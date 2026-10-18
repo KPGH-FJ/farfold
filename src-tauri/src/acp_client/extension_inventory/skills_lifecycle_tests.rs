@@ -199,7 +199,7 @@ fn skills_result_waits_for_real_successful_exit_and_inherited_pipes() {
     for (tail, expected) in [
         ("import sys;sys.exit(7)", Some(Code::QueryFailed)),
         (
-            "import os,time\nif os.fork()==0:\n time.sleep(.18);os._exit(0)\nos._exit(0)",
+            "import os,subprocess,sys\nsubprocess.Popen([sys.executable,'-c','import time;time.sleep(.18)'],stdin=subprocess.DEVNULL,stdout=sys.stdout,stderr=sys.stderr)\nos._exit(0)",
             None,
         ),
     ] {

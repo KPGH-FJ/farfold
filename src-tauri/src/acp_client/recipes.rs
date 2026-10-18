@@ -530,8 +530,7 @@ pub(crate) mod tests {
             name: id.into(),
             source: "registry".into(),
             command: if cfg!(windows) {
-                r"C:ixture
-ode.exe"
+                r"C:\fixture\node.exe"
             } else {
                 "/fixture/node"
             }
@@ -567,7 +566,7 @@ ode.exe"
         let root = tempfile::tempdir().unwrap();
         let mut row = official_row(root.path(), "registry:amp-acp", "amp-acp", "0.9.0");
         row.command = if cfg!(windows) {
-            r"C:\managedmp-acp.exe"
+            r"C:\managed\amp-acp.exe"
         } else {
             "/managed/amp-acp"
         }

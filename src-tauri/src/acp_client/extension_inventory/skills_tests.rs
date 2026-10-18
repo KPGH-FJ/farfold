@@ -36,7 +36,19 @@ fn skills_peer_receives_only_explicit_read_handshake_and_eof() {
 fn skill() -> serde_json::Value {
     json!({"name":"review-docs","description":"Review documents and summarize changes.","shortDescription":null,"path":"/PRIVATE_SKILL/SKILL.md","scope":"repo","enabled":false,"interface":{"shortDescription":"Review documents","iconSmall":"https://PRIVATE/icon"},"dependencies":{"tools":[{"value":"PRIVATE_COMMAND"}]},"pluginId":"PRIVATE_PLUGIN"})
 }
-fn response(skills: Vec<serde_json::Value>, errors: Vec<serde_json::Value>) -> serde_json::Value {
+fn response(
+    mut skills: Vec<serde_json::Value>,
+    errors: Vec<serde_json::Value>,
+) -> serde_json::Value {
+    // The test's synthetic absolute skill paths use local Windows drive syntax.
+    // Relative/malformed paths and all other fields retain their original bytes.
+    if cfg!(windows) {
+        for skill in &mut skills {
+            if let Some(path) = skill["path"].as_str().filter(|path| path.starts_with('/')) {
+                skill["path"] = json!(format!("C:{path}"));
+            }
+        }
+    }
     json!({"data":[{"cwd":"/tmp","skills":skills,"errors":errors}]})
 }
 fn decode(value: serde_json::Value) -> Result<SkillsInventory> {

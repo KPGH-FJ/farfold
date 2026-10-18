@@ -46,6 +46,14 @@ fn extra_skill_roots_waits_for_set_ack_before_list_on_same_owned_worker() {
     );
 }
 
+fn local_fixture_path(path: &str) -> String {
+    if cfg!(windows) {
+        format!("C:{path}")
+    } else {
+        path.into()
+    }
+}
+
 fn code<T>(value: Result<T>) -> Code {
     match value {
         Err(e) => e.code,
@@ -72,7 +80,8 @@ fn roots_are_bounded_absolute_explicit_and_disallowed_for_mcp() {
         Code::InvalidRequest
     );
     extra_skill_roots::validate(&[], Kind::Mcp).unwrap();
-    let edge = format!("/{}", "a".repeat(4095));
+    let prefix = if cfg!(windows) { "C:/" } else { "/" };
+    let edge = format!("{prefix}{}", "a".repeat(4096 - prefix.len()));
     extra_skill_roots::validate(
         &[edge.clone(), edge.clone(), edge.clone(), edge],
         Kind::Skills,
@@ -82,7 +91,10 @@ fn roots_are_bounded_absolute_explicit_and_disallowed_for_mcp() {
 #[test]
 fn roots_are_part_of_request_identity_and_cannot_reuse_mcp_or_cancelled_owners() {
     let registry = requests::Requests::default();
-    let roots = vec!["/selected/A".into(), "/selected/B".into()];
+    let roots = vec![
+        local_fixture_path("/selected/A"),
+        local_fixture_path("/selected/B"),
+    ];
     let (first, fresh) = registry
         .begin_with_roots("fixture", "/tmp", ID, ID, Kind::Skills, roots.clone())
         .unwrap();
@@ -94,7 +106,7 @@ fn roots_are_part_of_request_identity_and_cannot_reuse_mcp_or_cancelled_owners()
     for next in [
         vec![],
         vec![roots[1].clone(), roots[0].clone()],
-        vec!["/selected/C".into()],
+        vec![local_fixture_path("/selected/C")],
     ] {
         assert_eq!(
             code(registry.begin_with_roots("fixture", "/tmp", ID, ID, Kind::Skills, next)),
@@ -232,7 +244,7 @@ fn extra_reports_cannot_become_management_authority_even_with_a_forged_private_t
     let (request, _) = registry
         .begin_with_roots(&agent, cwd, ID, ID, Kind::Skills, vec![cwd.into()])
         .unwrap();
-    let wire:skills_output::Wire=serde_json::from_value(json!({"data":[{"cwd":cwd,"skills":[{"name":"controlled","description":"Controlled fixture.","scope":"user","path":"/controlled/SKILL.md","enabled":true}],"errors":[]}]})).unwrap();
+    let wire:skills_output::Wire=serde_json::from_value(json!({"data":[{"cwd":cwd,"skills":[{"name":"controlled","description":"Controlled fixture.","scope":"user","path":local_fixture_path("/controlled/SKILL.md"),"enabled":true}],"errors":[]}]})).unwrap();
     let (public, entries) = wire.project_private(cwd).unwrap();
     request.finish(Ok(InventorySnapshot::Skills(public)));
     let row = crate::meta_store::AgentRow {

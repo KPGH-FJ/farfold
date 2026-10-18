@@ -2,6 +2,14 @@
 use super::*;
 use serde_json::{Value, json};
 
+fn local_fixture_path(path: &str) -> String {
+    if cfg!(windows) {
+        format!("C:{path}")
+    } else {
+        path.into()
+    }
+}
+
 fn receive(exchange: &mut skills_rpc::Exchange, value: Value) -> Result<()> {
     let mut bytes = serde_json::to_vec(&value).unwrap();
     bytes.push(b'\n');
@@ -18,7 +26,7 @@ fn writes(exchange: &mut skills_rpc::Exchange) -> Vec<Value> {
 }
 fn waiting_set_ack() -> skills_rpc::Exchange {
     let mut exchange =
-        skills_rpc::Exchange::with_roots("/tmp", &["/selected/root".into()]).unwrap();
+        skills_rpc::Exchange::with_roots("/tmp", &[local_fixture_path("/selected/root")]).unwrap();
     assert_eq!(writes(&mut exchange)[0]["method"], "initialize");
     receive(
         &mut exchange,
@@ -29,7 +37,7 @@ fn waiting_set_ack() -> skills_rpc::Exchange {
         writes(&mut exchange),
         vec![
             json!({"method":"initialized"}),
-            json!({"id":2,"method":"skills/extraRoots/set","params":{"extraRoots":["/selected/root"]}})
+            json!({"id":2,"method":"skills/extraRoots/set","params":{"extraRoots":[local_fixture_path("/selected/root")]}})
         ]
     );
     exchange
@@ -78,7 +86,7 @@ fn unsupported_setter_is_finite_unavailable_without_query_or_retry() {
 #[test]
 fn premature_ack_and_duplicate_or_out_of_order_reply_fail_closed() {
     let mut exchange =
-        skills_rpc::Exchange::with_roots("/tmp", &["/selected/root".into()]).unwrap();
+        skills_rpc::Exchange::with_roots("/tmp", &[local_fixture_path("/selected/root")]).unwrap();
     writes(&mut exchange);
     receive(
         &mut exchange,
@@ -106,7 +114,7 @@ fn premature_ack_and_duplicate_or_out_of_order_reply_fail_closed() {
     );
 }
 fn skill(name: &str, scope: &str, path: &str) -> Value {
-    json!({"name":name,"description":"Controlled skill metadata.","path":path,"scope":scope,"enabled":true})
+    json!({"name":name,"description":"Controlled skill metadata.","path":local_fixture_path(path),"scope":scope,"enabled":true})
 }
 fn report(cwd: &str) -> skills_output::Wire {
     serde_json::from_value(json!({"data":[{"cwd":cwd,"skills":[skill("default-skill","user","/owned/default/SKILL.md"),skill("selected-skill","repo","/owned/extra/SKILL.md")],"errors":[]}]})).unwrap()
@@ -132,7 +140,7 @@ fn actual_serialized_ready_operations_have_exact_requested_roots_and_normal_empt
     const ID: &str = "03000000-0000-4000-8000-000000000010";
     for (label, roots) in [
         ("normal", vec![]),
-        ("extra", vec!["/owned/extra-skill-root".into()]),
+        ("extra", vec![local_fixture_path("/owned/extra-skill-root")]),
     ] {
         let registry = requests::Requests::default();
         let (request, _) = registry

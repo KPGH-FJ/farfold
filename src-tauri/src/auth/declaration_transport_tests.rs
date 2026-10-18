@@ -15,7 +15,7 @@ calls=Path(sys.argv[1])
 def reply(m,result): print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':result}),flush=True)
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method')
- with calls.open('a') as f: f.write(str(method)+'\n')
+ with calls.open('a', newline='\n') as f: f.write(str(method)+'\n')
  if method=='initialize':
   suffix=Path.cwd().name
   reply(m,{'protocolVersion':1,'agentInfo':{'name':'controlled-auth','version':'1'},'agentCapabilities':{},'authMethods':[
