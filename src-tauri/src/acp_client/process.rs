@@ -238,11 +238,14 @@ fn spawn_process_in(
         agent_client_protocol::Error::into_internal_error(error)
     })?;
     #[cfg(target_os = "macos")]
-    let (streams, child) = launched;
+    let (streams, mut child) = launched;
     #[cfg(not(target_os = "macos"))]
     let mut child = launched;
     let group = pending_group
-        .attach(child.id())
+        .attach_or_reap(Some(child.id()), || {
+            let _ = child.kill();
+            matches!(child.try_status(), Ok(Some(_)))
+        })
         .map_err(agent_client_protocol::Error::into_internal_error)?;
     if let Some(facts) = mcp_spawn_facts {
         let _ = control.mcp_spawn_facts.set(facts);

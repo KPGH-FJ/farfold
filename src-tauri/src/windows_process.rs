@@ -146,7 +146,7 @@ impl PendingGroup {
     /// The caller must retain its original Child (and Windows process handle)
     /// throughout this call. All std/async/PTY spawn owners do so: Windows cannot
     /// reuse that PID while the original process object has a retained handle.
-    pub(crate) fn attach(self, pid: u32) -> io::Result<OwnedGroup> {
+    pub(crate) fn attach(&self, pid: u32) -> io::Result<OwnedGroup> {
         let leader = unsafe { OpenProcess(PROCESS_TERMINATE, 0, pid) };
         if leader.is_null() {
             return Err(io::Error::last_os_error());
@@ -163,7 +163,38 @@ impl PendingGroup {
             return Err(io::Error::other("程序进程已登记"));
         }
         groups.insert(pid, Arc::downgrade(&self.0));
-        Ok(OwnedGroup { pid, job: self.0 })
+        Ok(OwnedGroup {
+            pid,
+            job: self.0.clone(),
+        })
+    }
+    /// A failed registration has no usable registry entry. Keep this direct Job
+    /// owner and the caller's exact Child until both termination facts hold.
+    /// The reap closure kills/polls only that Child, including before Job entry.
+    pub(crate) fn attach_or_reap(
+        &self,
+        pid: Option<u32>,
+        mut reap: impl FnMut() -> bool,
+    ) -> io::Result<OwnedGroup> {
+        match pid
+            .ok_or_else(|| io::Error::other("无法确认程序进程"))
+            .and_then(|pid| self.attach(pid))
+        {
+            Ok(group) => Ok(group),
+            Err(error) => {
+                let mut reaped = false;
+                loop {
+                    self.0.terminate();
+                    reaped = reaped || reap();
+                    if reaped && !self.0.active() {
+                        return Err(error);
+                    }
+                    // A query/reap failure is unknown, never an early release of
+                    // the caller's configuration, authentication or job permit.
+                    std::thread::sleep(std::time::Duration::from_millis(25));
+                }
+            }
+        }
     }
     pub(crate) fn helper_argv(
         &self,

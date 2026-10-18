@@ -237,14 +237,17 @@ impl Job {
         self.check()?;
         let pending =
             crate::process_platform::prepare_command(command).map_err(|_| "无法准备安装程序")?;
-        let child = command
+        let mut child = command
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::piped())
             .spawn()
             .map_err(|_| "安装程序未能启动，请重试")?;
         let group = pending
-            .attach(child.id())
+            .attach_or_reap(Some(child.id()), || {
+                let _ = child.kill();
+                matches!(child.try_wait(), Ok(Some(_)))
+            })
             .map_err(|_| "无法确认安装程序进程")?;
         let mut child = InstallChild {
             child,

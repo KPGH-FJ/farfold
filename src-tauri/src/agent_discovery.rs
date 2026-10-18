@@ -212,7 +212,7 @@ pub(crate) fn version_output(
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn();
-    let Ok(child) = child else {
+    let Ok(mut child) = child else {
         #[cfg(test)]
         if let Err(error) = child {
             version_probe_diagnostic("spawn_failed", error.raw_os_error(), None, 0, false);
@@ -220,7 +220,10 @@ pub(crate) fn version_output(
         return Ok(None);
     };
     let group = pending
-        .attach(child.id())
+        .attach_or_reap(Some(child.id()), || {
+            let _ = child.kill();
+            matches!(child.try_wait(), Ok(Some(_)))
+        })
         .map_err(|_| "无法确认程序检查进程")?;
     let mut child = VersionChild {
         child,

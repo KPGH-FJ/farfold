@@ -12,7 +12,11 @@ pub(crate) use crate::windows_process::OwnedGroup;
 
 #[cfg(unix)]
 impl PendingGroup {
-    pub(crate) fn attach(self, _pid: u32) -> io::Result<OwnedGroup> {
+    pub(crate) fn attach_or_reap(
+        &self,
+        _pid: Option<u32>,
+        _reap: impl FnMut() -> bool,
+    ) -> io::Result<OwnedGroup> {
         Ok(OwnedGroup)
     }
 }

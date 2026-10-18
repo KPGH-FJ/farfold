@@ -63,14 +63,12 @@ fn spawn(mut command: Command, interactive: bool) -> Result<(ChildOwner, Streams
     let mut child = command.spawn().map_err(|_| Code::SpawnFailed)?;
     drop(command); // Close all parent-side copies of child output handles.
     let pid = child.id();
-    let group = match group.attach(pid) {
-        Ok(group) => group,
-        Err(_) => {
+    let group = group
+        .attach_or_reap(Some(pid), || {
             let _ = child.kill();
-            let _ = child.wait();
-            return Err(Code::SpawnFailed.into());
-        }
-    };
+            matches!(child.try_wait(), Ok(Some(_)))
+        })
+        .map_err(|_| Code::SpawnFailed)?;
     let mut owner = ChildOwner {
         child,
         pid,

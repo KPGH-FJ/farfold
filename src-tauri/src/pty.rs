@@ -166,7 +166,10 @@ impl PtyManager {
         let pid = child.process_id();
         #[cfg(windows)]
         let group = pending_group
-            .attach(pid.ok_or("无法确认终端进程")?)
+            .attach_or_reap(pid, || {
+                let _ = child.kill();
+                matches!(child.try_wait(), Ok(Some(_)))
+            })
             .map_err(|_| "无法确认终端进程")?;
         #[cfg(unix)]
         let group = crate::process_platform::OwnedGroup;

@@ -124,6 +124,75 @@ fn leader_exit_does_not_release_live_descendants() {
     drop(group);
 }
 #[test]
+fn failed_attach_waits_for_original_child_and_unregistered_job_descendants() {
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("unregistered-child");
+    let pending = pending().unwrap();
+    let path = fixture();
+    let mut child = Parent(
+        Command::new(&path)
+            .args(pending.helper_argv(
+                path.as_os_str(),
+                [OsString::from("orphan"), marker.clone().into_os_string()],
+                false,
+            ))
+            .spawn()
+            .unwrap(),
+    );
+    let descendant = child_handle(&marker);
+    until(|| child.0.try_wait().unwrap().is_some());
+    assert!(pending.0.active());
+    assert!(!owns(child.0.id()));
+    assert!(!exited(&descendant));
+    let mut reaped = false;
+    // PID zero deterministically rejects OpenProcess. The actual child and its
+    // Job are real; no registry lookup can prove this unregistered Job ended.
+    let result = pending.attach_or_reap(Some(0), || {
+        let _ = child.0.kill();
+        reaped = child.0.try_wait().unwrap().is_some();
+        reaped
+    });
+    assert!(result.is_err());
+    assert!(reaped);
+    assert!(exited(&descendant));
+    assert!(!pending.0.active());
+}
+#[test]
+fn missing_pid_failure_reaps_the_helper_before_job_entry() {
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("must-not-start");
+    let ready = directory.path().join("waiting-before-entry");
+    let pending = pending().unwrap();
+    let path = fixture();
+    let mut child = Parent(
+        Command::new(&path)
+            .args(pending.helper_argv(
+                path.as_os_str(),
+                [
+                    OsString::from("wait"),
+                    marker.clone().into_os_string(),
+                    OsString::from("--fixture-delay-helper"),
+                    ready.clone().into_os_string(),
+                ],
+                false,
+            ))
+            .spawn()
+            .unwrap(),
+    );
+    until(|| ready.is_file());
+    assert!(!pending.0.active());
+    let mut reaped = false;
+    let result = pending.attach_or_reap(None, || {
+        let _ = child.0.kill();
+        reaped = child.0.try_wait().unwrap().is_some();
+        reaped
+    });
+    assert!(result.is_err());
+    assert!(reaped);
+    assert!(!pending.0.active());
+    assert!(!marker.exists());
+}
+#[test]
 fn losing_the_parent_process_closes_its_job_and_stops_work() {
     let directory = tempfile::tempdir().unwrap();
     let marker = directory.path().join("child");
