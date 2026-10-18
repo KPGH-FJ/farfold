@@ -38,6 +38,7 @@ export class OpeningInquiryOwner {
     return this.view;
   }
   addInterest(current?: () => boolean, signal?: AbortSignal) {
+    if (!this.available) return;
     this.interested.push(() => !signal?.aborted && (current?.() ?? true));
     if (signal) {
       const abort = () => {
@@ -109,6 +110,7 @@ export class OpeningInquiryOwner {
   retire() {
     if (!this.available) return;
     this.available = false;
+    this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
     this.view.requests.forEach((p) => this.cancelReply(p));
     this.update({
@@ -119,6 +121,7 @@ export class OpeningInquiryOwner {
   }
   finish(failed = false) {
     this.available = false;
+    this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
     this.update({
       requests: [],
