@@ -10,6 +10,7 @@ import { threads, type OpenResult, type ThreadState } from "./sessions";
 import { composerDrafts, draftPersistence } from "./drafts";
 import { STRINGS } from "./strings";
 import { freshThreadState } from "./session_projection";
+import { HistoryReplayBuffer } from "./history_replay";
 
 const option = {
   id: "model",
@@ -519,4 +520,74 @@ it("preserves a new unknown permission signal during configuration reloading", a
   expect(
     h.invoke.mock.calls.some(([command]) => command === "session_prompt"),
   ).toBe(false);
+});
+
+it("retires unbound replay staging after a rejected reload without changing the retained draft or history", async () => {
+  const old = await seed("recheck-retired-replay");
+  block(old);
+  composerDrafts.update(`session:${old.key}`, (draft) => ({
+    ...draft,
+    text: "Preserved during rejected reload",
+  }));
+  const draft = structuredClone(composerDrafts.read(`session:${old.key}`));
+  const buffered = vi.spyOn(HistoryReplayBuffer.prototype, "push");
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "session_open")
+      return {
+        ...opened(args),
+        service: {
+          id: "different-source",
+          fingerprint: "different",
+          model: "confirmed",
+        },
+      };
+    return command === "settings_get" ? null : [];
+  });
+  await expect(threads.recheckConfig(old.key)).rejects.toBeTruthy();
+  const items = structuredClone(old.items);
+  const lateChannel = h.channels.get(old.nativeSessionId);
+  buffered.mockClear();
+  // Exercise the actual failed opening callback and its real buffer, rather
+  // than inspecting a private collection or relying on garbage collection.
+  for (let index = 0; index < 128; index++)
+    lateChannel.onmessage({
+      update: {
+        sessionUpdate: "future_failed_reload",
+        index,
+        untouched: [null, true, "原值🙂"],
+        padding: "x".repeat(1024),
+      },
+    });
+  expect(buffered).not.toHaveBeenCalled();
+  expect(threads.thread(old.key)).toBe(old);
+  expect(old.items).toEqual(items);
+  expect(composerDrafts.read(`session:${old.key}`)).toEqual(draft);
+  expect(old.modelDrift).toBe(true);
+  expect(old.queuePaused).toBe("unavailable");
+  expect(
+    h.invoke.mock.calls.some(([command]) =>
+      ["session_close", "session_prompt", "session_set_config_option"].includes(
+        command,
+      ),
+    ),
+  ).toBe(false);
+});
+
+it("keeps bound live unknown data and connection loss after opening staging settles", async () => {
+  const state = await seed("recheck-live-after-replay");
+  const buffered = vi.spyOn(HistoryReplayBuffer.prototype, "push");
+  const update = {
+    sessionUpdate: "future_live_after_replay",
+    value: [null, false, { full: "原值🙂", count: 17 }],
+  };
+  const channel = h.channels.get(state.nativeSessionId);
+  channel.onmessage({ update });
+  const retained = state.items.find(
+    (item) => item.kind === "raw" && item.update === update,
+  );
+  expect(retained?.kind === "raw" && retained.update).toBe(update);
+  expect(buffered).not.toHaveBeenCalled();
+  channel.onmessage({ kind: "connectionLost", closeReason: "unexpected" });
+  expect(state.connectionLost).toBe(true);
+  expect(state.connectionCloseReason).toBe("unexpected");
 });

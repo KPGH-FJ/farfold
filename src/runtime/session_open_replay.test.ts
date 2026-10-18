@@ -131,4 +131,6 @@ it("keeps the 30 second marker deadline and rejects late replay after timeout", 
   deliver(marker);
   deliver(message("late", "Cannot repair a failed replay"));
   expect(state?.items).toEqual([]);
+  deliver({ kind: "connectionLost", closeReason: "unexpected" });
+  expect(state?.connectionCloseReason).toBe("unexpected");
 });

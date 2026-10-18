@@ -624,6 +624,7 @@ class ThreadsStore {
     let opened: OpenResult | undefined;
     let routePrepared = false;
     let abandonRecheck: (() => void) | undefined;
+    let receivingReplay = true;
     const promise = (async (): Promise<ThreadState> => {
       if (recheck) await recheck.detach();
       else if (retryState?.historyUnavailable || retryState?.sourceError)
@@ -656,7 +657,7 @@ class ThreadsStore {
             (!historyFailed || received?.kind === "connectionLost")
           )
             this.applyChannelEvent(boundKey, event);
-        } else {
+        } else if (receivingReplay) {
           replay.push(event);
         }
       };
@@ -793,6 +794,8 @@ class ThreadsStore {
         throw error;
       })
       .finally(() => {
+        receivingReplay = false;
+        replay.clear();
         historyReads.finish(openingKey, admission);
         inquiry.finish();
         this.openings.delete(openingKey);
