@@ -1,22 +1,35 @@
 /** Batch display notifications, never the ordered event mutations themselves. */
 export class ThreadNotifications {
-  private listeners = new Map<string, Set<() => void>>();
+  private listeners = new Map<string, Map<() => void, { count: number }>>();
   private versions = new Map<string, number>();
+  private revision = 0;
   private pending = new Set<string>();
   private frame: number | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   version(key: string): number {
-    return this.versions.get(key) ?? 0;
+    // Unsubscribed views still detect a change between render and subscribe.
+    return this.versions.get(key) ?? this.revision;
   }
 
   subscribe(key: string, fn: () => void): () => void {
     let listeners = this.listeners.get(key);
-    if (!listeners) this.listeners.set(key, (listeners = new Set()));
-    listeners.add(fn);
+    if (!listeners) {
+      this.listeners.set(key, (listeners = new Map()));
+      this.versions.set(key, this.revision);
+    }
+    let entry = listeners.get(fn);
+    if (!entry) listeners.set(fn, (entry = { count: 0 }));
+    entry.count++;
+    let subscribed = true;
     return () => {
-      listeners.delete(fn);
-      if (!listeners.size) this.listeners.delete(key);
+      if (!subscribed) return;
+      subscribed = false;
+      if (--entry.count === 0) listeners.delete(fn);
+      if (!listeners.size && this.listeners.get(key) === listeners) {
+        this.listeners.delete(key);
+        this.versions.delete(key);
+      }
     };
   }
 
@@ -38,8 +51,14 @@ export class ThreadNotifications {
   }
 
   private notify(key: string): void {
-    this.versions.set(key, this.version(key) + 1);
-    for (const fn of this.listeners.get(key) ?? []) fn();
+    const revision = ++this.revision;
+    const listeners = this.listeners.get(key);
+    if (!listeners) return;
+    this.versions.set(key, revision);
+    // Newly subscribed callbacks belong to the next update, not this traversal.
+    for (const [fn, entry] of [...listeners])
+      if (this.listeners.get(key) === listeners && listeners.get(fn) === entry)
+        fn();
   }
 
   private flushPending(): void {
@@ -60,6 +79,7 @@ export class ThreadNotifications {
     const keys = new Set([...this.pending, ...this.listeners.keys()]);
     this.pending.clear();
     this.cancelScheduled();
+    if (!keys.size) this.revision++;
     for (const key of keys) this.notify(key);
   }
 }

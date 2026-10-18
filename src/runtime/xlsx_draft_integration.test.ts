@@ -56,6 +56,12 @@ it("keeps full text and ordered all-saved scope across queue editing, resend, ne
     { type: "text", text: "question" },
     {
       type: "text",
+      text: JSON.stringify({
+        fileName: attachment.documentText!.local!.source.name,
+      }),
+    },
+    {
+      type: "text",
       text: attachment.documentText!.text,
     },
   ]);

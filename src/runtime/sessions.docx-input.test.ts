@@ -66,6 +66,12 @@ it("actual common drain sends exactly approved text on the official wire and pre
       { type: "text", text: "question without answers" },
       {
         type: "text",
+        text: JSON.stringify({
+          fileName: block.localDocumentText!.source.name,
+        }),
+      },
+      {
+        type: "text",
         text: approvedDocument().text,
       },
     ],

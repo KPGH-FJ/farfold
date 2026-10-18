@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 import { approvedDocument, documentBlock } from "./docx_draft.test-support";
 import { localMessageAttachments, wirePromptBlocks } from "./prompt_blocks";
+import { DOCUMENT_INPUT_MAX_BYTES } from "./document_input_types";
 import type { PromptBlock } from "./session_types";
 
 it("delivers only reviewed document text to a consumer that rereads resource URIs", () => {
@@ -19,7 +20,11 @@ it("delivers only reviewed document text to a consumer that rereads resource URI
   const reads = wire.flatMap((block) =>
     block.type === "resource" ? [block.resource.uri] : [],
   );
-  expect(texts).toEqual(["use the reviewed text", approved.resource.text]);
+  expect(texts).toEqual([
+    "use the reviewed text",
+    JSON.stringify({ fileName: approved.localDocumentText!.source.name }),
+    approved.resource.text,
+  ]);
   expect(reads).toEqual([]);
   expect(JSON.stringify(wire)).not.toContain("file:");
   expect(queued).toEqual(before);
@@ -46,7 +51,15 @@ it("keeps separate reviewed documents in order and sends each exact body once", 
   };
   const before = structuredClone([first, second]);
   expect(wirePromptBlocks([first, second])).toEqual([
+    {
+      type: "text",
+      text: JSON.stringify({ fileName: first.localDocumentText!.source.name }),
+    },
     { type: "text", text: first.resource.text },
+    {
+      type: "text",
+      text: JSON.stringify({ fileName: second.localDocumentText!.source.name }),
+    },
     { type: "text", text: second.resource.text },
   ]);
   expect([first, second]).toEqual(before);
@@ -88,4 +101,89 @@ it("rejects missing or malformed authority instead of turning it into plain text
   const malformed = documentBlock();
   Object.assign(malformed.localDocumentText!, { schema: 99 });
   expect(() => wirePromptBlocks([malformed])).toThrow();
+});
+
+function namedDocument(name: string, text: string, pathName = name) {
+  const approved = approvedDocument(text);
+  approved.local!.source.name = name;
+  approved.local!.source.path = `/owned/${pathName}`;
+  approved.local!.source.resolvedPath = `/owned/${pathName}`;
+  return {
+    type: "resource" as const,
+    resource: {
+      uri: `file:///owned/${encodeURIComponent(pathName)}`,
+      mimeType: "text/plain",
+      text: approved.text,
+    },
+    localDocumentText: approved.local,
+  };
+}
+
+it("distinguishes equal reviewed bodies by their chosen filenames when order changes", () => {
+  const body = "相同的已确认正文\nexact spacing 🙂\n";
+  const first = namedDocument("first.docx", body);
+  const second = namedDocument("second.docx", body);
+  const queued = [first, second];
+  const before = structuredClone(queued);
+  const wire = wirePromptBlocks(queued);
+  expect(wire).not.toEqual(wirePromptBlocks([second, first]));
+  expect(wire).toEqual([
+    { type: "text", text: JSON.stringify({ fileName: "first.docx" }) },
+    { type: "text", text: body },
+    { type: "text", text: JSON.stringify({ fileName: "second.docx" }) },
+    { type: "text", text: body },
+  ]);
+  expect(queued).toEqual(before);
+  expect(localMessageAttachments(queued).map((item) => item.uri)).toEqual([
+    first.resource.uri,
+    second.resource.uri,
+  ]);
+});
+
+it("quotes filename controls as source data without leaking source paths or authority", () => {
+  const name = 'line\n"quoted"\t\u0001.docx';
+  const body = "Reviewed body stays exact.\n";
+  // Formatter-level metadata shape only: existing file-path admission still
+  // rejects controls, and this test does not claim filesystem authorization.
+  const queued = [namedDocument(name, body, "control-fixture.docx")];
+  const before = structuredClone(queued);
+  const wire = wirePromptBlocks(queued);
+  expect(wire).toHaveLength(2);
+  expect(wire).toEqual([
+    { type: "text", text: JSON.stringify({ fileName: name }) },
+    { type: "text", text: body },
+  ]);
+  const label = wire[0] as Extract<PromptBlock, { type: "text" }>;
+  expect(JSON.parse(label.text)).toEqual({ fileName: name });
+  expect(label.text).not.toMatch(/[\r\n\t\u0000-\u001f]/);
+  const serialized = JSON.stringify(wire);
+  for (const forbidden of [
+    "file:",
+    "/owned/",
+    "localDocumentText",
+    "sha256",
+    "fixture-version",
+  ])
+    expect(serialized).not.toContain(forbidden);
+  expect(queued).toEqual(before);
+});
+
+it("keeps the approved body limit separate from bounded filename metadata", () => {
+  // Exercise the existing metadata decoder cap, not an OS filename fixture.
+  const name = "\u0001".repeat(4096);
+  const body = "a".repeat(DOCUMENT_INPUT_MAX_BYTES);
+  const queued = [namedDocument(name, body, "metadata-limit.docx")];
+  const before = structuredClone(queued);
+  const wire = wirePromptBlocks(queued);
+  expect(wire).toHaveLength(2);
+  expect(wire).toEqual([
+    { type: "text", text: JSON.stringify({ fileName: name }) },
+    { type: "text", text: body },
+  ]);
+  const label = wire[0] as Extract<PromptBlock, { type: "text" }>;
+  expect(Buffer.byteLength(label.text)).toBeLessThanOrEqual(6 * 4096 + 15);
+  // Also include the second JSON escaping layer of this official Text block.
+  expect(Buffer.byteLength(JSON.stringify(label))).toBeLessThanOrEqual(28730);
+  expect(queued[0].localDocumentText!.utf8Bytes).toBe(DOCUMENT_INPUT_MAX_BYTES);
+  expect(queued).toEqual(before);
 });

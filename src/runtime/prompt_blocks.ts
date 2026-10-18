@@ -121,11 +121,12 @@ export function resourceDraftAttachment(
 
 /** Enumerate official fields immediately before IPC. Reviewed document bodies
  * use baseline Text: a resource URI can make a consumer reread the unreviewed
- * original instead. Source/version metadata stays in the queue and local message. */
+ * original instead. A separate filename label keeps sources distinguishable;
+ * paths/version metadata stays in the queue and local message. */
 export function wirePromptBlocks(
   blocks: readonly PromptBlock[],
 ): PromptBlock[] {
-  return blocks.map((block) => {
+  return blocks.flatMap<PromptBlock>((block) => {
     switch (block.type) {
       case "text":
         return { type: "text", text: block.text };
@@ -149,7 +150,13 @@ export function wirePromptBlocks(
         if (block.localDocumentText !== undefined) {
           const approved = resourceDocumentText(block);
           if (!approved?.local) throw new Error(S.failed);
-          return { type: "text", text: approved.text };
+          return [
+            {
+              type: "text",
+              text: JSON.stringify({ fileName: approved.local.source.name }),
+            },
+            { type: "text", text: approved.text },
+          ];
         }
         return {
           type: "resource",

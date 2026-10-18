@@ -41,6 +41,12 @@ it("retains exact approved bytes through prepare, queue edit, resend, new draft 
     { type: "text", text: "question" },
     {
       type: "text",
+      text: JSON.stringify({
+        fileName: attachment.documentText!.local!.source.name,
+      }),
+    },
+    {
+      type: "text",
       text: attachment.documentText!.text,
     },
   ]);
@@ -150,6 +156,10 @@ it("wire whitelisting strips every local field, including arbitrary nested field
   const before = structuredClone(owned);
   const wire = wirePromptBlocks(owned);
   expect(wire).toEqual([
+    {
+      type: "text",
+      text: JSON.stringify({ fileName: block.localDocumentText!.source.name }),
+    },
     {
       type: "text",
       text: block.resource.text,

@@ -803,7 +803,12 @@ class ThreadsStore {
             );
           if (!previous) this.restoreQueue(old);
           if (old.key !== key) {
-            this.threads.delete(old.key);
+            const revision = this.removeThread(old.key);
+            if (revision)
+              this.permissionRevisions.set(
+                key,
+                Math.max(revision, this.permissionRevisions.get(key) ?? 0),
+              );
             this.channels.delete(old.key);
             old.key = key;
             old.cwd = target.cwd;
@@ -1327,12 +1332,19 @@ class ThreadsStore {
     }
   }
 
+  private removeThread(key: string): number {
+    this.threads.delete(key);
+    const revision = this.permissionRevisions.get(key) ?? 0;
+    this.permissionRevisions.delete(key);
+    return revision;
+  }
+
   async close(key: string): Promise<void> {
     const s = this.threads.get(key);
     if (s && hasActiveFork(s)) throw new Error(STRINGS.repair.archiveBusy);
     this.stopConfirmation.clear(key);
     this.channels.delete(key);
-    this.threads.delete(key);
+    this.removeThread(key);
     if (s) this.drafts.delete(s.draftGroup ?? "");
     this.emit();
     if (!s) return;
@@ -1388,7 +1400,7 @@ class ThreadsStore {
       this.threads.get(key),
       (s) => {
         if (this.threads.get(key) !== s) return;
-        this.threads.delete(key);
+        this.removeThread(key);
         this.channels.delete(key);
         if (this.drafts.get(s.draftGroup ?? "") === key)
           this.drafts.delete(s.draftGroup ?? "");
@@ -1405,7 +1417,7 @@ class ThreadsStore {
     await retirePreparationRead(this.threads.get(key), owns, (s, retain) => {
       if (retain) applyConnectionLost(s);
       else {
-        this.threads.delete(key);
+        this.removeThread(key);
         this.channels.delete(key);
       }
       if (this.drafts.get(s.draftGroup ?? "") === key)
@@ -1435,7 +1447,7 @@ class ThreadsStore {
     const blocked = this.archiveBlockReason(key);
     if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
     const s = this.threads.get(key);
-    this.threads.delete(key);
+    this.removeThread(key);
     if (s) this.drafts.delete(s.draftGroup ?? "");
     this.channels.delete(key);
     this.emit();

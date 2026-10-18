@@ -61,6 +61,10 @@ it("preserves known PDF text/scope across queue edit, resend and uncertain input
     { type: "text", text: "question" },
     {
       type: "text",
+      text: JSON.stringify({ fileName: approvedPdf().local!.source.name }),
+    },
+    {
+      type: "text",
       text: approvedPdf().text,
     },
   ]);
