@@ -120,15 +120,12 @@ function toolLines(
   options: TranscriptExportOptions,
   itemOrdinal: number,
 ): string[] {
-  const completed = call.status === "completed";
-  const kinds = completed ? T.toolSummaries : T.toolKinds;
-  const summary = Object.hasOwn(kinds, call.kind)
-    ? kinds[call.kind as keyof typeof kinds]
-    : kinds.other;
+  const summary = Object.hasOwn(T.toolKinds, call.kind)
+    ? T.toolKinds[call.kind as keyof typeof T.toolKinds]
+    : T.toolKinds.other;
   const status = Object.hasOwn(E.status, call.status)
     ? E.status[call.status as keyof typeof E.status]
     : E.unknown;
-  // Keep the existing completed one-line summary while making every status explicit.
   const first =
     options.sourceLocations === "omit" ? undefined : call.locations[0];
   const out = [

@@ -200,7 +200,7 @@ it("exports the readable surface as Markdown without collapsed technical detail"
     createElement(Markdown, { children: markdown }),
   );
   expect(readable).toContain("note.txt — /work/note.txt");
-  expect(readable).toContain("查看了文件 — /work/a.ts");
+  expect(readable).toContain("读取 — /work/a.ts（已完成）");
   expect(markdown).toContain("**Codex**");
   expect(markdown).toContain("已经看过文件了。");
   expect(markdown).toContain("> 已停止");

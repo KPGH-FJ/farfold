@@ -26,6 +26,51 @@ it("counts the changed fragment rows, not every supplied line", () => {
   expect(html).toContain('class="del">−1</span>');
 });
 
+it("keeps completed permission and write reports distinct without claiming either changed a file", () => {
+  const reports: ToolCallView[] = [
+    {
+      ...call,
+      toolCallId: "permission-report",
+      title: "Permission Request",
+      rawInput: "permission input",
+      rawOutput: "Dirac wants to edit /work/a.txt",
+    },
+    {
+      ...call,
+      toolCallId: "write-report",
+      title: "Wrote /work/a.txt",
+      rawInput: "write input",
+      rawOutput: "Successfully wrote /work/a.txt",
+    },
+  ];
+  const original = structuredClone(reports);
+  const collapsed = reports.map((report) =>
+    renderToStaticMarkup(<ToolStep call={report} />),
+  );
+  for (const [index, html] of collapsed.entries()) {
+    expect(html).toContain("修改 · 步骤已结束");
+    expect(html).not.toContain("修改了文件");
+    expect(html).not.toContain(reports[index].title);
+  }
+  const expanded = renderToStaticMarkup(
+    <TranscriptSearchContext.Provider value>
+      {reports.map((report) => (
+        <ToolStep key={report.toolCallId} call={report} />
+      ))}
+    </TranscriptSearchContext.Provider>,
+  );
+  expect(expanded.match(/class="step-detail"/g)).toHaveLength(2);
+  for (const report of reports) {
+    expect(expanded).toContain(report.title);
+    expect(expanded).toContain(report.rawInput);
+    expect(expanded).toContain(report.rawOutput);
+  }
+  expect(expanded).toContain("/work/a.txt");
+  expect(expanded).toContain('class="add">+1</span>');
+  expect(expanded).toContain('class="del">−1</span>');
+  expect(reports).toEqual(original);
+});
+
 it("keeps missing original text distinct from a newly created file", () => {
   const html = renderToStaticMarkup(
     <DiffView path="/work/a.txt" oldText={null} newText={"a\nb"} />,
@@ -132,6 +177,7 @@ it.each(["failed", "in_progress", "future-status"])(
   (status) => {
     const html = renderToStaticMarkup(<ToolStep call={{ ...call, status }} />);
     expect(html).not.toContain("修改了文件");
+    expect(html).not.toContain("步骤已结束");
     expect(html).toContain("修改");
   },
 );

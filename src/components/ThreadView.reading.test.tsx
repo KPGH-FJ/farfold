@@ -161,17 +161,17 @@ const textContent = (tree: ReactNode): string => {
 };
 
 it.each([
-  ["read", "查看了文件", "读取"],
-  ["edit", "修改了文件", "修改"],
-  ["delete", "删除了文件", "删除"],
-  ["move", "移动了文件", "移动"],
-  ["search", "搜索了内容", "搜索"],
-  ["execute", "运行了命令", "执行"],
-  ["think", "思考了", "思考"],
-  ["fetch", "查看了网页", "获取"],
-  ["switch_mode", "切换了模式", "切换模式"],
-  ["other", "执行了操作", "其他操作"],
-  ["custom_check", "执行了操作", "其他操作（custom_check）"],
+  ["read", "读取 · 步骤已结束", "读取"],
+  ["edit", "修改 · 步骤已结束", "修改"],
+  ["delete", "删除 · 步骤已结束", "删除"],
+  ["move", "移动 · 步骤已结束", "移动"],
+  ["search", "搜索 · 步骤已结束", "搜索"],
+  ["execute", "执行 · 步骤已结束", "执行"],
+  ["think", "思考 · 步骤已结束", "思考"],
+  ["fetch", "获取 · 步骤已结束", "获取"],
+  ["switch_mode", "切换模式 · 步骤已结束", "切换模式"],
+  ["other", "其他操作 · 步骤已结束", "其他操作"],
+  ["custom_check", "其他操作 · 步骤已结束", "其他操作（custom_check）"],
 ])(
   "summarizes %s in user language while the raw kind and title stay in technical details",
   (kind, summary, detailKind) => {

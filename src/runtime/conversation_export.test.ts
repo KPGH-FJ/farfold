@@ -64,6 +64,27 @@ it("retains source-less media and does not invent a file path", () => {
   expect(result).not.toContain("BINARYSECRET");
 });
 it.each([
+  ["read", "读取"],
+  ["edit", "修改"],
+  ["delete", "删除"],
+  ["move", "移动"],
+  ["search", "搜索"],
+  ["execute", "执行"],
+  ["think", "思考"],
+  ["fetch", "获取"],
+  ["switch_mode", "切换模式"],
+  ["other", "其他操作"],
+  ["custom_check", "其他操作"],
+])(
+  "exports completed %s as a category with its explicit status",
+  (kind, label) => {
+    const result = render([tool({ kind })]);
+    expect(result).toContain(`- ${label}（已完成）`);
+    expect(result).not.toContain("步骤已结束");
+    expect(result).not.toContain("HIDDENTITLE");
+  },
+);
+it.each([
   ["pending", "等待中"],
   ["in_progress", "进行中"],
   ["failed", "失败"],

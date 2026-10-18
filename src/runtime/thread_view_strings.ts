@@ -28,18 +28,5 @@ export const THREAD_VIEW_STRINGS = {
     other: "其他操作",
   },
   unknownToolKind: (kind: string) => `其他操作（${kind}）`,
-  /** User-language one-line summaries; the raw tool name and payload stay
-   *  inside the collapsed technical details (PRODUCT.md §6). */
-  toolSummaries: {
-    read: "查看了文件",
-    edit: "修改了文件",
-    delete: "删除了文件",
-    move: "移动了文件",
-    search: "搜索了内容",
-    execute: "运行了命令",
-    think: "思考了",
-    fetch: "查看了网页",
-    switch_mode: "切换了模式",
-    other: "执行了操作",
-  },
+  toolEnded: "步骤已结束",
 } as const;

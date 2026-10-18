@@ -95,12 +95,12 @@ function kindLabel(kind: string): string {
       : T.toolKinds.other;
 }
 
-/** One user-language sentence for the row; original kind/name/payload only
- *  appear inside the collapsed technical details. */
+/** Completion describes the step's state, not a verified side effect. */
 function toolSummary(kind: string): string {
-  return Object.hasOwn(T.toolSummaries, kind)
-    ? T.toolSummaries[kind as keyof typeof T.toolSummaries]
-    : T.toolSummaries.other;
+  const category = Object.hasOwn(T.toolKinds, kind)
+    ? T.toolKinds[kind as keyof typeof T.toolKinds]
+    : T.toolKinds.other;
+  return `${category} · ${T.toolEnded}`;
 }
 
 function durationLabel(call: ToolCallView): string | null {
