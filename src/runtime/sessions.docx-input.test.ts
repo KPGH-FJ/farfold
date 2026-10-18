@@ -11,10 +11,7 @@ import { threads } from "./sessions";
 import { draftPersistence, draftQueues, composerDrafts } from "./drafts";
 import { archiveActivity } from "./archive_activity";
 import { DOCUMENT_INPUT_STRINGS as S } from "./document_input_strings";
-import {
-  documentBlock,
-  approvedDocument,
-} from "./docx_draft.test-support";
+import { documentBlock, approvedDocument } from "./docx_draft.test-support";
 import type { PromptBlock } from "./session_types";
 
 beforeEach(() => {
