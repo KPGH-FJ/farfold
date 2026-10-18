@@ -18,8 +18,10 @@ interface Epoch {
   eligible: boolean;
   ended: boolean;
   nextSequence: number;
+  mapping: "vorbis" | "opus" | null;
   headers: number;
   rate: number;
+  preSkip: number;
   packet: Packet | null;
   anchor: bigint | null;
   previous: bigint | null;
@@ -31,8 +33,10 @@ function epoch(sequence: number, bos: boolean): Epoch {
     eligible: bos && sequence === 0,
     ended: false,
     nextSequence: sequence,
+    mapping: null,
     headers: 0,
     rate: 0,
+    preSkip: 0,
     packet: null,
     anchor: null,
     previous: null,
@@ -54,6 +58,43 @@ function prefixU32(prefix: number[], at: number): number {
     prefix[at + 2] * 65_536 +
     prefix[at + 3] * 16_777_216
   );
+}
+
+function signature(prefix: number[], name: string): boolean {
+  return (
+    prefix.length >= name.length &&
+    [...name].every((char, index) => prefix[index] === char.charCodeAt(0))
+  );
+}
+
+function headerCount(stream: Epoch): number {
+  return stream.mapping === "opus" ? 2 : 3;
+}
+
+function opusHeader(stream: Epoch, packet: Packet): void {
+  const prefix = packet.prefix;
+  if (stream.headers === 0) {
+    // Selected RFC7845 version 1, mapping family 0 only. Other layouts stay
+    // partial; input sample rate is informational, never the granule clock.
+    if (
+      !signature(prefix, "OpusHead") ||
+      packet.bytes !== 19 ||
+      prefix[8] !== 1 ||
+      (prefix[9] !== 1 && prefix[9] !== 2) ||
+      prefix[18] !== 0
+    ) {
+      breakEpoch(stream);
+      return;
+    }
+    stream.mapping = "opus";
+    stream.rate = 48_000;
+    stream.preSkip = prefix[10] + prefix[11] * 256;
+  } else if (!signature(prefix, "OpusTags") || packet.bytes < 16) {
+    breakEpoch(stream);
+    return;
+  }
+  // Tags contents and compressed audio remain opaque, as for Vorbis setup.
+  stream.headers++;
 }
 
 function vorbisHeader(stream: Epoch, packet: Packet): void {
@@ -88,6 +129,7 @@ function vorbisHeader(stream: Epoch, packet: Packet): void {
       breakEpoch(stream);
       return;
     }
+    stream.mapping = "vorbis";
     stream.rate = rate;
   } else if (packet.bytes < 8) {
     breakEpoch(stream);
@@ -98,16 +140,19 @@ function vorbisHeader(stream: Epoch, packet: Packet): void {
   stream.headers++;
 }
 
-/** Selected Ogg/Vorbis declared interval lower bounds, never total duration.
+/** Selected Ogg Vorbis/Opus declared interval lower bounds, never total duration.
  * Caller first checks canonical Base64 and bytes. RFC3533 lacing and Vorbis I
  * Appendix A.2 associate GP with the last completed audio packet. Subtracting
  * two same-epoch endpoints removes a nonzero origin. Only non-EOS pages start
  * an interval; a nondecreasing EOS endpoint may close one after final trimming.
+ * Opus always uses 48kHz. Subtract all preSkip conservatively: an early anchor
+ * may still precede its discarded prefix, including with a positive origin.
  *
  * Every non-excess remains notCovered. CRC, setup/codebooks, audio payload,
  * packet durations, exact playback and decoder allocation are not validated.
  * https://xiph.org/vorbis/doc/Vorbis_I_spec.html
  * https://www.rfc-editor.org/rfc/rfc3533.html
+ * https://www.rfc-editor.org/rfc/rfc7845.html
  */
 export function messageOggAudioAdmission(
   data: string,
@@ -167,12 +212,16 @@ export function messageOggAudioAdmission(
         const lace = reader.u8(at + 27 + index);
         if (!stream.packet) {
           stream.packet = { bytes: 0, prefix: [] };
-          // The supported Vorbis mapping ends setup on a prior page.
-          if (stream.headers === 3 && headersBeforePage < 3) breakEpoch(stream);
+          // Both selected mappings end their last header on a prior page.
+          if (
+            stream.headers === headerCount(stream) &&
+            headersBeforePage < headerCount(stream)
+          )
+            breakEpoch(stream);
         }
         const packet = stream.packet;
         if (stream.eligible) {
-          const prefixLimit = stream.headers < 3 ? 30 : 1;
+          const prefixLimit = stream.headers < headerCount(stream) ? 30 : 1;
           const take = Math.min(lace, prefixLimit - packet.prefix.length);
           if (!record(take)) return "audioTooComplex";
           for (let byte = 0; byte < take; byte++)
@@ -184,8 +233,14 @@ export function messageOggAudioAdmission(
         completedPackets++;
         stream.packet = null;
         if (!stream.eligible) continue;
-        if (stream.headers < 3) vorbisHeader(stream, packet);
-        else if (packet.bytes > 0 && !(packet.prefix[0] & 1))
+        if (stream.headers < headerCount(stream)) {
+          if (stream.mapping === "opus" || signature(packet.prefix, "OpusHead"))
+            opusHeader(stream, packet);
+          else vorbisHeader(stream, packet);
+        } else if (
+          packet.bytes > 0 &&
+          (stream.mapping === "opus" || !(packet.prefix[0] & 1))
+        )
           completedAudio = true;
         else breakEpoch(stream); // Nil/other packets are not known audio endpoints.
       }
@@ -209,7 +264,7 @@ export function messageOggAudioAdmission(
           stream.previous = raw;
           if (stream.anchor !== null) {
             if (
-              raw - stream.anchor >
+              raw - stream.anchor - BigInt(stream.preSkip) >
               BigInt(stream.rate) * BigInt(MAX_MESSAGE_AUDIO_SECONDS)
             )
               stream.excessive = true;
