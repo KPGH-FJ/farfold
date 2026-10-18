@@ -1,0 +1,240 @@
+{
+  "kind": "cold-history-admission-source-and-focused-evidence",
+  "recordedAtUtc": "2026-10-18T22:24:23.674440+00:00",
+  "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
+  "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
+  "sourceScope": {
+    "coldHistory": "Rust20 plus frontend13, initial logical policy C2/Q32/B8MiB; independent phase channel, raw Agent channel retained; window/token cancellation only waiting; actual ownership keeps admission through read-marker or actual process reap",
+    "P13": "AVIF/FLAC explicit default-open safety whitelist and neutral copy only",
+    "audioCapacity": "Ten existing exact16MiB test cases local10s plus content-free elapsed/count observations; no production performance change"
+  },
+  "actualFocused": {
+    "frontend": {
+      "files": 22,
+      "passed": 343,
+      "typecheckExit": 0,
+      "formatExit": 0,
+      "completionSha256": "6a1c6f946fa8ba140027bf66302bb9a5e28a5886a1e4c3b24f9a9ff313cb9ff7"
+    },
+    "rust": "See final freeze443521cd/verification98b18864/completione5d03f68; actual production/callback/lifecycle/approval/restore/Clippy targeted runs; earlier failed stages retained",
+    "wire": {
+      "productionRustSerdeToProductionTsConsumer": 7,
+      "passed": 7,
+      "SSRComponentStates": 3,
+      "layout": "notTested: browser executable absent; CUA file: protocol rejected, no workaround"
+    }
+  },
+  "windowsCi": {
+    "thirdRun": 39166972229,
+    "source": "b5b2678920ea235e4c98f8cde9a5e879825f8325",
+    "frontendFilesPassed": 597,
+    "frontendFilesFailed": 1,
+    "testsPassed": 7992,
+    "testsFailed": 1,
+    "failure": "existing exact16MiB save-failure/recovery case6296ms exceeded5000ms",
+    "rustInstallerUpload": "skipped",
+    "ci2Original167FailedMarkers": "retained; CI3 did not revalidate Rust",
+    "newWindowsRerun": false
+  },
+  "installedApp": {
+    "path": "/Applications/Farfold.app",
+    "source": "1564263f5a58cbea9c3cf40b4b7cec9a936b541d",
+    "binarySha256": "1ea3ae76f26675629170969ad1ffe6a763f72298965cc02a4b4069270e0f8295",
+    "rootLaunchedAfter156Install": false,
+    "currentBatchInstalled": false
+  },
+  "full7": null,
+  "candidate": null,
+  "installation": null,
+  "storageCleanup": {
+    "deletedExactOldRustObjectLeaves": 12800,
+    "reclaimedObservedBytes": 9268473856,
+    "noBulkTargetOrUserDataRemoval": true,
+    "availableSpaceIsPointObservation": true
+  },
+  "notVerified": [
+    "full7 on this checkpoint",
+    "new candidate/install/formal UI",
+    "AVIF/FLAC actual default OS open or real Agent media",
+    "global active Agent/output transport backpressure or RSS/long-run limits",
+    "Windows runtime and remaining Windows mutation/material features",
+    "full ARCH49/P13/29x8/151 completion"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/cold-history-source-checkpoint.json",
+      "sha256": "57e9f8bc7b0b941705401c9fc4496089918914f39a6d43db346a8d815147e70c",
+      "bytes": 4852
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/preparatory-source-checkpoints.json",
+      "sha256": "e8aab5f813cc8dacae622f081fc9397ddf2b341aed946e9e81ee665ab1cbd558",
+      "bytes": 1840
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/source-freeze-production-final.json",
+      "sha256": "443521cd5ff479f1cc112127abd987d8638516a313e5965bde2ad8ef15813dbf",
+      "bytes": 4767
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/source-freeze-r5-test-teardown.json",
+      "sha256": "067d7d3cde8b5bfe466f9aa13ddac1cf6790cb886cf59d0668d56b6efc2e3c77",
+      "bytes": 2880
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/parent-final-source-join.json",
+      "sha256": "8b86d377b303bc008856e0b1ea44675efc9cf2b17828f4c3ba75569d297f5e2a",
+      "bytes": 3084
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/independent-source-review-final.json",
+      "sha256": "d07cdf5de5088be3d0e62bf265a93375183f269bc60fdb5049ac2c506fd54b40",
+      "bytes": 8440
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/focused-execution-completion.json",
+      "sha256": "6a1c6f946fa8ba140027bf66302bb9a5e28a5886a1e4c3b24f9a9ff313cb9ff7",
+      "bytes": 3989
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/verification-production-final.json",
+      "sha256": "98b188645bfda6898d57a08113307cee18b62fdce4b5c7f7e00bbac44b78895c",
+      "bytes": 11835
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-wire-unit-r3/receipt.json",
+      "sha256": "17f4572a9a99044fb30be53bbff0e9ada7ca817fb043feb4c43ff1f368f3dae9",
+      "bytes": 154866
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-peer-r1/receipt.json",
+      "sha256": "907bb048fab9902aa35674ac05bfaab5ef11c6571268caf3969e037a082bc90e",
+      "bytes": 154860
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-lifecycle-r1/receipt.json",
+      "sha256": "38c7fd9a939e357f7504c6deb782aac54141799c41a5446943bba93c4a72b9ff",
+      "bytes": 154858
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-mcp-r1/receipt.json",
+      "sha256": "ab4b8ada87e01f99e85ff5306ecd5d3f53bc596480f3786db9281a1d6ccb44ce",
+      "bytes": 154862
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-restore-r1/receipt.json",
+      "sha256": "1e61a6494de3b2485504fc421f4a5d06206c6e22b174f6ad66723a65536885c2",
+      "bytes": 154868
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-map-wake-r1/receipt.json",
+      "sha256": "9575e6ad5f52b77771061c8f5667a98867329975fd8178ee039cadef26e06754",
+      "bytes": 155432
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-clippy-r1/receipt.json",
+      "sha256": "b7f15d8a4f167a49d291ef09140760466903f3dd68d950a8813b0042d67a75fe",
+      "bytes": 155385
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-permission-bypass-r1/receipt.json",
+      "sha256": "b661929a602ecc16b17c14a60d5cf90d4da068a3abc9f58f9ad01e29e5abe9f6",
+      "bytes": 155403
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/production-format-r1/receipt.json",
+      "sha256": "ef5b49e5f7ecb96a1144012cd1db7915a5ac1b94bd5dba8c74cd00dfb4652d24",
+      "bytes": 156377
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/affected.json",
+      "sha256": "904f4d6c8589dc9758a7de062466f17273c1a06d1406ada44c69c906e1111dd2",
+      "bytes": 300400
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/affected.log",
+      "sha256": "9df1b191da97cb9bc9fd40a475653b9c6e8cb2a11ee86cfd6f915be2baf1639f",
+      "bytes": 47073
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/typecheck.json",
+      "sha256": "7422462b9996ca7f889fdf8856f2c119b19e6f91ab75908757978e15cbff07dc",
+      "bytes": 299337
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/typecheck.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/format.json",
+      "sha256": "da22fc9b9d4cdec64e73129fe76194dc2a026188280ebd016798d62374692c43",
+      "bytes": 299873
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/checks-r3/format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/p13-default-open-preparation/revision2/execution/execution-completion.json",
+      "sha256": "820807cb4e73fbe1291c24f0f24ecccc408a35ce937edb85b1bfc2d8efeabdd8",
+      "bytes": 9548
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/p13-default-open-preparation/revision2/execution/source-freeze-final.json",
+      "sha256": "8e2176e88c542fec8e64c92de49a8f7e591420d75e0d194eabf50fa33f2b660b",
+      "bytes": 2487
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/ci3-audio-capacity-test-preparation/execution/execution-completion.json",
+      "sha256": "6c31798239eb45a536524682292f9cf3c811cb6d7835c10fffef3f96df43f9a4",
+      "bytes": 5814
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/ci3-audio-capacity-test-preparation/execution/source-freeze-final.json",
+      "sha256": "f7c324b8c878129b46a9839259a012eafa5be31e32e00e2e18285662c9a2097b",
+      "bytes": 1502
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/ci3-bounded-auth-fixtures/final-run.json",
+      "sha256": "749c923e34391438989e371b476d8012cfb466e1cac2f2e6de04960532a641f3",
+      "bytes": 2843
+    },
+    {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/ci3-audio-capacity-diagnosis/diagnosis.json",
+      "sha256": "94349a8cab61790a3f271a9ab58edffb1fa5d57bffda8e8656384014090bd028",
+      "bytes": 12932
+    },
+    {
+      "path": "docs/evidence/2026-10-19-worktree-browser-delivery/verification.json",
+      "sha256": "7798dfbb0392fbf5502d0f74512e2a6a852656579b9a241848014436daccf825",
+      "bytes": 17707
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/source-checkpoint-push-completion.json",
+      "sha256": "072803ad6079889e9ee4a14bc153c5d90b19e1d117c97ed616653800d864d1ae",
+      "bytes": 378
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/ssr-cua-browser-policy-boundary.json",
+      "sha256": "9296886090c6883e35d8e3861631cc20a27a3abe1bde5140015289607a4a1795",
+      "bytes": 825
+    },
+    {
+      "path": "output/2026-10-19-storage-binary-object-inventory/removal-receipt.json",
+      "sha256": "92d8b81b64e4b60013d0994132ef70f9f1a6f4f123d30d24d5a9cdeb4906bfb2",
+      "bytes": 3367
+    },
+    {
+      "path": "output/2026-10-19-storage-binary-object-inventory/removal-natural-completion.json",
+      "sha256": "3cad37cf2905a037db38e24d97f903e7b47f54b9eed1a8d94f7e8a35a062534d",
+      "bytes": 905
+    },
+    {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/cross-wire-visual/completion.json",
+      "sha256": "4ac81ae7f2d185308bff3142a615288d7b97ba62531464f2d5a1798712297a1a",
+      "bytes": 7438
+    }
+  ]
+}

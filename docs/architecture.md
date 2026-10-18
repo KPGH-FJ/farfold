@@ -53,6 +53,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 
+最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。当前仅源码与受影响检查，完整工程和正式验证仍待完成。
+
 Agent的原始事件包括未知字段进入总线；工具、异步任务、压缩和停止按真实事件更新。取消请求发出不等于已经停止，进程退出也不等于上一请求正常完成。未知结果阻止普通重试和自动重发，不清除已发生外部操作的事实。
 
 未发送内容与准备记录保存在meta_store的settings键中；文字、附件位置、意见与暂停队列可恢复，但附件需重新核验，保存失败明确呈现。保存退出采用单次共享操作和令牌校验，等当前保存完成；取消仅释放本次退出自己的锁，不释放更新、工作位置等其他操作的锁。重启仍受原有忙态与未知保护。
@@ -102,6 +104,8 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
 [message-media-visibility.tsx](../src/components/message-media-visibility.tsx) 将工具组、工具详情及保留对话路由的可见性逐层相交，内层展开不能覆盖已隐藏的祖先。[App.tsx](../src/App.tsx) 按实际显示的页面键传递路由可见性，沿原顺序保留带网页或草稿的页面；搜索和带入浮层仅暂停交互，不误作页面隐藏。保留的隐藏文字节点继续存在，但消息媒体来源和配额退役，并撤回此前的媒体展开意图；回到页面或查找揭示不会自动加载，仍需用户明确展开媒体。该边界不核系统休眠、窗口后台、网页内媒体或解码器内存的生命周期。
+
+本地文件的默认应用打开与消息内媒体播放分开：[selected_location.rs](../src-tauri/src/file_delivery/selected_location.rs) 的既有安全媒体名单在最新源码中补AVIF、FLAC，仍核原文件版本、位置及不可执行边界；没有内置预览的文件使用中性说明，不承诺任意后缀都能默认打开。该改动尚未安装或实际调用系统打开，不新增内嵌解码、格式有效性或正式消息媒体证明。
 
 以上是字节、已覆盖声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG/AVIF完整动画、未覆盖AVIF/音频资源边界、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
 
