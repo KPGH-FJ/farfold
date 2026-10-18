@@ -72,6 +72,7 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
 import {
   setup,
+  selection,
   operation,
   flush,
 } from "../runtime/history_search.test-support";
@@ -211,6 +212,144 @@ it("loaded conversations stay explicitly unavailable and cannot be selected", ()
   expect(checkbox.props.disabled).toBe(true);
   expect(h.port.start).not.toHaveBeenCalled();
 });
+it("prepare explains a selected history becoming loaded without reading its original scope", async () => {
+  choose();
+  const indexed = hooks.index[0];
+  hooks.threads.set("saved-1", {});
+  render();
+  click(S.prepare);
+  await flush();
+  const rendered = nodes();
+  expect(hooks.index[0]).toBe(indexed);
+  expect(h.port.capabilities).not.toHaveBeenCalled();
+  expect(h.port.start).not.toHaveBeenCalled();
+  expect(onOpen).not.toHaveBeenCalled();
+  expect(
+    rendered.some(
+      (node) => node.props.role === "alert" && node.props.children === S.stale,
+    ),
+  ).toBe(true);
+});
+it("an unrelated loaded conversation leaves a valid explicit history selection usable", async () => {
+  choose();
+  hooks.index = [
+    ...hooks.index,
+    { ...(hooks.index[0] as IndexRow), id: "another" },
+  ];
+  hooks.threads.set("another", {});
+  render();
+  click(S.prepare);
+  await flush();
+  expect(h.port.capabilities).toHaveBeenCalledExactlyOnceWith({
+    agentId: "fixture",
+    rowIds: ["saved-1"],
+  });
+  expect(h.port.start).not.toHaveBeenCalled();
+  expect(query).toBe("hello");
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it.each([true, false])(
+  "removing stale history selection preserves valid rows and query, focused recovery=%s",
+  async (focused) => {
+    hooks.index.push({
+      ...(hooks.index[0] as IndexRow),
+      id: "saved-2",
+      nativeSessionId: "native-2",
+    });
+    rows.push({ ...rows[0], key: "saved-2", nativeSessionId: "native-2" });
+    choose();
+    const checkboxes = nodes().filter(
+      (node) => node.type === "input" && node.props.type === "checkbox",
+    );
+    (checkboxes[1].props.onChange as Function)({ target: { checked: true } });
+    render();
+    hooks.threads.set("saved-1", {});
+    render();
+    click(S.prepare);
+    await flush();
+    expect(h.port.capabilities).not.toHaveBeenCalled();
+    const rendered = nodes();
+    const recovery = rendered.find(
+      (node) =>
+        node.type === "button" &&
+        node.props.children === S.clearInvalidSelection,
+    )!;
+    expect(recovery).toBeDefined();
+    expect(recovery.props.disabled).not.toBe(true);
+    const fieldset = rendered.find((node) => node.type === "fieldset")!;
+    const focus = vi.fn();
+    const button = {};
+    (fieldset.props.ref as { current: unknown }).current = {
+      focus,
+      ownerDocument: { activeElement: focused ? button : {} },
+    };
+    (recovery.props.onClick as Function)({ currentTarget: button });
+    const current = nodes();
+    expect(focus).toHaveBeenCalledTimes(focused ? 1 : 0);
+    expect(fieldset.props.tabIndex).toBe(-1);
+    expect(
+      current
+        .filter(
+          (node) => node.type === "input" && node.props.type === "checkbox",
+        )
+        .map((node) => node.props.checked),
+    ).toEqual([false, true]);
+    expect(current.some((node) => node.props.children === S.stale)).toBe(false);
+    expect(h.port.capabilities).not.toHaveBeenCalled();
+    expect(h.port.start).not.toHaveBeenCalled();
+    const prepared = selection();
+    prepared.rows[0].rowId = "saved-2";
+    h.port.capabilities.mockResolvedValue(prepared);
+    click(S.prepare);
+    await flush();
+    expect(h.port.capabilities).toHaveBeenCalledExactlyOnceWith({
+      agentId: "fixture",
+      rowIds: ["saved-2"],
+    });
+    click(S.start);
+    await flush();
+    expect(h.port.start).toHaveBeenCalledTimes(1);
+    expect(h.controller.get("fixture").flight?.expected).toMatchObject({
+      rowIds: ["saved-2"],
+      query: "hello",
+    });
+    expect(onOpen).not.toHaveBeenCalled();
+  },
+);
+it("a captured prepare explains a just-loaded source before the next render without reading it", async () => {
+  choose();
+  const prepare = nodes().find(
+    (node) => node.type === "button" && node.props.children === S.prepare,
+  )!.props.onClick as Function;
+  hooks.threads.set("saved-1", {});
+  prepare();
+  await flush();
+  render();
+  expect(h.port.capabilities).not.toHaveBeenCalled();
+  expect(h.port.start).not.toHaveBeenCalled();
+  expect(
+    nodes().some(
+      (node) => node.props.role === "alert" && node.props.children === S.stale,
+    ),
+  ).toBe(true);
+});
+it("returning a temporarily loaded row to unread history creates a usable fresh scope", async () => {
+  choose();
+  hooks.threads.set("saved-1", {});
+  render();
+  click(S.prepare);
+  await flush();
+  expect(h.port.capabilities).not.toHaveBeenCalled();
+  hooks.threads.delete("saved-1");
+  render();
+  click(S.prepare);
+  await flush();
+  expect(h.port.capabilities).toHaveBeenCalledExactlyOnceWith({
+    agentId: "fixture",
+    rowIds: ["saved-1"],
+  });
+  expect(h.port.start).not.toHaveBeenCalled();
+});
 it("hide while a read is pending exact-cancels and late text cannot reopen a context", async () => {
   await start();
   active = false;
@@ -338,6 +477,29 @@ it("captured old prepare cannot revive a retired scope after selection changes",
   oldPrepare();
   await flush();
   expect(h.port.capabilities).not.toHaveBeenCalled();
+});
+it("a retired prepare callback cannot write a stale warning into a valid successor scope", async () => {
+  choose();
+  const oldPrepare = nodes().find(
+    (node) => node.type === "button" && node.props.children === S.prepare,
+  )!.props.onClick as Function;
+  query = "current query";
+  render();
+  oldPrepare();
+  await flush();
+  expect(
+    nodes().some(
+      (node) => node.props.role === "alert" && node.props.children === S.stale,
+    ),
+  ).toBe(false);
+  expect(h.port.capabilities).not.toHaveBeenCalled();
+  click(S.prepare);
+  await flush();
+  expect(h.port.capabilities).toHaveBeenCalledExactlyOnceWith({
+    agentId: "fixture",
+    rowIds: ["saved-1"],
+  });
+  expect(h.port.start).not.toHaveBeenCalled();
 });
 it("captured old dismiss cannot release a successor's finished result", async () => {
   await start();

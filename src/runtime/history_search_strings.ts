@@ -18,6 +18,7 @@ export const HISTORY_SEARCH_STRINGS = {
   noCandidates: "当前范围没有可选择的历史对话。",
   prepare: "检查读取方式",
   preparing: "正在检查读取方式…",
+  clearInvalidSelection: "移除失效的选择",
   unsupported: "当前 Agent 尚未提供可用的历史读取方式。",
   start: "开始查找",
   reading: "正在读取所选历史…",

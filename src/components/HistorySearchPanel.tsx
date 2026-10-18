@@ -57,6 +57,7 @@ export function HistorySearchPanel({
   const live = useRef({ active, rows, agentOwners, query, scopeKey });
   live.current = { active, rows, agentOwners, query, scopeKey };
   const mounted = useRef(false);
+  const selectionFieldset = useRef<HTMLFieldSetElement>(null);
   const activeOwner = useRef<HistorySearchOwner | null>(null);
   const chosenIds = [...selected];
   const selectionKey = JSON.stringify(chosenIds);
@@ -70,6 +71,12 @@ export function HistorySearchPanel({
   )
     capturedRows.current = { key: selectionKey, rows: selectedRows };
   const captured = capturedRows.current.rows;
+  const selectionAvailable = captured.every(
+    (row) =>
+      row?.nativeSessionId &&
+      !snapshot.threads.has(row.id) &&
+      rows.some((candidate) => candidate.key === row.id),
+  );
   const agentOwner = agentOwners?.get(agentId);
   const owner = useMemo((): HistorySearchOwner => {
     let retired = false;
@@ -88,7 +95,7 @@ export function HistorySearchPanel({
           current.agentOwners?.get(agentId) === agentOwner &&
           captured.every(
             (row) =>
-              row &&
+              row?.nativeSessionId &&
               state.index.find((r) => r.id === row.id) === row &&
               !state.threads.has(row.id) &&
               current.rows.some((r) => r.key === row.id),
@@ -99,7 +106,16 @@ export function HistorySearchPanel({
     };
     return authority;
     // Equal values after any view/scope/program change must receive a new owner.
-  }, [agentId, agentOwner, selectionKey, scopeKey, query, active, captured]);
+  }, [
+    agentId,
+    agentOwner,
+    selectionKey,
+    scopeKey,
+    query,
+    active,
+    captured,
+    selectionAvailable,
+  ]);
   activeOwner.current = owner;
   useEffect(() => {
     mounted.current = true;
@@ -173,6 +189,33 @@ export function HistorySearchPanel({
     setAgentId(id);
     setSelected(new Set());
     setPreview(null);
+  };
+  const clearInvalidSelection = (event: {
+    currentTarget: HTMLButtonElement;
+  }) => {
+    if (
+      !mounted.current ||
+      activeOwner.current !== owner ||
+      !live.current.active ||
+      controller.get(agentId).flight
+    )
+      return;
+    const current = threads.getSnapshot();
+    const remaining = chosenIds.filter((id) => {
+      const row = current.index.find((candidate) => candidate.id === id);
+      return (
+        row?.nativeSessionId &&
+        !current.threads.has(id) &&
+        live.current.rows.some((candidate) => candidate.key === id)
+      );
+    });
+    if (remaining.length === chosenIds.length) return;
+    const fieldset = selectionFieldset.current;
+    if (fieldset?.ownerDocument.activeElement === event.currentTarget)
+      fieldset.focus();
+    controller.retire(owner);
+    setSelected(new Set(remaining));
+    setError(null);
   };
   const choosePreview = (hit: HistorySearchHit) => {
     if (
@@ -257,7 +300,11 @@ export function HistorySearchPanel({
         </select>
       </label>
       {agentId && (
-        <fieldset disabled={Boolean(flight)}>
+        <fieldset
+          ref={selectionFieldset}
+          tabIndex={-1}
+          disabled={Boolean(flight)}
+        >
           <legend>
             {S.chooseConversations} · {S.selected(selected.size)}
           </legend>
@@ -304,6 +351,16 @@ export function HistorySearchPanel({
             type="button"
             disabled={!active || !agentId || !selected.size || view.preparing}
             onClick={() => {
+              if (
+                !mounted.current ||
+                activeOwner.current !== owner ||
+                !live.current.active
+              )
+                return;
+              if (!owner.current()) {
+                setError(S.stale);
+                return;
+              }
               setError(null);
               void controller.prepare(owner, chosenIds);
             }}
@@ -322,6 +379,16 @@ export function HistorySearchPanel({
           >
             {S.start}
           </button>
+          {!selectionAvailable && (
+            <button
+              className="btn btn-ghost"
+              type="button"
+              disabled={!active}
+              onClick={clearInvalidSelection}
+            >
+              {S.clearInvalidSelection}
+            </button>
+          )}
           {query && !validHistoryQuery(query) && <p>{S.queryInvalid}</p>}
         </div>
       )}
@@ -403,7 +470,9 @@ export function HistorySearchPanel({
           )}
         </>
       )}
-      {error && <p role="alert">{error}</p>}
+      {(!selectionAvailable || error) && (
+        <p role="alert">{!selectionAvailable ? S.stale : error}</p>
+      )}
       {active && previewCurrent && (
         <WorkspaceDialog title={S.preview} onClose={() => setPreview(null)}>
           <p>{S.previewScope}</p>
