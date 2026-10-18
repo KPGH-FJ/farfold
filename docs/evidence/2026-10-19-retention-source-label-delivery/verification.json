@@ -1,0 +1,448 @@
+{
+  "kind": "RetentionAndDocumentSourceLabelDeliveryEvidenceWithExplicitScopes",
+  "date": "2026-10-19",
+  "scope": "Three common-code increments, actual seven checks, candidate/install checks, and one selected installed two-DOCX request. Not a second plan or whole-product acceptance.",
+  "source": {
+    "commit": "497b0f98aa960c19c31a76dac8adf00c83d86ab6",
+    "semanticReviewScope": "Three changed production surfaces and necessary regressions, not all-repository semantic review.",
+    "frozenInputs": 19199,
+    "protectedPreexistingUnstagedPreserved": true,
+    "sourceReviewPrecedesCandidateAndInstall": true
+  },
+  "controlled": {
+    "notificationRetention": {
+      "newCases": 12,
+      "affectedFiles": 9,
+      "affectedCases": 133,
+      "behavior": "Revision entries retained only for active keys; scalar fallback covers render-subscribe gaps; reference-counted/idempotent cleanup keeps current listeners.",
+      "originalSemanticRedPreserved": true
+    },
+    "permissionRevisionLifetime": {
+      "newCases": 12,
+      "affectedFiles": 33,
+      "affectedCases": 455,
+      "behavior": "Retire removed-key counters, carry maximum counters when changing keys, and retain owner checks against late replies and numeric counter collision.",
+      "originalSemanticRedPreserved": true
+    },
+    "twoMapsScope": "Logical lifetime/object-retention fixes and controlled count assertions, not measured RSS savings, peak memory or complete ARCH-49. No event-drop/backpressure policy added.",
+    "documentSourceLabel": {
+      "newCases": 3,
+      "affectedFiles": 13,
+      "affectedCases": 162,
+      "semanticRed": {
+        "chunk": "7890cf",
+        "session": null,
+        "naturalExit": 1,
+        "passed": 4,
+        "failed": 3,
+        "receiptSha256": "38f947c82e2dabf5c83d4bc141910f88d74cd70e45b1664672539ba903864b1d"
+      },
+      "green": {
+        "chunk": "ec2976",
+        "session": null,
+        "naturalExit": 0,
+        "files": 13,
+        "passed": 162,
+        "rawSha256": "bdcd079fb43da296d294b64ca6974e8001e676af6aa4a58440006acca48de900"
+      },
+      "behavior": "Only an authority-verified local document emits adjacent independent JSON filename Text then exact approved body Text. Ordinary/historical resources remain unchanged.",
+      "sameBodyDifferentNamesAndOrderControls": true,
+      "quotedFilenameControlsAndUriNegativeChecks": true,
+      "bodyHashUtf8BytesQueueLocalSearchStructureUnchanged": true,
+      "noUriPathOrAuthorityOnApprovedWire": true,
+      "bodyLimitUtf8Bytes": 262144,
+      "filenameExistingCodeUnitLimit": 4096,
+      "labelTextWorstCaseUtf8Bytes": 24591,
+      "serializedTextBlockConservativeTestBoundBytes": 28730,
+      "budgetScope": "Filename metadata is separate from exact body hash/utf8Bytes. No new attachment-count or aggregate prompt policy. Formatter controls do not grant filesystem authority. JSON quoting is not model-injection protection."
+    },
+    "overlappingGroupsNotSummed": true
+  },
+  "engineering": {
+    "checksPassed": 7,
+    "checksTotal": 7,
+    "actualExitCode": 0,
+    "inputCount": 19200,
+    "beforeAfterExact": true,
+    "frontendFiles": 596,
+    "frontendPassed": 7956,
+    "rustPassed": 1823,
+    "rustIgnored": 6,
+    "actualExecution": {
+      "sessionId": 83326,
+      "chunks": ["988b8c", "7c1e24", "2acc83", "b18baf", "2426c9", "662a7f"],
+      "exitCode": 0
+    },
+    "scope": "Execution and frozen input scope at the source checkpoint, before these public documents were added."
+  },
+  "installed": {
+    "application": "/Applications/Farfold.app",
+    "sourceCommit": "497b0f98aa960c19c31a76dac8adf00c83d86ab6",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binaryFileBytesSha256": "2384eddb63ec980635bff522877b9421476f988c9e979bc2692e60e7859ca323",
+    "candidateReviewPassed": 9,
+    "candidateReviewTotal": 9,
+    "installedReviewPassed": 10,
+    "installedReviewTotal": 10,
+    "threeFullManifests": {
+      "counts": [232530, 232530, 232530],
+      "strictByteEqual": true,
+      "sha256": "54d72f162661b7d6dfc3c94450d95d43f0f6507a9e3ede909259118e52f54a1e"
+    },
+    "duplicateCandidateAppRemoved": true,
+    "archivePreserved": true,
+    "publicSigningNotarizationDistributionOrUpdateAcceptance": false
+  },
+  "formalWindow": {
+    "sourceCommit": "497b0f98aa960c19c31a76dac8adf00c83d86ab6",
+    "binaryFileBytesSha256": "2384eddb63ec980635bff522877b9421476f988c9e979bc2692e60e7859ca323",
+    "rootActions": {
+      "prompts": 1,
+      "localReviewedScopeConfirmations": 2,
+      "agentPermissionApprovals": 0,
+      "configChanges": 0,
+      "newConversationClicks": 0,
+      "newAppDataFixtureFiles": 0,
+      "normalSaveExit": 1
+    },
+    "approvedTextUtf8BytesInAttachmentOrder": [1078, 1118],
+    "observed": {
+      "twoNewFilenameLabelsAbsentFromPromptAndShownInCorrectAttachmentOrder": true,
+      "sameBODYParagraphVisibleForBoth": true,
+      "differentNextParagraphVisibleWithCorrectFilename": true,
+      "missingHiddenTextMarkersPreservedInVisibleReply": true,
+      "completedAndNotRunningInThisConversation": true,
+      "unrelatedOrUnknownWorkQuitWarningRetained": true,
+      "replyUsesMarkdownAutolinksAcrossSomeJSONFieldText": true
+    },
+    "uiArtifactCount": 17,
+    "uiArtifactPins": {
+      "output/2026-10-19-retention-source-label-delivery/formal-check/01-startup.ax.txt": "bbe23a22e0070aa3a15ea62564a9ffabc8bd558f5b602670f460a3d64a4bca1e",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/01-startup.jpg": "955789b18a893a9cbc22a3ebb9fdeacb115474fb6415eaaeefda5352906958ae",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/02-loaded.ax.txt": "d91646038f6673190b7df6806d51cdead8e599f35dce1b9969b6a2cf0c02a49a",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/02-loaded.jpg": "cdd5446e18548805047ae94f8f05f120650e3a67e7b48cd5223a68a3884caa2c",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/03-saved-settings.ax.txt": "523220b6bab8ffd6c576f8fb17c9f333d592216d9acae08d23ee7f8e5c52ec64",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/03-saved-settings.jpg": "9880b3655e9a33bdc8f0e39d2225f83189bdda5d10c47c5d741293cde3cbefd2",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/04-review-a.ax.txt": "4b8cc91460be77c0c828e577601593a80e95fec89ed8c3cef8a18c8e6eec5fae",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/04-review-a.jpg": "1c0f91d9cd1804acd748afb7639e0f70979c36202fb4df9877c818ee0b030ebb",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/05-review-b.ax.txt": "b43de50e588685ac96ba897d977507eb052815faad9a5a0400d258ad5779319a",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/05-review-b.jpg": "90098d229713b707b435a8bca48ca9d2a3438a28707685f8f700c848162fe07e",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/06-ready.ax.txt": "86a9b3b16fe4b5da5a1bf3aa0bb91e80c0e4f7f9a1cc912bda4b3903696c6229",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/06-ready.jpg": "16b6f6acd345fdff6681e9e60990545e0273a1c3813bcf24cc7cd1ece562b717",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/07-send-immediate.ax.txt": "0384982be85188aa80fca60852d131182be8a90d250ff9d88db52089a2479ee1",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/08-reply.ax.txt": "46e013ad8495bf9e66acb021eb5c6f31e5c65e70a82d9f9540e031959851c419",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/08-reply.jpg": "9fc8a3dc7289e29db74d5385d39667532afb51be775b03bb4fa38da615420637",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/09-normal-exit-warning.ax.txt": "a26a04f7ee34ff86d40252e1b0098c2d5d4bf1a875bb85c31ec1e717974cabf8",
+      "output/2026-10-19-retention-source-label-delivery/formal-check/09-normal-exit-warning.jpg": "50fe97e65fb53c86de63969c9aee08704ef26f8eb42b67727a0f104f423bd64e"
+    },
+    "scope": "Exactly two owned public DOCX in one request with existing saved Dirac0.5.21 selections; prompt omitted filenames and answer tokens. Each local visible review and partial-content consent preceded sending.",
+    "successEvidence": "Visible reply associates both new filenames, common BODY and distinct next paragraphs/missing-text markers in attachment order; this conversation completed and was not running.",
+    "replyFormat": "Markdown autolinks cross some displayed JSON fields. Raw response bytes were not read, so neither valid nor invalid machine JSON is asserted.",
+    "toolLimits": "One collapsed step was not expanded; no assertion of zero Agent tools or lower-level rereads.",
+    "exit": {
+      "normalSaveExitObserved": true,
+      "postExitAxError": -10005,
+      "unknownWorkWarningPreserved": true,
+      "allHistoricalOrUnknownWorkStoppedProved": false
+    }
+  },
+  "coveredProtocol": {
+    "window": {
+      "startUtc": "2026-10-18T17:35:16.442346+00:00",
+      "endUtc": "2026-10-18T17:38:54.423214+00:00",
+      "startUnixMicroseconds": 1792344916442346,
+      "endUnixMicroseconds": 1792345134423214,
+      "recordClock": "Integer Unix milliseconds truncated in tap.rs; boundary-intersecting milliseconds are separately uncertain."
+    },
+    "files": 1,
+    "strictlyValidatedFiles": 1,
+    "records": 1068,
+    "boundaryUncertainRecords": 0,
+    "coverageIssues": {},
+    "outbound": {
+      "session/prompt": 1,
+      "session/new": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "session/set_config_option": 0,
+      "session/load": 1,
+      "session/list": 0
+    },
+    "inbound": {
+      "session/prompt": 0,
+      "session/new": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "session/set_config_option": 0,
+      "session/load": 0,
+      "session/list": 0
+    },
+    "actualScan": {
+      "session": null,
+      "chunk": "9c9cf4",
+      "naturalExitCode": 0,
+      "executions": 1
+    },
+    "noAgentAttribution": true,
+    "scope": "Fixed method/class counts only in the covered structured-log window. Local content review confirmations are not Agent permission callbacks. No response body, exact IPC payload, all-side-effect or unlogged-traffic proof."
+  },
+  "postUseData": {
+    "status": "comparisonCompletedWithObservedDifferences",
+    "summary": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/safe-summary.json",
+      "sha256": "2c6b8a540911c3c6fe840ff65d03b3dea50557968e31189091421acb00b963a2"
+    },
+    "review": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/review.json",
+      "sha256": "6d2632475343fab311d3aa968e45467560179a3b5f46d733bb149438a0c382ba"
+    },
+    "completion": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/execution-completion.json",
+      "sha256": "a7b2c27b5a3b654aa03854498d51892901910b9ffa3ffa45710f625e757594da"
+    },
+    "capture": {
+      "session": 26243,
+      "chunks": ["b91bce", "39735c"],
+      "naturalExitCode": 0,
+      "scope": "After-useendpoint despite legacy before-phase filenames; no secondfreshfull-before or originalSQL"
+    },
+    "baselineScope": "Reuse completed installed-after endpoint plus fresh raw-three/process-zero points; no new full-before capture or continuous observation claim",
+    "capturePhaseMeaning": "The unchanged helper used before mode after formal use, producing the one after-use capture/backup. Not another fresh pre-use capture or strict equality result.",
+    "actualSealedComparison": {
+      "session": null,
+      "initialChunk": "d97c80",
+      "finalChunk": "d97c80",
+      "naturalExitCode": 0,
+      "invocations": 1,
+      "connections": 2,
+      "allConnectionsClosed": true,
+      "mode": "ro&immutable=1; query_only",
+      "sourceOrFirstRawSqliteOpen": false
+    },
+    "oldWholeComposersExact": {
+      "before": 10,
+      "after": 10,
+      "exact": 10,
+      "unknownFieldSetsAndValuesExact": 10
+    },
+    "wholeRawUnsentExact": false,
+    "wholeParsedUnsentStrictExact": false,
+    "unsentListedTopLevelFieldsExact": {
+      "version": true,
+      "choice": true,
+      "feedback": true,
+      "queues": true,
+      "activity": false,
+      "templateEdits": true
+    },
+    "unsentTopLevelUnknownFieldSetsAndValuesExact": true,
+    "agentSetupWholeRawExact": true,
+    "agentSetupWholeParsedStrictExact": true,
+    "setupRetainedCounts": {
+      "confirmed": 23,
+      "pending": 41,
+      "completed": 23,
+      "progress": 72
+    },
+    "tableStats": {
+      "agents": {
+        "beforeCount": 40,
+        "afterCount": 40,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 39,
+        "changedOldRows": 1,
+        "rowKeySetExact": true
+      },
+      "sessions": {
+        "beforeCount": 138,
+        "afterCount": 138,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 137,
+        "changedOldRows": 1,
+        "rowKeySetExact": true
+      },
+      "settings": {
+        "beforeCount": 54,
+        "afterCount": 54,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 53,
+        "changedOldRows": 1,
+        "rowKeySetExact": true
+      },
+      "dismissed_sessions": {
+        "beforeCount": 173,
+        "afterCount": 173,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 173,
+        "changedOldRows": 0,
+        "rowKeySetExact": true
+      }
+    },
+    "changedColumns": {
+      "agents": {
+        "updated_at": 1
+      },
+      "sessions": {
+        "updated_at": 1
+      },
+      "settings": {
+        "value": 1
+      },
+      "dismissed_sessions": {}
+    },
+    "schemaEqual": true,
+    "rawMainDatabaseBytesAndSignatureExact": true,
+    "normalizedDatabaseBytesExact": false,
+    "wholeManifest": {
+      "beforeCount": 232530,
+      "afterCount": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 7,
+      "wholeEntryExact": 232523,
+      "modifiedBySafeCategory": {
+        "webkit": 4,
+        "metadataRawFile": 2,
+        "otherAppData": 1
+      },
+      "beforeSha256": "54d72f162661b7d6dfc3c94450d95d43f0f6507a9e3ede909259118e52f54a1e",
+      "afterSha256": "159e3ea5752479ad9f00c34a446bdf76ff00446218e74b5eb4475a7e2a8e8a16",
+      "wholeManifestExact": false,
+      "allAddedAndModifiedWriters": "unknown",
+      "knownRootAppDataFixtureAdditions": 0
+    },
+    "writerAttribution": "unknown",
+    "notExempted": [
+      "timestamps",
+      "activity",
+      "WAL/SHM",
+      "normalized bytes",
+      "whole-row differences",
+      "all seven manifest modifications"
+    ],
+    "scopeReviewAuthorAlsoPerformedThisSingleSealedComparison": true,
+    "dataEqualityOrRestoreClaim": false,
+    "officialAgentHistoryOrConfigurationOutsideCapturedRootsCovered": false
+  },
+  "authorshipBoundary": "Document author implemented document labels/tests and prepared capture helpers. Installed UI, build/install and protocol execution use Root sealed receipts. No App/Agent/SQL/raw-response/raw-protocol rerun by this documentation task. Independent source reviews are separately referenced.",
+  "historyPreserved": [
+    {
+      "path": "docs/evidence/2026-10-19-startup-intent-delivery/verification.json",
+      "sha256": "56fcde62c6cb3bd0acf620c2fb83caa915506fb51cf7ed0d00d0df0e75bc0581"
+    }
+  ],
+  "notProven": [
+    "All-format/Agent document delivery or all hidden-content behavior.",
+    "Exact raw response JSON validity or zero Agent tools.",
+    "All historical/unknown work stopped, global no-side-effects or protocol Agent attribution.",
+    "RSS savings, peak memory, long-session resource governance or complete ARCH-49.",
+    "Windows, all151 requirements or29Agents x8criteria; remaining internal development is not relabelled as only external prerequisites."
+  ],
+  "evidence": {
+    "sourceSemanticReview": {
+      "path": "output/2026-10-19-retention-source-label-delivery/source-review.json",
+      "sha256": "827b51292775c826c9a0a192f25c9c05524f97caf75068e95dcd42529e264528"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-19-retention-source-label-delivery/source-freeze.json",
+      "sha256": "a847de6b0721e5a709fdf308d6e6d00d760ea4eb33e767ba65383eebb97e51f5"
+    },
+    "fullSourceReview": {
+      "path": "output/2026-10-19-retention-source-label-delivery/full-source-review.json",
+      "sha256": "4a336bf2d9f407deabc3b668524e960432e0f63f57bc446201c05d3916621990"
+    },
+    "engineering": {
+      "path": "output/2026-10-19-retention-source-label-delivery/engineering/verification.json",
+      "sha256": "9c5a6a5b3a097b47f9162952feb3b89a9cbf1e71384e628e0186940c445988a5"
+    },
+    "engineeringCompletion": {
+      "path": "output/2026-10-19-retention-source-label-delivery/engineering-completion.json",
+      "sha256": "78072956e2e39c179612651202821ce872c97e80933e2a0513b09d863e74f59d"
+    },
+    "notificationControlled": {
+      "path": "output/2026-10-19-notification-retention/verification.json",
+      "sha256": "17292a9db6cd926f25d0fedae33fd5e7ec980f9d78f77e4187a1ebffa827d495"
+    },
+    "notificationIndependentReview": {
+      "path": "output/2026-10-19-notification-retention/independent-source-review.json",
+      "sha256": "0e7a82097226ef061fde44ade6749769a08f52ebae798ade5ffa81e76aca6521"
+    },
+    "permissionRevisionControlled": {
+      "path": "output/2026-10-19-permission-revision-investigation/verification.json",
+      "sha256": "5516927f33404369550921c4ec1171105225256fb988f715a9b39485f32a7f42"
+    },
+    "permissionRevisionIndependentReview": {
+      "path": "output/2026-10-19-permission-revision-investigation/independent-source-review.json",
+      "sha256": "c39c37cadc077eaae3b95c762014ebb4105d96c5517999dc8c3a8ea44a117566"
+    },
+    "documentLabelControlled": {
+      "path": "output/2026-10-19-startup-intent-delivery/document-source-label/completion.json",
+      "sha256": "b3d60c16698d0e0d1d6d7eec6e57422bd59aa22ad029eb9b476cfe0bb35593a4"
+    },
+    "documentLabelIndependentReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/document-source-label/independent-source-review.json",
+      "sha256": "6def83f805027ddaa57ac883c0ee234c57413843fa1f6c085d0ddccc063225ed"
+    },
+    "candidate": {
+      "path": "output/2026-10-19-retention-source-label-delivery/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "f04449790802be9c351aaa328c5ddcb8cb2b34c849ddf1fe1aa6a77fec00ce30"
+    },
+    "candidateIndependentReview": {
+      "path": "output/2026-10-19-retention-source-label-delivery/candidate-preparation/independent/review.json",
+      "sha256": "ba77b7bc59ad02e091aed1b99073c8d1555618da5807800f8760e8f7a67d3cb2"
+    },
+    "installedIndependentReview": {
+      "path": "output/2026-10-19-retention-source-label-delivery/install/installed-independent-review-private.json",
+      "sha256": "72cbf4f23a593f700acff62ad41fd29461805b81a0d99cba33912e5a9c89f437"
+    },
+    "exactCandidateCleanup": {
+      "path": "output/2026-10-19-retention-source-label-delivery/install/candidate-cleanup.json",
+      "sha256": "2259fdb064c6104c9e9cb1529fb168979189d85a133eb598dad887a23acb5f27"
+    },
+    "formalBaselineIntent": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/baseline-intent.json",
+      "sha256": "0b759c5e653ae6d263b7443d0e8165df35ff752c123d87485f9167c0cad867be"
+    },
+    "formalFixtureByteCopies": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-preparation/fixtures.json",
+      "sha256": "37ae66885540df7308ee1f15dac4f7df4c8e3c8c4bc54b386ab62a894526d2d6"
+    },
+    "formalObservation": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/actual-observation.json",
+      "sha256": "69e378c10862f55b73daf512861d7ded6694d52d7da60acf486f32fc6a1ec940"
+    },
+    "formalPostUseCaptureCompletion": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/capture-completion.json",
+      "sha256": "de42d659ec8f096a73ea9d14b752763ae562c39ca7d796211623e9ef2af37c81"
+    },
+    "formalProtocolSummary": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/protocol/summary.json",
+      "sha256": "fdf2955af9ea21d4d6c507e58b21df1bc37fa762d3b6be2e99ee4c59cb0852f9"
+    },
+    "formalProtocolCompletion": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/protocol/completion.json",
+      "sha256": "7a0eded58fdafc33be9e867fd5b5331b75fb595771bb03deefa0cadad1ad7ff5"
+    },
+    "postUseDataSummary": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/safe-summary.json",
+      "sha256": "2c6b8a540911c3c6fe840ff65d03b3dea50557968e31189091421acb00b963a2"
+    },
+    "postUseDataScopeReview": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/review.json",
+      "sha256": "6d2632475343fab311d3aa968e45467560179a3b5f46d733bb149438a0c382ba"
+    },
+    "postUseDataCompletion": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/execution-completion.json",
+      "sha256": "a7b2c27b5a3b654aa03854498d51892901910b9ffa3ffa45710f625e757594da"
+    },
+    "postUseCaptureJoin": {
+      "path": "output/2026-10-19-retention-source-label-delivery/formal-check/after-analysis/capture-join-proof.json",
+      "sha256": "2b6fe0906c1ed0d925feabb1bf66ac20f6f5870712fe4827cf04b35c18eee5c7"
+    }
+  }
+}
