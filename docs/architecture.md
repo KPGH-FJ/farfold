@@ -79,7 +79,7 @@ PNG检查签名、IHDR和有界容器布局；[message_apng_admission.ts](../src
 
 AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts) 使用有界容器、项目关联及序列检查，核已识别的画布、派生图片、辅助图片和样本声明，并沿共用画布、帧数、像素工作量与记录预算计额。容器尺寸不等于AV1位流的最大或中间帧尺寸；未知版本、编码布局及缺少可计额声明的兼容内容保持原支持，明确留为未覆盖，不能据此宣称全部AVIF受同样资源约束。
 
-[message_avif_items.ts](../src/runtime/message_avif_items.ts) 对已解析项目的确定本地`iloc`范围统一核文件或`idat`边界，覆盖普通编码图片、辅助项目及网格，不只在读取网格前检查。核`base_offset`与各段声明，不扫描图片负载；外部数据引用、未知寻址和未给出长度的布局仍未覆盖，范围通过不代表AV1内容有效。
+[message_avif_items.ts](../src/runtime/message_avif_items.ts) 对已解析项目的确定本地`iloc`范围统一核文件或`idat`边界，覆盖普通编码图片、辅助项目及网格，不只在读取网格前检查。核`base_offset`与各段声明，不扫描图片负载；外部数据引用、未知寻址和未给出长度的布局仍未覆盖，范围通过不代表AV1内容有效。 已知`ipma`关联确定后才对实际关联的`ispe`应用画布预算；未关联属性仍核结构、非零尺寸及记录预算，不把无用声明当作实际画布。关联版本或标志未知时无法确认其未使用，保留既有的已知尺寸保守校验。
 
 [message_avif_layers.ts](../src/runtime/message_avif_layers.ts) 解析已识别`a1lx`的空间层声明；按关联画布、声明层数与已有派生使用次数保守计入67,108,864像素工作量政策。空间层不当动画帧，不因`a1op`或`lsel`选择减少计额；该策略不推定解码器实际处理了哪些层。未知保留位保持未覆盖，但不跳过其他已知尺寸或工作量预算。
 
@@ -94,6 +94,8 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_prefix.ts) 核连续前置ID3v2.2/2.3/2.4修订0标签的已知头标志、存储字节范围及v2.4可选尾标记，随后只在声明边界识别音频；标签与对应音频帧或FLAC元数据共享65536条记录预算。未知版本、修订和标志保持未覆盖，不搜索标签内部或尾部同步点；标签内容、嵌入图片、URL、去同步及压缩语义不解码。播放保留原始完整来源，不裁掉标签、不改字节；这仍是选定声明准入，不是标签内容正确、完整播放或解码内存证明。
 
 [message_mp4_audio_admission.ts](../src/runtime/message_mp4_audio_admission.ts) 另核首个`ftyp`的选定经典ISO/M4A容器，只遍历固定层级、有界盒范围及声明表，不读取`mdat`样本负载。对已识别`soun`音轨，以该轨刻度分别核`mdhd`时长与`stts`的样本计数乘间隔，沿600秒策略，64位值用BigInt比较；不取影片或视频时钟，也不把并行音轨、声道倍乘成时长。盒、品牌和时间表条目共享65536记录预算。未知版本/标志/品牌、零或未知时间、时钟不一致、编辑映射及分片保持部分覆盖，独立已知超限仍拒绝；不验证完整编解码内容，不推断去除AAC前导/尾部采样后的准确播放或实际内存。原允许MIME和播放字节保持，未知容器不通过搜索内部同步点猜测格式。
+
+[message_mp4_fragments.ts](../src/runtime/message_mp4_fragments.ts) 对已识别的分片声明另核音轨预算：以已知`tkhd`标识连接`soun`音轨与`mdhd`刻度，沿`trun`、`tfhd`、`trex`的字段存在顺序取采样间隔，同轨的已知片段用BigInt累计到600秒策略。全体盒与显式样本表共用65536记录预算；无逐项列时用采样计数直接相乘，不按巨大计数分配数组或循环。零值、未知字段、轨道或刻度保持部分覆盖，不能遮蔽其他独立已知超限。经典表与分片声明分别核验，不合并以免重复计量；不把片段起始时间间隙、编辑映射、并行轨道或声道推为实际播放时长，不核`mdat`地址或负载、完整编解码有效性或内存。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 

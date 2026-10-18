@@ -34,9 +34,11 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
   const properties: (AvifDimensions | undefined)[] = [undefined];
   const layerProperties = new Map<number, AvifLayers>();
   const associations: AvifBox[] = [];
+  const associatedProperties = new Set<number>();
   const unknownDimensions = new Set<number>();
   let idat: AvifBox | undefined;
   let unknownInfo = false;
+  let unknownAssociations = false;
   const seen = new Set<string>();
   const item = (id: number): Item => {
     rasterRequire(id > 0);
@@ -149,7 +151,10 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
       if (property.kind === "ispe") {
         const cursor = new AvifCursor(context, property);
         if (supported(cursor, [0])) {
-          size = context.dimensions(cursor.uint(4), cursor.uint(4));
+          const width = cursor.uint(4),
+            height = cursor.uint(4);
+          rasterRequire(width > 0 && height > 0);
+          size = { width, height };
           cursor.done();
         } else unknownDimensions.add(properties.length);
       } else if (property.kind === "a1lx") {
@@ -201,6 +206,7 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
     const full = supported(cursor, [0, 1], 1);
     if (!full) {
       unknownInfo = true;
+      unknownAssociations = true;
       continue;
     }
     const count = cursor.uint(4);
@@ -222,6 +228,7 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
         rasterRequire(key < properties.length && (key || !encoded));
         if (!key) continue;
         value.associations.push(key);
+        associatedProperties.add(key);
         const layers = layerProperties.get(key);
         if (layers) {
           rasterRequire(!value.layers);
@@ -236,6 +243,15 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
       }
     }
     cursor.done();
+  }
+  // A property does not describe an image until ipma associates it. Keep the
+  // canvas gate for every known associated size; unused properties still had
+  // their structure and records checked above. Unknown association layouts
+  // cannot establish that a property is unused, so retain their prior gate.
+  for (let key = 1; key < properties.length; key++) {
+    const size = properties[key];
+    if (size && (unknownAssociations || associatedProperties.has(key)))
+      context.dimensions(size.width, size.height);
   }
   // Definite local ranges apply to coded/auxiliary items as well as grids.
   // Unknown addressing keeps its prior coverage; no item payload is decoded.

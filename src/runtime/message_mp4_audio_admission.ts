@@ -6,6 +6,7 @@ import {
   MessageRasterError,
   MessageRasterReader,
 } from "./message_raster_reader";
+import { mp4FragmentBudgets } from "./message_mp4_fragments";
 
 export type MessageMp4AudioAdmission =
   | "notMp4Audio"
@@ -39,13 +40,16 @@ function requireMp4(value: unknown): asserts value {
   if (!value) throw new Mp4AudioError("invalid");
 }
 
-/** This fixed hierarchy only visits container headers and stts entries, not
+/** This fixed hierarchy only visits container headers and timing entries, not
  * mdat/sample payloads or unknown leaf contents. No AVIF semantics are reused. */
 class Mp4AudioContext {
   records = 0;
   uncovered = false;
   audioTracks = 0;
   constructor(readonly reader: MessageRasterReader) {}
+  reject(reason: "invalid" | "audioTooLong" | "audioTooComplex"): never {
+    throw new Mp4AudioError(reason);
+  }
   record(count = 1): void {
     this.records += count;
     if (this.records > MAX_MESSAGE_AUDIO_RECORDS)
@@ -95,13 +99,19 @@ class Mp4AudioContext {
     return this.boxes(box.data, box.end);
   }
   /** Keep unknown full-box layouts uncovered without guessing field offsets. */
-  version(box: Box, supported: readonly number[]): number | null {
+  version(
+    box: Box,
+    supported: readonly number[],
+    allowedFlags = 0,
+  ): number | null {
     requireMp4(box.data + 4 <= box.end);
     const version = this.reader.u8(box.data);
     if (
       !supported.includes(version) ||
-      this.reader.u8(box.data + 1) !== 0 ||
-      this.reader.u16be(box.data + 2) !== 0
+      ((this.reader.u8(box.data + 1) * 65_536 +
+        this.reader.u16be(box.data + 2)) &
+        ~allowedFlags) !==
+        0
     ) {
       this.uncovered = true;
       return null;
@@ -207,8 +217,8 @@ function audioTrack(context: Mp4AudioContext, track: Box): void {
     context.uncovered = true;
 }
 
-/** Selected classic ISO/M4A audio-track declaration admission. Caller first
- * checks canonical Base64 and bytes. Only soun mdhd/stts media clocks count;
+/** Selected ISO/M4A audio-track declaration admission. Caller first checks
+ * canonical Base64 and bytes. Only soun media clocks and sample durations count;
  * tracks/channels are not multiplied into elapsed duration. BigInt comparisons
  * retain 64-bit ticks without rounding. Edits, fragments and unknown timing
  * remain uncovered but cannot hide an independently known over-budget track.
@@ -225,6 +235,7 @@ export function messageMp4AudioAdmission(
     const context = new Mp4AudioContext(reader);
     let fileType: Box | undefined;
     let movie: Box | undefined;
+    const fragments: Box[] = [];
     let mediaData = false;
     for (const box of context.boxes(0, reader.length, true)) {
       if (box.kind === "ftyp") {
@@ -241,13 +252,17 @@ export function messageMp4AudioAdmission(
         if (!knownBrand) context.uncovered = true;
       } else if (box.kind === "moov") movie = unique(movie, box);
       else if (box.kind === "mdat") mediaData = true;
-      else if (box.kind === "moof") context.uncovered = true;
+      else if (box.kind === "moof") {
+        context.uncovered = true;
+        fragments.push(box);
+      }
     }
     if (!fileType || !movie) return "notCovered";
     for (const box of context.children(movie)) {
       if (box.kind === "trak") audioTrack(context, box);
       else if (box.kind === "mvex") context.uncovered = true;
     }
+    if (fragments.length) mp4FragmentBudgets(context, movie, fragments);
     return context.uncovered || !context.audioTracks || !mediaData
       ? "notCovered"
       : "withinBudget";
