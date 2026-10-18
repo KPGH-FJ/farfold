@@ -272,3 +272,62 @@ fn windows_preparation_preserves_unknown_revision_publication_and_expiry_guards(
             .is_empty()
     );
 }
+
+#[test]
+fn windows_preparation_does_not_version_unrelated_names_or_read_their_bodies() {
+    let fixture = Fixture::new(false);
+    fs::write(fixture.path.join("package.json"), "PRIVATE_BODY_NOT_JSON").unwrap();
+    let receipt = fixture
+        .manager
+        .preparation_inspect(
+            &fixture.store,
+            &fixture.location.id,
+            fixture.location.revision,
+            "",
+        )
+        .unwrap();
+    let observed = preparation::collect_with(&fixture.saved(), "", || {
+        fs::write(
+            fixture.path.join("UNRELATED_PRIVATE_NAME.txt"),
+            "UNRELATED_PRIVATE_BODY",
+        )
+        .unwrap();
+    })
+    .unwrap();
+    assert_eq!(observed.facts.len(), 22);
+    let wire = serde_json::to_string(&receipt).unwrap();
+    for absent in [
+        "PRIVATE_BODY_NOT_JSON",
+        "UNRELATED_PRIVATE_NAME",
+        "UNRELATED_PRIVATE_BODY",
+    ] {
+        assert!(!wire.contains(absent));
+    }
+    assert!(
+        fixture
+            .manager
+            .preparation_validate(&fixture.store, &receipt.inspection_id)
+            .unwrap()
+            .valid
+    );
+    fs::write(
+        fixture.path.join("UNRELATED_PRIVATE_NAME.txt"),
+        "changed-unrelated-body",
+    )
+    .unwrap();
+    assert!(
+        fixture
+            .manager
+            .preparation_validate(&fixture.store, &receipt.inspection_id)
+            .unwrap()
+            .valid
+    );
+    fs::remove_file(fixture.path.join("UNRELATED_PRIVATE_NAME.txt")).unwrap();
+    assert!(
+        fixture
+            .manager
+            .preparation_validate(&fixture.store, &receipt.inspection_id)
+            .unwrap()
+            .valid
+    );
+}

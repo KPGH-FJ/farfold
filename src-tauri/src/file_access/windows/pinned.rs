@@ -1,12 +1,17 @@
 //! Opt-in local namespace pins. Existing delivery/browser sharing is unchanged.
 use super::*;
-use std::path::PathBuf;
+use std::{
+    path::PathBuf,
+    sync::{Mutex, MutexGuard},
+};
 use windows_sys::Win32::System::WindowsProgramming::{
     DRIVE_CDROM, DRIVE_FIXED, DRIVE_RAMDISK, DRIVE_REMOVABLE,
 };
 
 pub(crate) struct PinnedPath {
     files: Vec<File>,
+    // This owner has one FileObject cursor. All directory queries use this lock.
+    directory_scan: Mutex<()>,
     identities: Vec<Identity>,
     pub path: String,
     pub guid_path: PathBuf,
@@ -151,11 +156,19 @@ impl PinnedPath {
             .map(|f| stamp(f).map(|s| s.identity))
             .collect::<io::Result<_>>()?;
         Ok(Self {
+            directory_scan: Mutex::new(()),
             files,
             identities,
             path,
             guid_path,
         })
+    }
+    // Keep the guard for the complete restart-to-EOF scan. PinnedPath is not
+    // Clone; any future aliasing FileObject constructor must share this owner.
+    pub(super) fn directory_scan(&self) -> io::Result<MutexGuard<'_, ()>> {
+        self.directory_scan
+            .lock()
+            .map_err(|_| io::Error::other("directory scan owner poisoned"))
     }
     pub(crate) fn file(&self) -> &File {
         self.files.last().expect("pinned leaf")

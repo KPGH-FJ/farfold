@@ -26,6 +26,22 @@ pub(crate) struct EntryMetadata {
     changed: i64,
 }
 
+impl EntryMetadata {
+    pub(crate) fn matches_directory_entry(
+        &self,
+        listed: &crate::file_access::DirectoryObservation,
+    ) -> bool {
+        self.identity == listed.identity
+            && self.attributes == listed.attributes
+            && self.reparse_tag == listed.reparse_tag.unwrap_or(0)
+            && self.size == listed.size
+            && self.allocation_size == listed.allocation_size
+            && self.created == listed.created
+            && self.modified == listed.modified
+            && self.changed == listed.changed
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct MetadataFailure {
     phase: &'static str,

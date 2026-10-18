@@ -31,6 +31,8 @@ use windows_sys::{
         System::IO::IO_STATUS_BLOCK,
     },
 };
+mod directory;
+pub(crate) use directory::entries as directory_entries;
 mod metadata;
 pub(crate) use metadata::{EntryMetadata, MetadataFailure, MetadataKind, metadata_child};
 mod pinned;
