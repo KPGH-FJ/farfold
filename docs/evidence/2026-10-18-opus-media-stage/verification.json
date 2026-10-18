@@ -1,0 +1,301 @@
+{
+  "kind": "SelectedP13OpusIntervalAndFlacConsumerDiagnosticStage",
+  "atUtc": "2026-10-18T05:08:53.263229+00:00",
+  "sourceCommit": "48bebaec8fd975b26a5c43e5be23809f743fd8c9",
+  "result": "boundedStageImplementedControlledVerifiedAndStaticallyInstalled",
+  "authority": {
+    "onlyActivePlan": "plans/agent-access.md",
+    "firstReleaseAgents": 29,
+    "standardsEach": 8,
+    "originalRequirements": 151,
+    "unchanged": true
+  },
+  "implemented": {
+    "ogg": "Single existing Ogg scan extended to selected version1/family0 mono/stereo Opus. Two ordered header packets, fixed48000 clock independent of input-rate metadata, conservative subtraction of all preSkip before known continuous audio-page interval >600s rejects. NonEOS anchor/monotone EOS terminal and late-contradiction revocation retained; no stream/channel addition. Same65536 page/lace/prefix records, original MIME/data preserved.",
+    "resourceBoundary": "Not total duration, CRC/Tags/audio packet/codec validation, decoder/transport allocation or all Ogg mapping coverage. Non-excess remains partial. No new MIME or Farfold dependency; no upstream patch."
+  },
+  "completeControls": {
+    "codecTools": "Investigation-only official libopus1.5.2/libopusenc0.2.1/opusfile0.12 matched exact official SHA256SUMS; reused pinned libogg1.3.5. Official public API encoding plus separate full op_read_float consumer.",
+    "short": {
+      "bytes": 7244,
+      "inputRateInformational": 16000,
+      "outputRate": 48000,
+      "channels": 1,
+      "completeDecodedFrames": 96000,
+      "decodedSeconds": 2,
+      "preSkip": 312
+    },
+    "long": {
+      "bytes": 1908460,
+      "inputRateInformational": 16000,
+      "outputRate": 48000,
+      "channels": 1,
+      "completeDecodedFrames": 29280000,
+      "decodedSeconds": 610,
+      "preSkip": 312,
+      "firstNonEosAudioGp": 48000,
+      "eosGp": 29280312,
+      "conservativeKnownIntervalSeconds": 609
+    },
+    "sourceBytesUnmodified": true,
+    "sameVendorCompleteRoundtripNotConformance": true,
+    "allPagesIndependentlyCrcChecked": true
+  },
+  "affectedChecks": {
+    "originalSharedCases": {
+      "beforePassed": 2,
+      "beforeSemanticFailed": 2,
+      "afterPassed": 4,
+      "sameAssertions": true
+    },
+    "focusedFiles": 3,
+    "focusedPassed": 119,
+    "newOpusTests": 42,
+    "sharedAudioFiles": 10,
+    "sharedAudioPassed": 384,
+    "rootOriginalAndSharedActualExit": 0,
+    "rootOriginalAndSharedFinalChunk": "e930b0"
+  },
+  "controlledBrowser": {
+    "opus": {
+      "engines": ["Chrome", "WebKit"],
+      "casesEach": 3,
+      "assertionsPassedEach": 24,
+      "stableInputsEach": 282,
+      "short": "Exact original2s source, explicit muted initial clock advances; production collapse pause/remove-src/load, reset clock0 observed>=350ms.",
+      "long": "Exact610s source under existingaudio/ogg andaudio/wav rejected before/after expansion; noaudio/src/decoder delivery.",
+      "scope": "Controlled actual shared MessageContent/MessageAttachmentMedia only; no formalApp UI, audible/full/accurate playback or decoder-memory proof."
+    },
+    "flacDiagnostics": {
+      "newLegalPaddingLengths": [0, 1, 8, 32, 128, 512],
+      "nativeEachDecodedFrames": 800,
+      "nativeEachDecodedSeconds": 0.1,
+      "sameOriginalStreaminfoFrameAndPcm": true,
+      "webkitRealError4Failures": 4,
+      "webkitInitialClockSuccesses": 2,
+      "productionBridge": {
+        "negativePadding": 32,
+        "negativeStillRealError4": true,
+        "positivePadding": 128,
+        "diagnosticAssertionsPassed": 17,
+        "stableInputs": 270,
+        "positiveInitialMutedClockSeconds": 0.0409543,
+        "afterCollapseObservationMilliseconds": 374,
+        "failedSourceClearedAndRetryVisible": true,
+        "retryClickTestedThisStage": false
+      },
+      "positiveBrowserMetadataSeconds": 0.512,
+      "metadataDifferenceUnresolved": true,
+      "noGeneralThresholdOrRootCauseOrProductPaddingFixEstablished": true,
+      "original55BAndPrior4096PaddingNotRerun": true
+    },
+    "noExternalRequests": true,
+    "allOwnedResourcesClosed": true
+  },
+  "engineering": {
+    "run": 1,
+    "commandsPassed": 7,
+    "stableInputs": 19148,
+    "frontendFiles": 585,
+    "frontendPassed": 7801,
+    "rustPassed": 1787,
+    "rustIgnored": 6,
+    "naturalExit": 0,
+    "actualSession": 41755,
+    "actualFinalChunk": "6d8172"
+  },
+  "formalApplication": {
+    "location": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "48bebaec8fd975b26a5c43e5be23809f743fd8c9",
+    "binarySha256": "423929a1cc65542ef785b108baf79e33913fdc8d1a73c3294e8612e5f94742e3",
+    "strictAdHocSignature": true,
+    "candidateChecks": 9,
+    "installedIndependentChecks": 10,
+    "installed": true,
+    "appLaunchedThisStage": false,
+    "realAgentOrFormalMediaUiValidated": false,
+    "fiveIndividualNewInodeReplacements": true,
+    "wholeBundleAtomicityClaimed": false,
+    "duplicateCandidateRemoved": true
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-opus-media-stage/install/install-data-before.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-opus-media-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-opus-media-stage/install/install-data-after.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Fresh selected three-root captured manifest bytes only; point closed observations, normalQuitEvidence:null. Source and first capture preserved; SQL only second working/new consolidated backup. No waiver of historical strict differences or claim of all live-user-data equality/continuous absence."
+  },
+  "archive": {
+    "path": "src-tauri/target/internal-candidate/2026-10-18-opus-media-stage-48bebaec/Farfold-0.1.7-48bebaec.zip",
+    "sha256": "062ff746304bb898fbd1a0fc706e746795ee2d57a84b6600e25a5480e5c5c60e",
+    "bytes": 15490799
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-18-opus-media-stage/conditions/condition-delta.json",
+      "sha256": "a67caf7bbfe0307607a7c489f6fa1b0a31d0b3ad933d15bcdacbc22e40be5045"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/design/design-review.json",
+      "sha256": "b7e493ad3d86a5ba1e70b81f1ee3a3fa571238858fad4d4320eb7336da073523"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/design/header-and-preskip-addendum.json",
+      "sha256": "d3160a51f4708fba8899630920fbd40579a74244940270772ec438b749bbe205"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/controls.json",
+      "sha256": "7f815af97fe483d462dfe7bc13ec7f2850e6e7df14d6a1d11f4137cc8f905c34"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/opus-page-observations.json",
+      "sha256": "9266f32474fb80b463b138ee228e65638ce01b872199506746e7d262d5eef888"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/direct-tool-inputs.json",
+      "sha256": "d1083e34b9f2a4f8d17c3bcddb4defa2daa47935023085cf322306c5ac4fe724"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/complete-source-archive-verification.json",
+      "sha256": "9b3bcc76a9d4d803ffa301bdde15a90b1059d264c96b6fa56acc78f4e1816d47"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/original-failure-seal.json",
+      "sha256": "97046ee621274e27510e3a911c654ba3df0144600d834ef7778770c5f575f9e2"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/affected-verification.json",
+      "sha256": "61e3aa2c39110951703e03ca0bb0d949df379f2733b41cf8ebbb65332aac0960"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/source-controls-copy.json",
+      "sha256": "b9649c9c1c9c46461812f926af894b10683b9ec0241ee78e17cd7003c8a59e4d"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/source-freeze.json",
+      "sha256": "d1ed52fc3baeaaff19a089338237bee0f71a228c94845f24e956d80f150cbde3"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/independent/source-review.json",
+      "sha256": "f7ee5d52b0ac42d7df224323561cb8a3235d2b939b23b7453981698fe2e04007"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/source-review.json",
+      "sha256": "06abe621742b095d3fbab4359205d95afd6859d1d26fd129b4920a0cfaada52b"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/engineering/run1/verification.json",
+      "sha256": "04a0a3a6cfd6d0dd2326affc86bb72322c29290fbda3ca8dc2ab28eacc0529dd"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/source-checkpoint.json",
+      "sha256": "a52a775e0b5cf5790457a81ebffccf066f2600a594767dbf6f282c9c495f9429"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/opus/final-browser/execution-completion.json",
+      "sha256": "563bea721cd0f267c5ba650d728c07103c1552fc491c9dab246706982d726477"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/flac-probe/native-preflight.json",
+      "sha256": "d0717572039cc2bfba7124d9318e21a0a731ed92ba3facb88bd0ffb98e930bc4"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/flac-probe/execution-completion.json",
+      "sha256": "be0535a64e438ddc167cd4930c8018c01e945d851e02e1f5f1f838603e1c003c"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/flac-probe/production-bridge/execution-completion.json",
+      "sha256": "bdabf04ed54f6132c8be60f768ee60089e70f82358974aadf7973c53b035b6fe"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/preparation-index.json",
+      "sha256": "d5e4b88ddac006f2c169900eb875f41ac4d156f4c244c4206edee7ad246a4f37"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/preparation-static-validation.json",
+      "sha256": "2e5cdb7b0e5c61568d25c2d531e0c7e6e129e953381a616a08a3b18ed21d8161"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "20807d2f7bf10d1015b5ae7219af5d0019f4408afae4bc561230811d32ebd8cb"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/candidate-execution-completion.json",
+      "sha256": "d73b6b4d0e84737c390a8d8082fc66c35c272af1797f05a83d74b9ad4c15e619"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/independent/review.json",
+      "sha256": "d51b254a8a43ef24e946b06a379bd33a6370b529f7466e0e997a5625600b3121"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/candidate-preparation/independent/binding-snapshots/stage-scope-label.json",
+      "sha256": "0c269ff10ef375b74b3a37c8da1d3b9a8b0836c9f70f97bc0b29eef3a8ff3db6"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/retention-before-receipt.json",
+      "sha256": "8e528da8065c533622d7e60bf1e68062c007bdd4bd7434fede5827c0c55a92bb"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/retention-preinstall-receipt.json",
+      "sha256": "4495056b180b5a4cd0e03d9a7ae47d2fbd2390b9101d8e07ccd3a8503bb30ff5"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/retention-after-receipt.json",
+      "sha256": "b73688842aa3a899c890e72d5d8ea4b5e5180031727c4dc9e747ca960d951464"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/root-install-execution.json",
+      "sha256": "01a442ebd42bb5191c19ef342dfa45c222c2798d911f43d8862d9f2a51a15c46"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/install-result.json",
+      "sha256": "c713748f64e1e32a0da5ebe1e76e8ab0b146146577f527bfd7a6576b70456ec2"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/installed-independent-review-private.json",
+      "sha256": "7bb2265aa7396f770b2e9784fd128a9cd9e76dd1d5bfa2996e59ce2610894e80"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/installed-ten-execution-completion.json",
+      "sha256": "0ed7d193874db43016b22b60bea50c9edd6bcfb67960d6bd5d08ee2cffdaefcd"
+    },
+    {
+      "path": "output/2026-10-18-opus-media-stage/install/candidate-cleanup.json",
+      "sha256": "d1ebbc783ea5baf14275e1decc0895239aa1154a39a3ddc8c820757796061a83"
+    }
+  ],
+  "originalFailuresAndCorrections": [
+    "Initial urllib bodies shorter than Content-Length, SHA mismatch/gzipEOF retained; strict curl new exclusive paths at same official URLs then complete archive/SHA verification.",
+    "Python3.9 unsupported tar extraction filter failed before extraction; corrected API with explicit bounded member/path checks, original failure retained.",
+    "Darwin link rejected nested dependency archives; retained originals and assembled fresh flat archives from exact unchanged officially compiled object lists, dependencies explicit in final link.",
+    "Output-only installed-review scope label still named preceding stage; one string corrected with reverse-byte/AST proof before actual10. No algorithm or guard changed."
+  ],
+  "remaining": [
+    "Selected32/11permission inputs unchanged; prior24b eightowned paths explicitly joined as delivered changes. NEW-24affected newreal sends remain paused.",
+    "P18originalsample,NEW29realbusy,P40currentadoption and wavlvalidpair conditions absent; independent work proceeds without repeated unchanged investigations.",
+    "Other Ogg Opus versions/families/layouts, other audio/AVIF resource gaps, actual decoder/transport memory, full animation/playback, formal real messages and fullP13 remain open.",
+    "OldtinyAAC/FLACWebKit failures retained; legal padding extent observations do not establish a monotonic limit or safe payload workaround.",
+    "All29x8/151 acceptance,long-run andWindows actual validation remain open. Historical strictdata differences/unknownwriter/initialization/reopen causes remain unresolved."
+  ],
+  "primary": [
+    "https://www.rfc-editor.org/rfc/rfc7845.html",
+    "https://opus-codec.org/docs/opusfile_api-0.12/group__stream__info.html",
+    "https://downloads.xiph.org/releases/opus/SHA256SUMS.txt",
+    "https://www.rfc-editor.org/rfc/rfc9639.html"
+  ]
+}
