@@ -1,0 +1,277 @@
+{
+  "kind": "SelectedP13OggIntervalAndFailedMediaRetryStage",
+  "atUtc": "2026-10-18T04:38:24.849123+00:00",
+  "sourceCommit": "24b77f2a91172df659ec23aef930a8d27bf5ec86",
+  "result": "boundedStageImplementedControlledVerifiedAndStaticallyInstalled",
+  "authority": {
+    "onlyActivePlan": "plans/agent-access.md",
+    "firstReleaseAgents": 29,
+    "standardsEach": 8,
+    "originalRequirements": 151,
+    "unchanged": true
+  },
+  "implemented": {
+    "ogg": "Selected continuous Vorbis epochs: known completed-audio-page sample interval lower bound >600s rejects; non-EOS anchor, nondecreasing EOS terminal permitted; constant offsets cancel, parallel streams/channels not added. Unknown/contradictory layouts remain partial, never full withinBudget. Pages/lacing/prefix reads share existing65536 records. Original MIME and bytes preserved.",
+    "resourceBoundary": "No decoder, CRC/setup/codebook/packet duration validation, total Ogg playback or decoder/transport memory guarantee. Other codecs/mappings and short boundary intervals remain uncovered."
+  },
+  "completeControls": {
+    "codecTools": "Investigation-only official libogg1.3.5/libvorbis1.3.7 releases matched official SHA256SUMS; no Farfold dependency added or upstream source patched.",
+    "short": {
+      "bytes": 3867,
+      "rate": 8000,
+      "channels": 1,
+      "completeDecodedFrames": 16000,
+      "seconds": 2
+    },
+    "long": {
+      "bytes": 533078,
+      "rate": 8000,
+      "channels": 1,
+      "completeDecodedFrames": 4880000,
+      "seconds": 610,
+      "firstNonEosAudioGp": 63232,
+      "eosGp": 4880000,
+      "knownIntervalSeconds": 602.096,
+      "lastNonEosOnlyIntervalSeconds": 599.488
+    },
+    "sameVendorCompleteEncodeDecodeRoundtrip": true,
+    "allPagesIndependentlyCrcChecked": true,
+    "notArbitraryCodecConformance": true
+  },
+  "affectedChecks": {
+    "originalSharedCases": {
+      "beforePassed": 2,
+      "beforeSemanticFailed": 2,
+      "afterPassed": 4,
+      "sameAssertions": true
+    },
+    "moduleTests": 55,
+    "sharedAudioFiles": 9,
+    "sharedAudioPassed": 332,
+    "newIntegrationCases": 22
+  },
+  "controlledBrowser": {
+    "finalOgg": {
+      "engines": ["Chrome", "WebKit"],
+      "casesEach": 3,
+      "assertionsPassedEach": 24,
+      "stableInputsEach": 272,
+      "short": "Exact2s original source; explicit muted clock advances; collapse pauses, clears source and reloads; reset clock remains0 for>=350ms.",
+      "long": "Same610s original underaudio/ogg andaudio/wav rejected before/after expansion; no audio/source assignment or decoder delivery.",
+      "scope": "Initial muted clock and DOM retirement only; not full/audible/accurate duration playback.",
+      "shortMetadataSeconds": {
+        "nativeFullDecode": 2,
+        "Chrome": 2.032,
+        "WebKit": 2.173625
+      },
+      "metadataDifferenceCauseUnresolved": true
+    },
+    "failedMediaRetry": {
+      "engine": "WebKit",
+      "assertionsPassed": 66,
+      "stableInputs": 143,
+      "knownOldShortFiles": "Original33BAAC/55BFLAC initially and explicitly retried fail withnativeerror4; retained as actual playback failures.",
+      "instanceQuota": "Real shared acquire/release API observes per-flow remaining4,0,1,0,0,1,0,1,4; full quota prevents new source, release does not auto-retry, later explicit retry gets original bytes and new node.",
+      "notMeasured": "32MiB saturation or decoder-memory release"
+    },
+    "noExternalRequests": true,
+    "allOwnedResourcesClosed": true,
+    "R2TypeOnlyChange": "Browser receipts retainR1 freeze. Sole laterNode test-helper annotation has byte-identical emittedJS; other164 frozen paths unchanged, no browser rerun."
+  },
+  "engineering": {
+    "run": 2,
+    "commandsPassed": 7,
+    "stableInputs": 19144,
+    "frontendFiles": 584,
+    "frontendPassed": 7759,
+    "rustPassed": 1787,
+    "rustIgnored": 6,
+    "naturalExit": 0,
+    "actualSession": 38512,
+    "actualFinalChunk": "bd2e6a",
+    "failedRun1Preserved": true
+  },
+  "formalApplication": {
+    "location": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "24b77f2a91172df659ec23aef930a8d27bf5ec86",
+    "binarySha256": "e46e077a342e6d841d3f5a74e19f8dec5bd3f094bedb7d74e6fadfa4368bb63c",
+    "strictAdHocSignature": true,
+    "candidateChecks": 9,
+    "installedIndependentChecks": 10,
+    "installed": true,
+    "appLaunchedThisStage": false,
+    "realAgentOrFormalMediaUiValidated": false,
+    "fiveIndividualNewInodeReplacements": true,
+    "wholeBundleAtomicityClaimed": false,
+    "duplicateCandidateRemoved": true
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-media-continuation-stage/install/install-data-before.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-continuation-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-continuation-stage/install/install-data-after.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Fresh selected three-root captured manifest bytes only; point process absence, normalQuitEvidence:null. Does not waive prior strict differences or establish all live-user-data equality/continuous absence."
+  },
+  "archive": {
+    "path": "src-tauri/target/internal-candidate/2026-10-18-media-continuation-stage-24b77f2a/Farfold-0.1.7-24b77f2a.zip",
+    "sha256": "3e33993244e3e525daea720958fd3c723055102bc3f1d4e2008b6ddda0a821dc",
+    "bytes": 15490600
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-18-media-continuation-stage/conditions/condition-delta.json",
+      "sha256": "7fe8c93fe5d744e3be1daed58d187f76b9559893d66488aa1e95bbce792b0a9e"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/avif/investigation.json",
+      "sha256": "84ba8c6cdeb42cc02688824409ec1930a267195723dd7ea384152f1a7e587acf"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg-design/design-review.json",
+      "sha256": "def41bf7f921512180f77384c7a9af8b5de2273c827c337f0560aa2042ef6032"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg-design/eos-endpoint-addendum.json",
+      "sha256": "ab2abab711f3a11cc9b252eee658ffaffad1d4997cdb8f61583963df6bd0e32b"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/original-failure-seal.json",
+      "sha256": "184e8d6a108da086dc2ea752faa34b6c834a4271671880044f97e54664bcdb25"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/ogg-page-observations.json",
+      "sha256": "c93d6207bc777ba9d5ea94cdeba496325b5f9a43423af9fa28ca33f49efca9ce"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/short-2s.ogg.decode.json",
+      "sha256": "ef6a73062ff086a411ee953e131488b72e3b1cba5f457202569a838606182502"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/long-610s.ogg.decode.json",
+      "sha256": "d5415aea5dacbca8ce5beb3c7daf5e5b9eee60ead8c42809da47c269045fe2e3"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/affected-verification.json",
+      "sha256": "b1815b64207d4edba7c2d2b96833d53d951dc7eacba818208791c4545c7f00e8"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/ogg/source-owner/freeze.json",
+      "sha256": "831c5199c6e6f9812cdc4d0d9b2b479e3b9fbeb62d209013a66dab9a5f0372f9"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/playback/execution-completion.json",
+      "sha256": "6243d77381d0d64fd76ce7c8ac17e17205fd718007c947b6cd8455db7d9c6dae"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/playback/final-browser/execution-completion.json",
+      "sha256": "7f68ef1d8d1c7e90fb2f1c456886b11e06700875bf8f267433b7ba966098cd29"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/test-type-correction/verification.json",
+      "sha256": "46f4157f4d64659a698e3429870507cadf06263b85954a30de66aaeea3632299"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/source-freeze.json",
+      "sha256": "1dcdb821f5873314fe43fce582881ec1852df41a6ec5a33c1d81258b89e13d01"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/source-freeze-r2.json",
+      "sha256": "3bf7d36daed36a7bba663cf6308eb393d49f12e97ea9237f733681e97069bbfa"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/source-independent-review.json",
+      "sha256": "65f9221245768504b3694a84f6a7c003b4405f83d519905ddd441b701d0c960b"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/source-review.json",
+      "sha256": "33513e96f2763fa649f19aa375cca4d1087377b8ac472e66674db2d5a552aed4"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/engineering/run1/verification.json",
+      "sha256": "b5ae3f017a1be0a9db0c82a16f264983526c6c6948335187fb4d79846cc740f2"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/engineering/run2/verification.json",
+      "sha256": "4e6755993f1c527ea22082efd1614b3782f671297ab49d3fee3391eda37a015a"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/engineering/execution-completion.json",
+      "sha256": "83c2860d1b1739a0e95c71722d1145212185160a21b5ad5866a2521b58660fde"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/source-checkpoint.json",
+      "sha256": "109ffed1ccd3c869bfe56d7a8668d48d83a18eb38c6ab16757be40ab07365345"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "1f3235d8a8bdbbe4fdb49b5c74599bc478bba5359239b8d621f5e797db17a244"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/candidate-preparation/independent/review.json",
+      "sha256": "a62c92a511ab2c5dd34ed98ec48c4ed22b96d4e2b1f657591144159167b1b5d7"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/retention-before-receipt.json",
+      "sha256": "6f9d84d7b084d1cedb89795a91174e4f7aacab6ccf9136414198acf58c498d06"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/retention-preinstall-receipt.json",
+      "sha256": "756e4971c592b0f376cd12b4b5738f016e3a470039a8bf626dcb26e90607c6c8"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/retention-after-receipt.json",
+      "sha256": "2bf6f9a7a44f323eedf43a70ba526054621ca47a0b61a10db74d11ed77a27945"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/install-result.json",
+      "sha256": "3973f1bea6fb93c234b767f90b34e7864a1f4a5df6d2552a308d3d14998c0f5c"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/installed-independent-review-private.json",
+      "sha256": "a3cc234be553b1dd064984b1ab3d3096ce52be926ef9914d0811c1a234e9f48e"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/installed-ten-execution-completion.json",
+      "sha256": "64427d5535d49f095c4be43d286b35557787fd3ced5777681732a1b3d9543f2d"
+    },
+    {
+      "path": "output/2026-10-18-media-continuation-stage/install/candidate-cleanup.json",
+      "sha256": "d0b5645d0d72efc973bc8856232451d869f4d67bd4417ff8c9cb950a7b890ab4"
+    }
+  ],
+  "originalFailuresAndCorrections": [
+    "Unmodified oldVorbis configure used obsolete Darwin linker flag and failed; directcc compiled unchanged official source list, no sameconfigure retry.",
+    "Firstmodule55 yielded54pass/1audioTooComplex from unnecessary30byte audio prefix; changed audio only to1, headers30 and common65536 unchanged, same55passed.",
+    "Full7run1 formatpassed/typefailed from NodeBuffer generic inference; explicit test-onlyparameter type fixes it, emittedJS byte-identical; run2all7passed.",
+    "Playback preparation esbuild unavailable; existing TypeScript syntax check used, no dependency added.",
+    "Independent source review pre-seal textshape assertion failed before output; corrected using actual Vitest failureMessages, original red bytes remain sealed."
+  ],
+  "remaining": [
+    "NEW24 initial selected32/11permission inputs unchanged; affected newreal sends remain paused. P13 source changed later inthisstage.",
+    "P18originalsample,NEW29realbusy,P40currentadoption,wavlvalidpair andother media conditions remain missing; no repeated unchanged investigations.",
+    "SelectedAVIF partials need gainmap-aware reconstruction/actual failure controls; no new defect or source change justified thisstage.",
+    "OldWKshortAAC/FLAC failures, fullP13/formal media/realAgent, otherOgg mappings/layouts, all29x8,longrunning andWindows actual validation remain open.",
+    "Historical strict data differences, unknown writer, defaultOpenCode initialization and reopen caller causes remain unresolved."
+  ],
+  "primary": [
+    "https://xiph.org/vorbis/doc/Vorbis_I_spec.html",
+    "https://www.rfc-editor.org/rfc/rfc3533.html",
+    "https://downloads.xiph.org/releases/ogg/SHA256SUMS",
+    "https://downloads.xiph.org/releases/vorbis/SHA256SUMS"
+  ]
+}
