@@ -1,11 +1,15 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { createHash } from "node:crypto";
 import { largeAudioCapture } from "./audio_input.test-support";
+// The exact16MiB correctness cases include full validation and persistence.
+// This local runner allowance is not a product interaction/performance target.
+const CAPACITY_TEST_TIMEOUT_MS = 10_000;
 const h = vi.hoisted(() => ({
   invoke: vi.fn(),
   saved: null as unknown,
   prompts: [] as unknown[],
   reads: 0,
+  saveAttempts: 0,
   response: { status: "accepted" } as { status: string; reason?: string },
   failQueueSave: false,
 }));
@@ -32,12 +36,14 @@ beforeEach(async () => {
   h.saved = null;
   h.prompts = [];
   h.reads = 0;
+  h.saveAttempts = 0;
   h.response = { status: "accepted" };
   h.failQueueSave = false;
   h.invoke.mockReset().mockImplementation(async (cmd, args) => {
     if (cmd === "settings_get") return args.key === "unsentWork.v1" ? null : 0;
     if (cmd === "settings_set") {
       if (args.key === "unsentWork.v1") {
+        h.saveAttempts++;
         if (h.failQueueSave && Object.keys(args.value.queues).length)
           throw Error("controlled write failure");
         h.saved = args.value;
@@ -67,55 +73,71 @@ afterEach(async () => {
   d.draftQueues.write("audio-capacity", [], null);
   await d.draftPersistence.flush();
 });
-it("persists one exact-16MiB independently frozen WAV with matching whole-file SHA", async () => {
-  expect(
-    createHash("sha256").update(Buffer.from(data, "base64")).digest("hex"),
-  ).toBe(capture.file.sha256);
-  d.composerDrafts.update("session:audio-capacity", () => ({
-    text: "keep",
-    attachments: [audio],
-  }));
-  await d.draftPersistence.flush();
-  expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(true);
-  expect(JSON.stringify(h.saved).length).toBeLessThan(32 * 1024 * 1024);
-});
-it("can dispatch the same allowed 16MiB audio when a send-pending composer owns it", async () => {
-  const state = threads.markOpenFailed(
-    "audio-capacity",
-    "chosen",
-    "/chosen",
-    "capacity",
-    "controlled",
-  );
-  state.openError = null;
-  state.workEnabled = true;
-  d.composerDrafts.update(`session:${state.key}`, () => ({
-    text: "keep",
-    attachments: [audio],
-    sendPending: true,
-  }));
-  await d.draftPersistence.flush();
-  const { attachmentPromptBlocks } = await import("./draft_attachments");
-  const blocks = attachmentPromptBlocks("keep", [audio], true);
-  expect(await threads.send(state.key, blocks)).toEqual({ status: "accepted" });
-  expect(h.prompts).toHaveLength(1);
-});
-it("can save the unchanged queue editor for a 16MiB audio while preserving the original queued bytes", async () => {
-  const { attachmentPromptBlocks } = await import("./draft_attachments"),
-    { startQueueEditor } = await import("./queue_edit");
-  const blocks = attachmentPromptBlocks("keep", [audio], true);
-  d.draftQueues.write("audio-capacity", [blocks], null);
-  await d.draftPersistence.flush();
-  startQueueEditor("audio-capacity", 0, blocks);
-  await expect(d.draftPersistence.flush()).resolves.toBeUndefined();
-  expect(
-    d.composerDrafts.read("queue-edit:audio-capacity").attachments[0].data,
-  ).toBe(data);
-  expect(
-    JSON.stringify(d.draftQueues.read("audio-capacity")?.blocks[0]) ===
-      JSON.stringify(blocks),
-  ).toBe(true);
-});
+it(
+  "persists one exact-16MiB independently frozen WAV with matching whole-file SHA",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    expect(
+      createHash("sha256").update(Buffer.from(data, "base64")).digest("hex"),
+    ).toBe(capture.file.sha256);
+    d.composerDrafts.update("session:audio-capacity", () => ({
+      text: "keep",
+      attachments: [audio],
+    }));
+    await d.draftPersistence.flush();
+    expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+      true,
+    );
+    expect(JSON.stringify(h.saved).length).toBeLessThan(32 * 1024 * 1024);
+  },
+);
+it(
+  "can dispatch the same allowed 16MiB audio when a send-pending composer owns it",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    const state = threads.markOpenFailed(
+      "audio-capacity",
+      "chosen",
+      "/chosen",
+      "capacity",
+      "controlled",
+    );
+    state.openError = null;
+    state.workEnabled = true;
+    d.composerDrafts.update(`session:${state.key}`, () => ({
+      text: "keep",
+      attachments: [audio],
+      sendPending: true,
+    }));
+    await d.draftPersistence.flush();
+    const { attachmentPromptBlocks } = await import("./draft_attachments");
+    const blocks = attachmentPromptBlocks("keep", [audio], true);
+    expect(await threads.send(state.key, blocks)).toEqual({
+      status: "accepted",
+    });
+    expect(h.prompts).toHaveLength(1);
+  },
+);
+it(
+  "can save the unchanged queue editor for a 16MiB audio while preserving the original queued bytes",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    const { attachmentPromptBlocks } = await import("./draft_attachments"),
+      { startQueueEditor } = await import("./queue_edit");
+    const blocks = attachmentPromptBlocks("keep", [audio], true);
+    d.draftQueues.write("audio-capacity", [blocks], null);
+    await d.draftPersistence.flush();
+    startQueueEditor("audio-capacity", 0, blocks);
+    await expect(d.draftPersistence.flush()).resolves.toBeUndefined();
+    expect(
+      d.composerDrafts.read("queue-edit:audio-capacity").attachments[0].data,
+    ).toBe(data);
+    expect(
+      JSON.stringify(d.draftQueues.read("audio-capacity")?.blocks[0]) ===
+        JSON.stringify(blocks),
+    ).toBe(true);
+  },
+);
 
 function state(first = false) {
   const s = threads.markOpenFailed(
@@ -130,13 +152,34 @@ function state(first = false) {
   if (first) s.identity = "draft";
   return s;
 }
-async function prepared(key: string) {
+type CapacityPhase = "prepare" | "save" | "sendFinally" | "recovery";
+function capacityTiming() {
+  const started = performance.now();
+  let previous = started;
+  return (phase: CapacityPhase) => {
+    const now = performance.now();
+    console.info(
+      JSON.stringify({
+        phase,
+        elapsedMs: now - started,
+        stageMs: now - previous,
+        attachmentReadCount: h.reads,
+        saveAttemptCount: h.saveAttempts,
+        promptCount: h.prompts.length,
+      }),
+    );
+    previous = now;
+  };
+}
+async function prepared(key: string, observe?: (phase: CapacityPhase) => void) {
   d.composerDrafts.update(key, () => ({
     text: "keep",
     attachments: [audio],
     sendPending: true,
   }));
+  observe?.("prepare");
   await d.draftPersistence.flush();
+  observe?.("save");
   return (await import("./draft_attachments")).attachmentPromptBlocks(
     "keep",
     [audio],
@@ -145,6 +188,7 @@ async function prepared(key: string) {
 }
 it.each(["accepted", "rejected", "unknown"])(
   "retains the first pending 16MiB input through %s admission with one minimal wire payload",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
   async (status) => {
     const s = state(true),
       blocks = await prepared("new"),
@@ -185,40 +229,54 @@ it.each(["accepted", "rejected", "unknown"])(
     expect(JSON.stringify(h.saved).length).toBeLessThan(32 * 1024 * 1024);
   },
 );
-it("resend transfers a large input through the same saved queue without leaking local metadata", async () => {
-  const s = state(),
-    blocks = await prepared("resend:audio-capacity"),
-    original = d.composerDrafts.read("resend:audio-capacity");
-  expect(await threads.send(s.key, blocks)).toEqual({ status: "accepted" });
-  d.composerDrafts.clearIfUnchanged("resend:audio-capacity", original);
-  await d.draftPersistence.flush();
-  expect(h.prompts).toHaveLength(1);
-  expect(d.composerDrafts.hasContent("resend:audio-capacity")).toBe(false);
-});
-it("failed queue snapshot preserves the previously saved original draft and exact in-memory source with zero prompt calls", async () => {
-  const s = state(),
-    blocks = await prepared("session:audio-capacity"),
-    saved = h.saved;
-  h.failQueueSave = true;
-  expect(await threads.send(s.key, blocks)).toEqual({
-    status: "rejected",
-    reason: "failed",
-  });
-  expect(h.saved).toBe(saved);
-  expect(h.prompts).toHaveLength(0);
-  expect(
-    d.composerDrafts.read("session:audio-capacity").attachments[0].data ===
-      data,
-  ).toBe(true);
-  expect(s.queued[0] === blocks).toBe(true);
-  expect(d.draftPersistence.snapshot().error).toBeTruthy();
-  h.failQueueSave = false;
-  await d.draftPersistence.flush();
-  expect(h.prompts).toHaveLength(0);
-  expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(true);
-});
+it(
+  "resend transfers a large input through the same saved queue without leaking local metadata",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    const s = state(),
+      blocks = await prepared("resend:audio-capacity"),
+      original = d.composerDrafts.read("resend:audio-capacity");
+    expect(await threads.send(s.key, blocks)).toEqual({ status: "accepted" });
+    d.composerDrafts.clearIfUnchanged("resend:audio-capacity", original);
+    await d.draftPersistence.flush();
+    expect(h.prompts).toHaveLength(1);
+    expect(d.composerDrafts.hasContent("resend:audio-capacity")).toBe(false);
+  },
+);
+it(
+  "failed queue snapshot preserves the previously saved original draft and exact in-memory source with zero prompt calls",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
+  async () => {
+    const observe = capacityTiming();
+    const s = state(),
+      blocks = await prepared("session:audio-capacity", observe),
+      saved = h.saved;
+    h.failQueueSave = true;
+    expect(await threads.send(s.key, blocks)).toEqual({
+      status: "rejected",
+      reason: "failed",
+    });
+    observe("sendFinally");
+    expect(h.saved).toBe(saved);
+    expect(h.prompts).toHaveLength(0);
+    expect(
+      d.composerDrafts.read("session:audio-capacity").attachments[0].data ===
+        data,
+    ).toBe(true);
+    expect(s.queued[0] === blocks).toBe(true);
+    expect(d.draftPersistence.snapshot().error).toBeTruthy();
+    h.failQueueSave = false;
+    await d.draftPersistence.flush();
+    observe("recovery");
+    expect(h.prompts).toHaveLength(0);
+    expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+      true,
+    );
+  },
+);
 it.each(["cancel", "confirm"])(
   "preserves queued bytes across a saved large-audio editor %s without automatic dispatch",
+  { timeout: CAPACITY_TEST_TIMEOUT_MS },
   async (action) => {
     const s = state(),
       { attachmentPromptBlocks } = await import("./draft_attachments"),
