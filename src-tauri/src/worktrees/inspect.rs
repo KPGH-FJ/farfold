@@ -1,4 +1,4 @@
-use super::{git, types::*};
+use super::{read_context::Reader, types::*};
 use serde::{Deserialize, Serialize};
 use std::{
     fs,
@@ -6,10 +6,43 @@ use std::{
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(transparent)]
+pub(super) struct Stamp(PlatformStamp);
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(untagged)]
+enum PlatformStamp {
+    Unix(UnixStamp),
+    Windows(WindowsStamp),
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
-pub(super) struct Stamp {
+struct UnixStamp {
     dev: u64,
     ino: u64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct WindowsStamp {
+    windows: WindowsIdentity,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct WindowsIdentity {
+    volume: [u8; 8],
+    file_id: [u8; 16],
+}
+#[cfg(windows)]
+pub(super) fn pinned_stamp(pin: &crate::file_access::PinnedPath) -> Result<Stamp> {
+    let id = pin.identity();
+    if id.inode == 0 {
+        return Err(error("unsafePath"));
+    }
+    Ok(Stamp(PlatformStamp::Windows(WindowsStamp {
+        windows: WindowsIdentity {
+            volume: id.device.to_le_bytes(),
+            file_id: id.inode.to_le_bytes(),
+        },
+    })))
 }
 pub(super) fn stamp(path: &Path) -> Result<Stamp> {
     let m = fs::symlink_metadata(path).map_err(|e| {
@@ -25,33 +58,44 @@ pub(super) fn stamp(path: &Path) -> Result<Stamp> {
     #[cfg(unix)]
     {
         use std::os::unix::fs::MetadataExt;
-        Ok(Stamp {
+        Ok(Stamp(PlatformStamp::Unix(UnixStamp {
             dev: m.dev(),
             ino: m.ino(),
-        })
+        })))
     }
-    #[cfg(not(unix))]
+    #[cfg(windows)]
     {
-        Err(error("unsupportedGit"))
+        let pin =
+            crate::file_access::PinnedPath::directory(path).map_err(|_| error("unsafePath"))?;
+        pinned_stamp(&pin)
     }
 }
 pub(super) fn canonical(path: &Path) -> Result<String> {
-    if !path.is_absolute() {
-        return Err(error("unsafePath"));
+    #[cfg(windows)]
+    {
+        crate::file_access::PinnedPath::directory(path)
+            .map(|p| p.path)
+            .map_err(|_| error("unsafePath"))
     }
-    let p = path.canonicalize().map_err(|e| {
-        error(if e.kind() == std::io::ErrorKind::NotFound {
-            "missing"
-        } else {
-            "unavailable"
-        })
-    })?;
-    stamp(&p)?;
-    let s = p
-        .to_str()
-        .filter(|s| s.len() <= 4096)
-        .ok_or(error("unsafePath"))?;
-    Ok(s.into())
+    #[cfg(unix)]
+    {
+        if !path.is_absolute() {
+            return Err(error("unsafePath"));
+        }
+        let p = path.canonicalize().map_err(|e| {
+            error(if e.kind() == std::io::ErrorKind::NotFound {
+                "missing"
+            } else {
+                "unavailable"
+            })
+        })?;
+        stamp(&p)?;
+        let s = p
+            .to_str()
+            .filter(|s| s.len() <= 4096)
+            .ok_or(error("unsafePath"))?;
+        Ok(s.into())
+    }
 }
 pub(super) fn same(path: &str, identity: &Stamp) -> Result<()> {
     if canonical(Path::new(path))? != path || stamp(Path::new(path))? != *identity {
@@ -89,19 +133,55 @@ impl Snapshot {
 }
 fn git_path(root: &Path, value: String) -> Result<String> {
     let path = PathBuf::from(value);
-    canonical(&if path.is_absolute() {
+    let path = if path.is_absolute() {
         path
     } else {
         root.join(path)
-    })
+    };
+    #[cfg(windows)]
+    {
+        crate::file_access::PinnedPath::git_directory(&path)
+            .map(|p| p.path)
+            .map_err(|_| error("unsafePath"))
+    }
+    #[cfg(unix)]
+    {
+        canonical(&path)
+    }
 }
-pub(super) fn trees(root: &Path) -> Result<Vec<Tree>> {
-    let bytes = git::read(root, &["worktree", "list", "--porcelain", "-z"])?;
+fn trees_with_coverage(root: &Path, reader: &Reader) -> Result<(Vec<Tree>, bool)> {
+    let bytes = reader.read(root, &["worktree", "list", "--porcelain", "-z"])?;
     let mut trees = Vec::new();
     let mut current: Option<Tree> = None;
+    let mut prunable = false;
+    let mut unavailable = false;
+    #[cfg(windows)]
+    let mut records = 0usize;
     for field in bytes.split(|b| *b == 0) {
         if field.is_empty() {
             if let Some(t) = current.take() {
+                #[cfg(windows)]
+                {
+                    records += 1;
+                    if records > 256 {
+                        return Err(error("tooLarge"));
+                    }
+                }
+                if cfg!(windows) && prunable {
+                    unavailable = true;
+                    prunable = false;
+                    continue;
+                }
+                #[cfg(windows)]
+                let mut t = t;
+                #[cfg(windows)]
+                match crate::file_access::PinnedPath::git_directory(Path::new(&t.path)) {
+                    Ok(pin) => t.path = pin.path,
+                    Err(_) => {
+                        unavailable = true;
+                        continue;
+                    }
+                }
                 trees.push(t);
             }
             continue;
@@ -122,6 +202,8 @@ pub(super) fn trees(root: &Path) -> Result<Vec<Tree>> {
                 t.branch = Some(branch.into());
             } else if s == "locked" || s.starts_with("locked ") {
                 t.locked = true;
+            } else if s == "prunable" || s.starts_with("prunable ") {
+                prunable = true;
             } else if !(s.starts_with("HEAD ")
                 || s == "detached"
                 || s == "bare"
@@ -137,15 +219,10 @@ pub(super) fn trees(root: &Path) -> Result<Vec<Tree>> {
     if current.is_some() || trees.is_empty() || trees.len() > 256 {
         return Err(error("tooLarge"));
     }
-    Ok(trees)
+    Ok((trees, unavailable))
 }
-fn configured(root: &Path, pattern: &str) -> Result<bool> {
-    let out = git::execute(
-        root,
-        &["config", "--null", "--get-regexp", pattern],
-        &std::sync::atomic::AtomicBool::new(false),
-        std::time::Duration::from_secs(10),
-    )?;
+fn configured(root: &Path, pattern: &str, reader: &Reader) -> Result<bool> {
+    let out = reader.execute(root, &["config", "--null", "--get-regexp", pattern])?;
     // Git returns 1 when no key matched; no values ever leave this module.
     match out.code {
         Some(0) => Ok(!out.bytes.is_empty()),
@@ -153,38 +230,55 @@ fn configured(root: &Path, pattern: &str) -> Result<bool> {
         _ => Err(error("unavailable")),
     }
 }
+pub(super) fn observe(path: &Path) -> Result<(Snapshot, Reader)> {
+    let scope = Reader::open(path)?;
+    let snapshot = collect_snapshot(path, &scope)?;
+    scope.matches(&snapshot)?;
+    Ok((snapshot, scope))
+}
 pub(super) fn snapshot(path: &Path) -> Result<Snapshot> {
+    observe(path).map(|(snapshot, _)| snapshot)
+}
+fn collect_snapshot(path: &Path, reader: &Reader) -> Result<Snapshot> {
     let selected = canonical(path)?;
     let selected = Path::new(&selected);
-    if git::text(selected, &["rev-parse", "--is-bare-repository"])? == "true" {
+    if reader.text(selected, &["rev-parse", "--is-bare-repository"])? == "true" {
         return Err(error("bare"));
     }
     let root = git_path(
         selected,
-        git::text(selected, &["rev-parse", "--show-toplevel"])?,
+        reader.text(selected, &["rev-parse", "--show-toplevel"])?,
     )?;
     let p = Path::new(&root);
     let root_stamp = stamp(p)?;
-    let git_dir = git_path(p, git::text(p, &["rev-parse", "--absolute-git-dir"])?)?;
-    let common_dir = git_path(p, git::text(p, &["rev-parse", "--git-common-dir"])?)?;
+    let git_dir = git_path(p, reader.text(p, &["rev-parse", "--absolute-git-dir"])?)?;
+    let common_dir = git_path(p, reader.text(p, &["rev-parse", "--git-common-dir"])?)?;
     let mut blockers = Vec::new();
-    if configured(p, r"^(extensions\.partialclone|remote\..*\.promisor)$")? {
+    if configured(
+        p,
+        r"^(extensions\.partialclone|remote\..*\.promisor)$",
+        reader,
+    )? {
         blockers.push("partialClone".into());
     }
-    if git::config(p, "core.sparseCheckout", true)?.as_deref() == Some("true") {
+    if reader.config(p, "core.sparseCheckout", true)?.as_deref() == Some("true") {
         blockers.push("sparseCheckout".into());
     }
     // Only inspect object IDs after partial-clone detection; no object-demand command may fetch.
-    let head = git::text(p, &["rev-parse", "--verify", "HEAD"])
+    let head = reader
+        .text(p, &["rev-parse", "--verify", "HEAD"])
         .ok()
         .filter(|s| oid(s));
-    let branch = git::text(p, &["symbolic-ref", "-q", "HEAD"]).ok();
+    let branch = reader.text(p, &["symbolic-ref", "-q", "HEAD"]).ok();
     if head.is_none() {
         blockers.push("unborn".into());
     } else if branch.is_none() {
         blockers.push("detached".into());
     }
-    let all = trees(p)?;
+    let (all, unavailable) = trees_with_coverage(p, reader)?;
+    if unavailable {
+        blockers.push("unavailable".into());
+    }
     if all.iter().any(|t| t.path == root && t.locked) {
         blockers.push("locked".into());
     }
@@ -205,7 +299,9 @@ pub(super) fn snapshot(path: &Path) -> Result<Snapshot> {
 }
 pub(super) fn refs(s: &Snapshot) -> Result<Vec<Ref>> {
     s.identity()?;
-    let raw = git::read(
+    let reader = Reader::open(Path::new(&s.root))?;
+    reader.matches(s)?;
+    let raw = reader.read(
         Path::new(&s.root),
         &[
             "for-each-ref",
@@ -235,6 +331,7 @@ pub(super) fn refs(s: &Snapshot) -> Result<Vec<Ref>> {
         return Err(error("tooLarge"));
     }
     s.identity()?;
+    reader.matches(s)?;
     Ok(values)
 }
 /// Deliberately refuses custom conversions; never uses the current HEAD/index for a selected OID.
@@ -317,3 +414,7 @@ pub(super) fn target_objects(
     }
     Ok(paths)
 }
+
+#[cfg(test)]
+#[path = "identity_tests.rs"]
+mod identity_tests;

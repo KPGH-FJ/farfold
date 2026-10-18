@@ -69,6 +69,7 @@ impl Worktrees {
         project_relative_path: &str,
         after_capture: impl FnOnce(),
     ) -> Result<PreparationInspection> {
+        crate::worktrees::mutation_supported()?;
         preparation::relative_segments(project_relative_path)?;
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
@@ -149,6 +150,7 @@ impl Worktrees {
         inspection_id: &str,
         after_capture: impl FnOnce(),
     ) -> Result<PreparationValidation> {
+        crate::worktrees::mutation_supported()?;
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         let ticket = {

@@ -9,9 +9,28 @@ mod create;
 mod inspect;
 mod manager;
 mod material_scan;
+mod read_context;
+#[cfg(any(windows, test))]
+mod read_policy;
 mod recycle;
 mod storage;
+#[cfg(windows)]
+mod windows_git;
+#[cfg(windows)]
+mod windows_scope;
+#[cfg(all(windows, test))]
+mod windows_tests;
 pub use manager::Worktrees;
+
+// Existing local-tree reads/adoption are distinct from unimplemented filesystem
+// mutations. Refuse before any durable intent or background work on Windows.
+fn mutation_supported() -> types::Result<()> {
+    if cfg!(windows) {
+        Err(types::error("unsupportedGit"))
+    } else {
+        Ok(())
+    }
+}
 #[cfg(test)]
 mod checkout_boundary_tests;
 #[cfg(test)]

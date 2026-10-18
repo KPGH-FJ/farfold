@@ -31,6 +31,10 @@ use windows_sys::{
         System::IO::IO_STATUS_BLOCK,
     },
 };
+mod pinned;
+pub(crate) use pinned::PinnedPath;
+#[cfg(test)]
+mod pinned_tests;
 
 fn invalid() -> io::Error {
     io::Error::new(io::ErrorKind::InvalidInput, "invalid local file path")
@@ -152,6 +156,21 @@ pub(crate) fn stamp(file: &File) -> io::Result<Stamp> {
     })
 }
 fn open_at(parent: &File, component: &OsStr, directory: bool, create: bool) -> io::Result<File> {
+    open_at_shared(
+        parent,
+        component,
+        directory,
+        create,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+    )
+}
+fn open_at_shared(
+    parent: &File,
+    component: &OsStr,
+    directory: bool,
+    create: bool,
+    share: u32,
+) -> io::Result<File> {
     let mut encoded = name(component)?;
     let unicode = UNICODE_STRING {
         Length: (encoded.len() * 2) as u16,
@@ -183,7 +202,7 @@ fn open_at(parent: &File, component: &OsStr, directory: bool, create: bool) -> i
             &mut status,
             ptr::null(),
             FILE_ATTRIBUTE_NORMAL,
-            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            share,
             if create { FILE_CREATE } else { FILE_OPEN },
             FILE_OPEN_REPARSE_POINT
                 | FILE_SYNCHRONOUS_IO_NONALERT

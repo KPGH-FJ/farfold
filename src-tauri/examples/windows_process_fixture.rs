@@ -68,7 +68,12 @@ fn main() {
             command.arg("wait").arg(&args[1]);
             let pending = ownership::prepare_command(&mut command).unwrap();
             let mut child = command.spawn().unwrap();
-            let _group = pending.attach(child.id()).unwrap();
+            let _group = pending
+                .attach_or_reap(Some(child.id()), || {
+                    let _ = child.kill();
+                    matches!(child.try_wait(), Ok(Some(_)))
+                })
+                .unwrap();
             std::fs::write(&args[2], "ready").unwrap();
             let _ = child.wait();
         }

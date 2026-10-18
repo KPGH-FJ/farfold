@@ -71,6 +71,7 @@ impl Worktrees {
         id: &str,
         revision: u64,
     ) -> Result<RemoveInspection> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission
@@ -167,6 +168,7 @@ impl Worktrees {
         input: RemoveInput,
         retire: impl FnOnce(&Path) -> Result<()>,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let ticket = {
             let mut i = self.lock()?;
             let request = Request::Remove(input.clone());
@@ -394,6 +396,7 @@ impl Worktrees {
         id: &str,
         confirmation: RemoveConfirmation,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let mut i = self.lock()?;
         if !i.loaded {
             i.load(store)?;
@@ -613,6 +616,7 @@ impl Worktrees {
         id: &str,
         verify: impl FnOnce(&RemoveIntent) -> Result<()>,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission
@@ -718,6 +722,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub fn recovery_check(&self, store: &MetaStore, id: &str, revision: u64) -> Result<Listing> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission

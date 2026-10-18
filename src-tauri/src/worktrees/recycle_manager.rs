@@ -77,6 +77,7 @@ impl Worktrees {
         id: &str,
         revision: u64,
     ) -> Result<RecycleInspection> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission
@@ -170,6 +171,7 @@ impl Worktrees {
         input: RecycleInput,
         retire: impl FnOnce(&Path) -> Result<()>,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let ticket = {
             let mut i = self.lock()?;
             let request = Request::Recycle(input.clone());
@@ -342,6 +344,7 @@ impl Worktrees {
             .is_some_and(|o| o.status.operation_id == id && o.recycle.is_some()))
     }
     pub(super) fn start_recycle(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let mut i = self.lock()?;
         let Some(op) = i
             .doc
@@ -574,6 +577,7 @@ impl Worktrees {
         self.status(store, id)
     }
     pub fn recycle_check(&self, store: &MetaStore, id: &str, revision: u64) -> Result<Listing> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission
@@ -661,6 +665,7 @@ impl Worktrees {
         self.list(store)
     }
     pub(super) fn recheck_recycle(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let archived = {
             let mut i = self.lock()?;
             i.recover(store)?;
@@ -694,6 +699,7 @@ impl Worktrees {
         id: &str,
         verify: impl FnOnce(&SavedArchive) -> Result<Snapshot>,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let _own = self
             .0
             .admission

@@ -146,7 +146,7 @@ impl PendingGroup {
     /// The caller must retain its original Child (and Windows process handle)
     /// throughout this call. All std/async/PTY spawn owners do so: Windows cannot
     /// reuse that PID while the original process object has a retained handle.
-    pub(crate) fn attach(&self, pid: u32) -> io::Result<OwnedGroup> {
+    fn attach(&self, pid: u32) -> io::Result<OwnedGroup> {
         let leader = unsafe { OpenProcess(PROCESS_TERMINATE, 0, pid) };
         if leader.is_null() {
             return Err(io::Error::last_os_error());
@@ -216,6 +216,14 @@ impl PendingGroup {
 pub(crate) struct OwnedGroup {
     pid: u32,
     job: Arc<Job>,
+}
+impl OwnedGroup {
+    pub(crate) fn terminate(&self) {
+        self.job.terminate();
+    }
+    pub(crate) fn active(&self) -> bool {
+        self.job.active()
+    }
 }
 impl Drop for OwnedGroup {
     fn drop(&mut self) {

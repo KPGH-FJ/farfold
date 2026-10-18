@@ -37,6 +37,7 @@ impl Worktrees {
         input: RecoverInput,
         validate: impl FnOnce(RecoverInput, recovery_pack::SavedRecovery) -> Result<RecoverIntent>,
     ) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let source = {
             let mut i = self.lock()?;
             let request = Request::Recover(input.clone());
@@ -124,6 +125,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub(super) fn start_recover(&self, s: &MetaStore, id: &str) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let global = managed_update::activity().map_err(|_| error("busy"))?;
         let mut i = self.lock()?;
@@ -320,6 +322,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub(super) fn recheck_recover(&self, s: &MetaStore, id: &str) -> Result<Reply> {
+        crate::worktrees::mutation_supported()?;
         let _own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         let intent = {

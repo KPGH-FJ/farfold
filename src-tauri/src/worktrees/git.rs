@@ -15,16 +15,23 @@ pub(super) struct Output {
     pub code: Option<i32>,
     pub bytes: Vec<u8>,
 }
+fn override_name(name: &str, case_insensitive: bool) -> bool {
+    let folded;
+    let name = if case_insensitive {
+        folded = name.to_ascii_uppercase();
+        &folded
+    } else {
+        name
+    };
+    name.starts_with("GIT_")
+        && !matches!(
+            name,
+            "GIT_PAGER" | "GIT_EDITOR" | "GIT_SEQUENCE_EDITOR" | "GIT_TERMINAL_PROMPT"
+        )
+}
 pub(super) fn environment() -> Result<()> {
-    if std::env::vars_os().any(|(k, _)| {
-        k.to_str().is_some_and(|k| {
-            k.starts_with("GIT_")
-                && !matches!(
-                    k,
-                    "GIT_PAGER" | "GIT_EDITOR" | "GIT_SEQUENCE_EDITOR" | "GIT_TERMINAL_PROMPT"
-                )
-        })
-    }) {
+    if std::env::vars_os().any(|(k, _)| k.to_str().is_some_and(|k| override_name(k, cfg!(windows))))
+    {
         return Err(error("environmentOverride"));
     }
     Ok(())
@@ -73,7 +80,14 @@ pub(super) fn execute(
     cancel: &AtomicBool,
     timeout: Duration,
 ) -> Result<Output> {
-    execute_command(command(root, args)?, cancel, timeout)
+    #[cfg(windows)]
+    {
+        super::windows_git::execute(root, args, cancel, timeout)
+    }
+    #[cfg(unix)]
+    {
+        execute_command(command(root, args)?, cancel, timeout)
+    }
 }
 // Unwinding must not orphan a Git child while its caller releases directory
 // admission. Normal completion disables this guard only after group quiescence.
@@ -81,7 +95,33 @@ struct OwnedProcess {
     child: std::process::Child,
     #[cfg(unix)]
     group: i32,
+    #[cfg(windows)]
+    group: crate::process_platform::OwnedGroup,
     finished: bool,
+}
+impl OwnedProcess {
+    fn terminate_group(&self) {
+        #[cfg(unix)]
+        unsafe {
+            libc::kill(-self.group, libc::SIGKILL);
+        }
+        #[cfg(windows)]
+        self.group.terminate();
+    }
+    fn terminate(&mut self) {
+        self.terminate_group();
+        let _ = self.child.kill();
+    }
+    fn group_alive(&self) -> bool {
+        #[cfg(unix)]
+        {
+            group_exists(self.group)
+        }
+        #[cfg(windows)]
+        {
+            self.group.active()
+        }
+    }
 }
 impl std::ops::Deref for OwnedProcess {
     type Target = std::process::Child;
@@ -99,19 +139,14 @@ impl Drop for OwnedProcess {
         if self.finished {
             return;
         }
-        #[cfg(unix)]
-        unsafe {
-            libc::kill(-self.group, libc::SIGKILL);
-        }
-        let _ = self.child.kill();
+        self.terminate();
         loop {
             if self.child.wait().is_ok() {
                 break;
             }
             thread::sleep(Duration::from_millis(10));
         }
-        #[cfg(unix)]
-        while group_exists(self.group) {
+        while self.group_alive() {
             thread::sleep(Duration::from_millis(10));
         }
     }
@@ -131,6 +166,7 @@ pub(super) fn execute_to_file(
     stdout: File,
     limit: u64,
 ) -> Result<Output> {
+    super::mutation_supported()?;
     execute_bounded(cmd, cancel, timeout, stdout, limit, false)
 }
 fn execute_bounded(
@@ -141,6 +177,11 @@ fn execute_bounded(
     limit: u64,
     collect: bool,
 ) -> Result<Output> {
+    #[cfg(windows)]
+    let pending =
+        crate::process_platform::prepare_command(&mut cmd).map_err(|_| error("gitUnavailable"))?;
+    #[cfg(windows)]
+    cmd.stdin(Stdio::null());
     #[cfg(unix)]
     {
         use std::os::unix::process::CommandExt;
@@ -153,26 +194,33 @@ fn execute_bounded(
         return Err(error("cancelled"));
     }
     let child = cmd.spawn().map_err(|_| error("gitUnavailable"))?;
+    #[cfg(windows)]
+    let mut child = child;
+    #[cfg(windows)]
+    drop(cmd);
+    #[cfg(windows)]
+    let group = pending
+        .attach_or_reap(Some(child.id()), || {
+            let _ = child.kill();
+            matches!(child.try_wait(), Ok(Some(_)))
+        })
+        .map_err(|_| error("gitUnavailable"))?;
     let mut child = OwnedProcess {
         #[cfg(unix)]
         group: child.id() as i32,
+        #[cfg(windows)]
+        group,
         child,
         finished: false,
     };
     let started = Instant::now();
     let mut stopped = None;
-    #[cfg(unix)]
-    let group = child.id() as i32;
     loop {
         let waited = match child.try_wait() {
             Ok(value) => value,
             Err(_) => {
                 stopped = Some("unknown");
-                #[cfg(unix)]
-                unsafe {
-                    libc::kill(-(child.id() as i32), libc::SIGKILL);
-                }
-                let _ = child.kill();
+                child.terminate();
                 // Keep the admission until wait confirms this child has ended.
                 match child.wait() {
                     Ok(status) => Some(status),
@@ -184,14 +232,11 @@ fn execute_bounded(
             }
         };
         if let Some(status) = waited {
-            #[cfg(unix)]
-            if group_exists(group) {
+            if child.group_alive() {
                 // Git should join its helpers. A surviving process is not a successful receipt.
                 stopped = Some(stopped.unwrap_or("unknown"));
-                unsafe {
-                    libc::kill(-group, libc::SIGKILL);
-                }
-                while group_exists(group) {
+                child.terminate_group();
+                while child.group_alive() {
                     thread::sleep(Duration::from_millis(10));
                 }
             }
@@ -236,11 +281,7 @@ fn execute_bounded(
             };
             if let Some(reason) = reason {
                 stopped = Some(reason);
-                #[cfg(unix)]
-                unsafe {
-                    libc::kill(-(child.id() as i32), libc::SIGKILL);
-                }
-                let _ = child.kill();
+                child.terminate();
                 // A cancellation never releases ownership before the exact child is reaped.
             }
         }
@@ -293,6 +334,79 @@ fn group_exists(group: i32) -> bool {
 mod tests {
     use super::*;
     #[test]
+    fn windows_override_names_are_case_insensitive_without_changing_unix_rules() {
+        assert!(override_name("git_dir", true));
+        assert!(override_name("Git_Config_Count", true));
+        assert!(!override_name("git_dir", false));
+        assert!(!override_name("git_editor", true));
+        assert!(override_name("GIT_COMMON_DIR", false));
+        assert!(!override_name("NOT_GIT_DIR", true));
+    }
+    #[test]
+    #[cfg(windows)]
+    fn child_exit_with_live_job_descendant_is_not_a_success_receipt() {
+        let directory = tempfile::tempdir().unwrap();
+        let marker = directory.path().join("descendant-pid");
+        let mut command = Command::new(crate::windows_process::helper_executable().unwrap());
+        command.arg("orphan").arg(&marker);
+        let output = execute_command(command, &AtomicBool::new(false), Duration::from_secs(5));
+        assert_eq!(output.err().unwrap().code, "unknown");
+        // This fast branch need not let the descendant run as far as its
+        // marker. The separate cancellation case observes an exact handle.
+        // execute_command only returns after exact-child reap and direct Job
+        // inactivity. No descendant PID is signalled through a guessed lookup.
+    }
+    #[test]
+    #[cfg(windows)]
+    fn cancellation_waits_for_the_observed_selected_child_and_its_job() {
+        use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle};
+        use windows_sys::Win32::System::Threading::{
+            OpenProcess, PROCESS_SYNCHRONIZE, WaitForSingleObject,
+        };
+        let directory = tempfile::tempdir().unwrap();
+        let marker = directory.path().join("selected-pid");
+        let cancel = AtomicBool::new(false);
+        struct CancelOnDrop<'a>(&'a AtomicBool);
+        impl Drop for CancelOnDrop<'_> {
+            fn drop(&mut self) {
+                self.0.store(true, Ordering::SeqCst);
+            }
+        }
+        thread::scope(|scope| {
+            let cancel = &cancel;
+            let marker = &marker;
+            let owner = scope.spawn(move || {
+                let mut command =
+                    Command::new(crate::windows_process::helper_executable().unwrap());
+                command.arg("wait").arg(marker);
+                execute_command(command, cancel, Duration::from_secs(10))
+            });
+            // Every assertion/timeout path cancels before scoped joining; no
+            // guessed PID signal or unowned 60-second fixture is left behind.
+            let _cancel_on_drop = CancelOnDrop(cancel);
+            let deadline = Instant::now() + Duration::from_secs(5);
+            let pid = loop {
+                if let Ok(pid) = std::fs::read_to_string(marker)
+                    .unwrap_or_default()
+                    .parse::<u32>()
+                {
+                    break pid;
+                }
+                assert!(Instant::now() < deadline, "owned fixture readiness expired");
+                thread::sleep(Duration::from_millis(10));
+            };
+            let raw = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, pid) };
+            assert!(!raw.is_null());
+            let selected = unsafe { OwnedHandle::from_raw_handle(raw) };
+            cancel.store(true, Ordering::SeqCst);
+            assert_eq!(owner.join().unwrap().err().unwrap().code, "cancelled");
+            assert_eq!(
+                unsafe { WaitForSingleObject(selected.as_raw_handle(), 0) },
+                0
+            );
+        });
+    }
+    #[test]
     #[cfg(unix)]
     fn child_exit_with_live_output_holder_is_not_success() {
         let mut c = Command::new("/bin/sh");
@@ -302,7 +416,7 @@ mod tests {
     }
     #[test]
     fn fast_stderr_over_limit_cannot_be_success() {
-        let mut c = Command::new("/usr/bin/python3");
+        let mut c = Command::new(crate::platform_tests::python());
         c.args(["-c", "import os; os.write(2,b'x'*(4*1024*1024+1))"]);
         assert_eq!(
             execute_command(c, &AtomicBool::new(false), Duration::from_secs(2))

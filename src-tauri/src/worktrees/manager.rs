@@ -265,8 +265,9 @@ impl Worktrees {
     pub fn inspect(&self, store: &MetaStore, path: &str) -> Result<Inspection> {
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
-        let s = inspect::snapshot(Path::new(path))?;
+        let (s, scope) = inspect::observe(Path::new(path))?;
         let refs = inspect::refs(&s)?;
+        scope.matches(&s)?;
         let mut inner = self.lock()?;
         inner.load(store)?;
         inner
@@ -346,6 +347,7 @@ impl Worktrees {
         })
     }
     pub fn prepare(&self, store: &MetaStore, id: &str, input: Create) -> Result<Reply> {
+        super::mutation_supported()?;
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         let source = {
@@ -412,6 +414,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub fn start(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        super::mutation_supported()?;
         if self.is_recover(store, id)? {
             return self.start_recover(store, id);
         }
@@ -678,7 +681,7 @@ impl Worktrees {
         };
         let checked = (|| {
             source.identity()?;
-            let current = inspect::snapshot(Path::new(path))?;
+            let (current, scope) = inspect::observe(Path::new(path))?;
             if current.root != path
                 || current.common_dir != source.common_dir
                 || current.common_stamp != source.common_stamp
@@ -687,7 +690,7 @@ impl Worktrees {
             {
                 return Err(error("changed"));
             }
-            Ok(current)
+            Ok((current, scope))
         })();
         let mut i = self.lock()?;
         i.preparing.remove(id);
@@ -698,7 +701,7 @@ impl Worktrees {
         if let Err(e) = i.idle() {
             return Ok(i.reject(id, e.code));
         }
-        let s = match checked {
+        let (s, scope) = match checked {
             Ok(v) => v,
             Err(e) => return Ok(i.reject(id, e.code)),
         };
@@ -737,6 +740,9 @@ impl Worktrees {
             removal: None,
             recovery: None,
         });
+        if let Err(e) = scope.matches(&s) {
+            return Ok(i.reject(id, e.code));
+        }
         i.save(store, next)?;
         Ok(i.reply(id))
     }
@@ -758,7 +764,7 @@ impl Worktrees {
         };
         let checked = (|| {
             saved.identity.check()?;
-            let s = inspect::snapshot(Path::new(&saved.location.path))?;
+            let (s, scope) = inspect::observe(Path::new(&saved.location.path))?;
             if !saved.identity.matches(&s)
                 || s.head.is_none()
                 || !s
@@ -768,10 +774,14 @@ impl Worktrees {
             {
                 return Err(error("changed"));
             }
-            Ok(s)
+            Ok((s, scope))
         })();
         let mut i = self.lock()?;
         i.load(store)?;
+        let checked = checked.and_then(|(s, scope)| {
+            scope.matches(&s)?;
+            Ok((s, scope))
+        });
         let mut next = i.doc.clone();
         let entry = next
             .locations
@@ -780,7 +790,7 @@ impl Worktrees {
             .ok_or(error("changed"))?;
         entry.location.revision = next_revision(entry.location.revision)?;
         match &checked {
-            Ok(s) => {
+            Ok((s, _scope)) => {
                 entry.location.availability = "verified".into();
                 entry.location.head_oid = s.head.clone().unwrap();
                 entry.location.branch = s.branch.clone();
@@ -826,6 +836,16 @@ impl Worktrees {
         Ok(Forgotten { forgotten: true })
     }
     pub fn recheck(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        #[cfg(windows)]
+        {
+            let mut inner = self.lock()?;
+            inner.load(store)?;
+            if inner.doc.operation.as_ref().is_some_and(|op| {
+                op.status.operation_id == id && !matches!(op.request, Request::Adopt { .. })
+            }) {
+                return Err(error("unsupportedGit"));
+            }
+        }
         if self.is_recover(store, id)? {
             return self.recheck_recover(store, id);
         }
