@@ -24,10 +24,10 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 
-/** Translate a declared common category, never an Agent's arbitrary option name. */
+/** Translate only known common titles; a category can hold unrelated controls. */
 function optionLabel(option: ConfigOptionView) {
-  return option.category === "mode" ||
-    (!option.category && option.id === "mode")
+  const name = option.name.trim().toLowerCase();
+  return name === "mode" || name === "session mode"
     ? STRINGS.options.modeName
     : option.name;
 }
