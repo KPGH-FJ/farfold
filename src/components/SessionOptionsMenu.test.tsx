@@ -130,3 +130,101 @@ it("preserves official boolean and unknown options even with the exact mode id",
   expect(unknown).toContain("Decision strategy");
   expect(unknown).not.toContain("工作模式");
 });
+
+it.each(["Mode", "Session Mode", " mode ", " sEsSiOn MoDe "])(
+  "localizes only the exact standard operating description for %j",
+  (name) => {
+    const option = {
+      ...mode,
+      name,
+      description: "Session operating mode",
+    };
+    const before = structuredClone(option);
+    const html = render(option);
+    expect(html).toContain("对话的工作方式。");
+    expect(html).not.toContain("Session operating mode");
+    expect(option).toEqual(before);
+  },
+);
+
+it.each([
+  " Session operating mode",
+  "Session operating mode ",
+  "session operating mode",
+  "Session operating mode.",
+  "Session operating mode: experimental",
+])("preserves an unknown mode description exactly: %j", (description) => {
+  const html = render({ ...mode, description });
+  expect(html).toContain(description);
+  expect(html).not.toContain("对话的工作方式。");
+});
+
+it.each(["Planning strategy", "Auto Approve", "YOLO", "Mode preview"])(
+  "does not infer description semantics from category or id for %j",
+  (name) => {
+    const html = render({
+      ...mode,
+      id: "mode",
+      name,
+      description: "Session operating mode",
+    });
+    expect(html).toContain(name);
+    expect(html).toContain("Session operating mode");
+    expect(html).not.toContain("对话的工作方式。");
+  },
+);
+
+it.each([undefined, ""])(
+  "keeps the existing missing-description fallback for %j",
+  (description) => {
+    const html = render({ ...mode, description });
+    expect(html).toContain("Agent 未提供说明。");
+    expect(html).not.toContain("对话的工作方式。");
+  },
+);
+
+it("preserves boolean and unknown descriptions, values and order beside the standard mode", () => {
+  const options: ConfigOptionView[] = [
+    { ...mode, description: "Session operating mode" },
+    {
+      id: "autoApprove",
+      name: "Auto Approve",
+      category: "mode",
+      type: "boolean",
+      currentValue: false,
+      description: "Automatically approve actions when YOLO is disabled",
+      options: [],
+    },
+    {
+      id: "yolo",
+      name: "YOLO",
+      category: "mode",
+      type: "boolean",
+      currentValue: true,
+      description: "Bypass approval and safety prompts",
+      options: [],
+    },
+    {
+      id: "future",
+      name: "Decision strategy",
+      category: "mode",
+      type: "future",
+      currentValue: "opaque",
+      description: "Vendor supplied description",
+      options: [],
+    },
+  ];
+  const before = structuredClone(options);
+  const html = render(options);
+  expect(html).toContain("对话的工作方式。");
+  expect(html).toContain('aria-label="Auto Approve" aria-checked="false"');
+  expect(html).toContain('aria-label="YOLO" aria-checked="true"');
+  const descriptions = [
+    "对话的工作方式。",
+    ...options.slice(1).map(({ description }) => description!),
+  ];
+  const positions = descriptions.map((value) => html.indexOf(value));
+  expect(positions.every((position) => position >= 0)).toBe(true);
+  expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  expect(options).toEqual(before);
+});

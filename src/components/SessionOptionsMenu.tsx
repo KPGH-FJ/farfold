@@ -25,11 +25,13 @@ import {
 } from "../runtime/sessions";
 
 /** Translate only known common titles; a category can hold unrelated controls. */
-function optionLabel(option: ConfigOptionView) {
+function hasStandardModeName(option: ConfigOptionView) {
   const name = option.name.trim().toLowerCase();
-  return name === "mode" || name === "session mode"
-    ? STRINGS.options.modeName
-    : option.name;
+  return name === "mode" || name === "session mode";
+}
+
+function optionLabel(option: ConfigOptionView) {
+  return hasStandardModeName(option) ? STRINGS.options.modeName : option.name;
 }
 
 function OptionRow({
@@ -61,6 +63,11 @@ function OptionRow({
   const proposed = pending?.value ?? option.currentValue;
   const on = proposed === true || proposed === "true";
   const label = optionLabel(option);
+  const description =
+    hasStandardModeName(option) &&
+    option.description === "Session operating mode"
+      ? STRINGS.options.modeDescription
+      : option.description || R.descriptionUnknown;
   const choose = (value: unknown) => {
     if (configOptionChangeBlocked(thread, option.id)) return;
     setFailed(false);
@@ -114,9 +121,7 @@ function OptionRow({
           <span className="so-value">{configValueLabel(option)}</span>
         )}
       </div>
-      <p className="conversation-option-description">
-        {option.description || R.descriptionUnknown}
-      </p>
+      <p className="conversation-option-description">{description}</p>
       <details className="conversation-option-details">
         <summary>{R.optionDetails}</summary>
         <p>{R.optionScope}</p>
