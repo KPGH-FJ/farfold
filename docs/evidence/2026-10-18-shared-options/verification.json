@@ -1,0 +1,241 @@
+{
+  "kind": "SharedDeclaredOptionTitlesAndKnownDescriptionScopedDelivery",
+  "updatedAtUtc": "2026-10-18T10:15:05.361057+00:00",
+  "schedulingAuthority": "plans/agent-access.md only; not an additional plan",
+  "requirementsUnchanged": {
+    "agents": 29,
+    "standardsPerAgent": 8,
+    "originalTaskCount": 151
+  },
+  "sourceIncrements": [
+    {
+      "commit": "2975ea1c5f2d43d4d3503c95dc95c089dcc7c3b8",
+      "change": "Preserve distinct declared names within mode category; translate only common Mode/Session Mode titles",
+      "engineeringHead": "b022ee75a03aa5e4d322b56a3a89f94205f4b232",
+      "frontendFiles": 592,
+      "frontendPassed": 7883,
+      "rustPassed": 1823,
+      "rustIgnored": 6,
+      "sourceInputsStable": 19179,
+      "candidateNine": 9,
+      "installedTen": 10
+    },
+    {
+      "commit": "8fa5ac66dd5f4531cb4ce0cae2bd9705fb4fa471",
+      "change": "Translate only exact standard description for known Mode/Session Mode; preserve other descriptions and metadata",
+      "engineeringHead": "2975ea1c5f2d43d4d3503c95dc95c089dcc7c3b8",
+      "scopedRed": {
+        "passed": 19,
+        "semanticFailures": 5
+      },
+      "scopedGreen": 102,
+      "frontendFiles": 592,
+      "frontendPassed": 7899,
+      "rustPassed": 1823,
+      "rustIgnored": 6,
+      "sourceInputsStable": 19179,
+      "candidateNine": 9,
+      "installedTen": 10
+    }
+  ],
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "8fa5ac66dd5f4531cb4ce0cae2bd9705fb4fa471",
+    "binarySha256": "7812216e0592dc9e350e160bafe5c339fa35a60588290608f61e80245a8c684d",
+    "duplicateCandidateRemoved": true,
+    "archiveRetained": true,
+    "publicSigningNotarization": false
+  },
+  "installationRetention": {
+    "eachWindowManifestEntries": 232527,
+    "labelsThreeManifestsStrictEqual": true,
+    "descriptionThreeManifestsStrictEqual": true,
+    "labelsManifestSha256": "7c27a3ac475e5b61624c24ab2401794cb736410310c3f5260bf2ace3d3a15d4a",
+    "descriptionManifestSha256": "67b14de32d525578dcbdc89a1eef83b05f8ec8246554ffe39e17b8ad3c945150",
+    "notContinuousAbsenceProof": true
+  },
+  "formalObservations": {
+    "labels": "Separate Workmode/Auto-approve/YOLO; inherited standard English description found and fixed in next increment. Only saved screenshots independently supports visual claims; six savedAX were no-change stubs, retained and clarified.",
+    "description": "Known description now Chinese; distinct names, Act, existing model/Medium/OpenRouter/Thinking Off preserved in seven fullAX+seven saved screenshots. One existing test-record load, no option change/adoption/prompt UI action.",
+    "normalQuit": "Each observed needsresponse0/running0 point, then normal SaveExit; unknownwork warning retained, not claimed resolved",
+    "protocol": [
+      {
+        "window": "2975",
+        "files": 2,
+        "records": 355,
+        "outPrompt": 0,
+        "outLoad": 1,
+        "outNew": 0,
+        "outSetConfig": 0
+      },
+      {
+        "window": "8fa",
+        "files": 2,
+        "records": 310,
+        "outPrompt": 0,
+        "outLoad": 1,
+        "outNew": 0,
+        "outSetConfig": 0
+      }
+    ],
+    "noPerAgentAttributionOrSdkSideEffectsGuarantee": true,
+    "screenshotEncoding": {
+      "actual": "JPEG/JFIF",
+      "legacyExtensions": ".png",
+      "count": 13,
+      "originalNamesAndBytesPreserved": true,
+      "encodingLabelCorrectedWithoutRecapture": true
+    }
+  },
+  "postUseRetention": [
+    {
+      "window": "2975",
+      "wholeSessionsEqual": 138,
+      "wholeIgnoredRecordsEqual": 173,
+      "wholeComposerObjectsEqual": 10,
+      "wholeSettingsRowsEqual": 54,
+      "wholeUnsentObjectEqual": true,
+      "agentsWholeEqual": 39,
+      "agentsTotal": 40,
+      "oneChangedAgentFields": ["updated_at"],
+      "manifestAdded": 0,
+      "manifestDeleted": 0,
+      "manifestModified": 7,
+      "normalizedDbByteEqual": false,
+      "strictCaptureExit": 2,
+      "writer": "unknown"
+    },
+    {
+      "window": "8fa",
+      "baseline": "Reuse strict-equal installation three manifests and sealed normalized before; one after-use fullmanifest+normalized capture. Helper before parameter selects backup algorithm, not before-UI chronology.",
+      "wholeSessionsEqual": 138,
+      "wholeIgnoredRecordsEqual": 173,
+      "wholeComposerObjectsEqual": 10,
+      "wholeSettingsRowsEqual": 54,
+      "wholeUnsentObjectEqual": true,
+      "agentsWholeEqual": 39,
+      "agentsTotal": 40,
+      "oneChangedAgentFields": ["updated_at"],
+      "manifestAdded": 0,
+      "manifestDeleted": 0,
+      "manifestModified": 7,
+      "normalizedDbByteEqual": false,
+      "captureExit": 0,
+      "captureZeroDoesNotMeanDataEqual": true,
+      "writer": "unknown"
+    }
+  ],
+  "notProven": [
+    "Entire29/eight standards or151 tasks complete",
+    "All dynamic Agent content wording or controls accepted",
+    "Permission effect/timepoint or explicit cancellation terminal",
+    "Full user history/resumed prompt",
+    "No SDK sideeffects or all data byte-identical",
+    "P13 full animation/playback/actual decode memory",
+    "P18 positive complete diff/P32 attachment positives/NEW29livebusy",
+    "P40 package mutation/current conversation adoption",
+    "Long-term and Windows real system",
+    "Public signing/notarization/distribution"
+  ],
+  "evidence": {
+    "labelsEngineering": {
+      "path": "output/2026-10-18-config-option-labels/engineering/run1/verification.json",
+      "sha256": "9ccaf1b8882b9de0d4b5de79a6a1637a657efe331400445f9ae770a614c21d8d"
+    },
+    "labelsCandidate": {
+      "path": "output/2026-10-18-config-option-labels/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "1233c792f0706df4e39f86c66464dd6239dba0625d4cef3b00368dad9542a497"
+    },
+    "labelsNine": {
+      "path": "output/2026-10-18-config-option-labels/candidate-preparation/independent/review.json",
+      "sha256": "3c14fb9b6471ac3e5215779e71a81989465a0b0ba13e582f60cfa79da3bd6fcd"
+    },
+    "labelsTen": {
+      "path": "output/2026-10-18-config-option-labels/install/installed-independent-review-private.json",
+      "sha256": "fc1a63fe389a556669c58942b1ff53231758f2ff526f1eea5545874662bd1716"
+    },
+    "labelsCleanup": {
+      "path": "output/2026-10-18-config-option-labels/install/candidate-cleanup.json",
+      "sha256": "354077b02bd1665315c1d21fea4991ecb7efd19f178b665869349a42e0dff48b"
+    },
+    "labelsUi": {
+      "path": "output/2026-10-18-config-option-labels/formal-ui/actual-observation.json",
+      "sha256": "61bb0033fde843dfcf6aef0658402ef6882e64d320cbcbd31d2150764c27cf23"
+    },
+    "labelsAxClarification": {
+      "path": "output/2026-10-18-config-option-labels/formal-ui/ax-capture-clarification.json",
+      "sha256": "0658a129d8deb4140b913bb607455547e1613e489fac40e32d61e528f258fc9c"
+    },
+    "labelsIndependentUi": {
+      "path": "output/2026-10-18-config-option-labels/formal-ui/independent-observation-review.json",
+      "sha256": "50a7e0b261cffde2b5c3540912f4a6bd0d57aa85ef0e98fcfebfbcc7194a73bb"
+    },
+    "labelsProtocol": {
+      "path": "output/2026-10-18-config-option-labels/formal-protocol/summary.json",
+      "sha256": "76074e08a28d0e8475ea26f2725fcb491807742bba9e5d1e1eb52806a3fb4239"
+    },
+    "labelsData": {
+      "path": "output/2026-10-18-config-option-labels/formal-use-after-analysis/safe-summary.json",
+      "sha256": "0817c4cd8060fcbd45555dc9c0ba19d76150ee5ce1cd6a19ef1462b09d0ab1ff"
+    },
+    "descriptionEngineering": {
+      "path": "output/2026-10-18-config-option-description/engineering/run1/verification.json",
+      "sha256": "f09b6ddbba6955a0ed76e8e2d5dabf510e6a76c2bcbccf5bc4b7f4bdbc1a2b80"
+    },
+    "descriptionFreeze": {
+      "path": "output/2026-10-18-config-option-description/source-freeze.json",
+      "sha256": "ba69caff86abc461d152e59a42d530b3bc8c77d8e041ee4fee780bd4861c09f4"
+    },
+    "descriptionSourceReview": {
+      "path": "output/2026-10-18-config-option-description/full-source-review.json",
+      "sha256": "352bf97a1d8ac0df18334ba62d2f438e88c968e7c35d87fe5e8927ee11d20f32"
+    },
+    "descriptionCandidate": {
+      "path": "output/2026-10-18-config-option-description/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "51d4bad6b81af8cc44a7d81a486ce3187556a0cfe6ef9efc075c3233d59f4053"
+    },
+    "descriptionNine": {
+      "path": "output/2026-10-18-config-option-description/candidate-preparation/independent/review.json",
+      "sha256": "9332695340d590c43ac7cf1797b493a30b630c2f1a26c7e2cfd47be38afd8636"
+    },
+    "descriptionTen": {
+      "path": "output/2026-10-18-config-option-description/install/installed-independent-review-private.json",
+      "sha256": "340fc07ba5271c7eb32c4991eb546859a84c010a069be93fa13d728dceb4cf28"
+    },
+    "descriptionCleanup": {
+      "path": "output/2026-10-18-config-option-description/install/candidate-cleanup.json",
+      "sha256": "0595a579599ea5fe3e5946bf49f7a4743986b53ec235f52e107d08cebd92e73b"
+    },
+    "descriptionUi": {
+      "path": "output/2026-10-18-config-option-description/formal-ui/actual-observation.json",
+      "sha256": "d6d7981be6cc4743fc653f3d0160109c14525fe2eeafab6addaf6d9898872e06"
+    },
+    "descriptionProtocol": {
+      "path": "output/2026-10-18-config-option-description/formal-protocol/summary.json",
+      "sha256": "9437f4ff4ac715fe390fd6dea7a6589ca68f065d5dd627bf8dd902f04d0a5ed3"
+    },
+    "descriptionBaselineScope": {
+      "path": "output/2026-10-18-config-option-description/formal-use-after-capture/baseline-and-window-scope.json",
+      "sha256": "b1dc06744c1df806e3f76aad42338b344e9e264916eafe46f9efafbd59f793ef"
+    },
+    "descriptionAfterUse": {
+      "path": "output/2026-10-18-config-option-description/formal-use-after-capture/retention-before-receipt.json",
+      "sha256": "0f49ba28c72ebddaacdd0667b31bb9b49f8d190561226b58a1b3e17bd25807ba"
+    },
+    "descriptionAfterUseCompletion": {
+      "path": "output/2026-10-18-config-option-description/formal-use-after-capture/execution-completion.json",
+      "sha256": "e6693f813db90fdc2062e645e756c961e8cd42d89d27b78c335ed669a2f756c7"
+    },
+    "descriptionData": {
+      "path": "output/2026-10-18-config-option-description/formal-use-after-analysis/safe-summary.json",
+      "sha256": "0165c90b395b2eb144cb99f6ed296c8d6bcd10831f1fbf5b98e21170e3b15153"
+    },
+    "descriptionDataCompletion": {
+      "path": "output/2026-10-18-config-option-description/formal-use-after-analysis/independent-comparison-completion.json",
+      "sha256": "34a5a5707a16fe4c4ec3a558b0caf46537e1b073da3c4d752a8b6cae3f2d059f"
+    }
+  }
+}
