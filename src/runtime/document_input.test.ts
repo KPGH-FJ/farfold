@@ -11,7 +11,8 @@ import {
   readDocumentInput,
   verifyDocumentInput,
 } from "./document_input";
-import type { VerifiedFile } from "./file_delivery";
+import { localResourcePath, type VerifiedFile } from "./file_delivery";
+import { filePathUri } from "./file_paths";
 
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({ invoke }));
@@ -98,7 +99,8 @@ class ParsingWorker extends EventTarget {
 beforeEach(() => {
   directory = mkdtempSync(join(tmpdir(), "farfold-docx-input-unit-"));
   path = join(directory, "chosen.docx");
-  uri = new URL(`file://${path}`).href;
+  uri = filePathUri(path);
+  path = localResourcePath(uri)!;
   select("complete");
   invoke.mockImplementation(nativeCalls);
   vi.stubGlobal("crypto", webcrypto);

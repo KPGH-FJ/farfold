@@ -1,4 +1,4 @@
-import { expect, it, vi } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GeneralSettings } from "./GeneralSettings";
 import { STRINGS } from "../runtime/strings";
@@ -8,6 +8,7 @@ vi.mock("../runtime/sessions", () => ({
   threads: {},
   useThreadsSnapshot: () => ({ index: [] }),
 }));
+afterEach(() => vi.unstubAllGlobals());
 
 it.each(["light", "dark", "system"] as const)(
   "preserves the selected %s theme in the three actual appearance choices",
@@ -36,34 +37,49 @@ it.each(["light", "dark", "system"] as const)(
   },
 );
 
-it("only exposes supported settings and documents the actual keyboard actions", () => {
-  const html = renderToStaticMarkup(
-    <GeneralSettings
-      themeMode="light"
-      themeStatus={{ ready: false, saving: false, error: null, retry: vi.fn() }}
-      onThemeMode={vi.fn()}
-    />,
-  );
-  expect(html).not.toContain(STRINGS.general.proposal);
-  expect(html).toContain("需要你时提醒");
-  expect(html).toContain("工作完成时提醒");
-  expect(html).toContain("提醒声音");
-  expect(html).not.toContain("尚未提供");
-  expect(html).toContain("暂停消息发送");
-  expect(html).toContain("查看快捷键");
-  expect(html).toContain("你的数据如何保存");
-  expect(html.indexOf("更新与诊断")).toBeLessThan(html.indexOf("暂停消息发送"));
-  expect(html.match(/role="switch"/g)).toHaveLength(3);
-  expect(html).toContain('aria-checked="false"');
-  expect(html).toContain("系统通知许可尚未确认");
-  expect(html).toContain("仅在系统允许声音时播放");
-  expect(html).not.toContain("自定义");
-  expect(html).toContain("⌘ ,");
-  expect(html).not.toContain("零配置");
-  expect(html).toContain("⌘ N");
-  expect(html).toContain("⌘ K");
-  expect(html).not.toContain("⇧ Enter");
-  expect(
-    html.match(/class="general-theme-card"[^>]*disabled=""/g),
-  ).toHaveLength(3);
-});
+it.each(["MacIntel", "Win32"])(
+  "only exposes supported settings and documents the actual %s keyboard actions",
+  async (platform) => {
+    vi.stubGlobal("navigator", { platform });
+    vi.resetModules();
+    const { GeneralSettings } = await import("./GeneralSettings");
+    const mac = platform === "MacIntel";
+    const html = renderToStaticMarkup(
+      <GeneralSettings
+        themeMode="light"
+        themeStatus={{
+          ready: false,
+          saving: false,
+          error: null,
+          retry: vi.fn(),
+        }}
+        onThemeMode={vi.fn()}
+      />,
+    );
+    expect(html).not.toContain(STRINGS.general.proposal);
+    expect(html).toContain("需要你时提醒");
+    expect(html).toContain("工作完成时提醒");
+    expect(html).toContain("提醒声音");
+    expect(html).not.toContain("尚未提供");
+    expect(html).toContain("暂停消息发送");
+    expect(html).toContain("查看快捷键");
+    expect(html).toContain("你的数据如何保存");
+    expect(html.indexOf("更新与诊断")).toBeLessThan(
+      html.indexOf("暂停消息发送"),
+    );
+    expect(html.match(/role="switch"/g)).toHaveLength(3);
+    expect(html).toContain('aria-checked="false"');
+    expect(html).toContain("系统通知许可尚未确认");
+    expect(html).toContain("仅在系统允许声音时播放");
+    expect(html).not.toContain("自定义");
+    expect(html).toContain(mac ? "⌘ ," : "Ctrl+,");
+    expect(html).not.toContain("零配置");
+    expect(html).toContain(mac ? "⌘ N" : "Ctrl+N");
+    expect(html).toContain(mac ? "⌘ K" : "Ctrl+K");
+    expect(html).not.toContain(mac ? "Ctrl+" : "⌘");
+    expect(html).not.toContain("⇧ Enter");
+    expect(
+      html.match(/class="general-theme-card"[^>]*disabled=""/g),
+    ).toHaveLength(3);
+  },
+);

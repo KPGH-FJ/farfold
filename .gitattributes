@@ -1,0 +1,5 @@
+# PDF byte offsets and pinned wire/oracle receipts must survive checkout exactly.
+*.pdf -text
+src/runtime/fixtures/plugin-management-wire.json -text
+src/runtime/fixtures/plugin-management-scoped-wire.json -text
+src/runtime/fixtures/pptx/author-oracle.json.raw -text

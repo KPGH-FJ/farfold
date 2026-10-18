@@ -14,7 +14,8 @@ import {
   verifyDocumentInput,
   type DocumentInputOptions,
 } from "./document_input";
-import type { VerifiedFile } from "./file_delivery";
+import { localResourcePath, type VerifiedFile } from "./file_delivery";
+import { filePathUri } from "./file_paths";
 import {
   PDF_INPUT_SCOPE_WARNING_CODES,
   PdfInputError,
@@ -67,7 +68,8 @@ function result(): PdfInputResult {
 beforeEach(() => {
   directory = mkdtempSync(join(tmpdir(), "farfold-pdf-common-unit-"));
   path = join(directory, "chosen.pdf");
-  uri = new URL(`file://${path}`).href;
+  uri = filePathUri(path);
+  path = localResourcePath(uri)!;
   writeFileSync(path, readFileSync(fixture));
   vi.stubGlobal("crypto", webcrypto);
   h.invoke.mockReset().mockImplementation(async (command, args) => {
@@ -111,7 +113,8 @@ describe("PDF common explicit scope/source boundary", () => {
     "explicit PDF choice rereads %s by whole signature, retaining original cold scope",
     async (name) => {
       path = join(directory, name);
-      uri = new URL(`file://${path}`).href;
+      uri = filePathUri(path);
+      path = localResourcePath(uri)!;
       writeFileSync(path, readFileSync(fixture));
       const approved = await approve();
       expect(approved.local).toMatchObject({
@@ -135,7 +138,8 @@ describe("PDF common explicit scope/source boundary", () => {
   );
   it("an opaque PDF scope omission is rejected before inspecting any file", async () => {
     path = join(directory, "opaque-document");
-    uri = new URL(`file://${path}`).href;
+    uri = filePathUri(path);
+    path = localResourcePath(uri)!;
     writeFileSync(path, readFileSync(fixture));
     await expect(read({ pdf: undefined })).rejects.toMatchObject({
       code: "scopeRequired",
@@ -145,7 +149,8 @@ describe("PDF common explicit scope/source boundary", () => {
   });
   it("explicit PDF selection rejects non-PDF whole bytes before parser or ordinary text fallback", async () => {
     path = join(directory, "opaque-document");
-    uri = new URL(`file://${path}`).href;
+    uri = filePathUri(path);
+    path = localResourcePath(uri)!;
     writeFileSync(
       path,
       "ordinary text must never replace retained document text",

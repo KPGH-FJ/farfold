@@ -15,7 +15,8 @@ import {
   readDocumentInput,
   verifyDocumentInput,
 } from "./document_input";
-import type { VerifiedFile } from "./file_delivery";
+import { localResourcePath, type VerifiedFile } from "./file_delivery";
+import { filePathUri } from "./file_paths";
 
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({ invoke }));
@@ -105,7 +106,8 @@ class InputWorker extends EventTarget {
 beforeEach(() => {
   directory = mkdtempSync(join(tmpdir(), "farfold-xlsx-input-unit-"));
   path = join(directory, "chosen.xlsx");
-  uri = new URL(`file://${path}`).href;
+  uri = filePathUri(path);
+  path = localResourcePath(uri)!;
   select("01-values-scope");
   invoke.mockImplementation(native);
   vi.stubGlobal("crypto", webcrypto);

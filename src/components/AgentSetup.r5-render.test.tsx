@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, relative, resolve, sep } from "node:path";
 import ts from "typescript";
 import type { AuthActivitySnapshot } from "../runtime/auth_activity";
 import type {
@@ -717,9 +717,12 @@ function styles() {
   visit(resolve(ROOT, "main.tsx"));
   return {
     paths: paths.map((path) =>
-      path.startsWith(ROOT + "/")
+      (path.startsWith(ROOT + sep)
         ? path.slice(ROOT.length + 1)
-        : relative(resolve(ROOT, ".."), path),
+        : relative(resolve(ROOT, ".."), path)
+      )
+        .split(sep)
+        .join("/"),
     ),
     css: blocks.join("\n"),
   };
