@@ -73,9 +73,9 @@ import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
 import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
-import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
+import { finishHistoryPrefix } from "./history_replay";
+import { SessionOpenReplay } from "./session_open_replay";
 import {
-  requireReadableHistory,
   isHistoryReadFailure,
   historyFailureKey,
   recoveryTarget,
@@ -629,11 +629,8 @@ class ThreadsStore {
       routePrepared = true;
       if (retryState) this.channels.delete(retryState.key);
       const channel = new Channel<unknown>();
-      const buffered = new HistoryReplayBuffer();
-      const openToken = crypto.randomUUID();
-      let replayComplete = false;
-      let replayLost = false;
-      let replayDelivered: (() => void) | null = null;
+      const replay = new SessionOpenReplay();
+      const openToken = replay.token;
       let boundKey: string | null = null;
       let historyFailed = false;
       let recheckObserver = recheck;
@@ -649,14 +646,7 @@ class ThreadsStore {
           kind?: unknown;
           openToken?: unknown;
         } | null;
-        if (received?.kind === "session_history_complete") {
-          if (received.openToken === openToken) {
-            buffered.mark(openToken);
-            replayComplete = true;
-            replayDelivered?.();
-          }
-          return;
-        }
+        if (replay.receiveMarker(event)) return;
         if (boundKey) {
           if (
             this.channels.get(boundKey) === channel &&
@@ -664,11 +654,7 @@ class ThreadsStore {
           )
             this.applyChannelEvent(boundKey, event);
         } else {
-          buffered.push(event);
-          if (received?.kind === "connectionLost") {
-            replayLost = true;
-            replayDelivered?.();
-          }
+          replay.push(event);
         }
       };
       const result = await invoke<OpenResult>("session_open", {
@@ -692,26 +678,11 @@ class ThreadsStore {
       if (result.resumed) {
         // The command response and Channel can be delivered independently.
         // Only this operation's ordered marker proves replay was consumed.
-        if (!replayComplete && !replayLost) {
-          await new Promise<void>((resolve) => {
-            const timer = setTimeout(resolve, 30_000);
-            replayDelivered = () => {
-              clearTimeout(timer);
-              resolve();
-            };
-          });
-        }
-        replayDelivered = null;
+        if (replay.needsMarker) await replay.waitForMarker();
         try {
-          requireReadableHistory(
-            input.agentId,
-            result,
-            buffered.prefix(openToken),
-            replayComplete,
-            replayLost,
-          );
+          replay.requireReadable(input.agentId, result);
         } catch (error) {
-          buffered.clear();
+          replay.clear();
           if (isHistoryReadFailure(error)) {
             // Retain only actual loss from this owner, never late replay content.
             historyFailed = true;
@@ -753,9 +724,7 @@ class ThreadsStore {
         this.drafts.set(draftGroup(input), key);
       }
       boundKey = key;
-      const { prefix, following } = buffered.take(
-        result.resumed ? openToken : undefined,
-      );
+      const { prefix, following } = replay.take(result.resumed);
       for (const event of prefix) {
         this.applyChannelEvent(key, event, false);
       }
