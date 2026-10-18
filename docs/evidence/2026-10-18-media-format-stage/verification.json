@@ -1,0 +1,292 @@
+{
+  "kind": "SelectedP13AvifUnusedPropertiesAndFragmentedAudioStage",
+  "recordedAtUtc": "2026-10-18T02:48:22.018692+00:00",
+  "sourceCommit": "a00adb658acc34e9588ebb84824a16e61e95100b",
+  "scope": "Selected common media fixes, controlled actual bytes/components, full engineering and static formal installation; not complete P13,29x8 or release acceptance.",
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "a00adb658acc34e9588ebb84824a16e61e95100b",
+    "binarySha256": "7bb12e30ed3105a17b3c8ec6caa84857e5fa01e69feff011c1beb5c5b4143adf",
+    "installedUiOrRealMessagePlaybackTested": false
+  },
+  "implemented": [
+    "AVIF canvas budget follows known ipma associations; unused ispe still receives structure, positive-size and record checks. Unknown association layouts retain prior conservative known-size checks.",
+    "Selected fragmented MP4 audio joins known track IDs and audio clocks, honors duration-field presence trun>tfhd>trex, sums known positive same-track samples with BigInt, and shares the65536 work budget. No-sample-column counts use constant multiplication. Zero/unknown values stay partial; known excess still rejects. Classic and fragment clocks are checked separately without adding parallel tracks, edits or tfdt gaps."
+  ],
+  "engineering": {
+    "commandsPassed": 7,
+    "inputCount": 19137,
+    "frontendFiles": 582,
+    "frontendPassed": 7682,
+    "rustPassed": 1787,
+    "rustIgnored": 6,
+    "inputsStable": true
+  },
+  "selectedChecks": {
+    "avifOriginalRed": {
+      "total": 4,
+      "passed": 2,
+      "semanticFailed": 2
+    },
+    "avifNewRegressionPassed": 11,
+    "avifAffectedPassed": 197,
+    "avifCompleteControl": "Official600byte33x11progressive AVIF and three unused-property variants fully native-decode to identical PNG bytes. Oversized associated declaration used in browser is a separate never-decoded rejection control.",
+    "mp4OriginalRed": {
+      "selectedTotal": 2,
+      "passed": 1,
+      "semanticFailed": 1,
+      "actualUnexpectedFrontendTotal": 7628,
+      "actualUnexpectedFrontendPassed": 7627
+    },
+    "mp4OriginalCasesGreen": 2,
+    "mp4NewAndOldModulePassed": 105,
+    "mp4NativeControls": "Official AVFoundation AppleHLS compressed-passthrough remux of existing controlled AAC: short13425B/full CoreAudio101312frames at32000Hz=3.166s; long2505856B/full19239872frames=601.246s. Remux bytes and trim differ from original encodings; same-vendor remux/decode is not codec conformance or exact browser playback.",
+    "oldShortNativeDiagnosis": "Chrome14/14 raw+production clocks advance. WebKit10new-positive clocks advance;4oldAAC/FLAC raw+production errors remain. Production MessageContent removes failed source and displays error/retry; clicking retry and quota release were not directly tested in this matrix. Diagnostic exit0 means observations completed, not old failures passed. No payload padding/reencoding fix.",
+    "finalControlledBrowsers": {
+      "engines": ["Chrome", "WebKit"],
+      "eachCasesPassed": 7,
+      "eachAssertionsPassed": 43,
+      "eachStableInputs": 247,
+      "outsideRequests": 0,
+      "allOwnedClosed": true,
+      "scope": "Actual MessageContent/MessageAttachmentMedia; three actual AVIF33x11 displays, short fMP4 explicit muted clock advance, associated oversized declaration and same complete long MP4 under mp4/wav labels rejected without media source. Long MP4 never assigned to browser decoder. Metadata timing differs across engines and is not exact full playback."
+    },
+    "rootEvidenceCorrections": [
+      "Initial short PCM analyzer failed on WAVE_FORMAT_EXTENSIBLE after successful decode; exact existing bytes reparsed, no decode rerun.",
+      "Initial diagnostic config merged include arrays and accidentally ran7628frontendtests; selected2 red cases retained, future include corrected. This is not full7.",
+      "Root final10 task initially remained idle because send_message did not trigger a new turn; explicit followup dispatched the unique run, with no duplicated validation.",
+      "Same diagnostic later overwrote baseline-observations summary with green. Original baseline-red.json remains exact; actual original tool output and explicitly reconstructed red summary are distinct from original raw file. Earlier design-review summary pin is historical, not current."
+    ]
+  },
+  "installation": {
+    "candidateIndependentPassed": 9,
+    "installedIndependentPassed": 10,
+    "fiveNewInodeAtomicFileReplacements": true,
+    "wholeBundleAtomicityClaimed": false,
+    "duplicateCandidateRemoved": true,
+    "archivePreserved": {
+      "path": "src-tauri/target/internal-candidate/2026-10-18-media-format-stage-a00adb65/Farfold-0.1.7-a00adb65.zip",
+      "sha256": "a8f97b456628f37863ebb0c92baffc57ddcd945917c24f10e54117994d24d5af"
+    }
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-media-format-stage/install/install-data-before.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-format-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-format-stage/install/install-data-after.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Fresh captured three-root manifests and metadata/raw-first seals only. No continuous absence, observed normalquit event, live/all-user-data equality or whole-userdata-backup claim; older strict differences remain."
+  },
+  "agentTests": {
+    "run": false,
+    "reason": "NEW24 affected newreal sends remain paused; no new realAgent request, credential or model/service change."
+  },
+  "remaining": [
+    "Initial32selected observations/11permission inputs unchanged; this stage subsequently changes relevant P13 code. Full same-connection permissions/effect timing unresolved; affected newreal sends paused.",
+    "Formal real-message playback, complete animation/full audible playback, decoder/transfer memory and long use remain unverified. Unknown AVIF association/layout and uncovered MP4 tracks/fragments/addressing/mixed timelines remain partial.",
+    "Old shortAAC/FLAC WebKit errors remain despite valid CoreAudio decode; exact threshold/deep decoder cause unknown. Wavl valid pair/Ogg validlong, P18 originalsample, NEW29 realbusy and P40 currentadoption remain missing.",
+    "Older strict metadata differences/unknownwriters and automatic-reopen caller unresolved; formal attachment-search positives/Windows/all29x8/fullplan remain open."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-18-media-format-stage/conditions.json",
+      "sha256": "da9602db4c1ea84c58daa33ba6d4a4bebfb9b7d7b47f009f91243ca1e5210acf"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/source-freeze.json",
+      "sha256": "6aa6a7f5a4e5591cf8f45a424e8be2484844df4c50314fbfcbacba40c45dc2cd"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/source-review.json",
+      "sha256": "a88c4b93bc3663b538f56d38636627e159baa0bc1ee4f94304be27810411d8b2"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/source-independent-review.json",
+      "sha256": "2a8ac0516372161d0b2615180851b8e350f7f2da19f3443d2c68a30aba3c5459"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/source-checkpoint.json",
+      "sha256": "18b3aa5ab869cd9cd407f74cdb71fd81f6adddad8a8b703c83ea0de30e52e032"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/engineering/run1/verification.json",
+      "sha256": "579151c0666237fe02afce0feb2de449bab2dbb6f527f91a537bbd5e5317745e"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/engineering/execution-completion.json",
+      "sha256": "f8a97afb2542f3d1530dfd2be9c5ff1a0e0152fd9f7c92566625796626ee97ce"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/image-investigation/verification.json",
+      "sha256": "74843b2b450bf6a6ab844eed309086bfa49a95cc38c3dbff091a9e8eff73831e"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/image-investigation/unused-property-baseline-red.json",
+      "sha256": "8c03198a52d3768ee5e18acb9e12f0e34528c2b302a3c182a867ea58ed824e1e"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/verification.json",
+      "sha256": "5858dd901ce34ea29c5ff112a83d9305b98be597f7911daff171099cd3c15520"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/probe-inputs.json",
+      "sha256": "29e15e0f9dd30fdae8f935253ddbf3fecaa8f2e25e6f143c4579baac6dce94b1"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/short/remux.json",
+      "sha256": "2285d3caf825b16cac2a089c7844ed02619d7afa05d50ae3b77465186345955c"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/short/decode.json",
+      "sha256": "ddc2a0c17211f8553a93e3308df7e60780ae9e7729a98f1d2e9a30e44e479924"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/short/first-analysis-error.json",
+      "sha256": "c7b029cffeb9db9bd7d077e16a302a3169d827485c9b394e78e569823fb94b1c"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/long-execution.json",
+      "sha256": "0e9faaaab1aee1bc1340f02e6951c1b04e9c8189cead1fdc449d3d091b4afe31"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/long/decode.json",
+      "sha256": "fbefd06aa74695f3aa2e22bf435ebdc2d14f10e4720d5ee4776d041a7aea6106"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/baseline-red.json",
+      "sha256": "7a41ade63d3ff41aa1b77e4b1c45ee83a0e2192e4f4df0d0bca46ecdb605c989"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/baseline-execution-completion.json",
+      "sha256": "9d7c1842c578cbc1192033c1c0b2e18aeeaae996e49ad3fd54e539120efaf672"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/first-green.json",
+      "sha256": "24395128e261cadf37ed5056c54dba2315bb1b9b9b7669f2f7081777959bd366"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/original-cases-green.json",
+      "sha256": "1af78940a1cb7a1ad36ae886ddf9cb62f7d10483243529a48ed9dcb3038d9c5e"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/observation-output-correction.json",
+      "sha256": "8c7dcf3813a5238ff858ba393f7b2a23c5e81ebeb5a5a2dea69a869cbfa1f2da"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/baseline-observations.reconstructed-from-tool-output.json",
+      "sha256": "c2879e9ca7fc22fb07e28fbfd7e5e75b9082208a21adee93be36373e0dcb22fd"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-investigation/original-cases-green.observations.json",
+      "sha256": "ca03de2005fa0d833b7d9925393f0cc98e292c1f068ddd7e7a2d7a4c86cd38e1"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/mp4-design-review/design-review.json",
+      "sha256": "f97a6e9df51b864e6786ed0a8c8b5c898efab51f6e0e611a98429b9a381530dd"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/audio-investigation/diagnostic-summary.json",
+      "sha256": "bf4f19e2c9f45f993aa3d585b21b223e5f8744607385d59bee3cd06896288284"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/audio-investigation/final-browser/execution-completion.json",
+      "sha256": "d5d35b919b034fcad2a8a06905b7e662f65f8069d2a41b7c6a0e09778f0e71c2"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/audio-investigation/final-browser/chromium-verification.json",
+      "sha256": "e3ff05b0bdf41e76238a2261740ed7e5fb6d92e07e0243f75a2773bca0c04002"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/audio-investigation/final-browser/webkit-verification.json",
+      "sha256": "73c5000df16820968d4e1dc550b3d242adef214d90caed317db8d9c9de5120d1"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "30a33dde46ee6887b14437fcf439dcae45574a2d9b24ceb0c889005a75b52dea"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/candidate-preparation/candidate-build-completion.json",
+      "sha256": "34d27e3f96742f3a023ccfe5e457d0cdf536adfc07aebce50b86da7d559aff32"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/candidate-preparation/independent/review.json",
+      "sha256": "0307c699332482ff6c75ef585a3232c385f4ee4340a9fc415f0c24000190df78"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "d17a93c21f2252a895284666cc2cd4ac1d4b1b1e19eb91a0f35779233d8e690b"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/install-result.json",
+      "sha256": "ed59803f5088969bb00e2ecc0a30701a04161883064cdcc2abdee0173684d799"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/install-execution-completion.json",
+      "sha256": "98171c2ba7a1969c89360a3dd684992b203a4770f74b09bbea467882ee56eb0a"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/independent-ten-dispatch-correction.json",
+      "sha256": "03635284164d40773680eb4658e4a6fba351844b7a2630bf0b6e9b1dbdea1861"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/installed-independent-review-private.json",
+      "sha256": "764cc8097c3c928232b3d7c4119b17cdc1aabcd3675b49327f450d9feb80fca0"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/installed-ten-execution-completion.json",
+      "sha256": "a0a5d99cd50c0cf5b56d525cb4939565221dff6ac12ec3e57eb659ea3ff9ee33"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/candidate-cleanup.json",
+      "sha256": "c9fe968a7d7d3a83ee602bb26a781ff32dcc26d98060816d493316995bdffe3a"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/candidate-cleanup-execution-completion.json",
+      "sha256": "32b4d6e253ed1943b240db9152f3d70dcfb5d3afa980156df28fa4522f5174e6"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/retention-before-receipt.json",
+      "sha256": "7a5b8802a626f0e09b7c8c982236d94e25a8b0f4f8f6482ece81215ef6a8bbcc"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/retention-preinstall-receipt.json",
+      "sha256": "5bc25fc3b30850ef5a619b02af3e03e4287594b4b6b1a0318c5bf2d69afa40a6"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/retention-after-receipt.json",
+      "sha256": "614d403e101e7888ec0b4cdc75e8e944ca6c77884ff78f254acb29bd66c9dba7"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/before-execution-completion.json",
+      "sha256": "641344446cae492a1163b75534bfe5105bd64461b841fe8e418fcb02c1e66091"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/preinstall-execution-completion.json",
+      "sha256": "4b0339fa3567b88c4953ace957b7805f53fff75c43b02672ebd7aa11e1eb3c2e"
+    },
+    {
+      "path": "output/2026-10-18-media-format-stage/install/after-execution-completion.json",
+      "sha256": "ad209336af97c73c3c0bc4e3f761b5dae0272c7bc38b4800f78c09265f09ac63"
+    }
+  ],
+  "predecessor": {
+    "path": "docs/evidence/2026-10-18-retained-media-stage/verification.json",
+    "sha256": "27d0024ddb38d58d45bf106f62c15db7481851b934701e142e1e5794288bab69"
+  },
+  "onlyActivePlan": "plans/agent-access.md",
+  "original151And29x8Unchanged": true
+}
