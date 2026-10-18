@@ -8,6 +8,7 @@ import { messageFlacAdmission } from "./message_flac_admission";
 import { messageAdtsAdmission } from "./message_adts_admission";
 import { messageMpegAudioAdmission } from "./message_mpeg_audio_admission";
 import { messageMp4AudioAdmission } from "./message_mp4_audio_admission";
+import { messageOggAudioAdmission } from "./message_ogg_audio_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -135,7 +136,8 @@ function base64Value(code: number): number {
  * WAVE, native FLAC, ADTS and indexed LayerIII MPEG frames receive their
  * recognized duration policies, including selected leading ID3 stored extents
  * on the ADTS/MPEG paths. Selected classic MP4 audio-track declarations also
- * receive a media-clock policy. The original source is never rewritten;
+ * receive a media-clock policy. Selected continuous Ogg Vorbis declarations
+ * also receive a known audio-interval lower-bound policy. The original source is never rewritten;
  * other audio and unknown duration declarations remain uncovered.
  * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.
@@ -239,6 +241,11 @@ export function attachmentMediaAdmission(
               mp4 !== "notMp4Audio"
             )
               return { status: "rejected", reason: mp4 };
+            if (mp4 === "notMp4Audio") {
+              const ogg = messageOggAudioAdmission(data);
+              if (ogg !== "notCovered" && ogg !== "notOggAudio")
+                return { status: "rejected", reason: ogg };
+            }
           }
         }
       }

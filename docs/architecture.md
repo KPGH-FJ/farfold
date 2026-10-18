@@ -97,6 +97,8 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 
 [message_mp4_fragments.ts](../src/runtime/message_mp4_fragments.ts) 对已识别的分片声明另核音轨预算：以已知`tkhd`标识连接`soun`音轨与`mdhd`刻度，沿`trun`、`tfhd`、`trex`的字段存在顺序取采样间隔，同轨的已知片段用BigInt累计到600秒策略。全体盒与显式样本表共用65536记录预算；无逐项列时用采样计数直接相乘，不按巨大计数分配数组或循环。零值、未知字段、轨道或刻度保持部分覆盖，不能遮蔽其他独立已知超限。经典表与分片声明分别核验，不合并以免重复计量；不把片段起始时间间隙、编辑映射、并行轨道或声道推为实际播放时长，不核`mdat`地址或负载、完整编解码有效性或内存。
 
+[message_ogg_audio_admission.ts](../src/runtime/message_ogg_audio_admission.ts) 对选定连续Ogg Vorbis逻辑流检查已声明音频区间的下界。按包边界排除三个头包，仅在同一连续流内相减已完成音频页的已知非负采样位置；非结束页建立起点，连续且不回退的结束页可作为末端，超过600秒才拒绝。该差值消去常量起始偏移，不拿结束位置直接当总时长，不把并行流、声道或头页的零位置相加。页、分段和包遍历共用65536记录预算；丢页、未知映射及不可确定的区间保持部分覆盖，非超限不宣称完整预算通过。不核完整CRC、Vorbis设置与音频负载，也不推定实际播放、解码内存或全部Ogg编码支持；共用入口保留原MIME与来源字节。
+
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
 [message-media-visibility.tsx](../src/components/message-media-visibility.tsx) 将工具组、工具详情及保留对话路由的可见性逐层相交，内层展开不能覆盖已隐藏的祖先。[App.tsx](../src/App.tsx) 按实际显示的页面键传递路由可见性，沿原顺序保留带网页或草稿的页面；搜索和带入浮层仅暂停交互，不误作页面隐藏。保留的隐藏文字节点继续存在，但消息媒体来源和配额退役，并撤回此前的媒体展开意图；回到页面或查找揭示不会自动加载，仍需用户明确展开媒体。该边界不核系统休眠、窗口后台、网页内媒体或解码器内存的生命周期。
