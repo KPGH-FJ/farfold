@@ -1,0 +1,152 @@
+{
+  "kind": "InstalledFormalDiffExportAndLoadedAttachmentScopePartialEvidence",
+  "updatedAtUtc": "2026-10-18T10:49:43.123687+00:00",
+  "schedulingAuthority": "plans/agent-access.md only; not an additional plan",
+  "formalApp": {
+    "sourceCommit": "8fa5ac66dd5f4531cb4ce0cae2bd9705fb4fa471",
+    "binarySha256": "7812216e0592dc9e350e160bafe5c339fa35a60588290608f61e80245a8c684d",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "laterCss52fInstalledVisualProofIncluded": false
+  },
+  "p18": {
+    "agentVersion": "Dirac0.5.21",
+    "existingSavedModelAndReasoningRetained": true,
+    "rootObservedNewPrompt": 1,
+    "rootObservedApproveOnce": 1,
+    "rootObservedNewCodexPrompt": 0,
+    "sampleBeforeBytes": 54,
+    "originalExpectedAfterBytesWithFinalLf": 53,
+    "actualApprovedAfterBytes": 52,
+    "actualAfterSha256": "541f3764d6b6a2200e016d155fe47b0dab9bfe10901dee05506b5c41a5ea3e75",
+    "terminalLf": false,
+    "originalInstructionCompliance": false,
+    "known52ByteApprovalSeparateFromOriginalIntent": true,
+    "unifiedAndSideBySideFragmentsAgreeOnLfRemoval": true,
+    "rootSampleReadbackMatchesApprovedBytes": true,
+    "appDirectVerify": "rejected outside current working folder",
+    "nativeOpen": "disabled then normally cancelled",
+    "appDiskVerified": false,
+    "twoSamePathCompletedToolCards": "observed; duplication cause and underlying write count unknown"
+  },
+  "p35": {
+    "selectedAttachmentZipImplementationExists": true,
+    "existingRealFilesystemCancelAndUnknownTestsRetained": true,
+    "loadedAttachmentCandidates": 0,
+    "formatScopeAndPrivacyVisible": true,
+    "nativeSave": "disabled in two target directories; final normal cancellation feedback observed",
+    "nativeCause": "unknown; no product source failure proven",
+    "writerStarted": false,
+    "zipProduced": false,
+    "nativeMidwriteCancellationProven": false,
+    "existingImplementationReferences": [
+      "src/components/ConversationExportHost.tsx",
+      "src/runtime/conversation_archive_selection.ts",
+      "src-tauri/src/file_delivery/archive_stream.rs",
+      "src-tauri/src/file_archive/writer_tests.rs",
+      "src-tauri/src/file_archive_independent_tests.rs"
+    ]
+  },
+  "p32": {
+    "scope": "only current loaded conversations",
+    "loadedConversations": 2,
+    "messageAttachmentCandidatesInScope": 0,
+    "loadedDocxBodyContextAndRestoredDraftDoNotCountAsCompletedMessageAttachment": true,
+    "oldDraftSentOrCleared": false,
+    "allHistoryAttachmentAbsenceClaimed": false,
+    "realAttachmentSearchPositive": false
+  },
+  "protocol": {
+    "files": 3,
+    "validDefiniteRecords": 396,
+    "coverageIssues": 0,
+    "boundaryUncertainRecords": 0,
+    "outPrompt": 1,
+    "outLoad": 2,
+    "outNew": 1,
+    "outSetConfig": 2,
+    "outCancel": 0,
+    "inPermission": 1,
+    "uiActionCountsDistinctFromMethodCounts": true,
+    "perAgentAttributionOrCauseProven": false,
+    "zeroSdkSideEffectsProven": false
+  },
+  "dataComparison": {
+    "method": "Two sealed normalized endpoint copies; baseline raw files separately rechecked, no new complete pre-use roots scan or continuous-state claim. After-use helper before argument selected capture/normalization algorithm.",
+    "captureExit": 0,
+    "captureZeroMeansDataEqual": false,
+    "wholeOldComposerObjectsExact": 10,
+    "wholeIgnoredRowsExact": 173,
+    "sessionsWholeExact": 136,
+    "sessionsTotal": 138,
+    "changedSessions": 2,
+    "changedSessionFields": ["updated_at"],
+    "agentsWholeExact": 38,
+    "agentsTotal": 40,
+    "changedAgents": 2,
+    "changedAgentFields": ["updated_at"],
+    "settingsWholeExact": 52,
+    "settingsTotal": 54,
+    "wholeRawUnsentExact": false,
+    "unsentChangedKnownField": "activity",
+    "otherSettingChangeClassified": false,
+    "confirmedSelectionsWholeExact": true,
+    "confirmedSelections": 23,
+    "pendingWholeExact": true,
+    "pendingCount": 41,
+    "completedWholeExact": true,
+    "completedCount": 23,
+    "progressWholeExact": true,
+    "progressCount": 72,
+    "unknownDraftAndSetupFieldPresenceAndValuesExact": true,
+    "tableRowsAdded": 0,
+    "tableRowsRemoved": 0,
+    "manifestEntriesEach": 232527,
+    "manifestAdded": 0,
+    "manifestRemoved": 0,
+    "manifestModified": 8,
+    "normalizedDatabaseByteEqual": false,
+    "writer": "unknown",
+    "priorWindowFailuresAndDifferencesNotWaived": true
+  },
+  "notProven": [
+    "Original LF-preserving instruction success or wholeP18",
+    "App verified disk state or native Open/Save availability cause",
+    "Exactly-once underlying writes/callbacks/workflow",
+    "Current native ZIP output/readback, attachment packaging or midwrite cancel",
+    "P32 completed-message attachment positive or wholeP32/P35",
+    "All user data unchanged, continuous preservation or zero SDK sideeffects",
+    "All29/eight standards,151 tasks or only external conditions remaining",
+    "Later CSS52f installed appearance"
+  ],
+  "evidence": {
+    "rootArchiveAndSearchObservation": {
+      "path": "output/2026-10-18-conversation-archive-formal/actual-observation.json",
+      "sha256": "bc364c01f50ec093c0df39fdfb782f6ede9b55c1c965e15eb1d7a53fe87552d0"
+    },
+    "rootDiffObservation": {
+      "path": "output/2026-10-18-p18-dirac-0521/actual-observation.json",
+      "sha256": "b8edfdea386fa9c48d058ddf9a99478b30162d23a0494948be503c719ab43712"
+    },
+    "independentArchiveAndSearchReview": {
+      "path": "output/2026-10-18-conversation-archive-formal/independent-observation-review.json",
+      "sha256": "22cb38d3545ebc68dae0c397cf91b1f734c239b6209f6648c75efab245986023"
+    },
+    "independentDiffReview": {
+      "path": "output/2026-10-18-p18-dirac-0521/independent-observation-review.json",
+      "sha256": "7f7475a8b96f56e2718379333ae0ae0589a9ce747525ed834fbec57e5d26c939"
+    },
+    "dataComparison": {
+      "path": "output/2026-10-18-conversation-archive-formal/after-analysis/safe-summary.json",
+      "sha256": "1641197e5d62af04771af4f37cbd6942c19d90f0c1d1996ccdbc6e91e912e3ca"
+    },
+    "dataReview": {
+      "path": "output/2026-10-18-conversation-archive-formal/after-analysis/review.json",
+      "sha256": "fce73f9b992dd24977c890500ac87a4bf4eac1df5f91bc2e83c3b83f992b1882"
+    },
+    "contentFreeProtocol": {
+      "path": "output/2026-10-18-conversation-archive-formal/formal-protocol/summary.json",
+      "sha256": "d8db9569d285f58d09da68cc877096677ce8b498311ea3dd7b54dac7c0e2fdb3"
+    }
+  }
+}

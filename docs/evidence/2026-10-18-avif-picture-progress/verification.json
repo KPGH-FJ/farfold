@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "taskId": "P13",
+  "status": "partialEvidenceOnly",
+  "taskClosed": false,
+  "observedDate": "2026-10-18",
+  "selectedSource": {
+    "observedHead": "8fa5ac66dd5f4531cb4ce0cae2bd9705fb4fa471",
+    "repoClosureFiles": 103,
+    "productionFiles": 101,
+    "frozenInputs": 211,
+    "beforeAfterAndIndependentCurrentPinsExact": true,
+    "installedAppEquivalenceClaim": false
+  },
+  "control": {
+    "bytes": 2267,
+    "sha256": "3bf9f91da471749e7df639ba7945d4d94c1c3e3968c26f3619fbbcfc92790576",
+    "payloadChanged": false
+  },
+  "imageIoReference": {
+    "nativeIndicesRead": 5,
+    "rgbaReferencePinsExact": true,
+    "referenceRole": "Independent pixel references, not timed frame mapping",
+    "classes": [
+      { "name": "magenta", "possibleNativeIndices": [0] },
+      { "name": "brightGreen", "possibleNativeIndices": [1] },
+      { "name": "darkGreen", "possibleNativeIndices": [2] },
+      { "name": "gradientAmbiguous34", "possibleNativeIndices": [3, 4] }
+    ]
+  },
+  "controlledWebKit": {
+    "version": "26.5",
+    "actualExecution": {
+      "sessionId": 99090,
+      "initialChunk": "c09879",
+      "completionChunk": "0ae4ce",
+      "naturalExitCode": 0
+    },
+    "screenshotAttempts": 77,
+    "perCaseAttemptLimit": 40,
+    "sharedAttemptLimit": 80,
+    "cases": [
+      {
+        "kind": "plainImg",
+        "screenshots": 37,
+        "checksPassed": 13,
+        "checksTotal": 13,
+        "pictureCounts": {
+          "magenta": 9,
+          "brightGreen": 8,
+          "darkGreen": 6,
+          "gradientAmbiguous34": 14
+        },
+        "sameSourceAndNodeAtEveryRecordedSample": true,
+        "poolAvailableBeforeActiveAfter": [4, 4, 4],
+        "retirementObservationMs": 366.25325000000066
+      },
+      {
+        "kind": "productionMessageContent",
+        "screenshots": 40,
+        "checksPassed": 13,
+        "checksTotal": 13,
+        "pictureCounts": {
+          "magenta": 12,
+          "brightGreen": 7,
+          "darkGreen": 7,
+          "gradientAmbiguous34": 14
+        },
+        "explicitExpandAndCollapse": true,
+        "sameSourceAndNodeAtEveryRecordedSample": true,
+        "poolAvailableBeforeActiveAfter": [4, 3, 4],
+        "retiredNodeDetachedAndSourceRemoved": true,
+        "passiveRerenderDidNotRecreateSource": true,
+        "retirementObservationMs": 372.3131250000006
+      }
+    ],
+    "independentScreenshotRecomputation": {
+      "pngs": 77,
+      "pngCrcAndBoundsChecked": true,
+      "standardLibraryPngDecodeEqualsSavedRgbaByteForByte": true,
+      "originalReferenceRgbaAndRgbPinsExact": true,
+      "cropInset": 8,
+      "maxMeanAbsoluteRgbError": 24,
+      "minimumRunnerUpGap": 10,
+      "allClassAssignmentsAndScoresExact": true,
+      "representativeScreenshotsVisuallyReviewed": 8,
+      "originalAvifDecodedByIndependentReviewer": false
+    },
+    "closure": {
+      "pageContextBrowserBrowserServerAndViteClosed": true,
+      "nodeAndWebKitGroupsGone": true,
+      "stdoutStderrControlEof": true,
+      "port1610OpenAfterClose": false,
+      "finalImages": 0,
+      "finalFreePoolSlots": 4,
+      "outsideRequestsObserved": 0,
+      "unexpectedIpc": 0,
+      "timeoutOperations": 0,
+      "pendingUnderlyingOperations": 0,
+      "cleanupPending": false
+    }
+  },
+  "controlledSupervisorValidation": {
+    "scope": "Two owned Python parent/worker fixtures, not Node, WebKit or media playback",
+    "actualDriverExecution": {
+      "sessionId": 26164,
+      "initialChunk": "eacda1",
+      "completionChunk": "5ba33a",
+      "naturalExitCode": 0
+    },
+    "registeredChecksPassedTotal": [11, 11],
+    "lateChecksPassedTotal": [12, 12],
+    "registeredWorkerActualReturnCode": -15,
+    "lateGroupsEachReceivedOwnTermGraceAtLeast2Seconds": true,
+    "groupsGoneAndThreeStreamsEof": true,
+    "supervisorMainFunctionReturns": [1, 1],
+    "supervisorMainReturnsAreNotSeparateProcessNaturalExitCodes": true,
+    "injectedFailurePreserved": true,
+    "playbackPerformed": false
+  },
+  "notVerified": [
+    "Complete five-frame mapping; native indices 3 and 4 remain one class",
+    "Full frame order, frame durations, loop count or presentation orientation",
+    "Decoder allocation, peak memory, CPU or transport memory bounds",
+    "Installed Farfold/WKWebView or real Agent-returned media",
+    "Overall P13 or all 29 Agents and eight standards"
+  ],
+  "evidence": {
+    "originalAvif": {
+      "path": "output/2026-10-18-media-format-stage/image-investigation/official-controls/colors-animated-12bpc-keyframes-0-2-3.avif",
+      "sha256": "3bf9f91da471749e7df639ba7945d4d94c1c3e3968c26f3619fbbcfc92790576"
+    },
+    "imageIoOracle": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/imageio-oracle/run1/observation.json",
+      "sha256": "9d47fdec3bd75833ceff6ed0e8100385c477712907b973e62373519381340baa"
+    },
+    "browserFreeze": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/source-freeze.json",
+      "sha256": "f384792fae7ea36609460495b47aed742e2e18356b5fbe8826add89717a3dc03"
+    },
+    "browserVerification": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/run1/verification.json",
+      "sha256": "121a713b7d81d173f175fe3fa60769dae3cafbf3a636b477e5e8c233ea20a841"
+    },
+    "browserSupervisor": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/supervisor-result.json",
+      "sha256": "3e810c16e2d62bf7e16e1ef7950a4224cac065e175c6d36add06da3f3dff4e9f"
+    },
+    "browserExecutionCompletion": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/execution-completion.json",
+      "sha256": "59b2bb77a256a5f21ee00bb8eee527820ef6e7a12c6c06e8beeea799791038a8"
+    },
+    "independentActualReview": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/independent-actual-results-review.json",
+      "sha256": "dcb3aed6ec2d97d57780d105e71d132c1ecb2c82b6261a2d65b0e1588ac12772"
+    },
+    "independentScreenshotRecomputation": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3/independent-result-review/screenshot-recomputation.json",
+      "sha256": "ef3767e3d09e8467b40906dc6ea4beafcafe0cf01c990944723df2b334c4c34a"
+    },
+    "controlledSupervisorVerification": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3-safety-validation-r2/run1/verification.json",
+      "sha256": "711922b0747939fffdf00373652526413366c3a9187d4b7cf36a3e38a63c416c"
+    },
+    "controlledSupervisorCompletion": {
+      "path": "output/2026-10-18-p40-cli-management/scoped-query/p13-avif-assessment/browser-r3-safety-validation-r2/execution-completion.json",
+      "sha256": "c6dde532c56f4743d5a44d287af62607e90bcad043218a95e8bdfd89111f0536"
+    }
+  }
+}
