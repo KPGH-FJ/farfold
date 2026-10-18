@@ -265,7 +265,10 @@ fn extra_reports_cannot_become_management_authority_even_with_a_forged_private_t
     assert_eq!(code(source.current(&store, false)), Code::TargetUnavailable);
 }
 fn waiting_peer() -> String {
-    PEER.replace("print(json.dumps({'id':2,'result':{}}),flush=True)","import os,time\nwith open(sys.argv[2],'w') as marker: marker.write(str(os.getpid()))\ntime.sleep(60)\nprint(json.dumps({'id':2,'result':{}}),flush=True)")
+    PEER.replace(
+        "print(json.dumps({'id':2,'result':{}}),flush=True)",
+        "import os,time\nwith open(sys.argv[2]+'.pending','w') as marker:\n marker.write(str(os.getpid()))\nos.replace(sys.argv[2]+'.pending',sys.argv[2])\ntime.sleep(60)\nprint(json.dumps({'id':2,'result':{}}),flush=True)",
+    )
 }
 #[test]
 fn cancelling_while_setter_waits_reaps_the_exact_worker_and_pipes() {
@@ -292,16 +295,25 @@ fn cancelling_while_setter_waits_reaps_the_exact_worker_and_pipes() {
         marker.to_str().unwrap(),
     ]);
     let observer = request.clone();
-    let worker = std::thread::spawn(move || process::run_skills(command, &request));
-    let end = std::time::Instant::now() + Duration::from_secs(4);
-    while !marker.exists() && std::time::Instant::now() < end {
-        std::thread::sleep(Duration::from_millis(5));
+    struct CancelOnDrop<'a>(&'a requests::Request);
+    impl Drop for CancelOnDrop<'_> {
+        fn drop(&mut self) {
+            self.0.operation.abandon();
+        }
     }
-    let pid: u32 = std::fs::read_to_string(&marker).unwrap().parse().unwrap();
-    observer.operation.abandon();
-    assert_eq!(code(worker.join().unwrap()), Code::Cancelled);
-    assert!(!crate::supervisor::owned_group_alive(pid));
-    assert!(observer.targets.lock().unwrap().is_none());
+    std::thread::scope(|scope| {
+        let worker = scope.spawn(move || process::run_skills(command, &request));
+        let _cancel = CancelOnDrop(&observer);
+        let end = std::time::Instant::now() + Duration::from_secs(4);
+        while !marker.exists() && std::time::Instant::now() < end {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        let pid: u32 = std::fs::read_to_string(&marker).unwrap().parse().unwrap();
+        observer.operation.abandon();
+        assert_eq!(code(worker.join().unwrap()), Code::Cancelled);
+        assert!(!crate::supervisor::owned_group_alive(pid));
+        assert!(observer.targets.lock().unwrap().is_none());
+    });
 }
 #[test]
 fn timeout_while_setter_waits_does_not_publish_or_retry() {
