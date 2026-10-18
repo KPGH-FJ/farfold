@@ -8,7 +8,9 @@ mod windows;
 #[cfg(unix)]
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
 #[cfg(windows)]
-pub(crate) use windows::PinnedPath;
+pub(crate) use windows::{
+    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, metadata_child,
+};
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};
 

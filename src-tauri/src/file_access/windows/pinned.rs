@@ -160,6 +160,9 @@ impl PinnedPath {
     pub(crate) fn file(&self) -> &File {
         self.files.last().expect("pinned leaf")
     }
+    pub(crate) fn chain_identities(&self) -> &[Identity] {
+        &self.identities
+    }
     pub(crate) fn identity(&self) -> &Identity {
         self.identities.last().expect("pinned identity")
     }

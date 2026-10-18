@@ -13,6 +13,10 @@ impl Reader {
             context: super::windows_git::ReadContext::open(_path)?,
         })
     }
+    #[cfg(windows)]
+    pub fn windows_scope(&self) -> &super::windows_scope::Scope {
+        &self.context.scope
+    }
     pub fn matches(&self, _snapshot: &Snapshot) -> Result<()> {
         #[cfg(windows)]
         self.context.scope.matches(_snapshot)?;

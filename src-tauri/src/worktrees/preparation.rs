@@ -11,6 +11,14 @@ use super::{
     types::{Result, error},
 };
 
+pub(super) fn supported() -> Result<()> {
+    if cfg!(any(target_os = "macos", windows)) {
+        Ok(())
+    } else {
+        Err(error("unsupportedGit"))
+    }
+}
+
 pub(super) fn relative_segments(relative: &str) -> Result<Vec<&str>> {
     if relative.is_empty() {
         return Ok(Vec::new());
@@ -35,6 +43,8 @@ pub(super) struct Observation {
     pub git: GitObservation,
     #[cfg(target_os = "macos")]
     metadata: platform::MetadataObservation,
+    #[cfg(windows)]
+    metadata: super::preparation_windows::MetadataObservation,
 }
 pub(super) fn collect(saved: &SavedLocation, relative: &str) -> Result<Observation> {
     collect_with(saved, relative, || {})
@@ -70,7 +80,28 @@ pub(super) fn collect_with(
             metadata: before,
         })
     }
-    #[cfg(not(target_os = "macos"))]
+    #[cfg(windows)]
+    {
+        let scope = super::preparation_windows::Scope::open(saved, &segments)?;
+        let before = scope.observe()?;
+        let git = scope.git(saved)?;
+        between();
+        scope.recheck(saved)?;
+        if scope.observe()? != before || scope.git(saved)? != git {
+            return Err(error("changed"));
+        }
+        scope.recheck(saved)?;
+        if scope.observe()? != before {
+            return Err(error("changed"));
+        }
+        Ok(Observation {
+            project_path: scope.project_path(),
+            facts: before.facts(),
+            git,
+            metadata: before,
+        })
+    }
+    #[cfg(not(any(target_os = "macos", windows)))]
     {
         let _ = (saved, segments, between);
         Err(error("unsupportedGit"))

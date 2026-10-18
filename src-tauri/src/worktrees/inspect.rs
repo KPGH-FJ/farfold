@@ -239,6 +239,12 @@ pub(super) fn observe(path: &Path) -> Result<(Snapshot, Reader)> {
 pub(super) fn snapshot(path: &Path) -> Result<Snapshot> {
     observe(path).map(|(snapshot, _)| snapshot)
 }
+#[cfg(windows)]
+pub(super) fn observe_with_reader(path: &Path, reader: &Reader) -> Result<Snapshot> {
+    let snapshot = collect_snapshot(path, reader)?;
+    reader.matches(&snapshot)?;
+    Ok(snapshot)
+}
 fn collect_snapshot(path: &Path, reader: &Reader) -> Result<Snapshot> {
     let selected = canonical(path)?;
     let selected = Path::new(&selected);

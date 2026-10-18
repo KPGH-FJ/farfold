@@ -218,7 +218,7 @@ for line in sys.stdin:
  elif m.get('method')=='authenticate':
   assert m['params']=={'methodId':'api-key','_meta':{'api-key':{'apiKey':'protocol-key-transient-canary'}}}
   calls+=1
-  open(sys.argv[1],'a').write('matched\n')
+  open(sys.argv[1],'ab').write(b'matched\n')
   if calls==1: reply={'result':{}}
   else: reply={'error':{'code':-32603,'message':'protocol-key-transient-canary','data':{'secret':'protocol-key-transient-canary'}}}
   print(json.dumps(dict(jsonrpc='2.0',id=m['id'],**reply)),flush=True)
@@ -245,7 +245,7 @@ async fn protocol_key_wire_round_trip_keeps_secret_out_of_cache_and_error_diagno
         id: "protocol-key-fixture".into(),
         name: "Fixture".into(),
         source: "custom".into(),
-        command: "/usr/bin/python3".into(),
+        command: crate::platform_tests::python(),
         args: vec![
             "-u".into(),
             script.to_string_lossy().into_owned(),

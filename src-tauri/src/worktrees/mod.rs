@@ -71,3 +71,5 @@ mod preparation;
 mod preparation_git;
 #[cfg(all(test, target_os = "macos"))]
 mod preparation_tests;
+#[cfg(windows)]
+mod preparation_windows;

@@ -31,6 +31,8 @@ use windows_sys::{
         System::IO::IO_STATUS_BLOCK,
     },
 };
+mod metadata;
+pub(crate) use metadata::{EntryMetadata, MetadataFailure, MetadataKind, metadata_child};
 mod pinned;
 pub(crate) use pinned::PinnedPath;
 #[cfg(test)]
