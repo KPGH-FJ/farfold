@@ -8,7 +8,7 @@ pub(super) fn source(path: &str) -> source::Source {
             id: "synthetic".into(),
             name: "Synthetic".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: crate::platform_tests::python(),
             args: vec![],
             env: vec![],
             version: None,
@@ -40,8 +40,16 @@ pub(super) fn request() -> Request {
     }
 }
 fn peer(mode: &str, path: &str) -> Command {
-    let mut c = Command::new("/usr/bin/python3");
-    c.args(["-c", include_str!("peer.py"), mode, path]);
+    let mut c = Command::new(crate::platform_tests::python());
+    c.args([
+        "-X",
+        "utf8",
+        "-u",
+        "-c",
+        include_str!("peer.py"),
+        mode,
+        path,
+    ]);
     c
 }
 fn run(mode: &str) -> SearchOperation {
@@ -550,3 +558,7 @@ async fn unloaded_guard_checks_native_id_across_owned_directories() {
 async fn unloaded_guard_checks_loaded_native_id_of_proven_entry_alias() {
     unloaded_guard(true).await;
 }
+
+#[cfg(any(target_os = "macos", windows))]
+#[path = "admission_tests.rs"]
+mod admission_tests;

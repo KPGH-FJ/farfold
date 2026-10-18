@@ -9,7 +9,7 @@ for line in sys.stdin:
  if m=='initialize':v={'userAgent':'owned-synthetic'}
  elif m=='thread/read':
   assert r['params']=={'threadId':'native-1','includeTurns':False}
-  v={'thread':{'id':'wrong' if mode=='wrong' else 'native-1','cwd':cwd}}
+  v={'thread':{'id':'wrong' if mode=='wrong' else 'native-1','cwd':cwd+'.changed' if mode=='wrong-cwd' else cwd}}
  else:
   assert r['params']['threadId']=='native-1' and r['params']['itemsView']=='full'
   if mode=='unsupported':
