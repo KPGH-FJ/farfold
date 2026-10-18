@@ -1,0 +1,417 @@
+{
+  "kind": "InstalledStartupIntentSelectedFormalWindowAndInternalResourceBaseline",
+  "date": "2026-10-19",
+  "scope": "共用草稿准备和首次发送并发保护的源码、受控检查、安装及本窗被动启动/既有加载；独立归档与内部资源采样各按实际范围说明。",
+  "source": {
+    "commit": "0a777bcff535954c5635a8d2d4c8e9ecf4d842c5",
+    "semanticReviewResult": "noBlockingFinding",
+    "affectedFiles": 9,
+    "affectedPassed": 177,
+    "affectedNaturalExit": 0,
+    "behavior": "恢复保存选择、ready刷新、隐藏返回不自行准备；本次明确Agent/模型/目录或首发才准备，首发等待原设置确认后一次发送；同pair在途操作和附件等待后旧回调复用当前合法目标。",
+    "controlledScopeNotInstalledFirstSend": true
+  },
+  "engineering": {
+    "sourceCommit": "0a777bcff535954c5635a8d2d4c8e9ecf4d842c5",
+    "requiredChecks": 7,
+    "allNaturalExitZero": true,
+    "inputs": 19196,
+    "beforeEqualsAfter": true,
+    "frontendFiles": 594,
+    "frontendPassed": 7929,
+    "rustPassed": 1823,
+    "rustIgnored": 6,
+    "session": 75896,
+    "chunks": ["e37772", "4dc9bd", "55a41f"]
+  },
+  "installed": {
+    "sourceCommit": "0a777bcff535954c5635a8d2d4c8e9ecf4d842c5",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binaryFileBytesSha256": "550282ab49482e5cce0108c134e85099c03f2d852e3121b314a6a6bbad580926",
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 10,
+    "installedChecksTotal": 10,
+    "freshThreeManifestEntriesEach": 232530,
+    "freshThreeManifestsStrictlyEqual": true,
+    "duplicateCandidateAppRemoved": true,
+    "adhocInternalSignatureOnly": true,
+    "publicSigningOrNotarization": false
+  },
+  "formalWindow": {
+    "startUtc": "2026-10-18T16:39:28.779882+00:00",
+    "endUtc": "2026-10-18T16:42:00.973319+00:00",
+    "baseline": "复用安装后已关闭端点，再核当前原始三件与进程零；不是新做完整before捕获或连续关闭观测。",
+    "rootActions": {
+      "prompts": 0,
+      "configChanges": 0,
+      "permissionApprovals": 0,
+      "newConversationClicks": 0,
+      "AppDataFixtureAdditions": 0,
+      "nativeSavePanels": 1,
+      "saveSubmissions": 1,
+      "archiveRetry": 0,
+      "repoOutputZIPAdditions": 1
+    },
+    "startup": "恢复的新对话页未发送、未作当前选择；随后只加载既有Dirac测试对话，保留原服务、模型、推理与权限选择。",
+    "history": "仅本窗实际可见范围；原用户提示/结构化附件未在默认收起树出现，不声明完整历史或原附件恢复。",
+    "axAndImageFiles": 16,
+    "normalSaveAndExitObserved": true,
+    "unknownWorkWarningRetained": true,
+    "forcedQuit": false,
+    "formalFirstSendTested": false
+  },
+  "coveredProtocol": {
+    "scanExecutions": 1,
+    "naturalExit": 0,
+    "actualChunk": "d383f5",
+    "tapFiles": 1,
+    "parsedRecords": 1006,
+    "coverageIssueCount": 0,
+    "boundaryUncertainRecords": 0,
+    "out": {
+      "session/prompt": 0,
+      "session/new": 0,
+      "session/cancel": 0,
+      "session/request_permission": 0,
+      "session/set_config_option": 0,
+      "session/load": 1,
+      "session/list": 0
+    },
+    "inRequestPermission": 0,
+    "sourcePinsUnchanged": true,
+    "scope": "仅覆盖该结构化日志窗口；没有Agent归属字段，不归因此前new1、不证明所有启动/全局自动重开、实装首发或全系统零副作用。"
+  },
+  "selectedArchive": {
+    "savedOnce": true,
+    "archiveBytes": 6008,
+    "selected": 1,
+    "omitted": 7,
+    "toolDetailsIncluded": false,
+    "entries": 3,
+    "entryCrcsPassed": true,
+    "selectedCurrentFileBytes": 48,
+    "payloadByteExact": true,
+    "sourceUnchangedAtTwoReadPoints": true,
+    "archiveSha256": "c79253c5f987dbc29f32bc72a1c0075a2668c1363f897dca75f16c2a99fa526d",
+    "selectedPayloadSha256": "26b5d9b3a26b920c37497ecc3797dc9e0b24beb0d91148a8063ab697949a861c",
+    "completedAndParentCopyNeutral": true,
+    "notOriginalSentAttachmentRecovery": true,
+    "P35Complete": false
+  },
+  "postUseData": {
+    "status": "singleSealedComparisonCompletedDifferencesPreserved",
+    "baselineScope": "Distinct startup/old-conversation/archive formal window: reused installed endpoint plus baseline raw-three point to one AFTER-USE capture; no extra full pre-UI capture or continuous-interval claim.",
+    "capture": {
+      "session": 54851,
+      "chunks": ["75a9a8", "abd55e"],
+      "naturalExit": 0,
+      "role": "唯一after-use捕获；使用原before算法，不是额外freshbefore"
+    },
+    "comparison": {
+      "session": null,
+      "chunk": "53eb53",
+      "naturalExit": 0,
+      "attempts": 1,
+      "sealedConnections": 2,
+      "mode": "ro immutable/query_only",
+      "allConnectionsClosed": true,
+      "noSourceDatabaseOpened": true,
+      "authorScopeReviewNotSecondSQLAudit": true
+    },
+    "completeManifest": {
+      "beforeCount": 232530,
+      "afterCount": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 7,
+      "wholeEntryExact": 232523,
+      "modifiedBySafeCategory": {
+        "webkit": 4,
+        "metadataRawFile": 2,
+        "otherAppData": 1
+      },
+      "wholeManifestExact": false
+    },
+    "rawMainDatabaseBytesAndSignatureExact": true,
+    "rawWALAndSHMBytesAndSignaturesDiffer": true,
+    "normalizedMetadata": {
+      "beforeSha256": "cc8b7e9784ebbd3015813b6147e51c71324399d05caec1972bf6b32b4a8d2b91",
+      "afterSha256": "bcb324f7c93e018db566773fa94672074f1d05568e359cdd5c1b8f3c40c84595",
+      "wholeDatabaseByteEqual": false,
+      "schemaEqual": true,
+      "tableStats": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 39,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "sessions": {
+          "beforeCount": 138,
+          "afterCount": 138,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 138,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "settings": {
+          "beforeCount": 54,
+          "afterCount": 54,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 54,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "dismissed_sessions": {
+          "beforeCount": 173,
+          "afterCount": 173,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 173,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        }
+      },
+      "changedColumns": {
+        "agents": {
+          "updated_at": 1
+        },
+        "sessions": {},
+        "settings": {},
+        "dismissed_sessions": {}
+      }
+    },
+    "retainedUnsent": {
+      "wholeRawAndParsedUnsentExact": true,
+      "wholeComposersExact": 10,
+      "composersBefore": 10,
+      "composersAfter": 10,
+      "choiceQueuesFeedbackActivityTemplateEditsAndUnknownFieldsExact": true
+    },
+    "agentSetup": {
+      "wholeRawAndParsedExact": true,
+      "confirmedSelections": 23,
+      "pending": 41,
+      "completed": 23,
+      "progress": 72,
+      "allWholeValuesExact": true
+    },
+    "allChangedWriters": "unknown",
+    "allDirectoryDataUnchanged": false,
+    "officialAgentHomeAndConfigOutsideRootsNotCovered": true,
+    "noRestore": true,
+    "noRawDatabaseReadForTheseDocuments": true,
+    "installationManifestEqualityNotSubstitutedForPostUseData": true
+  },
+  "ARCH49SelectedInternalBaseline": {
+    "input": {
+      "bytes": 1969594,
+      "sha256": "5d76623d4dd2e81f40f3eca600dd031af4cfda0f7e71d259c6f2e676f6266868",
+      "events": 1024,
+      "logicalThreads": 8,
+      "ownedPublicSynthetic": true
+    },
+    "actualExit": 0,
+    "actualSessionId": null,
+    "actualChunk": "135b14",
+    "measurementElapsedMs": 22.001,
+    "ownedSubprocessElapsedMs": 818,
+    "sampleCount": 5,
+    "selectedPhases": [
+      {
+        "phase": "moduleBaseline",
+        "heapUsedBytes": 18867144,
+        "rssBytes": 94027776,
+        "externalBytes": 2389940,
+        "arrayBuffersBytes": 26271,
+        "counts": {
+          "threads": 0,
+          "items": 0,
+          "agentItems": 0,
+          "toolItems": 0,
+          "rawItems": 0,
+          "agentUtf16Units": 0,
+          "toolInputUtf16Units": 0,
+          "toolContentUtf16Units": 0
+        }
+      },
+      {
+        "phase": "inputLoaded",
+        "heapUsedBytes": 22940384,
+        "rssBytes": 96141312,
+        "externalBytes": 4359529,
+        "arrayBuffersBytes": 1995865,
+        "counts": {
+          "threads": 0,
+          "items": 0,
+          "agentItems": 0,
+          "toolItems": 0,
+          "rawItems": 0,
+          "agentUtf16Units": 0,
+          "toolInputUtf16Units": 0,
+          "toolContentUtf16Units": 0
+        }
+      },
+      {
+        "phase": "statesReady",
+        "heapUsedBytes": 22983072,
+        "rssBytes": 96157696,
+        "externalBytes": 4359529,
+        "arrayBuffersBytes": 1995865,
+        "counts": {
+          "threads": 8,
+          "items": 0,
+          "agentItems": 0,
+          "toolItems": 0,
+          "rawItems": 0,
+          "agentUtf16Units": 0,
+          "toolInputUtf16Units": 0,
+          "toolContentUtf16Units": 0
+        }
+      },
+      {
+        "phase": "retainedAfterNormalization",
+        "heapUsedBytes": 28951264,
+        "rssBytes": 97419264,
+        "externalBytes": 4359529,
+        "arrayBuffersBytes": 1995865,
+        "counts": {
+          "threads": 8,
+          "items": 768,
+          "agentItems": 256,
+          "toolItems": 256,
+          "rawItems": 256,
+          "agentUtf16Units": 524288,
+          "toolInputUtf16Units": 524288,
+          "toolContentUtf16Units": 524288
+        }
+      },
+      {
+        "phase": "closedAndInputReleased",
+        "heapUsedBytes": 19389800,
+        "rssBytes": 97632256,
+        "externalBytes": 2389935,
+        "arrayBuffersBytes": 26271,
+        "counts": {
+          "threads": 0,
+          "items": 0,
+          "agentItems": 0,
+          "toolItems": 0,
+          "rawItems": 0,
+          "agentUtf16Units": 0,
+          "toolInputUtf16Units": 0,
+          "toolContentUtf16Units": 0
+        }
+      }
+    ],
+    "weakStateObjectsObservedAlive": 1,
+    "inputsStable": true,
+    "allSelectedThreadsClosed": true,
+    "allOwnedClosed": true,
+    "cleanupPending": false,
+    "mockedExternalCallCounts": {
+      "session_close": 8
+    },
+    "onlyInternalOneVitestForkWithMockedIPC": true,
+    "peakMemoryOrLeakVerdictOrHardRSSCap": false,
+    "ARCH49Complete": false,
+    "limits": "单次公开合成输入、真实状态/归一化的五点样本；不含真实Agent、Rust传输、DOM、长历史或主运行器RSS。GC、缓存与并行工作噪声未分离，不能设性能阈值或据此丢弃事件/静默终止工作。"
+  },
+  "authorshipBoundary": "文档作者参与草稿反例测试与资源探针准备；源码语义审、正式窗口及资源实际执行按所列Root/其他审查者原件引用，不宣称重新独立执行这些路径。",
+  "historyPreserved": [
+    {
+      "path": "docs/evidence/2026-10-18-conversation-archive/verification.json",
+      "scope": "原a8a当前文件保存与new1/归属未知窗口保留；本窗new0不改写旧事实。",
+      "sha256": "f440673f7ca7f5878d5bd6d243bc09331d655f535cc8033d886abf8542f78d0f"
+    },
+    {
+      "path": "docs/evidence/2026-10-18-formal-diff-export/verification.json",
+      "scope": "旧8fa保存/打开禁用与取消、文件LF不符及附件无候选范围保持。",
+      "sha256": "356c43a14d26ab2e15aa97843cf418be662e0f280474ec21a9936bed3d017fa4"
+    }
+  ],
+  "notProven": [
+    "实装首发的配置确认和一次发送",
+    "所有Agent/草稿/全局自动重开原因及旧new1归属",
+    "原发送附件恢复、完整P35或全部历史",
+    "全局并发预算、背压、长期资源治理；仍有内部设计和开发工作",
+    "NEW-24解除、全部151项或29家八项标准完成"
+  ],
+  "evidence": {
+    "sourceCheckpoint": {
+      "path": "output/2026-10-19-startup-intent-delivery/source-checkpoint.json",
+      "sha256": "43ebcf83df4d7d6a2ae5e3a0a3ad3976d3edd35674f172a2deb7117989a4a185"
+    },
+    "sourceSemanticReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/source-review.json",
+      "sha256": "ff90f8cc24be8f3871f74e759d2d284e1b4ecbb554b4c48cf8f65d4d7a2f2bda"
+    },
+    "fullSourceReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/full-source-review.json",
+      "sha256": "d814dfe2bc7cf5408ad5b776812875dc9952f0ac194c17d953cc8ccd8e1e8df0"
+    },
+    "engineering": {
+      "path": "output/2026-10-19-startup-intent-delivery/engineering/verification.json",
+      "sha256": "a55ea5be420e9457ed726fd8741c2a2a9de3ad8baf4886634b5d4953c7a6a80c"
+    },
+    "candidate": {
+      "path": "output/2026-10-19-startup-intent-delivery/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "bfd8e35fac257216e624ba19b3d1f40a7ddc7f70fe803a2f1e21c53725a52421"
+    },
+    "candidateIndependentReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/candidate-preparation/independent/review.json",
+      "sha256": "79877b1e65d227d3eed58daab250be44b3db06f6491a11f72f30eff47e032edb"
+    },
+    "installedIndependentReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/install/installed-independent-review-private.json",
+      "sha256": "49e7b153f9156c3e2cfb1466878353664d5c06bbc02dcd934e8156e15693fab0"
+    },
+    "exactCandidateCleanup": {
+      "path": "output/2026-10-19-startup-intent-delivery/install/candidate-cleanup.json",
+      "sha256": "ea7a78d5b438390121069e13862cdadca3f9c9cb7ea7650d85ca7c80307d9899"
+    },
+    "formalBaselineIntent": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/baseline-intent.json",
+      "sha256": "b619a28fbbcad9b222cd1690edb1d7ebdea74081a5929e9617e528cc0955cac0"
+    },
+    "formalObservation": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/actual-observation.json",
+      "sha256": "dc382d2c492820b6aa57e72a48f5e17eebf6d6f92000a906b4b186e073a61c11"
+    },
+    "archiveReadback": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/archive-readback.json",
+      "sha256": "c92c0cfbe6087719bbb378d4a0578a1d43ff40aeb263800229bf700a6f97d959"
+    },
+    "formalProtocolSummary": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/protocol/summary.json",
+      "sha256": "7d852515519429ff81cc86564ecc6793c99d13c44c4542e138cb2f6e9498f164"
+    },
+    "resourceSummary": {
+      "path": "output/2026-10-19-startup-intent-delivery/resource-baseline-preparation/run1/independent-summary.json",
+      "sha256": "b76936c4baa4e59868f4e2250e98bba744b35009f1b1d787872b924d7bd6c3df"
+    },
+    "resourceExecution": {
+      "path": "output/2026-10-19-startup-intent-delivery/resource-baseline-preparation/run1/tool-execution-completion.json",
+      "sha256": "bb59cfd2e9dc500dd7fd4a97d0a3144a08592a7b73e56fa7ccce8034969e1cf5"
+    },
+    "postUseDataSummary": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/after-analysis/safe-summary.json",
+      "sha256": "8db7442c8b5110c56152a4ab781e6ecc3c273e8d37180c0ccdc7111d05de0008"
+    },
+    "postUseDataScopeReview": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/after-analysis/review.json",
+      "sha256": "4ac9f8aee4a3691539d8f5d7bafa7183b451c6ef6a051548e4b64de495030525"
+    },
+    "postUseDataCompletion": {
+      "path": "output/2026-10-19-startup-intent-delivery/formal-check/after-analysis/execution-completion.json",
+      "sha256": "3292bff32f1b0dc856687782ced6b790fc6a98d3b13e6be0d857d1a5e65cbed7"
+    }
+  }
+}
