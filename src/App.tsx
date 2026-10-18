@@ -28,6 +28,7 @@ import { SettingsPage, type SettingsTab } from "./components/SettingsPage";
 import { CustomAgentDialog } from "./components/CustomAgentDialog";
 import { Sidebar } from "./components/Sidebar";
 import { ThreadPage } from "./components/ThreadPage";
+import { MessageMediaVisibility } from "./components/message-media-visibility";
 import {
   AgentHub,
   type AgentHubSurface,
@@ -971,73 +972,77 @@ export default function App() {
             className="workspace-route"
             hidden={pageKey !== visiblePageKey}
           >
-            <ThreadPage
-              preparedComposerIsCurrent={
-                pageKey === preparedDraftKey ? preparedComposerOwner : null
-              }
-              viewKey={pageKey}
-              attachmentSearchRequest={
-                attachmentSearchRequest?.source.threadKey === pageKey
-                  ? attachmentSearchRequest
-                  : null
-              }
-              searchRequest={
-                loadedSearchRequest?.hit.threadKey === pageKey
-                  ? loadedSearchRequest
-                  : null
-              }
-              onManualOpen={
-                notificationOnlyKey === pageKey
-                  ? () => {
-                      const row = threads
-                        .getSnapshot()
-                        .index.find((item) => item.id === pageKey);
-                      if (row) openRow(row);
-                    }
-                  : undefined
-              }
-              active={pageKey === visiblePageKey && !paletteOpen && !importOpen}
-              onBrowserOwnersChange={observeBrowserOwners}
-              draftComposerRef={
-                pageKey === preparedDraftKey
-                  ? setDraftComposerTarget
-                  : undefined
-              }
-              agents={agents}
-              onNew={goNew}
-              onReopenSame={reopenSame}
-              onNewFromMessage={newFromMessage}
-              onGoSettings={() => {
-                const current = threads.thread(pageKey);
-                const sourceContext = current
-                  ? conversationRepairContext(current).sourceContext
-                  : undefined;
-                const needsAuthentication =
-                  !!current &&
-                  authenticationRequired(
-                    authentication,
-                    current.agentId,
-                    current.cwd,
+            <MessageMediaVisibility visible={pageKey === visiblePageKey}>
+              <ThreadPage
+                preparedComposerIsCurrent={
+                  pageKey === preparedDraftKey ? preparedComposerOwner : null
+                }
+                viewKey={pageKey}
+                attachmentSearchRequest={
+                  attachmentSearchRequest?.source.threadKey === pageKey
+                    ? attachmentSearchRequest
+                    : null
+                }
+                searchRequest={
+                  loadedSearchRequest?.hit.threadKey === pageKey
+                    ? loadedSearchRequest
+                    : null
+                }
+                onManualOpen={
+                  notificationOnlyKey === pageKey
+                    ? () => {
+                        const row = threads
+                          .getSnapshot()
+                          .index.find((item) => item.id === pageKey);
+                        if (row) openRow(row);
+                      }
+                    : undefined
+                }
+                active={
+                  pageKey === visiblePageKey && !paletteOpen && !importOpen
+                }
+                onBrowserOwnersChange={observeBrowserOwners}
+                draftComposerRef={
+                  pageKey === preparedDraftKey
+                    ? setDraftComposerTarget
+                    : undefined
+                }
+                agents={agents}
+                onNew={goNew}
+                onReopenSame={reopenSame}
+                onNewFromMessage={newFromMessage}
+                onGoSettings={() => {
+                  const current = threads.thread(pageKey);
+                  const sourceContext = current
+                    ? conversationRepairContext(current).sourceContext
+                    : undefined;
+                  const needsAuthentication =
+                    !!current &&
+                    authenticationRequired(
+                      authentication,
+                      current.agentId,
+                      current.cwd,
+                      sourceContext,
+                    );
+                  openAgents(current?.agentId, "manage", {
+                    panel: draftPreparationRequired(current)
+                      ? "model"
+                      : agentRepairPanel(current, needsAuthentication),
+                    needsAuthentication,
                     sourceContext,
-                  );
-                openAgents(current?.agentId, "manage", {
-                  panel: draftPreparationRequired(current)
-                    ? "model"
-                    : agentRepairPanel(current, needsAuthentication),
-                  needsAuthentication,
-                  sourceContext,
-                });
-              }}
-              onOpened={opened}
-              onRecover={recover}
-              onBack={() =>
-                routeHistory.current.length
-                  ? returnToOrigin()
-                  : showLibrary(filter)
-              }
-              navToggle={navToggle}
-              defaultCwd={defaultCwd}
-            />
+                  });
+                }}
+                onOpened={opened}
+                onRecover={recover}
+                onBack={() =>
+                  routeHistory.current.length
+                    ? returnToOrigin()
+                    : showLibrary(filter)
+                }
+                navToggle={navToggle}
+                defaultCwd={defaultCwd}
+              />
+            </MessageMediaVisibility>
           </div>
         ))}
         {hubMounted && (
