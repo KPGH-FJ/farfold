@@ -20,7 +20,7 @@
 use super::lifecycle::{ConnectionLife, WorkLease};
 use super::mutation::{self, Kind as MutationKind, Mutation, Reply as MutationReply};
 use super::operations::Operation;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -43,6 +43,10 @@ mod preparation_mode_tests;
 #[cfg(test)]
 #[path = "pump/restore_tests.rs"]
 mod restore_tests;
+
+#[cfg(test)]
+#[path = "pump/model_id_retention_tests.rs"]
+mod model_id_retention_tests;
 
 #[path = "config_change.rs"]
 mod config_change;
@@ -86,7 +90,7 @@ fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
     }
 }
 
-fn model_ids(options: &Value) -> Vec<String> {
+fn model_ids(options: &Value) -> HashSet<String> {
     options
         .as_array()
         .into_iter()
@@ -599,7 +603,7 @@ async fn session_pump(
     sessions: SessionMap,
     ops: SessionOps,
     mut configuration: super::session_config::SessionConfig,
-    mut models: Vec<String>,
+    mut models: HashSet<String>,
     mut model_guard: super::model_guard::ModelGuard,
     mut permission_guard: super::permission_guard::PermissionGuard,
     mut config_store: super::model_guard::ConfigStore,

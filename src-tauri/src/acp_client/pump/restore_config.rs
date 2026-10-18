@@ -255,7 +255,7 @@ pub(super) fn drain(
     inbox: &mut mpsc::UnboundedReceiver<Dispatch>,
     ctx: &mut DispatchContext<'_>,
     configuration: &mut super::super::session_config::SessionConfig,
-    models: &mut Vec<String>,
+    models: &mut HashSet<String>,
     guard: &mut ModelGuard,
     permissions: &mut super::super::permission_guard::PermissionGuard,
     opening: &mut Option<Opening>,
