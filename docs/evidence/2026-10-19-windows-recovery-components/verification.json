@@ -1,0 +1,155 @@
+{
+  "atUtc": "2026-10-19T10:22:23.233058+00:00",
+  "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
+  "sourceCheckpoint": "49e7324403fade12d31f2440dc392cec9e883a64",
+  "installedSourceUnchanged": "63142172be9fc58f41fb3e151f77c9eef953b464",
+  "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
+  "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464",
+  "checkpoints": {
+    "29433fa1e": "bundle graph/producer object pairing + owned cache denial fixture",
+    "2e58e6834": "offline source exclusion metadata and 18-control workflow",
+    "613da241f": "single-node native carrier component + launch phase/code +26 controls",
+    "6ced0f95c": "held Windows private commit roots",
+    "ad82887d5": "test-only real spool byte consumer and readback",
+    "cc990ec0a": "transient object ID/type/size closure from real rpack caller",
+    "49e732440": "settled compaction results index, original result precedence retained"
+  },
+  "checks": {
+    "carrierPortable20": {
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0
+    },
+    "fragmentPortable27IncludingOriginal20": {
+      "passed": 27,
+      "failed": 0,
+      "ignored": 0
+    },
+    "unixWorktrees": {
+      "passed": 140,
+      "failed": 0,
+      "ignored": 0,
+      "scope": "roots4 corrected source before later Windows-only graph code"
+    },
+    "combinedGraphTree": {
+      "crossAllTargetsStrict": 0,
+      "hostAllTargetsStrict": 0,
+      "inputsStable": 751
+    },
+    "frontendFinal": {
+      "files": 8,
+      "passed": 151,
+      "failed": 0,
+      "sourceInputsStable": 1322,
+      "typecheck": 0
+    },
+    "frontendBefore": {
+      "roundsPerCase": 512,
+      "kindReadsPerCase": 263168,
+      "failedCases": 2,
+      "oldTestsPassed": 16
+    },
+    "frontendAfterMetric": "two cases each <=2048 kind reads; exact count not printed, 2N is static inference",
+    "newRootsGraphOrFragmentWindowsTestsExecuted": false
+  },
+  "windows": {
+    "runId": 39233883008,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39233883008",
+    "head": "613da241f62a66aa61f29be857048b39afd1f36a",
+    "jobId": 117998157954,
+    "conclusion": "failure",
+    "rawFiles": {
+      "artifact": 117,
+      "job": 1,
+      "total": 118,
+      "rustStdoutStderrPairs": 46,
+      "sdkNodePair": 1
+    },
+    "passed": {
+      "material": 16,
+      "finiteInput": 7,
+      "heldArtifacts": 6,
+      "materialEntry": 5,
+      "preparationCache": 4,
+      "producerPairing": 3,
+      "portableCarrier": 20,
+      "ordinaryCarrier": 2,
+      "sdkRust": 4,
+      "sdkNode": 20
+    },
+    "failed": {
+      "firstImport": 7,
+      "sourceExport": 5,
+      "bundleGraph": 9,
+      "offlineGraph": 2,
+      "fullSecurityCarrier": 4,
+      "authCancellation": "inner/outer each 0passed/1failed"
+    },
+    "offlineGraphPassed": 4,
+    "nativeHelperFailure": "126; fixed execute-or-wait phase rawOS87; exact spawn/wait/path cause unknown",
+    "fullSecurity": "4 actual failures at fullSecurityOpen, code1314/combinedaccess16908288 before BackupRead/Write; no privilege adjustment/fallback",
+    "auth": "same held target WAIT_TIMEOUT258 before and after original cancel/await/join; PID reopen companion0 is not exit proof; root cause unknown",
+    "strictNegative": {
+      "exitCode": 101,
+      "passed": 0,
+      "failed": 1,
+      "stillFailedTest": true,
+      "inner18Owner17Exact": true
+    },
+    "aggregateCorrectlyFalse": true,
+    "singleDispatchAndSingleArtifactPlusJobFetch": true
+  },
+  "limits": [
+    "No complete TreeFacet/Manifest2 or public Windows mutation/restoration",
+    "Current staged refusal and index protection unchanged; no new staging-intent restoration requirement",
+    "New frontend fix is not installed or measured UI latency/RSS/real-Agent improvement",
+    "Full tree, links, catalog budget, namespace transaction and global resource work remain internal; not only external conditions",
+    "No 29x8 acceptance/plan completion/signing/distribution claim"
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/carrier-native-ci/independent-result/reviewer-audit/raw-pin-proof.json",
+      "sha256": "632745c1aa6e6f0b9d4afe747dd8c28abbdd8983ddf71bab02952bc9d9da4845"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/carrier-native-ci/independent-result/reviewer-audit/safe-summary.json",
+      "sha256": "a2cc2dfbdd4e2f7ea3b7a1e19146f1bc992aa90d0147354771d46627a575c324"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/carrier-r2-checkpoint.json",
+      "sha256": "6e92485d56b9a3336807addd6a57892a6469152912c9a6c3050f5c21962e2cde"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-roots-checkpoint.json",
+      "sha256": "64a4e97aa3230205566c4fef5169281bd2c1af7823ee24a3b2558a1164a763f6"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/tree-fragment-checkpoint.json",
+      "sha256": "1daca3007a733e54de4d398e99388bf7d4f19895269c2d9dc21766352cba6ec3"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-graph-checkpoint.json",
+      "sha256": "950e5e08326de467ccc4facdee0a355714262b22ccd308ad1bd1c1a4cebab03c"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/round-result-scan/checkpoint.json",
+      "sha256": "5422c7d29f8c16a48548a77cf408883ce97ce5d569e9327bd72f0a11d20afa48"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/round-result-scan/after.json",
+      "sha256": "dd450c4ab9ddfb76bd251e82f352f178dfe256461fe87e87311dd9fdf1756f14"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/round-result-scan/independent-delivery-review/source-review.json",
+      "sha256": "65ad2d5c728ac4e086efedc53069433b433ee889b68aa87f325bc364cb9e0b57"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/round-result-scan/independent-delivery-review/final-regression-supplement.json",
+      "sha256": "6284f28d103d931f15d4f2afb4726541c4c04cdab310350efeeb11dc4f89b9fb"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/storage-rcgu-r3/cleanup-receipt.json",
+      "sha256": "3b88329d16773a6e50554fed856dac2f3b7743d6c16b65887313433f875a5315"
+    }
+  ]
+}
