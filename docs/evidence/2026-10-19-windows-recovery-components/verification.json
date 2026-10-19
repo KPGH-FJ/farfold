@@ -1,7 +1,7 @@
 {
   "atUtc": "2026-10-19T10:22:23.233058+00:00",
   "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
-  "sourceCheckpoint": "49e7324403fade12d31f2440dc392cec9e883a64",
+  "sourceCheckpoint": "e24361c577e08f0a086dd8fb0a93f75c3bd4fb8b",
   "installedSourceUnchanged": "63142172be9fc58f41fb3e151f77c9eef953b464",
   "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
   "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464",
@@ -12,7 +12,10 @@
     "6ced0f95c": "held Windows private commit roots",
     "ad82887d5": "test-only real spool byte consumer and readback",
     "cc990ec0a": "transient object ID/type/size closure from real rpack caller",
-    "49e732440": "settled compaction results index, original result precedence retained"
+    "49e732440": "settled compaction results index, original result precedence retained",
+    "226b64710": "owned-relative-link component and same-owner Auth diagnostic R3; host/cross checks, no native R3 result",
+    "ff17f29cb": "same held selected Git program and fixed argument DOS representations; original executor/policies retained",
+    "e24361c57": "test-registered typed directory capture R2 and workflow R5; not installed or Windows executed"
   },
   "checks": {
     "carrierPortable20": {
@@ -103,8 +106,8 @@
     "No complete TreeFacet/Manifest2 or public Windows mutation/restoration",
     "Current staged refusal and index protection unchanged; no new staging-intent restoration requirement",
     "New frontend fix is not installed or measured UI latency/RSS/real-Agent improvement",
-    "Full tree, links, catalog budget, namespace transaction and global resource work remain internal; not only external conditions",
-    "No 29x8 acceptance/plan completion/signing/distribution claim"
+    "No 29x8 acceptance/plan completion/signing/distribution claim",
+    "Scoped resident/work accounting and owned-link components do not complete full-tree restoration, global resource bounds, RSS or SDK transport backpressure."
   ],
   "evidence": [
     {
@@ -150,6 +153,421 @@
     {
       "path": "output/2026-10-19-recovery-render-continuation/storage-rcgu-r3/cleanup-receipt.json",
       "sha256": "3b88329d16773a6e50554fed856dac2f3b7743d6c16b65887313433f875a5315"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/git-dos-path-source-checkpoint.json",
+      "sha256": "a0deb2697417e34433186db9fdffb8a6f6efba782194ddc78a48210f2abb728f",
+      "bytes": 4964
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/owned-link-auth-workflow-source-checkpoint.json",
+      "sha256": "4580060ab6fbacb93212462a9511b8b802e113091ee74bb923eb794954aeb2a8",
+      "bytes": 5329
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-workflow-source-checkpoint.json",
+      "sha256": "0e5e558a09f17b8f53f8a514da52aabfcfa27efa5efd97509169151a49e7f9e6",
+      "bytes": 4712
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-r2-root-review-and-apply.json",
+      "sha256": "a3c45f51c377d136cb0d33432bc31b3e113dd988948fe72ae16f0f572b46a222",
+      "bytes": 5636
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-r2-host-file-access-r1-receipt.json",
+      "sha256": "4f8124efde7a24e6c86167755b79f81171829ed7a72c1de157795d4b9d315d41",
+      "bytes": 1500
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-r2-host-strict-r1-receipt.json",
+      "sha256": "b4cd0a82dc96964216625fa0dd857facdf9a6fdde31223e615b868c0cf4f57e3",
+      "bytes": 1503
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-r2-cross-r1-receipt.json",
+      "sha256": "d63d653be1f258ac6b08ca161ab529bcd0787cb104773511cd5e875c7a5abf1b",
+      "bytes": 2855
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-workflow-r5-root-review-and-apply.json",
+      "sha256": "d6708d5923b5e942fa0c4a6adc19da2e1e3486d03f1a4f6c8288d5ae7de3d7f6",
+      "bytes": 5314
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-typed-directory-capture-r2-review/source-review.json",
+      "sha256": "56227a0c533f2542810d8bb05c96bc76dee21fa76637dde7bb08f349b0594571",
+      "bytes": 13698
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/checkpoint-226b-independent-auth-workflow-review/source-review.json",
+      "sha256": "fa5ce070df45cee62285748349e578caf3f55a59b45b72bc1de88876a1e53aa2",
+      "bytes": 5748
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/checkout-native-ci/independent-result/raw-audit/safe-summary.json",
+      "sha256": "a3ed1fd2b9d88a65d47630fc93c461125152590f0cad601a7bf5d6bc8603c650",
+      "bytes": 16489
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/git-dos-path-cross-r3-receipt.json",
+      "sha256": "8788c233b1ab876ca2385b0aad944bce6b085d65202c5dba044b003f54937a94",
+      "bytes": 2824
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/git-dos-path-host-strict-r2-receipt.json",
+      "sha256": "44abcb6e9de5b4f8dcf1a3037d715642d0781d50f6008bc4fd99f5034d862198",
+      "bytes": 1469
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/owned-link-auth-cross-r2-receipt.json",
+      "sha256": "1b0dbba5a0e8a99ec0e172fc3956ef5c893cf1347b208ac86b1bb27dd7de2ecc",
+      "bytes": 2835
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/owned-link-auth-host-strict-r1-receipt.json",
+      "sha256": "7eaf9e126ea6ab9f702e2138919d3ced3a47c21925adb33ea33d89724e291994",
+      "bytes": 1481
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/owned-link-auth-host-tests-r1-receipt.json",
+      "sha256": "c76c57d3a6c0dd458ee2541ad0a564c7d0b767055df4ffe07d9ab45649dd7326",
+      "bytes": 1483
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-capture-r2-host-file-access-r1.log",
+      "sha256": "05a1b4fe9f407684b62bed5a858aabfce3fbbb061d27c07e86be241bb5d2e0fd",
+      "bytes": 13959
+    },
+    {
+      "path": "docs/evidence/2026-10-19-recovery-render-continuation/verification.json",
+      "sha256": "eb8491950a1ac2ae17010772ec9ffe3fff7592d2d54d0e8f5065d9b5bfe3152b",
+      "bytes": 12502
     }
-  ]
+  ],
+  "alignmentPreparedAtUtc": "2026-10-19T12:08:03.253659+00:00",
+  "historicalSourceCheckpoint": "49e7324403fade12d31f2440dc392cec9e883a64",
+  "checksScope": "Original 49e and earlier scoped source checks, retained verbatim; not a new composite check of e243.",
+  "windowsScope": "Original 613 selected Windows result, retained verbatim; latest 46a result is separate below.",
+  "latestSelectedWindows": {
+    "runId": 39241052388,
+    "jobId": 118021670046,
+    "head": "46a932e7ead94b1cc3a2ca0ea7f9d1fe0ccab925",
+    "conclusion": "failure",
+    "artifactFiles": 148,
+    "groupCounts": [
+      {
+        "group": "carrier-fullsd-1",
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "carrier-fullsd-2",
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "carrier-fullsd-3",
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "carrier-fullsd-4",
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "raw-pin-fullsd",
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "carrier-backup-io",
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "carrier-records",
+        "passed": 9,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "carrier-ordinary-namespace",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "carrier-ordinary-authority",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "source-roots",
+        "passed": 1,
+        "failed": 3,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "source-graph",
+        "passed": 2,
+        "failed": 4,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "carrier-fragment",
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-name",
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-1",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-2",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-3",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-4",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-5",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "raw-pin-6",
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "checkout-profile",
+        "passed": 0,
+        "failed": 6,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "shape-framing",
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "shape-owned",
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "bundle-graph",
+        "passed": 0,
+        "failed": 9,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "producer-pairing",
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "offline-graph",
+        "passed": 4,
+        "failed": 2,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "private-input",
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "artifacts",
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "first-import",
+        "passed": 0,
+        "failed": 7,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "source-export",
+        "passed": 0,
+        "failed": 5,
+        "ignored": 0,
+        "exit": 101
+      },
+      {
+        "group": "material-entry",
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      },
+      {
+        "group": "preparation-cache",
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "exit": 0
+      }
+    ],
+    "auth": {
+      "raw": "auth_cancellation.stderr.log",
+      "samePreCapturedHeldTargetAndJob": true,
+      "membershipBeforeAfter": [true, true],
+      "jobActiveBeforeAfter": [2, 0],
+      "heldWaitBeforeAfter": [258, 258],
+      "originalAssertion": "same held target must have exited after cancellation",
+      "actualPass": false,
+      "interpretation": "Job accounting zero does not override unsignalled held process object; root cause unknown. Arc witness extends original Job lifetime.",
+      "pidReopen": "companion-only, not authority"
+    },
+    "fullSecurity": {
+      "executedIgnoredControls": 5,
+      "passed": 0,
+      "failed": 5,
+      "observedPhase": "fullSecurityOpen",
+      "nativeCode": 1314,
+      "requestedAccess": 16908288,
+      "privilegesAdjusted": false
+    },
+    "matrix": {
+      "eightCellsObserved": true,
+      "DOSProgramAndDOSArgs": "DGD/DDD exit1 with empty stdout/stderr; original config missing-value None, not ReadContext success",
+      "commonDir": "GUID for all eight, not independently varied",
+      "originalLaunchFailureFixed": false
+    },
+    "strictNegative": {
+      "actualExit": 101,
+      "testPassed": false,
+      "expectedObservationComplete": true
+    },
+    "aggregateCorrectlyFalse": true,
+    "doesNotCover": [
+      "226b Auth R3 and owned-link additions",
+      "ff17 DOS representation",
+      "e243 directory Capture R2 and workflow R5"
+    ],
+    "source": {
+      "path": "output/2026-10-19-recovery-render-continuation/checkout-native-ci/independent-result/raw-audit/safe-summary.json",
+      "sha256": "a3ed1fd2b9d88a65d47630fc93c461125152590f0cad601a7bf5d6bc8603c650",
+      "bytes": 16489
+    }
+  },
+  "currentScopedChecks": {
+    "gitDOS": {
+      "source": "ff17f29cb0bf09731296ef89f0200d9dfcb3140a",
+      "hostAllTargetsStrict": 0,
+      "windowsCrossAllTargetsStrict": 0,
+      "stableInputs": 775,
+      "newNativeTestsExecuted": false
+    },
+    "directoryCapture": {
+      "sourceCheckpoint": "e24361c577e08f0a086dd8fb0a93f75c3bd4fb8b",
+      "hostFileAccess": {
+        "passed": 114,
+        "failed": 0,
+        "ignored": 0,
+        "includesNewPortable": 16
+      },
+      "hostAllTargetsStrict": 0,
+      "windowsCrossAllTargetsStrict": 0,
+      "stableInputs": 782,
+      "ordinaryWindowsExecuted": 0,
+      "manualFullSecurityWindowsExecuted": 0,
+      "scope": "Test-registered actual single-directory capture/readback, not directory restore or complete tree"
+    },
+    "workflowR5": {
+      "applied": true,
+      "yamlSteps": 24,
+      "ordinaryTests": 118,
+      "ordinaryGroups": 32,
+      "manualTests": 7,
+      "manualGroups": 7,
+      "prettierExit": 0,
+      "actualCI": null
+    },
+    "newFullSeven": null,
+    "newInstallation": null,
+    "formalApp": null
+  },
+  "remainingScope": {
+    "internalDevelopment": [
+      "Complete reversible TreeFacet/topology and hardlink restoration combination",
+      "Directory BackupWrite/restoration and final metadata application",
+      "Single complete material format, public Windows lifecycle and final namespace transaction",
+      "Global transport/render backpressure, long-output and owner lifecycle resource governance"
+    ],
+    "systemConditionsAndEvidence": [
+      "Actual full-security requested-access capability of selected Windows token (selected controls observed1314)",
+      "New source controls on existing Windows runner, including ordinary NTFS capture and same-owner Auth",
+      "Fresh complete engineering, unique formal installation and bounded installed-use evidence",
+      "Remaining per-Agent account/service and 29x8 coverage"
+    ],
+    "noNewScopeDecision": true,
+    "NEW24AffectedRealSendPauseRetained": true
+  }
 }
