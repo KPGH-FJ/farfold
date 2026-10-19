@@ -27,6 +27,9 @@ mod artifact;
 #[cfg(windows)]
 #[path = "private_bare_windows.rs"]
 mod private_bare;
+#[cfg(windows)]
+#[path = "private_bundle_graph_windows.rs"]
+pub(super) mod private_graph;
 use artifact::Artifacts;
 pub(super) use artifact::FileIdentity;
 pub(super) const COMMAND_TIME: Duration = Duration::from_secs(120);
@@ -641,30 +644,44 @@ pub(super) fn build(
         ExportRequest::new(&saved.original.identity, &saved.archive.retained_path, m)?,
         cancel,
     )?;
-    #[cfg(windows)]
-    let first = first_owner.path();
     #[cfg(unix)]
     let first = first.as_path();
+    #[cfg(unix)]
     let staged_bundle = temp.path().join("verified.bundle");
-    private(
-        first,
-        &[
-            "bundle",
-            "create",
-            "--version=3",
-            staged_bundle.to_str().ok_or(error("unsafePath"))?,
-            "--all",
-        ],
-        None,
-        cancel,
-    )?;
-    // The generator writes only its fresh private staging directory. Final publication
-    // is create_new: even a late external same-name file must never be overwritten.
-    recover_into(&staged_bundle, m, &temp.path().join("second"), cancel)?;
+    #[cfg(unix)]
+    {
+        private(
+            first,
+            &[
+                "bundle",
+                "create",
+                "--version=3",
+                staged_bundle.to_str().ok_or(error("unsafePath"))?,
+                "--all",
+            ],
+            None,
+            cancel,
+        )?;
+        // The generator writes only its fresh private staging directory. Final publication
+        // is create_new: even a late external same-name file must never be overwritten.
+        recover_into(&staged_bundle, m, &temp.path().join("second"), cancel)?;
+    }
+    #[cfg(windows)]
+    let mut graph_owner = private_graph::generate(&first_owner, m, cancel)?;
+    #[cfg(windows)]
+    // Graph validity never substitutes for the existing full material path.
+    recover_into(graph_owner.path()?, m, &temp.path().join("second"), cancel)?;
+    #[cfg(windows)]
+    graph_owner.recheck(cancel)?;
+    #[cfg(windows)]
+    let staged_bundle = graph_owner.path()?;
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     inspect::same(path.to_str().ok_or(error("unsafePath"))?, reserved_stamp)?;
     let bundle = path.join("recovery.bundle");
+    #[cfg(unix)]
     publish_bundle(&staged_bundle, &bundle, cancel)?;
+    #[cfg(windows)]
+    publish_bundle(staged_bundle, &bundle, cancel)?;
     let manifest = path.join("manifest.json");
     let raw = serde_json::to_vec(m).map_err(|_| error("recoveryInvalid"))?;
     if raw.len() > 16 * 1024 * 1024 {

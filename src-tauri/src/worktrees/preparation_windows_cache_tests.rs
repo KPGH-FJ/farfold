@@ -113,11 +113,12 @@ fn actual_access_denial_is_unreadable_and_only_fresh_confirmed_absence_is_missin
     let fixture = Fixture::new();
     let path = fixture.root.join("package.json");
     let dacl = crate::file_access::security_test_fixture::OwnedDacl::new(&path);
-    // Parent enumeration remains allowed. This owned leaf denies exactly the
-    // FILE_READ_ATTRIBUTES right requested by the real metadata child opener.
+    // Parent enumeration stays allowed. READ_ATTRIBUTES can also be granted
+    // through parent LIST_DIRECTORY, so deny the SYNCHRONIZE right REQUIRED by
+    // the actual synchronous metadata_child open instead. No product guard changes.
     dacl.set(&format!(
         "D:P(D;;0x{:x};;;WD)(A;;FA;;;WD)",
-        windows_sys::Win32::Storage::FileSystem::FILE_READ_ATTRIBUTES
+        windows_sys::Win32::Storage::FileSystem::SYNCHRONIZE
     ));
     let denied = fixture.observe();
     assert!(matches!(&denied.entries[0], Node::Unreadable(_)));

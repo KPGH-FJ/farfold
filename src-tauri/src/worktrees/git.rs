@@ -9,6 +9,9 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
+#[cfg(windows)]
+#[path = "git_bundle_output_windows.rs"]
+pub(super) mod bundle_output;
 #[path = "git_input.rs"]
 mod input;
 #[cfg(windows)]

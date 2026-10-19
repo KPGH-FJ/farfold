@@ -36,6 +36,20 @@ pub(super) struct Imported {
     owner: Context,
 }
 impl Imported {
+    // Verified borrowed provenance for one fixed private graph consumer.
+    // No Command or arbitrary destination authority leaves this owner.
+    pub(super) fn observed(&self) -> Result<(&PinnedPath, &PinnedPath)> {
+        self.owner.verify()?;
+        Ok((self.owner.source.selected_program(), &self.owner.repo))
+    }
+    pub(super) fn allow_temporary_parent(&self, parent: &PinnedPath) -> Result<()> {
+        self.owner.verify()?;
+        if self.owner.source.scope.contains_project(parent) {
+            Err(error("unsafePath"))
+        } else {
+            Ok(())
+        }
+    }
     // A path is only for the existing subsequent stage. This exposes no new
     // Command factory or admission over that stage's arbitrary output paths.
     pub(super) fn path(&self) -> &Path {
