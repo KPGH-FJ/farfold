@@ -1,8 +1,8 @@
 {
   "kind": "cold-history-installed-and-later-scoped-source-evidence",
-  "recordedAtUtc": "2026-10-19T00:26:07.708238+00:00",
+  "recordedAtUtc": "2026-10-19T01:12:07.176837+00:00",
   "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
-  "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
+  "sourceCheckpoint": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
   "sourceScope": {
     "coldHistory": "Rust20 plus frontend13, initial logical policy C2/Q32/B8MiB; independent phase channel, raw Agent channel retained; window/token cancellation only waiting; actual ownership keeps admission through read-marker or actual process reap",
     "P13": "AVIF/FLAC explicit default-open safety whitelist and neutral copy only",
@@ -56,37 +56,50 @@
       "cancellationCause": "job annotation explicitly exceeded maximum1h0m0s",
       "specificUnfinishedWaitCause": "unknown",
       "notFinalRustTotals": true
+    },
+    "fifthRun": {
+      "id": 39181331155,
+      "head": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39181331155",
+      "asOfUtc": "2026-10-19T01:02:50.884524+00:00",
+      "status": "in_progress",
+      "frontendJob": "success",
+      "rustJob": "in_progress",
+      "conclusion": null,
+      "watchExit1WasAPIEOF": true,
+      "countsNotInferredFromMac": true
     }
   },
   "installedApp": {
     "path": "/Applications/Farfold.app",
-    "source": "3845e41457395e4201fdff050b22309c386d2be1",
-    "binarySha256": "f22b6a222ae3f2b20e1181a05d67d3802e3ac75bb6c5be9ad9d586519c44ad70",
+    "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
+    "binarySha256": "84515747f52a07a9116ac739e6a5fe4017ab386db8635bef68529ccbf2d29845",
     "currentBatchInstalled": true,
-    "rootLaunchedAfter3845Install": true,
+    "rootPassiveLaunchAfter27863Install": true,
     "normalSaveExitObserved": true
   },
   "full7": {
-    "source": "3845e41457395e4201fdff050b22309c386d2be1",
+    "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
     "passed": 7,
     "frontendFiles": 602,
-    "frontendTests": 8014,
-    "rustPassed": 1875,
+    "frontendTests": 8017,
+    "rustPassed": 1893,
     "rustIgnored": 6,
-    "inputs": 19246,
+    "inputs": 19253,
     "inputsStable": true,
     "verification": {
-      "path": "output/2026-10-19-cold-history-admission-stage/engineering/verification.json",
-      "sha256": "efef86a37de2b94090ad3fdf82d3c7d86ffdd2358cd19a561cb621078cded020",
-      "bytes": 6033131
+      "path": "output/2026-10-19-approval-audio-windows-stage/engineering/verification.json",
+      "sha256": "f8ee819158e1883ecfb75776fdf09f4f8820d1ebd03f21d48b8850b46805b3ea",
+      "bytes": 6034884
     }
   },
   "candidate": {
-    "source": "3845e41457395e4201fdff050b22309c386d2be1",
+    "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
     "independentPassed": 9,
     "independentTotal": 9
   },
   "installation": {
+    "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
     "independentPassed": 10,
     "independentTotal": 10,
     "threeManifestsEntries": 232530,
@@ -477,31 +490,141 @@
       "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/reviewed-twenty-preparation-r1/execution-completion.json",
       "sha256": "0d66ffab4d114a2eace02dd7c2326d915e95a9663c08d3bb439ee2d5482de2f0",
       "bytes": 1367
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/source-freeze.json",
+      "sha256": "4deaea0f89df11258f991ed8ee5466d9f99272307741cead43efdd928ed3f3df",
+      "bytes": 3478517
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/engineering/verification.json",
+      "sha256": "f8ee819158e1883ecfb75776fdf09f4f8820d1ebd03f21d48b8850b46805b3ea",
+      "bytes": 6034884
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/engineering/execution-completion.json",
+      "sha256": "edd55cc5c4e15f7c5bbe49cb3d5f63644a7b854672b35b86fba6cde1171c33f9",
+      "bytes": 735
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/full-source-review/full-source-review.json",
+      "sha256": "dda29d20c8b15235a11210e088f463d8ef73d325894eca8180ec7672074f70b0",
+      "bytes": 6230
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "1e52fca57c71385b0e63a7e8264f17fffa9c705d50ec01aef34f2b37a7baf5bb",
+      "bytes": 224931
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/candidate-preparation/independent/review.json",
+      "sha256": "9e40a9c8039abf03ace35d59c4f6239f89b69d40888a5c57edc10b8365e0e891",
+      "bytes": 4256
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/install/install-result.json",
+      "sha256": "18ff47ea7088b2ab2df7b9d860477060dead26d7e7f323f4241a6ebb60f6895a",
+      "bytes": 10786
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/install/installed-independent-review-private.json",
+      "sha256": "512748e3ec25419c6d72eaa56eb4a3ea71ec01bf0bbd840e270a3ca535d006fc",
+      "bytes": 6492
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/install/candidate-cleanup.json",
+      "sha256": "b7d7b1622a52df257e3e4314d8ac43e5d397e705da7d4061f3b2b25537e87422",
+      "bytes": 7171
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/formal-ui/actual-window-and-exit-receipt.json",
+      "sha256": "ac60ec0884db4000d2a1011056511dad93efa11e97bfba3a7c75a353499140a7",
+      "bytes": 1653
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/formal-ui/protocol/summary.json",
+      "sha256": "3aaf13edaa4e3b7ed6ef063c1435f9dd58bd10e413d2eeeb50e1a3201086acc0",
+      "bytes": 3815
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/formal-ui/data-analysis/safe-summary.json",
+      "sha256": "2201a0b2a8352ad4b5298ed51b10d33b4bad638413fa24188e1d49107345e53d",
+      "bytes": 7870
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/formal-ui/data-analysis/review.json",
+      "sha256": "625c3dde70e55ee2702244b7acb36987c392efe758818999e9c977d724c8c817",
+      "bytes": 4382
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/formal-ui/data-analysis/independent-root-readback.json",
+      "sha256": "96ec92bed0b3979b2c189fc944f7d766d47d7fc9b919c40a9f1d0c373bcbc1dc",
+      "bytes": 2152
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/later-readback/receipt.json",
+      "sha256": "418eba7d74997305d6c9151c313620dd4165dad94683158155bf8941b90f8551",
+      "bytes": 568
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/source-freeze-final.json",
+      "sha256": "24a187d7f14f3562c03ee694d428c1f04b592e189de2b45068f9eda8f345afa3",
+      "bytes": 11457
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/verification-final.json",
+      "sha256": "e9ef5fe12210cd881a2630eca2fbe8011183a45825dd17755b810ab91c265c37",
+      "bytes": 13012
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/execution-completion-final.json",
+      "sha256": "88cbfad79882e12a9a70db34b2c29b463fde6a97f90a1f33b651e3da231ceecb",
+      "bytes": 2591
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/independent-root-review.json",
+      "sha256": "f059322146d5f879acb5e95854e6eaa9842cdc14de2bad7bf500fa86d6f92b8f",
+      "bytes": 1952
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/commit.json",
+      "sha256": "264c2f8b7118d2f11e297185896d5a8b6b6d0a935aa7cd19083e664a2a732708",
+      "bytes": 901
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/push.json",
+      "sha256": "d83be4f1cd8d8b319702f05fa359b1950caba0f8c85896b93658b1afc06faba8",
+      "bytes": 206
     }
   ],
   "formalWindow": {
-    "historyReads": 1,
-    "outgoingPrompt": 0,
-    "outgoingNew": 0,
-    "outgoingLoad": 1,
-    "readingThenReplay": true,
-    "noAccountModelChangeByRoot": true,
+    "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
+    "scope": "Passive draft launch and normal SaveAndExit only; originalOpenCode/cohere/TR choice preserved",
+    "historyReads": 0,
+    "rootInputOrSelectionChanges": 0,
+    "outgoingPrompt": null,
+    "outgoingNew": null,
+    "outgoingLoad": null,
+    "protocolCandidateFiles": 0,
+    "protocolFilesRead": 0,
+    "protocolTrafficCoverage": false,
     "completeComposerObjectsPreserved": 10,
-    "wholeUnsentPreserved": true,
+    "wholeRawAndParsedUnsentPreserved": true,
+    "wholeRawAndParsedSetupPreserved": true,
     "settingsRowsPreserved": 54,
     "sessionRowsPreserved": 138,
     "dismissedRowsPreserved": 173,
-    "agentUpdatedAtChanged": 1,
+    "agentRowsPreserved": 40,
+    "normalizedDatabaseBytesEqual": true,
     "manifestAdded": 0,
     "manifestDeleted": 0,
-    "manifestModified": 7,
+    "manifestModified": 6,
     "writers": "unknown",
     "limits": [
-      "Current wide/light window only, waiting cancellation and burst untested",
-      "Initial/quit AX are short diff strings, not full AX",
-      "Protocol counts cover one extracted window, not all-system or per-Agent attribution",
-      "Raw first DB content was not reread in sealed comparison; prior capture pins and lstat evidence retained",
-      "Unknown-work quit warning retained"
+      "Protocol empty-set flags are not traffic-backed zero-prompt/new/load proof",
+      "Unknown-work warning remains; not proof all old work stopped",
+      "No actual approval/audio/terminal burst/Windows/all29 acceptance",
+      "Capture endpoint comparison is not continuous data retention proof"
     ]
   },
   "laterSourceOnly": {
@@ -628,6 +751,98 @@
         "Original4 native-open and11 publication failures unchanged; two added Windows diagnostics only compiled.",
         "WAIT/ACQUIRED trace does not alone prove continuous lock ownership or original hang cause.",
         "Not all165 CI4 failure markers fixed."
+      ]
+    },
+    "coveredByDelivery27863": {
+      "source": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
+      "full7AndInstallationComplete": true,
+      "appliesThrough": "aa7f7544142b29588d5c27b57f7461971f3fedc2",
+      "laterSourceNotCovered": true
+    },
+    "extendedAttributeObservation": {
+      "checkpoint": "e5773ff3fef51a123c524d0376ba64f7e096a859",
+      "files": 11,
+      "actualRed": {
+        "oldPassed": 6,
+        "newFailed": 3
+      },
+      "actualGreenSameTests": 9,
+      "finalFileAccess": 21,
+      "finalWorktreesTopLevel": 110,
+      "formatHostWindowsCrossStrictPassed": true,
+      "profile": "windowsDefaultDataEaV1",
+      "completeMaterial": false,
+      "full7": null,
+      "installed": false,
+      "realNTFS": null,
+      "remainingInternal": [
+        "ADS",
+        "security",
+        "mutations",
+        "independent recovery"
+      ]
+    }
+  },
+  "historical3845": {
+    "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
+    "installedApp": {
+      "path": "/Applications/Farfold.app",
+      "source": "3845e41457395e4201fdff050b22309c386d2be1",
+      "binarySha256": "f22b6a222ae3f2b20e1181a05d67d3802e3ac75bb6c5be9ad9d586519c44ad70",
+      "currentBatchInstalled": true,
+      "rootLaunchedAfter3845Install": true,
+      "normalSaveExitObserved": true
+    },
+    "full7": {
+      "source": "3845e41457395e4201fdff050b22309c386d2be1",
+      "passed": 7,
+      "frontendFiles": 602,
+      "frontendTests": 8014,
+      "rustPassed": 1875,
+      "rustIgnored": 6,
+      "inputs": 19246,
+      "inputsStable": true,
+      "verification": {
+        "path": "output/2026-10-19-cold-history-admission-stage/engineering/verification.json",
+        "sha256": "efef86a37de2b94090ad3fdf82d3c7d86ffdd2358cd19a561cb621078cded020",
+        "bytes": 6033131
+      }
+    },
+    "candidate": {
+      "source": "3845e41457395e4201fdff050b22309c386d2be1",
+      "independentPassed": 9,
+      "independentTotal": 9
+    },
+    "installation": {
+      "independentPassed": 10,
+      "independentTotal": 10,
+      "threeManifestsEntries": 232530,
+      "threeManifestsEqual": true,
+      "duplicateGeneratedFilesRemoved": 5
+    },
+    "formalWindow": {
+      "historyReads": 1,
+      "outgoingPrompt": 0,
+      "outgoingNew": 0,
+      "outgoingLoad": 1,
+      "readingThenReplay": true,
+      "noAccountModelChangeByRoot": true,
+      "completeComposerObjectsPreserved": 10,
+      "wholeUnsentPreserved": true,
+      "settingsRowsPreserved": 54,
+      "sessionRowsPreserved": 138,
+      "dismissedRowsPreserved": 173,
+      "agentUpdatedAtChanged": 1,
+      "manifestAdded": 0,
+      "manifestDeleted": 0,
+      "manifestModified": 7,
+      "writers": "unknown",
+      "limits": [
+        "Current wide/light window only, waiting cancellation and burst untested",
+        "Initial/quit AX are short diff strings, not full AX",
+        "Protocol counts cover one extracted window, not all-system or per-Agent attribution",
+        "Raw first DB content was not reread in sealed comparison; prior capture pins and lstat evidence retained",
+        "Unknown-work quit warning retained"
       ]
     }
   }
