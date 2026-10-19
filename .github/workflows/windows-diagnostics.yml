@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1 positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1 positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -776,7 +776,7 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json')
           if (-not $complete) { exit 1 }
-      - name: Owned source, carrier and links, ninety-five ordinary controls in twenty-six groups
+      - name: Owned source, carrier, links and directories, one hundred eighteen ordinary controls in thirty-two groups
         id: carrier_portable
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 5
@@ -937,6 +937,41 @@ jobs:
                 'worktrees::material_owner::shape_tests::ordinary_owned_directory_ea_and_named_data_have_actual_bounded_record_shapes',
                 'worktrees::material_owner::shape_tests::ordinary_owned_hardlink_aliases_observe_native_link_records_without_assuming_they_exist',
                 'worktrees::material_owner::shape_tests::ordinary_shape_pre_cancel_and_insufficient_shared_work_refuse_without_weakening_source'
+              ) },
+            @{ name = 'git-path-forms'; filter = 'worktrees::windows_git::paths::tests::'; expected = 4; names = @(
+                'worktrees::windows_git::paths::tests::actual_held_dos_spellings_pair_full_identity_and_stamp_without_searching_a_program',
+                'worktrees::windows_git::paths::tests::an_existing_different_dos_file_cannot_be_substituted_for_the_original_held_identity',
+                'worktrees::windows_git::paths::tests::a_private_directory_may_change_metadata_while_the_dos_alias_stays_the_same_held_object',
+                'worktrees::windows_git::paths::tests::real_read_context_accepts_missing_worktree_and_reads_allowed_boolean_with_original_selected_program'
+              ) },
+            @{ name = 'directory-records'; filter = 'file_access::material_directory_records::tests::'; expected = 7; names = @(
+                'file_access::material_directory_records::tests::empty_directory_is_typed_not_a_zero_default_regular_file',
+                'file_access::material_directory_records::tests::actual_parser_pairs_raw_ads_ea_and_full_security_across_short_reads',
+                'file_access::material_directory_records::tests::security_profiles_cannot_turn_partial_or_missing_bytes_into_full',
+                'file_access::material_directory_records::tests::unsupported_kind_duplicate_alias_and_invalid_ea_are_refusals',
+                'file_access::material_directory_records::tests::truncation_budget_and_cancellation_never_complete_a_full_directory',
+                'file_access::material_directory_records::tests::equal_length_native_payload_drift_changes_actual_contents_and_digest',
+                'file_access::material_directory_records::tests::returned_catalog_keeps_shared_resident_until_retired'
+              ) },
+            @{ name = 'directory-facet'; filter = 'file_access::material_directory_facet::tests::'; expected = 9; names = @(
+                'file_access::material_directory_facet::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128',
+                'file_access::material_directory_facet::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted',
+                'file_access::material_directory_facet::tests::actual_input_extent_or_hash_mismatch_never_emits_completion',
+                'file_access::material_directory_facet::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete',
+                'file_access::material_directory_facet::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error',
+                'file_access::material_directory_facet::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output',
+                'file_access::material_directory_facet::tests::verified_record_retains_its_logical_metadata_reservation_until_drop',
+                'file_access::material_directory_facet::tests::empty_partial_directory_has_real_zero_native_extent_but_never_full_security',
+                'file_access::material_directory_facet::tests::typed_directory_framing_rejects_regular_or_reparse_kind_and_foreign_magic'
+              ) },
+            @{ name = 'directory-owned-1'; filter = 'worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet'; expected = 1; exact = $true; names = @(
+                'worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet'
+              ) },
+            @{ name = 'directory-owned-2'; filter = 'worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim'; expected = 1; exact = $true; names = @(
+                'worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim'
+              ) },
+            @{ name = 'directory-owned-3'; filter = 'worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet'; expected = 1; exact = $true; names = @(
+                'worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet'
               ) }
           )
           $results = @()
@@ -979,7 +1014,7 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
-          $complete = $complete -and $results.Count -eq 26 -and $inputsStable
+          $complete = $complete -and $results.Count -eq 32 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
@@ -988,7 +1023,7 @@ jobs:
             inputsStable = $inputsStable
             observationComplete = $complete
             singleNodeCarrierControlsOnly = $false
-            ownedSourceCarrierAndLinkControlsOnly = $true
+            ownedSourceCarrierLinkAndDirectoryControlsOnly = $true
             explicitIgnoredFullSecurityControls = $false
             privilegesAdjusted = $false
             fullTreeOrManifest2Complete = $false
@@ -996,7 +1031,7 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'carrier-portable.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'carrier-portable.result.json')
           if (-not $complete) { exit 1 }
-      - name: Carrier, raw pin and owned links FullSD, six explicit ignored exact current-token Windows controls
+      - name: Carrier, raw pin, links and directories FullSD, seven explicit ignored exact current-token Windows controls
         id: carrier_full_sd
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 5
@@ -1028,6 +1063,9 @@ jobs:
               ) },
             @{ name = 'owned-link-fullsd'; filter = 'worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows'; expected = 1; names = @(
                 'worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows'
+              ) },
+            @{ name = 'directory-fullsd'; filter = 'worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile'; expected = 1; names = @(
+                'worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile'
               ) }
           )
           $results = @()
@@ -1068,7 +1106,7 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
-          $complete = $complete -and $results.Count -eq 6 -and $inputsStable
+          $complete = $complete -and $results.Count -eq 7 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
@@ -1077,7 +1115,7 @@ jobs:
             inputsStable = $inputsStable
             observationComplete = $complete
             singleNodeCarrierControlsOnly = $false
-            carrierRawPinAndOwnedLinksControlsOnly = $true
+            carrierRawPinOwnedLinkAndDirectoryControlsOnly = $true
             explicitIgnoredFullSecurityControls = $true
             privilegesAdjusted = $false
             fullTreeOrManifest2Complete = $false
@@ -1267,7 +1305,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
-            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }

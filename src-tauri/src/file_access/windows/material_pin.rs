@@ -458,6 +458,25 @@ impl MaterialPin {
             Resource::Child { file, .. } => file,
         }
     }
+    // Bind a directory-facet label to this SAME held object's final raw leaf.
+    // This grants no path/open authority and never String-normalizes the name.
+    pub(super) fn directory_carrier_leaf(&self, raw: &[u16]) -> Result<(), Failure> {
+        material_raw_name::check(raw).map_err(Failure::Name)?;
+        if self.inner.opening.kind != MetadataKind::Directory {
+            return Err(Failure::Unsupported);
+        }
+        let actual = self
+            .inner
+            .guid
+            .units
+            .rsplit(|u| matches!(*u, 47 | 92))
+            .next()
+            .ok_or(Failure::Changed)?;
+        if actual != raw {
+            return Err(Failure::Changed);
+        }
+        Ok(())
+    }
     pub(super) fn identity(&self) -> &Identity {
         &self.inner.identity
     }

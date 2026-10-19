@@ -207,3 +207,42 @@ pub(super) fn security(
     // digest. Access-denied/privilege errors remain failures, never partial SD.
     Ok(decoded)
 }
+
+// Only a SAME-handle Directory kind caller may request this inventory.
+pub(super) fn directory_inventory(
+    file: &File,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+) -> Result<Inventory> {
+    check(cancel)?;
+    let capacity = work.capacity().map_err(record)?;
+    let mut bytes = vec![0u64; BLOCK / 8];
+    let mut ios = IO_STATUS_BLOCK::default();
+    let status = unsafe {
+        NtQueryInformationFile(
+            handle(file),
+            &mut ios,
+            bytes.as_mut_ptr().cast(),
+            capacity as u32,
+            FileStreamInformation,
+        )
+    };
+    let raw = unsafe { std::slice::from_raw_parts(bytes.as_ptr().cast::<u8>(), capacity) };
+    let result = if status == 0 && ios.Information == 0 {
+        Inventory::empty_directory(status, ios.Information, raw, work, cancel)
+    } else {
+        Inventory::decode(status, ios.Information, raw, work, cancel, compare)
+            .and_then(Inventory::for_directory)
+    };
+    result.map_err(|e| match e {
+        AdsFailure::Cancelled => Error::Cancelled,
+        AdsFailure::Limit => Error::Limit,
+        AdsFailure::Status(status) => Error::NtStatus {
+            phase: "streamInventory",
+            status,
+        },
+        AdsFailure::Io { phase, code } => Error::Io { phase, code },
+        AdsFailure::Changed => Error::Changed,
+        _ => Error::Unsupported,
+    })
+}

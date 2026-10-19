@@ -88,6 +88,15 @@ pub(crate) use windows::{
 
 #[cfg(test)]
 mod material_directory_budget;
+#[cfg(test)]
+mod material_directory_facet;
+#[cfg(test)]
+mod material_directory_records;
 
 #[cfg(all(windows, test))]
 pub(crate) use windows::{OWNED_LINK_WORK_LIMIT, OwnedLinkMemory, OwnedLinkReceipt, OwnedLinks};
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    DirectoryMemory, DirectoryReceipt, DirectoryRequest, DirectoryRetirement, capture_directory,
+};

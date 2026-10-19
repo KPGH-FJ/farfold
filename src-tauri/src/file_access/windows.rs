@@ -609,7 +609,15 @@ mod material_fragment_consumer;
 pub(crate) use material_fragment_consumer::{FragmentRetirement, carrier_fragment_roundtrip};
 
 #[cfg(test)]
+mod material_directory_carrier;
+#[cfg(test)]
+mod material_directory_facts;
+#[cfg(test)]
 mod material_pin;
+#[cfg(test)]
+pub(crate) use material_directory_carrier::{
+    DirectoryMemory, DirectoryReceipt, DirectoryRequest, DirectoryRetirement, capture_directory,
+};
 
 #[cfg(test)]
 #[path = "windows/material_backup_shape_tests.rs"]
