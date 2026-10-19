@@ -934,3 +934,54 @@ it("wrapped source updates cannot become local inquiries or independent child re
     ),
   ).toBe(true);
 });
+
+it.each(["tool", "config"] as const)(
+  "does not install a child when %s conversion fails during original fork precheck",
+  async (kind) => {
+    const parent = seed();
+    const originalItems = parent.items;
+    const originalItem = parent.items[0];
+    h.invoke.mockImplementation(
+      async (command: string, args: Record<string, any>) => {
+        if (command !== "session_fork_current")
+          return command === "settings_get" ? null : [];
+        const bad = JSON.parse('{"toString":null,"valueOf":null}');
+        args.channel.onmessage({
+          update: {
+            sessionUpdate: "agent_message_chunk",
+            content: { type: "text", text: "READABLE BEFORE FAILURE" },
+          },
+        });
+        args.channel.onmessage({
+          update:
+            kind === "tool"
+              ? { sessionUpdate: "tool_call", toolCallId: bad }
+              : {
+                  sessionUpdate: "config_option_update",
+                  configOptions: [
+                    {
+                      id: bad,
+                      name: "owned",
+                      type: "boolean",
+                      currentValue: false,
+                    },
+                  ],
+                },
+        });
+        args.channel.onmessage({
+          kind: "session_history_complete",
+          openToken: args.openToken,
+        });
+        return response(args);
+      },
+    );
+    expect(await threads.forkCurrent(parent.key)).toBeUndefined();
+    const childKey = `${parent.agentId}:${parent.cwd}:child-${parent.nativeSessionId}`;
+    expect(threads.thread(childKey)).toBeUndefined();
+    expect(threads.thread(parent.key)).toBe(parent);
+    expect(parent.items).toBe(originalItems);
+    expect(parent.items[0]).toBe(originalItem);
+    expect(parent.forkOperation?.status).toBe("created_unavailable");
+    expect(parent.forkOperation?.reason).toBe("delivery_failed");
+  },
+);

@@ -550,3 +550,53 @@ it.each([false, true])(
     expect(copies).toBe(0);
   },
 );
+
+// Architecture characterization: JSON validity is not ACP schema validity.
+// A pure readable-message observer may not move these OLD exceptions past set.
+it.each(["tool", "config"] as const)(
+  "keeps prior state when %s JSON conversion fails after readable prefix text",
+  async (kind) => {
+    const native = `architecture-preflight-${kind}`;
+    const w = wireReplay(native);
+    const key = `wire-raw-fidelity:/replay:${native}`;
+    const prior = threads.thread(key)!;
+    prior.items = [
+      {
+        kind: "agent",
+        id: `old-${kind}`,
+        text: "KEEP PRIOR",
+        streaming: false,
+        time: 1,
+      },
+    ];
+    const items = prior.items;
+    const item = items[0];
+    const value = JSON.parse('{"toString":null,"valueOf":null}');
+    const update =
+      kind === "tool"
+        ? { sessionUpdate: "tool_call", toolCallId: value }
+        : {
+            sessionUpdate: "config_option_update",
+            configOptions: [
+              {
+                id: value,
+                name: "owned",
+                type: "boolean",
+                currentValue: false,
+              },
+            ],
+          };
+    const request = expect(w.promise).rejects.toBeInstanceOf(TypeError);
+    w.deliver(message("before", "READABLE BEFORE INVALID FIELD"));
+    w.deliver({ update });
+    w.deliver(message("after", "READABLE AFTER INVALID FIELD"));
+    w.deliver(w.marker());
+    w.finish();
+    await request;
+    expect(threads.thread(key)).toBe(prior);
+    expect(prior.items).toBe(items);
+    expect(prior.items[0]).toBe(item);
+    expect(item).toMatchObject({ text: "KEEP PRIOR", time: 1 });
+    await threads.close(key);
+  },
+);
