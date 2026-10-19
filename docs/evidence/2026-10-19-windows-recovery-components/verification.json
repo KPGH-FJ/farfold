@@ -1,7 +1,7 @@
 {
   "atUtc": "2026-10-19T10:22:23.233058+00:00",
   "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
-  "sourceCheckpoint": "b211d61d6f2e8a802a8e23378a01816b69221641",
+  "sourceCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
   "installedSourceUnchanged": false,
   "installedBinarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
   "latestFullSevenStillSource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
@@ -652,61 +652,26 @@
     "noNewScopeDecision": true,
     "NEW24AffectedRealSendPauseRetained": true
   },
-  "nativeComponentSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+  "nativeComponentSourceCheckpoint": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
   "alignmentUpdatedAtUtc": "2026-10-19T13:39:02.835714+00:00",
   "latestDispatchedWindows": {
-    "runId": 39262280954,
-    "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
-    "conclusion": "failure",
-    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39262280954",
-    "scope": "Actual selected components only; no full Windows/29x8 acceptance",
-    "finalMetadata": {
-      "path": "output/2026-10-19-recovery-render-continuation/history-tree-git5-ci-e7f89448/final-metadata.stdout.json",
-      "sha256": "d7a5c4681543650b8b71e9c04e6171c483c023aa21b5b8a7f281b275635abbdf"
+    "runId": 39272897287,
+    "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
+    "statusAtBinding": "queued",
+    "conclusionAtBinding": "",
+    "completionAuditCollected": false,
+    "binding": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
+      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
     },
-    "audit": {
-      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
-      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
+    "plannedContinuation30NotPassCount": {
+      "ordinary": 25,
+      "manual": 5
     },
-    "carrier149": {
-      "ordinary": {
-        "attempted": 137,
-        "passed": 115,
-        "failed": 22
-      },
-      "manualFullSD": {
-        "attempted": 12,
-        "passed": 0,
-        "failed": 12
-      },
-      "total": {
-        "attempted": 149,
-        "passed": 115,
-        "failed": 34
-      }
-    },
-    "Git5": {
-      "rawRustTestPassed": true,
-      "rawFiveCallsAndTenMarkersVerified": true,
-      "twoPlainFalseControlsPassed": true,
-      "ownersSettledAndFixtureRemoved": true,
-      "PowerShellStepFailed": true,
-      "PowerShellResultMissing": true,
-      "actualError": "Int64/U64-max comparison overflow in Test-U64",
-      "threeKeysControls": "Passed only by source control-flow inference; no dedicated receipts/result hash"
-    },
-    "strictNegative101": {
-      "failedTestAndStep": true,
-      "inner18AndOwner17Complete": true,
-      "notTestPass": true
-    },
-    "old132": {
-      "passed": 103,
-      "failed": 29,
-      "all132SameVerdictAsC9": true
-    }
+    "scope": "New source selected native components; original149/Git5/Matrix8/strictnegative separate; does not cover later live-only769 frontend or fullWindows/29x8"
   },
-  "uncommittedFrontendScope": "None: current history/preview/fork frontend source committed and pushed through3e7f2e17. No fresh complete engineering or installed acceptance yet.",
+  "uncommittedFrontendScope": "None: frontend source through769 committed/pushed. Current batch fresh full7/installed proof not yet performed; installed e7 evidence remains separate.",
   "latestCompletedWindows": {
     "runId": 39262280954,
     "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
@@ -760,38 +725,97 @@
     }
   },
   "currentSourceContinuation": {
-    "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
-    "frontendChecks": "32 files423pass,type and owned format0,1331 stable inputs; includes fork temporary replay retirement, no full failed-child recovery",
-    "nativeStatus": "Tree12 + Regular11 union20, three test-only failure observations and Git5 diagnostic committed; workflow149 plus separate Git5 mandatory control, no new Windows execution or installed claim",
-    "nativeChecks": [
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-cross-r1-receipt.json",
-        "sha256": "864b642e111bf8cbaded230f72a34539e2c19b01d468f5f1faa3693fc8b77f67"
-      },
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-host-strict-r1-receipt.json",
-        "sha256": "a50b156ebfcf1fc7d7cc9211ccab965e8655e0fdf496d8cd7cca62bb91d115ed"
-      },
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/regular-shared-host-file-access-r1-receipt.json",
-        "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
-      }
-    ],
-    "actual": "Latest local host and Windows cross all-target strict0 on796stable inputs; Tree/Regular host file_access120pass. Fresh e7full7=2085Rust/8147frontend; selected Windows149=115pass34fail, separate Git Rust1pass but PS validator overflow failed. Full Windows recovery remains incomplete.",
-    "remaining": "Mixed/alias capture and restore, persistent final namespace, public Windows consumers, global staging/byte backpressure/resources, installed behavior and per-Agent evidence remain open",
-    "nativeCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
-    "checkpointReceipt": {
-      "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
-      "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
+    "sourceCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
+    "nativeAndOwnershipCheckpoint": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+    "sourceCheckpointReceipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/source-continuation59-checkpoint.json",
+      "sha256": "fa3b05845af5d18cf05b3440a30cea25fee07e286f381b8081a8257b3ded0724"
     },
-    "workflow": "Carrier149 actual137ordinary115pass22fail,12manual0pass12fail; separateGit Rust1pass/5calls complete, PS numeric comparison overflow failed. New typed comparison fix not yet tested.",
+    "liveCheckpoint": {
+      "path": "output/2026-10-19-recovery-render-continuation/live-channel-projection-root-r1/checkpoint.json",
+      "sha256": "8d291cdbbb842a41966272d22af1aa22af5458df67d8c026256b8bdc899ad427"
+    },
+    "scope": "Source and affected controlled checks only. Installed/fresh full7 still e7, later source batch not installed.",
+    "globalHistoryDelivery": {
+      "actualFrontend": {
+        "selectedFiles": 17,
+        "suites": 18,
+        "passed": 156,
+        "inputs": 1341
+      },
+      "nativeDistinctPassed": 65,
+      "newNativeControls": 15,
+      "summary": {
+        "path": "output/2026-10-19-recovery-render-continuation/history-delivery-root-r2/affected-summary.json",
+        "sha256": "355a834c0fa3de553c685886c2e02f15dc4c4557dae12fb712378dfc8ecabc15"
+      },
+      "independent": {
+        "path": "output/2026-10-19-recovery-render-continuation/independent-global-history-delivery-review-r1/source-review.json",
+        "sha256": "e0bc75f30481fc62ef91dd9b92af8bcb4adf5957573a9cfadbb4fa845bfcc4d5"
+      },
+      "budgetScope": "Original2active/32waiting/8MiB request parameters only; original Entry two facts extends held responsibility, not history body/RSS cap",
+      "remaining": "Lost private receipt/reload recovery, full body/SDK/Tauri credits, actual Window/App/realAgent resource proof"
+    },
+    "liveChannelRepair": {
+      "actualRED": "1pass2fail at callbackErrors assertion after all required cleanup inputs",
+      "sameWholeTestsGREEN": "3pass0fail",
+      "affected": {
+        "selectedFiles": 10,
+        "passed": 137,
+        "inputsIncludingLockedTauriApi": 1344
+      },
+      "receipt": {
+        "path": "output/2026-10-19-recovery-render-continuation/live-channel-projection-root-r1/affected/receipt.json",
+        "sha256": "22a9e0a65923d4b82fcedb41545d07fe7c5ce3acbb593136fc67825b08ce5ea8"
+      },
+      "scope": "Actual JS Channel index and runtime with controlledIPC; only live applyUpdate local TypeError fallback, whole envelope kept. Original history TypeError and nonTypeError boundaries remain. No universal exception/RSS/backpressure claim."
+    },
+    "nativeComponents": {
+      "status": "Operation-scoped Mixed real carrier and readonly Alias topology are test-registered internal components; rawGUID and Gitplain corrections plus original onealias sharing fix applied. Persistent whole restore/final namespace/public Windows mutation remain incomplete.",
+      "hostFileAccessPassed": 126,
+      "hostFileAccessScope": "Earlier Mixed6portable plus120old, before later path/native corrections; not new Windows test execution",
+      "cross": {
+        "path": "output/2026-10-19-recovery-render-continuation/owned-link-sharing-cross-r1-receipt.json",
+        "sha256": "eea540773ecb27334f11a1bdb8bc5d613f7d47c3f75b338e487ae808c2dc56ad"
+      },
+      "host": {
+        "path": "output/2026-10-19-recovery-render-continuation/owned-link-sharing-host-r1-receipt.json",
+        "sha256": "6f12d8f7c9e1595cee345efacbed0a5d0d418ba9e09eb73c375c0ace61675c2c"
+      },
+      "inputs": 809,
+      "scope": "Actual all-target strict host/cross0, not Windows runtime; compile scope separate from1341/1344frontend."
+    },
     "validatorCorrection": {
-      "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
-      "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
+      "source": "0f9e280f65536fc9aa1f9e6c4d30fc4368fefa8d",
+      "independentActual": {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-powershell-actual-r1/independent-source-and-actual-review.json",
+        "sha256": "190d5cb947b36832dc6c499805f7fd93255222105d5411a86cff4463360c6019"
+      },
+      "scope": "Actual pureMacPowerShell RED/GREEN and inline controls; new Windows whole validator result not yet audited"
     },
-    "validatorCorrectionScope": "Static exact-key collision fixed using intrinsic Keys and count+case-exact comparison; valid, extra Keys and comma-key controls prepared, not PowerShell-executed locally.",
-    "currentDeliverySource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
-    "currentWindowsScope": "e7 actual149=115pass34fail. Separate Git1Rust/5calls success, PS U64 overflow means validator step failed. Exact old132 unchanged; code fixes and remaining recovery/global resources are internal."
+    "workflow": {
+      "carrier149Preserved": true,
+      "separateContinuation30": {
+        "ordinary": 25,
+        "manual": 5
+      },
+      "Git5Matrix8Strict101Kept": true,
+      "binding": {
+        "path": "output/2026-10-19-recovery-render-continuation/workflow-r9-root-r1/final-source-binding.json",
+        "sha256": "cff62c96ed7f2f609f1afb73b00019372f211f8559633a6ede775c32b9532332"
+      },
+      "PowerShellStaticAndLiteralOnly": {
+        "path": "output/2026-10-19-recovery-render-continuation/workflow-r9-root-r1/parse-and-table-receipt.json",
+        "sha256": "94097226b032661a99e23806a25e695fee2e7d662a32f86baff90b32552d93ce"
+      },
+      "newWindowsVerdict": null
+    },
+    "additionalStorageCleanup": {
+      "path": "output/2026-10-19-recovery-render-continuation/storage-incremental-owned-r2/cleanup-receipt.json",
+      "sha256": "4cbb7d43a133abb95fc84fc004d402acd6c3f35ce730d85787deb9ea0fba2d85"
+    },
+    "storageScope": "Further24 exclusive generatedcache bins2,648,896,295logicalB, not unique physicalAPFS/reclaimed claim. App/data/history/backup/shared/source/evidence kept.",
+    "remaining": "Full persistent mixed/alias payload/target restore, sourceGit role, final namespace/public mutation, global body/transport/resource policy and29x8 remain internal/evidence separated."
   },
   "historicalAtC9Dispatch": {
     "sourceCheckpoint": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
@@ -965,5 +989,44 @@
     },
     "narrowProgress": "Original auth reservation/cancel passed; same held target wait0/exit1 with same Job inactive. First import1/7 and export3/5; all mandatory aggregate failures retained.",
     "boundaries": "Actual tests in CI c9 only; no local Tree12/Regular11/new frontend or installed-app coverage. Seven full-security open1314 versus one owned-link target NT status remain distinct. Budget tests returned values unknown; test-only diagnostics added locally, not fixes."
+  },
+  "historicalSourceContinuationBefore769": {
+    "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
+    "frontendChecks": "32 files423pass,type and owned format0,1331 stable inputs; includes fork temporary replay retirement, no full failed-child recovery",
+    "nativeStatus": "Tree12 + Regular11 union20, three test-only failure observations and Git5 diagnostic committed; workflow149 plus separate Git5 mandatory control, no new Windows execution or installed claim",
+    "nativeChecks": [
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-cross-r1-receipt.json",
+        "sha256": "864b642e111bf8cbaded230f72a34539e2c19b01d468f5f1faa3693fc8b77f67"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-host-strict-r1-receipt.json",
+        "sha256": "a50b156ebfcf1fc7d7cc9211ccab965e8655e0fdf496d8cd7cca62bb91d115ed"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/regular-shared-host-file-access-r1-receipt.json",
+        "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
+      }
+    ],
+    "actual": "Latest local host and Windows cross all-target strict0 on796stable inputs; Tree/Regular host file_access120pass. Fresh e7full7=2085Rust/8147frontend; selected Windows149=115pass34fail, separate Git Rust1pass but PS validator overflow failed. Full Windows recovery remains incomplete.",
+    "remaining": "Mixed/alias capture and restore, persistent final namespace, public Windows consumers, global staging/byte backpressure/resources, installed behavior and per-Agent evidence remain open",
+    "nativeCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+    "checkpointReceipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
+      "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
+    },
+    "workflow": "Carrier149 actual137ordinary115pass22fail,12manual0pass12fail; separateGit Rust1pass/5calls complete, PS numeric comparison overflow failed. New typed comparison fix not yet tested.",
+    "validatorCorrection": {
+      "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
+      "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
+    },
+    "validatorCorrectionScope": "Static exact-key collision fixed using intrinsic Keys and count+case-exact comparison; valid, extra Keys and comma-key controls prepared, not PowerShell-executed locally.",
+    "currentDeliverySource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "currentWindowsScope": "e7 actual149=115pass34fail. Separate Git1Rust/5calls success, PS U64 overflow means validator step failed. Exact old132 unchanged; code fixes and remaining recovery/global resources are internal."
+  },
+  "historicalSourceIdentityBefore769": {
+    "sourceCheckpoint": "b211d61d6f2e8a802a8e23378a01816b69221641",
+    "nativeComponentSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+    "uncommittedFrontendScope": "None: current history/preview/fork frontend source committed and pushed through3e7f2e17. No fresh complete engineering or installed acceptance yet."
   }
 }
