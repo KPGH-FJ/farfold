@@ -303,3 +303,7 @@ mod tests {
 #[cfg(test)]
 #[path = "ci5_native_phase_tests.rs"]
 mod ci5_native_phase_tests;
+
+#[cfg(test)]
+#[path = "rename_publication_diagnostics.rs"]
+mod rename_publication_diagnostics;

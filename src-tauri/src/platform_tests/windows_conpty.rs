@@ -13,6 +13,7 @@ pub(crate) enum Case {
     Drain,
     CursorReply,
     CloseDrain,
+    TerminalCancel,
 }
 
 impl Case {
@@ -22,6 +23,9 @@ impl Case {
             Self::Cancellation => {
                 "auth::terminal::tests::cancellation_after_spawn_keeps_the_original_exit_owner"
             }
+            Self::TerminalCancel => {
+                "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent"
+            }
             _ => "platform_tests::windows_conpty::diagnostic_child",
         }
     }
@@ -29,7 +33,7 @@ impl Case {
         // Original cancellation body contains3s marker+1s result+5s close+1s
         // configuration waits, before ConPTY startup.8s cannot contain it.
         Duration::from_secs(match self {
-            Self::Reservation | Self::Cancellation => 20,
+            Self::Reservation | Self::Cancellation | Self::TerminalCancel => 20,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
             _ => 10,             //3s startup+3s readiness+2s exit+1s EOF; not a production cap
         })
@@ -106,7 +110,7 @@ impl Drop for Owner {
 }
 
 pub(crate) fn run(case: Case) {
-    // Only these six owned cases share this lock; unrelated tests keep running.
+    // Only these seven owned cases share this lock; unrelated tests keep running.
     static SERIAL: Mutex<()> = Mutex::new(());
     static CLEANUP_PENDING: AtomicBool = AtomicBool::new(false);
     let _serial = SERIAL.lock().unwrap_or_else(|poison| poison.into_inner());
