@@ -1,0 +1,521 @@
+{
+  "kind": "active-prompt-recovery-and-windows-security-source-stage",
+  "recordedAtUtc": "2026-10-19T07:14:01.035069+00:00",
+  "authority": "Only plans/agent-access.md schedules work; PRODUCT,29x8 and all151 original criteria unchanged.",
+  "sourceStatus": "Pushed5768745b/fa5689ba; fresh seven, independent source increment review, candidate9 and installed10 passed. Unique formal application is fa5689ba/badfd4fb; one existing Dirac history read and normal saved exit only. Post-use sealed comparison completed with0 additions,0 removals,7 modifications and unknown writers; protocol not assessed. Selected Windows run39212793966 completed failure: selected_material raw outcome failed despite a continue-on-error green step display; aggregate refused. Selected material controls were12 passed/4 failed; root causes remain unproven.",
+  "implemented": {
+    "activePrompt": {
+      "active": 2,
+      "waiting": 8,
+      "logicalWholeRequestBytes": 67108864,
+      "sharedAbsoluteDeadlineSeconds": 60,
+      "notRssOrSdkOrWebViewCap": true,
+      "offeredUnknownOwnedUntilKnownTerminalOrActualProcessGroupEnd": true
+    },
+    "typedProcessEnd": "Only separate local channel for exact current connection/state permits explicit new preparation. Old unknown outcomes/history remain; no automatic resend. Local preflight still blocks. session_open requires real Tauri Channel, sole current frontend caller supplies it.",
+    "frontendRaces": "Late offered/accepted cannot resurrect settled request; first owned error receipt delivers prior explicit cancel, known terminal retires deferred cancel before RPC.",
+    "windows": "Held same-object owner/group/DACL, stored label and in-tree full128 hardlink topology partial observations; explicit strict-security purpose adds BACKUP security descriptor read on the same strong objects, without privilege adjustment or partial fallback. Two existing archive consumers are wired behind still-closed Windows mutation gates. All Some profiles remain ineligible for Manifest1/recovery."
+  },
+  "affectedChecksBySnapshot": [
+    {
+      "scope": "earlierFrontendSnapshot",
+      "files": 51,
+      "tests": 693,
+      "naturalExit": 0,
+      "session": 78969,
+      "chunks": ["edece1", "87ebad", "c8b029"],
+      "inputCount": 1322,
+      "inputsStable": true,
+      "refs": ["frontend693", "frontend693Completion", "frontend693Raw"],
+      "notFinalSourceRerun": true
+    },
+    {
+      "scope": "twoAddedRecoveryControlsWithOriginalFive",
+      "files": 1,
+      "tests": 7,
+      "naturalExit": 0,
+      "chunk": "072aca",
+      "refs": ["recovery7", "recovery7Raw"],
+      "originalFiveWholeBodiesRetained": true,
+      "not693Rerun": true
+    },
+    {
+      "scope": "originalOwnerSemanticRed",
+      "passed": 12,
+      "failed": 3,
+      "naturalExit": 1,
+      "session": 93339,
+      "refs": ["ownerOriginalRed", "ownerOriginalRedRaw"]
+    },
+    {
+      "scope": "authorRegressionRedKnownTerminalBeforeCancelMicrotask",
+      "passed": 15,
+      "failed": 1,
+      "naturalExit": 1,
+      "session": 34959,
+      "refs": ["ownerAuthorRegressionRed", "ownerAuthorRegressionRedRaw"],
+      "notOriginalProductFailure": true
+    },
+    {
+      "scope": "finalTargetedFrontend",
+      "tests": 25,
+      "composition": {
+        "promptAdmission": 16,
+        "processEndedRecovery": 7,
+        "component": 2
+      },
+      "naturalExit": 0,
+      "session": 86718,
+      "chunks": ["4b31e6", "704ee9"],
+      "inputCount": 1322,
+      "inputsStable": true,
+      "refs": ["final25", "final25Completion", "final25Raw", "ownerFinalFreeze"]
+    },
+    {
+      "scope": "finalTargetedTypeAndFormat",
+      "naturalExit": 0,
+      "session": 48422,
+      "chunks": ["ffcfcf", "b54bb2"],
+      "refs": ["finalTypeFormat"]
+    },
+    {
+      "scope": "backendAffectedHost",
+      "passed": 173,
+      "failed": 0,
+      "ignored": 0,
+      "naturalExit": 0,
+      "inputCount": 713,
+      "inputsStable": true,
+      "refs": ["backend173", "backend173Raw"],
+      "notWholeBackendSuite": true
+    },
+    {
+      "scope": "hostStrictOriginal",
+      "naturalExit": 101,
+      "classification": "collapsible_if",
+      "refs": ["hostStrictOriginal101", "hostStrictOriginal101Raw"],
+      "correctionAtOriginalDraft": "let-chain only; no successful post-correction strict receipt claimed in this draft",
+      "postCorrectionRecheck": "Fresh actual seven rust-strict command passed0; see freshFullSeven and evidenceRefs.freshSeven. Original101 remains unchanged."
+    }
+  ],
+  "fullSecurityHostAffected": {
+    "passed": 181,
+    "failed": 0,
+    "ignored": 0,
+    "naturalExit": 0,
+    "inputCount": 717,
+    "inputsStable": true,
+    "scope": "macOS arm64 portable/current worktrees and file_access; Windows cfg/runtime not exercised"
+  },
+  "fullSecurityWindowsCross": {
+    "target": "x86_64-pc-windows-gnullvm",
+    "allTargets": true,
+    "strictWarnings": true,
+    "naturalExit": 0,
+    "inputCount": 717,
+    "inputsStable": true,
+    "runtimeEvidence": false
+  },
+  "freshFullSeven": {
+    "sourceCommit": "fa5689ba668424bca80c425234babc8be58c1352",
+    "allSevenPassed": true,
+    "inputCount": 18267,
+    "inputsStable": true,
+    "frontendFiles": 608,
+    "frontendPassed": 8095,
+    "rustPassed": 1994,
+    "rustFailed": 0,
+    "rustIgnored": 6,
+    "legacyActualSevenSha256": "454383705b601578761a0cf53bdea190c1fbe545584c4c147b7f01980df64eb0",
+    "sourceFreezeFiles": 1983,
+    "sourceFreezeSha256": "e38c461ee6df7d1f8255516dae9c73ac7be8dcb7378ed625d065f44402336f48",
+    "scope": "Fresh actual seven commands on source; later documentation fact updates are separately formatted/checked and not new product source."
+  },
+  "candidateOrInstallThisBatch": {
+    "candidateBuildNaturalExit": 0,
+    "candidate9": 9,
+    "installed10": 10,
+    "installed": true
+  },
+  "windowsSelectedNewWorkflow": {
+    "selectedOrdinaryMaterial": 16,
+    "runId": 39212793966,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39212793966",
+    "dispatchNaturalExit": 0,
+    "actualRuntimeResults": {
+      "runStatus": "completed",
+      "runConclusion": "failure",
+      "selectedMaterialRawOutcome": "failure",
+      "selectedMaterialContinueOnErrorDisplayIsNotPass": true,
+      "strictNegativeObservationComplete": true,
+      "strictNegativeInnerFailureExpected": true,
+      "aggregatePassed": false,
+      "innerCaseDiagnosis": "Two first-capture unsafePath failures and two fresh-capture materialChanged failures after explicit DACL/hardlink changes; exact root causes remain unproven.",
+      "scope": "Native safe-summary actual run/artifact readback; no CI dispatch/query or raw case-log rerun by this documentation author.",
+      "selectedMaterialExpected": 16,
+      "selectedMaterialPassed": 12,
+      "selectedMaterialFailed": 4,
+      "selectedMaterialIgnored": 0
+    },
+    "manualPrivilegedPositivesRemainIgnored": true,
+    "notFullWindowsOrInstaller": true
+  },
+  "storage": {
+    "exactRegenerableLeavesRemoved": 2369,
+    "beforeAvailableBytes": 5716914176,
+    "afterAvailableBytes": 10108043264,
+    "exclusiveAttributionOrFutureCapacityPromise": false,
+    "formalUserAgentBackupAndSharedObjectsRetained": true
+  },
+  "open": [
+    "NEW-24 affected new real sends remain paused",
+    "SDK/transport/render consumer backpressure and long-run RSS/resource measurement",
+    "Windows complete material carrier, attributes/other facets, mutation namespace transaction and independent recovery",
+    "Windows full-security native rights and nonempty SACL positive/change observations",
+    "P13 actual message media/playback and uncovered formats",
+    "29 individually accepted Agents across all eight standards"
+  ],
+  "evidenceRefs": {
+    "promptEvidenceDraft": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/ending-progress-monotonicity-r2/documentation-proposal/verification.proposed.json",
+      "bytes": 17482,
+      "sha256": "ffa1af84d7d380156b96fb3a409698979a89ebd453b30640c35f570b6951556b"
+    },
+    "typedRecoveryRootCorrection": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/process-ended-recovery-proposal-r1/strict-receipt-r2/root-execution-r1/root-channel-commandarg-correction-r1.json",
+      "bytes": 1446,
+      "sha256": "87e288a18e453830e713c38ee1be64ecdd94dd261a8e1ee95cfb6c84fa171da2"
+    },
+    "typedRecoveryReview": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/process-ended-recovery-proposal-r1/strict-receipt-r2/root-execution-r1/root-delta-native-review-r1/source-review.json",
+      "bytes": 8078,
+      "sha256": "acf1b808e641fc03a061fe9acab654124ee2e7a08f8c3a841f74db1262014975"
+    },
+    "securityApplication": {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/full-security-read-proposal-r1/application-r1/execution-completion.json",
+      "bytes": 2760,
+      "sha256": "03e48e9cea4caabd1151c16c2ae271240c4003a7d048eeca542e09e73746c6af"
+    },
+    "securityReview": {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/full-security-read-proposal-r1/independent-native-review/source-review.json",
+      "bytes": 8961,
+      "sha256": "660c28b8c1921ca140b1a6cb4dbe4149d193ba41b652be13ea78dcf17091faa9"
+    },
+    "workflow14Review": {
+      "path": "output/2026-10-19-windows-continuation-review/selected-material-workflow-r1/independent-native-review/source-review.json",
+      "bytes": 2661,
+      "sha256": "40b7d16f35f333c045aa300d542971151aa1ef06d5def26ef4819f9561277252"
+    },
+    "storage2369": {
+      "path": "output/2026-10-19-storage-unshared-object-retirement/fresh-current-505f-r1/retirement.json",
+      "bytes": 921,
+      "sha256": "4b77d4a319c6fa34f2081f5e4f6d409483c9c87e55a7d29989f2a046f9eabdb9"
+    },
+    "material181": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/implementation-proposal-r3/root-execution-r1/full-security-material-host-r1-receipt.json",
+      "bytes": 1787,
+      "sha256": "5ff3ded1d6acda667388c100c75364915e663d4ba9df39828c3bc703b5d33caf"
+    },
+    "lateProgressReview": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/ending-progress-monotonicity-r2/independent-native-review/source-review.json",
+      "bytes": 6719,
+      "sha256": "cd4b3f265f1313b11c4cb3da29ddafee2e17bddcc8e54bf2721ee4fae2f360a5"
+    },
+    "crossStrict": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/implementation-proposal-r3/root-execution-r1/prompt-full-security-cross-strict-r2-receipt.json",
+      "bytes": 3159,
+      "sha256": "528b7a55aa5d734e2b83cb80fb9256f23777e12f06ced65daab0d77a2ea3bbf1"
+    },
+    "ordinaryEntryCfgReview": {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/full-security-read-proposal-r1/independent-native-review/ordinary-entrypoint-cfg-challenge.json",
+      "bytes": 5138,
+      "sha256": "58da6b84430f184e30dbc2ad14f1a5ffc19e21175ad6da6046a5adf3b974aeb6"
+    },
+    "workflow16": {
+      "path": "output/2026-10-19-windows-continuation-review/selected-material-workflow-r2-full-security-controls/author-completion.json",
+      "bytes": 4896,
+      "sha256": "c1ff5effa89a3c62f411e44a262b79ecc628b8713356be96e9595b3135c4841e"
+    },
+    "workflow16Review": {
+      "path": "output/2026-10-19-windows-continuation-review/selected-material-workflow-r2-full-security-controls/independent-native-review/source-review.json",
+      "bytes": 2168,
+      "sha256": "c823fbb221abe66be8515ee432a383f04c9b1b5d27afdc096de64ae559b59004"
+    },
+    "freshSeven": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/engineering/verification.json",
+      "bytes": 5982,
+      "sha256": "a4208923bae9f3074493e1fef012585a7cd0d2f931a7f297acd84e3f9a46e0a9"
+    },
+    "freshSevenLegacy": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/engineering/legacy-seven.json",
+      "bytes": 5759604,
+      "sha256": "454383705b601578761a0cf53bdea190c1fbe545584c4c147b7f01980df64eb0"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/source-freeze.json",
+      "bytes": 320487,
+      "sha256": "e38c461ee6df7d1f8255516dae9c73ac7be8dcb7378ed625d065f44402336f48"
+    },
+    "fullSourceReview": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/independent-source-review/source-review.json",
+      "bytes": 17011,
+      "sha256": "8635af7a2d2393fd5fc8c3bf25cd9367c48e96f0f59b278ec244967f9fa90764"
+    },
+    "windowsDispatch": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/windows-selected-ci/dispatch.json",
+      "bytes": 567,
+      "sha256": "86d0b2e640b8b8c8d2be270e82b84bdf2ebb1b988d6e9480230d2f2bb91c37e0"
+    },
+    "candidate": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/candidate-preparation/candidate-output/candidate.json",
+      "bytes": 231824,
+      "sha256": "800998b34ca8ad5a27059b6f68f9e3f1a0add59a66d3db57f3a69d1b94b9ca63"
+    },
+    "candidate9": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/candidate-preparation/independent/review.json",
+      "bytes": 4258,
+      "sha256": "f0eec9cb26deb0b0074d77016b7b824bf2866236d0899a65a02bfa85fab9e900"
+    },
+    "install": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/install-result.json",
+      "bytes": 10874,
+      "sha256": "27e3571f1e7abdd415ee56b82cbf555428c6817070ee579d5e2cdb0fe254b320"
+    },
+    "installed10": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/installed-independent-review-private.json",
+      "bytes": 6492,
+      "sha256": "f3a12d37bd5b4feb7e0bc990e5bd72b64e10f10929c5dea76a933b2e2c9da4ca"
+    },
+    "afterRetention": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "269cc8bc34f057c7cd333b39cded40911d0ddaf52b23e5166fa5e7d7e274f822"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "90a1e896023982344c113e0fb3c519cfaf7ee565471c50e0826b220c6b29accb"
+    },
+    "formalUiRead": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/installed-cold-open-existing-history-and-exit.json",
+      "bytes": 1956,
+      "sha256": "7fa0b2941732835d02961fc82f2463e45c466c1458c7c994fc82cd8f6cd8d15b"
+    },
+    "beforeRetention": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "5ff7d685a6fbf5f4143b0831297aed1fc300829376060645f33d5983d9ae1947"
+    },
+    "preinstallRetention": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "611e9673b4b043523e7646aa93796d6d3f149ab69918a74477a774e5b4fd5a6f"
+    },
+    "candidate9ActualCompletion": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/independent-source-review/candidate-nine-actual-completion.json",
+      "bytes": 931,
+      "sha256": "62da29f291613d9a5637d36e14b40b6739d14e5c5137cb71dc347fd3067575a0"
+    },
+    "installed10ActualCompletion": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/independent-source-review/installed-ten-actual-completion.json",
+      "bytes": 1359,
+      "sha256": "c24a3e7f745f1c98c31f0389b25c8a0a143faee3d72674c0dd3d8d862a2a25af"
+    },
+    "postUseCapture": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/formal-ui/post-use-data/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "2d80d199f76862f81b89c0d3ae0156d1c348fa165809c53198693a83b5433ab1"
+    },
+    "postUseSafeSummary": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/formal-ui/data-analysis/safe-summary.json",
+      "bytes": 7774,
+      "sha256": "ec5f0d2c672672539b58583c38ae1b9715b5b7a4d11b909a38f4c9486a41868d"
+    },
+    "postUseComparisonCompletion": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/formal-ui/data-analysis/execution-completion.json",
+      "bytes": 596,
+      "sha256": "0ccaf0cdc137d37a9af97dac33974108b9b4ffed87442f314e7419ac4615c5f0"
+    },
+    "postUseIndependentActualCompletion": {
+      "path": "output/2026-10-19-prompt-windows-security-delivery/independent-source-review/sealed-comparison-actual-completion.json",
+      "bytes": 2811,
+      "sha256": "980474ca5015dec2e98c4eaacafa8ce8cb4f5724bfb62bb5cb3b6e018354b284"
+    },
+    "windowsSelectedFinalSafeSummary": {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/selected-diagnostics-integration/ci3-39212793966/independent-native-investigation/safe-summary.json",
+      "bytes": 23821,
+      "sha256": "adbc2133bf85cf30f4cc2ce75d3d682c2ebe94e1a38293c4ec485909133adf29"
+    }
+  },
+  "sourceCommit": "fa5689ba668424bca80c425234babc8be58c1352",
+  "preservedCrossFailure": {
+    "naturalExit": 101,
+    "reason": "three ordinary partial Windows entrypoints had no production consumer after strict archive wiring",
+    "correction": "only those Windows wrappers are test-only; shared walker and strict/Unix production chains remain",
+    "originalReceipt": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/implementation-proposal-r3/root-execution-r1/prompt-full-security-cross-strict-r1-receipt.json",
+      "bytes": 3161,
+      "sha256": "cfa3d80ab4dffb76e1965a6261d5e9a9a9ab2431b2f6a69993b8f8d7c8bfacc7"
+    }
+  },
+  "fullSourceReview": {
+    "result": "noBlockingFinding",
+    "currentObjects": 1963,
+    "unchangedByteBlobModeSame": 1848,
+    "deltaObjects": 115,
+    "changedReleaseAndSupportFilesRead": 67,
+    "testsNotAllIndependentlyRead": true
+  },
+  "installedAtStageStart": {
+    "source": "579079c875407796b33c75dfe7dc40ed0b8529a1",
+    "binarySha256": "e1508fd62a0eb7260204d013b9b98b5bf687bae7d62cbd96a9a18c2f1c99f0fd",
+    "containsCurrentBatch": false
+  },
+  "installed": {
+    "sourceCommit": "fa5689ba668424bca80c425234babc8be58c1352",
+    "binarySha256": "badfd4fb93473f1844153f947a471f59d458538c3eea2f5f54130b295ec3d961",
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "candidate9Passed": 9,
+    "installed10Passed": 10,
+    "atomicNewInodeFiles": 5,
+    "duplicateCandidateFilesRetired": 5,
+    "archiveSha256": "f39d07c6e28592789147d3d00cdb29db8dde031fd5f208b75622898f5b890fd8"
+  },
+  "installationData": {
+    "beforePreinstallAfterEach": 232530,
+    "strictByteIdentical": true,
+    "manifestSha256": "23e0d7134be7bad8562e16fe990f07dc282965557232752cadaa8d187e4f2e6d",
+    "sealedBaselineSha256": "ced3205110603a4e486121531857694e21509871f36586c4650d98dacd1cd75b",
+    "scope": "Three closed-observed endpoints, no continuous no-writer or all-unknown-work completion claim."
+  },
+  "formalUiRead": {
+    "coldStarted": true,
+    "uiListCount": 137,
+    "existingDiracReadAndHistoryReplyReplay": true,
+    "uiState": "未在运行",
+    "noTypingOrSendClick": true,
+    "unknownWorkQuitWarningRetained": true,
+    "normalSaveExitThenExactProcessCountZero": true,
+    "protocolTrafficAssessed": false,
+    "rawAxAndScreenshotsOnlyInConversationTools": true,
+    "newPromptWaitingStopAndFreshRecoveryUiNotVerified": true
+  },
+  "postUseData": {
+    "result": "completedReadonlyDataComparison",
+    "naturalExit": 0,
+    "actualComparisonChunk": "3a97cb",
+    "invocations": 1,
+    "baselineReusedInstallationEndpoint": true,
+    "postUseSingleCapture": true,
+    "baselineManifestSha256": "23e0d7134be7bad8562e16fe990f07dc282965557232752cadaa8d187e4f2e6d",
+    "postUseManifestSha256": "d60a68abeb7714674873a8bbf0d532fb359691a46cb97d995331020438ef1728",
+    "manifest": {
+      "beforeEntries": 232530,
+      "afterEntries": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 7,
+      "oldWholeEntriesExact": 232523,
+      "modifiedCategories": {
+        "webkit": 4,
+        "rawMetadataWalOrShm": 2,
+        "otherAppData": 1
+      },
+      "changedRecordFields": {
+        "sha256": 7,
+        "size": 1
+      }
+    },
+    "normalizedMetadata": {
+      "beforeSha256": "ced3205110603a4e486121531857694e21509871f36586c4650d98dacd1cd75b",
+      "afterSha256": "f2e8711bc74c8ba6b424c37af6e74e9b0b66452f32b2dde09219293b1677fe5e",
+      "wholeDatabaseByteEqual": false,
+      "schemaStrictExact": true,
+      "userVersionStrictExact": true,
+      "tableStats": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 39,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "sessions": {
+          "beforeCount": 138,
+          "afterCount": 138,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 138,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "settings": {
+          "beforeCount": 54,
+          "afterCount": 54,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 54,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "dismissed_sessions": {
+          "beforeCount": 173,
+          "afterCount": 173,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 173,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        }
+      },
+      "changedColumns": {
+        "agents": {
+          "updated_at": 1
+        },
+        "sessions": {},
+        "settings": {},
+        "dismissed_sessions": {}
+      },
+      "changedSettingValueCategories": {}
+    },
+    "rawMetadataRecordedEndpoints": {
+      "main": {
+        "recordedBytesAndHashExact": true,
+        "recordedSignatureExact": true
+      },
+      "wal": {
+        "recordedBytesAndHashExact": false,
+        "recordedSignatureExact": false
+      },
+      "shm": {
+        "recordedBytesAndHashExact": false,
+        "recordedSignatureExact": false
+      }
+    },
+    "unsentWholeRawAndStrictParsedExact": true,
+    "oldWholeComposersExact": 10,
+    "composersAllKnownAndUnknownFieldsPresenceTypesAndValuesCompared": true,
+    "setupWholeRawAndStrictParsedExact": true,
+    "setupCollections": {
+      "confirmedSelections": 23,
+      "pending": 41,
+      "completed": 23,
+      "progress": 72
+    },
+    "defaultsTrimmedOrNormalized": false,
+    "writerAttribution": "unknown for all differences",
+    "sqlScope": "Exactly two SHA-pinned standalone sealed normalized copies, mode=ro&immutable=1 with query_only; connections closed, copies unchanged and no sidecars created. No original or first-raw database SQL/content read.",
+    "protocolTrafficAssessed": false,
+    "limits": [
+      "Endpoint comparison, not a fresh full before capture or continuous-interval guarantee.",
+      "No directory-wide zero-change verdict; WAL/SHM and timestamp differences retained.",
+      "UI no-input actions are not a protocol zero-prompt proof.",
+      "Unknown-work exit warning retained; normal saved exit does not prove every historical unknown task stopped."
+    ]
+  }
+}

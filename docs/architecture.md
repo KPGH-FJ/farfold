@@ -1,6 +1,6 @@
 # Farfold 源码架构
 
-更新：2026-10-17。本页说明当前源码的职责与约束；产品要求以 [PRODUCT.md](../PRODUCT.md) 为准，实际通过、失败、未测和接续安排分别见[当前状态](status.md)与[唯一活动计划](../plans/agent-access.md)。
+更新：2026-10-19。本页说明当前源码的职责与约束；产品要求以 [PRODUCT.md](../PRODUCT.md) 为准，实际通过、失败、未测和接续安排分别见[当前状态](status.md)与[唯一活动计划](../plans/agent-access.md)。
 
 唯一正式应用为 /Applications/Farfold.app，标识 ai.farfold.desktop，内部版本0.1.7、macOS arm64；实际安装的功能源码、程序摘要与验证范围集中见[当前状态](status.md)。后续文档或测试整理提交不等于重新安装，受控样本与安装静态核验不构成真实 Agent 或P13整项验收。
 
@@ -43,6 +43,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 认证由协议方法驱动：Agent认证调用 authenticate，终端认证使用内嵌PTY。终端退出、网页返回和安装成功不能替代认证回执。服务说明、模型ID及密钥引用属于元数据；密钥保存在系统凭据存储，不进入数据库、事件或日志。保存服务不自动分发，明确选择服务才授权本次使用，见 [service_delivery.rs](../src-tauri/src/acp_client/service_delivery.rs)。
 
+终端由[既有退出所有者](../src-tauri/src/pty.rs)持有同一Child、进程组与控制句柄；[startup_owner.rs](../src-tauri/src/pty/startup_owner.rs)把该工作线程前移到首个系统调用之前。每个管理器只允许一个未确认的启动，[startup_control.rs](../src-tauri/src/pty/startup_control.rs)在同一状态锁下裁定就绪与等待超时。失败、取消或析构阻塞时，认证输出闭包、配置保护和活动许可仍随原所有者保留；只有实际清退才可报告完成，未知状态不自动释放或重试。这些后续源码已随fa5689纳入macOS正式应用；选定Windows终端取消与认证退出分项另有成功证据，保留主句柄的无应答负控仍失败，不代表ConPTY全部退出路径已验。
+
 服务交付与直接API测试是独立路径：测试支持某个接口，不证明所有 Agent能使用它。仅按已核官方配置方式交付，原来源失效不能静默换号、换模型或回退默认服务。配置对象与日志不携带密钥；启动诊断只记录受控事实。
 
 ## 对话、草稿和请求生命周期
@@ -53,9 +55,11 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 
-最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该后续修复仅有定向检查，尚未安装。
+最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该修复已包含在5790安装源码中，不能由此推定全部审批真实路径已验。
 
-Agent的原始事件包括未知字段进入总线；工具、异步任务、压缩和停止按真实事件更新。取消请求发出不等于已经停止，进程退出也不等于上一请求正常完成。未知结果阻止普通重试和自动重发，不清除已发生外部操作的事实。
+当前正式版由[active_prompt.rs](../src-tauri/src/acp_client/active_prompt.rs)限制活动发送：初始策略为同时2项、等待8项、保留请求64 MiB逻辑字节，独立于冷读取配额；这不是量测后的最优值或实际内存上限。等待不持有工作位置切换锁，获准后仍复核来源、模型、权限和保存结果；[process_prompt_escrow.rs](../src-tauri/src/acp_client/process_prompt_escrow.rs)在实际交付后持有请求许可与工作责任，只有已知结束结果或原进程及进程组确已结束才释放。窗口与请求令牌限定取消对象，等待取消保留草稿和队列，停止与审批不排入该等待队列。[session_prompt_dispatch.ts](../src/runtime/session_prompt_dispatch.ts)区分等待、已交付与结果未知，迟到的接纳回包不把已结束的一轮重新标为运行。该批随fa5689完成新完整七项、独立源码复核、候选9项及安装10项；正式界面仅核既有Dirac读取和正常保存退出，未验实际发送等待、停止或长期资源，不能由此推定整项资源治理或29家已验。
+
+Agent的原始事件包括未知字段进入总线；工具、异步任务、压缩和停止按真实事件更新。取消请求发出不等于已经停止，进程退出也不等于上一请求正常完成。未知结果阻止普通重试和自动重发，不清除已发生外部操作的事实。[session_process_ended.ts](../src/runtime/session_process_ended.ts)只接收独立的本地进程结束通道，核对原连接及当前状态对象后，才允许用户明确重新准备；旧未知结果、历史和未确认输入继续保留。普通事件中的同名字段、迟到旧连接通知及通道丢失均不能提供该许可；该批后端受控检查、统一七项工程、独立源码复核与fa5689正式安装已完成，实际结束通知后显式重新准备的界面路径尚未验证。
 
 未发送内容与准备记录保存在meta_store的settings键中；文字、附件位置、意见与暂停队列可恢复，但附件需重新核验，保存失败明确呈现。保存退出采用单次共享操作和令牌校验，等当前保存完成；取消仅释放本次退出自己的锁，不释放更新、工作位置等其他操作的锁。重启仍受原有忙态与未知保护。
 
@@ -73,7 +77,7 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 ## 消息图片与音频预览
 
-收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序，先核允许MIME、规范Base64及单项最多16 MiB，再核下述已覆盖的声明结构。显式展开才生成媒体DOM；搜索、折叠、普通消息呈现不自动加载媒体。远程地址不因预览而抓取，未知格式与原协议内容仍保留。
+收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序。明确展开后，[use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts)先做轻量资格和单项最多16 MiB检查，再取得共用4实例、32 MiB逻辑字节配额，随后才扫描规范Base64及下述已覆盖声明；取得配额并通过检查才生成媒体DOM。失败或退役释放本次配额，重试由用户明确触发；这不是实际解码内存或RSS上限。搜索、折叠、普通消息呈现不自动深查或加载媒体，远程地址不因预览而抓取，未知格式与原协议内容仍保留。
 
 Agent消息的正文与媒体顺序由 [message_content_order.ts](../src/runtime/message_content_order.ts) 保留为已有正文的字符范围和附件索引范围，仅用于内存呈现，不复制负载、不持久化事件。相邻文字片段合并为一个Markdown段；主对话和已读取历史预览使用同一呈现，搜索按连续文字段解析，导出在对应位置列附件来源。完整覆盖校验失败或旧消息没有顺序信息时保留原布局，不猜测丢失的顺序。稳定的段键及全消息附件索引用于保留展开状态、媒体来源与搜索定位。
 
@@ -87,7 +91,7 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 仅对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；明确的线性PCM、IEEE浮点及标准扩展格式才按data字节、帧对齐和采样率核算，并采用600秒的消息预览策略。存在播放列表时，确定的直接data仍核独立帧对齐与存储采样预算；列表的裁剪、循环及实际播放时长不据此推定。未知压缩编码、其他容器及wavl不套用直接PCM公式；短列表保留原播放路径并标为未覆盖。该策略不等于格式限制、实际播放/循环时长或解码与重采样内存保证。
 
-经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；总量为零的未知值、零采样率的非音频数据和保留元数据保持未覆盖，独立已知的超限仍拒绝。跨原允许音频MIME核实际标记，不新增格式入口；不扫描音频帧、嵌入图片或URI，不核实际解码内存或帧内参数变化。
+经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；未知总量另由[message_flac_frame_observer.ts](../src/runtime/message_flac_frame_observer.ts)观察选定单声道16位常量帧的完整范围、CRC及连续编号，只在确定的累计采样下界超过600秒时拒绝，其他结果仍为部分覆盖。零采样率、保留元数据和其他帧布局的未知边界保持。跨原允许音频MIME核实际标记，不新增格式入口；不读取嵌入图片或URI，不解码PCM，不核实际解码内存或完整播放。
 
 其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 
@@ -172,7 +176,11 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 [worktrees](../src-tauri/src/worktrees/mod.rs) 通过官方Git创建或接入独立目录；从提交内容创建，不复制原目录未提交修改，不执行项目钩子或自动访问网络。“使用”更新明确的新稿，不改既有历史的工作位置，也不自动合并项目更改。
 
-Windows现有目录沿“检查、明确接入、重查”路径保存私有完整卷与文件身份；[read_context.rs](../src-tauri/src/worktrees/read_context.rs) 在一次只读操作期间持有经核查的本地目录、元数据和Git程序句柄，限定只读命令及配置环境，结束前重查身份。Unix原身份表示保持。目录凭据不是持续文件系统授权；当前正式应用中的Windows新建、归档、删除、恢复及依赖实际准备仍在入口拒绝，不能由已有目录接入推为整个生命周期完成。依赖元数据检查已有源码；后续9文件通过同一持有目录对象的完整扫描锁、原始UTF-16与完整128位身份配对22个固定名称及真实叶元数据，错误不变成缺失或部分成功。该后续源码尚未安装或在Windows实际运行，不代表材料完整保存、依赖安装或服务就绪；同步锁及内核等待不被15秒响应期限中止，新建、归档、删除、恢复仍拒绝。已有目录相关源码已安装到macOS应用，Windows真实运行尚未验证。
+Windows现有目录沿“检查、明确接入、重查”路径保存私有完整卷与文件身份；[read_context.rs](../src-tauri/src/worktrees/read_context.rs) 在一次只读操作期间持有经核查的本地目录、元数据和Git程序句柄，限定只读命令及配置环境，结束前重查身份。Unix原身份表示保持。目录凭据不是持续文件系统授权；当前正式应用中的Windows新建、归档、删除、恢复及依赖实际准备仍在入口拒绝，不能由已有目录接入推为整个生命周期完成。依赖元数据检查已有源码；后续9文件通过同一持有目录对象的完整扫描锁、原始UTF-16与完整128位身份配对22个固定名称及真实叶元数据，错误不变成缺失或部分成功。该源码已包含在5790的macOS安装中，但Windows实际执行未验，不代表材料完整保存、依赖安装或服务就绪；同步锁及内核等待不被15秒响应期限中止，新建、归档、删除、恢复仍拒绝。已有目录相关源码已安装到macOS应用，Windows真实运行尚未验证。
+
+后续[material_windows.rs](../src-tauri/src/worktrees/material_windows.rs)以同一持有对象核默认数据、扩展属性、命名数据流及所有者、组和DACL；另读已存储完整性标签，不能将标签缺失推定为没有有效系统策略或完整SACL为空（[Windows说明](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control)）。安全描述符使用有界缓冲并计入共同观察工作预算。[material_links.rs](../src-tauri/src/worktrees/material_links.rs)按完整卷/128位身份及原始UTF-16名称摘要核树内硬链接成员；树外或排除名称未计齐即拒绝，不越界寻找名称，也不声称原子快照。[material_owner.rs](../src-tauri/src/worktrees/material_owner.rs)统一保留无法确认清退的原句柄与读取上下文，此后拒绝再次观察，直到实际进程结束。
+
+普通部分观察保留为Windows测试控制；已有两处归档消费者显式选择完整安全信息读取，由[security_full.rs](../src-tauri/src/file_access/windows/security_full.rs)在同一强权限对象上请求完整描述符，子对象继承同一用途。只使用当前令牌已具备的权限，不自动调整权限，不回退部分结果；实际返回的两次数据均计入预算，失败保留所处阶段，不能由拒绝码猜测某项权限。`windowsDefaultDataEaStreamsLinksFullSecurityV1`仍是部分资料类型，现有Windows操作入口和所有部分资料的完整恢复拒绝门保持；完整资料载体、硬链接重建、命名空间事务及恢复仍有内部开发，NTFS与完整SACL尚无完整成功证据。该批已随fa5689纳入macOS正式安装；Windows CI `39212793966`已完成失败，所选资料16项实际12通过/4失败、具体根因待证，不以步骤绿色显示、本机或交叉检查代替真实Windows行为。
 
 归档前核对连接、进程、工作位置与资料；保留未提交、未跟踪和忽略材料的实际捕获范围，不能称为任意文件全量备份。后台工作仍持有独占操作许可，前端超时、取消等待或卸载不能提前释放。恢复与删除均复核真实目录和材料，不能只信元数据标记。
 
