@@ -129,6 +129,7 @@ export class SessionForks {
     });
     const channel = new Channel<unknown>();
     const buffered = new HistoryReplayBuffer();
+    let receivingReplay = true;
     const openToken = crypto.randomUUID();
     const inquiry = openingInquiries.begin(`fork:${operation.operationId}`, {
       agentId: parent.agentId,
@@ -189,7 +190,7 @@ export class SessionForks {
         return;
       }
       if (isOwnerHistoryMarker(event, openToken)) {
-        buffered.mark(openToken);
+        if (receivingReplay) buffered.mark(openToken);
         wake?.();
         return;
       }
@@ -199,6 +200,7 @@ export class SessionForks {
         return;
       }
       if (!hasOwnUpdate(event) && inquiry.receive(event)) return;
+      if (!receivingReplay) return;
       buffered.push(event);
       if (!hasOwnUpdate(event) && received?.kind === "connectionLost") {
         replayLost = true;
@@ -333,8 +335,9 @@ export class SessionForks {
         operation.childKey = key;
         this.ports.emit(key);
         return state;
-      } catch {
+      } catch (error) {
         if (previouslySettled) return undefined;
+        operation.deliveryError = error;
         operation.status = operation.childSessionId
           ? "created_unavailable"
           : "unknown";
@@ -342,6 +345,12 @@ export class SessionForks {
         if (settled && verified) inquiry.finish(true);
         return undefined;
       } finally {
+        // A verified terminal result cannot acquire a child view later. Keep
+        // receipt metadata observable, but retire its unconsumed body owner.
+        if (settled && verified && !boundKey) {
+          receivingReplay = false;
+          buffered.clear();
+        }
         if (
           settled &&
           verified &&

@@ -18,6 +18,8 @@ export interface ForkOperation {
   ownerEnded?: true;
   settled?: true;
   reason?: string;
+  /** One actual local delivery failure, retained only in memory. */
+  deliveryError?: unknown;
 }
 
 export interface ForkResult {
