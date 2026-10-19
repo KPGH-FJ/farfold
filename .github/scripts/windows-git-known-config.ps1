@@ -28,8 +28,20 @@ $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
 $oneObservationTestPassed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0' -and [regex]::Matches($outText, '(?m)^test ' + [regex]::Escape($test) + ' \.\.\. ok\r?$').Count -eq 1
 
 function Test-Keys($value, $keys) {
-  return $value -is [System.Collections.IDictionary] -and ((@($value.Keys | Sort-Object) -join ',') -ceq (@($keys | Sort-Object) -join ','))
+  if ($value -isnot [System.Collections.IDictionary]) { return $false }
+  $actual = @($value.psbase.Keys | Sort-Object)
+  $expected = @($keys | Sort-Object)
+  if ($actual.Count -ne $expected.Count) { return $false }
+  for ($index = 0; $index -lt $actual.Count; $index++) {
+    if ($actual[$index] -isnot [string] -or $actual[$index] -cne $expected[$index]) { return $false }
+  }
+  return $true
 }
+# Exercise the same JSON dictionary type before trusting any diagnostic record.
+$keyControl = '{"schema":1,"case":"control"}' | ConvertFrom-Json -AsHashtable
+$keyCollision = '{"schema":1,"case":"control","Keys":["case","schema"]}' | ConvertFrom-Json -AsHashtable
+$keyJoined = '{"case,schema":1}' | ConvertFrom-Json -AsHashtable
+if (-not (Test-Keys $keyControl @('schema','case')) -or (Test-Keys $keyCollision @('schema','case')) -or (Test-Keys $keyJoined @('schema','case'))) { throw 'Exact JSON key controls failed' }
 function Test-Integer($value) {
   return $value -is [int] -or $value -is [long] -or $value -is [uint64] -or $value -is [bigint]
 }
