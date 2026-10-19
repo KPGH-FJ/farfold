@@ -1,7 +1,7 @@
 {
   "atUtc": "2026-10-19T10:22:23.233058+00:00",
   "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
-  "sourceCheckpoint": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+  "sourceCheckpoint": "b211d61d6f2e8a802a8e23378a01816b69221641",
   "installedSourceUnchanged": "63142172be9fc58f41fb3e151f77c9eef953b464",
   "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
   "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464",
@@ -553,70 +553,26 @@
     }
   },
   "currentScopedChecks": {
-    "gitDOS": {
-      "source": "ff17f29cb0bf09731296ef89f0200d9dfcb3140a",
-      "hostAllTargetsStrict": 0,
-      "windowsCrossAllTargetsStrict": 0,
-      "stableInputs": 775,
-      "newNativeTestsExecuted": false
-    },
-    "directoryCapture": {
-      "sourceCheckpoint": "e24361c577e08f0a086dd8fb0a93f75c3bd4fb8b",
-      "hostFileAccess": {
-        "passed": 114,
-        "failed": 0,
-        "ignored": 0,
-        "includesNewPortable": 16
+    "frontend": "32 files423pass,type and owned format0,1331 stable inputs; includes fork temporary replay retirement, no full failed-child recovery",
+    "native": [
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-cross-r1-receipt.json",
+        "sha256": "864b642e111bf8cbaded230f72a34539e2c19b01d468f5f1faa3693fc8b77f67"
       },
-      "hostAllTargetsStrict": 0,
-      "windowsCrossAllTargetsStrict": 0,
-      "stableInputs": 782,
-      "ordinaryWindowsExecuted": 0,
-      "manualFullSecurityWindowsExecuted": 0,
-      "scope": "Test-registered actual single-directory capture/readback, not directory restore or complete tree"
-    },
-    "workflowR5": {
-      "applied": true,
-      "yamlSteps": 24,
-      "ordinaryTests": 118,
-      "ordinaryGroups": 32,
-      "manualTests": 7,
-      "manualGroups": 7,
-      "prettierExit": 0,
-      "actualCI": null
-    },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-host-strict-r1-receipt.json",
+        "sha256": "a50b156ebfcf1fc7d7cc9211ccab965e8655e0fdf496d8cd7cca62bb91d115ed"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/regular-shared-host-file-access-r1-receipt.json",
+        "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
+      }
+    ],
+    "actual": "Latest Windows cross all-target strict0 and host all-target strict0 on796 stable inputs. Earlier same Tree/Regular implementation host file_access120pass=114old+6newportableTree; new Git5 cfgWindows only. Tree5Windows/Regular6Windows/Git5 single five-call diagnostic unrun.",
+    "workflow": "Carrier149=137 ordinary+12 manual full-security controls; original bodies retained. Separate exact Git one-test/five-call observation includes two actual exit0 false controls. Local Ruby YAML25steps and workflow format0; PowerShell parser unavailable, script not executed.",
     "newFullSeven": null,
     "newInstallation": null,
-    "formalApp": null,
-    "directoryRestore": {
-      "source": "4e7ef1b83f692fd2318db9d3f6c132cd62eca312",
-      "hostFileAccess": {
-        "passed": 114,
-        "failed": 0,
-        "ignored": 0
-      },
-      "hostAllTargetsStrict": 0,
-      "windowsCrossAllTargetsStrict": 0,
-      "stableInputs": 786,
-      "newWindowsSharedApiFake": 3,
-      "newOrdinaryNTFS": 3,
-      "newManualFullSecurity": 1,
-      "scope": "Test-registered single directory native write/recapture; success disposes target and carriers; no usable persistent tree",
-      "newWindowsResultsObtained": false,
-      "newWindowsExecutionStatus": "Dispatched corrected c9 source; no result retrieved yet, not asserted zero execution"
-    },
-    "workflowR6": {
-      "source": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
-      "applied": true,
-      "ordinaryTests": 124,
-      "ordinaryGroups": 36,
-      "manualTests": 8,
-      "manualGroups": 8,
-      "yamlSteps": 24,
-      "prettierExit": 0,
-      "initialSourceDispatch": "4e parse rejected HTTP422 max expression21000, no run",
-      "correction": "Only long-script SHA guard reads GitHub automatic GITHUB_SHA; original checks and132controls retained"
-    }
+    "formalApp": null
   },
   "remainingScope": {
     "internalDevelopment": [
@@ -635,16 +591,158 @@
     "noNewScopeDecision": true,
     "NEW24AffectedRealSendPauseRetained": true
   },
-  "nativeComponentSourceCheckpoint": "4e7ef1b83f692fd2318db9d3f6c132cd62eca312",
-  "alignmentUpdatedAtUtc": "2026-10-19T12:36:03.790491+00:00",
+  "nativeComponentSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+  "alignmentUpdatedAtUtc": "2026-10-19T13:39:02.835714+00:00",
   "latestDispatchedWindows": {
     "runId": 39252461040,
     "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
-    "boundStatus": "queued",
-    "conclusionAtBind": "",
-    "resultObtained": false,
-    "localPendingFrontendExcluded": true,
-    "notSameAsCompleted46a": true
+    "status": "completed",
+    "conclusion": "failure",
+    "resultObtained": true,
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
+      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    },
+    "doesNotCoverCurrentSource": true
   },
-  "uncommittedFrontendScope": "Failed-open R1 new8 passed but expanded208 has5regressions; R2 extra2 observed failures, repair pending. Preview receipt fix new4 and affected50 passed but not committed or full engineering. These local changes are excluded from dispatched Git head; no whole-worktree green claim."
+  "uncommittedFrontendScope": "None: current history/preview/fork frontend source committed and pushed through3e7f2e17. No fresh complete engineering or installed acceptance yet.",
+  "latestCompletedWindows": {
+    "runId": 39252461040,
+    "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+    "jobId": 118059387647,
+    "conclusion": "failure",
+    "rawArtifactFiles": 192,
+    "carrierOrdinary": {
+      "attempted": 124,
+      "passed": 103,
+      "failed": 21,
+      "ignored": 0
+    },
+    "carrierExplicitFullSecurity": {
+      "attempted": 8,
+      "passed": 0,
+      "failed": 8,
+      "ignored": 0
+    },
+    "zeroOrMissingTests": 0,
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
+      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    },
+    "narrowProgress": "Original auth reservation/cancel passed; same held target wait0/exit1 with same Job inactive. First import1/7 and export3/5; all mandatory aggregate failures retained.",
+    "boundaries": "Actual tests in CI c9 only; no local Tree12/Regular11/new frontend or installed-app coverage. Seven full-security open1314 versus one owned-link target NT status remain distinct. Budget tests returned values unknown; test-only diagnostics added locally, not fixes."
+  },
+  "currentSourceContinuation": {
+    "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
+    "frontendChecks": "32 files423pass,type and owned format0,1331 stable inputs; includes fork temporary replay retirement, no full failed-child recovery",
+    "nativeStatus": "Tree12 + Regular11 union20, three test-only failure observations and Git5 diagnostic committed; workflow149 plus separate Git5 mandatory control, no new Windows execution or installed claim",
+    "nativeChecks": [
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-cross-r1-receipt.json",
+        "sha256": "864b642e111bf8cbaded230f72a34539e2c19b01d468f5f1faa3693fc8b77f67"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-host-strict-r1-receipt.json",
+        "sha256": "a50b156ebfcf1fc7d7cc9211ccab965e8655e0fdf496d8cd7cca62bb91d115ed"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/regular-shared-host-file-access-r1-receipt.json",
+        "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
+      }
+    ],
+    "actual": "Latest Windows cross all-target strict0 and host all-target strict0 on796 stable inputs. Earlier same Tree/Regular implementation host file_access120pass=114old+6newportableTree; new Git5 cfgWindows only. Tree5Windows/Regular6Windows/Git5 single five-call diagnostic unrun.",
+    "remaining": "Mixed tree actual-byte lifetime/restore, complete link topology, persistent final namespace transaction, global backpressure/resource governance, full7/candidate/install and per-Agent evidence still open",
+    "nativeCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+    "checkpointReceipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
+      "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
+    },
+    "workflow": "Carrier149=137 ordinary+12 manual full-security controls; original bodies retained. Separate exact Git one-test/five-call observation includes two actual exit0 false controls. Local Ruby YAML25steps and workflow format0; PowerShell parser unavailable, script not executed.",
+    "validatorCorrection": {
+      "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
+      "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
+    },
+    "validatorCorrectionScope": "Static exact-key collision fixed using intrinsic Keys and count+case-exact comparison; valid, extra Keys and comma-key controls prepared, not PowerShell-executed locally."
+  },
+  "historicalAtC9Dispatch": {
+    "sourceCheckpoint": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+    "nativeComponentSourceCheckpoint": "4e7ef1b83f692fd2318db9d3f6c132cd62eca312",
+    "currentScopedChecks": {
+      "gitDOS": {
+        "source": "ff17f29cb0bf09731296ef89f0200d9dfcb3140a",
+        "hostAllTargetsStrict": 0,
+        "windowsCrossAllTargetsStrict": 0,
+        "stableInputs": 775,
+        "newNativeTestsExecuted": false
+      },
+      "directoryCapture": {
+        "sourceCheckpoint": "e24361c577e08f0a086dd8fb0a93f75c3bd4fb8b",
+        "hostFileAccess": {
+          "passed": 114,
+          "failed": 0,
+          "ignored": 0,
+          "includesNewPortable": 16
+        },
+        "hostAllTargetsStrict": 0,
+        "windowsCrossAllTargetsStrict": 0,
+        "stableInputs": 782,
+        "ordinaryWindowsExecuted": 0,
+        "manualFullSecurityWindowsExecuted": 0,
+        "scope": "Test-registered actual single-directory capture/readback, not directory restore or complete tree"
+      },
+      "workflowR5": {
+        "applied": true,
+        "yamlSteps": 24,
+        "ordinaryTests": 118,
+        "ordinaryGroups": 32,
+        "manualTests": 7,
+        "manualGroups": 7,
+        "prettierExit": 0,
+        "actualCI": null
+      },
+      "newFullSeven": null,
+      "newInstallation": null,
+      "formalApp": null,
+      "directoryRestore": {
+        "source": "4e7ef1b83f692fd2318db9d3f6c132cd62eca312",
+        "hostFileAccess": {
+          "passed": 114,
+          "failed": 0,
+          "ignored": 0
+        },
+        "hostAllTargetsStrict": 0,
+        "windowsCrossAllTargetsStrict": 0,
+        "stableInputs": 786,
+        "newWindowsSharedApiFake": 3,
+        "newOrdinaryNTFS": 3,
+        "newManualFullSecurity": 1,
+        "scope": "Test-registered single directory native write/recapture; success disposes target and carriers; no usable persistent tree",
+        "newWindowsResultsObtained": false,
+        "newWindowsExecutionStatus": "Dispatched corrected c9 source; no result retrieved yet, not asserted zero execution"
+      },
+      "workflowR6": {
+        "source": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+        "applied": true,
+        "ordinaryTests": 124,
+        "ordinaryGroups": 36,
+        "manualTests": 8,
+        "manualGroups": 8,
+        "yamlSteps": 24,
+        "prettierExit": 0,
+        "initialSourceDispatch": "4e parse rejected HTTP422 max expression21000, no run",
+        "correction": "Only long-script SHA guard reads GitHub automatic GITHUB_SHA; original checks and132controls retained"
+      }
+    },
+    "uncommittedFrontendScope": "Failed-open R1 new8 passed but expanded208 has5regressions; R2 extra2 observed failures, repair pending. Preview receipt fix new4 and affected50 passed but not committed or full engineering. These local changes are excluded from dispatched Git head; no whole-worktree green claim.",
+    "latestDispatchedWindows": {
+      "runId": 39252461040,
+      "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+      "boundStatus": "queued",
+      "conclusionAtBind": "",
+      "resultObtained": false,
+      "localPendingFrontendExcluded": true,
+      "notSameAsCompleted46a": true
+    },
+    "notice": "Exact prior dispatch-time record preserved; these fields are historical, not current worktree or completed CI state."
+  }
 }

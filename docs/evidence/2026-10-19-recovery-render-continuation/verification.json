@@ -272,5 +272,37 @@
       "path": "output/2026-10-19-recovery-render-continuation/windows-native-followup/independent-delivery-review.json",
       "sha256": "b5e6c5ffcf95237d517c3206e9a3162fb16f555e8346078f351383b6cd177b79"
     }
+  },
+  "sourceContinuation": {
+    "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
+    "historyAndPreviewCheckpoint": {
+      "path": "output/2026-10-19-recovery-render-continuation/history-recovery-preview-source-checkpoint/checkpoint.json",
+      "sha256": "f880a224e7839e31cae5070101ab3b784f46dc9201e724ee882fd8d6152fbcf1"
+    },
+    "forkCheckpoint": {
+      "path": "output/2026-10-19-recovery-render-continuation/fork-replay-source-checkpoint/checkpoint.json",
+      "sha256": "17e8a28e3ff0785e3e881b21f2c376b058782e5c6a38b5fb38ebab9b0ce8a5f2"
+    },
+    "nativeSourceStatus": "Tree/Regular internal components and test-only failure/Git5 diagnostics committed; full7 and installed source still631, not current continuation",
+    "completedWindowsAudit": {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
+      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    },
+    "additionalStorageCleanup": {
+      "path": "output/2026-10-19-recovery-render-continuation/storage-incremental-owned-r1/cleanup-receipt.json",
+      "sha256": "72a86d89b99dbf3b484534165470757ffd673bcc5a84f4f81dd284993ef137cc"
+    },
+    "storageScope": "Additional46 exclusive generated cache leaves/3,109,239,275 logical bytes;1543shared kept. Space point7.31GB after subsequent compilation, not continuous guarantee or sole attribution.",
+    "boundaries": "Local replay projection failure preserves old body/work uncertainty and exact cleanup receipts; terminal fork reader retired, failedchild full recovery/typed end and preview teardown ownership remain open. No full7/installed/formal/29x8 claim.",
+    "nativeSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
+    "nativeCheckpointReceipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
+      "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
+    },
+    "workflowScope": "Carrier149 and separate Git one-test/five-call control prepared for next source CI, not actual Windows success",
+    "validatorCorrection": {
+      "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
+      "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
+    }
   }
 }
