@@ -1,0 +1,186 @@
+{
+  "kind": "scoped-media-ownership-installed-and-windows-selected-evidence",
+  "recordedAtUtc": "2026-10-19T04:26:55.628316+00:00",
+  "authority": "Only plans/agent-access.md schedules work; PRODUCT,29x8 and all151 original criteria unchanged.",
+  "sourceCommit": "579079c875407796b33c75dfe7dc40ed0b8529a1",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "e1508fd62a0eb7260204d013b9b98b5bf687bae7d62cbd96a9a18c2f1c99f0fd",
+    "archiveSha256": "2eadd1389c45e352cae24d14ffaaa68b4f588228c753d3c2f5c02f4ce7762d28",
+    "candidateReviewPassed": 9,
+    "installedReviewPassed": 10,
+    "atomicNewInodeFilesReplaced": 5,
+    "duplicateCandidateFilesRemoved": 5
+  },
+  "implementedScope": [
+    "own raw update takes precedence over colliding local control fields",
+    "unknown-total selected FLAC frame cumulative duration admission",
+    "deep media validation after actual preview lease admission",
+    "owned JSON event forwarding removes one clone",
+    "Windows default EA partial observation and protected environment-name comparison",
+    "Windows exact-held-directory NT nonreplacement file publication"
+  ],
+  "engineering": {
+    "originalActualSevenExit": 101,
+    "firstSixActualPassed": true,
+    "frontendFiles": 605,
+    "frontendPassed": 8068,
+    "originalRustPassed": 1907,
+    "originalRustFailed": 1,
+    "originalRustIgnored": 6,
+    "originalFailingTest": "program_launch_tests::cancelled_selection_does_not_start_program_version_check",
+    "originalSilentChildCause": "unknown",
+    "exactOriginalFocusedPassed": 1,
+    "sameSourceOriginalFullRustResumedPassed": 1908,
+    "sameSourceOriginalFullRustResumedIgnored": 6,
+    "completeFreshSevenRun": false,
+    "priorSixChecksReusedWithExplicitResumeValidation": true,
+    "originalFailureUnresolvedAndPreserved": true
+  },
+  "installationData": {
+    "threeManifestsEntriesEach": 232530,
+    "strictByteIdentical": true,
+    "manifestSha256": "d514808f45934de3f3325069f495651068519698586609a3f7fa73c1209caf4c",
+    "scope": "before/preinstall/after closed-observed endpoints; no continuous absence proof"
+  },
+  "formalPassiveWindow": {
+    "onlyPassiveDraftStartupAndNormalSaveExit": true,
+    "uiListCount": 137,
+    "noTypingHistoryOrNewConversationClick": true,
+    "savedChoicesChanged": false,
+    "unknownWorkQuitWarningRetained": true,
+    "protocolAssessed": false,
+    "uiActionsAreNotProtocolZeroPromptProof": true,
+    "metadataWholeDatabaseBytesSame": true,
+    "agentsRowsSame": 40,
+    "sessionsRowsSame": 138,
+    "settingsRowsSame": 54,
+    "dismissedRowsSame": 173,
+    "wholeComposersSame": 10,
+    "wholeUnsentAndSetupSame": true,
+    "threeRootEntriesEach": 232530,
+    "added": 0,
+    "removed": 0,
+    "modified": 5,
+    "modifiedCategories": {
+      "webkit": 4,
+      "otherAppData": 1
+    },
+    "writers": "unknown",
+    "sourceOrFirstRawDatabaseOpenedBySql": false
+  },
+  "windowsSelected": {
+    "runId": 39193844855,
+    "head": "579079c875407796b33c75dfe7dc40ed0b8529a1",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39193844855",
+    "jobConclusion": "success",
+    "parserControlsPassed": 3,
+    "canonicalProductionPublicationPassed": 1,
+    "unicodeAnd255Utf16ProductionPublicationPassed": 1,
+    "cursorReplyPassed": 1,
+    "cursorNoReply": {
+      "actualExit": 101,
+      "actualPassed": 0,
+      "actualFailed": 1,
+      "seconds": 20.01,
+      "query": 1,
+      "replies": 0,
+      "closeReturnMillis": 5010,
+      "lastPhase": "held.session.drop.enter; no return",
+      "strictOwnerDeadlineReapJobInactiveEvidence": true,
+      "negativeObservationComplete": true,
+      "testPassed": false
+    },
+    "greenJobDoesNotMeanAllWindowsOrAllSelectedTestsPassed": true,
+    "oldCi1FailurePreserved": true
+  },
+  "activePromptBaseline": {
+    "productionSource": "579079c8",
+    "connectionsBeforeAnyCancel": 3,
+    "publicTextBytesEach": 65536,
+    "semanticDigestAndActorFenceEach": true,
+    "cancelledTerminals": 3,
+    "exactOwnerClosed": 3,
+    "rssMeasured": false,
+    "commonAdmissionImplemented": false,
+    "testPreparationFailuresPreserved": true,
+    "temporaryTestSourceArchivedNotCommitted": true
+  },
+  "storage": {
+    "exactRegenerableObjectLeavesRemoved": 7077,
+    "observedAvailableBeforeBytes": 4824678400,
+    "observedAvailableAfterBytes": 16420323328,
+    "observedIncreaseBytes": 11595644928,
+    "exclusiveCausalAttributionOrFutureFreeSpacePromise": false,
+    "wholeTargetDeleted": false,
+    "userAgentDataBackupsFormalAppRetained": true
+  },
+  "open": [
+    "NEW-24 affected new real sends remain paused",
+    "actual media playback/codec memory and overall P13",
+    "active prompt admission/transport backpressure/long history and long-run ARCH-49",
+    "Windows terminal master destruction owner, ADS/security/full material mutations and recovery, remaining platform cases",
+    "29 individually accepted Agents across all eight standards"
+  ],
+  "evidenceRefs": {
+    "originalEngineering": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/engineering/verification.json",
+      "sha256": "1757180f946c36ad6d4d59c7d03d5c18c0dff0ec2bd0a031565a8b447ae4550b"
+    },
+    "rustResume": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/engineering-rust-resume-r1/verification.json",
+      "sha256": "3fe3d6d8b1ccb1f54779bc1ed8b4426b8da09b77bfedcb43735a23c070e8f6dd"
+    },
+    "selectedEngineering": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/engineering-selected/index.json",
+      "sha256": "891f2a3c025227899feeb4d13f5117f0528a0acaa5ff875f3e62c327e8cb8280"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/full-source-review/full-source-review.json",
+      "sha256": "961b1c6e06ba4121cb380aeee2d9e43f12e483e40268e2cde66c1b61352b04ef"
+    },
+    "candidate": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "491b4b9ac29fa37fe789a72705640c232e9b7a28195899ad92a735266795c049"
+    },
+    "candidate9": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/candidate-preparation/independent/review.json",
+      "sha256": "36d235181b5fa54af9aa4cce95f0f43f1e0fb1ca6534de644b1ea413daaf3fdd"
+    },
+    "install": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/install/install-result.json",
+      "sha256": "297676f3a8e58308b8a418e1d56b8e9cbff7b7aefa0413904f0354511021a2e2"
+    },
+    "installed10": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/install/installed-independent-review-private.json",
+      "sha256": "ac89fa243c67b8e3827e81ad04bde86b28bd95c0e0fe4385d66d8184e1895888"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/install/candidate-cleanup.json",
+      "sha256": "6642774618734f757787b65c2cf84c49cb6a88bb6177f41bd7e69bf7266c9a38"
+    },
+    "passiveUi": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/install/passive-startup-and-normal-exit.json",
+      "sha256": "6af2cf88d1a422025eba5360f0f54dd11d4269caa37b5b0faa7090f690768454"
+    },
+    "postUseData": {
+      "path": "output/2026-10-19-media-preview-ownership-delivery/formal-ui/data-analysis/safe-summary.json",
+      "sha256": "a532682e2bac52347dceb3a079e8dc8940afe3294815dc13deba4e90767dc7dc"
+    },
+    "windowsSelected": {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/selected-diagnostics-integration/ci2/api-window-0345/summary.json",
+      "sha256": "0aadc7541b79b7b8e1951f975f6f798a246e669283258132f24ed62265e7d7f6"
+    },
+    "storage": {
+      "path": "output/2026-10-19-storage-unshared-object-retirement/retirement.json",
+      "sha256": "4ebcb7dc84aa556390f089c6b43fd0731d1c2a71335f0583441b263e959bb8bf"
+    },
+    "activePromptBaseline": {
+      "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/active-prompt-appendix/baseline-actual-r1/verification.json",
+      "sha256": "0f0563e739c1f1052e3465e778a2c917372ffa83d9eb2fdb1cd010a3b6a65814"
+    }
+  }
+}
