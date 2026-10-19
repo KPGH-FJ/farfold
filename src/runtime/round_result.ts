@@ -10,6 +10,7 @@ import type { ThreadItem, ThreadState, ToolCallView } from "./session_types";
 export type RoundResult =
   "reply" | "tool" | "pending" | "none" | MaintenanceResult;
 type Settled = Extract<ThreadItem, { kind: "settled" }>;
+type IndexedCompaction = { order: number; item: CompactionView };
 
 export function hasAgentReply(items: readonly ThreadItem[]): boolean {
   return hasReadableMessages(items.filter((item) => item.kind === "agent"));
@@ -71,15 +72,26 @@ export function roundResult(
 export function settledRoundResults(
   state: Pick<ThreadState, "items" | "activeToolCallIds" | "connectionLost">,
 ): Map<string, RoundResult> {
-  const tools = new Map(
-    state.items.flatMap((item) =>
-      item.kind === "tool" ? [[item.id, item.call] as const] : [],
-    ),
-  );
+  const tools = new Map<string, ToolCallView>();
+  const compactions = new Map<string, IndexedCompaction[]>();
+  state.items.forEach((item, order) => {
+    switch (item.kind) {
+      case "tool":
+        tools.set(item.id, item.call);
+        break;
+      case "compaction": {
+        const indexed = { order, item };
+        const sameId = compactions.get(item.id);
+        if (sameId) sameId.push(indexed);
+        else compactions.set(item.id, [indexed]);
+        break;
+      }
+    }
+  });
   const results = new Map<string, RoundResult>();
   for (const item of state.items) {
     if (item.kind !== "settled" || item.replyReceived === undefined) continue;
-    results.set(item.id, settledResult(item, tools, state));
+    results.set(item.id, settledResult(item, tools, compactions, state));
   }
   return results;
 }
@@ -87,20 +99,24 @@ export function settledRoundResults(
 function settledResult(
   item: Settled,
   tools: ReadonlyMap<string, ToolCallView>,
-  state: Pick<ThreadState, "items" | "activeToolCallIds" | "connectionLost">,
+  compactions: ReadonlyMap<string, readonly IndexedCompaction[]>,
+  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
 ): RoundResult {
-  return roundResult(
-    item.replyReceived === true,
+  if (item.replyReceived === true) return "reply";
+  const result = roundResult(
+    false,
     (item.artifactToolItemIds ?? []).flatMap((id) => {
       const tool = tools.get(id);
       return tool ? [tool] : [];
     }),
     state.activeToolCallIds,
     !state.connectionLost,
-    state.items.filter(
-      (entry): entry is CompactionView =>
-        entry.kind === "compaction" &&
-        (item.compactionItemIds ?? []).includes(entry.id),
-    ),
   );
+  if (result !== "none") return result;
+  // Preserve every matching history entry, including duplicate IDs, in its
+  // original order. Repeated references select an entry only once, as before.
+  const selected = [...new Set(item.compactionItemIds ?? [])]
+    .flatMap((id) => compactions.get(id) ?? [])
+    .sort((a, b) => a.order - b.order);
+  return maintenanceResult(selected.map(({ item }) => item)) ?? "none";
 }

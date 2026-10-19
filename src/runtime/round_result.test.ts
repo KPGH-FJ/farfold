@@ -5,6 +5,7 @@ import {
   freshThreadState,
 } from "./session_projection";
 import { settledRoundResults } from "./round_result";
+import type { ThreadItem } from "./session_types";
 
 function state() {
   const s = freshThreadState("agent:/p:result", "agent", "/p", "result");
@@ -12,6 +13,100 @@ function state() {
   s.queued = [[{ type: "text", text: "Next request" }]];
   return s;
 }
+
+it.each([true, false])(
+  "does not rescan every history item for each settled round (reply=%s)",
+  (replyReceived) => {
+    let kindReads = 0;
+    const items = Array.from({ length: 512 }, (_, index): ThreadItem => {
+      const item: ThreadItem = {
+        kind: "settled",
+        id: `end-${index}`,
+        status: "done",
+        diffCount: 0,
+        artifactCount: 0,
+        replyReceived,
+        time: index,
+      };
+      return new Proxy(item, {
+        get(target, property, receiver) {
+          if (property === "kind") kindReads += 1;
+          return Reflect.get(target, property, receiver);
+        },
+      });
+    });
+    const results = settledRoundResults({
+      items,
+      activeToolCallIds: [],
+      connectionLost: false,
+    });
+    expect(results.size).toBe(items.length);
+    expect([...results.values()]).toEqual(
+      Array(items.length).fill(replyReceived ? "reply" : "none"),
+    );
+    expect(kindReads).toBeLessThanOrEqual(4 * items.length);
+  },
+);
+
+it.each([
+  { status: "completed", observation: undefined, expected: "maintenance" },
+  { status: "failed", observation: undefined, expected: "maintenance_failed" },
+  {
+    status: "in_progress",
+    observation: undefined,
+    expected: "maintenance_pending",
+  },
+  {
+    status: "completed",
+    observation: "unknown" as const,
+    expected: "maintenance_unknown",
+  },
+])(
+  "keeps all duplicate compaction entries and result precedence for $expected",
+  ({ status, observation, expected }) => {
+    const compaction = (id: string, status: string): ThreadItem => ({
+      kind: "compaction",
+      id,
+      compactionId: id,
+      status,
+      summary: [],
+      details: { future: { retained: true } },
+      summaryDetails: [],
+    });
+    const first = compaction("duplicate", status);
+    if (first.kind === "compaction") first.observation = observation;
+    const ending: ThreadItem = {
+      kind: "settled",
+      id: "ending",
+      status: "done",
+      replyReceived: false,
+      artifactCount: 0,
+      diffCount: 0,
+      compactionItemIds: ["missing", "duplicate", "duplicate"],
+      time: 1,
+    };
+    const items: ThreadItem[] = [
+      first,
+      compaction("unrelated", "in_progress"),
+      compaction("duplicate", "completed"),
+      ending,
+      { ...ending, id: "reply", replyReceived: true },
+      { ...ending, id: "legacy", replyReceived: undefined },
+    ];
+    const before = structuredClone(items);
+    expect([
+      ...settledRoundResults({
+        items,
+        activeToolCallIds: [],
+        connectionLost: false,
+      }),
+    ]).toEqual([
+      ["ending", expected],
+      ["reply", "reply"],
+    ]);
+    expect(items).toEqual(before);
+  },
+);
 
 it.each(
   [
