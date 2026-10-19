@@ -48,6 +48,10 @@ mod restore_tests;
 #[path = "pump/model_id_retention_tests.rs"]
 mod model_id_retention_tests;
 
+#[cfg(test)]
+#[path = "pump/media_forwarding_tests.rs"]
+mod media_forwarding_tests;
+
 #[path = "config_change.rs"]
 mod config_change;
 use config_change::{complete_choice_change, save_confirmed_change};
@@ -445,12 +449,14 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
     match dispatch {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
-                let activity = ctx.tools.observe(message.params());
-                let compaction_activity = ctx.compactions.observe(message.params());
-                let task_activity = ctx.async_tasks.observe(message.params());
-                // Raw passthrough: the params object is the update envelope,
-                // unknown fields and `_meta` survive untouched.
-                (ctx.events)(message.params().clone());
+                let (_, params) = message.into_parts();
+                let activity = ctx.tools.observe(&params);
+                let compaction_activity = ctx.compactions.observe(&params);
+                let task_activity = ctx.async_tasks.observe(&params);
+                let terminal_output = super::terminal_output::output_event(&params);
+                // Raw passthrough moves the owned envelope after passive reads.
+                // Unknown fields and `_meta` survive untouched.
+                (ctx.events)(params);
                 if let Some(activity) = compaction_activity {
                     (ctx.events)(activity);
                 }
@@ -460,7 +466,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 if let Some(activity) = activity {
                     (ctx.events)(activity);
                 }
-                if let Some(output) = super::terminal_output::output_event(message.params()) {
+                if let Some(output) = terminal_output {
                     (ctx.events)(output);
                 }
             } else {
