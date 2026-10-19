@@ -1,5 +1,5 @@
 //! Fixed one-reply SDK exchange; text stays private until owned cleanup and source checks.
-use super::{launch::Resolved, requests::Job, rpc::Read, text, types::*};
+use super::{requests::Job, rpc::Read, sdk_paths::Paths, text, types::*};
 use crate::acp_client::extension_inventory as inventory;
 use serde::Deserialize;
 use serde_json::json;
@@ -49,9 +49,9 @@ pub(super) struct Exchange<'a> {
     error: Option<Code>,
 }
 impl<'a> Exchange<'a> {
-    pub fn new(job: &'a Job, index: usize, resolved: &Resolved) -> Result<Self> {
+    pub fn new(job: &'a Job, index: usize, resolved: &Paths) -> Result<Self> {
         let row = &job.source.rows[index];
-        let mut pending=serde_json::to_vec(&json!({"launch":{"node":resolved.node,"entry":resolved.entry,"installationRoot":resolved.root},"expectedSdkEntry":resolved.sdk,"request":{"rowId":row.id,"sessionId":row.native_session_id,"cwd":row.cwd}})).map_err(|_|Code::InvalidRequest)?;
+        let mut pending=serde_json::to_vec(&json!({"launch":{"node":resolved.node,"entry":resolved.entry,"installationRoot":resolved.root},"expectedSdkEntry":resolved.sdk,"request":{"rowId":row.id,"sessionId":row.native_session_id,"cwd":resolved.cwd}})).map_err(|_|Code::InvalidRequest)?;
         if pending.len() > 32767 {
             return Err(Code::InvalidRequest.into());
         }
@@ -152,6 +152,7 @@ impl<'a> Exchange<'a> {
             row.matched_text_blocks = matched;
         });
         Ok(Read {
+            sdk_context: None,
             hits,
             state: RowState::Partial,
             code: Some(if limited {

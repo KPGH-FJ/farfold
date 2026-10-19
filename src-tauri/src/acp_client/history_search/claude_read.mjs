@@ -54,13 +54,24 @@ export async function resolveSelected(launch) {
       !plain(launch) ||
       Object.keys(launch).sort().join() !== "entry,installationRoot,node" ||
       ![launch.entry, launch.installationRoot, launch.node].every(
-        (v) => typeof v === "string" && path.isAbsolute(v),
+        (v) =>
+          typeof v === "string" &&
+          (process.platform === "win32"
+            ? validDiskPath(v)
+            : path.isAbsolute(v)),
       )
     )
       fail("invalidRequest");
     const root = await fs.realpath(launch.installationRoot);
     const entry = await fs.realpath(launch.entry);
     const node = await fs.realpath(launch.node);
+    if (
+      process.platform === "win32" &&
+      (root !== launch.installationRoot ||
+        entry !== launch.entry ||
+        node !== launch.node)
+    )
+      fail("selectionChanged");
     if (!inside(root, entry)) fail("entryUnverified");
     await regular(node);
     await regular(entry);
@@ -135,6 +146,29 @@ const validText = (value) =>
   !/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(
     value,
   );
+// Only plain DOS presentation is accepted here. Rust supplied this spelling
+// from held local full-identity owners; this function is not filesystem authority.
+export function validDiskPath(value) {
+  if (!validText(value) || value.length > 4096 || !/^[A-Za-z]:\\/.test(value))
+    return false;
+  if (value.length === 3) return true;
+  return value
+    .slice(3)
+    .split("\\")
+    .every((part) => {
+      const stem = part.split(".")[0].toUpperCase();
+      return (
+        part.length > 0 &&
+        part.length <= 255 &&
+        !/[. ]$/.test(part) &&
+        !/[\u0000-\u001f\u007f-\u009f:/?*"<>|]/u.test(part) &&
+        !/^(CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|COM[1-9¹²³]|LPT[1-9¹²³])$/u.test(
+          stem,
+        )
+      );
+    });
+}
+
 export const LIMITS = Object.freeze({
   messages: 400,
   blocks: 1600,
@@ -152,7 +186,9 @@ export function validateRequest(value) {
     value.rowId.length < 1 ||
     value.rowId.length > 1024 ||
     !validText(value.cwd) ||
-    !value.cwd.startsWith("/") ||
+    !(process.platform === "win32"
+      ? validDiskPath(value.cwd)
+      : value.cwd.startsWith("/")) ||
     value.cwd.includes("\0") ||
     value.cwd.length > 4096
   )
@@ -363,6 +399,11 @@ export async function execute(input) {
   if ((await fs.realpath(process.execPath)) !== resolved.node)
     fail("entryUnverified");
   await recheckResolved(resolved);
+  if (
+    process.platform === "win32" &&
+    (await fs.realpath(process.cwd())) !== input.request.cwd
+  )
+    fail("sourceUnconfirmed");
   // SDK code runs only after selected-installation resolution. Parent supplies
   // process isolation, deadline/cancellation and true group+pipe cleanup.
   const sdk = await import(pathToFileURL(resolved.sdkEntry).href);
@@ -370,6 +411,11 @@ export async function execute(input) {
     fs.realpath(file),
   );
   await recheckResolved(resolved);
+  if (
+    process.platform === "win32" &&
+    (await fs.realpath(process.cwd())) !== input.request.cwd
+  )
+    fail("sourceChanged");
   return { kind: "projection", ...projection };
 }
 async function main() {

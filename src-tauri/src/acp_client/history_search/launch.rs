@@ -41,7 +41,7 @@ pub(super) struct Resolved {
     pub entry: PathBuf,
     pub root: PathBuf,
     pub sdk: PathBuf,
-    watched: Vec<(PathBuf, file_access::Stamp)>,
+    pub(super) watched: Vec<(PathBuf, file_access::Stamp)>,
 }
 fn regular(path: &Path) -> Result<File> {
     let parent = file_access::open_directory(path.parent().ok_or(Code::EntryUnverified)?)
@@ -254,8 +254,8 @@ pub(super) fn admission(row: &AgentRow) -> Result<Route> {
         inventory::launch::admission(row)?;
         return Ok(Route::AppServer);
     }
-    // The separate SDK helper still requires its reviewed macOS path contract.
-    if !cfg!(target_os = "macos") {
+    // Windows rows additionally require operation-local held-path admission.
+    if !cfg!(any(target_os = "macos", windows)) {
         return Err(Code::PlatformUnsupported.into());
     }
     let value = resolve(row)?;

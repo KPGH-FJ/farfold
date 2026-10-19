@@ -3,6 +3,7 @@ mod claude;
 mod launch;
 mod requests;
 mod rpc;
+mod sdk_paths;
 mod source;
 mod text;
 mod types;
@@ -35,16 +36,24 @@ impl inventory::process::Control for ChildControl<'_> {
         inventory::process::Control::pending_cleanup(self.job);
     }
 }
-fn run_selected(job: &Job, index: usize, command: std::process::Command) -> Result<rpc::Read> {
+fn run_selected(job: &Job, index: usize, mut command: std::process::Command) -> Result<rpc::Read> {
     job.within()?;
     let control = ChildControl {
         job,
         deadline: job.deadline.min(Instant::now() + Duration::from_secs(15)),
     };
     if let launch::Route::Sdk(resolved) = &job.source.route {
-        let mut exchange = claude::Exchange::new(job, index, resolved)?;
-        let result = inventory::process::run_owned(command, &control, Some(&mut exchange), 8388608);
-        return match result {
+        let context = sdk_paths::Context::new(&job.source.rows[index].cwd, resolved)?;
+        context.command(&mut command)?;
+        let mut exchange = claude::Exchange::new(job, index, &context.paths)?;
+        let result = {
+            let mut guarded = sdk_paths::ScopedExchange {
+                context: &context,
+                inner: &mut exchange,
+            };
+            inventory::process::run_owned(command, &control, Some(&mut guarded), 8388608)
+        };
+        let result = match result {
             Ok(mut out) => {
                 let result = exchange.finish(&out, None);
                 out.fill(0);
@@ -52,6 +61,12 @@ fn run_selected(job: &Job, index: usize, command: std::process::Command) -> Resu
             }
             Err(e) => exchange.finish(&[], Some(e.into())),
         };
+        return result.map(|mut read| {
+            // run_owned has settled the original process and both pipes, but
+            // publication still needs the SAME operation-local path authority.
+            read.sdk_context = Some(context);
+            read
+        });
     }
     let mut exchange = rpc::Exchange::new(job, index);
     let result = inventory::process::run_owned(command, &control, Some(&mut exchange), 8388608);

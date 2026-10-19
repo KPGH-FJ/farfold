@@ -1,8 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { project, readProjection, LIMITS } from "./claude_read.mjs";
+import {
+  project,
+  readProjection,
+  LIMITS,
+  validDiskPath,
+  validateRequest,
+} from "./claude_read.mjs";
 const id = "12345678-1234-1234-1234-123456789abc";
-const request = { rowId: "saved-1", sessionId: id, cwd: "/synthetic" };
+const request = {
+  rowId: "saved-1",
+  sessionId: id,
+  cwd: process.platform === "win32" ? "C:\\synthetic" : "/synthetic",
+};
 const info = {
   sessionId: id,
   cwd: request.cwd,
@@ -116,7 +126,7 @@ test("actual API order/options, metadata drift and empty projection", async () =
   assert.deepEqual(calls[1], [
     "messages",
     id,
-    { dir: "/synthetic", offset: 0, limit: 401, includeSystemMessages: false },
+    { dir: request.cwd, offset: 0, limit: 401, includeSystemMessages: false },
   ]);
   api.getSessionMessages = async () => [];
   await assert.rejects(
@@ -190,4 +200,39 @@ test("unknown record semantics and malformed command flags are not original pros
   assert.throws(() => project([msg({ isQueuedCommand: "yes" })], request), {
     code: "invalidOutput",
   });
+});
+
+test("Windows SDK-facing path grammar is strict without case folding", () => {
+  for (const value of [
+    "C:\\",
+    String.raw`C:\Owned\中文`,
+    String.raw`c:\Owned\Case`,
+    String.raw`C:\owned~name`,
+  ]) {
+    assert.equal(validDiskPath(value), true, value);
+  }
+  for (const value of [
+    String.raw`\\server\share\x`,
+    String.raw`\\?\C:\x`,
+    String.raw`\\.\C:\x`,
+    String.raw`C:relative`,
+    String.raw`C:/x`,
+    String.raw`C:\x:ads`,
+    String.raw`C:\x\..\y`,
+    String.raw`C:\x\.\y`,
+    String.raw`C:\x\\y`,
+    String.raw`C:\CON.txt`,
+    String.raw`C:\x.`,
+    String.raw`C:\x `,
+    "C:\\x\u0000",
+    "C:\\x\uD800",
+  ]) {
+    assert.equal(validDiskPath(value), false, value);
+  }
+  if (process.platform === "win32") {
+    assert.throws(() => validateRequest({ ...request, cwd: "/synthetic" }), {
+      code: "invalidRequest",
+    });
+    assert.equal(validateRequest(request), request);
+  }
 });

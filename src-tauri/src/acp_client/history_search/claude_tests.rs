@@ -19,10 +19,20 @@ impl Fixture {
         std::fs::write(&entry, "throw Error('ADAPTER_MUST_NOT_RUN')").unwrap();
         std::fs::write(adapter.join("package.json"),json!({"name":"@agentclientprotocol/claude-agent-acp","bin":{"claude-agent-acp":"dist/index.js"},"dependencies":{"@anthropic-ai/claude-agent-sdk":"0.0.0-synthetic"}}).to_string()).unwrap();
         std::fs::write(sdk.join("package.json"),json!({"name":"@anthropic-ai/claude-agent-sdk","type":"module","exports":{".":{"default":"./sdk.mjs","types":"./sdk.d.ts"}}}).to_string()).unwrap();
+        #[cfg(windows)]
+        let expected_dir = super::sdk_paths::disk_path(
+            &crate::file_access::PinnedPath::directory(&root)
+                .unwrap()
+                .path,
+        )
+        .unwrap();
+        #[cfg(not(windows))]
+        let expected_dir = root.to_str().unwrap().to_owned();
         std::fs::write(
             sdk.join("sdk.mjs"),
             format!(
-                "const mode={};\n{}",
+                "const expectedDir={};\nconst mode={};\n{}",
+                json!(expected_dir),
                 json!(mode),
                 include_str!("claude_peer.mjs")
             ),
@@ -494,4 +504,192 @@ fn claude_sdk_surface_is_suppressed_as_one_branch_on_common_failure() {
     let (source, scope) = source::public_surface(&route, None);
     assert_eq!(source, Some("officialSdk"));
     assert_eq!(scope.unwrap().coverage, "partial");
+}
+
+#[test]
+fn sdk_dos_presentation_preserves_case_unicode_and_refuses_namespace_forms() {
+    for (input, expected) in [
+        (r"C:\", r"C:\"),
+        (r"C:\Owned\中文", r"C:\Owned\中文"),
+        (r"\\?\C:\Owned\Case", r"C:\Owned\Case"),
+        (r"c:\Owned\Case", r"c:\Owned\Case"),
+    ] {
+        assert_eq!(sdk_paths::disk_path(input).unwrap(), expected);
+    }
+    for input in [
+        r"\\server\share\x",
+        r"\\?\UNC\s\x",
+        r"\\.\C:\x",
+        r"\\?\Volume{00000000-0000-0000-0000-000000000000}\x",
+        r"C:relative",
+        r"C:/x",
+        r"C:\x:ads",
+        r"C:\x\..\y",
+        r"C:\x\.\y",
+        r"C:\x\\y",
+        r"C:\CON.txt",
+        r"C:\x.",
+        r"C:\x ",
+    ] {
+        assert!(sdk_paths::disk_path(input).is_err(), "{input}");
+    }
+    // A tilde by itself is not an alias classifier. Native held-path admission
+    // separately rejects actual 8.3 spelling via the existing ordinal policy.
+    assert_eq!(
+        sdk_paths::disk_path(r"C:\owned~name").unwrap(),
+        r"C:\owned~name"
+    );
+}
+
+#[test]
+#[cfg(windows)]
+fn sdk_windows_context_uses_one_plain_cwd_and_native_full_identity() {
+    let f = Fixture::new("normal");
+    let launch::Route::Sdk(resolved) = &f.saved.route else {
+        panic!("SDK fixture")
+    };
+    let context = sdk_paths::Context::new(&f.saved.rows[0].cwd, resolved).unwrap();
+    assert!(!context.paths.cwd.starts_with(r"\\?\"));
+    let native = crate::file_access::PinnedPath::directory(&f.root).unwrap();
+    let sdk = crate::file_access::PinnedPath::directory(std::path::Path::new(&context.paths.cwd))
+        .unwrap();
+    assert!(crate::file_access::same_object(native.file(), sdk.file()).unwrap());
+    let mut command = f.command();
+    context.command(&mut command).unwrap();
+    assert_eq!(
+        command.get_current_dir().unwrap(),
+        std::path::Path::new(&context.paths.cwd)
+    );
+    let value = f.run();
+    assert_eq!(value.state, State::Completed);
+    assert_eq!(value.hits.len(), 2);
+    assert_eq!(value.rows[0].state, RowState::Partial);
+}
+
+#[test]
+#[cfg(windows)]
+fn sdk_windows_read_guard_keeps_source_write_denied_until_publication() {
+    let f = Fixture::new("normal");
+    let job = f.job();
+    let module = f.sdk.join("sdk.mjs");
+    let read = run_selected(&job, 0, f.command()).unwrap();
+    assert!(read.sdk_context.is_some());
+    assert!(job.snapshot().hits.is_empty());
+    // The real Context still holds the same regular FileObject with share-read
+    // only. Opening for write must fail; never release pins to manufacture drift.
+    let blocked = std::fs::OpenOptions::new()
+        .write(true)
+        .open(&module)
+        .expect_err("the result still owns its source pins");
+    assert_eq!(
+        blocked.raw_os_error(),
+        Some(windows_sys::Win32::Foundation::ERROR_SHARING_VIOLATION as i32)
+    );
+    read.publish(&job, 0).unwrap();
+    assert_eq!(job.snapshot().hits.len(), 2);
+    // Publication consumes the final Context; this is a write-open capability
+    // check only, not an edit or a claim that a held source can drift in place.
+    drop(
+        std::fs::OpenOptions::new()
+            .write(true)
+            .open(&module)
+            .unwrap(),
+    );
+}
+
+#[test]
+#[cfg(windows)]
+fn sdk_windows_disposable_cwd_probe_cannot_authorize_a_changed_module() {
+    let f = Fixture::new("normal");
+    let launch::Route::Sdk(resolved) = &f.saved.route else {
+        panic!("SDK fixture")
+    };
+    sdk_paths::probe_cwd(&f.saved.rows[0].cwd).unwrap();
+    // No source Context exists here. A hint cannot keep installation files
+    // pinned or turn its old watched stamps into later read authority.
+    std::fs::write(
+        f.sdk.join("sdk.mjs"),
+        "// replaced after disposable cwd hint",
+    )
+    .unwrap();
+    assert_eq!(
+        sdk_paths::Context::new(&f.saved.rows[0].cwd, resolved)
+            .err()
+            .unwrap()
+            .code,
+        Code::SelectionChanged
+    );
+    assert!(f.saved.route.current(&f.saved.agent).is_err());
+}
+
+#[test]
+fn sdk_configuration_wait_rechecks_selected_module_before_helper_dispatch() {
+    let _serial = inventory::execution::fixture_lock();
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    runtime.block_on(async {
+        let f = Fixture::new("normal");
+        let store = MetaStore::open(&f.root.join("meta.db")).unwrap();
+        store.insert_agent(&f.saved.agent).unwrap();
+        store.upsert_session(&f.saved.rows[0]).unwrap();
+        let manager = AcpManager::new(f.root.join("logs"), f.root.clone());
+        let scope = manager
+            .reserve_preparation_action(&f.saved.agent, &f.saved.agent.command, &f.saved.agent.args)
+            .unwrap();
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let activity = gate.activity().unwrap();
+        let configuration = crate::install_job::configuration_guard(&f.saved.agent.id).await;
+        let job = f.job();
+        let mut command = Some(f.command());
+        let dispatches = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let observed = dispatches.clone();
+        let task = execute_with(store, job.clone(), activity, scope, move |store, job| {
+            query_with(store, job, |_, _| {
+                observed.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                Ok(command.take().expect("one selected row"))
+            })
+        });
+        tokio::pin!(task);
+        // Poll the actual execute_with future while this test holds its real
+        // configuration lock. Pending proves it retained its execution permit;
+        // do not race a non-waiting worker by polling acquire from another task.
+        std::future::poll_fn(|cx| {
+            assert!(std::future::Future::poll(task.as_mut(), cx).is_pending());
+            std::task::Poll::Ready(())
+        })
+        .await;
+        let second = inventory::execution::acquire().unwrap();
+        assert!(inventory::execution::acquire().is_err());
+        assert!(!job.snapshot().settled);
+        assert_eq!(dispatches.load(std::sync::atomic::Ordering::SeqCst), 0);
+        // No real Context/source pins exist before the configuration grant.
+        std::fs::write(
+            f.sdk.join("sdk.mjs"),
+            "// changed while configuration was waiting",
+        )
+        .unwrap();
+        drop(configuration);
+        tokio::time::timeout(Duration::from_secs(5), task)
+            .await
+            .unwrap();
+        let value = job.snapshot();
+        assert_eq!(value.state, State::Failed);
+        assert_eq!(value.code, Some(Code::SelectionChanged));
+        assert!(value.hits.is_empty());
+        assert_eq!(dispatches.load(std::sync::atomic::Ordering::SeqCst), 0);
+        assert!(gate.update().is_ok());
+        assert!(
+            manager
+                .reserve_preparation_action(
+                    &f.saved.agent,
+                    &f.saved.agent.command,
+                    &f.saved.agent.args
+                )
+                .is_ok()
+        );
+        drop(second);
+        assert!(inventory::execution::acquire().is_ok());
+    });
 }

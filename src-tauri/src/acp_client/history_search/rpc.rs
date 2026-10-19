@@ -18,9 +18,14 @@ pub(super) struct Read {
     pub(super) state: RowState,
     pub(super) code: Option<Code>,
     pub(super) error: Option<Code>,
+    pub(super) sdk_context: Option<super::sdk_paths::Context>,
 }
 impl Read {
-    pub fn publish(self, job: &Job, index: usize) -> Result<()> {
+    pub fn publish(mut self, job: &Job, index: usize) -> Result<()> {
+        let context = self.sdk_context.take();
+        if let Some(context) = &context {
+            context.current()?;
+        }
         let mut accepted = false;
         job.update(|v| {
             // Serialize cancellation and publication with the same operation lock.
@@ -35,7 +40,9 @@ impl Read {
         if !accepted {
             return Err(Code::Cancelled.into());
         }
-        self.error.map_or(Ok(()), |code| Err(code.into()))
+        let result = self.error.map_or(Ok(()), |code| Err(code.into()));
+        drop(context);
+        result
     }
 }
 pub(super) struct Exchange<'a> {
@@ -316,6 +323,7 @@ impl<'a> Exchange<'a> {
             },
             code: error.or(self.row_code),
             error,
+            sdk_context: None,
         }
     }
 }

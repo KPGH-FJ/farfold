@@ -166,14 +166,13 @@ pub(super) fn capabilities(
                 Some(Code::NoNativeHistory)
             }
             Some(s) => {
-                if (matches!(&route, Ok(Route::Sdk(_)))
-                    && std::fs::canonicalize(&s.cwd)
-                        .ok()
-                        .and_then(|p| p.to_str().map(str::to_owned))
-                        .as_deref()
-                        != Some(s.cwd.as_str()))
-                    || inventory::launch::Directory::open(&s.cwd).is_err()
-                {
+                let cwd = match &route {
+                    Ok(Route::Sdk(_)) => super::sdk_paths::probe_cwd(&s.cwd),
+                    _ => inventory::launch::Directory::open(&s.cwd)
+                        .map(drop)
+                        .map_err(Into::into),
+                };
+                if cwd.is_err() {
                     Some(Code::CwdUnavailable)
                 } else {
                     match is_open(

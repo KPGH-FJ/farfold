@@ -27,7 +27,7 @@ const read = async (id, options) => {
   if (
     JSON.stringify(options) !==
     JSON.stringify({
-      dir: process.cwd(),
+      dir: expectedDir,
       offset: 0,
       limit: 401,
       includeSystemMessages: false,
