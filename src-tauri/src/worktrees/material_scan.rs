@@ -338,15 +338,21 @@ impl ListingBudget {
 #[cfg(windows)]
 #[path = "material_windows.rs"]
 mod windows;
+#[cfg(not(windows))]
 pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
-    #[cfg(windows)]
-    {
-        windows::capture(root, cancel)
-    }
-    #[cfg(not(windows))]
-    {
-        scan(root, cancel, false)
-    }
+    scan(root, cancel, false)
+}
+#[cfg(all(windows, test))]
+pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
+    super::material_owner::Owner::default().capture(root, cancel)
+}
+#[cfg(windows)]
+pub(super) fn capture_owned(
+    root: &Path,
+    cancel: &AtomicBool,
+    retired: &mut Option<crate::file_access::RetiredBackup>,
+) -> Result<MaterialSummary> {
+    windows::capture(root, cancel, retired)
 }
 pub(super) fn content(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
     scan(root, cancel, true)

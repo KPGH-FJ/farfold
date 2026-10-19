@@ -8,6 +8,7 @@ mod checkout;
 mod create;
 mod inspect;
 mod manager;
+mod material_owner;
 mod material_scan;
 mod read_context;
 #[cfg(any(windows, test))]

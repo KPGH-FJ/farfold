@@ -2,9 +2,13 @@
 //! Callers choose the authorized root; this layer refuses redirected components.
 use std::{fs::File, io};
 #[cfg(any(windows, test))]
+mod ads_records;
+#[cfg(any(windows, test))]
 mod directory_page;
 #[cfg(any(windows, test))]
 mod ea_records;
+#[cfg(windows)]
+pub(crate) use ads_records::{Failure as StreamsFailure, Observation as StreamsObservation};
 #[cfg(windows)]
 pub(crate) use ea_records::{
     Failure as EaFailure, Observation as EaObservation, WorkBudget as EaWorkBudget,
@@ -21,8 +25,8 @@ pub(crate) use directory_page::{
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
 #[cfg(windows)]
 pub(crate) use windows::{
-    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, directory_entries, ea_observation,
-    metadata_child, metadata_file,
+    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, RetiredBackup, directory_entries,
+    ea_observation, metadata_child, metadata_file, streams_observation,
 };
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};

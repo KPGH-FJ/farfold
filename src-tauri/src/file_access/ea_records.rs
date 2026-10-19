@@ -46,10 +46,13 @@ impl WorkBudget {
         Self { limit, used: 0 }
     }
     pub(crate) fn capacity(&self) -> Result<usize, Failure> {
-        let n = (self.limit - self.used).min(QUERY_BYTES as u64) as usize;
+        let n = self.remaining().min(QUERY_BYTES as u64) as usize;
         if n == 0 { Err(Failure::Limit) } else { Ok(n) }
     }
-    fn charge(&mut self, used: usize) -> Result<(), Failure> {
+    pub(crate) fn remaining(&self) -> u64 {
+        self.limit - self.used
+    }
+    pub(crate) fn charge(&mut self, used: usize) -> Result<(), Failure> {
         let next = self.used.checked_add(used as u64).ok_or(Failure::Limit)?;
         if next > self.limit {
             return Err(Failure::Limit);

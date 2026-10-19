@@ -62,7 +62,10 @@ fn actual_owned_default_data_observation_changes_with_body_and_includes_ignored_
     std::fs::write(dir.path().join("ignored.bin"), b"original-data").unwrap();
     let cancel = AtomicBool::new(false);
     let first = capture(dir.path(), &cancel).unwrap();
-    assert_eq!(first.profile, Some(MaterialProfile::WindowsDefaultDataEaV1));
+    assert_eq!(
+        first.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+    );
     assert_eq!(first.entries, 3);
     assert_eq!(capture(dir.path(), &cancel).unwrap(), first);
     std::fs::write(dir.path().join("ignored.bin"), b"changed!-data").unwrap();
@@ -458,5 +461,68 @@ fn real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total() {
     assert_eq!(a.bytes, 17);
     assert_eq!(b.bytes, 17);
     assert_eq!(a.entries, b.entries);
-    assert_eq!(b.profile, Some(MaterialProfile::WindowsDefaultDataEaV1));
+    assert_eq!(
+        b.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+    );
+}
+
+#[test]
+fn streams_partial_profile_is_additive_and_does_not_become_historical_unix() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsV1),
+        entries: 2,
+        bytes: 3,
+        sha256: "c".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaStreamsV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert!(
+        serde_json::from_str::<MaterialSummary>(
+            &wire.replace("windowsDefaultDataEaStreamsV1", "completeWindowsBackup")
+        )
+        .is_err()
+    );
+    assert_ne!(
+        value,
+        MaterialSummary {
+            profile: None,
+            ..value.clone()
+        }
+    );
+}
+
+#[cfg(windows)]
+#[test]
+fn owned_ntfs_named_data_changes_the_partial_stream_facet_without_changing_default_bytes() {
+    let directory = tempfile::tempdir().unwrap();
+    let root = directory.path().canonicalize().unwrap();
+    std::fs::write(root.join(".git"), b"owned-linked-pointer").unwrap();
+    let file = root.join("owned.txt");
+    std::fs::write(&file, b"body").unwrap();
+    let first_ads = format!("{}:one:$DATA", file.display());
+    let second_ads = format!("{}:two:$DATA", file.display());
+    // ADS pathnames are used only to create this explicitly owned fixture;
+    // production observation never opens one or widens the base handle.
+    std::fs::write(&first_ads, b"first").unwrap();
+    std::fs::write(&second_ads, b"other").unwrap();
+    let owner = crate::worktrees::material_owner::Owner::default();
+    let cancel = AtomicBool::new(false);
+    let first = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(
+        first.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+    );
+    assert_eq!(first.bytes, 4);
+    assert_eq!(owner.capture(&root, &cancel).unwrap(), first);
+    std::fs::write(&first_ads, b"later").unwrap();
+    let second = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(second.bytes, first.bytes);
+    assert_eq!(second.entries, first.entries);
+    assert_ne!(second.sha256, first.sha256);
+    assert_eq!(std::fs::read(&file).unwrap(), b"body");
 }

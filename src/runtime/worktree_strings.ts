@@ -208,6 +208,8 @@ export const WORKTREE_STRINGS = {
     cancelled: "操作已取消，未开始创建。",
     waitExpired: "等待已结束，实际结果仍需重新核查。",
     storageUnknown: "保存结果尚未确认，请核查这次操作。",
+    cleanupUnknown:
+      "资料检查未能确认结束，请保留工作文件，退出并重新打开应用后再核查。",
     storageConflict: "工作树记录已变化，请刷新清单。",
     operationConflict: "这次操作的信息与原记录不同，请核查原操作后再继续。",
     recheckRequired: "使用前需要重新核查此位置。",

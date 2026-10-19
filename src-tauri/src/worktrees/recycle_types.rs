@@ -47,6 +47,8 @@ pub enum MaterialProfile {
     WindowsDefaultDataV1,
     #[serde(rename = "windowsDefaultDataEaV1")]
     WindowsDefaultDataEaV1,
+    #[serde(rename = "windowsDefaultDataEaStreamsV1")]
+    WindowsDefaultDataEaStreamsV1,
 }
 // Missing is the historical Unix representation; an explicit null is not
 // silently downgraded to that representation.

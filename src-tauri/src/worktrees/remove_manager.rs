@@ -105,7 +105,7 @@ impl Worktrees {
         if saved.removal_operation.is_some() {
             return Err(error("recheckRequired"));
         }
-        let plan = removal::capture(&saved, &AtomicBool::new(false))?;
+        let plan = removal::capture(&self.0.material, &saved, &AtomicBool::new(false))?;
         let (baseline, imp) = impact(store, &saved)?;
         let local_tracking = if saved.archive.branch.is_none() {
             "noUpstream"
@@ -243,7 +243,9 @@ impl Worktrees {
             if imp.unsent {
                 return Err(error("unsentWork"));
             }
-            if removal::capture(&ticket.saved, &AtomicBool::new(false))? != ticket.plan {
+            if removal::capture(&self.0.material, &ticket.saved, &AtomicBool::new(false))?
+                != ticket.plan
+            {
                 return Err(error("recoveryChanged"));
             }
             Ok(MaintenanceOwner {
@@ -348,7 +350,7 @@ impl Worktrees {
         if cancel.load(Ordering::SeqCst) {
             return Err(error("cancelled"));
         }
-        if removal::capture(&intent.saved, cancel)? != plan {
+        if removal::capture(&self.0.material, &intent.saved, cancel)? != plan {
             return Err(error("recoveryChanged"));
         }
         let reserved_stamp = removal::reserve(&intent)?;
@@ -372,7 +374,7 @@ impl Worktrees {
             o.status = set_status(id, "running", "verifyingRecovery", None, &intent, true);
             i.save(store, n)?;
         }
-        if removal::capture(&intent.saved, cancel)? != plan {
+        if removal::capture(&self.0.material, &intent.saved, cancel)? != plan {
             return Err(error("recoveryChanged"));
         }
         if cancel.load(Ordering::SeqCst) {
@@ -458,7 +460,7 @@ impl Worktrees {
             .name("farfold-worktree-remove".into())
             .spawn(move || {
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    let p = removal::capture(&intent.saved, &cancel)?;
+                    let p = removal::capture(&manager.0.material, &intent.saved, &cancel)?;
                     removal::same_plan(&intent, &p)?;
                     recovery_pack::verify(
                         intent.recovery.as_ref().ok_or(error("recoveryInvalid"))?,
@@ -467,7 +469,7 @@ impl Worktrees {
                     if cancel.load(Ordering::SeqCst) {
                         return Err(error("cancelled"));
                     }
-                    removal::delete(&intent, &cancel, || {
+                    removal::delete(&manager.0.material, &intent, &cancel, || {
                         let mut dispatched = intent.clone();
                         dispatched.dispatched = true;
                         let mut i = manager.lock()?;

@@ -79,10 +79,12 @@ fn snapshot(saved: &SavedArchive, path: &str) -> Result<inspect::Snapshot> {
     Ok(s)
 }
 pub(super) fn verify_at(
+    material: &super::material_owner::Owner,
     saved: &SavedArchive,
     retained: bool,
     cancel: &AtomicBool,
 ) -> Result<inspect::Snapshot> {
+    material.available()?;
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     let (path, other) = if retained {
         (&saved.archive.retained_path, &saved.archive.original_path)
@@ -102,7 +104,7 @@ pub(super) fn verify_at(
         absent(&saved.retained_parent)?;
     }
     let s = snapshot(saved, path)?;
-    if material_scan::capture(Path::new(path), cancel)? != saved.material
+    if material.capture(Path::new(path), cancel)? != saved.material
         || index_digest(&saved.original.identity)? != saved.index_sha256
     {
         return Err(error("materialChanged"));
@@ -110,6 +112,7 @@ pub(super) fn verify_at(
     Ok(s)
 }
 pub(super) fn prepare_record(
+    material: &super::material_owner::Owner,
     location: SavedLocation,
     token: &str,
     cancel: &AtomicBool,
@@ -153,11 +156,11 @@ pub(super) fn prepare_record(
         parent,
         retained_parent,
         retained_parent_stamp: None,
-        material: material_scan::capture(Path::new(&s.root), cancel)?,
+        material: material.capture(Path::new(&s.root), cancel)?,
         index_sha256: index_digest(&location.identity)?,
         original: location,
     };
-    verify_at(&record, false, cancel)?;
+    verify_at(material, &record, false, cancel)?;
     Ok(record)
 }
 pub(super) fn reserve_parent(record: &mut SavedArchive) -> Result<()> {
@@ -193,9 +196,13 @@ pub(super) fn reserve_parent(record: &mut SavedArchive) -> Result<()> {
     }
     Ok(())
 }
-pub(super) fn move_tree(intent: &RecycleIntent, cancel: &AtomicBool) -> Result<inspect::Snapshot> {
+pub(super) fn move_tree(
+    material: &super::material_owner::Owner,
+    intent: &RecycleIntent,
+    cancel: &AtomicBool,
+) -> Result<inspect::Snapshot> {
     let restore = intent.action == RecycleAction::Restore;
-    verify_at(&intent.saved, restore, cancel)?;
+    verify_at(material, &intent.saved, restore, cancel)?;
     let a = &intent.saved.archive;
     let (from, to) = if restore {
         (&a.retained_path, &a.original_path)
@@ -212,5 +219,5 @@ pub(super) fn move_tree(intent: &RecycleIntent, cancel: &AtomicBool) -> Result<i
         return Err(error("unknown"));
     }
     // No retry or rollback: even a failed receipt retains both exact paths.
-    verify_at(&intent.saved, !restore, &AtomicBool::new(false))
+    verify_at(material, &intent.saved, !restore, &AtomicBool::new(false))
 }

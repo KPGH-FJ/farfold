@@ -27,6 +27,9 @@ pub(crate) struct EntryMetadata {
 }
 
 impl EntryMetadata {
+    pub(crate) fn attributes(&self) -> u32 {
+        self.attributes
+    }
     // Fixed-width observation fields, not security/EA/ADS contents or restore data.
     pub(crate) fn version_fields(&self) -> Vec<u8> {
         let mut out = Vec::new();

@@ -262,7 +262,8 @@ fn removal_identity_backup_rejects_parent_replacement_before_build() {
             let (_, doc) = storage::read(&s).unwrap();
             let saved = doc.archives[0].clone();
             let cancel = AtomicBool::new(false);
-            let plan = removal::capture(&saved, &cancel).unwrap();
+            let plan = removal::capture(&super::material_owner::Owner::default(), &saved, &cancel)
+                .unwrap();
             let root = Path::new(&saved.parent).join(".farfold-recovery-identity-test");
             fs::create_dir(&root).unwrap();
             replace_parent_keep_children(Path::new(&saved.parent));
@@ -365,7 +366,8 @@ fn removal_leaf_reservation_cannot_be_replaced_or_prepopulated() {
             let (_, doc) = storage::read(&s).unwrap();
             let saved = doc.archives[0].clone();
             let cancel = AtomicBool::new(false);
-            let plan = removal::capture(&saved, &cancel).unwrap();
+            let plan = removal::capture(&super::material_owner::Owner::default(), &saved, &cancel)
+                .unwrap();
             let mut failures = vec![];
             for (name, replace) in [("replaced", true), ("occupied", false)] {
                 let root = Path::new(&saved.parent).join(format!(".farfold-recovery-{name}"));

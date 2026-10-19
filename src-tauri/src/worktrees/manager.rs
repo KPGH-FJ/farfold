@@ -1,6 +1,7 @@
 use super::{
     create,
     inspect::{self, Snapshot},
+    material_owner::Owner as MaterialOwner,
     storage::{self, Document, Identity, Intent, Request, SavedLocation, SavedOperation},
     types::*,
 };
@@ -44,6 +45,7 @@ struct Ticket {
 }
 #[derive(Default)]
 struct Inner {
+    material: Arc<MaterialOwner>,
     raw: Option<String>,
     doc: Document,
     loaded: bool,
@@ -60,10 +62,23 @@ struct Inner {
     preparing: HashSet<String>,
     working: Option<(String, Arc<AtomicBool>)>,
 }
-#[derive(Default)]
 struct Shared {
+    material: Arc<MaterialOwner>,
     inner: Mutex<Inner>,
     admission: UpdateAdmission,
+}
+impl Default for Shared {
+    fn default() -> Self {
+        let material = Arc::new(MaterialOwner::default());
+        Self {
+            inner: Mutex::new(Inner {
+                material: material.clone(),
+                ..Inner::default()
+            }),
+            material,
+            admission: UpdateAdmission::default(),
+        }
+    }
 }
 #[derive(Clone, Default)]
 pub struct Worktrees(Arc<Shared>);
@@ -229,7 +244,8 @@ impl Inner {
             .unwrap_or_else(|| Reply::unknown(id))
     }
     fn idle(&self) -> Result<()> {
-        if self.working.is_some()
+        if self.material.occupied()
+            || self.working.is_some()
             || self.maintenance.is_some()
             || !self.preparing.is_empty()
             || self.doc.operation.as_ref().is_some_and(|o| {

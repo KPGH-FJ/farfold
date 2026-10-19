@@ -1,11 +1,12 @@
-//! Read-only namespace/default-data plus complete-or-refuse EA observations.
-//! Still partial: no ADS/security/hardlink restoration or coherent snapshot.
+//! Read-only namespace/default-data/EA plus held DATA stream observations.
+//! Still partial: no security/hardlink restoration or coherent snapshot.
 //! The linked root .git pointer keeps its historical explicit skip.
 use super::{ListingBudget, MaterialSummary, hex};
 use crate::{
     file_access::{
         DirectoryObservation, EaFailure, EaObservation, EaWorkBudget, MetadataKind, PinnedPath,
-        directory_entries, ea_observation, metadata_child, metadata_file,
+        RetiredBackup, StreamsFailure, StreamsObservation, directory_entries, ea_observation,
+        metadata_child, metadata_file, streams_observation,
     },
     worktrees::{
         recycle_types::MaterialProfile,
@@ -15,7 +16,6 @@ use crate::{
 use sha2::{Digest, Sha256};
 use std::{
     ffi::OsStr,
-    io::Read,
     path::Path,
     sync::atomic::{AtomicBool, Ordering},
 };
@@ -23,9 +23,9 @@ use windows_sys::Win32::Globalization::{CSTR_EQUAL, CompareStringOrdinal};
 const MAX_ENTRIES: u64 = 100_000;
 const MAX_BYTES: u64 = 1024 * 1024 * 1024;
 const MAX_FILE: u64 = 256 * 1024 * 1024;
-// Independent engineering cap on completed-returned EA bytes from BOTH
-// initial/recheck queries. Not default-data bytes, total disk I/O or RSS.
-const MAX_EA_QUERY_WORK: u64 = 1024 * 1024 * 1024;
+// One completed-returned work cap shared by EA, stream inventories and
+// BackupRead/default/named/opaque bytes, including all rechecks. Not RSS/I/O.
+const MAX_OBSERVATION_WORK: u64 = 1024 * 1024 * 1024;
 struct Scan {
     hash: Sha256,
     entries: ListingBudget,
@@ -44,6 +44,26 @@ impl Scan {
                 EaFailure::Cancelled => "cancelled",
                 EaFailure::Changed => "materialChanged",
                 EaFailure::Limit => "materialLimit",
+                _ => "unavailable",
+            })
+        })
+    }
+    fn streams(&mut self, value: &StreamsObservation) {
+        self.field(&value.count.to_le_bytes());
+        self.field(&value.logical_bytes.to_le_bytes());
+        self.field(&value.sha256);
+    }
+    fn observe_streams(
+        &mut self,
+        pin: PinnedPath,
+        cancel: &AtomicBool,
+        retired: &mut Option<RetiredBackup>,
+    ) -> Result<(PinnedPath, StreamsObservation)> {
+        streams_observation(pin, &mut self.ea_work, cancel, retired).map_err(|failure| {
+            error(match failure {
+                StreamsFailure::Cancelled => "cancelled",
+                StreamsFailure::Limit => "materialLimit",
+                StreamsFailure::Changed => "materialChanged",
                 _ => "unavailable",
             })
         })
@@ -104,11 +124,12 @@ fn names_field(raw: &[u16]) -> Vec<u8> {
 }
 fn walk(
     scan: &mut Scan,
-    dir: &PinnedPath,
+    dir: PinnedPath,
     prefix: &[u16],
     depth: usize,
     cancel: &AtomicBool,
-) -> Result<()> {
+    retired: &mut Option<RetiredBackup>,
+) -> Result<PinnedPath> {
     if depth > 64 {
         return Err(error("materialLimit"));
     }
@@ -120,13 +141,18 @@ fn walk(
     }
     // Directory EA gets one pre/post pair here, never a second pair in
     // its parent. Only this fixed-size digest survives recursion.
-    let ea_before = scan.observe_ea(dir, cancel)?;
+    let ea_before = scan.observe_ea(&dir, cancel)?;
     scan.ea(&ea_before);
+    let (dir, streams_before) = scan.observe_streams(dir, cancel, retired)?;
+    if streams_before.default_present {
+        return Err(error("specialFile"));
+    }
+    scan.streams(&streams_before);
     // Reserve the entire returned listing before processing even its first
     // child. The parent map remains alive across recursive calls.
     let (listed, first_capacity) = scan.entries.collect(
         cancel,
-        |capacity| directory_entries(dir, capacity, cancel).map_err(enumeration_error),
+        |capacity| directory_entries(&dir, capacity, cancel).map_err(enumeration_error),
         |values| values.len(),
     )?;
     let mut dot_git = 0;
@@ -172,7 +198,7 @@ fn walk(
         if !directory && metadata.kind != MetadataKind::File {
             return Err(error("specialFile"));
         }
-        let child = dir
+        let mut child = dir
             .child(raw, directory)
             .map_err(|_| error("unavailable"))?;
         let opened = metadata_file(child.file()).map_err(|_| error("unavailable"))?;
@@ -189,7 +215,7 @@ fn walk(
         // EaSize is only a recorded hint; no empty-EA claim follows from zero.
         scan.field(&observed.ea_size.to_le_bytes());
         if directory {
-            walk(scan, &child, &relative, depth + 1, cancel)?;
+            child = walk(scan, child, &relative, depth + 1, cancel, retired)?;
         } else {
             let ea_before = scan.observe_ea(&child, cancel)?;
             scan.ea(&ea_before);
@@ -205,29 +231,17 @@ fn walk(
             if scan.bytes > MAX_BYTES {
                 return Err(error("materialLimit"));
             }
-            let mut bytes = 0u64;
-            let mut hash = Sha256::new();
-            let mut file = child.file();
-            let mut buffer = [0u8; 65_536];
-            loop {
-                cancelled(cancel)?;
-                let n = file.read(&mut buffer).map_err(|_| error("unavailable"))?;
-                if n == 0 {
-                    break;
-                }
-                bytes = bytes.checked_add(n as u64).ok_or(error("materialLimit"))?;
-                if bytes > stamp.size {
-                    return Err(error("materialChanged"));
-                }
-                hash.update(&buffer[..n]);
-            }
-            if bytes != stamp.size
+            let (owned, streams) = scan.observe_streams(child, cancel, retired)?;
+            child = owned;
+            if !streams.default_present
+                || streams.default_size != stamp.size
                 || crate::file_access::stamp(child.file()).map_err(|_| error("unavailable"))?
                     != stamp
             {
                 return Err(error("materialChanged"));
             }
-            scan.field(&hash.finalize());
+            scan.field(&streams.default_sha256);
+            scan.streams(&streams);
             if scan.observe_ea(&child, cancel)? != ea_before {
                 return Err(error("materialChanged"));
             }
@@ -242,31 +256,40 @@ fn walk(
         }
         child.verify().map_err(|_| error("materialChanged"))?;
     }
-    if scan.observe_ea(dir, cancel)? != ea_before {
+    if scan.observe_ea(&dir, cancel)? != ea_before {
         return Err(error("materialChanged"));
     }
     // A complete second observation checks names/IDs/metadata after traversal;
     // it is still not an atomic snapshot against arbitrary external writers.
-    if directory_entries(dir, first_capacity, cancel).map_err(enumeration_error)? != listed
+    if directory_entries(&dir, first_capacity, cancel).map_err(enumeration_error)? != listed
         || metadata_file(dir.file()).map_err(|_| error("unavailable"))? != before
     {
         return Err(error("materialChanged"));
     }
     dir.verify().map_err(|_| error("materialChanged"))?;
-    cancelled(cancel)
+    let (dir, streams_after) = scan.observe_streams(dir, cancel, retired)?;
+    if streams_before != streams_after {
+        return Err(error("materialChanged"));
+    }
+    cancelled(cancel)?;
+    Ok(dir)
 }
-pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
+pub(super) fn capture(
+    root: &Path,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<MaterialSummary> {
     let root = PinnedPath::directory(root).map_err(|_| error("unsafePath"))?;
     let mut scan = Scan {
         hash: Sha256::new(),
         entries: ListingBudget::new(MAX_ENTRIES),
         bytes: 0,
-        ea_work: EaWorkBudget::new(MAX_EA_QUERY_WORK),
+        ea_work: EaWorkBudget::new(MAX_OBSERVATION_WORK),
     };
-    scan.field(b"farfold-windows-default-data-ea-observation-v1");
-    walk(&mut scan, &root, &[], 0, cancel)?;
+    scan.field(b"farfold-windows-default-data-ea-streams-observation-v1");
+    let _root = walk(&mut scan, root, &[], 0, cancel, retired)?;
     Ok(MaterialSummary {
-        profile: Some(MaterialProfile::WindowsDefaultDataEaV1),
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsV1),
         entries: scan.entries.reserved,
         bytes: scan.bytes,
         sha256: hex(scan.hash.finalize()),

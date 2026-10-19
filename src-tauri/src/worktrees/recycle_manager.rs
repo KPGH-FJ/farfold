@@ -103,7 +103,12 @@ impl Worktrees {
                         .cloned()
                         .ok_or(error("changed"))?;
                     drop(i);
-                    recycle::prepare_record(location, &token, &AtomicBool::new(false))?
+                    recycle::prepare_record(
+                        &self.0.material,
+                        location,
+                        &token,
+                        &AtomicBool::new(false),
+                    )?
                 }
                 RecycleAction::Restore => i
                     .doc
@@ -122,6 +127,7 @@ impl Worktrees {
             return Err(error("recheckRequired"));
         }
         recycle::verify_at(
+            &self.0.material,
             &saved,
             action == RecycleAction::Restore,
             &AtomicBool::new(false),
@@ -245,6 +251,7 @@ impl Worktrees {
                 return Err(error("unsentWork"));
             }
             recycle::verify_at(
+                &self.0.material,
                 &ticket.saved,
                 input.action == RecycleAction::Restore,
                 &AtomicBool::new(false),
@@ -384,6 +391,7 @@ impl Worktrees {
                         return Err(error("cancelled"));
                     }
                     recycle::verify_at(
+                        &manager.0.material,
                         &intent.saved,
                         intent.action == RecycleAction::Restore,
                         &cancel,
@@ -416,7 +424,7 @@ impl Worktrees {
                             Some(intent.clone());
                         i.save(&store, next)?;
                     }
-                    recycle::move_tree(&intent, &cancel)
+                    recycle::move_tree(&manager.0.material, &intent, &cancel)
                 }))
                 .unwrap_or_else(|_| Err(error("unknown")));
                 manager.finish_recycle(&store, &key, result, intent.dispatched);
@@ -489,6 +497,7 @@ impl Worktrees {
         } else if !dispatched
             && !matches!(code, Some("unknown" | "storageUnknown"))
             && recycle::verify_at(
+                &self.0.material,
                 saved,
                 intent.action == RecycleAction::Restore,
                 &AtomicBool::new(false),
@@ -600,9 +609,14 @@ impl Worktrees {
         if saved.removal_operation.is_some() {
             return self.check_removed_archive(store, &saved);
         }
-        let retained = recycle::verify_at(&saved, true, &AtomicBool::new(false));
+        let retained = recycle::verify_at(&self.0.material, &saved, true, &AtomicBool::new(false));
+        if let Err(failure) = &retained
+            && failure.code == "cleanupUnknown"
+        {
+            return Err(failure.clone());
+        }
         let original = if retained.is_err() {
-            recycle::verify_at(&saved, false, &AtomicBool::new(false)).ok()
+            recycle::verify_at(&self.0.material, &saved, false, &AtomicBool::new(false)).ok()
         } else {
             None
         };
@@ -690,7 +704,7 @@ impl Worktrees {
             return self.status(store, id);
         }
         self.recheck_restored_with(store, id, |saved| {
-            recycle::verify_at(saved, false, &AtomicBool::new(false))
+            recycle::verify_at(&self.0.material, saved, false, &AtomicBool::new(false))
         })
     }
     pub(super) fn recheck_restored_with(

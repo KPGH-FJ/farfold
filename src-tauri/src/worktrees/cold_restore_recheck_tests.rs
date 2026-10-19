@@ -203,6 +203,7 @@ fn late_restore_verification_preserves_a_newer_location_revision_then_allows_a_f
             let error = cold
                 .recheck_restored_with(&s, RESTORE, |saved| {
                     let snapshot = crate::worktrees::recycle::verify_at(
+                        &crate::worktrees::material_owner::Owner::default(),
                         saved,
                         false,
                         &AtomicBool::new(false),
@@ -252,6 +253,7 @@ fn late_restore_verification_cannot_erase_an_acknowledged_unknown_operation() {
             let error = cold
                 .recheck_restored_with(&s, RESTORE, |saved| {
                     let snapshot = crate::worktrees::recycle::verify_at(
+                        &crate::worktrees::material_owner::Owner::default(),
                         saved,
                         false,
                         &AtomicBool::new(false),

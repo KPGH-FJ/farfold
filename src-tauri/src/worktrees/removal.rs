@@ -13,10 +13,11 @@ pub(super) fn profile(m: &Manifest) -> Result<String> {
     )))
 }
 pub(super) fn capture(
+    material: &super::material_owner::Owner,
     saved: &super::storage::SavedArchive,
     cancel: &AtomicBool,
 ) -> Result<Manifest> {
-    let s = recycle::verify_at(saved, true, cancel)?;
+    let s = recycle::verify_at(material, saved, true, cancel)?;
     let diff = git::execute(
         Path::new(&s.root),
         &[
@@ -35,7 +36,7 @@ pub(super) fn capture(
         return Err(error("dirtyTracked"));
     }
     let plan = recovery_pack::capture(&s, cancel)?;
-    recycle::verify_at(saved, true, cancel)?;
+    recycle::verify_at(material, saved, true, cancel)?;
     Ok(plan)
 }
 pub(super) fn same_plan(i: &RemoveIntent, m: &Manifest) -> Result<()> {
@@ -108,11 +109,12 @@ pub(super) fn verify_deleted(i: &RemoveIntent, cancel: &AtomicBool) -> Result<()
     Ok(())
 }
 pub(super) fn delete(
+    material: &super::material_owner::Owner,
     i: &RemoveIntent,
     cancel: &AtomicBool,
     before_dispatch: impl FnOnce() -> Result<()>,
 ) -> Result<()> {
-    let plan = capture(&i.saved, cancel)?;
+    let plan = capture(material, &i.saved, cancel)?;
     same_plan(i, &plan)?;
     let restored =
         recovery_pack::verify(i.recovery.as_ref().ok_or(error("recoveryInvalid"))?, cancel)?;
@@ -120,7 +122,7 @@ pub(super) fn delete(
         return Err(error("recoveryChanged"));
     }
     // Last read after independent recovery: no stale source proof is promoted.
-    same_plan(i, &capture(&i.saved, cancel)?)?;
+    same_plan(i, &capture(material, &i.saved, cancel)?)?;
     if cancel.load(std::sync::atomic::Ordering::SeqCst) {
         return Err(error("cancelled"));
     }
