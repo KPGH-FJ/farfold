@@ -3,6 +3,7 @@ import {
   MAX_MESSAGE_AUDIO_SECONDS,
 } from "./message_audio_admission";
 import { messageAudioPrefix } from "./message_audio_prefix";
+import { messageFlacFrameLowerBound } from "./message_flac_frame_observer";
 import {
   MessageRasterError,
   MessageRasterReader,
@@ -27,7 +28,8 @@ function requireFlac(value: unknown): asserts value {
  * Zero total samples are unknown; zero rate may describe legal non-audio data.
  * Neither is a zero-duration success. Reserved metadata stays uncovered while
  * independently known budgets still apply. Payloads (including PICTURE/URIs),
- * frame overrides/CRCs, actual playback and decoder memory are not inspected.
+ * actual playback and decoder memory are not inspected. Unknown total samples
+ * additionally receive only the selected constant-frame lower-bound observer.
  * https://www.rfc-editor.org/rfc/rfc9639.html
  * Leading ID3 is optional decoder compatibility, not a FLAC conformance rule:
  * https://www.xiph.org/flac/documentation_format_overview.html
@@ -45,6 +47,9 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
     let metadataRecords = 0;
     let rate = 0;
     let samples = 0;
+    let bits = 0;
+    let channels = 0;
+    let blockSize = 0;
     let uncovered = false;
     let last = false;
     while (!last) {
@@ -62,6 +67,7 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
         requireFlac(length === 34);
         const minBlock = reader.u16be(start);
         const maxBlock = reader.u16be(start + 2);
+        blockSize = minBlock === maxBlock ? maxBlock : 0;
         requireFlac(minBlock >= 16 && maxBlock >= minBlock);
         const minFrame =
           reader.u8(start + 4) * 65_536 + reader.u16be(start + 5);
@@ -69,7 +75,8 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
           reader.u8(start + 7) * 65_536 + reader.u16be(start + 8);
         requireFlac(!minFrame || !maxFrame || minFrame <= maxFrame);
         rate = reader.u16be(start + 10) * 16 + (reader.u8(start + 12) >>> 4);
-        const bits =
+        channels = ((reader.u8(start + 12) >>> 1) & 7) + 1;
+        bits =
           (reader.u8(start + 12) & 1) * 16 + (reader.u8(start + 13) >>> 4) + 1;
         requireFlac(bits >= 4 && bits <= 32);
         // The high four bits are essential: the field is 36, not32, bits.
@@ -83,7 +90,14 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
     requireFlac(at < reader.length); // At least one frame follows the metadata.
     if (rate && samples > rate * MAX_MESSAGE_AUDIO_SECONDS)
       return "audioTooLong";
-    return !rate || !samples || uncovered ? "notCovered" : "withinBudget";
+    if (rate && !samples)
+      return messageFlacFrameLowerBound(reader, at, records, {
+        rate,
+        channels,
+        bits,
+        blockSize,
+      });
+    return !rate || uncovered ? "notCovered" : "withinBudget";
   } catch (error) {
     if (error instanceof MessageRasterError) return "invalid";
     throw error;
