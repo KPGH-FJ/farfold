@@ -2,6 +2,35 @@ import { HistoryReplayBuffer } from "./history_replay";
 import { requireReadableHistory } from "./session_recovery";
 import type { OpenResult } from "./session_open_types";
 
+/** A wire discriminator, not validation of a known update subtype. Preserve
+ * unknown/null/partial own update payloads before interpreting local controls. */
+export function hasOwnUpdate(event: unknown): boolean {
+  return (
+    typeof event === "object" &&
+    event !== null &&
+    Object.prototype.hasOwnProperty.call(event, "update")
+  );
+}
+
+export function isHistoryMarkerShape(event: unknown): boolean {
+  if (!event || typeof event !== "object" || Array.isArray(event)) return false;
+  const value = event as Record<string, unknown>;
+  return (
+    Object.keys(value).length === 2 &&
+    Object.prototype.hasOwnProperty.call(value, "kind") &&
+    Object.prototype.hasOwnProperty.call(value, "openToken") &&
+    value.kind === "session_history_complete" &&
+    typeof value.openToken === "string"
+  );
+}
+
+export function isOwnerHistoryMarker(event: unknown, token: string): boolean {
+  return (
+    isHistoryMarkerShape(event) &&
+    (event as Record<string, unknown>).openToken === token
+  );
+}
+
 /** One existing open's temporary replay coordination, never an admission queue. */
 export class SessionOpenReplay {
   private buffered = new HistoryReplayBuffer();
@@ -11,19 +40,19 @@ export class SessionOpenReplay {
   private delivered: (() => void) | null = null;
 
   receiveMarker(event: unknown): boolean {
-    const received = event as { kind?: unknown; openToken?: unknown } | null;
-    if (received?.kind !== "session_history_complete") return false;
-    if (received.openToken === this.token) {
-      this.buffered.mark(this.token);
-      this.complete = true;
-      this.delivered?.();
-    }
+    if (!isOwnerHistoryMarker(event, this.token)) return false;
+    this.buffered.mark(this.token);
+    this.complete = true;
+    this.delivered?.();
     return true;
   }
 
   push(event: unknown): void {
     this.buffered.push(event);
-    if ((event as { kind?: unknown } | null)?.kind === "connectionLost") {
+    if (
+      !hasOwnUpdate(event) &&
+      (event as { kind?: unknown } | null)?.kind === "connectionLost"
+    ) {
       this.lost = true;
       this.delivered?.();
     }

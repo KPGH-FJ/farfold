@@ -814,3 +814,123 @@ it("retains a late known child ID after actual owner termination without reopeni
   expect(hasActiveFork(parent)).toBe(false);
   expect(sessionForkControl(parent, vi.fn())?.prepareNew).toBeUndefined();
 });
+
+it.each([
+  "session_history_complete",
+  "forkResult",
+  "forkSourceEvent",
+  "turnEnd",
+  "permissionState",
+  "connectionLost",
+])(
+  "preserves independent child raw update despite top kind %s",
+  async (kind) => {
+    const parent = seed();
+    const before = structuredClone({
+      items: parent.items,
+      configOptions: parent.configOptions,
+      permissionState: parent.permissionState,
+    });
+    const raw = {
+      sessionUpdate: "future_fork_raw",
+      kind,
+      value: [null, "FORK_RAW_OWNED_VISIBLE", { untouched: true }],
+    };
+    let wire!: Record<string, any>;
+    h.invoke.mockImplementation(
+      async (command: string, args: Record<string, any>) => {
+        if (command !== "session_fork_current")
+          return command === "settings_get" ? null : [];
+        wire = args;
+        args.channel.onmessage({
+          sessionId: `child-${args.parentSessionId}`,
+          kind,
+          openToken:
+            kind === "session_history_complete"
+              ? args.openToken
+              : "foreign-token",
+          operationId: "foreign-operation",
+          update: raw,
+        });
+        return ready(args);
+      },
+    );
+    const child = await threads.forkCurrent(parent.key);
+    expect(
+      child?.items.some((item) => item.kind === "raw" && item.update === raw),
+    ).toBe(true);
+    const live = { sessionUpdate: "future_fork_live_raw", value: [7, null] };
+    wire.channel.onmessage({
+      sessionId: child!.nativeSessionId,
+      kind,
+      operationId: "foreign-operation",
+      openToken: wire.openToken,
+      update: live,
+    });
+    expect(
+      child?.items.some((item) => item.kind === "raw" && item.update === live),
+    ).toBe(true);
+    expect({
+      items: parent.items,
+      configOptions: parent.configOptions,
+      permissionState: parent.permissionState,
+    }).toEqual(before);
+  },
+);
+
+it("wrapped source updates cannot become local inquiries or independent child replay", async () => {
+  const parent = seed();
+  const requestId = `raw-wrapped-inquiry-${parent.nativeSessionId}`;
+  const sourceRaw = {
+    sessionUpdate: "future_source_only",
+    body: "NOT_CHILD_HISTORY",
+  };
+  const observed: boolean[] = [];
+  h.invoke.mockImplementation(
+    async (command: string, args: Record<string, any>) => {
+      if (command !== "session_fork_current")
+        return command === "settings_get" ? null : [];
+      for (const childSessionId of [null, `child-${args.parentSessionId}`]) {
+        args.channel.onmessage({
+          kind: "forkSourceEvent",
+          operationId: args.operationId,
+          childSessionId,
+          event: {
+            kind: "elicitation",
+            requestId,
+            owner: { connectionId: args.connectionId, requestId: "17" },
+            message: "RAW_NOT_LOCAL_QUESTION",
+            update: sourceRaw,
+          },
+        });
+        observed.push(
+          openingInquiries
+            .getSnapshot()
+            .some((view) =>
+              view.requests.some((request) => request.requestId === requestId),
+            ),
+        );
+      }
+      return ready(args);
+    },
+  );
+  const child = await threads.forkCurrent(parent.key);
+  expect(observed).toEqual([false, false]);
+  expect(
+    child?.items.some(
+      (item) =>
+        item.kind === "agent" && item.text === "Actual independent load replay",
+    ),
+  ).toBe(true);
+  expect(
+    child?.items.some(
+      (item) => item.kind === "raw" && item.update === sourceRaw,
+    ),
+  ).toBe(false);
+  expect(
+    parent.items.some(
+      (item) =>
+        item.kind === "agent" && item.text === "Parent visible projection",
+    ),
+  ).toBe(true);
+});

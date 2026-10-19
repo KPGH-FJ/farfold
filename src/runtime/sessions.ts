@@ -74,7 +74,11 @@ import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
 import { finishHistoryPrefix } from "./history_replay";
-import { SessionOpenReplay } from "./session_open_replay";
+import {
+  SessionOpenReplay,
+  hasOwnUpdate,
+  isHistoryMarkerShape,
+} from "./session_open_replay";
 import { historyReads } from "./session_history_admission";
 import {
   isHistoryReadFailure,
@@ -400,25 +404,32 @@ class ThreadsStore {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
-    observeDesktopNotification(s, e, live, () => this.thread(key) === s);
-    if (e.kind === "configOptions") {
+    const updateEnvelope = hasOwnUpdate(e);
+    const kind = updateEnvelope ? undefined : e.kind;
+    observeDesktopNotification(
+      s,
+      updateEnvelope ? {} : e,
+      live,
+      () => this.thread(key) === s,
+    );
+    if (kind === "configOptions") {
       if (!this.configurations.changing(s))
         replaceConfigOptions(
           s,
           normalizeConfigOptions(e.options),
           e.modern !== false,
         );
-    } else if (e.kind === "configCheck") {
+    } else if (kind === "configCheck") {
       if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
         applyConfigCheck(s, e.check as ConfigCheck);
-    } else if (e.kind === "asyncTasks") {
+    } else if (kind === "asyncTasks") {
       if (!receiveAsyncTasks(s, e)) return;
       this.finishArchiveActivity(s);
-    } else if (e.kind === "forkActivity") {
+    } else if (kind === "forkActivity") {
       if (!receiveForkActivity(s, e)) return;
-    } else if (receiveWorkActivity(s, e)) {
+    } else if (!updateEnvelope && receiveWorkActivity(s, e)) {
       this.finishArchiveActivity(s);
-    } else if (e.kind === "permissionState") {
+    } else if (kind === "permissionState") {
       // Only the explicit setter's matching reply may enable sending. A late
       // event can report state, but never undo an unknown result locally.
       if (typeof e.permissionConfigId === "string")
@@ -432,14 +443,14 @@ class ThreadsStore {
         s.permissionState = e.permissionState;
         pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
       }
-    } else if (e.kind === "permissionRequest") {
+    } else if (kind === "permissionRequest") {
       applyPermissionRequest(s, {
         requestId: String(e.requestId ?? ""),
         toolCall: e.toolCall,
         options: e.options,
         request: e.request,
       });
-    } else if (e.kind === "turnEnd") {
+    } else if (kind === "turnEnd") {
       if (!s.running && !s.uncertainPrompt && !s.connectionOutcomeUnknown)
         return;
       this.stopConfirmation.clear(key);
@@ -479,14 +490,14 @@ class ThreadsStore {
       void this.drainQueue(key);
       void this.refreshIndex();
       return;
-    } else if (e.kind === "serviceUnavailable") {
+    } else if (kind === "serviceUnavailable") {
       s.sourceError = true;
       s.openError =
         typeof e.message === "string"
           ? e.message
           : STRINGS.repair.requestFailed;
       pauseQueue(s, "unavailable");
-    } else if (e.kind === "connectionLost") {
+    } else if (kind === "connectionLost") {
       if (hasActiveFork(s) && s.forkOperation)
         s.forkOperation.status = "unknown";
       replacePermissionEffect(s, undefined);
@@ -494,22 +505,24 @@ class ThreadsStore {
       applyConnectionLost(s, e.closeReason);
       this.channels.delete(key);
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
-    } else if (e.kind === "interactionsCancelled") {
+    } else if (kind === "interactionsCancelled") {
       clearPendingRequests(s);
-    } else if (e.kind === "interactionExpired") {
+    } else if (kind === "interactionExpired") {
       expirePendingRequest(s, String(e.requestId ?? ""));
-    } else if (e.kind === "elicitationUnavailable") {
+    } else if (kind === "elicitationUnavailable") {
       pushRaw(s, e.params, STRINGS.repair.unsupportedInquiry);
       pauseQueue(s, "unavailable");
-    } else if (e.kind === "elicitationComplete") {
+    } else if (kind === "elicitationComplete") {
       completeElicitation(s, e);
-    } else if (e.kind === "elicitation") {
+    } else if (kind === "elicitation") {
       applyElicitation(s, e);
-    } else if (e.kind === "toolOutput") {
+    } else if (kind === "toolOutput") {
       appendToolOutput(s, e);
-    } else if (e.kind === "notification") {
+    } else if (kind === "notification") {
       pushNotification(s, { method: e.method, params: e.params });
-    } else if (e.update !== undefined) {
+    } else if (kind === "session_history_complete") {
+      if (!isHistoryMarkerShape(e)) pushRaw(s, e);
+    } else if (updateEnvelope || e.update !== undefined) {
       if (
         (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
         "config_option_update"
@@ -644,8 +657,10 @@ class ThreadsStore {
           recheckObserver = undefined;
         };
       channel.onmessage = (event) => {
-        if (!boundKey && inquiry.receive(event)) return;
-        recheckObserver?.observe(event);
+        if (!hasOwnUpdate(event)) {
+          if (!boundKey && inquiry.receive(event)) return;
+          recheckObserver?.observe(event);
+        }
         const received = event as {
           kind?: unknown;
           openToken?: unknown;
@@ -654,7 +669,8 @@ class ThreadsStore {
         if (boundKey) {
           if (
             this.channels.get(boundKey) === channel &&
-            (!historyFailed || received?.kind === "connectionLost")
+            (!historyFailed ||
+              (!hasOwnUpdate(event) && received?.kind === "connectionLost"))
           )
             this.applyChannelEvent(boundKey, event);
         } else if (receivingReplay) {

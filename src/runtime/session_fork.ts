@@ -9,6 +9,7 @@ import { openingInquiries } from "./opening_inquiries";
 import { configChangeBusy } from "./protected_config";
 import { openedThreadState } from "./session_open_state";
 import { requireReadableHistory } from "./session_recovery";
+import { hasOwnUpdate, isOwnerHistoryMarker } from "./session_open_replay";
 import { retireForkControlOwner, validForkId } from "./session_fork_activity";
 import type { ForkOperation, ForkResult } from "./session_fork_types";
 import { SESSION_FORK_STRINGS as S } from "./session_fork_strings";
@@ -140,7 +141,7 @@ export class SessionForks {
     let wake: (() => void) | undefined;
     channel.onmessage = (event) => {
       const received = event as { kind?: unknown; openToken?: unknown } | null;
-      if (received?.kind === "forkSourceEvent") {
+      if (!hasOwnUpdate(event) && received?.kind === "forkSourceEvent") {
         const source = event as {
           operationId?: unknown;
           childSessionId?: unknown;
@@ -164,16 +165,16 @@ export class SessionForks {
             )
               return;
           }
-          inquiry.receive(inner);
+          if (!hasOwnUpdate(inner)) inquiry.receive(inner);
         } else if (
           validForkId(source.childSessionId) &&
           (!operation.childSessionId ||
             operation.childSessionId === source.childSessionId)
         )
-          inquiry.receive(inner);
+          if (!hasOwnUpdate(inner)) inquiry.receive(inner);
         return;
       }
-      if (received?.kind === "forkResult") {
+      if (!hasOwnUpdate(event) && received?.kind === "forkResult") {
         const delivered = event as {
           operationId?: unknown;
           result?: ForkResult;
@@ -187,23 +188,21 @@ export class SessionForks {
           void queueResult(delivered.result, delivered.settled, "channel");
         return;
       }
+      if (isOwnerHistoryMarker(event, openToken)) {
+        buffered.mark(openToken);
+        wake?.();
+        return;
+      }
       if (boundKey) {
         if (this.ports.ownsChannel(boundKey, channel))
           this.ports.apply(boundKey, event);
         return;
       }
-      if (inquiry.receive(event)) return;
-      if (received?.kind === "session_history_complete") {
-        if (received.openToken === openToken) {
-          buffered.mark(openToken);
-          wake?.();
-        }
-      } else {
-        buffered.push(event);
-        if (received?.kind === "connectionLost") {
-          replayLost = true;
-          wake?.();
-        }
+      if (!hasOwnUpdate(event) && inquiry.receive(event)) return;
+      buffered.push(event);
+      if (!hasOwnUpdate(event) && received?.kind === "connectionLost") {
+        replayLost = true;
+        wake?.();
       }
     };
     let updates = Promise.resolve<ThreadState | undefined>(undefined);
