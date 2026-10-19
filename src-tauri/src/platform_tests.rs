@@ -101,3 +101,6 @@ pub(crate) mod windows_conpty;
 
 #[cfg(windows)]
 pub(crate) mod windows_cursor;
+
+#[cfg(windows)]
+pub(crate) mod held_process;

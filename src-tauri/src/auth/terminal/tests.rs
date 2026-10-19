@@ -131,6 +131,39 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     .await
     .unwrap();
     let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
+    #[cfg(windows)]
+    let target =
+        crate::platform_tests::held_process::HeldProcess::open(pid).unwrap_or_else(|error| {
+            eprintln!(
+                "FARFOLD_AUTH_CANCELLATION_TARGET {}",
+                serde_json::json!({
+                    "phase": "before_cancel.open_failed",
+                    "pid": pid,
+                    "requestedAccess": "SYNCHRONIZE",
+                    "errorKind": format!("{:?}", error.kind()),
+                    "nativeError": error.raw_os_error(),
+                })
+            );
+            panic!("owned target process must be held before cancellation");
+        });
+    #[cfg(windows)]
+    {
+        let observed = target.observe();
+        eprintln!(
+            "FARFOLD_AUTH_CANCELLATION_TARGET {}",
+            serde_json::json!({
+                "phase": "before_cancel.held",
+                "pid": pid,
+                "requestedAccess": "SYNCHRONIZE",
+                "waitReturn": observed.return_code,
+                "nativeError": observed.native_error,
+            })
+        );
+        assert!(
+            observed.is_running(),
+            "the owned target must still be running before cancellation: {observed:?}"
+        );
+    }
     crate::auth::attempts::auth_cancel(agent.into(), "first".into()).unwrap();
     let (finished, receive) = std::sync::mpsc::channel();
     let waiter = pty.clone();
@@ -145,7 +178,36 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         outcome.is_ok(),
         "the same operation flag must reach the existing PTY owner"
     );
+    #[cfg(not(windows))]
     assert_ne!(crate::platform_tests::process_check(pid), 0);
+    #[cfg(windows)]
+    {
+        let observed = target.observe();
+        eprintln!(
+            "FARFOLD_AUTH_CANCELLATION_TARGET {}",
+            serde_json::json!({
+                "phase": "after_original_wait_and_join.held",
+                "pid": pid,
+                "waitReturn": observed.return_code,
+                "nativeError": observed.native_error,
+            })
+        );
+        // Preserve the old PID reopen as a companion value, never authority
+        // for this held target. Its0 can mean either still live or denied.
+        let pid_companion = crate::platform_tests::process_check(pid);
+        eprintln!(
+            "FARFOLD_AUTH_CANCELLATION_PID_COMPANION {}",
+            serde_json::json!({
+                "phase": "after_original_wait_and_join.pid_reopen",
+                "value": pid_companion,
+                "authority": "companion_only",
+            })
+        );
+        assert!(
+            observed.is_exited(),
+            "the same held target must have exited after cancellation: {observed:?}"
+        );
+    }
     let _available = tokio::time::timeout(
         Duration::from_secs(1),
         crate::install_job::configuration_guard(agent),
