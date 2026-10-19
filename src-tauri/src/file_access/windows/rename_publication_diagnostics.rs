@@ -215,15 +215,16 @@ fn observe(v: Variant, collision: bool) -> (bool, bool) {
     let before = need(phase(v, collision, "sourceStamp", stamp(&temporary.file)));
     if matches!(v, Variant::OriginalLeaf | Variant::ShortExact) {
         let units = v.leaf().encode_utf16().count();
-        let count = offset_of!(FILE_RENAME_INFO, FileName) + units * 2;
+        let count = size_of::<FILE_RENAME_INFORMATION>() + units * 2;
         eprintln!(
             "FARFOLD_RENAME_PRIMITIVE {}",
             json!({
                 "variant":v.label(),"collision":collision,"phase":"productionDerivedLayout",
-                "nameUnits":units,"passedBytes":count,"structBytes":size_of::<FILE_RENAME_INFO>(),
-                "fileNameOffset":offset_of!(FILE_RENAME_INFO,FileName),
-                "rootOffset":offset_of!(FILE_RENAME_INFO,RootDirectory),
-                "lengthOffset":offset_of!(FILE_RENAME_INFO,FileNameLength),
+                "api":"NtSetInformationFile/FileRenameInformation",
+                "nameUnits":units,"passedBytes":count,"structBytes":size_of::<FILE_RENAME_INFORMATION>(),
+                "fileNameOffset":offset_of!(FILE_RENAME_INFORMATION,FileName),
+                "rootOffset":offset_of!(FILE_RENAME_INFORMATION,RootDirectory),
+                "lengthOffset":offset_of!(FILE_RENAME_INFORMATION,FileNameLength),
                 "allocationBytes":count.div_ceil(size_of::<usize>())*size_of::<usize>(),
                 "relativeRootNonNull":true,"replace":false
             })

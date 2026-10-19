@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'two selected synthetic diagnostics only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'three parser controls plus two production publication controls and two manual cursor consumer diagnostics only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -74,7 +74,35 @@ jobs:
             testBuildExit = $testBuildExit
             fixtureBuildExit = $fixtureBuildExit
           } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Encoding utf8
-      - name: Publication primitive matrix, one exact test
+      - name: Cursor parser controls, exactly three tests
+        id: cursor_parser
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 2
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $stdout = Join-Path $raw 'cursor-parser.stdout.log'
+          $stderr = Join-Path $raw 'cursor-parser.stderr.log'
+          $started = [DateTime]::UtcNow.ToString('o')
+          & $binary 'pty::windows_tests::terminal_cursor_query_' --nocapture --test-threads=1 1> $stdout 2> $stderr
+          $testExit = $LASTEXITCODE
+          $finished = [DateTime]::UtcNow.ToString('o')
+          $summaries = [regex]::Matches([IO.File]::ReadAllText($stdout), '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $last = if ($summaries.Count -gt 0) { $summaries[$summaries.Count - 1] } else { $null }
+          $exactSuccess = $testExit -eq 0 -and $summaries.Count -eq 1 -and $null -ne $last -and $last.Groups['status'].Value -eq 'ok' -and $last.Groups['passed'].Value -eq '3' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
+          [ordered]@{ head = $head; filter = 'pty::windows_tests::terminal_cursor_query_'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactThreePassed = $exactSuccess; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'cursor-parser.result.json') -Encoding utf8
+          Get-Content -LiteralPath $stdout
+          Get-Content -LiteralPath $stderr
+          if (-not $exactSuccess) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: Canonical production publication and collision, one exact test
         id: publication
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 3
@@ -91,19 +119,29 @@ jobs:
           $stdout = Join-Path $raw 'publication.stdout.log'
           $stderr = Join-Path $raw 'publication.stderr.log'
           $started = [DateTime]::UtcNow.ToString('o')
-          & $binary 'file_access::windows::metadata::rename_publication_diagnostics::ci6_rename_publication_primitive_matrix_owned_once' --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          & $binary 'file_access::windows::metadata::ci5_native_phase_tests::ci5_canonical_exact_create_sync_publish_reopen_and_collision_phases' --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
           $testExit = $LASTEXITCODE
           $finished = [DateTime]::UtcNow.ToString('o')
-          $summaries = [regex]::Matches([IO.File]::ReadAllText($stdout), '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
           $last = if ($summaries.Count -gt 0) { $summaries[$summaries.Count - 1] } else { $null }
           $exactSuccess = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -eq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
-          [ordered]@{ head = $head; test = 'file_access::windows::metadata::rename_publication_diagnostics::ci6_rename_publication_primitive_matrix_owned_once'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
-            ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'publication.result.json') -Encoding utf8
+          $exactFailure = $testExit -eq 101 -and $null -ne $last -and $last.Groups['status'].Value -eq 'FAILED' -and $last.Groups['passed'].Value -eq '0' -and $last.Groups['failed'].Value -eq '1' -and $last.Groups['ignored'].Value -eq '0'
+          $cursorPhases = @()
+          $cursorCovered = $false
+          $observationComplete = $exactSuccess
+          $failureClassification = $null
+          $ownerReceipt = $null
+          $ownerSettled = $false
+          $ownerNoOtherCause = $false
+          [ordered]@{ head = $head; test = 'file_access::windows::metadata::ci5_native_phase_tests::ci5_canonical_exact_create_sync_publish_reopen_and_collision_phases'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; exactOneFailed = $exactFailure; cursorCovered = $cursorCovered; observationComplete = $observationComplete; failureClassification = $failureClassification; ownerReceipt = $ownerReceipt; ownerSettled = $ownerSettled; phases = $cursorPhases; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'publication.result.json') -Encoding utf8
           Get-Content -LiteralPath $stdout
           Get-Content -LiteralPath $stderr
-          if (-not $exactSuccess) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
-      - name: Terminal cancellation, one exact owned wrapper
-        id: terminal_cancel
+          if (-not $observationComplete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: Unicode and maximum leaf production publication, one exact test
+        id: publication_names
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 3
         continue-on-error: true
@@ -116,21 +154,160 @@ jobs:
           $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
           $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
           if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
-          $stdout = Join-Path $raw 'terminal-cancel.stdout.log'
-          $stderr = Join-Path $raw 'terminal-cancel.stderr.log'
+          $stdout = Join-Path $raw 'publication-names.stdout.log'
+          $stderr = Join-Path $raw 'publication-names.stderr.log'
           $started = [DateTime]::UtcNow.ToString('o')
-          & $binary 'pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated' --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          & $binary 'file_access::windows::tests::publication_preserves_unicode_and_maximum_leaf_identity_and_collision' --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
           $testExit = $LASTEXITCODE
           $finished = [DateTime]::UtcNow.ToString('o')
-          $summaries = [regex]::Matches([IO.File]::ReadAllText($stdout), '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
           $last = if ($summaries.Count -gt 0) { $summaries[$summaries.Count - 1] } else { $null }
           $exactSuccess = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -eq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
-          [ordered]@{ head = $head; test = 'pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
-            ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'terminal-cancel.result.json') -Encoding utf8
+          $exactFailure = $testExit -eq 101 -and $null -ne $last -and $last.Groups['status'].Value -eq 'FAILED' -and $last.Groups['passed'].Value -eq '0' -and $last.Groups['failed'].Value -eq '1' -and $last.Groups['ignored'].Value -eq '0'
+          $cursorPhases = @()
+          $cursorCovered = $false
+          $observationComplete = $exactSuccess
+          $failureClassification = $null
+          $ownerReceipt = $null
+          $ownerSettled = $false
+          $ownerNoOtherCause = $false
+          [ordered]@{ head = $head; test = 'file_access::windows::tests::publication_preserves_unicode_and_maximum_leaf_identity_and_collision'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; exactOneFailed = $exactFailure; cursorCovered = $cursorCovered; observationComplete = $observationComplete; failureClassification = $failureClassification; ownerReceipt = $ownerReceipt; ownerSettled = $ownerSettled; phases = $cursorPhases; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'publication-names.result.json') -Encoding utf8
           Get-Content -LiteralPath $stdout
           Get-Content -LiteralPath $stderr
-          if (-not $exactSuccess) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
-      - name: Require both selected diagnostic outcomes to succeed
+          if (-not $observationComplete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: Cursor reply arm, one manual exact owned wrapper
+        id: terminal_reply
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $stdout = Join-Path $raw 'terminal-reply.stdout.log'
+          $stderr = Join-Path $raw 'terminal-reply.stderr.log'
+          $started = [DateTime]::UtcNow.ToString('o')
+          & $binary 'pty::windows_tests::terminal_cancel_cursor_reply_isolated' --ignored --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          $testExit = $LASTEXITCODE
+          $finished = [DateTime]::UtcNow.ToString('o')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $last = if ($summaries.Count -gt 0) { $summaries[$summaries.Count - 1] } else { $null }
+          $exactSuccess = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -eq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
+          $exactFailure = $testExit -eq 101 -and $null -ne $last -and $last.Groups['status'].Value -eq 'FAILED' -and $last.Groups['passed'].Value -eq '0' -and $last.Groups['failed'].Value -eq '1' -and $last.Groups['ignored'].Value -eq '0'
+          $cursorPhases = @()
+          $cursorCovered = $false
+          $observationComplete = $exactSuccess
+          $failureClassification = $null
+          $ownerReceipt = $null
+          $ownerSettled = $false
+          $ownerNoOtherCause = $false
+          $cursorPrefix = 'FARFOLD_TERMINAL_CURSOR '
+          $cursorPhases = @($errText -split "`r?`n" | Where-Object { $_.StartsWith($cursorPrefix, [StringComparison]::Ordinal) } | ForEach-Object { $_.Substring($cursorPrefix.Length) | ConvertFrom-Json -ErrorAction Stop })
+          $beginSeen = ($errText -split "`r?`n") -ccontains 'FARFOLD_CONPTY_BEGIN TerminalCursorReply'
+          $validPhases = $beginSeen -and $cursorPhases.Count -gt 0 -and $cursorPhases.Count -le 64
+          foreach ($phase in $cursorPhases) {
+            if ($phase.replyEnabled -ne $true -or $phase.bytes -lt 0 -or $phase.bytes -gt 1048576 -or $phase.queries -lt 0 -or $phase.queries -gt 8 -or $phase.replies -lt 0 -or $phase.replies -gt $phase.queries -or $phase.pending -lt 0 -or $phase.pending -gt 8 -or $phase.failed -ne $false) { $validPhases = $false }
+          }
+          $lastPhase = if ($cursorPhases.Count -gt 0) { $cursorPhases[$cursorPhases.Count - 1] } else { $null }
+          $spawnReturned = @($cursorPhases | Where-Object { $_.phase -ceq 'spawn.return' }).Count -eq 1
+          $cursorCovered = $validPhases -and $null -ne $lastPhase -and $lastPhase.queries -gt 0 -and $lastPhase.cursorCoverage -ceq 'observed'
+          $ownerPrefix = 'FARFOLD_CONPTY_DIAGNOSTIC_OWNER '
+          $ownerReceipts = @($errText -split "`r?`n" | Where-Object { $_.StartsWith($ownerPrefix, [StringComparison]::Ordinal) } | ForEach-Object { $_.Substring($ownerPrefix.Length) | ConvertFrom-Json -AsHashtable -ErrorAction Stop })
+          if ($ownerReceipts.Count -eq 1) { $ownerReceipt = $ownerReceipts[0] }
+          $ownerKeys = @('case','terminated','deadlineReached','cancelRequested','invalidPipeObserved','inputFailedObserved','tryWaitErrorObserved','stdinWrittenAndClosed','stdoutEOF','stderrEOF','stdoutFailed','stderrFailed','stdoutOverflow','stderrOverflow','childReaped','directJobInactive')
+          $actualOwnerKeys = if ($ownerReceipt) { @($ownerReceipt.Keys | Sort-Object) -join ',' } else { '' }
+          $validOwner = $null -ne $ownerReceipt -and $ownerReceipt.case -ceq 'TerminalCursorReply' -and $actualOwnerKeys -ceq (@($ownerKeys | Sort-Object) -join ',')
+          if ($validOwner) {
+            foreach ($key in $ownerKeys) { if ($key -cne 'case' -and $ownerReceipt[$key] -isnot [bool]) { $validOwner = $false } }
+          }
+          $ownerSettled = $validOwner -and $ownerReceipt.childReaped -eq $true -and $ownerReceipt.directJobInactive -eq $true -and $ownerReceipt.stdinWrittenAndClosed -eq $true -and $ownerReceipt.stdoutEOF -eq $true -and $ownerReceipt.stderrEOF -eq $true -and $ownerReceipt.stdoutFailed -eq $false -and $ownerReceipt.stderrFailed -eq $false -and $ownerReceipt.stdoutOverflow -eq $false -and $ownerReceipt.stderrOverflow -eq $false
+          $ownerNoOtherCause = $validOwner -and $ownerReceipt.cancelRequested -eq $false -and $ownerReceipt.invalidPipeObserved -eq $false -and $ownerReceipt.inputFailedObserved -eq $false -and $ownerReceipt.tryWaitErrorObserved -eq $false
+          $observationComplete = $exactSuccess -and $ownerSettled -and $ownerNoOtherCause -and $ownerReceipt.terminated -eq $false -and $ownerReceipt.deadlineReached -eq $false -and $cursorCovered -and $lastPhase.replies -eq $lastPhase.queries -and $lastPhase.pending -eq 0 -and $lastPhase.phase -ceq 'manager.drop.return' -and @($cursorPhases | Where-Object { $_.phase -ceq 'marker.wait.observed' }).Count -eq 1
+          [ordered]@{ head = $head; test = 'pty::windows_tests::terminal_cancel_cursor_reply_isolated'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; exactOneFailed = $exactFailure; cursorCovered = $cursorCovered; observationComplete = $observationComplete; failureClassification = $failureClassification; ownerReceipt = $ownerReceipt; ownerSettled = $ownerSettled; phases = $cursorPhases; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'terminal-reply.result.json') -Encoding utf8
+          Get-Content -LiteralPath $stdout
+          Get-Content -LiteralPath $stderr
+          if (-not $observationComplete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: No-reply observation, one manual exact owned wrapper
+        id: terminal_no_reply
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $stdout = Join-Path $raw 'terminal-no-reply.stdout.log'
+          $stderr = Join-Path $raw 'terminal-no-reply.stderr.log'
+          $started = [DateTime]::UtcNow.ToString('o')
+          & $binary 'pty::windows_tests::terminal_cancel_cursor_no_reply_isolated' --ignored --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          $testExit = $LASTEXITCODE
+          $finished = [DateTime]::UtcNow.ToString('o')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $last = if ($summaries.Count -gt 0) { $summaries[$summaries.Count - 1] } else { $null }
+          $exactSuccess = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -eq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
+          $exactFailure = $testExit -eq 101 -and $null -ne $last -and $last.Groups['status'].Value -eq 'FAILED' -and $last.Groups['passed'].Value -eq '0' -and $last.Groups['failed'].Value -eq '1' -and $last.Groups['ignored'].Value -eq '0'
+          $cursorPhases = @()
+          $cursorCovered = $false
+          $observationComplete = $exactSuccess
+          $failureClassification = $null
+          $ownerReceipt = $null
+          $ownerSettled = $false
+          $ownerNoOtherCause = $false
+          $cursorPrefix = 'FARFOLD_TERMINAL_CURSOR '
+          $cursorPhases = @($errText -split "`r?`n" | Where-Object { $_.StartsWith($cursorPrefix, [StringComparison]::Ordinal) } | ForEach-Object { $_.Substring($cursorPrefix.Length) | ConvertFrom-Json -ErrorAction Stop })
+          $beginSeen = ($errText -split "`r?`n") -ccontains 'FARFOLD_CONPTY_BEGIN TerminalCursorNoReply'
+          $validPhases = $beginSeen -and $cursorPhases.Count -gt 0 -and $cursorPhases.Count -le 64
+          foreach ($phase in $cursorPhases) {
+            if ($phase.replyEnabled -ne $false -or $phase.bytes -lt 0 -or $phase.bytes -gt 1048576 -or $phase.queries -lt 0 -or $phase.queries -gt 8 -or $phase.replies -lt 0 -or $phase.replies -gt $phase.queries -or $phase.pending -lt 0 -or $phase.pending -gt 8 -or $phase.failed -ne $false) { $validPhases = $false }
+          }
+          $lastPhase = if ($cursorPhases.Count -gt 0) { $cursorPhases[$cursorPhases.Count - 1] } else { $null }
+          $spawnReturned = @($cursorPhases | Where-Object { $_.phase -ceq 'spawn.return' }).Count -eq 1
+          $cursorCovered = $validPhases -and $null -ne $lastPhase -and $lastPhase.queries -gt 0 -and $lastPhase.cursorCoverage -ceq 'observed'
+          $ownerPrefix = 'FARFOLD_CONPTY_DIAGNOSTIC_OWNER '
+          $ownerReceipts = @($errText -split "`r?`n" | Where-Object { $_.StartsWith($ownerPrefix, [StringComparison]::Ordinal) } | ForEach-Object { $_.Substring($ownerPrefix.Length) | ConvertFrom-Json -AsHashtable -ErrorAction Stop })
+          if ($ownerReceipts.Count -eq 1) { $ownerReceipt = $ownerReceipts[0] }
+          $ownerKeys = @('case','terminated','deadlineReached','cancelRequested','invalidPipeObserved','inputFailedObserved','tryWaitErrorObserved','stdinWrittenAndClosed','stdoutEOF','stderrEOF','stdoutFailed','stderrFailed','stdoutOverflow','stderrOverflow','childReaped','directJobInactive')
+          $actualOwnerKeys = if ($ownerReceipt) { @($ownerReceipt.Keys | Sort-Object) -join ',' } else { '' }
+          $validOwner = $null -ne $ownerReceipt -and $ownerReceipt.case -ceq 'TerminalCursorNoReply' -and $actualOwnerKeys -ceq (@($ownerKeys | Sort-Object) -join ',')
+          if ($validOwner) {
+            foreach ($key in $ownerKeys) { if ($key -cne 'case' -and $ownerReceipt[$key] -isnot [bool]) { $validOwner = $false } }
+          }
+          $ownerSettled = $validOwner -and $ownerReceipt.childReaped -eq $true -and $ownerReceipt.directJobInactive -eq $true -and $ownerReceipt.stdinWrittenAndClosed -eq $true -and $ownerReceipt.stdoutEOF -eq $true -and $ownerReceipt.stderrEOF -eq $true -and $ownerReceipt.stdoutFailed -eq $false -and $ownerReceipt.stderrFailed -eq $false -and $ownerReceipt.stdoutOverflow -eq $false -and $ownerReceipt.stderrOverflow -eq $false
+          $ownerNoOtherCause = $validOwner -and $ownerReceipt.cancelRequested -eq $false -and $ownerReceipt.invalidPipeObserved -eq $false -and $ownerReceipt.inputFailedObserved -eq $false -and $ownerReceipt.tryWaitErrorObserved -eq $false
+          $noReplies = $cursorCovered -and $lastPhase.replies -eq 0 -and $lastPhase.pending -eq 0
+          $settledFailureBranch = $errText.Contains('owned case TerminalCursorNoReply exceeded its budget or output/input failed; child was terminated, not successful') -and -not $errText.Contains('cleanup unconfirmed')
+          $controlledRegion = @($cursorPhases | Where-Object { $_.phase -cin @('marker.missing.close.enter','close.enter','held.session.drop.enter','manager.drop.enter') }).Count -ge 1
+          $completeFailure = $exactFailure -and $ownerSettled -and $ownerNoOtherCause -and $ownerReceipt.terminated -eq $true -and $ownerReceipt.deadlineReached -eq $true -and $cursorCovered -and $spawnReturned -and $noReplies -and $settledFailureBranch -and $controlledRegion
+          $completeSuccess = $exactSuccess -and $ownerSettled -and $ownerNoOtherCause -and $ownerReceipt.terminated -eq $false -and $ownerReceipt.deadlineReached -eq $false -and $noReplies -and $lastPhase.phase -ceq 'manager.drop.return'
+          $observationComplete = $completeFailure -or $completeSuccess
+          $failureClassification = if ($completeFailure) { 'controlledOwnedFailureObserved_notTestPass' } elseif ($completeSuccess) { 'noReplyAlsoSucceeded_noCausalProof' } else { 'incompleteOrDifferentFailure' }
+          [ordered]@{ head = $head; test = 'pty::windows_tests::terminal_cancel_cursor_no_reply_isolated'; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; finalSummary = if ($last) { $last.Value } else { $null }; exactOnePassed = $exactSuccess; exactOneFailed = $exactFailure; cursorCovered = $cursorCovered; observationComplete = $observationComplete; failureClassification = $failureClassification; ownerReceipt = $ownerReceipt; ownerSettled = $ownerSettled; phases = $cursorPhases; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'terminal-no-reply.result.json') -Encoding utf8
+          Get-Content -LiteralPath $stdout
+          Get-Content -LiteralPath $stderr
+          # Preserve the actual failing test as a failed step outcome. Aggregate
+          # separately admits only the precise completed observation predicate.
+          if ($testExit -ne 0) { exit $testExit }
+          if (-not $observationComplete) { exit 1 }
+      - name: Require production publication, observed reply success and exact negative observation
         if: ${{ always() }}
         timeout-minutes: 1
         run: |
@@ -138,20 +315,36 @@ jobs:
           $raw = Join-Path $PWD 'windows-diagnostics-raw'
           New-Item -ItemType Directory -Path $raw -Force | Out-Null
           $build = '${{ steps.selected_build.outcome }}'
+          $parser = '${{ steps.cursor_parser.outcome }}'
           $publication = '${{ steps.publication.outcome }}'
-          $terminal = '${{ steps.terminal_cancel.outcome }}'
+          $publicationNames = '${{ steps.publication_names.outcome }}'
+          $reply = '${{ steps.terminal_reply.outcome }}'
+          $negative = '${{ steps.terminal_no_reply.outcome }}'
+          $negativePath = Join-Path $raw 'terminal-no-reply.result.json'
+          $negativeResult = if (Test-Path -LiteralPath $negativePath -PathType Leaf) { Get-Content -LiteralPath $negativePath -Raw | ConvertFrom-Json -ErrorAction Stop } else { $null }
+          $negativeOutcomeConsistent = $null -ne $negativeResult -and (($negative -eq 'success' -and $negativeResult.exitCode -eq 0 -and $negativeResult.exactOnePassed -eq $true) -or ($negative -eq 'failure' -and $negativeResult.exitCode -eq 101 -and $negativeResult.exactOneFailed -eq $true))
+          $negativeComplete = $null -ne $negativeResult -and $negativeResult.head -ceq '${{ github.sha }}' -and $negativeResult.test -ceq 'pty::windows_tests::terminal_cancel_cursor_no_reply_isolated' -and $negativeResult.observationComplete -eq $true -and $negativeOutcomeConsistent
+          $complete = $build -eq 'success' -and $parser -eq 'success' -and $publication -eq 'success' -and $publicationNames -eq 'success' -and $reply -eq 'success' -and $negativeComplete
           [ordered]@{
             sourceHead = '${{ github.sha }}'
             buildOutcome = $build
+            cursorParserStepOutcome = $parser
             publicationStepOutcome = $publication
-            terminalCancelStepOutcome = $terminal
-            publicationResultPresent = (Test-Path -LiteralPath (Join-Path $raw 'publication.result.json') -PathType Leaf)
-            terminalCancelResultPresent = (Test-Path -LiteralPath (Join-Path $raw 'terminal-cancel.result.json') -PathType Leaf)
+            unicodePublicationStepOutcome = $publicationNames
+            cursorReplyStepOutcome = $reply
+            noReplyStepOutcome = $negative
+            noReplyTestExit = if ($negativeResult) { $negativeResult.exitCode } else { $null }
+            noReplyTestPassed = if ($negativeResult) { $negativeResult.exactOnePassed } else { $null }
+            noReplyFinalSummary = if ($negativeResult) { $negativeResult.finalSummary } else { $null }
+            noReplyClassification = if ($negativeResult) { $negativeResult.failureClassification } else { 'notExecutedOrNoSealedResult' }
+            noReplyObservationComplete = $negativeComplete
+            diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
-            scope = 'selected test diagnostics; step timeout is failed/incomplete, never native cleanup proof'
+            productOrAllWindowsComplete = $false
+            scope = 'four selected exact diagnostics only; negative failure is not a test pass; only explicit pure deadline plus stdin closed, two true EOFs/noIOerrors and reap/Jobinactive may complete it; missing/mixed/cancelled/skipped/unknown remains incomplete'
           } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
-          if ($build -ne 'success' -or $publication -ne 'success' -or $terminal -ne 'success') { exit 1 }
+          if (-not $complete) { exit 1 }
       - name: Keep selected diagnostic raw logs and outcomes
         if: ${{ always() }}
         timeout-minutes: 2

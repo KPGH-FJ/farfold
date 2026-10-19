@@ -14,6 +14,8 @@ pub(crate) enum Case {
     CursorReply,
     CloseDrain,
     TerminalCancel,
+    TerminalCursorNoReply,
+    TerminalCursorReply,
 }
 
 impl Case {
@@ -26,6 +28,10 @@ impl Case {
             Self::TerminalCancel => {
                 "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent"
             }
+            Self::TerminalCursorNoReply => {
+                "pty::windows_tests::terminal_cancel_cursor_no_reply_child"
+            }
+            Self::TerminalCursorReply => "pty::windows_tests::terminal_cancel_cursor_reply_child",
             _ => "platform_tests::windows_conpty::diagnostic_child",
         }
     }
@@ -33,7 +39,11 @@ impl Case {
         // Original cancellation body contains3s marker+1s result+5s close+1s
         // configuration waits, before ConPTY startup.8s cannot contain it.
         Duration::from_secs(match self {
-            Self::Reservation | Self::Cancellation | Self::TerminalCancel => 20,
+            Self::Reservation
+            | Self::Cancellation
+            | Self::TerminalCancel
+            | Self::TerminalCursorNoReply
+            | Self::TerminalCursorReply => 20,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
             _ => 10,             //3s startup+3s readiness+2s exit+1s EOF; not a production cap
         })
@@ -170,6 +180,15 @@ pub(crate) fn run(case: Case) {
         let mut status = None;
         let mut input = None;
         let mut terminated = false;
+        let diagnostic_case = matches!(
+            case,
+            Case::TerminalCursorNoReply | Case::TerminalCursorReply
+        );
+        let mut deadline_seen = false;
+        let mut cancel_seen = false;
+        let mut invalid_pipe_seen = false;
+        let mut input_failed_seen = false;
+        let mut try_wait_error_seen = false;
         loop {
             if input.is_none() {
                 input = input_result.try_recv().ok();
@@ -178,6 +197,14 @@ pub(crate) fn run(case: Case) {
                 let value = p.lock().unwrap();
                 value.overflow || value.failed
             });
+            if diagnostic_case {
+                // Observation only. The original termination predicate below
+                // and its cleanup/liveness gates are deliberately unchanged.
+                deadline_seen |= started.elapsed() >= case.budget();
+                cancel_seen |= cancel.load(Ordering::SeqCst);
+                invalid_pipe_seen |= invalid_pipe;
+                input_failed_seen |= input == Some(false);
+            }
             if started.elapsed() >= case.budget()
                 || cancel.load(Ordering::SeqCst)
                 || invalid_pipe
@@ -192,7 +219,12 @@ pub(crate) fn run(case: Case) {
             if status.is_none() {
                 match owner.child.try_wait() {
                     Ok(value) => status = value,
-                    Err(_) => terminated = true,
+                    Err(_) => {
+                        terminated = true;
+                        if diagnostic_case {
+                            try_wait_error_seen = true;
+                        }
+                    }
                 }
             }
             let streams_terminal = [&stdout, &stderr].iter().all(|p| {
@@ -205,7 +237,22 @@ pub(crate) fn run(case: Case) {
                 && input.is_some()
             {
                 owner.closed = true;
-                let _ = send.send((status.success(), input == Some(true), terminated));
+                let receipt = diagnostic_case.then(|| {
+                    let out = stdout.lock().unwrap();
+                    let err = stderr.lock().unwrap();
+                    serde_json::json!({
+                        "case":format!("{case:?}"),"terminated":terminated,
+                        "deadlineReached":deadline_seen,"cancelRequested":cancel_seen,
+                        "invalidPipeObserved":invalid_pipe_seen,"inputFailedObserved":input_failed_seen,
+                        "tryWaitErrorObserved":try_wait_error_seen,
+                        "stdinWrittenAndClosed":input == Some(true),
+                        "stdoutEOF":out.eof,"stderrEOF":err.eof,
+                        "stdoutFailed":out.failed,"stderrFailed":err.failed,
+                        "stdoutOverflow":out.overflow,"stderrOverflow":err.overflow,
+                        "childReaped":true,"directJobInactive":true
+                    })
+                });
+                let _ = send.send((status.success(), input == Some(true), terminated, receipt));
                 return;
             }
             // The original Child and direct Job remain in this sole owner until
@@ -220,7 +267,7 @@ pub(crate) fn run(case: Case) {
         show(stdout, false);
         show(stderr, true);
     }
-    let (success, input, terminated) = match result {
+    let (success, input, terminated, diagnostic_receipt) = match result {
         Ok(value) => value,
         Err(error) => {
             // Seal admission before this parent's SERIAL guard can unwind.
@@ -231,6 +278,17 @@ pub(crate) fn run(case: Case) {
             );
         }
     };
+    if matches!(
+        case,
+        Case::TerminalCursorNoReply | Case::TerminalCursorReply
+    ) {
+        // Result receipt was sent only after original Child/Job/stream/input
+        // settlement. EOF remains distinct from a failed reader. No raw bytes.
+        eprintln!(
+            "FARFOLD_CONPTY_DIAGNOSTIC_OWNER {}",
+            diagnostic_receipt.expect("new diagnostic owner receipt")
+        );
+    }
     assert!(
         !terminated,
         "owned case {case:?} exceeded its budget or output/input failed; child was terminated, not successful"
