@@ -65,6 +65,27 @@ pub(super) fn collect_from<D: Owner>(
     remaining: u64,
     cancel: &AtomicBool,
 ) -> Result<Entries, Failure> {
+    collect_charged_from(directory, remaining, cancel, |_| Ok(()))
+}
+// This material-only entry still uses the original PinnedPath FileObject and
+// its full-scan cursor guard. It grants no new path/purpose/skip authority.
+#[cfg(test)]
+pub(crate) fn entries_with_work(
+    directory: &PinnedPath,
+    remaining: u64,
+    cancel: &AtomicBool,
+    work: &mut crate::file_access::EaWorkBudget,
+) -> Result<Entries, Failure> {
+    collect_charged_from(directory, remaining, cancel, |used| {
+        directory_page::charge_query_bytes(used, work)
+    })
+}
+fn collect_charged_from<D: Owner>(
+    directory: &D,
+    remaining: u64,
+    cancel: &AtomicBool,
+    mut charge: impl FnMut(usize) -> Result<(), Failure>,
+) -> Result<Entries, Failure> {
     directory_page::cancelled(cancel)?;
     // The real owner, not a numeric filesystem ID or global table, serializes
     // every query from the first NULL-pattern restart through EOF/error.
@@ -109,6 +130,8 @@ pub(super) fn collect_from<D: Owner>(
             let Some(used) = returned(code, status.Information)? else {
                 return Ok(None);
             };
+            // Charge BEFORE the page copy and parser, preserving status/EOF.
+            charge(used)?;
             // SAFETY: only the documented actual completed byte count is read.
             let bytes = unsafe { std::slice::from_raw_parts(buffer.as_ptr().cast::<u8>(), used) };
             Ok(Some(bytes.to_vec()))

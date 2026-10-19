@@ -109,6 +109,18 @@ fn key(name: &[u16]) -> Result<Key, Failure> {
     Ok(Key::Named(name.to_vec()))
 }
 impl Inventory {
+    // Native response framing cannot be offered less than its fixed header.
+    // An exhausted caller budget is Limit before the syscall; this does not
+    // turn an undersized/malformed returned response into a valid inventory.
+    #[cfg(test)]
+    pub(crate) fn query_capacity(budget: &WorkBudget) -> Result<usize, super::ea_records::Failure> {
+        let capacity = budget.capacity()?;
+        if capacity < INVENTORY_HEADER {
+            Err(super::ea_records::Failure::Limit)
+        } else {
+            Ok(capacity)
+        }
+    }
     /// `allocated` is the exact offered native buffer; Information is its used
     /// span. `ordinal` MUST be native CompareStringOrdinal(ignoreCase=true) in
     /// the Windows adapter. An exact comparator in host tests proves no native

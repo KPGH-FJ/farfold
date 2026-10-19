@@ -598,3 +598,6 @@ const EMPTY_INDEX: &[u8] = &[
 
 #[path = "windows_managed_git_edge_tests.rs"]
 mod managed_root_git_tests;
+
+#[path = "source_graph_managed_material_tests.rs"]
+mod managed_material_tests;

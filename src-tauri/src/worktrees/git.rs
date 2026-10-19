@@ -260,9 +260,18 @@ fn execute_bounded(
     loop {
         let waited = match child.try_wait() {
             Ok(value) => value,
-            Err(_) => {
+            Err(_wait_error) => {
                 stopped = Some("unknown");
                 child.terminate();
+                #[cfg(all(windows, test))]
+                settlement_observation::emit(
+                    "originalChildTryWaitError",
+                    child.id(),
+                    None,
+                    _wait_error.raw_os_error(),
+                    false,
+                    stopped,
+                );
                 // Keep the admission until wait confirms this child has ended.
                 match child.wait() {
                     Ok(status) => Some(status),
@@ -278,6 +287,15 @@ fn execute_bounded(
                 // Git should join its helpers. A surviving process is not a successful receipt.
                 stopped = Some(stopped.unwrap_or("unknown"));
                 child.terminate_group();
+                #[cfg(all(windows, test))]
+                settlement_observation::emit(
+                    "groupNotConfirmedInactiveAfterOriginalChild",
+                    child.id(),
+                    status.code(),
+                    None,
+                    true,
+                    stopped,
+                );
                 while child.group_alive() {
                     thread::sleep(Duration::from_millis(10));
                 }
@@ -411,6 +429,10 @@ fn group_exists(group: i32) -> bool {
     }
     std::io::Error::last_os_error().raw_os_error() != Some(libc::ESRCH)
 }
+#[cfg(all(windows, test))]
+#[path = "git_settlement_observation_tests.rs"]
+mod settlement_observation;
+
 #[cfg(test)]
 mod tests {
     use super::*;

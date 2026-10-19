@@ -170,3 +170,136 @@ fn the_original_100k_global_entry_limit_is_not_raised_by_remaining() {
     assert_eq!(outcome, Err(Failure::Limit));
     assert_eq!(next, MAX_ENTRIES + 1);
 }
+
+// Real shared parser grammar: two short records can occupy a complete returned
+// page because an intermediate aligned NextEntryOffset gap is not a record.
+fn padded_query_page(sequence: u16) -> Vec<u8> {
+    let a = format!("a{sequence:03}").encode_utf16().collect::<Vec<_>>();
+    let b = format!("b{sequence:03}").encode_utf16().collect::<Vec<_>>();
+    let mut bytes = record(&a, (1u128 << 110) + u128::from(sequence) * 2 + 1);
+    bytes[..4].copy_from_slice(&65440u32.to_le_bytes());
+    bytes.resize(65440, 0xa5);
+    bytes.extend(record(&b, (1u128 << 110) + u128::from(sequence) * 2 + 2));
+    assert_eq!(bytes.len(), PAGE_BYTES);
+    bytes
+}
+#[test]
+fn actual_query_span_charge_rejects_multiple_padded_pages_before_copy_and_partial_publication() {
+    use std::cell::Cell;
+    let cancel = AtomicBool::new(false);
+    // The complete uncharged listing is valid under the ORIGINAL grammar and
+    // count bound. This explicitly does not tighten gap/padding acceptance.
+    let mut number = 0u16;
+    let old = collect(17, 8, &cancel, || {
+        if number == 4 {
+            return Ok(None);
+        }
+        let page = padded_query_page(number);
+        number += 1;
+        Ok(Some(page))
+    })
+    .unwrap();
+    assert_eq!(old.len(), 8);
+    let estimate = (8 + 3) * 1024 + PAGE_BYTES;
+    assert!(4 * PAGE_BYTES > estimate);
+    let mut work = super::super::ea_records::WorkBudget::new(estimate as u64);
+    let queried = Cell::new(0u16);
+    let copied = Cell::new(0usize);
+    let new = collect(17, 8, &cancel, || {
+        let number = queried.get();
+        queried.set(number + 1);
+        let native = padded_query_page(number);
+        // SAME hook used by real NtQueryDirectoryFile before bytes.to_vec().
+        // Preowned fixture data is not native allocation/RSS evidence.
+        charge_query_bytes(native.len(), &mut work)?;
+        copied.set(copied.get() + 1);
+        Ok(Some(native.to_vec()))
+    });
+    assert_eq!(new, Err(Failure::Limit));
+    assert_eq!((queried.get(), copied.get()), (2, 1));
+    assert_eq!(work.remaining(), (estimate - PAGE_BYTES) as u64);
+}
+#[test]
+fn exact_query_bytes_keep_full_raw_identity_listing_and_empty_eof_is_not_charged() {
+    let cancel = AtomicBool::new(false);
+    let mut work = super::super::ea_records::WorkBudget::new((2 * PAGE_BYTES) as u64);
+    let mut sequence = 0u16;
+    let mut copies = 0usize;
+    let actual = collect(17, 4, &cancel, || {
+        if sequence == 2 {
+            return Ok(None);
+        }
+        let native = padded_query_page(sequence);
+        sequence += 1;
+        charge_query_bytes(native.len(), &mut work)?;
+        copies += 1;
+        Ok(Some(native.to_vec()))
+    })
+    .unwrap();
+    assert_eq!((actual.len(), copies, work.remaining()), (4, 2, 0));
+    let mut sequence = 0u16;
+    let expected = collect(17, 4, &cancel, || {
+        if sequence == 2 {
+            return Ok(None);
+        }
+        let page = padded_query_page(sequence);
+        sequence += 1;
+        Ok(Some(page))
+    })
+    .unwrap();
+    assert_eq!(actual, expected);
+    assert_eq!(
+        actual[&"a000".encode_utf16().collect::<Vec<_>>()]
+            .identity
+            .inode,
+        (1u128 << 110) + 1
+    );
+    for bad in [0, PAGE_BYTES + 1] {
+        assert_eq!(
+            charge_query_bytes(bad, &mut work),
+            Err(Failure::InvalidRecord)
+        );
+    }
+}
+#[test]
+fn shared_query_work_survives_cancel_error_and_another_scan_without_a_reset_or_partial_map() {
+    use std::sync::atomic::Ordering;
+    let cancel = AtomicBool::new(false);
+    let mut work = super::super::ea_records::WorkBudget::new((PAGE_BYTES + 1) as u64);
+    let mut first = true;
+    let accepted = collect(17, 2, &cancel, || {
+        if !first {
+            return Ok(None);
+        }
+        first = false;
+        let native = padded_query_page(0);
+        charge_query_bytes(native.len(), &mut work)?;
+        Ok(Some(native))
+    })
+    .unwrap();
+    assert_eq!((accepted.len(), work.remaining()), (2, 1));
+    let exhausted = collect(17, 2, &cancel, || {
+        let native = padded_query_page(1);
+        charge_query_bytes(native.len(), &mut work)?;
+        panic!("insufficient shared query work must fail before copy or decode");
+    });
+    assert_eq!(exhausted, Err(Failure::Limit));
+    assert_eq!(work.remaining(), 1);
+    let error = Failure::Io {
+        phase: "ownedQuery",
+        code: Some(5),
+        nt_status: None,
+    };
+    let failed = collect(17, 2, &cancel, || Err(error.clone()));
+    assert_eq!(failed, Err(error));
+    assert_eq!(work.remaining(), 1);
+    let mut actual_work = super::super::ea_records::WorkBudget::new(PAGE_BYTES as u64);
+    let cancelled = collect(17, 2, &cancel, || {
+        let native = padded_query_page(2);
+        charge_query_bytes(native.len(), &mut actual_work)?;
+        cancel.store(true, Ordering::SeqCst);
+        Ok(Some(native))
+    });
+    assert_eq!(cancelled, Err(Failure::Cancelled));
+    assert_eq!(actual_work.remaining(), 0);
+}

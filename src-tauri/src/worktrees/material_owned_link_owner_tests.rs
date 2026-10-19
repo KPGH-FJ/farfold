@@ -323,3 +323,101 @@ fn verified_alias_followed_by_caller_error_still_closes_the_exact_owner() {
     });
     assert_eq!(result.err(), Some(E::Cancelled));
 }
+
+#[test]
+fn empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets() {
+    use sha2::Digest;
+    use windows_sys::Win32::Storage::FileSystem::{
+        FILE_ATTRIBUTE_ARCHIVE, FILE_BASIC_INFO, FileBasicInfo, GetFileInformationByHandleEx,
+    };
+    owned(false, |owner| {
+        let file = owner.target()?;
+        let before = stamp(file).unwrap();
+        assert_eq!(before.size, 0);
+        assert_eq!(before.links, 1);
+        let mut basic = FILE_BASIC_INFO::default();
+        assert_ne!(
+            unsafe {
+                GetFileInformationByHandleEx(
+                    file.as_raw_handle(),
+                    FileBasicInfo,
+                    (&mut basic as *mut FILE_BASIC_INFO).cast(),
+                    std::mem::size_of_val(&basic) as u32,
+                )
+            },
+            0
+        );
+        assert_ne!(basic.FileAttributes & FILE_ATTRIBUTE_ARCHIVE, 0);
+        let receipt = link(owner, &vec![0x4e2d; 255])?;
+        assert_eq!(receipt.identity, before.identity);
+        assert_eq!(receipt.alias_identity, before.identity);
+        assert_eq!(receipt.links, 2);
+        assert_eq!(receipt.data_bytes, 0);
+        let empty: [u8; 32] = <sha2::Sha256 as Digest>::digest([]).into();
+        assert_eq!(receipt.data_sha256, empty);
+        assert_eq!(receipt.ea_count, 0);
+        assert_eq!(receipt.ea_sha256, receipt.before_ea_sha256);
+        assert_eq!(receipt.security_sha256, receipt.before_security_sha256);
+        assert!(!receipt.full_security_observed);
+        assert_eq!(owner.last_native_status(), Some(0));
+        Ok(())
+    })
+    .unwrap();
+}
+
+#[test]
+fn filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result() {
+    use windows_sys::Win32::Storage::FileSystem::{
+        FILE_BASIC_INFO, FileBasicInfo, GetFileInformationByHandleEx,
+    };
+    owned(false, |owner| {
+        fill(owner)?;
+        // Same FileObject duplicate, used ONLY for metadata. It is dropped
+        // before original owner cleanup; no name/PID reopen or retry occurs.
+        let witness = owner.target()?.try_clone().map_err(|_| E::Invalid)?;
+        let query = |file: &std::fs::File| -> std::io::Result<FILE_BASIC_INFO> {
+            let mut basic = FILE_BASIC_INFO::default();
+            if unsafe { GetFileInformationByHandleEx(
+                file.as_raw_handle(), FileBasicInfo,
+                (&mut basic as *mut FILE_BASIC_INFO).cast(),
+                std::mem::size_of_val(&basic) as u32,
+            ) } == 0 {
+                return Err(std::io::Error::last_os_error());
+            }
+            Ok(basic)
+        };
+        let before = query(&witness).map_err(|_| E::Invalid)?;
+        let before_stamp = stamp(&witness).map_err(|_| E::Invalid)?;
+        let result = link(owner, &vec![0x4e2d; 255]);
+        let after = query(&witness);
+        let after_stamp = stamp(&witness);
+        let event = serde_json::json!({
+            "operationError": result.as_ref().err().map(|v| format!("{v:?}")),
+            "nativeStatus": owner.last_native_status(),
+            "beforeAttributes": before.FileAttributes,
+            "afterAttributes": after.as_ref().ok().map(|v| v.FileAttributes),
+            "afterBasicError": after.as_ref().err().and_then(|v| v.raw_os_error()),
+            "sameFullIdentity": after_stamp.as_ref().ok().map(|v| v.identity == before_stamp.identity),
+            "beforeLinks": before_stamp.links,
+            "afterLinks": after_stamp.as_ref().ok().map(|v| v.links),
+            "afterStampError": after_stamp.as_ref().err().and_then(|v| v.raw_os_error()),
+        });
+        let _ = writeln!(std::io::stderr().lock(), "FARFOLD_OWNED_LINK_255_COMPANION {event}");
+        drop(witness);
+        // These are post-operation observations, not its exact failing branch.
+        // Preserve that original failure even if companion metadata succeeds.
+        let receipt = result?;
+        let after = after.map_err(|_| E::Invalid)?;
+        let after_stamp = after_stamp.map_err(|_| E::Invalid)?;
+        assert_eq!(before.FileAttributes, after.FileAttributes);
+        assert_eq!(after_stamp.identity, before_stamp.identity);
+        assert_eq!(receipt.identity, before_stamp.identity);
+        assert_eq!(receipt.alias_identity, before_stamp.identity);
+        assert_eq!(receipt.links, 2);
+        assert_eq!(receipt.data_bytes, 300);
+        assert_eq!(receipt.ea_count, 1);
+        assert_eq!(receipt.ea_sha256, receipt.before_ea_sha256);
+        assert_eq!(receipt.security_sha256, receipt.before_security_sha256);
+        Ok(())
+    }).unwrap();
+}

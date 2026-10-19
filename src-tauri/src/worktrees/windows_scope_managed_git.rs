@@ -243,6 +243,42 @@ impl RootGit {
         result.verify(source)?;
         Ok(result)
     }
+    #[cfg(test)]
+    pub(in crate::worktrees) fn matches_material_edge(
+        &self,
+        root: &File,
+        raw: &[u16],
+        listed: &crate::file_access::DirectoryObservation,
+    ) -> Result<()> {
+        let original_root = &self.versions[ROOT];
+        let edge = self.edges.first().ok_or(error("recoveryChanged"))?;
+        if edge.parent != ROOT
+            || edge.child != self.dot_git
+            || raw != edge.raw
+            || !ascii_same(raw, DOT_GIT)
+            || stamp(root).map_err(|_| error("recoveryChanged"))? != original_root.before
+            || metadata_file(root).map_err(|_| error("recoveryChanged"))? != original_root.metadata
+        {
+            return Err(error("recoveryChanged"));
+        }
+        let child = &self.versions[self.dot_git];
+        child.verify()?;
+        let actual = child_metadata(root, raw)?;
+        // Listing versions may be cached. Current complete metadata comes from
+        // the held object + this actual relative query, not cached timestamps.
+        if actual != child.metadata
+            || !actual.matches_directory_identity(listed)
+            || listed.reparse_tag.is_some()
+            || ((listed.attributes
+                & windows_sys::Win32::Storage::FileSystem::FILE_ATTRIBUTE_DIRECTORY
+                != 0)
+                != (actual.kind == MetadataKind::Directory))
+            || stamp(root).map_err(|_| error("recoveryChanged"))? != original_root.before
+        {
+            return Err(error("recoveryChanged"));
+        }
+        child.verify()
+    }
     pub(in crate::worktrees) fn verify(&self, source: &ReadContext) -> Result<()> {
         let scope = &source.scope;
         scope.verify()?;

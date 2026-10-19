@@ -1,7 +1,7 @@
 //! Proposed real Windows controls. No case has been run by this preparation.
 use super::*;
 use crate::worktrees::{recovery_roots::Roots, recycle_types::MaterialSummary, windows_git};
-use std::{ffi::OsStr, fs, path::PathBuf};
+use std::{fs, path::PathBuf};
 
 struct Fixture {
     root: PathBuf,
@@ -268,14 +268,21 @@ fn original_project_decoy_and_existing_public_read_and_mutation_gates_remain_sep
 fn probe(
     owner: &mut Context,
     args: &[&str],
-    global: Option<&OsStr>,
-    attributes: Option<&OsStr>,
-    hooks: Option<&OsStr>,
+    global: Option<&PinnedPath>,
+    attributes: Option<&PinnedPath>,
+    hooks: Option<&PinnedPath>,
     worktree: Option<&PinnedPath>,
 ) -> git::Output {
     let (mut command, paths) = owner.base_command().unwrap();
+    // Only explicitly held owned positive fixtures gain a plain spelling.
+    // Production null guards and command execution ownership are unchanged.
+    let pins = [global, attributes, hooks, worktree]
+        .into_iter()
+        .flatten()
+        .collect::<Vec<_>>();
+    let overrides = windows_git::paths::Paths::new(&pins).unwrap();
     if let Some(value) = global {
-        command.env("GIT_CONFIG_GLOBAL", value);
+        command.env("GIT_CONFIG_GLOBAL", overrides.path(value).unwrap());
     }
     for (key, value) in [
         ("core.attributesFile=", attributes),
@@ -283,7 +290,7 @@ fn probe(
     ] {
         if let Some(value) = value {
             let mut setting = std::ffi::OsString::from(key);
-            setting.push(value);
+            setting.push(overrides.path(value).unwrap());
             command.arg("-c").arg(setting);
         }
     }
@@ -292,7 +299,7 @@ fn probe(
         command
             .args(["-c", "core.bare=false"])
             .arg("--work-tree")
-            .arg(&tree.guid_path);
+            .arg(overrides.path(tree).unwrap());
     }
     command.args(args);
     let output = git::execute_command_input(
@@ -302,6 +309,7 @@ fn probe(
         std::time::Duration::from_secs(10),
     );
     paths.verify().unwrap();
+    overrides.verify().unwrap();
     let output = output.unwrap();
     owner.verify().unwrap();
     output
@@ -312,10 +320,15 @@ fn real_private_prefix_null_global_has_an_owned_positive_not_a_path_guess() {
     let mut imported = fixture.import();
     let config = imported.owner.root.guid_path.join("owned-global");
     fs::write(&config, b"[farfold]\n control = owned\n").unwrap();
+    let config = imported
+        .owner
+        .root
+        .child(&"owned-global".encode_utf16().collect::<Vec<_>>(), false)
+        .unwrap();
     let positive = probe(
         &mut imported.owner,
         &["config", "--global", "--get", "farfold.control"],
-        Some(config.as_os_str()),
+        Some(&config),
         None,
         None,
         None,
@@ -346,6 +359,14 @@ fn real_private_prefix_null_attributes_has_an_owned_positive() {
     let mut imported = fixture.import();
     let attributes = imported.owner.root.guid_path.join("owned-attributes");
     fs::write(&attributes, b"owned.txt farfold-control=owned\n").unwrap();
+    let attributes = imported
+        .owner
+        .root
+        .child(
+            &"owned-attributes".encode_utf16().collect::<Vec<_>>(),
+            false,
+        )
+        .unwrap();
     fs::create_dir(imported.owner.root.guid_path.join("worktree")).unwrap();
     let tree = imported
         .owner
@@ -356,7 +377,7 @@ fn real_private_prefix_null_attributes_has_an_owned_positive() {
         &mut imported.owner,
         &["check-attr", "--all", "--", "owned.txt"],
         None,
-        Some(attributes.as_os_str()),
+        Some(&attributes),
         None,
         Some(&tree),
     );
@@ -390,12 +411,17 @@ fn real_private_prefix_null_hooks_has_actual_benign_hook_positive_before_guarded
         b"#!/bin/sh\nprintf public > .owned-hook-marker\n",
     )
     .unwrap();
+    let hooks = imported
+        .owner
+        .repo
+        .child(&"hooks".encode_utf16().collect::<Vec<_>>(), true)
+        .unwrap();
     let positive = probe(
         &mut imported.owner,
         &["update-ref", "refs/tags/owned-positive", COMMIT],
         None,
         None,
-        Some(hooks.as_os_str()),
+        Some(&hooks),
         None,
     );
     assert!(positive.success);

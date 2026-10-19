@@ -5,7 +5,7 @@ use super::super::{
 };
 use crate::file_access::{MaterialStoreRequest, MixedMemory};
 use std::path::Path;
-pub(super) fn reserved(
+pub(in crate::worktrees) fn reserved(
     parent: &Path,
     directory: &Path,
     parent_stamp: &inspect::Stamp,
@@ -25,6 +25,23 @@ pub(super) fn reserved(
     // the real worker. The component creates no directory or public intent.
     MaterialStoreRequest::reserved(parent, directory, &parent_id, &directory_id, memory)
         .map_err(|_| error("recoveryChanged"))
+}
+// The unique worktree-to-material adapter. The proof owns the SAME admitted
+// SourceOwner, not a string exclusion, copied receipt or new ReadContext.
+pub(in crate::worktrees) fn worktree_source(
+    graph: &super::super::git::source_roots::SourceGraph,
+    root: crate::file_access::PinnedPath,
+    leaf: Vec<u16>,
+    memory: &MixedMemory,
+    cancel: &std::sync::atomic::AtomicBool,
+) -> std::result::Result<crate::file_access::MixedRequest, crate::file_access::CarrierFailure> {
+    crate::file_access::MixedRequest::worktree(
+        root,
+        leaf,
+        memory,
+        cancel,
+        graph.managed_root_git_edge(),
+    )
 }
 #[cfg(test)]
 #[path = "recovery_material_windows_tests.rs"]

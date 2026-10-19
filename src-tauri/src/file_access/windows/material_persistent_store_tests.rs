@@ -6,7 +6,7 @@ use std::io::Cursor;
 // This intentionally uses synthetic native bytes. The ordinary controls prove
 // retained-file framing/identity/noReplace behavior only; FullSD capture controls
 // live in the worktrees consumer and use the actual Mixed producer.
-fn bytes() -> Vec<u8> {
+pub(super) fn bytes() -> Vec<u8> {
     let resident = Resident::new(records::RESIDENT_LIMIT);
     let cancel = AtomicBool::new(false);
     let mut work = WorkBudget::new(records::WORK_LIMIT);
@@ -89,13 +89,13 @@ fn bytes() -> Vec<u8> {
     output
 }
 
-struct Fixture {
-    store: Store,
-    root: std::path::PathBuf,
+pub(super) struct Fixture {
+    pub(super) store: Store,
+    pub(super) root: std::path::PathBuf,
     _temp: tempfile::TempDir,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let temp = tempfile::tempdir().unwrap();
         let parent = temp.path().canonicalize().unwrap();
         let root = parent.join("reserved-operation");
@@ -148,13 +148,14 @@ impl Fixture {
                 published: false,
                 reading: false,
                 sealed_stamp: None,
+                restore: None,
                 request,
             },
             root,
             _temp: temp,
         }
     }
-    fn pending(&mut self, bytes: &[u8]) {
+    pub(super) fn pending(&mut self, bytes: &[u8]) {
         let resident = &self.store.request.resident;
         let verified = tree::verify_exact(
             &mut Cursor::new(bytes),
@@ -174,13 +175,14 @@ impl Fixture {
                 carrier_identity: self.store.request.root.identity().clone(),
             },
             whole_sha256: Sha256::digest(bytes).into(),
+            native_catalog: None,
         });
         drop(verified);
         self.store.open(true).unwrap();
         self.store.file.as_mut().unwrap().write_all(bytes).unwrap();
         self.store.file.as_ref().unwrap().sync_all().unwrap();
     }
-    fn publish_reopen(&mut self) -> MaterialSealReceipt {
+    pub(super) fn publish_reopen(&mut self) -> MaterialSealReceipt {
         self.store
             .verify(
                 &mut WorkBudget::new(records::WORK_LIMIT),

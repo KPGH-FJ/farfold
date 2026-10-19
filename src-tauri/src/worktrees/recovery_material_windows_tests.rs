@@ -285,3 +285,221 @@ fn callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned()
         f.preserved();
     }
 }
+
+// Rebuilding uses actual verified FFMTREE1/FFDIR1/FFNODE1 bytes. These controls
+// need existing combined FullSecurity rights on the OWNED source and target.
+// No privilege adjustment, permission fallback or synthetic native success.
+fn assert_reconstructed(
+    value: &crate::file_access::MaterialTreeReceipt,
+    expected: (usize, usize, usize),
+) {
+    assert_eq!((value.nodes, value.directories, value.regulars), expected);
+    assert_eq!(
+        (value.write_aborts as usize, value.read_aborts as usize),
+        (expected.0, expected.0)
+    );
+    assert!(value.exact_edges_verified && value.all_native_recaptured && value.metadata_finalized);
+    assert_eq!(value.target_ids.len(), expected.0);
+    for (index, id) in value.target_ids.iter().enumerate() {
+        assert_ne!(id.inode, 0);
+        assert!(!value.target_ids[..index].contains(id));
+    }
+}
+#[test]
+#[ignore = "manual: actual NTFS plus existing combined FullSecurity source/target rights; no privilege adjustment/fallback"]
+fn sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal() {
+    let f = Fixture::new();
+    let sub = f.source.join(OsString::from_wide(&[68, 0xd801, 67]));
+    std::fs::create_dir(&sub).unwrap();
+    let child = sub.join(OsString::from_wide(&[67, 0xdc00, 68]));
+    std::fs::write(&child, b"nested-default\0\xff").unwrap();
+    for path in [&f.source, &sub, &f.file, &child] {
+        ea_ads(path);
+    }
+    let source_ids = [
+        (&f.source, true),
+        (&sub, true),
+        (&f.file, false),
+        (&child, false),
+    ]
+    .into_iter()
+    .map(|(path, directory)| {
+        let pin = if directory {
+            PinnedPath::directory(path)
+        } else {
+            PinnedPath::regular(path)
+        }
+        .unwrap();
+        pin.identity().clone()
+    })
+    .collect::<Vec<_>>();
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let (actual, seal) = owner
+        .sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| {
+                assert!(owner.available().is_err());
+                let before = sealed.verify()?;
+                assert_eq!(
+                    (before.nodes, before.directories, before.regulars),
+                    (4, 2, 2)
+                );
+                let gone = f.source.with_file_name("removed-source-before-rebuild");
+                std::fs::rename(&f.source, &gone).unwrap();
+                std::fs::remove_dir_all(gone).unwrap();
+                assert!(!f.source.exists());
+                let result = sealed.reconstruct_tree()?;
+                assert_reconstructed(&result, (4, 2, 2));
+                assert!(result.target_ids.iter().all(|id| !source_ids.contains(id)));
+                assert_eq!(sealed.verify()?, before);
+                assert!(
+                    owner.available().is_err(),
+                    "target lifetime stays in the original Slot"
+                );
+                Ok(result)
+            },
+        )
+        .unwrap();
+    assert_reconstructed(&actual, (4, 2, 2));
+    owner.available().unwrap();
+    assert!(!owner.occupied());
+    assert_eq!(
+        <[u8; 32]>::from(Sha256::digest(
+            std::fs::read(f.destination.join("material.bin")).unwrap()
+        )),
+        seal.sha256
+    );
+    assert!(!f.destination.join(".material-pending").exists());
+    drop(actual);
+    f.temp.close().unwrap();
+}
+struct RestoreReadonly {
+    path: PathBuf,
+    original: std::fs::Permissions,
+}
+impl RestoreReadonly {
+    fn owned(path: &Path) -> Self {
+        let original = std::fs::metadata(path).unwrap().permissions();
+        let mut changed = original.clone();
+        changed.set_readonly(true);
+        std::fs::set_permissions(path, changed).unwrap();
+        Self {
+            path: path.to_owned(),
+            original,
+        }
+    }
+}
+impl Drop for RestoreReadonly {
+    fn drop(&mut self) {
+        if std::fs::set_permissions(&self.path, self.original.clone()).is_err() {
+            eprintln!("FARFOLD_OWNED_REBUILD_READONLY_FIXTURE_CLEANUP_UNKNOWN");
+        }
+    }
+}
+#[test]
+#[ignore = "manual: combined FullSecurity condition; restrictive source DACL is owned-only and restored by its original WRITE_DAC handle"]
+fn restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup() {
+    let f = Fixture::new();
+    ea_ads(&f.file);
+    let readonly = RestoreReadonly::owned(&f.file);
+    let dacl = crate::file_access::security_test_fixture::OwnedDacl::new(&f.file);
+    dacl.set("D:P(A;;FR;;;WD)");
+    // Prove a new DELETE open really is denied; target cleanup must instead use
+    // the rights granted on its original FileObject BEFORE restoring this SD.
+    let denied = OpenOptions::new()
+        .access_mode(windows_sys::Win32::Storage::FileSystem::DELETE)
+        .open(&f.file)
+        .unwrap_err();
+    assert_eq!(denied.raw_os_error(), Some(5));
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let result = owner.sealed_material(
+        f.source(&memory, true).unwrap(),
+        f.destination(&memory),
+        &AtomicBool::new(false),
+        |sealed| {
+            let before = sealed.verify()?;
+            let tree = sealed.reconstruct_tree()?;
+            assert_reconstructed(&tree, (2, 1, 1));
+            assert_eq!(sealed.verify()?, before);
+            Ok(tree)
+        },
+    );
+    dacl.restore();
+    drop(readonly);
+    let (tree, _) = result.unwrap();
+    assert_reconstructed(&tree, (2, 1, 1));
+    owner.available().unwrap();
+    assert!(!owner.occupied());
+    f.preserved();
+}
+#[test]
+#[ignore = "manual: combined FullSecurity source/target rights; repeated rebuilding is refused without detaching the first targets"]
+fn one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned() {
+    let f = Fixture::new();
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let (_, seal) = owner
+        .sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| {
+                let first = sealed.reconstruct_tree()?;
+                assert_reconstructed(&first, (2, 1, 1));
+                assert_eq!(sealed.reconstruct_tree().unwrap_err(), E::Invalid);
+                assert!(owner.available().is_err());
+                assert_eq!(sealed.verify()?.nodes, 2);
+                Ok(())
+            },
+        )
+        .unwrap();
+    owner.available().unwrap();
+    assert!(!owner.occupied());
+    assert_eq!(
+        <[u8; 32]>::from(Sha256::digest(
+            std::fs::read(f.destination.join("material.bin")).unwrap()
+        )),
+        seal.sha256
+    );
+    f.preserved();
+}
+#[test]
+#[ignore = "manual: combined FullSecurity source/target rights; controlled callback error/unwind remains failure after real target writes"]
+fn callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material() {
+    for unwind in [false, true] {
+        let f = Fixture::new();
+        let memory = MixedMemory::default();
+        let owner = Owner::default();
+        let result = owner.sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| -> std::result::Result<(), E> {
+                let actual = sealed.reconstruct_tree()?;
+                assert_reconstructed(&actual, (2, 1, 1));
+                assert!(owner.available().is_err());
+                if unwind {
+                    panic!("controlled failure after actual sealed reconstruction");
+                }
+                Err(E::Io {
+                    phase: "controlledReconstructedConsumer",
+                    code: Some(42),
+                })
+            },
+        );
+        assert!(result.is_err());
+        owner.available().unwrap();
+        assert!(!owner.occupied());
+        assert!(
+            std::fs::read(f.destination.join("material.bin"))
+                .unwrap()
+                .starts_with(b"FFMTREE1")
+        );
+        assert!(!f.destination.join(".material-pending").exists());
+        f.preserved();
+    }
+}

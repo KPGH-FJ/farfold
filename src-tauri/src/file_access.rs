@@ -35,6 +35,8 @@ pub(crate) use directory_page::{
 };
 #[cfg(unix)]
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
+#[cfg(all(windows, test))]
+pub(crate) use windows::directory_entries_with_work;
 #[cfg(windows)]
 pub(crate) use windows::{
     EntryMetadata, FullSecurityFailure, FullSecurityObservation, MetadataFailure, MetadataKind,
@@ -132,8 +134,8 @@ pub(crate) use windows::{
 
 #[cfg(all(windows, test))]
 pub(crate) use windows::{
-    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, OwnedSealedMaterial,
-    with_sealed_material,
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTreeReceipt,
+    OwnedSealedMaterial, with_sealed_material,
 };
 
 #[cfg(all(windows, test))]

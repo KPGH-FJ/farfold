@@ -100,6 +100,16 @@ impl State {
             self.pending = true;
             return Err(Error::Invalid);
         }
+        // This is only our newly created temporary target. FileLinkInformation
+        // sets ARCHIVE; establish it before any full payload/attribute snapshot.
+        // Do not mask attribute differences or change source/final metadata.
+        set_basic(
+            self.primary.as_ref().ok_or(Error::Invalid)?,
+            &FILE_BASIC_INFO {
+                FileAttributes: FILE_ATTRIBUTE_ARCHIVE,
+                ..Default::default()
+            },
+        )?;
         Ok(())
     }
     pub(super) fn cleanup(&mut self, root: &File) -> Result<()> {

@@ -274,7 +274,16 @@ fn old_path_replacement_and_moved_original_directory_ids_both_exclude_decoy_prog
     let fixture = Fixture::new();
     let paths = std::env::var_os("PATH").unwrap();
     let official = select_from(&fixture.saved, &paths, &AtomicBool::new(false)).unwrap();
-    let installed = official.guid_path.parent().unwrap().to_owned();
+    // A selected GUID object is not an eligible PATH spelling. Obtain the
+    // strict plain alias from the same held program, with full stamp fences.
+    let program_paths = crate::worktrees::windows_git::paths::Paths::new(&[&official]).unwrap();
+    let installed = program_paths
+        .path(&official)
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_owned();
+    program_paths.verify().unwrap();
     let expected_id = official.identity().clone();
     drop(official);
     let retained = std::path::Path::new(&fixture.saved.receipt.retained_path);
@@ -289,6 +298,7 @@ fn old_path_replacement_and_moved_original_directory_ids_both_exclude_decoy_prog
     .unwrap();
     let paths = std::env::join_paths([moved.as_path(), retained, installed.as_path()]).unwrap();
     let selected = select_from(&fixture.saved, &paths, &AtomicBool::new(false)).unwrap();
+    program_paths.verify().unwrap();
     assert_eq!(*selected.identity(), expected_id);
     let only_decoys = std::env::join_paths([moved.as_path(), retained]).unwrap();
     assert_eq!(

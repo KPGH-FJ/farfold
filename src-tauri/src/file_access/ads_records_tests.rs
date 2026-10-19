@@ -616,3 +616,52 @@ fn default_size_getter_does_not_invent_a_directory_default() {
         .unwrap();
     assert_eq!(directory.default_size(), None);
 }
+
+#[test]
+fn native_inventory_offer_refuses_subheader_shared_work_before_native_call() {
+    for remaining in 0..INVENTORY_HEADER {
+        let budget = WorkBudget::new(remaining as u64);
+        assert!(matches!(
+            Inventory::query_capacity(&budget),
+            Err(super::super::ea_records::Failure::Limit)
+        ));
+        assert_eq!(budget.remaining(), remaining as u64);
+    }
+}
+#[test]
+fn native_inventory_offer_keeps_the_same_budget_and_original_query_cap() {
+    let mut budget = WorkBudget::new(INVENTORY_HEADER as u64);
+    assert_eq!(
+        Inventory::query_capacity(&budget).unwrap(),
+        INVENTORY_HEADER
+    );
+    budget.charge(1).unwrap();
+    assert!(matches!(
+        Inventory::query_capacity(&budget),
+        Err(super::super::ea_records::Failure::Limit)
+    ));
+    assert_eq!(budget.remaining(), INVENTORY_HEADER as u64 - 1);
+    let large = WorkBudget::new(QUERY_BYTES as u64 + 7);
+    assert_eq!(Inventory::query_capacity(&large).unwrap(), QUERY_BYTES);
+    assert_eq!(large.remaining(), QUERY_BYTES as u64 + 7);
+}
+#[test]
+fn malformed_subheader_inventory_is_still_invalid_in_both_decoder_profiles() {
+    let raw = [0u8; INVENTORY_HEADER - 1];
+    let cancel = AtomicBool::new(false);
+    assert!(matches!(
+        Inventory::decode(
+            TOO_SMALL,
+            0,
+            &raw,
+            &mut WorkBudget::new(1024),
+            &cancel,
+            |a, b| Ok(a.cmp(b))
+        ),
+        Err(Failure::InvalidRecord)
+    ));
+    assert!(matches!(
+        Inventory::empty_directory(0, 0, &raw, &mut WorkBudget::new(1024), &cancel),
+        Err(Failure::InvalidRecord)
+    ));
+}

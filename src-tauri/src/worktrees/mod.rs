@@ -23,6 +23,8 @@ mod windows_offline_program;
 mod windows_scope;
 #[cfg(all(windows, test))]
 mod windows_tests;
+#[cfg(all(windows, test))]
+pub(crate) use git::source_roots::ManagedRootGitEdge;
 pub use manager::Worktrees;
 
 // Existing local-tree reads/adoption are distinct from unimplemented filesystem

@@ -34,6 +34,8 @@ use windows_sys::{
 };
 mod directory;
 pub(crate) use directory::entries as directory_entries;
+#[cfg(test)]
+pub(crate) use directory::entries_with_work as directory_entries_with_work;
 mod ea;
 pub(crate) use ea::observation as ea_observation;
 mod security;
@@ -679,8 +681,8 @@ pub(crate) use material_alias_topology::{
 mod material_persistent_store;
 #[cfg(test)]
 pub(crate) use material_persistent_store::{
-    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, OwnedSealedMaterial,
-    with_sealed_material,
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTreeReceipt,
+    OwnedSealedMaterial, with_sealed_material,
 };
 
 #[cfg(test)]

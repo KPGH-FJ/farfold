@@ -27,6 +27,10 @@ use std::{
     panic::AssertUnwindSafe,
     sync::atomic::AtomicBool,
 };
+#[path = "material_mixed_native_proof.rs"]
+mod native_proof;
+pub(super) use native_proof::NativeProof;
+
 pub(crate) struct MixedMemory(Resident);
 impl MixedMemory {
     pub(super) fn shared(&self) -> Resident {
@@ -44,7 +48,9 @@ enum RootPolicy {
 }
 pub(crate) struct MixedRequest {
     root_policy: RootPolicy,
+    retain_native: bool,
     root: MaterialPin,
+    managed_root_git: Option<crate::worktrees::ManagedRootGitEdge>,
     leaf: Vec<u16>,
     resident: Resident,
     _memory: ResidentLease,
@@ -54,8 +60,22 @@ impl MixedRequest {
         self.resident.grow(lease, 0)
     }
     pub(super) fn for_material_store(mut self) -> Self {
-        self.root_policy = RootPolicy::NoRootGit;
+        if self.managed_root_git.is_none() {
+            self.root_policy = RootPolicy::NoRootGit;
+        }
+        self.retain_native = true;
         self
+    }
+    pub(crate) fn worktree(
+        pin: PinnedPath,
+        leaf: Vec<u16>,
+        memory: &MixedMemory,
+        cancel: &AtomicBool,
+        proof: crate::worktrees::ManagedRootGitEdge,
+    ) -> Result<Self> {
+        let mut request = Self::held(pin, leaf, memory, cancel)?;
+        request.managed_root_git = Some(proof);
+        Ok(request)
     }
     pub(crate) fn held(
         pin: PinnedPath,
@@ -71,7 +91,9 @@ impl MixedRequest {
         root.directory_carrier_leaf(&leaf).map_err(pin_error)?;
         Ok(Self {
             root_policy: RootPolicy::OwnedTree,
+            retain_native: false,
             root,
+            managed_root_git: None,
             leaf,
             resident: memory.0.clone(),
             _memory: reserved,
@@ -80,6 +102,7 @@ impl MixedRequest {
 }
 struct Resources {
     sources: Option<Sources>,
+    retain_native: bool,
     namespace: Option<Namespace>,
     context: Option<RetiredContext>,
     resident: Resident,
@@ -103,6 +126,7 @@ pub(crate) struct MixedSummary {
 // Borrowed disjoint fields only, never an owned resource or self-reference.
 // T in with_mixed_tree_input is outside c: references cannot escape the callback.
 pub(crate) struct MixedInput<'c> {
+    pub(super) native_catalog: &'c mut Option<Vec<NativeProof>>,
     pub(super) namespace: &'c mut Namespace,
     pub(super) verified: &'c tree::Verified,
     pub(super) context: &'c mut Option<RetiredContext>,
@@ -132,6 +156,7 @@ impl MixedOutputLease {
 pub(super) struct MixedBytes {
     pub summary: MixedSummary,
     pub whole_sha256: [u8; 32],
+    pub native_catalog: Option<Vec<NativeProof>>,
 }
 impl MixedInput<'_> {
     // Complete actual carrier, including typed index/header/trailer, not just
@@ -179,6 +204,7 @@ impl MixedInput<'_> {
         Ok(MixedBytes {
             summary,
             whole_sha256: hash.finalize().into(),
+            native_catalog: self.native_catalog.take(),
         })
     }
 
@@ -388,6 +414,9 @@ where
     let mut directories: Vec<(usize, dirs::Node)> = Vec::with_capacity(tree::MAX_NODES);
     let mut witnesses = Vec::with_capacity(tree::MAX_NODES);
     let mut expected: Vec<Expected> = Vec::with_capacity(tree::MAX_NODES);
+    let mut native_catalog = resources
+        .retain_native
+        .then(|| Vec::with_capacity(tree::MAX_NODES));
     let mut output = ns.tree_carrier.as_ref().ok_or(Error::Invalid)?;
     let mut writer = tree::Writer::begin(&mut output, sources.nodes.len(), work, cancel, resident)?;
     for (index, node) in sources.nodes.iter().enumerate() {
@@ -416,6 +445,16 @@ where
                     sha256: directory.sha256,
                     basic: f.basic.clone(),
                 });
+                if let Some(catalog) = native_catalog.as_mut() {
+                    catalog.push(NativeProof::from_facts(
+                        &f.stamp.identity,
+                        Kind::Directory,
+                        &f.expected,
+                        &f.ea,
+                        f.security.as_ref().ok_or(Error::Unsupported)?,
+                        resident,
+                    )?);
+                }
                 directories.push((index, directory));
                 (stored, record)
             }
@@ -443,6 +482,17 @@ where
                     sha256: capture.parsed.sha256,
                     basic: capture.facts.basic.clone(),
                 });
+                if let Some(catalog) = native_catalog.as_mut() {
+                    let f = &capture.facts;
+                    catalog.push(NativeProof::from_facts(
+                        &f.stamp.identity,
+                        Kind::Regular,
+                        &f.expected,
+                        &f.ea,
+                        &f.security,
+                        resident,
+                    )?);
+                }
                 let result = {
                     let mut sink = RegularSink {
                         file: ns.target_carrier.as_ref().ok_or(Error::Invalid)?,
@@ -555,6 +605,7 @@ where
         .map_err(|e| io_error("mixedCarrierBeforeConsumer", e))?
         .identity;
     let value = consume(MixedInput {
+        native_catalog: &mut native_catalog,
         namespace: &mut *ns,
         verified: &verified,
         context: &mut resources.context,
@@ -571,6 +622,7 @@ where
     }
     // Whole input remains the same bytes even after a future same-namespace step.
     MixedInput {
+        native_catalog: &mut native_catalog,
         namespace: &mut *ns,
         verified: &verified,
         context: &mut resources.context,
@@ -633,15 +685,17 @@ where
     }
     let MixedRequest {
         root_policy,
+        retain_native,
         root,
+        managed_root_git,
         leaf,
         resident,
         _memory,
     } = request;
     // No native context exists before Sources is installed in this outside owner.
-    let sources = Sources::collect(root, leaf, work, cancel, &resident)?;
-    // Material persistence has no managed admin-edge authority yet. Refuse
-    // before build/BackupRead/spools, not after copying .git into a carrier.
+    let sources = Sources::collect(root, leaf, managed_root_git, work, cancel, &resident)?;
+    // A material request WITHOUT the typed same-SourceOwner capability refuses
+    // before build/BackupRead/spools, never after copying .git into a carrier.
     if matches!(root_policy, RootPolicy::NoRootGit) {
         for node in &sources.nodes {
             if node.parent == 0 && equal(&node.leaf, &[46, 103, 105, 116])? {
@@ -651,6 +705,7 @@ where
     }
     let mut resources = Resources {
         sources: Some(sources),
+        retain_native,
         namespace: None,
         context: None,
         resident,

@@ -37,6 +37,21 @@ pub(crate) enum Failure {
 }
 pub(crate) type Entries = BTreeMap<Vec<u16>, Observation>;
 
+// Actual completed native query span, including every ignored alignment/gap
+// byte. Called after status/Information validation and BEFORE copying/decoding.
+// The native call can return at most one PAGE_BYTES beyond the remaining work;
+// that response refuses without copying/parsing or another query. Not OS/RSS/CPU.
+#[cfg(test)]
+pub(super) fn charge_query_bytes(
+    used: usize,
+    work: &mut super::ea_records::WorkBudget,
+) -> Result<(), Failure> {
+    if used == 0 || used > PAGE_BYTES {
+        return Err(Failure::InvalidRecord);
+    }
+    work.charge(used).map_err(|_| Failure::Limit)
+}
+
 pub(super) fn cancelled(cancel: &AtomicBool) -> Result<(), Failure> {
     if cancel.load(Ordering::SeqCst) {
         Err(Failure::Cancelled)

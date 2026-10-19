@@ -17,7 +17,10 @@ use std::{
     io::{Read, Seek},
     path::Path,
     process::Command,
-    sync::atomic::{AtomicBool, Ordering},
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
     time::Duration,
 };
 use windows_sys::Win32::Storage::FileSystem::{
@@ -232,6 +235,16 @@ impl Inventory {
         })
     }
     fn verify(&self, root: &PinnedPath, cancel: &AtomicBool) -> Result<()> {
+        self.verify_with(root, cancel, |pin, remaining| {
+            directory_entries(pin, remaining, cancel).map_err(directory_error)
+        })
+    }
+    fn verify_with(
+        &self,
+        root: &PinnedPath,
+        cancel: &AtomicBool,
+        mut listing: impl FnMut(&PinnedPath, u64) -> Result<DirectoryEntries>,
+    ) -> Result<()> {
         cancelled(cancel)?;
         for leaf in &self.leaves {
             leaf.pin.verify().map_err(|_| error("recoveryChanged"))?;
@@ -247,15 +260,11 @@ impl Inventory {
         // At most one second map exists in addition to the <=4096-entry set
         // of first maps. This is a logical retained-entry bound, not RSS.
         for directory in &self.directories {
-            if directory_entries(&directory.pin, directory.capacity, cancel)
-                .map_err(directory_error)?
-                != directory.before
-            {
+            if listing(&directory.pin, directory.capacity)? != directory.before {
                 return Err(error("recoveryChanged"));
             }
         }
-        if directory_entries(root, MAX_ENTRIES - 1, cancel).map_err(directory_error)? != self.first
-        {
+        if listing(root, MAX_ENTRIES - 1)? != self.first {
             return Err(error("recoveryChanged"));
         }
         cancelled(cancel)
@@ -286,7 +295,7 @@ fn read(leaf: &Leaf, cancel: &AtomicBool) -> Result<Vec<u8>> {
     file.rewind().map_err(|_| error("unavailable"))?;
     let mut raw = Vec::new();
     (&mut file)
-        .take(FILE_BYTES + 1)
+        .take(leaf.before.size + 1)
         .read_to_end(&mut raw)
         .map_err(|_| error("unavailable"))?;
     cancelled(cancel)?;
@@ -444,6 +453,19 @@ impl SourceOwner {
     }
     fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
         self.inventory.verify(&self.source.scope.git, cancel)?;
+        self.recheck_roles(cancel)
+    }
+    #[cfg(test)]
+    fn recheck_with(
+        &self,
+        cancel: &AtomicBool,
+        listing: impl FnMut(&PinnedPath, u64) -> Result<DirectoryEntries>,
+    ) -> Result<()> {
+        self.inventory
+            .verify_with(&self.source.scope.git, cancel, listing)?;
+        self.recheck_roles(cancel)
+    }
+    fn recheck_roles(&self, cancel: &AtomicBool) -> Result<()> {
         self.source.scope.matches(&self.expected)?;
         self.managed_root_git.verify(&self.source)?;
         self.source
@@ -459,7 +481,7 @@ impl SourceOwner {
 // Still a transient source observation, not a complete recovery Manifest.
 // Raw source/config/index bytes do not enter a new persisted object/table.
 pub(in crate::worktrees) struct SourceGraph {
-    owner: SourceOwner,
+    owner: Arc<SourceOwner>,
     objects: Vec<String>,
 }
 impl SourceGraph {
@@ -472,7 +494,10 @@ impl SourceGraph {
         let input = super::Input::from_bytes(&ids, super::OUTPUT_LIMIT, cancel)?;
         let sizes = owner.query(Query::Sizes(input), cancel)?;
         validate_sizes(&sizes, &objects, cancel)?;
-        let result = Self { owner, objects };
+        let result = Self {
+            owner: Arc::new(owner),
+            objects,
+        };
         result.recheck(cancel)?;
         Ok(result)
     }
@@ -553,6 +578,12 @@ mod tests;
 #[cfg(test)]
 #[path = "source_graph_windows_tests.rs"]
 mod graph_tests;
+
+#[cfg(test)]
+#[path = "git_source_managed_material_windows.rs"]
+mod managed_material;
+#[cfg(test)]
+pub(crate) use managed_material::ManagedRootGitEdge;
 
 #[path = "git_source_checkout_windows.rs"]
 mod profile;

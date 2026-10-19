@@ -24,6 +24,10 @@ use std::{
 };
 use windows_sys::Win32::Foundation::CloseHandle;
 
+#[path = "material_persistent_restore.rs"]
+mod restore;
+pub(crate) use restore::MaterialTreeReceipt;
+
 const PENDING: &[u16] = &[
     46, 109, 97, 116, 101, 114, 105, 97, 108, 45, 112, 101, 110, 100, 105, 110, 103,
 ];
@@ -113,6 +117,7 @@ struct Store {
     published: bool,
     reading: bool,
     sealed_stamp: Option<Stamp>,
+    restore: Option<restore::Restore>,
     request: MaterialStoreRequest,
 }
 pub(crate) struct MaterialStoreRetirement {
@@ -220,6 +225,12 @@ impl Store {
         }
         Ok(())
     }
+    fn cleanup_all(&mut self) -> Result<()> {
+        self.restore
+            .as_mut()
+            .map_or(Ok(()), restore::Restore::cleanup)
+            .and_then(|()| self.dispose_pending())
+    }
     fn dispose_pending(&mut self) -> Result<()> {
         if self.stopped.is_some() || self.uncertain {
             return Err(Error::CleanupUnknown);
@@ -305,6 +316,15 @@ impl Store {
         file.rewind()
             .map_err(|e| io_error("materialVerifySeek", e))?;
         let verified = tree::verify_exact(&mut file, work, cancel, &self.request.resident, same)?;
+        if let Some(catalog) = expected.native_catalog.as_ref()
+            && (catalog.len() != verified.nodes.len()
+                || catalog
+                    .iter()
+                    .zip(&verified.nodes)
+                    .any(|(p, n)| !p.matches(n)))
+        {
+            return Err(Error::Changed);
+        }
         let directories = verified
             .nodes
             .iter()
@@ -377,6 +397,9 @@ pub(crate) struct OwnedSealedMaterial<'a> {
     cancel: &'a AtomicBool,
 }
 impl OwnedSealedMaterial<'_> {
+    pub(crate) fn reconstruct_tree(&mut self) -> Result<MaterialTreeReceipt> {
+        restore::rebuild(self.store, self.work, self.cancel)
+    }
     pub(crate) fn verify(&mut self) -> Result<MaterialSealReceipt> {
         self.store.verify(self.work, self.cancel)
     }
@@ -457,6 +480,7 @@ where
         published: false,
         reading: false,
         sealed_stamp: None,
+        restore: None,
         request: destination,
     });
     let mut mixed_retirement = None;
@@ -521,12 +545,12 @@ where
         if store.verify(work, cancel)? != actual {
             return Err(Error::Changed);
         }
-        store.close()?;
+        // Target cleanup must complete before the original sealed owner closes.
         Ok((value, actual))
     }))
     .unwrap_or(Err(Error::Unsupported));
     store.mixed = mixed_retirement;
-    let cleanup = store.dispose_pending();
+    let cleanup = store.cleanup_all();
     if let Err(cleanup_error) = cleanup {
         *retired = Some(MaterialStoreRetirement {
             _store: store,

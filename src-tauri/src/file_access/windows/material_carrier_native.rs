@@ -122,7 +122,7 @@ pub(super) fn facts(
 }
 fn inventory(file: &File, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<Inventory> {
     check(cancel)?;
-    let capacity = work.capacity().map_err(record)?;
+    let capacity = Inventory::query_capacity(work).map_err(record)?;
     let mut bytes = vec![0u64; BLOCK / 8];
     let mut ios = IO_STATUS_BLOCK::default();
     let status = unsafe {
@@ -215,7 +215,7 @@ pub(super) fn directory_inventory(
     cancel: &AtomicBool,
 ) -> Result<Inventory> {
     check(cancel)?;
-    let capacity = work.capacity().map_err(record)?;
+    let capacity = Inventory::query_capacity(work).map_err(record)?;
     let mut bytes = vec![0u64; BLOCK / 8];
     let mut ios = IO_STATUS_BLOCK::default();
     let status = unsafe {

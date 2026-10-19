@@ -20,6 +20,7 @@ pub(super) struct Namespace {
     cleaned: bool,
     links: Option<owned_link::State>,
     targets: Option<target_links::State>,
+    pub(super) sealed_tree: Option<sealed_tree::State>,
     directory: Option<owned_directory::State>,
     tree: Option<owned_directory_tree::State>,
     stopped_handles: Vec<StoppedHandle>,
@@ -41,6 +42,7 @@ impl Namespace {
             cleaned: false,
             links: None,
             targets: None,
+            sealed_tree: None,
             directory: None,
             tree: None,
             stopped_handles: Vec::with_capacity(5),
@@ -265,6 +267,54 @@ impl Namespace {
         self.target_carrier = Some(self.create("recapture.bin", false)?);
         Ok(())
     }
+    pub(super) fn prepare_sealed_tree(
+        &mut self,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
+        if self.sealed_tree.is_some()
+            || self.tree.is_some()
+            || self.targets.is_some()
+            || self.directory.is_some()
+            || self.target.is_some()
+        {
+            return Err(Error::Invalid);
+        }
+        self.verify()?;
+        let root = self.root.as_ref().ok_or(Error::Invalid)?;
+        let mut fs = [0u16; 32];
+        if unsafe {
+            GetVolumeInformationByHandleW(
+                handle(root),
+                ptr::null_mut(),
+                0,
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                fs.as_mut_ptr(),
+                32,
+            )
+        } == 0
+        {
+            return Err(io_error("sealedTreeVolume", io::Error::last_os_error()));
+        }
+        if fs[..4] != [78, 84, 70, 83] || fs[4] != 0 {
+            return Err(Error::Unsupported);
+        }
+        self.sealed_tree = Some(sealed_tree::State::reserve(resident)?);
+        Ok(())
+    }
+    pub(super) fn create_sealed_node(
+        &mut self,
+        node: &crate::file_access::material_mixed_tree_records::Node,
+        cancel: &AtomicBool,
+    ) -> Result<()> {
+        self.verify()?;
+        self.sealed_tree.as_mut().ok_or(Error::Invalid)?.create(
+            self.root.as_ref().ok_or(Error::Invalid)?,
+            node,
+            cancel,
+        )
+    }
     pub fn create_directory_target(
         &mut self,
         full: bool,
@@ -459,6 +509,9 @@ impl Namespace {
         if let Some(links) = self.links.as_mut() {
             links.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
+        if let Some(sealed) = self.sealed_tree.as_mut() {
+            sealed.cleanup()?;
+        }
         if let Some(targets) = self.targets.as_mut() {
             targets.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
@@ -639,6 +692,9 @@ mod owned_directory_tree;
 
 #[path = "material_owned_directory.rs"]
 mod owned_directory;
+
+#[path = "material_sealed_tree_targets.rs"]
+pub(super) mod sealed_tree;
 
 #[path = "material_target_link_groups.rs"]
 pub(super) mod target_links;
