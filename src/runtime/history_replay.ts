@@ -31,8 +31,13 @@ export class HistoryReplayBuffer {
       token === undefined
         ? this.events.length
         : (this.boundaries.get(token) ?? 0);
-    const prefix = this.events.slice(0, end);
-    const following = this.events.slice(end);
+    // Transfer the owned array at complete/empty boundaries. A partial marker
+    // still needs two independent slices; clear() always starts a fresh owner.
+    const events = this.events;
+    const prefix =
+      end === 0 ? [] : end === events.length ? events : events.slice(0, end);
+    const following =
+      end === 0 ? events : end === events.length ? [] : events.slice(end);
     this.clear();
     return { prefix, following };
   }
