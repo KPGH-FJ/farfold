@@ -40,9 +40,28 @@ pub struct RecycleInput {
     pub action: RecycleAction,
     pub expected_draft_baseline: DraftBaseline,
 }
+// A default-data observation is not an independent Windows recovery profile.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum MaterialProfile {
+    #[serde(rename = "windowsDefaultDataV1")]
+    WindowsDefaultDataV1,
+}
+// Missing is the historical Unix representation; an explicit null is not
+// silently downgraded to that representation.
+fn material_profile<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> Result<Option<MaterialProfile>, D::Error> {
+    MaterialProfile::deserialize(d).map(Some)
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MaterialSummary {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "material_profile"
+    )]
+    pub profile: Option<MaterialProfile>,
     pub entries: u64,
     pub bytes: u64,
     pub sha256: String,

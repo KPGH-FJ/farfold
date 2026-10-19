@@ -34,7 +34,9 @@ use windows_sys::{
 mod directory;
 pub(crate) use directory::entries as directory_entries;
 mod metadata;
-pub(crate) use metadata::{EntryMetadata, MetadataFailure, MetadataKind, metadata_child};
+pub(crate) use metadata::{
+    EntryMetadata, MetadataFailure, MetadataKind, metadata_child, metadata_file,
+};
 mod pinned;
 pub(crate) use pinned::PinnedPath;
 #[cfg(test)]

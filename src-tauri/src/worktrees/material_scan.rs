@@ -27,7 +27,7 @@ pub(super) fn hex(bytes: impl AsRef<[u8]>) -> String {
 #[cfg(unix)]
 struct Scan {
     hash: Sha256,
-    entries: u64,
+    entries: ListingBudget,
     bytes: u64,
     content_only: bool,
 }
@@ -37,19 +37,12 @@ impl Scan {
         self.hash.update((raw.len() as u64).to_le_bytes());
         self.hash.update(raw);
     }
-    fn count(&mut self, cancel: &AtomicBool) -> Result<()> {
-        if cancel.load(Ordering::SeqCst) {
-            return Err(error("cancelled"));
-        }
-        self.entries += 1;
-        if self.entries > MAX_ENTRIES {
-            return Err(error("materialLimit"));
-        }
-        Ok(())
-    }
 }
 #[cfg(unix)]
-fn names(dir: &File) -> Result<Vec<Vec<u8>>> {
+fn names(dir: &File, remaining: u64, cancel: &AtomicBool) -> Result<Vec<Vec<u8>>> {
+    if cancel.load(Ordering::SeqCst) {
+        return Err(error("cancelled"));
+    }
     // O_SEARCH descriptors cannot enumerate; reopen exactly this held directory.
     let fd = unsafe {
         libc::openat(
@@ -77,6 +70,9 @@ fn names(dir: &File) -> Result<Vec<Vec<u8>>> {
     let stream = Entries(stream);
     let mut result = Vec::new();
     loop {
+        if cancel.load(Ordering::SeqCst) {
+            return Err(error("cancelled"));
+        }
         #[cfg(target_os = "macos")]
         unsafe {
             *libc::__error() = 0;
@@ -99,10 +95,12 @@ fn names(dir: &File) -> Result<Vec<Vec<u8>>> {
         if name.is_empty() || name.contains(&b'/') || name.len() > 255 {
             return Err(error("unsafePath"));
         }
-        result.push(name.to_vec());
-        if result.len() as u64 > MAX_ENTRIES {
+        // Refuse before retaining another name; dot entries never consume
+        // capacity, but the linked root .git pointer keeps its historical count.
+        if u64::try_from(result.len()).map_err(|_| error("materialLimit"))? >= remaining {
             return Err(error("materialLimit"));
         }
+        result.push(name.to_vec());
     }
     result.sort();
     Ok(result)
@@ -135,7 +133,13 @@ fn walk(
         return Err(error("materialLimit"));
     }
     let before = crate::file_access::stamp(dir).map_err(|_| error("unavailable"))?;
-    let children = names(dir)?;
+    // Ancestor name vectors remain live while a first child is traversed.
+    // Reserve every returned name before any descendant or content processing.
+    let (children, _) = scan.entries.collect(
+        cancel,
+        |remaining| names(dir, remaining, cancel),
+        |children| children.len(),
+    )?;
     if depth > 0
         && (children.iter().any(|n| n == b".git")
             || (children.iter().any(|n| n == b"HEAD")
@@ -145,7 +149,9 @@ fn walk(
         return Err(error("nestedRepository"));
     }
     for raw in children {
-        scan.count(cancel)?;
+        if cancel.load(Ordering::SeqCst) {
+            return Err(error("cancelled"));
+        }
         let name = CString::new(raw.as_slice()).map_err(|_| error("unsafePath"))?;
         let meta = metadata(dir, &name)?;
         if depth == 0 && raw == b".git" {
@@ -282,8 +288,65 @@ fn walk(
     }
     Ok(())
 }
+// Counts every first complete listing before descendants can be queried.
+// The lifetime of a returned map is not a memory/RSS measurement. The first
+// maps have at most limit entries in aggregate; a recheck may add another map
+// bounded by that level's original query capacity, plus bounded parser pages.
+#[cfg(any(unix, windows, test))]
+struct ListingBudget {
+    limit: u64,
+    reserved: u64,
+}
+#[cfg(any(unix, windows, test))]
+impl ListingBudget {
+    fn new(limit: u64) -> Self {
+        Self { limit, reserved: 0 }
+    }
+    fn remaining(&self) -> u64 {
+        self.limit - self.reserved
+    }
+    fn reserve(&mut self, entries: usize) -> Result<()> {
+        let entries = u64::try_from(entries).map_err(|_| error("materialLimit"))?;
+        let next = self
+            .reserved
+            .checked_add(entries)
+            .ok_or(error("materialLimit"))?;
+        if next > self.limit {
+            return Err(error("materialLimit"));
+        }
+        self.reserved = next;
+        Ok(())
+    }
+    fn collect<T>(
+        &mut self,
+        cancel: &AtomicBool,
+        query: impl FnOnce(u64) -> Result<T>,
+        len: impl FnOnce(&T) -> usize,
+    ) -> Result<(T, u64)> {
+        if cancel.load(std::sync::atomic::Ordering::SeqCst) {
+            return Err(error("cancelled"));
+        }
+        let capacity = self.remaining();
+        let listed = query(capacity)?;
+        if cancel.load(std::sync::atomic::Ordering::SeqCst) {
+            return Err(error("cancelled"));
+        }
+        self.reserve(len(&listed))?;
+        Ok((listed, capacity))
+    }
+}
+#[cfg(windows)]
+#[path = "material_windows.rs"]
+mod windows;
 pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
-    scan(root, cancel, false)
+    #[cfg(windows)]
+    {
+        windows::capture(root, cancel)
+    }
+    #[cfg(not(windows))]
+    {
+        scan(root, cancel, false)
+    }
 }
 pub(super) fn content(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
     scan(root, cancel, true)
@@ -299,7 +362,7 @@ fn scan(root: &Path, cancel: &AtomicBool, content_only: bool) -> Result<Material
         let dir = crate::file_access::open_directory(root).map_err(|_| error("unsafePath"))?;
         let mut scan = Scan {
             hash: Sha256::new(),
-            entries: 0,
+            entries: ListingBudget::new(MAX_ENTRIES),
             bytes: 0,
             content_only,
         };
@@ -318,9 +381,14 @@ fn scan(root: &Path, cancel: &AtomicBool, content_only: bool) -> Result<Material
             return Err(error("materialChanged"));
         }
         Ok(MaterialSummary {
-            entries: scan.entries,
+            profile: None,
+            entries: scan.entries.reserved,
             bytes: scan.bytes,
             sha256: hex(scan.hash.finalize()),
         })
     }
 }
+
+#[cfg(test)]
+#[path = "material_profile_tests.rs"]
+mod profile_tests;

@@ -27,6 +27,21 @@ pub(crate) struct EntryMetadata {
 }
 
 impl EntryMetadata {
+    // Fixed-width observation fields, not security/EA/ADS contents or restore data.
+    pub(crate) fn version_fields(&self) -> Vec<u8> {
+        let mut out = Vec::new();
+        out.extend(self.identity.device.to_le_bytes());
+        out.extend(self.identity.inode.to_le_bytes());
+        out.extend(self.attributes.to_le_bytes());
+        out.extend(self.reparse_tag.to_le_bytes());
+        out.extend(self.size.to_le_bytes());
+        out.extend(self.allocation_size.to_le_bytes());
+        out.extend(self.links.to_le_bytes());
+        out.extend(self.created.to_le_bytes());
+        out.extend(self.modified.to_le_bytes());
+        out.extend(self.changed.to_le_bytes());
+        out
+    }
     pub(crate) fn matches_directory_entry(
         &self,
         listed: &crate::file_access::DirectoryObservation,
@@ -165,24 +180,18 @@ fn exact_name(file: &File, component: &OsStr) -> Result<(), MetadataFailure> {
     Ok(())
 }
 
-pub(crate) fn metadata_child(
-    parent: &File,
-    component: &OsStr,
-) -> Result<Option<EntryMetadata>, MetadataFailure> {
-    let Some(file) = open(parent, component)? else {
-        return Ok(None);
-    };
-    if unsafe { GetFileType(handle(&file)) } != FILE_TYPE_DISK {
+pub(crate) fn metadata_file(file: &File) -> Result<EntryMetadata, MetadataFailure> {
+    if unsafe { GetFileType(handle(file)) } != FILE_TYPE_DISK {
         return Err(MetadataFailure::invalid("fileType"));
     }
     let id: FILE_ID_INFO =
-        info(&file, FileIdInfo).map_err(|e| MetadataFailure::io("identity", e))?;
+        info(file, FileIdInfo).map_err(|e| MetadataFailure::io("identity", e))?;
     let basic: FILE_BASIC_INFO =
-        info(&file, FileBasicInfo).map_err(|e| MetadataFailure::io("basic", e))?;
+        info(file, FileBasicInfo).map_err(|e| MetadataFailure::io("basic", e))?;
     let standard: FILE_STANDARD_INFO =
-        info(&file, FileStandardInfo).map_err(|e| MetadataFailure::io("standard", e))?;
+        info(file, FileStandardInfo).map_err(|e| MetadataFailure::io("standard", e))?;
     let tag: FILE_ATTRIBUTE_TAG_INFO =
-        info(&file, FileAttributeTagInfo).map_err(|e| MetadataFailure::io("tag", e))?;
+        info(file, FileAttributeTagInfo).map_err(|e| MetadataFailure::io("tag", e))?;
     if standard.DeletePending
         || standard.EndOfFile < 0
         || standard.AllocationSize < 0
@@ -192,7 +201,6 @@ pub(crate) fn metadata_child(
     {
         return Err(MetadataFailure::invalid("inconsistent"));
     }
-    exact_name(&file, component)?;
     let reparse = basic.FileAttributes & FILE_ATTRIBUTE_REPARSE_POINT != 0;
     let kind = if reparse {
         if tag.ReparseTag == IO_REPARSE_TAG_SYMLINK {
@@ -206,7 +214,7 @@ pub(crate) fn metadata_child(
     } else {
         MetadataKind::File
     };
-    Ok(Some(EntryMetadata {
+    Ok(EntryMetadata {
         kind,
         identity: Identity {
             device: id.VolumeSerialNumber,
@@ -220,7 +228,19 @@ pub(crate) fn metadata_child(
         created: basic.CreationTime,
         modified: basic.LastWriteTime,
         changed: basic.ChangeTime,
-    }))
+    })
+}
+
+pub(crate) fn metadata_child(
+    parent: &File,
+    component: &OsStr,
+) -> Result<Option<EntryMetadata>, MetadataFailure> {
+    let Some(file) = open(parent, component)? else {
+        return Ok(None);
+    };
+    let value = metadata_file(&file)?;
+    exact_name(&file, component)?;
+    Ok(Some(value))
 }
 
 #[cfg(test)]

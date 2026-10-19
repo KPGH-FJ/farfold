@@ -244,6 +244,7 @@ fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
 }
 fn validate(m: &Manifest) -> Result<()> {
     if m.version != 1
+        || m.content.profile.is_some()
         || !matches!(m.roots.format.as_str(), "sha1" | "sha256")
         || !oid(&m.roots.head)
         || m.roots.commits.is_empty()
@@ -682,4 +683,32 @@ fn file_identity(path: &Path) -> Result<FileIdentity> {
     {
         Err(error("unsupportedGit"))
     }
+}
+
+#[cfg(test)]
+#[test]
+fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
+    use super::recycle_types::MaterialProfile;
+    let head = "a".repeat(40);
+    let mut manifest = Manifest {
+        version: 1,
+        roots: Roots {
+            head: head.clone(),
+            format: "sha1".into(),
+            commits: vec![head.clone()],
+            files: Vec::new(),
+        },
+        objects: vec![head],
+        content: MaterialSummary {
+            profile: None,
+            entries: 0,
+            bytes: 0,
+            sha256: "b".repeat(64),
+        },
+        configs: Vec::new(),
+        attributes: Vec::new(),
+    };
+    validate(&manifest).unwrap();
+    manifest.content.profile = Some(MaterialProfile::WindowsDefaultDataV1);
+    assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
 }

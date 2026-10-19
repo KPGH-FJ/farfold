@@ -16,6 +16,7 @@ pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, 
 #[cfg(windows)]
 pub(crate) use windows::{
     EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, directory_entries, metadata_child,
+    metadata_file,
 };
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};

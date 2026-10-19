@@ -206,6 +206,8 @@ impl SavedArchive {
             && Path::new(&a.original_path).parent() == Some(Path::new(&self.parent))
             && Path::new(&a.retained_path).parent() == Some(Path::new(&self.retained_parent))
             && Path::new(&self.retained_parent).parent() == Some(Path::new(&self.parent))
+            // Partial read observations are not legacy archive material authority.
+            && self.material.profile.is_none()
             && self.material.entries <= 100_000
             && self.material.bytes <= 1024 * 1024 * 1024
             && self.material.sha256.len() == 64

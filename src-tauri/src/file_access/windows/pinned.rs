@@ -170,6 +170,46 @@ impl PinnedPath {
             .lock()
             .map_err(|_| io::Error::other("directory scan owner poisoned"))
     }
+    // Opens a fresh child FileObject relative to this actual held parent.
+    // Ancestor duplicates are used only for verification, never enumeration.
+    pub(crate) fn child(&self, raw: &[u16], directory: bool) -> io::Result<Self> {
+        self.verify()?;
+        // Current local-path admission supports ordinary Unicode spelling only.
+        // Unsupported raw names fail the whole observation; never lossy-convert.
+        let text = String::from_utf16(raw).map_err(|_| invalid())?;
+        let child = open_at_shared(
+            self.file(),
+            OsStr::new(&text),
+            directory,
+            false,
+            FILE_SHARE_READ | if directory { FILE_SHARE_WRITE } else { 0 },
+        )?;
+        let mut files = self
+            .files
+            .iter()
+            .map(File::try_clone)
+            .collect::<io::Result<Vec<_>>>()?;
+        let child_identity = stamp(&child)?.identity;
+        let path = final_path(&child, FILE_NAME_NORMALIZED | VOLUME_NAME_DOS)?;
+        if path.len() > 4096 {
+            return Err(invalid());
+        }
+        absolute(Path::new(&path))?;
+        let guid_path = local_guid(&child)?;
+        files.push(child);
+        let mut identities = self.identities.clone();
+        identities.push(child_identity);
+        let result = Self {
+            files,
+            directory_scan: Mutex::new(()),
+            identities,
+            path,
+            guid_path,
+        };
+        self.verify()?;
+        result.verify()?;
+        Ok(result)
+    }
     pub(crate) fn file(&self) -> &File {
         self.files.last().expect("pinned leaf")
     }
