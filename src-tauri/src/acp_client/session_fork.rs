@@ -127,6 +127,7 @@ pub(crate) struct ForkRequest {
     pub events: SessionSink,
     pub delivery_failed: Arc<AtomicBool>,
     pub parent_opening: super::lifecycle::OpenReservation,
+    pub(super) history: Option<super::history_admission::Permit>,
 }
 
 fn opened_result(
@@ -309,7 +310,7 @@ mod owner_tests;
 
 impl AcpManager {
     #[allow(clippy::too_many_arguments)]
-    pub(crate) async fn fork_current(
+    pub(super) async fn fork_current(
         &self,
         row: AgentRow,
         cwd: &Path,
@@ -320,6 +321,7 @@ impl AcpManager {
         events: SessionSink,
         delivery_failed: Arc<AtomicBool>,
         store: &MetaStore,
+        history: Option<super::history_admission::Permit>,
     ) -> Result<ForkResult, String> {
         let result = self
             .begin_fork(
@@ -332,6 +334,7 @@ impl AcpManager {
                 events,
                 delivery_failed,
                 store,
+                history,
             )
             .await;
         Ok(match result {
@@ -342,7 +345,7 @@ impl AcpManager {
         })
     }
     #[allow(clippy::too_many_arguments)]
-    pub(crate) async fn begin_fork(
+    pub(super) async fn begin_fork(
         &self,
         row: AgentRow,
         cwd: &Path,
@@ -353,6 +356,7 @@ impl AcpManager {
         events: SessionSink,
         delivery_failed: Arc<AtomicBool>,
         store: &MetaStore,
+        history: Option<super::history_admission::Permit>,
     ) -> Result<Arc<SourceFork>, AdmissionFailure> {
         let connection = self.session_connection(&row.id, cwd, parent)?;
         if connection.connection_id != connection_id {
@@ -381,6 +385,7 @@ impl AcpManager {
             events,
             delivery_failed,
             parent_opening,
+            history,
         };
         crate::work_policy::admit(store, &request.row.id.clone(), cwd, || async {
             let (reply, receive) = oneshot::channel();
@@ -418,12 +423,14 @@ impl AcpManager {
 pub async fn session_fork_current(
     app: AppHandle,
     webview: Webview,
+    window: tauri::Window,
     agent_id: String,
     cwd: String,
     parent_session_id: String,
     connection_id: String,
     operation_id: String,
     open_token: String,
+    admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
     channel: Channel<Value>,
 ) -> Result<ForkResult, String> {
     if !crate::browser_workspace::caller_allowed(&webview) {
@@ -446,6 +453,17 @@ pub async fn session_fork_current(
             AdmissionFailure::rejected("unavailable"),
         ));
     }
+    let manager = app.state::<AcpManager>();
+    let store = app.state::<MetaStore>();
+    let mut request = super::history_admission_commands::HistoryRequest::from_window(
+        &manager,
+        &window,
+        &open_token,
+        &agent_id,
+        admission_channel,
+    )?;
+    let mut preparation =
+        super::history_admission_commands::HistoryPreparation::new(request.progress.clone());
     let row = match super::manager::require_agent_row(&app, &agent_id).await {
         Ok(row) => row,
         Err(_) => {
@@ -470,6 +488,28 @@ pub async fn session_fork_current(
             ));
         }
     };
+    // Reserve outside the cwd work-policy lock and before official fork.
+    // Source load and final independent load share this same Slot.
+    request.preparation_bytes = std::mem::size_of::<ForkRequest>()
+        .checked_add(connection_id.len())
+        .and_then(|v| v.checked_add(operation_id.len()))
+        .ok_or("读取所需设置较大，暂时无法开始；原记录与设置已保留。")?;
+    let history = match manager
+        .admit_cold_history(&row, &cwd, &parent_session_id, &[], &store, None, request)
+        .await
+    {
+        Ok(history) => history,
+        Err(_) => {
+            return Ok(ForkResult::before_dispatch(
+                operation_id,
+                &connection_id,
+                &parent_session_id,
+                &cwd,
+                AdmissionFailure::rejected("unavailable"),
+            ));
+        }
+    };
+    preparation.ready();
     let failed = Arc::new(AtomicBool::new(false));
     let delivery_failed = failed.clone();
     let events: SessionSink = Arc::new(move |event| {
@@ -488,6 +528,7 @@ pub async fn session_fork_current(
             events,
             delivery_failed,
             &app.state::<MetaStore>(),
+            Some(history),
         )
         .await
 }

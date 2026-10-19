@@ -250,3 +250,76 @@ fn owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows()
     })
     .unwrap();
 }
+
+// A real OS sharing control, not a predicate-only reconstruction of the flags.
+fn new_delete_open_is_denied(owner: &mut OwnedLinks) {
+    use std::{fs::File, os::windows::io::FromRawHandle};
+    use windows_sys::Win32::{
+        Foundation::{ERROR_SHARING_VIOLATION, INVALID_HANDLE_VALUE},
+        Storage::FileSystem::{
+            CreateFileW, DELETE, FILE_FLAG_OPEN_REPARSE_POINT, FILE_NAME_NORMALIZED,
+            FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, GetFinalPathNameByHandleW,
+            OPEN_EXISTING,
+        },
+    };
+    let file = owner.target().unwrap();
+    let need = unsafe {
+        GetFinalPathNameByHandleW(
+            file.as_raw_handle(),
+            std::ptr::null_mut(),
+            0,
+            FILE_NAME_NORMALIZED,
+        )
+    };
+    assert!((1..32768).contains(&need));
+    let mut path = vec![0u16; need as usize + 1];
+    let used = unsafe {
+        GetFinalPathNameByHandleW(
+            file.as_raw_handle(),
+            path.as_mut_ptr(),
+            path.len() as u32,
+            FILE_NAME_NORMALIZED,
+        )
+    };
+    assert!(used > 0 && (used as usize) < path.len());
+    let raw = unsafe {
+        CreateFileW(
+            path.as_ptr(),
+            DELETE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            std::ptr::null(),
+            OPEN_EXISTING,
+            FILE_FLAG_OPEN_REPARSE_POINT,
+            std::ptr::null_mut(),
+        )
+    };
+    let error = std::io::Error::last_os_error().raw_os_error();
+    if raw != INVALID_HANDLE_VALUE {
+        drop(unsafe { File::from_raw_handle(raw) });
+        panic!("a new DELETE open must not bypass the original link owner");
+    }
+    assert_eq!(error, Some(ERROR_SHARING_VIOLATION as i32));
+}
+#[test]
+fn original_primary_blocks_new_delete_opens_before_and_after_verified_link() {
+    owned(false, |owner| {
+        fill(owner)?;
+        new_delete_open_is_denied(owner);
+        let receipt = link(owner, &[65])?;
+        assert_eq!(receipt.links, 2);
+        assert_eq!(receipt.identity, receipt.alias_identity);
+        new_delete_open_is_denied(owner);
+        Ok(())
+    })
+    .unwrap();
+}
+#[test]
+fn verified_alias_followed_by_caller_error_still_closes_the_exact_owner() {
+    let result = owned(false, |owner| {
+        fill(owner)?;
+        let receipt = link(owner, &[66])?;
+        assert_eq!(receipt.links, 2);
+        Err::<(), _>(E::Cancelled)
+    });
+    assert_eq!(result.err(), Some(E::Cancelled));
+}

@@ -305,6 +305,7 @@ async fn abandoned_open(timeout: bool) {
             &f.store,
             None,
             Some("retry".into()),
+            None,
         )
         .await;
     assert!(
@@ -323,6 +324,7 @@ async fn abandoned_open(timeout: bool) {
             &f.store,
             None,
             Some("retry-after-reaping".into()),
+            None,
         )
         .await;
     let retried = reopened.is_ok();

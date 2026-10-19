@@ -31,6 +31,12 @@ it.each([false, true])(
       nativeSessionId: native,
     };
     h.invoke.mockImplementation((command, args) => {
+      if (command === "session_history_delivery_ack")
+        return Promise.resolve({
+          receiptId: args.receiptId,
+          openToken: args.openToken,
+          outcome: "acknowledged",
+        });
       if (command !== "session_open") return Promise.resolve([]);
       raw = args.channel;
       progress = args.admissionChannel;
@@ -105,6 +111,10 @@ it.each([false, true])(
       kind: "session_history_admission",
       openToken: token,
       phase: "starting",
+      historyDelivery: {
+        receiptId: responseFirst ? 501 : 502,
+        openToken: token,
+      },
     });
     raw.onmessage({ kind: "session_history_complete", openToken: token });
     raw.onmessage({

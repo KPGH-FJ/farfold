@@ -49,7 +49,7 @@ fn cancelled(cancel: &AtomicBool) -> Result<(), Failure> {
 fn invalid() -> io::Error {
     io::Error::from(io::ErrorKind::InvalidData)
 }
-fn into_io(value: Failure) -> io::Error {
+pub(super) fn into_io(value: Failure) -> io::Error {
     match value {
         Failure::Io { kind, code, .. } => {
             code.map_or_else(|| kind.into(), io::Error::from_raw_os_error)
@@ -60,12 +60,12 @@ fn into_io(value: Failure) -> io::Error {
         _ => invalid(),
     }
 }
-struct Guid {
+pub(super) struct Guid {
     units: Vec<u16>,
     volume: [u8; 36],
     _memory: ResidentLease,
 }
-fn guid(file: &File, resident: &Resident) -> Result<Guid, Failure> {
+pub(super) fn guid(file: &File, resident: &Resident) -> Result<Guid, Failure> {
     let flags = FILE_NAME_NORMALIZED | VOLUME_NAME_GUID;
     let count = unsafe { GetFinalPathNameByHandleW(handle(file), ptr::null_mut(), 0, flags) };
     if count == 0 {
@@ -120,6 +120,26 @@ fn guid(file: &File, resident: &Resident) -> Result<Guid, Failure> {
         volume,
         _memory: memory,
     })
+}
+impl Guid {
+    // Material-only actual-handle spelling. This is not path/open authority.
+    pub(super) fn same_path(&self, other: &Self) -> bool {
+        self.volume == other.volume && self.units == other.units
+    }
+    pub(super) fn child_of(&self, parent: &Self, leaf: &[u16]) -> bool {
+        if material_raw_name::check(leaf).is_err() || self.volume != parent.volume {
+            return false;
+        }
+        // No joined Vec/String/lossy conversion: compare the exact counted edge
+        // to the actual held parent's raw GUID spelling, including all units.
+        let separator = (parent.units.last() != Some(&92)).then_some(92);
+        self.units.iter().copied().eq(parent
+            .units
+            .iter()
+            .copied()
+            .chain(separator)
+            .chain(leaf.iter().copied()))
+    }
 }
 fn ordinary(meta: &EntryMetadata) -> bool {
     // Both metadata-only and actual data-handle checks precede any body read.

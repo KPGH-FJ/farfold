@@ -36,6 +36,7 @@ const TARGET: &[u16] = &[
 pub(super) struct State {
     primary: Option<File>,
     alias: Option<File>,
+    cleanup_alias: Option<File>,
     leaf: Vec<u16>,
     attempted: bool,
     pending: bool,
@@ -52,12 +53,13 @@ impl State {
         Ok(Self {
             primary: None,
             alias: None,
+            cleanup_alias: None,
             leaf: Vec::with_capacity(255),
             attempted: false,
             pending: false,
             status: None,
             full_security: full,
-            stopped: Vec::with_capacity(2),
+            stopped: Vec::with_capacity(3),
             buffer: None,
             buffer_memory: None,
             _memory: memory,
@@ -77,7 +79,10 @@ impl State {
                 } else {
                     0
                 },
-            FILE_SHARE_READ | FILE_SHARE_DELETE,
+            // This original FileObject has DELETE for its own cleanup, but
+            // denies later DELETE opens. Its original parent cannot move
+            // while the same-directory link operation is in progress.
+            FILE_SHARE_READ,
             &mut raw,
         );
         if code >= 0 && !raw.is_null() && raw != INVALID_HANDLE_VALUE {
@@ -97,25 +102,76 @@ impl State {
         }
         Ok(())
     }
-    pub(super) fn cleanup(&mut self) -> Result<()> {
+    pub(super) fn cleanup(&mut self, root: &File) -> Result<()> {
         if self.pending || !self.stopped.is_empty() {
             return Err(Error::CleanupUnknown);
         }
         if let Some(primary) = self.primary.as_ref() {
-            // Own new object only. Attribute normalization is the same cleanup
-            // action as the old namespace, now before alias dispositions.
             let mut basic: FILE_BASIC_INFO =
                 info(primary, FileBasicInfo).map_err(|e| io_error("linkCleanupBasic", e))?;
             basic.FileAttributes = FILE_ATTRIBUTE_NORMAL;
             set_basic(primary, &basic)?;
         }
-        for leaf in [&mut self.alias, &mut self.primary] {
-            if let Some(file) = leaf.as_ref() {
-                dispose(file)?;
+        if self.alias.is_some() {
+            let primary = self.primary.as_ref().ok_or(Error::Invalid)?;
+            let expected = stamp(primary).map_err(|e| io_error("linkCleanupPrimary", e))?;
+            let alias = stamp(self.alias.as_ref().ok_or(Error::Invalid)?)
+                .map_err(|e| io_error("linkCleanupAlias", e))?;
+            if !expected.regular
+                || !alias.regular
+                || expected.links != 2
+                || alias.links != 2
+                || expected.identity != alias.identity
+            {
+                return Err(Error::Changed);
             }
-            close(leaf, &mut self.stopped)?;
+            // The read-only alias keeps the actual object alive. Close the
+            // primary's DELETE FileObject before asking for another DELETE
+            // open; no sharing flag on the original namespace is widened.
+            dispose(primary)?;
+            close(&mut self.primary, &mut self.stopped)?;
+            self.delete_verified_alias(root, &expected.identity)?;
+            close(&mut self.alias, &mut self.stopped)?;
+        } else {
+            if let Some(primary) = self.primary.as_ref() {
+                dispose(primary)?;
+            }
+            close(&mut self.primary, &mut self.stopped)?;
         }
         Ok(())
+    }
+    fn delete_verified_alias(&mut self, root: &File, expected: &Identity) -> Result<()> {
+        // This is a non-atomic name reacquisition, not immutable authority.
+        // Capture its actual handle before any fallible status/identity check.
+        // A replacement is never disposed. On failure the original READ alias,
+        // any returned DELETE handle and the namespace stay in the same owner.
+        let mut raw = ptr::null_mut();
+        let code = open(
+            root,
+            &self.leaf,
+            FILE_OPEN,
+            FILE_READ_ATTRIBUTES | DELETE | SYNCHRONIZE,
+            FILE_SHARE_READ,
+            &mut raw,
+        );
+        if code >= 0 && !raw.is_null() && raw != INVALID_HANDLE_VALUE {
+            self.cleanup_alias = Some(unsafe { File::from_raw_handle(raw) });
+        }
+        if code != 0 {
+            return Err(Error::NtStatus {
+                phase: "ownedLinkCleanupAliasOpen",
+                status: code,
+            });
+        }
+        let actual = self.cleanup_alias.as_ref().ok_or(Error::Invalid)?;
+        for file in [actual, self.alias.as_ref().ok_or(Error::Invalid)?] {
+            let value = stamp(file).map_err(|e| io_error("linkCleanupAliasVerify", e))?;
+            if !value.regular || &value.identity != expected || value.links != 1 {
+                return Err(Error::Changed);
+            }
+        }
+        dispose(actual)?;
+        close(&mut self.cleanup_alias, &mut self.stopped)
     }
 }
 // A non-Clone value containing the existing namespace. Caller must reserve its
@@ -266,7 +322,10 @@ impl OwnedLinks {
             .cast::<FILE_LINK_INFORMATION>();
         unsafe {
             (*record).Anonymous.ReplaceIfExists = false;
-            (*record).RootDirectory = handle(root);
+            // A checked single leaf beside this original, DELETE-denying
+            // FileObject: use the documented same-parent branch. Passing
+            // our share=0 root would force an incompatible directory open.
+            (*record).RootDirectory = ptr::null_mut();
             (*record).FileNameLength = (leaf.len() * 2) as u32;
             ptr::copy_nonoverlapping(
                 leaf.as_ptr(),
@@ -305,11 +364,10 @@ impl OwnedLinks {
         }
         drop(state.buffer.take());
         drop(state.buffer_memory.take());
-        // Acquire the alias's original FileObject without closing the primary.
-        // Its DELETE access is compatible only with the link-purpose target.
+        // Hold the actual alias without requesting DELETE: the primary
+        // still denies any new DELETE opens and therefore cannot move.
         let mut raw = ptr::null_mut();
         let access = FILE_GENERIC_READ
-            | DELETE
             | if state.full_security {
                 ACCESS_SYSTEM_SECURITY
             } else {

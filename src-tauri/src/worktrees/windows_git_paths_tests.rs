@@ -9,8 +9,8 @@ fn actual_held_dos_spellings_pair_full_identity_and_stamp_without_searching_a_pr
     let directory = PinnedPath::directory(&root).unwrap();
     let file = PinnedPath::regular(&root.join("owned.txt")).unwrap();
     let forms = Paths::new(&[&directory, &file]).unwrap();
-    assert_eq!(forms.path(&directory).unwrap(), Path::new(&directory.path));
-    assert_eq!(forms.path(&file).unwrap(), Path::new(&file.path));
+    assert_eq!(forms.pairs[0].alias.path, directory.path);
+    assert_eq!(forms.pairs[1].alias.path, file.path);
     assert_eq!(forms.pairs[1].before, stamp(file.file()).unwrap());
     assert_eq!(forms.pairs[1].alias.identity(), file.identity());
     assert!(fs::write(root.join("owned.txt"), b"must not replace").is_err());

@@ -6,6 +6,9 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
 };
 
+#[path = "history_delivery_fork_manager_tests.rs"]
+mod history_delivery_tests;
+
 const FORK_PEER: &str = r#"
 import sys,json,os,time,threading,pathlib
 lock=threading.Lock(); active=set();answers={}
@@ -114,6 +117,7 @@ async fn begin(f: &Fixture, connection: &str, events: &Events) -> Arc<SourceFork
             sink(events),
             Arc::new(AtomicBool::new(false)),
             &f.store,
+            None,
         )
         .await
         .unwrap()
@@ -273,7 +277,8 @@ async fn fork_inflight_barrier_blocks_parent_mutations_reaping_and_second_fork()
                 "two".into(),
                 sink(&events),
                 Arc::new(AtomicBool::new(false)),
-                &f.store
+                &f.store,
+                None,
             )
             .await
             .is_err()
@@ -431,6 +436,7 @@ async fn fork_dropped_rpc_keeps_all_three_late_inquiries_and_final_replay() {
                 output,
                 Arc::new(AtomicBool::new(false)),
                 &store,
+                None,
             )
             .await
     });
@@ -593,6 +599,7 @@ async fn fork_safe_rejections_are_explicit_and_do_not_send_requests() {
                 sink(&events),
                 Arc::new(AtomicBool::new(false)),
                 &f.store,
+                None,
             )
             .await
             .unwrap();
@@ -778,6 +785,7 @@ async fn fork_mcp_checks_actual_owner_admission_without_copying_offer() {
             sink(&events),
             Arc::new(AtomicBool::new(false)),
             &f.store,
+            None,
         )
         .await
         .unwrap();
@@ -933,6 +941,7 @@ async fn fork_cross_directory_opening_first_excludes_known_pending_id_only_for_s
                     &store,
                     None,
                     Some("preview".into()),
+                    None,
                 )
                 .await
         });
@@ -978,6 +987,7 @@ async fn fork_cross_directory_opening_after_claim_cannot_bypass_same_child_holde
             &f.store,
             None,
             Some("preview".into()),
+            None,
         )
         .await;
     std::fs::remove_file(f.cwd.join("hold-source-load")).unwrap();

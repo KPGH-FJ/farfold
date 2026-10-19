@@ -42,7 +42,10 @@ impl Operation {
             history: None,
         }
     }
-    fn with_history(mut self, history: Option<super::history_admission::Permit>) -> Self {
+    pub(super) fn with_history(
+        mut self,
+        history: Option<super::history_admission::Permit>,
+    ) -> Self {
         self.history = history;
         self
     }

@@ -147,3 +147,11 @@ mod directory_tree_tests;
 #[cfg(all(windows, test))]
 #[path = "material_regular_shared_owner_tests.rs"]
 mod regular_shared_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_mixed_tree_owner_tests.rs"]
+mod mixed_tree_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_alias_topology_owner_tests.rs"]
+mod alias_topology_tests;

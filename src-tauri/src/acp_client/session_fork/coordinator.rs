@@ -58,7 +58,9 @@ pub(crate) fn start(
         return Err("此对话暂不支持复制当前内容".into());
     }
     let work = ops.life.work()?;
-    let lease = ops.life.operation(format!("fork:{}", request.parent))?;
+    let lease = ops
+        .life
+        .operation_with_history(format!("fork:{}", request.parent), request.history.clone())?;
     let result = ForkResult {
         status: "unknown",
         operation_id: request.operation_id.clone(),
@@ -255,7 +257,7 @@ async fn run(
         &sessions,
         &pending,
         ops.clone(),
-        Operation::new(),
+        Operation::new().with_history(request.history.clone()),
         None,
         Some(super::super::transient_mcp::McpUnavailable::NotEnabledForConversation),
     )
@@ -309,6 +311,7 @@ async fn run(
             request.events.clone(),
             &store.store,
             opening,
+            request.history.clone(),
         )
         .await
         .map_err(|_| "destination_open_failed")?;

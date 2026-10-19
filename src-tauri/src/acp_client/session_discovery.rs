@@ -10,7 +10,7 @@ use std::sync::{
 use serde::Serialize;
 use serde_json::Value;
 use tauri::ipc::Channel;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, Window};
 
 use super::manager::{AcpManager, require_agent_row, validate_cwd_async};
 use super::session_index::iso8601_millis;
@@ -27,25 +27,55 @@ pub struct ImportPreview {
 }
 
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub async fn session_import_preview(
     app: AppHandle,
+    window: Window,
     agent_id: String,
     cwd: String,
     session_id: String,
+    open_token: String,
+    admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
     channel: Channel<Value>,
 ) -> Result<ImportPreview, String> {
+    let manager = app.state::<AcpManager>();
+    let store = app.state::<MetaStore>();
+    let mut request = super::history_admission_commands::HistoryRequest::from_window(
+        &manager,
+        &window,
+        &open_token,
+        &agent_id,
+        admission_channel,
+    )?;
+    let mut preparation =
+        super::history_admission_commands::HistoryPreparation::new(request.progress.clone());
     if session_id.is_empty() {
         return Err("请选择需要查看的对话".into());
     }
     let row = require_agent_row(&app, &agent_id).await?;
     let cwd = validate_cwd_async(&cwd).await?;
     let token = NEXT_PREVIEW.fetch_add(1, Ordering::Relaxed).to_string();
-    let manager = app.state::<AcpManager>();
-    let store = app.state::<MetaStore>();
-    open_import_preview(&manager, &store, &row, &cwd, session_id, token, channel).await
+    request.preparation_bytes =
+        std::mem::size_of::<Channel<Value>>() + std::mem::size_of::<String>() + token.len();
+    let history = manager
+        .admit_cold_history(&row, &cwd, &session_id, &[], &store, None, request)
+        .await?;
+    preparation.ready();
+    open_import_preview(
+        &manager,
+        &store,
+        &row,
+        &cwd,
+        session_id,
+        token,
+        channel,
+        Some(history),
+    )
+    .await
 }
 
-pub(crate) async fn open_import_preview(
+#[allow(clippy::too_many_arguments)]
+pub(super) async fn open_import_preview(
     manager: &AcpManager,
     store: &MetaStore,
     row: &AgentRow,
@@ -53,6 +83,7 @@ pub(crate) async fn open_import_preview(
     session_id: String,
     token: String,
     channel: Channel<Value>,
+    history: Option<super::history_admission::Permit>,
 ) -> Result<ImportPreview, String> {
     let delivery_failed = Arc::new(AtomicBool::new(false));
     let failed = delivery_failed.clone();
@@ -72,6 +103,7 @@ pub(crate) async fn open_import_preview(
             store,
             None,
             Some(token.clone()),
+            history,
         )
         .await?;
     let connection = manager.session_connection(&row.id, cwd, &opened.session_id);

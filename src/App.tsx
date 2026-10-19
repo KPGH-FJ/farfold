@@ -7,6 +7,7 @@ import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
 import { OpeningElicitationList } from "./components/OpeningElicitationList";
 import { openingInquiries } from "./runtime/opening_inquiries";
 import { historyReads } from "./runtime/session_history_admission";
+import { HistoryReadStatus } from "./components/HistoryReadStatus";
 import { REDESIGN as R } from "./runtime/redesign_strings";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
@@ -875,6 +876,10 @@ export default function App() {
   return (
     <div className="app product-app">
       <BrowserSurfaceNotice />
+      <HistoryReadStatus
+        releaseOnly
+        active={!paletteOpen && !importOpen && !customAgentOpen}
+      />
       <div className="body-row">
         {sidebarOpen && (
           <Sidebar

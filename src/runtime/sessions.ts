@@ -767,9 +767,11 @@ class ThreadsStore {
             else this.applyChannelEvent(boundKey, event);
           }
         } else if (receivingReplay) {
+          admission?.observeRaw();
           replay.push(event);
         }
       };
+      admission?.dispatch();
       const result = await invoke<OpenResult>("session_open", {
         processEndedChannel,
         agentId: input.agentId,

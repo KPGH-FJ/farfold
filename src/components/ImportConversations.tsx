@@ -24,6 +24,7 @@ import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import { LIBRARY } from "../runtime/library_strings";
 import { MessageContent } from "./MessageContent";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
 import { chooseDirectory } from "../runtime/dialogs";
 import { observeAuthentication } from "../runtime/authentication";
@@ -528,6 +529,7 @@ export function ImportConversations({
       returnFocusRef={returnFocusRef}
     >
       <div className="history-import">
+        <HistoryReadStatus agentId={agentId} purpose="preview" active={open} />
         <ol className="history-steps" aria-label={S.stepsLabel}>
           {S.steps.map((label, index) => (
             <li

@@ -15,6 +15,7 @@ struct Node {
 }
 pub(super) struct State {
     nodes: Vec<Node>,
+    resident: Resident,
     _memory: ResidentLease,
 }
 impl State {
@@ -22,6 +23,7 @@ impl State {
         let memory = resident.lease(tree::MAX_NODES * 4096)?;
         Ok(Self {
             nodes: Vec::with_capacity(tree::MAX_NODES),
+            resident: resident.clone(),
             _memory: memory,
         })
     }
@@ -38,7 +40,7 @@ impl State {
         self.nodes.push(Node {
             parent,
             leaf: leaf.to_vec(),
-            directory: Directory::reserved(),
+            directory: Directory::reserved(&self.resident),
         });
         let (previous, current) = self.nodes.split_at_mut(ordinal);
         let held = if parent == tree::ROOT {

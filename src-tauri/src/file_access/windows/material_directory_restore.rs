@@ -139,7 +139,7 @@ impl DirectoryConsumer for Restorer {
         if verified.native.bytes != 0 && verified.native.bytes < (minimum as u64) {
             return Err(Error::Unsupported);
         }
-        ns.create_directory_target(full)?;
+        ns.create_directory_target(full, resident)?;
         ns.verify_directory_empty(work, cancel, resident)?;
         let typed = ns.target_carrier.as_ref().ok_or(Error::Invalid)?;
         let target = ns.directory_target()?;

@@ -312,6 +312,7 @@ impl AcpManager {
             store,
             selection,
             None,
+            None,
         )
         .await
     }
@@ -395,7 +396,7 @@ impl AcpManager {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub(crate) async fn open_session_owned(
+    pub(super) async fn open_session_owned(
         &self,
         agent: &AgentRow,
         cwd: &Path,
@@ -405,6 +406,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
+        history: Option<super::history_admission::Permit>,
     ) -> Result<OpenedSession, String> {
         self.open_session_owned_with_mcp(
             agent,
@@ -418,13 +420,14 @@ impl AcpManager {
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             None,
-            None,
+            history,
         )
         .await
     }
 
     /// Transfer the already held fork identity; do not release/reacquire it.
-    pub(crate) async fn open_session_reserved(
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn open_session_reserved(
         &self,
         agent: &AgentRow,
         cwd: &Path,
@@ -432,6 +435,7 @@ impl AcpManager {
         events: SessionSink,
         store: &MetaStore,
         reservation: super::lifecycle::OpenReservation,
+        history: Option<super::history_admission::Permit>,
     ) -> Result<OpenedSession, String> {
         self.open_session_owned_with_mcp(
             agent,
@@ -445,7 +449,7 @@ impl AcpManager {
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             Some(reservation),
-            None,
+            history,
         )
         .await
     }

@@ -12,6 +12,7 @@ import type { IndexRow, OpenResult } from "./sessions";
 import { IMPORT_STRINGS as S } from "./import_strings";
 import { hasReadableMessages } from "./message_attachments";
 import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
+import { historyReads } from "./session_history_admission";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -58,6 +59,14 @@ export async function previewHistory(
     row.cwd,
     row.nativeSessionId,
   );
+  const openToken = crypto.randomUUID();
+  const readKey = `preview:${openToken}`;
+  const admission = historyReads.begin(
+    readKey,
+    { agentId, cwd: row.cwd, nativeSessionId: row.nativeSessionId },
+    openToken,
+    "preview",
+  );
   const channel = new Channel<unknown>();
   const buffered = new HistoryReplayBuffer();
   let previewToken: string | null = null;
@@ -73,15 +82,21 @@ export async function previewHistory(
     ) {
       buffered.mark(event.previewToken);
       if (previewToken === event.previewToken) completeReplay?.();
-    } else buffered.push(event);
+    } else {
+      admission?.observeRaw();
+      buffered.push(event);
+    }
   };
   try {
+    admission?.dispatch();
     const result = await invoke<OpenResult & { previewToken: string }>(
       "session_import_preview",
       {
         agentId,
         cwd: row.cwd,
         sessionId: row.nativeSessionId,
+        openToken,
+        admissionChannel: admission?.channel,
         channel,
       },
     );
@@ -161,6 +176,8 @@ export async function previewHistory(
   } finally {
     receiving = false;
     channel.onmessage = () => {};
+    buffered.clear();
+    historyReads.finish(readKey, admission);
   }
 }
 export function hasPreviewContent(preview: HistoryPreview): boolean {

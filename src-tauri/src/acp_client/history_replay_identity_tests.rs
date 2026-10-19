@@ -82,6 +82,7 @@ async fn load_replay_preserves_official_message_ids_and_unknown_fields_before_lo
         "history".into(),
         "owned-preview".into(),
         channel,
+        None,
     )
     .await
     .unwrap();
@@ -123,6 +124,7 @@ async fn failed_load_after_partial_replay_never_publishes_a_completion_marker_or
         "fails-after-prefix".into(),
         "failed-preview".into(),
         channel,
+        None,
     )
     .await;
     assert!(result.is_err());

@@ -117,3 +117,15 @@ pub(crate) use windows::{
     RegularSharedMemory, RegularSharedReceipt, RegularSharedRequest, RegularSharedRetirement,
     regular_shared_capture,
 };
+
+#[cfg(test)]
+mod material_mixed_tree_records;
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    MixedInput, MixedMemory, MixedRequest, MixedRetirement, MixedSummary, with_mixed_tree_input,
+};
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
+};

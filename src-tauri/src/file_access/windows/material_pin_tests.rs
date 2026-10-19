@@ -389,3 +389,69 @@ fn material_listing_uses_shared_resident_before_retaining_a_large_owned_map() {
     drop(pin);
     temp.close().unwrap();
 }
+
+#[test]
+fn raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias() {
+    let pool = resident();
+    let prefix: Vec<u16> = r"\\?\Volume{01234567-89ab-cdef-0123-456789abcdef}\owned"
+        .encode_utf16()
+        .collect();
+    let make = |units: Vec<u16>| Guid {
+        volume: *b"01234567-89ab-cdef-0123-456789abcdef",
+        _memory: pool.lease(units.len() * 2).unwrap(),
+        units,
+    };
+    let parent = make(prefix.clone());
+    let volume_root = make(prefix[..49].to_vec());
+    let mut root_child = volume_root.units.clone();
+    root_child.extend_from_slice(&[97, 0xd800, 98]);
+    assert!(make(root_child).child_of(&volume_root, &[97, 0xd800, 98]));
+    for leaf in [
+        vec![97, 0xd800, 98],
+        vec![97, 0xdc00, 98],
+        vec![0xd800; 255],
+    ] {
+        assert!(String::from_utf16(&leaf).is_err());
+        let mut full = prefix.clone();
+        full.push(92);
+        full.extend_from_slice(&leaf);
+        let child = make(full);
+        assert!(child.child_of(&parent, &leaf));
+        assert!(child.same_path(&child));
+        let mut wrong_leaf = leaf.clone();
+        wrong_leaf[0] ^= 1;
+        assert!(!child.child_of(&parent, &wrong_leaf));
+        let mut wrong_parent = prefix.clone();
+        wrong_parent.push(120);
+        assert!(!child.child_of(&make(wrong_parent), &leaf));
+        let mut wrong_volume = make(child.units.clone());
+        wrong_volume.volume[0] = b'f';
+        assert!(!wrong_volume.child_of(&parent, &leaf));
+        assert!(!wrong_volume.same_path(&child));
+        assert!(!child.child_of(&parent, &[46, 46]));
+        assert!(!child.child_of(&parent, &[97, 92, 98]));
+        assert!(!child.child_of(&parent, &vec![0xd800; 256]));
+    }
+}
+#[test]
+fn actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool() {
+    let temp = tempfile::tempdir().unwrap();
+    let selected = PinnedPath::directory(&temp.path().canonicalize().unwrap()).unwrap();
+    ntfs(selected.file());
+    let flags = FILE_NAME_NORMALIZED | VOLUME_NAME_GUID;
+    let count =
+        unsafe { GetFinalPathNameByHandleW(handle(selected.file()), ptr::null_mut(), 0, flags) };
+    assert!(count > 0 && count <= MAX_UNITS as u32);
+    let shared = Resident::new(count as usize * 2);
+    let first = guid(selected.file(), &shared).unwrap();
+    assert!(matches!(
+        guid(selected.file(), &shared),
+        Err(Failure::Limit)
+    ));
+    drop(first);
+    let after_release = guid(selected.file(), &shared).unwrap();
+    assert!(after_release.units.len() < count as usize);
+    selected.verify().unwrap();
+    drop((after_release, selected));
+    temp.close().unwrap();
+}

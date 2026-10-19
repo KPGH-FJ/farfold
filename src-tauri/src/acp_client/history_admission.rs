@@ -73,6 +73,7 @@ enum Offer {
     Committed,
 }
 struct Entry {
+    renderer: Option<delivery::Renderer>,
     offer: Offer,
     owner: Owner,
     cost: usize,
@@ -225,6 +226,7 @@ impl Admission {
                 entry.offer = Offer::Cancelled;
             }
         }
+        Self::retire_destroyed_renderer(&mut state, &authority);
         let ids: Vec<_> = state
             .entries
             .iter()
@@ -309,6 +311,7 @@ impl Admission {
         s.entries.insert(
             id,
             Entry {
+                renderer: None,
                 offer,
                 owner: owner.clone(),
                 cost,
@@ -427,9 +430,17 @@ impl Admission {
         let Ok(mut s) = self.state.lock() else {
             return;
         };
-        let Some(e) = s.entries.get(&id) else { return };
+        let Some(e) = s.entries.get_mut(&id) else {
+            return;
+        };
         if (e.offer == Offer::Committed) != confirmed {
             return;
+        }
+        if let Some(renderer) = &mut e.renderer {
+            renderer.native_done = true;
+            if !renderer.renderer_done {
+                return;
+            }
         }
         let e = s.entries.remove(&id).expect("same locked entry");
         assert!(e.phase == Phase::Granted);
@@ -640,6 +651,13 @@ impl Charge {
         self.used
     }
 }
+
+#[path = "history_delivery.rs"]
+mod delivery;
+pub use delivery::{Ack as HistoryDeliveryAck, Receipt as HistoryDeliveryReceipt};
+#[cfg(test)]
+#[path = "history_delivery_tests.rs"]
+mod delivery_tests;
 
 #[cfg(test)]
 #[path = "history_admission_tests.rs"]

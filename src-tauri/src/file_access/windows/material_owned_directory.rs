@@ -1,10 +1,18 @@
 //! One fresh directory under the original private namespace. No destination path.
+use super::super::material_pin::{self, Guid};
 use super::*;
 use crate::file_access::{
     ea_records::WorkBudget,
     material_carrier_records::{self as records, Resident, charge, check},
 };
 use std::sync::{Mutex, MutexGuard};
+fn raw_guid(file: &File, resident: &Resident) -> Result<Guid> {
+    material_pin::guid(file, resident).map_err(|error| match error {
+        material_pin::Failure::Limit => Error::Limit,
+        material_pin::Failure::Changed => Error::Changed,
+        other => io_error("ownedDirectoryLocal", material_pin::into_io(other)),
+    })
+}
 pub(super) struct State {
     file: Option<File>,
     identity: Option<Identity>,
@@ -12,9 +20,13 @@ pub(super) struct State {
     _create_status: Option<i32>,
     scan: Mutex<()>,
     stopped: Vec<StoppedHandle>,
+    // Raw path storage and its reservation stay with this original target owner,
+    // including when Namespace is retained after unknown cleanup.
+    guid: Option<Guid>,
+    resident: Resident,
 }
 impl State {
-    pub fn reserved() -> Self {
+    pub fn reserved(resident: &Resident) -> Self {
         Self {
             file: None,
             identity: None,
@@ -22,6 +34,8 @@ impl State {
             _create_status: None,
             scan: Mutex::new(()),
             stopped: Vec::with_capacity(1),
+            guid: None,
+            resident: resident.clone(),
         }
     }
     pub fn create(&mut self, root: &File, full: bool) -> Result<()> {
@@ -32,6 +46,7 @@ impl State {
     pub(super) fn create_named(&mut self, root: &File, leaf: &[u16], full: bool) -> Result<()> {
         if self.file.is_some()
             || self.identity.is_some()
+            || self.guid.is_some()
             || self._create_status.is_some()
             || self.pending
             || !self.stopped.is_empty()
@@ -39,6 +54,9 @@ impl State {
             return Err(Error::Invalid);
         }
         crate::file_access::material_raw_name::check(leaf).map_err(|_| Error::Unsupported)?;
+        // Query this held parent before the create. All path buffers share the
+        // operation Resident, and no DOS/UTF8 pathname is opened or normalized.
+        let parent_guid = raw_guid(root, &self.resident)?;
         let unicode = UNICODE_STRING {
             Length: (leaf.len() * 2) as u16,
             MaximumLength: (leaf.len() * 2) as u16,
@@ -104,7 +122,12 @@ impl State {
         if value.regular || value.identity.inode == 0 {
             return Err(Error::Unsupported);
         }
-        super::super::pinned::local_guid(file).map_err(|e| io_error("ownedDirectoryLocal", e))?;
+        let guid = raw_guid(file, &self.resident)?;
+        if !guid.child_of(&parent_guid, leaf) {
+            return Err(Error::Changed);
+        }
+        drop(parent_guid);
+        self.guid = Some(guid);
         self.identity = Some(value.identity);
         self.verify()
             .map_err(|e| io_error("ownedDirectoryVerify", e))
@@ -132,7 +155,14 @@ impl State {
         {
             return Err(io::Error::other("owned directory kind changed"));
         }
-        super::super::pinned::local_guid(file)?;
+        let original = self
+            .guid
+            .as_ref()
+            .ok_or_else(|| io::Error::other("owned directory GUID absent"))?;
+        let current = material_pin::guid(file, &self.resident).map_err(material_pin::into_io)?;
+        if !current.same_path(original) {
+            return Err(io::Error::other("owned directory raw GUID changed"));
+        }
         Ok(())
     }
     pub fn empty(

@@ -6,6 +6,7 @@ import {
 import { draftPersistence } from "./drafts";
 import { finishHistoryPrefix, HistoryReplayBuffer } from "./history_replay";
 import { openingInquiries } from "./opening_inquiries";
+import { historyReads } from "./session_history_admission";
 import { configChangeBusy } from "./protected_config";
 import { openedThreadState } from "./session_open_state";
 import { requireReadableHistory } from "./session_recovery";
@@ -131,6 +132,18 @@ export class SessionForks {
     const buffered = new HistoryReplayBuffer();
     let receivingReplay = true;
     const openToken = crypto.randomUUID();
+    const readKey = `fork:${operation.operationId}`;
+    const admission = historyReads.begin(
+      readKey,
+      {
+        agentId: parent.agentId,
+        cwd: parent.cwd,
+        nativeSessionId: parent.nativeSessionId,
+        inquiryCurrent: current,
+      },
+      openToken,
+      "fork",
+    );
     const inquiry = openingInquiries.begin(`fork:${operation.operationId}`, {
       agentId: parent.agentId,
       cwd: parent.cwd,
@@ -201,6 +214,7 @@ export class SessionForks {
       }
       if (!hasOwnUpdate(event) && inquiry.receive(event)) return;
       if (!receivingReplay) return;
+      admission?.observeRaw();
       buffered.push(event);
       if (!hasOwnUpdate(event) && received?.kind === "connectionLost") {
         replayLost = true;
@@ -351,6 +365,7 @@ export class SessionForks {
           receivingReplay = false;
           buffered.clear();
         }
+        if (settled && verified) historyReads.finish(readKey, admission);
         if (
           settled &&
           verified &&
@@ -381,6 +396,7 @@ export class SessionForks {
         return undefined;
       }
       dispatched = true;
+      admission?.dispatch();
       const result = await invoke<ForkResult>("session_fork_current", {
         agentId: parent.agentId,
         cwd: parent.cwd,
@@ -388,6 +404,7 @@ export class SessionForks {
         connectionId: operation.connectionId,
         operationId: operation.operationId,
         openToken,
+        admissionChannel: admission?.channel,
         channel,
       });
       return await queueResult(
@@ -414,6 +431,7 @@ export class SessionForks {
       }
       return undefined;
     } finally {
+      if (!dispatched) historyReads.finish(readKey, admission);
       this.ports.emit(parent.key);
       void this.ports.refreshIndex();
     }

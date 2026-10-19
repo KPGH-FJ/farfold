@@ -39,20 +39,9 @@ pub async fn session_open(
     process_ended_channel: Channel<ProcessEndedReceipt>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
 ) -> Result<SessionOpenResult, String> {
-    let row = require_agent_row(&app, &agent_id).await?;
-    let cwd = validate_cwd_async(&cwd).await?;
-    let config = parse_config_map(config_options)?;
     // An empty native id means "create", never "load".
     let native_session_id = native_session_id.filter(|id| !id.is_empty());
     let resumed = native_session_id.is_some();
-    let delivery_failed = Arc::new(AtomicBool::new(false));
-    let delivery_state = delivery_failed.clone();
-    let event_channel = channel.clone();
-    let events: SessionSink = Arc::new(move |value| {
-        if event_channel.send(value).is_err() {
-            delivery_state.store(true, Ordering::SeqCst);
-        }
-    });
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     // One authoritative cold admission, before any browser transport or
@@ -69,6 +58,20 @@ pub async fn session_open(
             )
         })
         .transpose()?;
+    let mut preparation = request.as_ref().map(|request| {
+        super::history_admission_commands::HistoryPreparation::new(request.progress.clone())
+    });
+    let row = require_agent_row(&app, &agent_id).await?;
+    let cwd = validate_cwd_async(&cwd).await?;
+    let config = parse_config_map(config_options)?;
+    let delivery_failed = Arc::new(AtomicBool::new(false));
+    let delivery_state = delivery_failed.clone();
+    let event_channel = channel.clone();
+    let events: SessionSink = Arc::new(move |value| {
+        if event_channel.send(value).is_err() {
+            delivery_state.store(true, Ordering::SeqCst);
+        }
+    });
     // The connected tool starts without page permission. Preview opens use the
     // separate discovery path and do not receive this transient transport.
     use super::transient_mcp::McpUnavailable;
@@ -82,6 +85,9 @@ pub async fn session_open(
             service.as_ref(),
             request,
             || {
+                if let Some(preparation) = &mut preparation {
+                    preparation.ready();
+                }
                 if super::browser_capability::eligible(&row) {
                     match app
                         .state::<crate::browser_sharing::BrowserSharing>()

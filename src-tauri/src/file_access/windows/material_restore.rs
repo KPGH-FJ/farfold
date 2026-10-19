@@ -263,13 +263,17 @@ impl Namespace {
         self.target_carrier = Some(self.create("recapture.bin", false)?);
         Ok(())
     }
-    pub fn create_directory_target(&mut self, full: bool) -> Result<()> {
+    pub fn create_directory_target(
+        &mut self,
+        full: bool,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
         if self.directory.is_some() {
             return Err(Error::Invalid);
         }
         self.verify()?;
         // Installed before the first directory-create syscall.
-        self.directory = Some(owned_directory::State::reserved());
+        self.directory = Some(owned_directory::State::reserved(resident));
         let root = self.root.as_ref().ok_or(Error::Invalid)?;
         self.directory
             .as_mut()
@@ -304,6 +308,19 @@ impl Namespace {
         self.verify()?;
         self.tree = Some(owned_directory_tree::State::reserve(resident)?);
         self.tree_carrier = Some(self.create("directory-tree.bin", false)?);
+        Ok(())
+    }
+    // Separate mixed INPUT carrier, with no restored tree State or target.
+    pub fn prepare_mixed_input(&mut self) -> Result<()> {
+        if self.tree.is_some()
+            || self.directory.is_some()
+            || self.target.is_some()
+            || self.tree_carrier.is_some()
+        {
+            return Err(Error::Invalid);
+        }
+        self.verify()?;
+        self.tree_carrier = Some(self.create("mixed-tree.bin", false)?);
         Ok(())
     }
     pub fn create_tree_directory(
@@ -435,9 +452,10 @@ impl Namespace {
             return Err(Error::CleanupUnknown);
         }
         // No-op for every original carrier/restore caller (links == None).
-        // The link-purpose owner closes each verified alias before its primary.
+        // Link cleanup keeps its READ alias across the primary close and
+        // verifies a fresh, same-object DELETE handle before alias disposal.
         if let Some(links) = self.links.as_mut() {
-            links.cleanup()?;
+            links.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
         if let Some(tree) = self.tree.as_mut() {
             tree.cleanup()?;

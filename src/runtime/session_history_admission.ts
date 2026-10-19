@@ -1,12 +1,21 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { OpenInput } from "./session_open_input";
 import { HISTORY_READ as S } from "./history_read_strings";
+import {
+  acknowledgeHistoryDelivery,
+  historyDeliveryReceipt,
+  type HistoryDeliveryReceipt,
+} from "./session_history_delivery";
 
 type Interest = Pick<OpenInput, "inquiryCurrent" | "inquirySignal">;
 export interface HistoryReadView {
   token: string;
+  agentId: string;
+  purpose: "open" | "fork" | "preview";
+  releasing: boolean;
+  releaseRetry: boolean;
   target: string;
-  phase: "preparing" | "waiting" | "starting" | "cancelled";
+  phase: "preparing" | "waiting" | "starting" | "cancelled" | "finishing";
   cancelling: boolean;
   notice?: string;
 }
@@ -16,16 +25,43 @@ class HistoryReadOwner {
   readonly channel = new Channel<unknown>();
   private interests = new Map<() => boolean, () => void>();
   private finished = false;
+  private sent = false;
+  private notStarted = false;
+  private rawSeen = false;
+  private receipt?: HistoryDeliveryReceipt;
+  private acknowledged = false;
   private view: HistoryReadView;
   constructor(
+    readonly key: string,
     readonly token: string,
     target: string,
+    agentId: string,
+    purpose: HistoryReadView["purpose"],
     private publish: () => void,
+    private remove: () => void,
   ) {
-    this.view = { token, target, phase: "preparing", cancelling: false };
+    this.view = {
+      token,
+      agentId,
+      purpose,
+      target,
+      phase: "preparing",
+      cancelling: false,
+      releasing: false,
+      releaseRetry: false,
+    };
     // Native progress has its own transport. Agent events never enter here,
     // even when their unknown envelopes have these exact keys and token.
     this.channel.onmessage = (value) => this.receive(value);
+  }
+  dispatch() {
+    this.sent = true;
+  }
+  observeRaw() {
+    this.rawSeen = true;
+  }
+  joinable() {
+    return !this.finished;
   }
   snapshot() {
     return this.view;
@@ -54,20 +90,47 @@ class HistoryReadOwner {
     }
   }
   private update(patch: Partial<HistoryReadView>) {
-    if (this.finished) return;
     this.view = { ...this.view, ...patch };
     this.publish();
   }
   private receive(value: unknown) {
-    if (this.finished || !value || typeof value !== "object") return;
+    if (!value || typeof value !== "object" || Array.isArray(value)) return;
     const event = value as Record<string, unknown>;
     if (
       event.kind !== "session_history_admission" ||
       event.openToken !== this.token ||
-      (event.phase !== "waiting" && event.phase !== "starting") ||
+      (event.phase !== "waiting" &&
+        event.phase !== "starting" &&
+        event.phase !== "notStarted") ||
       this.view.phase === "cancelled"
     )
       return;
+    const firstReceipt = this.receipt === undefined;
+    if (
+      (event.phase === "starting" || event.phase === "notStarted") &&
+      event.historyDelivery !== undefined
+    ) {
+      const receipt = historyDeliveryReceipt(event.historyDelivery, this.token);
+      if (
+        !receipt ||
+        (this.receipt && receipt.receiptId !== this.receipt.receiptId)
+      )
+        return;
+      this.receipt ??= receipt;
+    }
+    if (event.phase === "notStarted") {
+      this.notStarted = true;
+      if (this.finished && !this.rawSeen && !this.receipt) {
+        this.channel.onmessage = () => {};
+        this.remove();
+        return;
+      }
+    }
+    if (this.finished) {
+      if (firstReceipt && this.receipt) void this.release();
+      return;
+    }
+    if (event.phase === "notStarted") return;
     if (event.phase === "starting")
       this.update({ phase: "starting", cancelling: false, notice: undefined });
     else if (this.view.phase !== "starting") this.update({ phase: "waiting" });
@@ -88,9 +151,19 @@ class HistoryReadOwner {
       const reply = await invoke<unknown>("session_open_cancel_waiting", {
         openToken: this.token,
       });
-      if (this.finished) return;
       const result = reply as Record<string, unknown> | null;
       if (result?.openToken !== this.token) throw new Error("unconfirmed");
+      if (this.finished) {
+        if (
+          result.outcome === "cancelledWaiting" &&
+          !this.receipt &&
+          !this.rawSeen
+        ) {
+          this.channel.onmessage = () => {};
+          this.remove();
+        }
+        return;
+      }
       if (result.outcome === "cancelledWaiting") {
         if (this.view.phase !== "waiting") throw new Error("unconfirmed");
         this.update({ phase: "cancelled", notice: S.cancelled });
@@ -105,10 +178,49 @@ class HistoryReadOwner {
     }
   }
   finish() {
+    if (this.finished) return;
     this.finished = true;
-    this.channel.onmessage = () => {};
     this.interests.forEach((remove) => remove());
     this.interests.clear();
+    if (
+      (!this.sent && !this.rawSeen) ||
+      ((this.view.phase === "cancelled" || this.notStarted) &&
+        !this.rawSeen &&
+        !this.receipt)
+    ) {
+      this.channel.onmessage = () => {};
+      this.remove();
+      return;
+    }
+    // No body, state, preview cleanup token, interest or AbortSignal retained.
+    // A late private-channel receipt still belongs to this original token.
+    this.update({
+      phase: "finishing",
+      cancelling: false,
+      notice: this.receipt ? undefined : S.releaseMissing,
+    });
+    void this.release();
+  }
+  async release() {
+    if (
+      !this.finished ||
+      !this.receipt ||
+      this.acknowledged ||
+      this.view.releasing
+    )
+      return;
+    const receipt = this.receipt;
+    this.update({ releasing: true, releaseRetry: false, notice: undefined });
+    try {
+      await acknowledgeHistoryDelivery(this.view.agentId, receipt);
+      this.acknowledged = true;
+      this.channel.onmessage = () => {};
+      this.remove();
+    } catch {
+      this.update({ notice: S.releaseUnconfirmed, releaseRetry: true });
+    } finally {
+      this.update({ releasing: false });
+    }
   }
 }
 
@@ -127,30 +239,48 @@ class HistoryReads {
     this.snapshot = [...this.owners.values()].map((owner) => owner.snapshot());
     this.listeners.forEach((listener) => listener());
   };
-  begin(key: string, input: OpenInput, token: string) {
+  begin(
+    key: string,
+    input: OpenInput,
+    token: string,
+    purpose: HistoryReadView["purpose"] = "open",
+  ) {
     if (!input.nativeSessionId) return;
+    if (this.owners.has(token)) throw new Error(S.releaseUnconfirmed);
     const target = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
-    const owner = new HistoryReadOwner(token, target, this.publish);
+    const owner = new HistoryReadOwner(
+      key,
+      token,
+      target,
+      input.agentId,
+      purpose,
+      this.publish,
+      () => {
+        if (this.owners.get(token) === owner) this.owners.delete(token);
+        this.publish();
+      },
+    );
     owner.addInterest(input);
-    this.owners.set(key, owner);
+    this.owners.set(token, owner);
     this.publish();
     return owner;
   }
   join(key: string, input: Interest) {
-    this.owners.get(key)?.addInterest(input);
+    [...this.owners.values()]
+      .find((owner) => owner.key === key && owner.joinable())
+      ?.addInterest(input);
   }
   finish(key: string, owner?: HistoryReadOwner) {
-    if (!owner) return;
+    if (!owner || owner.key !== key) return;
     owner.finish();
-    if (this.owners.get(key) === owner) {
-      this.owners.delete(key);
-      this.publish();
-    }
   }
   cancel(token: string) {
     return [...this.owners.values()]
       .find((owner) => owner.token === token)
       ?.cancel();
+  }
+  retryRelease(token: string) {
+    return this.owners.get(token)?.release();
   }
   retireUninterested() {
     for (const owner of this.owners.values()) owner.retireUninterested();

@@ -225,3 +225,33 @@ fn actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback
     drop(r);
     temp.close().unwrap();
 }
+
+#[test]
+fn actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary() {
+    for raw in [vec![97, 0xdc00, 98], vec![0xd800; 255]] {
+        assert!(String::from_utf16(&raw).is_err());
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("raw-guid-tree");
+        std::fs::create_dir(&root).unwrap();
+        let child = root.join(OsString::from_wide(&raw));
+        std::fs::create_dir(&child).unwrap();
+        // Existing ordinary String PinnedPath admission remains unchanged and
+        // refuses a spelling it cannot represent. Material uses held raw edges.
+        assert!(PinnedPath::directory(&child.canonicalize().unwrap()).is_err());
+        ea(&root);
+        ea(&child);
+        let first = ads(&root);
+        let second = ads(&child);
+        let r = run(
+            request(&root, false, &DirectoryTreeMemory::default()),
+            crate::file_access::SHAPE_WORK_LIMIT,
+            false,
+        )
+        .unwrap();
+        finished(&r, 2, false);
+        assert_eq!(std::fs::read(first).unwrap(), b"directory-tree\0\xff");
+        assert_eq!(std::fs::read(second).unwrap(), b"directory-tree\0\xff");
+        drop(r);
+        temp.close().unwrap();
+    }
+}

@@ -246,6 +246,7 @@ pub fn run() {
                 acp_client::manager::connection_retention::agent_connection_hold,
                 acp_client::session_commands::session_open,
                 acp_client::history_admission_commands::session_open_cancel_waiting,
+                acp_client::history_admission_commands::session_history_delivery_ack,
                 acp_client::active_prompt_commands::session_prompt_cancel,
                 acp_client::session_fork::session_fork_current,
                 acp_client::session_commands::session_prompt,

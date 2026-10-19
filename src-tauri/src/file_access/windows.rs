@@ -658,3 +658,19 @@ pub(crate) use material_regular_shared_probe::{
     RegularSharedMemory, RegularSharedReceipt, RegularSharedRequest, RegularSharedRetirement,
     regular_shared_capture,
 };
+
+#[cfg(test)]
+mod material_mixed_tree_input;
+#[cfg(test)]
+mod material_mixed_tree_source;
+#[cfg(test)]
+pub(crate) use material_mixed_tree_input::{
+    MixedInput, MixedMemory, MixedRequest, MixedRetirement, MixedSummary, with_mixed_tree_input,
+};
+
+#[cfg(test)]
+mod material_alias_topology;
+#[cfg(test)]
+pub(crate) use material_alias_topology::{
+    AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
+};

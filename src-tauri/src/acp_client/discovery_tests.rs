@@ -137,6 +137,7 @@ async fn import_preview_channel_marks_complete_after_the_entire_replay() {
             session_id.into(),
             "ordered".into(),
             channel,
+            None,
         )
         .await
         .unwrap();
@@ -202,6 +203,7 @@ async fn failed_preview_delivery_releases_only_its_own_route() {
             "history".into(),
             "failed-delivery".into(),
             channel,
+            None,
         )
         .await;
         assert!(failure.load(std::sync::atomic::Ordering::SeqCst));
@@ -270,6 +272,7 @@ async fn failed_preview_delivery_releases_only_its_own_route() {
         "history".into(),
         "retry".into(),
         tauri::ipc::Channel::new(|_| Ok(())),
+        None,
     )
     .await
     .unwrap();
@@ -347,6 +350,7 @@ async fn failed_preview_rollback_retains_the_cleanup_token() {
         "history".into(),
         "cleanup-retained".into(),
         channel,
+        None,
     )
     .await
     .unwrap();
@@ -466,7 +470,8 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 events.clone(),
                 &f.store,
                 None,
-                Some("preview-live".into())
+                Some("preview-live".into()),
+                None,
             )
             .await
             .is_err()
@@ -518,6 +523,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         &f.store,
         None,
         Some("first".into()),
+        None,
     );
     let second = f.manager.open_session_owned(
         &f.agent,
@@ -528,6 +534,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         &f.store,
         None,
         Some("second".into()),
+        None,
     );
     let (a, b) = tokio::join!(first, second);
     assert_ne!(a.is_ok(), b.is_ok());
@@ -592,7 +599,8 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 events,
                 &f.store,
                 None,
-                Some("failed".into())
+                Some("failed".into()),
+                None,
             )
             .await
             .is_err()
@@ -615,6 +623,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("first".into()),
+            None,
         )
         .await
         .unwrap();
@@ -640,6 +649,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("second".into()),
+            None,
         )
         .await
         .unwrap();
@@ -688,6 +698,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             &f.store,
             None,
             Some("late".into()),
+            None,
         )
         .await
         .unwrap();
@@ -735,6 +746,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             &f.store,
             None,
             Some("refused".into()),
+            None,
         )
         .await
         .unwrap();
