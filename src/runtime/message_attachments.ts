@@ -131,22 +131,22 @@ function base64Value(code: number): number {
   return code === 43 ? 62 : code === 47 ? 63 : -1;
 }
 
-/** Preview-only byte and declared image/audio metadata admission. Original payload,
- * transport and actual decoder memory are not bounded here. Recognized linear
- * WAVE, native FLAC, ADTS and indexed LayerIII MPEG frames receive their
- * recognized duration policies, including selected leading ID3 stored extents
- * on the ADTS/MPEG paths. Selected classic MP4 audio-track declarations also
- * receive a media-clock policy. Selected continuous Ogg Vorbis declarations
- * also receive a known audio-interval lower-bound policy. The original source is never rewritten;
- * other audio and unknown duration declarations remain uncovered.
- * PNG/APNG receives only structural/declaration admission,
- * including animation frame work; actual playback remains unverified.
- * No URL is created before the checks.
- * Remote links are never fetched. No payload trim, decode or URL precedes the
- * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
-export function attachmentMediaAdmission(
+export type MessageMediaPreviewEligibility =
+  | Exclude<MessageMediaAdmission, { status: "available" }>
+  | {
+      status: "eligible";
+      data: string;
+      mime: string;
+      kind: "image" | "audio";
+      bytes: number;
+      padding: number;
+    };
+
+/** Cheap preview reservation only: no alphabet/codec scan and no source URL.
+ * Eligibility is not a format admission; the original payload stays unchanged. */
+export function attachmentMediaPreviewEligibility(
   attachment: Attachment,
-): MessageMediaAdmission {
+): MessageMediaPreviewEligibility {
   const data = attachment.data;
   if (typeof data !== "string") return { status: "unavailable" };
   const overEncodedLimit = data.length > MAX_ENCODED_MEDIA_LENGTH;
@@ -168,6 +168,35 @@ export function attachmentMediaAdmission(
   const decodedBytes = (data.length / 4) * 3 - padding;
   if (decodedBytes > MAX_MESSAGE_MEDIA_BYTES)
     return { status: "rejected", reason: "tooLarge" };
+  return {
+    status: "eligible",
+    data,
+    mime: mime!,
+    kind,
+    bytes: decodedBytes,
+    padding,
+  };
+}
+
+/** Preview-only byte and declared image/audio metadata admission. Original payload,
+ * transport and actual decoder memory are not bounded here. Recognized linear
+ * WAVE, native FLAC, ADTS and indexed LayerIII MPEG frames receive their
+ * recognized duration policies, including selected leading ID3 stored extents
+ * on the ADTS/MPEG paths. Selected classic MP4 audio-track declarations also
+ * receive a media-clock policy. Selected continuous Ogg Vorbis declarations
+ * also receive a known audio-interval lower-bound policy. The original source is never rewritten;
+ * other audio and unknown duration declarations remain uncovered.
+ * PNG/APNG receives only structural/declaration admission,
+ * including animation frame work; actual playback remains unverified.
+ * No URL is created before the checks.
+ * Remote links are never fetched. No payload trim, decode or URL precedes the
+ * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
+export function attachmentMediaAdmission(
+  attachment: Attachment,
+): MessageMediaAdmission {
+  const eligibility = attachmentMediaPreviewEligibility(attachment);
+  if (eligibility.status !== "eligible") return eligibility;
+  const { data, mime, kind, padding } = eligibility;
   const bodyLength = data.length - padding;
   let tail = -1;
   for (let index = 0; index < bodyLength; index++) {

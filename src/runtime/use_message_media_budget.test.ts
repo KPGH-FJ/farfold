@@ -78,6 +78,16 @@ vi.mock("react", async (original) => {
   };
 });
 
+// Observe the actual production admission; no codec or preview result is stubbed.
+vi.mock("./message_attachments", async (original) => {
+  const actual = await original<typeof import("./message_attachments")>();
+  return {
+    ...actual,
+    attachmentMediaAdmission: vi.fn(actual.attachmentMediaAdmission),
+  };
+});
+
+import { attachmentMediaAdmission } from "./message_attachments";
 import { useMessageMediaPreview } from "./use_message_media_budget";
 import {
   MAX_ACTIVE_MESSAGE_MEDIA_BYTES,
@@ -85,6 +95,8 @@ import {
   type MessageMediaLease,
 } from "./message_media_budget";
 import { MESSAGE_AUDIO_WAV_TEST_DATA } from "./message_audio_fixtures.test-support";
+import { MESSAGE_FLAC_TEST_DATA } from "./message_flac_fixtures.test-support";
+import { MESSAGE_RASTER_TEST_DATA } from "./message_raster_fixtures.test-support";
 
 // The expected failure API is asserted at runtime against the old Hook too.
 type Preview = ReturnType<typeof useMessageMediaPreview> & {
@@ -180,6 +192,7 @@ afterEach(() => {
   for (const instance of instances.splice(0)) instance.unmount();
   for (const lease of held.splice(0)) lease.release();
   h.active = null;
+  vi.mocked(attachmentMediaAdmission).mockClear();
 });
 
 it("keeps disabled media out of the shared pool", () => {
@@ -329,3 +342,107 @@ it("recovers admitted file bytes on failure without releasing someone else's byt
   preview.unmount();
   expect(acquire()).toBeNull();
 });
+
+it("defers full production admission until a layout commit owns a lease", () => {
+  const owner: Owner = {
+    cursor: 0,
+    slots: [],
+    effects: [],
+    dirty: false,
+    alive: true,
+  };
+  h.active = owner;
+  let preview: Preview;
+  try {
+    preview = useMessageMediaPreview(source, true) as Preview;
+  } finally {
+    h.active = null;
+    owner.alive = false;
+  }
+  expect(preview.media).toBeNull();
+  expect(preview.pending).toBe(true);
+  expect(attachmentMediaAdmission).not.toHaveBeenCalled();
+  // This render was abandoned: no layout effect is run and no lease is owned.
+  for (let index = 0; index < 4; index++) expect(acquire()).not.toBeNull();
+});
+
+it("does not perform full admission or retain a preview source for a refused fifth owner", () => {
+  for (let index = 0; index < 4; index++) {
+    expect(mount().read().media?.src).toContain(source.data);
+  }
+  expect(attachmentMediaAdmission).toHaveBeenCalledTimes(4);
+  const refused = mount().read();
+  expect(refused.budgetRejected).toBe(true);
+  expect(refused.media).toBeNull();
+  expect(attachmentMediaAdmission).toHaveBeenCalledTimes(4);
+  expect(refused.admission?.status).not.toBe("available");
+});
+
+it("does not revalidate a quota refusal until its own explicit retry", () => {
+  const owners = Array.from({ length: 4 }, () => mount());
+  const refused = mount();
+  expect(refused.read().budgetRejected).toBe(true);
+  owners[0].unmount();
+  expect(refused.render().budgetRejected).toBe(true);
+  expect(attachmentMediaAdmission).toHaveBeenCalledTimes(4);
+  refused.read().retry();
+  expect(refused.render().media?.src).toContain(source.data);
+  expect(attachmentMediaAdmission).toHaveBeenCalledTimes(5);
+});
+
+it("releases the temporary lease when production format admission rejects", () => {
+  const invalid = mount({ ...source, data: "!!!!" }).read();
+  expect(invalid.admission).toEqual({ status: "rejected", reason: "invalid" });
+  expect(invalid.budgetRejected).toBe(false);
+  expect(invalid.pending).toBe(false);
+  expect(attachmentMediaAdmission).toHaveBeenCalledTimes(1);
+  expect(acquire(MAX_ACTIVE_MESSAGE_MEDIA_BYTES)).not.toBeNull();
+});
+
+// Deep format controls after the real deterministic layout commit. These are
+// structural refusals, not codec/DOM/actual React scheduling observations.
+const overCanvasPng =
+  "iVBORw0KGgoAAAANSUhEUgAAIAEAAAABCAIAAAAW69wJAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+const gifControl = Buffer.from(MESSAGE_RASTER_TEST_DATA.GIF, "base64");
+const gifImageStart = gifControl.indexOf(0x2c, 13);
+if (gifImageStart < 0) throw new Error("owned GIF fixture missing image");
+const overFramesGif = Buffer.concat([
+  gifControl.subarray(0, gifImageStart),
+  ...Array.from({ length: 129 }, () => gifControl.subarray(gifImageStart, -1)),
+  Buffer.from([0x3b]),
+]).toString("base64");
+
+it.each([
+  {
+    label: "PNG canvas",
+    mimeType: "image/png",
+    data: overCanvasPng,
+    reason: "tooManyPixels",
+  },
+  {
+    label: "GIF frames",
+    mimeType: "image/gif",
+    data: overFramesGif,
+    reason: "tooComplex",
+  },
+  {
+    label: "FLAC duration",
+    mimeType: "audio/wav",
+    data: MESSAGE_FLAC_TEST_DATA.LONG_601,
+    reason: "audioTooLong",
+  },
+] as const)(
+  "returns deep $label refusal and gives back its temporary lease",
+  ({ mimeType, data, reason }) => {
+    const attachment = { ...source, mimeType, data };
+    const before = JSON.stringify(attachment);
+    const preview = mount(attachment).read();
+    expect(preview.admission).toEqual({ status: "rejected", reason });
+    expect(preview.media).toBeNull();
+    expect(preview.pending).toBe(false);
+    expect(preview.budgetRejected).toBe(false);
+    expect(attachmentMediaAdmission).toHaveBeenCalledTimes(1);
+    expect(acquire(MAX_ACTIVE_MESSAGE_MEDIA_BYTES)).not.toBeNull();
+    expect(JSON.stringify(attachment)).toBe(before);
+  },
+);

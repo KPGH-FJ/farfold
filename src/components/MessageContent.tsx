@@ -276,6 +276,8 @@ function MessageAttachment({
           </div>
         )}
         {!mediaWaiting &&
+          !pending &&
+          !budgetRejected &&
           admission?.status !== "available" &&
           !mediaRejected &&
           attachment.data && <p>{A.previewUnavailable}</p>}

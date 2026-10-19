@@ -1,4 +1,12 @@
 import { beforeEach, expect, it, vi } from "vitest";
+
+// Presentation of computed format feedback. SSR does not commit layout effects;
+// real Hook, quota, pending and visibility tests are covered separately.
+vi.mock("../runtime/use_message_media_budget", async () => {
+  const { computedAdmissionForSsr } =
+    await import("./message_media_ssr.test-support");
+  return { useMessageMediaPreview: computedAdmissionForSsr };
+});
 import { renderToStaticMarkup } from "react-dom/server";
 import { MessageAttachments } from "./MessageContent";
 import { MESSAGE_AVIF_TEST_DATA } from "../runtime/message_avif_fixtures.test-support";
