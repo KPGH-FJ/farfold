@@ -13,17 +13,20 @@ import {
 import { STRINGS } from "../runtime/strings";
 import { COMPACTION } from "../runtime/compaction_strings";
 import { ThreadView } from "./ThreadView";
+import { TranscriptSearchContext } from "./transcript-search";
 
 const state = () => freshThreadState("a:/p:c", "a", "/p", "c");
-const render = (s: ReturnType<typeof state>) =>
+const render = (s: ReturnType<typeof state>, searchActive = false) =>
   renderToStaticMarkup(
-    <ThreadView
-      thread={s}
-      active
-      agents={[]}
-      onGoSettings={() => {}}
-      onOpened={() => {}}
-    />,
+    <TranscriptSearchContext.Provider value={searchActive}>
+      <ThreadView
+        thread={s}
+        active
+        agents={[]}
+        onGoSettings={() => {}}
+        onOpened={() => {}}
+      />
+    </TranscriptSearchContext.Provider>,
   );
 it.each([
   ["in_progress", "正在整理上下文"],
@@ -57,7 +60,7 @@ it("renders an accessible retained summary, non-text blocks and original details
     _meta: { future: "preserved" },
   });
   applyTurnEnd(s, { stopReason: "end_turn" });
-  const html = render(s);
+  const html = render(s, true);
   expect(html).toContain("<summary");
   expect(html).toContain("保留的摘要");
   expect(html).toContain("<strong>Retained summary</strong>");

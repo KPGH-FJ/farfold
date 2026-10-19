@@ -2,6 +2,16 @@ import { afterEach, expect, it, vi } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { RawBlock } from "../components/thread-items";
+import { TranscriptSearchContext } from "../components/transcript-search";
+
+const renderSearchableRaw = (update: unknown) =>
+  renderToStaticMarkup(
+    createElement(
+      TranscriptSearchContext.Provider,
+      { value: true },
+      createElement(RawBlock, { update }),
+    ),
+  );
 
 const h = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({
@@ -220,11 +230,7 @@ it.each([false, true])(
         .join("|"),
     ).toContain("Same-token data is not a marker");
     expect(
-      renderToStaticMarkup(
-        createElement(RawBlock, {
-          update: raw?.kind === "raw" ? raw.update : undefined,
-        }),
-      ),
+      renderSearchableRaw(raw?.kind === "raw" ? raw.update : undefined),
     ).toContain("RAW_REPLAY_OWNED_VISIBLE");
     const live = { sessionUpdate: "future_live_wire", exact: [7, null, false] };
     w.deliver({ sessionId: s.nativeSessionId, ...w.marker(), update: live });
@@ -468,8 +474,6 @@ it("same owner token with opaque extra fields is raw and cannot acknowledge hist
   expect(
     s.items.some((item) => item.kind === "raw" && item.update === raw),
   ).toBe(true);
-  expect(
-    renderToStaticMarkup(createElement(RawBlock, { update: raw })),
-  ).toContain("OPAQUE_MARKER_EXTRA");
+  expect(renderSearchableRaw(raw)).toContain("OPAQUE_MARKER_EXTRA");
   await threads.close(s.key);
 });
