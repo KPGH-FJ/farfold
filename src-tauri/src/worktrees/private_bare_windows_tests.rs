@@ -273,7 +273,7 @@ fn probe(
     hooks: Option<&OsStr>,
     worktree: Option<&PinnedPath>,
 ) -> git::Output {
-    let mut command = owner.base_command().unwrap();
+    let (mut command, paths) = owner.base_command().unwrap();
     if let Some(value) = global {
         command.env("GIT_CONFIG_GLOBAL", value);
     }
@@ -300,8 +300,9 @@ fn probe(
         git::Input::null(),
         &AtomicBool::new(false),
         std::time::Duration::from_secs(10),
-    )
-    .unwrap();
+    );
+    paths.verify().unwrap();
+    let output = output.unwrap();
     owner.verify().unwrap();
     output
 }

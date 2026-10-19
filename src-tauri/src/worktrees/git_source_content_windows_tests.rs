@@ -43,7 +43,7 @@ impl SourceGraph {
     ) -> Result<RawBlob<'_>> {
         self.recheck(cancel)?;
         super::super::environment()?;
-        let mut tree_command = command(&self.owner.source);
+        let (mut tree_command, tree_paths) = command(&self.owner.source)?;
         tree_command.args(["ls-tree", "-r", "-l", "-z", &self.owner.roots.head]);
         let tree = super::super::execute_command_input(
             tree_command,
@@ -51,6 +51,7 @@ impl SourceGraph {
             cancel,
             crate::worktrees::recovery_pack::COMMAND_TIME,
         );
+        tree_paths.verify()?;
         self.recheck(cancel)?;
         let tree = tree?;
         if !tree.success {
@@ -67,7 +68,7 @@ impl SourceGraph {
         .map_err(failure)?;
         self.recheck(cancel)?;
         super::super::environment()?;
-        let mut blob_command = command(&self.owner.source);
+        let (mut blob_command, blob_paths) = command(&self.owner.source)?;
         blob_command.args(["cat-file", "blob", &entry.oid]);
         let output = tempfile::tempfile().map_err(|_| error("unavailable"))?;
         // The original executor retains the same Child/direct Job and input.
@@ -82,6 +83,7 @@ impl SourceGraph {
             entry.bytes,
             false,
         );
+        blob_paths.verify()?;
         self.recheck(cancel)?;
         if !result?.success {
             return Err(error("recoveryInvalid"));

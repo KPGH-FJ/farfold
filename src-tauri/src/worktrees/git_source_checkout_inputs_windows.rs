@@ -52,17 +52,23 @@ fn config(
         .selected_program()
         .verify()
         .map_err(|_| error("changed"))?;
-    let mut command = Command::new(&owner.source.selected_program().guid_path);
+    let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+        owner.source.selected_program(),
+        &owner.source.scope.root,
+        &owner.source.scope.git,
+        &owner.source.scope.common,
+    ])?;
+    let mut command = Command::new(paths.path(owner.source.selected_program())?);
     // SOURCE effective configuration is deliberately inherited, unlike the
     // isolated destination context. Only these closed non-credential keys.
     command
         .env("GIT_NO_LAZY_FETCH", "1")
         .env("GIT_TERMINAL_PROMPT", "0")
-        .env("GIT_COMMON_DIR", &owner.source.scope.common.guid_path)
+        .env("GIT_COMMON_DIR", paths.path(&owner.source.scope.common)?)
         .args(["--no-pager", "--no-replace-objects", "-c"])
         .arg(format!(
             "core.hooksPath={}",
-            owner.source.selected_program().guid_path.display()
+            paths.path(owner.source.selected_program())?.display()
         ))
         .args([
             "-c",
@@ -77,12 +83,12 @@ fn config(
             "credential.helper=",
         ])
         .arg("--git-dir")
-        .arg(&owner.source.scope.git.guid_path)
+        .arg(paths.path(&owner.source.scope.git)?)
         .arg("--work-tree")
-        .arg(&owner.source.scope.root.guid_path)
+        .arg(paths.path(&owner.source.scope.root)?)
         .arg("-C")
-        .arg(&owner.source.scope.root.guid_path)
-        .current_dir(&owner.source.scope.root.guid_path)
+        .arg(paths.path(&owner.source.scope.root)?)
+        .current_dir(paths.path(&owner.source.scope.root)?)
         .arg("config");
     if boolean {
         command.arg("--type=bool");
@@ -93,6 +99,7 @@ fn config(
     command.args(["--get", key.name()]);
     let output =
         git::execute_command_input(command, git::Input::null(), cancel, Duration::from_secs(10));
+    paths.verify()?;
     owner.source.scope.matches(&owner.expected)?;
     owner
         .source

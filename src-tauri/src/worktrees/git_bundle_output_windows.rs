@@ -36,7 +36,11 @@ pub(in crate::worktrees) fn write(
     cancel: &std::sync::atomic::AtomicBool,
 ) -> Result<Produced> {
     request.verify()?;
-    let mut command = std::process::Command::new(&request.program()?.guid_path);
+    let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+        request.program()?,
+        request.repository_pin()?,
+    ])?;
+    let mut command = std::process::Command::new(paths.path(request.program()?)?);
     command
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .env("GIT_CONFIG_GLOBAL", "/dev/null")
@@ -45,10 +49,10 @@ pub(in crate::worktrees) fn write(
         .env("GIT_TERMINAL_PROMPT", "0")
         .args(OPTIONS)
         .arg("--git-dir")
-        .arg(request.repository()?)
+        .arg(paths.path(request.repository_pin()?)?)
         .arg("-C")
-        .arg(request.repository()?)
-        .current_dir(request.repository()?)
+        .arg(paths.path(request.repository_pin()?)?)
+        .current_dir(paths.path(request.repository_pin()?)?)
         .args(["bundle", "create", "--version=3", "-", "--all"]);
     let output = request.take_output()?;
     // The same original executor owns input, Child and direct Job through
@@ -62,6 +66,7 @@ pub(in crate::worktrees) fn write(
         MAX_BYTES,
         false,
     );
+    paths.verify()?;
     request.verify()?;
     if !outcome?.success {
         return Err(error("recoveryInvalid"));

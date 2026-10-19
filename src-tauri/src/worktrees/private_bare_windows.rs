@@ -151,9 +151,18 @@ impl Context {
         Ok(())
     }
     // Private to this owner, never returned through ReadContext's public API.
-    fn base_command(&self) -> Result<std::process::Command> {
+    fn base_command(
+        &self,
+    ) -> Result<(
+        std::process::Command,
+        crate::worktrees::windows_git::paths::Paths,
+    )> {
         self.verify()?;
-        let mut command = std::process::Command::new(&self.source.selected_program().guid_path);
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+            self.source.selected_program(),
+            &self.repo,
+        ])?;
+        let mut command = std::process::Command::new(paths.path(self.source.selected_program())?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
@@ -181,17 +190,17 @@ impl Context {
                 "credential.helper=",
             ])
             .arg("--git-dir")
-            .arg(&self.repo.guid_path)
+            .arg(paths.path(&self.repo)?)
             .arg("-C")
-            .arg(&self.repo.guid_path)
-            .current_dir(&self.repo.guid_path);
-        Ok(command)
+            .arg(paths.path(&self.repo)?)
+            .current_dir(paths.path(&self.repo)?);
+        Ok((command, paths))
     }
     // &mut serializes commands for this namespace. The finite Input is consumed
     // by the existing executor; no owner/token is released on a UI deadline.
     fn run(&mut self, action: Action<'_>, cancel: &AtomicBool) -> Result<Vec<u8>> {
         cancelled(cancel)?;
-        let mut command = self.base_command()?;
+        let (mut command, paths) = self.base_command()?;
         let input = match action {
             Action::Init(format) => {
                 if !matches!(format, "sha1" | "sha256") {
@@ -251,6 +260,7 @@ impl Context {
         // Windows stdio rebuilding precedes Input installation inside this
         // existing executor; it retains Child+Job through real cleanup/unwind.
         let output = git::execute_command_input(command, input, cancel, super::COMMAND_TIME);
+        paths.verify()?;
         self.verify()?;
         let output = output?;
         if !output.success {

@@ -303,19 +303,25 @@ enum Query<'a> {
     Objects(super::Input),
     Sizes(super::Input),
 }
-fn command(source: &ReadContext) -> Command {
-    let mut command = Command::new(&source.selected_program().guid_path);
+fn command(source: &ReadContext) -> Result<(Command, crate::worktrees::windows_git::paths::Paths)> {
+    let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+        source.selected_program(),
+        &source.scope.root,
+        &source.scope.git,
+        &source.scope.common,
+    ])?;
+    let mut command = Command::new(paths.path(source.selected_program())?);
     command
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .env("GIT_CONFIG_GLOBAL", "/dev/null")
         .env("GIT_ATTR_NOSYSTEM", "1")
         .env("GIT_NO_LAZY_FETCH", "1")
         .env("GIT_TERMINAL_PROMPT", "0")
-        .env("GIT_COMMON_DIR", &source.scope.common.guid_path)
+        .env("GIT_COMMON_DIR", paths.path(&source.scope.common)?)
         .args(["--no-pager", "--no-replace-objects", "-c"])
         .arg(format!(
             "core.hooksPath={}",
-            source.selected_program().guid_path.display()
+            paths.path(source.selected_program())?.display()
         ))
         .args([
             "-c",
@@ -332,13 +338,13 @@ fn command(source: &ReadContext) -> Command {
             "credential.helper=",
         ])
         .arg("--git-dir")
-        .arg(&source.scope.git.guid_path)
+        .arg(paths.path(&source.scope.git)?)
         .arg("--work-tree")
-        .arg(&source.scope.root.guid_path)
+        .arg(paths.path(&source.scope.root)?)
         .arg("-C")
-        .arg(&source.scope.root.guid_path)
-        .current_dir(&source.scope.root.guid_path);
-    command
+        .arg(paths.path(&source.scope.root)?)
+        .current_dir(paths.path(&source.scope.root)?);
+    Ok((command, paths))
 }
 fn query(
     source: &ReadContext,
@@ -359,7 +365,7 @@ fn query(
         }
         _ => (Duration::from_secs(10), "unprovenPrivateCommits"),
     };
-    let mut command = command(source);
+    let (mut command, paths) = command(source)?;
     let input = match action {
         Query::Format => {
             command.args(["rev-parse", "--show-object-format"]);
@@ -387,6 +393,7 @@ fn query(
     // Windows stdio is rebuilt by the ORIGINAL executor before this typed
     // Null is installed. No new spawn/Job/reaper or arbitrary args API.
     let outcome = super::execute_command_input(command, input, cancel, timeout);
+    paths.verify()?;
     source.scope.matches(snapshot)?;
     source
         .selected_program()

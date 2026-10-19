@@ -86,6 +86,13 @@ impl OutputRequest<'_> {
         self.first.imported.observed()?;
         Ok(self.first.path())
     }
+    pub(in crate::worktrees) fn repository_pin(&self) -> Result<&PinnedPath> {
+        let pin = self.first.imported.observed()?.1;
+        if self.repository()? != pin.guid_path.as_path() {
+            return Err(error("changed"));
+        }
+        Ok(pin)
+    }
     pub(in crate::worktrees) fn take_output(&mut self) -> Result<File> {
         self.output.take().ok_or(error("unknown"))
     }
@@ -324,11 +331,18 @@ impl<'a> Context<'a> {
         }
         Ok(())
     }
-    fn base(&self, first: bool) -> Result<std::process::Command> {
+    fn base(
+        &self,
+        first: bool,
+    ) -> Result<(
+        std::process::Command,
+        crate::worktrees::windows_git::paths::Paths,
+    )> {
         self.verify()?;
         let (program, original) = self.first.imported.observed()?;
         let repo = if first { original } else { &self.second };
-        let mut command = std::process::Command::new(&program.guid_path);
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&[program, repo])?;
+        let mut command = std::process::Command::new(paths.path(program)?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
@@ -337,20 +351,22 @@ impl<'a> Context<'a> {
             .env("GIT_TERMINAL_PROMPT", "0")
             .args(git::bundle_output::OPTIONS)
             .arg("--git-dir")
-            .arg(&repo.guid_path)
+            .arg(paths.path(repo)?)
             .arg("-C")
-            .arg(&repo.guid_path)
-            .current_dir(&repo.guid_path);
-        Ok(command)
+            .arg(paths.path(repo)?)
+            .current_dir(paths.path(repo)?);
+        Ok((command, paths))
     }
     fn run(
         &mut self,
         command: std::process::Command,
         input: git::Input,
+        paths: crate::worktrees::windows_git::paths::Paths,
         cancel: &AtomicBool,
     ) -> Result<Vec<u8>> {
         cancelled(cancel)?;
         let output = git::execute_command_input(command, input, cancel, super::COMMAND_TIME);
+        paths.verify()?;
         self.verify()?;
         let output = output?;
         if !output.success {
@@ -360,7 +376,7 @@ impl<'a> Context<'a> {
         Ok(output.bytes)
     }
     fn query(&mut self, first: bool, query: Query, cancel: &AtomicBool) -> Result<Vec<u8>> {
-        let mut command = self.base(first)?;
+        let (mut command, paths) = self.base(first)?;
         let input = match query {
             Query::Fsck => {
                 command.args([
@@ -389,10 +405,10 @@ impl<'a> Context<'a> {
                 git::Input::from_bytes(&self.manifest.roots.input(), git::OUTPUT_LIMIT, cancel)?
             }
         };
-        self.run(command, input, cancel)
+        self.run(command, input, paths, cancel)
     }
     fn second_action(&mut self, action: Action<'_>, cancel: &AtomicBool) -> Result<Vec<u8>> {
-        let mut command = self.base(false)?;
+        let (mut command, paths) = self.base(false)?;
         let input = match action {
             Action::Init => {
                 command
@@ -431,7 +447,7 @@ impl<'a> Context<'a> {
                 git::Input::null()
             }
         };
-        self.run(command, input, cancel)
+        self.run(command, input, paths, cancel)
     }
     fn expected_refs(&self) -> Vec<(String, String)> {
         let mut v = super::refs(self.manifest);

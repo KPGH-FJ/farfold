@@ -12,6 +12,9 @@ use std::{
     time::Duration,
 };
 
+#[path = "windows_git_paths.rs"]
+pub(super) mod paths;
+
 fn executable(scope: &Scope) -> Result<PinnedPath> {
     let paths = std::env::var_os("PATH").ok_or(error("gitUnavailable"))?;
     executable_from(scope, &paths)
@@ -69,16 +72,22 @@ impl ReadContext {
         git::environment()?;
         self.scope.verify()?;
         self.executable.verify().map_err(|_| error("changed"))?;
-        let mut command = Command::new(&self.executable.guid_path);
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+            &self.executable,
+            &self.scope.root,
+            &self.scope.git,
+            &self.scope.common,
+        ])?;
+        let mut command = Command::new(paths.path(&self.executable)?);
         command
             .env("GIT_NO_LAZY_FETCH", "1")
-            .env("GIT_COMMON_DIR", &self.scope.common.guid_path)
+            .env("GIT_COMMON_DIR", paths.path(&self.scope.common)?)
             .args(["--no-pager", "--no-replace-objects", "-c"])
             // Only traditional hooksPath lookup is addressed by this held file.
             // These fixed read commands do not authorize configured hooks.
             .arg(format!(
                 "core.hooksPath={}",
-                self.executable.guid_path.display()
+                paths.path(&self.executable)?.display()
             ))
             .args([
                 "-c",
@@ -95,15 +104,16 @@ impl ReadContext {
                 "credential.helper=",
             ])
             .arg("--git-dir")
-            .arg(&self.scope.git.guid_path)
+            .arg(paths.path(&self.scope.git)?)
             .arg("--work-tree")
-            .arg(&self.scope.root.guid_path)
+            .arg(paths.path(&self.scope.root)?)
             .arg("-C")
-            .arg(&self.scope.root.guid_path)
+            .arg(paths.path(&self.scope.root)?)
             .args(args)
-            .current_dir(&self.scope.root.guid_path)
+            .current_dir(paths.path(&self.scope.root)?)
             .stdin(Stdio::null());
         let output = git::execute_command(command, cancel, timeout);
+        paths.verify()?;
         // The exact child has been reaped and its direct Job is inactive.
         self.scope.verify()?;
         self.executable.verify().map_err(|_| error("changed"))?;

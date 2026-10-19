@@ -183,7 +183,8 @@ impl<'a> Context<'a> {
     fn run(&mut self, action: Action<'_>, cancel: &AtomicBool) -> Result<Vec<u8>> {
         self.verify()?;
         cancelled(cancel)?;
-        let mut command = Command::new(&self.program.guid_path);
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&[&self.program, &self.repo])?;
+        let mut command = Command::new(paths.path(&self.program)?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
@@ -192,10 +193,10 @@ impl<'a> Context<'a> {
             .env("GIT_TERMINAL_PROMPT", "0")
             .args(git::bundle_output::OPTIONS)
             .arg("--git-dir")
-            .arg(&self.repo.guid_path)
+            .arg(paths.path(&self.repo)?)
             .arg("-C")
-            .arg(&self.repo.guid_path)
-            .current_dir(&self.repo.guid_path);
+            .arg(paths.path(&self.repo)?)
+            .current_dir(paths.path(&self.repo)?);
         let input = match action {
             Action::Init => {
                 command
@@ -263,6 +264,7 @@ impl<'a> Context<'a> {
             }
         };
         let result = git::execute_command_input(command, input, cancel, super::COMMAND_TIME);
+        paths.verify()?;
         self.verify()?;
         let result = result?;
         cancelled(cancel)?;

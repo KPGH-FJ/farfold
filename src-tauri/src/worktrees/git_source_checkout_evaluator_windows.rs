@@ -247,13 +247,20 @@ impl<'a> Evaluator<'a> {
     ) -> Result<Vec<u8>> {
         self.verify(cancel)?;
         repo.verify().map_err(|_| error("changed"))?;
-        let mut command = Command::new(&self.owner.source.selected_program().guid_path);
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+            self.owner.source.selected_program(),
+            repo,
+            &self.owner.source.scope.root,
+            &self.objects,
+            &self.root,
+        ])?;
+        let mut command = Command::new(paths.path(self.owner.source.selected_program())?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
             .env("GIT_NO_LAZY_FETCH", "1")
             .env("GIT_TERMINAL_PROMPT", "0")
-            .env("GIT_DIR", &repo.guid_path)
+            .env("GIT_DIR", paths.path(repo)?)
             .args([
                 "--no-pager",
                 "--no-replace-objects",
@@ -275,15 +282,15 @@ impl<'a> Evaluator<'a> {
                 "checkout.workers=1",
             ])
             .arg("-C")
-            .arg(&repo.guid_path)
-            .current_dir(&repo.guid_path);
+            .arg(paths.path(repo)?)
+            .current_dir(paths.path(repo)?);
         // Init owns ONLY its new repo: never point its creation path at the
         // original object directory. Other actions only read shared objects.
         if !matches!(action, Action::Init) {
             command
-                .env("GIT_WORK_TREE", &self.owner.source.scope.root.guid_path)
-                .env("GIT_OBJECT_DIRECTORY", &self.objects.guid_path)
-                .env("GIT_INDEX_FILE", self.root.guid_path.join("index"))
+                .env("GIT_WORK_TREE", paths.path(&self.owner.source.scope.root)?)
+                .env("GIT_OBJECT_DIRECTORY", paths.path(&self.objects)?)
+                .env("GIT_INDEX_FILE", paths.path(&self.root)?.join("index"))
                 .args(["-c", "core.bare=false"]);
             for value in &self.configs {
                 command.args(["-c", value]);
@@ -342,6 +349,7 @@ impl<'a> Evaluator<'a> {
             cancel,
             crate::worktrees::recovery_pack::COMMAND_TIME,
         );
+        paths.verify()?;
         self.verify(cancel)?;
         repo.verify().map_err(|_| error("changed"))?;
         let output = output?;

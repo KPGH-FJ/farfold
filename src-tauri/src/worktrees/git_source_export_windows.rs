@@ -103,14 +103,20 @@ pub(in crate::worktrees) fn export(
     let namespace = Namespace { root, _temp: temp };
     let mut produced_output = ProducedOutput::new(&namespace)?;
     let output = produced_output.take()?;
-    let mut command = std::process::Command::new(&source.selected_program().guid_path);
+    let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+        source.selected_program(),
+        &source.scope.root,
+        &source.scope.git,
+        &source.scope.common,
+    ])?;
+    let mut command = std::process::Command::new(paths.path(source.selected_program())?);
     command
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .env("GIT_CONFIG_GLOBAL", "/dev/null")
         .env("GIT_ATTR_NOSYSTEM", "1")
         .env("GIT_NO_LAZY_FETCH", "1")
         .env("GIT_TERMINAL_PROMPT", "0")
-        .env("GIT_COMMON_DIR", &source.scope.common.guid_path)
+        .env("GIT_COMMON_DIR", paths.path(&source.scope.common)?)
         .args([
             "--no-pager",
             "--no-replace-objects",
@@ -136,13 +142,13 @@ pub(in crate::worktrees) fn export(
             "pack.windowMemory=16m",
         ])
         .arg("--git-dir")
-        .arg(&source.scope.git.guid_path)
+        .arg(paths.path(&source.scope.git)?)
         .arg("--work-tree")
-        .arg(&source.scope.root.guid_path)
+        .arg(paths.path(&source.scope.root)?)
         .arg("-C")
-        .arg(&source.scope.root.guid_path)
+        .arg(paths.path(&source.scope.root)?)
         .args(["pack-objects", "--stdout", "--revs"])
-        .current_dir(&source.scope.root.guid_path);
+        .current_dir(paths.path(&source.scope.root)?);
     source_matches(&source, &request)?;
     namespace.verify()?;
     cancelled(cancel)?;
@@ -159,6 +165,7 @@ pub(in crate::worktrees) fn export(
         MAX_BYTES,
         false,
     );
+    paths.verify()?;
     source_matches(&source, &request)?;
     namespace.verify()?;
     if !outcome?.success {
