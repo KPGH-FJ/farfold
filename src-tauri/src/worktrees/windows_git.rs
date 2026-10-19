@@ -36,6 +36,11 @@ pub(super) struct ReadContext {
     executable: PinnedPath,
 }
 impl ReadContext {
+    // Borrow the program already admitted against the ORIGINAL source scope.
+    // No PATH re-search and no arbitrary Command constructor is exposed.
+    pub(super) fn selected_program(&self) -> &PinnedPath {
+        &self.executable
+    }
     pub fn open(root: &Path) -> Result<Self> {
         git::environment()?;
         let scope = Scope::open(root)?;

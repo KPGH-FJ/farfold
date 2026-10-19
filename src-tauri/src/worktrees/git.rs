@@ -11,6 +11,9 @@ use std::{
 };
 #[path = "git_input.rs"]
 mod input;
+#[cfg(windows)]
+#[path = "git_source_export_windows.rs"]
+pub(super) mod source_export;
 pub(super) use input::Input;
 pub(super) const OUTPUT_LIMIT: u64 = 4 * 1024 * 1024;
 pub(super) struct Output {
@@ -179,6 +182,7 @@ pub(super) fn execute_command_input(
         true,
     )
 }
+#[cfg(unix)]
 pub(super) fn execute_to_file(
     cmd: Command,
     input: Input,

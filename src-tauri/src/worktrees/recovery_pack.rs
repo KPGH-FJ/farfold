@@ -24,9 +24,12 @@ use std::{
 };
 #[path = "recovery_artifact.rs"]
 mod artifact;
+#[cfg(windows)]
+#[path = "private_bare_windows.rs"]
+mod private_bare;
 use artifact::Artifacts;
 pub(super) use artifact::FileIdentity;
-const COMMAND_TIME: Duration = Duration::from_secs(120);
+pub(super) const COMMAND_TIME: Duration = Duration::from_secs(120);
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Manifest {
@@ -484,6 +487,75 @@ pub(super) fn publish_bundle(source: &Path, destination: &Path, cancel: &AtomicB
     }
     output.sync_all().map_err(|_| error("unavailable"))
 }
+#[cfg(windows)]
+pub(super) struct ExportRequest<'a> {
+    identity: &'a super::storage::Identity,
+    retained: &'a str,
+    manifest: &'a Manifest,
+}
+#[cfg(windows)]
+impl<'a> ExportRequest<'a> {
+    // The private constructor is reachable only from this existing consumer
+    // and its test module; a Roots value or arbitrary byte slice is not authority.
+    fn new(
+        identity: &'a super::storage::Identity,
+        retained: &'a str,
+        manifest: &'a Manifest,
+    ) -> Result<Self> {
+        validate(manifest)?;
+        let width = match manifest.roots.format.as_str() {
+            "sha1" => 40,
+            "sha256" => 64,
+            _ => return Err(error("recoveryInvalid")),
+        };
+        if manifest.roots.head.len() != width {
+            return Err(error("recoveryInvalid"));
+        }
+        Ok(Self {
+            identity,
+            retained,
+            manifest,
+        })
+    }
+    pub(super) fn identity(&self) -> &super::storage::Identity {
+        self.identity
+    }
+    pub(super) fn retained(&self) -> &str {
+        self.retained
+    }
+    pub(super) fn roots_input(&self) -> Vec<u8> {
+        self.manifest.roots.input()
+    }
+}
+#[cfg(windows)]
+struct WindowsFirst {
+    // Field drop order is intentional: Imported closes its source/pack pins
+    // before the export namespace's held directory and TempDir are removed.
+    imported: private_bare::Imported,
+    export_namespace: git::source_export::Namespace,
+}
+#[cfg(windows)]
+impl WindowsFirst {
+    fn path(&self) -> &Path {
+        self.imported.path()
+    }
+}
+#[cfg(windows)]
+fn windows_first(request: ExportRequest<'_>, cancel: &AtomicBool) -> Result<WindowsFirst> {
+    let manifest = request.manifest;
+    let identity = request.identity;
+    let retained = request.retained;
+    let exported = git::source_export::export(request, cancel)?;
+    let (source, pack, namespace) = exported.into_parts()?;
+    let imported = private_bare::import(source, identity, retained, pack, manifest, cancel)?;
+    let first = WindowsFirst {
+        imported,
+        export_namespace: namespace,
+    };
+    first.export_namespace.verify()?;
+    Ok(first)
+}
+
 pub(super) fn build(
     operation_id: &str,
     saved: &SavedArchive,
@@ -509,56 +581,73 @@ pub(super) fn build(
     }
     let directory_stamp = reserved_stamp.clone();
     let temp = tempfile::tempdir_in(path).map_err(|_| error("unavailable"))?;
+    #[cfg(unix)]
     let pack = temp.path().join("objects.pack");
-    let cmd = git::command(
-        Path::new(&saved.archive.retained_path),
-        &[
-            "-c",
-            "pack.threads=1",
-            "-c",
-            "pack.windowMemory=16m",
-            "pack-objects",
-            "--stdout",
-            "--revs",
-        ],
-    )?;
-    let input = git::Input::from_bytes(&m.roots.input(), git::OUTPUT_LIMIT, cancel)?;
-    if !git::execute_to_file(
-        cmd,
-        input,
-        cancel,
-        COMMAND_TIME,
-        create_file(&pack)?,
-        MAX_BYTES,
-    )?
-    .success
+    #[cfg(unix)]
     {
-        return Err(error("recoveryInvalid"));
+        let cmd = git::command(
+            Path::new(&saved.archive.retained_path),
+            &[
+                "-c",
+                "pack.threads=1",
+                "-c",
+                "pack.windowMemory=16m",
+                "pack-objects",
+                "--stdout",
+                "--revs",
+            ],
+        )?;
+        let input = git::Input::from_bytes(&m.roots.input(), git::OUTPUT_LIMIT, cancel)?;
+        if !git::execute_to_file(
+            cmd,
+            input,
+            cancel,
+            COMMAND_TIME,
+            create_file(&pack)?,
+            MAX_BYTES,
+        )?
+        .success
+        {
+            return Err(error("recoveryInvalid"));
+        }
     }
+    #[cfg(unix)]
     let first = temp.path().join("first");
-    init(&first, &m.roots.format, true, cancel)?;
-    let cmd = private_command(
-        &first,
-        &[
-            "index-pack",
-            "--stdin",
-            "--strict",
-            "--max-input-size=268435456",
-        ],
-    )?;
-    // This used to configure a File then run(None). Preserve that real file
-    // input explicitly; None now means Null only for callers with no payload.
-    let input = git::Input::from_file(
-        File::open(&pack).map_err(|_| error("unavailable"))?,
-        MAX_BYTES,
+    #[cfg(unix)]
+    {
+        init(&first, &m.roots.format, true, cancel)?;
+        let cmd = private_command(
+            &first,
+            &[
+                "index-pack",
+                "--stdin",
+                "--strict",
+                "--max-input-size=268435456",
+            ],
+        )?;
+        // This used to configure a File then run(None). Preserve that real file
+        // input explicitly; None now means Null only for callers with no payload.
+        let input = git::Input::from_file(
+            File::open(&pack).map_err(|_| error("unavailable"))?,
+            MAX_BYTES,
+            cancel,
+        )?;
+        run_input(cmd, input, cancel)?;
+        install_refs(&first, m, cancel)?;
+        verify_objects(&first, m, cancel)?;
+    }
+    #[cfg(windows)]
+    let first_owner = windows_first(
+        ExportRequest::new(&saved.original.identity, &saved.archive.retained_path, m)?,
         cancel,
     )?;
-    run_input(cmd, input, cancel)?;
-    install_refs(&first, m, cancel)?;
-    verify_objects(&first, m, cancel)?;
+    #[cfg(windows)]
+    let first = first_owner.path();
+    #[cfg(unix)]
+    let first = first.as_path();
     let staged_bundle = temp.path().join("verified.bundle");
     private(
-        &first,
+        first,
         &[
             "bundle",
             "create",
@@ -720,3 +809,7 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
     }
 }
+
+#[cfg(all(windows, test))]
+#[path = "source_pack_windows_tests.rs"]
+mod source_export_tests;
