@@ -78,6 +78,25 @@ fn snapshot(saved: &SavedArchive, path: &str) -> Result<inspect::Snapshot> {
     }
     Ok(s)
 }
+// The existing complete-material consumers explicitly request all security on
+// Windows. This facet remains partial; current public Windows gates refuse
+// before this path and all Some profiles remain ineligible for Manifest1.
+fn archive_material(
+    material: &super::material_owner::Owner,
+    root: &Path,
+    expected: &inspect::Stamp,
+    cancel: &AtomicBool,
+) -> Result<MaterialSummary> {
+    #[cfg(windows)]
+    {
+        material.capture_security_complete(root, expected, cancel)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = expected;
+        material.capture(root, cancel)
+    }
+}
 pub(super) fn verify_at(
     material: &super::material_owner::Owner,
     saved: &SavedArchive,
@@ -104,7 +123,7 @@ pub(super) fn verify_at(
         absent(&saved.retained_parent)?;
     }
     let s = snapshot(saved, path)?;
-    if material.capture(Path::new(path), cancel)? != saved.material
+    if archive_material(material, Path::new(path), &s.root_stamp, cancel)? != saved.material
         || index_digest(&saved.original.identity)? != saved.index_sha256
     {
         return Err(error("materialChanged"));
@@ -156,7 +175,7 @@ pub(super) fn prepare_record(
         parent,
         retained_parent,
         retained_parent_stamp: None,
-        material: material.capture(Path::new(&s.root), cancel)?,
+        material: archive_material(material, Path::new(&s.root), &s.root_stamp, cancel)?,
         index_sha256: index_digest(&location.identity)?,
         original: location,
     };

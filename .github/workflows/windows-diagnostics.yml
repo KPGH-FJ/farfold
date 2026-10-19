@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16 positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -394,6 +394,117 @@ jobs:
           Get-Content -LiteralPath $stdout
           Get-Content -LiteralPath $stderr
           if (-not $complete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: Selected SDK path ownership controls and public helper tests
+        id: sdk_paths
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 5
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $tests = @(
+            'acp_client::history_search::claude_tests::sdk_windows_context_uses_one_plain_cwd_and_native_full_identity',
+            'acp_client::history_search::claude_tests::sdk_windows_read_guard_keeps_source_write_denied_until_publication',
+            'acp_client::history_search::claude_tests::sdk_windows_disposable_cwd_probe_cannot_authorize_a_changed_module',
+            'acp_client::history_search::claude_tests::sdk_configuration_wait_rechecks_selected_module_before_helper_dispatch'
+          )
+          $results = @()
+          $complete = $true
+          $index = 0
+          foreach ($test in $tests) {
+            $index++
+            $stdout = Join-Path $raw "sdk-path-$index.stdout.log"
+            $stderr = Join-Path $raw "sdk-path-$index.stderr.log"
+            & $binary $test --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+            $testExit = $LASTEXITCODE
+            $outText = [IO.File]::ReadAllText($stdout)
+            $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+            $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
+            $passed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
+            if (-not $passed) { $complete = $false }
+            $results += [ordered]@{ test = $test; exitCode = $testExit; exactOnePassed = $passed; finalSummary = if ($last) { $last.Value } else { $null }; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash }
+            Get-Content -LiteralPath $stdout
+            Get-Content -LiteralPath $stderr
+          }
+          $nodeSources = @('src-tauri/src/acp_client/history_search/claude_read.mjs', 'src-tauri/src/acp_client/history_search/claude_read.test.mjs')
+          $sourceBefore = @($nodeSources | ForEach-Object { (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash })
+          $nodeStdout = Join-Path $raw 'sdk-helper.stdout.log'
+          $nodeStderr = Join-Path $raw 'sdk-helper.stderr.log'
+          $nodeTest = $nodeSources[1]
+          & node --test --test-reporter=tap $nodeTest 1> $nodeStdout 2> $nodeStderr
+          $nodeExit = $LASTEXITCODE
+          $sourceAfter = @($nodeSources | ForEach-Object { (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash })
+          $nodeText = [IO.File]::ReadAllText($nodeStdout)
+          $sourcesStable = ($sourceBefore -join ',') -ceq ($sourceAfter -join ',')
+          $nodePassed = $nodeExit -eq 0 -and $sourcesStable -and [regex]::Matches($nodeText, '(?m)^# tests 20\r?$').Count -eq 1 -and [regex]::Matches($nodeText, '(?m)^# pass 20\r?$').Count -eq 1 -and [regex]::Matches($nodeText, '(?m)^# fail 0\r?$').Count -eq 1 -and [regex]::Matches($nodeText, '(?m)^# skipped 0\r?$').Count -eq 1
+          $complete = $complete -and $nodePassed
+          [ordered]@{ head = $head; rustExactResults = $results; nodeExit = $nodeExit; node20Passed = $nodePassed; nodeSources = $nodeSources; nodeSourceHashesBefore = $sourceBefore; nodeSourceHashesAfter = $sourceAfter; nodeSourcesStable = $sourcesStable; nodeStdoutSha256 = (Get-FileHash -LiteralPath $nodeStdout -Algorithm SHA256).Hash; nodeStderrSha256 = (Get-FileHash -LiteralPath $nodeStderr -Algorithm SHA256).Hash; observationComplete = $complete; realAgentOrFullSdkAcceptance = $false } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'sdk-paths.result.json') -Encoding utf8
+          Get-Content -LiteralPath $nodeStdout
+          Get-Content -LiteralPath $nodeStderr
+          if (-not $complete) { exit 1 }
+      - name: Selected held material facets, sixteen exact owned Windows controls
+        id: selected_material
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 5
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $tests = @(
+            'file_access::windows::security::tests::actual_held_file_and_directory_security_are_stable_under_the_same_identity',
+            'file_access::windows::security::tests::busy_cancel_small_budget_and_poison_do_not_produce_empty_descriptors',
+            'file_access::windows::security::tests::missing_read_control_is_actual_access_denied_not_empty_security',
+            'file_access::windows::security::tests::same_held_full_identity_observes_owned_dacl_change_without_reading_file_data',
+            'file_access::windows::integrity::tests::real_label_query_keeps_same_file_and_directory_full_identity_without_privilege_adjustment',
+            'file_access::windows::integrity::tests::label_query_missing_read_control_is_a_real_error_not_absent_label',
+            'file_access::windows::integrity::tests::busy_poison_cancel_and_small_offer_never_produce_an_empty_label',
+            'worktrees::material_scan::profile_tests::real_material_walk_consumes_owned_dacl_without_changing_default_byte_meaning',
+            'worktrees::material_scan::profile_tests::hardlink_native::actual_in_tree_aliases_feed_the_real_owner_and_keep_per_name_default_bytes',
+            'worktrees::material_scan::profile_tests::hardlink_native::outside_link_is_refused_without_reading_its_directory_and_explicit_recheck_can_succeed',
+            'worktrees::material_scan::profile_tests::hardlink_native::skipped_root_git_pointer_cannot_hide_an_unaccounted_link',
+            'worktrees::material_scan::profile_tests::real_owner_observes_stored_label_facet_without_changing_data_or_requesting_privilege',
+            'worktrees::material_scan::profile_tests::actual_owned_default_data_observation_changes_with_body_and_includes_ignored_names',
+            'worktrees::material_scan::profile_tests::real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total',
+            'file_access::windows::security_full::tests::ordinary_pin_can_never_mint_full_coverage_even_if_the_process_happens_to_be_privileged',
+            'file_access::windows::security_full::tests::exact_current_token_error_codes_retain_the_combined_requested_access_without_guessing'
+          )
+          $results = @()
+          $complete = $true
+          $index = 0
+          foreach ($test in $tests) {
+            $index++
+            $stdout = Join-Path $raw "selected-material-$index.stdout.log"
+            $stderr = Join-Path $raw "selected-material-$index.stderr.log"
+            $started = [DateTime]::UtcNow.ToString('o')
+            & $binary $test --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+            $testExit = $LASTEXITCODE
+            $finished = [DateTime]::UtcNow.ToString('o')
+            $outText = [IO.File]::ReadAllText($stdout)
+            $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+            $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
+            $passed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0'
+            if (-not $passed) { $complete = $false }
+            $results += [ordered]@{ test = $test; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; exactOnePassed = $passed; finalSummary = if ($last) { $last.Value } else { $null }; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash }
+            Get-Content -LiteralPath $stdout
+            Get-Content -LiteralPath $stderr
+          }
+          $complete = $complete -and $results.Count -eq 16
+          [ordered]@{ head = $head; testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256; expectedTests = 16; rustExactResults = $results; observationComplete = $complete; partialMaterialControlsOnly = $true; productOrAllWindowsComplete = $false } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'selected-material.result.json') -Encoding utf8
+          if (-not $complete) { exit 1 }
       - name: Master retirement bounded unknown, strict manual exact negative observation
         id: master_unknown
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
@@ -477,6 +588,8 @@ jobs:
             auth_reservation = '${{ steps.auth_reservation.outcome }}'
             auth_cancellation = '${{ steps.auth_cancellation.outcome }}'
             ads_named = '${{ steps.ads_named.outcome }}'
+            sdk_paths = '${{ steps.sdk_paths.outcome }}'
+            selected_material = '${{ steps.selected_material.outcome }}'
           }
           $positivesPassed = $build -eq 'success'
           foreach ($outcome in $required.Values) { if ($outcome -ne 'success') { $positivesPassed = $false } }
@@ -497,7 +610,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
-            scope = 'selected parser/publication/terminal/auth/partialADS controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }

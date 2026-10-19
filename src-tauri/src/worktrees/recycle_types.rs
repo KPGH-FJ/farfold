@@ -49,6 +49,18 @@ pub enum MaterialProfile {
     WindowsDefaultDataEaV1,
     #[serde(rename = "windowsDefaultDataEaStreamsV1")]
     WindowsDefaultDataEaStreamsV1,
+    // Partial owner/group/DACL only; SACL and restoration are not observed.
+    #[serde(rename = "windowsDefaultDataEaStreamsOwnerGroupDaclV1")]
+    WindowsDefaultDataEaStreamsOwnerGroupDaclV1,
+    // Observed complete in-tree name membership is not a restore/snapshot proof.
+    #[serde(rename = "windowsDefaultDataEaStreamsOwnerGroupDaclLinksV1")]
+    WindowsDefaultDataEaStreamsOwnerGroupDaclLinksV1,
+    // Stored mandatory label only; audit/full SACL and restore remain unknown.
+    #[serde(rename = "windowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1")]
+    WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1,
+    // Full requested descriptor facet, still not full material or restoration.
+    #[serde(rename = "windowsDefaultDataEaStreamsLinksFullSecurityV1")]
+    WindowsDefaultDataEaStreamsLinksFullSecurityV1,
 }
 // Missing is the historical Unix representation; an explicit null is not
 // silently downgraded to that representation.

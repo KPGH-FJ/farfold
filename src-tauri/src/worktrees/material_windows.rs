@@ -1,12 +1,18 @@
 //! Read-only namespace/default-data/EA plus held DATA stream observations.
-//! Still partial: no security/hardlink restoration or coherent snapshot.
+//! Partial default profile; explicit strict-security adds full SD bytes only.
+//! No link/security restoration, atomic snapshot, or complete material authority.
 //! The linked root .git pointer keeps its historical explicit skip.
-use super::{ListingBudget, MaterialSummary, hex};
+use super::{
+    ListingBudget, MaterialSummary, hex,
+    links::{self, Topology},
+};
 use crate::{
     file_access::{
-        DirectoryObservation, EaFailure, EaObservation, EaWorkBudget, MetadataKind, PinnedPath,
-        RetiredBackup, StreamsFailure, StreamsObservation, directory_entries, ea_observation,
-        metadata_child, metadata_file, streams_observation,
+        DirectoryObservation, EaFailure, EaObservation, EaWorkBudget, FullSecurityFailure,
+        FullSecurityObservation, IntegrityObservation, MetadataKind, PinnedPath, RetiredBackup,
+        SecurityObservation, StreamsFailure, StreamsObservation, directory_entries, ea_observation,
+        full_security_observation, integrity_observation, metadata_child, metadata_file,
+        security_observation, streams_observation,
     },
     worktrees::{
         recycle_types::MaterialProfile,
@@ -31,8 +37,39 @@ struct Scan {
     entries: ListingBudget,
     bytes: u64,
     ea_work: EaWorkBudget,
+    links: Topology,
+    full_security: bool,
+}
+fn full_error(value: FullSecurityFailure) -> crate::worktrees::types::Failure {
+    error(match value {
+        FullSecurityFailure::AccessCondition { .. } => "securityAccessRequired",
+        FullSecurityFailure::Record(EaFailure::Cancelled) => "cancelled",
+        FullSecurityFailure::Record(EaFailure::Changed) => "materialChanged",
+        FullSecurityFailure::Record(EaFailure::Limit) => "materialLimit",
+        _ => "unavailable",
+    })
 }
 impl Scan {
+    fn observe_full_security(
+        &mut self,
+        pin: &PinnedPath,
+        cancel: &AtomicBool,
+    ) -> Result<Option<FullSecurityObservation>> {
+        if !self.full_security {
+            return Ok(None);
+        }
+        full_security_observation(pin, &mut self.ea_work, cancel)
+            .map(Some)
+            .map_err(full_error)
+    }
+    fn full_security_field(&mut self, value: &Option<FullSecurityObservation>) {
+        if let Some(value) = value {
+            self.field(&value.requested_information().to_le_bytes());
+            self.field(&value.aces().to_le_bytes());
+            self.field(&value.returned_bytes().to_le_bytes());
+            self.field(value.sha256());
+        }
+    }
     fn ea(&mut self, value: &EaObservation) {
         self.field(&value.count.to_le_bytes());
         self.field(&value.logical_bytes.to_le_bytes());
@@ -40,6 +77,44 @@ impl Scan {
     }
     fn observe_ea(&mut self, pin: &PinnedPath, cancel: &AtomicBool) -> Result<EaObservation> {
         ea_observation(pin, &mut self.ea_work, cancel).map_err(|e| {
+            error(match e {
+                EaFailure::Cancelled => "cancelled",
+                EaFailure::Changed => "materialChanged",
+                EaFailure::Limit => "materialLimit",
+                _ => "unavailable",
+            })
+        })
+    }
+    fn integrity(&mut self, value: &IntegrityObservation) {
+        self.field(&value.labels.to_le_bytes());
+        self.field(&value.logical_bytes.to_le_bytes());
+        self.field(&value.sha256);
+    }
+    fn observe_integrity(
+        &mut self,
+        pin: &PinnedPath,
+        cancel: &AtomicBool,
+    ) -> Result<IntegrityObservation> {
+        integrity_observation(pin, &mut self.ea_work, cancel).map_err(|e| {
+            error(match e {
+                EaFailure::Cancelled => "cancelled",
+                EaFailure::Changed => "materialChanged",
+                EaFailure::Limit => "materialLimit",
+                _ => "unavailable",
+            })
+        })
+    }
+    fn security(&mut self, value: &SecurityObservation) {
+        self.field(&value.aces.to_le_bytes());
+        self.field(&value.logical_bytes.to_le_bytes());
+        self.field(&value.sha256);
+    }
+    fn observe_security(
+        &mut self,
+        pin: &PinnedPath,
+        cancel: &AtomicBool,
+    ) -> Result<SecurityObservation> {
+        security_observation(pin, &mut self.ea_work, cancel).map_err(|e| {
             error(match e {
                 EaFailure::Cancelled => "cancelled",
                 EaFailure::Changed => "materialChanged",
@@ -119,6 +194,15 @@ fn enumeration_error(
         _ => "unavailable",
     })
 }
+fn topology_error(value: links::Failure) -> crate::worktrees::types::Failure {
+    error(match value {
+        links::Failure::Cancelled => "cancelled",
+        links::Failure::Limit => "materialLimit",
+        links::Failure::Changed => "materialChanged",
+        links::Failure::UnaccountedLinks => "specialFile",
+        links::Failure::InvalidName => "unsafePath",
+    })
+}
 fn names_field(raw: &[u16]) -> Vec<u8> {
     raw.iter().flat_map(|v| v.to_le_bytes()).collect()
 }
@@ -139,6 +223,15 @@ fn walk(
     if before.kind != MetadataKind::Directory {
         return Err(error("specialFile"));
     }
+    // The same shared completed-returned budget charges BOTH actual security
+    // queries. Raw descriptors retire inside observation before recursion.
+    // Stored label is an independent READ_CONTROL facet, not full audit SACL.
+    let full_before = scan.observe_full_security(&dir, cancel)?;
+    scan.full_security_field(&full_before);
+    let integrity_before = scan.observe_integrity(&dir, cancel)?;
+    scan.integrity(&integrity_before);
+    let security_before = scan.observe_security(&dir, cancel)?;
+    scan.security(&security_before);
     // Directory EA gets one pre/post pair here, never a second pair in
     // its parent. Only this fixed-size digest survives recursion.
     let ea_before = scan.observe_ea(&dir, cancel)?;
@@ -198,9 +291,13 @@ fn walk(
         if !directory && metadata.kind != MetadataKind::File {
             return Err(error("specialFile"));
         }
-        let mut child = dir
-            .child(raw, directory)
-            .map_err(|_| error("unavailable"))?;
+        let mut child = dir.child(raw, directory).map_err(|e| {
+            if scan.full_security {
+                full_error(FullSecurityFailure::child_open(e))
+            } else {
+                error("unavailable")
+            }
+        })?;
         let opened = metadata_file(child.file()).map_err(|_| error("unavailable"))?;
         if opened != metadata || !opened.matches_directory_entry(observed) {
             return Err(error("materialChanged"));
@@ -217,6 +314,12 @@ fn walk(
         if directory {
             child = walk(scan, child, &relative, depth + 1, cancel, retired)?;
         } else {
+            let full_before = scan.observe_full_security(&child, cancel)?;
+            scan.full_security_field(&full_before);
+            let integrity_before = scan.observe_integrity(&child, cancel)?;
+            scan.integrity(&integrity_before);
+            let security_before = scan.observe_security(&child, cancel)?;
+            scan.security(&security_before);
             let ea_before = scan.observe_ea(&child, cancel)?;
             scan.ea(&ea_before);
             let stamp =
@@ -245,6 +348,21 @@ fn walk(
             if scan.observe_ea(&child, cancel)? != ea_before {
                 return Err(error("materialChanged"));
             }
+            if scan.observe_security(&child, cancel)? != security_before {
+                return Err(error("materialChanged"));
+            }
+            if scan.observe_integrity(&child, cancel)? != integrity_before {
+                return Err(error("materialChanged"));
+            }
+            if scan.observe_full_security(&child, cancel)? != full_before {
+                return Err(error("materialChanged"));
+            }
+            // This is the same held child's full stamp already paired around
+            // its streams/EA/security reads. No path reopen or link enumeration
+            // outside the authorized namespace is used to fill missing names.
+            scan.links
+                .observe(&stamp.identity, stamp.links, &relative, cancel)
+                .map_err(topology_error)?;
         }
         if metadata_file(child.file()).map_err(|_| error("unavailable"))? != opened
             || metadata_child(dir.file(), OsStr::new(&text))
@@ -257,6 +375,15 @@ fn walk(
         child.verify().map_err(|_| error("materialChanged"))?;
     }
     if scan.observe_ea(&dir, cancel)? != ea_before {
+        return Err(error("materialChanged"));
+    }
+    if scan.observe_security(&dir, cancel)? != security_before {
+        return Err(error("materialChanged"));
+    }
+    if scan.observe_integrity(&dir, cancel)? != integrity_before {
+        return Err(error("materialChanged"));
+    }
+    if scan.observe_full_security(&dir, cancel)? != full_before {
         return Err(error("materialChanged"));
     }
     // A complete second observation checks names/IDs/metadata after traversal;
@@ -274,22 +401,62 @@ fn walk(
     cancelled(cancel)?;
     Ok(dir)
 }
+#[cfg(test)]
 pub(super) fn capture(
     root: &Path,
     cancel: &AtomicBool,
     retired: &mut Option<RetiredBackup>,
 ) -> Result<MaterialSummary> {
     let root = PinnedPath::directory(root).map_err(|_| error("unsafePath"))?;
+    capture_pin(root, false, cancel, retired)
+}
+pub(super) fn capture_security_complete(
+    root: &Path,
+    expected: &super::super::inspect::Stamp,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<MaterialSummary> {
+    cancelled(cancel)?;
+    let root = PinnedPath::directory_full_security(root).map_err(full_error)?;
+    if &super::super::inspect::pinned_stamp(&root)? != expected {
+        return Err(error("materialChanged"));
+    }
+    capture_pin(root, true, cancel, retired)
+}
+fn capture_pin(
+    root: PinnedPath,
+    full_security: bool,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<MaterialSummary> {
     let mut scan = Scan {
         hash: Sha256::new(),
         entries: ListingBudget::new(MAX_ENTRIES),
         bytes: 0,
         ea_work: EaWorkBudget::new(MAX_OBSERVATION_WORK),
+        links: Topology::new(MAX_ENTRIES),
+        full_security,
     };
-    scan.field(b"farfold-windows-default-data-ea-streams-observation-v1");
+    scan.field(if full_security {
+        b"farfold-windows-default-data-ea-streams-links-full-security-observation-v1".as_slice()
+    } else {
+        b"farfold-windows-default-data-ea-streams-owner-group-dacl-links-label-observation-v1"
+            .as_slice()
+    });
     let _root = walk(&mut scan, root, &[], 0, cancel, retired)?;
+    // All regular names must account for every observed declared link before
+    // a partial observation can publish. Both transient maps retire here.
+    let topology = scan.links.finish(cancel).map_err(topology_error)?;
+    scan.field(&topology.objects.to_le_bytes());
+    scan.field(&topology.names.to_le_bytes());
+    scan.field(&topology.aliases.to_le_bytes());
+    scan.field(&topology.sha256);
     Ok(MaterialSummary {
-        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsV1),
+        profile: Some(if full_security {
+            MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1
+        } else {
+            MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1
+        }),
         entries: scan.entries.reserved,
         bytes: scan.bytes,
         sha256: hex(scan.hash.finalize()),

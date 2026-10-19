@@ -64,7 +64,7 @@ fn actual_owned_default_data_observation_changes_with_body_and_includes_ignored_
     let first = capture(dir.path(), &cancel).unwrap();
     assert_eq!(
         first.profile,
-        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
     );
     assert_eq!(first.entries, 3);
     assert_eq!(capture(dir.path(), &cancel).unwrap(), first);
@@ -463,7 +463,7 @@ fn real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total() {
     assert_eq!(a.entries, b.entries);
     assert_eq!(
         b.profile,
-        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
     );
 }
 
@@ -515,7 +515,7 @@ fn owned_ntfs_named_data_changes_the_partial_stream_facet_without_changing_defau
     let first = owner.capture(&root, &cancel).unwrap();
     assert_eq!(
         first.profile,
-        Some(MaterialProfile::WindowsDefaultDataEaStreamsV1)
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
     );
     assert_eq!(first.bytes, 4);
     assert_eq!(owner.capture(&root, &cancel).unwrap(), first);
@@ -525,4 +525,310 @@ fn owned_ntfs_named_data_changes_the_partial_stream_facet_without_changing_defau
     assert_eq!(second.entries, first.entries);
     assert_ne!(second.sha256, first.sha256);
     assert_eq!(std::fs::read(&file).unwrap(), b"body");
+}
+
+#[test]
+fn owner_group_dacl_profile_remains_partial_and_not_legacy_manifest_authority() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclV1),
+        entries: 2,
+        bytes: 4,
+        sha256: "d".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaStreamsOwnerGroupDaclV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert!(value.profile.is_some());
+    assert!(
+        serde_json::from_str::<MaterialSummary>(&wire.replace(
+            "windowsDefaultDataEaStreamsOwnerGroupDaclV1",
+            "completeWindowsBackup"
+        ))
+        .is_err()
+    );
+}
+
+#[cfg(windows)]
+#[test]
+fn real_material_walk_consumes_owned_dacl_without_changing_default_byte_meaning() {
+    let directory = tempfile::tempdir().unwrap();
+    let root = directory.path().canonicalize().unwrap();
+    let path = root.join("owned.txt");
+    std::fs::write(&path, b"body").unwrap();
+    let dacl = crate::file_access::security_test_fixture::OwnedDacl::new(&path);
+    dacl.set("D:P(A;;FA;;;WD)");
+    let owner = crate::worktrees::material_owner::Owner::default();
+    let cancel = AtomicBool::new(false);
+    let first = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(
+        first.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
+    );
+    assert_eq!(first.bytes, 4);
+    assert_eq!(owner.capture(&root, &cancel).unwrap(), first);
+    dacl.set("D:P(A;;FR;;;WD)");
+    let second = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(second.bytes, first.bytes);
+    assert_eq!(second.entries, first.entries);
+    assert_ne!(second.sha256, first.sha256);
+    assert_eq!(std::fs::read(&path).unwrap(), b"body");
+    dacl.restore();
+}
+
+#[test]
+fn link_topology_profile_remains_partial_and_never_legacy_none() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksV1),
+        entries: 3,
+        bytes: 8,
+        sha256: "e".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaStreamsOwnerGroupDaclLinksV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert!(value.profile.is_some());
+    assert!(
+        serde_json::from_str::<MaterialSummary>(&wire.replace(
+            "windowsDefaultDataEaStreamsOwnerGroupDaclLinksV1",
+            "completeWindowsBackup"
+        ))
+        .is_err()
+    );
+}
+
+#[cfg(windows)]
+mod hardlink_native {
+    use super::*;
+    use std::os::windows::io::AsRawHandle;
+    use windows_sys::Win32::Storage::FileSystem::GetVolumeInformationByHandleW;
+
+    fn require_ntfs(path: &std::path::Path) {
+        let pin = crate::file_access::PinnedPath::regular(path).unwrap();
+        let mut fs = [0u16; 32];
+        assert_ne!(
+            unsafe {
+                GetVolumeInformationByHandleW(
+                    pin.file().as_raw_handle(),
+                    std::ptr::null_mut(),
+                    0,
+                    std::ptr::null_mut(),
+                    std::ptr::null_mut(),
+                    std::ptr::null_mut(),
+                    fs.as_mut_ptr(),
+                    fs.len() as u32,
+                )
+            },
+            0
+        );
+        let end = fs.iter().position(|v| *v == 0).unwrap();
+        assert_eq!(
+            String::from_utf16(&fs[..end]).unwrap(),
+            "NTFS",
+            "owned NTFS fixture required, never skipped"
+        );
+    }
+    #[test]
+    fn actual_in_tree_aliases_feed_the_real_owner_and_keep_per_name_default_bytes() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        std::fs::create_dir(root.join("sub")).unwrap();
+        let first = root.join("a.txt");
+        let second = root.join("sub/b.txt");
+        std::fs::write(&first, b"body").unwrap();
+        require_ntfs(&first);
+        std::fs::hard_link(&first, &second).unwrap();
+        let a = crate::file_access::PinnedPath::regular(&first).unwrap();
+        let b = crate::file_access::PinnedPath::regular(&second).unwrap();
+        let stamp = crate::file_access::stamp(a.file()).unwrap();
+        assert_eq!(
+            stamp.identity,
+            crate::file_access::stamp(b.file()).unwrap().identity
+        );
+        assert_eq!(stamp.links, 2);
+        drop((a, b));
+        let owner = crate::worktrees::material_owner::Owner::default();
+        let cancel = AtomicBool::new(false);
+        let captured = owner.capture(&root, &cancel).unwrap();
+        assert_eq!(
+            captured.profile,
+            Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
+        );
+        assert_eq!(captured.entries, 3);
+        // Existing logical bytes count names, not unique physical allocation.
+        assert_eq!(captured.bytes, 8);
+        assert_eq!(owner.capture(&root, &cancel).unwrap(), captured);
+        assert_eq!(std::fs::read(first).unwrap(), b"body");
+        assert_eq!(std::fs::read(second).unwrap(), b"body");
+    }
+    #[test]
+    fn outside_link_is_refused_without_reading_its_directory_and_explicit_recheck_can_succeed() {
+        let temp = tempfile::tempdir().unwrap();
+        let base = temp.path().canonicalize().unwrap();
+        let root = base.join("selected");
+        std::fs::create_dir(&root).unwrap();
+        let inside = root.join("owned.txt");
+        let outside = base.join("outside.txt");
+        std::fs::write(&inside, b"body").unwrap();
+        require_ntfs(&inside);
+        std::fs::hard_link(&inside, &outside).unwrap();
+        let owner = crate::worktrees::material_owner::Owner::default();
+        let cancel = AtomicBool::new(false);
+        assert_eq!(
+            owner.capture(&root, &cancel).unwrap_err().code,
+            "specialFile"
+        );
+        assert!(owner.available().is_ok());
+        assert_eq!(std::fs::read(&outside).unwrap(), b"body");
+        // Test-owned explicit action/recheck; the producer does not retry.
+        std::fs::remove_file(&outside).unwrap();
+        let observed = owner.capture(&root, &cancel).unwrap();
+        assert_eq!(observed.bytes, 4);
+        assert_eq!(observed.entries, 1);
+    }
+    #[test]
+    fn skipped_root_git_pointer_cannot_hide_an_unaccounted_link() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let inside = root.join("owned.txt");
+        std::fs::write(&inside, b"body").unwrap();
+        require_ntfs(&inside);
+        std::fs::hard_link(&inside, root.join(".git")).unwrap();
+        // Producer-only namespace control, not a valid selected Git repository.
+        // Existing root .git skip is preserved; excluded names cannot be used
+        // to assert complete membership for a regular file in this tree.
+        let owner = crate::worktrees::material_owner::Owner::default();
+        assert_eq!(
+            owner
+                .capture(&root, &AtomicBool::new(false))
+                .unwrap_err()
+                .code,
+            "specialFile"
+        );
+        assert!(owner.available().is_ok());
+    }
+}
+
+#[test]
+fn mandatory_label_facet_is_explicit_partial_never_full_sacl_or_unix_none() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1),
+        entries: 1,
+        bytes: 4,
+        sha256: "f".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert!(value.profile.is_some());
+    assert!(
+        serde_json::from_str::<MaterialSummary>(&wire.replace(
+            "windowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1",
+            "completeWindowsSecurity"
+        ))
+        .is_err()
+    );
+}
+#[cfg(windows)]
+#[test]
+fn real_owner_observes_stored_label_facet_without_changing_data_or_requesting_privilege() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    std::fs::write(root.join("owned.txt"), b"data").unwrap();
+    let owner = crate::worktrees::material_owner::Owner::default();
+    let cancel = AtomicBool::new(false);
+    let first = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(
+        first.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
+    );
+    assert_eq!(first.entries, 1);
+    assert_eq!(first.bytes, 4);
+    assert_eq!(owner.capture(&root, &cancel).unwrap(), first);
+    assert_eq!(std::fs::read(root.join("owned.txt")).unwrap(), b"data");
+}
+
+#[test]
+fn full_security_facet_remains_partial_and_cannot_be_downgraded_to_missing_or_null() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1),
+        entries: 1,
+        bytes: 4,
+        sha256: "f".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaStreamsLinksFullSecurityV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert!(value.profile.is_some());
+    let mut null = serde_json::to_value(&value).unwrap();
+    null["profile"] = serde_json::Value::Null;
+    assert!(serde_json::from_value::<MaterialSummary>(null).is_err());
+    assert!(
+        serde_json::from_str::<MaterialSummary>(&wire.replace(
+            "windowsDefaultDataEaStreamsLinksFullSecurityV1",
+            "completeWindowsBackup"
+        ))
+        .is_err()
+    );
+}
+#[cfg(windows)]
+#[test]
+#[ignore = "requires current-token full-security rights on every owned entry; never enables privilege"]
+fn explicit_strict_owner_reuses_actual_walk_and_checks_the_caller_root_identity() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    std::fs::write(root.join("owned.txt"), b"data").unwrap();
+    let other = tempfile::tempdir().unwrap();
+    let other_root = other.path().canonicalize().unwrap();
+    let owner = crate::worktrees::material_owner::Owner::default();
+    let cancel = AtomicBool::new(false);
+    let stamp = crate::worktrees::inspect::stamp(&root).unwrap();
+    let wrong = crate::worktrees::inspect::stamp(&other_root).unwrap();
+    assert_eq!(
+        owner
+            .capture_security_complete(&root, &wrong, &cancel)
+            .unwrap_err()
+            .code,
+        "materialChanged"
+    );
+    let partial = owner.capture(&root, &cancel).unwrap();
+    assert_eq!(
+        partial.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
+    );
+    let strict = owner
+        .capture_security_complete(&root, &stamp, &cancel)
+        .unwrap();
+    assert_eq!(
+        strict.profile,
+        Some(MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1)
+    );
+    assert_eq!(strict.entries, partial.entries);
+    assert_eq!(strict.bytes, partial.bytes);
+    assert_eq!(
+        owner
+            .capture_security_complete(&root, &stamp, &cancel)
+            .unwrap(),
+        strict
+    );
+    assert_ne!(partial.sha256, strict.sha256);
+    assert_eq!(
+        owner
+            .capture_security_complete(&root, &stamp, &AtomicBool::new(true))
+            .unwrap_err()
+            .code,
+        "cancelled"
+    );
+    assert!(owner.available().is_ok());
 }

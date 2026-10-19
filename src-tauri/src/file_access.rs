@@ -7,12 +7,24 @@ mod ads_records;
 mod directory_page;
 #[cfg(any(windows, test))]
 mod ea_records;
+#[cfg(any(windows, test))]
+mod full_security_records;
+#[cfg(any(windows, test))]
+mod integrity_records;
+#[cfg(any(windows, test))]
+mod security_records;
+#[cfg(all(windows, test))]
+pub(crate) mod security_test_fixture;
 #[cfg(windows)]
 pub(crate) use ads_records::{Failure as StreamsFailure, Observation as StreamsObservation};
 #[cfg(windows)]
 pub(crate) use ea_records::{
     Failure as EaFailure, Observation as EaObservation, WorkBudget as EaWorkBudget,
 };
+#[cfg(windows)]
+pub(crate) use integrity_records::Observation as IntegrityObservation;
+#[cfg(windows)]
+pub(crate) use security_records::Observation as SecurityObservation;
 #[cfg(unix)]
 mod unix;
 #[cfg(windows)]
@@ -25,8 +37,10 @@ pub(crate) use directory_page::{
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
 #[cfg(windows)]
 pub(crate) use windows::{
-    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, RetiredBackup, directory_entries,
-    ea_observation, metadata_child, metadata_file, streams_observation,
+    EntryMetadata, FullSecurityFailure, FullSecurityObservation, MetadataFailure, MetadataKind,
+    PinnedPath, RetiredBackup, directory_entries, ea_observation, full_security_observation,
+    integrity_observation, metadata_child, metadata_file, security_observation,
+    streams_observation,
 };
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};

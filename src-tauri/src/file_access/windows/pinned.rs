@@ -10,6 +10,7 @@ use windows_sys::Win32::System::WindowsProgramming::{
 
 pub(crate) struct PinnedPath {
     files: Vec<File>,
+    purpose: ReadPurpose,
     // This owner has one FileObject cursor. All directory queries use this lock.
     directory_scan: Mutex<()>,
     identities: Vec<Identity>,
@@ -59,18 +60,25 @@ fn local_guid(file: &File) -> io::Result<PathBuf> {
 }
 impl PinnedPath {
     pub(crate) fn directory(path: &Path) -> io::Result<Self> {
-        Self::open(path, false, false)
+        Self::open(path, false, false, ReadPurpose::Ordinary)
     }
     pub(crate) fn git_directory(path: &Path) -> io::Result<Self> {
-        Self::open(path, false, true)
+        Self::open(path, false, true, ReadPurpose::Ordinary)
     }
     pub(crate) fn regular(path: &Path) -> io::Result<Self> {
-        Self::open(path, true, false)
+        Self::open(path, true, false, ReadPurpose::Ordinary)
     }
     pub(crate) fn git_regular(path: &Path) -> io::Result<Self> {
-        Self::open(path, true, true)
+        Self::open(path, true, true, ReadPurpose::Ordinary)
     }
-    fn open(path: &Path, regular: bool, git_guid: bool) -> io::Result<Self> {
+    pub(crate) fn directory_full_security(path: &Path) -> Result<Self, FullSecurityFailure> {
+        Self::open(path, false, false, ReadPurpose::FullSecurity)
+            .map_err(|e| FullSecurityFailure::native("fullSecurityOpen", e))
+    }
+    pub(super) fn full_security_purpose(&self) -> bool {
+        self.purpose == ReadPurpose::FullSecurity
+    }
+    fn open(path: &Path, regular: bool, git_guid: bool, purpose: ReadPurpose) -> io::Result<Self> {
         if !git_guid {
             absolute(path)?;
         }
@@ -104,11 +112,23 @@ impl PinnedPath {
         if !matches!(parts.next(), Some(Component::RootDir)) {
             return Err(invalid());
         }
+        let components: Vec<_> = parts.filter(|c| *c != Component::RootDir).collect();
+        if regular && components.is_empty() {
+            return Err(denied());
+        }
+        // Only a selected drive-root target gets strong access here. For any
+        // deeper target all ancestors stay Ordinary; the final leaf is strong.
+        let root_access = FILE_GENERIC_READ
+            | if components.is_empty() {
+                purpose.extra_access()
+            } else {
+                0
+            };
         let root: Vec<_> = root.encode_utf16().chain(Some(0)).collect();
         let raw = unsafe {
             CreateFileW(
                 root.as_ptr(),
-                FILE_GENERIC_READ,
+                root_access,
                 FILE_SHARE_READ | FILE_SHARE_WRITE,
                 ptr::null(),
                 OPEN_EXISTING,
@@ -125,22 +145,23 @@ impl PinnedPath {
         }
         local_guid(&root)?;
         let mut files = vec![root];
-        let components: Vec<_> = parts.filter(|c| *c != Component::RootDir).collect();
-        if regular && components.is_empty() {
-            return Err(denied());
-        }
         for (index, component) in components.iter().enumerate() {
             let Component::Normal(name) = component else {
                 return Err(invalid());
             };
             let is_file = regular && index + 1 == components.len();
             let share = FILE_SHARE_READ | if is_file { 0 } else { FILE_SHARE_WRITE };
-            let next = open_at_shared(
+            let next = open_at_shared_for(
                 files.last().ok_or_else(invalid)?,
                 name,
                 !is_file,
                 false,
                 share,
+                if index + 1 == components.len() {
+                    purpose
+                } else {
+                    ReadPurpose::Ordinary
+                },
             )?;
             files.push(next);
         }
@@ -158,6 +179,7 @@ impl PinnedPath {
         Ok(Self {
             directory_scan: Mutex::new(()),
             files,
+            purpose,
             identities,
             path,
             guid_path,
@@ -184,12 +206,13 @@ impl PinnedPath {
         // Current local-path admission supports ordinary Unicode spelling only.
         // Unsupported raw names fail the whole observation; never lossy-convert.
         let text = String::from_utf16(raw).map_err(|_| invalid())?;
-        let child = open_at_shared(
+        let child = open_at_shared_for(
             self.file(),
             OsStr::new(&text),
             directory,
             false,
             FILE_SHARE_READ | if directory { FILE_SHARE_WRITE } else { 0 },
+            self.purpose,
         )?;
         let mut files = self
             .files
@@ -208,6 +231,7 @@ impl PinnedPath {
         identities.push(child_identity);
         let result = Self {
             files,
+            purpose: self.purpose,
             directory_scan: Mutex::new(()),
             identities,
             path,

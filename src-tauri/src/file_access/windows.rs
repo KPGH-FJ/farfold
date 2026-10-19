@@ -36,6 +36,15 @@ mod directory;
 pub(crate) use directory::entries as directory_entries;
 mod ea;
 pub(crate) use ea::observation as ea_observation;
+mod security;
+pub(crate) use security::observation as security_observation;
+mod security_full;
+pub(crate) use security_full::{
+    Failure as FullSecurityFailure, Observation as FullSecurityObservation,
+    observation as full_security_observation,
+};
+mod integrity;
+pub(crate) use integrity::observation as integrity_observation;
 mod streams;
 pub(crate) use streams::{RetiredBackup, observation as streams_observation};
 mod metadata;
@@ -175,6 +184,21 @@ fn open_at(parent: &File, component: &OsStr, directory: bool, create: bool) -> i
         FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
     )
 }
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum ReadPurpose {
+    Ordinary,
+    FullSecurity,
+}
+impl ReadPurpose {
+    fn extra_access(self) -> u32 {
+        match self {
+            Self::Ordinary => 0,
+            Self::FullSecurity => {
+                windows_sys::Win32::System::SystemServices::ACCESS_SYSTEM_SECURITY
+            }
+        }
+    }
+}
 fn open_at_shared(
     parent: &File,
     component: &OsStr,
@@ -182,6 +206,26 @@ fn open_at_shared(
     create: bool,
     share: u32,
 ) -> io::Result<File> {
+    open_at_shared_for(
+        parent,
+        component,
+        directory,
+        create,
+        share,
+        ReadPurpose::Ordinary,
+    )
+}
+fn open_at_shared_for(
+    parent: &File,
+    component: &OsStr,
+    directory: bool,
+    create: bool,
+    share: u32,
+    purpose: ReadPurpose,
+) -> io::Result<File> {
+    if create && purpose == ReadPurpose::FullSecurity {
+        return Err(invalid());
+    }
     let mut encoded = name(component)?;
     let unicode = UNICODE_STRING {
         Length: (encoded.len() * 2) as u16,
@@ -198,6 +242,7 @@ fn open_at_shared(
     let mut status = IO_STATUS_BLOCK::default();
     let mut result = ptr::null_mut();
     let access = FILE_GENERIC_READ
+        | purpose.extra_access()
         | if create {
             FILE_GENERIC_WRITE | DELETE
         } else {

@@ -91,6 +91,18 @@ impl Owner {
             Ok(())
         }
     }
+    #[cfg(windows)]
+    pub(super) fn capture_security_complete(
+        &self,
+        root: &Path,
+        expected: &super::inspect::Stamp,
+        cancel: &AtomicBool,
+    ) -> Result<MaterialSummary> {
+        self.slot.run(|retired| {
+            material_scan::capture_security_complete_owned(root, expected, cancel, retired)
+        })
+    }
+    #[cfg(any(not(windows), test))]
     pub(super) fn capture(&self, root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
         #[cfg(windows)]
         {

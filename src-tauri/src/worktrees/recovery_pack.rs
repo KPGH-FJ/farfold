@@ -713,6 +713,10 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         MaterialProfile::WindowsDefaultDataV1,
         MaterialProfile::WindowsDefaultDataEaV1,
         MaterialProfile::WindowsDefaultDataEaStreamsV1,
+        MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclV1,
+        MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksV1,
+        MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1,
+        MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1,
     ] {
         manifest.content.profile = Some(profile);
         assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
