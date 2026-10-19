@@ -2,9 +2,9 @@
   "atUtc": "2026-10-19T10:22:23.233058+00:00",
   "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
   "sourceCheckpoint": "b211d61d6f2e8a802a8e23378a01816b69221641",
-  "installedSourceUnchanged": "63142172be9fc58f41fb3e151f77c9eef953b464",
-  "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
-  "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464",
+  "installedSourceUnchanged": false,
+  "installedBinarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
+  "latestFullSevenStillSource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
   "checkpoints": {
     "29433fa1e": "bundle graph/producer object pairing + owned cache denial fixture",
     "2e58e6834": "offline source exclusion metadata and 18-control workflow",
@@ -569,10 +569,71 @@
       }
     ],
     "actual": "Latest Windows cross all-target strict0 and host all-target strict0 on796 stable inputs. Earlier same Tree/Regular implementation host file_access120pass=114old+6newportableTree; new Git5 cfgWindows only. Tree5Windows/Regular6Windows/Git5 single five-call diagnostic unrun.",
-    "workflow": "Carrier149=137 ordinary+12 manual full-security controls; original bodies retained. Separate exact Git one-test/five-call observation includes two actual exit0 false controls. Local Ruby YAML25steps and workflow format0; PowerShell parser unavailable, script not executed.",
-    "newFullSeven": null,
-    "newInstallation": null,
-    "formalApp": null
+    "workflow": "Carrier149 actual137ordinary115pass22fail,12manual0pass12fail; separateGit Rust1pass/5calls complete, PS numeric comparison overflow failed. New typed comparison fix not yet tested.",
+    "newFullSeven": {
+      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+      "naturalExit": 0,
+      "allSeven": true,
+      "frontendFiles": 616,
+      "frontendPassed": 8147,
+      "rustPassed": 2085,
+      "rustFailed": 0,
+      "rustExistingIgnored": 6,
+      "stableInputFiles": 18357,
+      "verification": {
+        "path": "output/2026-10-19-recovery-render-continuation/engineering-history-directory-cohort/verification.json",
+        "sha256": "b87d7e0c93a989d02f4e36fe73d24cf44e20f336a862fafc260c6102275a995f"
+      },
+      "sourceReview": {
+        "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-e7f89448/source-review.json",
+        "sha256": "44b7d036224af68d67d0da59b13beeee701db1b3f4a7c149b910c28f456ab678"
+      }
+    },
+    "newInstallation": {
+      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+      "binarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
+      "path": "/Applications/Farfold.app",
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "candidate9": 9,
+      "installed10": 10,
+      "scope": "Internal adhoc, closed observed; no installed behavior or real-Agent proof in this batch",
+      "freshThreeFullManifests": {
+        "countEach": 232530,
+        "sha256": "dfed1da1c81402096bbc093beaeebe80338622081576e7c4235a24ad5ca470f7",
+        "strictEqual": true
+      },
+      "duplicateAppRemoved": true,
+      "archiveKept": true,
+      "launchedByThisBatch": false,
+      "promptSentByThisBatch": false,
+      "normalQuitClaimedThisBatch": false,
+      "candidate": {
+        "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/candidate-output/candidate.json",
+        "sha256": "1ab92d27a76481f6055b4e95068daa161ca9b0f92f8101ab115fc222df8efbf4"
+      },
+      "candidateReview": {
+        "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/independent/review.json",
+        "sha256": "10a68173bd405afd368e25b61f28b2cddf307d07525bac4c5717d739fef7d859"
+      },
+      "install": {
+        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/install-result.json",
+        "sha256": "e9803a337afca884c2e009a74c6382fdf70f630c53b0884e49c52a177fb66e77"
+      },
+      "installedReview": {
+        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/installed-independent-review-private.json",
+        "sha256": "f7fb628ebd1a38dc6060fb72249dd2fcc9c38e4ee3a1252f54b87e4a7a4ae9c7"
+      },
+      "duplicateCleanup": {
+        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/candidate-cleanup.json",
+        "sha256": "e9d385f545018e2a0035ea4f8fb7ca7a6006afaec6ebef419a6327264b056f90"
+      }
+    },
+    "formalApp": {
+      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+      "behaviorTested": false
+    }
   },
   "remainingScope": {
     "internalDevelopment": [
@@ -594,43 +655,109 @@
   "nativeComponentSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
   "alignmentUpdatedAtUtc": "2026-10-19T13:39:02.835714+00:00",
   "latestDispatchedWindows": {
-    "runId": 39252461040,
-    "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
-    "status": "completed",
+    "runId": 39262280954,
+    "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
     "conclusion": "failure",
-    "resultObtained": true,
-    "audit": {
-      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
-      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39262280954",
+    "scope": "Actual selected components only; no full Windows/29x8 acceptance",
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/history-tree-git5-ci-e7f89448/final-metadata.stdout.json",
+      "sha256": "d7a5c4681543650b8b71e9c04e6171c483c023aa21b5b8a7f281b275635abbdf"
     },
-    "doesNotCoverCurrentSource": true
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
+      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
+    },
+    "carrier149": {
+      "ordinary": {
+        "attempted": 137,
+        "passed": 115,
+        "failed": 22
+      },
+      "manualFullSD": {
+        "attempted": 12,
+        "passed": 0,
+        "failed": 12
+      },
+      "total": {
+        "attempted": 149,
+        "passed": 115,
+        "failed": 34
+      }
+    },
+    "Git5": {
+      "rawRustTestPassed": true,
+      "rawFiveCallsAndTenMarkersVerified": true,
+      "twoPlainFalseControlsPassed": true,
+      "ownersSettledAndFixtureRemoved": true,
+      "PowerShellStepFailed": true,
+      "PowerShellResultMissing": true,
+      "actualError": "Int64/U64-max comparison overflow in Test-U64",
+      "threeKeysControls": "Passed only by source control-flow inference; no dedicated receipts/result hash"
+    },
+    "strictNegative101": {
+      "failedTestAndStep": true,
+      "inner18AndOwner17Complete": true,
+      "notTestPass": true
+    },
+    "old132": {
+      "passed": 103,
+      "failed": 29,
+      "all132SameVerdictAsC9": true
+    }
   },
   "uncommittedFrontendScope": "None: current history/preview/fork frontend source committed and pushed through3e7f2e17. No fresh complete engineering or installed acceptance yet.",
   "latestCompletedWindows": {
-    "runId": 39252461040,
-    "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
-    "jobId": 118059387647,
+    "runId": 39262280954,
+    "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
     "conclusion": "failure",
-    "rawArtifactFiles": 192,
-    "carrierOrdinary": {
-      "attempted": 124,
-      "passed": 103,
-      "failed": 21,
-      "ignored": 0
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39262280954",
+    "scope": "Actual selected components only; no full Windows/29x8 acceptance",
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/history-tree-git5-ci-e7f89448/final-metadata.stdout.json",
+      "sha256": "d7a5c4681543650b8b71e9c04e6171c483c023aa21b5b8a7f281b275635abbdf"
     },
-    "carrierExplicitFullSecurity": {
-      "attempted": 8,
-      "passed": 0,
-      "failed": 8,
-      "ignored": 0
-    },
-    "zeroOrMissingTests": 0,
     "audit": {
-      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
-      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
+      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
     },
-    "narrowProgress": "Original auth reservation/cancel passed; same held target wait0/exit1 with same Job inactive. First import1/7 and export3/5; all mandatory aggregate failures retained.",
-    "boundaries": "Actual tests in CI c9 only; no local Tree12/Regular11/new frontend or installed-app coverage. Seven full-security open1314 versus one owned-link target NT status remain distinct. Budget tests returned values unknown; test-only diagnostics added locally, not fixes."
+    "carrier149": {
+      "ordinary": {
+        "attempted": 137,
+        "passed": 115,
+        "failed": 22
+      },
+      "manualFullSD": {
+        "attempted": 12,
+        "passed": 0,
+        "failed": 12
+      },
+      "total": {
+        "attempted": 149,
+        "passed": 115,
+        "failed": 34
+      }
+    },
+    "Git5": {
+      "rawRustTestPassed": true,
+      "rawFiveCallsAndTenMarkersVerified": true,
+      "twoPlainFalseControlsPassed": true,
+      "ownersSettledAndFixtureRemoved": true,
+      "PowerShellStepFailed": true,
+      "PowerShellResultMissing": true,
+      "actualError": "Int64/U64-max comparison overflow in Test-U64",
+      "threeKeysControls": "Passed only by source control-flow inference; no dedicated receipts/result hash"
+    },
+    "strictNegative101": {
+      "failedTestAndStep": true,
+      "inner18AndOwner17Complete": true,
+      "notTestPass": true
+    },
+    "old132": {
+      "passed": 103,
+      "failed": 29,
+      "all132SameVerdictAsC9": true
+    }
   },
   "currentSourceContinuation": {
     "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
@@ -650,19 +777,21 @@
         "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
       }
     ],
-    "actual": "Latest Windows cross all-target strict0 and host all-target strict0 on796 stable inputs. Earlier same Tree/Regular implementation host file_access120pass=114old+6newportableTree; new Git5 cfgWindows only. Tree5Windows/Regular6Windows/Git5 single five-call diagnostic unrun.",
-    "remaining": "Mixed tree actual-byte lifetime/restore, complete link topology, persistent final namespace transaction, global backpressure/resource governance, full7/candidate/install and per-Agent evidence still open",
+    "actual": "Latest local host and Windows cross all-target strict0 on796stable inputs; Tree/Regular host file_access120pass. Fresh e7full7=2085Rust/8147frontend; selected Windows149=115pass34fail, separate Git Rust1pass but PS validator overflow failed. Full Windows recovery remains incomplete.",
+    "remaining": "Mixed/alias capture and restore, persistent final namespace, public Windows consumers, global staging/byte backpressure/resources, installed behavior and per-Agent evidence remain open",
     "nativeCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
     "checkpointReceipt": {
       "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
       "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
     },
-    "workflow": "Carrier149=137 ordinary+12 manual full-security controls; original bodies retained. Separate exact Git one-test/five-call observation includes two actual exit0 false controls. Local Ruby YAML25steps and workflow format0; PowerShell parser unavailable, script not executed.",
+    "workflow": "Carrier149 actual137ordinary115pass22fail,12manual0pass12fail; separateGit Rust1pass/5calls complete, PS numeric comparison overflow failed. New typed comparison fix not yet tested.",
     "validatorCorrection": {
       "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
       "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
     },
-    "validatorCorrectionScope": "Static exact-key collision fixed using intrinsic Keys and count+case-exact comparison; valid, extra Keys and comma-key controls prepared, not PowerShell-executed locally."
+    "validatorCorrectionScope": "Static exact-key collision fixed using intrinsic Keys and count+case-exact comparison; valid, extra Keys and comma-key controls prepared, not PowerShell-executed locally.",
+    "currentDeliverySource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "currentWindowsScope": "e7 actual149=115pass34fail. Separate Git1Rust/5calls success, PS U64 overflow means validator step failed. Exact old132 unchanged; code fixes and remaining recovery/global resources are internal."
   },
   "historicalAtC9Dispatch": {
     "sourceCheckpoint": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
@@ -744,5 +873,97 @@
       "notSameAsCompleted46a": true
     },
     "notice": "Exact prior dispatch-time record preserved; these fields are historical, not current worktree or completed CI state."
+  },
+  "historicalInstallationBeforeE7": {
+    "installedSourceUnchanged": "63142172be9fc58f41fb3e151f77c9eef953b464",
+    "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
+    "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464"
+  },
+  "installedSourceCurrent": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+  "currentDelivery": {
+    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "binarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "candidate9": 9,
+    "installed10": 10,
+    "scope": "Internal adhoc, closed observed; no installed behavior or real-Agent proof in this batch",
+    "freshThreeFullManifests": {
+      "countEach": 232530,
+      "sha256": "dfed1da1c81402096bbc093beaeebe80338622081576e7c4235a24ad5ca470f7",
+      "strictEqual": true
+    },
+    "duplicateAppRemoved": true,
+    "archiveKept": true,
+    "launchedByThisBatch": false,
+    "promptSentByThisBatch": false,
+    "normalQuitClaimedThisBatch": false,
+    "candidate": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/candidate-output/candidate.json",
+      "sha256": "1ab92d27a76481f6055b4e95068daa161ca9b0f92f8101ab115fc222df8efbf4"
+    },
+    "candidateReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/independent/review.json",
+      "sha256": "10a68173bd405afd368e25b61f28b2cddf307d07525bac4c5717d739fef7d859"
+    },
+    "install": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/install-result.json",
+      "sha256": "e9803a337afca884c2e009a74c6382fdf70f630c53b0884e49c52a177fb66e77"
+    },
+    "installedReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/installed-independent-review-private.json",
+      "sha256": "f7fb628ebd1a38dc6060fb72249dd2fcc9c38e4ee3a1252f54b87e4a7a4ae9c7"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/candidate-cleanup.json",
+      "sha256": "e9d385f545018e2a0035ea4f8fb7ca7a6006afaec6ebef419a6327264b056f90"
+    }
+  },
+  "currentEngineering": {
+    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "naturalExit": 0,
+    "allSeven": true,
+    "frontendFiles": 616,
+    "frontendPassed": 8147,
+    "rustPassed": 2085,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "stableInputFiles": 18357,
+    "verification": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-history-directory-cohort/verification.json",
+      "sha256": "b87d7e0c93a989d02f4e36fe73d24cf44e20f336a862fafc260c6102275a995f"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-e7f89448/source-review.json",
+      "sha256": "44b7d036224af68d67d0da59b13beeee701db1b3f4a7c149b910c28f456ab678"
+    }
+  },
+  "latestCompletedWindowsBeforeCurrentAudit": {
+    "runId": 39252461040,
+    "head": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
+    "jobId": 118059387647,
+    "conclusion": "failure",
+    "rawArtifactFiles": 192,
+    "carrierOrdinary": {
+      "attempted": 124,
+      "passed": 103,
+      "failed": 21,
+      "ignored": 0
+    },
+    "carrierExplicitFullSecurity": {
+      "attempted": 8,
+      "passed": 0,
+      "failed": 8,
+      "ignored": 0
+    },
+    "zeroOrMissingTests": 0,
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
+      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    },
+    "narrowProgress": "Original auth reservation/cancel passed; same held target wait0/exit1 with same Job inactive. First import1/7 and export3/5; all mandatory aggregate failures retained.",
+    "boundaries": "Actual tests in CI c9 only; no local Tree12/Regular11/new frontend or installed-app coverage. Seven full-security open1314 versus one owned-link target NT status remain distinct. Budget tests returned values unknown; test-only diagnostics added locally, not fixes."
   }
 }

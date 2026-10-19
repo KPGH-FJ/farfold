@@ -3,22 +3,45 @@
   "recordedAtUtc": "2026-10-19T09:19:19.102320+00:00",
   "authority": "Only plans/agent-access.md schedules; PRODUCT,29x8,151 original titles and acceptance conditions unchanged.",
   "installed": {
-    "source": "63142172be9fc58f41fb3e151f77c9eef953b464",
-    "binarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
+    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "binarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
     "path": "/Applications/Farfold.app",
     "identifier": "ai.farfold.desktop",
     "version": "0.1.7",
     "architecture": "arm64",
-    "scope": "internal adhoc; public signing/notarization/distribution deferred",
     "candidate9": 9,
     "installed10": 10,
+    "scope": "Internal adhoc, closed observed; no installed behavior or real-Agent proof in this batch",
     "freshThreeFullManifests": {
       "countEach": 232530,
-      "sha256": "d60a68abeb7714674873a8bbf0d532fb359691a46cb97d995331020438ef1728",
+      "sha256": "dfed1da1c81402096bbc093beaeebe80338622081576e7c4235a24ad5ca470f7",
       "strictEqual": true
     },
     "duplicateAppRemoved": true,
-    "archiveKept": true
+    "archiveKept": true,
+    "launchedByThisBatch": false,
+    "promptSentByThisBatch": false,
+    "normalQuitClaimedThisBatch": false,
+    "candidate": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/candidate-output/candidate.json",
+      "sha256": "1ab92d27a76481f6055b4e95068daa161ca9b0f92f8101ab115fc222df8efbf4"
+    },
+    "candidateReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/independent/review.json",
+      "sha256": "10a68173bd405afd368e25b61f28b2cddf307d07525bac4c5717d739fef7d859"
+    },
+    "install": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/install-result.json",
+      "sha256": "e9803a337afca884c2e009a74c6382fdf70f630c53b0884e49c52a177fb66e77"
+    },
+    "installedReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/installed-independent-review-private.json",
+      "sha256": "f7fb628ebd1a38dc6060fb72249dd2fcc9c38e4ee3a1252f54b87e4a7a4ae9c7"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/candidate-cleanup.json",
+      "sha256": "e9d385f545018e2a0035ea4f8fb7ca7a6006afaec6ebef419a6327264b056f90"
+    }
   },
   "implemented": [
     "Expanded/searching details lazily materialize body while complete stored raw/unknown envelope remains; not event retirement/global backpressure.",
@@ -30,157 +53,23 @@
     "Windows authentication target cancellation observer is test-only: same SYNCHRONIZE handle before/after, PID reopen only a companion; no production cancellation fix claimed."
   ],
   "engineering": {
+    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
     "naturalExit": 0,
     "allSeven": true,
-    "frontendFiles": 610,
-    "frontendPassed": 8110,
-    "rustPassed": 2008,
+    "frontendFiles": 616,
+    "frontendPassed": 8147,
+    "rustPassed": 2085,
     "rustFailed": 0,
     "rustExistingIgnored": 6,
-    "stableInputFiles": 18282,
-    "original39da": {
-      "frontendPassed": 8106,
-      "frontendFailed": 4,
-      "otherSixExit": 0,
-      "reason": "Two existing SSR presentation contexts expected detail body while new lazy default keeps it closed. Only context fixtures adapted; raw/replay/state assertions retained. Original failure preserved."
+    "stableInputFiles": 18357,
+    "verification": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-history-directory-cohort/verification.json",
+      "sha256": "b87d7e0c93a989d02f4e36fe73d24cf44e20f336a862fafc260c6102275a995f"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-e7f89448/source-review.json",
+      "sha256": "44b7d036224af68d67d0da59b13beeee701db1b3f4a7c149b910c28f456ab678"
     }
-  },
-  "installedNativeUi": {
-    "coldLaunch": true,
-    "existingHistoryOnly": "Dirac",
-    "expandCollapseExistingUnknownUpdate": true,
-    "search": "config_option_update 1/17 then2/17; absent query no matches; cancel returns folded summaries",
-    "composerInput": false,
-    "promptSentByRoot": false,
-    "accountModelReasoningChoiceChanged": false,
-    "normalSaveExit": true,
-    "exactFormalProcessAbsentAfter": true,
-    "protocolAssessed": false,
-    "limits": "AX/screenshot tool transcript only, not persisted raw local capture; no DOM body count, full bytes, timing/RSS or real task acceptance claim; unknown-work exit warning remains."
-  },
-  "postUseData": {
-    "manifest": {
-      "beforeEntries": 232530,
-      "afterEntries": 232530,
-      "added": 0,
-      "removed": 0,
-      "modified": 7,
-      "oldWholeEntriesExact": 232523,
-      "beforeCounts": {
-        "appData": {
-          "directory": 22245,
-          "file": 209681,
-          "symlink": 335,
-          "special": 0
-        },
-        "webkit": {
-          "directory": 155,
-          "file": 104,
-          "symlink": 0,
-          "special": 0
-        },
-        "cache": {
-          "directory": 8,
-          "file": 2,
-          "symlink": 0,
-          "special": 0
-        }
-      },
-      "afterCounts": {
-        "appData": {
-          "directory": 22245,
-          "file": 209681,
-          "symlink": 335,
-          "special": 0
-        },
-        "webkit": {
-          "directory": 155,
-          "file": 104,
-          "symlink": 0,
-          "special": 0
-        },
-        "cache": {
-          "directory": 8,
-          "file": 2,
-          "symlink": 0,
-          "special": 0
-        }
-      },
-      "modifiedCategories": {
-        "otherAppData": 1,
-        "rawMetadataWalOrShm": 2,
-        "webkit": 4
-      },
-      "changedRecordFields": {
-        "sha256": 7,
-        "size": 1
-      },
-      "allUnknownRecordFieldsCompared": true,
-      "pathsOrTargetsExported": false
-    },
-    "normalizedMetadata": {
-      "beforeSha256": "f2e8711bc74c8ba6b424c37af6e74e9b0b66452f32b2dde09219293b1677fe5e",
-      "afterSha256": "842188e1e792ef90b042337a9834385a2d9a27c5a787ae2bb296ecf21c79addd",
-      "wholeDatabaseByteEqual": false,
-      "schemaStrictExact": true,
-      "userVersionStrictExact": true,
-      "tableStats": {
-        "agents": {
-          "beforeCount": 40,
-          "afterCount": 40,
-          "added": 0,
-          "removed": 0,
-          "oldWholeRowsExact": 39,
-          "changedOldRows": 1,
-          "rowKeySetExact": true
-        },
-        "sessions": {
-          "beforeCount": 138,
-          "afterCount": 138,
-          "added": 0,
-          "removed": 0,
-          "oldWholeRowsExact": 138,
-          "changedOldRows": 0,
-          "rowKeySetExact": true
-        },
-        "settings": {
-          "beforeCount": 54,
-          "afterCount": 54,
-          "added": 0,
-          "removed": 0,
-          "oldWholeRowsExact": 54,
-          "changedOldRows": 0,
-          "rowKeySetExact": true
-        },
-        "dismissed_sessions": {
-          "beforeCount": 173,
-          "afterCount": 173,
-          "added": 0,
-          "removed": 0,
-          "oldWholeRowsExact": 173,
-          "changedOldRows": 0,
-          "rowKeySetExact": true
-        }
-      },
-      "changedColumns": {
-        "agents": {
-          "updated_at": 1
-        },
-        "sessions": {},
-        "settings": {},
-        "dismissed_sessions": {}
-      },
-      "changedSettingValueCategories": {},
-      "allConnectionsClosed": true,
-      "filesUnchangedByAnalysis": true,
-      "sidecarsAbsent": true
-    },
-    "unsentWorkWholeRawAndParsedExact": true,
-    "wholeTenComposersExact": true,
-    "agentSetupWholeRawAndParsedExact": true,
-    "writerAttribution": "unknown for all differences",
-    "baseline": "Reused this installation endpoint, not a separate fresh pre-UI capture; post-use capture happened once after output-parent preparation error before capture was fixed.",
-    "sqlScope": "Exactly two hash-pinned sealed standalone copies; original/first-raw were never opened by SQLite."
   },
   "windowsNative": {
     "runId": 39225032917,
@@ -283,26 +172,264 @@
       "path": "output/2026-10-19-recovery-render-continuation/fork-replay-source-checkpoint/checkpoint.json",
       "sha256": "17e8a28e3ff0785e3e881b21f2c376b058782e5c6a38b5fb38ebab9b0ce8a5f2"
     },
-    "nativeSourceStatus": "Tree/Regular internal components and test-only failure/Git5 diagnostics committed; full7 and installed source still631, not current continuation",
+    "nativeSourceStatus": "Fresh e7 full7 and installed10 complete; internal Windows/product recovery remains incomplete",
     "completedWindowsAudit": {
-      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
-      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
+      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
     },
     "additionalStorageCleanup": {
       "path": "output/2026-10-19-recovery-render-continuation/storage-incremental-owned-r1/cleanup-receipt.json",
       "sha256": "72a86d89b99dbf3b484534165470757ffd673bcc5a84f4f81dd284993ef137cc"
     },
     "storageScope": "Additional46 exclusive generated cache leaves/3,109,239,275 logical bytes;1543shared kept. Space point7.31GB after subsequent compilation, not continuous guarantee or sole attribution.",
-    "boundaries": "Local replay projection failure preserves old body/work uncertainty and exact cleanup receipts; terminal fork reader retired, failedchild full recovery/typed end and preview teardown ownership remain open. No full7/installed/formal/29x8 claim.",
+    "boundaries": "Full failed-child recovery, typed end, renderer reload responsibility, mixed/alias/persistent tree/final namespace/global resources and29x8 remain open",
     "nativeSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
     "nativeCheckpointReceipt": {
       "path": "output/2026-10-19-recovery-render-continuation/native-tree-regular-source-checkpoint/checkpoint.json",
       "sha256": "0f05b5dcc865999065383f96849113accb7276651665184be7b8128298fe0d6a"
     },
-    "workflowScope": "Carrier149 and separate Git one-test/five-call control prepared for next source CI, not actual Windows success",
+    "workflowScope": "e7 actual149=115pass34fail. Separate Git1Rust/5calls success, PS U64 overflow means validator step failed. Exact old132 unchanged; code fixes and remaining recovery/global resources are internal.",
     "validatorCorrection": {
       "path": "output/2026-10-19-recovery-render-continuation/git-known-config-keys-collision-correction-r1/checkpoint.json",
       "sha256": "f83aff7f6713b9606acad73c37bd388c55a8b22911af0e68f41007536d142c9a"
+    },
+    "currentDeliverySource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "currentWindowsScope": "e7 actual149=115pass34fail. Separate Git1Rust/5calls success, PS U64 overflow means validator step failed. Exact old132 unchanged; code fixes and remaining recovery/global resources are internal.",
+    "previousCompletedWindowsAudit": {
+      "path": "output/2026-10-19-recovery-render-continuation/directory-native-cohort-ci-r2/independent-result/raw-audit/final-audit-index.json",
+      "sha256": "46ffb98cf8fdf1407b594212e62c7d4897ee9a2a2b9f75dec4ba2555b11f000a"
+    }
+  },
+  "historicalInstalled631": {
+    "installed": {
+      "source": "63142172be9fc58f41fb3e151f77c9eef953b464",
+      "binarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
+      "path": "/Applications/Farfold.app",
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "scope": "internal adhoc; public signing/notarization/distribution deferred",
+      "candidate9": 9,
+      "installed10": 10,
+      "freshThreeFullManifests": {
+        "countEach": 232530,
+        "sha256": "d60a68abeb7714674873a8bbf0d532fb359691a46cb97d995331020438ef1728",
+        "strictEqual": true
+      },
+      "duplicateAppRemoved": true,
+      "archiveKept": true
+    },
+    "engineering": {
+      "naturalExit": 0,
+      "allSeven": true,
+      "frontendFiles": 610,
+      "frontendPassed": 8110,
+      "rustPassed": 2008,
+      "rustFailed": 0,
+      "rustExistingIgnored": 6,
+      "stableInputFiles": 18282,
+      "original39da": {
+        "frontendPassed": 8106,
+        "frontendFailed": 4,
+        "otherSixExit": 0,
+        "reason": "Two existing SSR presentation contexts expected detail body while new lazy default keeps it closed. Only context fixtures adapted; raw/replay/state assertions retained. Original failure preserved."
+      }
+    },
+    "installedNativeUi": {
+      "coldLaunch": true,
+      "existingHistoryOnly": "Dirac",
+      "expandCollapseExistingUnknownUpdate": true,
+      "search": "config_option_update 1/17 then2/17; absent query no matches; cancel returns folded summaries",
+      "composerInput": false,
+      "promptSentByRoot": false,
+      "accountModelReasoningChoiceChanged": false,
+      "normalSaveExit": true,
+      "exactFormalProcessAbsentAfter": true,
+      "protocolAssessed": false,
+      "limits": "AX/screenshot tool transcript only, not persisted raw local capture; no DOM body count, full bytes, timing/RSS or real task acceptance claim; unknown-work exit warning remains."
+    },
+    "postUseData": {
+      "manifest": {
+        "beforeEntries": 232530,
+        "afterEntries": 232530,
+        "added": 0,
+        "removed": 0,
+        "modified": 7,
+        "oldWholeEntriesExact": 232523,
+        "beforeCounts": {
+          "appData": {
+            "directory": 22245,
+            "file": 209681,
+            "symlink": 335,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 155,
+            "file": 104,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "afterCounts": {
+          "appData": {
+            "directory": 22245,
+            "file": 209681,
+            "symlink": 335,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 155,
+            "file": 104,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "modifiedCategories": {
+          "otherAppData": 1,
+          "rawMetadataWalOrShm": 2,
+          "webkit": 4
+        },
+        "changedRecordFields": {
+          "sha256": 7,
+          "size": 1
+        },
+        "allUnknownRecordFieldsCompared": true,
+        "pathsOrTargetsExported": false
+      },
+      "normalizedMetadata": {
+        "beforeSha256": "f2e8711bc74c8ba6b424c37af6e74e9b0b66452f32b2dde09219293b1677fe5e",
+        "afterSha256": "842188e1e792ef90b042337a9834385a2d9a27c5a787ae2bb296ecf21c79addd",
+        "wholeDatabaseByteEqual": false,
+        "schemaStrictExact": true,
+        "userVersionStrictExact": true,
+        "tableStats": {
+          "agents": {
+            "beforeCount": 40,
+            "afterCount": 40,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 39,
+            "changedOldRows": 1,
+            "rowKeySetExact": true
+          },
+          "sessions": {
+            "beforeCount": 138,
+            "afterCount": 138,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 138,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          },
+          "settings": {
+            "beforeCount": 54,
+            "afterCount": 54,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 54,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          },
+          "dismissed_sessions": {
+            "beforeCount": 173,
+            "afterCount": 173,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 173,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          }
+        },
+        "changedColumns": {
+          "agents": {
+            "updated_at": 1
+          },
+          "sessions": {},
+          "settings": {},
+          "dismissed_sessions": {}
+        },
+        "changedSettingValueCategories": {},
+        "allConnectionsClosed": true,
+        "filesUnchangedByAnalysis": true,
+        "sidecarsAbsent": true
+      },
+      "unsentWorkWholeRawAndParsedExact": true,
+      "wholeTenComposersExact": true,
+      "agentSetupWholeRawAndParsedExact": true,
+      "writerAttribution": "unknown for all differences",
+      "baseline": "Reused this installation endpoint, not a separate fresh pre-UI capture; post-use capture happened once after output-parent preparation error before capture was fixed.",
+      "sqlScope": "Exactly two hash-pinned sealed standalone copies; original/first-raw were never opened by SQLite."
+    },
+    "scope": "Exact prior631 records, not e7 behavior or post-use proof"
+  },
+  "currentInstalledBehavior": {
+    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "tested": false,
+    "appLaunched": false,
+    "scope": "9/10 and byte retention only; prior631 UI and seven post-use modifications remain historical"
+  },
+  "latestWindows": {
+    "runId": 39262280954,
+    "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "conclusion": "failure",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39262280954",
+    "scope": "Actual selected components only; no full Windows/29x8 acceptance",
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/history-tree-git5-ci-e7f89448/final-metadata.stdout.json",
+      "sha256": "d7a5c4681543650b8b71e9c04e6171c483c023aa21b5b8a7f281b275635abbdf"
+    },
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
+      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
+    },
+    "carrier149": {
+      "ordinary": {
+        "attempted": 137,
+        "passed": 115,
+        "failed": 22
+      },
+      "manualFullSD": {
+        "attempted": 12,
+        "passed": 0,
+        "failed": 12
+      },
+      "total": {
+        "attempted": 149,
+        "passed": 115,
+        "failed": 34
+      }
+    },
+    "Git5": {
+      "rawRustTestPassed": true,
+      "rawFiveCallsAndTenMarkersVerified": true,
+      "twoPlainFalseControlsPassed": true,
+      "ownersSettledAndFixtureRemoved": true,
+      "PowerShellStepFailed": true,
+      "PowerShellResultMissing": true,
+      "actualError": "Int64/U64-max comparison overflow in Test-U64",
+      "threeKeysControls": "Passed only by source control-flow inference; no dedicated receipts/result hash"
+    },
+    "strictNegative101": {
+      "failedTestAndStep": true,
+      "inner18AndOwner17Complete": true,
+      "notTestPass": true
+    },
+    "old132": {
+      "passed": 103,
+      "failed": 29,
+      "all132SameVerdictAsC9": true
     }
   }
 }
