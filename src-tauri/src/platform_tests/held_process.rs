@@ -62,6 +62,31 @@ impl HeldProcess {
     }
 }
 
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct ExitCodeObservation {
+    code: Option<u32>,
+    native_error: Option<u32>,
+}
+impl HeldProcess {
+    // One read-only query on the original handle. A raw STILL_ACTIVE (259)
+    // value is not substituted for the independent kernel wait observation.
+    pub(crate) fn exit_code(&self) -> ExitCodeObservation {
+        let mut code = 0;
+        let ok = unsafe {
+            windows_sys::Win32::System::Threading::GetExitCodeProcess(
+                self.handle.as_raw_handle(),
+                &mut code,
+            )
+        };
+        let native_error = (ok == 0).then(|| unsafe { GetLastError() });
+        ExitCodeObservation {
+            code: (ok != 0).then_some(code),
+            native_error,
+        }
+    }
+}
+
 impl AsRawHandle for HeldProcess {
     fn as_raw_handle(&self) -> std::os::windows::io::RawHandle {
         self.handle.as_raw_handle()

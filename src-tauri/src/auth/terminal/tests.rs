@@ -156,6 +156,7 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     #[cfg(windows)]
     let before_job_complete = {
         let observed = target.observe();
+        let exit_code = target.exit_code();
         use std::os::windows::io::AsRawHandle;
         let membership = job_witness
             .as_ref()
@@ -173,6 +174,9 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
                     serde_json::json!({"kind":format!("{:?}",e.kind()),"nativeError":e.raw_os_error()})
                 }),
                 "originalJob":membership,
+                "targetExitCode":exit_code,
+                "observationElapsedMicros":cursor_started.elapsed().as_micros().to_string(),
+                "observationsAtomic":false,
                 "targetWaitReturn":observed.return_code,"targetNativeError":observed.native_error,
                 "authority":"same pre-cancel captured Job and same single held target; failed query is unknown"
             })
@@ -209,6 +213,9 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     let after_wait = target.observe();
     #[cfg(windows)]
     let after_job_complete = {
+        // The ORIGINAL after_wait above is already captured. This call and all
+        // following diagnostics must never replace it in the original assert.
+        let exit_code = target.exit_code();
         use std::os::windows::io::AsRawHandle;
         let membership = job_witness
             .as_ref()
@@ -233,6 +240,9 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
                 "retainedChildHelperPid":helper_pid.as_ref().ok(),
                 "jobWitnessCaptured":matches!(&job_witness,Some(Ok(_))),
                 "originalJob":membership,"awaitResult":await_result,"closeResult":close_result,
+                "targetExitCode":exit_code,
+                "observationElapsedMicros":cursor_started.elapsed().as_micros().to_string(),
+                "observationsAtomic":false,
                 "targetWaitReturn":after_wait.return_code,"targetNativeError":after_wait.native_error,
                 "targetWaitCapturedBeforeNewLogging":true,
                 "authority":"read-only witness, no new stop/reopen/retry; unknown never means ended"

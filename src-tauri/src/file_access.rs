@@ -88,3 +88,6 @@ pub(crate) use windows::{
 
 #[cfg(test)]
 mod material_directory_budget;
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{OWNED_LINK_WORK_LIMIT, OwnedLinkMemory, OwnedLinkReceipt, OwnedLinks};

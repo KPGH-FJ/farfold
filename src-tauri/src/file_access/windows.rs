@@ -621,3 +621,9 @@ pub(crate) use material_backup_shape::{
     SHAPE_WORK_LIMIT, ShapeMemory, ShapeObservation, ShapeRequest, ShapeRetirement,
     observe as backup_shape_observe,
 };
+
+#[cfg(test)]
+pub(crate) use material_restore::owned_link::{
+    Memory as OwnedLinkMemory, OwnedLinks, Receipt as OwnedLinkReceipt,
+    WORK_LIMIT as OWNED_LINK_WORK_LIMIT,
+};

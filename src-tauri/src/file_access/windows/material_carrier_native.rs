@@ -147,7 +147,11 @@ fn inventory(file: &File, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<
         _ => Error::Unsupported,
     })
 }
-fn ea(file: &File, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<ea_records::Observation> {
+pub(super) fn ea(
+    file: &File,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+) -> Result<ea_records::Observation> {
     check(cancel)?;
     let capacity = work.capacity().map_err(record)?;
     let mut bytes = vec![0u64; BLOCK / 8];
@@ -168,7 +172,7 @@ fn ea(file: &File, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<ea_reco
     let raw = unsafe { std::slice::from_raw_parts(bytes.as_ptr().cast::<u8>(), capacity) };
     ea_records::complete(status, ios.Information, raw, work, cancel).map_err(record)
 }
-fn security(
+pub(super) fn security(
     file: &File,
     work: &mut WorkBudget,
     cancel: &AtomicBool,

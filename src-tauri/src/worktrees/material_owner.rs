@@ -127,3 +127,7 @@ mod carrier_tests;
 #[cfg(all(windows, test))]
 #[path = "material_backup_shape_owner_tests.rs"]
 mod shape_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_owned_link_owner_tests.rs"]
+mod owned_link_tests;

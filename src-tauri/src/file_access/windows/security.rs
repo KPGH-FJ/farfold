@@ -47,7 +47,7 @@ pub(crate) fn observation(
     Ok(result)
 }
 
-fn query(
+pub(super) fn query(
     file: &File,
     budget: &mut WorkBudget,
     cancel: &AtomicBool,

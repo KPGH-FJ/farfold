@@ -17,6 +17,7 @@ pub(super) struct Namespace {
     root: Option<File>,
     root_id: Option<Identity>,
     cleaned: bool,
+    links: Option<owned_link::State>,
     stopped_handles: Vec<StoppedHandle>,
     stopped_allocations: Vec<StoppedAllocation>,
     _creation: Option<CreationOutcome>,
@@ -33,6 +34,7 @@ impl Namespace {
             root: None,
             root_id: None,
             cleaned: false,
+            links: None,
             stopped_handles: Vec::with_capacity(5),
             stopped_allocations: Vec::with_capacity(1),
             _creation: None,
@@ -234,6 +236,11 @@ impl Namespace {
         if !self.stopped_handles.is_empty() || !self.stopped_allocations.is_empty() {
             return Err(Error::CleanupUnknown);
         }
+        // No-op for every original carrier/restore caller (links == None).
+        // The link-purpose owner closes each verified alias before its primary.
+        if let Some(links) = self.links.as_mut() {
+            links.cleanup()?;
+        }
         // Retire on any failed disposition; no pathname cleanup/fallback/retry.
         // Backup contexts must already have successfully aborted before here.
         for leaf in [
@@ -398,6 +405,9 @@ pub(super) fn flushed(file: &File) -> Result<()> {
     }
     Ok(())
 }
+
+#[path = "material_owned_link.rs"]
+pub(super) mod owned_link;
 
 #[cfg(test)]
 mod tests {
