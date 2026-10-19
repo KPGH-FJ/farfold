@@ -4,7 +4,7 @@
 use super::super::{
     inspect::{self, Snapshot},
     material_scan::hex,
-    recovery_roots::{MAX_ROOTS, RootFile, Roots},
+    recovery_roots::{MAX_BYTES, MAX_OBJECTS, MAX_ROOTS, RootFile, Roots},
     types::{Result, error, oid},
     windows_git::ReadContext,
 };
@@ -300,6 +300,8 @@ fn read(leaf: &Leaf, cancel: &AtomicBool) -> Result<Vec<u8>> {
 enum Query<'a> {
     Format,
     CommitType(&'a str),
+    Objects(super::Input),
+    Sizes(super::Input),
 }
 fn query(
     source: &ReadContext,
@@ -314,6 +316,12 @@ fn query(
         .selected_program()
         .verify()
         .map_err(|_| error("changed"))?;
+    let (timeout, failure) = match &action {
+        Query::Objects(_) | Query::Sizes(_) => {
+            (super::super::recovery_pack::COMMAND_TIME, "recoveryInvalid")
+        }
+        _ => (Duration::from_secs(10), "unprovenPrivateCommits"),
+    };
     let mut command = Command::new(&source.selected_program().guid_path);
     command
         .env("GIT_CONFIG_NOSYSTEM", "1")
@@ -348,25 +356,33 @@ fn query(
         .arg("-C")
         .arg(&source.scope.root.guid_path)
         .current_dir(&source.scope.root.guid_path);
-    match action {
+    let input = match action {
         Query::Format => {
             command.args(["rev-parse", "--show-object-format"]);
+            super::Input::null()
         }
         Query::CommitType(value) => {
             if !oid(value) {
                 return Err(error("unprovenPrivateCommits"));
             }
             command.args(["cat-file", "-t", value]);
+            super::Input::null()
         }
-    }
+        Query::Objects(input) => {
+            command.args(["rev-list", "--objects", "--no-object-names", "--stdin"]);
+            input
+        }
+        Query::Sizes(input) => {
+            command.args([
+                "cat-file",
+                "--batch-check=%(objectname) %(objecttype) %(objectsize)",
+            ]);
+            input
+        }
+    };
     // Windows stdio is rebuilt by the ORIGINAL executor before this typed
     // Null is installed. No new spawn/Job/reaper or arbitrary args API.
-    let outcome = super::execute_command_input(
-        command,
-        super::Input::null(),
-        cancel,
-        Duration::from_secs(10),
-    );
+    let outcome = super::execute_command_input(command, input, cancel, timeout);
     source.scope.matches(snapshot)?;
     source
         .selected_program()
@@ -374,33 +390,142 @@ fn query(
         .map_err(|_| error("changed"))?;
     let output = outcome?;
     if !output.success {
-        return Err(error("unprovenPrivateCommits"));
+        return Err(error(failure));
     }
     Ok(output.bytes)
 }
-pub(in crate::worktrees) fn capture(snapshot: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
+struct SourceOwner {
+    expected: Snapshot,
+    source: ReadContext,
+    inventory: Inventory,
+    roots: Roots,
+}
+impl SourceOwner {
+    fn observe(snapshot: &Snapshot, cancel: &AtomicBool) -> Result<Self> {
+        cancelled(cancel)?;
+        let head = snapshot.head.as_deref().ok_or(error("unborn"))?;
+        inspect::target_allowed(snapshot, head)?;
+        let source = ReadContext::open(Path::new(&snapshot.root))?;
+        source.scope.matches(snapshot)?;
+        let mut inventory = Inventory::capture(&source.scope.git, cancel)?;
+        let format = match query(&source, snapshot, Query::Format, cancel)?.as_slice() {
+            b"sha1\n" => "sha1",
+            b"sha256\n" => "sha256",
+            _ => return Err(error("unsupportedGit")),
+        };
+        let roots = inventory.roots(snapshot, format.into(), cancel)?;
+        for commit in &roots.commits {
+            if query(&source, snapshot, Query::CommitType(commit), cancel)? != b"commit\n" {
+                return Err(error("unprovenPrivateCommits"));
+            }
+        }
+        let owner = Self {
+            expected: snapshot.clone(),
+            source,
+            inventory,
+            roots,
+        };
+        owner.recheck(cancel)?;
+        Ok(owner)
+    }
+    fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
+        self.inventory.verify(&self.source.scope.git, cancel)?;
+        self.source.scope.matches(&self.expected)?;
+        self.source
+            .selected_program()
+            .verify()
+            .map_err(|_| error("changed"))?;
+        cancelled(cancel)
+    }
+    fn query(&self, action: Query<'_>, cancel: &AtomicBool) -> Result<Vec<u8>> {
+        query(&self.source, &self.expected, action, cancel)
+    }
+}
+// Still a transient source observation, not a complete recovery Manifest.
+// Raw source/config/index bytes do not enter a new persisted object/table.
+pub(in crate::worktrees) struct SourceGraph {
+    owner: SourceOwner,
+    objects: Vec<String>,
+}
+impl SourceGraph {
+    pub(in crate::worktrees) fn capture(snapshot: &Snapshot, cancel: &AtomicBool) -> Result<Self> {
+        let owner = SourceOwner::observe(snapshot, cancel)?;
+        let roots = super::Input::from_bytes(&owner.roots.input(), super::OUTPUT_LIMIT, cancel)?;
+        let raw = owner.query(Query::Objects(roots), cancel)?;
+        let objects = object_ids(&raw, &owner.roots, cancel)?;
+        let ids = (objects.join("\n") + "\n").into_bytes();
+        let input = super::Input::from_bytes(&ids, super::OUTPUT_LIMIT, cancel)?;
+        let sizes = owner.query(Query::Sizes(input), cancel)?;
+        validate_sizes(&sizes, &objects, cancel)?;
+        let result = Self { owner, objects };
+        result.recheck(cancel)?;
+        Ok(result)
+    }
+    pub(in crate::worktrees) fn roots(&self) -> &Roots {
+        &self.owner.roots
+    }
+    pub(in crate::worktrees) fn objects(&self) -> &[String] {
+        &self.objects
+    }
+    pub(in crate::worktrees) fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
+        self.owner.recheck(cancel)
+    }
+}
+fn object_ids(raw: &[u8], roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>> {
     cancelled(cancel)?;
-    let head = snapshot.head.as_deref().ok_or(error("unborn"))?;
-    inspect::target_allowed(snapshot, head)?;
-    let source = ReadContext::open(Path::new(&snapshot.root))?;
-    source.scope.matches(snapshot)?;
-    let mut inventory = Inventory::capture(&source.scope.git, cancel)?;
-    let format = match query(&source, snapshot, Query::Format, cancel)?.as_slice() {
-        b"sha1\n" => "sha1",
-        b"sha256\n" => "sha256",
-        _ => return Err(error("unsupportedGit")),
-    };
-    let roots = inventory.roots(snapshot, format.into(), cancel)?;
-    for commit in &roots.commits {
-        if query(&source, snapshot, Query::CommitType(commit), cancel)? != b"commit\n" {
-            return Err(error("unprovenPrivateCommits"));
+    let text = std::str::from_utf8(raw).map_err(|_| error("recoveryInvalid"))?;
+    let mut set = BTreeSet::new();
+    for line in text.lines() {
+        cancelled(cancel)?;
+        if !oid(line) || line.len() != roots.head.len() || !set.insert(line.to_owned()) {
+            return Err(error("recoveryInvalid"));
+        }
+        if set.len() > MAX_OBJECTS {
+            return Err(error("recoveryLimit"));
         }
     }
-    inventory.verify(&source.scope.git, cancel)?;
-    source.scope.matches(snapshot)?;
-    Ok(roots)
+    if !roots.commits.iter().all(|root| set.contains(root)) {
+        return Err(error("recoveryInvalid"));
+    }
+    Ok(set.into_iter().collect())
+}
+fn validate_sizes(raw: &[u8], objects: &[String], cancel: &AtomicBool) -> Result<u64> {
+    cancelled(cancel)?;
+    let text = std::str::from_utf8(raw).map_err(|_| error("recoveryInvalid"))?;
+    if text.lines().count() != objects.len() {
+        return Err(error("recoveryInvalid"));
+    }
+    let mut bytes = 0u64;
+    for (line, wanted) in text.lines().zip(objects) {
+        cancelled(cancel)?;
+        let fields = line.split(' ').collect::<Vec<_>>();
+        if fields.len() != 3
+            || fields[0] != wanted
+            || !matches!(fields[1], "commit" | "tree" | "blob" | "tag")
+        {
+            return Err(error("recoveryInvalid"));
+        }
+        bytes = bytes
+            .checked_add(
+                fields[2]
+                    .parse::<u64>()
+                    .map_err(|_| error("recoveryInvalid"))?,
+            )
+            .filter(|v| *v <= MAX_BYTES)
+            .ok_or(error("recoveryLimit"))?;
+    }
+    Ok(bytes)
+}
+#[cfg(test)]
+pub(in crate::worktrees) fn capture(snapshot: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
+    let owner = SourceOwner::observe(snapshot, cancel)?;
+    Ok(owner.roots)
 }
 
 #[cfg(test)]
 #[path = "source_roots_windows_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "source_graph_windows_tests.rs"]
+mod graph_tests;

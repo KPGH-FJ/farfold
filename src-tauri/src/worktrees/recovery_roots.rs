@@ -1,15 +1,20 @@
 //! Discover the exact worktree-private roots, including orphaned reflogs. Never
 //! use the shared refs/reflogs as a substitute, and never silently skip a file.
-use super::{git, inspect::Snapshot, material_scan::hex, remove_types::RootsSummary, types::*};
+#[cfg(any(not(windows), test))]
+use super::{git, inspect::Snapshot};
+use super::{material_scan::hex, remove_types::RootsSummary, types::*};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::sync::atomic::{AtomicBool, Ordering};
 
 #[cfg(not(windows))]
 use std::{fs, io::Read};
 
 #[cfg(any(not(windows), test))]
-use std::{collections::BTreeSet, path::Path};
+use std::{
+    collections::BTreeSet,
+    path::Path,
+    sync::atomic::{AtomicBool, Ordering},
+};
 
 pub(super) const MAX_ROOTS: usize = 4096;
 pub(super) const MAX_OBJECTS: usize = 50_000;
@@ -240,7 +245,7 @@ pub(super) fn verify_commits(
     Ok(())
 }
 
-#[cfg(windows)]
+#[cfg(all(windows, test))]
 pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
     if cancel.load(Ordering::SeqCst) {
         return Err(error("cancelled"));

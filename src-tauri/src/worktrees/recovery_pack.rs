@@ -113,55 +113,68 @@ fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>
     Ok(set.into_iter().collect())
 }
 pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
+    #[cfg(windows)]
+    let source_graph = git::source_roots::SourceGraph::capture(s, cancel)?;
+    #[cfg(windows)]
+    let roots = source_graph.roots().clone();
+    #[cfg(windows)]
+    let o = source_graph.objects().to_vec();
+    #[cfg(unix)]
     let roots = recovery_roots::capture(s, cancel)?;
     let root = Path::new(&s.root);
-    let o = objects(
-        git::command(
-            root,
-            &["rev-list", "--objects", "--no-object-names", "--stdin"],
-        )?,
-        &roots,
-        cancel,
-    )?;
-    let sizes = text(run(
-        git::command(
-            root,
-            &[
-                "cat-file",
-                "--batch-check=%(objectname) %(objecttype) %(objectsize)",
-            ],
-        )?,
-        Some((o.join("\n") + "\n").as_bytes()),
-        cancel,
-    )?)?;
-    let mut bytes = 0u64;
-    if sizes.lines().count() != o.len() {
-        return Err(error("recoveryInvalid"));
-    }
-    for (line, wanted) in sizes.lines().zip(&o) {
-        let fields: Vec<_> = line.split(' ').collect();
-        if fields.len() != 3
-            || fields[0] != wanted
-            || !matches!(fields[1], "commit" | "tree" | "blob" | "tag")
-        {
+    #[cfg(unix)]
+    let o = {
+        let o = objects(
+            git::command(
+                root,
+                &["rev-list", "--objects", "--no-object-names", "--stdin"],
+            )?,
+            &roots,
+            cancel,
+        )?;
+        let sizes = text(run(
+            git::command(
+                root,
+                &[
+                    "cat-file",
+                    "--batch-check=%(objectname) %(objecttype) %(objectsize)",
+                ],
+            )?,
+            Some((o.join("\n") + "\n").as_bytes()),
+            cancel,
+        )?)?;
+        let mut bytes = 0u64;
+        if sizes.lines().count() != o.len() {
             return Err(error("recoveryInvalid"));
         }
-        bytes = bytes
-            .checked_add(
-                fields[2]
-                    .parse::<u64>()
-                    .map_err(|_| error("recoveryInvalid"))?,
-            )
-            .ok_or(error("recoveryLimit"))?;
-        if bytes > MAX_BYTES {
-            return Err(error("recoveryLimit"));
+        for (line, wanted) in sizes.lines().zip(&o) {
+            let fields: Vec<_> = line.split(' ').collect();
+            if fields.len() != 3
+                || fields[0] != wanted
+                || !matches!(fields[1], "commit" | "tree" | "blob" | "tag")
+            {
+                return Err(error("recoveryInvalid"));
+            }
+            bytes = bytes
+                .checked_add(
+                    fields[2]
+                        .parse::<u64>()
+                        .map_err(|_| error("recoveryInvalid"))?,
+                )
+                .ok_or(error("recoveryLimit"))?;
+            if bytes > MAX_BYTES {
+                return Err(error("recoveryLimit"));
+            }
         }
-    }
+        o
+    };
     // Compare an actual clean checkout, including effective safe EOL attributes.
     // Git status alone is insufficient for assume-unchanged/ignored material.
     let profile = Checkout::prepare(s, &roots.head)?;
     let (configs, attributes) = profile.recovery_profile()?;
     let content = material_scan::content(root, cancel)?;
+    #[cfg(windows)]
+    source_graph.recheck(cancel)?;
     Ok(Manifest {
         version: 1,
         roots,
