@@ -168,11 +168,15 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 ### 持久化归属
 
+631已交付的详情呈现仅在展开或搜索时准备正文，完整原始事件和未知字段仍在既有状态保留；搜索节点映射使用单向游标，维持UTF-16边界与全部命中，历史完整数组在完成边界转交所有权。受控浏览器夹具与正式Dirac17处搜索分列，不由此宣称全局事件退役、背压、RSS或长期资源完成。
+
 [meta_store/schema.rs](../src-tauri/src/meta_store/schema.rs) 当前保留 agents、sessions、settings、dismissed_sessions 四表。内容是Farfold自有接入登记、对话索引、设置与相应整理记录；草稿、准备记录、分组、网页清单等放入受限设置结构。Agent消息、工具事件及完整历史不另建账本。
 
 服务密钥归系统凭据存储，项目成果归用户选定目录，Agent历史/账号/模型配置归各 Agent。工作位置只是请求及文件操作上下文，不保证不同对话的项目文件、账号、依赖和端口隔离。[lifemodel.rs](../src-tauri/src/lifemodel.rs) 仅保留默认关闭设置与空钩子，没有真实采集或注入。
 
 ### 并行工作位置与维护
+
+当前631增量中，Git有限输入在Windows命令重建之后安装；资料对象以同一持有文件核完整卷/128位身份、范围、哈希和前后版本。[private_bare_windows.rs](../src-tauri/src/worktrees/private_bare_windows.rs)及[git_source_export_windows.rs](../src-tauri/src/worktrees/git_source_export_windows.rs)已有受限内部消费者，但真实Windows新增7项/5项均在来源只读连接前提失败，尚未证明消费成功；生产者到后续文件句柄的交接仍待补。公开变更入口与Manifest1部分资料拒绝门保持，不因内部模块存在就称完整归档或恢复。
 
 [worktrees](../src-tauri/src/worktrees/mod.rs) 通过官方Git创建或接入独立目录；从提交内容创建，不复制原目录未提交修改，不执行项目钩子或自动访问网络。“使用”更新明确的新稿，不改既有历史的工作位置，也不自动合并项目更改。
 
@@ -181,6 +185,8 @@ Windows现有目录沿“检查、明确接入、重查”路径保存私有完�
 后续[material_windows.rs](../src-tauri/src/worktrees/material_windows.rs)以同一持有对象核默认数据、扩展属性、命名数据流及所有者、组和DACL；另读已存储完整性标签，不能将标签缺失推定为没有有效系统策略或完整SACL为空（[Windows说明](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control)）。安全描述符使用有界缓冲并计入共同观察工作预算。[material_links.rs](../src-tauri/src/worktrees/material_links.rs)按完整卷/128位身份及原始UTF-16名称摘要核树内硬链接成员；树外或排除名称未计齐即拒绝，不越界寻找名称，也不声称原子快照。[material_owner.rs](../src-tauri/src/worktrees/material_owner.rs)统一保留无法确认清退的原句柄与读取上下文，此后拒绝再次观察，直到实际进程结束。
 
 普通部分观察保留为Windows测试控制；已有两处归档消费者显式选择完整安全信息读取，由[security_full.rs](../src-tauri/src/file_access/windows/security_full.rs)在同一强权限对象上请求完整描述符，子对象继承同一用途。只使用当前令牌已具备的权限，不自动调整权限，不回退部分结果；实际返回的两次数据均计入预算，失败保留所处阶段，不能由拒绝码猜测某项权限。`windowsDefaultDataEaStreamsLinksFullSecurityV1`仍是部分资料类型，现有Windows操作入口和所有部分资料的完整恢复拒绝门保持；完整资料载体、硬链接重建、命名空间事务及恢复仍有内部开发，NTFS与完整SACL尚无完整成功证据。该批已随fa5689纳入macOS正式安装；Windows CI `39212793966`已完成失败，所选资料16项实际12通过/4失败、具体根因待证，不以步骤绿色显示、本机或交叉检查代替真实Windows行为。
+
+最新631的Windows资料16项实际16通过，准备元数据新增4项3通过/1失败，当前元数据配对的5项因筛选名错误实际0测试；旧失败不覆盖。有限输入7项和资料句柄6项通过，首次导入/源导出12项仍在前提前失败。完整可逆载体、树/硬链接/索引与离线恢复、最后命名空间发布仍有内部缺项；未应用提案不计生产接线。
 
 归档前核对连接、进程、工作位置与资料；保留未提交、未跟踪和忽略材料的实际捕获范围，不能称为任意文件全量备份。后台工作仍持有独占操作许可，前端超时、取消等待或卸载不能提前释放。恢复与删除均复核真实目录和材料，不能只信元数据标记。
 

@@ -1,0 +1,276 @@
+{
+  "kind": "recovery-render-internal-delivery",
+  "recordedAtUtc": "2026-10-19T09:19:19.102320+00:00",
+  "authority": "Only plans/agent-access.md schedules; PRODUCT,29x8,151 original titles and acceptance conditions unchanged.",
+  "installed": {
+    "source": "63142172be9fc58f41fb3e151f77c9eef953b464",
+    "binarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "scope": "internal adhoc; public signing/notarization/distribution deferred",
+    "candidate9": 9,
+    "installed10": 10,
+    "freshThreeFullManifests": {
+      "countEach": 232530,
+      "sha256": "d60a68abeb7714674873a8bbf0d532fb359691a46cb97d995331020438ef1728",
+      "strictEqual": true
+    },
+    "duplicateAppRemoved": true,
+    "archiveKept": true
+  },
+  "implemented": [
+    "Expanded/searching details lazily materialize body while complete stored raw/unknown envelope remains; not event retirement/global backpressure.",
+    "Transcript node mapping uses monotone cursors and preserves UTF16/empty-node/exact-hit semantics; browser fixture and native selected17-hit behavior are separate scopes.",
+    "Completed history buffer transfers owned full array, partial boundary keeps slices/order; clearing old owner does not mean process RSS reclaimed.",
+    "Private Git input finite range and held artifact same-object/full128 identity checks; Windows command rebuild installs the same explicit input after rebuilding.",
+    "Windows internal source pack export and first owned bare import/ref/fsck/object comparison are implemented behind existing public refusal gates, but new native prerequisite failures prevented their consumer tests from passing.",
+    "Material cached listing identity pairs with complete current held metadata; directory listing timestamps no longer masquerade as a current object version. Preparation metadata retains current-version checks and unreadable/missing distinction.",
+    "Windows authentication target cancellation observer is test-only: same SYNCHRONIZE handle before/after, PID reopen only a companion; no production cancellation fix claimed."
+  ],
+  "engineering": {
+    "naturalExit": 0,
+    "allSeven": true,
+    "frontendFiles": 610,
+    "frontendPassed": 8110,
+    "rustPassed": 2008,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "stableInputFiles": 18282,
+    "original39da": {
+      "frontendPassed": 8106,
+      "frontendFailed": 4,
+      "otherSixExit": 0,
+      "reason": "Two existing SSR presentation contexts expected detail body while new lazy default keeps it closed. Only context fixtures adapted; raw/replay/state assertions retained. Original failure preserved."
+    }
+  },
+  "installedNativeUi": {
+    "coldLaunch": true,
+    "existingHistoryOnly": "Dirac",
+    "expandCollapseExistingUnknownUpdate": true,
+    "search": "config_option_update 1/17 then2/17; absent query no matches; cancel returns folded summaries",
+    "composerInput": false,
+    "promptSentByRoot": false,
+    "accountModelReasoningChoiceChanged": false,
+    "normalSaveExit": true,
+    "exactFormalProcessAbsentAfter": true,
+    "protocolAssessed": false,
+    "limits": "AX/screenshot tool transcript only, not persisted raw local capture; no DOM body count, full bytes, timing/RSS or real task acceptance claim; unknown-work exit warning remains."
+  },
+  "postUseData": {
+    "manifest": {
+      "beforeEntries": 232530,
+      "afterEntries": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 7,
+      "oldWholeEntriesExact": 232523,
+      "beforeCounts": {
+        "appData": {
+          "directory": 22245,
+          "file": 209681,
+          "symlink": 335,
+          "special": 0
+        },
+        "webkit": {
+          "directory": 155,
+          "file": 104,
+          "symlink": 0,
+          "special": 0
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "symlink": 0,
+          "special": 0
+        }
+      },
+      "afterCounts": {
+        "appData": {
+          "directory": 22245,
+          "file": 209681,
+          "symlink": 335,
+          "special": 0
+        },
+        "webkit": {
+          "directory": 155,
+          "file": 104,
+          "symlink": 0,
+          "special": 0
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "symlink": 0,
+          "special": 0
+        }
+      },
+      "modifiedCategories": {
+        "otherAppData": 1,
+        "rawMetadataWalOrShm": 2,
+        "webkit": 4
+      },
+      "changedRecordFields": {
+        "sha256": 7,
+        "size": 1
+      },
+      "allUnknownRecordFieldsCompared": true,
+      "pathsOrTargetsExported": false
+    },
+    "normalizedMetadata": {
+      "beforeSha256": "f2e8711bc74c8ba6b424c37af6e74e9b0b66452f32b2dde09219293b1677fe5e",
+      "afterSha256": "842188e1e792ef90b042337a9834385a2d9a27c5a787ae2bb296ecf21c79addd",
+      "wholeDatabaseByteEqual": false,
+      "schemaStrictExact": true,
+      "userVersionStrictExact": true,
+      "tableStats": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 39,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "sessions": {
+          "beforeCount": 138,
+          "afterCount": 138,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 138,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "settings": {
+          "beforeCount": 54,
+          "afterCount": 54,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 54,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "dismissed_sessions": {
+          "beforeCount": 173,
+          "afterCount": 173,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 173,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        }
+      },
+      "changedColumns": {
+        "agents": {
+          "updated_at": 1
+        },
+        "sessions": {},
+        "settings": {},
+        "dismissed_sessions": {}
+      },
+      "changedSettingValueCategories": {},
+      "allConnectionsClosed": true,
+      "filesUnchangedByAnalysis": true,
+      "sidecarsAbsent": true
+    },
+    "unsentWorkWholeRawAndParsedExact": true,
+    "wholeTenComposersExact": true,
+    "agentSetupWholeRawAndParsedExact": true,
+    "writerAttribution": "unknown for all differences",
+    "baseline": "Reused this installation endpoint, not a separate fresh pre-UI capture; post-use capture happened once after output-parent preparation error before capture was fixed.",
+    "sqlScope": "Exactly two hash-pinned sealed standalone copies; original/first-raw were never opened by SQLite."
+  },
+  "windowsNative": {
+    "runId": 39225032917,
+    "head": "63142172be9fc58f41fb3e151f77c9eef953b464",
+    "conclusion": "failure",
+    "rootReadbackRawFiles": 93,
+    "rustPairs": 35,
+    "material16": {
+      "passed": 16,
+      "failed": 0,
+      "scope": "selected partial material controls only; not full-security successful restore"
+    },
+    "privateInput7": "raw exact7/7",
+    "artifact6": "raw exact6/6",
+    "firstImport7": "0pass7fail at source fixture ReadContext::open unsupportedGit; internal consumer not reached; exact branch unknown",
+    "sourceExport5": "0pass5fail same prerequisite; producer-to-pin pairing remains pending",
+    "materialEntry5": "0 tests because wrong module filter; namesExact false, aggregate correctly failed",
+    "preparationCache4": "3pass1fail at unreadable assertion; actual non-Unreadable variant and reason not recorded",
+    "authCancellation": "raw0, same target handle258 before/0 after, PID companion-1, cursor1query1reply complete232ms, ownerexit0/reaped/directJobinactive. Prior101 retained; no production fix inferred.",
+    "sdk": "Rust4/4 and Node20/20 selected controls only",
+    "strictNegative": "101,0pass1fail; complete18inner/17owner, close5003ms error/registryretained, mastertransferred, ownerreaped/directJobinactive. Not a passing test.",
+    "priorFailures": "39218601480 material14/2+auth101 and39212793966 material12/4 remain immutable.",
+    "newDiagnosticOnly": "Pushedb71334b0b; cfgWindows test-only settled stderr/config observations plus correct5-test filter; cross alltargets0. Distinct run39228910192 dispatched once, pending; no Git root-cause fix or full Windows result claimed."
+  },
+  "notComplete": [
+    "NEW-24 affected new real sends remain paused.",
+    "Global transport/WebView backpressure, native media decode/playback, measured RSS/long duration/sleep/offline behavior.",
+    "Windows same-producer export handoff, complete bundle roundtrip, reversible material carrier/tree/hardlinks/metadata, source-independent offline authority, index/staging object closure and final namespace/public mutation. Output-only proposals are not applied or accepted features.",
+    "Windows installer/UI/credentials/WebView2/notifications/platform lifecycle and all29x8 real acceptance."
+  ],
+  "evidenceRefs": {
+    "engineering": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-63142172/verification.json",
+      "sha256": "92ecb5f129407d57fbf60a5f723f36b83003b8ace546636c47a48f889b521dbe"
+    },
+    "originalFailedEngineering": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-39da/verification.json",
+      "sha256": "0fdba8ac7ba490e29c9431cf860df1cd3df9d2151bc5575ffe63fb91805e3844"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-63142172/source-review.json",
+      "sha256": "2f7f4c92b45ac4a8bde4660ab9195efaac0476e11b0e5d5fa24ce05659328b2d"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/source-freeze-63142172.json",
+      "sha256": "324df29f922bf1bd93d99c16e415514d87af6df35bf953f9e6906d76c6a0ddf3"
+    },
+    "candidate": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-39da/candidate-output/candidate.json",
+      "sha256": "63a36eddcf6e477cecf400787347702d7f75f64671b8fbe6b460586e7ae2ff16"
+    },
+    "candidate9": {
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-39da/independent/review.json",
+      "sha256": "b54eff35cf6d72d540f497a8492042d9970fbe6e1b4a0de400069c308f12357e"
+    },
+    "install": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-39da/install-result.json",
+      "sha256": "d23b5ac3b16b60a3cbc863cdd6f53f637b7beefac2188da85474512cab3f24ea"
+    },
+    "installed10": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-39da/installed-independent-review-private.json",
+      "sha256": "67b6ec512e5535dc95ce1ac12e1131259129b61bddea85e1d6b0032962ded09e"
+    },
+    "cleanup": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-39da/candidate-cleanup.json",
+      "sha256": "a7e5946da5ea46fcf3ee88c14ad6dfc95420e46acb44e1121c059cf3eb05b274"
+    },
+    "installedUi": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-39da/installed-passive-ui.json",
+      "sha256": "2b0279ccad3fc2a302e25573397976197a521b72bedd5662103cf246982c7669"
+    },
+    "sealedDataComparison": {
+      "path": "output/2026-10-19-recovery-render-continuation/formal-ui/data-analysis/safe-summary.json",
+      "sha256": "4da07b1e62c58798aa46b8ec06d16729fb6bbc851217efead06b70413088680a"
+    },
+    "sealedDataJoin": {
+      "path": "output/2026-10-19-recovery-render-continuation/formal-ui/data-analysis/capture-join-proof.json",
+      "sha256": "06e3e1011dd30f3e473f5f82cd6b12b25b7f7d8169a8e62036bfc616da346fd1"
+    },
+    "windowsRawReadback": {
+      "path": "output/2026-10-19-recovery-render-continuation/windows-private-pairing-ci/independent-result/root-raw-readback.json",
+      "sha256": "1dbcf04efc638e3b8e6d9e1fc222258f0be35d1b516806ac98954793ea9f9607"
+    },
+    "diagnosticCross": {
+      "path": "output/2026-10-19-recovery-render-continuation/native-prerequisite-observer-r1-receipt.json",
+      "sha256": "3542039882745c024d488e5f18730525694c8b3fddb891c36547187ebf55b114"
+    },
+    "diagnosticReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/windows-native-followup/independent-delivery-review.json",
+      "sha256": "b5e6c5ffcf95237d517c3206e9a3162fb16f555e8346078f351383b6cd177b79"
+    }
+  }
+}
