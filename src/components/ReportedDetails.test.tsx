@@ -1,5 +1,16 @@
 import { expect, it, vi } from "vitest";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToStaticMarkup as renderStaticMarkup } from "react-dom/server";
+import type { ReactNode } from "react";
+import { TranscriptSearchContext } from "./transcript-search";
+// SSR presentation only: materialize hidden text for the existing assertions.
+// This does not assert that a collapsed idle view has mounted its body.
+function renderToStaticMarkup(node: ReactNode) {
+  return renderStaticMarkup(
+    <TranscriptSearchContext.Provider value={true}>
+      {node}
+    </TranscriptSearchContext.Provider>,
+  );
+}
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue(null),
   Channel: class {},

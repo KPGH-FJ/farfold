@@ -9,10 +9,16 @@ export const REPORTED_DETAILS_STRINGS = {
 export function ReportedDetails({ details }: { details?: Fields }) {
   if (!details || Object.keys(details).length === 0) return null;
   return (
-    <SearchDisclosure className="raw-block">
+    <SearchDisclosure
+      className="raw-block"
+      renderBody={() => (
+        <>
+          <p>{REPORTED_DETAILS_STRINGS.note}</p>
+          <pre data-find-block>{JSON.stringify(details, null, 2)}</pre>
+        </>
+      )}
+    >
       <summary>{REPORTED_DETAILS_STRINGS.title}</summary>
-      <p>{REPORTED_DETAILS_STRINGS.note}</p>
-      <pre data-find-block>{JSON.stringify(details, null, 2)}</pre>
     </SearchDisclosure>
   );
 }

@@ -556,9 +556,11 @@ export function RawBlock({
   label?: string;
 }) {
   return (
-    <SearchDisclosure className="raw-block">
+    <SearchDisclosure
+      className="raw-block"
+      renderBody={() => <pre data-find-block>{safeStringify(update)}</pre>}
+    >
       <summary>{label ?? STRINGS.thread.rawUpdate}</summary>
-      <pre data-find-block>{safeStringify(update)}</pre>
     </SearchDisclosure>
   );
 }

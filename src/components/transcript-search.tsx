@@ -5,6 +5,7 @@ import {
   useState,
   type ComponentProps,
   type RefCallback,
+  type ReactNode,
 } from "react";
 import {
   SearchExpansion,
@@ -58,8 +59,11 @@ export function useSearchExpansion(initial = false) {
 
 export function SearchDisclosure({
   children,
+  renderBody,
   ...props
-}: Omit<ComponentProps<"details">, "open" | "onToggle" | "ref">) {
+}: Omit<ComponentProps<"details">, "open" | "onToggle" | "ref"> & {
+  renderBody?: () => ReactNode;
+}) {
   const fold = useSearchExpansion();
   return (
     <details
@@ -70,6 +74,7 @@ export function SearchDisclosure({
     >
       <MessageMediaVisibility visible={fold.open}>
         {children}
+        {fold.materialized ? renderBody?.() : null}
       </MessageMediaVisibility>
     </details>
   );
