@@ -19,6 +19,7 @@ pub(super) struct Namespace {
     root_id: Option<Identity>,
     cleaned: bool,
     links: Option<owned_link::State>,
+    targets: Option<target_links::State>,
     directory: Option<owned_directory::State>,
     tree: Option<owned_directory_tree::State>,
     stopped_handles: Vec<StoppedHandle>,
@@ -39,6 +40,7 @@ impl Namespace {
             root_id: None,
             cleaned: false,
             links: None,
+            targets: None,
             directory: None,
             tree: None,
             stopped_handles: Vec::with_capacity(5),
@@ -457,6 +459,9 @@ impl Namespace {
         if let Some(links) = self.links.as_mut() {
             links.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
+        if let Some(targets) = self.targets.as_mut() {
+            targets.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
+        }
         if let Some(tree) = self.tree.as_mut() {
             tree.cleanup()?;
         }
@@ -634,6 +639,9 @@ mod owned_directory_tree;
 
 #[path = "material_owned_directory.rs"]
 mod owned_directory;
+
+#[path = "material_target_link_groups.rs"]
+pub(super) mod target_links;
 
 #[path = "material_owned_link.rs"]
 pub(super) mod owned_link;

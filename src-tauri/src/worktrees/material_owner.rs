@@ -65,10 +65,46 @@ impl<T> Slot<T> {
         result.unwrap_or_else(|_| Err(error("unknown")))
     }
 }
+#[cfg(windows)]
+enum Retirement {
+    Backup {
+        _owner: crate::file_access::RetiredBackup,
+    },
+    #[cfg(test)]
+    Material {
+        _owner: crate::file_access::MaterialStoreRetirement,
+    },
+}
+#[cfg(windows)]
+struct PartialRetirement<'a> {
+    destination: &'a mut Option<Retirement>,
+    value: Option<crate::file_access::RetiredBackup>,
+}
+#[cfg(windows)]
+impl Drop for PartialRetirement<'_> {
+    fn drop(&mut self) {
+        if let Some(value) = self.value.take() {
+            *self.destination = Some(Retirement::Backup { _owner: value });
+        }
+    }
+}
+#[cfg(all(windows, test))]
+struct PersistentRetirement<'a> {
+    destination: &'a mut Option<Retirement>,
+    value: Option<crate::file_access::MaterialStoreRetirement>,
+}
+#[cfg(all(windows, test))]
+impl Drop for PersistentRetirement<'_> {
+    fn drop(&mut self) {
+        if let Some(value) = self.value.take() {
+            *self.destination = Some(Retirement::Material { _owner: value });
+        }
+    }
+}
 #[derive(Default)]
 pub(super) struct Owner {
     #[cfg(windows)]
-    slot: Slot<crate::file_access::RetiredBackup>,
+    slot: Slot<Retirement>,
 }
 impl Owner {
     pub(super) fn occupied(&self) -> bool {
@@ -99,15 +135,69 @@ impl Owner {
         cancel: &AtomicBool,
     ) -> Result<MaterialSummary> {
         self.slot.run(|retired| {
-            material_scan::capture_security_complete_owned(root, expected, cancel, retired)
+            let mut partial = PartialRetirement {
+                destination: retired,
+                value: None,
+            };
+            material_scan::capture_security_complete_owned(
+                root,
+                expected,
+                cancel,
+                &mut partial.value,
+            )
+        })
+    }
+    // First real persistent component, kept test-registered until the rpack
+    // managed-Git edge and final reconstruction composer can be promoted together.
+    // It uses THIS Owner/Slot, never a separate component-local Slot.
+    #[cfg(all(windows, test))]
+    pub(super) fn sealed_material<T, F>(
+        &self,
+        source: crate::file_access::MixedRequest,
+        destination: crate::file_access::MaterialStoreRequest,
+        cancel: &AtomicBool,
+        consume: F,
+    ) -> Result<(T, crate::file_access::MaterialSealReceipt)>
+    where
+        F: for<'a> FnOnce(
+            &mut crate::file_access::OwnedSealedMaterial<'a>,
+        ) -> std::result::Result<T, crate::file_access::CarrierFailure>,
+    {
+        self.slot.run(|slot| {
+            let mut retirement = PersistentRetirement {
+                destination: slot,
+                value: None,
+            };
+            let result = crate::file_access::with_sealed_material(
+                source,
+                destination,
+                &mut crate::file_access::EaWorkBudget::new(crate::file_access::SHAPE_WORK_LIMIT),
+                cancel,
+                &mut retirement.value,
+                consume,
+            );
+            result.map_err(|e| {
+                error(match e {
+                    crate::file_access::CarrierFailure::Cancelled => "cancelled",
+                    crate::file_access::CarrierFailure::Limit => "materialLimit",
+                    crate::file_access::CarrierFailure::Changed => "materialChanged",
+                    crate::file_access::CarrierFailure::CleanupUnknown => "cleanupUnknown",
+                    _ => "unsupportedMaterial",
+                })
+            })
         })
     }
     #[cfg(any(not(windows), test))]
     pub(super) fn capture(&self, root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
         #[cfg(windows)]
         {
-            self.slot
-                .run(|retired| material_scan::capture_owned(root, cancel, retired))
+            self.slot.run(|retired| {
+                let mut partial = PartialRetirement {
+                    destination: retired,
+                    value: None,
+                };
+                material_scan::capture_owned(root, cancel, &mut partial.value)
+            })
         }
         #[cfg(not(windows))]
         {
@@ -155,3 +245,7 @@ mod mixed_tree_tests;
 #[cfg(all(windows, test))]
 #[path = "material_alias_topology_owner_tests.rs"]
 mod alias_topology_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_target_link_group_owner_tests.rs"]
+mod target_link_group_tests;

@@ -868,3 +868,8 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
 #[cfg(all(windows, test))]
 #[path = "source_pack_windows_tests.rs"]
 mod source_export_tests;
+
+// Persistent body capability, not a new Manifest version/public restore gate.
+#[cfg(all(windows, test))]
+#[path = "recovery_material_windows.rs"]
+pub(super) mod material;

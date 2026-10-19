@@ -674,3 +674,17 @@ mod material_alias_topology;
 pub(crate) use material_alias_topology::{
     AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
 };
+
+#[cfg(test)]
+mod material_persistent_store;
+#[cfg(test)]
+pub(crate) use material_persistent_store::{
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, OwnedSealedMaterial,
+    with_sealed_material,
+};
+
+#[cfg(test)]
+pub(crate) use material_restore::target_links::{
+    GroupReceipt as TargetLinkReceipt, MAX_NODES as TARGET_LINK_MAX_NODES,
+    Memory as TargetLinkMemory, OwnedTargetLinks, ROOT as TARGET_LINK_ROOT,
+};

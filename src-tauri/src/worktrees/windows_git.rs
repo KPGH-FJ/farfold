@@ -39,6 +39,9 @@ pub(super) struct ReadContext {
     executable: PinnedPath,
 }
 impl ReadContext {
+    pub(super) fn managed_root_git(&self) -> Result<super::windows_scope::managed_git::RootGit> {
+        super::windows_scope::managed_git::RootGit::capture(self)
+    }
     // Borrow the program already admitted against the ORIGINAL source scope.
     // No PATH re-search and no arbitrary Command constructor is exposed.
     pub(super) fn selected_program(&self) -> &PinnedPath {

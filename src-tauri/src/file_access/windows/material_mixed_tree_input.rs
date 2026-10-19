@@ -28,18 +28,35 @@ use std::{
     sync::atomic::AtomicBool,
 };
 pub(crate) struct MixedMemory(Resident);
+impl MixedMemory {
+    pub(super) fn shared(&self) -> Resident {
+        self.0.clone()
+    }
+}
 impl Default for MixedMemory {
     fn default() -> Self {
         Self(Resident::new(records::RESIDENT_LIMIT))
     }
 }
+enum RootPolicy {
+    OwnedTree,
+    NoRootGit,
+}
 pub(crate) struct MixedRequest {
+    root_policy: RootPolicy,
     root: MaterialPin,
     leaf: Vec<u16>,
     resident: Resident,
     _memory: ResidentLease,
 }
 impl MixedRequest {
+    pub(super) fn require_pool(&self, lease: &mut ResidentLease) -> Result<()> {
+        self.resident.grow(lease, 0)
+    }
+    pub(super) fn for_material_store(mut self) -> Self {
+        self.root_policy = RootPolicy::NoRootGit;
+        self
+    }
     pub(crate) fn held(
         pin: PinnedPath,
         leaf: Vec<u16>,
@@ -53,6 +70,7 @@ impl MixedRequest {
         let root = MaterialPin::root(pin, &memory.0, cancel).map_err(pin_error)?;
         root.directory_carrier_leaf(&leaf).map_err(pin_error)?;
         Ok(Self {
+            root_policy: RootPolicy::OwnedTree,
             root,
             leaf,
             resident: memory.0.clone(),
@@ -104,7 +122,66 @@ fn equal(a: &[u16], b: &[u16]) -> Result<bool> {
 pub(crate) struct MixedOutputLease {
     _memory: ResidentLease,
 }
+impl MixedOutputLease {
+    pub(super) fn reserve(resident: &Resident, bytes: usize) -> Result<Self> {
+        Ok(Self {
+            _memory: resident.lease(bytes)?,
+        })
+    }
+}
+pub(super) struct MixedBytes {
+    pub summary: MixedSummary,
+    pub whole_sha256: [u8; 32],
+}
 impl MixedInput<'_> {
+    // Complete actual carrier, including typed index/header/trailer, not just
+    // selected node hashes. Output remains under the caller's original Slot.
+    pub(super) fn copy_tree<W: Write>(&mut self, out: &mut W) -> Result<MixedBytes> {
+        let summary = self.verify()?;
+        let _memory = self.resident.lease(2 * records::BLOCK)?;
+        let mut buffer = vec![0u8; records::BLOCK];
+        let mut file = self.namespace.tree_carrier.as_ref().ok_or(Error::Invalid)?;
+        let before = stamp(file).map_err(|e| io_error("mixedSealBefore", e))?;
+        if before.size != summary.carrier_bytes {
+            return Err(Error::Changed);
+        }
+        file.rewind().map_err(|e| io_error("mixedSealSeek", e))?;
+        let mut hash = Sha256::new();
+        let mut left = summary.carrier_bytes;
+        while left != 0 {
+            check(self.cancel)?;
+            let offer = left
+                .min(records::BLOCK as u64)
+                .min(self.work.remaining() / 2) as usize;
+            if offer == 0 {
+                return Err(Error::Limit);
+            }
+            charge(self.work, offer * 2)?;
+            file.read_exact(&mut buffer[..offer])
+                .map_err(|e| io_error("mixedSealRead", e))?;
+            out.write_all(&buffer[..offer])
+                .map_err(|e| io_error("mixedSealWrite", e))?;
+            hash.update(&buffer[..offer]);
+            left -= offer as u64;
+        }
+        let mut extra = [0u8; 1];
+        check(self.cancel)?;
+        charge(self.work, 1)?;
+        if file
+            .read(&mut extra)
+            .map_err(|e| io_error("mixedSealEof", e))?
+            != 0
+            || stamp(file).map_err(|e| io_error("mixedSealAfter", e))? != before
+        {
+            return Err(Error::Changed);
+        }
+        self.namespace.verify()?;
+        Ok(MixedBytes {
+            summary,
+            whole_sha256: hash.finalize().into(),
+        })
+    }
+
     // Caller-owned buffering must reserve the SAME pool before allocating. Streams
     // to another bounded owned file do not need an entire payload Vec reservation.
     pub(crate) fn reserve_output(&self, bytes: usize) -> Result<MixedOutputLease> {
@@ -555,6 +632,7 @@ where
         return Err(Error::Limit);
     }
     let MixedRequest {
+        root_policy,
         root,
         leaf,
         resident,
@@ -562,6 +640,15 @@ where
     } = request;
     // No native context exists before Sources is installed in this outside owner.
     let sources = Sources::collect(root, leaf, work, cancel, &resident)?;
+    // Material persistence has no managed admin-edge authority yet. Refuse
+    // before build/BackupRead/spools, not after copying .git into a carrier.
+    if matches!(root_policy, RootPolicy::NoRootGit) {
+        for node in &sources.nodes {
+            if node.parent == 0 && equal(&node.leaf, &[46, 103, 105, 116])? {
+                return Err(Error::Unsupported);
+            }
+        }
+    }
     let mut resources = Resources {
         sources: Some(sources),
         namespace: None,

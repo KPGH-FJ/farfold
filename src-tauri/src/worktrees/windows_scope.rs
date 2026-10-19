@@ -10,6 +10,9 @@ use std::{
     path::{Component, Path, PathBuf},
 };
 
+#[path = "windows_scope_managed_git.rs"]
+pub(super) mod managed_git;
+
 pub(super) struct Scope {
     pub root: PinnedPath,
     pub git: PinnedPath,

@@ -18,7 +18,7 @@ use windows_sys::Wdk::Storage::FileSystem::{
 };
 use windows_sys::Win32::System::SystemServices::ACCESS_SYSTEM_SECURITY;
 #[path = "material_link_snapshot.rs"]
-mod snapshot;
+pub(super) mod snapshot;
 use snapshot::Snapshot;
 
 pub(crate) const WORK_LIMIT: u64 = records::WORK_LIMIT;

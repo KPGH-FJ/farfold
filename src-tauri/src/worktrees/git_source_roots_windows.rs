@@ -406,6 +406,7 @@ fn query(
     Ok(output.bytes)
 }
 struct SourceOwner {
+    managed_root_git: super::super::windows_scope::managed_git::RootGit,
     expected: Snapshot,
     source: ReadContext,
     inventory: Inventory,
@@ -418,6 +419,7 @@ impl SourceOwner {
         inspect::target_allowed(snapshot, head)?;
         let source = ReadContext::open(Path::new(&snapshot.root))?;
         source.scope.matches(snapshot)?;
+        let managed_root_git = source.managed_root_git()?;
         let mut inventory = Inventory::capture(&source.scope.git, cancel)?;
         let format = match query(&source, snapshot, Query::Format, cancel)?.as_slice() {
             b"sha1\n" => "sha1",
@@ -431,6 +433,7 @@ impl SourceOwner {
             }
         }
         let owner = Self {
+            managed_root_git,
             expected: snapshot.clone(),
             source,
             inventory,
@@ -442,6 +445,7 @@ impl SourceOwner {
     fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
         self.inventory.verify(&self.source.scope.git, cancel)?;
         self.source.scope.matches(&self.expected)?;
+        self.managed_root_git.verify(&self.source)?;
         self.source
             .selected_program()
             .verify()

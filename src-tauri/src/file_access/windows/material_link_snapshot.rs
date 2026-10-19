@@ -4,19 +4,19 @@ use super::*;
 use crate::file_access::{ea_records, full_security_records, security_records};
 use sha2::{Digest, Sha256};
 #[derive(Debug, PartialEq, Eq)]
-pub(super) enum Security {
+pub(in super::super) enum Security {
     Ordinary(security_records::Observation),
     Full(full_security_records::Decoded),
 }
 impl Security {
-    pub(super) fn sha256(&self) -> [u8; 32] {
+    pub(in super::super) fn sha256(&self) -> [u8; 32] {
         match self {
             Self::Ordinary(v) => v.sha256,
             Self::Full(v) => v.sha256,
         }
     }
 }
-pub(super) struct Snapshot {
+pub(in super::super) struct Snapshot {
     pub stamp: Stamp,
     version: EntryMetadata,
     allocation: i64,
@@ -29,7 +29,7 @@ pub(super) struct Snapshot {
     _memory: ResidentLease,
 }
 impl Snapshot {
-    pub(super) fn take(
+    pub(in super::super) fn take(
         file: &File,
         full: bool,
         work: &mut WorkBudget,
@@ -114,7 +114,7 @@ impl Snapshot {
             _memory: memory,
         })
     }
-    pub(super) fn same_link_payload(&self, other: &Self) -> bool {
+    pub(in super::super) fn same_link_payload(&self, other: &Self) -> bool {
         // Link count and ChangeTime legitimately change. No data/EA/security,
         // full identity, allocation, size, Creation/Write time or attr is waived.
         self.stamp.identity == other.stamp.identity
@@ -128,7 +128,7 @@ impl Snapshot {
             && self.ea == other.ea
             && self.security == other.security
     }
-    pub(super) fn exact(&self, other: &Self) -> bool {
+    pub(in super::super) fn exact(&self, other: &Self) -> bool {
         self.version == other.version && self.stamp == other.stamp && self.same_link_payload(other)
     }
 }

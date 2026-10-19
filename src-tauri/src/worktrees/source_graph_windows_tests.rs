@@ -595,3 +595,6 @@ const EMPTY_INDEX: &[u8] = &[
     68, 73, 82, 67, 0, 0, 0, 2, 0, 0, 0, 0, 57, 216, 144, 19, 158, 229, 53, 108, 126, 245, 114, 33,
     108, 235, 205, 39, 170, 65, 249, 223,
 ];
+
+#[path = "windows_managed_git_edge_tests.rs"]
+mod managed_root_git_tests;

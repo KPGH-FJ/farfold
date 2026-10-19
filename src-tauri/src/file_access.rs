@@ -129,3 +129,14 @@ pub(crate) use windows::{
 pub(crate) use windows::{
     AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
 };
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, OwnedSealedMaterial,
+    with_sealed_material,
+};
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    OwnedTargetLinks, TARGET_LINK_MAX_NODES, TARGET_LINK_ROOT, TargetLinkMemory, TargetLinkReceipt,
+};
