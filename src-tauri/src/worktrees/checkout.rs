@@ -9,7 +9,7 @@ use super::{
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
-    io::{Read, Write},
+    io::Read,
     path::{Path, PathBuf},
     sync::atomic::AtomicBool,
     time::Duration,
@@ -22,19 +22,13 @@ pub(super) struct Checkout {
     oid: String,
     configs: Vec<String>,
 }
-fn output(
-    mut c: std::process::Command,
-    input: Option<&[u8]>,
-    cancel: &AtomicBool,
-) -> Result<Vec<u8>> {
-    if let Some(input) = input {
-        let mut f = tempfile::tempfile().map_err(|_| error("unavailable"))?;
-        f.write_all(input).map_err(|_| error("unavailable"))?;
-        use std::io::Seek;
-        f.rewind().map_err(|_| error("unavailable"))?;
-        c.stdin(f);
-    }
-    let o = git::execute_command(c, cancel, Duration::from_secs(120))?;
+fn output(c: std::process::Command, input: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
+    // target_objects came through the existing finite Git output budget.
+    let input = match input {
+        Some(bytes) => git::Input::from_bytes(bytes, git::OUTPUT_LIMIT, cancel)?,
+        None => git::Input::null(),
+    };
+    let o = git::execute_command_input(c, input, cancel, Duration::from_secs(120))?;
     if o.success {
         Ok(o.bytes)
     } else {

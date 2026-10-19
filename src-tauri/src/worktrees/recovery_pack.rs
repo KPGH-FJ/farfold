@@ -16,12 +16,16 @@ use sha2::{Digest, Sha256};
 use std::{
     collections::BTreeSet,
     fs::{self, File},
-    io::{Read, Seek, Write},
+    io::{Read, Write},
     path::Path,
     process::Command,
     sync::atomic::AtomicBool,
     time::Duration,
 };
+#[path = "recovery_artifact.rs"]
+mod artifact;
+use artifact::Artifacts;
+pub(super) use artifact::FileIdentity;
 const COMMAND_TIME: Duration = Duration::from_secs(120);
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -32,12 +36,6 @@ pub(super) struct Manifest {
     pub content: MaterialSummary,
     pub configs: Vec<String>,
     pub attributes: Vec<u8>,
-}
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(deny_unknown_fields)]
-pub(super) struct FileIdentity {
-    pub dev: u64,
-    pub ino: u64,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -58,18 +56,17 @@ fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
         .env("GIT_ATTR_NOSYSTEM", "1");
     Ok(c)
 }
-fn input(mut c: Command, bytes: Option<&[u8]>) -> Result<Command> {
-    if let Some(bytes) = bytes {
-        let mut f = tempfile::tempfile().map_err(|_| error("unavailable"))?;
-        f.write_all(bytes)
-            .and_then(|_| f.rewind())
-            .map_err(|_| error("unavailable"))?;
-        c.stdin(f);
-    }
-    Ok(c)
-}
 fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
-    let o = git::execute_command(input(c, bytes)?, cancel, COMMAND_TIME)?;
+    // MAX_ROOTS/MAX_OBJECTS with admitted SHA1/SHA256 OIDs fit the existing
+    // output budget. This is not a new cap on user material or pack payload.
+    let input = match bytes {
+        Some(bytes) => git::Input::from_bytes(bytes, git::OUTPUT_LIMIT, cancel)?,
+        None => git::Input::null(),
+    };
+    run_input(c, input, cancel)
+}
+fn run_input(c: Command, input: git::Input, cancel: &AtomicBool) -> Result<Vec<u8>> {
+    let o = git::execute_command_input(c, input, cancel, COMMAND_TIME)?;
     if !o.success {
         return Err(error("recoveryInvalid"));
     }
@@ -513,27 +510,34 @@ pub(super) fn build(
     let directory_stamp = reserved_stamp.clone();
     let temp = tempfile::tempdir_in(path).map_err(|_| error("unavailable"))?;
     let pack = temp.path().join("objects.pack");
-    let cmd = input(
-        git::command(
-            Path::new(&saved.archive.retained_path),
-            &[
-                "-c",
-                "pack.threads=1",
-                "-c",
-                "pack.windowMemory=16m",
-                "pack-objects",
-                "--stdout",
-                "--revs",
-            ],
-        )?,
-        Some(&m.roots.input()),
+    let cmd = git::command(
+        Path::new(&saved.archive.retained_path),
+        &[
+            "-c",
+            "pack.threads=1",
+            "-c",
+            "pack.windowMemory=16m",
+            "pack-objects",
+            "--stdout",
+            "--revs",
+        ],
     )?;
-    if !git::execute_to_file(cmd, cancel, COMMAND_TIME, create_file(&pack)?, MAX_BYTES)?.success {
+    let input = git::Input::from_bytes(&m.roots.input(), git::OUTPUT_LIMIT, cancel)?;
+    if !git::execute_to_file(
+        cmd,
+        input,
+        cancel,
+        COMMAND_TIME,
+        create_file(&pack)?,
+        MAX_BYTES,
+    )?
+    .success
+    {
         return Err(error("recoveryInvalid"));
     }
     let first = temp.path().join("first");
     init(&first, &m.roots.format, true, cancel)?;
-    let mut cmd = private_command(
+    let cmd = private_command(
         &first,
         &[
             "index-pack",
@@ -542,8 +546,14 @@ pub(super) fn build(
             "--max-input-size=268435456",
         ],
     )?;
-    cmd.stdin(File::open(&pack).map_err(|_| error("unavailable"))?);
-    run(cmd, None, cancel)?;
+    // This used to configure a File then run(None). Preserve that real file
+    // input explicitly; None now means Null only for callers with no payload.
+    let input = git::Input::from_file(
+        File::open(&pack).map_err(|_| error("unavailable"))?,
+        MAX_BYTES,
+        cancel,
+    )?;
+    run_input(cmd, input, cancel)?;
     install_refs(&first, m, cancel)?;
     verify_objects(&first, m, cancel)?;
     let staged_bundle = temp.path().join("verified.bundle");
@@ -575,10 +585,18 @@ pub(super) fn build(
     f.write_all(&raw)
         .and_then(|_| f.sync_all())
         .map_err(|_| error("unavailable"))?;
+    // The writer must close before acquiring Windows read-only artifact pins;
+    // otherwise the unchanged FILE_SHARE_READ correctly denies this open.
+    drop(f);
     File::open(path)
         .and_then(|f| f.sync_all())
         .map_err(|_| error("unavailable"))?;
-    let (bundle_bytes, bundle_sha256) = digest(&bundle, MAX_BYTES)?;
+    let mut artifacts =
+        Artifacts::open(path, parent, &saved.parent_stamp, &directory_stamp, cancel)?;
+    let observed = artifacts.observe(cancel)?;
+    if observed.manifest_raw != raw {
+        return Err(error("recoveryChanged"));
+    }
     let a = &saved.archive;
     let receipt = Recovery {
         id: id.into(),
@@ -591,9 +609,9 @@ pub(super) fn build(
         head_oid: a.head_oid.clone(),
         branch: a.branch.clone(),
         path: path.to_str().ok_or(error("unsafePath"))?.into(),
-        bundle_bytes,
-        bundle_sha256,
-        manifest_sha256: material_scan::hex(Sha256::digest(&raw)),
+        bundle_bytes: observed.bundle_bytes,
+        bundle_sha256: observed.bundle_sha256,
+        manifest_sha256: observed.manifest_sha256,
         roots_sha256: m.roots.summary()?.sha256,
         content_sha256: m.content.sha256.clone(),
         root_count: m.roots.commits.len() as u64,
@@ -610,34 +628,33 @@ pub(super) fn build(
         parent: parent.to_str().ok_or(error("unsafePath"))?.into(),
         parent_stamp: saved.parent_stamp.clone(),
         directory_stamp,
-        bundle_stamp: file_identity(&bundle)?,
-        manifest_stamp: file_identity(&manifest)?,
+        bundle_stamp: observed.bundle_identity,
+        manifest_stamp: observed.manifest_identity,
     })
 }
 pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manifest> {
     let r = &saved.receipt;
     let root = Path::new(&r.path);
-    let bundle = root.join("recovery.bundle");
-    let manifest = root.join("manifest.json");
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     inspect::same(&r.path, &saved.directory_stamp)?;
-    let b = file_identity(&bundle)?;
-    let f = file_identity(&manifest)?;
-    if b.dev != saved.bundle_stamp.dev
-        || b.ino != saved.bundle_stamp.ino
-        || f.dev != saved.manifest_stamp.dev
-        || f.ino != saved.manifest_stamp.ino
-    {
-        return Err(error("recoveryChanged"));
-    }
-    if digest(&bundle, MAX_BYTES)? != (r.bundle_bytes, r.bundle_sha256.clone()) {
-        return Err(error("recoveryChanged"));
-    }
-    let raw = recovery_roots::read_file(&manifest, 16 * 1024 * 1024)?;
-    if material_scan::hex(Sha256::digest(&raw)) != r.manifest_sha256 {
-        return Err(error("recoveryChanged"));
-    }
-    let m: Manifest = serde_json::from_slice(&raw).map_err(|_| error("recoveryInvalid"))?;
+    let mut artifacts = Artifacts::open(
+        root,
+        Path::new(&saved.parent),
+        &saved.parent_stamp,
+        &saved.directory_stamp,
+        cancel,
+    )?;
+    let expected = artifact::Expected {
+        bundle_identity: &saved.bundle_stamp,
+        manifest_identity: &saved.manifest_stamp,
+        bundle_bytes: r.bundle_bytes,
+        bundle_sha256: &r.bundle_sha256,
+        manifest_sha256: &r.manifest_sha256,
+    };
+    let observed = artifacts.read_verified(&expected, cancel)?;
+    let m: Manifest =
+        serde_json::from_slice(&observed.manifest_raw).map_err(|_| error("recoveryInvalid"))?;
+    let bundle = artifacts.bundle_path();
     validate(&m)?;
     if m.roots.summary()?.sha256 != r.roots_sha256
         || m.content.sha256 != r.content_sha256
@@ -658,31 +675,12 @@ pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manif
             .join("verified"),
         cancel,
     )?;
-    if digest(&bundle, MAX_BYTES)? != (r.bundle_bytes, r.bundle_sha256.clone()) {
+    if artifacts.read_verified(&expected, cancel)? != observed {
         return Err(error("recoveryChanged"));
     }
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     inspect::same(&r.path, &saved.directory_stamp)?;
     Ok(m)
-}
-
-fn file_identity(path: &Path) -> Result<FileIdentity> {
-    let m = fs::symlink_metadata(path).map_err(|_| error("recoveryChanged"))?;
-    if !m.is_file() || m.file_type().is_symlink() {
-        return Err(error("recoveryChanged"));
-    }
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::MetadataExt;
-        Ok(FileIdentity {
-            dev: m.dev(),
-            ino: m.ino(),
-        })
-    }
-    #[cfg(not(unix))]
-    {
-        Err(error("unsupportedGit"))
-    }
 }
 
 #[cfg(test)]

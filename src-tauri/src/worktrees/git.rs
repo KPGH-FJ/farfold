@@ -9,6 +9,9 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
+#[path = "git_input.rs"]
+mod input;
+pub(super) use input::Input;
 pub(super) const OUTPUT_LIMIT: u64 = 4 * 1024 * 1024;
 pub(super) struct Output {
     pub success: bool,
@@ -157,20 +160,39 @@ pub(super) fn execute_command(
     timeout: Duration,
 ) -> Result<Output> {
     let stdout = tempfile::tempfile().map_err(|_| error("unavailable"))?;
-    execute_bounded(cmd, cancel, timeout, stdout, OUTPUT_LIMIT, true)
+    execute_bounded(cmd, None, cancel, timeout, stdout, OUTPUT_LIMIT, true)
+}
+pub(super) fn execute_command_input(
+    cmd: Command,
+    input: Input,
+    cancel: &AtomicBool,
+    timeout: Duration,
+) -> Result<Output> {
+    let stdout = tempfile::tempfile().map_err(|_| error("unavailable"))?;
+    execute_bounded(
+        cmd,
+        Some(input),
+        cancel,
+        timeout,
+        stdout,
+        OUTPUT_LIMIT,
+        true,
+    )
 }
 pub(super) fn execute_to_file(
     cmd: Command,
+    input: Input,
     cancel: &AtomicBool,
     timeout: Duration,
     stdout: File,
     limit: u64,
 ) -> Result<Output> {
     super::mutation_supported()?;
-    execute_bounded(cmd, cancel, timeout, stdout, limit, false)
+    execute_bounded(cmd, Some(input), cancel, timeout, stdout, limit, false)
 }
 fn execute_bounded(
     mut cmd: Command,
+    input: Option<Input>,
     cancel: &AtomicBool,
     timeout: Duration,
     mut stdout: File,
@@ -180,8 +202,18 @@ fn execute_bounded(
     #[cfg(windows)]
     let pending =
         crate::process_platform::prepare_command(&mut cmd).map_err(|_| error("gitUnavailable"))?;
-    #[cfg(windows)]
-    cmd.stdin(Stdio::null());
+    if let Some(input) = &input {
+        // Windows prepare_command intentionally rebuilds Command. Install the
+        // explicit finite input only AFTER that replacement, not on the lost
+        // original. The input remains alive until exact child/group cleanup.
+        input.install(&mut cmd)?;
+    } else {
+        // Existing generic calls retain their exact platform behavior: null on
+        // Windows, configured stdin untouched on Unix. Private callers below
+        // use explicit Input, including index-pack's file rather than None.
+        #[cfg(windows)]
+        cmd.stdin(Stdio::null());
+    }
     #[cfg(unix)]
     {
         use std::os::unix::process::CommandExt;
@@ -244,6 +276,9 @@ fn execute_bounded(
             if let Some(code) = stopped {
                 return Err(error(code));
             }
+            if let Some(input) = &input {
+                input.verify()?;
+            }
             if stdout.metadata().map_or(true, |m| m.len() > limit)
                 || stderr.metadata().map_or(true, |m| m.len() > OUTPUT_LIMIT)
             {
@@ -276,6 +311,8 @@ fn execute_bounded(
                 Some("waitExpired")
             } else if over {
                 Some("tooLarge")
+            } else if input.as_ref().is_some_and(|input| input.verify().is_err()) {
+                Some("changed")
             } else {
                 None
             };

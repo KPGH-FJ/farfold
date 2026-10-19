@@ -44,6 +44,18 @@ pub(super) fn pinned_stamp(pin: &crate::file_access::PinnedPath) -> Result<Stamp
         },
     })))
 }
+#[cfg(unix)]
+pub(super) fn held_directory_stamp(file: &std::fs::File) -> Result<Stamp> {
+    use std::os::unix::fs::MetadataExt;
+    let m = file.metadata().map_err(|_| error("recoveryChanged"))?;
+    if !m.is_dir() {
+        return Err(error("recoveryChanged"));
+    }
+    Ok(Stamp(PlatformStamp::Unix(UnixStamp {
+        dev: m.dev(),
+        ino: m.ino(),
+    })))
+}
 pub(super) fn stamp(path: &Path) -> Result<Stamp> {
     let m = fs::symlink_metadata(path).map_err(|e| {
         error(if e.kind() == std::io::ErrorKind::NotFound {

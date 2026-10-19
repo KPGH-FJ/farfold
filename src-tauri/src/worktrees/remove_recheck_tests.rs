@@ -254,7 +254,12 @@ fn removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verif
                     let recovery = &mut doc.recoveries[0];
                     match variant {
                         "hash" => recovery.receipt.bundle_sha256 = "0".repeat(64),
-                        "inode" => recovery.bundle_stamp.ino += 1,
+                        "inode" => match &mut recovery.bundle_stamp {
+                            recovery_pack::FileIdentity::Unix(value) => value.ino += 1,
+                            recovery_pack::FileIdentity::Windows(_) => {
+                                panic!("Unix fixture identity required")
+                            }
+                        },
                         "origin" => recovery.operation_id = RECOVER.into(),
                         "older" => recovery.receipt.revision -= 1,
                         _ => unreachable!(),
