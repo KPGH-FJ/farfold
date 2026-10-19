@@ -98,3 +98,6 @@ pub(crate) fn terminate(pid: i32) -> i32 {
 
 #[cfg(windows)]
 pub(crate) mod windows_conpty;
+
+#[cfg(windows)]
+pub(crate) mod windows_cursor;

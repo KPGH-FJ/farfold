@@ -5,7 +5,7 @@
 //! exit-wait are separate commands. Used by terminal-style login flows.
 
 use std::collections::HashMap;
-use std::io::{Read as _, Write as _};
+use std::io::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
@@ -38,6 +38,8 @@ fn now_millis() -> u64 {
 /// destruction precede the exit sink and every `pty_await` notification.
 type ExitLatch = Arc<(Mutex<Option<u32>>, Condvar)>;
 type MasterSlot = Arc<Mutex<Option<Box<dyn MasterPty + Send>>>>;
+mod startup_control;
+mod startup_owner;
 
 fn drop_master(master: &MasterSlot) -> Result<(), ()> {
     // Taking, not cloning, transfers the last control object to this owner.
@@ -180,21 +182,25 @@ struct PtySession {
     pid: Option<u32>,
     stop: Arc<AtomicBool>,
     exit: ExitLatch,
+    // Same setup record/JoinHandle, not a second native controller.
+    _startup: Option<Arc<startup_control::Start>>,
 }
 
 /// Owns all live PTY sessions, keyed by generated id.
 pub struct PtyManager {
-    sessions: Mutex<HashMap<String, Arc<PtySession>>>,
+    sessions: Arc<Mutex<HashMap<String, Arc<PtySession>>>>,
+    startup: startup_control::Slot,
     counter: AtomicU64,
-    shutting_down: AtomicBool,
+    shutting_down: Arc<AtomicBool>,
 }
 
 impl PtyManager {
     pub fn new() -> Self {
         Self {
-            sessions: Mutex::new(HashMap::new()),
+            sessions: Arc::new(Mutex::new(HashMap::new())),
+            startup: startup_control::Slot::default(),
             counter: AtomicU64::new(1),
-            shutting_down: AtomicBool::new(false),
+            shutting_down: Arc::new(AtomicBool::new(false)),
         }
     }
 
@@ -241,144 +247,21 @@ impl PtyManager {
         stop: Arc<AtomicBool>,
     ) -> Result<String, String> {
         let admission = crate::managed_update::activity()?;
-        if stop.load(Ordering::SeqCst) {
-            return Err("AUTH_CANCELLED".into());
-        }
-        // Acquire the registry before launching so a poisoned lock cannot
-        // strand a newly spawned child without a reachable session owner.
-        let mut sessions = self.lock()?;
-        // Check under the same registry lock as shutdown's closing mark and
-        // snapshot. A spawn that won the lock is included in that snapshot;
-        // a later spawn cannot register after shutdown has inspected owners.
-        if self.shutting_down.load(Ordering::SeqCst) {
-            return Err("应用正在退出，请稍后重试".into());
-        }
-        let portable_pty::PtyPair { master, slave } = native_pty_system()
-            .openpty(size)
-            .map_err(|error| format!("cannot open pty: {error}"))?;
-
-        #[cfg(unix)]
-        let mut builder = {
-            let mut builder = CommandBuilder::new(command);
-            builder.args(args.iter().map(String::as_str));
-            builder
-        };
-        #[cfg(windows)]
-        let pending_group = crate::windows_process::pending().map_err(|_| "无法准备终端进程")?;
-        #[cfg(windows)]
-        let mut builder = {
-            let helper =
-                crate::windows_process::helper_executable().map_err(|_| "无法定位应用程序")?;
-            let mut builder = CommandBuilder::new(helper);
-            builder.args(pending_group.helper_argv(
-                std::ffi::OsStr::new(command),
-                args.iter().map(std::ffi::OsString::from),
-                true,
-            ));
-            builder
-        };
-        builder.cwd(cwd.as_os_str());
-        for (name, value) in env {
-            builder.env(name.as_str(), value.as_str());
-        }
-        let mut reader = master
-            .try_clone_reader()
-            .map_err(|error| format!("cannot clone pty reader: {error}"))?;
-        let writer = master
-            .take_writer()
-            .map_err(|error| format!("cannot take pty writer: {error}"))?;
-        if stop.load(Ordering::SeqCst) {
-            return Err("AUTH_CANCELLED".into());
-        }
-        let mut child = slave
-            .spawn_command(builder)
-            .map_err(|error| format!("cannot spawn {command} on pty: {error}"))?;
-        // ConPTY's slave shares the control object's inner Arc. Retire it before
-        // the process owner can take the master and claim its destructor ended.
-        drop(slave);
-        let master: MasterSlot = Arc::new(Mutex::new(Some(master)));
-        let pid = child.process_id();
-        #[cfg(windows)]
-        let group = pending_group
-            .attach_or_reap(pid, || {
-                let _ = child.kill();
-                matches!(child.try_wait(), Ok(Some(_)))
-            })
-            .map_err(|_| "无法确认终端进程")?;
-        #[cfg(unix)]
-        let group = crate::process_platform::OwnedGroup;
-
-        let id = format!(
-            "pty-{}-{}",
-            now_millis(),
-            self.counter.fetch_add(1, Ordering::SeqCst)
-        );
-        crate::logging::info("pty", format_args!("spawn: {id} (pid {pid:?})"));
-        let exit: ExitLatch = Arc::new((Mutex::new(None), Condvar::new()));
-
-        // The sole owner keeps Child/group and control-master destruction.
-        // portable-pty starts a new session/group; signals never use a name or
-        // a persisted PID. Closing callers can time out without dropping owner.
-        {
-            let exit = exit.clone();
-            let stop = stop.clone();
-            let id = id.clone();
-            let on_output = on_output.clone();
-            let master = master.clone();
-            thread::spawn(move || {
-                let _admission = admission;
-                let _group = group;
-                let settled = TerminalOwner {
-                    child: child.as_mut(),
-                    _group: &_group,
-                    pid,
-                    stop: &stop,
-                    master: &master,
-                    exit: &exit,
-                    id: &id,
-                    on_output: &on_output,
-                }
-                .settle();
-                if !settled {
-                    // Reap/inactivity was fulfilled first; uncertain master or
-                    // receipt still retains this original owner and admission.
-                    crate::logging::info("pty", format_args!("terminal cleanup unconfirmed: {id}"));
-                    loop {
-                        thread::park();
-                    }
-                }
-            });
-        }
-
-        // Reader thread: streams master output to the frontend channel.
-        {
-            let id = id.clone();
-            thread::spawn(move || {
-                let mut buffer = [0u8; 8192];
-                loop {
-                    match reader.read(&mut buffer) {
-                        Ok(0) | Err(_) => break,
-                        Ok(count) => {
-                            on_output(serde_json::json!({
-                                "id": id,
-                                "data": BASE64.encode(&buffer[..count]),
-                            }));
-                        }
-                    }
-                }
-            });
-        }
-
-        let session = Arc::new(PtySession {
-            writer: Mutex::new(writer),
-            master,
-            #[cfg(test)]
-            pid,
+        startup_owner::begin(
+            self,
+            startup_owner::Launch {
+                command: command.into(),
+                args: args.to_vec(),
+                env: env.to_vec(),
+                cwd: cwd.to_owned(),
+                size,
+                output: on_output,
+            },
             stop,
-            exit,
-        });
-        sessions.insert(id.clone(), session);
-        Ok(id)
+            admission,
+            CLOSE_TIMEOUT,
+            startup_owner::Engines::native(),
+        )
     }
 
     /// Write user input bytes to the session's stdin.
@@ -470,6 +353,9 @@ impl PtyManager {
     /// Stop all owners first, then share one shutdown budget. Unconfirmed
     /// sessions stay registered; their owner threads continue reaping.
     pub fn stop_for_shutdown(&self) {
+        self.shutting_down.store(true, Ordering::SeqCst);
+        self.startup.cancel_pending();
+        let deadline = Instant::now() + CLOSE_TIMEOUT;
         let sessions = match self.lock() {
             Ok(sessions) => {
                 self.shutting_down.store(true, Ordering::SeqCst);
@@ -483,7 +369,9 @@ impl PtyManager {
         for (_, session) in &sessions {
             session.stop.store(true, Ordering::SeqCst);
         }
-        let deadline = Instant::now() + CLOSE_TIMEOUT;
+        let _ = self
+            .startup
+            .wait_quiescent(deadline.saturating_duration_since(Instant::now()));
         for (id, session) in sessions {
             if wait_closed(&session, deadline.saturating_duration_since(Instant::now())).is_ok()
                 && let Ok(mut sessions) = self.lock()
@@ -499,9 +387,10 @@ impl Drop for PtyManager {
         self.shutting_down.store(true, Ordering::SeqCst);
         // Never synchronously destroy the control master or wait here. The
         // process owner retains its own slot and admission through real cleanup.
+        self.startup.cancel_pending();
         let sessions = self
             .sessions
-            .get_mut()
+            .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
         for session in sessions.values() {
             session.stop.store(true, Ordering::SeqCst);

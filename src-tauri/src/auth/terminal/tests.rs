@@ -95,6 +95,13 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     );
     let agent = "cancel-live-auth-terminal";
     let owned = owner(agent).await;
+    #[cfg(windows)]
+    let cursor_started = std::time::Instant::now();
+    #[cfg(windows)]
+    let (owned, mut cursor) = {
+        let (output, cursor) = crate::platform_tests::windows_cursor::CursorConsumer::channel(true);
+        (Ownership { output, ..owned }, cursor)
+    };
     let directory = tempfile::tempdir().unwrap();
     let marker = directory.path().join("pid");
     let pty = Arc::new(crate::pty::PtyManager::new());
@@ -112,6 +119,8 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         || Ok(vec![]),
     )
     .unwrap();
+    #[cfg(windows)]
+    cursor.start(Arc::downgrade(&pty), id.clone(), true);
     #[cfg(windows)]
     crate::platform_tests::windows_conpty::environment();
     tokio::time::timeout(Duration::from_secs(3), async {
@@ -143,6 +152,12 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     )
     .await
     .unwrap();
+    #[cfg(windows)]
+    {
+        cursor.finish();
+        cursor.phase("auth-cancellation.fixture.complete", true, cursor_started);
+        cursor.assert_settled();
+    }
 }
 
 #[cfg(windows)]

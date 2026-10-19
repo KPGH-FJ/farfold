@@ -929,8 +929,15 @@ mod tests {
         );
         let agent = "login-reservation-fixture";
         let reservation = crate::install_job::configuration_guard(agent).await;
+        #[cfg(windows)]
+        let cursor_started = std::time::Instant::now();
+        #[cfg(windows)]
+        let (output, mut cursor) =
+            crate::platform_tests::windows_cursor::CursorConsumer::channel(true);
+        #[cfg(not(windows))]
+        let output = Channel::new(|_| Ok(()));
         let sink = terminal_output(
-            Channel::new(|_| Ok(())),
+            output,
             reservation,
             crate::acp_client::manager::AccountScope::empty_for_test(),
             None,
@@ -961,6 +968,8 @@ mod tests {
             )
             .unwrap();
         #[cfg(windows)]
+        cursor.start(std::sync::Arc::downgrade(&manager), id.clone(), true);
+        #[cfg(windows)]
         crate::platform_tests::windows_conpty::environment();
         assert!(
             tokio::time::timeout(
@@ -985,6 +994,12 @@ mod tests {
         )
         .await
         .expect("the exited child releases its configuration reservation");
+        #[cfg(windows)]
+        {
+            cursor.finish();
+            cursor.phase("auth-reservation.fixture.complete", true, cursor_started);
+            cursor.assert_settled();
+        }
     }
 
     #[cfg(windows)]

@@ -71,6 +71,7 @@ fn fixture(gate: Arc<DropGate>) -> (PtyManager, Arc<PtySession>) {
         pid: None,
         stop: Arc::new(AtomicBool::new(false)),
         exit: Arc::new((Mutex::new(None), Condvar::new())),
+        _startup: None,
     });
     manager
         .lock()
