@@ -1,4 +1,4 @@
-import type { ThreadItem, ThreadState } from "./session_types";
+import type { ThreadItem, ThreadState, ToolCallView } from "./session_types";
 import { streamTailItem } from "./session_streams";
 
 /** Last received value at each unconsumed field path, never an event history.
@@ -230,9 +230,19 @@ export function retainReportedDetails(
   s: ThreadState,
   update: unknown,
   envelope?: unknown,
+  projectedTool?: ToolCallView,
 ): void {
   const u = record(update);
-  const owner = u ? ownerOf(s, u) : undefined;
+  // Projection just located this exact view. Reuse it without a second
+  // history traversal; standalone/non-tool/raw callers keep the old lookup.
+  const projectedOwner =
+    projectedTool &&
+    (u?.sessionUpdate === "tool_call" ||
+      u?.sessionUpdate === "tool_call_update") &&
+    projectedTool.toolCallId === String(u.toolCallId ?? "")
+      ? projectedTool
+      : undefined;
+  const owner = projectedOwner ?? (u ? ownerOf(s, u) : undefined);
   const rawAlreadyRetained =
     owner &&
     "kind" in owner &&

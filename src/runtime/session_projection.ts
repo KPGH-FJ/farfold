@@ -338,7 +338,10 @@ function findToolItem(s: ThreadState, toolCallId: string): number {
   );
 }
 
-function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
+function upsertToolCall(
+  s: ThreadState,
+  update: Record<string, unknown>,
+): ToolCallView | undefined {
   const toolCallId = String(update.toolCallId ?? "");
   if (!toolCallId) {
     pushRaw(s, update);
@@ -395,6 +398,7 @@ function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
   if (index < 0) {
     s.items.push({ kind: "tool", id: nextItemId(), call });
   }
+  return call;
 }
 
 function normalizePlanEntries(raw: unknown): PlanEntry[] {
@@ -649,13 +653,17 @@ export function applyUpdate(
   update: unknown,
   envelope?: unknown,
 ): void {
+  let projectedTool: ToolCallView | undefined;
   if (isKnownAsyncTaskUpdate(s, update, envelope))
     pushRaw(s, update, "asyncTaskUpdate");
-  else applyUpdateContent(s, update);
-  retainReportedDetails(s, update, envelope);
+  else projectedTool = applyUpdateContent(s, update);
+  retainReportedDetails(s, update, envelope, projectedTool);
 }
 
-function applyUpdateContent(s: ThreadState, update: unknown): void {
+function applyUpdateContent(
+  s: ThreadState,
+  update: unknown,
+): ToolCallView | undefined {
   const u = update as Record<string, unknown> | null;
   const kind = u?.sessionUpdate;
   switch (kind) {
@@ -674,8 +682,7 @@ function applyUpdateContent(s: ThreadState, update: unknown): void {
       return;
     case "tool_call":
     case "tool_call_update":
-      upsertToolCall(s, u as Record<string, unknown>);
-      return;
+      return upsertToolCall(s, u as Record<string, unknown>);
     case "plan": {
       sealStreams(s);
       const entries = normalizePlanEntries(u?.entries);
@@ -738,6 +745,7 @@ function applyUpdateContent(s: ThreadState, update: unknown): void {
       // Unknown sessionUpdate kinds (including extension/_meta payloads)
       // are kept, not dropped: render as a collapsed raw block.
       pushRaw(s, update);
+      return;
   }
 }
 

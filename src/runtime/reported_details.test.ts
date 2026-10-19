@@ -232,3 +232,79 @@ describe("reported extension fields stay with their existing entity", () => {
     });
   });
 });
+
+describe("projected tool owner handoff", () => {
+  it("uses one tool-ID traversal for a real long-history update while retaining exact owner and opaque values", () => {
+    const state = fresh();
+    for (let index = 0; index < 64; index++)
+      applyUpdate(state, {
+        sessionUpdate: "tool_call",
+        toolCallId: `owned-${index}`,
+        title: `public ${index}`,
+        status: "pending",
+      });
+    let historicalIdReads = 0;
+    for (const item of state.items.slice(0, -1)) {
+      if (item.kind !== "tool") throw new Error("owned tool fixture expected");
+      const value = item.call.toolCallId;
+      // Test-file-only observation of the real producer-created objects; no
+      // fake cache/production hook, no timing/RSS or GC assertion.
+      Object.defineProperty(item.call, "toolCallId", {
+        configurable: true,
+        enumerable: true,
+        get: () => {
+          historicalIdReads++;
+          return value;
+        },
+      });
+    }
+    const target = state.items.at(-1);
+    if (target?.kind !== "tool") throw new Error("owned target expected");
+    const opaque = { publicMarker: [1, null, { observed: true }] };
+    const output = { publicResult: "actual" };
+    applyUpdate(
+      state,
+      {
+        sessionUpdate: "tool_call_update",
+        toolCallId: "owned-63",
+        status: "completed",
+        rawOutput: output,
+        opaque,
+      },
+      { sessionId: "history", _meta: { owner: "same" } },
+    );
+    // Baseline performs two visits to each old tool ID: findIndex + ownerOf.
+    // This is an allocation/access-count expectation, not a product failure.
+    expect(historicalIdReads).toBe(63);
+    expect(state.items).toHaveLength(64);
+    expect(state.items.at(-1)).toBe(target);
+    expect(target.call.status).toBe("completed");
+    expect(target.call.rawOutput).toBe(output);
+    expect(target.call.reportedDetails?.["/update/opaque"]).toBe(opaque);
+    expect(target.call.reportedDetails?.["/_meta"]).toEqual({ owner: "same" });
+    expect(state.reportedDetails).toBeUndefined();
+  });
+
+  it("keeps an empty tool ID as the same raw update and retains envelope extras without a projected owner", () => {
+    const state = fresh();
+    const update = {
+      sessionUpdate: "tool_call_update",
+      toolCallId: "",
+      opaque: { publicMarker: "raw-only" },
+    };
+    applyUpdate(state, update, {
+      sessionId: "history",
+      update,
+      _meta: { observed: "envelope" },
+    });
+    expect(state.items).toHaveLength(1);
+    const item = state.items[0];
+    expect(item?.kind).toBe("raw");
+    if (item?.kind !== "raw") throw new Error("raw fallback expected");
+    expect(item.update).toBe(update);
+    expect(item.reportedDetails).toEqual({
+      "/_meta": { observed: "envelope" },
+    });
+    expect(state.reportedDetails).toBeUndefined();
+  });
+});
