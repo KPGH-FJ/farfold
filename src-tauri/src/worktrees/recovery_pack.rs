@@ -709,6 +709,11 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         attributes: Vec::new(),
     };
     validate(&manifest).unwrap();
-    manifest.content.profile = Some(MaterialProfile::WindowsDefaultDataV1);
-    assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
+    for profile in [
+        MaterialProfile::WindowsDefaultDataV1,
+        MaterialProfile::WindowsDefaultDataEaV1,
+    ] {
+        manifest.content.profile = Some(profile);
+        assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
+    }
 }

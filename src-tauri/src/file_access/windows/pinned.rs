@@ -2,7 +2,7 @@
 use super::*;
 use std::{
     path::PathBuf,
-    sync::{Mutex, MutexGuard},
+    sync::{Mutex, MutexGuard, TryLockError},
 };
 use windows_sys::Win32::System::WindowsProgramming::{
     DRIVE_CDROM, DRIVE_FIXED, DRIVE_RAMDISK, DRIVE_REMOVABLE,
@@ -169,6 +169,13 @@ impl PinnedPath {
         self.directory_scan
             .lock()
             .map_err(|_| io::Error::other("directory scan owner poisoned"))
+    }
+    // Share the actual FileObject query owner, never wait behind a scan.
+    // Kept private to file_access; no arbitrary File/alias constructors added.
+    pub(super) fn try_observation_owner(
+        &self,
+    ) -> Result<MutexGuard<'_, ()>, TryLockError<MutexGuard<'_, ()>>> {
+        self.directory_scan.try_lock()
     }
     // Opens a fresh child FileObject relative to this actual held parent.
     // Ancestor duplicates are used only for verification, never enumeration.

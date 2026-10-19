@@ -33,6 +33,8 @@ use windows_sys::{
 };
 mod directory;
 pub(crate) use directory::entries as directory_entries;
+mod ea;
+pub(crate) use ea::observation as ea_observation;
 mod metadata;
 pub(crate) use metadata::{
     EntryMetadata, MetadataFailure, MetadataKind, metadata_child, metadata_file,

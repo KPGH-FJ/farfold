@@ -62,7 +62,7 @@ fn actual_owned_default_data_observation_changes_with_body_and_includes_ignored_
     std::fs::write(dir.path().join("ignored.bin"), b"original-data").unwrap();
     let cancel = AtomicBool::new(false);
     let first = capture(dir.path(), &cancel).unwrap();
-    assert_eq!(first.profile, Some(MaterialProfile::WindowsDefaultDataV1));
+    assert_eq!(first.profile, Some(MaterialProfile::WindowsDefaultDataEaV1));
     assert_eq!(first.entries, 3);
     assert_eq!(capture(dir.path(), &cancel).unwrap(), first);
     std::fs::write(dir.path().join("ignored.bin"), b"changed!-data").unwrap();
@@ -381,4 +381,82 @@ mod unix_listing_controls {
             "cancelled"
         );
     }
+}
+
+#[test]
+fn new_ea_profile_is_still_explicit_partial_and_never_legacy_none() {
+    let value = MaterialSummary {
+        profile: Some(MaterialProfile::WindowsDefaultDataEaV1),
+        entries: 1,
+        bytes: 17,
+        sha256: "c".repeat(64),
+    };
+    let wire = serde_json::to_string(&value).unwrap();
+    assert!(wire.contains("windowsDefaultDataEaV1"));
+    assert_eq!(
+        serde_json::from_str::<MaterialSummary>(&wire).unwrap(),
+        value
+    );
+    assert_ne!(value.profile, None);
+    assert!(
+        serde_json::from_str::<MaterialSummary>(
+            &wire.replace("windowsDefaultDataEaV1", "completeWindowsBackup")
+        )
+        .is_err()
+    );
+}
+
+#[cfg(windows)]
+#[test]
+fn real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total() {
+    use std::{
+        fs::OpenOptions,
+        os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
+    };
+    use windows_sys::{
+        Wdk::Storage::FileSystem::NtSetEaFile,
+        Win32::{
+            Storage::FileSystem::{FILE_WRITE_EA, SYNCHRONIZE},
+            System::IO::IO_STATUS_BLOCK,
+        },
+    };
+    fn set_ea(path: &std::path::Path, value: &[u8]) {
+        let file = OpenOptions::new()
+            .access_mode(FILE_WRITE_EA | SYNCHRONIZE)
+            .open(path)
+            .unwrap();
+        let name = b"farfold-public-owned";
+        let mut raw = Vec::new();
+        raw.extend(0u32.to_le_bytes());
+        raw.extend([0, name.len() as u8]);
+        raw.extend((value.len() as u16).to_le_bytes());
+        raw.extend(name);
+        raw.push(0);
+        raw.extend(value);
+        let mut ios = IO_STATUS_BLOCK::default();
+        assert_eq!(
+            unsafe {
+                NtSetEaFile(
+                    file.as_raw_handle(),
+                    &mut ios,
+                    raw.as_ptr().cast(),
+                    raw.len() as u32,
+                )
+            },
+            0
+        );
+    }
+    let root = tempfile::tempdir().unwrap();
+    let file = root.path().join("owned.txt");
+    std::fs::write(&file, b"same-default-data").unwrap();
+    set_ea(&file, b"first\0\xff");
+    let cancel = AtomicBool::new(false);
+    let a = capture(root.path(), &cancel).unwrap();
+    set_ea(&file, b"other\0\xff");
+    let b = capture(root.path(), &cancel).unwrap();
+    assert_ne!(a.sha256, b.sha256);
+    assert_eq!(a.bytes, 17);
+    assert_eq!(b.bytes, 17);
+    assert_eq!(a.entries, b.entries);
+    assert_eq!(b.profile, Some(MaterialProfile::WindowsDefaultDataEaV1));
 }

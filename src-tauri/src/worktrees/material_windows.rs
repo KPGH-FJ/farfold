@@ -1,10 +1,11 @@
-//! Read-only namespace/default-data version profile. Not a complete Windows
-//! material backup: ADS, EA and security contents are not captured here.
+//! Read-only namespace/default-data plus complete-or-refuse EA observations.
+//! Still partial: no ADS/security/hardlink restoration or coherent snapshot.
+//! The linked root .git pointer keeps its historical explicit skip.
 use super::{ListingBudget, MaterialSummary, hex};
 use crate::{
     file_access::{
-        DirectoryObservation, MetadataKind, PinnedPath, directory_entries, metadata_child,
-        metadata_file,
+        DirectoryObservation, EaFailure, EaObservation, EaWorkBudget, MetadataKind, PinnedPath,
+        directory_entries, ea_observation, metadata_child, metadata_file,
     },
     worktrees::{
         recycle_types::MaterialProfile,
@@ -22,12 +23,31 @@ use windows_sys::Win32::Globalization::{CSTR_EQUAL, CompareStringOrdinal};
 const MAX_ENTRIES: u64 = 100_000;
 const MAX_BYTES: u64 = 1024 * 1024 * 1024;
 const MAX_FILE: u64 = 256 * 1024 * 1024;
+// Independent engineering cap on completed-returned EA bytes from BOTH
+// initial/recheck queries. Not default-data bytes, total disk I/O or RSS.
+const MAX_EA_QUERY_WORK: u64 = 1024 * 1024 * 1024;
 struct Scan {
     hash: Sha256,
     entries: ListingBudget,
     bytes: u64,
+    ea_work: EaWorkBudget,
 }
 impl Scan {
+    fn ea(&mut self, value: &EaObservation) {
+        self.field(&value.count.to_le_bytes());
+        self.field(&value.logical_bytes.to_le_bytes());
+        self.field(&value.sha256);
+    }
+    fn observe_ea(&mut self, pin: &PinnedPath, cancel: &AtomicBool) -> Result<EaObservation> {
+        ea_observation(pin, &mut self.ea_work, cancel).map_err(|e| {
+            error(match e {
+                EaFailure::Cancelled => "cancelled",
+                EaFailure::Changed => "materialChanged",
+                EaFailure::Limit => "materialLimit",
+                _ => "unavailable",
+            })
+        })
+    }
     fn field(&mut self, bytes: &[u8]) {
         self.hash.update((bytes.len() as u64).to_le_bytes());
         self.hash.update(bytes);
@@ -98,6 +118,10 @@ fn walk(
     if before.kind != MetadataKind::Directory {
         return Err(error("specialFile"));
     }
+    // Directory EA gets one pre/post pair here, never a second pair in
+    // its parent. Only this fixed-size digest survives recursion.
+    let ea_before = scan.observe_ea(dir, cancel)?;
+    scan.ea(&ea_before);
     // Reserve the entire returned listing before processing even its first
     // child. The parent map remains alive across recursive calls.
     let (listed, first_capacity) = scan.entries.collect(
@@ -167,6 +191,8 @@ fn walk(
         if directory {
             walk(scan, &child, &relative, depth + 1, cancel)?;
         } else {
+            let ea_before = scan.observe_ea(&child, cancel)?;
+            scan.ea(&ea_before);
             let stamp =
                 crate::file_access::stamp(child.file()).map_err(|_| error("unavailable"))?;
             if !stamp.regular || stamp.size > MAX_FILE {
@@ -202,6 +228,9 @@ fn walk(
                 return Err(error("materialChanged"));
             }
             scan.field(&hash.finalize());
+            if scan.observe_ea(&child, cancel)? != ea_before {
+                return Err(error("materialChanged"));
+            }
         }
         if metadata_file(child.file()).map_err(|_| error("unavailable"))? != opened
             || metadata_child(dir.file(), OsStr::new(&text))
@@ -212,6 +241,9 @@ fn walk(
             return Err(error("materialChanged"));
         }
         child.verify().map_err(|_| error("materialChanged"))?;
+    }
+    if scan.observe_ea(dir, cancel)? != ea_before {
+        return Err(error("materialChanged"));
     }
     // A complete second observation checks names/IDs/metadata after traversal;
     // it is still not an atomic snapshot against arbitrary external writers.
@@ -229,11 +261,12 @@ pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummar
         hash: Sha256::new(),
         entries: ListingBudget::new(MAX_ENTRIES),
         bytes: 0,
+        ea_work: EaWorkBudget::new(MAX_EA_QUERY_WORK),
     };
-    scan.field(b"farfold-windows-default-data-observation-v1");
+    scan.field(b"farfold-windows-default-data-ea-observation-v1");
     walk(&mut scan, &root, &[], 0, cancel)?;
     Ok(MaterialSummary {
-        profile: Some(MaterialProfile::WindowsDefaultDataV1),
+        profile: Some(MaterialProfile::WindowsDefaultDataEaV1),
         entries: scan.entries.reserved,
         bytes: scan.bytes,
         sha256: hex(scan.hash.finalize()),

@@ -45,6 +45,8 @@ pub struct RecycleInput {
 pub enum MaterialProfile {
     #[serde(rename = "windowsDefaultDataV1")]
     WindowsDefaultDataV1,
+    #[serde(rename = "windowsDefaultDataEaV1")]
+    WindowsDefaultDataEaV1,
 }
 // Missing is the historical Unix representation; an explicit null is not
 // silently downgraded to that representation.

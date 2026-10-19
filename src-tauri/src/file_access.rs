@@ -3,6 +3,12 @@
 use std::{fs::File, io};
 #[cfg(any(windows, test))]
 mod directory_page;
+#[cfg(any(windows, test))]
+mod ea_records;
+#[cfg(windows)]
+pub(crate) use ea_records::{
+    Failure as EaFailure, Observation as EaObservation, WorkBudget as EaWorkBudget,
+};
 #[cfg(unix)]
 mod unix;
 #[cfg(windows)]
@@ -15,8 +21,8 @@ pub(crate) use directory_page::{
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
 #[cfg(windows)]
 pub(crate) use windows::{
-    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, directory_entries, metadata_child,
-    metadata_file,
+    EntryMetadata, MetadataFailure, MetadataKind, PinnedPath, directory_entries, ea_observation,
+    metadata_child, metadata_file,
 };
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};
