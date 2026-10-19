@@ -12,22 +12,27 @@ export function textMatchOffsets(text: string, query: string): number[] {
 
 /** Map text matches across inline formatting without inserting DOM wrappers. */
 export function segmentedMatches(segments: readonly string[], query: string) {
-  const starts: number[] = [];
+  const starts = [0];
   let total = 0;
   for (const text of segments) {
-    starts.push(total);
     total += text.length;
+    starts.push(total);
   }
+  // Literal matches arrive in order with the same nonzero UTF-16 width. Each
+  // cursor crosses a segment boundary at most once, including empty segments.
+  const count = segments.length;
+  const width = query.trim().length;
+  let startCursor = 0;
+  let endCursor = 0;
   return textMatchOffsets(segments.join(""), query)
     .map((offset) => {
-      const end = offset + query.trim().length;
-      const startIndex = starts.findIndex(
-        (start, index) =>
-          offset >= start && offset < start + segments[index].length,
-      );
-      const endIndex = starts.findIndex(
-        (start, index) => end > start && end <= start + segments[index].length,
-      );
+      const end = offset + width;
+      while (startCursor < count && offset >= starts[startCursor + 1])
+        startCursor++;
+      // End boundaries belong to the preceding nonempty text node.
+      while (endCursor < count && end > starts[endCursor + 1]) endCursor++;
+      const startIndex = startCursor < count ? startCursor : -1;
+      const endIndex = endCursor < count ? endCursor : -1;
       return {
         startIndex,
         startOffset: offset - starts[startIndex],
