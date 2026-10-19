@@ -46,7 +46,15 @@ function Test-Integer($value) {
   return $value -is [int] -or $value -is [long] -or $value -is [uint64] -or $value -is [bigint]
 }
 function Test-U64($value) {
-  return (Test-Integer $value) -and $value -ge 0 -and $value -le [bigint]::Parse('18446744073709551615')
+  if (-not (Test-Integer $value)) { return $false }
+  $number = [bigint]$value
+  return $number.Sign -ge 0 -and $number.CompareTo([bigint]::Parse('18446744073709551615')) -le 0
+}
+foreach ($bound in @([long]0, [long]::MaxValue, [uint64]::MaxValue, [bigint]::Parse('10116456482831564288'))) {
+  if (-not (Test-U64 $bound)) { throw 'Valid U64 boundary rejected' }
+}
+foreach ($outside in @([long]-1, [bigint]::Parse('18446744073709551616'), [double]0, '0')) {
+  if (Test-U64 $outside) { throw 'Invalid U64 boundary accepted' }
 }
 function Test-NullableInteger($value) {
   return $null -eq $value -or (Test-Integer $value)
