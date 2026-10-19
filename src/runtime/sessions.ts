@@ -72,6 +72,7 @@ import { settledRoundResults } from "./round_result";
 import { finishHistoryPrefix } from "./history_replay";
 import {
   SessionOpenReplay,
+  applyFailedHistoryEvent,
   hasOwnUpdate,
   isHistoryMarkerShape,
 } from "./session_open_replay";
@@ -130,7 +131,11 @@ export interface AgentOnlyRow {
 /** View-model types live in `session_types.ts` (file-size cap); re-export
  *  so `../runtime/sessions` imports keep working. */
 import type { PromptBlock, ThreadItem, ThreadState } from "./session_types";
-import { hasActiveTools, hasPendingRequests } from "./session_types";
+import {
+  hasActiveTools,
+  hasPendingRequests,
+  hasUnconfirmedHistoryTools,
+} from "./session_types";
 export * from "./session_types";
 export {
   freshThreadState,
@@ -305,6 +310,7 @@ class ThreadsStore {
       s.connectionOutcomeUnknown ||
       s.uncertainPrompt ||
       hasActiveTools(s) ||
+      hasUnconfirmedHistoryTools(s) ||
       hasActiveCompaction(s) ||
       hasPendingRequests(s) ||
       (s.permissionConfigId && s.permissionState !== "ready")
@@ -395,7 +401,12 @@ class ThreadsStore {
     this.emit();
   }
 
-  private applyChannelEvent(key: string, event: unknown, live = true): void {
+  private applyChannelEvent(
+    key: string,
+    event: unknown,
+    live = true,
+    activityConnectionId?: string,
+  ): void {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
@@ -435,7 +446,10 @@ class ThreadsStore {
       this.finishArchiveActivity(s);
     } else if (kind === "forkActivity") {
       if (!receiveForkActivity(s, e)) return;
-    } else if (!updateEnvelope && receiveWorkActivity(s, e)) {
+    } else if (
+      !updateEnvelope &&
+      receiveWorkActivity(s, e, activityConnectionId)
+    ) {
       this.finishArchiveActivity(s);
     } else if (kind === "permissionState") {
       // Only the explicit setter's matching reply may enable sending. A late
@@ -664,6 +678,7 @@ class ThreadsStore {
     let routePrepared = false;
     let abandonRecheck: (() => void) | undefined;
     let receivingReplay = true;
+    let bindFailedReplay: ((state: ThreadState) => void) | undefined;
     const promise = (async (): Promise<ThreadState> => {
       if (recheck) await recheck.detach();
       else if (retryState?.historyUnavailable || retryState?.sourceError)
@@ -709,6 +724,21 @@ class ThreadsStore {
         applyEnded();
       };
       let historyFailed = false;
+      let failedLive = false;
+      let failedConnectionId: string | undefined;
+      const applyFailedLive = (state: ThreadState, event: unknown) =>
+        applyFailedHistoryEvent(
+          state,
+          event,
+          (value) =>
+            this.applyChannelEvent(
+              state.key,
+              value,
+              true,
+              failedLive ? failedConnectionId : undefined,
+            ),
+          () => this.emit(state.key),
+        );
       let recheckObserver = recheck;
       if (recheck)
         abandonRecheck = () => {
@@ -729,9 +759,13 @@ class ThreadsStore {
           if (
             this.channels.get(boundKey) === channel &&
             (!historyFailed ||
+              failedLive ||
               (!hasOwnUpdate(event) && received?.kind === "connectionLost"))
-          )
-            this.applyChannelEvent(boundKey, event);
+          ) {
+            const state = this.thread(boundKey);
+            if (historyFailed && state) applyFailedLive(state, event);
+            else this.applyChannelEvent(boundKey, event);
+          }
         } else if (receivingReplay) {
           replay.push(event);
         }
@@ -763,13 +797,35 @@ class ThreadsStore {
         try {
           replay.requireReadable(input.agentId, result);
         } catch (error) {
-          replay.clear();
           if (isHistoryReadFailure(error)) {
-            // Retain only actual loss from this owner, never late replay content.
             historyFailed = true;
-            boundKey = recoveryTarget(input, result).key;
-            this.channels.set(boundKey, channel);
-          } else channel.onmessage = () => {};
+            const id = result.connectionId;
+            failedConnectionId =
+              typeof id === "string" &&
+              id.length > 0 &&
+              id.length <= 4096 &&
+              !id.includes("\0")
+                ? id
+                : undefined;
+            failedLive =
+              replay.acknowledgedPrefix && failedConnectionId !== undefined;
+            // Bind only after the outer failure path has installed the exact
+            // retained old state at the canonical key. Until then this same
+            // temporary owner keeps any already-acknowledged live following.
+            bindFailedReplay = (state) => {
+              boundKey = state.key;
+              if (failedConnectionId) state.connectionId = failedConnectionId;
+              this.channels.set(boundKey, channel);
+              const { following } = replay.take(true);
+              if (failedLive)
+                for (const event of following) applyFailedLive(state, event);
+              endedState = state;
+              applyEnded();
+            };
+          } else {
+            replay.clear();
+            channel.onmessage = () => {};
+          }
           throw error;
         }
       }
@@ -867,6 +923,7 @@ class ThreadsStore {
           }
           retainRecoveryFailure(old, error, recheck ? undefined : opened);
           this.threads.set(key, old);
+          bindFailedReplay?.(old);
           this.emit();
         }
         throw error;

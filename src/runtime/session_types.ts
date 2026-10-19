@@ -295,8 +295,10 @@ export interface ThreadState extends ReportedDetailsOwner {
   openError: string | null;
   /** App-owned replay admission failure; never inferred from remote text. */
   historyUnavailable: {
-    reason: "empty" | "incomplete";
+    reason: "empty" | "incomplete" | "unreadable";
     sourceKnown: boolean;
+    /** Set only by actual parsed toolActivity on the acknowledged live channel. */
+    toolActivityConnectionId?: string;
   } | null;
   /** Open failed on the resume path — render as 无法恢复, not a blank
    *  session (PRODUCT.md §7). */
@@ -318,32 +320,77 @@ export function hasPendingRequests(
   );
 }
 
+type ToolActivityEvidence = Pick<
+  ThreadState,
+  "activeToolCallIds" | "connectionLost"
+> &
+  Partial<
+    Pick<
+      ThreadState,
+      "historyUnavailable" | "connectionId" | "processEndedConnectionId"
+    >
+  >;
+
+function currentToolActivityObserved(state: ToolActivityEvidence): boolean {
+  return (
+    !state.historyUnavailable ||
+    Boolean(
+      state.connectionId &&
+      state.historyUnavailable.toolActivityConnectionId === state.connectionId,
+    )
+  );
+}
+
+/** Retain old IDs as uncertainty, never newly executing work or proven idle.
+ * An actual matching independent process-end receipt ends local activity only. */
+export function hasUnconfirmedHistoryTools(
+  state: ToolActivityEvidence,
+): boolean {
+  return Boolean(
+    state.historyUnavailable &&
+    state.activeToolCallIds.length > 0 &&
+    !currentToolActivityObserved(state) &&
+    !(
+      state.connectionLost &&
+      state.connectionId &&
+      state.processEndedConnectionId === state.connectionId
+    ),
+  );
+}
+
 export function hasActiveTools(
   state: Pick<
     ThreadState,
     "activeToolCallIds" | "connectionLost" | "asyncTasks"
-  >,
+  > &
+    ToolActivityEvidence,
 ): boolean {
   return (
-    (!state.connectionLost && state.activeToolCallIds.length > 0) ||
+    (!state.connectionLost &&
+      currentToolActivityObserved(state) &&
+      state.activeToolCallIds.length > 0) ||
     hasAsyncTasks(state)
   );
 }
 
 export function hasActiveWork(state: ThreadState): boolean {
   return (
-    hasActiveTools(state) || hasActiveCompaction(state) || hasActiveFork(state)
+    hasUnconfirmedHistoryTools(state) ||
+    hasActiveTools(state) ||
+    hasActiveCompaction(state) ||
+    hasActiveFork(state)
   );
 }
 
 /** Rendering only: never rewrite the Agent's reported tool status. */
 export function toolActivityState(
-  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
+  state: ToolActivityEvidence,
   call: ToolCallView,
 ): "active" | "finished" | "unknown" {
   if (call.status === "completed" || call.status === "failed")
     return "finished";
   return !state.connectionLost &&
+    currentToolActivityObserved(state) &&
     state.activeToolCallIds.includes(call.toolCallId)
     ? "active"
     : "unknown";

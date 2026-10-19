@@ -1,5 +1,6 @@
 import {
   hasActiveWork,
+  hasUnconfirmedHistoryTools,
   hasPendingRequests,
   type ThreadState,
 } from "./session_types";
@@ -18,6 +19,7 @@ function workReason(thread: ThreadState): string | null {
     thread.stopUnconfirmed ||
     thread.uncertainPrompt ||
     thread.connectionOutcomeUnknown ||
+    hasUnconfirmedHistoryTools(thread) ||
     thread.permissionState === "unknown"
   )
     return S.workUnknown;

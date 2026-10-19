@@ -16,6 +16,7 @@ const result: OpenResult = {
   nativeSessionId: "same",
   resumed: true,
   configOptions: [],
+  warnings: [],
 };
 const readable = {
   update: {

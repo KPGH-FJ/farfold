@@ -22,12 +22,40 @@ class HistoryReadFailure extends Error {
   }
 }
 
-export function isHistoryReadFailure(error: unknown): boolean {
-  return error instanceof HistoryReadFailure;
+/** Only this renderer's successful load precheck creates this failure.
+ * Keep TypeError identity for the unchanged JSON-conversion boundary. */
+class HistoryProjectionFailure extends TypeError {
+  readonly reason = "unreadable" as const;
+  constructor(
+    readonly failedKey: string,
+    original: TypeError,
+  ) {
+    super(STRINGS.repair.historyUnavailable, { cause: original });
+  }
+}
+
+export function historyProjectionFailure(
+  agentId: string,
+  result: OpenResult,
+  original: TypeError,
+): TypeError {
+  return new HistoryProjectionFailure(
+    `${agentId}:${result.cwd}:${result.nativeSessionId}`,
+    original,
+  );
+}
+
+export function isHistoryReadFailure(
+  error: unknown,
+): error is HistoryReadFailure | HistoryProjectionFailure {
+  return (
+    error instanceof HistoryReadFailure ||
+    error instanceof HistoryProjectionFailure
+  );
 }
 
 export function historyFailureKey(error: unknown): string | undefined {
-  return error instanceof HistoryReadFailure ? error.failedKey : undefined;
+  return isHistoryReadFailure(error) ? error.failedKey : undefined;
 }
 
 /** Keep the existing admission boundary; a live disconnect is not an empty replay. */
@@ -98,23 +126,22 @@ export function retainRecoveryFailure(
   }
   state.identity = "established";
   state.reconnecting = false;
-  state.historyUnavailable =
-    error instanceof HistoryReadFailure
-      ? { reason: error.reason, sourceKnown }
-      : null;
+  state.historyUnavailable = isHistoryReadFailure(error)
+    ? { reason: error.reason, sourceKnown }
+    : null;
   state.unrecoverable =
     String(error).replace(/^Error:\s*/, "") === STRINGS.thread.notResumable;
-  state.openError =
-    error instanceof HistoryReadFailure
-      ? error.message
-      : state.unrecoverable
-        ? STRINGS.thread.notResumable
-        : STRINGS.repair.reconnectFailed;
+  state.openError = isHistoryReadFailure(error)
+    ? error.message
+    : state.unrecoverable
+      ? STRINGS.thread.notResumable
+      : STRINGS.repair.reconnectFailed;
   // A successful load with no observed loss supersedes the old connection flag.
   // Execution uncertainty and all history/config admission guards remain separate.
   if (state.historyUnavailable) {
     state.connectionLost = false;
-    state.activeToolCallIds = [];
+    // A local failed read cannot declare the old tool identities finished.
+    // Only actual subsequent activity/end receipts may update that evidence.
   } else if (!state.unrecoverable) state.connectionLost = true;
 }
 

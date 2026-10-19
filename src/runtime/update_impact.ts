@@ -1,5 +1,6 @@
 import {
   hasActiveWork,
+  hasUnconfirmedHistoryTools,
   hasPendingRequests,
   type ThreadState,
 } from "./session_types";
@@ -37,6 +38,7 @@ export function updateConversationBlocker(thread: ThreadState): string | null {
     thread.stopUnconfirmed ||
     thread.uncertainPrompt ||
     thread.connectionOutcomeUnknown ||
+    hasUnconfirmedHistoryTools(thread) ||
     thread.permissionState === "unknown"
   )
     return UPDATE_IMPACT.unknown;

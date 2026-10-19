@@ -85,18 +85,33 @@ export async function previewHistory(
         channel,
       },
     );
-    state.cwd = result.cwd;
-    state.connectionId = result.connectionId;
-    state.nativeSessionId = result.nativeSessionId;
-    state.resumed = true;
-    state.identity = "established";
-    state.service = result.service ?? undefined;
-    state.serviceContext = result.serviceContext ?? undefined;
-    state.configOptions = normalizeConfigOptions(result.configOptions);
-    state.permissionConfigId = result.permissionConfigId;
-    state.permissionState = result.permissionConfigId ? "required" : "ready";
-    if (result.configCheck) applyConfigCheck(state, result.configCheck);
+    // A successful invoke has granted one exact cleanup receipt. Preserve it
+    // even if either synchronous renderer conversion below fails locally.
+    const owned: HistoryPreview = {
+      ...result,
+      agentId,
+      state,
+      replayComplete: false,
+    };
     previewToken = result.previewToken;
+    try {
+      state.cwd = result.cwd;
+      state.connectionId = result.connectionId;
+      state.nativeSessionId = result.nativeSessionId;
+      state.resumed = true;
+      state.identity = "established";
+      state.service = result.service ?? undefined;
+      state.serviceContext = result.serviceContext ?? undefined;
+      state.configOptions = normalizeConfigOptions(result.configOptions);
+      state.permissionConfigId = result.permissionConfigId;
+      state.permissionState = result.permissionConfigId ? "required" : "ready";
+      if (result.configCheck) applyConfigCheck(state, result.configCheck);
+    } catch {
+      // This catch covers only local synchronous metadata projection, never
+      // invoke/auth failure. The caller receives an ineligible cleanup owner.
+      state.openError = S.loadFailed;
+      return owned;
+    }
     // Invoke and Channel delivery are independent. Only this ordered channel's
     // matching marker proves the renderer has consumed the replay prefix.
     const replayComplete =
@@ -110,31 +125,39 @@ export async function previewHistory(
       }));
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
-    for (const event of buffered.prefix(previewToken)) {
-      if (!event || typeof event !== "object") continue;
-      if (
-        "kind" in event &&
-        event.kind === "configOptions" &&
-        "options" in event
-      ) {
-        replaceConfigOptions(
-          state,
-          normalizeConfigOptions(event.options),
-          !("modern" in event && event.modern === false),
-        );
-      } else if ("update" in event) {
+    try {
+      for (const event of buffered.prefix(previewToken)) {
+        if (!event || typeof event !== "object") continue;
         if (
-          (event.update as { sessionUpdate?: unknown } | null)
-            ?.sessionUpdate === "config_option_update"
-        )
-          pushRaw(state, event.update, "config_option_update");
-        else applyUpdate(state, event.update, event);
+          "kind" in event &&
+          event.kind === "configOptions" &&
+          "options" in event
+        ) {
+          replaceConfigOptions(
+            state,
+            normalizeConfigOptions(event.options),
+            !("modern" in event && event.modern === false),
+          );
+        } else if ("update" in event) {
+          if (
+            (event.update as { sessionUpdate?: unknown } | null)
+              ?.sessionUpdate === "config_option_update"
+          )
+            pushRaw(state, event.update, "config_option_update");
+          else applyUpdate(state, event.update, event);
+        }
       }
+      finishHistoryPrefix(state);
+    } catch {
+      // An acknowledged native preview is not a successful displayed body.
+      // Retain the exact receipt; the existing false flag denies commit and
+      // lets the caller retry an unconfirmed exact close without another load.
+      state.openError = S.loadFailed;
+      return owned;
     }
-    finishHistoryPrefix(state);
     // A delivery timeout keeps ownership available for the caller to close or
     // retry. Partial text is never eligible for display or admission.
-    return { ...result, agentId, state, replayComplete };
+    return { ...owned, replayComplete };
   } finally {
     receiving = false;
     channel.onmessage = () => {};
