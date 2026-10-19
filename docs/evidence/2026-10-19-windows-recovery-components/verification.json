@@ -1,10 +1,10 @@
 {
   "atUtc": "2026-10-19T10:22:23.233058+00:00",
   "kind": "ScopedSourceCheckpointsAndSelectedWindowsEvidenceNotPhaseAcceptance",
-  "sourceCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
+  "sourceCheckpoint": "be6029a277cfb63b6eefa2729dc95d561bc6b564",
   "installedSourceUnchanged": false,
-  "installedBinarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
-  "latestFullSevenStillSource": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+  "installedBinarySha256": "6b25dada85e3cf627ec74e2b4db6d3b688cafcf10386b48842555f3e2bd419ae",
+  "latestFullSevenStillSource": "0d2eb617440417c8611231393bb53b111938acd5",
   "checkpoints": {
     "29433fa1e": "bundle graph/producer object pairing + owned cache denial fixture",
     "2e58e6834": "offline source exclusion metadata and 18-control workflow",
@@ -282,357 +282,115 @@
   ],
   "alignmentPreparedAtUtc": "2026-10-19T12:08:03.253659+00:00",
   "historicalSourceCheckpoint": "49e7324403fade12d31f2440dc392cec9e883a64",
-  "checksScope": "Original 49e and earlier scoped source checks, retained verbatim; not a new composite check of e243.",
-  "windowsScope": "Original 613 selected Windows result, retained verbatim; latest 46a result is separate below.",
+  "checksScope": "Original historical scoped checks retained verbatim; currentScopedChecks/continuation identify be6029 strict compile and separate0d2 fullseven.",
+  "windowsScope": "Original windows property retains613 history; latestSelected/Completed/DispatchedWindows all now reference audited run39272897287. Old whole JSON preserved by currentAlignmentPreviousWholeSnapshots.",
   "latestSelectedWindows": {
-    "runId": 39241052388,
-    "jobId": 118021670046,
-    "head": "46a932e7ead94b1cc3a2ca0ea7f9d1fe0ccab925",
+    "runId": 39272897287,
+    "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
     "conclusion": "failure",
-    "artifactFiles": 148,
-    "groupCounts": [
-      {
-        "group": "carrier-fullsd-1",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
+    "completedAndAudited": true,
+    "scope": "Selected actual native controls; laterfrontend769 and newmaterial21/be6029 not covered. Positiveportable/synthetic/refusal controls remain distinct from complete productrestore.",
+    "positiveRust": {
+      "total": 262,
+      "passed": 219,
+      "failed": 43,
+      "ignored": 0
+    },
+    "carrier149": {
+      "ordinary": {
+        "total": 137,
+        "passed": 122,
+        "failed": 15
+      },
+      "manual": {
+        "total": 12,
         "passed": 0,
-        "failed": 1,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "carrier-fullsd-2",
-        "passed": 0,
-        "failed": 1,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "carrier-fullsd-3",
-        "passed": 0,
-        "failed": 1,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "carrier-fullsd-4",
-        "passed": 0,
-        "failed": 1,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "raw-pin-fullsd",
-        "passed": 0,
-        "failed": 1,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "carrier-backup-io",
-        "passed": 11,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "carrier-records",
-        "passed": 9,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "carrier-ordinary-namespace",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "carrier-ordinary-authority",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "source-roots",
-        "passed": 1,
-        "failed": 3,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "source-graph",
-        "passed": 2,
-        "failed": 4,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "carrier-fragment",
-        "passed": 7,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-name",
-        "passed": 5,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-1",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-2",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-3",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-4",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-5",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "raw-pin-6",
-        "passed": 1,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "checkout-profile",
-        "passed": 0,
-        "failed": 6,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "shape-framing",
-        "passed": 2,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "shape-owned",
-        "passed": 4,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "bundle-graph",
-        "passed": 0,
-        "failed": 9,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "producer-pairing",
-        "passed": 3,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "offline-graph",
-        "passed": 4,
-        "failed": 2,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "private-input",
-        "passed": 7,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "artifacts",
-        "passed": 6,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "first-import",
-        "passed": 0,
-        "failed": 7,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "source-export",
-        "passed": 0,
-        "failed": 5,
-        "ignored": 0,
-        "exit": 101
-      },
-      {
-        "group": "material-entry",
-        "passed": 5,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
-      },
-      {
-        "group": "preparation-cache",
-        "passed": 4,
-        "failed": 0,
-        "ignored": 0,
-        "exit": 0
+        "failed": 12
       }
-    ],
-    "auth": {
-      "raw": "auth_cancellation.stderr.log",
-      "samePreCapturedHeldTargetAndJob": true,
-      "membershipBeforeAfter": [true, true],
-      "jobActiveBeforeAfter": [2, 0],
-      "heldWaitBeforeAfter": [258, 258],
-      "originalAssertion": "same held target must have exited after cancellation",
-      "actualPass": false,
-      "interpretation": "Job accounting zero does not override unsignalled held process object; root cause unknown. Arc witness extends original Job lifetime.",
-      "pidReopen": "companion-only, not authority"
     },
-    "fullSecurity": {
-      "executedIgnoredControls": 5,
-      "passed": 0,
-      "failed": 5,
-      "observedPhase": "fullSecurityOpen",
-      "nativeCode": 1314,
-      "requestedAccess": 16908288,
-      "privilegesAdjusted": false
+    "continuation30": {
+      "ordinary": {
+        "total": 25,
+        "passed": 25,
+        "failed": 0
+      },
+      "manual": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5
+      }
     },
-    "matrix": {
-      "eightCellsObserved": true,
-      "DOSProgramAndDOSArgs": "DGD/DDD exit1 with empty stdout/stderr; original config missing-value None, not ReadContext success",
-      "commonDir": "GUID for all eight, not independently varied",
-      "originalLaunchFailureFixed": false
+    "ordinaryFailures26": "3ownedpremise,2ReadContext,5windows_first,1movedsourceselection,12SourceOwner/Graph/profile,1link255Changed,2budgetclass mismatch; further internal investigation, not all permissions",
+    "manual17": "16 source fullSecurityOpen1314;1targetcreateC0000061, distinct phases",
+    "Git5": "Actual fivepair/fivecall/tenmarker result accepted by Windows typedU64+Keys validator; plainfile/common exit0 knownfalse, extendedboth1empty observed, no wholeGit/restore proof",
+    "strictNegative101": "actual failed test/step retained; required positive failures correctly reject aggregate",
+    "auth": "this sameheldtargetwait0/exit1+Job0 sample only; old intermittent258 unexplained",
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/execution-completion.json",
+      "bytes": 2238,
+      "sha256": "7535b2f58dbdceb6d83d9fa561b40e8fb770088524013eee214150626b07dcdb"
     },
-    "strictNegative": {
-      "actualExit": 101,
-      "testPassed": false,
-      "expectedObservationComplete": true
+    "safeOutcome": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/safe-outcome-addendum.json",
+      "bytes": 2548,
+      "sha256": "68f1afdcd5776cd62639fed877f1b7f378eb7c7d1afb971a92e85fc98b6340ba"
     },
-    "aggregateCorrectlyFalse": true,
-    "doesNotCover": [
-      "226b Auth R3 and owned-link additions",
-      "ff17 DOS representation",
-      "e243 directory Capture R2 and workflow R5"
-    ],
-    "source": {
-      "path": "output/2026-10-19-recovery-render-continuation/checkout-native-ci/independent-result/raw-audit/safe-summary.json",
-      "sha256": "a3ed1fd2b9d88a65d47630fc93c461125152590f0cad601a7bf5d6bc8603c650",
-      "bytes": 16489
-    }
+    "firstPhase": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/failure-firstphase-layering.json",
+      "bytes": 140945,
+      "sha256": "90e5fefe931ca6250ea420142304ef24b4ccb86eae7e61464185e409424f1451"
+    },
+    "evidenceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/evidence-freeze.json",
+      "bytes": 189811,
+      "sha256": "5a5169d60d789d18323aef2a134bb61afcfb794dded07b99d0cda2c8689a7147"
+    },
+    "dispatchBinding": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
+      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
+    },
+    "statusAtDispatchBinding": "queued; final completed/failure separately observed and audited"
   },
   "currentScopedChecks": {
-    "frontend": "32 files423pass,type and owned format0,1331 stable inputs; includes fork temporary replay retirement, no full failed-child recovery",
-    "native": [
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-cross-r1-receipt.json",
-        "sha256": "864b642e111bf8cbaded230f72a34539e2c19b01d468f5f1faa3693fc8b77f67"
-      },
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-host-strict-r1-receipt.json",
-        "sha256": "a50b156ebfcf1fc7d7cc9211ccab965e8655e0fdf496d8cd7cca62bb91d115ed"
-      },
-      {
-        "path": "output/2026-10-19-recovery-render-continuation/regular-shared-host-file-access-r1-receipt.json",
-        "sha256": "44d1cdf7318a12ea47ce167a7003a9e62b809b865e6baaa89add6bbc095efbe3"
-      }
-    ],
-    "actual": "Latest Windows cross all-target strict0 and host all-target strict0 on796 stable inputs. Earlier same Tree/Regular implementation host file_access120pass=114old+6newportableTree; new Git5 cfgWindows only. Tree5Windows/Regular6Windows/Git5 single five-call diagnostic unrun.",
-    "workflow": "Carrier149 actual137ordinary115pass22fail,12manual0pass12fail; separateGit Rust1pass/5calls complete, PS numeric comparison overflow failed. New typed comparison fix not yet tested.",
-    "newFullSeven": {
-      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "source": "be6029a277cfb63b6eefa2729dc95d561bc6b564",
+    "nativeInputsStable": 818,
+    "crossAllTargetsStrict": {
+      "path": "output/2026-10-19-recovery-render-continuation/material21-cross-r1-receipt.json",
+      "bytes": 2816,
+      "sha256": "e91973ba0cbc5ddc4303d1410e89fe2f9cac03318c9c0bded3b7f9221083cda4"
+    },
+    "hostAllTargetsStrict": {
+      "path": "output/2026-10-19-recovery-render-continuation/material21-host-r1-receipt.json",
+      "bytes": 1435,
+      "sha256": "c409505c94fa4f7bbfcdf22248201c3d08c0a23412a6d63bc552b5c718170706"
+    },
+    "new24WindowsControls": "compile-only20ordinary4manual; no native execution for21",
+    "latestCompleteFormalSeven": {
+      "source": "0d2eb617440417c8611231393bb53b111938acd5",
       "naturalExit": 0,
       "allSeven": true,
-      "frontendFiles": 616,
-      "frontendPassed": 8147,
-      "rustPassed": 2085,
+      "frontendFiles": 621,
+      "frontendPassed": 8160,
+      "rustPassed": 2106,
       "rustFailed": 0,
       "rustExistingIgnored": 6,
-      "stableInputFiles": 18357,
+      "stableInputFiles": 18377,
       "verification": {
-        "path": "output/2026-10-19-recovery-render-continuation/engineering-history-directory-cohort/verification.json",
-        "sha256": "b87d7e0c93a989d02f4e36fe73d24cf44e20f336a862fafc260c6102275a995f"
+        "path": "output/2026-10-19-recovery-render-continuation/engineering-owned-delivery-live-cohort/verification.json",
+        "bytes": 6257,
+        "sha256": "d9f4cd29c3f03ce32f38183302076b25b60419a100f204ab446d58a2bc1b85ab"
       },
       "sourceReview": {
-        "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-e7f89448/source-review.json",
-        "sha256": "44b7d036224af68d67d0da59b13beeee701db1b3f4a7c149b910c28f456ab678"
+        "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-0d2eb617/source-review.json",
+        "bytes": 11126,
+        "sha256": "418542a8077bf9420aac16cb012388ad9961d0d98bdfb51d4681e0b0d1176cc3"
       }
     },
-    "newInstallation": {
-      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
-      "binarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
-      "path": "/Applications/Farfold.app",
-      "identifier": "ai.farfold.desktop",
-      "version": "0.1.7",
-      "architecture": "arm64",
-      "candidate9": 9,
-      "installed10": 10,
-      "scope": "Internal adhoc, closed observed; no installed behavior or real-Agent proof in this batch",
-      "freshThreeFullManifests": {
-        "countEach": 232530,
-        "sha256": "dfed1da1c81402096bbc093beaeebe80338622081576e7c4235a24ad5ca470f7",
-        "strictEqual": true
-      },
-      "duplicateAppRemoved": true,
-      "archiveKept": true,
-      "launchedByThisBatch": false,
-      "promptSentByThisBatch": false,
-      "normalQuitClaimedThisBatch": false,
-      "candidate": {
-        "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/candidate-output/candidate.json",
-        "sha256": "1ab92d27a76481f6055b4e95068daa161ca9b0f92f8101ab115fc222df8efbf4"
-      },
-      "candidateReview": {
-        "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/independent/review.json",
-        "sha256": "10a68173bd405afd368e25b61f28b2cddf307d07525bac4c5717d739fef7d859"
-      },
-      "install": {
-        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/install-result.json",
-        "sha256": "e9803a337afca884c2e009a74c6382fdf70f630c53b0884e49c52a177fb66e77"
-      },
-      "installedReview": {
-        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/installed-independent-review-private.json",
-        "sha256": "f7fb628ebd1a38dc6060fb72249dd2fcc9c38e4ee3a1252f54b87e4a7a4ae9c7"
-      },
-      "duplicateCleanup": {
-        "path": "output/2026-10-19-recovery-render-continuation/install-after-631/candidate-cleanup.json",
-        "sha256": "e9d385f545018e2a0035ea4f8fb7ca7a6006afaec6ebef419a6327264b056f90"
-      }
-    },
-    "formalApp": {
-      "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
-      "behaviorTested": false
+    "latestWindowsActual": {
+      "run": 39272897287,
+      "source": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+      "scope": "earlier native cohort;25new ordinarypass5manualfail;fullpositive219/43;not new21 coverage"
     }
   },
   "remainingScope": {
@@ -652,170 +410,192 @@
     "noNewScopeDecision": true,
     "NEW24AffectedRealSendPauseRetained": true
   },
-  "nativeComponentSourceCheckpoint": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
-  "alignmentUpdatedAtUtc": "2026-10-19T13:39:02.835714+00:00",
+  "nativeComponentSourceCheckpoint": "be6029a277cfb63b6eefa2729dc95d561bc6b564",
+  "alignmentUpdatedAtUtc": "2026-10-19T15:39:41.227940+00:00",
   "latestDispatchedWindows": {
     "runId": 39272897287,
     "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
-    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
-    "statusAtBinding": "queued",
-    "conclusionAtBinding": "",
-    "completionAuditCollected": false,
-    "binding": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
-      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
-    },
-    "plannedContinuation30NotPassCount": {
-      "ordinary": 25,
-      "manual": 5
-    },
-    "scope": "New source selected native components; original149/Git5/Matrix8/strictnegative separate; does not cover later live-only769 frontend or fullWindows/29x8"
-  },
-  "uncommittedFrontendScope": "None: frontend source through769 committed/pushed. Current batch fresh full7/installed proof not yet performed; installed e7 evidence remains separate.",
-  "latestCompletedWindows": {
-    "runId": 39262280954,
-    "head": "e7f89448d047f61beba4782060c4227f5d3f3c81",
     "conclusion": "failure",
-    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39262280954",
-    "scope": "Actual selected components only; no full Windows/29x8 acceptance",
-    "finalMetadata": {
-      "path": "output/2026-10-19-recovery-render-continuation/history-tree-git5-ci-e7f89448/final-metadata.stdout.json",
-      "sha256": "d7a5c4681543650b8b71e9c04e6171c483c023aa21b5b8a7f281b275635abbdf"
-    },
-    "audit": {
-      "path": "output/2026-10-19-recovery-render-continuation/native-e7-ci-r1/independent-result/final-audit-index.json",
-      "sha256": "68c6a817d4335c99351d6b5d8f4b930615f9b4901f1268ea8f84031f22b5bdc1"
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
+    "completedAndAudited": true,
+    "scope": "Selected actual native controls; laterfrontend769 and newmaterial21/be6029 not covered. Positiveportable/synthetic/refusal controls remain distinct from complete productrestore.",
+    "positiveRust": {
+      "total": 262,
+      "passed": 219,
+      "failed": 43,
+      "ignored": 0
     },
     "carrier149": {
       "ordinary": {
-        "attempted": 137,
-        "passed": 115,
-        "failed": 22
+        "total": 137,
+        "passed": 122,
+        "failed": 15
       },
-      "manualFullSD": {
-        "attempted": 12,
+      "manual": {
+        "total": 12,
         "passed": 0,
         "failed": 12
-      },
-      "total": {
-        "attempted": 149,
-        "passed": 115,
-        "failed": 34
       }
     },
-    "Git5": {
-      "rawRustTestPassed": true,
-      "rawFiveCallsAndTenMarkersVerified": true,
-      "twoPlainFalseControlsPassed": true,
-      "ownersSettledAndFixtureRemoved": true,
-      "PowerShellStepFailed": true,
-      "PowerShellResultMissing": true,
-      "actualError": "Int64/U64-max comparison overflow in Test-U64",
-      "threeKeysControls": "Passed only by source control-flow inference; no dedicated receipts/result hash"
+    "continuation30": {
+      "ordinary": {
+        "total": 25,
+        "passed": 25,
+        "failed": 0
+      },
+      "manual": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5
+      }
     },
-    "strictNegative101": {
-      "failedTestAndStep": true,
-      "inner18AndOwner17Complete": true,
-      "notTestPass": true
+    "ordinaryFailures26": "3ownedpremise,2ReadContext,5windows_first,1movedsourceselection,12SourceOwner/Graph/profile,1link255Changed,2budgetclass mismatch; further internal investigation, not all permissions",
+    "manual17": "16 source fullSecurityOpen1314;1targetcreateC0000061, distinct phases",
+    "Git5": "Actual fivepair/fivecall/tenmarker result accepted by Windows typedU64+Keys validator; plainfile/common exit0 knownfalse, extendedboth1empty observed, no wholeGit/restore proof",
+    "strictNegative101": "actual failed test/step retained; required positive failures correctly reject aggregate",
+    "auth": "this sameheldtargetwait0/exit1+Job0 sample only; old intermittent258 unexplained",
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/execution-completion.json",
+      "bytes": 2238,
+      "sha256": "7535b2f58dbdceb6d83d9fa561b40e8fb770088524013eee214150626b07dcdb"
     },
-    "old132": {
-      "passed": 103,
-      "failed": 29,
-      "all132SameVerdictAsC9": true
-    }
+    "safeOutcome": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/safe-outcome-addendum.json",
+      "bytes": 2548,
+      "sha256": "68f1afdcd5776cd62639fed877f1b7f378eb7c7d1afb971a92e85fc98b6340ba"
+    },
+    "firstPhase": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/failure-firstphase-layering.json",
+      "bytes": 140945,
+      "sha256": "90e5fefe931ca6250ea420142304ef24b4ccb86eae7e61464185e409424f1451"
+    },
+    "evidenceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/evidence-freeze.json",
+      "bytes": 189811,
+      "sha256": "5a5169d60d789d18323aef2a134bb61afcfb794dded07b99d0cda2c8689a7147"
+    },
+    "dispatchBinding": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
+      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
+    },
+    "statusAtDispatchBinding": "queued; final completed/failure separately observed and audited"
+  },
+  "uncommittedFrontendScope": "none; lastshared769 and full7/delivery0d2 completed. NewWindows21/be6029 only affected strict compile checks, not new full7/install.",
+  "latestCompletedWindows": {
+    "runId": 39272897287,
+    "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+    "conclusion": "failure",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
+    "completedAndAudited": true,
+    "scope": "Selected actual native controls; laterfrontend769 and newmaterial21/be6029 not covered. Positiveportable/synthetic/refusal controls remain distinct from complete productrestore.",
+    "positiveRust": {
+      "total": 262,
+      "passed": 219,
+      "failed": 43,
+      "ignored": 0
+    },
+    "carrier149": {
+      "ordinary": {
+        "total": 137,
+        "passed": 122,
+        "failed": 15
+      },
+      "manual": {
+        "total": 12,
+        "passed": 0,
+        "failed": 12
+      }
+    },
+    "continuation30": {
+      "ordinary": {
+        "total": 25,
+        "passed": 25,
+        "failed": 0
+      },
+      "manual": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5
+      }
+    },
+    "ordinaryFailures26": "3ownedpremise,2ReadContext,5windows_first,1movedsourceselection,12SourceOwner/Graph/profile,1link255Changed,2budgetclass mismatch; further internal investigation, not all permissions",
+    "manual17": "16 source fullSecurityOpen1314;1targetcreateC0000061, distinct phases",
+    "Git5": "Actual fivepair/fivecall/tenmarker result accepted by Windows typedU64+Keys validator; plainfile/common exit0 knownfalse, extendedboth1empty observed, no wholeGit/restore proof",
+    "strictNegative101": "actual failed test/step retained; required positive failures correctly reject aggregate",
+    "auth": "this sameheldtargetwait0/exit1+Job0 sample only; old intermittent258 unexplained",
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/execution-completion.json",
+      "bytes": 2238,
+      "sha256": "7535b2f58dbdceb6d83d9fa561b40e8fb770088524013eee214150626b07dcdb"
+    },
+    "safeOutcome": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/safe-outcome-addendum.json",
+      "bytes": 2548,
+      "sha256": "68f1afdcd5776cd62639fed877f1b7f378eb7c7d1afb971a92e85fc98b6340ba"
+    },
+    "firstPhase": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/failure-firstphase-layering.json",
+      "bytes": 140945,
+      "sha256": "90e5fefe931ca6250ea420142304ef24b4ccb86eae7e61464185e409424f1451"
+    },
+    "evidenceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/evidence-freeze.json",
+      "bytes": 189811,
+      "sha256": "5a5169d60d789d18323aef2a134bb61afcfb794dded07b99d0cda2c8689a7147"
+    },
+    "dispatchBinding": {
+      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
+      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
+    },
+    "statusAtDispatchBinding": "queued; final completed/failure separately observed and audited"
   },
   "currentSourceContinuation": {
-    "sourceCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
-    "nativeAndOwnershipCheckpoint": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+    "sourceCheckpoint": "be6029a277cfb63b6eefa2729dc95d561bc6b564",
+    "sharedFrontendCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
+    "installedSource": "0d2eb617440417c8611231393bb53b111938acd5",
     "sourceCheckpointReceipt": {
-      "path": "output/2026-10-19-recovery-render-continuation/source-continuation59-checkpoint.json",
-      "sha256": "fa3b05845af5d18cf05b3440a30cea25fee07e286f381b8081a8257b3ded0724"
+      "path": "output/2026-10-19-recovery-render-continuation/next-material-cohort-root-application-r1/checkpoint.json",
+      "bytes": 3430,
+      "sha256": "9aa50e32e7933c76cbf7317b4652269d8c2b3f8576225dc2c87cee7207043ee6"
     },
-    "liveCheckpoint": {
-      "path": "output/2026-10-19-recovery-render-continuation/live-channel-projection-root-r1/checkpoint.json",
-      "sha256": "8d291cdbbb842a41966272d22af1aa22af5458df67d8c026256b8bdc899ad427"
+    "implemented": "21source persistentmaterial.bin + originalReadContext managedroot.git role + ownedcrossparent targetgroups; merged3 registrationtails retain old source/tests. Persistent/group components test-registered; originalpublicWindowsgates/Manifest1 unchanged.",
+    "sourceReviews": [
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/root-next-material-source-review-r1/source-review.json",
+        "bytes": 6559,
+        "sha256": "326f102e736953f7a961259e2291bad66a0a9aee09b2d3f956d626dedde7ac53"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/root-target-link-groups-review-r1/source-review.json",
+        "bytes": 2357,
+        "sha256": "8440eb146c8a5f4c4d1863342c2c3e5533db89ecf30a6ba17e97855b49e5f3a1"
+      }
+    ],
+    "current21Pins": {
+      "path": "output/2026-10-19-recovery-render-continuation/next-material-cohort-root-application-r1/formatted-source-pins.json",
+      "bytes": 2891,
+      "sha256": "848ca279d073b90601159736dc6107f0a76ffb944ca18bb8d3e241fc4a51b9ab"
     },
-    "scope": "Source and affected controlled checks only. Installed/fresh full7 still e7, later source batch not installed.",
-    "globalHistoryDelivery": {
-      "actualFrontend": {
-        "selectedFiles": 17,
-        "suites": 18,
-        "passed": 156,
-        "inputs": 1341
-      },
-      "nativeDistinctPassed": 65,
-      "newNativeControls": 15,
-      "summary": {
-        "path": "output/2026-10-19-recovery-render-continuation/history-delivery-root-r2/affected-summary.json",
-        "sha256": "355a834c0fa3de553c685886c2e02f15dc4c4557dae12fb712378dfc8ecabc15"
-      },
-      "independent": {
-        "path": "output/2026-10-19-recovery-render-continuation/independent-global-history-delivery-review-r1/source-review.json",
-        "sha256": "e0bc75f30481fc62ef91dd9b92af8bcb4adf5957573a9cfadbb4fa845bfcc4d5"
-      },
-      "budgetScope": "Original2active/32waiting/8MiB request parameters only; original Entry two facts extends held responsibility, not history body/RSS cap",
-      "remaining": "Lost private receipt/reload recovery, full body/SDK/Tauri credits, actual Window/App/realAgent resource proof"
+    "crossAllTargetsStrict": {
+      "path": "output/2026-10-19-recovery-render-continuation/material21-cross-r1-receipt.json",
+      "bytes": 2816,
+      "sha256": "e91973ba0cbc5ddc4303d1410e89fe2f9cac03318c9c0bded3b7f9221083cda4"
     },
-    "liveChannelRepair": {
-      "actualRED": "1pass2fail at callbackErrors assertion after all required cleanup inputs",
-      "sameWholeTestsGREEN": "3pass0fail",
-      "affected": {
-        "selectedFiles": 10,
-        "passed": 137,
-        "inputsIncludingLockedTauriApi": 1344
-      },
-      "receipt": {
-        "path": "output/2026-10-19-recovery-render-continuation/live-channel-projection-root-r1/affected/receipt.json",
-        "sha256": "22a9e0a65923d4b82fcedb41545d07fe7c5ce3acbb593136fc67825b08ce5ea8"
-      },
-      "scope": "Actual JS Channel index and runtime with controlledIPC; only live applyUpdate local TypeError fallback, whole envelope kept. Original history TypeError and nonTypeError boundaries remain. No universal exception/RSS/backpressure claim."
+    "hostAllTargetsStrict": {
+      "path": "output/2026-10-19-recovery-render-continuation/material21-host-r1-receipt.json",
+      "bytes": 1435,
+      "sha256": "c409505c94fa4f7bbfcdf22248201c3d08c0a23412a6d63bc552b5c718170706"
     },
-    "nativeComponents": {
-      "status": "Operation-scoped Mixed real carrier and readonly Alias topology are test-registered internal components; rawGUID and Gitplain corrections plus original onealias sharing fix applied. Persistent whole restore/final namespace/public Windows mutation remain incomplete.",
-      "hostFileAccessPassed": 126,
-      "hostFileAccessScope": "Earlier Mixed6portable plus120old, before later path/native corrections; not new Windows test execution",
-      "cross": {
-        "path": "output/2026-10-19-recovery-render-continuation/owned-link-sharing-cross-r1-receipt.json",
-        "sha256": "eea540773ecb27334f11a1bdb8bc5d613f7d47c3f75b338e487ae808c2dc56ad"
-      },
-      "host": {
-        "path": "output/2026-10-19-recovery-render-continuation/owned-link-sharing-host-r1-receipt.json",
-        "sha256": "6f12d8f7c9e1595cee345efacbed0a5d0d418ba9e09eb73c375c0ace61675c2c"
-      },
-      "inputs": 809,
-      "scope": "Actual all-target strict host/cross0, not Windows runtime; compile scope separate from1341/1344frontend."
-    },
-    "validatorCorrection": {
-      "source": "0f9e280f65536fc9aa1f9e6c4d30fc4368fefa8d",
-      "independentActual": {
-        "path": "output/2026-10-19-recovery-render-continuation/git-known-config-powershell-actual-r1/independent-source-and-actual-review.json",
-        "sha256": "190d5cb947b36832dc6c499805f7fd93255222105d5411a86cff4463360c6019"
-      },
-      "scope": "Actual pureMacPowerShell RED/GREEN and inline controls; new Windows whole validator result not yet audited"
-    },
-    "workflow": {
-      "carrier149Preserved": true,
-      "separateContinuation30": {
-        "ordinary": 25,
-        "manual": 5
-      },
-      "Git5Matrix8Strict101Kept": true,
-      "binding": {
-        "path": "output/2026-10-19-recovery-render-continuation/workflow-r9-root-r1/final-source-binding.json",
-        "sha256": "cff62c96ed7f2f609f1afb73b00019372f211f8559633a6ede775c32b9532332"
-      },
-      "PowerShellStaticAndLiteralOnly": {
-        "path": "output/2026-10-19-recovery-render-continuation/workflow-r9-root-r1/parse-and-table-receipt.json",
-        "sha256": "94097226b032661a99e23806a25e695fee2e7d662a32f86baff90b32552d93ce"
-      },
-      "newWindowsVerdict": null
-    },
-    "additionalStorageCleanup": {
-      "path": "output/2026-10-19-recovery-render-continuation/storage-incremental-owned-r2/cleanup-receipt.json",
-      "sha256": "4cbb7d43a133abb95fc84fc004d402acd6c3f35ce730d85787deb9ea0fba2d85"
-    },
-    "storageScope": "Further24 exclusive generatedcache bins2,648,896,295logicalB, not unique physicalAPFS/reclaimed claim. App/data/history/backup/shared/source/evidence kept.",
-    "remaining": "Full persistent mixed/alias payload/target restore, sourceGit role, final namespace/public mutation, global body/transport/resource policy and29x8 remain internal/evidence separated."
+    "stableNativeInputs": 818,
+    "new24WindowsControls": "compiled only;20ordinary/4manual not yet run",
+    "latestFormalFullSevenSource": "0d2eb617440417c8611231393bb53b111938acd5",
+    "noNewFullSevenOrInstallFor21": true,
+    "remainingInternal": [
+      "actualSourceGraph-held managedrootedge compose;completepersistenttarget reconstruction;aliascarrier+metadata-last+cleanupauthority;uniqueManifest2+finalnamespace+productworker",
+      "ordinary26Nativefailure remediation;globalSDK/IPC/renderer bytes/backpressure,failedfork/reload/longrun resource evidence"
+    ],
+    "stillMissingConditions": "ExplicitfullSD token access and stillmissing accounts/services/Windows formalinstallation evidence remain separate;29x8/151 unchanged;NEW24affected real sends paused.",
+    "notASecondActivePlan": true
   },
   "historicalAtC9Dispatch": {
     "sourceCheckpoint": "c9db1332f6a6bcd18a4c5948af4d03d60574668f",
@@ -903,17 +683,17 @@
     "installedBinarySha256": "481a71502952f753d059ebb36a3916f0d79db0808e46df53c3b735255563b24f",
     "latestFullSevenStillSource": "63142172be9fc58f41fb3e151f77c9eef953b464"
   },
-  "installedSourceCurrent": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+  "installedSourceCurrent": "0d2eb617440417c8611231393bb53b111938acd5",
   "currentDelivery": {
-    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
-    "binarySha256": "ba8dd2dba404e9589f53b0b71851570260a3b1f8a78255bc04edb20dd01f6995",
+    "source": "0d2eb617440417c8611231393bb53b111938acd5",
+    "binarySha256": "6b25dada85e3cf627ec74e2b4db6d3b688cafcf10386b48842555f3e2bd419ae",
     "path": "/Applications/Farfold.app",
     "identifier": "ai.farfold.desktop",
     "version": "0.1.7",
     "architecture": "arm64",
     "candidate9": 9,
     "installed10": 10,
-    "scope": "Internal adhoc, closed observed; no installed behavior or real-Agent proof in this batch",
+    "scope": "Internal adhoc delivery; actual existingDirac history/read-only find and normalSaveQuit observed separately; no freshprompt/all29/fullWindows acceptance",
     "freshThreeFullManifests": {
       "countEach": 232530,
       "sha256": "dfed1da1c81402096bbc093beaeebe80338622081576e7c4235a24ad5ca470f7",
@@ -921,47 +701,54 @@
     },
     "duplicateAppRemoved": true,
     "archiveKept": true,
-    "launchedByThisBatch": false,
+    "launchedByThisBatch": true,
     "promptSentByThisBatch": false,
-    "normalQuitClaimedThisBatch": false,
+    "normalQuitClaimedThisBatch": true,
     "candidate": {
-      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/candidate-output/candidate.json",
-      "sha256": "1ab92d27a76481f6055b4e95068daa161ca9b0f92f8101ab115fc222df8efbf4"
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-owned-delivery-live/candidate-output/candidate.json",
+      "bytes": 245940,
+      "sha256": "1d194ca99c1faf0037d6c53cea7808205f14f7658c4199db9a30aff3fee9bd39"
     },
     "candidateReview": {
-      "path": "output/2026-10-19-recovery-render-continuation/candidate-after-631/independent/review.json",
-      "sha256": "10a68173bd405afd368e25b61f28b2cddf307d07525bac4c5717d739fef7d859"
+      "path": "output/2026-10-19-recovery-render-continuation/candidate-owned-delivery-live/independent/review.json",
+      "bytes": 4262,
+      "sha256": "b4cd68c5489142ad287ae804f087ebf1fc39cc3443f01056aa1b7ae50c5bca7c"
     },
     "install": {
-      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/install-result.json",
-      "sha256": "e9803a337afca884c2e009a74c6382fdf70f630c53b0884e49c52a177fb66e77"
+      "path": "output/2026-10-19-recovery-render-continuation/install-owned-delivery-live/install-result.json",
+      "bytes": 11162,
+      "sha256": "c51c0e6502638ffd15fdc89899bf263f20a0f90960096f6086a43a529cb5d6bd"
     },
     "installedReview": {
-      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/installed-independent-review-private.json",
-      "sha256": "f7fb628ebd1a38dc6060fb72249dd2fcc9c38e4ee3a1252f54b87e4a7a4ae9c7"
+      "path": "output/2026-10-19-recovery-render-continuation/install-owned-delivery-live/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "a722dc1d6dd37201ece2c7217a55c78ac98ae872b05cd4a469e1a1a4b4a2a060"
     },
     "duplicateCleanup": {
-      "path": "output/2026-10-19-recovery-render-continuation/install-after-631/candidate-cleanup.json",
-      "sha256": "e9d385f545018e2a0035ea4f8fb7ca7a6006afaec6ebef419a6327264b056f90"
+      "path": "output/2026-10-19-recovery-render-continuation/install-owned-delivery-live/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "7adae64aef8522dc1669a3c767b43a8085fcdd6b51a976c7df023ca9bc841729"
     }
   },
   "currentEngineering": {
-    "source": "e7f89448d047f61beba4782060c4227f5d3f3c81",
+    "source": "0d2eb617440417c8611231393bb53b111938acd5",
     "naturalExit": 0,
     "allSeven": true,
-    "frontendFiles": 616,
-    "frontendPassed": 8147,
-    "rustPassed": 2085,
+    "frontendFiles": 621,
+    "frontendPassed": 8160,
+    "rustPassed": 2106,
     "rustFailed": 0,
     "rustExistingIgnored": 6,
-    "stableInputFiles": 18357,
+    "stableInputFiles": 18377,
     "verification": {
-      "path": "output/2026-10-19-recovery-render-continuation/engineering-history-directory-cohort/verification.json",
-      "sha256": "b87d7e0c93a989d02f4e36fe73d24cf44e20f336a862fafc260c6102275a995f"
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-owned-delivery-live-cohort/verification.json",
+      "bytes": 6257,
+      "sha256": "d9f4cd29c3f03ce32f38183302076b25b60419a100f204ab446d58a2bc1b85ab"
     },
     "sourceReview": {
-      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-e7f89448/source-review.json",
-      "sha256": "44b7d036224af68d67d0da59b13beeee701db1b3f4a7c149b910c28f456ab678"
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-0d2eb617/source-review.json",
+      "bytes": 11126,
+      "sha256": "418542a8077bf9420aac16cb012388ad9961d0d98bdfb51d4681e0b0d1176cc3"
     }
   },
   "latestCompletedWindowsBeforeCurrentAudit": {
@@ -1028,5 +815,39 @@
     "sourceCheckpoint": "b211d61d6f2e8a802a8e23378a01816b69221641",
     "nativeComponentSourceCheckpoint": "7cd1bda3e3c70825c42cc0f6100c0d18d928b1d4",
     "uncommittedFrontendScope": "None: current history/preview/fork frontend source committed and pushed through3e7f2e17. No fresh complete engineering or installed acceptance yet."
-  }
+  },
+  "currentInstalledBehavior": {
+    "source": "0d2eb617440417c8611231393bb53b111938acd5",
+    "tested": true,
+    "appLaunched": true,
+    "scope": "ExistingDirac history loaded; headernotrunning, blankcomposer, localfind1/4inclfoldedtext,cancel,normalSaveQuit. No freshprompt or account/model/reasoning selection; no byte/backpressure/nativecapacity claim.",
+    "ui": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-owned-delivery-live/installed-ui-readonly-observation.json",
+      "bytes": 1451,
+      "sha256": "5747a7d36923931038f08ed563ae81d3b0dcc61cd14d8c0d3cee422ab7f57fc4"
+    },
+    "postUse": {
+      "path": "output/2026-10-19-recovery-render-continuation/install-owned-delivery-live/post-use-analysis/safe-summary.json",
+      "bytes": 4257,
+      "sha256": "6bedb776fc74d8981b0a7f237c10c2133ce8899712d618ff0e070c7fdde03668"
+    },
+    "data": "0added/0removed/8modified complete232530 manifest entries; normalized138sessions/54settings/10composers and wholeunsent/setup exact;1Agent updated_at differs; writerunknown. HistoricalH17unknownrecords retained, not markedcomplete."
+  },
+  "currentAlignmentPreviousWholeSnapshots": [
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/status.md",
+      "bytes": 60985,
+      "sha256": "70cb3e457efba5d4b7356d701de0403cd3aa2996bb4d44140952aade8756da99"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/evidence/2026-10-19-recovery-render-continuation/verification.json",
+      "bytes": 26720,
+      "sha256": "f926ee1411bc04f9af3baa95df0d89bbca09c2fd788e5bd37401e36b71f231e1"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/evidence/2026-10-19-windows-recovery-components/verification.json",
+      "bytes": 43326,
+      "sha256": "e980249f12feeec19b603d3c544c5ca45b9d9b836f70b28000655b28610b6319"
+    }
+  ]
 }
