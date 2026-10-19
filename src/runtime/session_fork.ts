@@ -9,7 +9,7 @@ import { openingInquiries } from "./opening_inquiries";
 import { historyReads } from "./session_history_admission";
 import { configChangeBusy } from "./protected_config";
 import { openedThreadState } from "./session_open_state";
-import { requireReadableHistory } from "./session_recovery";
+import { requireReadableHistoryCooperatively } from "./session_recovery";
 import { hasOwnUpdate, isOwnerHistoryMarker } from "./session_open_replay";
 import { retireForkControlOwner, validForkId } from "./session_fork_activity";
 import type { ForkOperation, ForkResult } from "./session_fork_types";
@@ -316,12 +316,13 @@ export class SessionForks {
           });
         }
         wake = undefined;
-        requireReadableHistory(
+        await requireReadableHistoryCooperatively(
           parent.agentId,
           opened,
           buffered.prefixEvents(openToken),
           buffered.complete(openToken),
-          replayLost,
+          () => replayLost,
+          current,
         );
         const key = `${parent.agentId}:${opened.cwd}:${opened.nativeSessionId}`;
         if (!current() || this.ports.thread(key))

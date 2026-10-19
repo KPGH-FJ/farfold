@@ -6,6 +6,7 @@ import type { ThreadState } from "./session_types";
 import { applyUpdate, freshThreadState } from "./session_projection";
 import { hasReadableMessages } from "./message_attachments";
 import { STRINGS } from "./strings";
+import { consumeHistoryEvents } from "./history_replay_work";
 import { composerDrafts, hasUnsentWork } from "./drafts";
 
 /** Generated only after this app's successful resumed session_open reply. */
@@ -58,15 +59,18 @@ export function historyFailureKey(error: unknown): string | undefined {
   return isHistoryReadFailure(error) ? error.failedKey : undefined;
 }
 
-/** Keep the existing admission boundary; a live disconnect is not an empty replay. */
-export function requireReadableHistory(
+/** One unchanged complete preprojection serves synchronous checks and the
+ * cooperative production reader. No partial projection becomes the thread. */
+function readableHistoryProjection(
   agentId: string,
   result: OpenResult,
-  buffered: Iterable<unknown>,
   complete: boolean,
-  lost: boolean,
-): void {
-  if (lost) throw new Error(STRINGS.thread.connectionLost);
+  lost: () => boolean,
+) {
+  const verifyConnection = () => {
+    if (lost()) throw new Error(STRINGS.thread.connectionLost);
+  };
+  verifyConnection();
   const key = `${agentId}:${result.cwd}:${result.nativeSessionId}`;
   if (!complete) throw new HistoryReadFailure("incomplete", key);
   const replay = freshThreadState(
@@ -75,12 +79,58 @@ export function requireReadableHistory(
     result.cwd,
     result.nativeSessionId,
   );
-  for (const event of buffered) {
-    if (event && typeof event === "object" && "update" in event)
-      applyUpdate(replay, event.update);
-  }
-  if (!hasReadableMessages(replay.items))
-    throw new HistoryReadFailure("empty", key);
+  return {
+    receive(event: unknown) {
+      verifyConnection();
+      if (event && typeof event === "object" && "update" in event)
+        applyUpdate(replay, event.update);
+    },
+    finish() {
+      verifyConnection();
+      if (!hasReadableMessages(replay.items))
+        throw new HistoryReadFailure("empty", key);
+    },
+  };
+}
+
+/** Keep the synchronous conversion/error contract for existing direct checks. */
+export function requireReadableHistory(
+  agentId: string,
+  result: OpenResult,
+  buffered: Iterable<unknown>,
+  complete: boolean,
+  lost: boolean,
+): void {
+  const projection = readableHistoryProjection(
+    agentId,
+    result,
+    complete,
+    () => lost,
+  );
+  for (const event of buffered) projection.receive(event);
+  projection.finish();
+}
+
+/** The same complete validator, with finite work batches. The loss predicate
+ * belongs to this original channel; a new callback opportunity is not success. */
+export async function requireReadableHistoryCooperatively(
+  agentId: string,
+  result: OpenResult,
+  buffered: Iterable<unknown>,
+  complete: boolean,
+  lost: () => boolean,
+  current: () => boolean = () => true,
+): Promise<void> {
+  const verifyOwner = () => {
+    if (!current()) throw new Error(STRINGS.repair.reconnectFailed);
+  };
+  const projection = readableHistoryProjection(agentId, result, complete, lost);
+  await consumeHistoryEvents(buffered, (event) => {
+    verifyOwner();
+    projection.receive(event);
+  });
+  verifyOwner();
+  projection.finish();
 }
 
 interface RecoveryInput {

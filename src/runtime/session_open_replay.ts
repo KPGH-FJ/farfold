@@ -1,7 +1,7 @@
 import { HistoryReplayBuffer } from "./history_replay";
 import {
   historyProjectionFailure,
-  requireReadableHistory,
+  requireReadableHistoryCooperatively,
 } from "./session_recovery";
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
@@ -108,18 +108,23 @@ export class SessionOpenReplay {
     });
   }
 
-  requireReadable(agentId: string, result: OpenResult): void {
+  async requireReadable(
+    agentId: string,
+    result: OpenResult,
+    current: () => boolean,
+  ): Promise<void> {
     this.delivered = null;
     try {
-      requireReadableHistory(
+      await requireReadableHistoryCooperatively(
         agentId,
         result,
         this.buffered.prefixEvents(this.token),
         this.complete,
-        this.lost,
+        () => this.lost,
+        current,
       );
     } catch (error) {
-      // Only this synchronous local conversion can produce a typed failure;
+      // Only this local conversion can produce a typed failure;
       // raw Agent JSON and actual connection loss do not acquire this class.
       if (!this.lost && error instanceof TypeError)
         throw historyProjectionFailure(agentId, result, error);

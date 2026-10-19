@@ -808,7 +808,11 @@ class ThreadsStore {
         // Only this operation's ordered marker proves replay was consumed.
         if (replay.needsMarker) await replay.waitForMarker();
         try {
-          replay.requireReadable(input.agentId, result);
+          await replay.requireReadable(
+            input.agentId,
+            result,
+            () => !retryState || this.thread(retryState.key) === retryState,
+          );
         } catch (error) {
           if (isHistoryReadFailure(error)) {
             historyFailed = true;
@@ -890,7 +894,10 @@ class ThreadsStore {
     })()
       .catch((error: unknown) => {
         inquiry.finish(true);
-        if (recheck && this.thread(recheck.original.key) !== recheck.original) {
+        if (
+          (recheck && this.thread(recheck.original.key) !== recheck.original) ||
+          (retryState && this.thread(retryState.key) !== retryState)
+        ) {
           abandonRecheck?.();
           throw error;
         }

@@ -26,7 +26,7 @@ export class HistoryReplayBuffer {
     return end === undefined ? [] : this.events.slice(0, end);
   }
 
-  /** Borrow only the first acknowledged prefix for a synchronous observer.
+  /** Borrow only the first acknowledged prefix for a finite observer.
    * Capture this array and boundary now: later pushes/clear/repeated markers
    * cannot change this finite view. It grants no event mutation authority. */
   prefixEvents(token: string): Iterable<unknown> {

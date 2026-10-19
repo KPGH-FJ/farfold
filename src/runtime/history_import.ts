@@ -13,6 +13,7 @@ import { IMPORT_STRINGS as S } from "./import_strings";
 import { hasReadableMessages } from "./message_attachments";
 import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
 import { historyReads } from "./session_history_admission";
+import { consumeHistoryEvents } from "./history_replay_work";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -141,27 +142,30 @@ export async function previewHistory(
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
     try {
-      for (const event of buffered.prefix(previewToken)) {
-        if (!event || typeof event !== "object") continue;
-        if (
-          "kind" in event &&
-          event.kind === "configOptions" &&
-          "options" in event
-        ) {
-          replaceConfigOptions(
-            state,
-            normalizeConfigOptions(event.options),
-            !("modern" in event && event.modern === false),
-          );
-        } else if ("update" in event) {
+      await consumeHistoryEvents(
+        buffered.prefixEvents(previewToken),
+        (event) => {
+          if (!event || typeof event !== "object") return;
           if (
-            (event.update as { sessionUpdate?: unknown } | null)
-              ?.sessionUpdate === "config_option_update"
-          )
-            pushRaw(state, event.update, "config_option_update");
-          else applyUpdate(state, event.update, event);
-        }
-      }
+            "kind" in event &&
+            event.kind === "configOptions" &&
+            "options" in event
+          ) {
+            replaceConfigOptions(
+              state,
+              normalizeConfigOptions(event.options),
+              !("modern" in event && event.modern === false),
+            );
+          } else if ("update" in event) {
+            if (
+              (event.update as { sessionUpdate?: unknown } | null)
+                ?.sessionUpdate === "config_option_update"
+            )
+              pushRaw(state, event.update, "config_option_update");
+            else applyUpdate(state, event.update, event);
+          }
+        },
+      );
       finishHistoryPrefix(state);
     } catch {
       // An acknowledged native preview is not a successful displayed body.
