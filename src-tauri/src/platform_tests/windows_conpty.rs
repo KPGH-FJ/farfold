@@ -16,6 +16,7 @@ pub(crate) enum Case {
     TerminalCancel,
     TerminalCursorNoReply,
     TerminalCursorReply,
+    TerminalMasterBoundedUnknown,
 }
 
 impl Case {
@@ -32,6 +33,9 @@ impl Case {
                 "pty::windows_tests::terminal_cancel_cursor_no_reply_child"
             }
             Self::TerminalCursorReply => "pty::windows_tests::terminal_cancel_cursor_reply_child",
+            Self::TerminalMasterBoundedUnknown => {
+                "pty::windows_tests::terminal_master_drop_retains_bounded_unknown_child"
+            }
             _ => "platform_tests::windows_conpty::diagnostic_child",
         }
     }
@@ -43,7 +47,8 @@ impl Case {
             | Self::Cancellation
             | Self::TerminalCancel
             | Self::TerminalCursorNoReply
-            | Self::TerminalCursorReply => 20,
+            | Self::TerminalCursorReply
+            | Self::TerminalMasterBoundedUnknown => 20,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
             _ => 10,             //3s startup+3s readiness+2s exit+1s EOF; not a production cap
         })
@@ -182,9 +187,12 @@ pub(crate) fn run(case: Case) {
         let mut terminated = false;
         let diagnostic_case = matches!(
             case,
-            Case::TerminalCursorNoReply | Case::TerminalCursorReply
+            Case::TerminalCursorNoReply
+                | Case::TerminalCursorReply
+                | Case::TerminalMasterBoundedUnknown
         );
         let mut deadline_seen = false;
+        let mut child_alive_before_deadline_kill = false;
         let mut cancel_seen = false;
         let mut invalid_pipe_seen = false;
         let mut input_failed_seen = false;
@@ -197,6 +205,19 @@ pub(crate) fn run(case: Case) {
                 let value = p.lock().unwrap();
                 value.overflow || value.failed
             });
+            if case == Case::TerminalMasterBoundedUnknown
+                && !deadline_seen
+                && started.elapsed() >= case.budget()
+                && status.is_none()
+            {
+                // Before this case's first deadline kill, actually rule out an
+                // already panicked/exited child. A stale receipt is not enough.
+                match owner.child.try_wait() {
+                    Ok(None) => child_alive_before_deadline_kill = true,
+                    Ok(Some(value)) => status = Some(value),
+                    Err(_) => try_wait_error_seen = true,
+                }
+            }
             if diagnostic_case {
                 // Observation only. The original termination predicate below
                 // and its cleanup/liveness gates are deliberately unchanged.
@@ -237,7 +258,7 @@ pub(crate) fn run(case: Case) {
                 && input.is_some()
             {
                 owner.closed = true;
-                let receipt = diagnostic_case.then(|| {
+                let mut receipt = diagnostic_case.then(|| {
                     let out = stdout.lock().unwrap();
                     let err = stderr.lock().unwrap();
                     serde_json::json!({
@@ -252,6 +273,12 @@ pub(crate) fn run(case: Case) {
                         "childReaped":true,"directJobInactive":true
                     })
                 });
+                if case == Case::TerminalMasterBoundedUnknown {
+                    receipt.as_mut().unwrap().as_object_mut().unwrap().insert(
+                        "childAliveBeforeDeadlineKill".into(),
+                        child_alive_before_deadline_kill.into(),
+                    );
+                }
                 let _ = send.send((status.success(), input == Some(true), terminated, receipt));
                 return;
             }
@@ -287,6 +314,12 @@ pub(crate) fn run(case: Case) {
         eprintln!(
             "FARFOLD_CONPTY_DIAGNOSTIC_OWNER {}",
             diagnostic_receipt.expect("new diagnostic owner receipt")
+        );
+    } else if case == Case::TerminalMasterBoundedUnknown {
+        // Deliberately separate17-field schema; old CI2 owner16 is untouched.
+        eprintln!(
+            "FARFOLD_CONPTY_BOUNDED_UNKNOWN_OWNER {}",
+            diagnostic_receipt.expect("bounded-unknown exact owner receipt")
         );
     }
     assert!(

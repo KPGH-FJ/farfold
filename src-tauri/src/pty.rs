@@ -34,15 +34,148 @@ fn now_millis() -> u64 {
         .unwrap_or_default()
 }
 
-/// Child-exit latch: the waiter thread stores the exit code and wakes every
-/// `pty_await` blocked on the condvar.
+/// Confirmed terminal-exit latch: child/group cleanup and actual control-master
+/// destruction precede the exit sink and every `pty_await` notification.
 type ExitLatch = Arc<(Mutex<Option<u32>>, Condvar)>;
+type MasterSlot = Arc<Mutex<Option<Box<dyn MasterPty + Send>>>>;
+
+fn drop_master(master: &MasterSlot) -> Result<(), ()> {
+    // Taking, not cloning, transfers the last control object to this owner.
+    // Never hold this mutex while an upstream destructor or callback runs.
+    let master = {
+        let mut slot = master
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        slot.take().ok_or(())?
+    };
+    drop(master);
+    Ok(())
+}
+
+fn finish_exit(
+    master: &MasterSlot,
+    exit: &ExitLatch,
+    id: &str,
+    code: u32,
+    on_output: &PtySink,
+) -> Result<(), ()> {
+    drop_master(master)?;
+    crate::logging::info("pty", format_args!("exit: {id} code {code}"));
+    // Authentication/configuration release follows actual master destruction.
+    on_output(serde_json::json!({"id": id, "exit": code}));
+    let mut slot = exit.0.lock().map_err(|_| ())?;
+    *slot = Some(code);
+    drop(slot);
+    exit.1.notify_all();
+    Ok(())
+}
+
+// Borrowed view of the EXISTING sole worker, not another owner/thread/permit.
+struct TerminalOwner<'a> {
+    child: &'a mut dyn portable_pty::Child,
+    _group: &'a crate::process_platform::OwnedGroup,
+    pid: Option<u32>,
+    stop: &'a AtomicBool,
+    master: &'a MasterSlot,
+    exit: &'a ExitLatch,
+    id: &'a str,
+    on_output: &'a PtySink,
+}
+impl TerminalOwner<'_> {
+    fn settle(&mut self) -> bool {
+        let settled = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut code = None;
+            let mut stopping = None;
+            let mut terminated = false;
+            let mut killed = false;
+            loop {
+                if (self.stop.load(Ordering::SeqCst) || code.is_some()) && stopping.is_none() {
+                    stopping = Some(Instant::now());
+                    if let Some(pid) = self.pid {
+                        crate::supervisor::signal_owned_group(pid, crate::supervisor::HANGUP);
+                    } else {
+                        let _ = self.child.kill();
+                    }
+                }
+                if let Some(started) = stopping {
+                    if !terminated && started.elapsed() >= Duration::from_millis(250) {
+                        if let Some(pid) = self.pid {
+                            crate::supervisor::signal_owned_group(pid, crate::supervisor::TERM);
+                        }
+                        terminated = true;
+                    }
+                    if !killed && started.elapsed() >= Duration::from_secs(2) {
+                        if let Some(pid) = self.pid {
+                            crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
+                        } else {
+                            let _ = self.child.kill();
+                        }
+                        killed = true;
+                    }
+                }
+                if code.is_none()
+                    && let Ok(Some(status)) = self.child.try_wait()
+                {
+                    code = Some(status.exit_code());
+                }
+                if code.is_some() && !self.pid.is_some_and(crate::supervisor::owned_group_alive) {
+                    break;
+                }
+                thread::sleep(Duration::from_millis(if killed { 100 } else { 25 }));
+            }
+            finish_exit(
+                self.master,
+                self.exit,
+                self.id,
+                code.unwrap_or(1),
+                self.on_output,
+            )
+        }));
+        if matches!(settled, Ok(Ok(()))) {
+            return true;
+        }
+        self.stop.store(true, Ordering::SeqCst);
+        // Setting stop alone cannot work after this sole loop unwound. Preserve
+        // the SAME Child/Job and actively fulfill termination/reap first.
+        self.reap_after_failure();
+        // If a control object was never attempted, retire it on this same worker
+        // only AFTER reap. None/panic/block is never an exit receipt; do not
+        // repeat the sink, clear the unknown state, or release activity here.
+        let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| drop_master(self.master)));
+        false
+    }
+    fn reap_after_failure(&mut self) {
+        loop {
+            #[cfg(windows)]
+            self._group.terminate();
+            #[cfg(unix)]
+            if let Some(pid) = self.pid {
+                crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
+            }
+            // Trait code can panic as well as return an I/O error. Neither may
+            // unwind away this original owner or falsely confirm cleanup.
+            let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| self.child.kill()));
+            let reaped = matches!(
+                std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| self.child.try_wait())),
+                Ok(Ok(Some(_)))
+            );
+            #[cfg(windows)]
+            let inactive = !self._group.active();
+            #[cfg(unix)]
+            let inactive = !self.pid.is_some_and(crate::supervisor::owned_group_alive);
+            if reaped && inactive {
+                return;
+            }
+            thread::sleep(Duration::from_millis(100));
+        }
+    }
+}
 
 struct PtySession {
     writer: Mutex<Box<dyn std::io::Write + Send>>,
-    /// Kept alive for the session's lifetime; dropping it hangs up the pty.
-    /// `MasterPty` is `Send` but not `Sync`, so it lives behind the mutex.
-    master: Mutex<Box<dyn MasterPty + Send>>,
+    /// The process owner takes and destroys this object before confirming exit.
+    /// Session/resize references share the slot, never an extra master object.
+    master: MasterSlot,
     #[cfg(test)]
     pid: Option<u32>,
     stop: Arc<AtomicBool>,
@@ -120,7 +253,7 @@ impl PtyManager {
         if self.shutting_down.load(Ordering::SeqCst) {
             return Err("应用正在退出，请稍后重试".into());
         }
-        let pair = native_pty_system()
+        let portable_pty::PtyPair { master, slave } = native_pty_system()
             .openpty(size)
             .map_err(|error| format!("cannot open pty: {error}"))?;
 
@@ -148,21 +281,22 @@ impl PtyManager {
         for (name, value) in env {
             builder.env(name.as_str(), value.as_str());
         }
-        let mut reader = pair
-            .master
+        let mut reader = master
             .try_clone_reader()
             .map_err(|error| format!("cannot clone pty reader: {error}"))?;
-        let writer = pair
-            .master
+        let writer = master
             .take_writer()
             .map_err(|error| format!("cannot take pty writer: {error}"))?;
         if stop.load(Ordering::SeqCst) {
             return Err("AUTH_CANCELLED".into());
         }
-        let mut child = pair
-            .slave
+        let mut child = slave
             .spawn_command(builder)
             .map_err(|error| format!("cannot spawn {command} on pty: {error}"))?;
+        // ConPTY's slave shares the control object's inner Arc. Retire it before
+        // the process owner can take the master and claim its destructor ended.
+        drop(slave);
+        let master: MasterSlot = Arc::new(Mutex::new(Some(master)));
         let pid = child.process_id();
         #[cfg(windows)]
         let group = pending_group
@@ -182,7 +316,7 @@ impl PtyManager {
         crate::logging::info("pty", format_args!("spawn: {id} (pid {pid:?})"));
         let exit: ExitLatch = Arc::new((Mutex::new(None), Condvar::new()));
 
-        // The sole owner keeps the Child until reap and process-group cleanup.
+        // The sole owner keeps Child/group and control-master destruction.
         // portable-pty starts a new session/group; signals never use a name or
         // a persisted PID. Closing callers can time out without dropping owner.
         {
@@ -190,57 +324,29 @@ impl PtyManager {
             let stop = stop.clone();
             let id = id.clone();
             let on_output = on_output.clone();
+            let master = master.clone();
             thread::spawn(move || {
                 let _admission = admission;
                 let _group = group;
-                let mut code = None;
-                let mut stopping = None;
-                let mut terminated = false;
-                let mut killed = false;
-                loop {
-                    if (stop.load(Ordering::SeqCst) || code.is_some()) && stopping.is_none() {
-                        stopping = Some(Instant::now());
-                        if let Some(pid) = pid {
-                            crate::supervisor::signal_owned_group(pid, crate::supervisor::HANGUP);
-                        } else {
-                            let _ = child.kill();
-                        }
-                    }
-                    if let Some(started) = stopping {
-                        if !terminated && started.elapsed() >= Duration::from_millis(250) {
-                            if let Some(pid) = pid {
-                                crate::supervisor::signal_owned_group(pid, crate::supervisor::TERM);
-                            }
-                            terminated = true;
-                        }
-                        if !killed && started.elapsed() >= Duration::from_secs(2) {
-                            if let Some(pid) = pid {
-                                crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
-                            } else {
-                                let _ = child.kill();
-                            }
-                            killed = true;
-                        }
-                    }
-                    if code.is_none()
-                        && let Ok(Some(status)) = child.try_wait()
-                    {
-                        code = Some(status.exit_code());
-                    }
-                    if code.is_some() && !pid.is_some_and(crate::supervisor::owned_group_alive) {
-                        break;
-                    }
-                    thread::sleep(Duration::from_millis(if killed { 100 } else { 25 }));
+                let settled = TerminalOwner {
+                    child: child.as_mut(),
+                    _group: &_group,
+                    pid,
+                    stop: &stop,
+                    master: &master,
+                    exit: &exit,
+                    id: &id,
+                    on_output: &on_output,
                 }
-                let code = code.unwrap_or(1);
-                crate::logging::info("pty", format_args!("exit: {id} code {code}"));
-                // The exit sink releases authentication/configuration owners.
-                // Await/close must not consume this session before that cleanup.
-                on_output(serde_json::json!({"id": id, "exit": code}));
-                if let Ok(mut slot) = exit.0.lock() {
-                    *slot = Some(code);
+                .settle();
+                if !settled {
+                    // Reap/inactivity was fulfilled first; uncertain master or
+                    // receipt still retains this original owner and admission.
+                    crate::logging::info("pty", format_args!("terminal cleanup unconfirmed: {id}"));
+                    loop {
+                        thread::park();
+                    }
                 }
-                exit.1.notify_all();
             });
         }
 
@@ -265,7 +371,7 @@ impl PtyManager {
 
         let session = Arc::new(PtySession {
             writer: Mutex::new(writer),
-            master: Mutex::new(pair.master),
+            master,
             #[cfg(test)]
             pid,
             stop,
@@ -303,6 +409,8 @@ impl PtyManager {
             .master
             .lock()
             .map_err(|_| "pty master lock poisoned".to_string())?
+            .as_ref()
+            .ok_or_else(|| "登录终端正在结束，请等待".to_string())?
             .resize(PtySize {
                 rows,
                 cols,
@@ -382,6 +490,21 @@ impl PtyManager {
             {
                 sessions.remove(&id);
             }
+        }
+    }
+}
+
+impl Drop for PtyManager {
+    fn drop(&mut self) {
+        self.shutting_down.store(true, Ordering::SeqCst);
+        // Never synchronously destroy the control master or wait here. The
+        // process owner retains its own slot and admission through real cleanup.
+        let sessions = self
+            .sessions
+            .get_mut()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        for session in sessions.values() {
+            session.stop.store(true, Ordering::SeqCst);
         }
     }
 }
@@ -495,6 +618,9 @@ pub async fn pty_close(app: AppHandle, id: String) -> Result<Option<u32>, String
 
 #[cfg(all(test, windows))]
 mod windows_tests;
+
+#[cfg(test)]
+mod master_owner_tests;
 
 #[cfg(test)]
 mod tests {

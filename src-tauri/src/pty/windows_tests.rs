@@ -18,7 +18,8 @@ fn cancelling_a_windows_terminal_confirms_job_end_without_an_agent() {
     let dir = tempfile::tempdir().unwrap();
     let marker = dir.path().join("terminal-started");
     let executable = crate::windows_process::helper_executable().unwrap();
-    let manager = PtyManager::new();
+    let manager = Arc::new(PtyManager::new());
+    let (sink, mut cursor) = CursorConsumer::new(true);
     terminal_cancel_phase("spawn.enter", started);
     let id = manager
         .spawn(
@@ -32,10 +33,11 @@ fn cancelling_a_windows_terminal_confirms_job_end_without_an_agent() {
                 pixel_width: 0,
                 pixel_height: 0,
             },
-            Arc::new(|_| {}),
+            sink,
         )
         .unwrap();
     terminal_cancel_phase("spawn.return", started);
+    cursor.start(Arc::downgrade(&manager), id.clone(), true);
     terminal_cancel_phase("marker.wait.enter", started);
     let deadline = Instant::now() + Duration::from_secs(5);
     while !marker.is_file() {
@@ -65,7 +67,15 @@ fn cancelling_a_windows_terminal_confirms_job_end_without_an_agent() {
     terminal_cancel_phase("registry.check.enter", started);
     assert!(!manager.lock().unwrap().contains_key(&id));
     terminal_cancel_phase("registry.check.return", started);
-    // These are the original successful-path owners, in their original drop order.
+    // Keep the test-only legal cursor consumer alive through real master Drop.
+    cursor.finish();
+    cursor.phase("original-positive.fixture.complete", true, started);
+    {
+        let state = cursor.capture.lock().unwrap();
+        assert!(!state.failed && state.pending == 0);
+        assert_eq!(state.replies, state.queries);
+    }
+    // Original successful-path references retain their original drop order.
     terminal_cancel_phase("session.drop.enter", started);
     drop(session);
     terminal_cancel_phase("session.drop.return", started);
@@ -81,8 +91,9 @@ fn cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated() {
     );
 }
 
-// Independent A/B diagnostics. The original ignored body and four assertions
-// above remain byte-for-byte unchanged; neither failed original run is replaced.
+// Independent A/B diagnostics. The four original assertions above are retained;
+// the positive body now uses the same legal cursor consumer. Both prior failed
+// runs remain evidence and are not replaced by these new observations.
 #[derive(Default)]
 struct CursorCapture {
     tail: Vec<u8>,
@@ -412,4 +423,134 @@ fn terminal_cursor_query_limits_are_failures_not_successful_truncation() {
     assert!(!state.failed);
     assert_eq!(state.feed(b"x"), 0);
     assert!(state.failed);
+}
+
+// New manual diagnostic for the master-owner contract. Old CI2 A/B arms above
+// remain unchanged. This body deliberately stays alive after a valid unknown
+// observation so the exact isolation owner must prove bounded external cleanup.
+#[derive(serde::Serialize)]
+struct BoundedUnknownReceipt {
+    case: &'static str,
+    marker_observed: bool,
+    cursor_queries: usize,
+    cursor_replies: usize,
+    cursor_pending: usize,
+    cursor_failed: bool,
+    close_returned_error: bool,
+    close_elapsed_millis: u128,
+    registry_retained: bool,
+    registry_reference_count: usize,
+    exit_receipt_absent: bool,
+    exit_frames_observed: usize,
+    master_transferred: bool,
+    activity_blocked: bool,
+    stop_requested: bool,
+    group_owner_known: bool,
+    group_inactive: bool,
+    process_not_running: bool,
+}
+#[test]
+#[ignore = "new bounded-unknown body; only its manual exact isolation wrapper"]
+fn terminal_master_drop_retains_bounded_unknown_child() {
+    use crate::platform_tests::windows_conpty::Case;
+    use std::sync::atomic::AtomicUsize;
+    crate::platform_tests::windows_conpty::entered(Case::TerminalMasterBoundedUnknown);
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("terminal-started");
+    let executable = crate::windows_process::helper_executable().unwrap();
+    let manager = Arc::new(PtyManager::new());
+    let exits = Arc::new(AtomicUsize::new(0));
+    let observed_exits = exits.clone();
+    let (observe_cursor, mut cursor) = CursorConsumer::new(false);
+    let sink: PtySink = Arc::new(move |frame| {
+        if frame.get("exit").is_some() {
+            observed_exits.fetch_add(1, Ordering::SeqCst);
+        }
+        observe_cursor(frame);
+    });
+    let id = manager
+        .spawn(
+            executable.to_str().unwrap(),
+            &["wait".into(), marker.to_string_lossy().into_owned()],
+            &[],
+            directory.path(),
+            PtySize::default(),
+            sink,
+        )
+        .unwrap();
+    cursor.start(Arc::downgrade(&manager), id.clone(), false);
+    let query_deadline = Instant::now() + Duration::from_secs(5);
+    while cursor.capture.lock().unwrap().queries == 0 && Instant::now() < query_deadline {
+        thread::sleep(Duration::from_millis(10));
+    }
+    // No extra PtySession Arc crosses close: the registry is the only UI owner.
+    let pid = manager.lock().unwrap().get(&id).unwrap().pid.unwrap();
+    let began = Instant::now();
+    let close = manager.close(&id);
+    let close_elapsed = began.elapsed();
+    let (registry_retained, refs, exit_absent, transferred, stop_requested) = {
+        let sessions = manager.lock().unwrap();
+        match sessions.get(&id) {
+            Some(session) => (
+                true,
+                Arc::strong_count(session),
+                session.exit.0.try_lock().is_ok_and(|v| v.is_none()),
+                session.master.try_lock().is_ok_and(|v| v.is_none()),
+                session.stop.load(Ordering::SeqCst),
+            ),
+            None => (false, 0, false, false, false),
+        }
+    };
+    let state = cursor.capture.lock().unwrap();
+    let receipt = BoundedUnknownReceipt {
+        case: "TerminalMasterBoundedUnknown",
+        marker_observed: marker.is_file(),
+        cursor_queries: state.queries,
+        cursor_replies: state.replies,
+        cursor_pending: state.pending,
+        cursor_failed: state.failed,
+        close_returned_error: close.is_err(),
+        close_elapsed_millis: close_elapsed.as_millis(),
+        registry_retained,
+        registry_reference_count: refs,
+        exit_receipt_absent: exit_absent,
+        exit_frames_observed: exits.load(Ordering::SeqCst),
+        master_transferred: transferred,
+        activity_blocked: crate::managed_update::exclusive().is_err(),
+        stop_requested,
+        group_owner_known: crate::windows_process::owns(pid),
+        group_inactive: !crate::windows_process::active(pid),
+        process_not_running: crate::platform_tests::process_check(pid as i32) != 0,
+    };
+    drop(state);
+    eprintln!(
+        "FARFOLD_TERMINAL_BOUNDED_UNKNOWN {}",
+        serde_json::to_string(&receipt).unwrap()
+    );
+    // A missing query, fast unrelated error, premature exit/sink or extra owner
+    // is not the bounded-unknown observation and must fail before parking.
+    assert!(!receipt.marker_observed && receipt.cursor_queries > 0 && receipt.cursor_queries <= 8);
+    assert!(receipt.cursor_replies == 0 && receipt.cursor_pending == 0 && !receipt.cursor_failed);
+    assert!(
+        receipt.close_returned_error
+            && close_elapsed >= CLOSE_TIMEOUT.saturating_sub(Duration::from_millis(100))
+            && close_elapsed <= CLOSE_TIMEOUT + Duration::from_secs(2)
+    );
+    assert!(receipt.registry_retained && receipt.registry_reference_count == 1);
+    assert!(receipt.exit_receipt_absent && receipt.exit_frames_observed == 0);
+    assert!(receipt.master_transferred && receipt.activity_blocked && receipt.stop_requested);
+    assert!(receipt.group_owner_known && receipt.group_inactive && receipt.process_not_running);
+    eprintln!("FARFOLD_TERMINAL_BOUNDED_UNKNOWN_PARK TerminalMasterBoundedUnknown");
+    // The real owner remains blocked with its ActivityPermit, not a test-held
+    // substitute permit. The existing isolated parent owns this process+Job.
+    loop {
+        thread::park();
+    }
+}
+#[test]
+#[ignore = "manual selected bounded-unknown diagnostic; expected observation is not test pass"]
+fn terminal_master_drop_retains_bounded_unknown_isolated() {
+    crate::platform_tests::windows_conpty::run(
+        crate::platform_tests::windows_conpty::Case::TerminalMasterBoundedUnknown,
+    );
 }
