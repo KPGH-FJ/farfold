@@ -1,6 +1,6 @@
 {
   "kind": "cold-history-installed-and-later-scoped-source-evidence",
-  "recordedAtUtc": "2026-10-18T23:13:07.280865+00:00",
+  "recordedAtUtc": "2026-10-18T23:35:41.099083+00:00",
   "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
   "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
   "sourceScope": {
@@ -38,14 +38,24 @@
     "fourthRun": {
       "id": 39172236277,
       "source": "3845e41457395e4201fdff050b22309c386d2be1",
-      "status": "in_progress",
+      "status": "completed",
       "frontendStep": "success",
-      "rustStep": "in_progress",
-      "installerArtifact": "pending",
+      "rustStep": "cancelled",
+      "installerArtifact": "skipped",
       "watchNaturalExit": 1,
       "watchReason": "API EOF, not CI verdict",
       "subsequentMetadataConfirmedStillRunning": true,
-      "includesLaterSource": false
+      "includesLaterSource": false,
+      "conclusion": "cancelled",
+      "frontendFilesPassed": 602,
+      "frontendTestsPassed": 8014,
+      "rustOkMarkers": 1096,
+      "rustFailedMarkers": 165,
+      "rustIgnoredMarkers": 6,
+      "rustFinalSummary": null,
+      "cancellationCause": "job annotation explicitly exceeded maximum1h0m0s",
+      "specificUnfinishedWaitCause": "unknown",
+      "notFinalRustTotals": true
     }
   },
   "installedApp": {
@@ -90,7 +100,7 @@
     "availableSpaceIsPointObservation": true
   },
   "notVerified": [
-    "Later a371/Windows9 source full7/candidate/install/formal checks",
+    "Later a371/Windows9/f7/bfd5/025 source full7/candidate/install/formal checks",
     "Actual waiting cancellation, narrow/dark/burst UI",
     "AVIF/FLAC actual default OS open or real Agent media",
     "Global active Agent/output transport backpressure, RSS and long-run governance",
@@ -352,6 +362,81 @@
       "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/source-checkpoint-push.json",
       "sha256": "249d8b9d32ffb8d3f242d3599937b8d98a90149ab4625bd54b2c943db423891f",
       "bytes": 728
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/metadata-at-deadline.json",
+      "sha256": "1b3f2db9e6d82473802868aa5adbff840400c0b165f47e24269feb8f55f05d9b",
+      "bytes": 2824
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/final-log-fetch-receipt.json",
+      "sha256": "fd5f8cfd72baf50e6a8495308b9da68634206a18c84ba15deed3cb70c2662065",
+      "bytes": 115
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/raw-classification-corrected.json",
+      "sha256": "5e805b4bd62f4834ef7b559cd2e885aac122049f4d18272654dcb623f771fc5c",
+      "bytes": 20074
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/check-annotations.json",
+      "sha256": "bc282a7ecccc6711fa077bb91cdd199897f929f4bdf0c3327190aa8759798264",
+      "bytes": 1210
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/global-event-boundary/terminal-replay-retirement/execution/verification.json",
+      "sha256": "bbdf9035240554518e33da5b0c05fb37b2b8758c278e27347e485d1dfb0ab3f1",
+      "bytes": 7497
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/global-event-boundary/terminal-replay-retirement/execution/parent-independent-final-review.json",
+      "sha256": "baee6d1ebe31380aa731de66c33f0ddb95e0c818bc8507768a7731df67613c7c",
+      "bytes": 5245
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/parent-independent-final-review.json",
+      "sha256": "af02de7ed1e7ad9ffe20c5e87548ea64b2cb127ee6b569b821cd0794cbbcbde1",
+      "bytes": 5040
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/run1/verification.json",
+      "sha256": "186145caf134dd0b2eca7209dca7db50827e3ce19424e9811089f0127df916e1",
+      "bytes": 459570
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/execution-completion.json",
+      "sha256": "bf5235ebd873de8503fe98c2ec591b2b1ded041c521dfa502aa14570f5dce13e",
+      "bytes": 8309
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/source-freeze-final.json",
+      "sha256": "7b3e01f612ab9cf465d51f4483559fa26b27c91fd08b43d7c84c028299714e91",
+      "bytes": 230584
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/checkpoint-push.json",
+      "sha256": "42fbd524abe77b1a35c9cd14c58914f18f413c99c3bd30f2747cc78f0261cc9a",
+      "bytes": 384
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/parent-independent-final-review.json",
+      "sha256": "2efe2e05732d512c49565355866cf9b5d0df555c0177bdbf710b438ba09677dd",
+      "bytes": 2778
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/verification.json",
+      "sha256": "5951ad625832f0e5184a9057006d04893a02a057779ecf8a63237cceaa03031f",
+      "bytes": 9276
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/execution-completion.json",
+      "sha256": "95669a8cac85646e0ed6f01d5f9e10a69f30893f9e94157787ad47ad241d6b4f",
+      "bytes": 5996
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/source-freeze-final.json",
+      "sha256": "1aab8b31db544175bc9d1effa2a31d885f16d9cbb6f7cfd2cbce7bf2f65a722e",
+      "bytes": 8919
     }
   ],
   "formalWindow": {
@@ -388,6 +473,84 @@
     "installed": false,
     "realNTFS": null,
     "deterministicPageInterleaving": null,
-    "WindowsCheckpoint": "233f3eca9e0011eba1707e3ee18cc0eee30b8718"
+    "WindowsCheckpoint": "233f3eca9e0011eba1707e3ee18cc0eee30b8718",
+    "terminalReplay": {
+      "checkpoint": "f7debe74b6957a68b263da6e28bab5da28bf2983",
+      "scope": "Unbound staging stops after open promise settles; existing bound live/loss paths retained",
+      "actualRedFailed": 1,
+      "actualRedControlsPassed": 32,
+      "actualGreenFiles": 11,
+      "actualGreenPassed": 152,
+      "typeAndFormatExit": 0,
+      "full7": null,
+      "installed": false
+    },
+    "ci4AuthArchive": {
+      "checkpoint": "bfd5e7875c07070a75a8291ea2f1a4522246d4e2",
+      "sourceFiles": 3,
+      "scope": "Cross-platform Node program-name guard, raw ZIP backslash policy before normalization, and one local distinct-program negative fixture.",
+      "actualChecks": 6,
+      "hostTestsPassed": 37,
+      "hostStrictClippyExit": 0,
+      "windowsCrossAllTargetsStrictClippyExit": 0,
+      "windowsRuntime": false,
+      "full7": null,
+      "installed": false,
+      "review": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/parent-independent-final-review.json",
+        "sha256": "af02de7ed1e7ad9ffe20c5e87548ea64b2cb127ee6b569b821cd0794cbbcbde1",
+        "bytes": 5040
+      },
+      "verification": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/run1/verification.json",
+        "sha256": "186145caf134dd0b2eca7209dca7db50827e3ce19424e9811089f0127df916e1",
+        "bytes": 459570
+      },
+      "completion": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/execution-completion.json",
+        "sha256": "bf5235ebd873de8503fe98c2ec591b2b1ded041c521dfa502aa14570f5dce13e",
+        "bytes": 8309
+      },
+      "checkpointPush": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/ci4-auth-archive-fixes/checkpoint-push.json",
+        "sha256": "42fbd524abe77b1a35c9cd14c58914f18f413c99c3bd30f2747cc78f0261cc9a",
+        "bytes": 384
+      },
+      "limits": [
+        "Original CI4 Windows failures remain immutable; host/cross checks are not a real Windows rerun.",
+        "Other failed cases and unfinished waits remain open."
+      ]
+    },
+    "ci4FixturePortability": {
+      "checkpoint": "025f75de79a73f6c17b934a1c0f1ff8ec25af687",
+      "sourceFiles": 6,
+      "scope": "Test-only portability corrections; production recipes prefix and original assertions retained.",
+      "actualChecks": 7,
+      "hostTestsPassed": 96,
+      "hostStrictClippyExit": 0,
+      "windowsCrossAllTargetsStrictClippyExit": 0,
+      "windowsRuntime": false,
+      "full7": null,
+      "installed": false,
+      "review": {
+        "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/parent-independent-final-review.json",
+        "sha256": "2efe2e05732d512c49565355866cf9b5d0df555c0177bdbf710b438ba09677dd",
+        "bytes": 2778
+      },
+      "verification": {
+        "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/verification.json",
+        "sha256": "5951ad625832f0e5184a9057006d04893a02a057779ecf8a63237cceaa03031f",
+        "bytes": 9276
+      },
+      "completion": {
+        "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/execution-completion.json",
+        "sha256": "95669a8cac85646e0ed6f01d5f9e10a69f30893f9e94157787ad47ad241d6b4f",
+        "bytes": 5996
+      },
+      "limits": [
+        "Root reports checkpoint pushed; local committed file bytes checked against the sealed six-file review.",
+        "No claim that all165 CI4 failure markers are fixed."
+      ]
+    }
   }
 }
