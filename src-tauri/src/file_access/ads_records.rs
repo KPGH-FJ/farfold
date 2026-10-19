@@ -209,6 +209,23 @@ impl Inventory {
             directory: false,
         })
     }
+    // Test-registered carrier component consumes the exact admitted inventory.
+    // Default is canonically empty; named DATA raw UTF-16 is retained verbatim.
+    #[cfg(all(windows, test))]
+    pub(super) fn carrier_data(&self) -> super::material_carrier_records::Expected {
+        self.entries
+            .iter()
+            .map(|(key, value)| {
+                (
+                    match key {
+                        Key::Default => Vec::new(),
+                        Key::Named(raw) => raw.clone(),
+                    },
+                    value.size,
+                )
+            })
+            .collect()
+    }
     pub(crate) fn default_size(&self) -> Option<u64> {
         self.entries.get(&Key::Default).map(|stream| stream.size)
     }

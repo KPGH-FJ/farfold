@@ -62,3 +62,12 @@ pub(crate) struct Stamp {
 pub(crate) fn same_object(left: &File, right: &File) -> io::Result<bool> {
     Ok(stamp(left)?.identity == stamp(right)?.identity)
 }
+
+#[cfg(test)]
+mod material_backup_io;
+#[cfg(test)]
+mod material_carrier_records;
+#[cfg(all(windows, test))]
+pub(crate) use material_carrier_records::Error as CarrierFailure;
+#[cfg(all(windows, test))]
+pub(crate) use windows::{CarrierReceipt, CarrierRequest, CarrierRetirement, carrier_roundtrip};

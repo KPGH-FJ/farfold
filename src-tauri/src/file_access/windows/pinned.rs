@@ -31,7 +31,7 @@ fn final_path(file: &File, flags: u32) -> io::Result<String> {
     }
     String::from_utf16(&text[..length as usize]).map_err(|_| invalid())
 }
-fn local_guid(file: &File) -> io::Result<PathBuf> {
+pub(super) fn local_guid(file: &File) -> io::Result<PathBuf> {
     // Microsoft documents that network shares have no volume GUID path. Query
     // this actual handle, never infer locality from FILE_TYPE_DISK or a letter.
     let path = final_path(file, FILE_NAME_NORMALIZED | VOLUME_NAME_GUID)?;

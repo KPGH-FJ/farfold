@@ -360,6 +360,7 @@ pub(crate) fn run_if_requested() -> Option<i32> {
     if args.next().as_deref() != Some(OsStr::new(HELPER)) {
         return None;
     }
+    let mut failure_phase = "准备启动参数";
     let result = (|| {
         let name = args.next().ok_or_else(|| io::Error::other("missing job"))?;
         let terminal = match args.next().as_deref() {
@@ -371,12 +372,14 @@ pub(crate) fn run_if_requested() -> Option<i32> {
             .next()
             .filter(|arg| !arg.is_empty())
             .ok_or_else(|| io::Error::other("missing program"))?;
+        failure_phase = "加入进程保护";
         enter_job(&name)?;
         let mut command = Command::new(Path::new(&program));
         if !terminal {
             use std::os::windows::process::CommandExt;
             command.creation_flags(CREATE_NO_WINDOW);
         }
+        failure_phase = "执行或等待程序";
         let status = command
             .args(args)
             .stdin(Stdio::inherit())
@@ -387,8 +390,15 @@ pub(crate) fn run_if_requested() -> Option<i32> {
     })();
     Some(match result {
         Ok(code) => code,
-        Err(_) => {
+        Err(error) => {
             eprintln!("无法启动所选程序");
+            // Only a fixed phase and numeric system code; never selected argv,
+            // paths, environment values or credential-bearing diagnostics.
+            if let Some(code) = error.raw_os_error() {
+                eprintln!("{failure_phase}时失败，系统错误：{code}");
+            } else {
+                eprintln!("{failure_phase}时失败，系统未提供错误码");
+            }
             126
         }
     })

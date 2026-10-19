@@ -119,3 +119,7 @@ impl Owner {
 #[cfg(test)]
 #[path = "material_owner_tests.rs"]
 mod tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_carrier_owner_tests.rs"]
+mod carrier_tests;

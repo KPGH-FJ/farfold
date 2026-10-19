@@ -591,3 +591,14 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+mod material_carrier;
+#[cfg(test)]
+mod material_carrier_native;
+#[cfg(test)]
+mod material_restore;
+#[cfg(test)]
+pub(crate) use material_carrier::{
+    CarrierReceipt, CarrierRequest, CarrierRetirement, carrier_roundtrip,
+};
