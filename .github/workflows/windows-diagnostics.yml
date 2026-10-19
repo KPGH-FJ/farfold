@@ -786,7 +786,7 @@ jobs:
           $raw = Join-Path $PWD 'windows-diagnostics-raw'
           $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
           $head = (& git rev-parse HEAD).Trim()
-          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          if ($LASTEXITCODE -ne 0 -or $head -ne $env:GITHUB_SHA -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
           $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
           $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
           if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
