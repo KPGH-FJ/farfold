@@ -303,7 +303,7 @@ export class SessionForks {
         requireReadableHistory(
           parent.agentId,
           opened,
-          buffered.prefix(openToken),
+          buffered.prefixEvents(openToken),
           buffered.complete(openToken),
           replayLost,
         );

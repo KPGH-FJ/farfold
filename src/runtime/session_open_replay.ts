@@ -77,7 +77,7 @@ export class SessionOpenReplay {
     requireReadableHistory(
       agentId,
       result,
-      this.buffered.prefix(this.token),
+      this.buffered.prefixEvents(this.token),
       this.complete,
       this.lost,
     );

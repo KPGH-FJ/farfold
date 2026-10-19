@@ -26,6 +26,19 @@ export class HistoryReplayBuffer {
     return end === undefined ? [] : this.events.slice(0, end);
   }
 
+  /** Borrow only the first acknowledged prefix for a synchronous observer.
+   * Capture this array and boundary now: later pushes/clear/repeated markers
+   * cannot change this finite view. It grants no event mutation authority. */
+  prefixEvents(token: string): Iterable<unknown> {
+    const events = this.events;
+    const end = this.boundaries.get(token) ?? 0;
+    return {
+      *[Symbol.iterator]() {
+        for (let index = 0; index < end; index++) yield events[index];
+      },
+    };
+  }
+
   take(token?: string): { prefix: unknown[]; following: unknown[] } {
     const end =
       token === undefined

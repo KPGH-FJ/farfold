@@ -21,10 +21,12 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads } from "./sessions";
+import { HistoryReplayBuffer } from "./history_replay";
 import { STRINGS } from "./strings";
 
 afterEach(() => {
   vi.useRealTimers();
+  vi.restoreAllMocks();
   h.invoke.mockReset();
 });
 
@@ -477,3 +479,74 @@ it("same owner token with opaque extra fields is raw and cannot acknowledge hist
   expect(renderSearchableRaw(raw)).toContain("OPAQUE_MARKER_EXTRA");
   await threads.close(s.key);
 });
+
+it("rejects a non-coercible JSON tool field before replacing prior readable history", async () => {
+  const native = "noncoercible-history-owner";
+  const key = `wire-raw-fidelity:/replay:${native}`;
+  const w = wireReplay(native);
+  const prior = threads.thread(key)!;
+  const priorItem = {
+    kind: "agent" as const,
+    id: "owned-prior",
+    text: "OWNED_PRIOR_BODY",
+    streaming: false,
+    time: 0,
+  };
+  prior.items.push(priorItem);
+  const rejected = expect(w.promise).rejects.toThrow();
+  // These are ordinary JSON fields, not a hostile getter/function fixture.
+  const malformed = JSON.parse('{"toString":null,"valueOf":null}');
+  w.deliver({ update: { sessionUpdate: "tool_call", toolCallId: malformed } });
+  w.deliver(message("readable-after-malformed", "OWNED_NEW_BODY"));
+  w.deliver(w.marker());
+  w.finish();
+  try {
+    await rejected;
+    expect(threads.thread(key)).toBe(prior);
+    expect(prior.items).toEqual([priorItem]);
+    expect(prior.items[0]).toBe(priorItem);
+    expect(prior.openError).toBeTruthy();
+  } finally {
+    await threads.close(key);
+  }
+});
+
+it.each([false, true])(
+  "borrows the acknowledged precheck prefix without calling the copying prefix API (response first=%s)",
+  async (responseFirst) => {
+    const copying = vi.spyOn(HistoryReplayBuffer.prototype, "prefix");
+    const w = wireReplay(`borrowed-prefix-${responseFirst}`);
+    const unknown = {
+      sessionUpdate: "owned_borrow_future",
+      exact: [null, "OWNED_PREFIX_RAW", false],
+    };
+    if (responseFirst) {
+      w.finish();
+      await Promise.resolve();
+    }
+    w.deliver(message("old", "OWNED_PREFIX_BODY"));
+    w.deliver({ update: unknown });
+    w.deliver(w.marker());
+    w.deliver(message("live", "OWNED_FOLLOWING_BODY"));
+    w.deliver(w.marker());
+    if (!responseFirst) w.finish();
+    const state = await w.promise;
+    const copies = copying.mock.calls.length;
+    try {
+      expect(
+        state.items.filter((i) => i.kind === "agent").map((i) => i.text),
+      ).toEqual(["OWNED_PREFIX_BODY", "OWNED_FOLLOWING_BODY"]);
+      expect(
+        state.items.some((i) => i.kind === "raw" && i.update === unknown),
+      ).toBe(true);
+      expect(state.items.find((i) => i.kind === "agent")).toMatchObject({
+        time: 0,
+        streaming: false,
+      });
+    } finally {
+      await threads.close(state.key);
+    }
+    // This observes only one avoidable array-copy API, not all allocations/RSS.
+    expect(copies).toBe(0);
+  },
+);

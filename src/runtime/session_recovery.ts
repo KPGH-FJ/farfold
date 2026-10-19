@@ -34,7 +34,7 @@ export function historyFailureKey(error: unknown): string | undefined {
 export function requireReadableHistory(
   agentId: string,
   result: OpenResult,
-  buffered: unknown[],
+  buffered: Iterable<unknown>,
   complete: boolean,
   lost: boolean,
 ): void {
