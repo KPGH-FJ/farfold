@@ -87,6 +87,19 @@ fn optional_pointer(
     }
 }
 impl Scope {
+    pub(super) fn offline_program_origin(&self) -> Result<super::windows_offline_program::Origin> {
+        self.verify()?;
+        // All four facts come from these SAME live held directories, including
+        // common_parent. No later lookup reconstructs a missing parent.
+        let value = super::windows_offline_program::Origin::capture([
+            &self.root,
+            &self.git,
+            &self.common,
+            &self.common_parent,
+        ])?;
+        self.verify()?;
+        Ok(value)
+    }
     pub fn open(path: &Path) -> Result<Self> {
         let selected = PinnedPath::directory(path).map_err(failure)?;
         let mut found = None;

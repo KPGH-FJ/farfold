@@ -10,6 +10,14 @@ fn path(s: &str) -> bool {
 }
 pub(super) fn recovery(r: &SavedRecovery) -> bool {
     let v = &r.receipt;
+    #[cfg(windows)]
+    if r.windows_program_origin.as_ref().is_some_and(|origin| {
+        origin
+            .matches(&r.source.original.identity, &r.receipt.retained_path)
+            .is_err()
+    }) {
+        return false;
+    }
     id(&r.operation_id)
         && r.source.valid()
         && r.source.archive.id == v.archive_id

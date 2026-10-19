@@ -189,6 +189,26 @@ impl Artifacts {
         }
         Ok(observed)
     }
+    #[cfg(windows)]
+    pub(super) fn finite_bundle(
+        &mut self,
+        expected: &Expected<'_>,
+        cancel: &AtomicBool,
+    ) -> Result<super::super::git::Input> {
+        let before = self.read_verified(expected, cancel)?;
+        let mut file = self
+            .bundle
+            .opened
+            .file()
+            .try_clone()
+            .map_err(|_| error("unavailable"))?;
+        file.rewind().map_err(|_| error("recoveryChanged"))?;
+        let input = super::super::git::Input::from_file(file, MAX_BYTES, cancel)?;
+        if self.read_verified(expected, cancel)? != before {
+            return Err(error("recoveryChanged"));
+        }
+        Ok(input)
+    }
     pub(super) fn bundle_path(&self) -> PathBuf {
         self.bundle.opened.path()
     }

@@ -25,6 +25,9 @@ use std::{
 #[path = "recovery_artifact.rs"]
 mod artifact;
 #[cfg(windows)]
+#[path = "private_offline_graph_windows.rs"]
+mod offline_graph;
+#[cfg(windows)]
 #[path = "private_bare_windows.rs"]
 mod private_bare;
 #[cfg(windows)]
@@ -54,6 +57,13 @@ pub(super) struct SavedRecovery {
     pub directory_stamp: Stamp,
     pub bundle_stamp: FileIdentity,
     pub manifest_stamp: FileIdentity,
+    #[cfg(windows)]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "super::windows_offline_program::deserialize_optional"
+    )]
+    pub windows_program_origin: Option<super::windows_offline_program::Origin>,
 }
 fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
     let mut c = git::command(root, args)?;
@@ -736,6 +746,12 @@ pub(super) fn build(
         directory_stamp,
         bundle_stamp: observed.bundle_identity,
         manifest_stamp: observed.manifest_identity,
+        #[cfg(windows)]
+        windows_program_origin: Some({
+            let origin = first_owner.imported.offline_program_origin()?;
+            origin.matches(&saved.original.identity, &saved.archive.retained_path)?;
+            origin
+        }),
     })
 }
 pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manifest> {
@@ -771,6 +787,10 @@ pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manif
     {
         return Err(error("recoveryInvalid"));
     }
+    #[cfg(windows)]
+    // Additional Git-graph evidence only. Full material restoration below is
+    // still required, with every existing Manifest1/profile/mutation gate.
+    offline_graph::verify(saved, &mut artifacts, &m, cancel)?;
     let t = tempfile::tempdir().map_err(|_| error("unavailable"))?;
     recover_into(
         &bundle,

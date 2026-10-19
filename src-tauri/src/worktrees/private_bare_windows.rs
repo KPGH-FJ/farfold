@@ -36,6 +36,12 @@ pub(super) struct Imported {
     owner: Context,
 }
 impl Imported {
+    pub(super) fn offline_program_origin(
+        &self,
+    ) -> Result<super::super::windows_offline_program::Origin> {
+        self.owner.verify()?;
+        self.owner.source.scope.offline_program_origin()
+    }
     // Verified borrowed provenance for one fixed private graph consumer.
     // No Command or arbitrary destination authority leaves this owner.
     pub(super) fn observed(&self) -> Result<(&PinnedPath, &PinnedPath)> {

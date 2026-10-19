@@ -31,6 +31,21 @@ struct WindowsIdentity {
     volume: [u8; 8],
     file_id: [u8; 16],
 }
+
+#[cfg(windows)]
+impl Stamp {
+    // Inspect the tagged persisted native form without opening a disappeared
+    // source path or truncating a Windows ID into the historical Unix shape.
+    pub(super) fn windows_identity(&self) -> Option<crate::file_access::Identity> {
+        match &self.0 {
+            PlatformStamp::Windows(value) => Some(crate::file_access::Identity {
+                device: u64::from_le_bytes(value.windows.volume),
+                inode: u128::from_le_bytes(value.windows.file_id),
+            }),
+            PlatformStamp::Unix(_) => None,
+        }
+    }
+}
 #[cfg(windows)]
 pub(super) fn pinned_stamp(pin: &crate::file_access::PinnedPath) -> Result<Stamp> {
     let id = pin.identity();

@@ -18,6 +18,8 @@ mod storage;
 #[cfg(windows)]
 mod windows_git;
 #[cfg(windows)]
+mod windows_offline_program;
+#[cfg(windows)]
 mod windows_scope;
 #[cfg(all(windows, test))]
 mod windows_tests;
