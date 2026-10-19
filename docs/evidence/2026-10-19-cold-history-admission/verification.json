@@ -1,6 +1,6 @@
 {
   "kind": "cold-history-installed-and-later-scoped-source-evidence",
-  "recordedAtUtc": "2026-10-18T23:35:41.099083+00:00",
+  "recordedAtUtc": "2026-10-19T00:26:07.708238+00:00",
   "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
   "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
   "sourceScope": {
@@ -100,7 +100,7 @@
     "availableSpaceIsPointObservation": true
   },
   "notVerified": [
-    "Later a371/Windows9/f7/bfd5/025 source full7/candidate/install/formal checks",
+    "Later a371/Windows9/f7/bfd5/025/b3/aa7 source full7/candidate/install/formal checks",
     "Actual waiting cancellation, narrow/dark/burst UI",
     "AVIF/FLAC actual default OS open or real Agent media",
     "Global active Agent/output transport backpressure, RSS and long-run governance",
@@ -437,6 +437,46 @@
       "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/fixture-implementation-r1/source-freeze-final.json",
       "sha256": "1aab8b31db544175bc9d1effa2a31d885f16d9cbb6f7cfd2cbce7bf2f65a722e",
       "bytes": 8919
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/material-version-preparation-r5/implementation/source-freeze-final-r2.json",
+      "sha256": "08750a32c862730984b5568c101029c5d867eb62a4e8b3b79065a60a63eea29c",
+      "bytes": 9034
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/material-version-preparation-r5/implementation/verification-final.json",
+      "sha256": "5b4abb2b2b06536c9cce043c0aac1699d7d5dbe992a4b54985d917ebb092f007",
+      "bytes": 13428
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/material-version-preparation-r5/implementation/parent-independent-final-review.json",
+      "sha256": "df144505d018f4ec7d2aa72d13e7a68e5bc4a575e9820d5103834ac5dca254b3",
+      "bytes": 1996
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/material-version-preparation-r5/implementation/independent-audio-final-review/review.json",
+      "sha256": "e0b3bed975d5835e9471dedd2e1089aca036766d5c19de91f24d86a1517c9008",
+      "bytes": 4659
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/reviewed-twenty-preparation-r1/source-freeze-final.json",
+      "sha256": "a8c05d9190cad9f1381cf4673fa1970f830628879a5bf5a9052576308e659bb5",
+      "bytes": 12946
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/reviewed-twenty-preparation-r1/verification.json",
+      "sha256": "bc6587c47707f7fd8bd14b7415cc584c98142a5d40d36210af18a69eed41b3f7",
+      "bytes": 13017
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/reviewed-twenty-preparation-r1/parent-independent-final-review.json",
+      "sha256": "2528a8a9b24f5230c7435003f9ff49ecda0ad82b5f7f330a39e5dc79819343a9",
+      "bytes": 1906
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/independent-diagnosis/reviewed-twenty-preparation-r1/execution-completion.json",
+      "sha256": "0d66ffab4d114a2eace02dd7c2326d915e95a9663c08d3bb439ee2d5482de2f0",
+      "bytes": 1367
     }
   ],
   "formalWindow": {
@@ -550,6 +590,44 @@
       "limits": [
         "Root reports checkpoint pushed; local committed file bytes checked against the sealed six-file review.",
         "No claim that all165 CI4 failure markers are fixed."
+      ]
+    },
+    "recursiveBudgetAndPartialMaterial": {
+      "checkpoint": "b3b089e75dcc8e110778ccc45f6e967c5b603cbb",
+      "sourceFiles": 11,
+      "actualRedControlsPassed": 2,
+      "actualRedFailed": 1,
+      "actualGreenProfilePassed": 8,
+      "worktreePassedIncludingProfile": 109,
+      "fileAccessPassed": 12,
+      "strictHostAndWindowsCross": true,
+      "profile": "WindowsDefaultDataV1",
+      "completeMaterial": false,
+      "WindowsRuntime": null,
+      "full7": null,
+      "installed": false,
+      "limits": [
+        "ADS/EA/security complete metadata, mutations and independent recovery remain internal unfinished.",
+        "No atomic snapshot or measured peakRSS proof."
+      ]
+    },
+    "directoryClassificationAndFixtureDiagnostics": {
+      "checkpoint": "aa7f7544142b29588d5c27b57f7461971f3fedc2",
+      "sourceFiles": 20,
+      "actualHostRedFailed": 1,
+      "actualRedObserved": "unreadable vs expected changed",
+      "actualGreenSuites": 7,
+      "actualGreenPassed": 271,
+      "existingIgnored": 1,
+      "actualPostFormatChecks": 10,
+      "strictHostAndWindowsCross": true,
+      "WindowsRuntime": null,
+      "full7": null,
+      "installed": false,
+      "limits": [
+        "Original4 native-open and11 publication failures unchanged; two added Windows diagnostics only compiled.",
+        "WAIT/ACQUIRED trace does not alone prove continuous lock ownership or original hang cause.",
+        "Not all165 CI4 failure markers fixed."
       ]
     }
   }
