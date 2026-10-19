@@ -19,6 +19,9 @@ export type QueuePause =
 export interface PromptAdmission {
   status: "accepted" | "rejected" | "unknown";
   reason?:
+    | "send_wait_limit"
+    | "send_wait_payload"
+    | "send_wait_cancelled"
     | "work_disabled"
     | "unavailable"
     | "uncertain"

@@ -13,6 +13,10 @@ mod account_logout;
 mod account_observer;
 mod account_query;
 pub(crate) mod account_status;
+mod active_prompt;
+pub mod active_prompt_commands;
+#[cfg(test)]
+mod active_prompt_tests;
 mod api_key_auth;
 mod async_tasks;
 pub(crate) mod auth_compat;
@@ -44,6 +48,8 @@ pub mod plugin_management;
 pub mod preparation;
 pub mod preparation_actions;
 mod process;
+mod prompt_charge;
+mod prompt_wait;
 pub mod pump;
 pub(crate) mod recipes;
 pub(crate) mod service_config;
@@ -139,3 +145,6 @@ mod installed_initialize_probe;
 
 #[cfg(test)]
 mod async_task_wire_tests;
+
+#[cfg(test)]
+mod event_transport_baseline_tests;

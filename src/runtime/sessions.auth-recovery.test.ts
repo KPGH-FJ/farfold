@@ -38,6 +38,7 @@ it("clears a login requirement only after explicit preparation gets a successful
       return {
         cwd: "/account",
         nativeSessionId: "models-after-login",
+        connectionId: "connection-models-after-login",
         resumed: false,
         configOptions: [
           {
@@ -111,20 +112,29 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
   let promptFails = true;
   let sequence = 0;
   const channels = new Map<string, { onmessage: (event: unknown) => void }>();
+  const processEnds = new Map<
+    string,
+    { onmessage: (event: unknown) => void }
+  >();
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "settings_get")
       return args?.key === "autoArchiveDays" ? 30 : null;
     if (command === "session_open") {
       const id = `unauthenticated-models-${++sequence}`;
       channels.set(id, args.channel);
+      processEnds.set(id, args.processEndedChannel);
       return {
         cwd: args.cwd,
         nativeSessionId: id,
+        connectionId: `connection-${id}`,
+        configCheck: { status: "ready", issues: [], current: { choices: [] } },
         resumed: false,
         configOptions: [],
       };
     }
     if (command === "session_prompt") {
+      const receiptId = sequence;
+      args.admissionChannel.onmessage({ receiptId, phase: "offered" });
       const channel = channels.get(args.sessionId)!;
       if (!promptFails)
         channel.onmessage({
@@ -135,6 +145,7 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
         });
       channel.onmessage({
         kind: "turnEnd",
+        promptReceiptId: receiptId,
         ...(promptFails
           ? { error: "AUTH_REQUIRED" }
           : { stopReason: "end_turn" }),
@@ -157,6 +168,30 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
   await controller.start();
   expect(controller.getSnapshot().phase).toBe("failed");
   expect(required()).toBe(true);
+  const first = threads.thread(controller.getSnapshot().threadKey!)!;
+  const history = [...first.items];
+  expect(first.running).toBe(false); // the late admission ACK must not restart the round
+  expect(first.connectionOutcomeUnknown).toBe(true);
+  await controller.prepare(input, true);
+  expect(controller.getSnapshot().threadKey).toBe(first.key);
+  await expect(
+    controller.prepareForAccount({ agentId: input.agentId, cwd: input.cwd }),
+  ).rejects.toBeTruthy();
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_open"),
+  ).toHaveLength(1);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "auth_recheck"),
+  ).toHaveLength(0);
+  // Ordinary loss is still unknown; only the independent local receipt proves
+  // that the exact process ended. The failed request itself is not repaired.
+  channels.get(first.nativeSessionId)!.onmessage({ kind: "connectionLost" });
+  expect(controller.canPrepare()).toBe(false);
+  processEnds
+    .get(first.nativeSessionId)!
+    .onmessage({ connectionId: first.connectionId, closeReason: "unexpected" });
+  expect(first.connectionOutcomeUnknown).toBe(true);
+  expect(first.items).toEqual(history);
 
   await recheckAuthentication(
     { agentId: input.agentId, cwd: input.cwd },
@@ -179,8 +214,16 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
     "AUTH_REQUIRED",
     "other-service",
   );
+  const second = threads.thread(controller.getSnapshot().threadKey!)!;
+  processEnds.get(second.nativeSessionId)!.onmessage({
+    connectionId: second.connectionId,
+    closeReason: "unexpected",
+  });
+  expect(second.connectionOutcomeUnknown).toBe(true);
   await controller.prepare(input, true);
   expect(required()).toBe(true);
+  expect(threads.thread(first.key)).toBe(first);
+  expect(first.connectionOutcomeUnknown).toBe(true);
   promptFails = false;
   await controller.start();
   expect(controller.getSnapshot().phase).toBe("passed");

@@ -63,7 +63,17 @@ pub(super) enum Cancel {
     AlreadyStarting,
     NotFound,
 }
+// Cold entries retain the existing last-Slot-drop semantics. Prompt entries
+// explicitly distinguish pre-offer cancellation from committed/unknown work.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Offer {
+    Cold,
+    Reserved,
+    Cancelled,
+    Committed,
+}
 struct Entry {
+    offer: Offer,
     owner: Owner,
     cost: usize,
     phase: Phase,
@@ -90,6 +100,7 @@ pub(super) struct Waiting {
     owner: Owner,
     id: u64,
     queued: bool,
+    acquired: bool,
     receive: Option<oneshot::Receiver<Result<Permit, Failure>>>,
 }
 #[derive(Clone)]
@@ -209,6 +220,11 @@ impl Admission {
         let Some(authority) = state.windows.remove(window) else {
             return Ok(());
         };
+        for entry in state.entries.values_mut() {
+            if entry.offer == Offer::Reserved && Arc::ptr_eq(&authority, &entry.owner.authority) {
+                entry.offer = Offer::Cancelled;
+            }
+        }
         let ids: Vec<_> = state
             .entries
             .iter()
@@ -235,6 +251,21 @@ impl Admission {
         (s.active, s.waiting, s.retained)
     }
     pub(super) fn enqueue(self: &Arc<Self>, owner: Owner, cost: usize) -> Result<Waiting, Failure> {
+        self.enqueue_kind(owner, cost, Offer::Cold)
+    }
+    pub(super) fn enqueue_prompt(
+        self: &Arc<Self>,
+        owner: Owner,
+        cost: usize,
+    ) -> Result<Waiting, Failure> {
+        self.enqueue_kind(owner, cost, Offer::Reserved)
+    }
+    fn enqueue_kind(
+        self: &Arc<Self>,
+        owner: Owner,
+        cost: usize,
+        offer: Offer,
+    ) -> Result<Waiting, Failure> {
         let policy = self.policy;
         // `cost` MUST include the entire retained request and expected-source
         // snapshot, not just these three labels. No payload copy lives here.
@@ -278,6 +309,7 @@ impl Admission {
         s.entries.insert(
             id,
             Entry {
+                offer,
                 owner: owner.clone(),
                 cost,
                 phase: Phase::Waiting,
@@ -300,6 +332,7 @@ impl Admission {
             owner,
             id,
             queued,
+            acquired: false,
             receive: Some(receive),
         })
     }
@@ -353,7 +386,17 @@ impl Admission {
             return Ok(Cancel::NotFound);
         };
         if e.phase == Phase::Granted {
-            return Ok(Cancel::AlreadyStarting);
+            if e.offer == Offer::Reserved {
+                s.entries.get_mut(&id).expect("same locked entry").offer = Offer::Cancelled;
+                // Capacity still belongs to its actual last pre-offer Slot;
+                // a command already queued in the pump cannot now offer it.
+                return Ok(Cancel::CancelledWaiting);
+            }
+            return Ok(if e.offer == Offer::Cancelled {
+                Cancel::CancelledWaiting
+            } else {
+                Cancel::AlreadyStarting
+            });
         }
         let e = Self::take_waiting(&mut s, id);
         let deliveries = self.grant(&mut s);
@@ -377,13 +420,18 @@ impl Admission {
         e
     }
     fn release(self: &Arc<Self>, id: u64) {
+        self.release_kind(id, false);
+    }
+    fn release_kind(self: &Arc<Self>, id: u64, confirmed: bool) {
         // A poisoned owner is unknown: do not invent released capacity.
         let Ok(mut s) = self.state.lock() else {
             return;
         };
-        let Some(e) = s.entries.remove(&id) else {
+        let Some(e) = s.entries.get(&id) else { return };
+        if (e.offer == Offer::Committed) != confirmed {
             return;
-        };
+        }
+        let e = s.entries.remove(&id).expect("same locked entry");
         assert!(e.phase == Phase::Granted);
         s.active -= 1;
         s.retained -= e.cost;
@@ -395,6 +443,11 @@ impl Admission {
         let mut s = self.state.lock().map_err(|_| Failure::Unavailable)?;
         s.closed = true;
         s.windows.clear();
+        for entry in s.entries.values_mut() {
+            if entry.offer == Offer::Reserved {
+                entry.offer = Offer::Cancelled;
+            }
+        }
         let ids: Vec<_> = s
             .entries
             .iter()
@@ -423,26 +476,93 @@ impl Waiting {
     pub(super) fn queued(&self) -> bool {
         self.queued
     }
+    // Server-issued receipt; cancellation still requires the actual Owner.
+    pub(super) fn receipt_id(&self) -> u64 {
+        self.id
+    }
     #[cfg(test)]
     pub(super) fn id(&self) -> u64 {
         self.id
     }
     pub(super) async fn acquire(mut self) -> Result<Permit, Failure> {
-        self.receive
+        let result = self
+            .receive
             .take()
             .expect("one waiter")
             .await
-            .map_err(|_| Failure::Unavailable)?
+            .map_err(|_| Failure::Unavailable)?;
+        self.acquired = result.is_ok();
+        result
     }
 }
 impl Drop for Waiting {
     fn drop(&mut self) {
+        if self.acquired {
+            return;
+        }
         let _ = self.gate.cancel(self.id, &self.owner);
     }
 }
 impl Drop for Slot {
     fn drop(&mut self) {
         self.gate.release(self.id);
+    }
+}
+
+// A release capability, not an RAII permit. If all process/observer owners
+// disappear without a fact, Drop only destroys this handle. The one existing
+// admission entry stays charged (bounded by active policy), with no body,
+// lifecycle, process-control or self-reference retained in the queue.
+pub(super) struct OfferedSlot {
+    gate: Arc<Admission>,
+    id: u64,
+}
+impl OfferedSlot {
+    pub(super) fn id(&self) -> u64 {
+        self.id
+    }
+    pub(super) fn release(self) {
+        self.gate.release_kind(self.id, true);
+    }
+}
+impl Permit {
+    pub(super) fn belongs_to(&self, gate: &Arc<Admission>) -> bool {
+        Arc::ptr_eq(&self._slot.gate, gate)
+    }
+    pub(super) fn commit_prompt(
+        &self,
+        deadline: tokio::time::Instant,
+    ) -> Result<OfferedSlot, Failure> {
+        let gate = &self._slot.gate;
+        let mut s = gate.state.lock().map_err(|_| Failure::Unavailable)?;
+        if s.closed {
+            return Err(Failure::Closed);
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return Err(Failure::Cancelled);
+        }
+        let e = s.entries.get(&self._slot.id).ok_or(Failure::Invalid)?;
+        if !s
+            .windows
+            .get(&e.owner.window)
+            .is_some_and(|a| Arc::ptr_eq(a, &e.owner.authority))
+        {
+            return Err(Failure::Closed);
+        }
+        if e.offer == Offer::Cancelled {
+            return Err(Failure::Cancelled);
+        }
+        if e.phase != Phase::Granted || e.offer != Offer::Reserved {
+            return Err(Failure::Invalid);
+        }
+        s.entries
+            .get_mut(&self._slot.id)
+            .expect("same locked entry")
+            .offer = Offer::Committed;
+        Ok(OfferedSlot {
+            gate: gate.clone(),
+            id: self._slot.id,
+        })
     }
 }
 

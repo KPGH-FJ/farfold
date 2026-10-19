@@ -232,6 +232,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   serviceContext?: string;
   /** Live process only, not saved in the conversation index. */
   connectionId?: string;
+  /** Separate local process-end channel only; never copied to a new route. */
+  processEndedConnectionId?: string;
   sessionOperations?: import("./session_fork_types").SessionOperations;
   forkOperation?: import("./session_fork_types").ForkOperation;
   sourceError?: boolean;
@@ -248,6 +250,7 @@ export interface ThreadState extends ReportedDetailsOwner {
   identity: "draft" | "established";
   reconnecting: boolean;
   submitting: boolean;
+  promptAdmission?: import("./prompt_admission").PromptAdmissionView | null;
   configuring: boolean;
   configError: string | null;
   workEnabled: boolean;

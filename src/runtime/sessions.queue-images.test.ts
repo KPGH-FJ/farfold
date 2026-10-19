@@ -41,6 +41,7 @@ function scenario(name: string) {
   let fileData = BEFORE;
   let unreadable = false;
   const submitted: PromptBlock[][] = [];
+  let receiptId = 0;
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "draft_attachment_image") {
       expect(args).toEqual({ uri: URI, read: true });
@@ -48,6 +49,10 @@ function scenario(name: string) {
       return { data: fileData, mimeType: "image/png" };
     }
     if (command === "session_prompt") {
+      args.admissionChannel.onmessage({
+        receiptId: ++receiptId,
+        phase: "offered",
+      });
       submitted.push(structuredClone(args.content));
       return { status: "accepted" };
     }
@@ -61,6 +66,8 @@ function scenario(name: string) {
     "fixture",
   );
   state.openError = null;
+  state.connectionId = `connection-${name}`;
+  state.configCheck = { status: "ready", issues: [], current: { choices: [] } };
   const event = (value: unknown) =>
     (
       threads as unknown as {
@@ -83,7 +90,11 @@ function scenario(name: string) {
           content: { type: "text", text: "first response" },
         },
       });
-      event({ kind: "turnEnd", stopReason: "end_turn" });
+      event({
+        kind: "turnEnd",
+        promptReceiptId: receiptId,
+        stopReason: "end_turn",
+      });
     },
   };
 }

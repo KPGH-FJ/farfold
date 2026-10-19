@@ -117,9 +117,13 @@ impl Drop for Fixture {
 async fn official_prompt_usage_and_context_cost_keep_every_field_and_metadata() {
     let mut f = Fixture::new().await;
     let events = f.prompt("complete").await;
+    let receipt = events.last().unwrap()["promptReceiptId"]
+        .as_u64()
+        .filter(|id| *id > 0)
+        .expect("owned prompt receipt");
     assert_eq!(
         events.last().unwrap(),
-        &json!({"kind":"turnEnd","stopReason":"end_turn", "usage":{
+        &json!({"kind":"turnEnd","promptReceiptId":receipt,"stopReason":"end_turn", "usage":{
             "totalTokens":61,"inputTokens":31,"outputTokens":30,"thoughtTokens":7,
             "cachedReadTokens":11,"cachedWriteTokens":13,"_meta":{"future":"token-report"}
         },"meta":{"future":"prompt-report"}})

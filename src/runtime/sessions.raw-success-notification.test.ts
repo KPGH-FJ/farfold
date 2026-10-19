@@ -13,12 +13,45 @@ import { draftPersistence } from "./drafts";
 import { archiveActivity } from "./archive_activity";
 import type { ThreadState } from "./session_types";
 
+type PromptArgs = {
+  sessionId: string;
+  promptToken: string;
+  admissionChannel: { onmessage(value: unknown): void };
+};
+function receipt(args: PromptArgs) {
+  return (
+    h.invoke.mock.calls.findIndex(
+      ([command, value]) => command === "session_prompt" && value === args,
+    ) + 1
+  );
+}
+function offer(args: PromptArgs, phase = "offered") {
+  args.admissionChannel.onmessage({ receiptId: receipt(args), phase });
+}
+function ending(sessionId: string, value: unknown) {
+  if (!value || typeof value !== "object") return value;
+  const e = value as Record<string, unknown>;
+  if (
+    e.kind !== "turnEnd" ||
+    Object.hasOwn(e, "update") ||
+    Object.hasOwn(e, "sessionId")
+  )
+    return value;
+  const args = [...h.invoke.mock.calls]
+    .reverse()
+    .find(
+      ([command, args]) =>
+        command === "session_prompt" && args.sessionId === sessionId,
+    )?.[1] as PromptArgs | undefined;
+  return args ? { ...e, promptReceiptId: receipt(args) } : value;
+}
+
 function event(state: ThreadState, value: unknown) {
   (
     threads as unknown as {
       applyChannelEvent(key: string, value: unknown): void;
     }
-  ).applyChannelEvent(state.key, value);
+  ).applyChannelEvent(state.key, ending(state.nativeSessionId, value));
 }
 
 beforeEach(() => {
@@ -26,8 +59,11 @@ beforeEach(() => {
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   vi.spyOn(archiveActivity, "begin").mockResolvedValue();
   vi.spyOn(archiveActivity, "finish").mockResolvedValue();
-  h.invoke.mockImplementation(async (command: string) => {
-    if (command === "session_prompt") return { status: "accepted" };
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_prompt") {
+      offer(args);
+      return { status: "accepted" };
+    }
     if (command === "desktop_notifications_get")
       return {
         enabled: false,
@@ -63,6 +99,11 @@ it.each(["failed", "completed"] as const)(
     state.openError = null;
     state.identity = "established";
     state.connectionId = `connection-${id}`;
+    state.configCheck = {
+      status: "ready",
+      issues: [],
+      current: { choices: [] },
+    };
     expect(
       await threads.send(state.key, [
         { type: "text", text: "Controlled input" },

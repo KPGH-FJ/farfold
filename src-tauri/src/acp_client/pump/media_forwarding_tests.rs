@@ -29,6 +29,7 @@ fn forward(params: &[Value], live: bool, retain: bool) -> Observed {
     life.ready().unwrap();
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
+        prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),
         opening: None,
         connection_id: CONNECTION.into(),

@@ -11,6 +11,7 @@ use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
+pub use crate::acp_client::pump::ProcessEndedReceipt;
 use crate::acp_client::pump::SessionSink;
 use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
@@ -35,6 +36,7 @@ pub async fn session_open(
     service: Option<crate::credentials::ServiceSelection>,
     open_token: String,
     channel: Channel<Value>,
+    process_ended_channel: Channel<ProcessEndedReceipt>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
 ) -> Result<SessionOpenResult, String> {
     let row = require_agent_row(&app, &agent_id).await?;
@@ -144,6 +146,20 @@ pub async fn session_open(
         ),
     );
     let connection = manager.session_connection(&agent_id, &cwd, &opened.session_id)?;
+    {
+        // Drain-before-register => failed open, never a usable unobservable route.
+        // Register-before-drain => one sink held by that exact SessionEntry.
+        let mut entries = connection.sessions.lock().map_err(|_| "无法读取对话状态")?;
+        let entry = entries
+            .get_mut(&opened.session_id)
+            .ok_or("Agent 连接已结束，请重试")?;
+        entry.observe_process_end(
+            &opened.connection_id,
+            Arc::new(move |receipt| {
+                let _ = process_ended_channel.send(receipt);
+            }),
+        )?;
+    }
     let session_operations = super::session_fork::capabilities(&connection, &opened.session_id);
     let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
@@ -190,6 +206,10 @@ pub struct PromptAdmission {
 fn prompt_failure_admission(error: &str) -> PromptAdmission {
     let reason = match error {
         "WORK_DISABLED" => "work_disabled",
+        "FAILED: PROMPT_QUEUE_FULL" => "send_wait_limit",
+        "FAILED: PROMPT_QUEUE_PAYLOAD" => "send_wait_payload",
+        "FAILED: PROMPT_QUEUE_CANCELLED" => "send_wait_cancelled",
+        "FAILED: PROMPT_QUEUE_UNAVAILABLE" => "unavailable",
         "UNAVAILABLE" | "FAILED: SESSION_UNAVAILABLE" => "unavailable",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN" => "embedded_context_unknown",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED" => "embedded_context_unsupported",
@@ -250,13 +270,20 @@ fn permission_scope_rejection_is_definite_only_with_pre_dispatch_failure_prefix(
 }
 
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 pub async fn session_prompt(
     app: AppHandle,
+    window: tauri::Window,
     agent_id: String,
     cwd: String,
     session_id: String,
     content: Value,
+    connection_id: Option<String>,
+    expected_current: Value,
+    prompt_token: String,
+    admission_channel: Channel<super::active_prompt::Progress>,
 ) -> Result<PromptAdmission, String> {
+    let deadline = tokio::time::Instant::now() + std::time::Duration::from_secs(60);
     let cwd = validate_cwd_async(&cwd).await?;
     let blocks: Vec<ContentBlock> = serde_json::from_value(content)
         .map_err(|error| format!("invalid prompt content: {error}"))?;
@@ -272,12 +299,35 @@ pub async fn session_prompt(
         .await?;
     prompt.extend(blocks);
     let manager = app.state::<AcpManager>();
-    let outcome = crate::work_policy::admit(&store, &agent_id, &cwd, || async {
-        manager
-            .session_prompt(&agent_id, &cwd, &session_id, prompt)
-            .await
-    })
-    .await;
+    let owner = manager
+        .prompt_admission
+        .owner(&window, &prompt_token, &agent_id)
+        .map_err(super::active_prompt::failure)?;
+    let outcome = match connection_id {
+        None => Err("FAILED: SESSION_UNAVAILABLE".into()),
+        Some(connection_id) => {
+            manager
+                .admit_prompt(super::active_prompt::Input {
+                    agent: &agent_id,
+                    cwd: &cwd,
+                    session: &session_id,
+                    blocks: prompt,
+                    store: &store,
+                    request: super::active_prompt::Request {
+                        owner,
+                        connection_id,
+                        expected_current,
+                        deadline,
+                        progress: Arc::new(move |progress| {
+                            admission_channel
+                                .send(progress)
+                                .map_err(|_| "无法确认发送等待状态".into())
+                        }),
+                    },
+                })
+                .await
+        }
+    };
     match outcome {
         Ok(()) => {
             // Metadata failure cannot turn an accepted message into a retry.

@@ -16,8 +16,12 @@ pub(crate) enum SessionControl {
     },
     Prompt {
         blocks: Vec<ContentBlock>,
+        grant: Box<super::super::active_prompt::Granted>,
+        result: oneshot::Sender<super::super::active_prompt::DispatchResult>,
+    },
+    CancelPrompt {
+        request: super::super::active_prompt::CancelRequest,
         deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
     },
     Cancel {
         deadline: tokio::time::Instant,
@@ -83,8 +87,13 @@ pub(crate) enum SessionControl {
 impl SessionControl {
     pub(super) fn reject(self, error: String) {
         match self {
-            Self::Prompt { result, .. }
-            | Self::Cancel { result, .. }
+            Self::Prompt { result, .. } => {
+                let _ = result.send(super::super::active_prompt::DispatchResult::Rejected(error));
+            }
+            Self::CancelPrompt { request, .. } => {
+                let _ = request.result.send(Err(error));
+            }
+            Self::Cancel { result, .. }
             | Self::SetMode { result, .. }
             | Self::Close { result, .. }
             | Self::ForkClose { result }
@@ -112,10 +121,9 @@ impl SessionControl {
             Self::Fork {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),
-            Self::Prompt {
-                deadline, result, ..
-            }
-            | Self::Cancel { deadline, result }
+            Self::Prompt { grant, result, .. } => (grant.deadline, result.is_closed()),
+            Self::CancelPrompt { request, deadline } => (*deadline, request.result.is_closed()),
+            Self::Cancel { deadline, result }
             | Self::SetMode {
                 deadline, result, ..
             }

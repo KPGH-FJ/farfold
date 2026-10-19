@@ -282,6 +282,8 @@ pub(crate) async fn open_session_on_connection(
     if configuration.has_invalid_options() {
         model_guard.change_unknown();
     }
+    let prompt_snapshot = Arc::new(Mutex::new(model_guard.current_value()));
+    let events = super::super::active_prompt::observed_sink(events, prompt_snapshot.clone());
     let (ready_tx, ready_rx) = oneshot::channel();
     let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
     let opening = restore_config::Opening {
@@ -316,6 +318,9 @@ pub(crate) async fn open_session_on_connection(
                 browser_unavailable,
                 control: control_tx,
                 events: events.clone(),
+                process_ended_sink: None,
+                prompt_snapshot,
+                prompt_store: config_store.store.clone(),
                 _guard: guard,
                 _mcp_lease: mcp_lease,
                 _retention: retention.registered(),

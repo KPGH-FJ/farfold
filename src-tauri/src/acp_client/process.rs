@@ -18,6 +18,9 @@ use tokio::sync::watch;
 
 #[path = "process_io.rs"]
 pub(super) mod io;
+#[path = "process_prompt_escrow.rs"]
+mod prompt_escrow;
+pub(super) use prompt_escrow::{PromptEscrow, PromptObservation};
 
 #[cfg(test)]
 #[path = "process_mcp_tests.rs"]
@@ -85,6 +88,16 @@ fn capture_mcp_spawn_facts(
     }
 }
 
+// This proof can be constructed only from successful Child status and the
+// exact owned-group observation. An io::Error is not a reaping receipt.
+struct ReapedProcess;
+fn process_completion(
+    exit: &Option<std::io::Result<std::process::ExitStatus>>,
+    group_active: bool,
+) -> Option<ReapedProcess> {
+    (exit.as_ref().is_some_and(Result::is_ok) && !group_active).then_some(ReapedProcess)
+}
+
 #[derive(Clone)]
 pub(crate) struct ProcessControl {
     pub pid: Arc<AtomicU32>,
@@ -92,6 +105,7 @@ pub(crate) struct ProcessControl {
     start_failed: Arc<AtomicBool>,
     stop: watch::Sender<bool>,
     done: watch::Sender<Option<Result<(), String>>>,
+    prompt_escrow: PromptEscrow,
     diagnostics: Arc<Diagnostics>,
     pub(crate) mcp_spawn_facts: Arc<OnceLock<McpSpawnFacts>>,
     capture_mcp_facts: bool,
@@ -107,11 +121,30 @@ impl ProcessControl {
             start_failed: Arc::new(AtomicBool::new(false)),
             stop: watch::channel(false).0,
             done: watch::channel(None).0,
+            prompt_escrow: PromptEscrow::default(),
         }
     }
     pub(crate) fn review_mcp_launch(mut self, reviewed: bool) -> Self {
         self.capture_mcp_facts = reviewed;
         self
+    }
+    pub(super) fn with_prompt_admission(
+        mut self,
+        gate: Arc<super::history_admission::Admission>,
+    ) -> Self {
+        assert!(
+            !self.started.load(Ordering::SeqCst),
+            "prompt pool is set only before launch"
+        );
+        self.prompt_escrow = PromptEscrow::for_pool(gate);
+        self
+    }
+    pub(super) fn prompt_escrow(&self) -> PromptEscrow {
+        self.prompt_escrow.clone()
+    }
+    fn complete_process(&self, reaped: ReapedProcess, outcome: Result<(), String>) {
+        self.prompt_escrow.process_reaped(reaped);
+        self.done.send_replace(Some(outcome));
     }
     pub fn stop(&self) {
         self.stop.send_replace(true);
@@ -320,7 +353,7 @@ impl ConnectTo<Client> for ProcessTransport {
         });
         // This one task owns the exact Child until wait/reap completes. Dropping
         // protocol futures only requests shutdown; it never abandons the Child.
-        let done = process.done.clone();
+        let completion = process.clone();
         let (registered, registration_result) = tokio::sync::oneshot::channel();
         let command = self.agent.config().command().to_string_lossy().into_owned();
         let owner_diagnostics = diagnostics.clone();
@@ -367,14 +400,17 @@ impl ConnectTo<Client> for ProcessTransport {
             let draining = drain;
             let started = tokio::time::Instant::now();
             let mut killed = false;
-            loop {
-                if exit.is_none() {
+            let reaped = loop {
+                if !exit.as_ref().is_some_and(Result::is_ok) {
+                    let previous_error = exit.as_ref().is_some_and(Result::is_err);
                     exit = child.try_status().transpose();
-                    if let Some(status) = &exit { owner_diagnostics.exit(status); }
+                    if let Some(status) = &exit
+                        && (!previous_error || status.is_ok())
+                    { owner_diagnostics.exit(status); }
                 }
-                if exit.is_some() && !supervisor::owned_group_alive(pid) {
+                if let Some(reaped) = process_completion(&exit, supervisor::owned_group_alive(pid)) {
                     owner_diagnostics.group_ended();
-                    break;
+                    break reaped;
                 }
                 if !killed && started.elapsed() >= Duration::from_secs(2) {
                     owner_diagnostics.signal_requested(true, false);
@@ -391,7 +427,7 @@ impl ConnectTo<Client> for ProcessTransport {
                     },
                 ))
                 .await;
-            }
+            };
             guard.armed = false;
             let _ = tokio::time::timeout(Duration::from_millis(100), draining).await;
             let outcome = if unexpected_exit
@@ -406,7 +442,7 @@ impl ConnectTo<Client> for ProcessTransport {
             // Completion is an OS fact. A slow registry filesystem must not
             // keep a reaped process alive in the manager's state.
             drop(guard);
-            done.send_replace(Some(outcome));
+            completion.complete_process(reaped, outcome);
             let registration = match registration {
                 Some(result) => result,
                 None => registration_task.await.map_err(|_| "无法保存连接进程".to_string()).and_then(|result| result),

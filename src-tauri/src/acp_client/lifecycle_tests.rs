@@ -459,11 +459,32 @@ async fn expired_queued_prompt_never_reaches_the_agent() {
         .unwrap()
         .control
         .clone();
+    let owner =
+        f.manager
+            .prompt_admission
+            .fixture_owner("expired-owned-window", "expired", &f.row.id);
+    let waiting = f
+        .manager
+        .prompt_admission
+        .enqueue_prompt(owner.clone(), 256)
+        .unwrap();
+    let receipt_id = waiting.receipt_id();
+    let permit = waiting.acquire().await.unwrap();
+    let grant = super::active_prompt::Granted {
+        permit,
+        owner,
+        receipt_id,
+        connection_id: connection.connection_id.clone(),
+        session_id: opened.session_id.clone(),
+        expected_current: opened.config_check.current,
+        progress: Arc::new(|_| Ok(())),
+        deadline: tokio::time::Instant::now() - Duration::from_secs(1),
+    };
     let (result, receive) = tokio::sync::oneshot::channel();
     control
         .send(super::pump::SessionControl::Prompt {
             blocks: serde_json::from_value(json!([{"type":"text","text":"expired"}])).unwrap(),
-            deadline: tokio::time::Instant::now() - Duration::from_secs(1),
+            grant: Box::new(grant),
             result,
         })
         .unwrap();
@@ -1195,4 +1216,79 @@ async fn closing_process_keeps_its_session_owner_until_reaped() {
             .unwrap()
             .is_none()
     );
+}
+
+// Append to the existing lifecycle_tests module; uses its real owned peer.
+#[tokio::test(flavor = "multi_thread")]
+async fn process_end_sink_is_single_owner_and_only_fires_after_actual_process_cleanup() {
+    let f = Fixture::new();
+    let opened = f
+        .manager
+        .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
+        .await
+        .unwrap();
+    let connection = f
+        .manager
+        .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+        .unwrap();
+    let pid = connection
+        .child_pid
+        .load(std::sync::atomic::Ordering::SeqCst);
+    let (send, mut receive) = tokio::sync::mpsc::unbounded_channel();
+    let replacement_calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let original_registered;
+    let replacement_refused;
+    {
+        let mut entries = connection.sessions.lock().unwrap();
+        let entry = entries.get_mut(&opened.session_id).unwrap();
+        original_registered = entry
+            .observe_process_end(
+                &opened.connection_id,
+                Arc::new(move |receipt| {
+                    let group_inactive = !crate::supervisor::owned_group_alive(pid);
+                    let _ = send.send((receipt, group_inactive));
+                }),
+            )
+            .is_ok();
+        let replacement_calls = replacement_calls.clone();
+        replacement_refused = entry
+            .observe_process_end(
+                &opened.connection_id,
+                Arc::new(move |_| {
+                    replacement_calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                }),
+            )
+            .is_err();
+        // Even exact JSON spelling traversing the mixed sink has no capability.
+        (entry.events)(
+            json!({"kind":"connectionLost", "sessionId":opened.session_id,
+            "connectionId":opened.connection_id, "processEnded":true}),
+        );
+    }
+    let no_early_receipt = matches!(
+        receive.try_recv(),
+        Err(tokio::sync::mpsc::error::TryRecvError::Empty)
+    );
+    // Cleanup precedes assertions: never lose the original process owner on a
+    // failed negative control. This is an owned peer, not a real Agent.
+    f.manager.stop_for_shutdown();
+    let closed = tokio::time::timeout(Duration::from_secs(6), connection.life.closed()).await;
+    let observed = tokio::time::timeout(Duration::from_secs(1), receive.recv()).await;
+    assert!(original_registered && replacement_refused && no_early_receipt);
+    assert!(
+        closed.is_ok(),
+        "original process owner did not settle within test wait"
+    );
+    assert!(
+        connection.life.finished(),
+        "not a timeout/dispatch completion proof"
+    );
+    let (receipt, group_inactive) = observed.unwrap().unwrap();
+    assert_eq!(receipt.connection_id, opened.connection_id);
+    assert!(group_inactive);
+    assert_eq!(
+        replacement_calls.load(std::sync::atomic::Ordering::SeqCst),
+        0
+    );
+    assert!(receive.try_recv().is_err());
 }

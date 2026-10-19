@@ -26,8 +26,8 @@ use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
-    CancelNotification, PromptRequest, SessionConfigOptionValue, SessionConfigValueId,
-    SessionModeState, SetSessionModeRequest,
+    CancelNotification, SessionConfigOptionValue, SessionConfigValueId, SessionModeState,
+    SetSessionModeRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
@@ -127,6 +127,7 @@ pub(crate) struct SessionOps {
     /// Unanswered permission/elicitation requests plus in-flight prompts —
     /// while >0 the connection is mid-interaction and must not be reaped.
     pub life: Arc<ConnectionLife>,
+    pub(super) prompt_escrow: super::process::PromptEscrow,
 }
 
 impl SessionOps {
@@ -146,6 +147,15 @@ impl SessionOps {
 /// session_id → live session handle, one map per `(agent_id, cwd)` connection.
 pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
 
+/// Separate IPC control receipt: never synthesized from an Agent Value.
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcessEndedReceipt {
+    pub connection_id: String,
+    pub close_reason: super::lifecycle::CloseReason,
+}
+type ProcessEndedSink = Arc<dyn Fn(ProcessEndedReceipt) + Send + Sync>;
+
 /// Everything needed to reach a live session from the command layer.
 pub(crate) struct SessionEntry {
     connection_id: String,
@@ -155,6 +165,9 @@ pub(crate) struct SessionEntry {
     pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     pub control: mpsc::UnboundedSender<SessionControl>,
     pub events: SessionSink,
+    process_ended_sink: Option<ProcessEndedSink>,
+    pub(super) prompt_snapshot: super::active_prompt::PublicSnapshot,
+    pub(super) prompt_store: crate::meta_store::MetaStore,
     /// Keeps the dynamic session handler registered; dropping unregisters it.
     _guard: DynamicHandlerGuard<Agent>,
     _mcp_lease: Option<super::transient_mcp::SessionMcpLease>,
@@ -162,6 +175,19 @@ pub(crate) struct SessionEntry {
 }
 
 impl SessionEntry {
+    /// Register under the same map lock used by notify_connection_lost/drain.
+    /// An existing read owner is never replaced by a second observer.
+    pub(crate) fn observe_process_end(
+        &mut self,
+        connection_id: &str,
+        sink: ProcessEndedSink,
+    ) -> Result<(), String> {
+        if self.connection_id != connection_id || self.process_ended_sink.is_some() {
+            return Err("Agent 连接已变化，请重新打开对话".into());
+        }
+        self.process_ended_sink = Some(sink);
+        Ok(())
+    }
     pub(crate) fn abandon(self) {
         let _ = self.control.send(SessionControl::Shutdown);
         self._retention.retain_until_terminated();
@@ -171,6 +197,8 @@ impl SessionEntry {
 mod control;
 pub(crate) use control::SessionControl;
 mod fork;
+#[path = "pump/prompt.rs"]
+mod prompt;
 
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
@@ -628,14 +656,14 @@ async fn session_pump(
     let mut stopping = ops.life.stop_receiver();
     let mut mutation: Option<Mutation> = None;
     let mut pending_config_store = None;
-    let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
+    let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<prompt::Outcome>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
     // A transport/error receipt cannot establish which context was committed.
     // This guard only gates the new fork action; it does not infer a stop.
     let mut fork_execution_known = true;
     let mut prompt_cancelling = false;
-    let mut prompt_lease = None;
+    let mut prompt_owner: Option<prompt::Active> = None;
     let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
     let mut compactions = super::compaction_activity::CompactionActivity::new(
         ops.life.clone(),
@@ -677,7 +705,14 @@ async fn session_pump(
         if buffered_control.is_none() {
             buffered_control = control.try_recv().ok();
         }
-        if ((prompt_in_flight && matches!(buffered_control, Some(SessionControl::Cancel { .. })))
+        if (((prompt_in_flight
+            || prompt_owner
+                .as_ref()
+                .is_some_and(prompt::Active::unresolved))
+            && matches!(
+                buffered_control,
+                Some(SessionControl::Cancel { .. } | SessionControl::CancelPrompt { .. })
+            ))
             || (opening.is_none()
                 && !fork_state
                     .as_ref()
@@ -703,6 +738,15 @@ async fn session_pump(
                     result,
                     task_tx.clone(),
                 ));
+            } else if let SessionControl::CancelPrompt { request, .. } = command {
+                prompt::cancel(
+                    &cx,
+                    &mut ctx,
+                    prompt_owner.as_ref(),
+                    request,
+                    mcp_requests.as_ref(),
+                );
+                prompt_cancelling = ctx.prompt_cancelling;
             } else if let SessionControl::Cancel { result, .. } = command {
                 if opening.is_some() {
                     let _ = result.send(Err("对话正在恢复，请稍后重试".into()));
@@ -835,19 +879,22 @@ async fn session_pump(
                     tokio::time::Instant::now()+std::time::Duration::from_secs(60), future));
             },
             outcome = turn_rx.recv() => {
-                if let Some(outcome) = outcome {
+                if let Some(prompt::Outcome { receipt_id, result: outcome }) = outcome {
                     ops.life.touch();
                     fork_execution_known = outcome.as_ref().is_ok_and(|reply|matches!(reply.get("stopReason").and_then(Value::as_str),Some("end_turn"|"max_tokens"|"max_turn_requests"|"refusal"|"cancelled")));
                     if prompt_in_flight {
                         prompt_in_flight = false;
                         prompt_cancelling = false;
-                        prompt_lease.take();
+                        if prompt_owner.as_ref().is_some_and(|p| !p.unresolved()) {
+                            prompt_owner.take();
+                        }
                     }
                     cancel_permissions(&pending, &mut permission_ids);
                     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
                     if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }
                     let failure = failures.finish(outcome.as_ref().ok());
                     let mut event = turn_end_event(outcome);
+                    event["promptReceiptId"] = serde_json::json!(receipt_id);
                     if let Some(failure) = failure { event["failure"] = failure; }
                     events(event);
                 }
@@ -1095,109 +1142,26 @@ async fn session_pump(
                     detached = Some(result);
                     break;
                 }
-                SessionControl::Prompt { blocks, result, deadline } => {
-                    if ctx.compactions.busy() {
-                        let _ = result.send(Err("上下文整理尚未结束，请等待明确结果".into()));
-                        continue;
+                SessionControl::Prompt { blocks, grant, result } => {
+                    let unresolved = prompt_owner.as_ref().is_some_and(prompt::Active::unresolved);
+                    match prompt::send(prompt::Input {
+                        cx: &cx, ctx: &mut ctx, config_store: &config_store,
+                        model_guard: &mut model_guard, permission_guard: &mut permission_guard,
+                        inbox: &mut inbox, configuration: &mut configuration, models: &mut models,
+                        opening: &mut opening, mutation: &mut mutation, mcp: mcp_requests.as_ref(),
+                        turn: &turn_tx, in_flight: prompt_in_flight, unresolved,
+                    }, blocks, *grant, &result).await {
+                        Ok(started) => {
+                            prompt_in_flight = started.sent.is_ok();
+                            prompt_owner = Some(started.active);
+                            let _ = result.send(super::active_prompt::DispatchResult::Offered(started.sent));
+                        }
+                        Err(error) => { let _ = result.send(super::active_prompt::DispatchResult::Rejected(error)); }
                     }
-                    if !permission_guard.admissible() {
-                        events(permission_guard.event());
-                        let _ = result.send(Err("请重新确认权限后再发送".into()));
-                        continue;
-                    }
-                    if permission_guard.blocks_prompt(&blocks) {
-                        let _ = result.send(Err("PROMPT_PERMISSION_SCOPE_UNVERIFIED".into()));
-                        continue;
-                    }
-                    let source_model_ok = config_store.expected_model.as_ref().is_none_or(|expected| {
-                        model_guard.single_model_value() == Some(expected)
-                    });
-                    let source_check = if source_model_ok { config_store.validate_service().await } else {
-                        Err("Agent 的模型与所选 API 不一致，请重新选择后重试".into())
-                    };
-                    if let Err(error) = source_check {
-                        events(serde_json::json!({"kind":"serviceUnavailable", "message":error}));
-                        let _ = result.send(Err("SERVICE_UNAVAILABLE".into()));
-                        continue;
-                    }
-                    if !model_guard.admissible() {
-                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                        let _ = result.send(Err(format!("CONFIG_{}", model_guard.check().status.to_uppercase())));
-                        continue;
-                    }
-                    if prompt_in_flight || mutation.is_some() {
-                        let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
-                        continue;
-                    }
-                    let lease = match ops.life.work() {
-                        Ok(lease) => lease,
-                        Err(error) => { let _ = result.send(Err(error)); continue; }
-                    };
-                    // Source/model identity must survive a crash once the Agent has
-                    // seen this message. A failed local write is provably unsent.
-                    let saved_config = model_guard.record();
-                    if config_store.save(&session_id, saved_config.clone()).await.is_err() {
-                        model_guard.record_failed();
-                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                        let _ = result.send(Err("CONFIG_RECORD_FAILED".into()));
-                        continue;
-                    }
-                    // A successful save establishes the selection even if this
-                    // attempt is refused or expires. Lock before queued updates so
-                    // a first-prompt drift cannot become the next retry's baseline.
-                    model_guard.lock();
-                    // Storage yields while the independent incoming actor keeps
-                    // routing updates. Admit only the selection just saved.
-                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models,
-                        &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
-                    if ctx.compactions.busy() {
-                        let _ = result.send(Err("上下文整理尚未结束，请等待明确结果".into()));
-                        continue;
-                    }
-                    if !permission_guard.admissible() {
-                        events(permission_guard.event());
-                        let _ = result.send(Err("请重新确认权限后再发送".into()));
-                        continue;
-                    }
-                    if !model_guard.admissible() || model_guard.record() != saved_config {
-                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                        let _ = result.send(Err("CONFIG_BLOCKED".into()));
-                        continue;
-                    }
-                    if result.is_closed() || tokio::time::Instant::now() >= deadline {
-                        let _ = result.send(Err("请求等待已结束，消息尚未发送".into()));
-                        continue;
-                    }
-                    // Open before the synchronous send: an immediate MCP call
-                    // on another worker must not outrun prompt admission.
-                    if let Some(requests) = &mcp_requests { requests.set_prompt_active(true); }
-                    let sent = cx
-                        .send_request_to(Agent, PromptRequest::new(session_id.clone(), blocks))
-                        .on_receiving_result({
-                            let turn_tx = turn_tx.clone();
-                            async move |outcome| {
-                                let _ = turn_tx.send(
-                                    outcome
-                                        .and_then(|response| {
-                                            serde_json::to_value(&response)
-                                                .map_err(agent_client_protocol::Error::into_internal_error)
-                                        })
-                                        .map_err(describe_acp_error),
-                                );
-                                Ok(())
-                            }
-                        })
-                        .map_err(describe_acp_error);
-                    if sent.is_ok() {
-                        ctx.tools.begin_live();
-                        ctx.compactions.begin_live();
-                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                        prompt_lease = Some(lease);
-                        prompt_in_flight = true;
-                    } else if let Some(requests) = &mcp_requests {
-                        requests.set_prompt_active(false);
-                    }
-                    let _ = result.send(sent);
+                }
+                SessionControl::CancelPrompt { request, .. } => {
+                    prompt::cancel(&cx, &mut ctx, prompt_owner.as_ref(), request, mcp_requests.as_ref());
+                    prompt_cancelling = ctx.prompt_cancelling;
                 }
                 SessionControl::Cancel { result, .. } => {
                     send_session_cancel(&cx, &mut ctx, result, prompt_in_flight, mcp_requests.as_ref());
@@ -1357,7 +1321,7 @@ async fn session_pump(
             }
         }
     }
-    drop(prompt_lease);
+    drop(prompt_owner); // Non-owning observer only; process escrow survives.
     cancel_permissions(&pending, &mut permission_ids);
     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
     if let Some(reply) = detached {
@@ -1386,6 +1350,14 @@ pub(crate) fn notify_connection_lost(sessions: &SessionMap, reason: super::lifec
                 "sessionId":session_id, "compactionIds":[], "uncertain":false, "reason":"process_ended"}),
             );
             (entry.events)(serde_json::json!({"kind": "connectionLost", "closeReason": reason}));
+            // Only this actual process-owner closure path has this capability.
+            // No JSON marker forwarded through SessionSink can invoke it.
+            if let Some(sink) = &entry.process_ended_sink {
+                sink(ProcessEndedReceipt {
+                    connection_id: entry.connection_id.clone(),
+                    close_reason: reason,
+                });
+            }
         }
     }
 }

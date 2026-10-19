@@ -12,15 +12,53 @@ const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown): void;
 };
 const text = (value: string): PromptBlock[] => [{ type: "text", text: value }];
+type PromptArgs = {
+  sessionId: string;
+  promptToken: string;
+  admissionChannel: { onmessage(value: unknown): void };
+};
+function receipt(args: PromptArgs) {
+  return (
+    invoke.mock.calls.findIndex(
+      ([command, value]) => command === "session_prompt" && value === args,
+    ) + 1
+  );
+}
+function offer(args: PromptArgs, phase = "offered") {
+  args.admissionChannel.onmessage({ receiptId: receipt(args), phase });
+}
+function ending(sessionId: string, value: unknown) {
+  if (!value || typeof value !== "object") return value;
+  const e = value as Record<string, unknown>;
+  if (
+    e.kind !== "turnEnd" ||
+    Object.hasOwn(e, "update") ||
+    Object.hasOwn(e, "sessionId")
+  )
+    return value;
+  const args = [...invoke.mock.calls]
+    .reverse()
+    .find(
+      ([command, args]) =>
+        command === "session_prompt" && args.sessionId === sessionId,
+    )?.[1] as PromptArgs | undefined;
+  return args ? { ...e, promptReceiptId: receipt(args) } : value;
+}
+
 let serial = 0;
 function state() {
   const id = `outcome-${++serial}`;
   const s = threads.markOpenFailed(`a:/p:${id}`, "a", "/p", id, "fixture");
   s.openError = null;
+  s.connectionId = `connection-${s.key}`;
+  s.configCheck = { status: "ready", issues: [], current: { choices: [] } };
   return s;
 }
 function event(key: string, value: unknown) {
-  channel.applyChannelEvent(key, value);
+  channel.applyChannelEvent(
+    key,
+    ending(threads.thread(key)!.nativeSessionId, value),
+  );
 }
 function reply(key: string) {
   event(key, {
@@ -36,13 +74,13 @@ beforeEach(() => {
   vi.spyOn(archiveActivity, "begin").mockResolvedValue();
   vi.spyOn(archiveActivity, "finish").mockResolvedValue();
   vi.spyOn(archiveActivity, "touch").mockResolvedValue();
-  invoke.mockImplementation(async (command: string) =>
-    command === "session_prompt"
-      ? { status: "accepted" }
-      : command === "settings_get"
-        ? null
-        : [],
-  );
+  invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_prompt") {
+      offer(args);
+      return { status: "accepted" };
+    }
+    return command === "settings_get" ? null : [];
+  });
 });
 afterEach(() => {
   vi.restoreAllMocks();
@@ -65,7 +103,11 @@ it("pauses queued input after an empty ending and never records it as completed 
 it("admits only an explicit new message after a confirmed failure with an empty queue", async () => {
   const s = state();
   await threads.send(s.key, text("Failed request"));
-  event(s.key, { kind: "turnEnd", failure: { category: "service" } });
+  event(s.key, {
+    kind: "turnEnd",
+    stopReason: "end_turn",
+    failure: { category: "service" },
+  });
   expect(s).toMatchObject({
     running: false,
     connectionOutcomeUnknown: false,
@@ -114,7 +156,11 @@ it("keeps an active tool protected after failure and never automatically sends w
     },
   });
   event(s.key, { kind: "toolActivity", toolCallIds: ["tail"] });
-  event(s.key, { kind: "turnEnd", failure: { category: "service" } });
+  event(s.key, {
+    kind: "turnEnd",
+    stopReason: "end_turn",
+    failure: { category: "service" },
+  });
   expect(s.activeToolCallIds).toEqual(["tail"]);
   expect(canReleaseEmptyQueuePause(s)).toBe(false);
   const next = text("New request");
@@ -220,9 +266,10 @@ it.each(["unknown", "lost-reply"])(
   "a real terminal channel receipt beats a late %s admission reply",
   async (kind) => {
     const s = state();
-    invoke.mockImplementation(async (command: string) => {
+    invoke.mockImplementation(async (command: string, args) => {
       if (command !== "session_prompt")
         return command === "settings_get" ? null : [];
+      offer(args);
       reply(s.key);
       if (kind === "lost-reply") throw new Error("IPC reply lost");
       return { status: "unknown" };
@@ -240,9 +287,15 @@ it.each(["unknown", "lost-reply"])(
 
 it("discarding a hot unknown retry copy does not clear execution protection or consume another queued message", async () => {
   const s = state();
-  invoke.mockImplementation(async (command: string) =>
-    command === "session_prompt" ? { status: "unknown" } : null,
-  );
+  invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_prompt") {
+      offer(args);
+      return { status: "unknown" };
+    }
+    if (command === "session_prompt_cancel")
+      return { receiptId: args.receiptId, outcome: "cancelRequested" };
+    return null;
+  });
   const first = text("Possibly dispatched");
   await threads.send(s.key, first);
   const later = text("Never dispatched");
@@ -255,10 +308,16 @@ it("discarding a hot unknown retry copy does not clear execution protection or c
     invoke.mock.calls.filter(([command]) => command === "session_prompt"),
   ).toHaveLength(1);
   await threads.cancel(s.key);
-  expect(invoke).toHaveBeenCalledWith("session_cancel", {
+  const prompt = invoke.mock.calls.find(
+    ([command]) => command === "session_prompt",
+  )![1] as PromptArgs;
+  expect(invoke).toHaveBeenCalledWith("session_prompt_cancel", {
     agentId: s.agentId,
     cwd: s.cwd,
     sessionId: s.nativeSessionId,
+    connectionId: s.connectionId,
+    promptToken: prompt.promptToken,
+    receiptId: receipt(prompt),
   });
   expect(s.stopping).toBe(true);
   reply(s.key);

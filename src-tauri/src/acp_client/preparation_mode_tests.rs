@@ -153,6 +153,7 @@ async fn read(
                 &sessions,
                 &pending,
                 SessionOps {
+                    prompt_escrow: Default::default(),
                     async_tasks_supported: Arc::new(AtomicBool::new(false)),
                     opening: None,
                     connection_id: "preparation-fixture".into(),

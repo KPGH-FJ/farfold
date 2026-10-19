@@ -129,7 +129,10 @@ impl Fixture {
                 match message {
                     SessionControl::Prompt { blocks, result, .. } => {
                         messages.lock().unwrap().push(blocks);
-                        let _ = result.send(Ok(()));
+                        // This existing interceptor checks admission content,
+                        // not an actual SDK offer or active-resource receipt.
+                        let _ = result
+                            .send(super::super::active_prompt::DispatchResult::Offered(Ok(())));
                     }
                     _ => panic!("unexpected control message"),
                 }

@@ -625,40 +625,46 @@ impl AcpManager {
     /// Send a prompt; resolves once the request is sent. Turn completion
     /// arrives on the session channel as `{kind:"turnEnd"}`.
     /// Send `session/prompt`. Errors prefixed `FAILED:` mean the request
-    /// provably never reached the wire (no connection, dead pump, dispatch
-    /// error); bare `Err` means the answer timed out or the channel closed
+    /// provably never reached the SDK offer (no connection, dead pump or
+    /// pre-offer rejection); bare `Err` means registration failed, timed out, or closed
     /// mid-flight — genuinely unknown whether the agent saw it.
-    pub(crate) async fn session_prompt(
+    pub(super) async fn send_granted_prompt(
         &self,
         agent_id: &str,
         cwd: &Path,
         session_id: &str,
         blocks: Vec<ContentBlock>,
+        grant: super::active_prompt::Granted,
     ) -> Result<(), String> {
         // Declarations and the sending entry belong to this one actual owner;
         // cached cards and preparation connections cannot authorize this prompt.
         let connection = self
             .session_connection(agent_id, cwd, session_id)
             .map_err(|_| "FAILED: SESSION_UNAVAILABLE".to_string())?;
+        if connection.connection_id != grant.connection_id || session_id != grant.session_id {
+            return Err("FAILED: SESSION_UNAVAILABLE".into());
+        }
         let control =
             session_control(&connection, session_id).map_err(|error| format!("FAILED: {error}"))?;
         embedded_context_admission(connection.handshake.get(), &blocks)?;
         audio_admission(connection.handshake.get(), &blocks)?;
+        let deadline = grant.deadline;
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
-                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(60),
                 blocks,
+                grant: Box::new(grant),
                 result: result_tx,
             })
             .map_err(|_| "FAILED: session is closed".to_string())?;
-        super::wait::reply(
-            result_rx,
-            std::time::Duration::from_secs(60),
-            "session prompt",
-        )
-        .await?
-        .map_err(|error| format!("FAILED: {error}"))
+        match tokio::time::timeout_at(deadline, result_rx).await {
+            Ok(Ok(super::active_prompt::DispatchResult::Rejected(error))) => {
+                Err(format!("FAILED: {error}"))
+            }
+            Ok(Ok(super::active_prompt::DispatchResult::Offered(result))) => result,
+            Ok(Err(_)) => Err("session prompt channel closed".into()),
+            Err(_) => Err("session prompt deadline elapsed".into()),
+        }
     }
 
     /// `session/set_mode` for agents exposing `modes` outside

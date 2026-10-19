@@ -17,10 +17,11 @@ export class StopConfirmation {
     s: ThreadState | undefined,
     current: () => ThreadState | undefined,
     emit: () => void,
+    dispatch?: () => Promise<void>,
   ): Promise<void> {
     if (
       !s ||
-      (!s.running && !s.connectionOutcomeUnknown) ||
+      (!s.running && !s.submitting && !s.connectionOutcomeUnknown) ||
       s.connectionLost ||
       s.stopping
     )
@@ -39,11 +40,13 @@ export class StopConfirmation {
     const isCurrentStop = this.start(s, current, emit);
     emit();
     try {
-      await invoke("session_cancel", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-      });
+      if (dispatch) await dispatch();
+      else
+        await invoke("session_cancel", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+        });
     } catch {
       if (
         !isCurrentStop() ||

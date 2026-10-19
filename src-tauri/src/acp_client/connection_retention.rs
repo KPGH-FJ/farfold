@@ -49,6 +49,9 @@ impl AcpManager {
         self.history_admission
             .close_window(window)
             .map_err(super::super::cold_history_open::error)?;
+        self.prompt_admission
+            .close_window(window)
+            .map_err(super::super::active_prompt::failure)?;
         for connection in self.lock()?.values() {
             connection.life.release_views(window)?;
         }

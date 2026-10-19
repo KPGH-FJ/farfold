@@ -1,3 +1,4 @@
+import { connectionWorkEnded } from "./session_process_ended";
 import { useSyncExternalStore } from "react";
 import {
   threads,
@@ -180,13 +181,14 @@ function configKey(config: Record<string, unknown>): string {
 function outstanding(thread: ThreadState | undefined): boolean {
   return (
     !!thread &&
-    (thread.running ||
-      thread.submitting ||
-      thread.stopping ||
-      thread.stopUnconfirmed ||
-      thread.connectionOutcomeUnknown ||
-      !!thread.uncertainPrompt ||
-      hasPendingRequests(thread))
+    (thread.submitting ||
+      (!connectionWorkEnded(thread) &&
+        (thread.running ||
+          thread.stopping ||
+          thread.stopUnconfirmed ||
+          thread.connectionOutcomeUnknown ||
+          !!thread.uncertainPrompt ||
+          hasPendingRequests(thread))))
   );
 }
 export const testInProgress = (phase: PreparationPhase) =>
@@ -266,7 +268,10 @@ export class AgentPreparation {
     if (
       this.attempt?.sending ||
       outstanding(thread) ||
-      (own && thread?.identity === "draft" && this.attempt)
+      (own &&
+        thread?.identity === "draft" &&
+        this.attempt &&
+        !connectionWorkEnded(thread))
     )
       return Promise.reject(new Error(A.workHint));
     this.invalidate(false);
@@ -320,6 +325,9 @@ export class AgentPreparation {
     )
       return Promise.resolve();
     const existing = this.currentThread();
+    // Process completion permits only a new explicit read, never an automatic retry.
+    if (!fresh && existing && connectionWorkEnded(existing))
+      return Promise.resolve();
     if (
       !fresh &&
       same &&

@@ -158,6 +158,7 @@ pub struct AcpManager {
     pub(crate) shutting_down: Arc<AtomicBool>,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
     pub(super) history_admission: Arc<super::history_admission::Admission>,
+    pub(super) prompt_admission: Arc<super::history_admission::Admission>,
     connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
     account_admission: Arc<AccountAdmission>,
     log_dir: PathBuf,
@@ -192,6 +193,7 @@ impl AcpManager {
             shutting_down: Arc::new(AtomicBool::new(false)),
             opening_sessions: super::lifecycle::OpenReservations::default(),
             history_admission: super::history_admission::Admission::production(),
+            prompt_admission: super::active_prompt::production(),
             connections: Arc::new(Mutex::new(HashMap::new())),
             account_admission: Arc::new(AccountAdmission::default()),
             log_dir,
@@ -504,10 +506,12 @@ impl AcpManager {
         life.retain_history_startup(history)?;
         let state = life.state.clone();
         let browser_launch = super::browser_capability::reviewed_launch(agent);
-        let process = ProcessControl::new(diagnostics.clone()).review_mcp_launch(matches!(
-            browser_launch,
-            Some(super::browser_capability::LaunchKind::Node)
-        ));
+        let process = ProcessControl::new(diagnostics.clone())
+            .with_prompt_admission(self.prompt_admission.clone())
+            .review_mcp_launch(matches!(
+                browser_launch,
+                Some(super::browser_capability::LaunchKind::Node)
+            ));
         let sessions: SessionMap = SessionMap::default();
         let sessions_for_task = sessions.clone();
         let sessions_for_cleanup = sessions.clone();
@@ -527,6 +531,7 @@ impl AcpManager {
             elicitations: self.pending_elicitations.clone(),
             inquiries: inquiries.clone(),
             life: life.clone(),
+            prompt_escrow: process.prompt_escrow(),
         };
         let cwd_for_task = cwd.to_path_buf();
         let agent_label = format!("{} on {}", agent.id, cwd.display());
@@ -887,6 +892,7 @@ impl AcpManager {
     pub fn stop_for_shutdown(&self) {
         self.shutting_down.store(true, Ordering::SeqCst);
         let _ = self.history_admission.shutdown();
+        let _ = self.prompt_admission.shutdown();
         let lives: Vec<_> = match self.connections.lock() {
             Ok(connections) => connections
                 .values()

@@ -151,22 +151,31 @@ async fn check_prompt_save_race(change: &str, established: bool) {
         .session_connection(&f.row.id, &f.cwd, SESSION)
         .unwrap();
     assert_eq!(connection.life.work.load(Ordering::SeqCst), 0);
+    // Initialize the outer work-policy record before holding a writer. This
+    // test gates the pump's config save, not the earlier policy migration.
+    crate::work_policy::admit(&f.store, &f.row.id, &f.cwd, || async { Ok(()) })
+        .await
+        .unwrap();
     let database = rusqlite::Connection::open(f.cwd.join("meta.db")).unwrap();
     database.execute_batch("BEGIN IMMEDIATE").unwrap();
     let mut prompt = std::pin::pin!(
         f.manager
             .session_prompt(&f.row.id, &f.cwd, SESSION, blocks())
     );
-    // First poll enqueues the exact product request before observing its lease.
+    // Start outer admission; the select below drives it to the real pump lease.
     poll_fn(|cx| {
         assert!(matches!(prompt.as_mut().poll(cx), Poll::Pending));
         Poll::Ready(())
     })
     .await;
-    until("pump entered prompt before blocked metadata save", || {
-        connection.life.work.load(Ordering::SeqCst) == 1
-    })
-    .await;
+    // Drive outer admission through its asynchronous policy read while the
+    // writer remains held. One initial Pending alone is no longer enqueue.
+    tokio::select! {
+        _ = until("pump entered prompt before blocked metadata save", || {
+            connection.life.work.load(Ordering::SeqCst) == 1
+        }) => {},
+        result = prompt.as_mut() => panic!("prompt resolved before held config save: {result:?}"),
+    }
     assert_eq!(prompts(&f.cwd).len(), baseline_prompts);
     std::fs::write(f.cwd.join("fire-update"), change).unwrap();
     until("incoming actor routed update while save is held", || {

@@ -67,7 +67,10 @@ impl AcpManager {
     ) -> Result<(), String> {
         self.history_admission
             .register_window(window)
-            .map_err(super::cold_history_open::error)
+            .map_err(super::cold_history_open::error)?;
+        self.prompt_admission
+            .register_window(window)
+            .map_err(super::active_prompt::failure)
     }
 }
 #[tauri::command]

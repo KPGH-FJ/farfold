@@ -10,6 +10,39 @@ import { threads } from "./sessions";
 import { draftPersistence } from "./drafts";
 import { archiveActivity } from "./archive_activity";
 
+type PromptArgs = {
+  sessionId: string;
+  promptToken: string;
+  admissionChannel: { onmessage(value: unknown): void };
+};
+function receipt(args: PromptArgs) {
+  return (
+    invoke.mock.calls.findIndex(
+      ([command, value]) => command === "session_prompt" && value === args,
+    ) + 1
+  );
+}
+function offer(args: PromptArgs, phase = "offered") {
+  args.admissionChannel.onmessage({ receiptId: receipt(args), phase });
+}
+function ending(sessionId: string, value: unknown) {
+  if (!value || typeof value !== "object") return value;
+  const e = value as Record<string, unknown>;
+  if (
+    e.kind !== "turnEnd" ||
+    Object.hasOwn(e, "update") ||
+    Object.hasOwn(e, "sessionId")
+  )
+    return value;
+  const args = [...invoke.mock.calls]
+    .reverse()
+    .find(
+      ([command, args]) =>
+        command === "session_prompt" && args.sessionId === sessionId,
+    )?.[1] as PromptArgs | undefined;
+  return args ? { ...e, promptReceiptId: receipt(args) } : value;
+}
+
 let serial = 0;
 const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown, live?: boolean): void;
@@ -22,8 +55,11 @@ beforeEach(() => {
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   vi.spyOn(archiveActivity, "begin").mockResolvedValue();
   vi.spyOn(archiveActivity, "finish").mockResolvedValue();
-  invoke.mockImplementation(async (command: string) => {
-    if (command === "session_prompt") return { status: "accepted" };
+  invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_prompt") {
+      offer(args);
+      return { status: "accepted" };
+    }
     if (command === "desktop_notifications_get")
       return {
         enabled: false,
@@ -54,8 +90,13 @@ function setup() {
   );
   s.openError = null;
   s.connectionId = `connection-${serial}`;
+  s.configCheck = { status: "ready", issues: [], current: { choices: [] } };
   const event = (e: unknown, live = true) =>
-    channel.applyChannelEvent(s.key, e, live);
+    channel.applyChannelEvent(
+      s.key,
+      live ? ending(s.nativeSessionId, e) : e,
+      live,
+    );
   const reply = () =>
     event({
       update: {
@@ -151,6 +192,7 @@ it("a valid ending that arrives before admission acknowledgement waits for the s
   invoke.mockImplementation((command: string, ...args: unknown[]) =>
     command === "session_prompt"
       ? new Promise((r) => {
+          offer(args[0] as PromptArgs);
           resolve = r;
         })
       : normal(command, ...args),

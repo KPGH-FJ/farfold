@@ -187,12 +187,48 @@ async fn cancellation_with_backlog(order: QueueOrder) {
         .open_session(&row, &cwd, None, vec![], sink, &store)
         .await
         .unwrap();
-    let mut prompt = std::pin::pin!(manager.session_prompt(
-        &row.id,
-        &cwd,
-        &opened.session_id,
-        serde_json::from_value(json!([{"type":"text","text":"run"}])).unwrap(),
-    ));
+    // These two controls test ordering AFTER admission, at the real pump
+    // queue. A first Pending of outer admission now may be its policy read,
+    // which does not prove a Prompt has entered that queue. Acquire the real
+    // pool permit first, before gating the sink, then poll the actual enqueue.
+    // The conservative fixture ticket is not a whole-request charge proof.
+    let granted = if prompt_queued_behind_updates {
+        let (connection_id, expected_current, _) = manager
+            .prompt_snapshot(&row.id, &cwd, &opened.session_id)
+            .unwrap();
+        let owner = manager
+            .prompt_admission
+            .fixture_owner("owned-pump-order", "queued", &row.id);
+        let waiting = manager
+            .prompt_admission
+            .enqueue_prompt(owner.clone(), 4096)
+            .unwrap();
+        let receipt_id = waiting.receipt_id();
+        Some(super::active_prompt::Granted {
+            permit: waiting.acquire().await.unwrap(),
+            owner,
+            connection_id,
+            session_id: opened.session_id.clone(),
+            expected_current,
+            progress: Arc::new(|_| Ok(())),
+            deadline: tokio::time::Instant::now() + Duration::from_secs(60),
+            receipt_id,
+        })
+    } else {
+        None
+    };
+    let mut prompt = std::pin::pin!(async {
+        let blocks = serde_json::from_value(json!([{"type":"text","text":"run"}])).unwrap();
+        if let Some(granted) = granted {
+            manager
+                .send_granted_prompt(&row.id, &cwd, &opened.session_id, blocks, granted)
+                .await
+        } else {
+            manager
+                .session_prompt(&row.id, &cwd, &opened.session_id, blocks)
+                .await
+        }
+    });
     if prompt_queued_behind_updates {
         std::fs::write(fence.with_file_name("start-idle-burst"), "start").unwrap();
     } else {

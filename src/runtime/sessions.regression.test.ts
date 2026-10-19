@@ -31,6 +31,8 @@ afterEach(() => {
 function seed(id: string) {
   const s = threads.markOpenFailed(`a:/p:${id}`, "a", "/p", id, "fixture");
   s.openError = null;
+  s.connectionId = `connection-${s.key}`;
+  s.configCheck = { status: "ready", issues: [], current: { choices: [] } };
   return s;
 }
 it("keeps undeclared reasoning read-only without disabling declared unrelated options", async () => {
@@ -790,9 +792,10 @@ it("unknown submission stays visible but cannot be repeated", async () => {
 it("does not consume queue until acknowledgement even if completion arrives first", async () => {
   const s = seed("ack");
   let accept!: (v: unknown) => void;
-  h.invoke.mockImplementation((cmd: string) =>
+  h.invoke.mockImplementation((cmd: string, args) =>
     cmd === "session_prompt"
       ? new Promise((resolve) => {
+          args.admissionChannel.onmessage({ receiptId: 1, phase: "offered" });
           accept = resolve;
         })
       : Promise.resolve(cmd === "settings_get" ? 0 : []),
@@ -800,7 +803,7 @@ it("does not consume queue until acknowledgement even if completion arrives firs
   const sending = threads.send(s.key, [{ type: "text", text: "once" }]);
   expect(s.queued).toHaveLength(1);
   await vi.waitFor(() => expect(accept).toBeTypeOf("function"));
-  event(s.key, { kind: "turnEnd", stopReason: "end_turn" });
+  event(s.key, { kind: "turnEnd", promptReceiptId: 1, stopReason: "end_turn" });
   expect(s.queued).toHaveLength(1);
   accept({ status: "accepted" });
   await sending;

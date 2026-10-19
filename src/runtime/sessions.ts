@@ -1,4 +1,10 @@
 import { openingInquiries } from "./opening_inquiries";
+import { drainPrompt } from "./session_prompt_dispatch";
+import { PromptRequestOwner } from "./prompt_admission";
+import {
+  processEndedReceipt,
+  type ProcessEndedReceipt,
+} from "./session_process_ended";
 import { retainIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
@@ -45,7 +51,6 @@ import { threadNeedsAttention } from "./thread_attention";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import {
   observeDesktopNotification,
-  beginSuccessDesktopNotification,
   checkDesktopNotifications,
 } from "./desktop_notifications";
 import { paneCards, appendToolOutput } from "./artifacts";
@@ -56,14 +61,6 @@ import { InteractionActions } from "./interaction_actions";
 import { StopConfirmation } from "./stop_confirmation";
 import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
 import {
-  localMessageAttachments,
-  wirePromptBlocks,
-  titleFromBlocks,
-  promptText,
-  promptRejectionItem,
-} from "./prompt_blocks";
-import { validateQueuedAttachments } from "./draft_attachments";
-import {
   markRestoredQueueAttachments,
   queuedAttachmentsNeedReview,
 } from "./recovered_attachments";
@@ -72,7 +69,6 @@ import { archiveActivity } from "./archive_activity";
 import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
 import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
-import { uiError } from "./ui_error";
 import { finishHistoryPrefix } from "./history_replay";
 import {
   SessionOpenReplay,
@@ -167,7 +163,6 @@ import {
   synthesizeModeOption,
   applyPermissionRequest,
   nextItemId,
-  sealStreams,
   pushRaw,
   pushNotification,
   isKnownConfigUpdate,
@@ -406,6 +401,19 @@ class ThreadsStore {
     const e = event as Record<string, unknown>;
     const updateEnvelope = hasOwnUpdate(e);
     const kind = updateEnvelope ? undefined : e.kind;
+    const endingOwner =
+      kind === "turnEnd" ? this.promptOwners.get(s) : undefined;
+    // Validate before notifications or projection can treat an ending as ours.
+    // Unknown Agent envelopes and foreign receipts remain raw observations.
+    if (
+      kind === "turnEnd" &&
+      (Object.hasOwn(e, "sessionId") ||
+        (endingOwner && !endingOwner.ending(e.promptReceiptId)))
+    ) {
+      pushRaw(s, e);
+      this.emit(key);
+      return;
+    }
     observeDesktopNotification(
       s,
       updateEnvelope ? {} : e,
@@ -451,6 +459,7 @@ class ThreadsStore {
         request: e.request,
       });
     } else if (kind === "turnEnd") {
+      const owner = endingOwner;
       if (!s.running && !s.uncertainPrompt && !s.connectionOutcomeUnknown)
         return;
       this.stopConfirmation.clear(key);
@@ -464,6 +473,22 @@ class ThreadsStore {
         failure: e.failure,
         usage: e.usage,
       });
+      if (owner) {
+        if (
+          [
+            "end_turn",
+            "max_tokens",
+            "max_turn_requests",
+            "refusal",
+            "cancelled",
+          ].includes(String(e.stopReason))
+        )
+          owner.end();
+        else {
+          s.connectionOutcomeUnknown = true;
+          pauseQueue(s, "uncertain");
+        }
+      }
       if (e.error === "AUTH_REQUIRED")
         observeAuthentication(
           s.agentId,
@@ -502,6 +527,7 @@ class ThreadsStore {
         s.forkOperation.status = "unknown";
       replacePermissionEffect(s, undefined);
       this.stopConfirmation.clear(key);
+      this.promptOwners.get(s)?.end();
       applyConnectionLost(s, e.closeReason);
       this.channels.delete(key);
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
@@ -649,6 +675,39 @@ class ThreadsStore {
       const channel = new Channel<unknown>();
       const openToken = replay.token;
       let boundKey: string | null = null;
+      let ended: ProcessEndedReceipt | null = null;
+      let endedState: ThreadState | undefined;
+      const processEndedChannel = new Channel<unknown>();
+      const applyEnded = () => {
+        const state = endedState;
+        if (!state || !ended) return;
+        if (ended.connectionId !== state.connectionId) {
+          ended = null;
+          return;
+        }
+        // This closure owns the captured state even after normal raw-channel
+        // cleanup; a new same-key state or connection never inherits proof.
+        if (this.thread(state.key) !== state) return;
+        state.processEndedConnectionId = ended.connectionId;
+        const reason = ended.closeReason;
+        ended = null;
+        processEndedChannel.onmessage = () => {};
+        this.applyChannelEvent(state.key, {
+          kind: "connectionLost",
+          closeReason: reason,
+        });
+      };
+      processEndedChannel.onmessage = (value) => {
+        const receipt = processEndedReceipt(value);
+        if (
+          !receipt ||
+          (endedState && receipt.connectionId !== endedState.connectionId)
+        )
+          return;
+        // One native SessionEntry can send at most one receipt. No event list.
+        ended ??= receipt;
+        applyEnded();
+      };
       let historyFailed = false;
       let recheckObserver = recheck;
       if (recheck)
@@ -678,6 +737,7 @@ class ThreadsStore {
         }
       };
       const result = await invoke<OpenResult>("session_open", {
+        processEndedChannel,
         agentId: input.agentId,
         cwd: input.cwd,
         nativeSessionId: input.nativeSessionId ?? null,
@@ -751,6 +811,8 @@ class ThreadsStore {
       }
       if (result.resumed) finishHistoryPrefix(state);
       for (const event of following) this.applyChannelEvent(key, event);
+      endedState = state;
+      applyEnded();
       recheck?.finish(state, result);
       recheckObserver = undefined;
       this.emit();
@@ -892,162 +954,19 @@ class ThreadsStore {
     return this.drainQueue(key);
   }
 
-  private async drainQueue(key: string): Promise<SendAdmission> {
-    const s = this.thread(key);
-    if (
-      !s ||
-      !canDrain(s) ||
-      composerDrafts.read(`queue-edit:${key}`).queueEdit
-    )
-      return { status: "queued" };
-    const blocks = s.queued[0];
-    const finishPreparation = this.stopConfirmation.prepare(s);
-    s.submitting = true;
-    s.running = true;
-    const firstPrompt = s.identity === "draft";
-    sealStreams(s);
-    const text = promptText(blocks);
-    const item: ThreadItem = {
-      kind: "user",
-      id: nextItemId(),
-      text,
-      attachments: [],
-      streaming: false,
-      time: Date.now(),
-    };
-    s.items.push(item);
-    s.roundItemBase = s.items.length;
-    beginSuccessDesktopNotification(s, () => this.thread(key) === s);
-    this.emit();
-    let dispatched = false;
-    const receivedEnding = () =>
-      s.items
-        .slice(s.roundItemBase)
-        .some(
-          (entry) =>
-            entry.kind === "settled" && entry.replyReceived !== undefined,
-        );
-    const admit = () => {
-      removeQueued(s, blocks);
-      if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
-      s.identity = "established";
-      this.drafts.delete(s.draftGroup ?? "");
-      if (firstPrompt && !s.title) {
-        s.title = titleFromBlocks(blocks);
-        void invoke("session_touch", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-          title: s.title,
-          configOptions: null,
-        })
-          .then(() => this.refreshIndex())
-          .catch(() => undefined);
-      }
-    };
-    try {
-      await validateQueuedAttachments(blocks);
-      // Project checked dispatch content, not the earlier queue snapshot.
-      item.attachments = localMessageAttachments(blocks);
-      // Persist the in-flight input before it can reach an Agent. A crash in
-      // this window restores an explicitly quarantined request, never a retry.
-      this.emit(key);
-      await draftPersistence.flush();
-      await archiveActivity.begin(key);
-      if (
-        this.thread(key) !== s ||
-        composerDrafts.read(`queue-edit:${key}`).queueEdit ||
-        !canDrain({ ...s, running: false, submitting: false })
-      ) {
-        s.running = false;
-        s.items = s.items.filter((i) => i !== item);
-        if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
-        if (firstPrompt) s.identity = "draft";
-        return { status: "rejected", reason: "unavailable" };
-      }
-      const content = wirePromptBlocks(blocks);
-      finishPreparation();
-      dispatched = true;
-      const result = await invoke<PromptAdmission>("session_prompt", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-        content,
-      });
-      if (this.thread(key) !== s) return result;
-      if (
-        result.status === "accepted" ||
-        (result.status === "unknown" && receivedEnding())
-      ) {
-        // The result channel can beat the admission reply. A real ending proves
-        // delivery, even if the later admission reply was lost; it proves no success.
-        admit();
-        return { status: "accepted" };
-      } else {
-        s.running = false;
-        if (result.status === "unknown") {
-          s.identity = "established";
-          s.uncertainPrompt = blocks;
-          s.connectionOutcomeUnknown = true;
-          pauseQueue(s, "uncertain");
-        } else {
-          // Rejected admission proves this prompt never began; no completion
-          // can arrive to settle a stop requested while its reply was pending.
-          this.stopConfirmation.clear(key);
-          s.stopping = false;
-          s.stopUnconfirmed = false;
-          s.items = s.items.filter((i) => i !== item);
-          const notice = promptRejectionItem(result, nextItemId);
-          if (notice) s.items.push(notice);
-          pauseQueue(
-            s,
-            result.reason === "work_disabled"
-              ? "work_disabled"
-              : result.reason === "failed"
-                ? "failed"
-                : "unavailable",
-          );
-        }
-      }
-      return result;
-    } catch (error) {
-      if (this.thread(key) !== s) return { status: "unknown" };
-      if (dispatched && receivedEnding()) {
-        admit();
-        return { status: "accepted" };
-      }
-      if (!dispatched) {
-        s.running = false;
-        s.items = s.items.filter((i) => i !== item);
-        if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
-        if (firstPrompt) s.identity = "draft";
-        pauseQueue(s, "failed");
-        if (!firstPrompt)
-          s.items.push({
-            kind: "notice",
-            id: nextItemId(),
-            message: uiError(error, STRINGS.repair.sendFailed),
-            time: Date.now(),
-          });
-        return { status: "rejected", reason: "failed" };
-      }
-      // IPC failure may happen after dispatch: never automatically repeat it.
-      s.running = false;
-      s.identity = "established";
-      s.uncertainPrompt = blocks;
-      s.connectionOutcomeUnknown = true;
-      pauseQueue(s, "uncertain");
-      return { status: "unknown" };
-    } finally {
-      finishPreparation();
-      s.submitting = false;
-      this.emit();
-      this.finishArchiveActivity(s);
-      // A failed post-admission save must not turn a dispatched message into
-      // "unsent". The global save state retains the error for explicit retry.
-      await draftPersistence.flush().catch(() => undefined);
-      if (canDrain(s)) void this.drainQueue(key);
-    }
+  private drainQueue(key: string): Promise<SendAdmission> {
+    return drainPrompt(key, {
+      thread: (key) => this.thread(key),
+      emit: (key) => this.emit(key),
+      stop: this.stopConfirmation,
+      owners: this.promptOwners,
+      retireDraft: (state) => {
+        this.drafts.delete(state.draftGroup ?? "");
+      },
+      refreshIndex: () => this.refreshIndex(),
+      finishArchive: (state) => this.finishArchiveActivity(state),
+      drain: (key) => this.drainQueue(key),
+    });
   }
 
   async continueQueue(key: string): Promise<void> {
@@ -1178,6 +1097,7 @@ class ThreadsStore {
   }
 
   private stopConfirmation = new StopConfirmation();
+  private promptOwners = new WeakMap<ThreadState, PromptRequestOwner>();
 
   async stopTask(key: string, task: AsyncTask): Promise<void> {
     const thread = this.thread(key);
@@ -1191,10 +1111,22 @@ class ThreadsStore {
   }
 
   async cancel(key: string): Promise<void> {
+    const thread = this.thread(key);
+    const owner = thread && this.promptOwners.get(thread);
+    if (owner && !owner.isOffered()) {
+      await owner.cancel();
+      return;
+    }
     return this.stopConfirmation.cancel(
-      this.thread(key),
+      thread,
       () => this.threads.get(key),
       () => this.emit(),
+      owner
+        ? async () => {
+            if ((await owner.cancel()) === "unconfirmed")
+              throw new Error("cancelUnconfirmed");
+          }
+        : undefined,
     );
   }
 

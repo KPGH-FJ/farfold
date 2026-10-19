@@ -1,3 +1,4 @@
+import { PROMPT_ADMISSION } from "./prompt_admission_strings";
 import { ATTACHMENT_SEARCH_STRINGS } from "./attachment_search_strings";
 import { REMEMBERED_BROWSER_STRINGS } from "./browser_remembered_strings";
 import { HISTORY_SEARCH_STRINGS } from "./history_search_strings";
@@ -95,6 +96,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      PROMPT_ADMISSION,
       REMEMBERED_BROWSER_STRINGS,
       HISTORY_SEARCH_STRINGS,
       ATTACHMENT_SEARCH_STRINGS,

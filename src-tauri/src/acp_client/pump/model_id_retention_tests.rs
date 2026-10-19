@@ -32,6 +32,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     life.ready().unwrap();
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
+        prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),
         opening: None,
         connection_id: connection.into(),
