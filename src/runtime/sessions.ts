@@ -573,7 +573,18 @@ class ThreadsStore {
         this.emit(key);
         return;
       }
-      applyUpdate(s, e.update, e);
+      try {
+        applyUpdate(s, e.update, e);
+      } catch (error) {
+        // A local conversion of ordinary Agent JSON must not strand Tauri's
+        // ordered Channel index. Keep the entire envelope as opaque data.
+        // History preparation still fails at its original transaction boundary;
+        // no working/unknown/receipt/permission owner is retired by this fallback.
+        if (!live || !(error instanceof TypeError)) throw error;
+        pushRaw(s, e);
+        this.emit(key);
+        return;
+      }
       if (live) conversationReadState.receiveUpdate(key, e.update);
       if (
         (e.update as { sessionUpdate?: unknown } | undefined)?.sessionUpdate ===
