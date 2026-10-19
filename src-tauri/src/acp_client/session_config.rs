@@ -185,7 +185,13 @@ impl SessionConfig {
         self.options().ok_or_else(|| UNCONFIRMED.into())
     }
 
-    pub(crate) fn observe(&mut self, dispatch: &Dispatch) -> Option<Value> {
+    /// These updates must be interpreted after the initial load response.
+    /// It is an ordering barrier, not permission to discard any other message.
+    pub(crate) fn waits_for_load_response(dispatch: &Dispatch) -> bool {
+        Self::configuration_update(dispatch).is_some()
+    }
+
+    fn configuration_update(dispatch: &Dispatch) -> Option<&Value> {
         let Dispatch::Notification(message) = dispatch else {
             return None;
         };
@@ -193,6 +199,15 @@ impl SessionConfig {
             return None;
         }
         let update = message.params().get("update")?;
+        matches!(
+            update.get("sessionUpdate").and_then(Value::as_str),
+            Some("config_option_update" | "current_model_update")
+        )
+        .then_some(update)
+    }
+
+    pub(crate) fn observe(&mut self, dispatch: &Dispatch) -> Option<Value> {
+        let update = Self::configuration_update(dispatch)?;
         match update.get("sessionUpdate").and_then(Value::as_str) {
             Some("config_option_update") => {
                 self.options = Some(update.get("configOptions").cloned().unwrap_or(Value::Null));

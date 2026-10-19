@@ -75,7 +75,7 @@ pub(crate) async fn open_session_on_connection(
             downstream(value);
         }
     });
-    let (inbox_tx, inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
+    let (inbox_tx, mut inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
     // Questions required by load cannot wait in the pump inbox until load
@@ -85,6 +85,9 @@ pub(crate) async fn open_session_on_connection(
             .opening_session(id, &operation, events.clone())
     });
     let resumed = native_session_id.is_some();
+    let mut received = native_session_id
+        .as_ref()
+        .map(|id| load_notifications::State::new(id, &ops));
     let (session_id, mut response, guard, retention, identity) = match native_session_id {
         None => {
             let params = super::super::transient_mcp::session_params(cwd, None, mcp.as_ref());
@@ -142,14 +145,16 @@ pub(crate) async fn open_session_on_connection(
             let params = super::super::transient_mcp::session_params(cwd, Some(&id), mcp.as_ref());
             let request =
                 UntypedMessage::new("session/load", &params).map_err(describe_open_error)?;
-            match ops
-                .inquiries
-                .request(
-                    &operation,
-                    cx,
-                    || cx.send_request_to(Agent, request),
-                    events.clone(),
-                )
+            let load = ops.inquiries.request(
+                &operation,
+                cx,
+                || cx.send_request_to(Agent, request),
+                events.clone(),
+            );
+            match received
+                .as_mut()
+                .expect("load owns its dispatch state")
+                .while_loading(&id, &mut inbox_rx, &events, pending, &ops, load)
                 .await
             {
                 Ok(response) => {
@@ -326,6 +331,7 @@ pub(crate) async fn open_session_on_connection(
                 _retention: retention.registered(),
             },
         );
+    let received = received.unwrap_or_else(|| load_notifications::State::new(&session_id, &ops));
     // Publish ownership before the pump can finish or receive a close request.
     // Removing the route then releases the retention under the admission lock.
     let connection_id = ops.connection_id.clone();
@@ -345,6 +351,7 @@ pub(crate) async fn open_session_on_connection(
         config_store,
         opening,
         mcp_requests,
+        received,
     ));
 
     let ready = ready_rx

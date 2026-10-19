@@ -56,6 +56,8 @@ mod media_forwarding_tests;
 mod config_change;
 use config_change::{complete_choice_change, save_confirmed_change};
 
+#[path = "pump/load_notifications.rs"]
+mod load_notifications;
 #[path = "pump/open.rs"]
 mod open;
 pub(crate) use open::open_session_on_connection;
@@ -649,6 +651,7 @@ async fn session_pump(
     mut config_store: super::model_guard::ConfigStore,
     opening: restore_config::Opening,
     mcp_requests: Option<super::transient_mcp::SessionMcpRequests>,
+    received: load_notifications::State,
 ) {
     let mut opening = Some(opening);
     let mut detached = None;
@@ -657,29 +660,24 @@ async fn session_pump(
     let mut mutation: Option<Mutation> = None;
     let mut pending_config_store = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<prompt::Outcome>();
-    let mut permission_ids: Vec<String> = Vec::new();
+    let load_notifications::State {
+        mut permission_ids,
+        mut elicitation_ids,
+        mut tools,
+        mut compactions,
+        mut async_tasks,
+        mut failures,
+        expiry_tx,
+        mut expiry_rx,
+        mut held_dispatch,
+    } = received;
     let mut prompt_in_flight = false;
     // A transport/error receipt cannot establish which context was committed.
     // This guard only gates the new fork action; it does not infer a stop.
     let mut fork_execution_known = true;
     let mut prompt_cancelling = false;
     let mut prompt_owner: Option<prompt::Active> = None;
-    let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
-    let mut compactions = super::compaction_activity::CompactionActivity::new(
-        ops.life.clone(),
-        ops.connection_id.clone(),
-        session_id.clone(),
-    );
-    let mut async_tasks = super::async_tasks::Tasks::new(
-        ops.async_tasks_supported.load(Ordering::SeqCst),
-        ops.connection_id.clone(),
-        session_id.clone(),
-        ops.life.clone(),
-    );
     let (task_tx, mut task_rx) = mpsc::unbounded_channel();
-    let mut failures = super::failures::FailureTracker::default();
-    let mut elicitation_ids: Vec<String> = Vec::new();
-    let (expiry_tx, mut expiry_rx) = mpsc::unbounded_channel::<String>();
     let mut buffered_control = None;
     loop {
         if *stopping.borrow() {
@@ -777,14 +775,12 @@ async fn session_pump(
                 if let Some(deadline) = task_deadline { tokio::time::sleep_until(deadline).await; }
                 else { std::future::pending::<()>().await; }
             } => { events(ctx.async_tasks.expire()); },
-            dispatch = inbox.recv() => match dispatch {
+            dispatch = async {
+                if let Some(dispatch) = held_dispatch.take() { Some(dispatch) }
+                else { inbox.recv().await }
+            } => match dispatch {
                 Some(dispatch) => {
-                    if let Dispatch::Notification(message) = &dispatch
-                        && message.method() == "session/update"
-                        && message.params().pointer("/update/sessionUpdate").and_then(Value::as_str) == Some("session_info_update")
-                        && let Some(meta) = message.params().pointer("/update/_meta") {
-                        failures.observe(meta, prompt_in_flight);
-                    }
+                    load_notifications::observe_failure(&dispatch, &mut failures, prompt_in_flight);
                     let options = configuration.observe(&dispatch);
                     if let Some(options) = &options {
                         models.extend(model_ids(options));

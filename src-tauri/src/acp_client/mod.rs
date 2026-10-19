@@ -148,3 +148,6 @@ mod async_task_wire_tests;
 
 #[cfg(test)]
 mod event_transport_baseline_tests;
+
+#[cfg(test)]
+mod load_prefix_consumption_tests;
