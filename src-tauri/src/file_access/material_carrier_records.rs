@@ -129,11 +129,11 @@ struct Part {
 }
 #[derive(Debug)]
 pub(super) struct Parsed {
-    _memory: ResidentLease,
     parts: BTreeMap<Key, Part>,
     pub bytes: u64,
     pub sha256: [u8; 32],
     pub security: full_security_records::Decoded,
+    _memory: ResidentLease,
 }
 impl PartialEq for Parsed {
     fn eq(&self, other: &Self) -> bool {

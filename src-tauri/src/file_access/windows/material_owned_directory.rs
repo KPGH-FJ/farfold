@@ -26,10 +26,23 @@ impl State {
     }
     pub fn create(&mut self, root: &File, full: bool) -> Result<()> {
         const LEAF: &[u16] = &[114, 101, 115, 116, 111, 114, 101, 100, 45, 100, 105, 114];
+        self.create_named(root, LEAF, full)
+    }
+    // Only the original Namespace-owned directory tree calls this raw leaf seam.
+    pub(super) fn create_named(&mut self, root: &File, leaf: &[u16], full: bool) -> Result<()> {
+        if self.file.is_some()
+            || self.identity.is_some()
+            || self._create_status.is_some()
+            || self.pending
+            || !self.stopped.is_empty()
+        {
+            return Err(Error::Invalid);
+        }
+        crate::file_access::material_raw_name::check(leaf).map_err(|_| Error::Unsupported)?;
         let unicode = UNICODE_STRING {
-            Length: (LEAF.len() * 2) as u16,
-            MaximumLength: (LEAF.len() * 2) as u16,
-            Buffer: LEAF.as_ptr().cast_mut(),
+            Length: (leaf.len() * 2) as u16,
+            MaximumLength: (leaf.len() * 2) as u16,
+            Buffer: leaf.as_ptr().cast_mut(),
         };
         let object = OBJECT_ATTRIBUTES {
             Length: size_of::<OBJECT_ATTRIBUTES>() as u32,

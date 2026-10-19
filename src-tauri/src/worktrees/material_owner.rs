@@ -139,3 +139,11 @@ mod owned_link_tests;
 #[cfg(all(windows, test))]
 #[path = "material_directory_restore_owner_tests.rs"]
 mod directory_restore_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_directory_tree_owner_tests.rs"]
+mod directory_tree_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_regular_shared_owner_tests.rs"]
+mod regular_shared_tests;

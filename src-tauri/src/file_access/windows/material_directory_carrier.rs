@@ -34,7 +34,7 @@ pub(crate) struct DirectoryRequest {
     resident: Resident,
     _memory: ResidentLease,
 }
-fn pin_error(error: super::material_pin::Failure) -> Error {
+pub(super) fn pin_error(error: super::material_pin::Failure) -> Error {
     use super::material_pin::Failure as E;
     match error {
         E::Cancelled => Error::Cancelled,

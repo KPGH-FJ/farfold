@@ -201,10 +201,8 @@ fn wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet() {
         ),
         Err(E::Cancelled)
     ));
-    assert!(matches!(
-        run(request(&path, false, &memory), 1, false),
-        Err(E::Limit)
-    ));
+    let limited = run(request(&path, false, &memory), 1, false);
+    assert!(matches!(limited, Err(E::Limit)), "{limited:?}");
     assert!(std::fs::read_dir(&path).unwrap().next().is_none());
     temp.close().unwrap();
 }

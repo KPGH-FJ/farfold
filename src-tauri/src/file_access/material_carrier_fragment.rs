@@ -29,11 +29,11 @@ pub(super) struct NativeExtent {
     pub sha256: [u8; 32],
 }
 pub(super) struct Verified {
-    _memory: ResidentLease,
     pub metadata: Metadata,
     pub native: NativeExtent,
     pub record_sha256: [u8; 32],
     pub stored_bytes: u64,
+    _memory: ResidentLease,
 }
 fn leaf(raw: &[u16]) -> Result<()> {
     if raw.is_empty()

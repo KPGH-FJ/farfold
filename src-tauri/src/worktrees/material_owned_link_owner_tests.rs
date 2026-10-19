@@ -45,6 +45,13 @@ fn owned<T>(full: bool, f: impl FnOnce(&mut OwnedLinks) -> Result<T, E>) -> Resu
             owner.record_failure(error.clone());
         }
         let cleanup = owner.cleanup();
+        let _ = writeln!(
+            std::io::stderr().lock(),
+            "FARFOLD_OWNED_LINK_TEST_OUTCOME operation={:?} cleanup={:?} native_status={:?}",
+            result.as_ref().err(),
+            cleanup.as_ref().err(),
+            owner.last_native_status(),
+        );
         if cleanup.is_err() {
             *retired = Some(owner);
             actual = Some(Err(E::CleanupUnknown));

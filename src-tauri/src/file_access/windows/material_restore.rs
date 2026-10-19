@@ -20,12 +20,14 @@ pub(super) struct Namespace {
     cleaned: bool,
     links: Option<owned_link::State>,
     directory: Option<owned_directory::State>,
+    tree: Option<owned_directory_tree::State>,
     stopped_handles: Vec<StoppedHandle>,
     stopped_allocations: Vec<StoppedAllocation>,
     _creation: Option<CreationOutcome>,
     pub source_carrier: Option<File>,
     pub target: Option<File>,
     pub target_carrier: Option<File>,
+    pub tree_carrier: Option<File>,
 }
 impl Namespace {
     // Caller installs this owner in its retirement sink before any API call.
@@ -38,12 +40,14 @@ impl Namespace {
             cleaned: false,
             links: None,
             directory: None,
+            tree: None,
             stopped_handles: Vec::with_capacity(5),
             stopped_allocations: Vec::with_capacity(1),
             _creation: None,
             source_carrier: None,
             target: None,
             target_carrier: None,
+            tree_carrier: None,
         })
     }
     pub fn open(&mut self) -> Result<()> {
@@ -286,6 +290,61 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .empty(work, cancel, resident)
     }
+    pub fn prepare_directory_tree(
+        &mut self,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
+        if self.tree.is_some()
+            || self.directory.is_some()
+            || self.target.is_some()
+            || self.tree_carrier.is_some()
+        {
+            return Err(Error::Invalid);
+        }
+        self.verify()?;
+        self.tree = Some(owned_directory_tree::State::reserve(resident)?);
+        self.tree_carrier = Some(self.create("directory-tree.bin", false)?);
+        Ok(())
+    }
+    pub fn create_tree_directory(
+        &mut self,
+        parent: u32,
+        leaf: &[u16],
+        full: bool,
+    ) -> Result<usize> {
+        self.verify()?;
+        let root = self.root.as_ref().ok_or(Error::Invalid)?;
+        self.tree
+            .as_mut()
+            .ok_or(Error::Invalid)?
+            .create(root, parent, leaf, full)
+    }
+    pub fn tree_directory(&self, index: usize) -> Result<&File> {
+        self.tree.as_ref().ok_or(Error::Invalid)?.file(index)
+    }
+    pub fn tree_directory_empty(
+        &self,
+        index: usize,
+        work: &mut crate::file_access::ea_records::WorkBudget,
+        cancel: &AtomicBool,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
+        self.tree
+            .as_ref()
+            .ok_or(Error::Invalid)?
+            .empty(index, work, cancel, resident)
+    }
+    pub fn verify_tree_edges(
+        &self,
+        work: &mut crate::file_access::ea_records::WorkBudget,
+        cancel: &AtomicBool,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
+        self.tree
+            .as_ref()
+            .ok_or(Error::Invalid)?
+            .verify_edges(work, cancel, resident)
+    }
     pub fn create_target(&mut self) -> Result<()> {
         if self.target.is_some() {
             return Err(Error::Invalid);
@@ -380,6 +439,9 @@ impl Namespace {
         if let Some(links) = self.links.as_mut() {
             links.cleanup()?;
         }
+        if let Some(tree) = self.tree.as_mut() {
+            tree.cleanup()?;
+        }
         if let Some(directory) = self.directory.as_mut() {
             directory.cleanup()?;
         }
@@ -388,6 +450,7 @@ impl Namespace {
         for leaf in [
             &mut self.source_carrier,
             &mut self.target_carrier,
+            &mut self.tree_carrier,
             &mut self.target,
         ] {
             if let Some(file) = leaf.as_ref() {
@@ -547,6 +610,9 @@ pub(super) fn flushed(file: &File) -> Result<()> {
     }
     Ok(())
 }
+
+#[path = "material_owned_directory_tree.rs"]
+mod owned_directory_tree;
 
 #[path = "material_owned_directory.rs"]
 mod owned_directory;

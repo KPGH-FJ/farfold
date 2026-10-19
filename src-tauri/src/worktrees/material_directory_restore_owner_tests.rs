@@ -171,10 +171,8 @@ fn precancel_and_shared_work_failure_preserve_source_without_a_successful_restor
         ),
         Err(E::Cancelled)
     ));
-    assert!(matches!(
-        run(request(&p, false, &memory), 1, false),
-        Err(E::Limit)
-    ));
+    let limited = run(request(&p, false, &memory), 1, false);
+    assert!(matches!(limited, Err(E::Limit)), "{limited:?}");
     assert!(std::fs::read_dir(&p).unwrap().next().is_none());
     d.close().unwrap();
 }

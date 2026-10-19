@@ -2,14 +2,15 @@
 use super::*;
 use super::{
     material_carrier_native::{self as native, Facts},
+    material_regular_shared as shared,
     material_restore::{self, Namespace},
 };
 use crate::file_access::{
     ea_records::WorkBudget,
     material_backup_io::{self as transfer, Api, Mode, RetiredContext, Session},
     material_carrier_records::{
-        self as records, Error, Parsed, RESIDENT_LIMIT, Resident, Result, WORK_LIMIT, check,
-        io_error,
+        self as records, Error, Parsed, RESIDENT_LIMIT, Resident, ResidentLease, Result,
+        WORK_LIMIT, check, io_error,
     },
 };
 use std::{
@@ -57,6 +58,8 @@ pub(crate) struct CarrierRetirement {
     _context: Option<RetiredContext>,
     _operation_error: Option<Error>,
     _cleanup_error: Error,
+    _resident: Resident,
+    _namespace_memory: Option<ResidentLease>,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) struct CarrierReceipt {
@@ -145,7 +148,7 @@ fn parsed(
     }
     Ok(value)
 }
-fn captured(
+pub(super) fn captured(
     file: &File,
     spool: &File,
     facts: &Facts,
@@ -180,9 +183,10 @@ pub(crate) fn carrier_roundtrip(
     roundtrip_with_consumer(request, cancel, retirement, None)
 }
 
-// Only internal owned-carrier consumers implement this observer. It receives
-// the actual complete spool after every original source/target fence succeeds;
-// it runs before original namespace cleanup and cannot relax those checks.
+// Only trusted internal owned-carrier consumers implement this observer.
+// The legacy wrapper invokes it after all original source/target fences and
+// before cleanup. Shared capture instead fences its complete source spool;
+// it does not imply that a restore target exists or has been verified.
 pub(super) struct FragmentSource<'a> {
     pub(super) file: &'a File,
     pub(super) leaf: &'a [u16],
@@ -215,6 +219,11 @@ pub(super) fn roundtrip_with_consumer(
     let mut source = None;
     let mut namespace = None;
     let mut context = None;
+    let mut namespace_memory = None;
+    // Wrapper alone owns the original policy values. Reusable capture never
+    // makes a fresh pool/work allowance or another namespace/controller.
+    let resident = Resident::new(RESIDENT_LIMIT);
+    let mut work = WorkBudget::new(WORK_LIMIT);
     // Caller acquires its existing Slot before here. Reservation spans source,
     // carrier, native write, recapture and all cleanup, including Rust unwind.
     let result = std::panic::catch_unwind(AssertUnwindSafe(|| {
@@ -229,34 +238,30 @@ pub(super) fn roundtrip_with_consumer(
         if pin.identity() != &expected {
             return Err(Error::Changed);
         }
-        let _query = pin
-            .try_observation_owner()
-            .map_err(|_| Error::Unsupported)?;
-        pin.verify().map_err(|e| io_error("sourceVerify", e))?;
-        let mut work = WorkBudget::new(WORK_LIMIT);
-        let resident = Resident::new(RESIDENT_LIMIT);
-        let _namespace_memory = resident.lease(4 * records::BLOCK)?;
-        let before = native::facts(pin.file(), &mut work, cancel, &resident)?;
+        namespace_memory = Some(resident.lease(4 * records::BLOCK)?);
+        let prepared = shared::prepare(
+            shared::Held::legacy(pin)?,
+            &mut shared::Io {
+                work: &mut work,
+                cancel,
+                resident: &resident,
+                context: &mut context,
+            },
+        )?;
         namespace = Some(Namespace::reserve()?);
         let ns = namespace.as_mut().ok_or(Error::Invalid)?;
         ns.open()?;
-        let carrier = ns.source_carrier.as_ref().ok_or(Error::Invalid)?;
-        let first = captured(
-            pin.file(),
-            carrier,
-            &before,
-            &mut work,
-            cancel,
-            &mut context,
-            &resident,
+        let captured_source = prepared.capture(
+            ns,
+            &mut shared::Io {
+                work: &mut work,
+                cancel,
+                resident: &resident,
+                context: &mut context,
+            },
         )?;
-        let after = native::facts(pin.file(), &mut work, cancel, &resident)?;
-        if !before.unchanged(&after) {
-            return Err(Error::Changed);
-        }
-        drop(after);
-        pin.verify()
-            .map_err(|e| io_error("sourceAfterCapture", e))?;
+        let before = &captured_source.facts;
+        let first = &captured_source.parsed;
         // Full framing/SD/inventory and source fences pass BEFORE target create.
         // The carrier handle is exclusive; no writable external alias is made.
         ns.create_target()?;
@@ -302,10 +307,15 @@ pub(super) fn roundtrip_with_consumer(
             return Err(Error::Changed);
         }
         drop(target_after);
-        if !before.unchanged(&native::facts(pin.file(), &mut work, cancel, &resident)?) {
-            return Err(Error::Changed);
-        }
-        pin.verify().map_err(|e| io_error("sourceFinalVerify", e))?;
+        captured_source.verify_unchanged(
+            &mut shared::Io {
+                work: &mut work,
+                cancel,
+                resident: &resident,
+                context: &mut context,
+            },
+            "sourceFinalVerify",
+        )?;
         parent
             .verify()
             .map_err(|e| io_error("parentFinalVerify", e))?;
@@ -331,8 +341,8 @@ pub(super) fn roundtrip_with_consumer(
                 FragmentSource {
                     file: ns.source_carrier.as_ref().ok_or(Error::Invalid)?,
                     leaf: &leaf,
-                    facts: &before,
-                    parsed: &first,
+                    facts: before,
+                    parsed: first,
                 },
                 &mut work,
                 cancel,
@@ -371,9 +381,13 @@ pub(super) fn roundtrip_with_consumer(
             _context: context,
             _operation_error: operation_error,
             _cleanup_error: cleanup_error,
+            _resident: resident,
+            _namespace_memory: namespace_memory,
         });
         return Err(Error::CleanupUnknown);
     }
+    drop(namespace);
+    drop(namespace_memory);
     result.map(|mut receipt| {
         receipt.owned_handles_closed_and_disposition_accepted = true;
         receipt

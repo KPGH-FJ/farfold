@@ -103,3 +103,17 @@ pub(crate) use windows::{
 
 #[cfg(all(windows, test))]
 pub(crate) use windows::{DirectoryRestoreReceipt, directory_roundtrip};
+
+#[cfg(test)]
+mod material_directory_tree_records;
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    DirectoryTreeMemory, DirectoryTreeReceipt, DirectoryTreeRequest, DirectoryTreeRetirement,
+    directory_tree_roundtrip,
+};
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    RegularSharedMemory, RegularSharedReceipt, RegularSharedRequest, RegularSharedRetirement,
+    regular_shared_capture,
+};

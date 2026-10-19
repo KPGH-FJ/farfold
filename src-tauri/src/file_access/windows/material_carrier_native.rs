@@ -29,7 +29,6 @@ pub(super) struct Basic {
 }
 #[derive(Debug)]
 pub(super) struct Facts {
-    _memory: ResidentLease,
     pub version: EntryMetadata,
     pub stamp: Stamp,
     pub basic: Basic,
@@ -37,6 +36,7 @@ pub(super) struct Facts {
     pub inventory: Inventory,
     pub ea: ea_records::Observation,
     pub security: full_security_records::Decoded,
+    _memory: ResidentLease,
 }
 impl Facts {
     pub fn unchanged(&self, other: &Self) -> bool {

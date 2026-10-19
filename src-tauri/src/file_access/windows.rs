@@ -615,7 +615,16 @@ mod material_directory_facts;
 #[cfg(test)]
 mod material_directory_restore;
 #[cfg(test)]
+mod material_directory_tree;
+#[cfg(test)]
+mod material_directory_tree_source;
+#[cfg(test)]
 pub(crate) use material_directory_restore::{DirectoryRestoreReceipt, directory_roundtrip};
+#[cfg(test)]
+pub(crate) use material_directory_tree::{
+    DirectoryTreeMemory, DirectoryTreeReceipt, DirectoryTreeRequest, DirectoryTreeRetirement,
+    directory_tree_roundtrip,
+};
 #[cfg(test)]
 mod material_pin;
 #[cfg(test)]
@@ -638,4 +647,14 @@ pub(crate) use material_backup_shape::{
 pub(crate) use material_restore::owned_link::{
     Memory as OwnedLinkMemory, OwnedLinks, Receipt as OwnedLinkReceipt,
     WORK_LIMIT as OWNED_LINK_WORK_LIMIT,
+};
+
+#[cfg(test)]
+mod material_regular_shared;
+#[cfg(test)]
+mod material_regular_shared_probe;
+#[cfg(test)]
+pub(crate) use material_regular_shared_probe::{
+    RegularSharedMemory, RegularSharedReceipt, RegularSharedRequest, RegularSharedRetirement,
+    regular_shared_capture,
 };
