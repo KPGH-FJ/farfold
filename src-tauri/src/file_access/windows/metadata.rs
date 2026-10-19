@@ -45,6 +45,16 @@ impl EntryMetadata {
         out.extend(self.changed.to_le_bytes());
         out
     }
+    // Enumeration is a namespace observation. NTFS may return stale cached
+    // metadata for this same identity; current version equality uses handles.
+    // The stronger legacy helper below remains unchanged for its consumers.
+    pub(crate) fn matches_directory_identity(
+        &self,
+        listed: &crate::file_access::DirectoryObservation,
+    ) -> bool {
+        self.identity == listed.identity
+    }
+    #[cfg(test)]
     pub(crate) fn matches_directory_entry(
         &self,
         listed: &crate::file_access::DirectoryObservation,

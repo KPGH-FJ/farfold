@@ -8,11 +8,12 @@ use super::{
 };
 use crate::{
     file_access::{
-        DirectoryObservation, EaFailure, EaObservation, EaWorkBudget, FullSecurityFailure,
-        FullSecurityObservation, IntegrityObservation, MetadataKind, PinnedPath, RetiredBackup,
-        SecurityObservation, StreamsFailure, StreamsObservation, directory_entries, ea_observation,
-        full_security_observation, integrity_observation, metadata_child, metadata_file,
-        security_observation, streams_observation,
+        DirectoryEntries, DirectoryObservation, EaFailure, EaObservation, EaWorkBudget,
+        EntryMetadata, FullSecurityFailure, FullSecurityObservation, IntegrityObservation,
+        MetadataKind, PinnedPath, RetiredBackup, SecurityObservation, StreamsFailure,
+        StreamsObservation, directory_entries, ea_observation, full_security_observation,
+        integrity_observation, metadata_child, metadata_file, security_observation,
+        streams_observation,
     },
     worktrees::{
         recycle_types::MaterialProfile,
@@ -183,6 +184,55 @@ fn admitted(value: &DirectoryObservation) -> Result<()> {
     }
     Ok(())
 }
+// Current handle metadata is authoritative for version/profile checks. Keep
+// the early conservative enumeration refusal, and also refuse current flags
+// before opening a data-capable child even when its directory copy is stale.
+fn admitted_current(value: &EntryMetadata) -> Result<()> {
+    if value.attributes() & (0x400 | 0x1000 | 0x4000 | 0x40000 | 0x400000) != 0 {
+        return Err(error("specialFile"));
+    }
+    Ok(())
+}
+// Names/raw UTF-16 and full volume/file128 IDs form the enumeration fence.
+// Recheck complete actual child metadata after traversal instead of treating
+// potentially cached directory times/size/attributes as a current version.
+fn recheck_children(
+    dir: &PinnedPath,
+    listed: &DirectoryEntries,
+    versions: &[(&[u16], EntryMetadata)],
+    capacity: u64,
+    cancel: &AtomicBool,
+) -> Result<()> {
+    cancelled(cancel)?;
+    let after = directory_entries(dir, capacity, cancel).map_err(enumeration_error)?;
+    // Preserve the conservative type/unsupported-profile refusal at both
+    // namespace fences as well as the current-handle refusal before reads.
+    for value in after.values() {
+        cancelled(cancel)?;
+        admitted(value)?;
+    }
+    if after.len() != listed.len()
+        || listed.iter().any(|(raw, value)| {
+            after.get(raw).is_none_or(|next| {
+                next.identity != value.identity || (next.attributes ^ value.attributes) & 0x10 != 0
+            })
+        })
+    {
+        return Err(error("materialChanged"));
+    }
+    for (raw, expected) in versions {
+        cancelled(cancel)?;
+        let text = String::from_utf16(raw).map_err(|_| error("unsafePath"))?;
+        if metadata_child(dir.file(), OsStr::new(&text))
+            .map_err(|_| error("unavailable"))?
+            .as_ref()
+            != Some(expected)
+        {
+            return Err(error("materialChanged"));
+        }
+    }
+    cancelled(cancel)
+}
 fn enumeration_error(
     value: crate::file_access::DirectoryFailure,
 ) -> crate::worktrees::types::Failure {
@@ -267,6 +317,9 @@ fn walk(
         return Err(error("nestedRepository"));
     }
     scan.field(&before.version_fields());
+    // Borrow names from the already-reserved listing; retain at most one fixed
+    // metadata value per traversed entry (global MAX_ENTRIES), no extra handles.
+    let mut versions = Vec::with_capacity(listed.len());
     for (raw, observed) in &listed {
         cancelled(cancel)?;
         admitted(observed)?;
@@ -284,9 +337,10 @@ fn walk(
         let metadata = metadata_child(dir.file(), OsStr::new(&text))
             .map_err(|_| error("unavailable"))?
             .ok_or(error("materialChanged"))?;
-        if !metadata.matches_directory_entry(observed) {
+        if !metadata.matches_directory_identity(observed) {
             return Err(error("materialChanged"));
         }
+        admitted_current(&metadata)?;
         let directory = metadata.kind == MetadataKind::Directory;
         if !directory && metadata.kind != MetadataKind::File {
             return Err(error("specialFile"));
@@ -299,7 +353,7 @@ fn walk(
             }
         })?;
         let opened = metadata_file(child.file()).map_err(|_| error("unavailable"))?;
-        if opened != metadata || !opened.matches_directory_entry(observed) {
+        if opened != metadata || !opened.matches_directory_identity(observed) {
             return Err(error("materialChanged"));
         }
         let mut relative = prefix.to_vec();
@@ -373,6 +427,7 @@ fn walk(
             return Err(error("materialChanged"));
         }
         child.verify().map_err(|_| error("materialChanged"))?;
+        versions.push((raw.as_slice(), opened));
     }
     if scan.observe_ea(&dir, cancel)? != ea_before {
         return Err(error("materialChanged"));
@@ -386,11 +441,10 @@ fn walk(
     if scan.observe_full_security(&dir, cancel)? != full_before {
         return Err(error("materialChanged"));
     }
-    // A complete second observation checks names/IDs/metadata after traversal;
-    // it is still not an atomic snapshot against arbitrary external writers.
-    if directory_entries(&dir, first_capacity, cancel).map_err(enumeration_error)? != listed
-        || metadata_file(dir.file()).map_err(|_| error("unavailable"))? != before
-    {
+    // Full actual child versions include ChangeTime, links, tags and flags.
+    // This remains a bounded observation, not an atomic filesystem snapshot.
+    recheck_children(&dir, &listed, &versions, first_capacity, cancel)?;
+    if metadata_file(dir.file()).map_err(|_| error("unavailable"))? != before {
         return Err(error("materialChanged"));
     }
     dir.verify().map_err(|_| error("materialChanged"))?;
@@ -462,3 +516,7 @@ fn capture_pin(
         sha256: hex(scan.hash.finalize()),
     })
 }
+
+#[cfg(test)]
+#[path = "material_windows_entry_pair_tests.rs"]
+mod entry_pair_tests;

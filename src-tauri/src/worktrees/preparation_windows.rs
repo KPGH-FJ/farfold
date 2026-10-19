@@ -35,10 +35,20 @@ impl Node {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Eq)]
 struct NamedObservation {
     raw_name: Vec<u16>,
     metadata: DirectoryObservation,
+}
+impl PartialEq for NamedObservation {
+    fn eq(&self, other: &Self) -> bool {
+        // Directory metadata can be a stale NTFS index copy. Current complete
+        // versions live separately in Node::Present(EntryMetadata). Keep raw
+        // spelling/full identity and the historically versioned EA-size hint.
+        self.raw_name == other.raw_name
+            && self.metadata.identity == other.metadata.identity
+            && self.metadata.ea_size == other.metadata.ea_size
+    }
 }
 
 // Complete enumeration is used only to resolve the existing fixed-name set.
@@ -98,7 +108,7 @@ fn observe_listed(project: &PinnedPath, listed: DirectoryEntries) -> Result<Meta
             Ok(Some(value))
                 if listed
                     .as_ref()
-                    .is_some_and(|listed| value.matches_directory_entry(&listed.metadata)) =>
+                    .is_some_and(|listed| value.matches_directory_identity(&listed.metadata)) =>
             {
                 Node::Present(value)
             }
@@ -342,3 +352,7 @@ mod namespace_tests {
         assert!(observe_listed(&pin, fresh).is_ok());
     }
 }
+
+#[cfg(test)]
+#[path = "preparation_windows_cache_tests.rs"]
+mod cache_tests;
