@@ -620,12 +620,12 @@ jobs:
                 'worktrees::recovery_pack::source_export_tests::roots_cannot_inject_revision_options_and_partial_material_still_cannot_export',
                 'worktrees::recovery_pack::source_export_tests::missing_source_objects_fail_and_absolute_project_program_decoy_is_not_authority'
               ) },
-            @{ name = 'material-entry'; filter = 'worktrees::material_windows::entry_pair_tests::'; expected = 5; names = @(
-                'worktrees::material_windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version',
-                'worktrees::material_windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected',
-                'worktrees::material_windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence',
-                'worktrees::material_windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version',
-                'worktrees::material_windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected'
+            @{ name = 'material-entry'; filter = 'worktrees::material_scan::windows::entry_pair_tests::'; expected = 5; names = @(
+                'worktrees::material_scan::windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version',
+                'worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected',
+                'worktrees::material_scan::windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence',
+                'worktrees::material_scan::windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version',
+                'worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected'
               ) },
             @{ name = 'preparation-cache'; filter = 'worktrees::preparation_windows::cache_tests::'; expected = 4; names = @(
                 'worktrees::preparation_windows::cache_tests::earlier_real_listing_pairs_with_stable_current_fixed_file_and_fresh_cache_observation',

@@ -129,6 +129,17 @@ impl ReadContext {
         }
         args.extend(["--get", name]);
         let output = self.execute(&args, &AtomicBool::new(false), Duration::from_secs(10))?;
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_WINDOWS_GIT_TEST_CONFIG {}",
+            serde_json::json!({
+                "name": name,
+                "boolean": boolean,
+                "exitCode": output.code,
+                "success": output.success,
+                "stdoutBytes": output.bytes.len(),
+            })
+        );
         match output.code {
             Some(1) if output.bytes.is_empty() => Ok(None),
             Some(0) => String::from_utf8(output.bytes)

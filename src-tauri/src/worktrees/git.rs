@@ -288,6 +288,34 @@ fn execute_bounded(
             {
                 return Err(error("tooLarge"));
             }
+            #[cfg(all(windows, test))]
+            if !status.success() {
+                // Owned test diagnostics only, after the same Child/Job has
+                // settled and the original stderr cap has passed. Observation
+                // failure must not change the existing command result.
+                let sample = (|| -> std::io::Result<Vec<u8>> {
+                    let mut reader = stderr.try_clone()?;
+                    reader.seek(SeekFrom::Start(0))?;
+                    let mut sample = Vec::new();
+                    reader.take(4097).read_to_end(&mut sample)?;
+                    Ok(sample)
+                })();
+                let event = match sample {
+                    Ok(sample) => serde_json::json!({
+                        "exitCode": status.code(),
+                        "stderrPrefix": String::from_utf8_lossy(&sample[..sample.len().min(4096)]),
+                        "prefixTruncated": sample.len() > 4096,
+                        "observationError": null,
+                    }),
+                    Err(error) => serde_json::json!({
+                        "exitCode": status.code(),
+                        "stderrPrefix": null,
+                        "prefixTruncated": null,
+                        "observationError": error.raw_os_error(),
+                    }),
+                };
+                eprintln!("FARFOLD_WINDOWS_GIT_TEST_CHILD {event}");
+            }
             stdout
                 .seek(SeekFrom::Start(0))
                 .map_err(|_| error("unavailable"))?;
