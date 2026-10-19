@@ -6,6 +6,14 @@ use inventory::{
 };
 use serde_json::{Value, json};
 use std::process::Command;
+pub(super) fn fixture_path(path: &str) -> String {
+    if cfg!(windows) && path.starts_with('/') {
+        format!("C:{path}")
+    } else {
+        path.into()
+    }
+}
+
 pub(super) fn fixture_lock() -> std::sync::MutexGuard<'static, ()> {
     inventory::execution::fixture_lock()
 }
@@ -19,7 +27,7 @@ pub(super) struct Fixture {
     pub registry: requests::Requests,
 }
 pub(super) fn config() -> Value {
-    json!({"layers":[{"name":{"type":"user","file":"/controlled/config.toml","profile":null},"version":"v1","config":{"model":"keep","skills":{"config":[{"name":"other","enabled":false,"unknown":{"keep":[1,"two",true]}}]}},"disabledReason":null}]})
+    json!({"layers":[{"name":{"type":"user","file":fixture_path("/controlled/config.toml"),"profile":null},"version":"v1","config":{"model":"keep","skills":{"config":[{"name":"other","enabled":false,"unknown":{"keep":[1,"two",true]}}]}},"disabledReason":null}]})
 }
 impl Fixture {
     pub fn new() -> Self {
@@ -150,7 +158,7 @@ for line in sys.stdin:
   skills=[] if mode=='missing' else [{'name':'fixture','path':path,'description':'test','scope':'user','enabled':wrote}]
   result={'data':[{'cwd':cwd,'skills':skills,'errors':[]}]}
  elif method=='config/value/write':
-  p=q['params']; assert p['keyPath']=='skills.config' and p['mergeStrategy']=='replace' and p['expectedVersion']=='v1' and p['filePath']=='/controlled/config.toml'
+  p=q['params']; assert p['keyPath']=='skills.config' and p['mergeStrategy']=='replace' and p['expectedVersion']=='v1' and p['filePath']==config['layers'][0]['name']['file']
   assert p['value'][0]==config['layers'][0]['config']['skills']['config'][0]
   assert p['value'][-1]=={'path':path,'enabled':True}
   if mode=='reject':

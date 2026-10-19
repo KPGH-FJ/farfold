@@ -6,7 +6,7 @@ use serde_json::{Value, json};
 
 #[test]
 fn mcp_http_independent_auth_defaults_are_typed_not_merely_empty_or_false() {
-    let raw = json!({"layers":[{"name":{"type":"user","file":"/synthetic/http.toml"},"version":"v1","config":{"unrelated":{"keep":true}}}]});
+    let raw = json!({"layers":[{"name":{"type":"user","file":super::tests::fixture_path("/synthetic/http.toml")},"version":"v1","config":{"unrelated":{"keep":true}}}]});
     let before = plan::Config::parse(raw.clone()).unwrap();
     let plan = mcp_add_plan::Plan::new(
         before.clone(),

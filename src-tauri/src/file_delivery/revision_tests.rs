@@ -101,7 +101,21 @@ fn same_path_atomic_replacement_can_refresh_but_old_explicit_reads_still_fail() 
 #[test]
 fn same_length_edit_is_fully_captured_once_before_returning_a_receipt() {
     let (_root, path, file) = fixture();
+    let before_modified = fs::metadata(&path).unwrap().modified().unwrap();
     fs::write(&path, "version two").unwrap();
+    // This positive requires an observable changed hint; coarse or colliding
+    // hints remain covered separately by the explicit Content fallback test.
+    let changed_modified = before_modified
+        .checked_add(std::time::Duration::from_secs(60))
+        .unwrap();
+    let edited = fs::OpenOptions::new().write(true).open(&path).unwrap();
+    edited
+        .set_times(fs::FileTimes::new().set_modified(changed_modified))
+        .unwrap();
+    drop(edited);
+    let observed = fs::metadata(&path).unwrap();
+    assert_eq!(observed.len(), file.size);
+    assert_ne!(observed.modified().unwrap(), before_modified);
     let calls = std::cell::Cell::new(0);
     let result = check_with_capture(&file, RevisionMode::Hint, |opened| {
         calls.set(calls.get() + 1);

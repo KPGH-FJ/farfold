@@ -259,3 +259,22 @@ fn audio_input_recheck_detects_same_bytes_replacement_and_symlink_redirect() {
     std::os::unix::fs::symlink(&outside, &link).unwrap();
     assert!(read_audio_input(&link, Some(&linked.file)).is_err());
 }
+
+#[test]
+fn prior_audio_regular_selection_replaced_by_directory_is_changed() {
+    let directory = tempfile::tempdir().unwrap();
+    let root = directory.path().canonicalize().unwrap();
+    let path = root.join("selected.wav");
+    std::fs::write(&path, wave(1, 8_000, 8, 2)).unwrap();
+    let first = read_audio_input(&path, None).unwrap();
+    std::fs::remove_file(&path).unwrap();
+    std::fs::create_dir(&path).unwrap();
+    assert_eq!(
+        read_audio_input(&path, Some(&first.file)).unwrap_err().code,
+        "changed"
+    );
+    assert_eq!(
+        read_audio_input(&path, None).unwrap_err().code,
+        "unreadable"
+    );
+}

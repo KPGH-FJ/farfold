@@ -274,7 +274,12 @@ async fn standard_declaration_keeps_the_standard_logout_route() {
             " elif method=='_auth/status':",
             " elif method=='logout': reply(m,{})\n elif method=='_auth/status':",
         );
-    std::fs::write(&f.row.command, peer).unwrap();
+    let peer_path = if cfg!(windows) {
+        f.cwd.join("vibe-acp-peer.py")
+    } else {
+        std::path::PathBuf::from(&f.row.command)
+    };
+    std::fs::write(peer_path, peer).unwrap();
     f.connect().await;
     assert!(f.manager.can_logout(&f.row.id, &f.cwd));
     logout(&f, AuthenticationOperation::new()).await.unwrap();

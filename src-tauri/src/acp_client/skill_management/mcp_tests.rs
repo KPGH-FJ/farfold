@@ -12,10 +12,10 @@ pub(super) struct Fixture {
     pub registry: requests::Requests,
 }
 pub(super) fn config() -> Value {
-    json!({"layers":[{"name":{"type":"user","file":"/synthetic/selected.config.toml","profile":"selected"},"version":"v1","config":{"model":"unchanged","other":{"future":[1,true,{"nested":"keep"}]},"mcp_servers":{"fixture.one":{"command":"/synthetic/program","args":["--bounded"],"env":{"PRIVATE_SENTINEL":"never-public-value"},"enabled_tools":["read"],"disabled_tools":["write"],"future":{"array":[1,2]},"enabled":true},"fixture":{"one":{"enabled":true,"untouched":[1,2]}},"unrelated":{"url":"https://synthetic.invalid","http_headers":{"SECRET_SENTINEL":"do-not-show"},"enabled":false}}}}]})
+    json!({"layers":[{"name":{"type":"user","file":super::tests::fixture_path("/synthetic/selected.config.toml"),"profile":"selected"},"version":"v1","config":{"model":"unchanged","other":{"future":[1,true,{"nested":"keep"}]},"mcp_servers":{"fixture.one":{"command":super::tests::fixture_path("/synthetic/program"),"args":["--bounded"],"env":{"PRIVATE_SENTINEL":"never-public-value"},"enabled_tools":["read"],"disabled_tools":["write"],"future":{"array":[1,2]},"enabled":true},"fixture":{"one":{"enabled":true,"untouched":[1,2]}},"unrelated":{"url":"https://synthetic.invalid","http_headers":{"SECRET_SENTINEL":"do-not-show"},"enabled":false}}}}]})
 }
 pub(super) fn report() -> Value {
-    json!({"name":"fixture.one","enabled":true,"disabled_reason":null,"transport":{"type":"stdio","command":"/synthetic/program","args":["--bounded"],"env":{"PRIVATE_SENTINEL":"never-public-value"},"env_vars":[],"cwd":null},"enabled_tools":["read"],"disabled_tools":["write"],"startup_timeout_sec":null,"tool_timeout_sec":null})
+    json!({"name":"fixture.one","enabled":true,"disabled_reason":null,"transport":{"type":"stdio","command":super::tests::fixture_path("/synthetic/program"),"args":["--bounded"],"env":{"PRIVATE_SENTINEL":"never-public-value"},"env_vars":[],"cwd":null},"enabled_tools":["read"],"disabled_tools":["write"],"startup_timeout_sec":null,"tool_timeout_sec":null})
 }
 impl Fixture {
     pub fn new() -> Self {

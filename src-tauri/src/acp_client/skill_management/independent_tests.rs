@@ -18,7 +18,8 @@ use serde_json::{Value, json};
 use std::{path::PathBuf, process::Command, sync::Arc};
 
 fn config(file: &str) -> Value {
-    let base_file = PathBuf::from(file).with_file_name("config.toml");
+    let file = super::tests::fixture_path(file);
+    let base_file = PathBuf::from(&file).with_file_name("config.toml");
     json!({"config":{},"origins":{},"layers":[
         {"name":{"type":"sessionFlags"},"version":"top-v","config":{"unrelated":true}},
         {"name":{"type":"user","file":file,"profile":"selected-profile"},"version":"profile-v","config":{
@@ -34,7 +35,7 @@ fn config(file: &str) -> Value {
 fn target(path: &str) -> SkillTarget {
     SkillTarget {
         id: 0,
-        path: path.into(),
+        path: super::tests::fixture_path(path),
         name: "independent-skill".into(),
         origin: "repo".into(),
         enabled: true,
@@ -55,13 +56,15 @@ fn independent_highest_user_profile_preserves_complete_unknown_json_and_other_la
     assert_eq!(params["expectedVersion"], "profile-v");
     assert_eq!(
         params["filePath"],
-        "/synthetic/selected-profile.config.toml"
+        super::tests::fixture_path("/synthetic/selected-profile.config.toml")
     );
     let mut expected = before["layers"][1]["config"]["skills"]["config"]
         .as_array()
         .unwrap()
         .clone();
-    expected.push(json!({"path":"/synthetic/selected/SKILL.md","enabled":false}));
+    expected.push(
+        json!({"path":super::tests::fixture_path("/synthetic/selected/SKILL.md"),"enabled":false}),
+    );
     assert_eq!(params["value"], json!(expected));
     let mut after = before.clone();
     after["layers"][1]["config"]["skills"]["config"] = params["value"].clone();
@@ -77,7 +80,7 @@ fn independent_highest_user_profile_preserves_complete_unknown_json_and_other_la
 
 #[test]
 fn independent_only_final_path_only_rule_is_updated_without_dropping_unknown_fields() {
-    let path = "/synthetic/selected/SKILL.md";
+    let path = super::tests::fixture_path("/synthetic/selected/SKILL.md");
     let mut before = config("/synthetic/selected-profile.config.toml");
     let last =
         json!({"path":path,"enabled":true,"future":{"tuple":[false,{"extension":"preserved"}]}});
@@ -85,13 +88,13 @@ fn independent_only_final_path_only_rule_is_updated_without_dropping_unknown_fie
         .as_array_mut()
         .unwrap()
         .push(last.clone());
-    let plan = Plan::new(Config::parse(before.clone()).unwrap(), target(path), false).unwrap();
+    let plan = Plan::new(Config::parse(before.clone()).unwrap(), target(&path), false).unwrap();
     let mut expected = last;
     expected["enabled"] = json!(false);
     assert_eq!(plan.mutation, "updateLastPathRule");
     assert_eq!(plan.array.as_array().unwrap().last().unwrap(), &expected);
     before["layers"][1]["config"]["skills"]["config"][2]["name"] = json!("ambiguous-name");
-    let plan = Plan::new(Config::parse(before.clone()).unwrap(), target(path), false).unwrap();
+    let plan = Plan::new(Config::parse(before.clone()).unwrap(), target(&path), false).unwrap();
     assert_eq!(plan.mutation, "appendPathRule");
     assert_eq!(
         plan.array[2],

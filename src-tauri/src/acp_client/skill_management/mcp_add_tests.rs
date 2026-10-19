@@ -15,7 +15,7 @@ pub(super) struct Fixture {
 pub(super) fn input() -> mcp_add_input::StdioInput {
     mcp_add_input::StdioInput {
         name: "sample.new".into(),
-        executable_path: "/synthetic/unexecuted program".into(),
+        executable_path: super::tests::fixture_path("/synthetic/unexecuted program"),
         args: vec![
             "".into(),
             "one two".into(),
@@ -24,7 +24,7 @@ pub(super) fn input() -> mcp_add_input::StdioInput {
     }
 }
 fn config() -> Value {
-    json!({"layers":[{"name":{"type":"user","file":"/synthetic/selected.toml"},"version":"v1","config":{"future":{"array":[1,true,{"unknown":"preserve"}]},"private":{"env":"PRIVATE_CANARY"}}}]})
+    json!({"layers":[{"name":{"type":"user","file":super::tests::fixture_path("/synthetic/selected.toml")},"version":"v1","config":{"future":{"array":[1,true,{"unknown":"preserve"}]},"private":{"env":"PRIVATE_CANARY"}}}]})
 }
 impl Fixture {
     pub fn new(listed: Value) -> Self {

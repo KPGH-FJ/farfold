@@ -16,7 +16,7 @@ pub(super) fn listed(http: bool) -> Value {
     let transport = if http {
         json!({"type":"streamable_http","url":"https://synthetic.invalid/mcp","http_headers":{"Authorization":"PRIVATE_SECRET"}})
     } else {
-        json!({"type":"stdio","command":"/synthetic/never-execute","args":["","one two"],"env":{"PRIVATE":"PRIVATE_SECRET"}})
+        json!({"type":"stdio","command":super::tests::fixture_path("/synthetic/never-execute"),"args":["","one two"],"env":{"PRIVATE":"PRIVATE_SECRET"}})
     };
     json!([{"name":"a.b","enabled":false,"transport":transport,"auth_status":"unsupported"}])
 }
@@ -24,13 +24,13 @@ pub(super) fn config(http: bool, siblings: bool) -> Value {
     let entry = if http {
         json!({"url":"https://synthetic.invalid/mcp","http_headers":{"Authorization":"PRIVATE_SECRET"},"enabled":false})
     } else {
-        json!({"command":"/synthetic/never-execute","args":["","one two"],"env":{"PRIVATE":"PRIVATE_SECRET"},"enabled":false})
+        json!({"command":super::tests::fixture_path("/synthetic/never-execute"),"args":["","one two"],"env":{"PRIVATE":"PRIVATE_SECRET"},"enabled":false})
     };
     let mut table = json!({"a.b":entry});
     if siblings {
         table["a"] = json!({"b":{"unknown":[1,true]},"command":"/keep","enabled":false});
     }
-    json!({"layers":[{"name":{"type":"user","file":"/synthetic/selected.toml"},"version":"v1","config":{"mcp_servers":table,"future":{"array":[1,true,{"unknown":"preserve"}]},"private":{"env":"PRIVATE_CANARY"}}}]})
+    json!({"layers":[{"name":{"type":"user","file":super::tests::fixture_path("/synthetic/selected.toml")},"version":"v1","config":{"mcp_servers":table,"future":{"array":[1,true,{"unknown":"preserve"}]},"private":{"env":"PRIVATE_CANARY"}}}]})
 }
 impl Fixture {
     pub fn new(http: bool, siblings: bool) -> Self {

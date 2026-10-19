@@ -24,7 +24,7 @@ use windows_sys::{
     Win32::{
         Foundation::{
             HANDLE, INVALID_HANDLE_VALUE, OBJ_CASE_INSENSITIVE, RtlNtStatusToDosError,
-            UNICODE_STRING,
+            STATUS_FILE_IS_A_DIRECTORY, UNICODE_STRING,
         },
         Globalization::{CSTR_EQUAL, CompareStringOrdinal},
         Storage::FileSystem::*,
@@ -221,6 +221,11 @@ fn open_at_shared(
             0,
         )
     };
+    if code == STATUS_FILE_IS_A_DIRECTORY && !directory && !create {
+        // Preserve the exact kernel type result before Win32 maps it to an
+        // access-denied code shared with genuine permission failures.
+        return Err(io::ErrorKind::IsADirectory.into());
+    }
     if code < 0 {
         return Err(io::Error::from_raw_os_error(
             unsafe { RtlNtStatusToDosError(code) } as i32,
@@ -442,6 +447,19 @@ mod tests {
         let mut body = String::new();
         file.read_to_string(&mut body).unwrap();
         assert_eq!(body, "document");
+    }
+    #[test]
+    fn protected_regular_leaf_open_preserves_directory_type_failure() {
+        let fixture = tempfile::tempdir().unwrap();
+        let root = fixture.path().canonicalize().unwrap();
+        std::fs::create_dir(root.join("directory")).unwrap();
+        let parent = open_directory(&root).unwrap();
+        assert_eq!(
+            open_relative(&parent, Path::new("directory"))
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::IsADirectory
+        );
     }
     #[test]
     fn reserved_shell_names_and_alternate_streams_are_rejected() {

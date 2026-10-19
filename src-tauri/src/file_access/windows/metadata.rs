@@ -300,3 +300,6 @@ mod tests {
         );
     }
 }
+#[cfg(test)]
+#[path = "ci5_native_phase_tests.rs"]
+mod ci5_native_phase_tests;

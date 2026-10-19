@@ -187,7 +187,15 @@ pub fn read_audio_input(
     if expected.is_some_and(|file| Path::new(&file.path) != path) {
         return Err(failure("changed"));
     }
-    let (file, bytes) = capture(parent, path, MAX_AUDIO_BYTES)?;
+    let (file, bytes) = capture(parent, path, MAX_AUDIO_BYTES).map_err(|error| {
+        if expected.is_some() && matches!(error, DeliveryError::NotFile) {
+            // A previously verified regular file replaced by a directory is a
+            // changed selection; a fresh directory selection is not readable.
+            failure("changed")
+        } else {
+            error.into()
+        }
+    })?;
     if expected.is_some_and(|expected| expected != &file) {
         return Err(failure("changed"));
     }

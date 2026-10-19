@@ -52,7 +52,14 @@ fn names(directory: &Path) -> Vec<String> {
 #[test]
 fn independent_early_cancel_retains_exact_pair_through_capacity_and_copy_calls() {
     let jobs = FileCopyJobs::default();
-    let original = sample("/synthetic/never-opened/archive.zip".into());
+    let original = sample(
+        if cfg!(windows) {
+            "C:/synthetic/never-opened/archive.zip"
+        } else {
+            "/synthetic/never-opened/archive.zip"
+        }
+        .into(),
+    );
     let key = original.key();
     closed_absence(jobs.archive_cancel(&key).unwrap(), &key);
     assert_eq!(

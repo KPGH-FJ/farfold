@@ -172,7 +172,7 @@ fn mcp_http_real_exchange_saves_exact_query_once_and_never_publishes_url() {
 
 #[test]
 fn mcp_http_exact_get_identity_refuses_all_auth_helpers_and_query_drift() {
-    let raw = json!({"layers":[{"name":{"type":"user","file":"/synthetic/config.toml"},"version":"v1","config":{"unrelated":[{"keep":true}]}}]});
+    let raw = json!({"layers":[{"name":{"type":"user","file":super::tests::fixture_path("/synthetic/config.toml")},"version":"v1","config":{"unrelated":[{"keep":true}]}}]});
     let before = plan::Config::parse(raw.clone()).unwrap();
     let p = mcp_add_plan::Plan::new(before.clone(), before, input(URL)).unwrap();
     let mut after = raw;

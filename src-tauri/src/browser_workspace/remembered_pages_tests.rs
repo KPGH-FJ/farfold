@@ -7,8 +7,9 @@ fn owner() -> PageOwner {
         created_at: 10,
     }
 }
-fn metadata() -> MetaStore {
-    let store = MetaStore::open(std::path::Path::new(":memory:")).unwrap();
+fn metadata() -> (tempfile::TempDir, MetaStore) {
+    let directory = tempfile::tempdir().unwrap();
+    let store = MetaStore::open(&directory.path().join("meta.sqlite3")).unwrap();
     store
         .upsert_session(&SessionRow {
             id: owner().session_id,
@@ -23,7 +24,7 @@ fn metadata() -> MetaStore {
             updated_at: 10,
         })
         .unwrap();
-    store
+    (directory, store)
 }
 fn ready(state: &BrowserWorkspace, path: &str) -> (u64, BrowserInfo) {
     let url = format!("https://example.com/{path}");
@@ -60,7 +61,7 @@ fn remember(
 #[test]
 fn only_exact_selected_ready_public_page_can_be_explicitly_remembered() {
     let state = BrowserWorkspace::default();
-    let store = metadata();
+    let (_metadata_directory, store) = metadata();
     let (_, a) = ready(&state, "a?q=ordinary#part");
     let (_, b) = ready(&state, "b");
     assert!(remember(&state, &store, &a).is_err(), "unselected page");
@@ -104,7 +105,7 @@ fn only_exact_selected_ready_public_page_can_be_explicitly_remembered() {
 #[test]
 fn navigation_selection_aba_and_close_invalidate_old_confirmation() {
     let state = BrowserWorkspace::default();
-    let store = metadata();
+    let (_metadata_directory, store) = metadata();
     let (a_id, a) = ready(&state, "a");
     let (_, b) = ready(&state, "b");
     select(&state, &a.label);
@@ -143,7 +144,7 @@ fn local_preview_unknown_creation_and_shutdown_cannot_be_written() {
         "pageError",
     ] {
         let state = BrowserWorkspace::default();
-        let store = metadata();
+        let (_metadata_directory, store) = metadata();
         let (id, info) = ready(&state, "a");
         select(&state, &info.label);
         {
@@ -183,7 +184,7 @@ fn local_preview_unknown_creation_and_shutdown_cannot_be_written() {
 #[test]
 fn forgetting_never_closes_live_page_and_reopen_gets_fresh_identity_and_read_lease() {
     let state = BrowserWorkspace::default();
-    let store = metadata();
+    let (_metadata_directory, store) = metadata();
     let (id, info) = ready(&state, "a");
     select(&state, &info.label);
     let info = state.info(id).unwrap();

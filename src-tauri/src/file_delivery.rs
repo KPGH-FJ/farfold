@@ -217,8 +217,14 @@ fn open_source_detailed(
     let relative = resolved
         .strip_prefix(&root)
         .map_err(|_| DeliveryError::OutsideRoot)?;
-    let file = file_access::open_relative(&root_handle, relative)
-        .map_err(|error| source_open_error(error, DeliveryError::Changed))?;
+    let file = file_access::open_relative(&root_handle, relative).map_err(|error| {
+        let delivery = if error.kind() == std::io::ErrorKind::IsADirectory {
+            DeliveryError::NotFile
+        } else {
+            DeliveryError::Changed
+        };
+        source_open_error(error, delivery)
+    })?;
     let before = file_access::stamp(&file)
         .map_err(|error| source_open_error(error, DeliveryError::Unreadable))?;
     if !before.regular {

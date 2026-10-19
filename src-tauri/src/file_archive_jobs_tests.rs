@@ -70,7 +70,14 @@ fn exact_ready_completion_is_idempotent_does_not_rewrite_and_releases_payload() 
 #[test]
 fn ready_expiry_drops_payload_but_not_closed_identity_and_copy_capacity_is_shared() {
     let jobs = FileCopyJobs::default();
-    let p = sample("/synthetic/archive.zip".into());
+    let p = sample(
+        if cfg!(windows) {
+            "C:/synthetic/archive.zip"
+        } else {
+            "/synthetic/archive.zip"
+        }
+        .into(),
+    );
     let key = p.key();
     jobs.archive_prepare(p.clone()).unwrap();
     {
