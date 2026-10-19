@@ -40,6 +40,31 @@ pub(crate) fn entries(
     remaining: u64,
     cancel: &AtomicBool,
 ) -> Result<Entries, Failure> {
+    collect_from(directory, remaining, cancel)
+}
+// Sealed to this Windows module: each implementation owns the FileObject and
+// its original cursor mutex. No standalone File/lock constructor is exposed.
+pub(super) trait Owner {
+    fn file(&self) -> &File;
+    fn verify(&self) -> io::Result<()>;
+    fn directory_scan(&self) -> io::Result<std::sync::MutexGuard<'_, ()>>;
+}
+impl Owner for PinnedPath {
+    fn file(&self) -> &File {
+        PinnedPath::file(self)
+    }
+    fn verify(&self) -> io::Result<()> {
+        PinnedPath::verify(self)
+    }
+    fn directory_scan(&self) -> io::Result<std::sync::MutexGuard<'_, ()>> {
+        PinnedPath::directory_scan(self)
+    }
+}
+pub(super) fn collect_from<D: Owner>(
+    directory: &D,
+    remaining: u64,
+    cancel: &AtomicBool,
+) -> Result<Entries, Failure> {
     directory_page::cancelled(cancel)?;
     // The real owner, not a numeric filesystem ID or global table, serializes
     // every query from the first NULL-pattern restart through EOF/error.

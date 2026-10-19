@@ -607,3 +607,6 @@ pub(crate) use material_carrier::{
 mod material_fragment_consumer;
 #[cfg(test)]
 pub(crate) use material_fragment_consumer::{FragmentRetirement, carrier_fragment_roundtrip};
+
+#[cfg(test)]
+mod material_pin;

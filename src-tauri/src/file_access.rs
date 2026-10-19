@@ -76,3 +76,6 @@ pub(crate) use windows::{CarrierReceipt, CarrierRequest, CarrierRetirement, carr
 mod material_carrier_fragment;
 #[cfg(all(windows, test))]
 pub(crate) use windows::{FragmentRetirement, carrier_fragment_roundtrip};
+
+#[cfg(test)]
+mod material_raw_name;
