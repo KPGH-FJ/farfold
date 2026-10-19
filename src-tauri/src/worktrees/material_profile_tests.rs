@@ -57,25 +57,26 @@ fn partial_windows_profile_is_explicit_and_unknown_profiles_are_not_accepted() {
 #[test]
 fn actual_owned_default_data_observation_changes_with_body_and_includes_ignored_names() {
     let dir = tempfile::tempdir().unwrap();
+    let canonical_root = dir.path().canonicalize().unwrap();
     std::fs::write(dir.path().join(".git"), b"owned-linked-pointer-marker").unwrap();
     std::fs::write(dir.path().join(".gitignore"), b"ignored.bin\n").unwrap();
     std::fs::write(dir.path().join("ignored.bin"), b"original-data").unwrap();
     let cancel = AtomicBool::new(false);
-    let first = capture(dir.path(), &cancel).unwrap();
+    let first = capture(&canonical_root, &cancel).unwrap();
     assert_eq!(
         first.profile,
         Some(MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1)
     );
     assert_eq!(first.entries, 3);
-    assert_eq!(capture(dir.path(), &cancel).unwrap(), first);
+    assert_eq!(capture(&canonical_root, &cancel).unwrap(), first);
     std::fs::write(dir.path().join("ignored.bin"), b"changed!-data").unwrap();
-    assert_ne!(capture(dir.path(), &cancel).unwrap(), first);
+    assert_ne!(capture(&canonical_root, &cancel).unwrap(), first);
     assert_eq!(
-        content(dir.path(), &cancel).unwrap_err().code,
+        content(&canonical_root, &cancel).unwrap_err().code,
         "unsupportedGit"
     );
     assert_eq!(
-        capture(dir.path(), &AtomicBool::new(true))
+        capture(&canonical_root, &AtomicBool::new(true))
             .unwrap_err()
             .code,
         "cancelled"
@@ -450,13 +451,14 @@ fn real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total() {
         );
     }
     let root = tempfile::tempdir().unwrap();
+    let canonical_root = root.path().canonicalize().unwrap();
     let file = root.path().join("owned.txt");
     std::fs::write(&file, b"same-default-data").unwrap();
     set_ea(&file, b"first\0\xff");
     let cancel = AtomicBool::new(false);
-    let a = capture(root.path(), &cancel).unwrap();
+    let a = capture(&canonical_root, &cancel).unwrap();
     set_ea(&file, b"other\0\xff");
-    let b = capture(root.path(), &cancel).unwrap();
+    let b = capture(&canonical_root, &cancel).unwrap();
     assert_ne!(a.sha256, b.sha256);
     assert_eq!(a.bytes, 17);
     assert_eq!(b.bytes, 17);
@@ -570,7 +572,22 @@ fn real_material_walk_consumes_owned_dacl_without_changing_default_byte_meaning(
     assert_eq!(first.bytes, 4);
     assert_eq!(owner.capture(&root, &cancel).unwrap(), first);
     dacl.set("D:P(A;;FR;;;WD)");
-    let second = owner.capture(&root, &cancel).unwrap();
+    let second = owner.capture(&root, &cancel).unwrap_or_else(|failure| {
+        eprintln!("FARFOLD_OWNED_MATERIAL_CAPTURE_FAILURE {}", serde_json::json!({
+            "stage": "dacl.capture_failed_after_owned_change", "originalFailure": format!("{failure:?}"),
+            "observation": "post-failure companion only; no second capture",
+        }));
+        let diagnostic = std::panic::catch_unwind(||
+            diagnose_material_pair("dacl.capture_failed_after_owned_change", &root, "owned.txt", &cancel));
+        let result = match diagnostic {
+            Ok(value) => format!("{value:?}"),
+            Err(_) => "diagnostic panicked; original capture remains failed".to_owned(),
+        };
+        eprintln!("FARFOLD_OWNED_MATERIAL_POST_FAILURE {}", serde_json::json!({
+            "stage": "dacl.capture_failed_after_owned_change", "diagnostic": result,
+        }));
+        panic!("original owned material capture failed: {failure:?}");
+    });
     assert_eq!(second.bytes, first.bytes);
     assert_eq!(second.entries, first.entries);
     assert_ne!(second.sha256, first.sha256);
@@ -687,7 +704,22 @@ mod hardlink_native {
         assert_eq!(std::fs::read(&outside).unwrap(), b"body");
         // Test-owned explicit action/recheck; the producer does not retry.
         std::fs::remove_file(&outside).unwrap();
-        let observed = owner.capture(&root, &cancel).unwrap();
+        let observed = owner.capture(&root, &cancel).unwrap_or_else(|failure| {
+            eprintln!("FARFOLD_OWNED_MATERIAL_CAPTURE_FAILURE {}", serde_json::json!({
+                "stage": "links.capture_failed_after_outside_remove", "originalFailure": format!("{failure:?}"),
+                "observation": "post-failure companion only; no second capture",
+            }));
+            let diagnostic = std::panic::catch_unwind(||
+                super::diagnose_material_pair("links.capture_failed_after_outside_remove", &root, "owned.txt", &cancel));
+            let result = match diagnostic {
+                Ok(value) => format!("{value:?}"),
+                Err(_) => "diagnostic panicked; original capture remains failed".to_owned(),
+            };
+            eprintln!("FARFOLD_OWNED_MATERIAL_POST_FAILURE {}", serde_json::json!({
+                "stage": "links.capture_failed_after_outside_remove", "diagnostic": result,
+            }));
+            panic!("original owned material capture failed: {failure:?}");
+        });
         assert_eq!(observed.bytes, 4);
         assert_eq!(observed.entries, 1);
     }
@@ -831,4 +863,132 @@ fn explicit_strict_owner_reuses_actual_walk_and_checks_the_caller_root_identity(
         "cancelled"
     );
     assert!(owner.available().is_ok());
+}
+
+// Test-owned roots/leaves only. No production hook, mutation or data read.
+#[cfg(windows)]
+fn material_diagnostic_value<T: std::fmt::Debug, E: std::fmt::Debug>(
+    stage: &'static str,
+    phase: &'static str,
+    value: std::result::Result<T, E>,
+) -> std::result::Result<T, &'static str> {
+    eprintln!(
+        "FARFOLD_OWNED_MATERIAL_PHASE {}",
+        serde_json::json!({
+            "stage": stage, "phase": phase, "value": format!("{value:?}"),
+        })
+    );
+    value.map_err(|_| phase)
+}
+
+#[cfg(windows)]
+fn diagnose_material_pair(
+    stage: &'static str,
+    root: &std::path::Path,
+    leaf: &str,
+    cancel: &AtomicBool,
+) -> std::result::Result<(), &'static str> {
+    use crate::file_access::{PinnedPath, directory_entries, metadata_child, metadata_file, stamp};
+    use std::ffi::OsStr;
+    let emit = |phase: &str, value: String| {
+        eprintln!(
+            "FARFOLD_OWNED_MATERIAL_PHASE {}",
+            serde_json::json!({
+                "stage": stage, "phase": phase, "value": value,
+            })
+        );
+    };
+    material_diagnostic_value(stage, "root.canonical", root.canonicalize())?;
+    let pin = match PinnedPath::directory(root) {
+        Ok(value) => value,
+        Err(error) => {
+            emit(
+                "root.open.error",
+                format!("kind={:?}, code={:?}", error.kind(), error.raw_os_error()),
+            );
+            return Err("root.open");
+        }
+    };
+    emit(
+        "root.chain.full128",
+        format!("{:?}", pin.chain_identities()),
+    );
+    material_diagnostic_value(stage, "root.verify.before", pin.verify())?;
+    let root_before =
+        material_diagnostic_value(stage, "root.metadata.before", metadata_file(pin.file()))?;
+    let first =
+        material_diagnostic_value(stage, "listing.before", directory_entries(&pin, 4, cancel))?;
+    let raw = leaf.encode_utf16().collect::<Vec<_>>();
+    let listed = first.get(&raw).ok_or_else(|| {
+        emit("listing.before.missingOwnedLeaf", leaf.to_owned());
+        "listing.before.missingOwnedLeaf"
+    })?;
+    let relative_before = material_diagnostic_value(
+        stage,
+        "relative.metadata.before",
+        metadata_child(pin.file(), OsStr::new(leaf)),
+    )?
+    .ok_or("relative.metadata.before.missing")?;
+    let child = match pin.child(&raw, false) {
+        Ok(value) => value,
+        Err(error) => {
+            emit(
+                "child.open.error",
+                format!("kind={:?}, code={:?}", error.kind(), error.raw_os_error()),
+            );
+            return Err("child.open");
+        }
+    };
+    let held =
+        material_diagnostic_value(stage, "child.metadata.held", metadata_file(child.file()))?;
+    material_diagnostic_value(stage, "child.stamp.held", stamp(child.file()))?;
+    material_diagnostic_value(stage, "child.verify", child.verify())?;
+    let relative_after = material_diagnostic_value(
+        stage,
+        "relative.metadata.after",
+        metadata_child(pin.file(), OsStr::new(leaf)),
+    )?
+    .ok_or("relative.metadata.after.missing")?;
+    // One separately declared restart of this same held FileObject cursor,
+    // never a retry after a failed query or a pathname/ID fallback.
+    let second =
+        material_diagnostic_value(stage, "listing.after", directory_entries(&pin, 4, cancel))?;
+    let listed_after = second.get(&raw).ok_or_else(|| {
+        emit("listing.after.missingOwnedLeaf", leaf.to_owned());
+        "listing.after.missingOwnedLeaf"
+    })?;
+    let relative_final = material_diagnostic_value(
+        stage,
+        "relative.metadata.final",
+        metadata_child(pin.file(), OsStr::new(leaf)),
+    )?
+    .ok_or("relative.metadata.final.missing")?;
+    let root_after =
+        material_diagnostic_value(stage, "root.metadata.after", metadata_file(pin.file()))?;
+    material_diagnostic_value(stage, "root.verify.after", pin.verify())?;
+    let relations = [
+        (
+            "relativeBefore.matchesEntry",
+            relative_before.matches_directory_entry(listed),
+        ),
+        ("held.matchesEntry", held.matches_directory_entry(listed)),
+        ("held.equalsRelativeBefore", held == relative_before),
+        ("held.equalsRelativeAfter", held == relative_after),
+        (
+            "relativeFinal.matchesEntryAfter",
+            relative_final.matches_directory_entry(listed_after),
+        ),
+        ("listing.beforeEqualsAfter", first == second),
+        ("root.metadataBeforeEqualsAfter", root_before == root_after),
+    ];
+    let mut mismatch = false;
+    for (phase, matches) in relations {
+        emit(phase, matches.to_string());
+        mismatch |= !matches;
+    }
+    if mismatch {
+        return Err("entryOrHeldMetadataPairMismatch");
+    }
+    // Local handles drop before returning to the failed case, which always panics.
+    Ok(())
 }
