@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6 positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4 positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -589,6 +589,102 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-input-artifacts.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'owned-input-artifacts.result.json')
           if (-not $complete) { exit 1 }
+      - name: Owned first-import, source-export, material-entry and preparation-cache, exact twenty-one Windows controls
+        id: owned_recovery_material
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $groups = @(
+            @{ name = 'first-import'; filter = 'worktrees::recovery_pack::private_bare::tests::'; expected = 7; names = @(
+                'worktrees::recovery_pack::private_bare::tests::actual_import_ref_install_fsck_and_exact_reachable_objects_share_the_selected_owner',
+                'worktrees::recovery_pack::private_bare::tests::malformed_pack_and_wrong_object_set_fail_without_changing_the_owned_source',
+                'worktrees::recovery_pack::private_bare::tests::cancelled_or_mismatched_source_identity_does_not_gain_private_execution_authority',
+                'worktrees::recovery_pack::private_bare::tests::original_project_decoy_and_existing_public_read_and_mutation_gates_remain_separate',
+                'worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_global_has_an_owned_positive_not_a_path_guess',
+                'worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_attributes_has_an_owned_positive',
+                'worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_hooks_has_actual_benign_hook_positive_before_guarded_absence'
+              ) },
+            @{ name = 'source-export'; filter = 'worktrees::recovery_pack::source_export_tests::'; expected = 5; names = @(
+                'worktrees::recovery_pack::source_export_tests::real_source_export_then_existing_import_checks_exact_objects_without_source_writes',
+                'worktrees::recovery_pack::source_export_tests::real_export_output_and_source_authority_stay_owned_until_import_finishes',
+                'worktrees::recovery_pack::source_export_tests::cancelled_or_wrong_source_request_has_no_export_success',
+                'worktrees::recovery_pack::source_export_tests::roots_cannot_inject_revision_options_and_partial_material_still_cannot_export',
+                'worktrees::recovery_pack::source_export_tests::missing_source_objects_fail_and_absolute_project_program_decoy_is_not_authority'
+              ) },
+            @{ name = 'material-entry'; filter = 'worktrees::material_windows::entry_pair_tests::'; expected = 5; names = @(
+                'worktrees::material_windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version',
+                'worktrees::material_windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected',
+                'worktrees::material_windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence',
+                'worktrees::material_windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version',
+                'worktrees::material_windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected'
+              ) },
+            @{ name = 'preparation-cache'; filter = 'worktrees::preparation_windows::cache_tests::'; expected = 4; names = @(
+                'worktrees::preparation_windows::cache_tests::earlier_real_listing_pairs_with_stable_current_fixed_file_and_fresh_cache_observation',
+                'worktrees::preparation_windows::cache_tests::current_same_object_complete_metadata_still_changes_the_fixed_observation',
+                'worktrees::preparation_windows::cache_tests::actual_same_object_attribute_change_is_not_hidden_by_namespace_comparison',
+                'worktrees::preparation_windows::cache_tests::actual_access_denial_is_unreadable_and_only_fresh_confirmed_absence_is_missing'
+              ) }
+          )
+          $results = @()
+          $complete = $true
+          foreach ($group in $groups) {
+            $stdout = Join-Path $raw ("owned-" + $group.name + '.stdout.log')
+            $stderr = Join-Path $raw ("owned-" + $group.name + '.stderr.log')
+            $started = [DateTime]::UtcNow.ToString('o')
+            & $binary $group.filter --nocapture --test-threads=1 1> $stdout 2> $stderr
+            $testExit = $LASTEXITCODE
+            $finished = [DateTime]::UtcNow.ToString('o')
+            $outText = [IO.File]::ReadAllText($stdout)
+            $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+            $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
+            $nameMatches = [regex]::Matches($outText, '(?m)^test (?<name>[A-Za-z0-9_:]+) \.\.\. ok\r?$')
+            $actualNames = @($nameMatches | ForEach-Object { $_.Groups['name'].Value })
+            $expectedNames = @($group.names)
+            $namesExact = $actualNames.Count -eq $group.expected -and $expectedNames.Count -eq $group.expected -and ((@($actualNames | Sort-Object) -join ',') -ceq (@($expectedNames | Sort-Object) -join ','))
+            $passed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and [int]$last.Groups['passed'].Value -eq $group.expected -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0' -and $namesExact
+            if (-not $passed) { $complete = $false }
+            $results += [ordered]@{
+              group = $group.name
+              filter = $group.filter
+              expectedTests = $group.expected
+              expectedNames = $expectedNames
+              actualPassedNames = $actualNames
+              startedAtUtc = $started
+              finishedAtUtc = $finished
+              exitCode = $testExit
+              summaryCount = $summaries.Count
+              finalSummary = if ($last) { $last.Value } else { $null }
+              namesExact = $namesExact
+              exactGroupPassed = $passed
+              stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash
+              stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash
+            }
+            Get-Content -LiteralPath $stdout
+            Get-Content -LiteralPath $stderr
+          }
+          $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
+          $complete = $complete -and $results.Count -eq 4 -and $inputsStable
+          [ordered]@{
+            head = $head
+            testBinarySha256 = $selection.testBinarySha256
+            fixtureSha256 = $selection.fixtureSha256
+            groups = $results
+            inputsStable = $inputsStable
+            observationComplete = $complete
+            publicMutationOrPrivateContextComplete = $false
+            productOrAllWindowsComplete = $false
+          } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-recovery-material.result.json') -Encoding utf8
+          Get-Content -LiteralPath (Join-Path $raw 'owned-recovery-material.result.json')
+          if (-not $complete) { exit 1 }
       - name: Master retirement bounded unknown, strict manual exact negative observation
         id: master_unknown
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
@@ -675,6 +771,7 @@ jobs:
             sdk_paths = '${{ steps.sdk_paths.outcome }}'
             selected_material = '${{ steps.selected_material.outcome }}'
             owned_input_artifacts = '${{ steps.owned_input_artifacts.outcome }}'
+            owned_recovery_material = '${{ steps.owned_recovery_material.outcome }}'
           }
           $positivesPassed = $build -eq 'success'
           foreach ($outcome in $required.Values) { if ($outcome -ne 'success') { $positivesPassed = $false } }
@@ -695,7 +792,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
-            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }
