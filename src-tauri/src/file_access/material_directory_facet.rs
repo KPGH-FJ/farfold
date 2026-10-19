@@ -37,6 +37,15 @@ pub(super) struct Verified {
     pub stored_bytes: u64,
     _memory: ResidentLease,
 }
+impl Verified {
+    #[cfg(windows)]
+    pub(super) fn native_offset(&self) -> Result<u64> {
+        (self.metadata.raw_leaf.len() as u64)
+            .checked_mul(2)
+            .and_then(|v| v.checked_add(FIXED as u64))
+            .ok_or(Error::Limit)
+    }
+}
 fn leaf(raw: &[u16]) -> Result<()> {
     super::material_raw_name::check(raw).map_err(|_| Error::Unsupported)
 }

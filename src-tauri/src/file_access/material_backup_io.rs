@@ -183,9 +183,9 @@ pub(super) fn capture<A: Api>(
     }
     result
 }
-pub(super) fn restore<A: Api>(
+pub(super) fn restore<A: Api, R: Read + Seek>(
     session: &mut Session<'_, A>,
-    spool: &File,
+    spool: R,
     length: u64,
     budget: &mut WorkBudget,
     cancel: &AtomicBool,

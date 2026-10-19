@@ -100,3 +100,6 @@ pub(crate) use windows::{OWNED_LINK_WORK_LIMIT, OwnedLinkMemory, OwnedLinkReceip
 pub(crate) use windows::{
     DirectoryMemory, DirectoryReceipt, DirectoryRequest, DirectoryRetirement, capture_directory,
 };
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{DirectoryRestoreReceipt, directory_roundtrip};

@@ -3,6 +3,7 @@ use super::material_carrier_native::Basic;
 use super::*;
 use crate::file_access::material_carrier_records::{Error, Result, io_error};
 use std::os::windows::io::IntoRawHandle;
+use std::sync::atomic::AtomicBool;
 use windows_sys::Win32::System::SystemServices::ACCESS_SYSTEM_SECURITY;
 use windows_sys::Win32::{
     Foundation::{CloseHandle, LocalFree},
@@ -18,6 +19,7 @@ pub(super) struct Namespace {
     root_id: Option<Identity>,
     cleaned: bool,
     links: Option<owned_link::State>,
+    directory: Option<owned_directory::State>,
     stopped_handles: Vec<StoppedHandle>,
     stopped_allocations: Vec<StoppedAllocation>,
     _creation: Option<CreationOutcome>,
@@ -35,6 +37,7 @@ impl Namespace {
             root_id: None,
             cleaned: false,
             links: None,
+            directory: None,
             stopped_handles: Vec::with_capacity(5),
             stopped_allocations: Vec::with_capacity(1),
             _creation: None,
@@ -147,6 +150,142 @@ impl Namespace {
         self.target_carrier = Some(self.create("recapture.bin", false)?);
         Ok(())
     }
+    pub fn open_directory_namespace(&mut self) -> Result<()> {
+        // OS temporary-directory selection is not a new product env flag. It
+        // selects ONLY a parent; authority to delete is NEVER given for it.
+        let path = std::env::temp_dir()
+            .canonicalize()
+            .map_err(|e| io_error("tempCanonical", e))?;
+        absolute(&path).map_err(|e| io_error("tempPath", e))?;
+        let wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+        let raw = unsafe {
+            CreateFileW(
+                wide.as_ptr(),
+                FILE_TRAVERSE | FILE_ADD_SUBDIRECTORY | FILE_READ_ATTRIBUTES | SYNCHRONIZE,
+                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                ptr::null(),
+                OPEN_EXISTING,
+                FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+                ptr::null_mut(),
+            )
+        };
+        if raw == INVALID_HANDLE_VALUE {
+            return Err(io_error("tempParentOpen", io::Error::last_os_error()));
+        }
+        self.parent = Some(unsafe { File::from_raw_handle(raw) });
+        let parent = self.parent.as_ref().ok_or(Error::Invalid)?;
+        let value = stamp(parent).map_err(|e| io_error("tempParentStamp", e))?;
+        if value.regular {
+            return Err(Error::Unsupported);
+        }
+        super::pinned::local_guid(parent).map_err(|e| io_error("tempParentLocal", e))?;
+        self.parent_id = Some(value.identity);
+        let mut random = [0u8; 24];
+        getrandom::fill(&mut random).map_err(|_| Error::Unsupported)?;
+        let suffix: String = random.iter().map(|b| format!("{b:02x}")).collect();
+        let leaf = format!("farfold-owned-carrier-{suffix}");
+        let mut security = PrivateDescriptor::new(&mut self.stopped_allocations)?;
+        let mut encoded = name(OsStr::new(&leaf)).map_err(|e| io_error("namespaceName", e))?;
+        let unicode = UNICODE_STRING {
+            Length: (encoded.len() * 2) as u16,
+            MaximumLength: (encoded.len() * 2) as u16,
+            Buffer: encoded.as_mut_ptr(),
+        };
+        let object = OBJECT_ATTRIBUTES {
+            Length: size_of::<OBJECT_ATTRIBUTES>() as u32,
+            RootDirectory: handle(parent),
+            ObjectName: &unicode,
+            Attributes: OBJ_CASE_INSENSITIVE,
+            SecurityDescriptor: security.0.cast(),
+            ..Default::default()
+        };
+        let mut ios = IO_STATUS_BLOCK::default();
+        let mut raw = ptr::null_mut();
+        let status = unsafe {
+            NtCreateFile(
+                &mut raw,
+                FILE_LIST_DIRECTORY
+                    | FILE_ADD_FILE
+                    | FILE_ADD_SUBDIRECTORY
+                    | FILE_READ_ATTRIBUTES
+                    | DELETE
+                    | SYNCHRONIZE,
+                &object,
+                &mut ios,
+                ptr::null(),
+                FILE_ATTRIBUTE_DIRECTORY,
+                0,
+                FILE_CREATE,
+                FILE_DIRECTORY_FILE | FILE_OPEN_REPARSE_POINT | FILE_SYNCHRONOUS_IO_NONALERT,
+                ptr::null(),
+                0,
+            )
+        };
+        // Capture a successful handle BEFORE fallible descriptor disposal.
+        if status == 0 {
+            self.root = Some(unsafe { File::from_raw_handle(raw) });
+        }
+        let mapped_error = if status != 0 {
+            Some(unsafe { RtlNtStatusToDosError(status) } as i32)
+        } else {
+            None
+        };
+        self._creation = Some(CreationOutcome {
+            _status: status,
+            _mapped_error: mapped_error,
+        });
+        let descriptor_freed = security.finish();
+        drop(security);
+        // Preserve the original create failure EVEN IF descriptor cleanup also
+        // failed. The outer cleanup sees stopped_allocations and retires both.
+        if let Some(code) = mapped_error {
+            return Err(Error::Io {
+                phase: "namespaceCreate",
+                code: Some(code),
+            });
+        }
+        if !descriptor_freed {
+            return Err(Error::CleanupUnknown);
+        }
+        // Only the actual newly-created handle becomes the delete capability.
+        let root = self.root.as_ref().ok_or(Error::Invalid)?;
+        let value = stamp(root).map_err(|e| io_error("namespaceStamp", e))?;
+        if value.regular {
+            return Err(Error::Unsupported);
+        }
+        super::pinned::local_guid(root).map_err(|e| io_error("namespaceLocal", e))?;
+        self.root_id = Some(value.identity);
+        self.source_carrier = Some(self.create("capture.bin", false)?);
+        self.target_carrier = Some(self.create("recapture.bin", false)?);
+        Ok(())
+    }
+    pub fn create_directory_target(&mut self, full: bool) -> Result<()> {
+        if self.directory.is_some() {
+            return Err(Error::Invalid);
+        }
+        self.verify()?;
+        // Installed before the first directory-create syscall.
+        self.directory = Some(owned_directory::State::reserved());
+        let root = self.root.as_ref().ok_or(Error::Invalid)?;
+        self.directory
+            .as_mut()
+            .ok_or(Error::Invalid)?
+            .create(root, full)
+    }
+    pub fn directory_target(&self) -> Result<&File> {
+        self.directory.as_ref().ok_or(Error::Invalid)?.file()
+    }
+    pub fn verify_directory_empty(
+        &self,
+        work: &mut crate::file_access::ea_records::WorkBudget,
+        cancel: &AtomicBool,
+        resident: &crate::file_access::material_carrier_records::Resident,
+    ) -> Result<()> {
+        self.directory
+            .as_ref()
+            .ok_or(Error::Invalid)?
+            .empty(work, cancel, resident)
+    }
     pub fn create_target(&mut self) -> Result<()> {
         if self.target.is_some() {
             return Err(Error::Invalid);
@@ -240,6 +379,9 @@ impl Namespace {
         // The link-purpose owner closes each verified alias before its primary.
         if let Some(links) = self.links.as_mut() {
             links.cleanup()?;
+        }
+        if let Some(directory) = self.directory.as_mut() {
+            directory.cleanup()?;
         }
         // Retire on any failed disposition; no pathname cleanup/fallback/retry.
         // Backup contexts must already have successfully aborted before here.
@@ -405,6 +547,9 @@ pub(super) fn flushed(file: &File) -> Result<()> {
     }
     Ok(())
 }
+
+#[path = "material_owned_directory.rs"]
+mod owned_directory;
 
 #[path = "material_owned_link.rs"]
 pub(super) mod owned_link;

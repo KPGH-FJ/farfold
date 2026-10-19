@@ -613,6 +613,10 @@ mod material_directory_carrier;
 #[cfg(test)]
 mod material_directory_facts;
 #[cfg(test)]
+mod material_directory_restore;
+#[cfg(test)]
+pub(crate) use material_directory_restore::{DirectoryRestoreReceipt, directory_roundtrip};
+#[cfg(test)]
 mod material_pin;
 #[cfg(test)]
 pub(crate) use material_directory_carrier::{

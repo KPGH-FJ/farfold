@@ -1,5 +1,5 @@
-//! Internal typed DIRECTORY capture/byte verification only, not restore.
-//! No target directory/child mutation, recursive carrier, or public gate.
+//! Internal typed DIRECTORY capture and optional one-owned-target consumer.
+//! No child topology, recursive carrier, TreeFacet completion, or public gate.
 use super::*;
 use super::{
     directory::Owner as DirectoryOwner,
@@ -99,10 +99,41 @@ pub(crate) struct DirectoryReceipt {
     pub owned_carriers_closed: bool,
     _memory: ResidentLease,
 }
-struct Native {
+pub(super) struct Native {
     full: bool,
     eof: bool,
     aborts: u32,
+}
+impl Native {
+    pub(super) fn new(full: bool) -> Self {
+        Self {
+            full,
+            eof: false,
+            aborts: 0,
+        }
+    }
+    pub(super) fn eof(&self) -> bool {
+        self.eof
+    }
+    pub(super) fn aborts(&self) -> u32 {
+        self.aborts
+    }
+}
+pub(super) struct Captured<'a> {
+    pub facts: &'a facts::Facts,
+    pub parsed: &'a parser::Parsed,
+    pub metadata: &'a facet::Metadata,
+}
+pub(super) trait DirectoryConsumer {
+    fn consume(
+        &mut self,
+        namespace: &mut Namespace,
+        source: Captured<'_>,
+        work: &mut WorkBudget,
+        cancel: &AtomicBool,
+        resident: &Resident,
+        context: &mut Option<RetiredContext>,
+    ) -> Result<()>;
 }
 impl Api for Native {
     fn read(
@@ -129,32 +160,51 @@ impl Api for Native {
         self.eof = count == 0;
         Ok(count as usize)
     }
-    fn write(
-        &mut self,
-        _file: &File,
-        _bytes: &[u8],
-        _context: &mut *mut c_void,
-    ) -> io::Result<usize> {
-        Err(io::ErrorKind::Unsupported.into())
+    fn write(&mut self, file: &File, bytes: &[u8], context: &mut *mut c_void) -> io::Result<usize> {
+        let mut count = 0;
+        if unsafe {
+            BackupWrite(
+                handle(file),
+                bytes.as_ptr(),
+                bytes.len() as u32,
+                &mut count,
+                0,
+                i32::from(self.full),
+                context,
+            )
+        } == 0
+        {
+            Err(io::Error::last_os_error())
+        } else {
+            Ok(count as usize)
+        }
     }
     fn abort(&mut self, mode: Mode, file: &File, context: &mut *mut c_void) -> io::Result<()> {
-        if mode != Mode::Read {
-            return Err(io::ErrorKind::Unsupported.into());
-        }
         self.aborts = self
             .aborts
             .checked_add(1)
             .ok_or_else(|| io::Error::other("abort count"))?;
         if unsafe {
-            BackupRead(
-                handle(file),
-                ptr::null_mut(),
-                0,
-                ptr::null_mut(),
-                1,
-                i32::from(self.full),
-                context,
-            )
+            match mode {
+                Mode::Read => BackupRead(
+                    handle(file),
+                    ptr::null_mut(),
+                    0,
+                    ptr::null_mut(),
+                    1,
+                    i32::from(self.full),
+                    context,
+                ),
+                Mode::Write => BackupWrite(
+                    handle(file),
+                    ptr::null(),
+                    0,
+                    ptr::null_mut(),
+                    1,
+                    i32::from(self.full),
+                    context,
+                ),
+            }
         } == 0
         {
             Err(io::Error::last_os_error())
@@ -168,6 +218,15 @@ pub(crate) fn capture_directory(
     work: &mut WorkBudget,
     cancel: &AtomicBool,
     retirement: &mut Option<DirectoryRetirement>,
+) -> Result<DirectoryReceipt> {
+    capture_with_consumer(request, work, cancel, retirement, None)
+}
+pub(super) fn capture_with_consumer(
+    request: DirectoryRequest,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+    retirement: &mut Option<DirectoryRetirement>,
+    mut consumer: Option<&mut dyn DirectoryConsumer>,
 ) -> Result<DirectoryReceipt> {
     if retirement.is_some() {
         return Err(Error::CleanupUnknown);
@@ -201,7 +260,11 @@ pub(crate) fn capture_directory(
         namespace_memory = Some(resident.lease(4 * records::BLOCK)?);
         namespace = Some(Namespace::reserve()?);
         let ns = namespace.as_mut().ok_or(Error::Invalid)?;
-        ns.open()?;
+        if consumer.is_some() {
+            ns.open_directory_namespace()?;
+        } else {
+            ns.open()?;
+        }
         let spool = ns.source_carrier.as_ref().ok_or(Error::Invalid)?;
         let mut api = Native {
             full,
@@ -290,6 +353,20 @@ pub(crate) fn capture_directory(
             || verified.stored_bytes != stored
         {
             return Err(Error::Changed);
+        }
+        if let Some(consumer) = consumer.as_mut() {
+            consumer.consume(
+                ns,
+                Captured {
+                    facts: &before,
+                    parsed: &parsed,
+                    metadata: &meta,
+                },
+                work,
+                cancel,
+                &resident,
+                &mut context,
+            )?;
         }
         if !before.unchanged(&facts::take(file, full, work, cancel, &resident)?) {
             return Err(Error::Changed);
