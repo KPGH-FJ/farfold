@@ -1,6 +1,6 @@
 {
   "kind": "cold-history-installed-and-later-scoped-source-evidence",
-  "recordedAtUtc": "2026-10-19T01:12:07.176837+00:00",
+  "recordedAtUtc": "2026-10-19T01:58:40.440856+00:00",
   "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
   "sourceCheckpoint": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
   "sourceScope": {
@@ -61,13 +61,28 @@
       "id": 39181331155,
       "head": "27863fc0cddc5757d6e3b1cae9930a469f765db1",
       "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39181331155",
-      "asOfUtc": "2026-10-19T01:02:50.884524+00:00",
-      "status": "in_progress",
+      "asOfUtc": "2026-10-19T01:42:35.702701+00:00",
+      "status": "completed",
       "frontendJob": "success",
-      "rustJob": "in_progress",
-      "conclusion": null,
+      "rustJob": "cancelled",
+      "conclusion": "cancelled",
       "watchExit1WasAPIEOF": true,
-      "countsNotInferredFromMac": true
+      "countsNotInferredFromMac": true,
+      "frontendFilesPassed": 602,
+      "frontendTestsPassed": 8017,
+      "frontendBuildPassed": true,
+      "rustFinalSummary": null,
+      "rustCancellationCause": "annotation explicitly1h0m0s",
+      "observedFailedStatusOccurrences": 210,
+      "uniqueObservedFailedNames": 171,
+      "notFinalRustCounts": true,
+      "installerJob": "skipped",
+      "aggregateVerify": "failure",
+      "finalReadback": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/final-readback/summary.json",
+        "sha256": "ae188989fb1278f4bae38ece4732fbb9b385405dfe5d53fbc62f031c29c2e1bc",
+        "bytes": 9476
+      }
     }
   },
   "installedApp": {
@@ -110,10 +125,17 @@
     "deletedExactOldRustObjectLeaves": 12800,
     "reclaimedObservedBytes": 9268473856,
     "noBulkTargetOrUserDataRemoval": true,
-    "availableSpaceIsPointObservation": true
+    "availableSpaceIsPointObservation": true,
+    "laterReadOnlyFollowup": {
+      "candidateLooseLeaves": 0,
+      "largeProvenRetirementCandidate": false,
+      "additionalDeletion": false,
+      "pointAvailableApproxGiB": 4.82,
+      "notContinuousCapacityGuarantee": true
+    }
   },
   "notVerified": [
-    "Later a371/Windows9/f7/bfd5/025/b3/aa7 source full7/candidate/install/formal checks",
+    "Later e577/7c088/b785/2439 source full7/candidate/install;27863 approval/audio/terminal/NTFS formal专项 remain untested. Earlier a371-through-aa7 full7/9/10 completed, notunverified.",
     "Actual waiting cancellation, narrow/dark/burst UI",
     "AVIF/FLAC actual default OS open or real Agent media",
     "Global active Agent/output transport backpressure, RSS and long-run governance",
@@ -595,6 +617,71 @@
       "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/ea-observation-execution-preparation-r1/implementation/push.json",
       "sha256": "d83be4f1cd8d8b319702f05fa359b1950caba0f8c85896b93658b1afc06faba8",
       "bytes": 206
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/final-readback/summary.json",
+      "sha256": "ae188989fb1278f4bae38ece4732fbb9b385405dfe5d53fbc62f031c29c2e1bc",
+      "bytes": 9476
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/final-readback/execution-completion.json",
+      "sha256": "c93b85363632ba44c024472e7af597c1462632fa93eea5428a1b34ee50045d28",
+      "bytes": 5951
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/final-readback/native-phase-summary.json",
+      "sha256": "d7b841b78ca3cdbd371c40726cd22d78896ca0023232c2292f0de60dc6a9c5e4",
+      "bytes": 12871
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-claude-history-preparation/small-gaps-proposal-r1/implementation/verification-final.json",
+      "sha256": "c5315ff80370043300c4dcaae15d7cc9d2dea6395c6a50b0847c00dcf82bfb62",
+      "bytes": 7307
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-claude-history-preparation/small-gaps-proposal-r1/implementation/independent-root-review.json",
+      "sha256": "11fe14d458ad503ae59015c151816589c65f29d52d5babc159d7022d1fe4cb93",
+      "bytes": 1290
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/verification.json",
+      "sha256": "ae7cdf1c4a1919a962ea30ceb1a373ec015e7e8b05763336f1e96c7548a9e5f3",
+      "bytes": 10692
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/independent-review/final-source-review.json",
+      "sha256": "02db69f27d0ea4c6bd2719f9a824e4f882ff5c140c0c45260e337088531f0434",
+      "bytes": 7113
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/root-final-review.json",
+      "sha256": "b39605e79ac7d2e0726421f858dc84b42aa68b1e03c80952697ae2a2d5004c38",
+      "bytes": 3373
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/verification.json",
+      "sha256": "2d44d926c74a5e419a9e7bff7d5d4a9c4cfce28fe9a631d2e04bdfdfdf7ee4d7",
+      "bytes": 7581
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/independent-review/final-source-review.json",
+      "sha256": "78cacb984e97f0e87a3793db7f862eeb44c61fc1231e7501b643827adc14ec35",
+      "bytes": 5903
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/root-final-review.json",
+      "sha256": "3f8c2f113d766213673b703939e0e38d631b2aaea805b6c0fec6c21ca98c3129",
+      "bytes": 801
+    },
+    {
+      "path": "output/2026-10-19-storage-after-source-batch/inventory.json",
+      "sha256": "1c065543c3d415df1c1f571c32887cf7838081367ee5891a3bacecf6af990448",
+      "bytes": 60463
+    },
+    {
+      "path": "output/2026-10-19-storage-generated-cache-followup/summary.json",
+      "sha256": "0dea051d924666237623991f7e28637644100593a6aac135fc25f568584ccf28",
+      "bytes": 2228
     }
   ],
   "formalWindow": {
@@ -780,6 +867,99 @@
         "security",
         "mutations",
         "independent recovery"
+      ]
+    },
+    "claudeEnvironmentAndPipe": {
+      "checkpoint": "7c088f6fdd90d0939d704472f6c145da80783b5c",
+      "sourceFiles": 2,
+      "hostPassed": 13,
+      "formatHostWindowsCrossStrictPassed": true,
+      "WindowsRuntime": null,
+      "full7": null,
+      "installed": false,
+      "verification": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/windows-claude-history-preparation/small-gaps-proposal-r1/implementation/verification-final.json",
+        "sha256": "c5315ff80370043300c4dcaae15d7cc9d2dea6395c6a50b0847c00dcf82bfb62",
+        "bytes": 7307
+      },
+      "review": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/windows-claude-history-preparation/small-gaps-proposal-r1/implementation/independent-root-review.json",
+        "sha256": "11fe14d458ad503ae59015c151816589c65f29d52d5babc159d7022d1fe4cb93",
+        "bytes": 1290
+      },
+      "limit": "Not coherentSDKpath solution or actualWindows Job/pipe proof"
+    },
+    "rawControlFidelity": {
+      "checkpoint": "b785446d0f98e6cdf9c9aa82a2375d3bec114016",
+      "files": 6,
+      "rawSemanticRED": {
+        "oldPassed": 39,
+        "newFailed": 23
+      },
+      "finalRuntimeFiles": 370,
+      "finalRuntimePassed": 5649,
+      "typeFormatPassed": true,
+      "inputsStable": 1319,
+      "verification": {
+        "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/verification.json",
+        "sha256": "ae7cdf1c4a1919a962ea30ceb1a373ec015e7e8b05763336f1e96c7548a9e5f3",
+        "bytes": 10692
+      },
+      "review": {
+        "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/independent-review/final-source-review.json",
+        "sha256": "02db69f27d0ea4c6bd2719f9a824e4f882ff5c140c0c45260e337088531f0434",
+        "bytes": 7113
+      },
+      "rootReview": {
+        "path": "output/2026-10-19-cold-history-admission-stage/remaining-internal-audit/raw-control-fidelity-proposal-r3/root-final-review.json",
+        "sha256": "b39605e79ac7d2e0726421f858dc84b42aa68b1e03c80952697ae2a2d5004c38",
+        "bytes": 3373
+      },
+      "full7": null,
+      "installed": false,
+      "limits": "Scopedown-update precedence; oldfailuresretained; notglobalbackpressure/realAgent"
+    },
+    "unknownTotalFlac": {
+      "checkpoint": "2439b195dd508a7aaecd045fc5c6a372e65600b7",
+      "files": 4,
+      "actualRED": {
+        "passed": 5,
+        "failed": 12
+      },
+      "sameByteTestsGreen": 17,
+      "finalAffectedFiles": 11,
+      "finalAffectedPassed": 309,
+      "typeFormatPassed": true,
+      "inputsStable": 1322,
+      "verification": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/verification.json",
+        "sha256": "2d44d926c74a5e419a9e7bff7d5d4a9c4cfce28fe9a631d2e04bdfdfdf7ee4d7",
+        "bytes": 7581
+      },
+      "review": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/independent-review/final-source-review.json",
+        "sha256": "78cacb984e97f0e87a3793db7f862eeb44c61fc1231e7501b643827adc14ec35",
+        "bytes": 5903
+      },
+      "rootReview": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/flac-unknown-total/production-proposal-r1/root-final-review.json",
+        "sha256": "3f8c2f113d766213673b703939e0e38d631b2aaea805b6c0fec6c21ca98c3129",
+        "bytes": 801
+      },
+      "nativeOverallStillFailed": true,
+      "nativeSelectedOutputOnly": true,
+      "full7": null,
+      "installed": false,
+      "limits": "Selectedconstantframe lowerbound only; noformalplayback/decoderRSS/completeP13proof"
+    },
+    "stageFieldSemantics": {
+      "originalFields": "full7:null/installed:false on a371-through-aa7 entries describe their original source-checkpoint stage, before delivery27863; historical values retained, not current delivery state.",
+      "currentDeliveryCoverage": "coveredByDelivery27863 confirms full7/candidate9/install10 for those entries throughaa7; does not assert feature-specific formal acceptance.",
+      "laterUninstalledCheckpoints": [
+        "e5773ff3fef51a123c524d0376ba64f7e096a859",
+        "7c088f6fdd90d0939d704472f6c145da80783b5c",
+        "b785446d0f98e6cdf9c9aa82a2375d3bec114016",
+        "2439b195dd508a7aaecd045fc5c6a372e65600b7"
       ]
     }
   },
