@@ -79,3 +79,9 @@ pub(crate) use windows::{FragmentRetirement, carrier_fragment_roundtrip};
 
 #[cfg(test)]
 mod material_raw_name;
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{
+    SHAPE_WORK_LIMIT, ShapeFailure, ShapeMemory, ShapeObservation, ShapeRequest, ShapeRetirement,
+    backup_shape_observe,
+};

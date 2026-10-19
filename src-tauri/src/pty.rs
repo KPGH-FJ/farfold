@@ -800,3 +800,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(all(windows, test))]
+#[path = "pty/diagnostic_tests.rs"]
+mod diagnostic_tests;

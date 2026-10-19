@@ -157,3 +157,7 @@ pub(super) fn execute(
 ) -> Result<git::Output> {
     ReadContext::open(root)?.execute(args, cancel, timeout)
 }
+
+#[cfg(test)]
+#[path = "windows_git_launch_matrix_tests.rs"]
+pub(super) mod launch_matrix_tests;

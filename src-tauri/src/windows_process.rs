@@ -458,3 +458,9 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "windows_process/diagnostic_tests.rs"]
+mod diagnostic_tests;
+#[cfg(test)]
+pub(crate) use diagnostic_tests::read_only_job_witness_for_test;

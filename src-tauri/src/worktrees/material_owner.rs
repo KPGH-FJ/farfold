@@ -123,3 +123,7 @@ mod tests;
 #[cfg(all(windows, test))]
 #[path = "material_carrier_owner_tests.rs"]
 mod carrier_tests;
+
+#[cfg(all(windows, test))]
+#[path = "material_backup_shape_owner_tests.rs"]
+mod shape_tests;

@@ -132,6 +132,13 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     .unwrap();
     let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
     #[cfg(windows)]
+    let helper_pid = pty.retained_child_pid_for_test(&id);
+    #[cfg(windows)]
+    let job_witness = helper_pid
+        .as_ref()
+        .ok()
+        .map(|pid| crate::windows_process::read_only_job_witness_for_test(*pid));
+    #[cfg(windows)]
     let target =
         crate::platform_tests::held_process::HeldProcess::open(pid).unwrap_or_else(|error| {
             eprintln!(
@@ -139,7 +146,7 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
                 serde_json::json!({
                     "phase": "before_cancel.open_failed",
                     "pid": pid,
-                    "requestedAccess": "SYNCHRONIZE",
+                    "requestedAccess": "SYNCHRONIZE|QUERY_LIMITED_INFORMATION",
                     "errorKind": format!("{:?}", error.kind()),
                     "nativeError": error.raw_os_error(),
                 })
@@ -147,14 +154,35 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
             panic!("owned target process must be held before cancellation");
         });
     #[cfg(windows)]
-    {
+    let before_job_complete = {
         let observed = target.observe();
+        use std::os::windows::io::AsRawHandle;
+        let membership = job_witness
+            .as_ref()
+            .and_then(|result| result.as_ref().ok())
+            .map(|witness| witness.observe(target.as_raw_handle()));
+        let complete = membership.as_ref().is_some_and(|value| value.complete());
+        eprintln!(
+            "FARFOLD_AUTH_CANCELLATION_SAME_OWNER {}",
+            serde_json::json!({
+                "phase":"before_cancel.same_owner", "markerTargetPid":pid,
+                "retainedChildHelperPid":helper_pid.as_ref().ok(),
+                "helperPidAvailable":helper_pid.is_ok(),
+                "jobWitnessCaptured":matches!(&job_witness,Some(Ok(_))),
+                "jobWitnessCaptureError":job_witness.as_ref().and_then(|r|r.as_ref().err()).map(|e| {
+                    serde_json::json!({"kind":format!("{:?}",e.kind()),"nativeError":e.raw_os_error()})
+                }),
+                "originalJob":membership,
+                "targetWaitReturn":observed.return_code,"targetNativeError":observed.native_error,
+                "authority":"same pre-cancel captured Job and same single held target; failed query is unknown"
+            })
+        );
         eprintln!(
             "FARFOLD_AUTH_CANCELLATION_TARGET {}",
             serde_json::json!({
                 "phase": "before_cancel.held",
                 "pid": pid,
-                "requestedAccess": "SYNCHRONIZE",
+                "requestedAccess": "SYNCHRONIZE|QUERY_LIMITED_INFORMATION",
                 "waitReturn": observed.return_code,
                 "nativeError": observed.native_error,
             })
@@ -163,7 +191,8 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
             observed.is_running(),
             "the owned target must still be running before cancellation: {observed:?}"
         );
-    }
+        complete
+    };
     crate::auth::attempts::auth_cancel(agent.into(), "first".into()).unwrap();
     let (finished, receive) = std::sync::mpsc::channel();
     let waiter = pty.clone();
@@ -172,8 +201,47 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         let _ = finished.send(waiter.await_exit(&waiting_id));
     });
     let outcome = receive.recv_timeout(Duration::from_secs(1));
-    let _ = pty.close(&id);
+    let close_outcome = pty.close(&id);
     thread.join().unwrap();
+    // Capture this zero-time target wait BEFORE the new diagnostic logging or
+    // Job queries; no diagnostic delay is inserted to make the target signaled.
+    #[cfg(windows)]
+    let after_wait = target.observe();
+    #[cfg(windows)]
+    let after_job_complete = {
+        use std::os::windows::io::AsRawHandle;
+        let membership = job_witness
+            .as_ref()
+            .and_then(|result| result.as_ref().ok())
+            .map(|witness| witness.observe(target.as_raw_handle()));
+        let complete = membership.as_ref().is_some_and(|value| value.complete());
+        let await_result = match &outcome {
+            Ok(Ok(code)) => serde_json::json!({"delivered":true,"inner":"exit","exitCode":code}),
+            Ok(Err(error)) => serde_json::json!({"delivered":true,"inner":"error","error":error}),
+            Err(error) => {
+                serde_json::json!({"delivered":false,"receiveError":format!("{error:?}")})
+            }
+        };
+        let close_result = match &close_outcome {
+            Ok(code) => serde_json::json!({"result":"ok","exitCode":code}),
+            Err(error) => serde_json::json!({"result":"error","error":error}),
+        };
+        eprintln!(
+            "FARFOLD_AUTH_CANCELLATION_SAME_OWNER {}",
+            serde_json::json!({
+                "phase":"after_original_wait_and_join.same_owner", "markerTargetPid":pid,
+                "retainedChildHelperPid":helper_pid.as_ref().ok(),
+                "jobWitnessCaptured":matches!(&job_witness,Some(Ok(_))),
+                "originalJob":membership,"awaitResult":await_result,"closeResult":close_result,
+                "targetWaitReturn":after_wait.return_code,"targetNativeError":after_wait.native_error,
+                "targetWaitCapturedBeforeNewLogging":true,
+                "authority":"read-only witness, no new stop/reopen/retry; unknown never means ended"
+            })
+        );
+        complete
+    };
+    #[cfg(not(windows))]
+    let _ = close_outcome;
     assert!(
         outcome.is_ok(),
         "the same operation flag must reach the existing PTY owner"
@@ -182,7 +250,7 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     assert_ne!(crate::platform_tests::process_check(pid), 0);
     #[cfg(windows)]
     {
-        let observed = target.observe();
+        let observed = after_wait;
         eprintln!(
             "FARFOLD_AUTH_CANCELLATION_TARGET {}",
             serde_json::json!({
@@ -219,6 +287,11 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         cursor.finish();
         cursor.phase("auth-cancellation.fixture.complete", true, cursor_started);
         cursor.assert_settled();
+        // Keep all original cleanup/assertions first. Missing/failed queries
+        // are explicitly incomplete, never an automatic diagnostic pass.
+        if !before_job_complete || !after_job_complete {
+            panic!("same-owner diagnostic incomplete: session/Job/membership/accounting unknown");
+        }
     }
 }
 

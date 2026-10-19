@@ -1024,6 +1024,78 @@ jobs:
           # Aggregate separately accepts only the exact settled diagnostic facts.
           if ($testExit -ne 0) { exit $testExit }
           exit 1
+      - name: Observe eight same-program Git path representations, no admission or fix claim
+        id: git_launch_matrix
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 4
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Matrix head differs from selected build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Matrix inputs changed after build' }
+          $stdout = Join-Path $raw 'git-launch-matrix.stdout.log'
+          $stderr = Join-Path $raw 'git-launch-matrix.stderr.log'
+          $test = 'worktrees::windows_git::launch_matrix_tests::owned_same_program_path_matrix_observes_original_executor_without_granting_admission'
+          $started = [DateTime]::UtcNow.ToString('o')
+          & $binary $test --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          $testExit = $LASTEXITCODE
+          $finished = [DateTime]::UtcNow.ToString('o')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
+          $oneObservationTestPassed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0' -and [regex]::Matches($outText, '(?m)^test ' + [regex]::Escape($test) + ' \.\.\. ok\r?$').Count -eq 1
+          $prefix = 'FARFOLD_WINDOWS_GIT_LAUNCH_MATRIX '
+          $records = @($errText -split "`r?`n" | Where-Object { $_.StartsWith($prefix, [StringComparison]::Ordinal) } | ForEach-Object { $_.Substring($prefix.Length) | ConvertFrom-Json -AsHashtable -ErrorAction Stop })
+          $matrix = if ($records.Count -eq 1) { $records[0] } else { $null }
+          $expectedKeys = @('schema','case','cells','fixtureCleanup','fixtureCleanupError','observationComplete','commonDirEnvironmentForm','readContextAdmissionProven','existingFailureFixed','productOrAllWindowsComplete','newProcessController')
+          $complete = $oneObservationTestPassed -and $null -ne $matrix -and ((@($matrix.Keys | Sort-Object) -join ',') -ceq (@($expectedKeys | Sort-Object) -join ','))
+          if ($complete) {
+            $complete = ($matrix.schema -is [int] -or $matrix.schema -is [long]) -and $matrix.schema -eq 1 -and $matrix.case -ceq 'OwnedSameProgramPathMatrix' -and $matrix.fixtureCleanup -ceq 'knownRemoved' -and $null -eq $matrix.fixtureCleanupError -and $matrix.commonDirEnvironmentForm -ceq 'fixedGuid' -and @($matrix.cells).Count -eq 8
+            foreach ($key in @('observationComplete','readContextAdmissionProven','existingFailureFixed','productOrAllWindowsComplete','newProcessController')) { if ($matrix[$key] -isnot [bool]) { $complete = $false } }
+            $complete = $complete -and $matrix.observationComplete -and -not $matrix.readContextAdmissionProven -and -not $matrix.existingFailureFixed -and -not $matrix.productOrAllWindowsComplete -and -not $matrix.newProcessController
+          }
+          $cellKeys = @('id','program','cwd','path_args','full_identity_precheck','full_identity_postcheck','executor_error','returned_code','stdout_bytes','owner','observation_complete')
+          $ownerKeys = @('child_reaped','direct_job_inactive','original_output_cap_checks_passed','input_mode','owned_wrapper_exit','stderr_observed','stderr_prefix_bytes','stderr_prefix_sha256','stderr_prefix_truncated','stderr_observation_error','stderr_class','launcher_phase','launcher_native_error')
+          $index = 0
+          if ($complete) { foreach ($program in @('guid','dos')) { foreach ($cwd in @('guid','dos')) { foreach ($argsForm in @('guid','dos')) {
+            $cell = $matrix.cells[$index]
+            $id = $program.Substring(0,1).ToUpperInvariant() + $cwd.Substring(0,1).ToUpperInvariant() + $argsForm.Substring(0,1).ToUpperInvariant()
+            $valid = $cell -is [System.Collections.IDictionary] -and ((@($cell.Keys | Sort-Object) -join ',') -ceq (@($cellKeys | Sort-Object) -join ',')) -and $cell.id -ceq $id -and $cell.program -ceq $program -and $cell.cwd -ceq $cwd -and $cell.path_args -ceq $argsForm
+            foreach ($key in @('full_identity_precheck','full_identity_postcheck','observation_complete')) { if ($cell[$key] -isnot [bool] -or $cell[$key] -ne $true) { $valid = $false } }
+            $owner = $cell.owner
+            $valid = $valid -and $owner -is [System.Collections.IDictionary] -and ((@($owner.Keys | Sort-Object) -join ',') -ceq (@($ownerKeys | Sort-Object) -join ',')) -and $owner.input_mode -ceq 'originalNullStdin' -and $null -eq $owner.stderr_observation_error
+            foreach ($key in @('child_reaped','direct_job_inactive','original_output_cap_checks_passed','stderr_observed')) { if ($owner[$key] -isnot [bool] -or $owner[$key] -ne $true) { $valid = $false } }
+            $valid = $valid -and $owner.stderr_prefix_truncated -is [bool] -and ($owner.stderr_prefix_bytes -is [int] -or $owner.stderr_prefix_bytes -is [long]) -and $owner.stderr_prefix_bytes -ge 0 -and $owner.stderr_prefix_bytes -le 512 -and $owner.stderr_prefix_sha256 -cmatch '^[0-9a-f]{64}$' -and $owner.stderr_class -cin @('empty','launcher','otherRedacted')
+            if ($null -ne $owner.launcher_phase -and $owner.launcher_phase -cnotin @('prepare','enterJob','executeOrWait')) { $valid = $false }
+            foreach ($code in @($cell.returned_code,$owner.owned_wrapper_exit,$owner.launcher_native_error)) { if ($null -ne $code -and $code -isnot [int] -and $code -isnot [long]) { $valid = $false } }
+            if ($null -ne $cell.executor_error -and $cell.executor_error -isnot [string]) { $valid = $false }
+            if ($null -ne $cell.stdout_bytes -and ($cell.stdout_bytes -isnot [int] -and $cell.stdout_bytes -isnot [long] -or $cell.stdout_bytes -lt 0)) { $valid = $false }
+            if ($null -eq $cell.executor_error -and ($null -eq $cell.stdout_bytes -or $cell.returned_code -ne $owner.owned_wrapper_exit)) { $valid = $false }
+            if ($null -ne $cell.executor_error -and ($null -ne $cell.stdout_bytes -or $null -ne $cell.returned_code)) { $valid = $false }
+            if ($null -ne $cell.stdout_bytes -and $cell.stdout_bytes -gt 4194304) { $valid = $false }
+            if (-not $valid) { $complete = $false }
+            $index++
+          } } } }
+          $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
+          $complete = $complete -and $index -eq 8 -and $inputsStable
+          [ordered]@{
+            head = $head; test = $test; startedAtUtc = $started; finishedAtUtc = $finished
+            exitCode = $testExit; summaryCount = $summaries.Count; finalSummary = if ($last) { $last.Value } else { $null }
+            oneObservationTestPassed = $oneObservationTestPassed; diagnosticObservationComplete = $complete
+            matrix = $matrix; inputsStable = $inputsStable; existingLaunchFailureFixed = $false
+            readContextAdmissionProven = $false; productOrAllWindowsComplete = $false
+            stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash
+            stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash
+          } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $raw 'git-launch-matrix.result.json') -Encoding utf8
+          Get-Content -LiteralPath $stdout
+          Get-Content -LiteralPath $stderr
+          if (-not $complete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
       - name: Require selected positives and strict retained-master negative observation
         if: ${{ always() }}
         timeout-minutes: 1

@@ -295,6 +295,12 @@ fn execute_bounded(
                 return Err(error("tooLarge"));
             }
             #[cfg(all(windows, test))]
+            super::windows_git::launch_matrix_tests::observe_settlement(
+                status.code(),
+                input.is_some(),
+                &stderr,
+            );
+            #[cfg(all(windows, test))]
             if !status.success() {
                 // Owned test diagnostics only, after the same Child/Job has
                 // settled and the original stderr cap has passed. Observation

@@ -610,3 +610,14 @@ pub(crate) use material_fragment_consumer::{FragmentRetirement, carrier_fragment
 
 #[cfg(test)]
 mod material_pin;
+
+#[cfg(test)]
+#[path = "windows/material_backup_shape_tests.rs"]
+mod material_backup_shape;
+#[cfg(test)]
+pub(crate) use crate::file_access::material_carrier_records::Error as ShapeFailure;
+#[cfg(test)]
+pub(crate) use material_backup_shape::{
+    SHAPE_WORK_LIMIT, ShapeMemory, ShapeObservation, ShapeRequest, ShapeRetirement,
+    observe as backup_shape_observe,
+};
