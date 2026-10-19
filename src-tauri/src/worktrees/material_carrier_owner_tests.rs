@@ -203,3 +203,47 @@ fn hardlinked_source_is_not_silently_flattened_into_single_node_profile() {
         b"source"
     );
 }
+
+#[test]
+#[ignore = "manual: current token must already permit full SACL read/write; no privilege changes"]
+fn actual_native_carrier_is_consumed_as_real_bytes_before_original_owner_cleanup() {
+    let bytes: Vec<u8> = (0..=255).cycle().take(300).collect();
+    let fixture = Fixture::new(&bytes);
+    std::fs::write(
+        format!("{}:owned:$DATA", fixture.path().display()),
+        b"separate\0stream",
+    )
+    .unwrap();
+    let slot = Slot::<crate::file_access::FragmentRetirement>::default();
+    let mut result = None;
+    slot.run(|retired| {
+        result = Some(crate::file_access::carrier_fragment_roundtrip(
+            fixture.request(),
+            &AtomicBool::new(false),
+            retired,
+        ));
+        match result.as_ref().unwrap() {
+            Ok(_) => Ok(()),
+            Err(_) => Err(error("carrierFailed")),
+        }
+    })
+    .unwrap();
+    let receipt = result.unwrap().unwrap();
+    assert!(!slot.occupied());
+    assert!(
+        receipt.node.target_recaptured
+            && receipt.node.owned_handles_closed_and_disposition_accepted
+    );
+    assert_eq!(receipt.copied_native_bytes, receipt.node.carrier_bytes);
+    assert_eq!(
+        receipt.stored_bytes,
+        receipt.copied_native_bytes + 102 + 18 + 40
+    );
+    assert_ne!(receipt.record_sha256, [0; 32]);
+    assert_eq!(receipt.node.data_streams, 2);
+    assert_eq!(std::fs::read(fixture.path()).unwrap(), bytes);
+    assert_eq!(
+        std::fs::read(format!("{}:owned:$DATA", fixture.path().display())).unwrap(),
+        b"separate\0stream"
+    );
+}

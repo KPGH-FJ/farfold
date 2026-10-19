@@ -602,3 +602,8 @@ mod material_restore;
 pub(crate) use material_carrier::{
     CarrierReceipt, CarrierRequest, CarrierRetirement, carrier_roundtrip,
 };
+
+#[cfg(test)]
+mod material_fragment_consumer;
+#[cfg(test)]
+pub(crate) use material_fragment_consumer::{FragmentRetirement, carrier_fragment_roundtrip};

@@ -71,3 +71,8 @@ mod material_carrier_records;
 pub(crate) use material_carrier_records::Error as CarrierFailure;
 #[cfg(all(windows, test))]
 pub(crate) use windows::{CarrierReceipt, CarrierRequest, CarrierRetirement, carrier_roundtrip};
+
+#[cfg(test)]
+mod material_carrier_fragment;
+#[cfg(all(windows, test))]
+pub(crate) use windows::{FragmentRetirement, carrier_fragment_roundtrip};

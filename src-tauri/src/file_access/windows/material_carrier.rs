@@ -177,6 +177,33 @@ pub(crate) fn carrier_roundtrip(
     cancel: &AtomicBool,
     retirement: &mut Option<CarrierRetirement>,
 ) -> Result<CarrierReceipt> {
+    roundtrip_with_consumer(request, cancel, retirement, None)
+}
+
+// Only internal owned-carrier consumers implement this observer. It receives
+// the actual complete spool after every original source/target fence succeeds;
+// it runs before original namespace cleanup and cannot relax those checks.
+pub(super) struct FragmentSource<'a> {
+    pub(super) file: &'a File,
+    pub(super) leaf: &'a [u16],
+    pub(super) facts: &'a Facts,
+    pub(super) parsed: &'a Parsed,
+}
+pub(super) trait FragmentConsumer {
+    fn consume(
+        &mut self,
+        source: FragmentSource<'_>,
+        work: &mut WorkBudget,
+        cancel: &AtomicBool,
+        resident: &Resident,
+    ) -> Result<()>;
+}
+pub(super) fn roundtrip_with_consumer(
+    request: CarrierRequest,
+    cancel: &AtomicBool,
+    retirement: &mut Option<CarrierRetirement>,
+    mut consumer: Option<&mut dyn FragmentConsumer>,
+) -> Result<CarrierReceipt> {
     if retirement.is_some() {
         return Err(Error::CleanupUnknown);
     }
@@ -298,6 +325,19 @@ pub(crate) fn carrier_roundtrip(
                 != target_id
         {
             return Err(Error::Changed);
+        }
+        if let Some(consumer) = consumer.as_mut() {
+            consumer.consume(
+                FragmentSource {
+                    file: ns.source_carrier.as_ref().ok_or(Error::Invalid)?,
+                    leaf: &leaf,
+                    facts: &before,
+                    parsed: &first,
+                },
+                &mut work,
+                cancel,
+                &resident,
+            )?;
         }
         Ok(CarrierReceipt {
             source: expected.clone(),
