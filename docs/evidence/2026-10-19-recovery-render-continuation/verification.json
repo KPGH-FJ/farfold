@@ -1,6 +1,6 @@
 {
   "kind": "recovery-render-internal-delivery",
-  "recordedAtUtc": "2026-10-19T15:39:41.227940+00:00",
+  "recordedAtUtc": "2026-10-19T16:26:03.798562+00:00",
   "authority": "Only plans/agent-access.md schedules; PRODUCT,29x8,151 original titles and acceptance conditions unchanged.",
   "installed": {
     "source": "0d2eb617440417c8611231393bb53b111938acd5",
@@ -59,53 +59,113 @@
     "Current0d2 formal delivery includes global native+renderer history ownership ACK and live TypeError raw-envelope retention; actual/full7/evidence boundaries are in current fields."
   ],
   "engineering": {
-    "source": "0d2eb617440417c8611231393bb53b111938acd5",
+    "source": "36bcf788896721ea554cc485a841d011adcca22b",
+    "executionHead": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "executionIncludedThenUncommittedLoadSix": true,
+    "committedSourceByteClosure": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+      "bytes": 1837,
+      "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
+    },
     "naturalExit": 0,
     "allSeven": true,
-    "frontendFiles": 621,
-    "frontendPassed": 8160,
-    "rustPassed": 2106,
+    "frontendFiles": 622,
+    "frontendPassed": 8167,
+    "rustPassed": 2117,
     "rustFailed": 0,
     "rustExistingIgnored": 6,
-    "stableInputFiles": 18377,
+    "stableInputFiles": 18399,
     "verification": {
-      "path": "output/2026-10-19-recovery-render-continuation/engineering-owned-delivery-live-cohort/verification.json",
-      "bytes": 6257,
-      "sha256": "d9f4cd29c3f03ce32f38183302076b25b60419a100f204ab446d58a2bc1b85ab"
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-review-pause-cohort/verification.json",
+      "bytes": 6172,
+      "sha256": "6d108224768ea07699463f2af010c98864d7c202a1ff0e0a30fadcbb0138413b"
     },
+    "installedByThisReviewClosure": false,
+    "scope": "Actual seven commands on frozen18399inputs; six load source bytes then committed exactly. Final evidence/docs alignment occurs afterwards and is checked separately. Not realAgent/Windowsnative/installedproductacceptance.",
     "sourceReview": {
-      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-0d2eb617/source-review.json",
-      "bytes": 11126,
-      "sha256": "418542a8077bf9420aac16cb012388ad9961d0d98bdfb51d4681e0b0d1176cc3"
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-pause-batch/source-review-r2.json",
+      "bytes": 20181,
+      "sha256": "dbbaf5571c8813623f2838a54f57681d9c1d8b2a5179b5d8d172659655cd2fdb"
     }
   },
   "windowsNative": {
-    "runId": 39225032917,
-    "head": "63142172be9fc58f41fb3e151f77c9eef953b464",
+    "runId": 39284472134,
+    "head": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "jobId": 118166404201,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39284472134",
+    "status": "completed",
     "conclusion": "failure",
-    "rootReadbackRawFiles": 93,
-    "rustPairs": 35,
-    "material16": {
-      "passed": 16,
-      "failed": 0,
-      "scope": "selected partial material controls only; not full-security successful restore"
+    "rawArtifactFiles": 298,
+    "fullJobLogBytes": 680662,
+    "completedSelectedPositiveRust": {
+      "total": 272,
+      "passed": 228,
+      "failed": 44,
+      "ignored": 0
     },
-    "privateInput7": "raw exact7/7",
-    "artifact6": "raw exact6/6",
-    "firstImport7": "0pass7fail at source fixture ReadContext::open unsupportedGit; internal consumer not reached; exact branch unknown",
-    "sourceExport5": "0pass5fail same prerequisite; producer-to-pin pairing remains pending",
-    "materialEntry5": "0 tests because wrong module filter; namesExact false, aggregate correctly failed",
-    "preparationCache4": "3pass1fail at unreadable assertion; actual non-Unreadable variant and reason not recorded",
-    "authCancellation": "raw0, same target handle258 before/0 after, PID companion-1, cursor1query1reply complete232ms, ownerexit0/reaped/directJobinactive. Prior101 retained; no production fix inferred.",
-    "sdk": "Rust4/4 and Node20/20 selected controls only",
-    "strictNegative": "101,0pass1fail; complete18inner/17owner, close5003ms error/registryretained, mastertransferred, ownerreaped/directJobinactive. Not a passing test.",
-    "priorFailures": "39218601480 material14/2+auth101 and39212793966 material12/4 remain immutable.",
-    "newDiagnosticOnly": "Pushedb71334b0b; cfgWindows test-only settled stderr/config observations plus correct5-test filter; cross alltargets0. Distinct run39228910192 dispatched once, pending; no Git root-cause fix or full Windows result claimed."
+    "declaredPositiveCases": 304,
+    "all304Attempted": false,
+    "newOrdinary32": "No accepted exact results; only first case log pair,rawrunning2100,partialmarkersnotcounted;300secondtimeout;actualdispatchcauseunknown",
+    "newManual10": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "ignored": 0
+    },
+    "original149": {
+      "total": 149,
+      "passed": 129,
+      "failed": 20,
+      "ignored": 0
+    },
+    "continuation30": {
+      "total": 30,
+      "passed": 25,
+      "failed": 5,
+      "ignored": 0
+    },
+    "ordinaryFailures": 17,
+    "manualFailures": 27,
+    "manualFailureKinds": "23sourceFullSecurityOpen1314;2targetNTc0000061;1sourceidentityInvalidInput;1DELETEdenialexpectedbutOk. Notall externalconditions.",
+    "strictNegative": "Exactexit101and18inner/17ownerobservations retained; notpositivepass",
+    "noOrdinaryFailureAttributedToPrivilegeWithoutEvidence": true,
+    "actualFullWindowsProductAccepted": false,
+    "doesNotCoverLaterLoadSix": true,
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/safe-summary-final.json",
+      "bytes": 23186,
+      "sha256": "0af2e3b72ef7f0f55046de932e256f4087d767265f081ed5e9624ed2ba1e1ef3"
+    },
+    "completion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/execution-completion-final.json",
+      "bytes": 1944,
+      "sha256": "e5bd27fc7378601e1e2c54041e7bf9078b68ce835289f64b3302474670c1e765"
+    },
+    "fullReport": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/report-final.md",
+      "bytes": 2178,
+      "sha256": "5049aa5b5b9138a4170a1408ea70c5de00c381f608cd5acab0423b988729251a"
+    },
+    "evidenceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/evidence-freeze-final.json",
+      "bytes": 6265,
+      "sha256": "f0506dfac8987ad2e4ad5c546f377abba91a08c93ee3681ae801234749981d39"
+    },
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/final-metadata.stdout.json",
+      "bytes": 7092,
+      "sha256": "8fd063353a75e4fb17b1662664a301273a6f84ab22d0bb3a5e8dda9309862b29"
+    },
+    "watchCompletion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/watch-completion.json",
+      "bytes": 429,
+      "sha256": "5fd1fe3a12e1116e2e7a7ece716f3c0dfd8a181378382fa48042a023586df81a"
+    }
   },
   "notComplete": [
     "NEW-24 affected new real sends remain paused.",
     "Global transport/WebView backpressure, native media decode/playback, measured RSS/long duration/sleep/offline behavior.",
-    "Windows actual SourceGraph-held adminedge compose, full persistent target reconstruction/hardlink profile/metadata-last, uniqueManifest2/index closure/final namespace/publicworker remain internal unfinished. Current21 source is applied and strictly compiled; followup proposals are not accepted productrestore.",
+    "Windows restart via authenticatedcompleteManifest2, completealias/tree/fullprofile composition, finalnamespace/publicworker stillinternal unfinished;current32 covers sameprocess sealed reconstruction andtypedadminedge only,compiled+host132 but native42 pending.",
     "Windows installer/UI/credentials/WebView2/notifications/platform lifecycle and all29x8 real acceptance."
   ],
   "evidenceRefs": {
@@ -171,52 +231,155 @@
     }
   },
   "sourceContinuation": {
-    "sourceCheckpoint": "be6029a277cfb63b6eefa2729dc95d561bc6b564",
-    "sharedFrontendCheckpoint": "7691770264969d09700c22e712df537e1e0b42d2",
+    "sourceCheckpoint": "36bcf788896721ea554cc485a841d011adcca22b",
+    "sharedFrontendCheckpoint": "3632e536976e16bce751e6116ef556406d73151b",
     "installedSource": "0d2eb617440417c8611231393bb53b111938acd5",
     "sourceCheckpointReceipt": {
-      "path": "output/2026-10-19-recovery-render-continuation/next-material-cohort-root-application-r1/checkpoint.json",
-      "bytes": 3430,
-      "sha256": "9aa50e32e7933c76cbf7317b4652269d8c2b3f8576225dc2c87cee7207043ee6"
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+      "bytes": 1837,
+      "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
     },
-    "implemented": "21source persistentmaterial.bin + originalReadContext managedroot.git role + ownedcrossparent targetgroups; merged3 registrationtails retain old source/tests. Persistent/group components test-registered; originalpublicWindowsgates/Manifest1 unchanged.",
+    "implemented": "32Rust files: actual sealed-bytes native reconstruction under originalStore/Slot with recapture+postorder metadata, sameSourceOwner exactrootGit exclusion with actualdirectoryquery bytecharges, ordinarybudget/link fixture corrections and safeGitsettlement observations.2CI sourcefiles add42 exactselected controls. Internal testregistered Windowscomponents; originalManifest1/profile/publicWindowsgates retained.",
     "sourceReviews": [
       {
-        "path": "output/2026-10-19-recovery-render-continuation/root-next-material-source-review-r1/source-review.json",
-        "bytes": 6559,
-        "sha256": "326f102e736953f7a961259e2291bad66a0a9aee09b2d3f956d626dedde7ac53"
+        "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-merge-r1/source-review.json",
+        "bytes": 13173,
+        "sha256": "ba516e70d2db3774d957caa2adc4c2f881483fb21d2bf0cca235f3dfa58ce9f2"
       },
       {
-        "path": "output/2026-10-19-recovery-render-continuation/root-target-link-groups-review-r1/source-review.json",
-        "bytes": 2357,
-        "sha256": "8440eb146c8a5f4c4d1863342c2c3e5533db89ecf30a6ba17e97855b49e5f3a1"
+        "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-native-merge-review-r1/source-review.json",
+        "bytes": 3305,
+        "sha256": "c045b7512610ad84b1deadfe7d41eff47c798f0d19ac0329adae855ed2cb699b"
+      },
+      {
+        "path": "output/2026-10-19-recovery-render-continuation/root-owned-material-ci-review-r3/source-review.json",
+        "bytes": 17249,
+        "sha256": "632d51c4b0efc11258e2e23ada81348ef8c676891dea2847f7a7891c666210f1"
       }
     ],
-    "current21Pins": {
-      "path": "output/2026-10-19-recovery-render-continuation/next-material-cohort-root-application-r1/formatted-source-pins.json",
-      "bytes": 2891,
-      "sha256": "848ca279d073b90601159736dc6107f0a76ffb944ca18bb8d3e241fc4a51b9ab"
+    "current32Pins": {
+      "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-application-r1/formatted-pins-r2.json",
+      "bytes": 6810,
+      "sha256": "d0ab34280a53133031835188d1fe7aa2aed576f664daf9b9560f624ec34dba7e"
     },
     "crossAllTargetsStrict": {
-      "path": "output/2026-10-19-recovery-render-continuation/material21-cross-r1-receipt.json",
-      "bytes": 2816,
-      "sha256": "e91973ba0cbc5ddc4303d1410e89fe2f9cac03318c9c0bded3b7f9221083cda4"
+      "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-cross-r2-receipt.json",
+      "bytes": 2835,
+      "sha256": "e195b3b3e0ef484e1aafe0c39362a4d3e0d05152bdbc875670e4271457555f33"
     },
     "hostAllTargetsStrict": {
-      "path": "output/2026-10-19-recovery-render-continuation/material21-host-r1-receipt.json",
-      "bytes": 1435,
-      "sha256": "c409505c94fa4f7bbfcdf22248201c3d08c0a23412a6d63bc552b5c718170706"
+      "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-host-r1-receipt.json",
+      "bytes": 1486,
+      "sha256": "fe30ab788771d4c856212d834045f50bfcf64c3a227a2876cccdab3d3ff34716"
     },
-    "stableNativeInputs": 818,
-    "new24WindowsControls": "compiled only;20ordinary/4manual not yet run",
+    "hostFileAccess": {
+      "path": "output/2026-10-19-recovery-render-continuation/recovery-next32-fileaccess-r1-receipt.json",
+      "bytes": 1488,
+      "sha256": "05c27fc5cff40692526fba6f1b40b1ee09a3a3ce39eb02c129c50aa0cf61f496"
+    },
+    "stableNativeInputs": 826,
+    "hostFileAccessPassed": 132,
+    "newPortableSixActuallyExecuted": true,
+    "new42WindowsControls": "No accepted exact results; only first case log pair,rawrunning2100,partialmarkersnotcounted;300secondtimeout;actualdispatchcauseunknown;manual10exactfailed;completedCIaudited. Not productacceptance.",
+    "frontend": {
+      "checkpoint": "3632e536976e16bce751e6116ef556406d73151b",
+      "receipt": {
+        "path": "output/2026-10-19-recovery-render-continuation/cooperative-history-checkpoint-r1/checkpoint.json",
+        "bytes": 2444,
+        "sha256": "45b11b64605c0cadc1ac2353295ef8041036021b427bfede6c47374f622a0874"
+      },
+      "scopedAffected": "60files701pass/type/scopedformat0;1338stable",
+      "newControls": "oldproduction6semanticfail1pass→new7pass",
+      "notGlobalBytesOrRSS": true,
+      "notInstalledYet": true
+    },
     "latestFormalFullSevenSource": "0d2eb617440417c8611231393bb53b111938acd5",
-    "noNewFullSevenOrInstallFor21": true,
     "remainingInternal": [
-      "actualSourceGraph-held managedrootedge compose;completepersistenttarget reconstruction;aliascarrier+metadata-last+cleanupauthority;uniqueManifest2+finalnamespace+productworker",
-      "ordinary26Nativefailure remediation;globalSDK/IPC/renderer bytes/backpressure,failedfork/reload/longrun resource evidence"
+      "NativeProof persistence/restart through sole completeManifest2 and originaltrustedArtifacts",
+      "Complete sourcealias/hardlink profiles and final namespace/publicworker integration",
+      "Global transmission/render bytebackpressure and longoutput resource governance; committed Rustload6 covers scoped originalnotification consumption only"
     ],
-    "stillMissingConditions": "ExplicitfullSD token access and stillmissing accounts/services/Windows formalinstallation evidence remain separate;29x8/151 unchanged;NEW24affected real sends paused.",
-    "notASecondActivePlan": true
+    "stillMissingConditions": [
+      "ActualselectedWindows fullsecurity access capability; ordinary32exactexecution andremainingnativefailures notresolved",
+      "Formal installation/behavior ofcurrentnewsource,remainingperAgentaccount/service/all29x8evidence"
+    ],
+    "notASecondActivePlan": true,
+    "nativeComponentCheckpoint": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "loadPrefix": {
+      "checkpoint": "36bcf788896721ea554cc485a841d011adcca22b",
+      "receipt": {
+        "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+        "bytes": 1837,
+        "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
+      },
+      "implemented": "Original official load future concurrently consumes notification prefix through original dispatcher; state moves once into original pump. Config/request FIFOhead barrier retained.",
+      "red": {
+        "path": "output/2026-10-19-recovery-render-continuation/load-prefix-native-red-r1-receipt.json",
+        "bytes": 1556,
+        "sha256": "e24ecb557d934f7559f6a4e1f6508218d8107345ff9e8fc4cc9cf8e2f62674cf"
+      },
+      "green": {
+        "path": "output/2026-10-19-recovery-render-continuation/load-prefix-native-green-r1-receipt.json",
+        "bytes": 1561,
+        "sha256": "8f48f0554247f3ec9905d7423e982a3bc430722b7aacf6632fbc2ff6cf517d57"
+      },
+      "cross": {
+        "path": "output/2026-10-19-recovery-render-continuation/load-prefix-cross-r1-receipt.json",
+        "bytes": 2820,
+        "sha256": "928a02f573613198f85e7f28141a6ccba4f26618ddd86e0d3decebc4baa8bac2"
+      },
+      "actual": "old1pass4semanticfail→new5pass,all5ownedpeerclosed;828stableWindowscrossalltargetstrict0",
+      "limits": "Controlled officialSDK/nativeTauri callback; not realAgent/WebViewACK/fullSDKbytecredit/loadpermissionUI/globalbackpressure/bodyRSS proof."
+    },
+    "freshCompleteEngineering": {
+      "source": "36bcf788896721ea554cc485a841d011adcca22b",
+      "executionHead": "6d634ecb30141430ff30237c6ff3f717cab10466",
+      "executionIncludedThenUncommittedLoadSix": true,
+      "committedSourceByteClosure": {
+        "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+        "bytes": 1837,
+        "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
+      },
+      "naturalExit": 0,
+      "allSeven": true,
+      "frontendFiles": 622,
+      "frontendPassed": 8167,
+      "rustPassed": 2117,
+      "rustFailed": 0,
+      "rustExistingIgnored": 6,
+      "stableInputFiles": 18399,
+      "verification": {
+        "path": "output/2026-10-19-recovery-render-continuation/engineering-review-pause-cohort/verification.json",
+        "bytes": 6172,
+        "sha256": "6d108224768ea07699463f2af010c98864d7c202a1ff0e0a30fadcbb0138413b"
+      },
+      "installedByThisReviewClosure": false,
+      "scope": "Actual seven commands on frozen18399inputs; six load source bytes then committed exactly. Final evidence/docs alignment occurs afterwards and is checked separately. Not realAgent/Windowsnative/installedproductacceptance.",
+      "sourceReview": {
+        "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-pause-batch/source-review-r2.json",
+        "bytes": 20181,
+        "sha256": "dbbaf5571c8813623f2838a54f57681d9c1d8b2a5179b5d8d172659655cd2fdb"
+      }
+    },
+    "nativeSourceCheckpointReceipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/recovery-next34-checkpoint-r1/checkpoint.json",
+      "bytes": 7590,
+      "sha256": "a97007a6d70a58b126b13bcce8a03db4cb8771ab78c818331ce82dfb089447b1"
+    },
+    "noNewInstallationForCurrentCheckpoints": true,
+    "integratedSourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-pause-batch/source-review-r2.json",
+      "bytes": 20181,
+      "sha256": "dbbaf5571c8813623f2838a54f57681d9c1d8b2a5179b5d8d172659655cd2fdb"
+    },
+    "sourceUnionRelativeToInstalled": {
+      "native": 41,
+      "frontend": 8,
+      "load": 6,
+      "ci": 2,
+      "total": 57,
+      "native21Union32Intersection12": true
+    }
   },
   "historicalInstalled631": {
     "installed": {
@@ -410,72 +573,78 @@
     "data": "0added/0removed/8modified complete232530 manifest entries; normalized138sessions/54settings/10composers and wholeunsent/setup exact;1Agent updated_at differs; writerunknown. HistoricalH17unknownrecords retained, not markedcomplete."
   },
   "latestWindows": {
-    "runId": 39272897287,
-    "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
+    "runId": 39284472134,
+    "head": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "jobId": 118166404201,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39284472134",
+    "status": "completed",
     "conclusion": "failure",
-    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
-    "completedAndAudited": true,
-    "scope": "Selected actual native controls; laterfrontend769 and newmaterial21/be6029 not covered. Positiveportable/synthetic/refusal controls remain distinct from complete productrestore.",
-    "positiveRust": {
-      "total": 262,
-      "passed": 219,
-      "failed": 43,
+    "rawArtifactFiles": 298,
+    "fullJobLogBytes": 680662,
+    "completedSelectedPositiveRust": {
+      "total": 272,
+      "passed": 228,
+      "failed": 44,
       "ignored": 0
     },
-    "carrier149": {
-      "ordinary": {
-        "total": 137,
-        "passed": 122,
-        "failed": 15
-      },
-      "manual": {
-        "total": 12,
-        "passed": 0,
-        "failed": 12
-      }
+    "declaredPositiveCases": 304,
+    "all304Attempted": false,
+    "newOrdinary32": "No accepted exact results; only first case log pair,rawrunning2100,partialmarkersnotcounted;300secondtimeout;actualdispatchcauseunknown",
+    "newManual10": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "ignored": 0
+    },
+    "original149": {
+      "total": 149,
+      "passed": 129,
+      "failed": 20,
+      "ignored": 0
     },
     "continuation30": {
-      "ordinary": {
-        "total": 25,
-        "passed": 25,
-        "failed": 0
-      },
-      "manual": {
-        "total": 5,
-        "passed": 0,
-        "failed": 5
-      }
+      "total": 30,
+      "passed": 25,
+      "failed": 5,
+      "ignored": 0
     },
-    "ordinaryFailures26": "3ownedpremise,2ReadContext,5windows_first,1movedsourceselection,12SourceOwner/Graph/profile,1link255Changed,2budgetclass mismatch; further internal investigation, not all permissions",
-    "manual17": "16 source fullSecurityOpen1314;1targetcreateC0000061, distinct phases",
-    "Git5": "Actual fivepair/fivecall/tenmarker result accepted by Windows typedU64+Keys validator; plainfile/common exit0 knownfalse, extendedboth1empty observed, no wholeGit/restore proof",
-    "strictNegative101": "actual failed test/step retained; required positive failures correctly reject aggregate",
-    "auth": "this sameheldtargetwait0/exit1+Job0 sample only; old intermittent258 unexplained",
+    "ordinaryFailures": 17,
+    "manualFailures": 27,
+    "manualFailureKinds": "23sourceFullSecurityOpen1314;2targetNTc0000061;1sourceidentityInvalidInput;1DELETEdenialexpectedbutOk. Notall externalconditions.",
+    "strictNegative": "Exactexit101and18inner/17ownerobservations retained; notpositivepass",
+    "noOrdinaryFailureAttributedToPrivilegeWithoutEvidence": true,
+    "actualFullWindowsProductAccepted": false,
+    "doesNotCoverLaterLoadSix": true,
     "audit": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/execution-completion.json",
-      "bytes": 2238,
-      "sha256": "7535b2f58dbdceb6d83d9fa561b40e8fb770088524013eee214150626b07dcdb"
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/safe-summary-final.json",
+      "bytes": 23186,
+      "sha256": "0af2e3b72ef7f0f55046de932e256f4087d767265f081ed5e9624ed2ba1e1ef3"
     },
-    "safeOutcome": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/safe-outcome-addendum.json",
-      "bytes": 2548,
-      "sha256": "68f1afdcd5776cd62639fed877f1b7f378eb7c7d1afb971a92e85fc98b6340ba"
+    "completion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/execution-completion-final.json",
+      "bytes": 1944,
+      "sha256": "e5bd27fc7378601e1e2c54041e7bf9078b68ce835289f64b3302474670c1e765"
     },
-    "firstPhase": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/failure-firstphase-layering.json",
-      "bytes": 140945,
-      "sha256": "90e5fefe931ca6250ea420142304ef24b4ccb86eae7e61464185e409424f1451"
+    "fullReport": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/report-final.md",
+      "bytes": 2178,
+      "sha256": "5049aa5b5b9138a4170a1408ea70c5de00c381f608cd5acab0423b988729251a"
     },
     "evidenceFreeze": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/independent-result/final-audit/evidence-freeze.json",
-      "bytes": 189811,
-      "sha256": "5a5169d60d789d18323aef2a134bb61afcfb794dded07b99d0cda2c8689a7147"
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/evidence-freeze-final.json",
+      "bytes": 6265,
+      "sha256": "f0506dfac8987ad2e4ad5c546f377abba91a08c93ee3681ae801234749981d39"
     },
-    "dispatchBinding": {
-      "path": "output/2026-10-19-recovery-render-continuation/continuation30-native-ci/selected-run.json",
-      "sha256": "272dc8840800824d5b1540efce4ec29470a04a21425800e2123a8a36938dc056"
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/final-metadata.stdout.json",
+      "bytes": 7092,
+      "sha256": "8fd063353a75e4fb17b1662664a301273a6f84ab22d0bb3a5e8dda9309862b29"
     },
-    "statusAtDispatchBinding": "queued; final completed/failure separately observed and audited"
+    "watchCompletion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/watch-completion.json",
+      "bytes": 429,
+      "sha256": "5fd1fe3a12e1116e2e7a7ece716f3c0dfd8a181378382fa48042a023586df81a"
+    }
   },
   "historicalSourceContinuationBefore769": {
     "frontendCheckpoint": "3e7f2e17e5a436b1f0a4cb7464ce786de6cda3de",
@@ -516,12 +685,215 @@
     }
   },
   "latestDispatchedWindows": {
+    "runId": 39284472134,
+    "head": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "jobId": 118166404201,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39284472134",
+    "status": "completed",
+    "conclusion": "failure",
+    "rawArtifactFiles": 298,
+    "fullJobLogBytes": 680662,
+    "completedSelectedPositiveRust": {
+      "total": 272,
+      "passed": 228,
+      "failed": 44,
+      "ignored": 0
+    },
+    "declaredPositiveCases": 304,
+    "all304Attempted": false,
+    "newOrdinary32": "No accepted exact results; only first case log pair,rawrunning2100,partialmarkersnotcounted;300secondtimeout;actualdispatchcauseunknown",
+    "newManual10": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "ignored": 0
+    },
+    "original149": {
+      "total": 149,
+      "passed": 129,
+      "failed": 20,
+      "ignored": 0
+    },
+    "continuation30": {
+      "total": 30,
+      "passed": 25,
+      "failed": 5,
+      "ignored": 0
+    },
+    "ordinaryFailures": 17,
+    "manualFailures": 27,
+    "manualFailureKinds": "23sourceFullSecurityOpen1314;2targetNTc0000061;1sourceidentityInvalidInput;1DELETEdenialexpectedbutOk. Notall externalconditions.",
+    "strictNegative": "Exactexit101and18inner/17ownerobservations retained; notpositivepass",
+    "noOrdinaryFailureAttributedToPrivilegeWithoutEvidence": true,
+    "actualFullWindowsProductAccepted": false,
+    "doesNotCoverLaterLoadSix": true,
+    "audit": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/safe-summary-final.json",
+      "bytes": 23186,
+      "sha256": "0af2e3b72ef7f0f55046de932e256f4087d767265f081ed5e9624ed2ba1e1ef3"
+    },
+    "completion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/execution-completion-final.json",
+      "bytes": 1944,
+      "sha256": "e5bd27fc7378601e1e2c54041e7bf9078b68ce835289f64b3302474670c1e765"
+    },
+    "fullReport": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/report-final.md",
+      "bytes": 2178,
+      "sha256": "5049aa5b5b9138a4170a1408ea70c5de00c381f608cd5acab0423b988729251a"
+    },
+    "evidenceFreeze": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/independent-result/evidence-freeze-final.json",
+      "bytes": 6265,
+      "sha256": "f0506dfac8987ad2e4ad5c546f377abba91a08c93ee3681ae801234749981d39"
+    },
+    "finalMetadata": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/final-metadata.stdout.json",
+      "bytes": 7092,
+      "sha256": "8fd063353a75e4fb17b1662664a301273a6f84ab22d0bb3a5e8dda9309862b29"
+    },
+    "watchCompletion": {
+      "path": "output/2026-10-19-recovery-render-continuation/owned42-native-ci/watch-completion.json",
+      "bytes": 429,
+      "sha256": "5fd1fe3a12e1116e2e7a7ece716f3c0dfd8a181378382fa48042a023586df81a"
+    }
+  },
+  "currentAlignmentPreviousWholeSnapshots": [
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/next32-public-alignment/before/docs/status.md",
+      "sha256": "78896f32fd236cbf480a5d42807e8deaa117c0b62f63ceeca82828d623217d10"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/next32-public-alignment/before/docs/evidence/2026-10-19-recovery-render-continuation/verification.json",
+      "sha256": "c53f81e00df20e39b0c42fdde7eb222ef04dd82f8e148d4e6a654338856330ed"
+    },
+    {
+      "path": "output/2026-10-19-recovery-render-continuation/next32-public-alignment/before/docs/evidence/2026-10-19-windows-recovery-components/verification.json",
+      "sha256": "16ac1612ac9211112f3fc8aab0707c3417136882777482792173f0a683463b60"
+    }
+  ],
+  "userReviewPauseBoundary": {
+    "at": "2026-10-20",
+    "instruction": "Finish current load/recovery batch validation and handoff, then pause for user review; no automatic next feature batch.",
+    "manifest2": "Unapplied/unverified WIP only; internal development remains; no implementation acceptance.",
+    "manifest2Wip": {
+      "path": "output/2026-10-19-recovery-render-continuation/manifest2-native-proof-reopen-proposal-r1/wip-source-index.json",
+      "bytes": 11617,
+      "sha256": "d540312e971dd881c74459d15b8ec2106fa1cadcfddc5b153952fdb2bd038354"
+    },
+    "currentBatchClosureComplete": true,
+    "newFeatureDevelopmentStopped": true,
+    "newInstallationPerformed": false,
+    "pendingImplementationNotReclassifiedAsExternalCondition": true
+  },
+  "currentLoadSource": {
+    "checkpoint": "36bcf788896721ea554cc485a841d011adcca22b",
+    "receipt": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+      "bytes": 1837,
+      "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
+    },
+    "implemented": "Original official load future concurrently consumes notification prefix through original dispatcher; state moves once into original pump. Config/request FIFOhead barrier retained.",
+    "red": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-native-red-r1-receipt.json",
+      "bytes": 1556,
+      "sha256": "e24ecb557d934f7559f6a4e1f6508218d8107345ff9e8fc4cc9cf8e2f62674cf"
+    },
+    "green": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-native-green-r1-receipt.json",
+      "bytes": 1561,
+      "sha256": "8f48f0554247f3ec9905d7423e982a3bc430722b7aacf6632fbc2ff6cf517d57"
+    },
+    "cross": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-cross-r1-receipt.json",
+      "bytes": 2820,
+      "sha256": "928a02f573613198f85e7f28141a6ccba4f26618ddd86e0d3decebc4baa8bac2"
+    },
+    "actual": "old1pass4semanticfail→new5pass,all5ownedpeerclosed;828stableWindowscrossalltargetstrict0",
+    "limits": "Controlled officialSDK/nativeTauri callback; not realAgent/WebViewACK/fullSDKbytecredit/loadpermissionUI/globalbackpressure/bodyRSS proof."
+  },
+  "reviewClosureEngineering": {
+    "source": "36bcf788896721ea554cc485a841d011adcca22b",
+    "executionHead": "6d634ecb30141430ff30237c6ff3f717cab10466",
+    "executionIncludedThenUncommittedLoadSix": true,
+    "committedSourceByteClosure": {
+      "path": "output/2026-10-19-recovery-render-continuation/load-prefix-source-checkpoint-r1/checkpoint.json",
+      "bytes": 1837,
+      "sha256": "954867d66db63af7c461da3bb52ebfd03178190c4f5079e219a25f838bbbf1d9"
+    },
+    "naturalExit": 0,
+    "allSeven": true,
+    "frontendFiles": 622,
+    "frontendPassed": 8167,
+    "rustPassed": 2117,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "stableInputFiles": 18399,
+    "verification": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-review-pause-cohort/verification.json",
+      "bytes": 6172,
+      "sha256": "6d108224768ea07699463f2af010c98864d7c202a1ff0e0a30fadcbb0138413b"
+    },
+    "installedByThisReviewClosure": false,
+    "scope": "Actual seven commands on frozen18399inputs; six load source bytes then committed exactly. Final evidence/docs alignment occurs afterwards and is checked separately. Not realAgent/Windowsnative/installedproductacceptance.",
+    "sourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-pause-batch/source-review-r2.json",
+      "bytes": 20181,
+      "sha256": "dbbaf5571c8813623f2838a54f57681d9c1d8b2a5179b5d8d172659655cd2fdb"
+    }
+  },
+  "currentReviewState": "PausedForUserReviewAfterCurrentBatchClosure",
+  "historicalInstalledEngineering0d2": {
+    "source": "0d2eb617440417c8611231393bb53b111938acd5",
+    "naturalExit": 0,
+    "allSeven": true,
+    "frontendFiles": 621,
+    "frontendPassed": 8160,
+    "rustPassed": 2106,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "stableInputFiles": 18377,
+    "verification": {
+      "path": "output/2026-10-19-recovery-render-continuation/engineering-owned-delivery-live-cohort/verification.json",
+      "bytes": 6257,
+      "sha256": "d9f4cd29c3f03ce32f38183302076b25b60419a100f204ab446d58a2bc1b85ab"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-19-recovery-render-continuation/independent-source-review-0d2eb617/source-review.json",
+      "bytes": 11126,
+      "sha256": "418542a8077bf9420aac16cb012388ad9961d0d98bdfb51d4681e0b0d1176cc3"
+    }
+  },
+  "historicalWindowsNativeBefore39284472134": {
+    "runId": 39225032917,
+    "head": "63142172be9fc58f41fb3e151f77c9eef953b464",
+    "conclusion": "failure",
+    "rootReadbackRawFiles": 93,
+    "rustPairs": 35,
+    "material16": {
+      "passed": 16,
+      "failed": 0,
+      "scope": "selected partial material controls only; not full-security successful restore"
+    },
+    "privateInput7": "raw exact7/7",
+    "artifact6": "raw exact6/6",
+    "firstImport7": "0pass7fail at source fixture ReadContext::open unsupportedGit; internal consumer not reached; exact branch unknown",
+    "sourceExport5": "0pass5fail same prerequisite; producer-to-pin pairing remains pending",
+    "materialEntry5": "0 tests because wrong module filter; namesExact false, aggregate correctly failed",
+    "preparationCache4": "3pass1fail at unreadable assertion; actual non-Unreadable variant and reason not recorded",
+    "authCancellation": "raw0, same target handle258 before/0 after, PID companion-1, cursor1query1reply complete232ms, ownerexit0/reaped/directJobinactive. Prior101 retained; no production fix inferred.",
+    "sdk": "Rust4/4 and Node20/20 selected controls only",
+    "strictNegative": "101,0pass1fail; complete18inner/17owner, close5003ms error/registryretained, mastertransferred, ownerreaped/directJobinactive. Not a passing test.",
+    "priorFailures": "39218601480 material14/2+auth101 and39212793966 material12/4 remain immutable.",
+    "newDiagnosticOnly": "Pushedb71334b0b; cfgWindows test-only settled stderr/config observations plus correct5-test filter; cross alltargets0. Distinct run39228910192 dispatched once, pending; no Git root-cause fix or full Windows result claimed."
+  },
+  "historicalLatestWindowsBefore39284472134": {
     "runId": 39272897287,
     "head": "5a9f5811a7ea75573928e81a12707892bc0e7adc",
     "conclusion": "failure",
     "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39272897287",
     "completedAndAudited": true,
-    "scope": "Selected actual native controls; laterfrontend769 and newmaterial21/be6029 not covered. Positiveportable/synthetic/refusal controls remain distinct from complete productrestore.",
+    "scope": "Latestcompletedandaudited5a9 only; later21/be6,source34/6d andfrontend3632 notcovered. Newrun39284472134 finalartifactsawaited.",
     "positiveRust": {
       "total": 262,
       "passed": 219,
@@ -583,21 +955,5 @@
     },
     "statusAtDispatchBinding": "queued; final completed/failure separately observed and audited"
   },
-  "currentAlignmentPreviousWholeSnapshots": [
-    {
-      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/status.md",
-      "bytes": 60985,
-      "sha256": "70cb3e457efba5d4b7356d701de0403cd3aa2996bb4d44140952aade8756da99"
-    },
-    {
-      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/evidence/2026-10-19-recovery-render-continuation/verification.json",
-      "bytes": 26720,
-      "sha256": "f926ee1411bc04f9af3baa95df0d89bbca09c2fd788e5bd37401e36b71f231e1"
-    },
-    {
-      "path": "output/2026-10-19-recovery-render-continuation/source-be6029-public-alignment/before/docs/evidence/2026-10-19-windows-recovery-components/verification.json",
-      "bytes": 43326,
-      "sha256": "e980249f12feeec19b603d3c544c5ca45b9d9b836f70b28000655b28610b6319"
-    }
-  ]
+  "notASecondActivePlan": true
 }
