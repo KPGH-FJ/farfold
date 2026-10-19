@@ -147,7 +147,7 @@ fn real_recovery_capture_does_not_turn_a_graph_component_into_complete_material(
             .len(),
         4
     );
-    // Checkout still has its exact pre-existing Windows admission boundary.
+    // Material content comparison retains its Windows admission boundary.
     // No None profile/fake material is supplied to get past it.
     assert_eq!(
         crate::worktrees::recovery_pack::capture(&snapshot, &cancel)

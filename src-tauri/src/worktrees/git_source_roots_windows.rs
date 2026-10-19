@@ -461,6 +461,15 @@ impl SourceGraph {
         result.recheck(cancel)?;
         Ok(result)
     }
+    pub(in crate::worktrees) fn checkout_profile(
+        &self,
+        cancel: &AtomicBool,
+    ) -> Result<(Vec<String>, Vec<u8>)> {
+        self.recheck(cancel)?;
+        let result = profile::capture(&self.owner, cancel);
+        self.recheck(cancel)?;
+        result
+    }
     pub(in crate::worktrees) fn roots(&self) -> &Roots {
         &self.owner.roots
     }
@@ -529,3 +538,6 @@ mod tests;
 #[cfg(test)]
 #[path = "source_graph_windows_tests.rs"]
 mod graph_tests;
+
+#[path = "git_source_checkout_windows.rs"]
+mod profile;

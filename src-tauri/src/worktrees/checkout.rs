@@ -35,7 +35,7 @@ fn output(c: std::process::Command, input: Option<&[u8]>, cancel: &AtomicBool) -
         Err(error("unknown"))
     }
 }
-fn attrs(raw: &[u8]) -> Result<BTreeMap<Vec<u8>, BTreeMap<String, String>>> {
+pub(super) fn attrs(raw: &[u8]) -> Result<BTreeMap<Vec<u8>, BTreeMap<String, String>>> {
     let mut result: BTreeMap<Vec<u8>, BTreeMap<String, String>> = BTreeMap::new();
     if raw.is_empty() {
         return Ok(result);
@@ -63,7 +63,7 @@ fn attrs(raw: &[u8]) -> Result<BTreeMap<Vec<u8>, BTreeMap<String, String>>> {
     }
     Ok(result)
 }
-fn pattern(path: &[u8]) -> String {
+pub(super) fn pattern(path: &[u8]) -> String {
     // C-quoted Git pattern; escape glob syntax before quoting, preserving arbitrary path bytes.
     let mut s = String::from("\"/");
     for &b in path {
@@ -297,6 +297,7 @@ impl Checkout {
         source.identity()?;
         Ok(this)
     }
+    #[cfg(unix)]
     pub(super) fn recovery_profile(&self) -> Result<(Vec<String>, Vec<u8>)> {
         Ok((
             self.configs.clone(),

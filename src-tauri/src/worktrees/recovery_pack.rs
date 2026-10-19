@@ -1,7 +1,8 @@
 //! A complete, bounded local bundle plus actual recovery in an independent repo.
 //! It never adds refs/config/index entries to the source repository.
+#[cfg(unix)]
+use super::checkout::Checkout;
 use super::{
-    checkout::Checkout,
     git,
     inspect::{self, Snapshot, Stamp},
     material_scan,
@@ -170,8 +171,12 @@ pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
     };
     // Compare an actual clean checkout, including effective safe EOL attributes.
     // Git status alone is insufficient for assume-unchanged/ignored material.
+    #[cfg(unix)]
     let profile = Checkout::prepare(s, &roots.head)?;
+    #[cfg(unix)]
     let (configs, attributes) = profile.recovery_profile()?;
+    #[cfg(windows)]
+    let (configs, attributes) = source_graph.checkout_profile(cancel)?;
     let content = material_scan::content(root, cancel)?;
     #[cfg(windows)]
     source_graph.recheck(cancel)?;

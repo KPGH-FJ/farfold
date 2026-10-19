@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/carrierFullSD4 positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph6/carrierFragment7/rawName5/rawPinOrdinary6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1 positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -776,7 +776,7 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json')
           if (-not $complete) { exit 1 }
-      - name: Carrier portable twenty and ordinary Windows two, four exact groups
+      - name: Carrier and source read-only, sixty-two ordinary controls in seventeen groups
         id: carrier_portable
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 5
@@ -820,6 +820,72 @@ jobs:
               ) },
             @{ name = 'carrier-ordinary-authority'; filter = 'worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request'; expected = 1; names = @(
                 'worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request'
+              ) },
+            @{ name = 'source-roots'; filter = 'worktrees::git::source_roots::tests::'; expected = 4; names = @(
+                'worktrees::git::source_roots::tests::real_private_roots_consumer_keeps_deleted_reflog_commits_without_mutating_source',
+                'worktrees::git::source_roots::tests::orphan_reflog_fingerprint_changes_even_when_its_commit_set_does_not',
+                'worktrees::git::source_roots::tests::unknown_private_state_noncommit_ref_and_cancel_are_not_silently_omitted',
+                'worktrees::git::source_roots::tests::held_inventory_denies_metadata_writers_and_rechecks_complete_private_namespace'
+              ) },
+            @{ name = 'source-graph'; filter = 'worktrees::git::source_roots::graph_tests::'; expected = 6; names = @(
+                'worktrees::git::source_roots::graph_tests::actual_source_graph_has_exact_reachable_objects_and_one_program_with_held_private_inventory',
+                'worktrees::git::source_roots::graph_tests::real_recovery_capture_does_not_turn_a_graph_component_into_complete_material',
+                'worktrees::git::source_roots::graph_tests::missing_owned_source_object_and_pre_cancel_never_publish_a_complete_graph',
+                'worktrees::git::source_roots::graph_tests::real_object_parser_rejects_incomplete_duplicate_wrong_width_and_overbudget_sets',
+                'worktrees::git::source_roots::graph_tests::actual_size_parser_keeps_exact_rows_types_and_checked_256mib_sum',
+                'worktrees::git::source_roots::graph_tests::graph_retains_private_namespace_observation_until_explicit_recheck_finishes'
+              ) },
+            @{ name = 'carrier-fragment'; filter = 'file_access::material_carrier_fragment::tests::'; expected = 7; names = @(
+                'file_access::material_carrier_fragment::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128',
+                'file_access::material_carrier_fragment::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted',
+                'file_access::material_carrier_fragment::tests::actual_input_extent_or_hash_mismatch_never_emits_completion',
+                'file_access::material_carrier_fragment::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete',
+                'file_access::material_carrier_fragment::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error',
+                'file_access::material_carrier_fragment::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output',
+                'file_access::material_carrier_fragment::tests::verified_record_retains_its_logical_metadata_reservation_until_drop'
+              ) },
+            @{ name = 'raw-name'; filter = 'file_access::material_raw_name::tests::'; expected = 5; names = @(
+                'file_access::material_raw_name::tests::raw_units_including_unpaired_surrogates_are_admitted_without_rewriting',
+                'file_access::material_raw_name::tests::counted_limit_is_utf16_units_not_unicode_scalars_or_utf8_bytes',
+                'file_access::material_raw_name::tests::relative_separators_controls_streams_and_empty_names_never_pass',
+                'file_access::material_raw_name::tests::dos_devices_and_extensions_keep_existing_material_boundary',
+                'file_access::material_raw_name::tests::unicode_spelling_is_not_normalized_into_an_alias_or_device_name'
+              ) },
+            @{ name = 'raw-pin-1'; filter = 'file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string'
+              ) },
+            @{ name = 'raw-pin-2'; filter = 'file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses'
+              ) },
+            @{ name = 'raw-pin-3'; filter = 'file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart'
+              ) },
+            @{ name = 'raw-pin-4'; filter = 'file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability'
+              ) },
+            @{ name = 'raw-pin-5'; filter = 'file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins'
+              ) },
+            @{ name = 'raw-pin-6'; filter = 'file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy'
+              ) },
+            @{ name = 'checkout-profile'; filter = 'worktrees::git::source_roots::profile::tests::'; expected = 6; names = @(
+                'worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes',
+                'worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback',
+                'worktrees::git::source_roots::profile::tests::custom_filter_and_literal_unset_driver_are_rejected_without_running_a_helper',
+                'worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected',
+                'worktrees::git::source_roots::profile::tests::cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery',
+                'worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation'
+              ) },
+            @{ name = 'shape-framing'; filter = 'file_access::windows::material_backup_shape::tests::'; expected = 2; names = @(
+                'file_access::windows::material_backup_shape::tests::observation_retains_unknown_header_and_raw_link_units_without_minting_a_profile',
+                'file_access::windows::material_backup_shape::tests::framing_truncation_cancel_and_shared_byte_limit_never_become_completion'
+              ) },
+            @{ name = 'shape-owned'; filter = 'worktrees::material_owner::shape_tests::'; expected = 4; names = @(
+                'worktrees::material_owner::shape_tests::ordinary_owned_empty_directory_shape_reaches_real_eof_and_abort_without_full_security',
+                'worktrees::material_owner::shape_tests::ordinary_owned_directory_ea_and_named_data_have_actual_bounded_record_shapes',
+                'worktrees::material_owner::shape_tests::ordinary_owned_hardlink_aliases_observe_native_link_records_without_assuming_they_exist',
+                'worktrees::material_owner::shape_tests::ordinary_shape_pre_cancel_and_insufficient_shared_work_refuse_without_weakening_source'
               ) }
           )
           $results = @()
@@ -860,7 +926,7 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
-          $complete = $complete -and $results.Count -eq 4 -and $inputsStable
+          $complete = $complete -and $results.Count -eq 17 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
@@ -868,7 +934,8 @@ jobs:
             groups = $results
             inputsStable = $inputsStable
             observationComplete = $complete
-            singleNodeCarrierControlsOnly = $true
+            singleNodeCarrierControlsOnly = $false
+            readOnlySourceAndCarrierControlsOnly = $true
             explicitIgnoredFullSecurityControls = $false
             privilegesAdjusted = $false
             fullTreeOrManifest2Complete = $false
@@ -876,7 +943,7 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'carrier-portable.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'carrier-portable.result.json')
           if (-not $complete) { exit 1 }
-      - name: Carrier FullSD, four explicit ignored exact current-token Windows controls
+      - name: Carrier and raw pin FullSD, five explicit ignored exact current-token Windows controls
         id: carrier_full_sd
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 5
@@ -902,6 +969,9 @@ jobs:
               ) },
             @{ name = 'carrier-fullsd-4'; filter = 'worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile'; expected = 1; names = @(
                 'worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile'
+              ) },
+            @{ name = 'raw-pin-fullsd'; filter = 'file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback'; expected = 1; names = @(
+                'file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback'
               ) }
           )
           $results = @()
@@ -942,7 +1012,7 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
-          $complete = $complete -and $results.Count -eq 4 -and $inputsStable
+          $complete = $complete -and $results.Count -eq 5 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
@@ -950,7 +1020,8 @@ jobs:
             groups = $results
             inputsStable = $inputsStable
             observationComplete = $complete
-            singleNodeCarrierControlsOnly = $true
+            singleNodeCarrierControlsOnly = $false
+            carrierAndRawPinControlsOnly = $true
             explicitIgnoredFullSecurityControls = $true
             privilegesAdjusted = $false
             fullTreeOrManifest2Complete = $false
@@ -1140,7 +1211,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
-            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/carrierFullSD4 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph6/carrierFragment7/rawName5/rawPinOrdinary6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }
