@@ -83,6 +83,32 @@
         "sha256": "ae188989fb1278f4bae38ece4732fbb9b385405dfe5d53fbc62f031c29c2e1bc",
         "bytes": 9476
       }
+    },
+    "selectedDiagnostics1": {
+      "run": 39188672060,
+      "source": "9995b45752b7b23590a06a18d245af78961b192d",
+      "conclusion": "failure",
+      "build": "success",
+      "publicationMatrix": {
+        "passed": 1,
+        "Win32VariantFreshAndCollision87": 5,
+        "heldRootNtFreshAndSpecificCollision": "success/full128+bytes;collision NT0xc0000035 mapped183",
+        "productionFixVerified": false
+      },
+      "terminalCancel": {
+        "failed": 1,
+        "exit": 101,
+        "seconds": 20.02,
+        "observed": "spawn returned6ms;marker absent at5025ms;last missing-marker close.enter without return",
+        "rootCause": "unknown"
+      },
+      "watch": "one watch exited API EOF,not job verdict;one final metadata/log/artifact set read,no restart or redispatch",
+      "scope": "Selected synthetic diagnostics,not all Windows or realAgent proof. NT production fix is later9f145;cursor A/B remains under independent review,not executed.",
+      "summary": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/selected-diagnostics-integration/ci1/after-watch-once/summary.json",
+        "sha256": "e3880fd632ccabac85a0e9b61d43d08e0dcabe529bef407cac5caf768a492e8d",
+        "bytes": 29084
+      }
     }
   },
   "installedApp": {
@@ -132,6 +158,25 @@
       "additionalDeletion": false,
       "pointAvailableApproxGiB": 4.82,
       "notContinuousCapacityGuarantee": true
+    },
+    "laterExactIncrementalRetirement": {
+      "generationDirectories": 4,
+      "unlinkedLeaves": 526,
+      "estimatedUniqueAllocatedBytes": 1311977472,
+      "intentionalRegenerableCacheRetirement": true,
+      "scope": "No dependency binaries,formal App,ZIP,backup,evidence,user or Agent data selected;each parent retained complete sibling",
+      "cleanup": {
+        "path": "output/2026-10-19-storage-generated-cache-followup/r2/cleanup-result.json",
+        "sha256": "3d7b914a1f48879e4957ae9c0f007c72ddfb9357a12e57f7f01ada06ab950e95",
+        "bytes": 90112
+      },
+      "point": {
+        "path": "output/2026-10-19-storage-generated-cache-followup/r2/post-cleanup-point.json",
+        "sha256": "2deb7ef4c61a35733e9101389aef27e10c108c635b4a1094eb6264f4aed47071",
+        "bytes": 475
+      },
+      "availablePointGiB": 5.864,
+      "notContinuousOrExclusiveAttribution": true
     }
   },
   "notVerified": [
@@ -682,6 +727,51 @@
       "path": "output/2026-10-19-storage-generated-cache-followup/summary.json",
       "sha256": "0dea051d924666237623991f7e28637644100593a6aac135fc25f568584ccf28",
       "bytes": 2228
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/root-execution/verification-final.json",
+      "sha256": "afc9b8da8952a2e64183b0bd88db96cad3551d2de8574173370da23d24d4a8b6",
+      "bytes": 9043
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/root-execution/root-final-review.json",
+      "sha256": "64c82643f8690ff3a76471895b0900eb9c8763fc5d2afef1088be786c86af19d",
+      "bytes": 1593
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/independent-review/final/source-review.json",
+      "sha256": "164d7558773a89e85663da5f617813722a0801bb445b79d46311b2e6cc5ced7c",
+      "bytes": 3512
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/media-retention-design/production-proposal-r1/execution-r1/verification-final.json",
+      "sha256": "1a877fe1f87bccf734b6029abe3cb77ea4b1f66174c8b0034e5eb873ce9340b2",
+      "bytes": 16179
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/media-retention-design/production-proposal-r1/execution-r1/root-final-review.json",
+      "sha256": "28aee9de612868a6be2e60a50728d3492bb14a5197b44b799f824e43eae844c0",
+      "bytes": 1028
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/selected-diagnostics-integration/ci1/after-watch-once/summary.json",
+      "sha256": "e3880fd632ccabac85a0e9b61d43d08e0dcabe529bef407cac5caf768a492e8d",
+      "bytes": 29084
+    },
+    {
+      "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/ci1-followup-execution/nt-final-review.json",
+      "sha256": "9a5d131350f1910227373aa443345bfbf6dc7aa78492594a40c943e0aeddaf40",
+      "bytes": 3056
+    },
+    {
+      "path": "output/2026-10-19-storage-generated-cache-followup/r2/cleanup-result.json",
+      "sha256": "3d7b914a1f48879e4957ae9c0f007c72ddfb9357a12e57f7f01ada06ab950e95",
+      "bytes": 90112
+    },
+    {
+      "path": "output/2026-10-19-storage-generated-cache-followup/r2/post-cleanup-point.json",
+      "sha256": "2deb7ef4c61a35733e9101389aef27e10c108c635b4a1094eb6264f4aed47071",
+      "bytes": 475
     }
   ],
   "formalWindow": {
@@ -961,6 +1051,93 @@
         "b785446d0f98e6cdf9c9aa82a2375d3bec114016",
         "2439b195dd508a7aaecd045fc5c6a372e65600b7"
       ]
+    },
+    "mediaOwnedEnvelope": {
+      "checkpoint": "13cfe90432be3014aa35906d787e02299fdc5cea",
+      "sourceFiles": 2,
+      "relatedHostPassed": 71,
+      "strictHostAndWindowsCross": true,
+      "scope": "Moves the existing owned session/update JSON after passive reads; preserves full value and derived event order. Baseline allocation-only assertion failed while three functional cases passed; same four cases then green.",
+      "full7": null,
+      "installed": false,
+      "limits": [
+        "No zero-copy IPC, RSS or latency claim",
+        "Raw transport, SDK queues, loaded history and codec allocations remain separate internal work"
+      ],
+      "verification": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/media-retention-design/production-proposal-r1/execution-r1/verification-final.json",
+        "sha256": "1a877fe1f87bccf734b6029abe3cb77ea4b1f66174c8b0034e5eb873ce9340b2",
+        "bytes": 16179
+      },
+      "rootReview": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-internal-investigation/media-retention-design/production-proposal-r1/execution-r1/root-final-review.json",
+        "sha256": "28aee9de612868a6be2e60a50728d3492bb14a5197b44b799f824e43eae844c0",
+        "bytes": 1028
+      }
+    },
+    "previewLeaseBeforeDeepAdmission": {
+      "checkpoint": "11d4169b3d5f5a6cacef372d1fb76c53420eebd6",
+      "sourceFiles": 15,
+      "productionFiles": 3,
+      "actualSameTestBaseline": {
+        "passed": 11,
+        "semanticFailed": 5
+      },
+      "actualSameTestGreen": 16,
+      "firstAffected": {
+        "passed": 957,
+        "failed": 21,
+        "scope": "legacy SSR deep-rejection expectations; original assertions preserved"
+      },
+      "actualFinal": {
+        "files": 48,
+        "passed": 981,
+        "failed": 0,
+        "typeExit": 0,
+        "ownedFormatExit": 0,
+        "stableInputs": 1324
+      },
+      "scope": "Cheap render eligibility only; deep validation and media URI construction after acquiring existing4/32MiB lease. Nine legacy SSR presentation fixtures remain separate from actual Hook/pool controls.",
+      "full7": null,
+      "installed": false,
+      "limits": [
+        "No actual React DOM scheduling, browser decode or installed media proof",
+        "Failed preview admitted URI retention unchanged",
+        "No transport/codec/RSS/global pressure bound"
+      ],
+      "verification": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/root-execution/verification-final.json",
+        "sha256": "afc9b8da8952a2e64183b0bd88db96cad3551d2de8574173370da23d24d4a8b6",
+        "bytes": 9043
+      },
+      "rootReview": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/root-execution/root-final-review.json",
+        "sha256": "64c82643f8690ff3a76471895b0900eb9c8763fc5d2afef1088be786c86af19d",
+        "bytes": 1593
+      },
+      "independentReview": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/p13-preview-lease-order-investigation/independent-review/final/source-review.json",
+        "sha256": "164d7558773a89e85663da5f617813722a0801bb445b79d46311b2e6cc5ced7c",
+        "bytes": 3512
+      }
+    },
+    "windowsHeldRelativePublication": {
+      "checkpoint": "9f14502ab352f4b616e158728d416cb766f5b1f2",
+      "sourceFiles": 1,
+      "hostPassed": 150,
+      "hostExistingIgnored": 1,
+      "formatExit": 0,
+      "strictHostAndWindowsCross": true,
+      "scope": "NT same-held-source/parent rename, no replacement; original guards retained; original shared offset_of import restored after static coupling finding. Unicode/255-unit production case added.",
+      "actualNewWindowsProduction": null,
+      "actualNewUnicode255": null,
+      "full7": null,
+      "installed": false,
+      "rootReview": {
+        "path": "output/2026-10-19-approval-audio-windows-stage/windows-ci5/ci1-followup-execution/nt-final-review.json",
+        "sha256": "9a5d131350f1910227373aa443345bfbf6dc7aa78492594a40c943e0aeddaf40",
+        "bytes": 3056
+      }
     }
   },
   "historical3845": {
@@ -1025,5 +1202,6 @@
         "Unknown-work quit warning retained"
       ]
     }
-  }
+  },
+  "lastSourceUpdateAtUtc": "2026-10-19T03:02:03.848520+00:00"
 }
