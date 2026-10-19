@@ -234,11 +234,15 @@ pub(super) fn selected_environment(
         "DYLD_INSERT_LIBRARIES",
         "DYLD_LIBRARY_PATH",
     ] {
-        if env
-            .get(key)
-            .cloned()
-            .or_else(|| std::env::var(key).ok())
-            .is_some_and(|v| !v.is_empty())
+        if (cfg!(windows)
+            && env
+                .iter()
+                .any(|(name, value)| name.eq_ignore_ascii_case(key) && !value.is_empty()))
+            || env
+                .get(key)
+                .cloned()
+                .or_else(|| std::env::var(key).ok())
+                .is_some_and(|v| !v.is_empty())
         {
             return Err(Code::EnvironmentUnavailable.into());
         }

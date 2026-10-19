@@ -216,7 +216,13 @@ fn claude_unknown_preloads_are_unavailable_without_discarding_selected_environme
             .unwrap();
     assert_eq!(env.get("HOME").unwrap(), "/synthetic-home");
     assert_eq!(env.get("SYNTHETIC_EXISTING_SETTING").unwrap(), "preserved");
-    for key in ["NODE_OPTIONS", "NODE_PATH", "DYLD_INSERT_LIBRARIES"] {
+    for key in [
+        "NODE_OPTIONS",
+        "NODE_PATH",
+        "LD_PRELOAD",
+        "DYLD_INSERT_LIBRARIES",
+        "DYLD_LIBRARY_PATH",
+    ] {
         let mut row = f.saved.agent.clone();
         row.env = vec![(key.into(), "synthetic-preload".into())];
         assert_eq!(
@@ -226,6 +232,62 @@ fn claude_unknown_preloads_are_unavailable_without_discarding_selected_environme
             Code::EnvironmentUnavailable
         );
     }
+}
+#[test]
+fn claude_fixed_helper_environment_names_follow_the_platform_without_running_injections() {
+    let template = tests::source("/synthetic").agent;
+    let names = [
+        ("NODE_OPTIONS", "node_options"),
+        ("NODE_PATH", "Node_Path"),
+        ("LD_PRELOAD", "ld_preload"),
+        ("DYLD_INSERT_LIBRARIES", "DyLd_InSeRt_LiBrArIeS"),
+        ("DYLD_LIBRARY_PATH", "dyld_LIBRARY_path"),
+    ];
+    let mut clean: std::collections::HashMap<String, String> = names
+        .iter()
+        .map(|(name, _)| ((*name).into(), String::new()))
+        .collect();
+    clean.insert("HOME".into(), "/synthetic-home".into());
+    clean.insert("SYNTHETIC_EXISTING_SETTING".into(), "inherited".into());
+    for (name, mixed) in names {
+        for selected in [false, true] {
+            let mut row = template.clone();
+            row.env = vec![("SYNTHETIC_EXISTING_SETTING".into(), "selected".into())];
+            let mut inherited = clean.clone();
+            // Windows gets one mixed-case spelling. Unix shadows any actual
+            // uppercase process value with the original explicit empty value.
+            inherited.remove(name);
+            #[cfg(unix)]
+            inherited.insert(name.into(), String::new());
+            if selected {
+                row.env.push((mixed.into(), "synthetic-preload".into()));
+            } else {
+                inherited.insert(mixed.into(), "synthetic-preload".into());
+            }
+            let mut expected = inherited.clone();
+            expected.extend(row.env.iter().cloned());
+            let result = launch::selected_environment(&row, inherited);
+            #[cfg(windows)]
+            assert_eq!(result.unwrap_err().code, Code::EnvironmentUnavailable);
+            #[cfg(unix)]
+            assert_eq!(result.unwrap(), expected);
+        }
+    }
+    // Exact selected values still override the inherited map, without changing
+    // unrelated keys or rejecting empty protected settings on either platform.
+    let mut row = template.clone();
+    row.env = vec![
+        ("SYNTHETIC_EXISTING_SETTING".into(), "selected".into()),
+        ("NODE_OPTIONS".into(), String::new()),
+    ];
+    let mut inherited = clean.clone();
+    inherited.insert("NODE_OPTIONS".into(), "synthetic-preload".into());
+    let mut expected = inherited.clone();
+    expected.extend(row.env.iter().cloned());
+    assert_eq!(
+        launch::selected_environment(&row, inherited).unwrap(),
+        expected
+    );
 }
 #[test]
 fn claude_helper_decode_units_are_part_of_rust_verification() {
@@ -329,10 +391,37 @@ fn claude_pipe_holding_descendant_is_reaped_before_result_is_published() {
     let saved = f.saved.clone();
     let job = f.job();
     let pidfile = f.root.join("descendant-pid");
-    // This owned peer speaks the same helper output but leaves a descendant holding
-    // the pipes after its leader exits. No official SDK or external process is used.
+    let leaderfile = f.root.join("leader-pid");
+    // One owned Python peer launches itself with both output pipes inherited,
+    // then exits. No SDK, Agent, shell, detached process or new environment.
+    const PEER: &str = r#"import sys, os, time, signal, json, subprocess
+def mark(file):
+    with open(file + ".pending", "w", encoding="ascii") as marker:
+        marker.write(str(os.getpid()))
+    os.replace(file + ".pending", file)
+if sys.argv[1] == "child":
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    mark(sys.argv[2])
+    time.sleep(30)
+    os._exit(0)
+sys.stdin.readline()
+mark(sys.argv[2])
+child = subprocess.Popen(
+    [sys.executable, "-u", "-c", sys.argv[3], "child", sys.argv[1]],
+    stdin=subprocess.DEVNULL,
+    stdout=sys.stdout,
+    stderr=sys.stderr,
+    close_fds=True,
+)
+print(json.dumps({"kind": "error", "code": "sourceUnconfirmed"}), flush=True)
+os._exit(0)
+"#;
     let mut command = Command::new(crate::platform_tests::python());
-    command.args(["-u","-c", "import sys,os,time,signal,json;sys.stdin.readline();pid=os.fork();\nif pid==0:\n signal.signal(signal.SIGTERM,signal.SIG_IGN);open(sys.argv[1],'w').write(str(os.getpid()));time.sleep(30);os._exit(0)\nprint(json.dumps({'kind':'error','code':'sourceUnconfirmed'}),flush=True)"]).arg(&pidfile);
+    command
+        .args(["-u", "-c", PEER])
+        .arg(&pidfile)
+        .arg(&leaderfile)
+        .arg(PEER);
     let snapshot = std::thread::scope(|scope| {
         let worker = scope.spawn(|| run_selected(&job, 0, command));
         let deadline = Instant::now() + Duration::from_secs(5);
@@ -340,6 +429,20 @@ fn claude_pipe_holding_descendant_is_reaped_before_result_is_published() {
             std::thread::sleep(Duration::from_millis(10));
         }
         assert!(pidfile.exists());
+        let leader = std::fs::read_to_string(&leaderfile)
+            .unwrap()
+            .parse::<i32>()
+            .unwrap();
+        while crate::platform_tests::process_check(leader) == 0 && Instant::now() < deadline {
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        assert_ne!(crate::platform_tests::process_check(leader), 0);
+        let descendant = std::fs::read_to_string(&pidfile)
+            .unwrap()
+            .parse::<i32>()
+            .unwrap();
+        assert_eq!(crate::platform_tests::process_check(descendant), 0);
+        assert!(!worker.is_finished());
         assert!(job.snapshot().hits.is_empty());
         job.cancel();
         let result = worker.join().unwrap();
