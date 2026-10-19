@@ -17,6 +17,9 @@ mod input;
 #[cfg(windows)]
 #[path = "git_source_export_windows.rs"]
 pub(super) mod source_export;
+#[cfg(windows)]
+#[path = "git_source_roots_windows.rs"]
+pub(super) mod source_roots;
 pub(super) use input::Input;
 pub(super) const OUTPUT_LIMIT: u64 = 4 * 1024 * 1024;
 pub(super) struct Output {

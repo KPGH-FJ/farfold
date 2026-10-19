@@ -3,13 +3,13 @@
 use super::{git, inspect::Snapshot, material_scan::hex, remove_types::RootsSummary, types::*};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{
-    collections::BTreeSet,
-    fs,
-    io::Read,
-    path::Path,
-    sync::atomic::{AtomicBool, Ordering},
-};
+use std::sync::atomic::{AtomicBool, Ordering};
+
+#[cfg(not(windows))]
+use std::{fs, io::Read};
+
+#[cfg(any(not(windows), test))]
+use std::{collections::BTreeSet, path::Path};
 
 pub(super) const MAX_ROOTS: usize = 4096;
 pub(super) const MAX_OBJECTS: usize = 50_000;
@@ -42,6 +42,7 @@ impl Roots {
         (self.commits.join("\n") + "\n").into_bytes()
     }
 }
+#[cfg(not(windows))]
 pub(super) fn read_file(path: &Path, cap: u64) -> Result<Vec<u8>> {
     let mut options = fs::OpenOptions::new();
     options.read(true);
@@ -74,6 +75,7 @@ pub(super) fn read_file(path: &Path, cap: u64) -> Result<Vec<u8>> {
     }
     Ok(out)
 }
+#[cfg(not(windows))]
 fn enumerate(
     root: &Path,
     relative: &str,
@@ -122,6 +124,7 @@ fn enumerate(
     }
     Ok(())
 }
+#[cfg(not(windows))]
 fn add(roots: &mut BTreeSet<String>, raw: &str, width: usize) -> Result<()> {
     if raw.len() != width || !oid(raw) {
         return Err(error("unprovenPrivateCommits"));
@@ -134,6 +137,7 @@ fn add(roots: &mut BTreeSet<String>, raw: &str, width: usize) -> Result<()> {
     }
     Ok(())
 }
+#[cfg(not(windows))]
 pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
     let root = Path::new(&s.root);
     let format = git::text(root, &["rev-parse", "--show-object-format"])?;
@@ -213,6 +217,7 @@ pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
     })
 }
 
+#[cfg(any(not(windows), test))]
 pub(super) fn verify_commits(
     root: &Path,
     commits: &BTreeSet<String>,
@@ -233,4 +238,12 @@ pub(super) fn verify_commits(
         }
     }
     Ok(())
+}
+
+#[cfg(windows)]
+pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Roots> {
+    if cancel.load(Ordering::SeqCst) {
+        return Err(error("cancelled"));
+    }
+    git::source_roots::capture(s, cancel)
 }
