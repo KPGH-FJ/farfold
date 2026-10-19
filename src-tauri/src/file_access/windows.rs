@@ -18,7 +18,8 @@ use windows_sys::{
         Foundation::OBJECT_ATTRIBUTES,
         Storage::FileSystem::{
             FILE_CREATE, FILE_DIRECTORY_FILE, FILE_NON_DIRECTORY_FILE, FILE_OPEN,
-            FILE_OPEN_REPARSE_POINT, FILE_SYNCHRONOUS_IO_NONALERT, NtCreateFile,
+            FILE_OPEN_REPARSE_POINT, FILE_RENAME_INFORMATION, FILE_SYNCHRONOUS_IO_NONALERT,
+            FileRenameInformation, NtCreateFile, NtSetInformationFile,
         },
     },
     Win32::{
@@ -376,10 +377,10 @@ impl TemporaryExport {
     }
     pub fn publish(&mut self, destination: &OsStr) -> io::Result<()> {
         let destination = name(destination)?;
-        let count = offset_of!(FILE_RENAME_INFO, FileName) + destination.len() * 2;
-        // usize storage gives FILE_RENAME_INFO its required pointer alignment.
+        let count = size_of::<FILE_RENAME_INFORMATION>() + destination.len() * 2;
+        // usize storage supplies pointer alignment; include the documented struct extent.
         let mut allocation = vec![0usize; count.div_ceil(size_of::<usize>())];
-        let rename = allocation.as_mut_ptr().cast::<FILE_RENAME_INFO>();
+        let rename = allocation.as_mut_ptr().cast::<FILE_RENAME_INFORMATION>();
         unsafe {
             (*rename).RootDirectory = handle(&self.directory);
             (*rename).FileNameLength = (destination.len() * 2) as u32;
@@ -389,15 +390,23 @@ impl TemporaryExport {
                 (*rename).FileName.as_mut_ptr(),
                 destination.len(),
             );
-            if SetFileInformationByHandle(
+        }
+        let mut status = IO_STATUS_BLOCK::default();
+        // create() owns a DELETE-capable FILE_SYNCHRONOUS_IO_NONALERT handle:
+        // this call completes before its buffer and status storage leave scope.
+        let code = unsafe {
+            NtSetInformationFile(
                 handle(&self.file),
-                FileRenameInfo,
+                &mut status,
                 rename.cast(),
                 count as u32,
-            ) == 0
-            {
-                return Err(io::Error::last_os_error());
-            }
+                FileRenameInformation,
+            )
+        };
+        if code != 0 {
+            return Err(io::Error::from_raw_os_error(
+                unsafe { RtlNtStatusToDosError(code) } as i32,
+            ));
         }
         self.published = true;
         Ok(())
@@ -480,5 +489,58 @@ mod tests {
             assert!(name(OsStr::new(value)).is_err(), "{value}");
         }
         assert!(name(OsStr::new("report 1.txt")).is_ok());
+    }
+    #[test]
+    fn publication_preserves_unicode_and_maximum_leaf_identity_and_collision() {
+        use std::io::{Read, Write};
+        const PAYLOAD: &[u8] = b"owned publication boundary\n";
+        const OTHER: &[u8] = b"must not replace target\n";
+        let leaves = [
+            "发布-Δ🙂.txt".to_owned(),
+            format!("{}.txt", "x".repeat(251)),
+        ];
+        assert_eq!(leaves[1].encode_utf16().count(), 255);
+        for leaf in leaves {
+            let fixture = tempfile::tempdir().unwrap();
+            let canonical = fixture.path().canonicalize().unwrap();
+            let parent = open_directory(&canonical).unwrap();
+            let parent_identity = stamp(&parent).unwrap().identity;
+            let read = |directory: &File| {
+                let mut file = open_relative(directory, Path::new(&leaf)).unwrap();
+                let identity = stamp(&file).unwrap().identity;
+                let mut bytes = Vec::new();
+                Read::by_ref(&mut file)
+                    .take(128)
+                    .read_to_end(&mut bytes)
+                    .unwrap();
+                (identity, bytes)
+            };
+            let mut temporary = TemporaryExport::create(parent.try_clone().unwrap()).unwrap();
+            temporary.file.write_all(PAYLOAD).unwrap();
+            temporary.file.sync_all().unwrap();
+            let source_identity = stamp(&temporary.file).unwrap().identity;
+            temporary.publish(OsStr::new(&leaf)).unwrap();
+            assert_eq!(stamp(&temporary.file).unwrap().identity, source_identity);
+            let (target_identity, bytes) = read(&parent);
+            assert_eq!(target_identity, source_identity);
+            assert_eq!(bytes, PAYLOAD);
+            assert_eq!(stamp(&parent).unwrap().identity, parent_identity);
+            // Release the first source handle before the independent collision attempt.
+            drop(temporary);
+            let mut collision = TemporaryExport::create(parent.try_clone().unwrap()).unwrap();
+            collision.file.write_all(OTHER).unwrap();
+            collision.file.sync_all().unwrap();
+            let collision_identity = stamp(&collision.file).unwrap().identity;
+            let error = collision.publish(OsStr::new(&leaf)).unwrap_err();
+            assert_eq!(error.kind(), io::ErrorKind::AlreadyExists);
+            assert_eq!(stamp(&collision.file).unwrap().identity, collision_identity);
+            let (unchanged_identity, bytes) = read(&parent);
+            assert_eq!(unchanged_identity, target_identity);
+            assert_eq!(bytes, PAYLOAD);
+            assert_eq!(stamp(&parent).unwrap().identity, parent_identity);
+            collision.discard().unwrap();
+            drop((collision, parent));
+            fixture.close().unwrap();
+        }
     }
 }
