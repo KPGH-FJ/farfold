@@ -303,25 +303,7 @@ enum Query<'a> {
     Objects(super::Input),
     Sizes(super::Input),
 }
-fn query(
-    source: &ReadContext,
-    snapshot: &Snapshot,
-    action: Query<'_>,
-    cancel: &AtomicBool,
-) -> Result<Vec<u8>> {
-    cancelled(cancel)?;
-    super::environment()?;
-    source.scope.matches(snapshot)?;
-    source
-        .selected_program()
-        .verify()
-        .map_err(|_| error("changed"))?;
-    let (timeout, failure) = match &action {
-        Query::Objects(_) | Query::Sizes(_) => {
-            (super::super::recovery_pack::COMMAND_TIME, "recoveryInvalid")
-        }
-        _ => (Duration::from_secs(10), "unprovenPrivateCommits"),
-    };
+fn command(source: &ReadContext) -> Command {
     let mut command = Command::new(&source.selected_program().guid_path);
     command
         .env("GIT_CONFIG_NOSYSTEM", "1")
@@ -356,6 +338,28 @@ fn query(
         .arg("-C")
         .arg(&source.scope.root.guid_path)
         .current_dir(&source.scope.root.guid_path);
+    command
+}
+fn query(
+    source: &ReadContext,
+    snapshot: &Snapshot,
+    action: Query<'_>,
+    cancel: &AtomicBool,
+) -> Result<Vec<u8>> {
+    cancelled(cancel)?;
+    super::environment()?;
+    source.scope.matches(snapshot)?;
+    source
+        .selected_program()
+        .verify()
+        .map_err(|_| error("changed"))?;
+    let (timeout, failure) = match &action {
+        Query::Objects(_) | Query::Sizes(_) => {
+            (super::super::recovery_pack::COMMAND_TIME, "recoveryInvalid")
+        }
+        _ => (Duration::from_secs(10), "unprovenPrivateCommits"),
+    };
+    let mut command = command(source);
     let input = match action {
         Query::Format => {
             command.args(["rev-parse", "--show-object-format"]);
@@ -541,3 +545,7 @@ mod graph_tests;
 
 #[path = "git_source_checkout_windows.rs"]
 mod profile;
+
+#[cfg(test)]
+#[path = "git_source_content_windows_tests.rs"]
+mod raw_content;

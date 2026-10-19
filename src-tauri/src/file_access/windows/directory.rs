@@ -125,6 +125,12 @@ pub(super) fn collect_from<D: Owner>(
 }
 
 #[cfg(test)]
+#[path = "directory_budget_tests.rs"]
+mod material_budget;
+#[cfg(test)]
+pub(super) use material_budget::collect_budgeted_from;
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use windows_sys::{

@@ -49,6 +49,21 @@ impl Resident {
             bytes,
         })
     }
+    // Extend one existing owner, avoiding an unmetered Vec<Lease> per record.
+    // A different pool cannot grow/release a lease belonging to this pool.
+    pub fn grow(&self, lease: &mut ResidentLease, bytes: usize) -> Result<()> {
+        if !Arc::ptr_eq(&self.used, &lease.used) {
+            return Err(Error::Invalid);
+        }
+        let total = lease.bytes.checked_add(bytes).ok_or(Error::Limit)?;
+        self.used
+            .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| {
+                n.checked_add(bytes).filter(|n| *n <= self.limit)
+            })
+            .map_err(|_| Error::Limit)?;
+        lease.bytes = total;
+        Ok(())
+    }
 }
 impl Drop for ResidentLease {
     fn drop(&mut self) {

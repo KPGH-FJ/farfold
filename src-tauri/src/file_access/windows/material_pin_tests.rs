@@ -306,7 +306,11 @@ fn material_case_alias_listing_is_refused_by_real_os_ordinal_policy() {
     let actual = pin.entries(8, &cancel).unwrap();
     let original: Vec<u16> = "Owned".encode_utf16().collect();
     let alternate: Vec<u16> = "OWNED".encode_utf16().collect();
-    let mut ambiguous = actual.clone();
+    // Explicit independent synthetic observation fixture; not a second owned scan.
+    let mut ambiguous: crate::file_access::DirectoryEntries = actual
+        .iter()
+        .map(|(name, value)| (name.clone(), value.clone()))
+        .collect();
     ambiguous.insert(alternate, actual[&original].clone());
     // This is a controlled observation fixture, not a claim that this NTFS
     // directory was configured case-sensitive or returned two aliases itself.
@@ -314,7 +318,7 @@ fn material_case_alias_listing_is_refused_by_real_os_ordinal_policy() {
         unique_names(&ambiguous, &resident(), &cancel),
         Err(crate::file_access::DirectoryFailure::Changed)
     ));
-    assert!(unique_names(&actual, &resident(), &cancel).is_ok());
+    assert!(unique_names(actual.as_entries(), &resident(), &cancel).is_ok());
     drop(pin);
     temp.close().unwrap();
 }
@@ -351,5 +355,37 @@ fn full_security_root_child_retains_actual_security_access_without_ordinary_fall
     );
     assert!((20..=65536).contains(&returned));
     drop((child, pin));
+    temp.close().unwrap();
+}
+
+#[test]
+fn material_listing_uses_shared_resident_before_retaining_a_large_owned_map() {
+    let temp = tempfile::tempdir().unwrap();
+    for n in 0..512 {
+        std::fs::write(
+            temp.path().join(format!("item-{n:04}-{}", "x".repeat(112))),
+            b"owned",
+        )
+        .unwrap();
+    }
+    let selected = PinnedPath::directory(&temp.path().canonicalize().unwrap()).unwrap();
+    ntfs(selected.file());
+    let cancel = AtomicBool::new(false);
+    let pin = MaterialPin::root(selected, &Resident::new(256 * 1024), &cancel).unwrap();
+    // Actual reference path: retain the original unbudgeted collector and
+    // original case check under this SAME cursor owner and shared pool.
+    // This is an owned Windows comparison, not an observed old-code RED yet.
+    let legacy = super::super::directory::collect_from(&pin, 512, &cancel).unwrap();
+    assert_eq!(legacy.len(), 512);
+    unique_names(&legacy, &pin.inner.resident, &cancel).unwrap();
+    drop(legacy);
+    // Original map path only charged the 3*512 ordinal indices and succeeds;
+    // the material map itself must now refuse under the same shared pool.
+    assert!(matches!(
+        pin.entries(512, &cancel),
+        Err(crate::file_access::DirectoryFailure::Limit)
+    ));
+    pin.verify().unwrap();
+    drop(pin);
     temp.close().unwrap();
 }

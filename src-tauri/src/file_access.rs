@@ -85,3 +85,6 @@ pub(crate) use windows::{
     SHAPE_WORK_LIMIT, ShapeFailure, ShapeMemory, ShapeObservation, ShapeRequest, ShapeRetirement,
     backup_shape_observe,
 };
+
+#[cfg(test)]
+mod material_directory_budget;

@@ -51,6 +51,16 @@ fn i64_at(bytes: &[u8], at: usize) -> i64 {
     i64::from_le_bytes(bytes[at..at + 8].try_into().expect("checked fixed header"))
 }
 fn page(bytes: &[u8], volume: u64, cancel: &AtomicBool) -> Result<Entries, Failure> {
+    page_reserved(bytes, volume, cancel, |_| Ok(()))
+}
+// Purpose-specific allocation admission; the legacy collector uses a no-op.
+// The same parser/offset/identity/error rules remain the only decoding body.
+pub(super) fn page_reserved(
+    bytes: &[u8],
+    volume: u64,
+    cancel: &AtomicBool,
+    mut reserve: impl FnMut(usize) -> Result<(), Failure>,
+) -> Result<Entries, Failure> {
     if bytes.is_empty() || bytes.len() > PAGE_BYTES {
         return Err(Failure::InvalidRecord);
     }
@@ -81,6 +91,9 @@ fn page(bytes: &[u8], volume: u64, cancel: &AtomicBool) -> Result<Entries, Failu
         if next == 0 && bytes.len() - end >= 8 {
             return Err(Failure::InvalidRecord);
         }
+        // The requested counted-name payload and one logical map entry are
+        // reserved before either the Vec or the map insertion can allocate.
+        reserve(length)?;
         let name = bytes[start..end]
             .chunks_exact(2)
             .map(|b| u16::from_le_bytes([b[0], b[1]]))

@@ -501,9 +501,13 @@ impl MaterialPin {
         &self,
         remaining: u64,
         cancel: &AtomicBool,
-    ) -> Result<crate::file_access::DirectoryEntries, crate::file_access::DirectoryFailure> {
-        let values = super::directory::collect_from(self, remaining, cancel)?;
-        unique_names(&values, &self.inner.resident, cancel)?;
+    ) -> Result<
+        crate::file_access::material_directory_budget::MaterialEntries,
+        crate::file_access::DirectoryFailure,
+    > {
+        let values =
+            super::directory::collect_budgeted_from(self, remaining, cancel, &self.inner.resident)?;
+        unique_names(values.as_entries(), &self.inner.resident, cancel)?;
         Ok(values)
     }
 }

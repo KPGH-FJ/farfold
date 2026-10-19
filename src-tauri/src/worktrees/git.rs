@@ -536,3 +536,7 @@ fn unwind_reaps_owned_process_before_directory_permit_can_drop() {
         Some(libc::ECHILD)
     );
 }
+
+#[cfg(test)]
+#[path = "git_content_stream.rs"]
+mod content_stream;
