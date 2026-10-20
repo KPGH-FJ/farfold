@@ -1,0 +1,380 @@
+{
+  "kind": "SelectedHistoricalImageResourcePhaseDeliveredNotWholeProductAcceptance",
+  "sourceCommit": "959e7c8224aa7afff30c6abb8745913070e3eab7",
+  "functionalCheckpoint": "446571dce3e2ac671075fa16736aec83a53ae038",
+  "onlyActivePlan": "plans/agent-access.md",
+  "requirements151AndFirstRelease29ByEightUnchanged": true,
+  "implemented": [
+    "Historical user image explicit expansion now acquires existing singleton4preview/32MiB file-byte budget before original validator.",
+    "Original8MiB/static/MIME/dimension checks and two unsettled decoder-promise slots retained.",
+    "Hidden/close/source change/unmount retire exact DOM source and owner lease; stale result/error cannot adopt or release a new owner; explicit retry only.",
+    "Windows test-only same-Job bounded32-member list and borrowed-originalChild wait0 observation; original production verdict/cleanup unchanged.",
+    "Corrected actual status formal identity drift and archived original74755byte status exactly; no second active plan."
+  ],
+  "verification": {
+    "originalControlled8": {
+      "beforePassed": 3,
+      "beforeFailed": 5,
+      "afterPassed": 8,
+      "afterFailed": 0
+    },
+    "affected": {
+      "files": 5,
+      "passed": 61
+    },
+    "permanentHistoricalImageControls": 18,
+    "actualWebKit": {
+      "rows": 9,
+      "checks": 35,
+      "allPassed": true,
+      "session": 54601,
+      "completionChunk": "349b4e",
+      "limits": "Actual production components in owned Playwright WebKit; not formal WKWebView, realAgent, physical decoder count or RSS. Promise hold after native decode and DOM fault injection are explicitly controlled peers."
+    },
+    "actualSeven": {
+      "session": 70126,
+      "completionChunk": "2a1c14",
+      "naturalExit": 0,
+      "frontendFiles": 626,
+      "frontendPassed": 8264,
+      "rustPassed": 2117,
+      "rustFailed": 0,
+      "rustExistingIgnored": 6,
+      "inputsStable": 18411
+    },
+    "productionComposite": {
+      "members": 2096,
+      "unchanged6fa": 2092,
+      "changed": 4,
+      "added": 0,
+      "deleted": 0,
+      "freezeFiles": 2123,
+      "inheritedReviewNotFreshManualReadAllFiles": true
+    }
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "aebcf494dec04a598daa42347e6abadd875896af23378bc079a691feb8fcebcf",
+    "candidate9Passed": 9,
+    "installed10Passed": 10,
+    "installSession": 2914,
+    "installNaturalCompletionChunk": "55c7b1",
+    "installed10Session": 28689,
+    "installed10NaturalCompletionChunk": "4c038b",
+    "notLaunched": true,
+    "noNewUIOrAgentPrompt": true,
+    "duplicateCandidateExactFiveFilesRemoved": true,
+    "zipAndSealedBackupRetained": true
+  },
+  "data": {
+    "phases": ["freshBefore", "preinstall", "after"],
+    "entriesPerCapture": 232530,
+    "allThreeStrictlyEqual": true,
+    "manifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "normalQuitEvidence": null,
+    "scope": "Three closed-observed endpoints, not continuous zero-write proof. Prior user changes, data differences, unknown writers/work and automatic reopen cause retained."
+  },
+  "windows": {
+    "singleRun": 39389362143,
+    "sourceCommit": "446571dce3e2ac671075fa16736aec83a53ae038",
+    "conclusion": "failure",
+    "originalWatchSession": 72586,
+    "naturalWatchExit": 1,
+    "original304": {
+      "passed": 262,
+      "failed": 42,
+      "ignored": 0
+    },
+    "extraSafety1SeparatePassed": true,
+    "same304PriorRun": 39382612570,
+    "prior264Passed40Failed": true,
+    "caseDelta": {
+      "green": 3,
+      "red": 5,
+      "same": 296,
+      "notAttributedToDiagnostic": true
+    },
+    "failureClassification": {
+      "ordinary15": {
+        "Unknown": 11,
+        "Changed": 4
+      },
+      "manual27": {
+        "firstFullSecurityOpen1314": 23,
+        "firstOtherNtStatus": 2,
+        "invalidLocalPath": 1,
+        "unexpectedFileOk": 1
+      },
+      "laterSlotUnknownInFiveManualDoesNotReplaceFirstCauseOrDoubleCount": true
+    },
+    "associationObservations": {
+      "records": 11,
+      "stderrFiles": 5,
+      "exactSingleCase": 1,
+      "sharedContextRecords": 10,
+      "originalWaitReturn0": 11,
+      "accountingActive1": 11,
+      "listCompleteOneOtherAssociatedId": 11,
+      "returnedBytes16": 11,
+      "helperListed": false,
+      "originalExitCodes": {
+        "zero": 9,
+        "one": 2
+      },
+      "limits": "Non-atomic observations; other associated IDs are not liveness, timing/lag/root-cause/cleanup proof or reopen/signal authority. Successful partial list keeps observed counts but not parsed IDs; failed query leaves counts unknown."
+    },
+    "previousFiveUnknownTargetsAllPassedButNotResolved": true,
+    "requiredPositiveGates": 20,
+    "strictMasterNegativeStillFailed101NotPositivePass": true,
+    "artifactFiles": 396,
+    "retrievalAttempts": 1,
+    "noRerunOrGuardRelaxation": true
+  },
+  "audio": {
+    "fourSameOriginalFilesEightObservationsComplete": true,
+    "oldTwoTinyHtmlError4Remain": true,
+    "longTwoHtmlActualEnded": true,
+    "webAudioFourDecodedBuffers": true,
+    "noProductionFallbackOrFormatRestriction": true,
+    "aacBufferSeconds": {
+      "tiny": 0.12,
+      "long": 2.04
+    },
+    "flacBufferSeconds": {
+      "tiny": 0.1,
+      "long": 2.0
+    },
+    "longHtmlSecondsBoth": 2.304,
+    "timeDifferencesAndAudibilityStillUnknown": true,
+    "firstHarnessRunTwoRowsStoppedOnLateContextCallbackErrorPreserved": true,
+    "secondRunOnlyHarnessLifecycleFixed": true
+  },
+  "openBoundaries": [
+    "NEW24 affected fresh sends remain paused; unchanged official inputs not reinvestigated or unknown requests repeated.",
+    "FullP13 real returned media, formal expansion/playback, untested format/layout/ordering and actual resource/RSS/long-term behavior.",
+    "FullWindows tree/material/persistent unique Manifest/public restore and42 selected failures remain.",
+    "Full29agentsByEight, ARCH49 backpressure/longterm, other original151 conditions remain under the sole plan.",
+    "Public signing/notarization/distribution/update deferred pending user capability review."
+  ],
+  "preservedFailures": [
+    "Original RED5 semantic failures, previous full7 PID/handshake/Busy history, all original Windows failed runs, old shortAAC/FLAC failures retained.",
+    "This phase test-seam TS2345 diagnostics corrected by unknown-object narrowing; no assertion weakened.",
+    "Initial audio harness late callback failure and review/preparation assumption failures kept as tooling evidence, not product-pass claims."
+  ],
+  "finalDocumentation": "Updated after installed959 cohort; final docs get focused docs/format checks. The actual seven are source959, not a claim of rerunning all seven after final documentation.",
+  "refs": [
+    {
+      "path": "output/2026-10-20-next-resource-stage/code-checkpoint.json",
+      "bytes": 1404,
+      "sha256": "793ccb6075d920e875def27506f3f9dcecc16d1992345c69337c680ee19556e2"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/engineering-resource-cohort/verification.json",
+      "bytes": 6019,
+      "sha256": "2fb735f45de68b40bddc120e894f5986d5d6425e9b05c104136efe0966f4e3c0"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/final-source-review/source-review.json",
+      "bytes": 47545,
+      "sha256": "7283e42bb4de3e726f19045665e025deb6c0e0fcb21927ac441f85f3d19d6a46"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/final-source-review/source-freeze-959e7c82.json",
+      "bytes": 345136,
+      "sha256": "b66c239fddc9fa3500084829e45f59fa2643b28e3036f666ea46eab579e50679"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/final-source-review-independent-review/review.json",
+      "bytes": 14033,
+      "sha256": "0d86e73464f4aed062d2c9ed74199fcf96696a94d82ad2dbeaf6685c8d47d480"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/authority-review/source-review.json",
+      "bytes": 19218,
+      "sha256": "3c254ff3a404830209977353a2c4393365a3bc34579e661cc96edfb3f6db5866"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/historical-image-independent-review/source-review.json",
+      "bytes": 10360,
+      "sha256": "6677379818a542495ad66b5ac6ffbef40c0e7b2f876a4a887dcf75f48a8dcefd"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/review.json",
+      "bytes": 8688,
+      "sha256": "0b8e00c39409304e111d060b0eeb35f816aa1aaa98e625e9b247acc8f13d6218"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/completion.json",
+      "bytes": 917,
+      "sha256": "1328ef6fa2fb84a3e6800de7063e4648a3a74707a96350c1a5d8342c0bdf664b"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/green-r1/completion.json",
+      "bytes": 934,
+      "sha256": "be1533ac974207dc6412d871d1e1152f16448c0715a429ae70f9ce34f8c79472"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/checks/historical-image-affected-r2.json",
+      "bytes": 20959,
+      "sha256": "80eec9e22024d537065118ec4da2a4a94f812d7d35bfffb53f5ed58057b0b4f3"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/webkit-prepared/verification.json",
+      "bytes": 641436,
+      "sha256": "4d8eef2ada0a047966eb1913c20de1c3b3e7ab579cf1b0405cb35d28ffba0921"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/webkit-prepared/execution-receipt.json",
+      "bytes": 156629,
+      "sha256": "b692b625ef762b5db1e2b8a6edc30758d72e65d6d15bc99d1ab841f4bd05a0a7"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/formal-observer-review/review.json",
+      "bytes": 4602,
+      "sha256": "8b002770f07d360b9c8e90629ef2fd5510b02d93619ce5124d4c3de36bc68a25"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/p13-resource-audit/formal-observer-review/binding-review.json",
+      "bytes": 4176,
+      "sha256": "67bce1bd5152ab062547b6302d10a1c8aafa6d88802dee0a10dff29889bf0227"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/candidate-output/candidate.json",
+      "bytes": 249320,
+      "sha256": "68e02d08a00442b1d47a6da64044ce232144f520d19a6fb0db9c9e9d3e5b75cd"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/independent/review.json",
+      "bytes": 4239,
+      "sha256": "ee6c82df058877238fa5f9336b854f53a9daa381aeedc8bba8884612c1524e2e"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/install-result.json",
+      "bytes": 10772,
+      "sha256": "b493d513be37f61a19d3f3bd214d14c5c7f70030e8c35377804a1a491f9c6f22"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "ff215305684d7a0a532f2bbc17f1865658042f304f1c3739dcc352e7c7df19ed"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "364f61c387bf554c2268d69f7647de7cee4434ab8cd19deb1701f453aef7d804"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "fb3f1094f7d6df8859d528481c8fae6476666be12589eb4689be17da7ad3a7d5"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "1c6a7ca1cbea20ccf89057a3a430a8a7a1f1f3d173da18391e867e5fc454c30d"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "ed8b8dae2a301e02350f8b5f8f7b50779367bd9d86157655e7e6f770a4599835"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/checks/windows-association-cross-r2-receipt.json",
+      "bytes": 2846,
+      "sha256": "437fd5767d1eefc5d5f06ac7c575af9fceabcbbc807fdf09b070702b764023c0"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-investigation/job-membership-independent-review-r1/source-review.json",
+      "bytes": 4556,
+      "sha256": "8354783e81acdfe593340e3756fb47e35c4db8baf13dcfc3f22dbb60cc0e8aa2"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-investigation/job-membership-independent-review-r1/root-applied-join.json",
+      "bytes": 1012,
+      "sha256": "7cc98350ed31101c15a0c8f27b5f3730548aec7efd5875c59ecb79182e37d017"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/final-metadata.stdout.json",
+      "bytes": 7324,
+      "sha256": "f8df989907a55561185edce7277a04a840b40a4a036c6286d227105b8407ef27"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/watch-completion.json",
+      "bytes": 429,
+      "sha256": "8d3253220fd778239cedada74f5f0fb89582f140a9b52ba80038bdb3bfdf18fd"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/independent-result/retrieval-receipt.json",
+      "bytes": 131015,
+      "sha256": "f9ffc458ae72b42832e994837e4a51a6c73a05eefb0b838142a97b26bf303104"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/independent-result/raw-audit-r1/safe-summary.json",
+      "bytes": 223040,
+      "sha256": "c6108a7a37abff350af068f224608dc4e050517086053d6f2893ec38dcc252c4"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/independent-result/raw-audit-r1/execution-completion.json",
+      "bytes": 1358,
+      "sha256": "70ededc54efeb3a4d39de42b1a3c8622caf22be364bfae36c69d55b6bb4b7807"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/independent-result/raw-audit-r1/failure-index.json",
+      "bytes": 66487,
+      "sha256": "139877aa0ed930b81b6c0a7ee713a1ab9f816512bb68e474be4b7f2081f61d32"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/actual-evidence-review.json",
+      "bytes": 70806,
+      "sha256": "da1e4eaed08336410913b5902b8f2844cf204caf090f3354335b7af11920a8cb"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/auditor-independent-review/review.json",
+      "bytes": 7688,
+      "sha256": "98cfe84d91c070d211bbde19cb273254904e6c1cd932f7f93c8c9692b3d439a1"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/windows-association-native-execution-r1/auditor-independent-review/actual-observation-independent-review.json",
+      "bytes": 27649,
+      "sha256": "4774f268ba3a35ef258c82968cd0ef9ed6d56a706ac3a7e0c3770ed1f7967f41"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/audio-failure-audit/audit.json",
+      "bytes": 18730,
+      "sha256": "e00a2841c5175ca416bdb46fc396b81daedb9ce1f9add3fc13750a6ef5eb0e41"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/audio-failure-audit/consumer-probe/execution-receipt.json",
+      "bytes": 158603,
+      "sha256": "5590e5c39f38ea66e2081fd82bfe9ecb5285459902674513045604f224e5c53c"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/audio-failure-audit/consumer-probe-r2/verification.json",
+      "bytes": 386909,
+      "sha256": "5d590449fa1f646766081117157bb13cbf3f2bd92b7a83b64e169a9fead0b0b7"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/audio-failure-audit/consumer-probe-r2/execution-receipt.json",
+      "bytes": 159440,
+      "sha256": "ee24f2225e004bef35013684e6ce36890b1af7de84dff7ea2d914e30cfbd1be7"
+    },
+    {
+      "path": "output/2026-10-20-next-resource-stage/audio-failure-audit/consumer-differential-evidence-review.json",
+      "bytes": 16353,
+      "sha256": "cb4b9f6dd2769c01fcf832b52a78c3ce2270c5d113bed8279d0650aa373d8ba6"
+    },
+    {
+      "path": "docs/maintenance/2026-10-20-status-continuation-alignment.json",
+      "bytes": 1078,
+      "sha256": "41cc575db88a448c45dd11c1d72b4cf1b8dff09dd6ff4ea48955bffb34ea6c28"
+    },
+    {
+      "path": "docs/archive/2026-10-20-before-next-resource-stage/docs/status.md",
+      "bytes": 74755,
+      "sha256": "2ba4a42c84097614754f0b94af05ae42c2f16a2aeee283480980e06271bd8290"
+    }
+  ]
+}
