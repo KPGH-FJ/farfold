@@ -1,0 +1,337 @@
+{
+  "kind": "SelectedAVIFPaddingAndStrictOggChainBudgetStageInstalledNotWholeProductAcceptance",
+  "sourceCommit": "2ad9a1fa40d466c108bc875517534110cea0c9b3",
+  "baseInstalledSource": "e5c1a20ad9f63e8c7590b917e01330056bf16aa9",
+  "scope": "Two selected P13 compatibility and declared-resource-budget gaps, no Agent/provider/model/persistence or product requirement change.",
+  "changes": [
+    "AVIF iinf free/skip opaque padding no longer counted as an infe item or rejected; original box extents, item count and shared complexity checks remain.",
+    "At bounded EOF only, sum conservative lower bounds of entirely closed unique-serial noninterleaved Ogg chains with one selected mapping/clock. Every Opus link subtracts full preSkip; parallel/reused/unknown/incomplete links disable only new total, independent old known-long proof unchanged."
+  ],
+  "controlled": {
+    "avifOriginalRed": {
+      "passed": 7,
+      "semanticFailed": 4,
+      "naturalExit": 1,
+      "chunk": "5caf08"
+    },
+    "oggOriginalRed": {
+      "passed": 1,
+      "newCoverageFailed": 1,
+      "naturalExit": 1,
+      "chunk": "3fdd10"
+    },
+    "oggSameAssertionsGreen": {
+      "passed": 2,
+      "naturalExit": 0,
+      "chunk": "755600"
+    },
+    "affected": {
+      "files": 5,
+      "passed": 137,
+      "naturalExit": 0,
+      "chunk": "92f2cc"
+    },
+    "actualWebKit": {
+      "scenarios": 3,
+      "checksPassed": 10,
+      "browserVersion": "26.5",
+      "originalSession": 2558,
+      "completionChunk": "2ccec0",
+      "naturalExit": 0,
+      "sourceAndOwnedPins": 119,
+      "withActualBinding": 120,
+      "threeRawAndThreeComponentImages": true,
+      "dimensions": [33, 11],
+      "fullRgbaBytesEach": 1452,
+      "genuineLoadEvents": 6,
+      "noAudioNodeEverInserted": true,
+      "noIPCOrOutsideRequests": true,
+      "ownedCleanupComplete": true,
+      "scope": "Actual local headless WebKit Image/canvas and production MessageAttachments, original600B and free/skip608B plus controlled Ogg-chain refusal. No installed WKWebView/real Agent message/playback/RSS or complete P13 acceptance."
+    }
+  },
+  "engineering": {
+    "source": "2ad9a1fa40d466c108bc875517534110cea0c9b3",
+    "allSevenPassed": true,
+    "originalSession": 94883,
+    "completionChunk": "a328ec",
+    "naturalExit": 0,
+    "inputCount": 18419,
+    "stableInputs": true,
+    "frontendFiles": 631,
+    "frontendPassed": 8312,
+    "rustPassed": 2117,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "sourceProductMembers": 2101,
+    "inheritedUnchanged": 2097,
+    "modified": 2,
+    "addedTests": 2,
+    "freezeMembers": 2129,
+    "scope": "Actual seven on functional checkpoint before final documentation updates; inherited production joined by Git/blob/mode/hash, not a fresh manual read of every file."
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "source": "2ad9a1fa40d466c108bc875517534110cea0c9b3",
+    "binarySha256": "8aa5820a23c2e1d76da980cf60be68aab6e5725f86d9ff5dc879f22d3841aac5",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "signatureScope": "Internal ad-hoc, not public signing/notarization/distribution",
+    "candidate9": {
+      "passed": 9,
+      "session": 47639,
+      "completionChunk": "dcdce7",
+      "naturalExit": 0
+    },
+    "installed10": {
+      "passed": 10,
+      "session": 17954,
+      "completionChunk": "1f478a",
+      "naturalExit": 0
+    },
+    "phase": "installedVerifiedNotLaunched",
+    "data": {
+      "captures": 3,
+      "entriesEach": 232530,
+      "strictSameManifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+      "backupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+      "scope": "Three closed-observed endpoints only; already closed, normalQuitEvidenceNone, not continuous zero writes or all Agents idle. Previous differences and unknown writers/work retained."
+    },
+    "cleanup": {
+      "completionChunk": "2b15d5",
+      "naturalExit": 0,
+      "exactDuplicateCandidateFilesRemoved": 5,
+      "zipAndMetadataBackupRetained": true,
+      "archive": "src-tauri/target/internal-candidate/2026-10-20-media-container-next-2ad9a1fa/Farfold-0.1.7-2ad9a1fa.zip",
+      "archiveSha256": "178c8819278157525adedb3551a6e8baf844d6a249de961136cdf90839cb8541"
+    },
+    "newAppUiOrRealAgentAcceptanceClaimed": false,
+    "candidateBuild": {
+      "session": 21640,
+      "completionChunk": "3b69d1",
+      "naturalExit": 0
+    }
+  },
+  "originalFailuresRetained": [
+    "Original AVIF7pass4fail and Ogg1pass1new-coverage-fail remain unchanged.",
+    "First focused AVIF assertion wrongly forbade even existing tiny PNG Base64 sniff; corrected test allows that fixed probe. First new Ogg test typecheck missed required Attachment.name; test corrected. Production was not changed to chase either test error.",
+    "Root first candidate binder hash argument failed pre-output guard; actual config hash then passed with unchanged predicates. Output preparation/reviewer-only stop incidents retained in their own records.",
+    "Earlier short-audio/browser/full-engineering/data differences and unknown writers/work remain, not overwritten by new green."
+  ],
+  "remaining": [
+    "NEW-24 affected fresh sends remain paused; known local subset unchanged, selected effective permissions and external newer official versions not established.",
+    "CompleteP13/P16, real Agent returned media/formal-file-open/playback/system-open/audibility and actual decoder/transport/RSS/ARCH49/longterm remain open. Positive unknown/capped layouts may still fall back.",
+    "Latest previous Windows39389362143 original304=262pass42fail plus separate safety1; no Windows run or production cleanup change this cohort. Full material/persistent manifest/public restore remain development gaps.",
+    "Old short AAC/FLAC HTML failures and API-clock differences, earlier data differences/unknown writers/work and automatic reopen cause remain unresolved.",
+    "Other151original requirements and29agents by8standards remain; public signing/notarization/distribution/update deferred."
+  ],
+  "authority": "Only plans/agent-access.md schedules. Original151 IDs/titles/conditions,16packages and29x8 preserved. This index has no scheduling authority.",
+  "refs": [
+    {
+      "path": "output/2026-10-20-media-container-next/start.json",
+      "bytes": 1227,
+      "sha256": "ab1b876502d21de01f0d0e353c98e561b89e7b20fb9541726c4569f24b7ca446"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/image-audit/preparation-index.json",
+      "bytes": 4120,
+      "sha256": "3d064c7d340945438b00b9107237d788d66bc3c6a3b35f137ffc43a26ea8581a"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/image-audit/assessment.json",
+      "bytes": 18891,
+      "sha256": "d202605b7fb404d5e5ab97d8832a7fab46ba2baa5c3d9eccc767d2962e443df0"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/native-audit/scope-and-next-slice.json",
+      "bytes": 10501,
+      "sha256": "3b91949f2664fec7d84eb922166dc6f1e540e563a0e6ebb303a4c2d6367597ca"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/native-audit/ogg-chain-red/execution.json",
+      "bytes": 2989,
+      "sha256": "587b9ccf2ee43812c107211a616f67be9c64b3aa2816c722a19994be424247d8"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/native-audit/ogg-chain-green/execution.json",
+      "bytes": 2584,
+      "sha256": "a02fa49716b65e9627e1a6b98467e9df3af644be0d04ce73310a851da4042266"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/affected-execution.json",
+      "bytes": 2780,
+      "sha256": "848309f371d784699971a7fe3bfd268dad27891c14a07116ca1420b475ee9613"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/container-affected-r2.json",
+      "bytes": 37887,
+      "sha256": "4a5c2c283472ce8c11ba5829afc5f8e881e283c2c93b508aaccda063326b4db1"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/lifecycle-audit/source-review.json",
+      "bytes": 15063,
+      "sha256": "b18f8f8e4ea5a07066144840c25192b95e4c6f2e15ac883b91743aedd7ffab79"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/avif-review.json",
+      "bytes": 6240,
+      "sha256": "9abd2e295e53a9a17e1c902c8d881ab84c5351f67102e969e82ca41563298af2"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/ogg-review.json",
+      "bytes": 6676,
+      "sha256": "5eb83299b589e3b82fe23225b1021b6d0642ce6b4ea02b4d320df8e9ff912ebe"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/current-authority-review.json",
+      "bytes": 14701,
+      "sha256": "633ca8e45812fcea4d7bd6eeb3bcdbc73f65eede5410d6e26b090b8c52b9fe43"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/helper-independent-review/helper-migration-review.json",
+      "bytes": 7619,
+      "sha256": "59378e80236bb6bba68da7c22ee4aba2dcf98275d72229aeff0a00a7182470bd"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/sealer-migration-review.json",
+      "bytes": 4084,
+      "sha256": "ccffc2cd5812fbd1bd2e64aecb5f9e35360e4949a8a5d2eb429ea4748c0b9d48"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/actual-source-binding-review.json",
+      "bytes": 4543,
+      "sha256": "59074173b1b833d0e63e4a8572def3e4d06cb0b0a69ed83f85571fdc1d044c9b"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/candidate-review9-binding-review.json",
+      "bytes": 4076,
+      "sha256": "adef282f8da9fbb01ed6e3b028a3515bfac1befe53e7d6742bad47b829f3a7d7"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/install-binding-review.json",
+      "bytes": 4303,
+      "sha256": "405e89463390c1102b04aa0981103413482cac8e149792404fc5470fddbcf963"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/installed10-cleanup-binding-review.json",
+      "bytes": 3437,
+      "sha256": "a5032c3ee9e6bf16a4001482754ce25ce87808cc4c505e19f5428471b0a144ec"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/engineering/verification.json",
+      "bytes": 5836,
+      "sha256": "fdef07bf9f90ceb43e2ef0b261b2f84cff0609bf32203da1f0e2064c41bcb459"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/engineering/legacy-seven.json",
+      "bytes": 5799581,
+      "sha256": "90e8918055cdaade04c24acc2b19e95123efd8399f835b9ea21975dc15de08b1"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-source-review/source-review.json",
+      "bytes": 12259,
+      "sha256": "898efdb5d5f9e6f220db61875d987991f295e6f81a0139fe46a18fa397631403"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-source-review/source-freeze-2ad9a1fa.json",
+      "bytes": 346121,
+      "sha256": "4f243608d93b821239bb0088abbe392d34b7619e8719dad23b10b4dd3c2c5291"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-source-review/root-completion.json",
+      "bytes": 398,
+      "sha256": "1fdfd5d0c28fd5f5f44a5a8c83847bab99f402eeff7fd5786088a9c3626d8be8"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/candidate-build-completion.json",
+      "bytes": 415,
+      "sha256": "d4df8c78b0199ed762e2c3064a7f238fd11881da4c104ee4231c8397ea11e437"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/browser/independent-preparation-review.json",
+      "bytes": 4961,
+      "sha256": "3047d71395b9b45ab846832c29526208254eefb3d078fefe9c8a73948222bd66"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/browser/verification.json",
+      "bytes": 497813,
+      "sha256": "f42fcd5d77b8d29027cad358de7841e897720e67893c3385edae249130c80404"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/browser/execution-receipt.json",
+      "bytes": 14186,
+      "sha256": "877e5aaf4bf1e29a4feb74fdacb6286a6507f6757f70e279c6b51cb967360115"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/final-independent/browser-actual-review.json",
+      "bytes": 6469,
+      "sha256": "3a000814bcd0c8b598322b4ad3d374b461fddaf90299bbae0b3514ec8210fba8"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 249774,
+      "sha256": "5cfe6770bd6d4e5ea0a634af28aee3efd5de6b03eb5bf0deb24d6cb81e6cda4e"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/independent/review.json",
+      "bytes": 4240,
+      "sha256": "d66bb1f86d7721e0f337f2d026679ef88f110cda012de6aba2a3dd2e135659f3"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "8775b5b3f096d388df560d5039238fd382b486dd3596777fd411c9163c547322"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "321c345edd73e592ca57abb3b767fa7fd4d5841392b11d31e573992a4ae2f6bc"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "90e54675512fbc363cafce5d806b5555f7b24b0b1d8ea6966e30eb5f2b65b9da"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/install-result.json",
+      "bytes": 10646,
+      "sha256": "c0eb9447118be49c07794757b6a0653241c9b813515f11e30ab93e5af061fa8f"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/install-journal.jsonl",
+      "bytes": 4223,
+      "sha256": "5e7c97f1ba92ecb322240ed5d5ccd76344d7b3d2c4b41e048464d05cf9ba99de"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "59a57a230cc0af312d564b82a650dc21e16752f08c47bd220a281ee80fb465a7"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "b0de58e28f31874178d0743cbdb79299489e8ba01904a9c44e7dd6b83f55b79a"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/root-actual-events.json",
+      "bytes": 1117,
+      "sha256": "510ec2e7647030c8d9ef69b1ec319ae462cb528f2f0eb352fd7533158daf30f2"
+    },
+    {
+      "path": "output/2026-10-20-media-container-next/binding-prelaunch-incident.json",
+      "bytes": 364,
+      "sha256": "6cc80e3575f8e2a32c97daf64e2daf71c140df42596dcb8b121658e5633532fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-20-flac-resource-next/verification.json",
+      "bytes": 15202,
+      "sha256": "2ce3ce3847edd9593a0f94ae5747f4aa3430cc62e101c8eb73d34e6cf8c1884e"
+    },
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35956,
+      "sha256": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c"
+    }
+  ]
+}
