@@ -73,6 +73,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 
+PDF外层[预览](../src/runtime/pdf_preview.ts)及内层[绘制线程](../src/workers/pdf_render.worker.ts)均将`messageerror`接入各自原有失败路径：外层清画布、计时与取消监听，结束自己的线程并归还原共享名额；内层固定失败消息使迟到结果不再发布成功，已返回的位图由原分支关闭。没有增加第二套名额或等待期限；受控事件与浏览器分项不证明真实反序列化故障、物理线程树停止或内存释放。
+
 意见绑定原对话、规范路径和具体磁盘版本；DOCX结构位置、XLSX单元格范围、PPTX预览位置等只对实际已解析的内容有效。明确加入原草稿后才由用户发送，不自动提交。刷新、切换、隐藏和迟到回包需核对版本与归属；自动刷新失败保留旧预览并标明状态，不能把旧位置当新文件。只有 Agent真实修改及重新核验文件，才证明返工完成。
 
 ## 消息图片与音频预览
@@ -91,7 +93,7 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；线性PCM、IEEE浮点、已知标准扩展及普通18字节fmt/cb0的G711标签6/7按各自确定的存储帧核600秒消息预览策略。普通20字节fmt/cb2、4位单/双声道IMA标签17另核每通道块几何，只计最后完整块之前的完整前缀；已知前缀采样数超过600秒时拒绝，其余一律保持部分覆盖，不把末块容量、fact或平均字节率当作准确播放时长。部分尾块不套用线性帧对齐要求。当前正式版对fmt50/cb32、4位单/双声道、七组标准系数且块采样几何匹配的MS-ADPCM标签2复用该前缀政策；不把fact裁剪或末块填充当准确时长，未知系数和布局保持部分覆盖。存在播放列表时，确定的直接data仍核独立存储预算；列表的裁剪、循环及实际播放时长不据此推定。未知编码、扩展、其他容器及wavl保留兼容路径，不套用PCM公式。该策略不等于格式限制、实际播放/循环时长、解码有效性或解码与重采样内存保证。
 
-经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；未知总量另由[message_flac_frame_observer.ts](../src/runtime/message_flac_frame_observer.ts)观察选定单声道16位常量帧的完整范围、CRC及连续编号，只在确定的累计采样下界超过600秒时拒绝，其他结果仍为部分覆盖。零采样率、保留元数据和其他帧布局的未知边界保持。跨原允许音频MIME核实际标记，不新增格式入口；不读取嵌入图片或URI，不解码PCM，不核实际解码内存或完整播放。
+经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；未知总量由[message_flac_frame_observer.ts](../src/runtime/message_flac_frame_observer.ts)观察选定单声道16位常量帧的完整范围、CRC及连续编号。正数总量也在同一剩余记录预算内观察，只有已验证累计采样下界超600秒才提升为拒绝；不完整、校验不足或记录上限耗尽时保留原正数声明策略，不能据此宣称完整计额或格式有效。未知总量原有无效、超复杂及部分覆盖结果保持。零采样率、保留元数据和其他帧布局的未知边界保持。跨原允许音频MIME核实际标记，不新增格式入口；不读取嵌入图片或URI，不解码PCM，不核实际解码内存或完整播放。
 
 其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 

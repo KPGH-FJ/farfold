@@ -1,0 +1,335 @@
+{
+  "kind": "SelectedFLACBudgetAndPDFWorkerFailurePhaseVerifiedInstalledNotWholeProductAcceptance",
+  "sourceCommit": "e5c1a20ad9f63e8c7590b917e01330056bf16aa9",
+  "baseInstalledSource": "861bacd5c96c16180b8f7466232a18bb5adbd70f",
+  "scope": "Selected P13 positive-total FLAC stored-frame proof and P16 two PDF Worker error boundaries only. No new format, provider/model choice, Agent loop, persistence or product requirement change.",
+  "changes": [
+    "Positive FLAC declarations cannot hide a verified over600s constant-frame prefix. Same shared65536 record cap and zero-total behavior; optional incomplete/CRC-insufficient/capped observation keeps previous positive metadata policy. Not complete FLAC counting or decoding.",
+    "Outer PDF preview messageerror enters existing failure/canvas/timer/own-worker/slot cleanup. Inner parser messageerror publishes fixed failure, suppresses late success and closes a late returned bitmap via original branch. No new pool/controller or extended timeout."
+  ],
+  "controlled": {
+    "flacOriginalFive": {
+      "passed": 2,
+      "semanticFailed": 3,
+      "naturalExit": 1,
+      "originalChunk": "251b0a"
+    },
+    "flacSameFiveGreen": {
+      "passed": 5,
+      "naturalExit": 0,
+      "originalChunk": "b8e675"
+    },
+    "pdfOuterOriginal": {
+      "passed": 2,
+      "semanticFailed": 1,
+      "naturalExit": 1,
+      "originalChunk": "2c599c"
+    },
+    "pdfInnerOriginal": {
+      "passed": 2,
+      "semanticFailed": 1,
+      "naturalExit": 1,
+      "originalChunk": "29074e"
+    },
+    "affected": {
+      "files": 9,
+      "passed": 155,
+      "originalSession": 97733,
+      "completionChunk": "c2ddaa"
+    },
+    "sharedCapExtra": {
+      "passed": 3,
+      "naturalExit": 0,
+      "originalChunk": "600712",
+      "meaning": "Same overlong selected body with positive1+65534padding retains metadata fallback; without padding refuses; zero+padded tooComplex. No fresh frame pool, no full-positive-count or performance claim."
+    },
+    "actualWebKit": {
+      "scenarios": 2,
+      "checksPassed": 8,
+      "browserVersion": "26.5",
+      "originalSession": 70447,
+      "completionChunk": "ef0e8b",
+      "naturalExit": 0,
+      "inputPinsStable": 311,
+      "sameActualOriginalBindingAlsoStable": true,
+      "manualOuterMessageerrorTrusted": false,
+      "realWorkersCreatedAndTerminatedOnce": 3,
+      "realPDFDraws": 2,
+      "drawSize": [200, 200],
+      "centerRGBA": [0, 255, 0, 255],
+      "FLACPositiveTotalControlledBytes": 14004,
+      "noAudioNodeEverInserted": true,
+      "noIPCOrOutsideRequests": true,
+      "ownedCleanupComplete": true,
+      "scope": "Actual ReactDOM/WebKit and native Workers; explicitly injected untrusted outer event, real font-free owned PDF drawing and controlled FLAC component. Not genuine deserialization failure, inner-browser failure, installed WKWebView or real Agent message/playback/RSS."
+    }
+  },
+  "engineering": {
+    "source": "e5c1a20ad9f63e8c7590b917e01330056bf16aa9",
+    "allSevenPassed": true,
+    "originalSession": 47881,
+    "completionChunk": "e5ef1f",
+    "naturalExit": 0,
+    "inputCount": 18416,
+    "stableInputs": true,
+    "frontendFiles": 629,
+    "frontendPassed": 8286,
+    "rustPassed": 2117,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "sourceProductMembers": 2099,
+    "inheritedUnchanged": 2093,
+    "modified": 4,
+    "addedTests": 2,
+    "freezeMembers": 2127,
+    "scope": "Actual seven on source checkpoint before final documentation updates; inherited source verified by Git/blob/mode/hash and prior frozen review, not a fresh manual read of all2099 files."
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "source": "e5c1a20ad9f63e8c7590b917e01330056bf16aa9",
+    "binarySha256": "4b19eb9e89073d9cd3eb168df6c8c3324ebf16b940a63a8a2abab38ba7d9b64b",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "signatureScope": "Internal ad-hoc; not public signing/notarization/distribution",
+    "candidate9": {
+      "passed": 9,
+      "buildOriginalSession": 76138,
+      "buildCompletionChunk": "5bd633",
+      "reviewCompletionChunk": "5ee8ee"
+    },
+    "installed10": {
+      "passed": 10,
+      "originalSession": 84773,
+      "completionChunk": "6fc26a"
+    },
+    "phase": "installedVerifiedNotLaunched",
+    "data": {
+      "captures": 3,
+      "entriesEach": 232530,
+      "strictSameManifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+      "backupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+      "scope": "Three closed-observed endpoints; normalQuitEvidenceNone because already closed. Not continuous zero writes; previous differences/unknown writers/work remain."
+    },
+    "cleanup": {
+      "completionChunk": "f15b3d",
+      "naturalExit": 0,
+      "exactDuplicateCandidateFilesRemoved": 5,
+      "zipAndMetadataBackupRetained": true,
+      "archive": "src-tauri/target/internal-candidate/2026-10-20-flac-resource-next-e5c1a20a/Farfold-0.1.7-e5c1a20a.zip",
+      "archiveSha256": "dfded1d573c811c6c7bee016807e09969719c0a817f47d20b73ab77c541e9825"
+    },
+    "newAppUiOrRealAgentAcceptanceClaimed": false
+  },
+  "originalFailuresRetained": [
+    "Original positive-total FLAC semanticRED and both PDF messageerror semanticRED remain unchanged; subsequent green never overwrites them.",
+    "New FLAC permanent test helper initially omitted required Attachment.name; targeted typecheck failed, helper-only correction passed. No product change to chase the type error.",
+    "Green wrapper initially targeted an existing RED namespace and stopped at exclusive-output guard before starting Vitest. Corrected wrapper remains separate; first prelaunch incident retained.",
+    "Reviewer-only historical source/hash/count assumptions that met authorized Root edits are retained in their reports; not classified as product failures. Prior full-engineering, short-audio/browser and other original failed evidence remain."
+  ],
+  "remaining": [
+    "NEW-24 affected fresh sends remain paused; known local subset unchanged, selected effective permissions and external newer official versions not established.",
+    "CompleteP13/P16, real Agent returned media/formal-file-open/playback/system-open/audibility and actual decoder/transport/RSS/ARCH49/longterm remain open. Positive unknown/capped layouts may still fall back.",
+    "Latest previous Windows39389362143 original304=262pass42fail plus separate safety1; no Windows run or production cleanup change this cohort. Full material/persistent manifest/public restore remain development gaps.",
+    "Old short AAC/FLAC HTML failures and API-clock differences, earlier data differences/unknown writers/work and automatic reopen cause remain unresolved.",
+    "Other151original requirements and29agents by8standards remain; public signing/notarization/distribution/update deferred."
+  ],
+  "authority": "Only plans/agent-access.md schedules. Original151 IDs/titles/conditions and29x8 preserved. This evidence index has no scheduling authority.",
+  "refs": [
+    {
+      "path": "output/2026-10-20-flac-resource-next/start.json",
+      "bytes": 1225,
+      "sha256": "8bae91b5ace013fba90e1cdc070e01438fd987d2aef7bb2c276c7e9da58d34d9"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/assessment.json",
+      "bytes": 15474,
+      "sha256": "c14c86b0a6d833ef609b215d7097372da9e61505471d9b0d4cfa15853fd29509"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/execution-completion.json",
+      "bytes": 13186,
+      "sha256": "08873c9b033f03915a53bfdbae60a8bd03c7c9051cead78a7f13d8616bfe53e3"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/green-controls/summary.json",
+      "bytes": 16169,
+      "sha256": "093fd7fc48611f38763604c3e01914d0560ea003c0fe65d38218f94f2e2c0730"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/shared-record-cap-control/summary.json",
+      "bytes": 12752,
+      "sha256": "fb99e10da52f865ab3bd8a5e1318ea8227cc59d008b29c454147f77aa5eaddfa"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/lifecycle-audit/source-review.json",
+      "bytes": 12332,
+      "sha256": "ad44eabcce7921df5bc53c90e02c4e499668872232f18f1bae8bed019c4f7a5a"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/lifecycle-inner/source-review.json",
+      "bytes": 7763,
+      "sha256": "6a426944e924b78b11ed1833a64e071cb8bced04c2974bdc1f9a16ee5e59e325"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/focused-checks.json",
+      "bytes": 1674,
+      "sha256": "d474fb99fc90902c13805f4666f38b249c94d083b00dfd706f6b15ce94715b5e"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/focused-tests-r2.json",
+      "bytes": 43786,
+      "sha256": "4c69f02fc7fb09ca23d857ba460faff23fe066e3cc23b9263bcca20f901ba581"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/flac-review.json",
+      "bytes": 7582,
+      "sha256": "d0c4fc59ac350fe7491ef223fb2e85b7d8b6eebebbd4a7ae8e5403f9af2a0e43"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/pdf-review.json",
+      "bytes": 6142,
+      "sha256": "265bd92e08d8060fd13cf0fd6ca21c3a806533d5f3376a5b587e5aa1a360e152"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/authority-review.json",
+      "bytes": 16737,
+      "sha256": "41cd990cbcfdf6f0cde0ac1a450a38e26eb572e06c103dbc25e396af3aba83a4"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/actual-source-binding-review.json",
+      "bytes": 4118,
+      "sha256": "38600449f7ecdeb8471addcef49c7f7ff5e9cf938d183c20291c502a0a82d588"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/candidate-review9-binding-review.json",
+      "bytes": 3146,
+      "sha256": "42be8f2830d499ca0320d3b23b48d3355327b1bdb08b501ec60b7b93775e3428"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/install-binding-review.json",
+      "bytes": 2685,
+      "sha256": "5a40e488a713463a90f03f0558a18dcfff2769322adb39ddd72b9a6422495fdb"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-independent/installed10-cleanup-binding-review.json",
+      "bytes": 3616,
+      "sha256": "d6d4d8aafff774b53d31be6270818ba54446c3a6ebde2428b3faf74e1cde6ae7"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/engineering/verification.json",
+      "bytes": 5815,
+      "sha256": "5f8c1f8cfc640d3044c7b4fc499a5fdc273a60a22332da28c62931236f5fe436"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/engineering/legacy-seven.json",
+      "bytes": 5798831,
+      "sha256": "d04d26ac78f7343fa16e22578486c4faee82dadee37f9e68b525ae1000bf510a"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-source-review/source-review.json",
+      "bytes": 17922,
+      "sha256": "962768d22f33ad24fdb9c57555a24afed493943c4406836d26374e59ccda62a2"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-source-review/source-freeze-e5c1a20a.json",
+      "bytes": 345798,
+      "sha256": "d60c73a876f7a859e88399df98d90c9134bd80f0b1164d9f1bc674512728c8a9"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/final-source-review/root-completion.json",
+      "bytes": 396,
+      "sha256": "0e17381b99ec604741389f8720201710b88d8cca23a47e2617fff7589204001f"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/candidate-build-completion.json",
+      "bytes": 765,
+      "sha256": "8fa1c71ba97532dd14df764435f1357899b9f5808b4daecb81946cbda25e03ea"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/browser/independent-preparation-review.json",
+      "bytes": 6378,
+      "sha256": "1d51ac0bd8926081e3c1cd7cef8bbcd3285a007582a8caddee12c4cc12261d79"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/browser/verification.json",
+      "bytes": 86667,
+      "sha256": "b783eb8b121a5a962760ca4a600b65f90fc4add607743c6d1c36c912c456041d"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/browser/execution-receipt.json",
+      "bytes": 37643,
+      "sha256": "c0feb7eb2cbb6c4986cc4cab36899e68d9e99d022fcb1415d76c86e10a137508"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/browser/safe-summary.json",
+      "bytes": 3256,
+      "sha256": "8446957c9bb4d45c20ee883af4577bddbd2219863ed344d06632e40eed2509ef"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/browser/independent-result-review.json",
+      "bytes": 5801,
+      "sha256": "54381d006905c70e18d57018a3f3948171050ca237a13c92700910df031de615"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 249526,
+      "sha256": "a8c65ecdc68ffa36303f55d4baa4ead157963b5b2dac4b14703b994d5258341b"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/independent/review.json",
+      "bytes": 4238,
+      "sha256": "98e43809dc669ab317a2e0a0f9667cfdbb20119285e84b81a715eed9b3e72204"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "dba7e1825eaa9d23009b94cf85bc918c3559301a035486df0ac8502cb74096e2"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "5d4a1e51a5de7d85b169308792046b15f6894ce045a63545e8a5dcce632197fb"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "31e1653bf31cc12597073db9c114408cc1fb6185939c21c173d91e2892b9d619"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/install-result.json",
+      "bytes": 10610,
+      "sha256": "4f572746635e8e61bfa88d989a047b5d10892dddb8d0d6b6817f4ce74804f920"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/install-journal.jsonl",
+      "bytes": 4223,
+      "sha256": "f32f04ed8be8b55f69f8ff29806c058b87c7ed6632eda8a7b7a243597297924f"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "820ac4eaa50391905c8fceed64b55761761737b9fd0d483c65433c4e1e939df2"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "1430026e23a3360bfa0ea06d16fd89f3d217eb3dea586020ef176e949c742cd4"
+    },
+    {
+      "path": "output/2026-10-20-flac-resource-next/root-cleanup-binding.json",
+      "bytes": 1223,
+      "sha256": "9012b2e45dd4762879a62336d8c3a216ce62e906ed707f0e2f7514d3652fc1a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-20-media-lifecycle-next/verification.json",
+      "bytes": 12156,
+      "sha256": "65e80cf061a2bf39994a415401331e16e649065d45bfd80f855cc8425cee7089"
+    },
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35956,
+      "sha256": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c"
+    }
+  ]
+}
