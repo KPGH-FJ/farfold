@@ -303,34 +303,53 @@ function DocumentImage({
   run: Extract<DocxRun, { kind: "image" }>;
   images: Images;
 }) {
-  const [url, setUrl] = useState<string | null>(null);
-  const [failed, setFailed] = useState(false);
+  type Owner = {
+    resource: NonNullable<ReturnType<Images["acquire"]>>;
+    live: boolean;
+  };
+  const latest = useRef({ image, images });
+  latest.current = { image, images };
+  const [result, setResult] = useState<{
+    image: DocxImage;
+    images: Images;
+    owner: Owner | null;
+    failed: boolean;
+  } | null>(null);
   useEffect(() => {
-    setFailed(false);
-    if (!image) return;
+    if (!image) {
+      setResult(null);
+      return;
+    }
     let resource: ReturnType<Images["acquire"]>;
     try {
       resource = images.acquire(image.id);
     } catch {
-      setFailed(true);
+      setResult({ image, images, owner: null, failed: true });
       return;
     }
     if (!resource) return;
-    setUrl(resource.url);
+    const owner: Owner = { resource, live: true };
+    setResult({ image, images, owner, failed: false });
     return () => {
+      owner.live = false;
       resource.release();
-      setUrl(null);
+      setResult((previous) => (previous?.owner === owner ? null : previous));
     };
   }, [image, images]);
-  if (!image || failed)
+  const current =
+    result && result.image === image && result.images === images
+      ? result
+      : null;
+  if (!image || current?.failed)
     return (
       <span className="document-notice" role="alert">
         {S.imageFailed}
       </span>
     );
-  return url ? (
+  const owner = current?.owner;
+  return owner?.live ? (
     <img
-      src={url}
+      src={owner.resource.url}
       alt={run.alt || S.image}
       loading="lazy"
       decoding="async"
@@ -340,7 +359,25 @@ function DocumentImage({
         height: "auto",
         aspectRatio: `${run.widthPt} / ${run.heightPt}`,
       }}
-      onError={() => setFailed(true)}
+      onError={(event) => {
+        const element = event.currentTarget;
+        if (
+          !owner.live ||
+          latest.current.image !== image ||
+          latest.current.images !== images ||
+          !element.isConnected ||
+          element.getAttribute("src") !== owner.resource.url
+        )
+          return;
+        // Retire this consumer before returning its own reference. Other
+        // visible consumers may still need the same shared object URL.
+        owner.live = false;
+        element.removeAttribute("src");
+        owner.resource.release();
+        setResult((previous) =>
+          previous?.owner === owner ? { ...previous, failed: true } : previous,
+        );
+      }}
     />
   ) : null;
 }

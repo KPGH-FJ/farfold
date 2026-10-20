@@ -75,11 +75,14 @@ export function imageInputError(error: unknown): string {
     : IMAGE_INPUT_STRINGS.invalid;
 }
 
-function bytesFromBase64(data: string): Uint8Array {
+function checkImageDataLength(data: string): void {
   if (typeof data !== "string" || !data)
     throw new Error(DRAFT_STRINGS.attachmentIncomplete);
   if (data.length > 4 * Math.ceil(MAX_IMAGE_BYTES / 3))
     throw new Error(IMAGE_BYTES_STRINGS.tooLarge);
+}
+
+function bytesFromBase64(data: string): Uint8Array {
   if (data.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data))
     throw new Error(IMAGE_INPUT_STRINGS.invalid);
   let decoded: string;
@@ -96,12 +99,15 @@ export async function validateDraftImage(
   data: string,
   mimeType?: string,
 ): Promise<DraftImage> {
+  // Keep the constant-time input bound ahead of the capacity check. An already
+  // full decoder pool must not expand or scan another bounded payload first.
+  checkImageDataLength(data);
+  if (decoding >= 2) throw new Error(IMAGE_INPUT_STRINGS.decodeBusy);
   const inspection = inspectImageBytes(bytesFromBase64(data));
   if (mimeType !== undefined && mimeType !== inspection.mimeType)
     throw new Error(IMAGE_INPUT_STRINGS.invalid);
   if (typeof Image !== "function")
     throw new Error(IMAGE_INPUT_STRINGS.decodeUnavailable);
-  if (decoding >= 2) throw new Error(IMAGE_INPUT_STRINGS.decodeBusy);
   decoding++;
   let image: HTMLImageElement | undefined;
   let started = false;

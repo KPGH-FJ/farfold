@@ -10,6 +10,7 @@ import {
   validateDraftImage,
 } from "./draft_images";
 import { IMAGE_BYTES_STRINGS, MAX_IMAGE_BYTES } from "./image_bytes";
+import { DRAFT_STRINGS } from "./draft_storage";
 import {
   PNG_IMAGE_TEST_DATA,
   TestImageDecoder,
@@ -112,7 +113,21 @@ it("times out callers while keeping genuinely unfinished decoder slots bounded",
   const second = validateDraftImage(PNG_IMAGE_TEST_DATA).catch(
     (error) => error as Error,
   );
+  const expand = vi.spyOn(globalThis, "atob");
   try {
+    await expect(validateDraftImage(PNG_IMAGE_TEST_DATA)).rejects.toThrow(
+      S.decodeBusy,
+    );
+    expect(expand).not.toHaveBeenCalled();
+    // Capacity cannot make an oversized or missing input bypass the cheap
+    // input checks, nor should either input be expanded while the pool is full.
+    await expect(
+      validateDraftImage("A".repeat(4 * Math.ceil(MAX_IMAGE_BYTES / 3) + 4)),
+    ).rejects.toThrow(IMAGE_BYTES_STRINGS.tooLarge);
+    await expect(validateDraftImage("")).rejects.toThrow(
+      DRAFT_STRINGS.attachmentIncomplete,
+    );
+    expect(expand).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(15_000);
     expect(((await first) as Error).message).toBe(S.decodeWaitExpired);
     expect(((await second) as Error).message).toBe(S.decodeWaitExpired);
@@ -120,8 +135,10 @@ it("times out callers while keeping genuinely unfinished decoder slots bounded",
     await expect(validateDraftImage(PNG_IMAGE_TEST_DATA)).rejects.toThrow(
       S.decodeBusy,
     );
+    expect(expand).not.toHaveBeenCalled();
     expect(elements).toHaveLength(2);
   } finally {
+    expand.mockRestore();
     finish.forEach((resolve) => resolve());
     await Promise.resolve();
     await Promise.resolve();
