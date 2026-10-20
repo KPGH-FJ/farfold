@@ -16,41 +16,70 @@ import {
 } from "./draft_images";
 
 type Report = (message: string) => void;
-function patch(
+
+/** Saving waits only for unfinished input that still belongs to this draft.
+ * Withdrawing input does not cancel its underlying read. The actual task still
+ * settles separately, and retired members can never regain write ownership. */
+function attachmentWork(
   key: string,
   generation: number,
-  id: string,
-  uri: string | undefined,
-  update: Partial<DraftAttachment>,
+  additions: readonly DraftAttachment[],
 ) {
-  if (
-    composerDrafts.generation(key) !== generation ||
-    !composerDrafts
-      .read(key)
-      .attachments.some(
-        (attachment) => attachment.id === id && attachment.uri === uri,
-      )
-  )
-    return false;
-  composerDrafts.update(key, (draft) => ({
-    ...draft,
-    attachments: draft.attachments.map((attachment) =>
-      attachment.id === id && attachment.uri === uri
-        ? { ...attachment, ...update }
-        : attachment,
-    ),
-  }));
-  return true;
-}
-function present(key: string, generation: number, id: string, uri?: string) {
-  return (
-    composerDrafts.generation(key) === generation &&
-    composerDrafts
-      .read(key)
-      .attachments.some(
-        (attachment) => attachment.id === id && attachment.uri === uri,
-      )
-  );
+  const pending = new Map(additions.map((item) => [item.id, item]));
+  let release!: () => void;
+  const waiting = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let settled = false;
+  let unsubscribe = () => {};
+  function finish() {
+    if (settled) return;
+    settled = true;
+    pending.clear();
+    unsubscribe();
+    release();
+  }
+  function refresh() {
+    const live = new Set(composerDrafts.read(key).attachments);
+    for (const [id, expected] of pending)
+      if (composerDrafts.generation(key) !== generation || !live.has(expected))
+        pending.delete(id);
+    if (!pending.size) finish();
+  }
+  unsubscribe = composerDrafts.subscribe(refresh);
+  refresh();
+  return {
+    present(attachment: DraftAttachment) {
+      refresh();
+      return pending.has(attachment.id);
+    },
+    patch(attachment: DraftAttachment, update: Partial<DraftAttachment>) {
+      refresh();
+      const expected = pending.get(attachment.id);
+      if (!expected) return false;
+      const next = { ...expected, ...update };
+      // Publish our replacement as the expected member before notifying the
+      // draft subscribers. Ordinary text edits retain this exact attachment.
+      pending.set(attachment.id, next);
+      composerDrafts.update(key, (draft) => ({
+        ...draft,
+        attachments: draft.attachments.map((item) =>
+          item === expected ? next : item,
+        ),
+      }));
+      return true;
+    },
+    done(attachment: DraftAttachment) {
+      pending.delete(attachment.id);
+      refresh();
+    },
+    track(task: Promise<void>) {
+      // Consume both outcomes without pretending that a released save wait
+      // means the File/native operation itself has stopped.
+      void task.then(finish, finish);
+      draftPersistence.trackAttachment(waiting);
+    },
+  };
 }
 
 /** Keep the exact chosen attachments before reading them. Every late result
@@ -85,16 +114,17 @@ export async function addPickedAttachments(
     ...draft,
     attachments: [...draft.attachments, ...additions],
   }));
+  const work = attachmentWork(key, generation, additions);
   const task = (async () => {
     for (const attachment of additions) {
-      if (!present(key, generation, attachment.id, attachment.uri)) continue;
+      if (!work.present(attachment)) continue;
       try {
         let audio: string | null;
         try {
           audio = await selectedAudioCandidate(attachment.uri!);
         } catch (error) {
           if (
-            patch(key, generation, attachment.id, attachment.uri, {
+            work.patch(attachment, {
               loading: false,
               audioClassificationFailed: true,
             })
@@ -102,9 +132,9 @@ export async function addPickedAttachments(
             report(audioInputFailure(error));
           continue;
         }
-        if (!present(key, generation, attachment.id, attachment.uri)) continue;
+        if (!work.present(attachment)) continue;
         if (audio || audioNameCandidate(attachment.name)) {
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             kind: "file",
             mimeType: audio ?? "audio/unknown",
             loading: false,
@@ -123,7 +153,7 @@ export async function addPickedAttachments(
               /* Ordinary files retain their existing link fallback. */
             }
           }
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             content,
             loading: false,
           });
@@ -133,14 +163,14 @@ export async function addPickedAttachments(
           attachment.uri!,
           imageEnabled,
         );
-        if (!present(key, generation, attachment.id, attachment.uri)) continue;
+        if (!work.present(attachment)) continue;
         if (!candidate) {
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             loading: false,
           });
         } else if (!imageEnabled) {
           if (
-            patch(key, generation, attachment.id, attachment.uri, {
+            work.patch(attachment, {
               mimeType: candidate.mimeType,
               loading: false,
             })
@@ -148,7 +178,7 @@ export async function addPickedAttachments(
             report(IMAGE_INPUT_STRINGS.linkOnly);
         } else {
           if (
-            !patch(key, generation, attachment.id, attachment.uri, {
+            !work.patch(attachment, {
               kind: "image",
               mimeType: candidate.mimeType,
               data: candidate.data ?? undefined,
@@ -160,7 +190,7 @@ export async function addPickedAttachments(
             candidate.data ?? "",
             candidate.mimeType,
           );
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             ...image,
             imageChecked: { ...image, uri: attachment.uri },
             loading: false,
@@ -168,16 +198,18 @@ export async function addPickedAttachments(
         }
       } catch (error) {
         if (
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             loading: false,
             imageChecked: undefined,
           })
         )
           report(imageInputError(error));
+      } finally {
+        work.done(attachment);
       }
     }
   })();
-  draftPersistence.trackAttachment(task);
+  work.track(task);
   return task;
 }
 
@@ -197,13 +229,14 @@ export function addClipboardImages(
     ...draft,
     attachments: [...draft.attachments, ...additions],
   }));
+  const work = attachmentWork(key, generation, additions);
   const task = (async () => {
     for (const [index, attachment] of additions.entries()) {
-      if (!present(key, generation, attachment.id, attachment.uri)) continue;
+      if (!work.present(attachment)) continue;
       try {
         const candidate = await clipboardImageCandidate(files[index]!);
         if (
-          !patch(key, generation, attachment.id, attachment.uri, {
+          !work.patch(attachment, {
             ...candidate,
             imageChecked: undefined,
           })
@@ -213,22 +246,24 @@ export function addClipboardImages(
           candidate.data,
           candidate.mimeType,
         );
-        patch(key, generation, attachment.id, attachment.uri, {
+        work.patch(attachment, {
           ...image,
           imageChecked: { ...image },
           loading: false,
         });
       } catch (error) {
         if (
-          patch(key, generation, attachment.id, attachment.uri, {
+          work.patch(attachment, {
             loading: false,
             imageChecked: undefined,
           })
         )
           report(imageInputError(error));
+      } finally {
+        work.done(attachment);
       }
     }
   })();
-  draftPersistence.trackAttachment(task);
+  work.track(task);
   return task;
 }

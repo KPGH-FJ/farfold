@@ -14,7 +14,10 @@ const h = vi.hoisted(() => ({
   decode: vi.fn(),
 }));
 vi.mock("../runtime/pdf_preview", () => ({ renderPdfPage: h.render }));
-vi.mock("../runtime/draft_images", () => ({ validateDraftImage: h.decode }));
+vi.mock("../runtime/draft_images", async (original) => ({
+  ...(await original<typeof import("../runtime/draft_images")>()),
+  validateDraftImage: h.decode,
+}));
 vi.mock("./VisualAreaSelection", async () => {
   const { createElement, Fragment } = await import("react");
   return {

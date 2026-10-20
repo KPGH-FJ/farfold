@@ -98,12 +98,17 @@ function bytesFromBase64(data: string): Uint8Array {
 export async function validateDraftImage(
   data: string,
   mimeType?: string,
+  expectedBytes?: number,
 ): Promise<DraftImage> {
   // Keep the constant-time input bound ahead of the capacity check. An already
   // full decoder pool must not expand or scan another bounded payload first.
   checkImageDataLength(data);
   if (decoding >= 2) throw new Error(IMAGE_INPUT_STRINGS.decodeBusy);
-  const inspection = inspectImageBytes(bytesFromBase64(data));
+  const bytes = bytesFromBase64(data);
+  // File previews must match the captured byte count, using this same decode.
+  if (expectedBytes !== undefined && bytes.length !== expectedBytes)
+    throw new Error(IMAGE_INPUT_STRINGS.invalid);
+  const inspection = inspectImageBytes(bytes);
   if (mimeType !== undefined && mimeType !== inspection.mimeType)
     throw new Error(IMAGE_INPUT_STRINGS.invalid);
   if (typeof Image !== "function")

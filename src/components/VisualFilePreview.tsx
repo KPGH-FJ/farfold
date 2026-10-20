@@ -1,11 +1,15 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { VisualPreview } from "../runtime/file_delivery";
-import { validateDraftImage } from "../runtime/draft_images";
+import {
+  IMAGE_INPUT_STRINGS,
+  validateDraftImage,
+} from "../runtime/draft_images";
 import { renderPdfPage } from "../runtime/pdf_preview";
 import { validPdfPage } from "../runtime/file_feedback_anchor";
 import type { VisualPreviewReadiness } from "../runtime/visual_feedback";
 import {
   checkedVisualPreview,
+  checkedVisualPreviewMetadata,
   VISUAL_PREVIEW_STRINGS as S,
 } from "../runtime/visual_preview";
 import {
@@ -99,9 +103,14 @@ export function VisualFilePreview({
     let renderedPages: number | null = null;
     let renderedPage = page;
     void (async () => {
-      const checked = checkedVisualPreview(preview.file, preview);
-      if (checked.kind === "image") {
-        const result = await validateDraftImage(preview.data, checked.mimeType);
+      const pdf = preview.mimeType === "application/pdf";
+      if (!pdf) {
+        checkedVisualPreviewMetadata(preview.file, preview);
+        const result = await validateDraftImage(
+          preview.data,
+          preview.mimeType ?? "",
+          preview.file.size,
+        );
         if (owns())
           setImage({
             url: `data:${result.mimeType};base64,${result.data}`,
@@ -109,6 +118,7 @@ export function VisualFilePreview({
             owner: operation,
           });
       } else {
+        const checked = checkedVisualPreview(preview.file, preview);
         if (!owns() || !canvas.current) return;
         // The optional selection stage is fit-content and has no intrinsic
         // width while its canvas is hidden. Measure the stable content pane.
@@ -136,11 +146,10 @@ export function VisualFilePreview({
         );
       }
       if (owns()) {
-        if (checked.kind === "pdf" && renderedPages === null)
-          throw new Error(S.failed);
+        if (pdf && renderedPages === null) throw new Error(S.failed);
         setState("ready");
         setMessage(S.snapshot);
-        if (checked.kind === "pdf") {
+        if (pdf) {
           const element = canvas.current;
           if (element && element.width > 0 && element.height > 0) {
             const next: VisualAreaDisplay = {
@@ -179,9 +188,12 @@ export function VisualFilePreview({
       setState("failed");
       setMessage(
         error instanceof Error &&
-          Object.values(S).includes(error.message as never)
-          ? error.message
-          : S.failed,
+          error.message === IMAGE_INPUT_STRINGS.decodeBusy
+          ? S.busy
+          : error instanceof Error &&
+              Object.values(S).includes(error.message as never)
+            ? error.message
+            : S.failed,
       );
     });
     return () => {

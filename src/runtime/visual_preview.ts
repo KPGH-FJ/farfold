@@ -30,7 +30,11 @@ export function visualFileKind(name: string): "image" | "pdf" | null {
   if (/\.pdf$/i.test(name)) return "pdf";
   return /\.(png|jpe?g|gif|webp)$/i.test(name) ? "image" : null;
 }
-export function checkedVisualPreview(file: VerifiedFile, value: VisualPreview) {
+/** Constant-time file binding and outer bounds; never expands the payload. */
+export function checkedVisualPreviewMetadata(
+  file: VerifiedFile,
+  value: VisualPreview,
+): void {
   if (
     !value ||
     !value.file ||
@@ -57,6 +61,10 @@ export function checkedVisualPreview(file: VerifiedFile, value: VisualPreview) {
     value.data.length > Math.ceil(MAX_VISUAL_BYTES / 3) * 4
   )
     throw new Error(VISUAL_PREVIEW_STRINGS.limit);
+}
+
+export function checkedVisualPreview(file: VerifiedFile, value: VisualPreview) {
+  checkedVisualPreviewMetadata(file, value);
   let bytes: Uint8Array;
   try {
     const raw = atob(value.data);
