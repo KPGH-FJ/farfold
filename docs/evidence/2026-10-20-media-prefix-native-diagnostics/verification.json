@@ -1,5 +1,5 @@
 {
-  "kind": "SelectedP13EncodedPrefixAndWindowsFailureDiagnosticIncrementNotWholePhaseAcceptance",
+  "kind": "SelectedP13EncodedPrefixAndOwnedWindowsLinkTransitionDeliveredIncrementNotWholePhaseAcceptance",
   "atUtc": "2026-10-20T04:38:48.973264+00:00",
   "sourceBaseline": "89491026f4dd9237de1e854fd65740b6b6b41651",
   "appliedFiles": [
@@ -50,26 +50,26 @@
   "installedBaseline": {
     "source": "ca4153edd6a7249838e475b73b06d9e776c22f2e",
     "binarySha256": "4761be1a553aadde37980ae790f6841c1a75e5d29b931fd1bb4ea2e2b51e7788",
-    "newSourceInstalled": false
+    "newSourceInstalled": true,
+    "meaning": "Previous installed baseline retained;current installation separately below"
   },
   "fullSeven": {
-    "source": "616e33f3c6ad7c04bdeebe1a93f728704001753b",
+    "source": "f0191a75a4f0bd6376adfbb6718329cebafcdae3",
     "allSevenNaturalExitZero": true,
     "inputCount": 18404,
-    "inputsStable": true,
+    "inputsStableDuringActualSeven": true,
     "frontendFiles": 624,
     "frontendTests": 8230,
     "rustPassed": 2117,
     "rustExistingIgnored": 6,
-    "currentWindowsDeltaCovered": false
+    "documentationCloseoutNotPartOfThisEarlierFrozenSource": "Final documents describe results after actual delivery;product2093 unchanged from this source"
   },
   "realAgent": "Not tested. NEW-24 affected new sends remain paused;no account/model/reasoning change",
   "remaining": [
-    "Actual changed-source Windows run;new1separatefromold304 and4specificRED outcomes",
-    "Fresh final full-seven and independent integration freeze/review for current delta",
-    "Candidate,retention,formal update and scoped installed proof",
-    "Exact/final IMA duration,unknown formats,real-message playback,actual allocation and completeP13",
-    "Remaining55 d004 failures,fullWindows material tree/manifest/namespace/public restore and29x8 acceptance"
+    "49actualselectedWindows failures;5newUnknownexactsourcecapture prerequisites andunknowninnercauses remain open",
+    "CompleteWindows materialtree/persistentManifest/namespace/publicrestore still internalwork",
+    "P13unknownformats/layouts,oldshortAAC/FLACfailures,actualmessageplayback/systemopen/audibility/actualmemory/longtermremainopen",
+    "NEW24affectedfreshsendsremainpaused;OLDdatawriter/workunknowns preserved;29x8notaccepted"
   ],
   "refs": [
     {
@@ -171,14 +171,119 @@
     {
       "path": "output/2026-10-20-p13-next-media-stage/windows-link-native-r1/independent-result/fourth-changed-facets-addendum.json",
       "sha256": "4d6c06794845ee26bd472eb997dc38f3b9bc82932c18bac9cb094e9ed7db006a"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/engineering-allocation-media-cohort/verification.json",
+      "sha256": "9513e81fbb4c5de52561ca6575bd6118eaea08a07b2b7b7905fdec95da4ae176"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/final-source-review-r2/source-freeze-f0191a75.json",
+      "sha256": "b414e4144745448e2032bbbfcbcd0e010979ba5ada0d0993d6eb65bc9e7bdde0"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/final-source-review-r2/source-review.json",
+      "sha256": "2aab859b7f5531b2b4156b8c89bcb3a9e481a7c50da6ac97d6513cd0d434857c"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/authority-and-evidence-independent-review-r1.json",
+      "sha256": "574424d148adc34187938c0d6855efad24bbb7201f26d2665f89af20a1428f71"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/watch-completion.json",
+      "sha256": "b0ccbd65507ff3bb4fb792588e20bafca8f0db1ed6a0fa55fd9b19976b417119"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/final-metadata.stdout.json",
+      "sha256": "85b7e212f81eb269959d6f8a864b8fec124c115346a49596c76ee77dfe9ac7b0"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/priority-five-outcomes.json",
+      "sha256": "de6bdb41b84c0d06521d81317642ceaebdf5ca0010c35c4d1dbf991be8d6da85"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/raw-audit-r1/safe-summary.json",
+      "sha256": "47838e8e685c493bcc2a8a485e360b6f8bcb0756f056937ca639d861b029e4b8"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/five-new-unknown-boundaries.json",
+      "sha256": "34e92398968580bb2c09d1d045dfcc9fa8dd35600c66a473fcb8f2696e1d271e"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/candidate-output/candidate.json",
+      "sha256": "ebda8f0690d61a8db3606f19931e400e6cd0529919ddb787790bc393bcec3b09"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/independent/review.json",
+      "sha256": "6814f3cec14cf64bd8da9a6c996b049cfa96878db3139b16d3174697639b7ca2"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/install-result.json",
+      "sha256": "36386c6e7af02b78ebc06717cf3fd36d5a6777e5672e629b34bab3c6b70b312e"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/retention-before-receipt.json",
+      "sha256": "6d7fc00c3f5da10e57f82c72812052009127fa22e38150044ae342a755236894"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/retention-preinstall-receipt.json",
+      "sha256": "9eb37213a20e86795eab279d4f5a44cbf6fabfcf2853114773dabe452e48d44e"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/retention-after-receipt.json",
+      "sha256": "cc662faabd890097128e9d1c18bd4de443109ae40d9d3783c569f9e6507d9dba"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/installed-independent-review-private.json",
+      "sha256": "39552c961ac7bb56593a191bcdcde0780124783f4c312c4630aea5e0745d746d"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-delivery/install/candidate-cleanup.json",
+      "sha256": "336eae208795148a3d34df452547240ea217ae220d7356b35f7713b6566adcb2"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-binding-independent-review-r1/candidate9-and-installer-review.json",
+      "sha256": "cbd89dd626bf36cb37bae510f0d9b98970fd9d4edf99ebf85bfe5a8e4589c4c2"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-binding-independent-review-r1/installed10-binding-review.json",
+      "sha256": "4a862a17998d761e0932d8dfdb25dabedcc2d83ab3fbfd56310f7d09184327e6"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-binding-independent-review-r1/cleanup-binding-review.json",
+      "sha256": "0b8a87e4e06cc283c7f290c7905da16e60e3b71b0f90f907315b5f73e62617e1"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/safe-summary-final.json",
+      "sha256": "b9162a9c68f71315dd5636c4ffae26ba8910cdb2eea205d79e1a1437283fa2a5"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/execution-completion-final.json",
+      "sha256": "a84e59c7ac5010be0717fe118da444b371461ea9399b0b2021b3b539e626c9fa"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/first-failure-phases.json",
+      "sha256": "a950c1b7cf3cff19e609e903649594ca3c7f83a7a397c9245b51393888866142"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-native-r2/independent-result/previous304-case-diff.json",
+      "sha256": "0b00351d593432143931128ce9b1ff4d5c29dcf26ebf7486abc6736f6039ca9f"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-binding-independent-review-r1/install-receipt-review.json",
+      "sha256": "b64789c9102223d6e7f2d19e2a8e9d9b7b2d94f78761595728fd5be5153f0a87"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/formal-binding-independent-review-r1/installed10-binding-review.json",
+      "sha256": "4a862a17998d761e0932d8dfdb25dabedcc2d83ab3fbfd56310f7d09184327e6"
     }
   ],
   "initialAppliedSnapshot": {
     "sourceCommit": "d004486a7d43adafdf63933cffc8fcd756e493fb",
     "meaning": "appliedFiles above are this initial snapshot,not current Windows-fix hashes"
   },
-  "updatedAtUtc": "2026-10-20T05:22:24.263925+00:00",
-  "pendingWindowsFix": {
+  "updatedAtUtc": "2026-10-20T06:21:41.982798+00:00",
+  "deliveredSource": "f0191a75a4f0bd6376adfbb6718329cebafcdae3",
+  "windowsFix": {
     "base": "616e33f3c6ad7c04bdeebe1a93f728704001753b",
     "files": [
       {
@@ -200,8 +305,46 @@
     ],
     "scope": "Only2owned-link beforeAfter calls use9nonallocation facets;strict10facet/exact/internal snapshot/primaryAlias/links/later verify remain. Original4RED and304 unchanged;independent1 safetytest+20thCIgate added.",
     "cross": "Initial type_complexity101,newlocaltransparenttypealias only;second all-target strict check0,828inputs stable. Cross compile is not execution.",
-    "independentReview": "noBlockingFinding;newtest and4actualRED rerun pending",
-    "nativeRun": "not dispatched yet",
-    "fullSeven": "not yet run on this delta"
+    "independentReview": "noBlockingFinding;actual4oldRED+separate1pass onnewrun",
+    "nativeRun": 39374585697,
+    "fullSeven": "Fresh actual7passedonf019;sourcefreeze2117/composite independentreview complete"
+  },
+  "windowsNativeFinal": {
+    "run": 39374585697,
+    "source": "f0191a75a4f0bd6376adfbb6718329cebafcdae3",
+    "workflow": "completed/failure",
+    "selectedOriginal304": {
+      "passed": 255,
+      "failed": 49,
+      "ignored": 0
+    },
+    "original149": "128passed21failed",
+    "continuation30": "25passed5failed",
+    "newOrdinary32": "28passed4failed",
+    "newExplicitManual10": "0passed10failed",
+    "newSafetyControlOutside304": "1passed0failed0ignored/exit0/exactFQN/hashstable",
+    "fourFormerAllocationRed": "Allfour actualexact1passed0failed0ignoredexit0;original assertions unchanged",
+    "old304Delta": "15FAILED->ok,5ok->FAILED,284same;other11improvements not attributed tofix",
+    "newFailures": "5Unknown at sourcecapture prerequisites;innercause andindirectregression notexcluded;2sameUnknown already observed at393644",
+    "artifacts": 396,
+    "fullJobLogBytes": 1586351,
+    "requiredGates": 20,
+    "integrityIssues": []
+  },
+  "formalDelivery": {
+    "source": "f0191a75a4f0bd6376adfbb6718329cebafcdae3",
+    "binarySha256": "a2c5a2d4a60d8d4b8e107161bd14c9409338b2e84f73d69faff5536e122f0df0",
+    "candidateBuildSession": 60157,
+    "candidateNaturalCompletionChunk": "7be1b2",
+    "candidate9": "9/9passed",
+    "atomicInstallSession": 87997,
+    "atomicNaturalCompletionChunk": "a88804",
+    "installed10Session": 27815,
+    "installed10NaturalCompletionChunk": "7ff2b5",
+    "installed10": "10/10passed",
+    "retention": "Allthree232530entryfullmanifests strictlyequal;metadata/rawprewritegates retained",
+    "manifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "duplicateCleanup": "actual0753f3exit0/exact5files5dirs;ZIP/formalApp/evidence/data retained",
+    "observation": "ClosedObserved;normalQuitEvidenceNone;appwasalreadyclosed;nonewAppUIorAgentpromptverification"
   }
 }
