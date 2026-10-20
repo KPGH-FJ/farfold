@@ -77,7 +77,7 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 ## 消息图片与音频预览
 
-收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序。明确展开后，[use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts)先做轻量资格和单项最多16 MiB检查，再取得共用4实例、32 MiB逻辑字节配额，随后才扫描规范Base64及下述已覆盖声明；取得配额并通过检查才生成媒体DOM。失败或退役释放本次配额，重试由用户明确触发；这不是实际解码内存或RSS上限。搜索、折叠、普通消息呈现不自动深查或加载媒体，远程地址不因预览而抓取，未知格式与原协议内容仍保留。
+收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序。明确展开后，[use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts)先做轻量资格和单项最多16 MiB检查，再取得共用4实例、32 MiB逻辑字节配额，随后才扫描规范Base64及下述已覆盖声明；取得配额并通过检查才生成媒体DOM。失败或退役释放本次配额，重试由用户明确触发；这不是实际解码内存或RSS上限。搜索、折叠、普通消息呈现不自动深查或加载媒体，远程地址不因预览而抓取，未知格式与原协议内容仍保留。最新源码的 [MessageContent.tsx](../src/components/MessageContent.tsx) 将Markdown图片替换为同一安全网页/文件来源入口；已有外层链接的图片只保留文字标签，避免嵌套操作。不从Markdown图片生成img、预加载或另一套自动抓取流程；安装与浏览器覆盖见状态。
 
 Agent消息的正文与媒体顺序由 [message_content_order.ts](../src/runtime/message_content_order.ts) 保留为已有正文的字符范围和附件索引范围，仅用于内存呈现，不复制负载、不持久化事件。相邻文字片段合并为一个Markdown段；主对话和已读取历史预览使用同一呈现，搜索按连续文字段解析，导出在对应位置列附件来源。完整覆盖校验失败或旧消息没有顺序信息时保留原布局，不猜测丢失的顺序。稳定的段键及全消息附件索引用于保留展开状态、媒体来源与搜索定位。
 
@@ -89,7 +89,7 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 [message_avif_layers.ts](../src/runtime/message_avif_layers.ts) 解析已识别`a1lx`的空间层声明；按关联画布、声明层数与已有派生使用次数保守计入67,108,864像素工作量政策。空间层不当动画帧，不因`a1op`或`lsel`选择减少计额；该策略不推定解码器实际处理了哪些层。未知保留位保持未覆盖，但不跳过其他已知尺寸或工作量预算。
 
-音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；线性PCM、IEEE浮点、已知标准扩展及普通18字节fmt/cb0的G711标签6/7按各自确定的存储帧核600秒消息预览策略。普通20字节fmt/cb2、4位单/双声道IMA标签17另核每通道块几何，只计最后完整块之前的完整前缀；已知前缀采样数超过600秒时拒绝，其余一律保持部分覆盖，不把末块容量、fact或平均字节率当作准确播放时长。部分尾块不套用线性帧对齐要求。存在播放列表时，确定的直接data仍核独立存储预算；列表的裁剪、循环及实际播放时长不据此推定。未知编码、扩展、其他容器及wavl保留兼容路径，不套用PCM公式。该策略不等于格式限制、实际播放/循环时长、解码有效性或解码与重采样内存保证。
+音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；线性PCM、IEEE浮点、已知标准扩展及普通18字节fmt/cb0的G711标签6/7按各自确定的存储帧核600秒消息预览策略。普通20字节fmt/cb2、4位单/双声道IMA标签17另核每通道块几何，只计最后完整块之前的完整前缀；已知前缀采样数超过600秒时拒绝，其余一律保持部分覆盖，不把末块容量、fact或平均字节率当作准确播放时长。部分尾块不套用线性帧对齐要求。最新源码对fmt50/cb32、4位单/双声道、七组标准系数且块采样几何匹配的MS-ADPCM标签2复用该前缀政策；不把fact裁剪或末块填充当准确时长，未知系数和布局保持部分覆盖。存在播放列表时，确定的直接data仍核独立存储预算；列表的裁剪、循环及实际播放时长不据此推定。未知编码、扩展、其他容器及wavl保留兼容路径，不套用PCM公式。该策略不等于格式限制、实际播放/循环时长、解码有效性或解码与重采样内存保证。
 
 经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；未知总量另由[message_flac_frame_observer.ts](../src/runtime/message_flac_frame_observer.ts)观察选定单声道16位常量帧的完整范围、CRC及连续编号，只在确定的累计采样下界超过600秒时拒绝，其他结果仍为部分覆盖。零采样率、保留元数据和其他帧布局的未知边界保持。跨原允许音频MIME核实际标记，不新增格式入口；不读取嵌入图片或URI，不解码PCM，不核实际解码内存或完整播放。
 
