@@ -1,0 +1,384 @@
+{
+  "kind": "CompletedSelectedPdfPreviewAdmissionStage",
+  "sourceCommit": "d466fe22acb486d94f5308c5285524191a8f30ca",
+  "baseInstalledSource": "5008caaa39f2e725917316a5d47e760151c171d2",
+  "scope": "Selected P13/P16 shared preview resource increment. Full seven ran on functional source before later documentation. Not complete tasks or29x8 acceptance.",
+  "changes": [
+    "PDF component checks cheap original-file metadata, then acquires its existing shared render slot before deferred byte expansion. Full capacity refuses without atob or another Worker. Idle validates and expands once.",
+    "Existing render entry still accepts direct bytes. Preparation failure or cancellation creates no Worker, clears through original finally, and returns exactly its own capacity. No second pool/queue/retry or new environment switch.",
+    "Six permanent regressions in two new files plus stronger existing invalid-byte case. Two production sources and three tests independently reviewed. Original semantic RED and first affected-test seam failure retained."
+  ],
+  "checks": {
+    "affected": {
+      "files": 7,
+      "passed": 48,
+      "typecheckPassed": true,
+      "session": 10580,
+      "naturalCompletionChunk": "6544df",
+      "naturalExit": 0
+    },
+    "originalRed": {
+      "passed": 2,
+      "failed": 1,
+      "chunk": "64574d",
+      "controlledWorkerOnly": true
+    },
+    "sameAssertionGreen": {
+      "passed": 3,
+      "naturalExit": 0,
+      "chunk": "6dc52a"
+    },
+    "firstAffected": {
+      "passed": 47,
+      "failed": 1,
+      "naturalExit": 1,
+      "chunk": "a69741",
+      "cause": "Old fully mocked render-entry assertion no longer executed deferred validation; test changed to call actual renderer and preserve zero Worker/fixed-error assertions. Typecheck not started in this failed run."
+    },
+    "freshSeven": {
+      "session": 40433,
+      "completionChunk": "a02f9e",
+      "naturalExit": 0,
+      "inputCount": 18428,
+      "frontendFiles": 637,
+      "frontendPassed": 8347,
+      "rustPassed": 2117,
+      "rustExistingIgnored": 6,
+      "allSevenPassed": true
+    },
+    "sourceReview": {
+      "result": "noBlockingFinding",
+      "productionMembers": 2107,
+      "freezeFiles": 2138,
+      "method": "Inherited exact Git blob/mode/hash plus fresh independent exact2production and3tests/current authority; not every inherited line freshly reviewed."
+    },
+    "genuineWebKit": {
+      "session": 74300,
+      "completionChunk": "e942b6",
+      "naturalExit": 0,
+      "version": "26.5",
+      "rows": 3,
+      "checks": 8,
+      "outerWorkers": 6,
+      "fullPixelCanvases": 5,
+      "pixelBytesEach": 160000,
+      "cleanupComplete": true,
+      "inputsStable": true,
+      "scope": "Controlled actual ReactDOM VisualFilePreview and real WebKit PDF.js/parser/OffscreenCanvas/ImageBitmap/canvas pixels. Only original completed-render event delivery is held. Not physical parser busy/RSS, installed Farfold/WKWebView, native file reading, Agent or complete PDF/P13/P16 coverage. No mock parser/canvas result and no fake successful Worker event. Internal component promises are not directly exposed; original termination/slot reuse/DOM and exact held-event/bitmap cleanup are observed."
+    },
+    "candidate": {
+      "passed": 9,
+      "total": 9
+    },
+    "installed": {
+      "passed": 10,
+      "total": 10
+    }
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "d466fe22acb486d94f5308c5285524191a8f30ca",
+    "binarySha256": "13ff248a49de6dcbf9bca6ddfa08cc6ca59310ec9ecf1cc6f9dd12e6e4ebfe44",
+    "phase": "installedVerifiedNotLaunched",
+    "archive": "src-tauri/target/internal-candidate/2026-10-21-preview-resource-next-d466fe22/Farfold-0.1.7-d466fe22.zip",
+    "archiveSha256": "e68f4ec685ae00c1bed5273910895254b63093838d241f24d3c8909532310cbc",
+    "archiveBytes": 15900944,
+    "exactFiveAtomicReplacements": true,
+    "duplicateCandidateRemoved": true,
+    "publicSigningNotarizationDistribution": "postponed"
+  },
+  "data": {
+    "manifest": {
+      "counts": {
+        "appData": {
+          "directory": 22245,
+          "file": 209681,
+          "symlink": 335,
+          "special": 0
+        },
+        "webkit": {
+          "directory": 155,
+          "file": 104,
+          "symlink": 0,
+          "special": 0
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "symlink": 0,
+          "special": 0
+        }
+      },
+      "sha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95"
+    },
+    "beforePreinstallAfterExactlyEqual": true,
+    "metadataBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "exactFormalProcessObservationsZero": true,
+    "normalQuitEvidence": null,
+    "limit": "Three fresh endpoints only; does not overwrite older runtime data differences, unknown writer or unexplained reopening."
+  },
+  "storageCleanup": {
+    "exactCacheDirectories": 99,
+    "generatedFilesRemoved": 3201,
+    "observedFreeBytesIncrease": 1976111104,
+    "excludedHistoricalVitestResultRetained": true,
+    "scope": "Exact independently inventoried Vite generated caches only. User/Agent history, source, fixtures, evidence, backup, ZIP and formal app retained."
+  },
+  "notVerified": [
+    "Installed-app interface or actual current Agent messages, permissions or playback. No formal App/Agent launch or real send this stage.",
+    "Physical parser/IO busy state, thread-tree termination, process RSS or actual decoded memory. Browser held only delivery of already completed genuine ready events.",
+    "Complete PDF formats or P13/P16,29Agents x8, long duration/interruptions or full Windows.",
+    "NEW-24 remains open and affected new real sends paused. Known7 local inputs unchanged; actual permissions and external latest versions unknown.",
+    "Original short AAC/FLAC failures and duration disagreements, Windows42failures/old Unknown, unknown data writer and reopening remain open."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-21-preview-resource-next/start.json",
+      "bytes": 1110,
+      "sha256": "06024388d027c60eb6e517f3059e7df43077c12333ec46d41e104c71249eded0"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/NEW24-local-delta.json",
+      "bytes": 2434,
+      "sha256": "4a28b9f7cb5dfe1f784cb8866d4a45362a087db5cbc0fdfd6fcf785e3e233a64"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/affected-checks.json",
+      "bytes": 907,
+      "sha256": "2db501d6e2c7059b17766e7bed37cfede28a37557afc142e987fda1c1c63fa0e"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/affected-r1/execution.json",
+      "bytes": 1258,
+      "sha256": "70bbd5ef4a6ed96891cd271551a21d8bee0a0373074e4eac25fb86a2c33958a4"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/preview-audit/pdf-admission-red/execution.json",
+      "bytes": 41423,
+      "sha256": "98c4de7714d15567890790b3904f71ba20e49131d233d645679849ff6d96cfa7"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/preview-audit/pdf-admission-red/assessment.json",
+      "bytes": 7065,
+      "sha256": "dcb39b39b1b543eee56dd77e382764b07cfa1e0bfa7f6c6a63e4aa2d5e884bb3"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/preview-audit/pdf-admission-green/execution.json",
+      "bytes": 41570,
+      "sha256": "f4573eca7706a48e9bda8e8db29ba44fd75ae29d66375c68eb67d8d7afe0c980"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/preview-audit/pdf-source-independent-review/source-review.json",
+      "bytes": 3521,
+      "sha256": "b41510dfaf7874148044c3454b4e9e4c69ddfe2a9c65a76a15b6d6a95f7bea59"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/native-audit/pdf-tests-independent-review/source-review.json",
+      "bytes": 5344,
+      "sha256": "f660225a4d9dbd6878127bcafa354fbb20898e0b7fdbed9db4584feda5f22375"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/native-audit/message-audio-lifecycle-audit.json",
+      "bytes": 8536,
+      "sha256": "fa830286b2e5bb182a3d9a5e4fb3594ff25f7961aebbc51aeaa2f2c6406f90c4"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/current-authority-review.json",
+      "bytes": 13826,
+      "sha256": "e3db015986f9cdfb469c9d5548110a55e23c3f01894c4b6fca13efe649620c1e"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/helper-sealer-independent-review-r1/review.json",
+      "bytes": 6906,
+      "sha256": "d3644ee618a2761c48f78e2c6cb7487b484de2ac8a7a8be087c8f1fa23b75e9b"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/final-source-review/config.json",
+      "bytes": 7663,
+      "sha256": "e2570e7776c0fa45fe346c160dc8c3f57461572a5c3daba6a5333d8e145f6636"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/final-source-review/engineering-natural-completion.json",
+      "bytes": 399,
+      "sha256": "dd198a57aaa495b95628f7277871eaa2ff93455068f2314582cd46b0430ae4d6"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/final-source-review/source-review.json",
+      "bytes": 16233,
+      "sha256": "33874a0dce012833ba64a6fc70baffeaec2b8e30dfe25c0ee105b640dc16050b"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/final-source-review/source-freeze-d466fe22.json",
+      "bytes": 347716,
+      "sha256": "ca94cd196551c985e2afa6354fb196d302b785b12eac8fce60386a8fb2db6b93"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/final-source-review/review-freeze.json",
+      "bytes": 1698,
+      "sha256": "284d18c556d0e7e8566fbb023ae20cf8c6e16da2ffdd2cc4cda586e169c23ded"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/engineering/verification.json",
+      "bytes": 5844,
+      "sha256": "786e9cc5296abef2c9a120d84ad00633b464ddbab89dbcd033e1728b7255a532"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser/preparation-index.json",
+      "bytes": 41400,
+      "sha256": "2a4fa2e147f49b4973f70e4cd282139c1372993054385360d7b3e2a764b2214d"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser/bound-preparation.json",
+      "bytes": 41633,
+      "sha256": "9c1779ccbb830de4445dd9c5ff6b6ffb32f2f961be37ee82947c33d1b83fa4ec"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser/execution-receipt.json",
+      "bytes": 37937,
+      "sha256": "d4dea5dec319c284ce60db625641a6cb37ac926f2acd535e9c6ce5a39e367e5b"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser/verification.json",
+      "bytes": 139596,
+      "sha256": "9d6a0dc4d91acd6be3db5dd967f4721317fb532c4df57f34601e41518d610010"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser/trace.jsonl",
+      "bytes": 26419,
+      "sha256": "d5ba2f2f58c7990c93613cbdf2dc1ef5e5bf8c83e60f754efeae3267f6377973"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser-author-readback-r1/review.json",
+      "bytes": 4190,
+      "sha256": "6f8ac68a1ba1e277b1eac47650bb65789b72e2583c26bd266c6ebb1e18c80d73"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/storage-inventory/inventory.json",
+      "bytes": 92093,
+      "sha256": "6cede94366b0040c72565017e3502fe953a44053b716d78931e12045aa623714"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/storage-cleanup.json",
+      "bytes": 8081,
+      "sha256": "b4851142cb29c4c598d858b387a01e4d7cb3aa0bb9358e5bbf0b060f509f17b5"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/retention.py",
+      "bytes": 14349,
+      "sha256": "842e220d10872e18a28ae42fdd2ebc549806e3468920fcc8d2fc1fb74708261c"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/candidate.py",
+      "bytes": 14724,
+      "sha256": "519edbc49c2741ae8cf1cd374bb29b0198a9ad0cc6db7d5092cefb66fe144b0d"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 250550,
+      "sha256": "69003b7f5fcfb282026cb8acb052495ef20c827a2fad97e35b069993cfbf41d7"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/independent/review.json",
+      "bytes": 4241,
+      "sha256": "afb2fe719d15e27d8f0e58c48136670f7871dd23d5762dc0c6872509b5894891"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "78a6465ff15827022a085f5a9c86ab95f159846665ed091de35f0c7b54e87c37"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "cee1373650bf0905749b7f1b858ed894fad3a70390c8fffc8c55280d3d470112"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "2e749e4e9538af44484aab317b92ec07e92d6acf287c6ceb4188427498343392"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/install-result.json",
+      "bytes": 10670,
+      "sha256": "82fd05704edf25b079fa2299fddc4f0eaddcd4bd637a93c597563f23cff6332c"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "07e1adce033bf79e5a32836b53eacc65dcb01524e51391ce706afa5a408733ae"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "ecea8165a5243d13a8a2211139df42cbb959f7d4a5aee262abb10285ccf1c2fb"
+    },
+    {
+      "path": "docs/evidence/2026-10-21-shared-resource-next/verification.json",
+      "bytes": 15805,
+      "sha256": "7fa226e33155ca454ab39c8039d07a2478d1fc5b874f48efd3de8d0760d6b2b3"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/browser-independent-review-r1/review.json",
+      "bytes": 7431,
+      "sha256": "7ae82118086272e7b6148d791624e0276902950582c66bb5a6eef2686b668e3a"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/actual-helper-binding-independent-review-r1/review.json",
+      "bytes": 4299,
+      "sha256": "0a393ba24af1b4eb107cd52d18d10375fd46c093f2eccb794a963ec11314e9bb"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/binder-before-independent-review-r2/review.json",
+      "bytes": 3410,
+      "sha256": "d7fb53e0f5f90e307fac12be15de1e381062f3b017b9a7eb5cf3d00ff3ebe7ee"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/phase2-independent-review-r1/review9-install-binding-review.json",
+      "bytes": 3698,
+      "sha256": "791e1d9d7be044da44ddf9dda460f553a1c503030da7abe254bcc857cfc9960d"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/phase2-independent-review-r1/installed10-cleanup-binding-review.json",
+      "bytes": 3927,
+      "sha256": "f7da6cdeb8944476b7793b7847e3287ab74d0d75c2dff38a3341aa1d1e7cb994"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/delivery-prep/actual-composite-readback-r1/review.json",
+      "bytes": 2590,
+      "sha256": "4ec20ee64ab2653f5390e1be0508ce3a561fa2fce5668608ee4be78396b72a67"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/delivery-prep/actual-composite-readback-r1/coverage-counts-addendum.json",
+      "bytes": 1441,
+      "sha256": "c96df9cc29246c62a9c9227731fe77b2e5809052394f0bd2b10a776aaa04fc4f"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/docs-script-first-failure.json",
+      "bytes": 253,
+      "sha256": "19f5437e3b66aecf3de8dc01e953a443e4b69f4ea630e6e7341f3364dbc14d79"
+    },
+    {
+      "path": "output/2026-10-21-preview-resource-next/docs-script-encoding-readpoint.json",
+      "bytes": 531,
+      "sha256": "876c47b14077de8e13090e4ea26709b886754cde223bb92c6064fa413e4c8874"
+    }
+  ],
+  "documentationAssemblyIncident": {
+    "originalDirectInvocation": {
+      "chunk": "c1891b",
+      "naturalExit": 1,
+      "beforeAnyDocWrites": true
+    },
+    "currentOriginalBytesValidUtf8AndCompileSuccessfully": true,
+    "rootCause": "unknown",
+    "separateAsciiEscapedLiteralVariantAstExactlyEqual": true,
+    "variantExecution": {
+      "chunk": "1c67a1",
+      "naturalExit": 0
+    },
+    "scope": "Root output-only documentation script; not product code or engineering failure. Both originals and readpoint retained."
+  }
+}
