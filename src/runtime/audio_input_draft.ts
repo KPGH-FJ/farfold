@@ -27,6 +27,10 @@ export function createAudioInputTarget(
   let mutating = false;
   let offDraft = () => {};
   let offStorage = () => {};
+  const savingReads = new Set<() => void>();
+  const releaseSavingReads = () => {
+    for (const finish of savingReads) finish();
+  };
   const isCurrent = () =>
     !retired &&
     owns() &&
@@ -42,6 +46,7 @@ export function createAudioInputTarget(
   const retire = () => {
     if (retired) return;
     retired = true;
+    releaseSavingReads();
     offDraft();
     offStorage();
     if (
@@ -82,6 +87,21 @@ export function createAudioInputTarget(
   return {
     isCurrent,
     retire,
+    /** Only an active review contributes pending input to saving. The caller
+     * still awaits the actual read, whose native permit is never released here. */
+    trackRead(task: Promise<unknown>) {
+      const waiting = new Promise<void>((resolve) => {
+        const finish = () => {
+          savingReads.delete(finish);
+          resolve();
+        };
+        if (!retired) savingReads.add(finish);
+        // Always consume the real outcome, including already retired reviews.
+        void task.then(finish, finish);
+        if (retired) finish();
+      });
+      draftPersistence.trackAttachment(waiting);
+    },
     apply(capture: AudioCapture): boolean {
       if (
         !isCurrent() ||
@@ -99,6 +119,7 @@ export function createAudioInputTarget(
         capture.file.size,
       );
       retired = true;
+      releaseSavingReads();
       offDraft();
       offStorage();
       composerDrafts.update(key, (draft) => ({

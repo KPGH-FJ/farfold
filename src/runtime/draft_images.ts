@@ -38,6 +38,9 @@ const imageMimes: readonly string[] = [
   "image/webp",
 ];
 let decoding = 0;
+// Separate from decoder capacity: File reads and candidate encoding start
+// before validation, and multiple paste batches can prepare concurrently.
+let clipboardPreparing = 0;
 export function isBitmapMime(value: string | undefined): value is ImageMime {
   return !!value && imageMimes.includes(value);
 }
@@ -209,16 +212,25 @@ export async function clipboardImageCandidate(
     throw new Error(IMAGE_INPUT_STRINGS.invalid);
   if (file.size > MAX_IMAGE_BYTES)
     throw new Error(IMAGE_BYTES_STRINGS.tooLarge);
-  const bytes = new Uint8Array(await file.arrayBuffer());
-  if (bytes.length > MAX_IMAGE_BYTES)
-    throw new Error(IMAGE_BYTES_STRINGS.tooLarge);
-  const chunks: string[] = [];
-  for (let start = 0; start < bytes.length; start += 32_768)
-    chunks.push(String.fromCharCode(...bytes.subarray(start, start + 32_768)));
-  // Keep bounded user input even if validation subsequently refuses it. It
-  // never reaches decode or an Agent until the same bytes pass all checks.
-  return {
-    data: btoa(chunks.join("")),
-    mimeType: sniffImageMime(bytes) ?? undefined,
-  };
+  if (clipboardPreparing >= 2) throw new Error(F.checkBusy);
+  clipboardPreparing++;
+  try {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes.length > MAX_IMAGE_BYTES)
+      throw new Error(IMAGE_BYTES_STRINGS.tooLarge);
+    const chunks: string[] = [];
+    for (let start = 0; start < bytes.length; start += 32_768)
+      chunks.push(
+        String.fromCharCode(...bytes.subarray(start, start + 32_768)),
+      );
+    // Keep bounded user input even if validation subsequently refuses it. It
+    // never reaches decode or an Agent until the same bytes pass all checks.
+    return {
+      data: btoa(chunks.join("")),
+      mimeType: sniffImageMime(bytes) ?? undefined,
+    };
+  } finally {
+    // Withdrawing a draft releases its save wait, not this actual preparation.
+    clipboardPreparing--;
+  }
 }

@@ -100,7 +100,7 @@ export function useAudioComposerAttachments({
     setError(null);
     setWorking("reading");
     const task = readAudioInput(attachment.uri);
-    draftPersistence.trackAttachment(task);
+    target.trackRead(task);
     try {
       const value = await task;
       if (ticket.current === target && target.isCurrent()) {
@@ -125,7 +125,7 @@ export function useAudioComposerAttachments({
       await draftPersistence.flush();
       if (ticket.current !== target || !target.isCurrent()) return;
       const task = readAudioInput(selection.attachment.uri!, result.file);
-      draftPersistence.trackAttachment(task);
+      target.trackRead(task);
       const fresh = await task;
       if (fresh.data !== result.data) throw new Error(S.changed);
       if (ticket.current !== target || !target.apply(fresh)) return;
