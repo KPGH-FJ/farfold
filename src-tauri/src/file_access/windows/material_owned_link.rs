@@ -452,7 +452,9 @@ impl OwnedLinks {
                 #[cfg(test)]
                 Snapshot::diagnostic_error("ownedLink.alias", error);
             })?;
-        if !before.same_link_payload(&after) || !after.exact(&alias_after) || after.stamp.links != 2
+        if !before.same_after_owned_link(&after)
+            || !after.exact(&alias_after)
+            || after.stamp.links != 2
         {
             #[cfg(test)]
             {

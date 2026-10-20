@@ -372,7 +372,7 @@ impl State {
                 #[cfg(test)]
                 Snapshot::diagnostic_error("targetGroup.alias", error);
             })?;
-        if !before.same_link_payload(&after)
+        if !before.same_after_owned_link(&after)
             || !after.exact(&alias_after)
             || after.stamp.links != (count + 1) as u64
         {

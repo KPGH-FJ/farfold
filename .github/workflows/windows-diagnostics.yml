@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42 positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -140,6 +140,42 @@ jobs:
           Get-Content -LiteralPath $stdout
           Get-Content -LiteralPath $stderr
           if (-not $observationComplete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
+      - name: Require allocation-only owned link transition and unchanged strict checks, one exact control
+        id: owned_link_transition
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $raw = Join-Path $PWD 'windows-diagnostics-raw'
+          $selection = Get-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Raw | ConvertFrom-Json
+          $head = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}' -or $selection.sourceHead -ne $head) { throw 'Diagnostic head changed after build' }
+          $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
+          $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
+          if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $stdout = Join-Path $raw 'owned-link-transition.stdout.log'
+          $stderr = Join-Path $raw 'owned-link-transition.stderr.log'
+          $test = 'file_access::windows::material_restore::owned_link::snapshot::tests::owned_link_transition_accepts_only_allocation_and_strict_checks_stay_strict'
+          $started = [DateTime]::UtcNow.ToString('o')
+          & $binary $test --exact --nocapture --test-threads=1 1> $stdout 2> $stderr
+          $testExit = $LASTEXITCODE
+          $finished = [DateTime]::UtcNow.ToString('o')
+          $outText = [IO.File]::ReadAllText($stdout)
+          $errText = [IO.File]::ReadAllText($stderr)
+          $summaries = [regex]::Matches($outText, '(?m)^test result: (?<status>ok|FAILED)\. (?<passed>\d+) passed; (?<failed>\d+) failed; (?<ignored>\d+) ignored;')
+          $last = if ($summaries.Count -eq 1) { $summaries[0] } else { $null }
+          $cases = [regex]::Matches($outText, '(?m)^test (?<name>\S+) \.\.\. (?<status>ok|FAILED|ignored)\r?$')
+          $case = if ($cases.Count -eq 1) { $cases[0] } else { $null }
+          $exactCase = $null -ne $case -and $case.Groups['name'].Value -ceq $test -and $case.Groups['status'].Value -ceq 'ok'
+          $exactSuccess = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0' -and $exactCase
+          $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
+          $complete = $exactSuccess -and $inputsStable
+          [ordered]@{ head = $head; test = $test; testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256; expectedTests = 1; startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit; summaryCount = $summaries.Count; finalSummary = if ($last) { $last.Value } else { $null }; caseCount = $cases.Count; exactExpectedCase = $exactCase; exactOnePassed = $exactSuccess; inputsStable = $inputsStable; observationComplete = $complete; productOrAllWindowsComplete = $false; stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash; stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash } |
+            ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-link-transition.result.json') -Encoding utf8
+          Get-Content -LiteralPath $stdout
+          Get-Content -LiteralPath $stderr
+          if (-not $complete) { if ($testExit -ne 0) { exit $testExit }; exit 1 }
       - name: Unicode and maximum leaf production publication, one exact test
         id: publication_names
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
@@ -1384,6 +1420,7 @@ jobs:
             continuation_controls = '${{ steps.continuation_controls.outcome }}'
             owned_material_ordinary = '${{ steps.owned_material_ordinary.outcome }}'
             owned_material_full_sd = '${{ steps.owned_material_full_sd.outcome }}'
+            owned_link_transition = '${{ steps.owned_link_transition.outcome }}'
           }
           $positivesPassed = $build -eq 'success'
           foreach ($outcome in $required.Values) { if ($outcome -ne 'success') { $positivesPassed = $false } }
@@ -1404,7 +1441,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
-            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42 controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }

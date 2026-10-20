@@ -43,21 +43,33 @@
     "shortAudio": "14 actual WK observations:4 natural failures,10 ended property true but only2 ended events; no Farfold-specific cause established.7 production collapse source-retire controls observed, active-unmount not isolated.",
     "avif": "15 unchanged official full-file controls available and byte-exact,55313 bytes; no new confirmed defect or native decoder rerun.",
     "windowsCross": "Initial strict check exit101 unused duplicate Write import; only redundant snapshot import removed; second strict all-target check exit0,828 inputs stable.",
-    "windowsNative": "No new run yet;three existing Changed causes unknown,added only cfg(test) observation of original returns/snapshots; original errors,queries,budgets,cleanup and test assertions retained."
+    "windowsNative": "Actual d004 run39370766363:304 selected=245passed59failed,noignored;19gates and393artifacts/fulljob joined. Four actual Changed failed at owned-link before/after;only allocation304->4096 differs,other active fields and simultaneous primaryAlias exact. Specific NTFS allocation mechanism unknown;remaining55 not fixed.",
+    "webKitIMA": "Actual5 observations/30checks pass:long production denied with0audio/src/play;genuine600 source exact without full playback;short raw+production actualended events4.04s;separate active direct-unmount clears saved node source and returns logical quota. FixtureWebKit26.5,not installed WKWebView/realAgent/audible/RSS proof.",
+    "feedback": "Shared processing-limit feedback corrected at616e33f3c;8files70 affected tests passed;no exact duration asserted by encoded-prefix rejection."
   },
   "installedBaseline": {
     "source": "ca4153edd6a7249838e475b73b06d9e776c22f2e",
     "binarySha256": "4761be1a553aadde37980ae790f6841c1a75e5d29b931fd1bb4ea2e2b51e7788",
     "newSourceInstalled": false
   },
-  "fullSeven": "Not yet run on this increment",
+  "fullSeven": {
+    "source": "616e33f3c6ad7c04bdeebe1a93f728704001753b",
+    "allSevenNaturalExitZero": true,
+    "inputCount": 18404,
+    "inputsStable": true,
+    "frontendFiles": 624,
+    "frontendTests": 8230,
+    "rustPassed": 2117,
+    "rustExistingIgnored": 6,
+    "currentWindowsDeltaCovered": false
+  },
   "realAgent": "Not tested. NEW-24 affected new sends remain paused;no account/model/reasoning change",
   "remaining": [
-    "Full selected cohort engineering and independent integration review",
-    "Windows actual failed-branch evidence; no operation predicate relaxation",
-    "Candidate,retention,formal update and actual selected verification",
+    "Actual changed-source Windows run;new1separatefromold304 and4specificRED outcomes",
+    "Fresh final full-seven and independent integration freeze/review for current delta",
+    "Candidate,retention,formal update and scoped installed proof",
     "Exact/final IMA duration,unknown formats,real-message playback,actual allocation and completeP13",
-    "Full Windows material tree/manifest/namespace/public restore and29x8 acceptance"
+    "Remaining55 d004 failures,fullWindows material tree/manifest/namespace/public restore and29x8 acceptance"
   ],
   "refs": [
     {
@@ -111,6 +123,85 @@
     {
       "path": "output/2026-10-20-p13-next-media-stage/windows-strict-r2-receipt.json",
       "sha256": "5eb983331f781a1d48ab685ffbe6728b96eac00208e9ce7dc5c0059c2dcefdb7"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/engineering-final-media-cohort/verification.json",
+      "sha256": "b1c20454a3402817a380e79154e8ec16c1b2a8833201095ff46bf1d10b672ccf"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/feedback-affected-receipt.json",
+      "sha256": "ace92ffc7e5cca2e20ef8b081684d781e750482dce4905f24b6e205043ce96e9"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/ima-webkit/verification.json",
+      "sha256": "a20c14ddfd2886a4ba56d5470d4d8e46c63431185fb1fc38e50cb7b2344064b3"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/ima-webkit/conclusion.json",
+      "sha256": "96a9e46388cef7a419710b10d5ef643110db300e2301d73ee91fcc33c2bf1d8d"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/ima-webkit/actual-completion.json",
+      "sha256": "7b58c25143dfe4239da6e91df7df8928f15a13bd80f6ff5604b1c0506b32ccdf"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-link-native-r1/independent-result/safe-summary-final.json",
+      "sha256": "e766f5ad3b68f9113399f271de2d4ccd17f01ffa3dad3340a9f87671f25dfe0b"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-type-alias-delta.json",
+      "sha256": "e0009b6a8c525a496fbcff4b524ffa22e93a4ac69ce30e22d9cab780024c1206"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/allocation-windows-strict-receipt.json",
+      "sha256": "e1156fa264ac48ba7f4dc7afa21b0eb3496a4c9b93cf11802699de0e47056718"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/allocation-windows-strict-r2-receipt.json",
+      "sha256": "4ebea34e3b8eb96964e7aec5ec355dbd318b7c3d76f5f321802de07869387766"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-challenge/source-review-r1.json",
+      "sha256": "140f65f810785550b7695eba0bcf5a1f846d2dc4612f2bfb6090edf00f04dc61"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-allocation-challenge/ci-wiring-review.json",
+      "sha256": "4a75f56973f590bb773e3843c66837247349ffe2a0c4eda192150fe815c7eeb5"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-link-native-r1/independent-result/fourth-changed-facets-addendum.json",
+      "sha256": "4d6c06794845ee26bd472eb997dc38f3b9bc82932c18bac9cb094e9ed7db006a"
     }
-  ]
+  ],
+  "initialAppliedSnapshot": {
+    "sourceCommit": "d004486a7d43adafdf63933cffc8fcd756e493fb",
+    "meaning": "appliedFiles above are this initial snapshot,not current Windows-fix hashes"
+  },
+  "updatedAtUtc": "2026-10-20T05:22:24.263925+00:00",
+  "pendingWindowsFix": {
+    "base": "616e33f3c6ad7c04bdeebe1a93f728704001753b",
+    "files": [
+      {
+        "path": "src-tauri/src/file_access/windows/material_link_snapshot.rs",
+        "sha256": "18ecd783d8ffb7857ef36fdba36e810e97609dec54dfe2e05e0519e171e79742"
+      },
+      {
+        "path": "src-tauri/src/file_access/windows/material_owned_link.rs",
+        "sha256": "c8f154ee61442ffb5b22dcf56dccf8f2d46a8d7f16e6a2c04b7fede969560164"
+      },
+      {
+        "path": "src-tauri/src/file_access/windows/material_target_link_groups.rs",
+        "sha256": "d9e67be35543bdbb88e9b45ff80620c534dc7a648feb53efee54786fa8b56248"
+      },
+      {
+        "path": ".github/workflows/windows-diagnostics.yml",
+        "sha256": "d39ebba74556a11045c41652fbf2e9f9ba9fb53093e3f30f61b7ffecb230b853"
+      }
+    ],
+    "scope": "Only2owned-link beforeAfter calls use9nonallocation facets;strict10facet/exact/internal snapshot/primaryAlias/links/later verify remain. Original4RED and304 unchanged;independent1 safetytest+20thCIgate added.",
+    "cross": "Initial type_complexity101,newlocaltransparenttypealias only;second all-target strict check0,828inputs stable. Cross compile is not execution.",
+    "independentReview": "noBlockingFinding;newtest and4actualRED rerun pending",
+    "nativeRun": "not dispatched yet",
+    "fullSeven": "not yet run on this delta"
+  }
 }

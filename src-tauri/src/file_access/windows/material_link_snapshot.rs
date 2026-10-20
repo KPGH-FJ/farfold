@@ -135,19 +135,27 @@ impl Snapshot {
             _memory: memory,
         })
     }
-    pub(in super::super) fn same_link_payload(&self, other: &Self) -> bool {
-        // Link count and ChangeTime legitimately change. No data/EA/security,
-        // full identity, allocation, size, Creation/Write time or attr is waived.
+    fn same_content_facets(&self, other: &Self) -> bool {
         self.stamp.identity == other.stamp.identity
             && self.stamp.size == other.stamp.size
             && self.stamp.regular == other.stamp.regular
-            && self.allocation == other.allocation
             && self.created == other.created
             && self.modified == other.modified
             && self.attributes == other.attributes
             && self.data_sha256 == other.data_sha256
             && self.ea == other.ea
             && self.security == other.security
+    }
+    pub(in super::super) fn same_link_payload(&self, other: &Self) -> bool {
+        // Strict comparisons still require the allocation layout to match.
+        // Link count and ChangeTime are checked by the separate exact fence.
+        self.allocation == other.allocation && self.same_content_facets(other)
+    }
+    pub(in super::super) fn same_after_owned_link(&self, other: &Self) -> bool {
+        // Only the successful, owned FileLinkInformation before/after boundary
+        // admits allocation-layout changes. No content, identity or basic
+        // metadata difference is waived; alias/existing-member fences stay exact.
+        self.same_content_facets(other)
     }
     pub(in super::super) fn exact(&self, other: &Self) -> bool {
         self.version == other.version && self.stamp == other.stamp && self.same_link_payload(other)
@@ -205,5 +213,83 @@ impl Snapshot {
             self.version,
             other.version
         );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn owned_link_transition_accepts_only_allocation_and_strict_checks_stay_strict() {
+        // Actual ordinary same-handle snapshots seed the comparison control.
+        // Only the owned fixture is read; mutations below are RAM-only samples,
+        // not a substitute for the four native FileLinkInformation regressions.
+        let temp = tempfile::tempdir().expect("owned snapshot fixture");
+        let path = temp.path().join("comparison.bin");
+        std::fs::write(&path, [0x5a; 300]).expect("write owned snapshot fixture");
+        let file = File::open(&path).expect("open owned snapshot fixture read-only");
+        let resident = Resident::new(records::RESIDENT_LIMIT);
+        let cancel = AtomicBool::new(false);
+        let mut work = WorkBudget::new(records::WORK_LIMIT);
+        let mut fresh = || {
+            Snapshot::take(&file, false, &mut work, &cancel, &resident)
+                .expect("actual ordinary snapshot")
+        };
+        let before = fresh();
+        let same = fresh();
+        assert!(before.same_after_owned_link(&same));
+        assert!(before.same_link_payload(&same));
+        assert!(before.exact(&same));
+        drop(same);
+
+        let mut allocation_only = fresh();
+        allocation_only.allocation = allocation_only
+            .allocation
+            .checked_add(4096)
+            .expect("bounded fixture allocation");
+        assert!(before.same_after_owned_link(&allocation_only));
+        assert!(allocation_only.same_after_owned_link(&before));
+        assert!(!before.same_link_payload(&allocation_only));
+        assert!(!before.exact(&allocation_only));
+        drop(allocation_only);
+
+        type FacetMutation = fn(&mut Snapshot);
+        let changes: [(&str, FacetMutation); 10] = [
+            ("volume", |value| value.stamp.identity.device ^= 1),
+            ("full file identity", |value| {
+                value.stamp.identity.inode ^= 1
+            }),
+            ("logical size", |value| value.stamp.size ^= 1),
+            ("regular file kind", |value| value.stamp.regular = false),
+            ("creation time", |value| value.created ^= 1),
+            ("last write time", |value| value.modified ^= 1),
+            ("attributes", |value| {
+                value.attributes ^= FILE_ATTRIBUTE_HIDDEN
+            }),
+            ("DATA", |value| value.data_sha256[0] ^= 1),
+            ("EA", |value| value.ea.sha256[0] ^= 1),
+            ("ordinary security", |value| {
+                let Security::Ordinary(security) = &mut value.security else {
+                    panic!("ordinary snapshot must not claim SACL coverage");
+                };
+                security.sha256[0] ^= 1;
+            }),
+        ];
+        for (name, change) in changes {
+            let mut changed = fresh();
+            change(&mut changed);
+            assert!(!before.same_after_owned_link(&changed), "{name}");
+            assert!(!before.same_link_payload(&changed), "{name}");
+            assert!(!before.exact(&changed), "{name}");
+            changed.allocation = changed
+                .allocation
+                .checked_add(4096)
+                .expect("bounded fixture allocation");
+            assert!(
+                !before.same_after_owned_link(&changed),
+                "{name} with allocation change"
+            );
+        }
     }
 }
