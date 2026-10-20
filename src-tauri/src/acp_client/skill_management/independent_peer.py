@@ -121,7 +121,9 @@ for line in sys.stdin:
             child = os.fork()
             if child == 0:
                 signal.signal(signal.SIGTERM, signal.SIG_IGN)
-                (root / "held-child.pid").write_text(str(os.getpid()))
+                pending = root / "held-child.pid.pending"
+                pending.write_text(str(os.getpid()))
+                pending.replace(root / "held-child.pid")
                 end = time.monotonic() + 5
                 while not (root / "release-child").exists() and time.monotonic() < end:
                     time.sleep(0.01)
