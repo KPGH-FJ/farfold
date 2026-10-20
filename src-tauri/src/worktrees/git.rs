@@ -283,7 +283,11 @@ fn execute_bounded(
             }
         };
         if let Some(status) = waited {
-            if child.group_alive() {
+            #[cfg(all(windows, test))]
+            let (group_alive, group_query) = child.group.active_with_observation();
+            #[cfg(not(all(windows, test)))]
+            let group_alive = child.group_alive();
+            if group_alive {
                 // Git should join its helpers. A surviving process is not a successful receipt.
                 stopped = Some(stopped.unwrap_or("unknown"));
                 child.terminate_group();
@@ -296,6 +300,8 @@ fn execute_bounded(
                     true,
                     stopped,
                 );
+                #[cfg(all(windows, test))]
+                group_query.emit(child.id(), status.code());
                 while child.group_alive() {
                     thread::sleep(Duration::from_millis(10));
                 }

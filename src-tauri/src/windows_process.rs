@@ -47,6 +47,19 @@ struct Job {
     name: String,
     leader: OnceLock<Handle>,
 }
+// One stack-owned result of the EXISTING Job accounting query, no new handle.
+struct ActivityQuery {
+    ok: i32,
+    info: JOBOBJECT_BASIC_ACCOUNTING_INFORMATION,
+    #[cfg(test)]
+    native_error: Option<u32>,
+}
+impl ActivityQuery {
+    fn not_confirmed_inactive(&self) -> bool {
+        // A failed query is not proof of process termination.
+        self.ok == 0 || self.info.ActiveProcesses != 0
+    }
+}
 impl Job {
     fn create() -> io::Result<Arc<Self>> {
         let mut random = [0u8; 16];
@@ -111,6 +124,9 @@ impl Job {
         }
     }
     fn active(&self) -> bool {
+        self.activity_query().not_confirmed_inactive()
+    }
+    fn activity_query(&self) -> ActivityQuery {
         let mut info: JOBOBJECT_BASIC_ACCOUNTING_INFORMATION = unsafe { std::mem::zeroed() };
         let ok = unsafe {
             QueryInformationJobObject(
@@ -121,8 +137,19 @@ impl Job {
                 std::ptr::null_mut(),
             )
         };
-        // A failed query is not proof of process termination.
-        ok == 0 || info.ActiveProcesses != 0
+        #[cfg(test)]
+        let native_error = if ok == 0 {
+            // Capture immediately: no other API/logging precedes GetLastError.
+            Some(unsafe { GetLastError() })
+        } else {
+            None
+        };
+        ActivityQuery {
+            ok,
+            info,
+            #[cfg(test)]
+            native_error,
+        }
     }
 }
 
@@ -407,6 +434,9 @@ pub(crate) fn run_if_requested() -> Option<i32> {
 #[cfg(test)]
 #[path = "windows_process/behavior_tests.rs"]
 mod behavior_tests;
+#[cfg(test)]
+#[path = "windows_process/git_activity_observation_tests.rs"]
+pub(crate) mod git_activity_observation;
 #[cfg(test)]
 mod tests {
     use super::*;

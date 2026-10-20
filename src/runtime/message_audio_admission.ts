@@ -22,11 +22,11 @@ function requireAudio(value: unknown): asserts value {
 interface StoredFrameFormat {
   align: number;
   sampleRate: number;
-  imaBlockFrames?: number;
+  encodedBlockFrames?: number;
 }
 
 /** Known PCM/float and byte-per-channel G.711 stored-frame layouts, plus a
- * separate selected IMA block-prefix geometry. Other compressed formats never
+ * separate selected IMA/MS-ADPCM block-prefix geometry. Other compressed formats never
  * inherit the PCM/G.711 byte/sample relationship. */
 function storedFrameFormat(
   reader: MessageRasterReader,
@@ -51,6 +51,37 @@ function storedFrameFormat(
     requireAudio(reader.u32le(at + 8) === sampleRate * align);
     return { align, sampleRate };
   }
+  if (tag === 2) {
+    // Selected ordinary Microsoft ADPCM, not XAudio2's modified codec.
+    // Microsoft Multimedia Data Standards Update (1994), printed pp22-24:
+    // tag2/cb32, seven standard coefficient pairs, seven header bytes/channel,
+    // then four-bit codes. Unknown packing/extensions retain compatibility.
+    // https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf
+    if (
+      length !== 50 ||
+      reader.u16le(at + 16) !== 32 ||
+      reader.u16le(at + 14) !== 4 ||
+      reader.u16le(at + 20) !== 7
+    )
+      return null;
+    const channels = reader.u16le(at + 2);
+    if (channels !== 1 && channels !== 2) return null;
+    const coefficients = [
+      256, 0, 512, -256, 0, 0, 192, 64, 240, 0, 460, -208, 392, -232,
+    ];
+    for (let index = 0; index < coefficients.length; index++) {
+      if (reader.u16le(at + 22 + index * 2) !== (coefficients[index] & 0xffff))
+        return null;
+    }
+    const sampleRate = reader.u32le(at + 4);
+    const align = reader.u16le(at + 12);
+    requireAudio(sampleRate > 0 && align >= 7 * channels);
+    const encodedBlockFrames = 2 + ((align - 7 * channels) * 2) / channels;
+    // A different declared count can describe another padding/packing layout;
+    // do not call it invalid or turn block capacity into an exact duration.
+    if (reader.u16le(at + 18) !== encodedBlockFrames) return null;
+    return { align, sampleRate, encodedBlockFrames };
+  }
   if (tag === 0x11) {
     // Selected ordinary 4-bit mono/stereo IMA-ADPCM. Other extensions and
     // packing variants stay uncovered. Microsoft Multimedia Data Standards
@@ -69,10 +100,10 @@ function storedFrameFormat(
     const channelWordBytes = 4 * channels;
     requireAudio(sampleRate > 0);
     requireAudio(align >= channelWordBytes && align % channelWordBytes === 0);
-    const imaBlockFrames = 1 + (align / channelWordBytes - 1) * 8;
-    requireAudio(reader.u16le(at + 18) === imaBlockFrames);
+    const encodedBlockFrames = 1 + (align / channelWordBytes - 1) * 8;
+    requireAudio(reader.u16le(at + 18) === encodedBlockFrames);
     // nAvgBytesPerSec is a rate hint, not a linear bytes/sample relation.
-    return { align, sampleRate, imaBlockFrames };
+    return { align, sampleRate, encodedBlockFrames };
   }
   if (tag !== 1 && tag !== 3 && tag !== 0xfffe) return null;
   requireAudio(length >= 16);
@@ -105,7 +136,7 @@ function storedFrameFormat(
 /** Classic little-endian RIFF/WAVE declarations only. Caller must first enforce
  * canonical Base64 and the existing per-file byte limit. Cross-audio-MIME
  * signatures receive the same check. No URL, full binary buffer or audio
- * decoder is created. Selected ordinary IMA-ADPCM receives only a conservative
+ * decoder is created. Selected ordinary IMA/MS-ADPCM receives only a conservative
  * complete-prefix budget; exact/final-block duration remains uncovered.
  * RIFX/RF64/Wave64, other compressed WAVE, wavl, playlist timing
  * and other containers remain uncovered. A playlist cannot hide a known
@@ -160,7 +191,7 @@ export function messageAudioAdmission(
     }
     requireAudio(fmtSeen && dataSeen);
     if (!format || dataBytes === null) return "notCovered";
-    if (format.imaBlockFrames !== undefined) {
+    if (format.encodedBlockFrames !== undefined) {
       // Last-block padding/fact clipping and partial tails are not established
       // here. Only complete blocks before the final complete block contribute
       // this conservative encoded-prefix sample/work lower bound. A fact count
@@ -171,7 +202,7 @@ export function messageAudioAdmission(
         Math.floor(dataBytes / format.align) - 1,
       );
       if (
-        prefixBlocks * format.imaBlockFrames >
+        prefixBlocks * format.encodedBlockFrames >
         format.sampleRate * MAX_MESSAGE_AUDIO_SECONDS
       )
         return "audioTooLong";
