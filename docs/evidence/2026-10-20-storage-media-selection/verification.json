@@ -1,0 +1,331 @@
+{
+  "schema": 1,
+  "kind": "storage-media-selection-internal-delivery",
+  "updatedAtUtc": "2026-10-20T04:01:28.752835+00:00",
+  "sourceCommit": "ca4153edd6a7249838e475b73b06d9e776c22f2e",
+  "engineering": {
+    "state": "allSevenPassed",
+    "actualReceipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/engineering-media-selection-cohort/verification.json",
+      "sha256": "a7fe696c2b7f5bc58b0415c12b76860eb1c707e64579effaba31fb5f232a32d8"
+    },
+    "legacyActualSeven": {
+      "path": "output/2026-10-20-storage-and-media-continuation/engineering-media-selection-cohort/legacy-seven.json",
+      "sha256": "9f1054c74ca29b13cb7b358f3237b45f294c645f5bc56981ee3936b7ada2b77d"
+    },
+    "stableInputs": 18401,
+    "frontend": {
+      "files": 623,
+      "passed": 8190,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2117,
+      "failed": 0,
+      "ignored": 6
+    },
+    "scope": "Listed product/design/docs/script roots and literal Rust includes; dependency runtime contents and generated Rust OUT_DIR are not a reproducibility archive.",
+    "sourceFreeze": {
+      "path": "output/2026-10-20-storage-and-media-continuation/source-freeze-ca4153edd-r2.json",
+      "bytes": 344178,
+      "sha256": "7a10ed057257f02253e63f39f1aa39325a78d9c000ad819d6b286f18982c73dd"
+    },
+    "compositeSourceReview": {
+      "path": "output/2026-10-20-storage-and-media-continuation/composite-source-review-r1/source-review.json",
+      "bytes": 12469,
+      "sha256": "9d3d87daa29d5e3a5f40ab9839538fe3aa7311be2907e8c10c9e01976f684146"
+    },
+    "finalDocumentationAlignedAfterActualSeven": true,
+    "finalDocumentationScope": "The four final current docs are edited after engineering; their final bytes are checked separately. The18401 frozen engineering input set is not claimed to equal all later documentation."
+  },
+  "candidate": {
+    "state": "preparedThenDelivered",
+    "actualReceipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/candidate-output/candidate.json",
+      "sha256": "29adb3427cc093540e8dedcaa1fa36f9e229d00b26079aa3575d7533a469d483"
+    },
+    "binarySha256": "4761be1a553aadde37980ae790f6841c1a75e5d29b931fd1bb4ea2e2b51e7788",
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-20-storage-and-media-continuation-ca4153ed/Farfold-0.1.7-ca4153ed.zip",
+      "sha256": "8920e0b2c270568d2422b8a9c5cff33c7682116daaf9a22bcc6c230f5aad9ba7"
+    },
+    "buildExit": 0,
+    "independent9Receipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/independent/review.json",
+      "bytes": 4250,
+      "sha256": "fac9992a069f54d808e24e166932ce8574f498f8751091b2cd72891a0f26c159"
+    },
+    "installationReceipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/install-result.json",
+      "bytes": 11068,
+      "sha256": "9c6e6a124abdf2ee67538a449e29ebd00eef30f0320c645c895425414470153e"
+    }
+  },
+  "formalDelivery": {
+    "state": "installedAndExistingHistoryReadOnlyVerified",
+    "sourceCommit": "ca4153edd6a7249838e475b73b06d9e776c22f2e",
+    "binarySha256": "4761be1a553aadde37980ae790f6841c1a75e5d29b931fd1bb4ea2e2b51e7788",
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "signature": "internalAdhocNotPublicSigningOrNotarization",
+    "independentInstalled10Receipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "0352b53c4427ee7302ed7a22fc701d2710a738c7e12ae6867732ed343c749f94"
+    },
+    "beforePreinstallAfterReceipts": [
+      {
+        "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/retention-before-receipt.json",
+        "bytes": 5690,
+        "sha256": "eca8c6885b845a0b70786dc0d9530b2d8e8af1f50775a3ecdf354db70dc4f197"
+      },
+      {
+        "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/retention-preinstall-receipt.json",
+        "bytes": 2795,
+        "sha256": "12efd6009bb12fecc38255bbff61cefc7d7bc9a53fc33fb9209e3dcf3c4d74b1"
+      },
+      {
+        "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/retention-after-receipt.json",
+        "bytes": 2790,
+        "sha256": "4bde9b8c5618531e6ccbfe9fbd7d24216e365abbfbc05440da98bb779f0250ba"
+      }
+    ],
+    "strictManifestEquality": {
+      "strict": true,
+      "countEach": 232530,
+      "sha256": "1ceca599bd088d41354a12d677f22395578a625f0c60e07b0cd0e775a25a4637"
+    },
+    "duplicateCleanupReceipt": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "0dbf210c98c0f6cfa53c97600911af8345e544196a827c43a532aae91880a0f2"
+    },
+    "installedUI": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/installed-ui-readonly-observation.json",
+      "bytes": 4890,
+      "sha256": "95b128277fd391dc5eaf30a73bf1af3772a576e90a5ef631e1f913feb911cb62"
+    },
+    "postUseDataComparison": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/install/post-use-analysis/safe-summary.json",
+      "bytes": 4754,
+      "sha256": "e661613cd1ab627bf940887597fac692b7a5c7d231576d166a8ee276ece69bd5"
+    },
+    "postUseManifest": {
+      "beforeEntries": 232530,
+      "afterEntries": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 8,
+      "modifiedCategories": {
+        "rawMetadataWalOrShm": 2,
+        "otherAppData": 2,
+        "webkit": 4
+      },
+      "allUnknownRecordFieldsCompared": true
+    },
+    "postUseTables": {
+      "agents": {
+        "beforeCount": 40,
+        "afterCount": 40,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 39,
+        "changedOldRows": 1,
+        "changedColumns": {
+          "updated_at": 1
+        }
+      },
+      "sessions": {
+        "beforeCount": 138,
+        "afterCount": 138,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 138,
+        "changedOldRows": 0,
+        "changedColumns": {}
+      },
+      "settings": {
+        "beforeCount": 54,
+        "afterCount": 54,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 54,
+        "changedOldRows": 0,
+        "changedColumns": {}
+      },
+      "dismissed_sessions": {
+        "beforeCount": 173,
+        "afterCount": 173,
+        "added": 0,
+        "removed": 0,
+        "oldWholeRowsExact": 173,
+        "changedOldRows": 0,
+        "changedColumns": {}
+      }
+    },
+    "wholeUnsentExact": true,
+    "wholeComposers": {
+      "beforeType": "dict",
+      "afterType": "dict",
+      "wholeStrictExact": true,
+      "beforeCount": 10,
+      "afterCount": 10,
+      "keySetExact": true,
+      "oldWholeEntriesExact": 10,
+      "added": 0,
+      "removed": 0
+    },
+    "wholeAgentSetupExact": true,
+    "writerAttribution": "unknown for every difference",
+    "noFreshPromptOrModelChangeByOperator": true,
+    "notProtocolZeroClaim": true,
+    "unknownWorkStillUnknown": true,
+    "independentPostUseEvidenceReview": {
+      "path": "output/2026-10-20-storage-and-media-continuation/formal-delivery/independent-post-ui-evidence-review-r1/source-review.json",
+      "sha256": "acfdf2a52a8df85caec7c1c620fd35b4006f4bbafe590d43e071ff5010548ebf"
+    }
+  },
+  "previousVerifiedFormal": {
+    "sourceCommit": "0d2eb617440417c8611231393bb53b111938acd5",
+    "binarySha256": "6b25dada85e3cf627ec74e2b4db6d3b688cafcf10386b48842555f3e2bd419ae",
+    "record": "docs/evidence/2026-10-19-recovery-render-continuation/verification.json",
+    "notFreshAppObservationByDraftAuthor": true
+  },
+  "P13": {
+    "state": "partial",
+    "recognition": "Only ordinary18-byte WAVEFORMATEX tag6/7 cbSize0 G711 stored sample relationships; existing16MiB/600s and shared preview budgets retained. Unknown extensions/other codec layouts remain notCovered.",
+    "nativeControls": {
+      "cases": 6,
+      "state": "selectedCoreAudioFullEofPcmControlsPassed",
+      "mono8000HzOnly": true,
+      "receipt": {
+        "path": "output/2026-10-20-p13-g711-wave-budget/native-run1/verification.json",
+        "sha256": "6563c64cf6dfa4f442d661fcd999079b46caafa0268502378f3a4f2515271d62"
+      }
+    },
+    "oldProduction": {
+      "tests": 10,
+      "passed": 4,
+      "newCoverageExpectationFailed": 6,
+      "receipt": {
+        "path": "output/2026-10-20-p13-g711-wave-budget/red-run1/classification.json",
+        "sha256": "99587913f0e2c2d898d05a296daa40bf4347942113509c51bddf4f7a09679b88"
+      },
+      "notPreviouslyGuaranteedPolicyBypass": true
+    },
+    "newRegistered": {
+      "tests": 23,
+      "passed": 23,
+      "receipt": {
+        "path": "output/2026-10-20-storage-and-media-continuation/g711-registered-green-r1-receipt.json",
+        "sha256": "f6e85e6f95303c41e7054bfe4487dbce64db4311be1a18284c2ffd3c932b799a"
+      }
+    },
+    "affected": {
+      "files": 27,
+      "tests": 597,
+      "passed": 597,
+      "receipt": {
+        "path": "output/2026-10-20-storage-and-media-continuation/g711-media-affected-r1-receipt.json",
+        "sha256": "3f8eb6971ce97e8def0acdb21389bfef15a7711b6c7853b488a226435071d108"
+      }
+    },
+    "reviews": [
+      {
+        "path": "output/2026-10-20-storage-and-media-continuation/g711-root-application-r1/source-review.json",
+        "sha256": "f1014456012ce825be52791667287629442090bb58f9c954c910c621f5694d63"
+      },
+      {
+        "path": "output/2026-10-20-p13-g711-wave-budget/independent-native-review-r1/source-review.json",
+        "sha256": "cee65fbea0c509e13068d1364303efadc3fa3c1d555655bfe171467cf4e28245"
+      }
+    ],
+    "notProven": [
+      "WebKit playback",
+      "audibility",
+      "actual Agent-returned media",
+      "decoder or transport RSS hard bound",
+      "all formats and layouts",
+      "wholeP13"
+    ]
+  },
+  "Windows": {
+    "run": 39364443946,
+    "head": "217e2e2e750e0bf64f060dd4f79beb0808893d63",
+    "job": 118437908497,
+    "state": "completedFailure",
+    "rawAudit": {
+      "path": "output/2026-10-20-storage-and-media-continuation/windows-selection-native-r1/independent-result/safe-summary-final.json",
+      "sha256": "df305d509b80038119631adbcc66c91fa0612c0332783dacecbe9813d3689414"
+    },
+    "selectedPositiveRust": {
+      "total": 304,
+      "passed": 256,
+      "failed": 48,
+      "ignored": 0
+    },
+    "newOrdinary32": {
+      "total": 32,
+      "passed": 27,
+      "failed": 5,
+      "ignored": 0
+    },
+    "newManual10": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "ignored": 0
+    },
+    "old149": {
+      "total": 149,
+      "passed": 128,
+      "failed": 21,
+      "ignored": 0
+    },
+    "continuation30": {
+      "total": 30,
+      "passed": 25,
+      "failed": 5,
+      "ignored": 0
+    },
+    "selectionGaps": [],
+    "all304ActuallyAttempted": true,
+    "strictNegativeSeparate": {
+      "outerPassed": 0,
+      "outerFailed": 1,
+      "actualExit": 101,
+      "inner18Owner17Complete": true,
+      "isTestPass": false
+    },
+    "Git5AndMatrix8AreSeparateObservationsNotAllGitAdmission": true,
+    "doesNotCoverLaterG711Source": true,
+    "oldFailedRunsPreserved": true
+  },
+  "boundaries": [
+    "29 Agents x eight standards and all151 original requirement titles/completion conditions remain unchanged.",
+    "NEW-24 affected real sends remain paused.",
+    "Source tests, fixtures, native samples, candidate, installed App, real Agent and whole-product acceptance are distinct.",
+    "No documentation update can reclassify earlier failures, user-data differences, unknown writers, permissions or source gaps."
+  ],
+  "authority": "Only plans/agent-access.md schedules;29x8 and151 original titles/conditions unchanged; NEW-24 affected fresh sends remain paused.",
+  "storage": {
+    "state": "exactGeneratedUnsharedObjectsRetired",
+    "files": 1192,
+    "allocatedBytesOfRetiredObjects": 2449252352,
+    "observedFreeBytesBefore": 3231346688,
+    "observedFreeBytesAfter": 5681500160,
+    "scope": "Project-owned nlink1 MachO objects only; formal App, Agent data/config, backups, evidence, shared objects and fresh linked test anchor retained; no exclusive APFS attribution or continuous guarantee",
+    "retirement": {
+      "path": "output/2026-10-20-storage-and-media-continuation/storage-unshared-objects-r1/retirement.json",
+      "bytes": 920,
+      "sha256": "e0591f9319e739dca345481c32ab20b0b33f57003da0fbf11eb1c62dc91a9192"
+    },
+    "independentReview": {
+      "path": "output/2026-10-20-storage-and-media-continuation/storage-unshared-objects-r1/independent-cleanup-review.json",
+      "bytes": 4742,
+      "sha256": "784c9afc93445f3a73dda8baf03890bb776a8e069c36663fe854951407bb5f84"
+    }
+  }
+}
