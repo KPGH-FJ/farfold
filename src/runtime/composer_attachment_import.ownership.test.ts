@@ -30,7 +30,7 @@ const key = "new";
 const other = "session:clipboard-save-other";
 const turn = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 const tasks: Promise<void>[] = [];
-const inputs: ReturnType<typeof selected>[] = [];
+const inputs: { finish(): Promise<void> }[] = [];
 function selected(name = "owned-pending.png") {
   const file = new NodeFile(
     [Buffer.from(PNG_IMAGE_TEST_DATA, "base64")],
