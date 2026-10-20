@@ -1,0 +1,291 @@
+{
+  "kind": "CompletedSelectedImageAdmissionAndWithdrawnDraftSaveWaitStage",
+  "sourceCommit": "34a0783b1b2b3555899306292c5c7cdc4e05502d",
+  "baseInstalledSource": "2ad9a1fa40d466c108bc875517534110cea0c9b3",
+  "scope": "Selected P13/P16/P01/P06/P07 common resource/input lifecycle defects; not full items or29x8 acceptance. Final engineering is on functional commit before final docs.",
+  "changes": [
+    "Ordinary file image metadata and outer bounds precede common busy admission. Idle uses one byte expansion/inspection, checks exact file size and retains original MIME/format/pixel/late-result guards. PDF path unchanged.",
+    "Producer-local unfinished exact-object ownership releases save wait only for withdrawn inputs; retained future inputs, other drafts and quit locks remain protected. The original File/native task still settles; retired results cannot regain ownership. draft_storage byte unchanged."
+  ],
+  "checks": {
+    "affected": {
+      "files": 7,
+      "passed": 50,
+      "boundary": "affected-r2 before subsequent type-only annotation correction; unchanged runtime/assertions included in final full7."
+    },
+    "firstSeven": {
+      "source": "126954b9e8688822a04c2ceb1b6f3965c67ab612",
+      "session": 66546,
+      "completionChunk": "4d6f38",
+      "naturalExit": 1,
+      "passed": 5,
+      "failed": ["type", "build"],
+      "cause": "TS2502/TS7023 circular test fixture inference; original retained."
+    },
+    "freshSeven": {
+      "session": 68367,
+      "completionChunk": "5738fb",
+      "naturalExit": 0,
+      "inputCount": 18422,
+      "frontendFiles": 633,
+      "frontendPassed": 8330,
+      "rustPassed": 2117,
+      "rustExistingIgnored": 6,
+      "allSevenPassed": true
+    },
+    "sourceReview": {
+      "productionMembers": 2103,
+      "freezeFiles": 2132,
+      "result": "noBlockingFinding",
+      "method": "Inherited Git blob/mode/hash join plus selected8 source/test and current authority independent review; not all-files fresh manual review."
+    },
+    "actualWebKit": {
+      "session": 36784,
+      "completionChunk": "73cc2a",
+      "naturalExit": 0,
+      "version": "26.5",
+      "rows": 3,
+      "checks": 9,
+      "inputPinsIncludingBinding": 69,
+      "cleanupComplete": true,
+      "boundary": "Genuine Image/File APIs completed before delivery-only hold; explicit settings mock. Not formal App/Agent/native-IO-busy/physical-stop/RSS proof."
+    },
+    "candidateBuild": {
+      "session": 65533,
+      "completionChunk": "497713",
+      "naturalExit": 0
+    },
+    "candidate9": {
+      "completionChunk": "1bced4",
+      "passed": 9,
+      "naturalExit": 0
+    },
+    "installation": {
+      "session": 34297,
+      "completionChunk": "2c1833",
+      "naturalExit": 0
+    },
+    "installed10": {
+      "session": 99989,
+      "completionChunk": "8043af",
+      "passed": 10,
+      "naturalExit": 0
+    },
+    "cleanup": {
+      "completionChunk": "ecc00a",
+      "naturalExit": 0,
+      "exactDuplicateFilesRemoved": 5
+    }
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "34a0783b1b2b3555899306292c5c7cdc4e05502d",
+    "binarySha256": "bf7107b08e2770ca5b2910084b9106547ad61233f848e3a765a92af9e399b04a",
+    "phase": "installedVerifiedNotLaunched",
+    "signature": "Internal ad-hoc; public signing/notarization/distribution postponed.",
+    "archive": "src-tauri/target/internal-candidate/2026-10-20-resource-lifecycle-next-34a0783b/Farfold-0.1.7-34a0783b.zip",
+    "archiveSha256": "e0f101ecb44d063b7d7128f53ec9ac1ab3433bdc7747fd5c876f5683f17cbdd8",
+    "archiveBytes": 15901017
+  },
+  "data": {
+    "captures": 3,
+    "entriesEach": 232530,
+    "strictSameManifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "metadataBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "sameExactObserverSha256": "45a821e996246446dcad7f3f97c8a8e0883cd424a448f67776028c0cbb51932c",
+    "normalQuitEvidence": null,
+    "boundary": "Three closed-observed endpoints only; already closed. Not continuous zero writes or all Agents idle. Prior differences, unknown writers/work and reopen cause remain open."
+  },
+  "remaining": [
+    "NEW-24 affected new real sends paused; actual selected effective permissions and newer external official versions unknown.",
+    "Real returned media/formal playback/retry/retirement, historical target and old short-audio failures remain open.",
+    "New-path system clipboard/desktop drop, formal file preview and actual save/quit/restart remain unverified by these controls.",
+    "Full P13/P16 formats/native decode/transport/RSS/long-term use and29x8 remain open.",
+    "Windows original304:262pass42fail plus separate safety1; not rerun or reattributed."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/start.json",
+      "bytes": 901,
+      "sha256": "5625e6d62226017f9d503fb24302642ad39d0eeade99a6304fbf1d09fc5cac1e"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/native-audit/visual-busy-red/execution.json",
+      "bytes": 2788,
+      "sha256": "d4725f0ce45d11908c204f832a18fc735e158277d96a9cb1bec14b853a2d5536"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/draft-save-retirement-r1/execution-completion.json",
+      "bytes": 12547,
+      "sha256": "5108b9b5eca8becda670375412565e71e545066047e81f492a7168e15442869e"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/affected-r2/execution.json",
+      "bytes": 1076,
+      "sha256": "1d144dc2dd1117f6b0a1c5cf429d5ed588be72cae0f54e8bc07b21efce41f628"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/engineering/verification.json",
+      "bytes": 5892,
+      "sha256": "3d79fa525f789cafdb5cba21027c19d7292aeb27e4ca93ffa0558921b543d5ac"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/engineering/02.log",
+      "bytes": 528,
+      "sha256": "b9892adb2805b9e5abf983a613a116c8fcea57506f3d8e56c732ee189a0b776f"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/type-failure-correction/original-full-seven-completion.json",
+      "bytes": 280,
+      "sha256": "9fb939b07d1af0c02a528b9b52fe589920d0909683d894daab4820d82e635e6e"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/visual-admission-independent-review-r2/type-delta-review.json",
+      "bytes": 2557,
+      "sha256": "ed4b81f77f6c4a91e4361d2c8bd22825cc5e482445da9fc930734e36b9d475c2"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/engineering-r2/verification.json",
+      "bytes": 5910,
+      "sha256": "79cd427efc34149b414c947977fa81f16add20609d01391bd112818db83a8379"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/engineering-r2/legacy-seven.json",
+      "bytes": 5800419,
+      "sha256": "29927266c950e1286204d4b2c28c7e9501c43d4d41063d299aa8c5386f1b8c99"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/final-source-review/actual-seven-completion.json",
+      "bytes": 404,
+      "sha256": "5fbf82841f6e9b856b21b5246f285861af1651cd58fe0b3141f12223a1a90c91"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/final-source-review/source-freeze-34a0783b.json",
+      "bytes": 346662,
+      "sha256": "bae2f7ba60f2621836afaf33d8b51b4eb0df4401f3c163e2b8508742d23cfc26"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/final-source-review/source-review.json",
+      "bytes": 20110,
+      "sha256": "7d0c8b9bfe9ffdd5befaee1de4a2262f8bfa38a694b6e14ea220149b594e32a6"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/actual-composite-readback-r1/review.json",
+      "bytes": 7018,
+      "sha256": "46d3b0208c63a394de05722d861628769b26f490c93ac718233d138e3a914684"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/current-authority-review-r2.json",
+      "bytes": 14321,
+      "sha256": "5391a58a08ed24154c4a9caecd220cf52c556bdc905243f1b49f28e7f435ec2c"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/visual-admission-independent-review-r2/source-review.json",
+      "bytes": 11285,
+      "sha256": "f711912d74e4b7a20bfcc8d026281466c2a15d877c5307ef7defeb6c66e4a635"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/clipboard-owner-review/actual34-source-join.json",
+      "bytes": 2318,
+      "sha256": "09f338a2a0c93becbfbad9023f651eb03a31e6a491f2391be8e0c79d392c7298"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/browser/preparation-index.json",
+      "bytes": 4950,
+      "sha256": "7260688424e0b69280697d4aaa0d65ed3d894583172d7cc797555588a87838a3"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/browser/bound-preparation.json",
+      "bytes": 8620,
+      "sha256": "30b0a276074986bb70f31b371a35bf005cfbdfc330c81494bec37afe94d82565"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/browser/execution-receipt.json",
+      "bytes": 8380,
+      "sha256": "365b6689b045e7a661ba02f880feab900d9b54c423b3f4208920928a2550ceee"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/browser/verification.json",
+      "bytes": 29400,
+      "sha256": "869cd9c8026c42fdbe39e1e2e3d7577faacffd7a0303a5ecfa984efc9af9fe83"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/browser-actual-independent-review-r1/review.json",
+      "bytes": 4997,
+      "sha256": "f47400627f788973f763772c7547ad7b2077c0d5bd1bb324cf9366fccf5b7622"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/helper-migration-independent-review-r1/review.json",
+      "bytes": 3942,
+      "sha256": "563c3c924f4e089b4b8a35f815f6fb4261ea1d884b9242f5b87c997fb46d01c0"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/actual-observer-independent-review-r2/review.json",
+      "bytes": 3918,
+      "sha256": "c566584bd91ce55bc3f904cc54f0fda28a23d20af4e100025ba3f2485cd63ad1"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/lifecycle-audit/actual-binder-independent-review-r1/review.json",
+      "bytes": 5419,
+      "sha256": "25077e467d372f769bcb04c64ad92252ad6f3bff0887a4ac3818c24d4eb66c96"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/sealer-independent-review/review.json",
+      "bytes": 2694,
+      "sha256": "882fb62e3eeac14d601987b5efff409d049954f30aced073e81c1b95eb52997d"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/p13-formal-evidence-conditions.json",
+      "bytes": 13196,
+      "sha256": "21869307cfc7d5b8cab880a2b2bd274f391df58eba375f66808552682f58ba8b"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 250089,
+      "sha256": "948739ee96be459959f042ffdd3190ca5169393851d3cca6fae27be5c47761a4"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/independent/review.json",
+      "bytes": 4243,
+      "sha256": "3197ed333175ab59c905450a60da4e9026f8c7134e4dbf9763f4bd78b856763b"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "2a4f22f0f9acd8929c9478a6dceac33fa46435e3d3375a7e635653bfa4ea279f"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "20ebb3ba8708918cad998edf1f4bb7bbd5c7888ce8f3b5ed38d0c5700f47f135"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "ed63c7458d2143bc5a573767e9da019ae43da746da1284c6ce2e6280a44a408c"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/install-result.json",
+      "bytes": 10734,
+      "sha256": "2ad479a3a5081840a6a3244d8cf1d005183fe010fe4773f0e0f485e47d9eb844"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "e60265459dbf361974c8c33c65b5e3e59c02658143b7c7255c26e57952add83f"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "4466d0af23698a30664dd38746abaaebb2440524640ede0a88aa35d750a8d5b6"
+    },
+    {
+      "path": "output/2026-10-20-resource-lifecycle-next/formal-delivery/binding-snapshots/cleanup-final.json",
+      "bytes": 956,
+      "sha256": "b109b4d30d8c463b6478bada596922c9ac5398d6d7765437cb58c93580cb51df"
+    }
+  ]
+}
