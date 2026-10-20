@@ -118,7 +118,7 @@ export function VisualFilePreview({
             owner: operation,
           });
       } else {
-        const checked = checkedVisualPreview(preview.file, preview);
+        checkedVisualPreviewMetadata(preview.file, preview);
         if (!owns() || !canvas.current) return;
         // The optional selection stage is fit-content and has no intrinsic
         // width while its canvas is hidden. Measure the stable content pane.
@@ -130,7 +130,7 @@ export function VisualFilePreview({
             (Number.parseFloat(style?.paddingRight ?? "0") || 0)
           : 800;
         await renderPdfPage(
-          checked.bytes,
+          () => checkedVisualPreview(preview.file, preview).bytes,
           canvas.current,
           page,
           Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2),

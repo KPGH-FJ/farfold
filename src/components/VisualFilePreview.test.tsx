@@ -166,11 +166,25 @@ it("does not display an image whose decode finishes after leaving this preview",
   expect(render().html).not.toContain("<img");
 });
 it("does not start decoding invalid bytes and never displays a raw parser error", async () => {
+  const actual = await vi.importActual<typeof import("../runtime/pdf_preview")>(
+    "../runtime/pdf_preview",
+  );
+  const worker = vi.fn();
+  vi.stubGlobal("Worker", worker);
+  vi.stubGlobal("OffscreenCanvas", class {});
+  vi.stubGlobal("ImageBitmap", class {});
+  h.render.mockImplementation(actual.renderPdfPage);
   props.preview = { ...props.preview, data: btoa("script") };
-  render();
-  await drain();
-  expect(h.render).not.toHaveBeenCalled();
-  expect(render().html).toContain(S.failed);
+  try {
+    render();
+    await drain();
+    // The real render owner prepares bytes after admission, before any worker.
+    expect(h.render).toHaveBeenCalledOnce();
+    expect(worker).not.toHaveBeenCalled();
+    expect(render().html).toContain(S.failed);
+  } finally {
+    vi.unstubAllGlobals();
+  }
 });
 it("shows only a fixed password outcome, never library details", async () => {
   h.render.mockRejectedValue(new Error(S.password));

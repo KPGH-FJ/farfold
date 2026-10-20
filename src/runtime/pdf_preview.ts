@@ -10,7 +10,7 @@ import { tryAcquirePdfWorkerSlot } from "./pdf_worker_slots";
 /** The app receives pixels only. Parsing and drawing both live in the owned
  * worker tree, without a document, app API, annotation DOM or PDF actions. */
 export async function renderPdfPage(
-  bytes: Uint8Array,
+  bytes: Uint8Array | (() => Uint8Array),
   canvas: HTMLCanvasElement,
   pageNumber: number,
   displayWidth: number,
@@ -31,6 +31,10 @@ export async function renderPdfPage(
   let timer: ReturnType<typeof setTimeout> | undefined;
   let cancel: (() => void) | undefined;
   try {
+    // Prepare file bytes only after owning a render slot. Preparation failure
+    // retires this same slot without ever starting a worker tree.
+    const data = (typeof bytes === "function" ? bytes() : bytes).slice();
+    if (signal.aborted) throw new Error(S.cancelled);
     await new Promise<void>((resolve, reject) => {
       let settled = false;
       const fail = (message: string) => {
@@ -107,7 +111,6 @@ export async function renderPdfPage(
           bitmap.close();
         }
       });
-      const data = bytes.slice();
       worker.postMessage(
         {
           data,
