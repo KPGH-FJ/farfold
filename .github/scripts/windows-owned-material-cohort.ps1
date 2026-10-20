@@ -79,7 +79,8 @@ foreach ($case in $selected) {
   $stdout = Join-Path $raw ($prefix + '.stdout.log')
   $stderr = Join-Path $raw ($prefix + '.stderr.log')
   $started = [DateTime]::UtcNow.ToString('o')
-  $selectionArguments = if ($manualMode) { @('--ignored', '--exact') } else { @('--exact') }
+  $selectionArguments = @('--exact')
+  if ($manualMode) { $selectionArguments = @('--ignored', '--exact') }
   & $binary $case.test @selectionArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
   $testExit = $LASTEXITCODE
   $finished = [DateTime]::UtcNow.ToString('o')
