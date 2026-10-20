@@ -1,0 +1,354 @@
+{
+  "kind": "CompletedSelectedClipboardPreparationAndAudioSaveWaitStage",
+  "sourceCommit": "5008caaa39f2e725917316a5d47e760151c171d2",
+  "baseInstalledSource": "34a0783b1b2b3555899306292c5c7cdc4e05502d",
+  "scope": "Selected P13/P01/P06/P08 common resource and unsent-input lifecycle increments; not full items or29x8 acceptance. Full7 is actual functional source before final docs.",
+  "changes": [
+    "Clipboard candidates share2 unfinished File read/encoding preparations across batches. Cheap size errors precede capacity; busy refuses before arrayBuffer/btoa. Withdrawal releases save ownership, not this capacity. Actual preparation completion returns its slot; retry remains explicit. Native read2 and decode2 stay separate and unchanged.",
+    "Audio review first read and confirmation reread contribute to saving only while that exact target still owns input. Cancel/removal retires save waits; only a still-owned attachment restores its original object, and removed attachments are never recreated. Actual read and native permit are untouched. Late verified replies cannot apply or notify saved. Real Document cancellation and shared draft_storage remain unchanged.",
+    "Two permanent regression files add11 cases; actual read promise observation closes test teardown gaps without replacing implementations or results.",
+    "H15 progress wording distinguishes historical Windows264/40 from latest262/42; both original runs retained, no production fix or attribution claim."
+  ],
+  "checks": {
+    "affected": {
+      "files": 6,
+      "passed": 55,
+      "typecheckPassed": true,
+      "executionSession": 82208,
+      "naturalCompletionChunk": "dcb5f8",
+      "naturalExit": 0
+    },
+    "originalRed": {
+      "clipboard": {
+        "passed": 2,
+        "failed": 2,
+        "chunk": "dd11c4"
+      },
+      "audio": {
+        "passed": 2,
+        "failed": 2,
+        "chunk": "83a3cf"
+      },
+      "boundary": "Semantic failure originals retained; Node File returns and native IPC audio delivery are explicitly controlled."
+    },
+    "originalAssertionGreen": {
+      "clipboard": 4,
+      "audio": 4,
+      "boundary": "Audio original4 establishes controlled IPC delivery counts and storage state; the new permanent tests additionally await observed actual read promises before teardown."
+    },
+    "freshSeven": {
+      "session": 57219,
+      "completionChunk": "298b46",
+      "naturalExit": 0,
+      "inputCount": 18425,
+      "frontendFiles": 635,
+      "frontendPassed": 8341,
+      "rustPassed": 2117,
+      "rustExistingIgnored": 6,
+      "allSevenPassed": true
+    },
+    "sourceReview": {
+      "productionMembers": 2105,
+      "freezeFiles": 2135,
+      "result": "noBlockingFinding",
+      "method": "Inherited Git blob/mode/hash join plus independently reviewed exact3 modified production sources and2 new tests, and current authority; not all-files fresh line-by-line review."
+    },
+    "firstWebKit": {
+      "session": 96419,
+      "completionChunk": "c4251e",
+      "naturalExit": 1,
+      "passed": 1,
+      "failed": 1,
+      "cause": "Fixture used nonpersistent keys outside the real serializer whitelist. Audio/retry not reached; cleanup completed. Original retained."
+    },
+    "actualWebKit": {
+      "session": 40811,
+      "completionChunk": "73b91e",
+      "naturalExit": 0,
+      "version": "26.5",
+      "rows": 3,
+      "checks": 8,
+      "inputPinsIncludingBinding": 58,
+      "cleanupComplete": true,
+      "boundary": "Actual File/Image APIs, AudioTarget/readAudioInput and browser SHA. File buffers finish before held return delivery; only own settings and636B native-audio IPC response mocked. target.retire is not an installed UI click or physical I/O/RSS proof."
+    },
+    "candidateBuild": {
+      "session": 55655,
+      "completionChunk": "86bf60",
+      "naturalExit": 0
+    },
+    "candidate9": {
+      "completionChunk": "a74895",
+      "naturalExit": 0,
+      "passed": 9
+    },
+    "installation": {
+      "session": 12874,
+      "completionChunk": "84b0f5",
+      "naturalExit": 0
+    },
+    "installed10": {
+      "session": 42004,
+      "completionChunk": "389705",
+      "naturalExit": 0,
+      "passed": 10
+    },
+    "cleanup": {
+      "completionChunk": "957b71",
+      "naturalExit": 0,
+      "exactDuplicateFilesRemoved": 5
+    }
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "5008caaa39f2e725917316a5d47e760151c171d2",
+    "binarySha256": "f58b4e64da9875712b7a51a54329c860ebdf1352cdf80c7a836bbfa260f2f001",
+    "phase": "installedVerifiedNotLaunched",
+    "signature": "Internal ad-hoc; public signing/notarization/distribution postponed.",
+    "archive": "src-tauri/target/internal-candidate/2026-10-21-shared-resource-next-5008caaa/Farfold-0.1.7-5008caaa.zip",
+    "archiveSha256": "bbc28047704b68255657bbba7ab30be3d89936ac0a979e600141f58707c69592",
+    "archiveBytes": 15900905
+  },
+  "data": {
+    "captures": 3,
+    "entriesEach": 232530,
+    "strictSameManifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "metadataBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "sameExactObserverSha256": "dff6696d98af42c3fd3c7295a9fd9d52a22a731bb6a0c099aa666110e1e2f2bb",
+    "normalQuitEvidence": null,
+    "boundary": "Already closed; three closed-observed endpoints only, not continuous zero writes or all Agents idle. Prior data differences/unknown writer/work and reopen cause remain open."
+  },
+  "storageCleanup": {
+    "removedGeneratedCacheLeaves": 3,
+    "removedRegularFiles": 1548,
+    "observedFreeBytesIncrease": 580796416,
+    "boundary": "Observed free-space increase only; inventory du estimate is not reclaimed-byte proof. Protected data/backups/evidence/formal App retained."
+  },
+  "remaining": [
+    "NEW-24 affected new real sends paused; actual selected effective permissions and newer external official versions unknown.",
+    "Real returned media/formal playback/retry/retirement, historical target and old short-audio failures remain open.",
+    "New-path system clipboard/desktop drop, formal file preview and actual save/quit/restart remain unverified by these controls.",
+    "Full P13/P16 formats/native decode/transport/RSS/long-term use and29x8 remain open.",
+    "Windows original304:262pass42fail plus separate safety1; not rerun or reattributed."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-21-shared-resource-next/start.json",
+      "bytes": 1044,
+      "sha256": "62eae606765cc32f161d83196292d416b4f849a92e754e550ff819879b6375be"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/NEW24-local-delta.json",
+      "bytes": 2644,
+      "sha256": "9b82a04767b36455df8e8da4d9ff5065417988823be6059f2fe632739a1edda0"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/storage-cleanup.json",
+      "bytes": 1307,
+      "sha256": "feed0ce1e6f0d3c43340137eb169731a4b8de73a772629d8d150de2603d8a878"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/native-audit/file-preparation-red/execution.json",
+      "bytes": 2821,
+      "sha256": "7721b38ceebc143399ee34e3ba9b174b8a91703d24becfff981d22e3f6b0cdb0"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/native-audit/file-preparation-green/execution.json",
+      "bytes": 2842,
+      "sha256": "ef3e9b40c78c5de24b37aa03ef272810742d9e847b0db074058f76a1d63197eb"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/worker-audit/execution.json",
+      "bytes": 6757,
+      "sha256": "cbf655d4620b30dba7f11ed161a4ad7759208afc57f837ece2776b4f010f1b30"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/worker-audit/green-controls/execution.json",
+      "bytes": 7315,
+      "sha256": "3acc407d9a99460aef410152339a5541dd3e761fb985e88a852e5da7f67a4a44"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/affected-checks.json",
+      "bytes": 1073,
+      "sha256": "a92ed8d9af31d828192e2f69b7f1682f8151b30ab7f64831fc810912f785ea87"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/engineering/verification.json",
+      "bytes": 5835,
+      "sha256": "3287765855421211b0d72e3728c37a0321736d71fd02ddaa3af50dfea8fd8f0c"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/engineering/legacy-seven.json",
+      "bytes": 5801167,
+      "sha256": "44e83c941f69c01229c479b79dde6eb041b2b61b4b571c5021bab3e6b54f20f2"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/final-source-review/actual-seven-completion.json",
+      "bytes": 398,
+      "sha256": "4da4d219a140e3bdd50298e8157eac9708cff4f81a683c8754009aafed66659c"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/final-source-review/source-freeze-5008caaa.json",
+      "bytes": 347190,
+      "sha256": "6bca341e3836f65b180b857b86950d03731c4d5186bce9081e3e99dfe7dde2ca"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/final-source-review/source-review.json",
+      "bytes": 13502,
+      "sha256": "9ef966bb490f245b2962105d14bb19fbeb350ab16403402c3812bc6a952ed7be"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/delivery-prep/selected-source-independent-review-r1/source-review.json",
+      "bytes": 7893,
+      "sha256": "6399e6cfc173614791d02caf53ae8c85a1cac3ed8fc2d508a96239e2b442ab92"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/worker-audit/audio-source-independent-review/source-review.json",
+      "bytes": 4391,
+      "sha256": "9c046873d81f93b1b4653e22ba7a8bcc1e145001956b1803883b210920332e4c"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/current-authority-review.json",
+      "bytes": 14079,
+      "sha256": "7490f2f9cf92816ad3dbf7fa4c56ce4e6ba6275765810cb277e45dbd547b486f"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/delivery-prep/actual-composite-readback-r1/review.json",
+      "bytes": 6109,
+      "sha256": "e7cfdbbe4566971d938a4f91b0ee4c0055802d56076e13796a47c8fd9b698964"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/delivery-prep/actual-bindings-independent-review-r1/review.json",
+      "bytes": 5815,
+      "sha256": "80ce6b2ebced54643e130be0d5d291b82659aeb286ab4c2eafcaaa271b505857"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/browser/execution-receipt.json",
+      "bytes": 7177,
+      "sha256": "fcad744a0f1fdc878618b82dd63194c3a7c7e270ff6226d56f8cbadd412e13f5"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/browser/verification.json",
+      "bytes": 21090,
+      "sha256": "4b95482179f29f679b56e10d4b4187e0c34ef4062336c6fa5768c7c021327802"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/native-audit/browser-first-evidence-review.json",
+      "bytes": 3531,
+      "sha256": "6b2d283163a9b2bfcde5ca8ab8a52137ffe952607cadbcee9fb8b90595cd9ef6"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/browser-r2/bound-preparation.json",
+      "bytes": 8121,
+      "sha256": "6570c4401016f769712ffd3b4cf016df54e9c4c4464d0379183597aaeb290335"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/browser-r2/execution-receipt.json",
+      "bytes": 7190,
+      "sha256": "b283629ca02fadc67790d86f44708c63084cfd6c36f4e9a8dc585ed823c97f78"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/browser-r2/verification.json",
+      "bytes": 43228,
+      "sha256": "e7e8eedf2d1f292cdfc4f4ebf6c81aa065d83c677f9bad2ea503938bff33a8a2"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/native-audit/browser-r2-evidence-review.json",
+      "bytes": 2938,
+      "sha256": "26a6fe29b58a6bc0d09505bd22564a60dddb55b23ea6a2034ad4f10be866ff2a"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/helper-migration-independent-review-r1/review.json",
+      "bytes": 2297,
+      "sha256": "dac991d7ea7f4f4d560449a77aec181b916b3857a33a0540ec10db7a2453f884"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/retention-observer-independent-review-r1/actual-binding-review.json",
+      "bytes": 4366,
+      "sha256": "ee92ee90731a09f53db9e738477479cbe5b3d3f4174e9c56c88861739eae8651"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/sealer-independent-review-r1/review.json",
+      "bytes": 2579,
+      "sha256": "3ad31988da0e5d3a3cdb2b0a3839141f0797bb2c6daaa02a36646eb3f14e675b"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/phase2-independent-review-r1/review9-install-binding-review.json",
+      "bytes": 1991,
+      "sha256": "f86465846a146a6582961ffbccfcc299dc37c6cb09c963df1eaa3f43f0dd800c"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/phase2-independent-review-r1/installed10-binding-review.json",
+      "bytes": 1582,
+      "sha256": "24d17902b8363da500542c19579c7588e7781243802e3adb19f2215f23ec1d92"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 250297,
+      "sha256": "76fc2a4e91f7456a9c27067a1b30bf68c05b5f9e1d13a4e9b2786c7c26b2bd2c"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/independent/review.json",
+      "bytes": 4240,
+      "sha256": "fb589e6e84f92698ea71056a4b255a049019a78b61c56bdedf8645ea44d967d7"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "0ef9e0225a7898906740556d495ce3e79fed7f8a6d6b6b9ea875b98843ad021f"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "2ebe54e8f211645ae5eaf51c624636d8d6ab0e7f97b0f35382b8354a72b67d56"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "039c26e329464c79fd18934076e9e1d5378237817a1b3e3d5bdd4d3eaa04be54"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/install-result.json",
+      "bytes": 10656,
+      "sha256": "30c3ecda4bda4a219dc6bc3ae281aed75ce1e7996e70a647d8a4d7ebcdef2179"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "8028cee2a84f9688d6c099ff8c9c61fd7b6b68142165f0f71b681cfe7626a5ae"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "35ee899d91f7a77479993343dd900366d5d8a38ab26197fdb23546353c3a14bb"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/formal-delivery/binding-snapshots/cleanup-final.json",
+      "bytes": 1205,
+      "sha256": "c454466cba4ff8e4eead0b1be36e9f0559f69c5fa4f33591085673f7c9723739"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/root-completions.json",
+      "bytes": 870,
+      "sha256": "40a00bb61227372a19319129b02222c0d2d88545d7dfcd334760e8581201f8bf"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/phase2-independent-review-r1/installed10-cleanup-binding-review.json",
+      "bytes": 2222,
+      "sha256": "5335477f661df9f8d6e20d458d75921bdd0eacf628f7d72500589d7caf1a6158"
+    },
+    {
+      "path": "output/2026-10-21-shared-resource-next/documentation-assembly-incident.json",
+      "bytes": 313,
+      "sha256": "ad6f7053610d94b947070d5232c799ffa7be210cc38ff0a8c31bf16163785fa3"
+    },
+    {
+      "path": "docs/evidence/2026-10-20-resource-lifecycle-next/verification.json",
+      "bytes": 12875,
+      "sha256": "6d59aad546201bbccf09be472ca519bd0d6c88139f146004bfac8b7beee20484"
+    }
+  ]
+}
