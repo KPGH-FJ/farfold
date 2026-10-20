@@ -147,6 +147,9 @@ function vorbisHeader(stream: Epoch, packet: Packet): void {
  * an interval; a nondecreasing EOS endpoint may close one after final trimming.
  * Opus always uses 48kHz. Subtract all preSkip conservatively: an early anchor
  * may still precede its discarded prefix, including with a positive origin.
+ * At EOF, strictly sequential, closed, unique-serial links with the same
+ * selected mapping and clock may add these conservative intervals. Interleaved,
+ * reused, incomplete or unknown links never contribute to a chain total.
  *
  * Every non-excess remains notCovered. CRC, setup/codebooks, audio payload,
  * packet durations, exact playback and decoder allocation are not validated.
@@ -166,6 +169,8 @@ export function messageOggAudioAdmission(
   };
   const streams = new Map<number, Epoch>();
   const epochs: Epoch[] = [];
+  let chainEligible = true;
+  let currentEpoch: Epoch | null = null;
   try {
     let at = 0;
     while (at < reader.length) {
@@ -191,10 +196,16 @@ export function messageOggAudioAdmission(
 
       let stream = streams.get(serial);
       if (bos || !stream || stream.ended) {
+        if (stream) chainEligible = false;
         if (stream && (!stream.ended || !bos)) breakEpoch(stream);
         stream = epoch(sequence, bos);
         streams.set(serial, stream);
         epochs.push(stream);
+      }
+      if (stream !== currentEpoch) {
+        if (!bos || (currentEpoch !== null && !currentEpoch.ended))
+          chainEligible = false;
+        currentEpoch = stream;
       }
       if (
         flags & ~7 ||
@@ -272,6 +283,7 @@ export function messageOggAudioAdmission(
         }
       }
       if (eos) {
+        if (!completedAudio) chainEligible = false;
         if (stream.packet !== null) breakEpoch(stream);
         stream.ended = true;
       }
@@ -280,7 +292,33 @@ export function messageOggAudioAdmission(
     // A later ownership/continuation/timing contradiction must not be hidden by
     // an early long interval. Other independent intact epochs remain eligible.
     for (const stream of epochs) if (stream.packet !== null) breakEpoch(stream);
-    return epochs.some((stream) => stream.eligible && stream.excessive)
+    const first = epochs[0];
+    let chainSamples = 0n;
+    if (chainEligible && epochs.length >= 2)
+      for (const stream of epochs) {
+        if (
+          !stream.eligible ||
+          !stream.ended ||
+          stream.mapping === null ||
+          stream.mapping !== first.mapping ||
+          stream.rate <= 0 ||
+          stream.rate !== first.rate ||
+          stream.anchor === null ||
+          stream.previous === null
+        ) {
+          chainEligible = false;
+          break;
+        }
+        const samples =
+          stream.previous - stream.anchor - BigInt(stream.preSkip);
+        if (samples > 0n) chainSamples += samples;
+      }
+    const chainExcessive =
+      chainEligible &&
+      epochs.length >= 2 &&
+      chainSamples > BigInt(first.rate) * BigInt(MAX_MESSAGE_AUDIO_SECONDS);
+    return epochs.some((stream) => stream.eligible && stream.excessive) ||
+      chainExcessive
       ? "audioTooLong"
       : "notCovered";
   } catch (error) {

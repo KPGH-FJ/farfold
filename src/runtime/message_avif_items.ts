@@ -69,6 +69,9 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
     context.record(count);
     let entries = 0;
     for (const entry of context.boxes(cursor.at, box.end, box.depth + 1)) {
+      // AVIF9.1.2 permits these opaque boxes at every hierarchy level. The
+      // shared iterator still checks and charges each box before we skip it.
+      if (entry.kind === "free" || entry.kind === "skip") continue;
       rasterRequire(entry.kind === "infe");
       entries++;
       const fields = new AvifCursor(context, entry);
