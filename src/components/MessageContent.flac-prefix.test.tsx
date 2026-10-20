@@ -42,7 +42,7 @@ it("shows tagged FLAC duration feedback and keeps following text and original lo
       ]}
     />,
   );
-  expect(html).toContain("音频时长超过 10 分钟");
+  expect(html).toContain("此音频超过预览处理上限");
   expect(html).toContain(uri);
   expect(html).toContain("Keep following text");
   expect(html).not.toContain("<audio");
@@ -62,6 +62,6 @@ it("does not load or preflight a search-only reveal", () => {
       ]}
     />,
   );
-  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("音频超过预览处理上限");
   expect(html).not.toContain("<audio");
 });

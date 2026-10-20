@@ -42,7 +42,7 @@ it("shows the complete long MP4 refusal while retaining original location and fo
       ]}
     />,
   );
-  expect(html).toContain("音频时长超过 10 分钟");
+  expect(html).toContain("此音频超过预览处理上限");
   expect(html).toContain(attachment.uri);
   expect(html).toContain("Retain the following content");
   expect(html).not.toContain("<audio");
@@ -60,7 +60,7 @@ it("does not preflight MP4 during a search-only expansion", () => {
     />,
   );
   expect(html).toContain("Search-only MP4");
-  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("音频超过预览处理上限");
   expect(html).not.toContain("<audio");
 });
 it("keeps the short complete control pending a real mount, without SSR playback claims", () => {

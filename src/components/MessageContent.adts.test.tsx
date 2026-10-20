@@ -44,7 +44,7 @@ it.each(["audio/aac", "audio/mpeg"])(
         ]}
       />,
     );
-    expect(html).toContain("音频时长超过 10 分钟");
+    expect(html).toContain("此音频超过预览处理上限");
     expect(html).toContain("file:///owned/original.aac");
     expect(html).toContain("Keep this body after the audio");
     expect(html.indexOf("Original long ADTS AAC")).toBeLessThan(
@@ -71,7 +71,7 @@ it("does not preflight long ADTS AAC during a search-only reveal", () => {
     />,
   );
   expect(html).toContain("Search-only ADTS AAC");
-  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("音频超过预览处理上限");
   expect(html).not.toContain("data:audio");
   expect(html).not.toContain("<audio");
 });

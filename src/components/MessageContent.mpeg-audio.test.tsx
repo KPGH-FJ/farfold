@@ -44,7 +44,7 @@ it.each(["audio/mp3", "audio/wav"])(
         ]}
       />,
     );
-    expect(html).toContain("音频时长超过 10 分钟");
+    expect(html).toContain("此音频超过预览处理上限");
     expect(html).toContain(input.uri);
     expect(html).toContain("Keep following text");
     expect(html).not.toContain("data:audio");
@@ -64,7 +64,7 @@ it("does not preflight a long MPEG payload merely revealed by search", () => {
     />,
   );
   expect(html).toContain("Search only");
-  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("音频超过预览处理上限");
   expect(html).not.toContain("<audio");
 });
 

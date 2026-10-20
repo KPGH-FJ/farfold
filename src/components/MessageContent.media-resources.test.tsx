@@ -88,7 +88,7 @@ it.each(["audio/wav", "audio/mpeg"])(
         ]}
       />,
     );
-    expect(html).toContain("音频时长超过 10 分钟");
+    expect(html).toContain("此音频超过预览处理上限");
     expect(html).toContain("file:///owned/original.wav");
     expect(html).not.toContain("<audio");
     expect(html).not.toContain("data:audio");
@@ -117,7 +117,7 @@ it.each([
     expect(decode).not.toHaveBeenCalled();
     expect(html).toContain("Search-only source");
     expect(html).not.toContain("图片尺寸过大");
-    expect(html).not.toContain("音频时长超过");
+    expect(html).not.toContain("音频超过预览处理上限");
     expect(html).not.toContain("<img");
     expect(html).not.toContain("<audio");
   } finally {

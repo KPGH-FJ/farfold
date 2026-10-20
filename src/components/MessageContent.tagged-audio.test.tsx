@@ -44,7 +44,7 @@ it.each([F.MPEG_LONG_601, F.ADTS_LONG_601])(
         ]}
       />,
     );
-    expect(html).toContain("音频时长超过 10 分钟");
+    expect(html).toContain("此音频超过预览处理上限");
     expect(html).toContain(input.uri);
     expect(html).toContain("Keep this following text");
     expect(html).not.toContain("<audio");
@@ -68,7 +68,7 @@ it("does not preflight a tagged payload for a search-only expansion", () => {
     />,
   );
   expect(html).toContain("Search-only tagged audio");
-  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("音频超过预览处理上限");
   expect(html).not.toContain("<audio");
 });
 
