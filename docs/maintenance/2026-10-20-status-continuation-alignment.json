@@ -1,0 +1,20 @@
+{
+  "kind": "CurrentStatusIdentityDriftCorrectionAndHistoryArchival",
+  "sourceCommit": "14fbdc23193aa534fc0b4101ea8f87d03b6bfe5e",
+  "originalPath": "docs/status.md",
+  "originalSha256": "2ba4a42c84097614754f0b94af05ae42c2f16a2aeee283480980e06271bd8290",
+  "archivePath": "docs/archive/2026-10-20-before-next-resource-stage/docs/status.md",
+  "archiveByteExact": true,
+  "knownDrift": "top6fa/6fb2 but currentFormal table stillf019/a2c5",
+  "actualBaseline": "6fa1de9e/6fb2d04a; native304264/40",
+  "currentStatusSha256BeforeFormatting": "295593025a900e9992bd37da0dc6b15a63245a74359b7ac12ffe36ab843ac897",
+  "oldBytes": 74755,
+  "newBytesBeforeFormatting": 21577,
+  "currentCapabilityRowsRetained": true,
+  "allHistoricalDataDifferencesAndUnknownsPreservedInSnapshotAndCurrentLimits": true,
+  "productPlan151ConditionsUnchanged": true,
+  "notFeatureFixOrInstallationProof": true,
+  "noEvidenceMovedOrRewritten": true,
+  "alignedStatusSha256BeforeFinalFormat": "4f74ba5b791caf369322272f2340d9501c02731f567f5222feb14f1f24583834",
+  "alignedStatusBytesBeforeFinalFormat": 19177
+}
