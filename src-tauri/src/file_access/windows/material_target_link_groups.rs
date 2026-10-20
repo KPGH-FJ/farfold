@@ -10,6 +10,8 @@ use crate::file_access::{
     },
     material_raw_name,
 };
+#[cfg(test)]
+use std::io::Write as _;
 use std::sync::atomic::AtomicBool;
 use windows_sys::Wdk::Storage::FileSystem::{FILE_LINK_INFORMATION, FileLinkInformation};
 use windows_sys::Win32::System::SystemServices::ACCESS_SYSTEM_SECURITY;
@@ -231,10 +233,20 @@ impl State {
             .file
             .as_ref()
             .ok_or(Error::Invalid)?;
-        let before = Snapshot::take(primary, full, work, cancel, &self.resident)?;
+        let before =
+            Snapshot::take(primary, full, work, cancel, &self.resident).inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("targetGroup.before", error);
+            })?;
         let primary_handle = handle(primary);
         let count = self.members.iter().filter(|m| m.group == group).count();
         if before.stamp.links != count as u64 {
+            #[cfg(test)]
+            let _ = writeln!(
+                std::io::stderr().lock(),
+                "FARFOLD_LINK_CHANGED phase=targetGroup.beforeLinkCount group={group} expected={count} actual={}",
+                before.stamp.links
+            );
             return Err(Error::Changed);
         }
         let held = self.directories[parent as usize].owner.file()?;
@@ -334,20 +346,48 @@ impl State {
         if !id.regular
             || id.identity != before.stamp.identity
             || stamp(primary)
-                .map_err(|e| io_error("targetGroupPrimaryAfter", e))?
+                .map_err(|e| io_error("targetGroupPrimaryAfter", e))
+                .inspect(|actual| {
+                    #[cfg(test)]
+                    if actual.identity != before.stamp.identity {
+                        let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_CHANGED phase=targetGroup.primaryIdentity group={group} expected={:?} actual={actual:?}", before.stamp.identity);
+                    }
+                })?
                 .identity
                 != before.stamp.identity
         {
+            #[cfg(test)]
+            let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_CHANGED phase=targetGroup.aliasIdentityGate group={group} parent={parent} leafUnits={} expected={:?} alias={id:?}", leaf.len(), before.stamp.identity);
             return Err(Error::Changed);
         }
         // Native effect and its actual same-object read witness are now owned.
         self.pending = false;
-        let after = Snapshot::take(primary, full, work, cancel, &self.resident)?;
-        let alias_after = Snapshot::take(alias, full, work, cancel, &self.resident)?;
+        let after =
+            Snapshot::take(primary, full, work, cancel, &self.resident).inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("targetGroup.after", error);
+            })?;
+        let alias_after =
+            Snapshot::take(alias, full, work, cancel, &self.resident).inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("targetGroup.alias", error);
+            })?;
         if !before.same_link_payload(&after)
             || !after.exact(&alias_after)
             || after.stamp.links != (count + 1) as u64
         {
+            #[cfg(test)]
+            {
+                before.diagnostic_pair(&after, "targetGroup.beforeAfter");
+                after.diagnostic_pair(&alias_after, "targetGroup.primaryAlias");
+                let _ = writeln!(
+                    std::io::stderr().lock(),
+                    "FARFOLD_LINK_CHANGED phase=targetGroup.postLink group={group} parent={parent} leafUnits={} expectedLinks={} actualLinks={}",
+                    leaf.len(),
+                    count + 1,
+                    after.stamp.links
+                );
+            }
             return Err(Error::Changed);
         }
         Ok(())
@@ -374,13 +414,24 @@ impl State {
             let dirs = self.directories.iter().filter(|n| n.ancestor == at as u32);
             let files = self.members.iter().filter(|n| n.parent == at);
             if entries.as_entries().len() != dirs.clone().count() + files.clone().count() {
+                #[cfg(test)]
+                let _ = writeln!(
+                    std::io::stderr().lock(),
+                    "FARFOLD_LINK_CHANGED phase=targetGroup.verifyListingCount parent={at} actual={} expected={}",
+                    entries.as_entries().len(),
+                    dirs.clone().count() + files.clone().count()
+                );
                 return Err(Error::Changed);
             }
             for child in dirs {
                 let actual = entries
                     .as_entries()
                     .get(&child.leaf)
-                    .ok_or(Error::Changed)?;
+                    .ok_or(Error::Changed)
+                    .inspect_err(|error| {
+                        #[cfg(test)]
+                        Snapshot::diagnostic_error("targetGroup.verifyMissingDirectory", error);
+                    })?;
                 let id = stamp(child.owner.file()?)
                     .map_err(|e| io_error("targetDirMemberId", e))?
                     .identity;
@@ -388,6 +439,15 @@ impl State {
                     || actual.reparse_tag.is_some()
                     || actual.attributes & FILE_ATTRIBUTE_DIRECTORY == 0
                 {
+                    #[cfg(test)]
+                    let _ = writeln!(
+                        std::io::stderr().lock(),
+                        "FARFOLD_LINK_CHANGED phase=targetGroup.verifyDirectoryEntry parent={at} leafUnits={} listedIdentity={:?} heldIdentity={id:?} attributes={} reparse={:?}",
+                        child.leaf.len(),
+                        actual.identity,
+                        actual.attributes,
+                        actual.reparse_tag
+                    );
                     return Err(Error::Changed);
                 }
             }
@@ -395,7 +455,11 @@ impl State {
                 let actual = entries
                     .as_entries()
                     .get(&child.leaf)
-                    .ok_or(Error::Changed)?;
+                    .ok_or(Error::Changed)
+                    .inspect_err(|error| {
+                        #[cfg(test)]
+                        Snapshot::diagnostic_error("targetGroup.verifyMissingFile", error);
+                    })?;
                 let id = stamp(child.file.as_ref().ok_or(Error::Changed)?)
                     .map_err(|e| io_error("targetFileMemberId", e))?
                     .identity;
@@ -403,6 +467,15 @@ impl State {
                     || actual.reparse_tag.is_some()
                     || actual.attributes & FILE_ATTRIBUTE_DIRECTORY != 0
                 {
+                    #[cfg(test)]
+                    let _ = writeln!(
+                        std::io::stderr().lock(),
+                        "FARFOLD_LINK_CHANGED phase=targetGroup.verifyFileEntry parent={at} leafUnits={} listedIdentity={:?} heldIdentity={id:?} attributes={} reparse={:?}",
+                        child.leaf.len(),
+                        actual.identity,
+                        actual.attributes,
+                        actual.reparse_tag
+                    );
                     return Err(Error::Changed);
                 }
             }
@@ -418,9 +491,19 @@ impl State {
                 work,
                 cancel,
                 &self.resident,
-            )?;
+            )
+            .inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("targetGroup.verifyPrimary", error);
+            })?;
             let count = self.members.iter().filter(|m| m.group == at).count();
             if expected.stamp.links != count as u64 {
+                #[cfg(test)]
+                let _ = writeln!(
+                    std::io::stderr().lock(),
+                    "FARFOLD_LINK_CHANGED phase=targetGroup.verifyLinkCount group={at} expected={count} actual={}",
+                    expected.stamp.links
+                );
                 return Err(Error::Changed);
             }
             for member in self.members.iter().filter(|m| m.group == at) {
@@ -430,8 +513,14 @@ impl State {
                     work,
                     cancel,
                     &self.resident,
-                )?;
+                )
+                .inspect_err(|error| {
+                    #[cfg(test)]
+                    Snapshot::diagnostic_error("targetGroup.verifyMember", error);
+                })?;
                 if !expected.exact(&actual) {
+                    #[cfg(test)]
+                    expected.diagnostic_pair(&actual, "targetGroup.verifyMember");
                     return Err(Error::Changed);
                 }
             }

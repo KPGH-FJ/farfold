@@ -91,14 +91,35 @@ impl Snapshot {
             }
             total = total.checked_add(n as u64).ok_or(Error::Limit)?;
             if total > before.size {
+                #[cfg(test)]
+                let _ = writeln!(
+                    std::io::stderr().lock(),
+                    "FARFOLD_LINK_SNAPSHOT_CHANGED phase=dataGrowth total={total} before={before:?}"
+                );
                 return Err(Error::Changed);
             }
             hash.update(&buffer[..n]);
         }
         if total != before.size
-            || stamp(file).map_err(|e| io_error("linkSnapshotAfter", e))? != before
-            || metadata_file(file).map_err(|_| Error::Invalid)? != version
+            || stamp(file).map_err(|e| io_error("linkSnapshotAfter", e))
+                .inspect(|actual| {
+                    #[cfg(test)]
+                    if actual != &before {
+                        let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_SNAPSHOT_CHANGED phase=heldStamp before={before:?} after={actual:?}");
+                    }
+                })? != before
+            || metadata_file(file).map_err(|_| Error::Invalid)
+                .inspect(|actual| {
+                    #[cfg(test)]
+                    if actual != &version {
+                        let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_SNAPSHOT_CHANGED phase=heldMetadata before={version:?} after={actual:?}");
+                    }
+                })? != version
         {
+            #[cfg(test)]
+            if total != before.size {
+                let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_SNAPSHOT_CHANGED phase=dataLength total={total} before={before:?}");
+            }
             return Err(Error::Changed);
         }
         Ok(Self {
@@ -130,5 +151,59 @@ impl Snapshot {
     }
     pub(in super::super) fn exact(&self, other: &Self) -> bool {
         self.version == other.version && self.stamp == other.stamp && self.same_link_payload(other)
+    }
+    // Existing snapshots only: no extra query/read, DATA/EA/SD bytes, raw name,
+    // path or handle address. These helpers are test-only and never choose Error.
+    #[cfg(test)]
+    pub(in super::super) fn diagnostic_error(phase: &'static str, error: &Error) {
+        let _ = writeln!(
+            std::io::stderr().lock(),
+            "FARFOLD_LINK_STAGE_ERROR phase={phase} error={error:?}"
+        );
+    }
+    #[cfg(test)]
+    pub(in super::super) fn diagnostic_pair(&self, other: &Self, phase: &'static str) {
+        let _ = writeln!(
+            std::io::stderr().lock(),
+            concat!(
+                "FARFOLD_LINK_SNAPSHOT_COMPARE phase={} payloadEqual={} versionEqual={} stampEqual={} ",
+                "identityEqual={} sizeEqual={} regularEqual={} allocationEqual={} creationEqual={} writeEqual={} ",
+                "attributesEqual={} dataEqual={} eaEqual={} securityEqual={} ",
+                "beforeAllocation={} afterAllocation={} beforeCreated={} afterCreated={} ",
+                "beforeModified={} afterModified={} beforeAttributes={} afterAttributes={} ",
+                "beforeVolume={:016x} beforeFileId={:032x} afterVolume={:016x} afterFileId={:032x} ",
+                "beforeStamp={:?} afterStamp={:?} beforeVersion={:?} afterVersion={:?}"
+            ),
+            phase,
+            self.same_link_payload(other),
+            self.version == other.version,
+            self.stamp == other.stamp,
+            self.stamp.identity == other.stamp.identity,
+            self.stamp.size == other.stamp.size,
+            self.stamp.regular == other.stamp.regular,
+            self.allocation == other.allocation,
+            self.created == other.created,
+            self.modified == other.modified,
+            self.attributes == other.attributes,
+            self.data_sha256 == other.data_sha256,
+            self.ea == other.ea,
+            self.security == other.security,
+            self.allocation,
+            other.allocation,
+            self.created,
+            other.created,
+            self.modified,
+            other.modified,
+            self.attributes,
+            other.attributes,
+            self.stamp.identity.device,
+            self.stamp.identity.inode,
+            other.stamp.identity.device,
+            other.stamp.identity.inode,
+            self.stamp,
+            other.stamp,
+            self.version,
+            other.version
+        );
     }
 }

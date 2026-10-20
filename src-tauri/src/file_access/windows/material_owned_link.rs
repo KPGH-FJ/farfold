@@ -9,6 +9,8 @@ use crate::file_access::{
     },
     material_raw_name,
 };
+#[cfg(test)]
+use std::io::Write as _;
 use std::{
     io::{Read, Seek, SeekFrom},
     sync::atomic::AtomicBool,
@@ -232,7 +234,10 @@ impl OwnedLinks {
             }
             self.opened = true;
             self.namespace.open()?;
-            self.namespace.verify()?;
+            self.namespace.verify().inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("ownedLink.open.initialNamespace", error);
+            })?;
             // Install before the first target-create call, not after success.
             self.namespace.links = Some(State::reserve(&self.resident, full)?);
             let root = self.namespace.root.as_ref().ok_or(Error::Invalid)?;
@@ -241,7 +246,10 @@ impl OwnedLinks {
                 .as_mut()
                 .ok_or(Error::Invalid)?
                 .create(root)?;
-            self.namespace.verify()?;
+            self.namespace.verify().inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("ownedLink.open.createdNamespace", error);
+            })?;
             check(cancel)
         })();
         if result.is_ok() {
@@ -304,7 +312,10 @@ impl OwnedLinks {
         }
         material_raw_name::check(leaf).map_err(|_| Error::Invalid)?;
         check(cancel)?;
-        self.namespace.verify()?;
+        self.namespace.verify().inspect_err(|error| {
+            #[cfg(test)]
+            Snapshot::diagnostic_error("ownedLink.beforeNamespace", error);
+        })?;
         let root = self.namespace.root.as_ref().ok_or(Error::Invalid)?;
         let root_id = stamp(root)
             .map_err(|e| io_error("linkRootStamp", e))?
@@ -314,7 +325,11 @@ impl OwnedLinks {
             return Err(Error::Invalid);
         }
         let primary = state.primary.as_ref().ok_or(Error::Invalid)?;
-        let before = Snapshot::take(primary, state.full_security, work, cancel, &self.resident)?;
+        let before = Snapshot::take(primary, state.full_security, work, cancel, &self.resident)
+            .inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("ownedLink.before", error);
+            })?;
         if before.stamp.links != 1 || before.stamp.identity.device != root_id.device {
             return Err(Error::Unsupported);
         }
@@ -402,11 +417,23 @@ impl OwnedLinks {
         }
         let alias = state.alias.as_ref().ok_or(Error::Invalid)?;
         if stamp(alias)
-            .map_err(|e| io_error("linkAliasIdentity", e))?
+            .map_err(|e| io_error("linkAliasIdentity", e))
+            .inspect(|actual| {
+                #[cfg(test)]
+                if actual.identity != before.stamp.identity {
+                    let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_CHANGED phase=ownedLink.aliasIdentity expected={:?} actual={actual:?}", before.stamp.identity);
+                }
+            })?
             .identity
             != before.stamp.identity
             || stamp(primary)
-                .map_err(|e| io_error("linkPrimaryIdentity", e))?
+                .map_err(|e| io_error("linkPrimaryIdentity", e))
+                .inspect(|actual| {
+                    #[cfg(test)]
+                    if actual.identity != before.stamp.identity {
+                        let _ = writeln!(std::io::stderr().lock(), "FARFOLD_LINK_CHANGED phase=ownedLink.primaryIdentity expected={:?} actual={actual:?}", before.stamp.identity);
+                    }
+                })?
                 .identity
                 != before.stamp.identity
         {
@@ -415,10 +442,28 @@ impl OwnedLinks {
         // Both handles now prove the new name denotes only our created object.
         // Cancellation/verification failure may safely dispose these exact links.
         state.pending = false;
-        let after = Snapshot::take(primary, state.full_security, work, cancel, &self.resident)?;
-        let alias_after = Snapshot::take(alias, state.full_security, work, cancel, &self.resident)?;
+        let after = Snapshot::take(primary, state.full_security, work, cancel, &self.resident)
+            .inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("ownedLink.after", error);
+            })?;
+        let alias_after = Snapshot::take(alias, state.full_security, work, cancel, &self.resident)
+            .inspect_err(|error| {
+                #[cfg(test)]
+                Snapshot::diagnostic_error("ownedLink.alias", error);
+            })?;
         if !before.same_link_payload(&after) || !after.exact(&alias_after) || after.stamp.links != 2
         {
+            #[cfg(test)]
+            {
+                before.diagnostic_pair(&after, "ownedLink.beforeAfter");
+                after.diagnostic_pair(&alias_after, "ownedLink.primaryAlias");
+                let _ = writeln!(
+                    std::io::stderr().lock(),
+                    "FARFOLD_LINK_CHANGED phase=ownedLink.postLink expectedLinks=2 actualLinks={}",
+                    after.stamp.links
+                );
+            }
             return Err(Error::Changed);
         }
         let receipt = Receipt {
@@ -434,7 +479,10 @@ impl OwnedLinks {
             before_security_sha256: before.security.sha256(),
             full_security_observed: state.full_security,
         };
-        self.namespace.verify()?;
+        self.namespace.verify().inspect_err(|error| {
+            #[cfg(test)]
+            Snapshot::diagnostic_error("ownedLink.afterNamespace", error);
+        })?;
         check(cancel)?;
         Ok(receipt)
     }

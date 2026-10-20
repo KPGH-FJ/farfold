@@ -22,11 +22,12 @@ function requireAudio(value: unknown): asserts value {
 interface StoredFrameFormat {
   align: number;
   sampleRate: number;
+  imaBlockFrames?: number;
 }
 
-/** Known PCM/float and byte-per-channel G.711 stored-frame layouts only.
- * G.711's one encoded octet per sample permits the same stored-frame count;
- * other compressed formats never inherit this byte/sample relationship. */
+/** Known PCM/float and byte-per-channel G.711 stored-frame layouts, plus a
+ * separate selected IMA block-prefix geometry. Other compressed formats never
+ * inherit the PCM/G.711 byte/sample relationship. */
 function storedFrameFormat(
   reader: MessageRasterReader,
   at: number,
@@ -49,6 +50,29 @@ function storedFrameFormat(
     requireAudio(align === channels);
     requireAudio(reader.u32le(at + 8) === sampleRate * align);
     return { align, sampleRate };
+  }
+  if (tag === 0x11) {
+    // Selected ordinary 4-bit mono/stereo IMA-ADPCM. Other extensions and
+    // packing variants stay uncovered. Microsoft Multimedia Data Standards
+    // Update (1994), printed pp30-33: four-byte header and words per channel.
+    // https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf
+    if (
+      length !== 20 ||
+      reader.u16le(at + 16) !== 2 ||
+      reader.u16le(at + 14) !== 4
+    )
+      return null;
+    const channels = reader.u16le(at + 2);
+    if (channels !== 1 && channels !== 2) return null;
+    const sampleRate = reader.u32le(at + 4);
+    const align = reader.u16le(at + 12);
+    const channelWordBytes = 4 * channels;
+    requireAudio(sampleRate > 0);
+    requireAudio(align >= channelWordBytes && align % channelWordBytes === 0);
+    const imaBlockFrames = 1 + (align / channelWordBytes - 1) * 8;
+    requireAudio(reader.u16le(at + 18) === imaBlockFrames);
+    // nAvgBytesPerSec is a rate hint, not a linear bytes/sample relation.
+    return { align, sampleRate, imaBlockFrames };
   }
   if (tag !== 1 && tag !== 3 && tag !== 0xfffe) return null;
   requireAudio(length >= 16);
@@ -81,7 +105,9 @@ function storedFrameFormat(
 /** Classic little-endian RIFF/WAVE declarations only. Caller must first enforce
  * canonical Base64 and the existing per-file byte limit. Cross-audio-MIME
  * signatures receive the same check. No URL, full binary buffer or audio
- * decoder is created. RIFX/RF64/Wave64, other compressed WAVE, wavl, playlist timing
+ * decoder is created. Selected ordinary IMA-ADPCM receives only a conservative
+ * complete-prefix budget; exact/final-block duration remains uncovered.
+ * RIFX/RF64/Wave64, other compressed WAVE, wavl, playlist timing
  * and other containers remain uncovered. A playlist cannot hide a known
  * recognized stored-data extent; its stored frames retain the independent budget.
  * Duration is recognized stored data frames, not elapsed playback, loop duration,
@@ -134,6 +160,23 @@ export function messageAudioAdmission(
     }
     requireAudio(fmtSeen && dataSeen);
     if (!format || dataBytes === null) return "notCovered";
+    if (format.imaBlockFrames !== undefined) {
+      // Last-block padding/fact clipping and partial tails are not established
+      // here. Only complete blocks before the final complete block contribute
+      // this conservative encoded-prefix sample/work lower bound. A fact count
+      // or byte-rate hint cannot shorten that independent known prefix. This
+      // is not an exact playback-duration or decoder-allocation guarantee.
+      const prefixBlocks = Math.max(
+        0,
+        Math.floor(dataBytes / format.align) - 1,
+      );
+      if (
+        prefixBlocks * format.imaBlockFrames >
+        format.sampleRate * MAX_MESSAGE_AUDIO_SECONDS
+      )
+        return "audioTooLong";
+      return "notCovered";
+    }
     requireAudio(dataBytes % format.align === 0);
     const frames = dataBytes / format.align;
     if (frames > format.sampleRate * MAX_MESSAGE_AUDIO_SECONDS)

@@ -1,0 +1,116 @@
+{
+  "kind": "SelectedP13EncodedPrefixAndWindowsFailureDiagnosticIncrementNotWholePhaseAcceptance",
+  "atUtc": "2026-10-20T04:38:48.973264+00:00",
+  "sourceBaseline": "89491026f4dd9237de1e854fd65740b6b6b41651",
+  "appliedFiles": [
+    {
+      "path": "src/runtime/message_audio_admission.ts",
+      "sha256": "b3cfe59c3735f6ba1b957b70bce5846cb089177364e15d01dd89408359a4e7a8"
+    },
+    {
+      "path": "src/runtime/message_ima_wave.test.ts",
+      "sha256": "ab6969adbf62aa348409593a24825e499a6c85846a898e42afc3f239418bcd4d"
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/material_link_snapshot.rs",
+      "sha256": "5ab988d0038ef763b637d479abbdf8c9e02fe84d2a7f01449cf4ce6d9a223b98"
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/material_owned_link.rs",
+      "sha256": "ccab22e8c5f662ea051af2f85453fbbfcf05a6f062751303af19e92c06b8a518"
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/material_target_link_groups.rs",
+      "sha256": "3a3b9c629b498fadea18bf2028e4593b3b883bb098ad8858a41b638bbfeac7ce"
+    }
+  ],
+  "actual": {
+    "imaBefore": {
+      "passed": 12,
+      "failed": 28,
+      "tests": 40
+    },
+    "imaAfter": {
+      "passed": 40,
+      "failed": 0
+    },
+    "affectedMedia": {
+      "files": 28,
+      "passed": 620,
+      "failed": 0
+    },
+    "nativeBoundary": "CoreAudio complete PCM/EOF: short4.04s,long601.013125s,genuine600s. fact-based600/600+1 both actually600.003125s; header-only+1 actually stayed600s. All contrary results retained, no WebKit/playback/allocation claim.",
+    "shortAudio": "14 actual WK observations:4 natural failures,10 ended property true but only2 ended events; no Farfold-specific cause established.7 production collapse source-retire controls observed, active-unmount not isolated.",
+    "avif": "15 unchanged official full-file controls available and byte-exact,55313 bytes; no new confirmed defect or native decoder rerun.",
+    "windowsCross": "Initial strict check exit101 unused duplicate Write import; only redundant snapshot import removed; second strict all-target check exit0,828 inputs stable.",
+    "windowsNative": "No new run yet;three existing Changed causes unknown,added only cfg(test) observation of original returns/snapshots; original errors,queries,budgets,cleanup and test assertions retained."
+  },
+  "installedBaseline": {
+    "source": "ca4153edd6a7249838e475b73b06d9e776c22f2e",
+    "binarySha256": "4761be1a553aadde37980ae790f6841c1a75e5d29b931fd1bb4ea2e2b51e7788",
+    "newSourceInstalled": false
+  },
+  "fullSeven": "Not yet run on this increment",
+  "realAgent": "Not tested. NEW-24 affected new sends remain paused;no account/model/reasoning change",
+  "remaining": [
+    "Full selected cohort engineering and independent integration review",
+    "Windows actual failed-branch evidence; no operation predicate relaxation",
+    "Candidate,retention,formal update and actual selected verification",
+    "Exact/final IMA duration,unknown formats,real-message playback,actual allocation and completeP13",
+    "Full Windows material tree/manifest/namespace/public restore and29x8 acceptance"
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/stage-start.json",
+      "sha256": "046cf7608375b9760c785f0e52926df0a217b1bbc0c4949bce53b850775b994a"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/admission-review/preparation-index.json",
+      "sha256": "58817683d5a9830c85c8ef04e529fb6ce82de66c62f9ea69d03846193dcf0d93"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/admission-review/native/coreaudio-proof.json",
+      "sha256": "f57891d21a4406c6ca9b0f1973c4ad4c0286e49ff9bfd88e5fe8b14f0ee31ccd"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/admission-review/native/coreaudio-padding-fact-proof.json",
+      "sha256": "b8c94123ddc4d415a44bd10cf855083e6a13e15243c8cd2b5f57f8c2be07639c"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/admission-review/native/coreaudio-genuine-boundary-proof.json",
+      "sha256": "f69cbd84084ed7f591eccbc9a873808f7d061ed9fd22f694fc3240a1710451a4"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/admission-review/red-run2/receipt.json",
+      "sha256": "acdceeb99a535a5f63d5b74e253bf79ff835780d3eb75ef0c177eda39f10b9f8"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/ima-green-receipt.json",
+      "sha256": "b67818b40a0809f7a6fbce1b4be65a9ba0f7c5887bf25803c5e6edcc5370c5f6"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/ima-media-affected-receipt.json",
+      "sha256": "1b40bdeb3b63c4e72b7809c8bbd75083b8e6fe1f8aa70c9703afcbfa7c0a3ef1"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/short-audio/conclusion.json",
+      "sha256": "5e137e2df8b503e33f8f35338f59e0486c913d610b3d6c6917e06eb49d35182b"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/avif/verification.json",
+      "sha256": "9405b8f4dbe99d3675ed95ab66ce709a511fcb2948d68cc8af5dddef7cd0c9fd"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-link-diagnostics/proposal-r1/preparation-index.json",
+      "sha256": "6fd54275d8061c0c11c7860605691c199fe32694c982781e27dd9bf393a8d500"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-strict-receipt.json",
+      "sha256": "3cd96e9917a0b62cddd6dba63580dc0371efbde3c8e8345342cf5befd7bdb6b9"
+    },
+    {
+      "path": "output/2026-10-20-p13-next-media-stage/windows-strict-r2-receipt.json",
+      "sha256": "5eb983331f781a1d48ab685ffbe6728b96eac00208e9ce7dc5c0059c2dcefdb7"
+    }
+  ]
+}
