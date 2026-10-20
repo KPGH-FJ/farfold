@@ -284,7 +284,7 @@ fn execute_bounded(
         };
         if let Some(status) = waited {
             #[cfg(all(windows, test))]
-            let (group_alive, group_query) = child.group.active_with_observation();
+            let (group_alive, group_query) = child.group.active_with_observation(&child.child);
             #[cfg(not(all(windows, test)))]
             let group_alive = child.group_alive();
             if group_alive {

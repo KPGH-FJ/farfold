@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { CaretDown, Paperclip } from "@phosphor-icons/react";
 import {
   textImageParts,
@@ -6,59 +6,131 @@ import {
 } from "../runtime/text_image_links";
 import { validateDraftImage, type DraftImage } from "../runtime/draft_images";
 import { MESSAGE_ATTACHMENTS as S } from "../runtime/message_attachment_strings";
+import { MAX_IMAGE_BYTES } from "../runtime/image_bytes";
+import {
+  attachmentMediaPreviewEligibility,
+  type MessageMediaPreviewEligibility,
+} from "../runtime/message_attachments";
+import {
+  messageMediaBudget,
+  type MessageMediaLease,
+} from "../runtime/message_media_budget";
+import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
+import { useMessageMediaVisibility } from "./message-media-visibility";
 import "../message-attachments.css";
 
 type TextImage = Extract<TextImagePart, { kind: "image" }>;
+type HistoryPreview = {
+  eligibility: MessageMediaPreviewEligibility;
+  attempt: number;
+  checked: DraftImage | null;
+  lease: MessageMediaLease | null;
+  checking: boolean;
+  failed: boolean;
+  budgetRejected: boolean;
+};
 
-/** Checking begins only on explicit expansion, with the existing shared caps.
- * Neither a closed attachment nor a late check can introduce an img decoder. */
-export function TextMessageImage({ image }: { image: TextImage }) {
-  const [expanded, setExpanded] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const [checked, setChecked] = useState<DraftImage | null>(null);
-  const request = useRef(0);
-  const pending = useRef(false);
+/** Reserve shared file bytes before the existing draft-image validator. Its
+ * 8 MiB/static/dimension checks and two real decoder slots remain unchanged. */
+function useHistoryImagePreview(image: TextImage, enabled: boolean) {
+  const eligibility = useMemo(
+    () =>
+      enabled
+        ? attachmentMediaPreviewEligibility({
+            name: S.historyImage,
+            data: image.data,
+            mimeType: image.mimeType,
+          })
+        : null,
+    [enabled, image.data, image.mimeType],
+  );
+  const [attempt, setAttempt] = useState(0);
+  const [result, setResult] = useState<HistoryPreview | null>(null);
   useLayoutEffect(() => {
-    ++request.current;
-    pending.current = false;
-    setExpanded(false);
-    setChecking(false);
-    setFailed(false);
-    setChecked(null);
-    return () => {
-      ++request.current;
-      pending.current = false;
-    };
-  }, [image.data, image.mimeType]);
-  const current =
-    checked?.data === image.data && checked.mimeType === image.mimeType
-      ? checked
-      : null;
-  const toggle = async (open: boolean) => {
-    setExpanded(open);
-    if (!open) {
-      ++request.current;
-      pending.current = false;
-      setChecking(false);
+    if (!eligibility) {
+      setResult(null);
       return;
     }
-    if (current || pending.current) return;
-    const id = ++request.current;
-    pending.current = true;
-    setChecking(true);
-    setFailed(false);
-    try {
-      const result = await validateDraftImage(image.data, image.mimeType);
-      if (request.current === id) setChecked(result);
-    } catch {
-      if (request.current === id) setFailed(true);
-    } finally {
-      if (request.current === id) {
-        pending.current = false;
-        setChecking(false);
-      }
+    const base: HistoryPreview = {
+      eligibility,
+      attempt,
+      checked: null,
+      lease: null,
+      checking: false,
+      failed: false,
+      budgetRejected: false,
+    };
+    if (
+      eligibility.status !== "eligible" ||
+      eligibility.bytes > MAX_IMAGE_BYTES
+    ) {
+      setResult({ ...base, failed: true });
+      return;
     }
+    const lease = messageMediaBudget.acquire(eligibility.bytes);
+    if (!lease) {
+      setResult({ ...base, budgetRejected: true });
+      return;
+    }
+    let live = true;
+    setResult({ ...base, lease, checking: true });
+    const settle = (checked: DraftImage | null) => {
+      if (!checked) lease.release();
+      if (live)
+        setResult({
+          ...base,
+          checked,
+          lease: checked ? lease : null,
+          failed: !checked,
+        });
+    };
+    void validateDraftImage(image.data, image.mimeType).then(
+      (checked) => settle(checked),
+      () => settle(null),
+    );
+    return () => {
+      live = false;
+      lease.release();
+    };
+  }, [eligibility, attempt, image.data, image.mimeType]);
+  const current =
+    !!eligibility &&
+    result?.eligibility === eligibility &&
+    result.attempt === attempt;
+  return {
+    checked: current && result.lease ? result.checked : null,
+    checking: !!eligibility && (!current || result.checking),
+    failed: current && result.failed,
+    budgetRejected: current && result.budgetRejected,
+    fail: () => {
+      if (!current || !result.lease || result.failed) return;
+      result.lease.release();
+      setResult((previous) =>
+        previous === result
+          ? { ...previous, checked: null, lease: null, failed: true }
+          : previous,
+      );
+    },
+    retry: () => setAttempt((value) => value + 1),
+  };
+}
+
+/** Hidden ancestry withdraws both the source and this owner's expansion intent.
+ * A late validation may settle its real decoder, but cannot restore this view. */
+export function TextMessageImage({ image }: { image: TextImage }) {
+  const visible = useMessageMediaVisibility();
+  const [opened, setOpened] = useState<TextImage | null>(null);
+  const expanded =
+    visible &&
+    opened?.data === image.data &&
+    opened.mimeType === image.mimeType;
+  useLayoutEffect(() => {
+    setOpened(null);
+  }, [image.data, image.mimeType, visible]);
+  const { checked, checking, failed, budgetRejected, fail, retry } =
+    useHistoryImagePreview(image, expanded);
+  const toggle = (open: boolean) => {
+    if (visible) setOpened(open ? image : null);
   };
   return (
     <div
@@ -87,14 +159,41 @@ export function TextMessageImage({ image }: { image: TextImage }) {
         {expanded && (
           <figure className="message-attachment-content">
             <figcaption>{image.mimeType}</figcaption>
-            {current && (
-              <img
-                src={`data:${current.mimeType};base64,${current.data}`}
-                alt={S.historyImage}
+            {checked && (
+              <MessageAttachmentMedia
+                key={`${checked.mimeType}:${checked.data}`}
+                media={{
+                  kind: "image",
+                  src: `data:${checked.mimeType};base64,${checked.data}`,
+                }}
+                name={S.historyImage}
+                onFailure={fail}
               />
             )}
             {checking && <p role="status">{S.historyImageChecking}</p>}
-            {failed && <p role="alert">{S.historyImageUnavailable}</p>}
+            {(failed || budgetRejected) && (
+              <div className="message-attachment-media-failure">
+                <p role="alert">
+                  {budgetRejected
+                    ? S.mediaBudgetReached
+                    : S.historyImageUnavailable}
+                </p>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    if (!event.currentTarget.isConnected) return;
+                    if (document.activeElement === event.currentTarget)
+                      event.currentTarget
+                        .closest("details")
+                        ?.querySelector("summary")
+                        ?.focus();
+                    retry();
+                  }}
+                >
+                  {S.retryMedia}
+                </button>
+              </div>
+            )}
           </figure>
         )}
       </details>
