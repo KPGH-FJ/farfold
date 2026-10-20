@@ -71,7 +71,7 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 文件成果分开“工具报告”与“磁盘核验”。消息中的写入参数、路径或差异摘要只证明报告内容；明确打开文件后，[file_access.rs](../src-tauri/src/file_access.rs) 才按路径和文件句柄边界读取。项目索引有遍历数量、深度、名称和时间预算，不是持久全文索引；同句柄校验不提供整个文件系统原子快照。
 
-[OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。
+[OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 
 意见绑定原对话、规范路径和具体磁盘版本；DOCX结构位置、XLSX单元格范围、PPTX预览位置等只对实际已解析的内容有效。明确加入原草稿后才由用户发送，不自动提交。刷新、切换、隐藏和迟到回包需核对版本与归属；自动刷新失败保留旧预览并标明状态，不能把旧位置当新文件。只有 Agent真实修改及重新核验文件，才证明返工完成。
 
@@ -107,7 +107,7 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
-历史用户消息中的内嵌图片由 [UserMessageContent.tsx](../src/components/UserMessageContent.tsx) 在明确展开、祖先可见且取得同一共用配额后，调用原 [draft_images.ts](../src/runtime/draft_images.ts) 检查；8 MiB、静态格式、尺寸及两项尚未结束检查的限制保持。关闭、隐藏、换源及卸载撤下本次来源并释放自己的预览配额，迟到结果不能恢复展示；再次显示或其他媒体释放配额不会自动打开，失败后须明确重试。两项检查的名额仍等解码Promise实际结束才释放，超时或退役不证明物理解码已停止、RSS已下降。原消息与复制内容保持，正式消息和完整资源验证另见状态。
+历史用户消息中的内嵌图片由 [UserMessageContent.tsx](../src/components/UserMessageContent.tsx) 在明确展开、祖先可见且取得同一共用配额后，调用原 [draft_images.ts](../src/runtime/draft_images.ts) 检查；8 MiB、静态格式、尺寸及两项尚未结束检查的限制保持。关闭、隐藏、换源及卸载撤下本次来源并释放自己的预览配额，迟到结果不能恢复展示；再次显示或其他媒体释放配额不会自动打开，失败后须明确重试。[draft_images.ts](../src/runtime/draft_images.ts)先核原有常量时间缺失/长度门槛，已有两项检查未结束时在Base64展开及结构扫描前返回忙态；空闲下原校验保持。两项检查的名额仍等解码Promise实际结束才释放，超时或退役不证明物理解码已停止、RSS已下降。原消息与复制内容保持，正式消息和完整资源验证另见状态。
 
 [message-media-visibility.tsx](../src/components/message-media-visibility.tsx) 将工具组、工具详情及保留对话路由的可见性逐层相交，内层展开不能覆盖已隐藏的祖先。[App.tsx](../src/App.tsx) 按实际显示的页面键传递路由可见性，沿原顺序保留带网页或草稿的页面；搜索和带入浮层仅暂停交互，不误作页面隐藏。保留的隐藏文字节点继续存在，但消息媒体来源和配额退役，并撤回此前的媒体展开意图；回到页面或查找揭示不会自动加载，仍需用户明确展开媒体。该边界不核系统休眠、窗口后台、网页内媒体或解码器内存的生命周期。
 

@@ -1,0 +1,265 @@
+{
+  "kind": "SelectedImageResourcePhaseVerifiedAndInstalledNotWholeProductAcceptance",
+  "sourceCommit": "861bacd5c96c16180b8f7466232a18bb5adbd70f",
+  "baseInstalledSource": "959e7c8224aa7afff30c6abb8745913070e3eab7",
+  "scope": "P13 shared image preflight capacity and P16 DOCX failed-image consumer retirement only; original requirements and29x8 unchanged.",
+  "changes": [
+    "Two pending image decode promises prevent another payload expansion or structural scan after original constant-time missing/encoded-length checks. Original idle checks,8MiB/static/dimensions/MIME,15s caller timeout and real-promise slot release remain.",
+    "DOCX image failure removes this exact DOM source before releasing its own reference; other consumers keep the shared URL. Source-owned live state and latest-source guards prevent stale events from affecting a new owner. Original document bytes/text/order and fixed feedback remain; no automatic retry."
+  ],
+  "controlled": {
+    "draftOriginalRed": {
+      "passedBusyAssertion": true,
+      "extraAtob": 1,
+      "extraInspection": 1,
+      "newImage": 0,
+      "naturalExit": 1
+    },
+    "draftSameAssertionGreen": {
+      "extraAtob": 0,
+      "extraInspection": 0,
+      "newImage": 0,
+      "naturalExit": 0
+    },
+    "docxOriginalSemanticRed": {
+      "positivePassed": 2,
+      "failed": 2
+    },
+    "docxSameFourControlsGreen": true,
+    "permanentDocxCases": 6,
+    "affected": {
+      "files": 8,
+      "passed": 99
+    },
+    "actualWebKit": {
+      "scenarios": 3,
+      "checksPassed": 12,
+      "browserVersion": "26.5",
+      "naturalInvalidImageErrorAndOwnSourceRemovalObserved": true,
+      "sharedOtherConsumerRetained": true,
+      "nativeDecodeCompletedBeforeControlledReturnedPromiseHold": true,
+      "noIPCOrOutsideRequests": true,
+      "allOwnedResourcesClosed": true,
+      "scope": "Controlled typed document view input, not a DOCX parser or formal-file-open result; explicitly injected shared errors separate from natural invalid-image error; no physical busy codec/RSS proof."
+    }
+  },
+  "engineering": {
+    "source": "861bacd5c96c16180b8f7466232a18bb5adbd70f",
+    "allSevenPassed": true,
+    "originalSession": 98151,
+    "completionChunk": "9cfe96",
+    "naturalExit": 0,
+    "inputCount": 18413,
+    "stableInputs": true,
+    "frontendFiles": 627,
+    "frontendPassed": 8270,
+    "rustPassed": 2117,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "sourceProductMembers": 2097,
+    "inheritedUnchanged": 2093,
+    "modified": 3,
+    "addedTest": 1,
+    "noFreshManualReadClaimForAll2097": true
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "source": "861bacd5c96c16180b8f7466232a18bb5adbd70f",
+    "binarySha256": "37c374c9bafbbb0a98fefe7242d719ccb89484e018c2194983ae2bfbfddf2f56",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "signatureScope": "Internal ad-hoc; not public signing/notarization/distribution",
+    "candidate9": {
+      "passed": 9,
+      "completionChunk": "b45482"
+    },
+    "installed10": {
+      "passed": 10,
+      "originalSession": 80725,
+      "completionChunk": "f94d35"
+    },
+    "phase": "installedVerifiedNotLaunched",
+    "data": {
+      "captures": 3,
+      "entriesEach": 232530,
+      "strictSameManifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+      "backupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+      "scope": "Three closed-observed endpoints; not continuous zero writes. Normal-quit proof is absent because already closed. Prior data differences/unknown writers/work remain."
+    },
+    "cleanup": {
+      "completionChunk": "8df002",
+      "naturalExit": 0,
+      "exactDuplicateCandidateFilesRemoved": 5,
+      "zipAndMetadataBackupRetained": true
+    },
+    "newAppUiOrRealAgentAcceptanceClaimed": false
+  },
+  "originalFailuresRetained": [
+    "First DOCX resolver did not recurse arrays: four fixture failures, not product RED; R2 corrected only seam and produced two genuine semantic failures.",
+    "Initial browser runner delimiter syntax failure occurred before launch. First actual WebKit fixture PNG unexpectedly loaded then wait-for-error timed out; all owned resources closed and original receipt retained. R2 uses different explicit non-image typed input and passed; no parser or decoder-tolerance root-cause inference.",
+    "Summary-preparation import-map lookup mistake retained; no browser rerun for it.",
+    "R1 composite could not pin a legitimately changed historical source; exact historical959 Git/freeze proof and all current source/engineering gates retained in independently reviewed R2.",
+    "Root initially flattened two helper-template directories; corrected before phase2 execution, content and guards unchanged."
+  ],
+  "remaining": [
+    "NEW-24 affected fresh sends remain paused; known local official inputs unchanged, actual selected permissions/upstream changes remain unknown.",
+    "Real returned media, installed playback/system-open/audibility, decoder/transport memory, ARCH-49 and completeP13/P16 remain open.",
+    "Latest previous Windows39389362143 had262pass/42fail plus separate safety1. No new Windows run or production cleanup change this cohort; full material tree/persistent manifest/public restore remain development gaps.",
+    "Old short AAC/FLAC HTML failures and API-clock differences were not rerun or fixed this cohort.",
+    "Other original151 requirements and29agents by8standards remain; public distribution deferred."
+  ],
+  "authority": "Only plans/agent-access.md schedules. This evidence index is not another plan.",
+  "refs": [
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/code-checkpoint.json",
+      "bytes": 1029,
+      "sha256": "4c9836b6e6fce4496170432ef1a976b1efee6e2354ec7fc4f11b7d6482dfb3f0"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/root-source-delta.json",
+      "bytes": 1089,
+      "sha256": "94567e3741fa0f9990ea304bd4b36c8b46b70b15635eaaaeefa19882c1f266e9"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/checks/affected.json",
+      "bytes": 1734,
+      "sha256": "cd8b5102c2e36969da2adb925499a6509de4ebea25ef4852f12b0518c6aae664"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/authority-resource-audit/audit.json",
+      "bytes": 12307,
+      "sha256": "e76f3d6bb58eae496208c9ad6e67449767dc63f85c07c0f24cd0becd7735d534"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/authority-resource-audit/decoder-preflight-execution.json",
+      "bytes": 1787,
+      "sha256": "dba6c46256292ddef107fad850147abd525aa4f725bbc4188327fb6a040c3dfa"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/authority-resource-audit/decoder-preflight-green-r1/independent-root-delta-review.json",
+      "bytes": 4522,
+      "sha256": "8c177768ab24d356e473cd51918fe4426892f14652fc2a8cbdb0330c8d6ea1e5"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/review-prep/resource-finding.json",
+      "bytes": 12298,
+      "sha256": "5eeb85ac4baaa31972fad591424abc4524ede47468ec8a96d2f249dc839a28bf"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/review-prep/green/source-review.json",
+      "bytes": 7351,
+      "sha256": "e4a5987f1dd2d4323c5dda522e2e9a61f9b9aba7df42b9a17eeb95bc92710e0e"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/review-prep/source-review-final.json",
+      "bytes": 7062,
+      "sha256": "cfc8676c02de0ec6af7db79c6189a3adb803a4fc961624aa633aa0d77c42fca1"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/browser/safe-summary.json",
+      "bytes": 4634,
+      "sha256": "baf82e612a83fd93819a0c783b700aadcf0cfde4a3ff7e0693d0e221ce2327d4"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/browser/r2/verification.json",
+      "bytes": 63525,
+      "sha256": "e24eebe75bf5a4225120bdca12f5000f337d7e1aacceb337c451781b1a34bee8"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/browser/verification.json",
+      "bytes": 29408,
+      "sha256": "a923498b497a7c09f727bcc9c9a16f8b29260b7879d40019cdb2c733c98cb946"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/engineering/verification.json",
+      "bytes": 5843,
+      "sha256": "a08bf3e04d84e2adad958c6dbb994d8f2ad9ef0b38bbfb7f929da43898281d5a"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/final-source-review/source-review.json",
+      "bytes": 21901,
+      "sha256": "3dda6cb358a3acc99873468a9f94287419915892a441ba31afa0aeaf18560b60"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/final-source-review/source-freeze-861bacd5.json",
+      "bytes": 345289,
+      "sha256": "79fdaf5f3c1cd5513268d115d71470adf636fd358c1594ed95ed548dcab42797"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/composite-independent-review/review.json",
+      "bytes": 4393,
+      "sha256": "ebdef6d4d1e09de332cc3d4a187a19db3e4a847ab48999f2c1eb1368d73f8a29"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/composite-independent-review/applied-result-review.json",
+      "bytes": 3550,
+      "sha256": "fb3ed7341bc6aa06b6fd1c07a650c90a9738266d267170f13122bdb3810d9465"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/helper-independent-review/authority-review.json",
+      "bytes": 12403,
+      "sha256": "34db69430ecd6abc3209da9aa73d98a29e4b626179b37ff6399f3157346b0165"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/helper-independent-review/source-review.json",
+      "bytes": 6575,
+      "sha256": "f6eddd68e0504bd003fa61cc4bd9227bcb37a9257282a911c141d5ea6eef20a3"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/helper-independent-review/binding-review.json",
+      "bytes": 12697,
+      "sha256": "c995a3ad9f03e96558f30fc4ded63531ca928b1d6f2f5b20aa8a088082ac9c81"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/helper-independent-review/final-delivery-bindings-review.json",
+      "bytes": 22749,
+      "sha256": "aa34b6e16817f1d8cd9543e09edbdc431c194ce7672e2879e68acf00db59a20c"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/candidate-output/candidate.json",
+      "bytes": 249309,
+      "sha256": "20672f8faab8073bdda011f9411e299bf1fb270bfb46186f4b293b3a913939d0"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/independent/review.json",
+      "bytes": 4240,
+      "sha256": "090d36b62de25146512c7fb887fc46b9921fc02ce0c0795976b0d10871844b95"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/install-result.json",
+      "bytes": 10648,
+      "sha256": "5d12875499befe8f99341fdc8d936806969de01979b14d557ea587674f16bf8b"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "c5f379258c34a586482b3995c099ba1df1c71953f797e10d6a703009608ffc3b"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "32ca698516216c12f55bed3a3feab98a1fee5bc7d93daff875a862a93098f6d5"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "b8ad44014d52917d20333897e6c12e79db3ff4ed213dfbf69db783b57ddfa9b3"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "476de721ce7cc92a099fe5c2e1de578951666ac00b465fe6450ea3dcbde2958b"
+    },
+    {
+      "path": "output/2026-10-20-media-lifecycle-next/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "61449309630d53abe8c402ffd5c9d2e8fb20702df4551604bca5ae15506386ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-20-next-resource-stage/verification.json",
+      "bytes": 16452,
+      "sha256": "051e56daa5eb618335285443a98bd10be33986b9035b48f20d1cf3e6ea541e04"
+    }
+  ]
+}
