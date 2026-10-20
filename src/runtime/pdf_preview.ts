@@ -47,6 +47,7 @@ export async function renderPdfPage(
         { type: "module" },
       );
       worker.addEventListener("error", () => fail(S.failed));
+      worker.addEventListener("messageerror", () => fail(S.failed));
       worker.addEventListener("message", (event) => {
         const value = event.data;
         if (settled) {

@@ -23,6 +23,7 @@ globalThis.onmessage = async (event: MessageEvent) => {
       type: "module",
     });
     parser.addEventListener("error", () => failure());
+    parser.addEventListener("messageerror", () => failure());
     parser.addEventListener("message", (message) => {
       if (message.data?.farfoldPdfIncomplete === true) failure();
     });

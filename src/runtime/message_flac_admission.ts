@@ -29,7 +29,10 @@ function requireFlac(value: unknown): asserts value {
  * Neither is a zero-duration success. Reserved metadata stays uncovered while
  * independently known budgets still apply. Payloads (including PICTURE/URIs),
  * actual playback and decoder memory are not inspected. Unknown total samples
- * additionally receive only the selected constant-frame lower-bound observer.
+ * receive the selected constant-frame observer. Positive totals retain their
+ * metadata-only compatibility, but cannot erase an independently verified
+ * over-budget frame prefix. An incomplete/capped optional observation is not
+ * a duration success or an additional positive-total format restriction.
  * https://www.rfc-editor.org/rfc/rfc9639.html
  * Leading ID3 is optional decoder compatibility, not a FLAC conformance rule:
  * https://www.xiph.org/flac/documentation_format_overview.html
@@ -97,6 +100,24 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
         bits,
         blockSize,
       });
+    if (rate) {
+      // Keep the original shared record budget. Only a completely known frame
+      // prefix can override a short positive declaration; partial observations
+      // retain the old declaration policy, including metadata-only fixtures.
+      try {
+        if (
+          messageFlacFrameLowerBound(reader, at, records, {
+            rate,
+            channels,
+            bits,
+            blockSize,
+          }) === "audioTooLong"
+        )
+          return "audioTooLong";
+      } catch (error) {
+        if (!(error instanceof MessageRasterError)) throw error;
+      }
+    }
     return !rate || uncovered ? "notCovered" : "withinBudget";
   } catch (error) {
     if (error instanceof MessageRasterError) return "invalid";

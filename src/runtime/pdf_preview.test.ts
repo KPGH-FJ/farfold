@@ -140,6 +140,57 @@ it("bounds concurrent rendering trees and releases capacity after cancellation",
     .receive({ kind: "ready", pages: 2, bitmap: new Bitmap() });
   await next;
 });
+it.each(["error", "messageerror"])(
+  "retires only its own worker on %s and permits a fresh preview before timeout",
+  async (event) => {
+    vi.useFakeTimers();
+    const first = new AbortController(),
+      second = new AbortController(),
+      replacement = new AbortController();
+    const target = canvas(),
+      ready = vi.fn();
+    target.width = 120;
+    target.height = 160;
+    let outcome: unknown = "pending";
+    const a = start(first.signal, target, ready).catch((error: unknown) => {
+      outcome = error;
+    });
+    const b = start(second.signal).catch(() => {});
+    let c: Promise<void> | undefined;
+    try {
+      const [failed, other] = FakeWorker.instances;
+      await expect(start()).rejects.toThrow(S.busy);
+      failed.dispatchEvent(new Event(event));
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(outcome).toEqual(new Error(S.failed));
+      await a;
+      expect([target.width, target.height]).toEqual([0, 0]);
+      expect(ready).not.toHaveBeenCalled();
+      expect(failed.terminate).toHaveBeenCalledOnce();
+      expect(other.terminate).not.toHaveBeenCalled();
+      expect(vi.getTimerCount()).toBe(1);
+      failed.dispatchEvent(new Event(event));
+      const late = new Bitmap();
+      failed.receive({ kind: "ready", pages: 3, bitmap: late });
+      expect(late.close).toHaveBeenCalledOnce();
+      expect(failed.terminate).toHaveBeenCalledOnce();
+      c = start(replacement.signal);
+      await expect(start()).rejects.toThrow(S.busy);
+      FakeWorker.instances
+        .at(-1)!
+        .receive({ kind: "ready", pages: 3, bitmap: new Bitmap() });
+      await c;
+      expect(other.terminate).not.toHaveBeenCalled();
+    } finally {
+      first.abort();
+      second.abort();
+      replacement.abort();
+      await Promise.all([a, b, c]);
+    }
+    expect(vi.getTimerCount()).toBe(0);
+  },
+);
 it("gives an explicit unsupported-environment outcome and allocates nothing for cancellation", async () => {
   const abort = new AbortController();
   abort.abort();
