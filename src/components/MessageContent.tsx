@@ -27,6 +27,7 @@ import {
 
 export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
 const FileOpenContext = createContext<OpenMessageFile | null>(null);
+const MarkdownLinkLabelContext = createContext(false);
 
 /** Consumes current navigation context even when the Markdown tree is cached. */
 export function MessageFileLink({
@@ -313,6 +314,17 @@ export function MessageResultLink({
   return <span className="message-file-link">{children}</span>;
 }
 
+/** Markdown image destinations remain explicit source links, never loads. */
+function MarkdownImageLink({ src, alt }: { src?: string; alt?: string }) {
+  const inLinkLabel = useContext(MarkdownLinkLabelContext);
+  const label = alt || A.kindNames.image;
+  return inLinkLabel ? (
+    <span>{label}</span>
+  ) : (
+    <MessageResultLink href={src}>{label}</MessageResultLink>
+  );
+}
+
 function textFromNode(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") {
     return String(node);
@@ -364,7 +376,7 @@ function messageTree(source: object, text: string): ReactNode {
     children: text,
     remarkPlugins: [remarkGfm],
     urlTransform: (url, key) =>
-      key !== "href"
+      key !== "href" && key !== "src"
         ? defaultUrlTransform(url)
         : messageLink(url).kind === "unavailable"
           ? undefined
@@ -373,8 +385,13 @@ function messageTree(source: object, text: string): ReactNode {
       pre: CodeBlock,
       code: InlineFileCode,
       a: ({ children, href }) => (
-        <MessageResultLink href={href}>{children}</MessageResultLink>
+        <MessageResultLink href={href}>
+          <MarkdownLinkLabelContext.Provider value={true}>
+            {children}
+          </MarkdownLinkLabelContext.Provider>
+        </MessageResultLink>
       ),
+      img: MarkdownImageLink,
     },
   });
   parsedMessages.set(source, { text, tree });
