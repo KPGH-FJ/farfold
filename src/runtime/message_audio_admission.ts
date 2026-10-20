@@ -19,22 +19,37 @@ function requireAudio(value: unknown): asserts value {
   if (!value) throw new MessageRasterError("invalid");
 }
 
-interface LinearFormat {
+interface StoredFrameFormat {
   align: number;
   sampleRate: number;
 }
 
-/** Only known linear formats permit frames = data bytes / block alignment.
- * Unknown compressed formats never inherit PCM byte-rate/sample assumptions. */
-function linearFormat(
+/** Known PCM/float and byte-per-channel G.711 stored-frame layouts only.
+ * G.711's one encoded octet per sample permits the same stored-frame count;
+ * other compressed formats never inherit this byte/sample relationship. */
+function storedFrameFormat(
   reader: MessageRasterReader,
   at: number,
   length: number,
-): LinearFormat | null {
+): StoredFrameFormat | null {
   // The original WAVE common fields are 14 bytes. Bits/extension fields are
   // format-specific; do not demand a PCM layout of an unknown format.
   requireAudio(length >= 14);
   let tag = reader.u16le(at);
+  if (tag === 6 || tag === 7) {
+    // Selected ordinary WAVEFORMATEX A-law/mu-law with no extra fields.
+    // Unknown extension layouts stay compatible and uncovered. RFC3551
+    // section4.5.14 specifies eight encoded bits per G.711 sample;
+    // RFC2361 A.7/A.8 identifies the WAVE tags. No PCM is decoded here.
+    if (length !== 18 || reader.u16le(at + 16) !== 0) return null;
+    const channels = reader.u16le(at + 2);
+    const sampleRate = reader.u32le(at + 4);
+    const align = reader.u16le(at + 12);
+    requireAudio(channels > 0 && sampleRate > 0 && reader.u16le(at + 14) === 8);
+    requireAudio(align === channels);
+    requireAudio(reader.u32le(at + 8) === sampleRate * align);
+    return { align, sampleRate };
+  }
   if (tag !== 1 && tag !== 3 && tag !== 0xfffe) return null;
   requireAudio(length >= 16);
   const bits = reader.u16le(at + 14);
@@ -66,10 +81,10 @@ function linearFormat(
 /** Classic little-endian RIFF/WAVE declarations only. Caller must first enforce
  * canonical Base64 and the existing per-file byte limit. Cross-audio-MIME
  * signatures receive the same check. No URL, full binary buffer or audio
- * decoder is created. RIFX/RF64/Wave64, compressed WAVE, wavl, playlist timing
+ * decoder is created. RIFX/RF64/Wave64, other compressed WAVE, wavl, playlist timing
  * and other containers remain uncovered. A playlist cannot hide a known
- * direct linear data extent; its stored frames retain the independent budget.
- * Duration is linear stored data frames, not elapsed playback, loop duration,
+ * recognized stored-data extent; its stored frames retain the independent budget.
+ * Duration is recognized stored data frames, not elapsed playback, loop duration,
  * resampled allocation, compressed expansion or transport-memory proof.
  * Microsoft/IBM RIFF WAVE specification: fmt precedes a single data or wavl.
  */
@@ -88,7 +103,7 @@ export function messageAudioAdmission(
     let fmtSeen = false;
     let dataSeen = false;
     let extendedLayout = false;
-    let linear: LinearFormat | null = null;
+    let format: StoredFrameFormat | null = null;
     let dataBytes: number | null = null;
     while (at < reader.length) {
       if (++records > MAX_MESSAGE_AUDIO_RECORDS) return "audioTooComplex";
@@ -101,7 +116,7 @@ export function messageAudioAdmission(
       if (reader.matches(at, "fmt ")) {
         requireAudio(!fmtSeen && !dataSeen);
         fmtSeen = true;
-        linear = linearFormat(reader, start, length);
+        format = storedFrameFormat(reader, start, length);
       } else if (reader.matches(at, "data")) {
         requireAudio(fmtSeen && !dataSeen);
         dataSeen = true;
@@ -118,10 +133,10 @@ export function messageAudioAdmission(
       at = end + (length % 2);
     }
     requireAudio(fmtSeen && dataSeen);
-    if (!linear || dataBytes === null) return "notCovered";
-    requireAudio(dataBytes % linear.align === 0);
-    const frames = dataBytes / linear.align;
-    if (frames > linear.sampleRate * MAX_MESSAGE_AUDIO_SECONDS)
+    if (!format || dataBytes === null) return "notCovered";
+    requireAudio(dataBytes % format.align === 0);
+    const frames = dataBytes / format.align;
+    if (frames > format.sampleRate * MAX_MESSAGE_AUDIO_SECONDS)
       return "audioTooLong";
     return extendedLayout ? "notCovered" : "withinBudget";
   } catch (error) {
