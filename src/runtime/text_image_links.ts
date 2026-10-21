@@ -16,7 +16,11 @@ function runEnd(text: string, at: number, delimiter: string) {
   return at;
 }
 function lineStart(text: string, at: number) {
-  return /^ {0,3}$/.test(text.slice(text.lastIndexOf("\n", at - 1) + 1, at));
+  let start = at;
+  // Only zero to three spaces can precede a fence. Inspect that bounded
+  // suffix instead of searching the whole line again for each delimiter.
+  while (start > 0 && at - start < 4 && text[start - 1] === " ") start--;
+  return at - start <= 3 && (start === 0 || text[start - 1] === "\n");
 }
 function indentedLineEnd(text: string, at: number) {
   let next = at;
@@ -32,17 +36,17 @@ function skipCode(text: string, at: number, delimiter: string): number {
   let next = end;
   while ((next = text.indexOf(delimiter, next)) !== -1) {
     const close = runEnd(text, next, delimiter);
-    const lineEnd = text.indexOf("\n", close);
-    if (
-      fenced
-        ? close - next >= width &&
-          lineStart(text, next) &&
-          /^\s*$/.test(
-            text.slice(close, lineEnd === -1 ? text.length : lineEnd),
-          )
-        : close - next === width
-    )
-      return close;
+    if (!fenced) {
+      if (close - next === width) return close;
+    } else if (close - next >= width && lineStart(text, next)) {
+      // A narrower or mid-line delimiter cannot close this fence. Only a
+      // possible closing fence needs to inspect its remaining line.
+      const lineEnd = text.indexOf("\n", close);
+      if (
+        /^\s*$/.test(text.slice(close, lineEnd === -1 ? text.length : lineEnd))
+      )
+        return close;
+    }
     next = close;
   }
   // An unfinished code fragment remains literal, including any image examples.

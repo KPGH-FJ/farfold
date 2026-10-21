@@ -1,5 +1,9 @@
 import { SaxesParser } from "saxes";
 import { PPTX_LIMITS, PptxError } from "./pptx_types";
+import {
+  extendXmlNamespaceScope,
+  type XmlNamespaceScope,
+} from "./xml_namespace_scope";
 
 export const P = "http://schemas.openxmlformats.org/presentationml/2006/main";
 export const R =
@@ -15,7 +19,7 @@ export interface PptxXml {
   name: string;
   uri: string;
   attrs: Record<string, string>;
-  namespaces: Record<string, string>;
+  namespaces: XmlNamespaceScope;
   children: PptxXml[];
   text: string;
 }
@@ -109,7 +113,7 @@ export function parseXml(bytes: Uint8Array, budget: XmlBudget): PptxXml {
       name: tag.local,
       uri: tag.uri,
       attrs,
-      namespaces: { ...stack.at(-1)?.namespaces, ...tag.ns },
+      namespaces: extendXmlNamespaceScope(stack.at(-1)?.namespaces, tag.ns),
       children: [],
       text: "",
     };
