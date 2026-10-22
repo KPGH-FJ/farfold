@@ -26,6 +26,7 @@ import {
 } from "../runtime/sessions";
 import { ThreadView } from "./ThreadView";
 import { ToolStep } from "./thread-items";
+import { TranscriptSearchContext } from "./transcript-search";
 const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown): void;
 };
@@ -39,15 +40,17 @@ function state(id: string) {
   s.running = true;
   return s;
 }
-const render = (thread: ThreadState) =>
+const render = (thread: ThreadState, search = false) =>
   renderToStaticMarkup(
-    <ThreadView
-      thread={thread}
-      active
-      agents={[]}
-      onGoSettings={() => {}}
-      onOpened={() => {}}
-    />,
+    <TranscriptSearchContext.Provider value={search}>
+      <ThreadView
+        thread={thread}
+        active
+        agents={[]}
+        onGoSettings={() => {}}
+        onOpened={() => {}}
+      />
+    </TranscriptSearchContext.Provider>,
   );
 const approval = (html: string) =>
   html.slice(
@@ -173,8 +176,12 @@ it("keeps unknown input fully inspectable as escaped JSON without inventing comm
     },
     options,
   });
-  const html = approval(render(s));
-  expect(html).toContain("完整输入");
+  const collapsed = approval(render(s));
+  expect(collapsed).toContain("完整输入");
+  expect(collapsed).not.toContain("preserved-value");
+  expect(collapsed).not.toContain("<pre");
+  const html = approval(render(s, true));
+  expect(html).not.toContain('open=""');
   expect(html).toContain("preserved-value");
   expect(html).toContain("&lt;unsafe-tag&gt;");
   expect(html).not.toContain("<unsafe-tag>");
