@@ -2,6 +2,8 @@ export const ASYNC_TASKS = {
   title: "后台任务",
   update: "后台任务更新",
   stop: "停止任务",
+  source: "查看来源步骤",
+  sourceUnavailable: "来源步骤尚未载入或无法确定",
   running: "仍在运行",
   requested: "正在请求停止…",
   accepted: "停止请求已接受，等待任务结果",

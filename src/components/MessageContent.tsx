@@ -18,6 +18,7 @@ import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings"
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
 import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
+import { MessageAudioCompatibility } from "./MessageAudioCompatibility";
 import { useMessageMediaVisibility } from "./message-media-visibility";
 import { useSearchExpansion } from "./transcript-search";
 import {
@@ -274,6 +275,15 @@ function MessageAttachment({
             >
               {A.retryMedia}
             </button>
+            {failed &&
+              admission?.status === "available" &&
+              admission.media.kind === "audio" && (
+                <MessageAudioCompatibility
+                  key={admission.media.src}
+                  source={admission.media.src}
+                  name={attachment.name}
+                />
+              )}
           </div>
         )}
         {!mediaWaiting &&

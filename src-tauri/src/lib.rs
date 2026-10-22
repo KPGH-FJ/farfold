@@ -7,6 +7,7 @@ mod api_test;
 #[cfg(target_os = "macos")]
 mod app_menu;
 mod archive_zip;
+mod audio_preview;
 mod auth;
 mod browser_sharing;
 mod browser_workspace;
@@ -188,6 +189,8 @@ pub fn run() {
                 return true;
             }
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
+                audio_preview::audio_preview_available,
+                audio_preview::audio_preview_decode,
                 storage_recovery::storage_recovery_status,
                 storage_recovery::storage_recovery_retry,
                 storage_recovery::storage_recovery_export,

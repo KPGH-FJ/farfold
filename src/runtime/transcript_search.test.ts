@@ -4,6 +4,7 @@ import {
   registerSearchExpansion,
   revealSearchAncestors,
   keepSearchAncestors,
+  openTranscriptAncestors,
 } from "./transcript_search";
 
 it("temporarily reveals a closed disclosure and restores its user's choice", () => {
@@ -15,6 +16,32 @@ it("temporarily reveals a closed disclosure and restores its user's choice", () 
   release();
   expect(fold.open).toBe(false);
   expect(changed).toHaveBeenCalledTimes(2);
+});
+
+it("explicit source navigation opens only its transcript and survives a search release", () => {
+  const outside = { parentElement: null } as unknown as HTMLElement;
+  const root = { parentElement: outside } as HTMLElement;
+  const parent = { parentElement: root } as HTMLElement;
+  const child = { parentElement: parent } as HTMLElement;
+  root.contains = (node: Node | null) =>
+    node === root || node === parent || node === child;
+  const outsideFold = new SearchExpansion(),
+    parentFold = new SearchExpansion(),
+    childFold = new SearchExpansion();
+  const cleanup = [
+    registerSearchExpansion(outside, outsideFold),
+    registerSearchExpansion(parent, parentFold),
+    registerSearchExpansion(child, childFold),
+  ];
+  const release = revealSearchAncestors(child, root);
+  openTranscriptAncestors(child, root);
+  release();
+  expect(parentFold.userOpen && childFold.userOpen).toBe(true);
+  expect(outsideFold.open).toBe(false);
+  childFold.choose(false);
+  openTranscriptAncestors(outside, root);
+  expect(childFold.open).toBe(false);
+  cleanup.forEach((remove) => remove());
 });
 it("does not close a disclosure the user had opened", () => {
   const fold = new SearchExpansion(true);

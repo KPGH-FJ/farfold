@@ -12,6 +12,7 @@ const h = vi.hoisted(() => ({
   cleanup: undefined as undefined | (() => void),
   current: undefined as unknown,
   stop: vi.fn(),
+  show: vi.fn(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -25,7 +26,7 @@ vi.mock("../runtime/sessions", () => ({
   threads: { thread: () => h.current, stopTask: h.stop },
 }));
 import { AsyncTasks } from "./AsyncTasks";
-import { freshThreadState } from "../runtime/session_projection";
+import { applyUpdate, freshThreadState } from "../runtime/session_projection";
 import { receiveAsyncTasks } from "../runtime/async_tasks";
 import { ASYNC_TASKS as T } from "../runtime/async_task_strings";
 import type { ThreadState } from "../runtime/session_types";
@@ -42,7 +43,7 @@ function nodes(tree: ReactNode): ReactElement<Record<string, unknown>>[] {
 }
 function render(active = true) {
   h.cursor = 0;
-  const tree = AsyncTasks({ thread, active });
+  const tree = AsyncTasks({ thread, active, onShowTool: h.show });
   return {
     html: renderToStaticMarkup(tree),
     buttons: nodes(tree).filter((e) => e.type === "button"),
@@ -55,6 +56,7 @@ beforeEach(() => {
   h.cursor = 0;
   h.cleanup = undefined;
   h.stop.mockReset();
+  h.show.mockReset();
   thread = freshThreadState("view", "agent", "/own", "native");
   thread.connectionId = "conn";
   h.current = thread;
@@ -129,3 +131,60 @@ it("does not automatically collapse the details when the requested task finishes
   thread.asyncTasks!.tasks[0].state = "completed";
   expect(render().html).toContain('<details open="">');
 });
+
+function addSource() {
+  applyUpdate(thread, {
+    sessionUpdate: "tool_call",
+    toolCallId: "source-tool",
+    title: "Reported source",
+    kind: "execute",
+    status: "in_progress",
+  });
+  thread.asyncTasks!.tasks[0].toolCallId = "source-tool";
+  return thread.items.find((item) => item.kind === "tool")!;
+}
+it("locates the exact reported source independently of task stop or completion", () => {
+  const source = addSource();
+  thread.asyncTasks!.tasks[0].state = "completed";
+  const view = render();
+  expect(view.html).toContain(T.source);
+  expect(h.show).not.toHaveBeenCalled();
+  click(view.buttons[0]);
+  expect(h.show).toHaveBeenCalledExactlyOnceWith(source);
+  expect(h.stop).not.toHaveBeenCalled();
+});
+it.each(["missing", "ambiguous", "connection", "session"])(
+  "does not substitute another source when %s",
+  (mode) => {
+    const source = addSource();
+    if (mode === "missing") thread.items = [];
+    if (mode === "ambiguous") thread.items.push({ ...source, id: "other" });
+    if (mode === "connection") thread.connectionId = "another";
+    if (mode === "session") thread.nativeSessionId = "another";
+    const view = render();
+    expect(view.html).toContain(T.sourceUnavailable);
+    expect(
+      view.buttons.some((button) => button.props.children === T.source),
+    ).toBe(false);
+    expect(h.show).not.toHaveBeenCalled();
+  },
+);
+it.each(["hide", "replace", "unmount", "removed", "ambiguous"])(
+  "rejects a stale source action after %s",
+  (mode) => {
+    const source = addSource();
+    const old = render().buttons[0];
+    if (mode === "hide") render(false);
+    if (mode === "replace") {
+      thread = { ...thread };
+      h.current = thread;
+      render();
+    }
+    if (mode === "unmount") h.cleanup!();
+    if (mode === "removed") thread.items = [];
+    if (mode === "ambiguous") thread.items.push({ ...source, id: "other" });
+    click(old);
+    expect(h.show).not.toHaveBeenCalled();
+    expect(h.stop).not.toHaveBeenCalled();
+  },
+);

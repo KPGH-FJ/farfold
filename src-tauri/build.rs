@@ -36,7 +36,12 @@ fn compile_macos() {
         .collect();
     std::fs::write(output.join("BrowserObservation.inc"), literals)
         .expect("browser observation include");
-    for name in ["BrowserWorkspace", "DesktopNotifications", "AppQuit"] {
+    for name in [
+        "BrowserWorkspace",
+        "DesktopNotifications",
+        "AppQuit",
+        "AudioPreview",
+    ] {
         let source = root.join(format!("native/{name}.m"));
         let object = output.join(format!("{name}.o"));
         run_xcrun(
@@ -69,6 +74,7 @@ fn compile_macos() {
             output.join("BrowserWorkspace.o").as_os_str(),
             output.join("DesktopNotifications.o").as_os_str(),
             output.join("AppQuit.o").as_os_str(),
+            output.join("AudioPreview.o").as_os_str(),
         ],
     );
     println!("cargo:rustc-link-search=native={}", output.display());
@@ -76,6 +82,7 @@ fn compile_macos() {
     println!("cargo:rustc-link-lib=framework=AppKit");
     println!("cargo:rustc-link-lib=framework=WebKit");
     println!("cargo:rustc-link-lib=framework=UserNotifications");
+    println!("cargo:rustc-link-lib=framework=AudioToolbox");
 }
 
 fn compile_windows_launcher() {
@@ -127,6 +134,8 @@ fn main() {
     println!("cargo:rerun-if-changed=native/DesktopNotifications.m");
     println!("cargo:rerun-if-changed=native/AppQuit.h");
     println!("cargo:rerun-if-changed=native/AppQuit.m");
+    println!("cargo:rerun-if-changed=native/AudioPreview.h");
+    println!("cargo:rerun-if-changed=native/AudioPreview.m");
     match env::var("CARGO_CFG_TARGET_OS")
         .expect("Cargo target OS")
         .as_str()

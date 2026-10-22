@@ -160,3 +160,36 @@ it("rejects a cross-session declaration and keeps an earlier recognized label hi
   ).toBeUndefined();
   expect(render(s)).toContain(STRINGS.thread.rawUpdate);
 });
+
+it("wires a declared task to its uniquely loaded tool without synthesizing a hierarchy", () => {
+  const s = setup();
+  apply(s, {
+    sessionUpdate: "tool_call",
+    toolCallId: "reported-tool",
+    kind: "execute",
+    title: "Source command",
+    status: "in_progress",
+  });
+  receiveAsyncTasks(s, {
+    kind: "asyncTasks",
+    connectionId: "connection",
+    sessionId: "session",
+    supported: true,
+    overflow: false,
+    tasks: [
+      {
+        asyncTaskId: "reported-task",
+        name: "Controlled task",
+        taskType: "shell",
+        toolCallId: "reported-tool",
+        canStop: true,
+        state: "running",
+        stopRequest: "idle",
+      },
+    ],
+  });
+  const html = render(s);
+  expect(html).toContain(ASYNC_TASKS.source);
+  expect(html).toContain("data-tool-item=");
+  expect(s.items.filter((item) => item.kind === "tool")).toHaveLength(1);
+});

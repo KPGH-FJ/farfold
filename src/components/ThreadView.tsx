@@ -2,6 +2,7 @@ import { audioCapability } from "../runtime/audio_input";
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import { AsyncTasks } from "./AsyncTasks";
+import { showToolLocation } from "./showToolLocation";
 import { ASYNC_TASKS } from "../runtime/async_task_strings";
 import { MessageResendDialog } from "./MessageResendDialog";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
@@ -828,7 +829,13 @@ export function ThreadView({
                   )}
               </div>
             )}
-            <AsyncTasks thread={thread} active={active} />
+            <AsyncTasks
+              thread={thread}
+              active={active}
+              onShowTool={(tool) => {
+                if (ownsContent()) showToolLocation(scrollRef.current, tool.id);
+              }}
+            />
             {empty && !thread.openError && (
               <div className="who">{STRINGS.thread.draftHint}</div>
             )}
@@ -887,6 +894,7 @@ export function ThreadView({
                             <ToolStep
                               key={item.id}
                               call={item.call}
+                              transcriptItemId={item.id}
                               onOpenFile={openFile}
                               activity={toolActivityState(thread, item.call)}
                               onOpenArtifacts={

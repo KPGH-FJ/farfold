@@ -63,3 +63,20 @@ export function keepSearchAncestors(element: HTMLElement) {
     if (model?.open && !model.userOpen) model.choose(true);
   }
 }
+
+/** Explicit navigation is a user choice, so a later search release must not
+ * hide the destination. Never open disclosures outside the owning transcript. */
+export function openTranscriptAncestors(
+  element: HTMLElement,
+  root: HTMLElement,
+) {
+  if (!root.contains(element)) return;
+  for (
+    let node: HTMLElement | null = element;
+    node;
+    node = node.parentElement
+  ) {
+    disclosures.get(node)?.choose(true);
+    if (node === root) break;
+  }
+}

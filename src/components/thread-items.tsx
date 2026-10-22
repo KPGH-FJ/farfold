@@ -421,11 +421,13 @@ function ToolDetail({
 
 export function ToolStep({
   call,
+  transcriptItemId,
   activity,
   onOpenArtifacts,
   onOpenFile,
 }: {
   call: ToolCallView;
+  transcriptItemId?: string;
   activity?: "active" | "finished" | "unknown";
   onOpenArtifacts?: MouseEventHandler<HTMLButtonElement>;
   onOpenFile?: OpenMessageFile;
@@ -437,7 +439,11 @@ export function ToolStep({
   const duration = durationLabel(call);
   const loc = call.locations[0]?.path;
   return (
-    <div ref={expansion.ref}>
+    <div
+      ref={expansion.ref}
+      data-tool-item={transcriptItemId}
+      tabIndex={transcriptItemId ? -1 : undefined}
+    >
       <div className="step">
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">

@@ -3,14 +3,20 @@ import { useEffect, useRef } from "react";
 import { canStopAsyncTask } from "../runtime/async_tasks";
 import { ASYNC_TASKS as T } from "../runtime/async_task_strings";
 import { threads } from "../runtime/sessions";
+import {
+  asyncTaskToolLocations,
+  type AsyncTaskTool,
+} from "../runtime/async_task_location";
 import "./AsyncTasks.css";
 
 export function AsyncTasks({
   thread,
   active,
+  onShowTool,
 }: {
   thread: ThreadState;
   active: boolean;
+  onShowTool?: (tool: AsyncTaskTool) => void;
 }) {
   const owner = thread.asyncTasks;
   const latest = useRef({ thread, owner, active });
@@ -24,6 +30,7 @@ export function AsyncTasks({
   latest.current = { thread, owner, active };
   if (!owner?.supported || (!owner.tasks.length && !owner.overflow))
     return null;
+  const locations = onShowTool ? asyncTaskToolLocations(thread) : null;
   return (
     <section className="async-tasks" aria-label={T.title}>
       <details open>
@@ -34,6 +41,9 @@ export function AsyncTasks({
         {owner.overflow && <p role="status">{T.overflow}</p>}
         <ul>
           {owner.tasks.map((task) => {
+            const source = task.toolCallId
+              ? locations?.get(task.toolCallId)
+              : undefined;
             const unsettled =
               task.state === "running" || task.state === "unknown";
             const status =
@@ -50,6 +60,32 @@ export function AsyncTasks({
                 <span className="async-task-status" role="status">
                   {status}
                 </span>
+                {source && onShowTool ? (
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={!active}
+                    onClick={() => {
+                      if (
+                        mounted.current &&
+                        latest.current.active &&
+                        latest.current.thread === thread &&
+                        latest.current.owner === owner &&
+                        thread.asyncTasks === owner &&
+                        threads.thread(thread.key) === thread &&
+                        asyncTaskToolLocations(thread).get(task.toolCallId!) ===
+                          source
+                      )
+                        onShowTool(source);
+                    }}
+                  >
+                    {T.source}
+                  </button>
+                ) : task.toolCallId && onShowTool ? (
+                  <span className="async-task-status">
+                    {T.sourceUnavailable}
+                  </span>
+                ) : null}
                 {unsettled && task.canStop && (
                   <button
                     type="button"

@@ -4,6 +4,17 @@ export const MESSAGE_ATTACHMENTS = {
   audioUnavailable: "音频暂时无法播放",
   imageFailed: "这张图片无法显示，消息原文和来源仍已保留。",
   audioFailed: "这段音频无法播放，消息原文和来源仍已保留。",
+  audioCompatibility: "尝试兼容播放",
+  audioCompatibilityPreparing: "正在准备兼容播放…",
+  audioCompatibilityReady:
+    "已准备兼容播放，请点播放。时长可能与原预览不同，原音频保持不变。",
+  audioCompatibilityFailed: "兼容播放未能完成，原音频和来源仍已保留。",
+  audioCompatibilityUnavailable:
+    "当前系统暂不支持兼容播放。原音频和来源仍已保留。",
+  audioCompatibilityBusy: "音频仍在处理中，请稍后重试。",
+  audioCompatibilityLimit: "兼容播放超过处理上限，原音频和来源仍已保留。",
+  audioCompatibilityCancel: "取消准备",
+  audioCompatibilityCancelled: "已取消本次显示。音频处理结束后会释放资源。",
   retryMedia: "重新载入",
   previewUnavailable: "此附件暂不支持预览",
   mediaTooLarge: "此媒体超过 16 MiB，本次未加载；消息原文和来源仍已保留。",
