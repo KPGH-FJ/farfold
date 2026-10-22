@@ -65,6 +65,10 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
     part: string;
     noteId?: string;
   }[] = [];
+  // Package trees are immutable during this parse. Check the entire part once,
+  // including unreferenced notes, and keep note lookup local to this document.
+  const checkedParts = new Set<DocxXml>();
+  const noteIndexes = new Map<DocxXml, Map<string, DocxXml | null>>();
   const id = () => {
     if (++blockCount > DOCX_LIMITS.blocks) throw new DocxError("limit");
     return `block-${blockCount}`;
@@ -89,6 +93,7 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
     storyQueue.push({ kind, part, noteId });
   };
   const checkActive = (node: DocxXml) => {
+    if (checkedParts.has(node)) return;
     const stack = [node];
     while (stack.length) {
       const n = stack.pop()!;
@@ -122,6 +127,7 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
         throw new DocxError("unsupported");
       for (const c of n.children) stack.push(c);
     }
+    checkedParts.add(node);
   };
   const section = (n: DocxXml, ctx: StoryContext) => {
     for (const c of n.children) {
@@ -518,11 +524,22 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
       storyNodes = tree.children;
     } else {
       root(tree, item.kind + "s");
-      const notes = children(tree, item.kind).filter(
-        (n) => attr(n, "id") === item.noteId,
-      );
-      if (notes.length !== 1) throw new DocxError("invalid");
-      storyNodes = notes[0].children;
+      let notes = noteIndexes.get(tree);
+      if (!notes) {
+        notes = new Map();
+        for (const note of children(tree, item.kind)) {
+          const noteId = attr(note, "id");
+          if (noteId !== undefined)
+            notes.set(noteId, notes.has(noteId) ? null : note);
+        }
+        noteIndexes.set(tree, notes);
+      }
+      // Only a selected duplicate is invalid; unused duplicate IDs retain the
+      // existing behavior. IDs remain literal strings, including leading zeros.
+      const note =
+        item.noteId === undefined ? undefined : notes.get(item.noteId);
+      if (!note) throw new DocxError("invalid");
+      storyNodes = note.children;
     }
     stories.push({
       id: `story-${i + 1}`,

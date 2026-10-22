@@ -317,9 +317,11 @@ function ToolInput({
           </pre>
         </>
       )}
-      <SearchDisclosure className="raw-block">
+      <SearchDisclosure
+        className="raw-block"
+        renderBody={() => <pre data-find-block>{safeStringify(input)}</pre>}
+      >
         <summary>{STRINGS.thread.fullInput}</summary>
-        <pre data-find-block>{safeStringify(input)}</pre>
       </SearchDisclosure>
     </div>
   );
