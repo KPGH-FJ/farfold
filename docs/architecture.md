@@ -81,6 +81,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 
+[xlsx_sheet.ts](../src/runtime/xlsx_sheet.ts)为每张已选工作表使用16,385项Uint32列索引（65,540字节数据区），以样式编号加一保存覆盖，默认样式0也能拒绝重叠。有效区间总覆盖不超过16,384列；区间检查与填充有界，单元格按行/列默认与显式样式优先级读取，列布局保持输入顺序。XML、单元格及展开文字原上限不变；这不是总解析内存或耗时保证。
+
 [xml_namespace_scope.ts](../src/runtime/xml_namespace_scope.ts)供DOCX/PPTX解析器共用只读声明作用域：无本地声明时共用父作用域，有声明时仅保存本地自有数据并冻结，祖先声明不复制到每个节点。前缀继承、局部覆盖、兄弟隔离及MC分支和MustUnderstand规则保持，特殊名称不触发原型设置。原XML预算及未知格式拒绝不变；本批受控验证中真实Worker所用输入是自有合成parts，文件身份为逻辑夹具标签，不能称为系统文件/ZIP核验或完整Office排版证明。
 
 PDF外层[预览](../src/runtime/pdf_preview.ts)及内层[绘制线程](../src/workers/pdf_render.worker.ts)均将`messageerror`接入各自原有失败路径：外层清画布、计时与取消监听，结束自己的线程并归还原共享名额；内层固定失败消息使迟到结果不再发布成功，已返回的位图由原分支关闭。没有增加第二套名额或等待期限；受控事件与浏览器分项不证明真实反序列化故障、物理线程树停止或内存释放。
@@ -143,6 +145,8 @@ Agent历史仍归 Agent所有。列表、正文读取与继续对话分别处理
 | 所选附件内容 | 明确选取的当前本地文字、DOCX、XLSX、PDF、PPTX的可解析文字  | 附件历史版本、OCR、音频、网页及全格式正文      |
 
 已加载查找在worker内按字段和总量限额执行，迟到结果需校验当前范围。官方历史读取使用临时任务与归属控制，只接受已核入口；已注册方式只证明其返回的保存记录，不推断当前分支或可继续效果。取消/超时不冒充实际停止，SDK内部读取与分配也不被外部输出限额完全约束。入口见 [history_search_controller.ts](../src/runtime/history_search_controller.ts) 与 [history_search](../src-tauri/src/acp_client/history_search)。
+
+[loaded_search_markdown.ts](../src/runtime/loaded_search_markdown.ts)用与消息相同的Markdown/GFM解析提取可见字段；图片取与MessageContent相同的说明或空说明标签，保留其所在连续文字段，目标网址/Base64不入字段，也不加载图片。搜索命中仍须通过[loaded_search_dom.ts](../src/runtime/loaded_search_dom.ts)的原消息归属与完整字段严格相等检查，才能映射实际DOM Range；未扩展持久索引或读取范围。
 
 已加载正文及所选附件结果共用 [search_snippet.ts](../src/runtime/search_snippet.ts) 截取匹配前后摘要；保留56/88个UTF-16单位的窗口上限，仅在外缘切开有效代理对时向内缩一个单位，避免制造原文没有的替代字符。匹配内容、来源版本及定位范围不变，不归一化原文，也不保证整个组合字素都留在窗口内。
 

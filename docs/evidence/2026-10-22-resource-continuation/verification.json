@@ -1,0 +1,275 @@
+{
+  "kind": "SelectedXlsxResourceAndMarkdownImageSearchStageEvidence",
+  "sourceCommit": "01e14daccd4436dab8754bb0467500298d01d1ca",
+  "priorInstalledSource": "355ae4eae72b9c20aaf93c3cd9cfb4e5dc89bb0b",
+  "tasks": ["P13", "P16", "P32", "ARCH-49"],
+  "status": "selectedSourceControlledAndClosedObservedDeliveryPassed",
+  "scope": {
+    "modifiedExisting": [
+      "src/runtime/xlsx_sheet.ts",
+      "src/runtime/loaded_search_markdown.ts",
+      "src/runtime/loaded_search_dom.test.tsx"
+    ],
+    "added": ["src/runtime/xlsx_sheet.columns.test.ts"],
+    "permanentTestsAdded": 11,
+    "productionMembers": 2110,
+    "frozenInputs": 2143,
+    "solePlan": "plans/agent-access.md",
+    "preservedAgentCount": 29,
+    "preservedStandardsPerAgent": 8,
+    "originalRequirementCount": 151,
+    "commonPackages": 16
+  },
+  "controls": {
+    "xlsx": {
+      "redPassed": 2,
+      "redFailed": 2,
+      "greenPassed": 4,
+      "oldIntervalPredicates": 1572352,
+      "greenSamePredicateCount": 0,
+      "fixedIndexDataBytes": 65540,
+      "limit": "Zero measures only the old some/find predicates; indexed validation/fill and total parsing still do work. No latency or RSS claim."
+    },
+    "markdown": {
+      "redPassed": 2,
+      "redFailed": 3,
+      "greenPassed": 5,
+      "visibleLabelsAndAdjacentRanges": true,
+      "destinationAndBase64Excluded": true
+    },
+    "focused": {
+      "files": 7,
+      "passed": 83,
+      "failed": 0
+    },
+    "engineering": {
+      "allSevenPassed": true,
+      "inputCount": 18433,
+      "frontend": {
+        "files": 639,
+        "passed": 8373
+      },
+      "rust": {
+        "passed": 2117,
+        "failed": 0,
+        "ignored": 6,
+        "allLogSummaries": [
+          [2117, 0, 6],
+          [0, 0, 0],
+          [0, 0, 0]
+        ]
+      },
+      "executionSession": 47363,
+      "completionChunk": "5248b3"
+    },
+    "realWebKit": {
+      "rows": 3,
+      "checks": 8,
+      "passed": true,
+      "actualDefaultModuleWorkerAndNativeDOMRange": true,
+      "xlsxInput": "Owned logical workbook parts through actual parser; no native ZIP/file receipt."
+    }
+  },
+  "delivery": {
+    "candidateChecks": 9,
+    "installedChecks": 10,
+    "formalPath": "/Applications/Farfold.app",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "03f9df9c3f67d0868006161594f64d0e78482f8769fea8b7be789bcb8f421c2e",
+    "archive": "src-tauri/target/internal-candidate/2026-10-22-resource-continuation-01e14dac/Farfold-0.1.7-01e14dac.zip",
+    "archiveSha256": "a3f17868488ee53cd0ffc7c244629becddf1249cdc7a6b9088e3c2851a00234e",
+    "atomicFilesReplaced": 5,
+    "duplicateFilesRemoved": 5,
+    "AppOrAgentLaunched": false,
+    "normalQuitEvidence": null
+  },
+  "data": {
+    "phases": ["before", "preinstall", "after"],
+    "completeManifestRows": 232530,
+    "completeManifestBytes": 63013847,
+    "manifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "threeManifestsStrictlyEqual": true,
+    "rawMetadataExactlyEqual": true,
+    "privateBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "boundary": "Captured endpoints only; not continuous idle or zero change between captures. Prior unknown writers/reopen/data differences remain unknown."
+  },
+  "storage": {
+    "objectPaths": 366,
+    "closedObjectInodeGroups": 113,
+    "viteFiles": 93,
+    "observedAvailableByteIncrease": 3280273408,
+    "currentOldTestBinaryPreserved": true
+  },
+  "notCovered": [
+    "NEW-24 full effective permissions and external interfaces; affected new real sends stay paused",
+    "Real Agent message/playback, official account/model/permission journeys, whole29x8",
+    "Native XLSX ZIP read or complete Office layout; no new installed UI interaction",
+    "Whole P13/P16/P32/ARCH-49, total latency/RSS and long-running global backpressure",
+    "Windows original diagnostic remains42 failures in304 cases; not rerun here"
+  ],
+  "preparationBoundary": "Initial output-only preparation/audit guards and field/path/spacing corrections are retained in original receipts and conversation; they are not product failures or semantic RED. A failed stdin documentation script parsed no code and wrote no document; saved UTF-8 script then applied the intended changes. No project/capture/test retry was inferred from preparation failures.",
+  "references": [
+    {
+      "path": "output/2026-10-22-resource-continuation/start.json",
+      "bytes": 2085,
+      "sha256": "91560d5352428660b6ba8d7e00bac102a6e06daa03c1624d78fa278a9ebe7e84"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/continuation/receipt.json",
+      "bytes": 6184,
+      "sha256": "f0fa23367a8c9048aac4f6203c1456e78c2139f83e760b3455dc72cce8800ff9"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/office-audit/xlsx-colstyle-red/execution.json",
+      "bytes": 28999,
+      "sha256": "48f4337d57f0ec31afd091448bfe347a15b17c02a5def73ec98c743c022cf908"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/office-audit/xlsx-colstyle-red/observations.json",
+      "bytes": 3505,
+      "sha256": "37a4f85c07a210243237f612b558db24c61c8a04a7e8e0d1085b73f31772a48e"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/office-audit/xlsx-colstyle-green/execution.json",
+      "bytes": 27669,
+      "sha256": "093e90a0f512c407942c22856ef9f266c18be7561d29cfef028c12cff36869b7"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/office-audit/xlsx-colstyle-green/observations.json",
+      "bytes": 3475,
+      "sha256": "5db04802fd1b14bec079b89e6058b92b011b6cd4ca60d153bebf6abfe34a935e"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/message-audit/red-preparation/execution.json",
+      "bytes": 47212,
+      "sha256": "f59e74322dc2222da3a1a3e9c4ce9a90ee09acae8f915f77c3d636ce13d6edf4"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/message-audit/red-preparation/observations.json",
+      "bytes": 8193,
+      "sha256": "46e7ad4c45f4063621a22c8a0001615d0c8153ed2e93ad690b21039c4867f000"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/message-audit/green/execution.json",
+      "bytes": 49465,
+      "sha256": "283f3e9612c67c5b7f209f66f9bb062f18069baae9a05dafb6ccda8ab4d014ae"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/message-audit/green/observations.json",
+      "bytes": 9237,
+      "sha256": "d44fab436f055e321fcf1e026de07dc51990f161b224bf0c335cc89fb8e2306e"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/focused.json",
+      "bytes": 37220,
+      "sha256": "62871308fb47170a1d38fe9cb1ea1cc6fe677339af31d5e87dcb61d1af5de955"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/source-review/xlsx.json",
+      "bytes": 8891,
+      "sha256": "639c6396136c7006fbf5f4891e0b4c6619e52722dc3885049f4ab2121f79392d"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/source-review/markdown.json",
+      "bytes": 6047,
+      "sha256": "6508433a50ddd54b2f672dcea995f3e63ad2d42df23167eeb2eaf35300e3f3d2"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/source-review/authority.json",
+      "bytes": 6733,
+      "sha256": "5f5a728618a26b32ce3863d4c2095ac724044d663814b1c88eae563b6ce6177c"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/engineering/verification.json",
+      "bytes": 5861,
+      "sha256": "dcd63e27bfb1bf979690514b641445ad97f6778c8c606ca091ce03f70a6273d8"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/final-source-review/full7-completion.json",
+      "bytes": 399,
+      "sha256": "10ce29feccc7c995d2fd04352bb4a55fb79890f73c249d9a769abf13e55b2523"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/final-source-review/source-review.json",
+      "bytes": 12511,
+      "sha256": "a507a30b240672af40eaefd64fdbe254fa91c184703732cad5014aa4f7a4c559"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/final-source-review/source-freeze-01e14dac.json",
+      "bytes": 348562,
+      "sha256": "683f36635dfd97a4f691e5b14b6f390b8b6cb97de59fa8e4e9962f39d0f38d34"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/browser/verification.json",
+      "bytes": 61711,
+      "sha256": "6c43e60dce5837211470cad6b5666a9e8abd323b568ae2517d3f3593e1dc7052"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/browser/execution-receipt.json",
+      "bytes": 16280,
+      "sha256": "d262980db641953463039c42882e009d593790b1455836f472334b2eee82ca07"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/storage/cleanup.json",
+      "bytes": 46034,
+      "sha256": "569e6e629b6c82e70db38bdb77b1bf8488d62f3797ab01b4e83486ab8cd7dc75"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/delivery-prep-independent-review/review.json",
+      "bytes": 6054,
+      "sha256": "5dbde9dac3f8cfdc420e873ccb3adbe8da0155b7f824726e02c737e3b16e27a8"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/delivery-prep/preinstall-independent.json",
+      "bytes": 8659,
+      "sha256": "f041cb2d05f24dcc78e2b434389f5637be08bc321d1544fc8fa02982a2279ce9"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/candidate-output/candidate.json",
+      "bytes": 250895,
+      "sha256": "3ce760c77da975a9b972a8fd96b70c9342839948a2e707ca09fe0ace16f5c258"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/independent/review.json",
+      "bytes": 4241,
+      "sha256": "653d8f49baec2cb69508b503c048d3fe4d00df4b0ba39acb9b0f4d1431a6f87b"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "42ae5aaf8d27919cbabf70ed38310a180a5904822b0e85c8212849dd8311ab41"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "24f23fddb301be3efec726e7654752c8fea531e264bbf07c3b23cd726414a807"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "1d836a2ffef64a936c137688a26472260d0724fd80eafb306a1692da7e3b119b"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/install-result.json",
+      "bytes": 10674,
+      "sha256": "4a81ada93b2fc15a5b343aa187dd0879416dae73caecd780f6da3111d5c5dde9"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/install-journal.jsonl",
+      "bytes": 4223,
+      "sha256": "62044f2e34778a56f3900cf32a36a4c429fa9baa854ad6baffe3cb106a15d00c"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "61bf9ac48164efe7ba3f004da870f74a52613da7d0d9b5d5d2934d24ae81b000"
+    },
+    {
+      "path": "output/2026-10-22-resource-continuation/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "4c0af92935125b483ea0d15efd70c27e0cb275435813aff8e0b12ccb16ca5cb8"
+    }
+  ]
+}
