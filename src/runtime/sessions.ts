@@ -1,3 +1,5 @@
+import { SessionDeliveryObserver } from "./session_delivery_observer";
+import { openDeliveryConsumer } from "./session_open_delivery";
 import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
 import { PromptRequestOwner } from "./prompt_admission";
@@ -683,6 +685,8 @@ class ThreadsStore {
     }
     const inquiry = openingInquiries.begin(openingKey, input);
     const replay = new SessionOpenReplay();
+    const delivery = new SessionDeliveryObserver(input.agentId, replay.token);
+    let deliveryBound = false;
     const admission = historyReads.begin(openingKey, input, replay.token);
 
     let opened: OpenResult | undefined;
@@ -753,35 +757,27 @@ class ThreadsStore {
       let recheckObserver = recheck;
       if (recheck)
         abandonRecheck = () => {
+          delivery.dispose();
           channel.onmessage = () => {};
           recheckObserver = undefined;
         };
-      channel.onmessage = (event) => {
-        if (!hasOwnUpdate(event)) {
-          if (!boundKey && inquiry.receive(event)) return;
-          recheckObserver?.observe(event);
-        }
-        const received = event as {
-          kind?: unknown;
-          openToken?: unknown;
-        } | null;
-        if (replay.receiveMarker(event)) return;
-        if (boundKey) {
-          if (
-            this.channels.get(boundKey) === channel &&
-            (!historyFailed ||
-              failedLive ||
-              (!hasOwnUpdate(event) && received?.kind === "connectionLost"))
-          ) {
-            const state = this.thread(boundKey);
-            if (historyFailed && state) applyFailedLive(state, event);
-            else this.applyChannelEvent(boundKey, event);
-          }
-        } else if (receivingReplay) {
+      channel.onmessage = openDeliveryConsumer(delivery, {
+        key: () => boundKey,
+        owns: (key) => this.channels.get(key) === channel,
+        thread: (key) => this.thread(key),
+        inquiry: (event) => inquiry.receive(event),
+        recheck: (event) => recheckObserver?.observe(event),
+        marker: (event) => replay.receiveMarker(event),
+        historyFailed: () => historyFailed,
+        failedLive: () => failedLive,
+        applyFailed: applyFailedLive,
+        apply: (key, event) => this.applyChannelEvent(key, event),
+        receiving: () => receivingReplay,
+        buffer: (event) => {
           admission?.observeRaw();
           replay.push(event);
-        }
-      };
+        },
+      });
       admission?.dispatch();
       const result = await invoke<OpenResult>("session_open", {
         processEndedChannel,
@@ -833,14 +829,19 @@ class ThreadsStore {
               boundKey = state.key;
               if (failedConnectionId) state.connectionId = failedConnectionId;
               this.channels.set(boundKey, channel);
-              const { following } = replay.take(true);
+              deliveryBound = true;
+              const { prefix, following } = replay.take(true);
+              delivery.discardBuffered(prefix.length);
               if (failedLive)
-                for (const event of following) applyFailedLive(state, event);
+                for (const event of following)
+                  delivery.consumeBuffered(() => applyFailedLive(state, event));
+              else delivery.discardBuffered(following.length);
               endedState = state;
               applyEnded();
             };
           } else {
             replay.clear();
+            delivery.dispose();
             channel.onmessage = () => {};
           }
           throw error;
@@ -878,12 +879,16 @@ class ThreadsStore {
         this.drafts.set(draftGroup(input), key);
       }
       boundKey = key;
+      deliveryBound = true;
       const { prefix, following } = replay.take(result.resumed);
       for (const event of prefix) {
-        this.applyChannelEvent(key, event, false);
+        delivery.consumeBuffered(() =>
+          this.applyChannelEvent(key, event, false),
+        );
       }
       if (result.resumed) finishHistoryPrefix(state);
-      for (const event of following) this.applyChannelEvent(key, event);
+      for (const event of following)
+        delivery.consumeBuffered(() => this.applyChannelEvent(key, event));
       endedState = state;
       applyEnded();
       recheck?.finish(state, result);
@@ -950,6 +955,8 @@ class ThreadsStore {
       })
       .finally(() => {
         receivingReplay = false;
+        delivery.discardBuffered();
+        if (!deliveryBound) delivery.dispose();
         replay.clear();
         historyReads.finish(openingKey, admission);
         inquiry.finish();

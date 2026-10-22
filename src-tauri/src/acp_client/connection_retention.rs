@@ -49,6 +49,8 @@ impl AcpManager {
         self.history_admission
             .close_window(window)
             .map_err(super::super::cold_history_open::error)?;
+        self.delivery_observations
+            .retire_invalid(&self.history_admission);
         self.prompt_admission
             .close_window(window)
             .map_err(super::super::active_prompt::failure)?;

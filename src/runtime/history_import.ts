@@ -1,3 +1,4 @@
+import { SessionDeliveryObserver } from "./session_delivery_observer";
 import { Channel, invoke } from "@tauri-apps/api/core";
 import {
   applyUpdate,
@@ -68,26 +69,30 @@ export async function previewHistory(
     openToken,
     "preview",
   );
+  const delivery = new SessionDeliveryObserver(agentId, openToken);
   const channel = new Channel<unknown>();
   const buffered = new HistoryReplayBuffer();
   let previewToken: string | null = null;
   let completeReplay: (() => void) | undefined;
   let receiving = true;
-  channel.onmessage = (event) => {
-    if (!receiving || !event || typeof event !== "object") return;
-    if (
-      "kind" in event &&
-      event.kind === "history_preview_complete" &&
-      "previewToken" in event &&
-      typeof event.previewToken === "string"
-    ) {
-      buffered.mark(event.previewToken);
-      if (previewToken === event.previewToken) completeReplay?.();
-    } else {
-      admission?.observeRaw();
-      buffered.push(event);
-    }
-  };
+  channel.onmessage = (input) =>
+    delivery.receive(input, (event) => {
+      if (!receiving || !event || typeof event !== "object") return "discarded";
+      if (
+        "kind" in event &&
+        event.kind === "history_preview_complete" &&
+        "previewToken" in event &&
+        typeof event.previewToken === "string"
+      ) {
+        buffered.mark(event.previewToken);
+        if (previewToken === event.previewToken) completeReplay?.();
+        return "consumed";
+      } else {
+        admission?.observeRaw();
+        buffered.push(event);
+        return "buffered";
+      }
+    });
   try {
     admission?.dispatch();
     const result = await invoke<OpenResult & { previewToken: string }>(
@@ -142,9 +147,8 @@ export async function previewHistory(
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
     try {
-      await consumeHistoryEvents(
-        buffered.prefixEvents(previewToken),
-        (event) => {
+      await consumeHistoryEvents(buffered.prefixEvents(previewToken), (event) =>
+        delivery.consumeBuffered(() => {
           if (!event || typeof event !== "object") return;
           if (
             "kind" in event &&
@@ -164,7 +168,7 @@ export async function previewHistory(
               pushRaw(state, event.update, "config_option_update");
             else applyUpdate(state, event.update, event);
           }
-        },
+        }),
       );
       finishHistoryPrefix(state);
     } catch {
@@ -179,6 +183,7 @@ export async function previewHistory(
     return { ...owned, replayComplete };
   } finally {
     receiving = false;
+    delivery.dispose();
     channel.onmessage = () => {};
     buffered.clear();
     historyReads.finish(readKey, admission);

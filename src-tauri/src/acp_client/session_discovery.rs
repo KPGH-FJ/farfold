@@ -7,6 +7,7 @@ use std::sync::{
     atomic::{AtomicBool, AtomicU64, Ordering},
 };
 
+use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
 use serde::Serialize;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -36,7 +37,7 @@ pub async fn session_import_preview(
     session_id: String,
     open_token: String,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
-    channel: Channel<Value>,
+    channel: Channel<DeliveryEvent>,
 ) -> Result<ImportPreview, String> {
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
@@ -61,6 +62,7 @@ pub async fn session_import_preview(
         .admit_cold_history(&row, &cwd, &session_id, &[], &store, None, request)
         .await?;
     preparation.ready();
+    let channel = DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
     open_import_preview(
         &manager,
         &store,
@@ -82,9 +84,10 @@ pub(super) async fn open_import_preview(
     cwd: &Path,
     session_id: String,
     token: String,
-    channel: Channel<Value>,
+    channel: impl Into<DeliveryChannel>,
     history: Option<super::history_admission::Permit>,
 ) -> Result<ImportPreview, String> {
+    let channel = channel.into();
     let delivery_failed = Arc::new(AtomicBool::new(false));
     let failed = delivery_failed.clone();
     let replay_channel = channel.clone();

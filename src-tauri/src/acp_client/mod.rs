@@ -25,6 +25,7 @@ pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
 mod cold_history_open;
 mod compaction_activity;
+pub mod delivery_observation;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
 mod elicitation;

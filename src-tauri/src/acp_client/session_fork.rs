@@ -1,4 +1,5 @@
 //! One explicit official current-context fork. Only index metadata is stored.
+use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
 use super::{
     manager::{AcpManager, ManagedConnection},
     pump::{SessionControl, SessionSink},
@@ -431,7 +432,7 @@ pub async fn session_fork_current(
     operation_id: String,
     open_token: String,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
-    channel: Channel<Value>,
+    channel: Channel<DeliveryEvent>,
 ) -> Result<ForkResult, String> {
     if !crate::browser_workspace::caller_allowed(&webview) {
         return Err("请从主界面复制对话".into());
@@ -512,6 +513,7 @@ pub async fn session_fork_current(
     preparation.ready();
     let failed = Arc::new(AtomicBool::new(false));
     let delivery_failed = failed.clone();
+    let channel = DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
     let events: SessionSink = Arc::new(move |event| {
         if channel.send(event).is_err() {
             failed.store(true, Ordering::SeqCst);

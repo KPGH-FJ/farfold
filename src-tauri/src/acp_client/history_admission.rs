@@ -187,6 +187,15 @@ impl Admission {
             authority,
         })
     }
+    pub(super) fn current_owner(&self, owner: &Owner) -> bool {
+        self.state.lock().is_ok_and(|state| {
+            !state.closed
+                && state
+                    .windows
+                    .get(&owner.window)
+                    .is_some_and(|authority| Arc::ptr_eq(authority, &owner.authority))
+        })
+    }
     pub(super) fn cancel_token(
         self: &Arc<Self>,
         window: &tauri::Window,

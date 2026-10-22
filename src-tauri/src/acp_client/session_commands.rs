@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
+use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -35,7 +36,7 @@ pub async fn session_open(
     config_options: Option<Value>,
     service: Option<crate::credentials::ServiceSelection>,
     open_token: String,
-    channel: Channel<Value>,
+    channel: Channel<DeliveryEvent>,
     process_ended_channel: Channel<ProcessEndedReceipt>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
 ) -> Result<SessionOpenResult, String> {
@@ -64,6 +65,7 @@ pub async fn session_open(
     let row = require_agent_row(&app, &agent_id).await?;
     let cwd = validate_cwd_async(&cwd).await?;
     let config = parse_config_map(config_options)?;
+    let channel = DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
     let delivery_failed = Arc::new(AtomicBool::new(false));
     let delivery_state = delivery_failed.clone();
     let event_channel = channel.clone();

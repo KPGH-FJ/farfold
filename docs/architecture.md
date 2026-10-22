@@ -53,7 +53,11 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 前端以 [session_types.ts](../src/runtime/session_types.ts) 与 [sessions.ts](../src/runtime/sessions.ts) 保存当前连接、消息投影、队列和请求状态。后端管理进程、会话与命令归属。模型和推理仅在实际提供、安全空闲、回执匹配且保存成功后成为新请求与恢复基线；普通配置通知不是用户切换请求的成功回执。配置未知、停止未确认、保存失败或待审批时，不静默继续。
 
+[AsyncTasks.tsx](../src/components/AsyncTasks.tsx) 对官方后台任务仅显示已有能力所提供的状态与控制。[async_task_location.ts](../src/runtime/async_task_location.ts) 按相同连接/对话中唯一已加载的toolCallId查来源；缺失或重复不猜测。[showToolLocation.ts](../src/components/showToolLocation.ts) 在当前正文内按字面数据属性匹配唯一节点，明确展开其祖先、滚动并聚焦；点击前后复核归属，显式展开不被后来退出搜索撤回。此源码检查点尚未正式安装，不补造父子层级，也不把来源步骤状态当后台任务终态。
+
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
+
+[delivery_observation.rs](../src-tauri/src/acp_client/delivery_observation.rs)在打开、预览和复制对话的实际Tauri通道外包一层交付标记，原始事件保持原样；一次序列化的实际UTF-8长度只作为计数。每个接收端最多一个未回应样本，注册表只保留弱归属和标量，窗口失效及实际对象释放时退役。[session_delivery_observer.ts](../src/runtime/session_delivery_observer.ts)在现有消费路径完成后回应，缓冲阶段只保留数字位置；观测序号不决定内容顺序或去重。此分项不能证明React绘制、完整历史消费、传输背压或内存上限，正式应用观测未验。
 
 最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该修复已包含在5790安装源码中，不能由此推定全部审批真实路径已验。
 
@@ -122,6 +126,8 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 [message_ogg_audio_admission.ts](../src/runtime/message_ogg_audio_admission.ts) 对选定连续Ogg Vorbis及Opus逻辑流检查已声明音频区间的下界。按包边界排除Vorbis三个头包或Opus两个头包，仅在同一连续流内相减已完成音频页的已知非负采样位置；非结束页建立起点，连续且不回退的结束页可作为末端。Opus仅覆盖版本1、映射族0的单/双声道头，固定按48000时钟计算，忽略头部输入采样率；还保守扣除全部开头丢弃采样，避免起点仍在待丢弃前缀时误拒。得到的下界超过600秒才拒绝。在有界文件末端，仅对全体完整结束、编号全程唯一、未交错且具有同一已识别映射和时钟的顺序链累计非负区间；每段均扣自己的开头丢弃采样。未知、复用、并行、缺少已知结束点或后续矛盾会撤回新增合计资格，原独立超长区间判断保持。该差值消去常量起始偏移，不拿结束位置直接当总时长，不把并行流、声道或头页的零位置相加。页、分段和包遍历共用65536记录预算；丢页、未知映射及不可确定的区间保持部分覆盖，非超限不宣称完整预算通过。不核完整CRC、头部评论/设置内容与音频负载，也不推定实际播放、解码内存或全部Ogg编码支持；共用入口保留原MIME与来源字节。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
+
+新增源码的[MessageAudioCompatibility.tsx](../src/components/MessageAudioCompatibility.tsx)在原音频实际加载失败后提供明确兼容重试；macOS使用[audio_preview.rs](../src-tauri/src/audio_preview.rs)及[AudioPreview.m](../src-tauri/native/AudioPreview.m)的官方AudioToolbox内存读写回调。完整FLAC/无前置标签ADTS输入与完整WAVE输出各限16 MiB，单/双声道、8–96 kHz、600秒；系统按4096帧块交付，输出缓冲按受限几何容量增长。原始来源不改，最多两个真实解码工作同时进行，调用取消不提前释放尚在运行的工作名额。前端先从原共用池保留16 MiB，经来源摘要、完整WAVE及有限浮点检查后才建立本次Blob，退役播放节点后撤销。Windows明确不提供该兼容路径。AAC可能包含不同的前导/尾部采样，界面说明时长可能与原预览不同；未猜测裁剪。实际解码与受控WebKit播放分项已有证据，正式IPC、可听声音、系统解码内存和完整格式覆盖仍未验，逻辑字节配额不是RSS上限。
 
 历史用户消息中的内嵌图片由 [UserMessageContent.tsx](../src/components/UserMessageContent.tsx) 在明确展开、祖先可见且取得同一共用配额后，调用原 [draft_images.ts](../src/runtime/draft_images.ts) 检查；8 MiB、静态格式、尺寸及两项尚未结束检查的限制保持。关闭、隐藏、换源及卸载撤下本次来源并释放自己的预览配额，迟到结果不能恢复展示；再次显示或其他媒体释放配额不会自动打开，失败后须明确重试。[draft_images.ts](../src/runtime/draft_images.ts)先核原有常量时间缺失/长度门槛，已有两项检查未结束时在Base64展开及结构扫描前返回忙态；空闲下原校验保持。两项检查的名额仍等解码Promise实际结束才释放，超时或退役不证明物理解码已停止、RSS已下降。原消息与复制内容保持，正式消息和完整资源验证另见状态。
 
