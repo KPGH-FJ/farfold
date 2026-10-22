@@ -1,19 +1,25 @@
 //! Materialize one immutable OID through official Git, without inherited executable helpers.
 //! This is a temporary Git command context, not an Agent HOME/config or another worktree.
-use super::{
-    git,
-    inspect::{self, Snapshot},
-    storage::Intent,
-    types::*,
-};
+#[cfg(not(windows))]
+use super::{git, inspect};
+use super::{inspect::Snapshot, storage::Intent, types::*};
+use std::collections::BTreeMap;
+#[cfg(windows)]
+use std::sync::atomic::AtomicBool;
+#[cfg(not(windows))]
 use std::{
-    collections::{BTreeMap, BTreeSet},
+    collections::BTreeSet,
     fs,
     io::Read,
     path::{Path, PathBuf},
     sync::atomic::AtomicBool,
     time::Duration,
 };
+#[cfg(windows)]
+pub(super) struct Checkout {
+    selected: super::git::source_roots::SelectedCheckout,
+}
+#[cfg(not(windows))]
 pub(super) struct Checkout {
     _temp: tempfile::TempDir,
     git_dir: PathBuf,
@@ -22,6 +28,7 @@ pub(super) struct Checkout {
     oid: String,
     configs: Vec<String>,
 }
+#[cfg(not(windows))]
 fn output(c: std::process::Command, input: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
     // target_objects came through the existing finite Git output budget.
     let input = match input {
@@ -80,6 +87,7 @@ pub(super) fn pattern(path: &[u8]) -> String {
     s.push('"');
     s
 }
+#[cfg(not(windows))]
 impl Checkout {
     pub fn prepare(source: &Snapshot, oid: &str) -> Result<Self> {
         inspect::target_allowed(source, oid)?;
@@ -396,5 +404,29 @@ impl Checkout {
         tmp.persist_noclobber(destination)
             .map_err(|_| error("changed"))?;
         Ok(())
+    }
+}
+#[cfg(windows)]
+impl Checkout {
+    pub fn prepare(source: &Snapshot, oid: &str) -> Result<Self> {
+        Ok(Self {
+            selected: super::git::source_roots::SelectedCheckout::prepare(source, oid)?,
+        })
+    }
+    #[cfg(test)]
+    pub fn materialize(&self, intent: &Intent, cancel: &AtomicBool) -> Result<()> {
+        let root = crate::file_access::PinnedPath::directory(std::path::Path::new(&intent.target))
+            .map_err(|_| error("changed"))?;
+        let mut owner =
+            crate::file_access::WorktreeCheckout::new(&root).map_err(|_| error("changed"))?;
+        self.selected.materialize(intent, cancel, &mut owner)
+    }
+    pub fn materialize_reserved(
+        &self,
+        intent: &Intent,
+        cancel: &AtomicBool,
+        created: &mut crate::file_access::WorktreeCheckout<'_>,
+    ) -> Result<()> {
+        self.selected.materialize(intent, cancel, created)
     }
 }

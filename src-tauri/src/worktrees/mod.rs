@@ -23,12 +23,13 @@ mod windows_offline_program;
 mod windows_scope;
 #[cfg(all(windows, test))]
 mod windows_tests;
-#[cfg(all(windows, test))]
-pub(crate) use git::source_roots::ManagedRootGitEdge;
+#[cfg(windows)]
+pub(crate) use git::source_roots::{ManagedRemovalHold, ManagedRootGitEdge};
 pub use manager::Worktrees;
 
-// Existing local-tree reads/adoption are distinct from unimplemented filesystem
-// mutations. Refuse before any durable intent or background work on Windows.
+// Shared non-Windows fallback. Windows production operations each use their
+// owned platform path; the test-only Windows branch is a legacy negative control.
+#[cfg(any(not(windows), test))]
 fn mutation_supported() -> types::Result<()> {
     if cfg!(windows) {
         Err(types::error("unsupportedGit"))
@@ -52,6 +53,14 @@ pub(crate) mod recycle_tests;
 mod remove_types;
 pub use remove_types::*;
 mod recovery_pack;
+#[cfg(any(windows, test))]
+pub(crate) use recovery_pack::material_manifest::MaterialContent;
+#[cfg(windows)]
+pub(crate) use recovery_pack::material_manifest::{
+    MaterialEa, MaterialKind, MaterialNode, MaterialSecurity, MaterialStream, WindowsMaterial,
+};
+#[cfg(windows)]
+pub(crate) use recovery_pack::private_graph::PreparedRecoveryGit;
 mod recovery_roots;
 #[cfg(test)]
 mod recovery_tests;
@@ -78,3 +87,10 @@ mod preparation_git;
 mod preparation_tests;
 #[cfg(windows)]
 mod preparation_windows;
+
+#[cfg(all(windows, test))]
+mod recovery_public_windows_tests;
+#[cfg(all(windows, test))]
+mod recovery_cold_windows_tests;
+#[cfg(all(windows, test))]
+mod remove_native_windows_tests;

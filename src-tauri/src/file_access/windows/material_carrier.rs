@@ -1,30 +1,35 @@
 //! Test-registered first real carrier component. No public recovery gate opens.
 use super::*;
 use super::{
-    material_carrier_native::{self as native, Facts},
-    material_regular_shared as shared,
-    material_restore::{self, Namespace},
+    material_carrier_native::Facts,
+    material_restore,
+};
+#[cfg(test)]
+use super::{material_carrier_native as native, material_regular_shared as shared, material_restore::Namespace};
+#[cfg(test)]
+use crate::file_access::material_carrier_records::{
+    RESIDENT_LIMIT, ResidentLease, WORK_LIMIT, check,
 };
 use crate::file_access::{
     ea_records::WorkBudget,
     material_backup_io::{self as transfer, Api, Mode, RetiredContext, Session},
-    material_carrier_records::{
-        self as records, Error, Parsed, RESIDENT_LIMIT, Resident, ResidentLease, Result,
-        WORK_LIMIT, check, io_error,
-    },
+    material_carrier_records::{self as records, Error, Parsed, Resident, Result, io_error},
 };
+#[cfg(test)]
+use std::panic::AssertUnwindSafe;
 use std::{
     ffi::c_void,
     io::{Seek, SeekFrom},
-    panic::AssertUnwindSafe,
     sync::atomic::AtomicBool,
 };
 
+#[cfg(test)]
 pub(crate) struct CarrierRequest {
     parent: PinnedPath,
     leaf: Vec<u16>,
     expected: Identity,
 }
+#[cfg(test)]
 impl CarrierRequest {
     // Internal held-capability constructor. The only registered consumers in
     // this slice are OWNED tests; this is not arbitrary public-path authority.
@@ -51,6 +56,7 @@ impl CarrierRequest {
 }
 // Raw context stays inert and PRIVATE. The outer existing Slot stores this
 // whole owner using ManuallyDrop<Box<_>> until process exit on any unknown.
+#[cfg(test)]
 pub(crate) struct CarrierRetirement {
     _source: Option<PinnedPath>,
     _parent: PinnedPath,
@@ -61,6 +67,7 @@ pub(crate) struct CarrierRetirement {
     _resident: Resident,
     _namespace_memory: Option<ResidentLease>,
 }
+#[cfg(test)]
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) struct CarrierReceipt {
     pub source: Identity,
@@ -175,6 +182,7 @@ pub(super) fn captured(
     }
     Ok(value)
 }
+#[cfg(test)]
 pub(crate) fn carrier_roundtrip(
     request: CarrierRequest,
     cancel: &AtomicBool,
@@ -202,6 +210,7 @@ pub(super) trait FragmentConsumer {
         resident: &Resident,
     ) -> Result<()>;
 }
+#[cfg(test)]
 pub(super) fn roundtrip_with_consumer(
     request: CarrierRequest,
     cancel: &AtomicBool,

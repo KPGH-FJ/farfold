@@ -35,14 +35,14 @@ pub(crate) use directory_page::{
 };
 #[cfg(unix)]
 pub(crate) use unix::{TemporaryExport, absolute, open_directory, open_relative, stamp};
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 pub(crate) use windows::directory_entries_with_work;
 #[cfg(windows)]
 pub(crate) use windows::{
     EntryMetadata, FullSecurityFailure, FullSecurityObservation, MetadataFailure, MetadataKind,
-    PinnedPath, RetiredBackup, directory_entries, ea_observation, full_security_observation,
-    integrity_observation, metadata_child, metadata_file, security_observation,
-    streams_observation,
+    PinnedPath, RetiredBackup, WorktreeCheckout, WorktreeMove, WorktreePointer, directory_entries,
+    ea_observation, full_security_observation, integrity_observation, metadata_child,
+    metadata_file, replace_worktree_pointers, security_observation, streams_observation,
 };
 #[cfg(windows)]
 pub(crate) use windows::{TemporaryExport, absolute, open_directory, open_relative, stamp};
@@ -65,21 +65,23 @@ pub(crate) fn same_object(left: &File, right: &File) -> io::Result<bool> {
     Ok(stamp(left)?.identity == stamp(right)?.identity)
 }
 
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_backup_io;
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_carrier_records;
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 pub(crate) use material_carrier_records::Error as CarrierFailure;
+#[cfg(windows)]
+pub(crate) use material_carrier_records::WORK_LIMIT as MATERIAL_WORK_LIMIT;
 #[cfg(all(windows, test))]
 pub(crate) use windows::{CarrierReceipt, CarrierRequest, CarrierRetirement, carrier_roundtrip};
 
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_carrier_fragment;
 #[cfg(all(windows, test))]
 pub(crate) use windows::{FragmentRetirement, carrier_fragment_roundtrip};
 
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_raw_name;
 
 #[cfg(all(windows, test))]
@@ -88,11 +90,11 @@ pub(crate) use windows::{
     backup_shape_observe,
 };
 
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_directory_budget;
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_directory_facet;
-#[cfg(test)]
+#[cfg(any(windows, test))]
 mod material_directory_records;
 
 #[cfg(all(windows, test))]
@@ -120,11 +122,15 @@ pub(crate) use windows::{
     regular_shared_capture,
 };
 
-#[cfg(test)]
+#[cfg(any(windows, test))]
+mod material_mixed_semantic;
+#[cfg(any(windows, test))]
 mod material_mixed_tree_records;
-#[cfg(all(windows, test))]
+// Shared by the cross-platform descriptor reader and the Windows byte format.
+pub(crate) const MIXED_TREE_NODE_LIMIT: usize = 4096;
+#[cfg(windows)]
 pub(crate) use windows::{
-    MixedInput, MixedMemory, MixedRequest, MixedRetirement, MixedSummary, with_mixed_tree_input,
+    MixedMemory, MixedRequest, MixedRetirement, with_mixed_tree_input, with_mixed_tree_input_then,
 };
 
 #[cfg(all(windows, test))]
@@ -132,13 +138,19 @@ pub(crate) use windows::{
     AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
 };
 
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 pub(crate) use windows::{
-    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTreeReceipt,
-    OwnedSealedMaterial, with_sealed_material,
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTargetRequest,
+    MaterialTreeReceipt, OwnedSealedMaterial, with_reopened_material, with_sealed_material,
 };
 
 #[cfg(all(windows, test))]
 pub(crate) use windows::{
     OwnedTargetLinks, TARGET_LINK_MAX_NODES, TARGET_LINK_ROOT, TargetLinkMemory, TargetLinkReceipt,
 };
+
+#[cfg(all(windows, test))]
+pub(crate) use windows::{MixedInput, MixedSummary};
+
+#[cfg(windows)]
+pub(crate) use windows::{DeleteSecurity, DeleteStoppedHandle, WorktreeDeleteNode};

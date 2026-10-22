@@ -153,6 +153,7 @@ fn opened(
     metadata_only: bool,
     directory: bool,
     full: bool,
+    deletion: bool,
 ) -> Result<File, Failure> {
     let mut encoded = raw.to_vec();
     let unicode = UNICODE_STRING {
@@ -172,7 +173,9 @@ fn opened(
     let access = if metadata_only {
         FILE_READ_ATTRIBUTES | SYNCHRONIZE
     } else {
-        FILE_GENERIC_READ | if full { ACCESS_SYSTEM_SECURITY } else { 0 }
+        FILE_GENERIC_READ
+            | if full { ACCESS_SYSTEM_SECURITY } else { 0 }
+            | if deletion { DELETE } else { 0 }
     };
     let share = if metadata_only {
         FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE
@@ -249,10 +252,19 @@ fn long_leaf(value: &Guid, raw: &[u16]) -> Result<(), Failure> {
 }
 // Material-only case-insensitive uniqueness. Fallible merge ordering avoids
 // a panicking/inconsistent comparator and quadratic insertion/alias searches.
+#[cfg(test)]
 fn unique_names(
     values: &crate::file_access::DirectoryEntries,
     resident: &Resident,
     cancel: &AtomicBool,
+) -> Result<(), crate::file_access::DirectoryFailure> {
+    unique_names_charged(values, resident, cancel, |_| Ok(()))
+}
+fn unique_names_charged(
+    values: &crate::file_access::DirectoryEntries,
+    resident: &Resident,
+    cancel: &AtomicBool,
+    mut charge: impl FnMut(usize) -> Result<(), crate::file_access::DirectoryFailure>,
 ) -> Result<(), crate::file_access::DirectoryFailure> {
     use crate::file_access::DirectoryFailure as D;
     if values.len() > crate::file_access::directory_page::MAX_ENTRIES {
@@ -260,6 +272,7 @@ fn unique_names(
     }
     for raw in values.keys() {
         crate::file_access::directory_page::cancelled(cancel)?;
+        charge(raw.len().checked_mul(2).ok_or(D::Limit)?)?;
         material_raw_name::check(raw).map_err(|_| D::Unsupported)?;
     }
     let count = values.len();
@@ -282,6 +295,12 @@ fn unique_names(
                 crate::file_access::directory_page::cancelled(cancel)?;
                 let left = names[order[a]];
                 let right = names[order[b]];
+                charge(
+                    left.len()
+                        .checked_add(right.len())
+                        .and_then(|v| v.checked_mul(2))
+                        .ok_or(D::Limit)?,
+                )?;
                 let take_left = match unsafe {
                     CompareStringOrdinal(
                         left.as_ptr(),
@@ -339,6 +358,7 @@ fn unique_names(
 }
 enum Resource {
     Root(PinnedPath),
+    DeleteRoot(super::pinned::WorktreeDeleteRoot),
     Child {
         parent: MaterialPin,
         file: File,
@@ -351,6 +371,7 @@ struct Node {
     guid: Guid,
     opening: EntryMetadata,
     full_security: bool,
+    deletion: bool,
     depth: usize,
     resident: Resident,
     _memory: ResidentLease,
@@ -388,6 +409,7 @@ impl MaterialPin {
                 guid,
                 opening,
                 full_security,
+                deletion: false,
                 depth: 0,
                 resident: resident.clone(),
                 _memory: memory,
@@ -421,7 +443,7 @@ impl MaterialPin {
             .resident
             .lease(NODE_MEMORY)
             .map_err(|_| Failure::Limit)?;
-        let probe = opened(self.file(), raw, true, directory, false)?;
+        let probe = opened(self.file(), raw, true, directory, false, false)?;
         let before = metadata_file(&probe).map_err(Failure::Metadata)?;
         if !ordinary(&before) {
             return Err(Failure::Unsupported);
@@ -432,7 +454,14 @@ impl MaterialPin {
             return Err(Failure::Changed);
         }
         cancelled(cancel)?;
-        let file = opened(self.file(), raw, false, directory, self.inner.full_security)?;
+        let file = opened(
+            self.file(),
+            raw,
+            false,
+            directory,
+            self.inner.full_security,
+            self.inner.deletion,
+        )?;
         let opening = metadata_file(&file).map_err(Failure::Metadata)?;
         let actual = stamp(&file).map_err(|e| failure("rawChildStamp", e))?;
         if opening != before
@@ -466,6 +495,7 @@ impl MaterialPin {
                 guid,
                 opening,
                 full_security: self.inner.full_security,
+                deletion: self.inner.deletion,
                 depth,
                 resident: self.inner.resident.clone(),
                 _memory: memory,
@@ -475,6 +505,7 @@ impl MaterialPin {
     fn file(&self) -> &File {
         match &self.inner.resource {
             Resource::Root(pin) => pin.file(),
+            Resource::DeleteRoot(root) => root.pin().file(),
             Resource::Child { file, .. } => file,
         }
     }
@@ -509,6 +540,7 @@ impl MaterialPin {
     pub(super) fn verify(&self) -> io::Result<()> {
         match &self.inner.resource {
             Resource::Root(pin) => pin.verify()?,
+            Resource::DeleteRoot(root) => root.pin().verify()?,
             Resource::Child { parent, .. } => parent.verify()?,
         }
         if stamp(self.file())?.identity != self.inner.identity {
@@ -523,6 +555,7 @@ impl MaterialPin {
     fn directory_scan(&self) -> io::Result<MutexGuard<'_, ()>> {
         match &self.inner.resource {
             Resource::Root(pin) => pin.directory_scan(),
+            Resource::DeleteRoot(root) => root.pin().directory_scan(),
             Resource::Child { scan, .. } => scan
                 .lock()
                 .map_err(|_| io::Error::other("material scan owner poisoned")),
@@ -533,9 +566,11 @@ impl MaterialPin {
     ) -> Result<MutexGuard<'_, ()>, TryLockError<MutexGuard<'_, ()>>> {
         match &self.inner.resource {
             Resource::Root(pin) => pin.try_observation_owner(),
+            Resource::DeleteRoot(root) => root.pin().try_observation_owner(),
             Resource::Child { scan, .. } => scan.try_lock(),
         }
     }
+    #[cfg(test)]
     pub(super) fn entries(
         &self,
         remaining: u64,
@@ -547,6 +582,28 @@ impl MaterialPin {
         let values =
             super::directory::collect_budgeted_from(self, remaining, cancel, &self.inner.resident)?;
         unique_names(values.as_entries(), &self.inner.resident, cancel)?;
+        Ok(values)
+    }
+    pub(super) fn entries_with_work(
+        &self,
+        remaining: u64,
+        cancel: &AtomicBool,
+        work: &mut crate::file_access::EaWorkBudget,
+    ) -> Result<
+        crate::file_access::material_directory_budget::MaterialEntries,
+        crate::file_access::DirectoryFailure,
+    > {
+        let values = super::directory::collect_budgeted_with_work_from(
+            self,
+            remaining,
+            cancel,
+            &self.inner.resident,
+            work,
+        )?;
+        unique_names_charged(values.as_entries(), &self.inner.resident, cancel, |bytes| {
+            work.charge(bytes)
+                .map_err(|_| crate::file_access::DirectoryFailure::Limit)
+        })?;
         Ok(values)
     }
 }
@@ -573,3 +630,6 @@ impl super::directory::Owner for MaterialPin {
 #[cfg(test)]
 #[path = "material_pin_tests.rs"]
 mod tests;
+
+#[path = "material_pin_delete.rs"]
+mod deletion;

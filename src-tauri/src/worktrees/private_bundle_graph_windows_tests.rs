@@ -59,6 +59,7 @@ impl Fixture {
         objects.sort();
         Manifest {
             version: 1,
+            windows_material: None,
             roots: Roots {
                 head: COMMIT.into(),
                 format: "sha1".into(),
@@ -165,6 +166,62 @@ fn real_stdout_bundle_and_two_stdin_commands_verify_independent_exact_graph() {
     drop(graph);
     assert!(!private.exists());
     assert!(first.path().is_dir());
+    assert_eq!(fixture.bytes(), before);
+}
+
+#[test]
+fn actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names() {
+    let fixture = Fixture::new();
+    let before = fixture.bytes();
+    let first = fixture.first();
+    let manifest = fixture.manifest();
+    let graph = generate(&first, &manifest, &AtomicBool::new(false)).unwrap();
+    let private = graph.owner.second.guid_path.clone();
+    let captured = crate::worktrees::recovery_pack::Capture {
+        roots: manifest.roots,
+        objects: manifest.objects,
+        content: manifest.content,
+        configs: manifest.configs,
+        attributes: manifest.attributes,
+    };
+    let prepared = graph
+        .into_recovery_git(&captured, &AtomicBool::new(false))
+        .unwrap();
+    prepared.verify(&AtomicBool::new(false)).unwrap();
+    assert!(
+        fs::read(private.join("packed-refs"))
+            .unwrap()
+            .windows(b"refs/heads/recovery/root-0000".len())
+            .any(|bytes| bytes == b"refs/heads/recovery/root-0000")
+    );
+    assert!(
+        fs::read(private.join("index"))
+            .unwrap()
+            .starts_with(b"DIRC")
+    );
+    assert!(
+        String::from_utf8(fs::read(private.join("config")).unwrap())
+            .unwrap()
+            .contains("bare = false")
+    );
+    assert!(
+        fs::OpenOptions::new()
+            .write(true)
+            .open(private.join("config"))
+            .is_err()
+    );
+    assert_eq!(fixture.bytes(), before);
+    // Directory READ pins do not imply an atomic namespace lock. The final
+    // complete observation must reject even an irrelevant additional leaf.
+    fs::write(private.join("foreign-extra"), b"owned test injection").unwrap();
+    assert_eq!(
+        prepared.verify(&AtomicBool::new(false)).unwrap_err().code,
+        "recoveryChanged"
+    );
+    assert_eq!(
+        fs::read(private.join("foreign-extra")).unwrap(),
+        b"owned test injection"
+    );
     assert_eq!(fixture.bytes(), before);
 }
 #[test]

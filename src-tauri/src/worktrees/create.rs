@@ -4,7 +4,45 @@ use super::{
     storage::{Identity, Intent},
     types::*,
 };
-use std::{path::Path, sync::atomic::AtomicBool, time::Duration};
+#[cfg(not(windows))]
+use std::time::Duration;
+use std::{path::Path, sync::atomic::AtomicBool};
+#[cfg(windows)]
+#[path = "create_windows.rs"]
+mod windows;
+pub(super) fn supported() -> Result<()> {
+    #[cfg(windows)]
+    {
+        git::environment()
+    }
+    #[cfg(not(windows))]
+    {
+        super::mutation_supported()
+    }
+}
+#[cfg(windows)]
+pub(super) fn reserve(intent: &Intent) -> Result<crate::file_access::WorktreeCheckout<'static>> {
+    let parent = crate::file_access::PinnedPath::directory(Path::new(&intent.parent))
+        .map_err(|_| error("changed"))?;
+    if parent.path != intent.parent || inspect::pinned_stamp(&parent)? != intent.parent_stamp {
+        return Err(error("changed"));
+    }
+    let owned =
+        crate::file_access::WorktreeCheckout::create_under(&parent, &intent.input.directory_name)
+            .map_err(|e| {
+            error(if e.kind() == std::io::ErrorKind::AlreadyExists {
+                "targetExists"
+            } else {
+                // FILE_CREATE may already have succeeded before a later
+                // identity/namespace handoff failed. Never claim no change.
+                "unknown"
+            })
+        })?;
+    if owned.root().path != intent.target {
+        return Err(error("unknown"));
+    }
+    Ok(owned)
+}
 fn absent(path: &Path) -> Result<()> {
     match std::fs::symlink_metadata(path) {
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
@@ -103,25 +141,30 @@ pub(super) fn add(intent: &Intent, cancel: &AtomicBool) -> Result<()> {
     inspect::same(&intent.parent, &intent.parent_stamp)?;
     let stamp = intent.target_stamp.as_ref().ok_or(error("unknown"))?;
     inspect::same(&intent.target, stamp)?;
-    let mut args = vec!["worktree", "add", "--no-checkout"];
-    match &intent.input.branch {
-        Branch::New { name, start_oid } => {
-            args.extend(["--no-track", "-b", name, "--", &intent.target, start_oid]);
+    #[cfg(windows)]
+    return windows::add(intent, cancel);
+    #[cfg(not(windows))]
+    {
+        let mut args = vec!["worktree", "add", "--no-checkout"];
+        match &intent.input.branch {
+            Branch::New { name, start_oid } => {
+                args.extend(["--no-track", "-b", name, "--", &intent.target, start_oid]);
+            }
+            Branch::Existing { .. } => {
+                args.extend(["--", &intent.target, intent.input.branch.name()]);
+            }
         }
-        Branch::Existing { .. } => {
-            args.extend(["--", &intent.target, intent.input.branch.name()]);
+        let result = git::execute(
+            Path::new(&intent.source.root),
+            &args,
+            cancel,
+            Duration::from_secs(120),
+        )?;
+        if !result.success {
+            return Err(error("unknown"));
         }
+        Ok(())
     }
-    let result = git::execute(
-        Path::new(&intent.source.root),
-        &args,
-        cancel,
-        Duration::from_secs(120),
-    )?;
-    if !result.success {
-        return Err(error("unknown"));
-    }
-    Ok(())
 }
 pub(super) fn verify(intent: &Intent) -> Result<Snapshot> {
     intent.source.check()?;

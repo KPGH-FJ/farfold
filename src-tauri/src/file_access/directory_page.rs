@@ -41,7 +41,7 @@ pub(crate) type Entries = BTreeMap<Vec<u16>, Observation>;
 // byte. Called after status/Information validation and BEFORE copying/decoding.
 // The native call can return at most one PAGE_BYTES beyond the remaining work;
 // that response refuses without copying/parsing or another query. Not OS/RSS/CPU.
-#[cfg(test)]
+#[cfg(any(windows, test))]
 pub(super) fn charge_query_bytes(
     used: usize,
     work: &mut super::ea_records::WorkBudget,

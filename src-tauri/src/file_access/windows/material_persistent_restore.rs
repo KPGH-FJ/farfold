@@ -5,16 +5,46 @@ use crate::file_access::material_backup_io::RetiredContext;
 #[path = "material_sealed_restore_node.rs"]
 mod node;
 
+pub(super) fn validate_native(
+    store: &Store,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+) -> Result<()> {
+    let proofs = store
+        .copied
+        .as_ref()
+        .and_then(|c| c.native_catalog.as_ref())
+        .ok_or(Error::Unsupported)?;
+    let nodes = &store.verified.as_ref().ok_or(Error::Invalid)?.nodes;
+    if proofs.len() != nodes.len() {
+        return Err(Error::Changed);
+    }
+    let file = store.file.as_ref().ok_or(Error::Invalid)?;
+    for (entry, proof) in nodes.iter().zip(proofs) {
+        node::validate(file, entry, proof, work, cancel, &store.request.resident)?;
+    }
+    Ok(())
+}
+
 pub(super) struct Restore {
     namespace: Namespace,
+    target: Option<MaterialTargetRequest>,
     context: Option<RetiredContext>,
     _memory: ResidentLease,
 }
 impl Restore {
-    pub(super) fn reserve(resident: &Resident) -> Result<Self> {
+    pub(super) fn reserve(
+        resident: &Resident,
+        mut target: Option<MaterialTargetRequest>,
+    ) -> Result<Self> {
+        if let Some(target) = &mut target {
+            target.require_pool(resident)?;
+            target.verify()?;
+        }
         let memory = resident.lease(4 * records::BLOCK)?;
         Ok(Self {
             namespace: Namespace::reserve()?,
+            target,
             context: None,
             _memory: memory,
         })
@@ -36,12 +66,14 @@ pub(crate) struct MaterialTreeReceipt {
     pub exact_edges_verified: bool,
     pub all_native_recaptured: bool,
     pub metadata_finalized: bool,
+    pub retained: bool,
     // Data only. These IDs grant no constructor/path/reopen authority.
     pub target_ids: Vec<Identity>,
     _memory: ResidentLease,
 }
 pub(super) fn rebuild(
     store: &mut Store,
+    target: Option<MaterialTargetRequest>,
     work: &mut WorkBudget,
     cancel: &AtomicBool,
 ) -> Result<MaterialTreeReceipt> {
@@ -64,13 +96,32 @@ pub(super) fn rebuild(
     }
     // Original Box owns this before namespace creation, target creation or
     // BackupWrite can produce a native handle/context. Panic does not detach it.
-    store.restore = Some(Restore::reserve(resident)?);
-    let result_memory = resident.lease(tree::MAX_NODES * 128 + 4096)?;
+    store.restore = Some(Restore::reserve(resident, target)?);
+    let result_memory = resident.lease(
+        verified
+            .nodes
+            .len()
+            .checked_mul(128)
+            .and_then(|bytes| bytes.checked_add(4096))
+            .ok_or(Error::Limit)?,
+    )?;
     let restored = store.restore.as_mut().ok_or(Error::Invalid)?;
     restored.namespace.open_directory_namespace()?;
-    restored.namespace.prepare_sealed_tree(resident)?;
+    restored
+        .namespace
+        .prepare_sealed_tree(resident, verified.nodes.len())?;
     for source in &verified.nodes {
-        restored.namespace.create_sealed_node(source, cancel)?;
+        if let Some(target) = &restored.target {
+            target.verify()?;
+            restored
+                .namespace
+                .sealed_tree
+                .as_mut()
+                .ok_or(Error::Invalid)?
+                .create_at(target.parent(), target.leaf(), source, cancel)?;
+        } else {
+            restored.namespace.create_sealed_node(source, cancel)?;
+        }
     }
     let targets = restored
         .namespace
@@ -100,6 +151,9 @@ pub(super) fn rebuild(
             }
             check(cancel)?;
             store.request.verify()?;
+            if let Some(target) = &restored.target {
+                target.verify()?;
+            }
             if stamp(input).map_err(|e| io_error("treeRestoreSourceFence", e))? != before {
                 return Err(Error::Changed);
             }
@@ -159,6 +213,18 @@ pub(super) fn rebuild(
     restored.namespace.verify()?;
     store.request.verify()?;
     check(cancel)?;
+    let retained = restored.target.is_some();
+    if let Some(target) = &restored.target {
+        target.verify()?;
+        // This is the only publication boundary. All source/target/native
+        // checks have completed; the original owner now closes without delete.
+        restored
+            .namespace
+            .sealed_tree
+            .as_mut()
+            .ok_or(Error::Invalid)?
+            .retain()?;
+    }
     Ok(MaterialTreeReceipt {
         nodes: verified.nodes.len(),
         directories: sealed.directories,
@@ -168,6 +234,7 @@ pub(super) fn rebuild(
         exact_edges_verified: true,
         all_native_recaptured: true,
         metadata_finalized: true,
+        retained,
         target_ids,
         _memory: result_memory,
     })

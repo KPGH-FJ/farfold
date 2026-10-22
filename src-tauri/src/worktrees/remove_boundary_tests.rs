@@ -270,7 +270,10 @@ fn removal_identity_backup_rejects_parent_replacement_before_build() {
             let result = recovery_pack::build(
                 REMOVE,
                 &saved,
-                &plan,
+                recovery_pack::BuildSource {
+                    owner: &crate::worktrees::material_owner::Owner::default(),
+                    captured: &plan,
+                },
                 "62345678-1234-4123-8123-123456789abc",
                 &root,
                 &inspect::stamp(&root).unwrap(),
@@ -302,10 +305,12 @@ fn removal_identity_deleted_requires_original_retained_parent() {
             let (_, doc) = storage::read(&s).unwrap();
             let intent = doc.operation.unwrap().removal.unwrap();
             let cancel = AtomicBool::new(false);
-            removal::verify_deleted(&intent, &cancel).unwrap();
+            removal::verify_deleted(&super::material_owner::Owner::default(), &intent, &cancel)
+                .unwrap();
             replace_parent_keep_children(Path::new(&intent.saved.retained_parent));
             assert!(
-                removal::verify_deleted(&intent, &cancel).is_err(),
+                removal::verify_deleted(&super::material_owner::Owner::default(), &intent, &cancel)
+                    .is_err(),
                 "absence inside a replacement parent must not become a deletion receipt"
             );
             assert!(Path::new(&b.path).join("recovery.bundle").exists());
@@ -347,7 +352,14 @@ fn removal_identity_recovered_repository_rejects_replaced_parent() {
             let (_, doc) = storage::read(&s).unwrap();
             let intent = doc.operation.unwrap().recovery.unwrap();
             replace_parent_keep_children(&parent);
-            assert!(recover::verify(&intent, &AtomicBool::new(false)).is_err());
+            assert!(
+                recover::verify(
+                    &super::material_owner::Owner::default(),
+                    &intent,
+                    &AtomicBool::new(false)
+                )
+                .is_err()
+            );
             assert_eq!(fs::read(parent.join("restored/a.txt")).unwrap(), b"fixture");
         },
     );
@@ -383,7 +395,10 @@ fn removal_leaf_reservation_cannot_be_replaced_or_prepopulated() {
                 let result = recovery_pack::build(
                     REMOVE,
                     &saved,
-                    &plan,
+                    recovery_pack::BuildSource {
+                        owner: &crate::worktrees::material_owner::Owner::default(),
+                        captured: &plan,
+                    },
                     "62345678-1234-4123-8123-123456789abc",
                     &root,
                     &stamp,

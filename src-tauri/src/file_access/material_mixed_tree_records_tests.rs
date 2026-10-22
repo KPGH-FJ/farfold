@@ -246,3 +246,109 @@ fn truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input()
         );
     }
 }
+
+#[test]
+fn more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit() {
+    let mut nodes = vec![(Kind::Directory, ROOT, 1, vec![82])];
+    for ordinal in 1..=128 {
+        nodes.push((
+            Kind::Regular,
+            0,
+            ordinal + 1,
+            format!("owned-{ordinal:03}.txt").encode_utf16().collect(),
+        ));
+    }
+    let bytes = fixture(&nodes);
+    let actual = verify(&bytes).unwrap();
+    assert_eq!(actual.nodes.len(), nodes.len());
+    for (actual, (kind, parent, identity, name)) in actual.nodes.iter().zip(&nodes) {
+        assert_eq!((&actual.kind, &actual.parent), (kind, parent));
+        assert_eq!(actual.metadata.source_id, *identity);
+        assert_eq!(&actual.metadata.raw_leaf, name);
+    }
+    // Increasing the format's finite node limit never increases this pool.
+    let resident = Resident::new(4 * super::super::material_carrier_records::BLOCK);
+    assert!(matches!(
+        verify_exact(
+            &mut Cursor::new(&bytes),
+            &mut WorkBudget::new(super::super::material_carrier_records::WORK_LIMIT),
+            &AtomicBool::new(false),
+            &resident,
+            |a, b| Ok(a == b)
+        ),
+        Err(Error::Limit)
+    ));
+    // A refused read retires its reservation instead of poisoning later work.
+    let lease = resident
+        .lease(4 * super::super::material_carrier_records::BLOCK)
+        .unwrap();
+    drop(lease);
+}
+
+#[test]
+fn expanded_collision_checks_share_work_and_cancel_before_further_comparisons() {
+    let mut nodes = vec![(Kind::Directory, ROOT, 1, vec![82])];
+    for ordinal in 1..=128 {
+        nodes.push((Kind::Regular, 0, ordinal + 1, vec![256 + ordinal as u16]));
+    }
+    let bytes = fixture(&nodes);
+    // Enough for the complete encoded input and all EOF probes, but not the
+    // pairwise work: expanding the node count must not bypass the allowance.
+    let resident = Resident::new(super::super::material_carrier_records::RESIDENT_LIMIT);
+    let mut comparisons = 0;
+    assert!(matches!(
+        verify_exact(
+            &mut Cursor::new(&bytes),
+            &mut WorkBudget::new(bytes.len() as u64 + nodes.len() as u64 + 1),
+            &AtomicBool::new(false),
+            &resident,
+            |a, b| {
+                comparisons += 1;
+                Ok(a == b)
+            }
+        ),
+        Err(Error::Limit)
+    ));
+    assert!(comparisons > 0 && comparisons < 128 * 127 / 2);
+    let cancel = AtomicBool::new(false);
+    comparisons = 0;
+    assert!(matches!(
+        verify_exact(
+            &mut Cursor::new(&bytes),
+            &mut WorkBudget::new(super::super::material_carrier_records::WORK_LIMIT),
+            &cancel,
+            &resident,
+            |_, _| {
+                comparisons += 1;
+                cancel.store(true, std::sync::atomic::Ordering::SeqCst);
+                Ok(false)
+            }
+        ),
+        Err(Error::Cancelled)
+    ));
+    assert_eq!(comparisons, 1);
+    // Both incomplete reads release their operation-scoped reservations.
+    drop(
+        resident
+            .lease(super::super::material_carrier_records::RESIDENT_LIMIT)
+            .unwrap(),
+    );
+}
+
+#[test]
+fn finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes() {
+    let resident = Resident::new(super::super::material_carrier_records::RESIDENT_LIMIT);
+    let mut work = WorkBudget::new(super::super::material_carrier_records::WORK_LIMIT);
+    let cancel = AtomicBool::new(false);
+    let mut output = Vec::new();
+    assert!(matches!(
+        Writer::begin(&mut output, MAX_NODES + 1, &mut work, &cancel, &resident),
+        Err(Error::Limit)
+    ));
+    assert!(output.is_empty());
+    let mut head = [0u8; 16];
+    head[..8].copy_from_slice(MAGIC);
+    head[8..12].copy_from_slice(&((MAX_NODES + 1) as u32).to_le_bytes());
+    head[12] = 1;
+    assert!(matches!(verify(&head), Err(Error::Limit)));
+}

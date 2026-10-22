@@ -75,10 +75,12 @@ fn existing_main_and_linked_tree_require_exact_adopt_then_cold_recheck() {
         b"retain"
     );
     assert_eq!(std::fs::read(root.join(".git/config")).unwrap(), config);
-    assert_eq!(
-        manager.start(&store, "unknown").unwrap_err().code,
-        "unsupportedGit"
-    );
+    let before_unknown = store.worktree_raw().unwrap();
+    assert!(matches!(
+        manager.start(&store, "unknown").unwrap(),
+        Reply::Unknown { .. }
+    ));
+    assert_eq!(store.worktree_raw().unwrap(), before_unknown);
 }
 #[test]
 fn a_project_local_git_executable_is_not_admitted_from_absolute_path() {
@@ -94,7 +96,7 @@ fn a_project_local_git_executable_is_not_admitted_from_absolute_path() {
 }
 
 #[test]
-fn unimplemented_entrypoints_refuse_before_retirement_or_durable_intent() {
+fn expired_or_missing_conditions_refuse_before_retirement_or_durable_intent() {
     let store = tests::store();
     let manager = Worktrees::default();
     let before = store.worktree_raw().unwrap();
@@ -116,16 +118,13 @@ fn unimplemented_entrypoints_refuse_before_retirement_or_durable_intent() {
             Ok(())
         },
     );
-    assert!(matches!(
-        result,
-        Err(Failure {
-            code: "unsupportedGit"
-        })
-    ));
+    let rejected = tests::op(result.unwrap());
+    assert_eq!(rejected.state, "failed");
+    assert_eq!(rejected.code.as_deref(), Some("inspectionExpired"));
     assert!(!retired);
     let result = manager.prepare_remove(
         &store,
-        "11111111-1111-4111-8111-111111111111",
+        "22222222-2222-4222-8222-222222222222",
         RemoveInput {
             inspection_id: "fixture".into(),
             expected_draft_baseline: baseline,
@@ -135,34 +134,30 @@ fn unimplemented_entrypoints_refuse_before_retirement_or_durable_intent() {
             Ok(())
         },
     );
-    assert!(matches!(
-        result,
-        Err(Failure {
-            code: "unsupportedGit"
-        })
-    ));
+    let rejected = tests::op(result.unwrap());
+    assert_eq!(rejected.state, "failed");
+    assert_eq!(rejected.code.as_deref(), Some("inspectionExpired"));
     assert!(!retired);
     assert!(matches!(
         manager.preparation_inspect(&store, "missing", 0, "project"),
-        Err(Failure {
-            code: "unsupportedGit"
-        })
+        Err(Failure { code: "missing" })
     ));
-    assert!(matches!(
-        manager.prepare_recover(
-            &store,
-            "11111111-1111-4111-8111-111111111111",
-            RecoverInput {
-                recovery_id: "22222222-2222-4222-8222-222222222222".into(),
-                expected_revision: 0,
-                parent_path: r"C:\nonexistent".into(),
-                directory_name: "must-not-create".into()
-            }
-        ),
-        Err(Failure {
-            code: "unsupportedGit"
-        })
-    ));
+    let rejected = tests::op(
+        manager
+            .prepare_recover(
+                &store,
+                "33333333-3333-4333-8333-333333333333",
+                RecoverInput {
+                    recovery_id: "22222222-2222-4222-8222-222222222222".into(),
+                    expected_revision: 0,
+                    parent_path: r"C:\nonexistent".into(),
+                    directory_name: "must-not-create".into(),
+                },
+            )
+            .unwrap(),
+    );
+    assert_eq!(rejected.state, "failed");
+    assert_eq!(rejected.code.as_deref(), Some("missingRecovery"));
     assert_eq!(store.worktree_raw().unwrap(), before);
 }
 #[test]
@@ -201,9 +196,7 @@ fn cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready() {
     let cold = Worktrees::default();
     assert!(matches!(
         cold.recheck(&store, id),
-        Err(Failure {
-            code: "unsupportedGit"
-        })
+        Err(Failure { code: "unknown" })
     ));
     assert_eq!(store.worktree_raw().unwrap().as_deref(), Some(raw.as_str()));
     assert!(!directory.path().join("not-created").exists());

@@ -735,6 +735,8 @@ jobs:
           $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
           $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
           if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $selectorPath = './.github/scripts/windows-historical-selection.ps1'
+          $selectorHash = (Get-FileHash -LiteralPath $selectorPath -Algorithm SHA256).Hash
           $groups = @(
             @{ name = 'bundle-graph'; filter = 'worktrees::recovery_pack::private_graph::tests::'; expected = 9; names = @(
                 'worktrees::recovery_pack::private_graph::tests::real_stdout_bundle_and_two_stdin_commands_verify_independent_exact_graph',
@@ -767,7 +769,8 @@ jobs:
             $stdout = Join-Path $raw ("owned-" + $group.name + '.stdout.log')
             $stderr = Join-Path $raw ("owned-" + $group.name + '.stderr.log')
             $started = [DateTime]::UtcNow.ToString('o')
-            & $binary $group.filter --nocapture --test-threads=1 1> $stdout 2> $stderr
+            $historicalArguments = @(& $selectorPath -Filter $group.filter)
+            & $binary @historicalArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
             $testExit = $LASTEXITCODE
             $finished = [DateTime]::UtcNow.ToString('o')
             $outText = [IO.File]::ReadAllText($stdout)
@@ -781,7 +784,7 @@ jobs:
             if (-not $passed) { $complete = $false }
             $results += [ordered]@{
               group = $group.name
-              filter = $group.filter
+              filter = $group.filter; selectionArguments = $historicalArguments
               expectedTests = $group.expected
               expectedNames = $expectedNames
               actualPassedNames = $actualNames
@@ -799,12 +802,13 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
+          $inputsStable = $inputsStable -and (Get-FileHash -LiteralPath $selectorPath -Algorithm SHA256).Hash -eq $selectorHash
           $complete = $complete -and $results.Count -eq 3 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
             fixtureSha256 = $selection.fixtureSha256
-            groups = $results
+            groups = $results; historicalSelectorSha256 = $selectorHash
             inputsStable = $inputsStable
             observationComplete = $complete
             publicMutationOrPrivateContextComplete = $false
@@ -826,6 +830,8 @@ jobs:
           $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Path
           $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
           if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Built diagnostic inputs changed' }
+          $selectorPath = './.github/scripts/windows-historical-selection.ps1'
+          $selectorHash = (Get-FileHash -LiteralPath $selectorPath -Algorithm SHA256).Hash
           $groups = @(
             @{ name = 'carrier-backup-io'; filter = 'file_access::material_backup_io::tests::'; expected = 11; names = @(
                 'file_access::material_backup_io::tests::returned_zero_is_real_eof_and_spool_is_exact',
@@ -1062,7 +1068,8 @@ jobs:
             $exactArguments = @()
             if ($group.exact -eq $true) { $exactArguments = @('--exact') }
             if ($group.name -ceq 'source-graph') { $exactArguments += @('--skip', 'worktrees::git::source_roots::graph_tests::managed_root_git_tests::', '--skip', 'worktrees::git::source_roots::graph_tests::managed_material_tests::') }
-            & $binary $group.filter @exactArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
+            $historicalArguments = @(& $selectorPath -Filter $group.filter)
+            & $binary @historicalArguments @exactArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
             $testExit = $LASTEXITCODE
             $finished = [DateTime]::UtcNow.ToString('o')
             $outText = [IO.File]::ReadAllText($stdout)
@@ -1076,7 +1083,7 @@ jobs:
             if (-not $passed) { $complete = $false }
             $results += [ordered]@{
               group = $group.name
-              filter = $group.filter
+              filter = $group.filter; selectionArguments = $historicalArguments
               expectedTests = $group.expected
               expectedNames = $expectedNames
               actualPassedNames = $actualNames
@@ -1094,12 +1101,13 @@ jobs:
             Get-Content -LiteralPath $stderr
           }
           $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256
+          $inputsStable = $inputsStable -and (Get-FileHash -LiteralPath $selectorPath -Algorithm SHA256).Hash -eq $selectorHash
           $complete = $complete -and $results.Count -eq 44 -and $inputsStable
           [ordered]@{
             head = $head
             testBinarySha256 = $selection.testBinarySha256
             fixtureSha256 = $selection.fixtureSha256
-            groups = $results
+            groups = $results; historicalSelectorSha256 = $selectorHash
             inputsStable = $inputsStable
             observationComplete = $complete
             singleNodeCarrierControlsOnly = $false
@@ -1245,6 +1253,22 @@ jobs:
         continue-on-error: true
         run: |
           & ./.github/scripts/windows-owned-material-cohort.ps1 -ExpectedHead '${{ github.sha }}' -Mode FullSecurityManual
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Current capability closeout, exact ordinary owned controls
+        id: capability_closeout_ordinary
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          & ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode Ordinary
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Current capability closeout, exact current-token FullSecurity controls
+        id: capability_closeout_full_sd
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          & ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode FullSecurityManual
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Master retirement bounded unknown, strict manual exact negative observation
         id: master_unknown
@@ -1421,6 +1445,8 @@ jobs:
             owned_material_ordinary = '${{ steps.owned_material_ordinary.outcome }}'
             owned_material_full_sd = '${{ steps.owned_material_full_sd.outcome }}'
             owned_link_transition = '${{ steps.owned_link_transition.outcome }}'
+            capability_closeout_ordinary = '${{ steps.capability_closeout_ordinary.outcome }}'
+            capability_closeout_full_sd = '${{ steps.capability_closeout_full_sd.outcome }}'
           }
           $positivesPassed = $build -eq 'success'
           foreach ($outcome in $required.Values) { if ($outcome -ne 'success') { $positivesPassed = $false } }
@@ -1441,6 +1467,7 @@ jobs:
             diagnosticsComplete = $complete
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
+            currentCapabilityCloseoutInventory = '.github/scripts/windows-capability-closeout-cases.json'
             scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')

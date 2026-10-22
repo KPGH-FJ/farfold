@@ -60,6 +60,7 @@ impl Fixture {
         objects.sort();
         Manifest {
             version: 1,
+            windows_material: None,
             roots: Roots {
                 head: COMMIT.into(),
                 format: "sha1".into(),

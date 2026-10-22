@@ -70,7 +70,11 @@ pub(super) fn operation(o: &SavedOperation) -> bool {
     };
     let s = &o.status;
     i.saved.valid()
-        && i.content.profile.is_none()
+        && if cfg!(windows) {
+            i.content.profile == Some(super::MaterialProfile::WindowsRetainedTreeV1)
+        } else {
+            i.content.profile.is_none()
+        }
         && i.roots.count > 0
         && i.roots.count <= 4096
         && hash(&i.roots.sha256)

@@ -295,7 +295,11 @@ fn late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operati
             let mut durable_after_newer = None;
             let rejected = m
                 .recheck_remove_with(&s, fixture::REMOVE, |intent| {
-                    crate::worktrees::removal::verify_deleted(intent, &AtomicBool::new(false))?;
+                    crate::worktrees::removal::verify_deleted(
+                        &crate::worktrees::material_owner::Owner::default(),
+                        intent,
+                        &AtomicBool::new(false),
+                    )?;
                     newer = Some(m.recovery_check(&s, &b.id, b.revision)?.recoveries[0].clone());
                     durable_after_newer = s.worktree_raw().unwrap();
                     Ok(())
@@ -308,7 +312,11 @@ fn late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operati
             let mut durable_after_observation = None;
             let rejected = m
                 .recheck_remove_with(&s, fixture::REMOVE, |intent| {
-                    crate::worktrees::removal::verify_deleted(intent, &AtomicBool::new(false))?;
+                    crate::worktrees::removal::verify_deleted(
+                        &crate::worktrees::material_owner::Owner::default(),
+                        intent,
+                        &AtomicBool::new(false),
+                    )?;
                     let mut i = m.lock()?;
                     let mut doc = i.doc.clone();
                     doc.recoveries[0].receipt.availability = "unknown".into();
@@ -325,7 +333,11 @@ fn late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operati
             let mut durable_after_adopt = None;
             let rejected = m
                 .recheck_remove_with(&s, fixture::REMOVE, |intent| {
-                    crate::worktrees::removal::verify_deleted(intent, &AtomicBool::new(false))?;
+                    crate::worktrees::removal::verify_deleted(
+                        &crate::worktrees::material_owner::Owner::default(),
+                        intent,
+                        &AtomicBool::new(false),
+                    )?;
                     let inspected = m.inspect(&s, r.root.to_str().unwrap())?;
                     let adopted = tests::op(m.adopt(
                         &s,

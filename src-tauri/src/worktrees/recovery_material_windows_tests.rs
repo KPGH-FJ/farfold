@@ -324,13 +324,21 @@ fn sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_rem
     ]
     .into_iter()
     .map(|(path, directory)| {
-        let pin = if directory {
-            PinnedPath::directory(path)
-        } else {
-            PinnedPath::regular(path)
-        }
-        .unwrap();
-        pin.identity().clone()
+        use windows_sys::Win32::Storage::FileSystem::{
+            FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, FILE_READ_ATTRIBUTES,
+            FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, SYNCHRONIZE,
+        };
+        // The fixture deliberately owns raw, unpaired UTF-16 names. Read their
+        // actual identities without broadening production user-path admission.
+        let file = OpenOptions::new()
+            .access_mode(FILE_READ_ATTRIBUTES | SYNCHRONIZE)
+            .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT)
+            .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE)
+            .open(path)
+            .unwrap();
+        let stamp = crate::file_access::stamp(&file).unwrap();
+        assert_eq!(stamp.regular, !directory);
+        stamp.identity
     })
     .collect::<Vec<_>>();
     let memory = MixedMemory::default();
@@ -376,6 +384,100 @@ fn sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_rem
     drop(actual);
     f.temp.close().unwrap();
 }
+
+#[test]
+#[ignore = "manual: existing full-security source/target rights; no privilege adjustment"]
+fn persisted_descriptor_reopens_with_new_owner_after_original_source_and_owner_drop() {
+    let f = Fixture::new();
+    ea_ads(&f.file);
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let (descriptor, original) = owner
+        .sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| sealed.descriptor(),
+        )
+        .unwrap();
+    let wire = serde_json::to_vec(&descriptor).unwrap();
+    drop((descriptor, owner, memory));
+    std::fs::remove_dir_all(&f.source).unwrap();
+    let decoded: crate::worktrees::WindowsMaterial = serde_json::from_slice(&wire).unwrap();
+    let fresh_owner = Owner::default();
+    let fresh_memory = MixedMemory::default();
+    let (restored, reopened) = fresh_owner
+        .reopen_material(
+            f.destination(&fresh_memory),
+            &decoded,
+            &AtomicBool::new(false),
+            |sealed| {
+                assert_eq!(sealed.descriptor()?, decoded);
+                sealed.reconstruct_tree()
+            },
+        )
+        .unwrap();
+    assert_eq!(reopened, original);
+    assert_reconstructed(&restored, (2, 1, 1));
+    fresh_owner.available().unwrap();
+    assert!(!fresh_owner.occupied());
+    assert!(!f.source.exists());
+    assert_eq!(
+        std::fs::read(f.destination.join("material.bin"))
+            .unwrap()
+            .len() as u64,
+        original.bytes
+    );
+}
+
+#[test]
+#[ignore = "manual: actual complete source capture; cold reader must reject changed identity/digest/catalog"]
+fn cold_descriptor_tamper_never_enters_consumer_or_removes_retained_material() {
+    let f = Fixture::new();
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let (descriptor, original) = owner
+        .sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| sealed.descriptor(),
+        )
+        .unwrap();
+    drop((owner, memory));
+    for mutation in 0..4 {
+        let mut changed = descriptor.clone();
+        match mutation {
+            0 => changed.file_id[15] ^= 128,
+            1 => changed.sha256[0] ^= 1,
+            2 => changed.nodes[0].security.sha256[0] ^= 1,
+            _ => changed.nodes[1].streams[0].bytes += 1,
+        }
+        let memory = MixedMemory::default();
+        let owner = Owner::default();
+        assert!(
+            owner
+                .reopen_material(
+                    f.destination(&memory),
+                    &changed,
+                    &AtomicBool::new(false),
+                    |_| -> std::result::Result<(), E> {
+                        panic!("invalid stored material reached consumer")
+                    }
+                )
+                .is_err()
+        );
+        owner.available().unwrap();
+        assert!(!owner.occupied());
+        assert_eq!(
+            <[u8; 32]>::from(Sha256::digest(
+                std::fs::read(f.destination.join("material.bin")).unwrap()
+            )),
+            original.sha256
+        );
+        f.preserved();
+    }
+}
 struct RestoreReadonly {
     path: PathBuf,
     original: std::fs::Permissions,
@@ -405,6 +507,10 @@ fn restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_unt
     let f = Fixture::new();
     ea_ads(&f.file);
     let readonly = RestoreReadonly::owned(&f.file);
+    let parent_dacl = crate::file_access::security_test_fixture::OwnedDacl::directory(&f.source);
+    // DELETE may also be granted through FILE_DELETE_CHILD (0x40) on the parent.
+    // Both ACLs belong to this temporary fixture and retain restoration handles.
+    parent_dacl.set("D:P(D;;0x00000040;;;WD)(A;;FA;;;WD)");
     let dacl = crate::file_access::security_test_fixture::OwnedDacl::new(&f.file);
     dacl.set("D:P(A;;FR;;;WD)");
     // Prove a new DELETE open really is denied; target cleanup must instead use
@@ -429,6 +535,7 @@ fn restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_unt
         },
     );
     dacl.restore();
+    parent_dacl.restore();
     drop(readonly);
     let (tree, _) = result.unwrap();
     assert_reconstructed(&tree, (2, 1, 1));
@@ -502,4 +609,83 @@ fn callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps
         assert!(!f.destination.join(".material-pending").exists());
         f.preserved();
     }
+}
+
+#[test]
+#[ignore = "manual: explicit combined FullSecurity access; persisted target must survive original Store and Owner release"]
+fn cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release() {
+    let f = Fixture::new();
+    ea_ads(&f.source);
+    ea_ads(&f.file);
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let (descriptor, _) = owner
+        .sealed_material(
+            f.source(&memory, true).unwrap(),
+            f.destination(&memory),
+            &AtomicBool::new(false),
+            |sealed| sealed.descriptor(),
+        )
+        .unwrap();
+    let wire = serde_json::to_vec(&descriptor).unwrap();
+    drop((owner, memory, descriptor));
+    std::fs::remove_dir_all(&f.source).unwrap();
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let descriptor = serde_json::from_slice(&wire).unwrap();
+    let parent = f.destination.parent().unwrap();
+    let pin = PinnedPath::directory(parent).unwrap();
+    let target = crate::file_access::MaterialTargetRequest::new(
+        parent,
+        pin.identity(),
+        "selected-target".encode_utf16().collect(),
+        &memory,
+    )
+    .unwrap();
+    let (tree, _) = owner
+        .reopen_material(
+            f.destination(&memory),
+            &descriptor,
+            &AtomicBool::new(false),
+            |sealed| sealed.reconstruct_target(target),
+        )
+        .unwrap();
+    assert_reconstructed(&tree, (2, 1, 1));
+    assert!(tree.retained);
+    owner.available().unwrap();
+    drop((owner, memory, tree));
+    let restored = parent.join("selected-target");
+    let file = restored.join(f.file.file_name().unwrap());
+    assert_eq!(std::fs::read(&file).unwrap(), b"actual-default-data\0\xff");
+    let mut ads = file.as_os_str().to_os_string();
+    ads.push(":retained:$DATA");
+    assert_eq!(
+        std::fs::read(PathBuf::from(ads)).unwrap(),
+        b"actual-ads\0\xff"
+    );
+    assert_eq!(std::fs::read_dir(&restored).unwrap().count(), 1);
+    assert!(f.destination.join("material.bin").exists());
+    assert!(!f.source.exists());
+    // A second operation cannot overwrite or adopt the already delivered root.
+    let memory = MixedMemory::default();
+    let owner = Owner::default();
+    let target = crate::file_access::MaterialTargetRequest::new(
+        parent,
+        pin.identity(),
+        "selected-target".encode_utf16().collect(),
+        &memory,
+    )
+    .unwrap();
+    assert!(
+        owner
+            .reopen_material(
+                f.destination(&memory),
+                &descriptor,
+                &AtomicBool::new(false),
+                |sealed| sealed.reconstruct_target(target),
+            )
+            .is_err()
+    );
+    owner.available().unwrap();
+    assert_eq!(std::fs::read(&file).unwrap(), b"actual-default-data\0\xff");
 }

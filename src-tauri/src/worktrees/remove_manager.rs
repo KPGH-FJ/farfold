@@ -1,7 +1,7 @@
 //! Two explicit operations: preparing recovery never grants deletion to ordinary start.
 use super::*;
 use crate::worktrees::{
-    recovery_pack::{self, Manifest},
+    recovery_pack::{self, Capture},
     removal,
     remove_types::*,
     storage::{RemoveIntent, SavedArchive},
@@ -9,7 +9,7 @@ use crate::worktrees::{
 pub(super) struct RemoveTicket {
     saved: SavedArchive,
     preview: RemoveInspection,
-    plan: Manifest,
+    plan: Capture,
     created: Instant,
 }
 fn reject(i: &mut Inner, id: &str, code: &str) -> Reply {
@@ -71,7 +71,7 @@ impl Worktrees {
         id: &str,
         revision: u64,
     ) -> Result<RemoveInspection> {
-        crate::worktrees::mutation_supported()?;
+        removal::supported()?;
         let _own = self
             .0
             .admission
@@ -168,7 +168,7 @@ impl Worktrees {
         input: RemoveInput,
         retire: impl FnOnce(&Path) -> Result<()>,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        removal::supported()?;
         let ticket = {
             let mut i = self.lock()?;
             let request = Request::Remove(input.clone());
@@ -344,7 +344,7 @@ impl Worktrees {
         store: &MetaStore,
         id: &str,
         mut intent: RemoveIntent,
-        plan: Manifest,
+        plan: Capture,
         cancel: &AtomicBool,
     ) -> Result<()> {
         if cancel.load(Ordering::SeqCst) {
@@ -353,16 +353,21 @@ impl Worktrees {
         if removal::capture(&self.0.material, &intent.saved, cancel)? != plan {
             return Err(error("recoveryChanged"));
         }
-        let reserved_stamp = removal::reserve(&intent)?;
+        let reserved = removal::reserve(&intent)?;
+        reserved.verify()?;
         let r = recovery_pack::build(
             id,
             &intent.saved,
-            &plan,
+            recovery_pack::BuildSource {
+                owner: &self.0.material,
+                captured: &plan,
+            },
             &intent.recovery_id,
             Path::new(&intent.recovery_path),
-            &reserved_stamp,
+            &reserved.stamp,
             cancel,
         )?;
+        reserved.verify()?;
         intent.recovery = Some(r.clone());
         // The complete artifact remains findable even if source verification subsequently fails.
         {
@@ -398,7 +403,7 @@ impl Worktrees {
         id: &str,
         confirmation: RemoveConfirmation,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        removal::supported()?;
         let mut i = self.lock()?;
         if !i.loaded {
             i.load(store)?;
@@ -463,6 +468,7 @@ impl Worktrees {
                     let p = removal::capture(&manager.0.material, &intent.saved, &cancel)?;
                     removal::same_plan(&intent, &p)?;
                     recovery_pack::verify(
+                        &manager.0.material,
                         intent.recovery.as_ref().ok_or(error("recoveryInvalid"))?,
                         &cancel,
                     )?;
@@ -609,7 +615,7 @@ impl Worktrees {
     }
     pub(super) fn recheck_remove(&self, store: &MetaStore, id: &str) -> Result<Reply> {
         self.recheck_remove_with(store, id, |intent| {
-            removal::verify_deleted(intent, &AtomicBool::new(false))
+            removal::verify_deleted(&self.0.material, intent, &AtomicBool::new(false))
         })
     }
     pub(super) fn recheck_remove_with(
@@ -618,7 +624,7 @@ impl Worktrees {
         id: &str,
         verify: impl FnOnce(&RemoveIntent) -> Result<()>,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        removal::supported()?;
         let _own = self
             .0
             .admission
@@ -724,7 +730,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub fn recovery_check(&self, store: &MetaStore, id: &str, revision: u64) -> Result<Listing> {
-        crate::worktrees::mutation_supported()?;
+        crate::worktrees::recover::supported()?;
         let _own = self
             .0
             .admission
@@ -744,7 +750,7 @@ impl Worktrees {
                 .cloned()
                 .ok_or(error("missingRecovery"))?
         };
-        let checked = recovery_pack::verify(&saved, &AtomicBool::new(false));
+        let checked = recovery_pack::verify(&self.0.material, &saved, &AtomicBool::new(false));
         let mut i = self.lock()?;
         let mut n = i.doc.clone();
         let r = n

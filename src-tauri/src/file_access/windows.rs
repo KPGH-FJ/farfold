@@ -34,7 +34,6 @@ use windows_sys::{
 };
 mod directory;
 pub(crate) use directory::entries as directory_entries;
-#[cfg(test)]
 pub(crate) use directory::entries_with_work as directory_entries_with_work;
 mod ea;
 pub(crate) use ea::observation as ea_observation;
@@ -55,6 +54,13 @@ pub(crate) use metadata::{
 };
 mod pinned;
 pub(crate) use pinned::PinnedPath;
+mod worktree_checkout;
+pub(crate) use worktree_checkout::WorktreeCheckout;
+mod worktree_move;
+pub(crate) use worktree_move::WorktreeMove;
+mod worktree_pointer;
+pub(crate) use worktree_pointer::WorktreePointer;
+pub(crate) use worktree_pointer::replace_pair as replace_worktree_pointers;
 #[cfg(test)]
 mod pinned_tests;
 
@@ -594,11 +600,8 @@ mod tests {
     }
 }
 
-#[cfg(test)]
 mod material_carrier;
-#[cfg(test)]
 mod material_carrier_native;
-#[cfg(test)]
 mod material_restore;
 #[cfg(test)]
 pub(crate) use material_carrier::{
@@ -610,15 +613,12 @@ mod material_fragment_consumer;
 #[cfg(test)]
 pub(crate) use material_fragment_consumer::{FragmentRetirement, carrier_fragment_roundtrip};
 
-#[cfg(test)]
 mod material_directory_carrier;
-#[cfg(test)]
 mod material_directory_facts;
 #[cfg(test)]
 mod material_directory_restore;
 #[cfg(test)]
 mod material_directory_tree;
-#[cfg(test)]
 mod material_directory_tree_source;
 #[cfg(test)]
 pub(crate) use material_directory_restore::{DirectoryRestoreReceipt, directory_roundtrip};
@@ -627,7 +627,6 @@ pub(crate) use material_directory_tree::{
     DirectoryTreeMemory, DirectoryTreeReceipt, DirectoryTreeRequest, DirectoryTreeRetirement,
     directory_tree_roundtrip,
 };
-#[cfg(test)]
 mod material_pin;
 #[cfg(test)]
 pub(crate) use material_directory_carrier::{
@@ -651,7 +650,6 @@ pub(crate) use material_restore::owned_link::{
     WORK_LIMIT as OWNED_LINK_WORK_LIMIT,
 };
 
-#[cfg(test)]
 mod material_regular_shared;
 #[cfg(test)]
 mod material_regular_shared_probe;
@@ -661,13 +659,12 @@ pub(crate) use material_regular_shared_probe::{
     regular_shared_capture,
 };
 
-#[cfg(test)]
 mod material_mixed_tree_input;
-#[cfg(test)]
 mod material_mixed_tree_source;
 #[cfg(test)]
+pub(crate) use material_mixed_tree_input::{MixedInput, MixedSummary};
 pub(crate) use material_mixed_tree_input::{
-    MixedInput, MixedMemory, MixedRequest, MixedRetirement, MixedSummary, with_mixed_tree_input,
+    MixedMemory, MixedRequest, MixedRetirement, with_mixed_tree_input, with_mixed_tree_input_then,
 };
 
 #[cfg(test)]
@@ -677,12 +674,10 @@ pub(crate) use material_alias_topology::{
     AliasFailure, AliasMemory, AliasRequest, AliasView, with_alias_structure,
 };
 
-#[cfg(test)]
 mod material_persistent_store;
-#[cfg(test)]
 pub(crate) use material_persistent_store::{
-    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTreeReceipt,
-    OwnedSealedMaterial, with_sealed_material,
+    MaterialSealReceipt, MaterialStoreRequest, MaterialStoreRetirement, MaterialTargetRequest,
+    MaterialTreeReceipt, OwnedSealedMaterial, with_reopened_material, with_sealed_material,
 };
 
 #[cfg(test)]
@@ -690,3 +685,7 @@ pub(crate) use material_restore::target_links::{
     GroupReceipt as TargetLinkReceipt, MAX_NODES as TARGET_LINK_MAX_NODES,
     Memory as TargetLinkMemory, OwnedTargetLinks, ROOT as TARGET_LINK_ROOT,
 };
+
+mod material_delete;
+mod worktree_delete_file;
+pub(crate) use material_delete::{DeleteSecurity, DeleteStoppedHandle, WorktreeDeleteNode};

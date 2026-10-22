@@ -13,18 +13,23 @@ use super::{
     types::*,
 };
 use serde::{Deserialize, Serialize};
+#[cfg(any(unix, test))]
 use sha2::{Digest, Sha256};
 use std::{
-    collections::BTreeSet,
-    fs::{self, File},
-    io::{Read, Write},
-    path::Path,
-    process::Command,
-    sync::atomic::AtomicBool,
-    time::Duration,
+    collections::BTreeSet, fs, io::Write, path::Path, sync::atomic::AtomicBool, time::Duration,
 };
+#[cfg(any(unix, test))]
+use std::{fs::File, io::Read, process::Command};
 #[path = "recovery_artifact.rs"]
 mod artifact;
+#[path = "recovery_capture.rs"]
+mod capture;
+#[cfg(windows)]
+#[path = "recovery_graph.rs"]
+mod graph;
+pub(super) use capture::Capture;
+#[path = "recovery_material_manifest.rs"]
+pub(crate) mod material_manifest;
 #[cfg(windows)]
 #[path = "private_offline_graph_windows.rs"]
 mod offline_graph;
@@ -46,6 +51,17 @@ pub(super) struct Manifest {
     pub content: MaterialSummary,
     pub configs: Vec<String>,
     pub attributes: Vec<u8>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "material_descriptor"
+    )]
+    pub windows_material: Option<material_manifest::WindowsMaterial>,
+}
+fn material_descriptor<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<material_manifest::WindowsMaterial>, D::Error> {
+    material_manifest::WindowsMaterial::deserialize(d).map(Some)
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -66,6 +82,7 @@ pub(super) struct SavedRecovery {
     )]
     pub windows_program_origin: Option<super::windows_offline_program::Origin>,
 }
+#[cfg(any(unix, test))]
 fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
     let mut c = git::command(root, args)?;
     c.env("GIT_CONFIG_NOSYSTEM", "1")
@@ -73,6 +90,7 @@ fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
         .env("GIT_ATTR_NOSYSTEM", "1");
     Ok(c)
 }
+#[cfg(any(unix, test))]
 fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
     // MAX_ROOTS/MAX_OBJECTS with admitted SHA1/SHA256 OIDs fit the existing
     // output budget. This is not a new cap on user material or pack payload.
@@ -82,6 +100,7 @@ fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>>
     };
     run_input(c, input, cancel)
 }
+#[cfg(any(unix, test))]
 fn run_input(c: Command, input: git::Input, cancel: &AtomicBool) -> Result<Vec<u8>> {
     let o = git::execute_command_input(c, input, cancel, COMMAND_TIME)?;
     if !o.success {
@@ -89,6 +108,7 @@ fn run_input(c: Command, input: git::Input, cancel: &AtomicBool) -> Result<Vec<u
     }
     Ok(o.bytes)
 }
+#[cfg(any(unix, test))]
 fn private(
     root: &Path,
     args: &[&str],
@@ -97,9 +117,11 @@ fn private(
 ) -> Result<Vec<u8>> {
     run(private_command(root, args)?, bytes, cancel)
 }
+#[cfg(any(unix, test))]
 fn text(bytes: Vec<u8>) -> Result<String> {
     String::from_utf8(bytes).map_err(|_| error("recoveryInvalid"))
 }
+#[cfg(any(unix, test))]
 fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>> {
     let raw = text(run(c, Some(&roots.input()), cancel)?)?;
     let mut set = BTreeSet::new();
@@ -113,7 +135,13 @@ fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>
     }
     Ok(set.into_iter().collect())
 }
-pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
+pub(super) fn capture(
+    owner: &super::material_owner::Owner,
+    s: &Snapshot,
+    cancel: &AtomicBool,
+) -> Result<Capture> {
+    #[cfg(not(windows))]
+    let _ = owner;
     #[cfg(windows)]
     let source_graph = git::source_roots::SourceGraph::capture(s, cancel)?;
     #[cfg(windows)]
@@ -122,6 +150,7 @@ pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
     let o = source_graph.objects().to_vec();
     #[cfg(unix)]
     let roots = recovery_roots::capture(s, cancel)?;
+    #[cfg(unix)]
     let root = Path::new(&s.root);
     #[cfg(unix)]
     let o = {
@@ -177,11 +206,13 @@ pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
     let (configs, attributes) = profile.recovery_profile()?;
     #[cfg(windows)]
     let (configs, attributes) = source_graph.checkout_profile(cancel)?;
+    #[cfg(unix)]
     let content = material_scan::content(root, cancel)?;
     #[cfg(windows)]
+    let content = material::capture(owner, &source_graph, s, cancel)?;
+    #[cfg(windows)]
     source_graph.recheck(cancel)?;
-    Ok(Manifest {
-        version: 1,
+    Ok(Capture {
         roots,
         objects: o,
         content,
@@ -189,10 +220,12 @@ pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
         attributes,
     })
 }
+#[cfg(any(unix, test))]
 fn init(root: &Path, format: &str, bare: bool, cancel: &AtomicBool) -> Result<()> {
     fs::create_dir(root).map_err(|_| error("targetExists"))?;
     initialize(root, format, bare, cancel)
 }
+#[cfg(any(unix, test))]
 fn initialize(root: &Path, format: &str, bare: bool, cancel: &AtomicBool) -> Result<()> {
     let flag = format!("--object-format={format}");
     let mut args = vec!["init", "--template=", flag.as_str()];
@@ -210,6 +243,7 @@ fn refs(m: &Manifest) -> Vec<(String, String)> {
         .map(|(i, oid)| (oid.clone(), format!("refs/heads/recovery/root-{i:04}")))
         .collect()
 }
+#[cfg(any(unix, test))]
 fn install_refs(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     for (oid, name) in refs(m) {
         private(root, &["update-ref", &name, &oid], None, cancel)?;
@@ -222,6 +256,7 @@ fn install_refs(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     private(root, &["symbolic-ref", "HEAD", &head], None, cancel)?;
     Ok(())
 }
+#[cfg(any(unix, test))]
 fn verify_objects(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     private(
         root,
@@ -248,6 +283,7 @@ fn verify_objects(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> 
     }
     Ok(())
 }
+#[cfg(any(unix, test))]
 fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     let info = root.join(".git/info");
     fs::create_dir_all(&info).map_err(|_| error("unavailable"))?;
@@ -273,9 +309,22 @@ fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     }
     Ok(())
 }
-fn validate(m: &Manifest) -> Result<()> {
-    if m.version != 1
-        || m.content.profile.is_some()
+pub(super) fn validate(m: &Manifest) -> Result<()> {
+    let material_valid = match (m.version, &m.windows_material) {
+        (1, None) => m.content.profile.is_none(),
+        (2, Some(material)) => {
+            cfg!(windows)
+                && material.validate()
+                && (material.content.nodes as usize) < material.nodes.len()
+                && m.content.profile
+                    == Some(super::recycle_types::MaterialProfile::WindowsRetainedTreeV1)
+                && m.content.entries == material.content.nodes as u64
+                && m.content.bytes == material.content.bytes
+                && m.content.sha256 == material_scan::hex(material.content.sha256)
+        }
+        _ => false,
+    };
+    if !material_valid
         || !matches!(m.roots.format.as_str(), "sha1" | "sha256")
         || !oid(&m.roots.head)
         || m.roots.commits.is_empty()
@@ -293,8 +342,14 @@ fn validate(m: &Manifest) -> Result<()> {
     {
         return Err(error("recoveryInvalid"));
     }
+    validate_profile(&m.configs, &m.attributes)
+}
+fn validate_profile(configs: &[String], attributes: &[u8]) -> Result<()> {
+    if configs.len() > 9 || attributes.len() > 4 * 1024 * 1024 {
+        return Err(error("recoveryInvalid"));
+    }
     let mut names = BTreeSet::new();
-    for config in &m.configs {
+    for config in configs {
         let (name, value) = config.split_once('=').ok_or(error("recoveryInvalid"))?;
         let valid = match name {
             "core.autocrlf" => matches!(value, "true" | "false" | "input"),
@@ -314,6 +369,7 @@ fn validate(m: &Manifest) -> Result<()> {
     }
     Ok(())
 }
+#[cfg(any(unix, test))]
 pub(super) fn recover_into(
     bundle: &Path,
     m: &Manifest,
@@ -324,6 +380,7 @@ pub(super) fn recover_into(
     init(target, &m.roots.format, false, cancel)?;
     populate(bundle, m, target, cancel)
 }
+#[cfg(unix)]
 pub(super) fn recover_reserved(
     bundle: &Path,
     m: &Manifest,
@@ -343,6 +400,7 @@ pub(super) fn recover_reserved(
     initialize(target, &m.roots.format, false, cancel)?;
     populate(bundle, m, target, cancel)
 }
+#[cfg(any(unix, test))]
 fn populate(bundle: &Path, m: &Manifest, target: &Path, cancel: &AtomicBool) -> Result<()> {
     let bundle = bundle.to_str().ok_or(error("unsafePath"))?;
     private(target, &["bundle", "verify", bundle], None, cancel)?;
@@ -387,6 +445,7 @@ pub(super) fn expected_branch(m: &Manifest) -> Result<String> {
         .map(|(_, n)| n)
         .ok_or(error("recoveryInvalid"))
 }
+#[cfg(any(unix, test))]
 pub(super) fn verify_restored(target: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     validate(m)?;
     if target.join(".git/objects/info/alternates").exists() || target.join(".git/shallow").exists()
@@ -423,6 +482,7 @@ pub(super) fn verify_restored(target: &Path, m: &Manifest, cancel: &AtomicBool) 
     }
     Ok(())
 }
+#[cfg(any(unix, test))]
 fn create_file(path: &Path) -> Result<File> {
     let mut o = fs::OpenOptions::new();
     o.write(true).create_new(true);
@@ -433,6 +493,7 @@ fn create_file(path: &Path) -> Result<File> {
     }
     o.open(path).map_err(|_| error("targetExists"))
 }
+#[cfg(any(unix, test))]
 pub(super) fn digest(path: &Path, cap: u64) -> Result<(u64, String)> {
     let mut o = fs::OpenOptions::new();
     o.read(true);
@@ -471,6 +532,7 @@ pub(super) fn digest(path: &Path, cap: u64) -> Result<(u64, String)> {
     }
     Ok((count, material_scan::hex(sha.finalize())))
 }
+#[cfg(any(unix, test))]
 pub(super) fn publish_bundle(source: &Path, destination: &Path, cancel: &AtomicBool) -> Result<()> {
     let expected = digest(source, MAX_BYTES)?;
     let mut options = fs::OpenOptions::new();
@@ -522,7 +584,7 @@ pub(super) fn publish_bundle(source: &Path, destination: &Path, cancel: &AtomicB
 pub(super) struct ExportRequest<'a> {
     identity: &'a super::storage::Identity,
     retained: &'a str,
-    manifest: &'a Manifest,
+    manifest: graph::Graph,
 }
 #[cfg(windows)]
 impl<'a> ExportRequest<'a> {
@@ -531,9 +593,9 @@ impl<'a> ExportRequest<'a> {
     fn new(
         identity: &'a super::storage::Identity,
         retained: &'a str,
-        manifest: &'a Manifest,
+        manifest: &impl graph::GraphSource,
     ) -> Result<Self> {
-        validate(manifest)?;
+        let manifest = manifest.graph()?;
         let width = match manifest.roots.format.as_str() {
             "sha1" => 40,
             "sha256" => 64,
@@ -573,12 +635,12 @@ impl WindowsFirst {
 }
 #[cfg(windows)]
 fn windows_first(request: ExportRequest<'_>, cancel: &AtomicBool) -> Result<WindowsFirst> {
-    let manifest = request.manifest;
+    let manifest = request.manifest.clone();
     let identity = request.identity;
     let retained = request.retained;
     let exported = git::source_export::export(request, cancel)?;
     let (source, pack, namespace) = exported.into_parts()?;
-    let imported = private_bare::import(source, identity, retained, pack, manifest, cancel)?;
+    let imported = private_bare::import(source, identity, retained, pack, &manifest, cancel)?;
     let first = WindowsFirst {
         imported,
         export_namespace: namespace,
@@ -587,16 +649,28 @@ fn windows_first(request: ExportRequest<'_>, cancel: &AtomicBool) -> Result<Wind
     Ok(first)
 }
 
+pub(super) struct BuildSource<'a> {
+    pub owner: &'a super::material_owner::Owner,
+    pub captured: &'a Capture,
+}
 pub(super) fn build(
     operation_id: &str,
     saved: &SavedArchive,
-    m: &Manifest,
+    source: BuildSource<'_>,
     id: &str,
     path: &Path,
     reserved_stamp: &Stamp,
     cancel: &AtomicBool,
 ) -> Result<SavedRecovery> {
-    validate(m)?;
+    let BuildSource { owner, captured } = source;
+    #[cfg(unix)]
+    let _ = owner;
+    #[cfg(unix)]
+    let manifest = captured.manifest(None)?;
+    #[cfg(unix)]
+    let m = &manifest;
+    #[cfg(windows)]
+    let m = captured;
     let parent = path.parent().ok_or(error("unsafePath"))?;
     if parent != Path::new(&saved.parent) {
         return Err(error("unsafePath"));
@@ -611,6 +685,24 @@ pub(super) fn build(
         return Err(error("targetExists"));
     }
     let directory_stamp = reserved_stamp.clone();
+    #[cfg(windows)]
+    let publication_root = {
+        let parent_pin = crate::file_access::PinnedPath::directory(parent)
+            .map_err(|_| error("recoveryChanged"))?;
+        let root = crate::file_access::PinnedPath::directory(path)
+            .map_err(|_| error("recoveryChanged"))?;
+        if inspect::pinned_stamp(&parent_pin)? != saved.parent_stamp
+            || inspect::pinned_stamp(&root)? != *reserved_stamp
+            || root.guid_path.parent() != Some(parent_pin.guid_path.as_path())
+        {
+            return Err(error("recoveryChanged"));
+        }
+        root
+    };
+    #[cfg(windows)]
+    let mut publication = crate::file_access::WorktreeCheckout::new(&publication_root)
+        .map_err(|_| error("recoveryChanged"))?;
+    #[cfg(unix)]
     let temp = tempfile::tempdir_in(path).map_err(|_| error("unavailable"))?;
     #[cfg(unix)]
     let pack = temp.path().join("objects.pack");
@@ -697,39 +789,77 @@ pub(super) fn build(
     #[cfg(windows)]
     let mut graph_owner = private_graph::generate(&first_owner, m, cancel)?;
     #[cfg(windows)]
-    // Graph validity never substitutes for the existing full material path.
-    recover_into(graph_owner.path()?, m, &temp.path().join("second"), cancel)?;
-    #[cfg(windows)]
     graph_owner.recheck(cancel)?;
     #[cfg(windows)]
     let staged_bundle = graph_owner.path()?;
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     inspect::same(path.to_str().ok_or(error("unsafePath"))?, reserved_stamp)?;
+    #[cfg(unix)]
     let bundle = path.join("recovery.bundle");
     #[cfg(unix)]
     publish_bundle(&staged_bundle, &bundle, cancel)?;
     #[cfg(windows)]
-    publish_bundle(staged_bundle, &bundle, cancel)?;
+    {
+        let source = crate::file_access::PinnedPath::git_regular(staged_bundle)
+            .map_err(|_| error("recoveryChanged"))?;
+        let stamp =
+            crate::file_access::stamp(source.file()).map_err(|_| error("recoveryChanged"))?;
+        publication
+            .copy_regular("recovery.bundle", source.file(), stamp.size, cancel)
+            .map_err(|_| error("recoveryChanged"))?;
+        graph_owner.recheck(cancel)?;
+    }
+    #[cfg(windows)]
+    let manifest_value = captured.manifest(Some(material::build(
+        owner,
+        saved,
+        captured,
+        path,
+        reserved_stamp,
+        graph_owner.into_recovery_git(captured, cancel)?,
+        cancel,
+    )?))?;
+    #[cfg(windows)]
+    let m = &manifest_value;
+    #[cfg(unix)]
     let manifest = path.join("manifest.json");
     let raw = serde_json::to_vec(m).map_err(|_| error("recoveryInvalid"))?;
     if raw.len() > 16 * 1024 * 1024 {
         return Err(error("recoveryLimit"));
     }
-    let mut f = create_file(&manifest)?;
-    f.write_all(&raw)
-        .and_then(|_| f.sync_all())
-        .map_err(|_| error("unavailable"))?;
-    // The writer must close before acquiring Windows read-only artifact pins;
-    // otherwise the unchanged FILE_SHARE_READ correctly denies this open.
-    drop(f);
-    File::open(path)
-        .and_then(|f| f.sync_all())
-        .map_err(|_| error("unavailable"))?;
+    #[cfg(unix)]
+    {
+        let mut f = create_file(&manifest)?;
+        f.write_all(&raw)
+            .and_then(|_| f.sync_all())
+            .map_err(|_| error("unavailable"))?;
+        drop(f);
+        File::open(path)
+            .and_then(|f| f.sync_all())
+            .map_err(|_| error("unavailable"))?;
+    }
+    #[cfg(windows)]
+    {
+        let mut staged = tempfile::tempfile().map_err(|_| error("unavailable"))?;
+        staged
+            .write_all(&raw)
+            .and_then(|_| staged.sync_all())
+            .map_err(|_| error("unavailable"))?;
+        // Exact FILE_CREATE under the held recovery root. Actual file owners
+        // remain read-only through artifact observation and receipt publication.
+        publication
+            .copy_regular("manifest.json", &staged, raw.len() as u64, cancel)
+            .map_err(|_| error("recoveryChanged"))?;
+        publication.verify().map_err(|_| error("recoveryChanged"))?;
+    }
     let mut artifacts =
         Artifacts::open(path, parent, &saved.parent_stamp, &directory_stamp, cancel)?;
     let observed = artifacts.observe(cancel)?;
     if observed.manifest_raw != raw {
         return Err(error("recoveryChanged"));
+    }
+    if let Some(material) = &m.windows_material {
+        artifacts.require_material(material, cancel)?;
     }
     let a = &saved.archive;
     let receipt = Recovery {
@@ -755,6 +885,8 @@ pub(super) fn build(
     };
     inspect::same(&saved.parent, &saved.parent_stamp)?;
     inspect::same(path.to_str().ok_or(error("unsafePath"))?, &directory_stamp)?;
+    #[cfg(windows)]
+    publication.verify().map_err(|_| error("recoveryChanged"))?;
     Ok(SavedRecovery {
         operation_id: operation_id.into(),
         source: saved.clone(),
@@ -772,7 +904,13 @@ pub(super) fn build(
         }),
     })
 }
-pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manifest> {
+pub(super) fn verify(
+    owner: &super::material_owner::Owner,
+    saved: &SavedRecovery,
+    cancel: &AtomicBool,
+) -> Result<Manifest> {
+    #[cfg(unix)]
+    let _ = owner;
     let r = &saved.receipt;
     let root = Path::new(&r.path);
     inspect::same(&saved.parent, &saved.parent_stamp)?;
@@ -794,8 +932,12 @@ pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manif
     let observed = artifacts.read_verified(&expected, cancel)?;
     let m: Manifest =
         serde_json::from_slice(&observed.manifest_raw).map_err(|_| error("recoveryInvalid"))?;
+    #[cfg(unix)]
     let bundle = artifacts.bundle_path();
     validate(&m)?;
+    if let Some(material) = &m.windows_material {
+        artifacts.require_material(material, cancel)?;
+    }
     if m.roots.summary()?.sha256 != r.roots_sha256
         || m.content.sha256 != r.content_sha256
         || m.roots.head != r.head_oid
@@ -806,10 +948,12 @@ pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manif
         return Err(error("recoveryInvalid"));
     }
     #[cfg(windows)]
-    // Additional Git-graph evidence only. Full material restoration below is
-    // still required, with every existing Manifest1/profile/mutation gate.
     offline_graph::verify(saved, &mut artifacts, &m, cancel)?;
+    #[cfg(windows)]
+    material::verify(owner, saved, &m, cancel)?;
+    #[cfg(unix)]
     let t = tempfile::tempdir().map_err(|_| error("unavailable"))?;
+    #[cfg(unix)]
     recover_into(
         &bundle,
         &m,
@@ -834,6 +978,7 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
     let head = "a".repeat(40);
     let mut manifest = Manifest {
         version: 1,
+        windows_material: None,
         roots: Roots {
             head: head.clone(),
             format: "sha1".into(),
@@ -851,6 +996,15 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         attributes: Vec::new(),
     };
     validate(&manifest).unwrap();
+    let legacy = serde_json::to_value(&manifest).unwrap();
+    assert!(legacy.get("windows_material").is_none());
+    assert_eq!(
+        serde_json::from_value::<Manifest>(legacy.clone()).unwrap(),
+        manifest
+    );
+    let mut invalid = legacy;
+    invalid["windows_material"] = serde_json::Value::Null;
+    assert!(serde_json::from_value::<Manifest>(invalid).is_err());
     for profile in [
         MaterialProfile::WindowsDefaultDataV1,
         MaterialProfile::WindowsDefaultDataEaV1,
@@ -859,6 +1013,7 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksV1,
         MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1,
         MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1,
+        MaterialProfile::WindowsRetainedTreeV1,
     ] {
         manifest.content.profile = Some(profile);
         assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");
@@ -869,7 +1024,7 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
 #[path = "source_pack_windows_tests.rs"]
 mod source_export_tests;
 
-// Persistent body capability, not a new Manifest version/public restore gate.
-#[cfg(all(windows, test))]
+// Windows complete material and controlled independent Git tree share this one Manifest.
+#[cfg(windows)]
 #[path = "recovery_material_windows.rs"]
 pub(super) mod material;

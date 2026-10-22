@@ -7,10 +7,12 @@ use crate::worktrees::{
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+#[cfg(unix)]
+use std::path::PathBuf;
 use std::{
     fs::File,
     io::{Read, Seek},
-    path::{Path, PathBuf},
+    path::Path,
     sync::atomic::{AtomicBool, Ordering},
 };
 #[cfg(unix)]
@@ -126,6 +128,7 @@ pub(super) struct Artifacts {
     directory: platform::Directory,
     bundle: Artifact,
     manifest: Artifact,
+    material: Option<Artifact>,
 }
 impl Artifacts {
     pub(super) fn open(
@@ -148,6 +151,7 @@ impl Artifacts {
             directory,
             bundle,
             manifest,
+            material: None,
         };
         value.verify()?;
         cancelled(cancel)?;
@@ -157,7 +161,43 @@ impl Artifacts {
         self.directory.verify()?;
         self.bundle.verify(&self.directory)?;
         self.manifest.verify(&self.directory)?;
+        if let Some(material) = &self.material {
+            material.verify(&self.directory)?;
+        }
         self.directory.verify()
+    }
+    // The descriptor comes only from the already identity/hash-verified unique
+    // manifest. This pins the third fixed artifact for the entire operation.
+    // The descriptor alone never authorizes a pathname or a content restore.
+    pub(super) fn require_material(
+        &mut self,
+        expected: &super::material_manifest::WindowsMaterial,
+        cancel: &AtomicBool,
+    ) -> Result<()> {
+        if !expected.validate() {
+            return Err(error("recoveryInvalid"));
+        }
+        cancelled(cancel)?;
+        self.verify()?;
+        if self.material.is_none() {
+            self.material = Some(Artifact::open(&self.directory, "material.bin")?);
+        }
+        let material = self.material.as_ref().ok_or(error("recoveryInvalid"))?;
+        let identity = FileIdentity::Windows(WindowsIdentity {
+            windows: WindowsId {
+                volume: expected.volume.to_le_bytes(),
+                file_id: expected.file_id,
+            },
+        });
+        if FileIdentity::native(material.opened.file())? != identity {
+            return Err(error("recoveryChanged"));
+        }
+        let (bytes, hash, _) = read(material, MAX_BYTES, false, cancel)?;
+        if bytes != expected.bytes || hash != material_scan::hex(expected.sha256) {
+            return Err(error("recoveryChanged"));
+        }
+        self.verify()?;
+        cancelled(cancel)
     }
     pub(super) fn require_identities(
         &self,
@@ -209,6 +249,7 @@ impl Artifacts {
         }
         Ok(input)
     }
+    #[cfg(unix)]
     pub(super) fn bundle_path(&self) -> PathBuf {
         self.bundle.opened.path()
     }

@@ -112,7 +112,7 @@ impl Inventory {
     // Native response framing cannot be offered less than its fixed header.
     // An exhausted caller budget is Limit before the syscall; this does not
     // turn an undersized/malformed returned response into a valid inventory.
-    #[cfg(test)]
+    #[cfg(any(windows, test))]
     pub(crate) fn query_capacity(budget: &WorkBudget) -> Result<usize, super::ea_records::Failure> {
         let capacity = budget.capacity()?;
         if capacity < INVENTORY_HEADER {
@@ -223,7 +223,7 @@ impl Inventory {
     }
     // Test-registered carrier component consumes the exact admitted inventory.
     // Default is canonically empty; named DATA raw UTF-16 is retained verbatim.
-    #[cfg(all(windows, test))]
+    #[cfg(windows)]
     pub(super) fn carrier_data(&self) -> super::material_carrier_records::Expected {
         self.entries
             .iter()

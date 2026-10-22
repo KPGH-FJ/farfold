@@ -4,7 +4,7 @@ use super::owned_directory::State as Directory;
 use super::*;
 use crate::file_access::{
     ea_records::WorkBudget,
-    material_carrier_records::{self as records, Resident, ResidentLease, charge, check},
+    material_carrier_records::{Resident, ResidentLease, charge, check},
     material_mixed_tree_records as tree, material_raw_name,
 };
 use std::sync::atomic::AtomicBool;
@@ -30,16 +30,23 @@ pub(in super::super) struct State {
     resident: Resident,
     pending: bool,
     stopped: Vec<StoppedHandle>,
+    retained: bool,
+    limit: usize,
     _memory: ResidentLease,
 }
 impl State {
-    pub(in super::super) fn reserve(resident: &Resident) -> Result<Self> {
-        let memory = resident.lease(tree::MAX_NODES * 4096)?;
+    pub(in super::super) fn reserve(resident: &Resident, count: usize) -> Result<Self> {
+        if count == 0 || count > tree::MAX_NODES {
+            return Err(Error::Limit);
+        }
+        let memory = resident.lease(count.checked_mul(4096).ok_or(Error::Limit)?)?;
         Ok(Self {
-            nodes: Vec::with_capacity(tree::MAX_NODES),
+            nodes: Vec::with_capacity(count),
             resident: resident.clone(),
             pending: false,
-            stopped: Vec::with_capacity(tree::MAX_NODES),
+            stopped: Vec::with_capacity(count),
+            retained: false,
+            limit: count,
             _memory: memory,
         })
     }
@@ -49,12 +56,25 @@ impl State {
         source: &tree::Node,
         cancel: &AtomicBool,
     ) -> Result<()> {
+        const TOP: &[u16] = &[
+            114, 101, 115, 116, 111, 114, 101, 100, 45, 109, 97, 116, 101, 114, 105, 97, 108, 45,
+            116, 114, 101, 101,
+        ];
+        self.create_at(root, TOP, source, cancel)
+    }
+    pub(in super::super) fn create_at(
+        &mut self,
+        root: &File,
+        top: &[u16],
+        source: &tree::Node,
+        cancel: &AtomicBool,
+    ) -> Result<()> {
         check(cancel)?;
         let at = self.nodes.len();
-        if self.pending || !self.stopped.is_empty() {
+        if self.pending || !self.stopped.is_empty() || self.retained {
             return Err(Error::CleanupUnknown);
         }
-        if at >= tree::MAX_NODES
+        if at >= self.limit
             || (at == 0 && (source.kind != tree::Kind::Directory || source.parent != tree::ROOT))
             || (at != 0
                 && (source.parent as usize >= at
@@ -63,15 +83,12 @@ impl State {
             return Err(Error::Invalid);
         }
         material_raw_name::check(&source.metadata.raw_leaf).map_err(|_| Error::Unsupported)?;
-        const TOP: &[u16] = &[
-            114, 101, 115, 116, 111, 114, 101, 100, 45, 109, 97, 116, 101, 114, 105, 97, 108, 45,
-            116, 114, 101, 101,
-        ];
         let leaf = if at == 0 {
-            TOP
+            top
         } else {
             &source.metadata.raw_leaf
         };
+        material_raw_name::check(leaf).map_err(|_| Error::Unsupported)?;
         let object = match source.kind {
             tree::Kind::Directory => Object::Directory(Directory::reserved(&self.resident)),
             tree::Kind::Regular => Object::Regular(None),
@@ -196,25 +213,39 @@ impl State {
             check(cancel)?;
             self.node(index)?;
             if let Object::Directory(directory) = &node.object {
-                charge(work, (tree::MAX_NODES + 3) * records::BLOCK)?;
-                let values = super::super::directory::collect_budgeted_from(
+                let mut expected = 0;
+                for child in &self.nodes {
+                    check(cancel)?;
+                    charge(work, 2 * size_of::<u32>())?;
+                    expected += usize::from(child.parent == index as u32);
+                }
+                let values = super::super::directory::collect_budgeted_with_work_from(
                     directory,
-                    tree::MAX_NODES as u64,
+                    expected as u64,
                     cancel,
                     &self.resident,
+                    work,
                 )
                 .map_err(super::super::material_directory_tree_source::directory_error)?;
-                if values.as_entries().len()
-                    != self
-                        .nodes
-                        .iter()
-                        .filter(|n| n.parent == index as u32)
-                        .count()
-                {
+                if values.as_entries().len() != expected {
                     return Err(Error::Changed);
                 }
-                for child in self.nodes.iter().filter(|n| n.parent == index as u32) {
-                    let actual = values.as_entries().get(&child.leaf).ok_or(Error::Changed)?;
+                for (name, actual) in values.as_entries() {
+                    let mut known = None;
+                    for child in &self.nodes {
+                        check(cancel)?;
+                        charge(work, 2 * size_of::<u32>())?;
+                        if child.parent != index as u32 {
+                            continue;
+                        }
+                        charge(work, (name.len() + child.leaf.len()) * size_of::<u16>())?;
+                        if name == &child.leaf {
+                            known = Some(child);
+                            break;
+                        }
+                    }
+                    let child = known.ok_or(Error::Changed)?;
+                    charge(work, 2 * size_of::<Identity>())?;
                     if Some(&actual.identity) != child.identity.as_ref()
                         || actual.reparse_tag.is_some()
                         || ((actual.attributes & FILE_ATTRIBUTE_DIRECTORY != 0)
@@ -235,7 +266,7 @@ impl State {
         // No pathname/DACL reopen, privilege adjustment or outside-name sweep.
         for node in self.nodes.iter_mut().rev() {
             if let Object::Regular(slot) = &mut node.object {
-                if let Some(file) = slot.as_ref() {
+                if let Some(file) = slot.as_ref().filter(|_| !self.retained) {
                     let mut basic: FILE_BASIC_INFO = info(file, FileBasicInfo)
                         .map_err(|e| io_error("sealedTreeCleanupBasic", e))?;
                     basic.FileAttributes = FILE_ATTRIBUTE_NORMAL;
@@ -247,9 +278,22 @@ impl State {
         }
         for node in self.nodes.iter_mut().rev() {
             if let Object::Directory(directory) = &mut node.object {
-                directory.cleanup()?;
+                if self.retained {
+                    directory.release()?;
+                } else {
+                    directory.cleanup()?;
+                }
             }
         }
+        Ok(())
+    }
+    pub(in super::super) fn retain(&mut self) -> Result<()> {
+        if self.pending || !self.stopped.is_empty() || self.nodes.is_empty() || self.retained {
+            return Err(Error::CleanupUnknown);
+        }
+        // No fallible close precedes this latch: failure during release must
+        // retain all remaining original handles, never delete published data.
+        self.retained = true;
         Ok(())
     }
 }

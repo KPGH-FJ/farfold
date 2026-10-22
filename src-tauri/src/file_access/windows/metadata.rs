@@ -27,8 +27,24 @@ pub(crate) struct EntryMetadata {
 }
 
 impl EntryMetadata {
+    pub(crate) fn identity(&self) -> &Identity {
+        &self.identity
+    }
     pub(crate) fn attributes(&self) -> u32 {
         self.attributes
+    }
+    // Used only after disposing this directory's original children. Directory
+    // index size/allocation and write/change times can then differ; identity,
+    // kind, creation, attributes, links and reparse state still must match.
+    // EA, streams and full security are checked separately on the same handle.
+    pub(crate) fn same_directory_after_owned_removals(&self, original: &Self) -> bool {
+        self.kind == MetadataKind::Directory
+            && original.kind == MetadataKind::Directory
+            && self.identity == original.identity
+            && self.attributes == original.attributes
+            && self.reparse_tag == original.reparse_tag
+            && self.links == original.links
+            && self.created == original.created
     }
     // Fixed-width observation fields, not security/EA/ADS contents or restore data.
     pub(crate) fn version_fields(&self) -> Vec<u8> {

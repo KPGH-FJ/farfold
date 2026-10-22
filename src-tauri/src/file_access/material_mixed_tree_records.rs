@@ -13,7 +13,9 @@ use std::{
     io::{Read, Write},
     sync::atomic::AtomicBool,
 };
-pub(super) const MAX_NODES: usize = 64;
+// Finite format bound, independent of the unchanged shared resident/work
+// budgets. A particular tree must still fit all live owners and native data.
+pub(super) const MAX_NODES: usize = super::MIXED_TREE_NODE_LIMIT;
 const MAGIC: &[u8; 8] = b"FFMTREE1";
 const END: &[u8; 8] = b"FFMTEND1";
 const PREFIX: usize = 49;
@@ -311,13 +313,27 @@ pub(super) fn verify_exact<R: Read>(
             return Err(Error::Unsupported);
         }
         for old in &nodes {
+            check(cancel)?;
+            // Pairwise identity and Windows ordinal-name comparisons share
+            // the same work allowance as the actual bytes being verified.
+            charge(work, 2 * (size_of::<u64>() + size_of::<u128>()))?;
             if old.metadata.source_volume == metadata.source_volume
                 && old.metadata.source_id == metadata.source_id
             {
                 return Err(Error::Changed);
             }
-            if old.parent == parent && equal(&old.metadata.raw_leaf, &metadata.raw_leaf)? {
-                return Err(Error::Changed);
+            if old.parent == parent {
+                let units = old
+                    .metadata
+                    .raw_leaf
+                    .len()
+                    .checked_add(metadata.raw_leaf.len())
+                    .and_then(|n| n.checked_mul(size_of::<u16>()))
+                    .ok_or(Error::Limit)?;
+                charge(work, units)?;
+                if equal(&old.metadata.raw_leaf, &metadata.raw_leaf)? {
+                    return Err(Error::Changed);
+                }
             }
         }
         let native_start = typed_start

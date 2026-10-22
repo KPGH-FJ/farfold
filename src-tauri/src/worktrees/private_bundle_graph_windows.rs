@@ -1,5 +1,10 @@
 //! Source-present Git graph verification only. Never full material recovery.
-use super::{Manifest, WindowsFirst};
+#[cfg(test)]
+use super::Manifest;
+use super::{
+    WindowsFirst,
+    graph::{Graph, GraphSource},
+};
 use crate::{
     file_access::PinnedPath,
     worktrees::{
@@ -21,6 +26,12 @@ use windows_sys::Win32::Storage::FileSystem::{
     FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ, FILE_SHARE_WRITE,
 };
 
+#[path = "recovery_prepared_git_windows.rs"]
+mod prepared;
+pub(in crate::worktrees) use prepared::Frozen;
+pub(crate) use prepared::PreparedRecoveryGit;
+#[path = "recovery_prepare_git_windows.rs"]
+mod prepare;
 struct Bundle {
     pin: PinnedPath,
     stamp: crate::file_access::Stamp,
@@ -36,7 +47,7 @@ pub(in crate::worktrees) struct Produced {
 // Namespace pins close before TempDir deletion; no detached cleanup task.
 struct Context<'a> {
     first: &'a WindowsFirst,
-    manifest: &'a Manifest,
+    manifest: Graph,
     first_pins: Vec<PinnedPath>,
     second_pins: Vec<PinnedPath>,
     second: PinnedPath,
@@ -139,6 +150,8 @@ enum Query {
 }
 enum Action<'a> {
     Init,
+    Index,
+    PackRefs,
     Verify(git::Input),
     Unbundle(git::Input),
     Root(usize, &'a str),
@@ -247,8 +260,12 @@ fn digest(pin: &PinnedPath, cancel: &AtomicBool) -> Result<(crate::file_access::
     Ok(value)
 }
 impl<'a> Context<'a> {
-    fn new(first: &'a WindowsFirst, manifest: &'a Manifest, cancel: &AtomicBool) -> Result<Self> {
-        super::validate(manifest)?;
+    fn new(
+        first: &'a WindowsFirst,
+        manifest: &impl GraphSource,
+        cancel: &AtomicBool,
+    ) -> Result<Self> {
+        let manifest = manifest.graph()?;
         cancelled(cancel)?;
         let width = match manifest.roots.format.as_str() {
             "sha1" => 40,
@@ -416,6 +433,14 @@ impl<'a> Context<'a> {
                     .arg(format!("--object-format={}", self.manifest.roots.format));
                 git::Input::null()
             }
+            Action::PackRefs => {
+                command.args(["pack-refs", "--all"]);
+                git::Input::null()
+            }
+            Action::Index => {
+                command.args(["read-tree", "--reset", "HEAD"]);
+                git::Input::null()
+            }
             Action::Verify(input) => {
                 command.args(["bundle", "verify", "-"]);
                 input
@@ -450,7 +475,7 @@ impl<'a> Context<'a> {
         self.run(command, input, paths, cancel)
     }
     fn expected_refs(&self) -> Vec<(String, String)> {
-        let mut v = super::refs(self.manifest);
+        let mut v = self.manifest.refs();
         v.sort();
         v
     }
@@ -495,9 +520,7 @@ impl<'a> Context<'a> {
             .map_err(|_| error("recoveryInvalid"))?;
         let symbolic = String::from_utf8(self.query(first, Query::Symbolic, cancel)?)
             .map_err(|_| error("recoveryInvalid"))?;
-        if head.trim() != self.manifest.roots.head
-            || symbolic.trim() != super::expected_branch(self.manifest)?
-        {
+        if head.trim() != self.manifest.roots.head || symbolic.trim() != self.manifest.branch()? {
             return Err(error("recoveryInvalid"));
         }
         self.verify()
@@ -629,7 +652,7 @@ impl<'a> Context<'a> {
         if self.parse_refs(raw)? != expected {
             return Err(error("recoveryInvalid"));
         }
-        let manifest = self.manifest;
+        let manifest = self.manifest.clone();
         for (index, object) in manifest.roots.commits.iter().enumerate() {
             self.second_action(Action::Root(index, object), cancel)?;
         }
@@ -651,7 +674,7 @@ impl<'a> Context<'a> {
 }
 pub(super) fn generate<'a>(
     first: &'a WindowsFirst,
-    manifest: &'a Manifest,
+    manifest: &impl GraphSource,
     cancel: &AtomicBool,
 ) -> Result<GraphBundle<'a>> {
     let mut owner = Context::new(first, manifest, cancel)?;

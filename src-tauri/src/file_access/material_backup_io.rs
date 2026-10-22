@@ -44,7 +44,7 @@ pub(super) struct RetiredContext {
     _mode: Mode,
     _opaque: usize,
     operation: OperationOutcome,
-    abort_error: Option<i32>,
+    _abort_error: Option<i32>,
 }
 impl RetiredContext {
     pub(super) fn operation_error(&self) -> Option<&Error> {
@@ -114,7 +114,7 @@ impl<'a, A: Api> Session<'a, A> {
             _mode: self.mode,
             _opaque: self.context as usize,
             operation: self.operation.clone(),
-            abort_error: None,
+            _abort_error: None,
         });
         match self.api.abort(self.mode, self.file, &mut self.context) {
             Ok(()) => {
@@ -126,7 +126,7 @@ impl<'a, A: Api> Session<'a, A> {
                     _mode: self.mode,
                     _opaque: self.context as usize,
                     operation: self.operation.clone(),
-                    abort_error: e.raw_os_error(),
+                    _abort_error: e.raw_os_error(),
                 });
                 false
             }
@@ -141,6 +141,97 @@ impl<A: Api> Drop for Session<'_, A> {
         self.finish();
     }
 }
+/// Parse the original native session through one shared-pool page. Native
+/// reads retain the existing minimum offer; parser byte reads do not become
+/// one-byte BackupRead calls. Prepay its original typed native extent plus
+/// one bounded EOF offer from the SAME work budget, never a fresh allowance.
+pub(super) fn inspect<A: Api, T>(
+    session: &mut Session<'_, A>,
+    native_bytes: u64,
+    minimum: usize,
+    work: &mut WorkBudget,
+    resident: &Resident,
+    parse: impl FnOnce(&mut dyn Read, &mut WorkBudget) -> Result<T>,
+) -> Result<T> {
+    if minimum == 0 || minimum > BLOCK || session.mode != Mode::Read || session.finished {
+        return Err(Error::Invalid);
+    }
+    let _memory = resident.lease(BLOCK)?;
+    let allowance = native_bytes
+        .checked_add(minimum as u64)
+        .ok_or(Error::Limit)?;
+    charge(work, usize::try_from(allowance).map_err(|_| Error::Limit)?)?;
+    struct Input<'a, 'b, A: Api> {
+        session: &'a mut Session<'b, A>,
+        buffer: Vec<u8>,
+        at: usize,
+        used: usize,
+        remaining: u64,
+        minimum: usize,
+        eof: bool,
+        failure: Option<Error>,
+    }
+    impl<A: Api> Read for Input<'_, '_, A> {
+        fn read(&mut self, bytes: &mut [u8]) -> std::io::Result<usize> {
+            if bytes.is_empty() || self.eof {
+                return Ok(0);
+            }
+            if self.at == self.used {
+                let offer = self.remaining.min(BLOCK as u64) as usize;
+                if offer < self.minimum {
+                    self.failure = Some(Error::Changed);
+                    return Err(std::io::Error::other(
+                        "material exceeded its original extent",
+                    ));
+                }
+                match self.session.read(&mut self.buffer[..offer]) {
+                    Ok(count) if count <= offer => {
+                        self.remaining -= count as u64;
+                        self.at = 0;
+                        self.used = count;
+                        self.eof = count == 0;
+                        if self.eof {
+                            return Ok(0);
+                        }
+                    }
+                    other => {
+                        self.failure = Some(match other {
+                            Err(error) => error,
+                            _ => Error::Invalid,
+                        });
+                        return Err(std::io::Error::other("native material read failed"));
+                    }
+                }
+            }
+            let count = bytes.len().min(self.used - self.at);
+            bytes[..count].copy_from_slice(&self.buffer[self.at..self.at + count]);
+            self.at += count;
+            Ok(count)
+        }
+    }
+    let mut input = Input {
+        session,
+        buffer: vec![0; BLOCK],
+        at: 0,
+        used: 0,
+        remaining: allowance,
+        minimum,
+        eof: false,
+        failure: None,
+    };
+    let parsed = parse(&mut input, work);
+    let result = match (input.failure.take(), parsed) {
+        (Some(error), _) => Err(error),
+        (None, Ok(_)) if !input.eof => Err(Error::Invalid),
+        (None, value) => value,
+    };
+    input.session.completed(&result);
+    if !input.session.finish() {
+        return Err(Error::CleanupUnknown);
+    }
+    result
+}
+
 pub(super) fn capture<A: Api>(
     session: &mut Session<'_, A>,
     spool: &File,

@@ -209,7 +209,7 @@ fn recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission(
                     release_rx
                         .recv_timeout(std::time::Duration::from_secs(10))
                         .unwrap();
-                    recover::prepare(input, recovery)
+                    recover::prepare(&super::material_owner::Owner::default(), input, recovery)
                 })
             });
             entered_rx

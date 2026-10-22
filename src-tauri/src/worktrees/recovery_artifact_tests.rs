@@ -1,5 +1,6 @@
 use super::*;
 use std::fs;
+use std::path::PathBuf;
 #[test]
 fn unix_identity_wire_stays_exact_and_foreign_full_ids_never_truncate_or_mix() {
     let unix = FileIdentity::Unix(UnixIdentity { dev: 9, ino: 17 });

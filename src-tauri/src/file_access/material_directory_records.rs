@@ -9,11 +9,9 @@ use super::{
     },
 };
 use sha2::{Digest, Sha256};
-use std::{
-    collections::BTreeMap,
-    io::{self, Read},
-    sync::atomic::AtomicBool,
-};
+#[cfg(test)]
+use std::io;
+use std::{collections::BTreeMap, io::Read, sync::atomic::AtomicBool};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum Profile {
     PayloadOnly,
@@ -51,6 +49,27 @@ impl PartialEq for Parsed {
 }
 impl Eq for Parsed {}
 impl Parsed {
+    pub fn semantic_sha256(&self) -> [u8; 32] {
+        let mut hash = Sha256::new();
+        hash.update(b"FFNATIVESEM1");
+        hash.update((self.parts.len() as u64).to_le_bytes());
+        for (key, part) in &self.parts {
+            let (tag, name): (u8, &[u16]) = match key {
+                Key::Data(name) => (1, name),
+                Key::Ea => (2, &[]),
+                Key::Security => (3, &[]),
+            };
+            hash.update([tag]);
+            hash.update((name.len() as u64).to_le_bytes());
+            for value in name {
+                hash.update(value.to_le_bytes());
+            }
+            hash.update(part.size.to_le_bytes());
+            hash.update(part.flags.to_le_bytes());
+            hash.update(part.sha256);
+        }
+        hash.finalize().into()
+    }
     pub fn same_contents(&self, other: &Self) -> bool {
         // Native substream order need not be identical; no payload is omitted.
         self.parts == other.parts && self.security == other.security && self.ea == other.ea

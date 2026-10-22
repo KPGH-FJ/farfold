@@ -59,6 +59,7 @@ impl Fixture {
         objects.sort();
         let manifest = Manifest {
             version: 1,
+            windows_material: None,
             roots: Roots {
                 head: COMMIT.into(),
                 format: "sha1".into(),
@@ -200,11 +201,16 @@ fn actual_owned_bundle_verifies_after_all_original_source_paths_are_absent_but_f
         crate::worktrees::mutation_supported().unwrap_err().code,
         "unsupportedGit"
     );
+    // A graph-only legacy Manifest has no complete retained material descriptor.
     assert_eq!(
-        super::super::verify(&fixture.saved, &AtomicBool::new(false))
-            .unwrap_err()
-            .code,
-        "unsupportedGit"
+        super::super::verify(
+            &crate::worktrees::material_owner::Owner::default(),
+            &fixture.saved,
+            &AtomicBool::new(false)
+        )
+        .unwrap_err()
+        .code,
+        "recoveryInvalid"
     );
     assert!(!std::path::Path::new(&fixture.saved.receipt.retained_path).exists());
 }

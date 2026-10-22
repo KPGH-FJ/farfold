@@ -16,7 +16,7 @@ use std::{
 
 pub(super) const BLOCK: usize = 65_536;
 pub(super) const STREAM_LIMIT: u64 = 256 * 1024 * 1024;
-pub(super) const WORK_LIMIT: u64 = 1024 * 1024 * 1024;
+pub(crate) const WORK_LIMIT: u64 = 1024 * 1024 * 1024;
 pub(super) const RESIDENT_LIMIT: usize = 8 * 1024 * 1024;
 pub(super) const CATALOG_RESIDENT: usize = 16 * BLOCK;
 // Conservative logical reservations cover catalog key/value/header capacities;
@@ -145,6 +145,27 @@ impl PartialEq for Parsed {
 }
 impl Eq for Parsed {}
 impl Parsed {
+    pub fn semantic_sha256(&self) -> [u8; 32] {
+        let mut hash = Sha256::new();
+        hash.update(b"FFNATIVESEM1");
+        hash.update((self.parts.len() as u64).to_le_bytes());
+        for (key, part) in &self.parts {
+            let (tag, name): (u8, &[u16]) = match key {
+                Key::Data(name) => (1, name),
+                Key::Ea => (2, &[]),
+                Key::Security => (3, &[]),
+            };
+            hash.update([tag]);
+            hash.update((name.len() as u64).to_le_bytes());
+            for value in name {
+                hash.update(value.to_le_bytes());
+            }
+            hash.update(part.size.to_le_bytes());
+            hash.update(part.flags.to_le_bytes());
+            hash.update(part.sha256);
+        }
+        hash.finalize().into()
+    }
     pub fn same_contents(&self, other: &Self) -> bool {
         // Native substream order need not be identical; no payload is omitted.
         self.parts == other.parts && self.security == other.security

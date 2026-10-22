@@ -48,6 +48,7 @@ pub(super) fn environment() -> Result<()> {
     }
     Ok(())
 }
+#[cfg(any(unix, test))]
 pub(super) fn command(root: &Path, args: &[&str]) -> Result<Command> {
     environment()?;
     if !cfg!(target_os = "macos") {
@@ -401,12 +402,14 @@ pub(super) fn read(root: &Path, args: &[&str]) -> Result<Vec<u8>> {
         Err(error("unavailable"))
     }
 }
+#[cfg(unix)]
 pub(super) fn text(root: &Path, args: &[&str]) -> Result<String> {
     let raw = read(root, args)?;
     String::from_utf8(raw)
         .map(|s| s.strip_suffix('\n').unwrap_or(&s).to_owned())
         .map_err(|_| error("unsupportedGit"))
 }
+#[cfg(unix)]
 pub(super) fn config(root: &Path, name: &str, boolean: bool) -> Result<Option<String>> {
     let mut args = vec!["config"];
     if boolean {

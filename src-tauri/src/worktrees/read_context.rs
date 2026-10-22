@@ -7,6 +7,10 @@ pub(super) struct Reader {
     context: super::windows_git::ReadContext,
 }
 impl Reader {
+    #[cfg(windows)]
+    pub(super) fn from_windows(context: super::windows_git::ReadContext) -> Self {
+        Self { context }
+    }
     pub fn open(_path: &Path) -> Result<Self> {
         Ok(Self {
             #[cfg(windows)]

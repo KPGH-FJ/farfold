@@ -28,7 +28,9 @@ impl Worktrees {
             .is_some_and(|o| o.status.operation_id == id && o.recovery.is_some()))
     }
     pub fn prepare_recover(&self, s: &MetaStore, id: &str, input: RecoverInput) -> Result<Reply> {
-        self.prepare_recover_checked(s, id, input, recover::prepare)
+        self.prepare_recover_checked(s, id, input, |input, recovery| {
+            recover::prepare(&self.0.material, input, recovery)
+        })
     }
     pub(in crate::worktrees) fn prepare_recover_checked(
         &self,
@@ -37,7 +39,7 @@ impl Worktrees {
         input: RecoverInput,
         validate: impl FnOnce(RecoverInput, recovery_pack::SavedRecovery) -> Result<RecoverIntent>,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recover::supported()?;
         let source = {
             let mut i = self.lock()?;
             let request = Request::Recover(input.clone());
@@ -125,7 +127,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub(super) fn start_recover(&self, s: &MetaStore, id: &str) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recover::supported()?;
         let own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let global = managed_update::activity().map_err(|_| error("busy"))?;
         let mut i = self.lock()?;
@@ -184,12 +186,13 @@ impl Worktrees {
         if cancel.load(Ordering::SeqCst) {
             return Err(error("cancelled"));
         }
-        recover::revalidate(&intent)?;
-        let manifest = recovery_pack::verify(&intent.recovery, cancel)?;
+        recover::revalidate(&self.0.material, &intent)?;
+        let manifest = recovery_pack::verify(&self.0.material, &intent.recovery, cancel)?;
         if cancel.load(Ordering::SeqCst) {
             return Err(error("cancelled"));
         }
         inspect::same(&intent.parent, &intent.parent_stamp)?;
+        #[cfg(unix)]
         std::fs::create_dir(&intent.target).map_err(|e| {
             error(if e.kind() == std::io::ErrorKind::AlreadyExists {
                 "targetExists"
@@ -197,7 +200,10 @@ impl Worktrees {
                 "unavailable"
             })
         })?;
-        intent.target_stamp = Some(inspect::stamp(Path::new(&intent.target))?);
+        #[cfg(unix)]
+        {
+            intent.target_stamp = Some(inspect::stamp(Path::new(&intent.target))?);
+        }
         // The exact created leaf is saved before Git can initialize or write its contents.
         intent.dispatched = true;
         {
@@ -211,6 +217,7 @@ impl Worktrees {
             o.recovery = Some(intent.clone());
             i.save(s, n)?;
         }
+        #[cfg(unix)]
         recovery_pack::recover_reserved(
             &Path::new(&intent.recovery.receipt.path).join("recovery.bundle"),
             &manifest,
@@ -218,7 +225,25 @@ impl Worktrees {
             intent.target_stamp.as_ref().ok_or(error("unknown"))?,
             cancel,
         )?;
-        recover::verify(&intent, &AtomicBool::new(false))
+        #[cfg(windows)]
+        {
+            intent.target_stamp = Some(recovery_pack::material::restore_target(
+                &self.0.material,
+                &intent,
+                &manifest,
+                cancel,
+            )?);
+            let mut inner = self.lock()?;
+            let mut doc = inner.doc.clone();
+            let operation = doc
+                .operation
+                .as_mut()
+                .filter(|o| o.status.operation_id == id)
+                .ok_or(error("unknown"))?;
+            operation.recovery = Some(intent.clone());
+            inner.save(s, doc)?;
+        }
+        recover::verify(&self.0.material, &intent, &AtomicBool::new(false))
     }
     fn finish_recover(&self, s: &MetaStore, id: &str, result: Result<Snapshot>) {
         let Ok(mut i) = self.lock() else { return };
@@ -322,7 +347,7 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub(super) fn recheck_recover(&self, s: &MetaStore, id: &str) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recover::supported()?;
         let _own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         let intent = {
@@ -340,7 +365,11 @@ impl Worktrees {
         if let Some(intent) = intent
             && intent.target_stamp.is_some()
         {
-            self.finish_recover(s, id, recover::verify(&intent, &AtomicBool::new(false)));
+            self.finish_recover(
+                s,
+                id,
+                recover::verify(&self.0.material, &intent, &AtomicBool::new(false)),
+            );
         }
         self.status(s, id)
     }

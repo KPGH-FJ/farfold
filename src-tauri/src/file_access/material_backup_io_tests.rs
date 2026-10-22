@@ -327,7 +327,7 @@ fn read_failure_and_distinct_abort_failure_are_both_retained() {
             code: Some(13)
         })
     );
-    assert_eq!(held.abort_error, Some(5));
+    assert_eq!(held._abort_error, Some(5));
     assert_eq!(
         held.operation_error(),
         Some(&Error::Io {
@@ -370,7 +370,7 @@ fn write_failure_and_distinct_abort_failure_are_both_retained() {
             code: Some(87)
         })
     );
-    assert_eq!(held.abort_error, Some(32));
+    assert_eq!(held._abort_error, Some(32));
     assert_eq!(api.aborts, 1);
 }
 #[test]
@@ -401,6 +401,167 @@ fn observed_cancellation_and_abort_failure_keep_separate_causes() {
     }
     let held = retired.as_ref().unwrap();
     assert_eq!(held.operation, OperationOutcome::Failed(Error::Cancelled));
-    assert_eq!(held.abort_error, Some(995));
+    assert_eq!(held._abort_error, Some(995));
     assert_eq!(api.aborts, 1);
+}
+
+#[test]
+fn direct_inspection_requires_real_eof_and_retires_original_context_once() {
+    let file = source(&[]);
+    let mut api = Fake {
+        input: Cursor::new(b"actual native input".to_vec()),
+        ..Fake::default()
+    };
+    let mut retired = None;
+    {
+        let mut session = Session::new(&file, &mut api, Mode::Read, &mut retired);
+        let bytes = inspect(
+            &mut session,
+            19,
+            33,
+            &mut WorkBudget::new(WORK_LIMIT),
+            &Resident::new(RESIDENT_LIMIT),
+            |reader, _| {
+                let mut bytes = Vec::new();
+                reader
+                    .read_to_end(&mut bytes)
+                    .map_err(|e| io_error("testReader", e))?;
+                Ok(bytes)
+            },
+        )
+        .unwrap();
+        assert_eq!(bytes, b"actual native input");
+    }
+    assert_eq!(api.aborts, 1);
+    assert!(retired.is_none());
+}
+
+#[test]
+fn direct_inspection_early_success_does_not_count_as_eof() {
+    let file = source(&[]);
+    let mut api = Fake {
+        input: Cursor::new(b"not exhausted".to_vec()),
+        ..Fake::default()
+    };
+    let mut retired = None;
+    {
+        let mut session = Session::new(&file, &mut api, Mode::Read, &mut retired);
+        assert_eq!(
+            inspect(
+                &mut session,
+                13,
+                33,
+                &mut WorkBudget::new(WORK_LIMIT),
+                &Resident::new(RESIDENT_LIMIT),
+                |reader, _| {
+                    let mut byte = [0];
+                    reader
+                        .read_exact(&mut byte)
+                        .map_err(|e| io_error("testReader", e))?;
+                    Ok(())
+                }
+            ),
+            Err(Error::Invalid)
+        );
+    }
+    assert_eq!(api.aborts, 1);
+    assert!(retired.is_none());
+}
+
+#[test]
+fn direct_inspection_preserves_native_error_and_unknown_abort_ownership() {
+    let file = source(&[]);
+    for unknown in [false, true] {
+        let mut api = Fake {
+            read_error: Some(1234),
+            abort_fails: unknown,
+            ..Fake::default()
+        };
+        let mut retired = None;
+        {
+            let mut session = Session::new(&file, &mut api, Mode::Read, &mut retired);
+            assert_eq!(
+                inspect(
+                    &mut session,
+                    0,
+                    33,
+                    &mut WorkBudget::new(WORK_LIMIT),
+                    &Resident::new(RESIDENT_LIMIT),
+                    |reader, _| {
+                        let mut byte = [0];
+                        reader
+                            .read_exact(&mut byte)
+                            .map_err(|e| io_error("parser", e))?;
+                        Ok(())
+                    }
+                ),
+                Err(if unknown {
+                    Error::CleanupUnknown
+                } else {
+                    Error::Io {
+                        phase: "backupRead",
+                        code: Some(1234),
+                    }
+                })
+            );
+            assert_eq!(session.finish(), !unknown);
+        }
+        assert_eq!(api.aborts, 1);
+        assert_eq!(retired.is_some(), unknown);
+        if let Some(stopped) = retired {
+            assert_eq!(
+                stopped.operation_error(),
+                Some(&Error::Io {
+                    phase: "backupRead",
+                    code: Some(1234)
+                })
+            );
+        }
+    }
+}
+
+#[test]
+fn direct_inspection_budget_or_cancel_after_actual_read_still_aborts_once() {
+    let file = source(&[]);
+    for cancelled in [false, true] {
+        let mut api = Fake {
+            input: Cursor::new(b"bounded original".to_vec()),
+            ..Fake::default()
+        };
+        let mut retired = None;
+        {
+            let mut session = Session::new(&file, &mut api, Mode::Read, &mut retired);
+            let result = inspect(
+                &mut session,
+                16,
+                33,
+                &mut WorkBudget::new(100),
+                &Resident::new(RESIDENT_LIMIT),
+                |reader, work| {
+                    let mut byte = [0];
+                    reader
+                        .read_exact(&mut byte)
+                        .map_err(|e| io_error("testReader", e))?;
+                    assert_eq!(byte, [b'b']); // the Native peer really supplied bytes
+                    if cancelled {
+                        check(&AtomicBool::new(true))?;
+                    } else {
+                        let refused = work.remaining() as usize + 1;
+                        charge(work, refused)?;
+                    }
+                    Ok(())
+                },
+            );
+            assert_eq!(
+                result,
+                Err(if cancelled {
+                    Error::Cancelled
+                } else {
+                    Error::Limit
+                })
+            );
+        }
+        assert_eq!(api.aborts, 1);
+        assert!(retired.is_none());
+    }
 }

@@ -166,6 +166,14 @@ impl Fixture {
         )
         .unwrap();
         self.store.copied = Some(MixedBytes {
+            content: crate::file_access::material_mixed_semantic::summarize(
+                &verified.nodes,
+                verified.nodes.len(),
+                |index| verified.nodes[index].native_sha256,
+                &mut WorkBudget::new(records::WORK_LIMIT),
+                &AtomicBool::new(false),
+            )
+            .unwrap(),
             summary: super::super::material_mixed_tree_input::MixedSummary {
                 nodes: 2,
                 directories: 1,

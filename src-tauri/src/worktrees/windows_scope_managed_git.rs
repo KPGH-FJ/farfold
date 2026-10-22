@@ -243,7 +243,6 @@ impl RootGit {
         result.verify(source)?;
         Ok(result)
     }
-    #[cfg(test)]
     pub(in crate::worktrees) fn matches_material_edge(
         &self,
         root: &File,

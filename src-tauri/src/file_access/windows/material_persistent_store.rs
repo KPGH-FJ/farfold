@@ -1,5 +1,5 @@
 //! Actual fixed material.bin retention, independent reopen, original Slot only.
-//! Internal component: not a Manifest2 or authority to restore public targets.
+//! The unique Manifest binds its descriptor; a separate held target request admits restoration.
 use super::*;
 use super::{
     material_mixed_tree_input::with_mixed_tree_input,
@@ -15,9 +15,11 @@ use crate::file_access::{
     material_mixed_tree_records as tree,
 };
 use sha2::{Digest, Sha256};
+#[cfg(test)]
+use std::io::{SeekFrom, Write};
 use std::{ffi::OsString, mem::size_of_val, os::windows::ffi::OsStringExt};
 use std::{
-    io::{Read, Seek, SeekFrom, Write},
+    io::{Read, Seek},
     os::windows::io::IntoRawHandle,
     panic::AssertUnwindSafe,
     sync::atomic::AtomicBool,
@@ -27,6 +29,12 @@ use windows_sys::Win32::Foundation::CloseHandle;
 #[path = "material_persistent_restore.rs"]
 mod restore;
 pub(crate) use restore::MaterialTreeReceipt;
+#[path = "material_persistent_reopen.rs"]
+mod reopen;
+pub(crate) use reopen::with_reopened_material;
+#[path = "material_persistent_target.rs"]
+mod target;
+pub(crate) use target::MaterialTargetRequest;
 
 const PENDING: &[u16] = &[
     46, 109, 97, 116, 101, 114, 105, 97, 108, 45, 112, 101, 110, 100, 105, 110, 103,
@@ -325,6 +333,23 @@ impl Store {
         {
             return Err(Error::Changed);
         }
+        if crate::file_access::material_mixed_semantic::summarize(
+            &verified.nodes,
+            expected.content.nodes as usize,
+            |index| {
+                expected
+                    .native_catalog
+                    .as_ref()
+                    .map_or(verified.nodes[index].native_sha256, |catalog| {
+                        catalog[index].semantic_sha256
+                    })
+            },
+            work,
+            cancel,
+        )? != expected.content
+        {
+            return Err(Error::Changed);
+        }
         let directories = verified
             .nodes
             .iter()
@@ -397,12 +422,51 @@ pub(crate) struct OwnedSealedMaterial<'a> {
     cancel: &'a AtomicBool,
 }
 impl OwnedSealedMaterial<'_> {
+    pub(crate) fn descriptor(&mut self) -> Result<crate::worktrees::WindowsMaterial> {
+        let receipt = self.verify()?;
+        let catalog = self
+            .store
+            .copied
+            .as_ref()
+            .and_then(|v| v.native_catalog.as_ref())
+            .ok_or(Error::Unsupported)?;
+        let value = crate::worktrees::WindowsMaterial {
+            version: 1,
+            volume: receipt.identity.device,
+            file_id: receipt.identity.inode.to_le_bytes(),
+            bytes: receipt.bytes,
+            sha256: receipt.sha256,
+            tree_sha256: receipt.tree_sha256,
+            content: self
+                .store
+                .copied
+                .as_ref()
+                .ok_or(Error::Invalid)?
+                .content
+                .clone(),
+            nodes: catalog
+                .iter()
+                .map(super::material_mixed_tree_input::NativeProof::descriptor)
+                .collect(),
+        };
+        if !value.validate() {
+            return Err(Error::Invalid);
+        }
+        Ok(value)
+    }
     pub(crate) fn reconstruct_tree(&mut self) -> Result<MaterialTreeReceipt> {
-        restore::rebuild(self.store, self.work, self.cancel)
+        restore::rebuild(self.store, None, self.work, self.cancel)
+    }
+    pub(crate) fn reconstruct_target(
+        &mut self,
+        target: MaterialTargetRequest,
+    ) -> Result<MaterialTreeReceipt> {
+        restore::rebuild(self.store, Some(target), self.work, self.cancel)
     }
     pub(crate) fn verify(&mut self) -> Result<MaterialSealReceipt> {
         self.store.verify(self.work, self.cancel)
     }
+    #[cfg(test)]
     pub(crate) fn reserve_output(
         &self,
         bytes: usize,
@@ -412,6 +476,7 @@ impl OwnedSealedMaterial<'_> {
             bytes,
         )
     }
+    #[cfg(test)]
     pub(crate) fn copy_node<W: Write>(&mut self, index: usize, out: &mut W) -> Result<[u8; 32]> {
         self.verify()?;
         let node = self
@@ -491,10 +556,13 @@ where
             cancel,
             &mut mixed_retirement,
             |mut input: MixedInput<'_>| {
-                // The present profile does NOT yet possess the verified Git admin
-                // edge. Refuse it explicitly; never copy or silently omit root.git.
-                for node in &input.verified.nodes {
-                    if node.parent == 0 && same(&node.metadata.raw_leaf, &[46, 103, 105, 116])? {
+                // Only the typed prepared Git suffix can contribute root .git.
+                // User material may never smuggle an administrative name into it.
+                for (index, node) in input.verified.nodes.iter().enumerate() {
+                    if node.parent == 0
+                        && same(&node.metadata.raw_leaf, &[46, 103, 105, 116])?
+                        && index != input.user_nodes
+                    {
                         return Err(Error::Unsupported);
                     }
                     let id = Identity {

@@ -77,7 +77,7 @@ impl Worktrees {
         id: &str,
         revision: u64,
     ) -> Result<RecycleInspection> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let _own = self
             .0
             .admission
@@ -177,7 +177,7 @@ impl Worktrees {
         input: RecycleInput,
         retire: impl FnOnce(&Path) -> Result<()>,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let ticket = {
             let mut i = self.lock()?;
             let request = Request::Recycle(input.clone());
@@ -351,7 +351,7 @@ impl Worktrees {
             .is_some_and(|o| o.status.operation_id == id && o.recycle.is_some()))
     }
     pub(super) fn start_recycle(&self, store: &MetaStore, id: &str) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let mut i = self.lock()?;
         let Some(op) = i
             .doc
@@ -386,6 +386,8 @@ impl Worktrees {
             .spawn(move || {
                 let store = worker_store;
                 let mut intent = intent;
+                #[cfg(windows)]
+                let mut retained_parent = None;
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     if cancel.load(Ordering::SeqCst) {
                         return Err(error("cancelled"));
@@ -397,7 +399,13 @@ impl Worktrees {
                         &cancel,
                     )?;
                     if intent.action == RecycleAction::Archive {
+                        #[cfg(not(windows))]
                         recycle::reserve_parent(&mut intent.saved)?;
+                        #[cfg(windows)]
+                        {
+                            retained_parent =
+                                Some(recycle::reserve_parent_owned(&mut intent.saved)?);
+                        }
                     }
                     {
                         let mut i = manager.lock()?;
@@ -428,6 +436,8 @@ impl Worktrees {
                 }))
                 .unwrap_or_else(|_| Err(error("unknown")));
                 manager.finish_recycle(&store, &key, result, intent.dispatched);
+                #[cfg(windows)]
+                drop(retained_parent);
             });
         if spawned.is_err() {
             drop(i);
@@ -443,6 +453,35 @@ impl Worktrees {
         result: Result<Snapshot>,
         dispatched: bool,
     ) {
+        // A native material observation can block or become explicitly retired.
+        // Keep it outside the manager mutex while the existing maintenance
+        // owner continues to protect the operation and metadata write seal.
+        let observed_original = if !dispatched
+            && result
+                .as_ref()
+                .err()
+                .is_some_and(|e| !matches!(e.code, "unknown" | "storageUnknown"))
+        {
+            let saved = self.lock().ok().and_then(|i| {
+                i.doc
+                    .operation
+                    .as_ref()
+                    .filter(|o| o.status.operation_id == id)
+                    .and_then(|o| o.recycle.as_ref())
+                    .map(|r| (r.saved.clone(), r.action))
+            });
+            saved.filter(|(saved, action)| {
+                recycle::verify_at(
+                    &self.0.material,
+                    saved,
+                    *action == RecycleAction::Restore,
+                    &AtomicBool::new(false),
+                )
+                .is_ok()
+            })
+        } else {
+            None
+        };
         let Ok(mut i) = self.lock() else {
             return;
         };
@@ -496,13 +535,9 @@ impl Worktrees {
             code = None;
         } else if !dispatched
             && !matches!(code, Some("unknown" | "storageUnknown"))
-            && recycle::verify_at(
-                &self.0.material,
-                saved,
-                intent.action == RecycleAction::Restore,
-                &AtomicBool::new(false),
-            )
-            .is_ok()
+            && observed_original
+                .as_ref()
+                .is_some_and(|(observed, action)| observed == saved && *action == intent.action)
         {
             state = if code == Some("cancelled") {
                 "cancelled"
@@ -586,7 +621,7 @@ impl Worktrees {
         self.status(store, id)
     }
     pub fn recycle_check(&self, store: &MetaStore, id: &str, revision: u64) -> Result<Listing> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let _own = self
             .0
             .admission
@@ -679,7 +714,7 @@ impl Worktrees {
         self.list(store)
     }
     pub(super) fn recheck_recycle(&self, store: &MetaStore, id: &str) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let archived = {
             let mut i = self.lock()?;
             i.recover(store)?;
@@ -713,7 +748,7 @@ impl Worktrees {
         id: &str,
         verify: impl FnOnce(&SavedArchive) -> Result<Snapshot>,
     ) -> Result<Reply> {
-        crate::worktrees::mutation_supported()?;
+        recycle::supported()?;
         let _own = self
             .0
             .admission

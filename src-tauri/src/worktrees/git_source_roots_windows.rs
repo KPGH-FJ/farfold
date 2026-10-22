@@ -308,6 +308,9 @@ fn read(leaf: &Leaf, cancel: &AtomicBool) -> Result<Vec<u8>> {
 }
 enum Query<'a> {
     Format,
+    CleanIndex,
+    RecoveryFsck,
+    RecoveryRefs,
     CommitType(&'a str),
     Objects(super::Input),
     Sizes(super::Input),
@@ -369,13 +372,40 @@ fn query(
         .verify()
         .map_err(|_| error("changed"))?;
     let (timeout, failure) = match &action {
-        Query::Objects(_) | Query::Sizes(_) => {
+        Query::CleanIndex => (Duration::from_secs(15), "dirtyTracked"),
+        Query::Objects(_) | Query::Sizes(_) | Query::RecoveryFsck => {
             (super::super::recovery_pack::COMMAND_TIME, "recoveryInvalid")
         }
         _ => (Duration::from_secs(10), "unprovenPrivateCommits"),
     };
     let (mut command, paths) = command(source)?;
     let input = match action {
+        Query::CleanIndex => {
+            command.args([
+                "diff-index",
+                "--cached",
+                "--quiet",
+                "--no-ext-diff",
+                "--no-textconv",
+                "HEAD",
+                "--",
+            ]);
+            super::Input::null()
+        }
+        Query::RecoveryFsck => {
+            command.args([
+                "fsck",
+                "--full",
+                "--strict",
+                "--no-reflogs",
+                "--no-dangling",
+            ]);
+            super::Input::null()
+        }
+        Query::RecoveryRefs => {
+            command.args(["for-each-ref", "--format=%(objectname) %(refname)"]);
+            super::Input::null()
+        }
         Query::Format => {
             command.args(["rev-parse", "--show-object-format"]);
             super::Input::null()
@@ -455,7 +485,6 @@ impl SourceOwner {
         self.inventory.verify(&self.source.scope.git, cancel)?;
         self.recheck_roles(cancel)
     }
-    #[cfg(test)]
     fn recheck_with(
         &self,
         cancel: &AtomicBool,
@@ -519,6 +548,11 @@ impl SourceGraph {
     pub(in crate::worktrees) fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
         self.owner.recheck(cancel)
     }
+    pub(in crate::worktrees) fn require_clean_index(&self, cancel: &AtomicBool) -> Result<()> {
+        self.recheck(cancel)?;
+        self.owner.query(Query::CleanIndex, cancel)?;
+        self.recheck(cancel)
+    }
 }
 fn object_ids(raw: &[u8], roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>> {
     cancelled(cancel)?;
@@ -579,15 +613,25 @@ mod tests;
 #[path = "source_graph_windows_tests.rs"]
 mod graph_tests;
 
-#[cfg(test)]
 #[path = "git_source_managed_material_windows.rs"]
 mod managed_material;
-#[cfg(test)]
-pub(crate) use managed_material::ManagedRootGitEdge;
+pub(crate) use managed_material::{ManagedRemovalHold, ManagedRootGitEdge};
 
 #[path = "git_source_checkout_windows.rs"]
 mod profile;
+pub(in crate::worktrees) use profile::SelectedCheckout;
 
 #[cfg(test)]
 #[path = "git_source_content_windows_tests.rs"]
 mod raw_content;
+
+#[path = "git_recovered_source_windows.rs"]
+mod recovered;
+pub(in crate::worktrees) use recovered::RecoveryGraph;
+
+#[path = "git_source_frozen_windows.rs"]
+mod frozen;
+pub(in crate::worktrees) use frozen::{FrozenNode, FrozenSource};
+
+#[path = "git_source_delete_windows.rs"]
+mod deletion;

@@ -39,36 +39,36 @@ impl Key {
     }
 }
 fn config(
-    owner: &SourceOwner,
+    owner: &dyn EvaluationSource,
     key: Key,
     boolean: bool,
     cancel: &AtomicBool,
 ) -> Result<Option<String>> {
     cancelled(cancel)?;
     git::environment()?;
-    owner.source.scope.matches(&owner.expected)?;
+    owner.context().scope.matches(owner.snapshot())?;
     owner
-        .source
+        .context()
         .selected_program()
         .verify()
         .map_err(|_| error("changed"))?;
     let paths = crate::worktrees::windows_git::paths::Paths::new(&[
-        owner.source.selected_program(),
-        &owner.source.scope.root,
-        &owner.source.scope.git,
-        &owner.source.scope.common,
+        owner.context().selected_program(),
+        &owner.context().scope.root,
+        &owner.context().scope.git,
+        &owner.context().scope.common,
     ])?;
-    let mut command = Command::new(paths.path(owner.source.selected_program())?);
+    let mut command = Command::new(paths.path(owner.context().selected_program())?);
     // SOURCE effective configuration is deliberately inherited, unlike the
     // isolated destination context. Only these closed non-credential keys.
     command
         .env("GIT_NO_LAZY_FETCH", "1")
         .env("GIT_TERMINAL_PROMPT", "0")
-        .env("GIT_COMMON_DIR", paths.path(&owner.source.scope.common)?)
+        .env("GIT_COMMON_DIR", paths.path(&owner.context().scope.common)?)
         .args(["--no-pager", "--no-replace-objects", "-c"])
         .arg(format!(
             "core.hooksPath={}",
-            paths.path(owner.source.selected_program())?.display()
+            paths.path(owner.context().selected_program())?.display()
         ))
         .args([
             "-c",
@@ -83,12 +83,12 @@ fn config(
             "credential.helper=",
         ])
         .arg("--git-dir")
-        .arg(paths.path(&owner.source.scope.git)?)
+        .arg(paths.path(&owner.context().scope.git)?)
         .arg("--work-tree")
-        .arg(paths.path(&owner.source.scope.root)?)
+        .arg(paths.path(&owner.context().scope.root)?)
         .arg("-C")
-        .arg(paths.path(&owner.source.scope.root)?)
-        .current_dir(paths.path(&owner.source.scope.root)?)
+        .arg(paths.path(&owner.context().scope.root)?)
+        .current_dir(paths.path(&owner.context().scope.root)?)
         .arg("config");
     if boolean {
         command.arg("--type=bool");
@@ -100,9 +100,9 @@ fn config(
     let output =
         git::execute_command_input(command, git::Input::null(), cancel, Duration::from_secs(10));
     paths.verify()?;
-    owner.source.scope.matches(&owner.expected)?;
+    owner.context().scope.matches(owner.snapshot())?;
     owner
-        .source
+        .context()
         .selected_program()
         .verify()
         .map_err(|_| error("changed"))?;
@@ -115,7 +115,7 @@ fn config(
         _ => Err(error("unavailable")),
     }
 }
-fn safe(owner: &SourceOwner, cancel: &AtomicBool) -> Result<Vec<String>> {
+fn safe(owner: &dyn EvaluationSource, cancel: &AtomicBool) -> Result<Vec<String>> {
     let mut result = Vec::new();
     for (key, values) in [
         (Key::Autocrlf, &["true", "false", "input"][..]),
@@ -259,7 +259,7 @@ impl<'a> OptionalFile<'a> {
         Ok(bytes)
     }
 }
-fn configured_path(owner: &SourceOwner, raw: &str) -> Result<(PathBuf, Vec<String>)> {
+fn configured_path(owner: &dyn EvaluationSource, raw: &str) -> Result<(PathBuf, Vec<String>)> {
     if raw.is_empty() || raw.contains(['\0', '\r', '\n']) {
         return Err(error("unsafePath"));
     }
@@ -269,7 +269,7 @@ fn configured_path(owner: &SourceOwner, raw: &str) -> Result<(PathBuf, Vec<Strin
     {
         return Err(error("unsafePath"));
     }
-    let joined = Path::new(&owner.source.scope.root.path).join(path);
+    let joined = Path::new(&owner.context().scope.root.path).join(path);
     let mut normal = PathBuf::new();
     for part in joined.components() {
         match part {
@@ -304,12 +304,12 @@ pub(super) struct Inputs<'a> {
     configured: Option<OptionalFile<'a>>,
 }
 impl<'a> Inputs<'a> {
-    pub(super) fn capture(owner: &'a SourceOwner, cancel: &AtomicBool) -> Result<Self> {
+    pub(super) fn capture(owner: &'a dyn EvaluationSource, cancel: &AtomicBool) -> Result<Self> {
         let configs = safe(owner, cancel)?;
         let attr_path = config(owner, Key::Attributes, false, cancel)?;
         // ReadContext fixes GIT_COMMON_DIR to this same held common directory.
         let info = OptionalFile::open(
-            Root::Borrowed(&owner.source.scope.common),
+            Root::Borrowed(&owner.context().scope.common),
             vec!["info".into(), "attributes".into()],
             cancel,
         )?;
@@ -345,7 +345,7 @@ impl<'a> Inputs<'a> {
     }
     pub(super) fn check_filter(
         &self,
-        owner: &SourceOwner,
+        owner: &dyn EvaluationSource,
         attrs: &Attributes,
         cancel: &AtomicBool,
     ) -> Result<()> {
@@ -366,7 +366,7 @@ impl<'a> Inputs<'a> {
         }
         Ok(())
     }
-    pub(super) fn verify(&self, owner: &SourceOwner, cancel: &AtomicBool) -> Result<()> {
+    pub(super) fn verify(&self, owner: &dyn EvaluationSource, cancel: &AtomicBool) -> Result<()> {
         self.info.verify()?;
         if let Some(file) = &self.configured {
             file.verify()?;

@@ -154,7 +154,7 @@ fn exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_f
     fs::write(&selected, b"owned.txt eol=crlf\n").unwrap();
     configure(&f, "\n[core]\n attributesFile = owned.attributes\n");
     let graph = SourceGraph::capture(&f.snapshot(), &AtomicBool::new(false)).unwrap();
-    let inputs = inputs::Inputs::capture(&graph.owner, &AtomicBool::new(false)).unwrap();
+    let inputs = inputs::Inputs::capture(graph.owner.as_ref(), &AtomicBool::new(false)).unwrap();
     assert_eq!(inputs.attr_file(), Some(selected.as_path()));
     assert!(fs::OpenOptions::new().write(true).open(&selected).is_err());
     let (_, attributes) = graph.checkout_profile(&AtomicBool::new(false)).unwrap();
@@ -164,7 +164,7 @@ fn exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_f
     let missing = Fixture::new();
     configure(&missing, "\n[core]\n attributesFile = missing.attributes\n");
     let graph = SourceGraph::capture(&missing.snapshot(), &AtomicBool::new(false)).unwrap();
-    let inputs = inputs::Inputs::capture(&graph.owner, &AtomicBool::new(false)).unwrap();
+    let inputs = inputs::Inputs::capture(graph.owner.as_ref(), &AtomicBool::new(false)).unwrap();
     assert_eq!(
         inputs.attr_file(),
         Some(missing.root.join("missing.attributes").as_path())
@@ -206,12 +206,12 @@ fn custom_filter_and_literal_unset_driver_are_rejected_without_running_a_helper(
 fn held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected() {
     let f = Fixture::new();
     let graph = SourceGraph::capture(&f.snapshot(), &AtomicBool::new(false)).unwrap();
-    let inputs = inputs::Inputs::capture(&graph.owner, &AtomicBool::new(false)).unwrap();
+    let inputs = inputs::Inputs::capture(graph.owner.as_ref(), &AtomicBool::new(false)).unwrap();
     fs::create_dir(common(&f).join("info")).unwrap();
     fs::write(common(&f).join("info/attributes"), b"owned.txt eol=lf\n").unwrap();
     assert_eq!(
         inputs
-            .verify(&graph.owner, &AtomicBool::new(false))
+            .verify(graph.owner.as_ref(), &AtomicBool::new(false))
             .unwrap_err()
             .code,
         "changed"
@@ -240,14 +240,19 @@ fn cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery(
         "cancelled"
     );
     assert_eq!(f.bytes(), before);
-    // This slice has no material-content/restore authority: real capture still
-    // reaches the existing unsupported Windows content-comparison gate.
-    assert_eq!(
-        crate::worktrees::recovery_pack::capture(&f.snapshot(), &AtomicBool::new(false))
-            .unwrap_err()
-            .code,
-        "unsupportedGit"
-    );
+    // Successful profile observation still cannot grant full-material purpose
+    // to an ordinary directory pin. Production full capture has separate controls.
+    let ordinary = crate::file_access::PinnedPath::directory(&f.root).unwrap();
+    assert!(matches!(
+        crate::worktrees::recovery_pack::material::worktree_source(
+            &graph,
+            ordinary,
+            "owned linked".encode_utf16().collect(),
+            &crate::file_access::MixedMemory::default(),
+            &AtomicBool::new(false),
+        ),
+        Err(crate::file_access::CarrierFailure::Unsupported)
+    ));
     assert_eq!(fs::read(f.private.join("index")).unwrap(), EMPTY_INDEX);
 }
 
@@ -305,7 +310,7 @@ fn actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_eval
     assert!(!effective.contains("must-not-run"));
     // Consume the returned profile through official Git in a fresh owned role.
     // Fixed semantic expectations below do not reproduce the mirror algorithm.
-    let mut mirrored = evaluator::Evaluator::new(&graph.owner, &configs, &cancel).unwrap();
+    let mut mirrored = evaluator::Evaluator::new(graph.owner.as_ref(), &configs, &cancel).unwrap();
     let paths = mirrored.paths(&cancel).unwrap();
     mirrored
         .install(evaluator::Role::Mirror, &attributes, &cancel)

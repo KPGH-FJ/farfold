@@ -59,6 +59,94 @@ pub(super) fn local_guid(file: &File) -> io::Result<PathBuf> {
     Ok(PathBuf::from(path))
 }
 impl PinnedPath {
+    // WorktreeMove alone requests rename authority. Ordinary pins are unchanged.
+    pub(super) fn move_root(parent: &Self, leaf: &str, purpose: ReadPurpose) -> io::Result<Self> {
+        parent.verify()?;
+        let mut raw = name(OsStr::new(leaf))?;
+        let unicode = UNICODE_STRING {
+            Length: (raw.len() * 2) as u16,
+            MaximumLength: (raw.len() * 2) as u16,
+            Buffer: raw.as_mut_ptr(),
+        };
+        let object = OBJECT_ATTRIBUTES {
+            Length: size_of::<OBJECT_ATTRIBUTES>() as u32,
+            RootDirectory: handle(parent.file()),
+            ObjectName: &unicode,
+            Attributes: OBJ_CASE_INSENSITIVE,
+            ..Default::default()
+        };
+        let mut status = IO_STATUS_BLOCK::default();
+        let mut result = ptr::null_mut();
+        let code = unsafe {
+            NtCreateFile(
+                &mut result,
+                FILE_GENERIC_READ | DELETE | FILE_WRITE_ATTRIBUTES | purpose.extra_access(),
+                &object,
+                &mut status,
+                ptr::null(),
+                FILE_ATTRIBUTE_NORMAL,
+                FILE_SHARE_READ,
+                FILE_OPEN,
+                FILE_OPEN_REPARSE_POINT | FILE_SYNCHRONOUS_IO_NONALERT | FILE_DIRECTORY_FILE,
+                ptr::null(),
+                0,
+            )
+        };
+        if code != 0 {
+            return Err(io::Error::from_raw_os_error(
+                unsafe { RtlNtStatusToDosError(code) } as i32,
+            ));
+        }
+        let file = unsafe { File::from_raw_handle(result) };
+        if stamp(&file)?.regular {
+            return Err(denied());
+        }
+        let path = final_path(&file, FILE_NAME_NORMALIZED | VOLUME_NAME_DOS)?;
+        let guid_path = local_guid(&file)?;
+        if guid_path != parent.guid_path.join(leaf) {
+            return Err(denied());
+        }
+        let identity = stamp(&file)?.identity;
+        let mut files = parent
+            .files
+            .iter()
+            .map(File::try_clone)
+            .collect::<io::Result<Vec<_>>>()?;
+        files.push(file);
+        let mut identities = parent.identities.clone();
+        identities.push(identity);
+        let value = Self {
+            files,
+            purpose,
+            directory_scan: Mutex::new(()),
+            identities,
+            path,
+            guid_path,
+        };
+        parent.verify()?;
+        value.verify()?;
+        Ok(value)
+    }
+    pub(super) fn after_owned_move(mut self, parent: &Self, leaf: &str) -> io::Result<Self> {
+        parent.verify()?;
+        let file = self.files.pop().ok_or_else(invalid)?;
+        let identity = self.identities.last().ok_or_else(invalid)?.clone();
+        if stamp(&file)?.identity != identity || local_guid(&file)? != parent.guid_path.join(leaf) {
+            return Err(denied());
+        }
+        self.path = final_path(&file, FILE_NAME_NORMALIZED | VOLUME_NAME_DOS)?;
+        self.guid_path = local_guid(&file)?;
+        self.files = parent
+            .files
+            .iter()
+            .map(File::try_clone)
+            .collect::<io::Result<Vec<_>>>()?;
+        self.files.push(file);
+        self.identities = parent.identities.clone();
+        self.identities.push(identity);
+        self.verify()?;
+        Ok(self)
+    }
     pub(crate) fn directory(path: &Path) -> io::Result<Self> {
         Self::open(path, false, false, ReadPurpose::Ordinary)
     }
@@ -75,7 +163,7 @@ impl PinnedPath {
         Self::open(path, false, false, ReadPurpose::FullSecurity)
             .map_err(|e| FullSecurityFailure::native("fullSecurityOpen", e))
     }
-    pub(super) fn full_security_purpose(&self) -> bool {
+    pub(crate) fn full_security_purpose(&self) -> bool {
         self.purpose == ReadPurpose::FullSecurity
     }
     fn open(path: &Path, regular: bool, git_guid: bool, purpose: ReadPurpose) -> io::Result<Self> {
@@ -265,3 +353,7 @@ impl PinnedPath {
         Ok(())
     }
 }
+
+#[path = "worktree_delete_root.rs"]
+mod deletion;
+pub(crate) use deletion::WorktreeDeleteRoot;

@@ -462,6 +462,32 @@ pub(super) fn capture(
     retired: &mut Option<RetiredBackup>,
 ) -> Result<MaterialSummary> {
     let root = PinnedPath::directory(root).map_err(|_| error("unsafePath"))?;
+    capture_pin(root, false, cancel, retired).map(|(_, summary)| summary)
+}
+// Same-object retention may observe ordinary readable facets without claiming
+// full SACL observation or independent security reconstruction authority.
+pub(super) fn capture_archive(
+    root: &Path,
+    expected: &super::super::inspect::Stamp,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<MaterialSummary> {
+    cancelled(cancel)?;
+    let root = PinnedPath::directory(root).map_err(|_| error("unsafePath"))?;
+    if &super::super::inspect::pinned_stamp(&root)? != expected {
+        return Err(error("materialChanged"));
+    }
+    capture_archive_pin(root, cancel, retired).map(|(_, summary)| summary)
+}
+pub(super) fn capture_archive_pin(
+    root: PinnedPath,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<(PinnedPath, MaterialSummary)> {
+    if root.full_security_purpose() {
+        return Err(error("materialChanged"));
+    }
+    root.verify().map_err(|_| error("materialChanged"))?;
     capture_pin(root, false, cancel, retired)
 }
 pub(super) fn capture_security_complete(
@@ -475,6 +501,17 @@ pub(super) fn capture_security_complete(
     if &super::super::inspect::pinned_stamp(&root)? != expected {
         return Err(error("materialChanged"));
     }
+    capture_security_complete_pin(root, cancel, retired).map(|(_, summary)| summary)
+}
+pub(super) fn capture_security_complete_pin(
+    root: PinnedPath,
+    cancel: &AtomicBool,
+    retired: &mut Option<RetiredBackup>,
+) -> Result<(PinnedPath, MaterialSummary)> {
+    if !root.full_security_purpose() {
+        return Err(error("securityAccessRequired"));
+    }
+    root.verify().map_err(|_| error("materialChanged"))?;
     capture_pin(root, true, cancel, retired)
 }
 fn capture_pin(
@@ -482,7 +519,7 @@ fn capture_pin(
     full_security: bool,
     cancel: &AtomicBool,
     retired: &mut Option<RetiredBackup>,
-) -> Result<MaterialSummary> {
+) -> Result<(PinnedPath, MaterialSummary)> {
     let mut scan = Scan {
         hash: Sha256::new(),
         entries: ListingBudget::new(MAX_ENTRIES),
@@ -497,7 +534,7 @@ fn capture_pin(
         b"farfold-windows-default-data-ea-streams-owner-group-dacl-links-label-observation-v1"
             .as_slice()
     });
-    let _root = walk(&mut scan, root, &[], 0, cancel, retired)?;
+    let root = walk(&mut scan, root, &[], 0, cancel, retired)?;
     // All regular names must account for every observed declared link before
     // a partial observation can publish. Both transient maps retire here.
     let topology = scan.links.finish(cancel).map_err(topology_error)?;
@@ -505,16 +542,19 @@ fn capture_pin(
     scan.field(&topology.names.to_le_bytes());
     scan.field(&topology.aliases.to_le_bytes());
     scan.field(&topology.sha256);
-    Ok(MaterialSummary {
-        profile: Some(if full_security {
-            MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1
-        } else {
-            MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1
-        }),
-        entries: scan.entries.reserved,
-        bytes: scan.bytes,
-        sha256: hex(scan.hash.finalize()),
-    })
+    Ok((
+        root,
+        MaterialSummary {
+            profile: Some(if full_security {
+                MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1
+            } else {
+                MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1
+            }),
+            entries: scan.entries.reserved,
+            bytes: scan.bytes,
+            sha256: hex(scan.hash.finalize()),
+        },
+    ))
 }
 
 #[cfg(test)]

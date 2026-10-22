@@ -1,5 +1,5 @@
 //! One operation-scoped immutable mixed carrier, consumed inside the original Slot.
-//! No target tree/alias/Manifest2 or public restore is claimed by these bytes.
+//! The outer complete-tree and Manifest owners decide publication and target admission.
 use super::*;
 use super::{
     directory::Owner,
@@ -51,11 +51,52 @@ pub(crate) struct MixedRequest {
     retain_native: bool,
     root: MaterialPin,
     managed_root_git: Option<crate::worktrees::ManagedRootGitEdge>,
+    recovery_git: Option<crate::worktrees::PreparedRecoveryGit>,
     leaf: Vec<u16>,
     resident: Resident,
     _memory: ResidentLease,
 }
 impl MixedRequest {
+    pub(crate) fn deleting(
+        pin: &super::WorktreeDeleteNode,
+        leaf: Vec<u16>,
+        memory: &MixedMemory,
+        cancel: &AtomicBool,
+        proof: crate::worktrees::ManagedRootGitEdge,
+    ) -> Result<Self> {
+        check(cancel)?;
+        if !proof.deletion_purpose() {
+            return Err(Error::Unsupported);
+        }
+        let reserved = memory.0.lease(2048)?;
+        let root = pin.material();
+        if !root.deletion_purpose() {
+            return Err(Error::Unsupported);
+        }
+        root.directory_carrier_leaf(&leaf).map_err(pin_error)?;
+        Ok(Self {
+            root_policy: RootPolicy::OwnedTree,
+            retain_native: true,
+            root,
+            managed_root_git: Some(proof),
+            recovery_git: None,
+            leaf,
+            resident: memory.0.clone(),
+            _memory: reserved,
+        })
+    }
+    pub(crate) fn with_recovery_git(
+        mut self,
+        proof: crate::worktrees::PreparedRecoveryGit,
+        cancel: &AtomicBool,
+    ) -> Result<Self> {
+        if self.managed_root_git.is_none() || self.recovery_git.is_some() {
+            return Err(Error::Unsupported);
+        }
+        proof.verify(cancel).map_err(|_| Error::Changed)?;
+        self.recovery_git = Some(proof);
+        Ok(self)
+    }
     pub(super) fn require_pool(&self, lease: &mut ResidentLease) -> Result<()> {
         self.resident.grow(lease, 0)
     }
@@ -75,6 +116,7 @@ impl MixedRequest {
     ) -> Result<Self> {
         let mut request = Self::held(pin, leaf, memory, cancel)?;
         request.managed_root_git = Some(proof);
+        request.retain_native = true;
         Ok(request)
     }
     pub(crate) fn held(
@@ -94,6 +136,7 @@ impl MixedRequest {
             retain_native: false,
             root,
             managed_root_git: None,
+            recovery_git: None,
             leaf,
             resident: memory.0.clone(),
             _memory: reserved,
@@ -101,6 +144,7 @@ impl MixedRequest {
     }
 }
 struct Resources {
+    delete_stopped: Vec<super::worktree_delete_file::DeleteStoppedHandle>,
     sources: Option<Sources>,
     retain_native: bool,
     namespace: Option<Namespace>,
@@ -110,7 +154,7 @@ struct Resources {
     _namespace_memory: Option<ResidentLease>,
 }
 pub(crate) struct MixedRetirement {
-    _resources: Resources,
+    _resources: Box<Resources>,
     _operation_error: Option<Error>,
     _cleanup_error: Error,
 }
@@ -126,6 +170,7 @@ pub(crate) struct MixedSummary {
 // Borrowed disjoint fields only, never an owned resource or self-reference.
 // T in with_mixed_tree_input is outside c: references cannot escape the callback.
 pub(crate) struct MixedInput<'c> {
+    pub(super) user_nodes: usize,
     pub(super) native_catalog: &'c mut Option<Vec<NativeProof>>,
     pub(super) namespace: &'c mut Namespace,
     pub(super) verified: &'c tree::Verified,
@@ -143,9 +188,11 @@ fn equal(a: &[u16], b: &[u16]) -> Result<bool> {
         Ok(n == CSTR_EQUAL)
     }
 }
+#[cfg(test)]
 pub(crate) struct MixedOutputLease {
     _memory: ResidentLease,
 }
+#[cfg(test)]
 impl MixedOutputLease {
     pub(super) fn reserve(resident: &Resident, bytes: usize) -> Result<Self> {
         Ok(Self {
@@ -154,11 +201,28 @@ impl MixedOutputLease {
     }
 }
 pub(super) struct MixedBytes {
+    pub content: crate::worktrees::MaterialContent,
     pub summary: MixedSummary,
     pub whole_sha256: [u8; 32],
     pub native_catalog: Option<Vec<NativeProof>>,
 }
 impl MixedInput<'_> {
+    pub(crate) fn complete_digest(&mut self) -> Result<crate::worktrees::MaterialContent> {
+        self.verify()?;
+        crate::file_access::material_mixed_semantic::summarize(
+            &self.verified.nodes,
+            self.user_nodes,
+            |index| {
+                self.native_catalog
+                    .as_ref()
+                    .map_or(self.verified.nodes[index].native_sha256, |catalog| {
+                        catalog[index].semantic_sha256
+                    })
+            },
+            self.work,
+            self.cancel,
+        )
+    }
     // Complete actual carrier, including typed index/header/trailer, not just
     // selected node hashes. Output remains under the caller's original Slot.
     pub(super) fn copy_tree<W: Write>(&mut self, out: &mut W) -> Result<MixedBytes> {
@@ -202,6 +266,19 @@ impl MixedInput<'_> {
         }
         self.namespace.verify()?;
         Ok(MixedBytes {
+            content: crate::file_access::material_mixed_semantic::summarize(
+                &self.verified.nodes,
+                self.user_nodes,
+                |index| {
+                    self.native_catalog
+                        .as_ref()
+                        .map_or(self.verified.nodes[index].native_sha256, |catalog| {
+                            catalog[index].semantic_sha256
+                        })
+                },
+                self.work,
+                self.cancel,
+            )?,
             summary,
             whole_sha256: hash.finalize().into(),
             native_catalog: self.native_catalog.take(),
@@ -210,6 +287,7 @@ impl MixedInput<'_> {
 
     // Caller-owned buffering must reserve the SAME pool before allocating. Streams
     // to another bounded owned file do not need an entire payload Vec reservation.
+    #[cfg(test)]
     pub(crate) fn reserve_output(&self, bytes: usize) -> Result<MixedOutputLease> {
         Ok(MixedOutputLease {
             _memory: self.resident.lease(bytes)?,
@@ -255,6 +333,7 @@ impl MixedInput<'_> {
         })
     }
     // An actual typed-record byte consumer. No arbitrary path/File/target capability.
+    #[cfg(test)]
     pub(crate) fn copy_node<W: Write>(&mut self, index: usize, out: &mut W) -> Result<[u8; 32]> {
         let work = &mut *self.work;
         let cancel = self.cancel;
@@ -410,13 +489,12 @@ where
         .map_err(|e| io_error("mixedRawInitial", e))?
         .identity;
     // Declared BEFORE all dependent vectors: their borrowed pins/metadata drop first.
-    let _witness_memory = resident.lease(tree::MAX_NODES * 8192)?;
-    let mut directories: Vec<(usize, dirs::Node)> = Vec::with_capacity(tree::MAX_NODES);
-    let mut witnesses = Vec::with_capacity(tree::MAX_NODES);
-    let mut expected: Vec<Expected> = Vec::with_capacity(tree::MAX_NODES);
-    let mut native_catalog = resources
-        .retain_native
-        .then(|| Vec::with_capacity(tree::MAX_NODES));
+    let count = sources.nodes.len();
+    let _witness_memory = resident.lease(count.checked_mul(8192).ok_or(Error::Limit)?)?;
+    let mut directories: Vec<(usize, dirs::Node)> = Vec::with_capacity(count);
+    let mut witnesses = Vec::with_capacity(count);
+    let mut expected: Vec<Expected> = Vec::with_capacity(count);
+    let mut native_catalog = resources.retain_native.then(|| Vec::with_capacity(count));
     let mut output = ns.tree_carrier.as_ref().ok_or(Error::Invalid)?;
     let mut writer = tree::Writer::begin(&mut output, sources.nodes.len(), work, cancel, resident)?;
     for (index, node) in sources.nodes.iter().enumerate() {
@@ -424,12 +502,14 @@ where
         let (stored, record) = match node.kind {
             Kind::Directory => {
                 let mut directory = dirs::Node {
+                    #[cfg(test)]
                     parent: node.parent,
                     leaf: node.leaf.clone(),
                     pin: node.pin.clone(),
                     facts: None,
                     bytes: 0,
                     sha256: [0; 32],
+                    semantic_sha256: [0; 32],
                 };
                 let (record, stored) = dirs::capture_node(
                     &mut directory,
@@ -449,6 +529,7 @@ where
                     catalog.push(NativeProof::from_facts(
                         &f.stamp.identity,
                         Kind::Directory,
+                        directory.semantic_sha256,
                         &f.expected,
                         &f.ea,
                         f.security.as_ref().ok_or(Error::Unsupported)?,
@@ -487,6 +568,7 @@ where
                     catalog.push(NativeProof::from_facts(
                         &f.stamp.identity,
                         Kind::Regular,
+                        capture.parsed.semantic_sha256(),
                         &f.expected,
                         &f.ea,
                         &f.security,
@@ -605,6 +687,7 @@ where
         .map_err(|e| io_error("mixedCarrierBeforeConsumer", e))?
         .identity;
     let value = consume(MixedInput {
+        user_nodes: sources.user_nodes,
         native_catalog: &mut native_catalog,
         namespace: &mut *ns,
         verified: &verified,
@@ -622,6 +705,7 @@ where
     }
     // Whole input remains the same bytes even after a future same-namespace step.
     MixedInput {
+        user_nodes: sources.user_nodes,
         native_catalog: &mut native_catalog,
         namespace: &mut *ns,
         verified: &verified,
@@ -667,6 +751,33 @@ where
     // Witnesses and directory Facts drop ONLY AFTER final consumer fence. No
     // self-borrow survives returning/moving outside Resources into retirement.
 }
+pub(crate) struct VerifiedRemoval<'a> {
+    sources: &'a mut Sources,
+    work: &'a mut WorkBudget,
+    cancel: &'a AtomicBool,
+    stopped: &'a mut Vec<super::worktree_delete_file::DeleteStoppedHandle>,
+    dispatched: &'a mut bool,
+    context: &'a mut Option<RetiredContext>,
+}
+impl VerifiedRemoval<'_> {
+    pub(crate) fn remove(
+        self,
+        material: &super::material_mixed_tree_source::RemovalMaterial,
+        before: impl FnOnce() -> Result<()>,
+    ) -> Result<()> {
+        self.sources.remove_owned(
+            material,
+            self.work,
+            self.cancel,
+            super::material_mixed_tree_source::RemovalProgress {
+                stopped: self.stopped,
+                dispatched: self.dispatched,
+                context: self.context,
+            },
+            before,
+        )
+    }
+}
 pub(crate) fn with_mixed_tree_input<T, F>(
     request: MixedRequest,
     work: &mut WorkBudget,
@@ -676,6 +787,20 @@ pub(crate) fn with_mixed_tree_input<T, F>(
 ) -> Result<T>
 where
     F: for<'c> FnOnce(MixedInput<'c>) -> Result<T>,
+{
+    with_mixed_tree_input_then(request, work, cancel, retirement, consume, |_, _| Ok(()))
+}
+pub(crate) fn with_mixed_tree_input_then<T, F, G>(
+    request: MixedRequest,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+    retirement: &mut Option<MixedRetirement>,
+    consume: F,
+    finish: G,
+) -> Result<T>
+where
+    F: for<'c> FnOnce(MixedInput<'c>) -> Result<T>,
+    G: for<'a> FnOnce(VerifiedRemoval<'a>, &T) -> Result<()>,
 {
     if retirement.is_some() {
         return Err(Error::CleanupUnknown);
@@ -688,12 +813,21 @@ where
         retain_native,
         root,
         managed_root_git,
+        recovery_git,
         leaf,
         resident,
         _memory,
     } = request;
     // No native context exists before Sources is installed in this outside owner.
-    let sources = Sources::collect(root, leaf, managed_root_git, work, cancel, &resident)?;
+    let sources = Sources::collect(
+        root,
+        leaf,
+        managed_root_git,
+        recovery_git,
+        work,
+        cancel,
+        &resident,
+    )?;
     // A material request WITHOUT the typed same-SourceOwner capability refuses
     // before build/BackupRead/spools, never after copying .git into a carrier.
     if matches!(root_policy, RootPolicy::NoRootGit) {
@@ -703,7 +837,8 @@ where
             }
         }
     }
-    let mut resources = Resources {
+    let mut resources = Box::new(Resources {
+        delete_stopped: Vec::with_capacity(1),
         sources: Some(sources),
         retain_native,
         namespace: None,
@@ -711,7 +846,7 @@ where
         resident,
         _memory,
         _namespace_memory: None,
-    };
+    });
     let result = std::panic::catch_unwind(AssertUnwindSafe(|| {
         build(&mut resources, work, cancel, consume)
     }))
@@ -738,6 +873,42 @@ where
         });
         return Err(Error::CleanupUnknown);
     }
+    // build returned only after its complete final Native/source fence. Its
+    // witnesses/catalog borrows have dropped; every real context is retired,
+    // and the private namespace has been successfully cleaned before mutation.
+    let result = match result {
+        Ok(value) => {
+            let mut dispatched = false;
+            let finished = std::panic::catch_unwind(AssertUnwindSafe(|| {
+                let resources = resources.as_mut();
+                let removal = VerifiedRemoval {
+                    sources: resources.sources.as_mut().ok_or(Error::Invalid)?,
+                    work,
+                    cancel,
+                    stopped: &mut resources.delete_stopped,
+                    dispatched: &mut dispatched,
+                    context: &mut resources.context,
+                };
+                finish(removal, &value)
+            }))
+            .unwrap_or(Err(Error::Unsupported));
+            if let Err(e) = finished {
+                if dispatched || !resources.delete_stopped.is_empty() || resources.context.is_some()
+                {
+                    *retirement = Some(MixedRetirement {
+                        _resources: resources,
+                        _operation_error: Some(e),
+                        _cleanup_error: Error::CleanupUnknown,
+                    });
+                    return Err(Error::CleanupUnknown);
+                }
+                Err(e)
+            } else {
+                Ok(value)
+            }
+        }
+        Err(e) => Err(e),
+    };
     drop(resources);
     result
 }

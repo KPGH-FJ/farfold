@@ -12,6 +12,9 @@ use std::{
 
 #[path = "windows_scope_managed_git.rs"]
 pub(super) mod managed_git;
+#[path = "windows_scope_move.rs"]
+mod move_metadata;
+pub(super) use move_metadata::MoveMetadata;
 
 pub(super) struct Scope {
     pub root: PinnedPath,
@@ -219,3 +222,7 @@ impl Scope {
             .any(|p| candidate.has_ancestor(p.identity()))
     }
 }
+
+#[path = "windows_scope_remove.rs"]
+mod remove_metadata;
+pub(super) use remove_metadata::RemoveMetadata;

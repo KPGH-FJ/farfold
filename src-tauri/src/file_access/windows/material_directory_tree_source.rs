@@ -1,8 +1,10 @@
 //! Same held source tree, directory-only. Complete names; never skips a file.
+#[cfg(test)]
+use super::material_directory_carrier::pin_error;
 use super::*;
 use super::{
     directory::Owner,
-    material_directory_carrier::{Native, pin_error},
+    material_directory_carrier::Native,
     material_directory_facts as facts,
     material_pin::MaterialPin,
     material_restore::{self, Namespace},
@@ -10,25 +12,29 @@ use super::{
 use crate::file_access::{
     ea_records::WorkBudget,
     material_backup_io::{self as transfer, Mode, RetiredContext, Session},
-    material_carrier_records::{
-        self as records, Error, Resident, ResidentLease, Result, charge, check, io_error,
-    },
+    material_carrier_records::{Error, Resident, Result, check, io_error},
     material_directory_facet as facet,
     material_directory_records::{self as parser, Profile},
-    material_directory_tree_records as tree,
+};
+#[cfg(test)]
+use crate::file_access::{
+    material_carrier_records::ResidentLease, material_directory_tree_records as tree,
 };
 use std::{
     io::{Seek, SeekFrom},
     sync::atomic::AtomicBool,
 };
 pub(super) struct Node {
+    #[cfg(test)]
     pub parent: u32,
     pub leaf: Vec<u16>,
     pub pin: MaterialPin,
     pub facts: Option<facts::Facts>,
     pub bytes: u64,
     pub sha256: [u8; 32],
+    pub semantic_sha256: [u8; 32],
 }
+#[cfg(test)]
 pub(super) struct Sources {
     pub nodes: Vec<Node>,
     _memory: ResidentLease,
@@ -39,16 +45,7 @@ pub(super) fn listing(
     work: &mut WorkBudget,
     cancel: &AtomicBool,
 ) -> Result<crate::file_access::material_directory_budget::MaterialEntries> {
-    // At most N distinct children + 2 dots; one extra page covers a failing
-    // response. Precharge before the first synchronous query, no second budget.
-    charge(
-        work,
-        remaining
-            .checked_add(3)
-            .and_then(|n| n.checked_mul(records::BLOCK))
-            .ok_or(Error::Limit)?,
-    )?;
-    pin.entries(remaining as u64, cancel)
+    pin.entries_with_work(remaining as u64, cancel, work)
         .map_err(directory_error)
 }
 pub(super) fn directory_error(e: crate::file_access::DirectoryFailure) -> Error {
@@ -66,6 +63,7 @@ pub(super) fn directory_error(e: crate::file_access::DirectoryFailure) -> Error 
         _ => Error::Unsupported,
     }
 }
+#[cfg(test)]
 impl Sources {
     pub fn collect(
         root: MaterialPin,
@@ -84,6 +82,7 @@ impl Sources {
             facts: None,
             bytes: 0,
             sha256: [0; 32],
+            semantic_sha256: [0; 32],
         });
         let mut at = 0;
         while at < nodes.len() {
@@ -111,6 +110,7 @@ impl Sources {
                     facts: None,
                     bytes: 0,
                     sha256: [0; 32],
+                    semantic_sha256: [0; 32],
                 });
             }
             at += 1;
@@ -231,6 +231,7 @@ pub(super) fn capture_node(
     {
         return Err(Error::Changed);
     }
+    node.semantic_sha256 = parsed.semantic_sha256();
     let meta = facet::Metadata {
         security_full: full,
         raw_leaf: node.leaf.clone(),

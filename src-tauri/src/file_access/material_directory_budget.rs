@@ -4,7 +4,9 @@ use super::{
     directory_page::{self, Entries, Failure, MAX_ENTRIES, Observation, PAGE_BYTES},
     material_carrier_records::{Resident, ResidentLease},
 };
-use std::{collections::btree_map, mem::size_of, ops::Index, sync::atomic::AtomicBool};
+#[cfg(test)]
+use std::collections::btree_map;
+use std::{mem::size_of, ops::Index, sync::atomic::AtomicBool};
 
 // Logical per-entry representation: key/value plus a declared structural
 // allowance. BTree allocator nodes/rounding and arbitrary caller-made copies
@@ -35,22 +37,27 @@ impl PartialEq for MaterialEntries {
 }
 impl Eq for MaterialEntries {}
 impl MaterialEntries {
+    #[cfg(test)]
     pub(super) fn len(&self) -> usize {
         self.entries.len()
     }
+    #[cfg(test)]
     pub(super) fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
+    #[cfg(test)]
     pub(super) fn keys(&self) -> btree_map::Keys<'_, Vec<u16>, Observation> {
         self.entries.keys()
     }
+    #[cfg(test)]
     pub(super) fn iter(&self) -> btree_map::Iter<'_, Vec<u16>, Observation> {
         self.entries.iter()
     }
+    #[cfg(test)]
     pub(super) fn contains_key(&self, raw: &[u16]) -> bool {
         self.entries.contains_key(raw)
     }
-    pub(super) fn as_entries(&self) -> &Entries {
+    pub(crate) fn as_entries(&self) -> &Entries {
         &self.entries
     }
 }

@@ -26,19 +26,19 @@ impl Worktrees {
                 .ok_or(error("missingRecovery"))?
         };
         let checked = (|| {
-            let m = recovery_pack::verify(&recovery, &AtomicBool::new(false))?;
+            let m = recovery_pack::verify(&self.0.material, &recovery, &AtomicBool::new(false))?;
             let intent = RemoveIntent {
                 saved: recovery.source.clone(),
                 roots: m.roots.summary()?,
                 content: m.content.clone(),
-                profile_sha256: removal::profile(&m)?,
+                profile_sha256: removal::profile_values(&m.configs, &m.attributes)?,
                 recovery_id: recovery.receipt.id.clone(),
                 recovery_path: recovery.receipt.path.clone(),
                 recovery: Some(recovery.clone()),
                 dispatched: true,
                 confirmation: None,
             };
-            removal::verify_deleted(&intent, &AtomicBool::new(false))
+            removal::verify_deleted(&self.0.material, &intent, &AtomicBool::new(false))
         })();
         let mut i = self.lock()?;
         let mut n = i.doc.clone();

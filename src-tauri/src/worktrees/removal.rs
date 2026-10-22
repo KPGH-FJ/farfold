@@ -1,51 +1,107 @@
 use super::{
     git, inspect, material_scan,
-    recovery_pack::{self, Manifest},
+    recovery_pack::{self, Capture},
     recycle,
     storage::RemoveIntent,
     types::*,
 };
 use sha2::{Digest, Sha256};
-use std::{fs, path::Path, sync::atomic::AtomicBool, time::Duration};
-pub(super) fn profile(m: &Manifest) -> Result<String> {
+#[cfg(not(windows))]
+use std::{fs, time::Duration};
+use std::{path::Path, sync::atomic::AtomicBool};
+pub(super) fn supported() -> Result<()> {
+    super::recover::supported()
+}
+pub(super) fn profile(m: &Capture) -> Result<String> {
+    profile_values(&m.configs, &m.attributes)
+}
+pub(super) fn profile_values(configs: &[String], attributes: &[u8]) -> Result<String> {
     Ok(material_scan::hex(Sha256::digest(
-        serde_json::to_vec(&(&m.configs, &m.attributes)).map_err(|_| error("recoveryInvalid"))?,
+        serde_json::to_vec(&(configs, attributes)).map_err(|_| error("recoveryInvalid"))?,
     )))
 }
 pub(super) fn capture(
     material: &super::material_owner::Owner,
     saved: &super::storage::SavedArchive,
     cancel: &AtomicBool,
-) -> Result<Manifest> {
+) -> Result<Capture> {
     let s = recycle::verify_at(material, saved, true, cancel)?;
-    let diff = git::execute(
-        Path::new(&s.root),
-        &[
-            "diff-index",
-            "--cached",
-            "--quiet",
-            "--no-ext-diff",
-            "--no-textconv",
-            "HEAD",
-            "--",
-        ],
-        cancel,
-        Duration::from_secs(15),
-    )?;
-    if diff.code != Some(0) {
-        return Err(error("dirtyTracked"));
+    #[cfg(windows)]
+    git::source_roots::SourceGraph::capture(&s, cancel)?.require_clean_index(cancel)?;
+    #[cfg(not(windows))]
+    {
+        let diff = git::execute(
+            Path::new(&s.root),
+            &[
+                "diff-index",
+                "--cached",
+                "--quiet",
+                "--no-ext-diff",
+                "--no-textconv",
+                "HEAD",
+                "--",
+            ],
+            cancel,
+            Duration::from_secs(15),
+        )?;
+        if diff.code != Some(0) {
+            return Err(error("dirtyTracked"));
+        }
     }
-    let plan = recovery_pack::capture(&s, cancel)?;
+    let plan = recovery_pack::capture(material, &s, cancel)?;
     recycle::verify_at(material, saved, true, cancel)?;
     Ok(plan)
 }
-pub(super) fn same_plan(i: &RemoveIntent, m: &Manifest) -> Result<()> {
+pub(super) fn same_plan(i: &RemoveIntent, m: &Capture) -> Result<()> {
     if m.roots.summary()? != i.roots || m.content != i.content || profile(m)? != i.profile_sha256 {
         return Err(error("recoveryChanged"));
     }
     Ok(())
 }
-pub(super) fn reserve(i: &RemoveIntent) -> Result<inspect::Stamp> {
+pub(super) struct Reservation {
+    pub stamp: inspect::Stamp,
+    #[cfg(windows)]
+    owner: crate::file_access::WorktreeCheckout<'static>,
+}
+impl Reservation {
+    pub fn verify(&self) -> Result<()> {
+        #[cfg(windows)]
+        {
+            self.owner
+                .root()
+                .verify()
+                .map_err(|_| error("recoveryChanged"))?;
+            if inspect::pinned_stamp(self.owner.root())? != self.stamp {
+                return Err(error("recoveryChanged"));
+            }
+        }
+        Ok(())
+    }
+}
+#[cfg(windows)]
+pub(super) fn reserve(i: &RemoveIntent) -> Result<Reservation> {
+    use crate::file_access::{PinnedPath, WorktreeCheckout};
+    let parent =
+        PinnedPath::directory(Path::new(&i.saved.parent)).map_err(|_| error("recoveryChanged"))?;
+    if inspect::pinned_stamp(&parent)? != i.saved.parent_stamp
+        || Path::new(&i.recovery_path).parent() != Some(Path::new(&i.saved.parent))
+    {
+        return Err(error("unsafePath"));
+    }
+    let leaf = Path::new(&i.recovery_path)
+        .file_name()
+        .and_then(|v| v.to_str())
+        .ok_or(error("unsafePath"))?;
+    let owner = WorktreeCheckout::<'static>::create_under(&parent, leaf)
+        .map_err(|_| error("targetExists"))?;
+    let stamp = inspect::pinned_stamp(owner.root())?;
+    let result = Reservation { stamp, owner };
+    result.verify()?;
+    parent.verify().map_err(|_| error("recoveryChanged"))?;
+    Ok(result)
+}
+#[cfg(not(windows))]
+pub(super) fn reserve(i: &RemoveIntent) -> Result<Reservation> {
     inspect::same(&i.saved.parent, &i.saved.parent_stamp)?;
     if Path::new(&i.recovery_path).parent() != Some(Path::new(&i.saved.parent)) {
         return Err(error("unsafePath"));
@@ -64,15 +120,19 @@ pub(super) fn reserve(i: &RemoveIntent) -> Result<inspect::Stamp> {
     fs::File::open(&i.saved.parent)
         .and_then(|f| f.sync_all())
         .map_err(|_| error("unavailable"))?;
-    Ok(stamp)
+    Ok(Reservation { stamp })
 }
-pub(super) fn verify_deleted(i: &RemoveIntent, cancel: &AtomicBool) -> Result<()> {
+pub(super) fn verify_deleted(
+    material: &super::material_owner::Owner,
+    i: &RemoveIntent,
+    cancel: &AtomicBool,
+) -> Result<()> {
     if !i.dispatched {
         return Err(error("unknown"));
     }
     let s = &i.saved;
     let r = i.recovery.as_ref().ok_or(error("recoveryInvalid"))?;
-    recovery_pack::verify(r, cancel)?;
+    recovery_pack::verify(material, r, cancel)?;
     inspect::same(&s.parent, &s.parent_stamp)?;
     inspect::same(
         &s.retained_parent,
@@ -94,10 +154,9 @@ pub(super) fn verify_deleted(i: &RemoveIntent, cancel: &AtomicBool) -> Result<()
         return Err(error("unknown"));
     }
     if let Some(branch) = &s.archive.branch
-        && git::text(
-            Path::new(&s.archive.repository_root),
-            &["rev-parse", "--verify", branch],
-        )? != s.archive.head_oid
+        && !inspect::refs(&now)?
+            .iter()
+            .any(|value| value.r#ref == *branch && value.oid == s.archive.head_oid)
     {
         return Err(error("changed"));
     }
@@ -108,6 +167,7 @@ pub(super) fn verify_deleted(i: &RemoveIntent, cancel: &AtomicBool) -> Result<()
     )?;
     Ok(())
 }
+#[cfg(not(windows))]
 pub(super) fn delete(
     material: &super::material_owner::Owner,
     i: &RemoveIntent,
@@ -116,9 +176,12 @@ pub(super) fn delete(
 ) -> Result<()> {
     let plan = capture(material, &i.saved, cancel)?;
     same_plan(i, &plan)?;
-    let restored =
-        recovery_pack::verify(i.recovery.as_ref().ok_or(error("recoveryInvalid"))?, cancel)?;
-    if plan != restored {
+    let restored = recovery_pack::verify(
+        material,
+        i.recovery.as_ref().ok_or(error("recoveryInvalid"))?,
+        cancel,
+    )?;
+    if !plan.matches(&restored) {
         return Err(error("recoveryChanged"));
     }
     // Last read after independent recovery: no stale source proof is promoted.
@@ -138,5 +201,11 @@ pub(super) fn delete(
     }
     let mut dispatched = i.clone();
     dispatched.dispatched = true;
-    verify_deleted(&dispatched, &AtomicBool::new(false))
+    verify_deleted(material, &dispatched, &AtomicBool::new(false))
 }
+
+#[cfg(windows)]
+#[path = "remove_windows.rs"]
+mod windows;
+#[cfg(windows)]
+pub(super) use windows::delete;

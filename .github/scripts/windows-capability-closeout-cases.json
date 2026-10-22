@@ -1,0 +1,455 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "create-public-selected",
+      "test": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "manual": false,
+      "category": "publicCreateOwnedGit"
+    },
+    {
+      "name": "create-filter-refusal",
+      "test": "worktrees::create::windows::tests::selected_custom_filter_is_rejected_before_target_or_branch_creation",
+      "manual": false,
+      "category": "publicCreateOwnedGit"
+    },
+    {
+      "name": "checkout-range",
+      "test": "file_access::windows::worktree_checkout::tests::owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "checkout-attributes",
+      "test": "file_access::windows::worktree_checkout::tests::attribute_guards_cover_each_lookup_level_and_deny_mutation",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "checkout-index",
+      "test": "file_access::windows::worktree_checkout::tests::fixed_index_publication_is_exclusive_and_never_replaces_existing_index",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "checkout-cancel",
+      "test": "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "cold-reopen",
+      "test": "worktrees::recovery_pack::material::tests::persisted_descriptor_reopens_with_new_owner_after_original_source_and_owner_drop",
+      "manual": true,
+      "category": "ownedActualFullSecurityColdMaterial"
+    },
+    {
+      "name": "cold-tamper",
+      "test": "worktrees::recovery_pack::material::tests::cold_descriptor_tamper_never_enters_consumer_or_removes_retained_material",
+      "manual": true,
+      "category": "ownedActualFullSecurityColdMaterial"
+    },
+    {
+      "name": "cold-selected-target",
+      "test": "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release",
+      "manual": true,
+      "category": "ownedActualFullSecurityColdMaterial"
+    },
+    {
+      "name": "public-recover-refusals",
+      "test": "worktrees::recovery_public_windows_tests::public_cold_recover_rejects_collision_cancel_and_changed_manifest_without_deletion",
+      "manual": true,
+      "category": "ownedActualPublicRecoveryWorkflow"
+    },
+    {
+      "name": "checkout-owned-root",
+      "test": "file_access::windows::worktree_checkout::tests::created_root_handle_blocks_the_old_path_stamp_replacement_window",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "checkout-reject-extra",
+      "test": "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation",
+      "manual": false,
+      "category": "ownedNativeDestination"
+    },
+    {
+      "name": "pointer-exclusive-owner",
+      "test": "file_access::windows::worktree_pointer::tests::actual_pointer_owner_excludes_writers_and_checks_original_identity_and_bytes",
+      "manual": false,
+      "category": "ownedArchivePointer"
+    },
+    {
+      "name": "pointer-pair-rejection",
+      "test": "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither",
+      "manual": false,
+      "category": "ownedArchivePointer"
+    },
+    {
+      "name": "archive-native-identity",
+      "test": "file_access::windows::worktree_move::tests::actual_move_refuses_collision_and_preserves_identity_after_post_rename_failure",
+      "manual": true,
+      "category": "ownedActualFullSecurityArchive"
+    },
+    {
+      "name": "public-create-archive-restore",
+      "test": "worktrees::create::windows::tests::public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers",
+      "manual": true,
+      "category": "ownedActualFullSecurityArchive"
+    },
+    {
+      "name": "prepared-independent-git",
+      "test": "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names",
+      "manual": false,
+      "category": "ownedActualPreparedRecoveryGit"
+    },
+    {
+      "name": "complete-manifest-semantics",
+      "test": "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix",
+      "manual": false,
+      "category": "portableRecoveryDescriptor"
+    },
+    {
+      "name": "public-retained-cold-recover",
+      "test": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "manual": true,
+      "category": "ownedActualPublicRecoveryWithoutDelete"
+    },
+    {
+      "name": "delete-readonly-owner",
+      "test": "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence",
+      "manual": false,
+      "category": "ownedNativeDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "delete-duplicate-handle",
+      "test": "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close",
+      "manual": false,
+      "category": "ownedNativeDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "delete-external-reader",
+      "test": "file_access::windows::worktree_delete_file::tests::external_nonsharing_reader_prevents_delete_authority_and_preserves_bytes",
+      "manual": false,
+      "category": "ownedNativeDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "delete-late-directory-child",
+      "test": "file_access::windows::worktree_delete_file::tests::late_unknown_directory_child_survives_and_prevents_parent_disposal",
+      "manual": false,
+      "category": "ownedNativeDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "delete-image-section",
+      "test": "file_access::windows::worktree_delete_file::tests::force_image_section_check_refuses_live_image_mapping_without_unlink",
+      "manual": false,
+      "category": "ownedNativeDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "remove-common-owner",
+      "test": "worktrees::windows_scope::remove_metadata::tests::original_common_config_and_selected_ref_stay_held_after_linked_pins_retire",
+      "manual": false,
+      "category": "ownedRemovalMetadataHandoffNotPublicDeletion"
+    },
+    {
+      "name": "remove-changed-ref",
+      "test": "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected",
+      "manual": false,
+      "category": "ownedRemovalMetadataHandoffNotPublicDeletion"
+    },
+    {
+      "name": "remove-packed-ref-refusal",
+      "test": "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock",
+      "manual": false,
+      "category": "ownedRemovalMetadataHandoffNotPublicDeletion"
+    },
+    {
+      "name": "remove-detached-head",
+      "test": "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config",
+      "manual": false,
+      "category": "ownedRemovalMetadataHandoffNotPublicDeletion"
+    },
+    {
+      "name": "delete-owner-native-facets",
+      "test": "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf",
+      "manual": true,
+      "category": "ownedActualFullSecurityDeletePrimitiveNotPublicDeletion"
+    },
+    {
+      "name": "descriptor-roundtrip",
+      "test": "worktrees::recovery_pack::material_manifest::tests::descriptor_roundtrip_retains_full_file_ids_and_literal_utf16_streams",
+      "manual": false,
+      "category": "portableRecoveryDescriptor"
+    },
+    {
+      "name": "descriptor-refusals",
+      "test": "worktrees::recovery_pack::material_manifest::tests::descriptor_rejects_duplicate_identity_partial_default_and_unbounded_fields",
+      "manual": false,
+      "category": "portableRecoveryDescriptor"
+    },
+    {
+      "name": "descriptor-null-refusal",
+      "test": "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade",
+      "manual": false,
+      "category": "portableRecoveryDescriptor"
+    },
+    {
+      "name": "material-semantic-identity",
+      "test": "file_access::material_mixed_semantic::tests::new_target_identity_and_root_name_preserve_material_but_every_payload_field_matters",
+      "manual": false,
+      "category": "portableMaterialSemantics"
+    },
+    {
+      "name": "material-semantic-suffix",
+      "test": "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material",
+      "manual": false,
+      "category": "portableMaterialSemantics"
+    },
+    {
+      "name": "regular-semantic-streams",
+      "test": "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order",
+      "manual": false,
+      "category": "portableMaterialSemantics"
+    },
+    {
+      "name": "directory-semantic-streams",
+      "test": "file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order",
+      "manual": false,
+      "category": "portableMaterialSemantics"
+    },
+    {
+      "name": "mixed-material-node-capacity",
+      "test": "file_access::material_mixed_tree_records::tests::more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit",
+      "manual": false,
+      "category": "portableMaterialCapacity"
+    },
+    {
+      "name": "public-adopt-cold-recheck",
+      "test": "worktrees::windows_tests::existing_main_and_linked_tree_require_exact_adopt_then_cold_recheck",
+      "manual": false,
+      "category": "changedPublicAdmissionControl"
+    },
+    {
+      "name": "public-expired-input-refusal",
+      "test": "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent",
+      "manual": false,
+      "category": "changedPublicAdmissionControl"
+    },
+    {
+      "name": "public-cold-orphan-refusal",
+      "test": "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready",
+      "manual": false,
+      "category": "changedPublicAdmissionControl"
+    },
+    {
+      "name": "directory-budget-small-listing",
+      "test": "file_access::windows::directory::material_budget::tests::actual_small_listing_charges_data_and_eof_instead_of_admitted_child_capacity",
+      "manual": false,
+      "category": "ownedDirectoryQueryBudget"
+    },
+    {
+      "name": "directory-budget-eof-restart",
+      "test": "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation",
+      "manual": false,
+      "category": "ownedDirectoryQueryBudget"
+    },
+    {
+      "name": "directory-budget-before-query",
+      "test": "file_access::windows::directory::material_budget::tests::resident_and_cancellation_refuse_before_any_query_work_is_charged",
+      "manual": false,
+      "category": "ownedDirectoryQueryBudget"
+    },
+    {
+      "name": "directory-budget-native-error",
+      "test": "file_access::windows::directory::material_budget::tests::actual_failed_native_query_still_consumes_one_prepaid_page",
+      "manual": false,
+      "category": "ownedDirectoryQueryBudget"
+    },
+    {
+      "name": "directory-budget-multiple-pages",
+      "test": "file_access::windows::directory::material_budget::tests::actual_multiple_pages_charge_each_request_and_keep_the_full_raw_namespace",
+      "manual": false,
+      "category": "ownedDirectoryQueryBudget"
+    },
+    {
+      "name": "mixed-source-node-capacity",
+      "test": "file_access::windows::material_mixed_tree_source::tests::more_than_sixty_four_actual_sources_fit_unchanged_pool_and_release_their_leases",
+      "manual": true,
+      "category": "ownedActualFullSecuritySourceCapacityNotRestore"
+    },
+    {
+      "name": "mixed-material-comparison-budget",
+      "test": "file_access::material_mixed_tree_records::tests::expanded_collision_checks_share_work_and_cancel_before_further_comparisons",
+      "manual": false,
+      "category": "portableMaterialCapacity"
+    },
+    {
+      "name": "mixed-material-finite-bound",
+      "test": "file_access::material_mixed_tree_records::tests::finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes",
+      "manual": false,
+      "category": "portableMaterialCapacity"
+    },
+    {
+      "name": "descriptor-node-capacity",
+      "test": "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget",
+      "manual": false,
+      "category": "portableRecoveryDescriptor"
+    },
+    {
+      "name": "mixed-source-comparison-budget",
+      "test": "file_access::windows::material_mixed_tree_source::tests::comparison_budget_and_cancel_precede_matching_identity_and_raw_names",
+      "manual": false,
+      "category": "ownedMaterialSourceBudget"
+    },
+    {
+      "name": "backup-inspection-eof",
+      "test": "file_access::material_backup_io::tests::direct_inspection_requires_real_eof_and_retires_original_context_once",
+      "manual": false,
+      "category": "portableOriginalNativeSessionOwnership"
+    },
+    {
+      "name": "backup-inspection-short-success",
+      "test": "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof",
+      "manual": false,
+      "category": "portableOriginalNativeSessionOwnership"
+    },
+    {
+      "name": "backup-inspection-original-error",
+      "test": "file_access::material_backup_io::tests::direct_inspection_preserves_native_error_and_unknown_abort_ownership",
+      "manual": false,
+      "category": "portableOriginalNativeSessionOwnership"
+    },
+    {
+      "name": "backup-inspection-after-read-budget-cancel",
+      "test": "file_access::material_backup_io::tests::direct_inspection_budget_or_cancel_after_actual_read_still_aborts_once",
+      "manual": false,
+      "category": "portableOriginalNativeSessionOwnership"
+    },
+    {
+      "name": "remove-late-ads",
+      "test": "worktrees::remove_native_windows_tests::late_named_stream_after_complete_native_fence_must_be_preserved",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; actual named data stream write completed; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=namedStream",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "remove-late-ea",
+      "test": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; actual NtSetEaFile succeeded and writer was closed; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=ea",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "remove-late-same-size-ads",
+      "test": "worktrees::remove_native_windows_tests::same_size_named_stream_change_in_final_callback_is_rejected_with_valid_recovery",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; same-size named bytes were changed and read back; original basic timestamps/attributes restored and writer closed; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=sameSizeNamedStream",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "remove-late-security",
+      "test": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; actual DACL change succeeded and writer was closed; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=security",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "remove-late-member",
+      "test": "worktrees::remove_native_windows_tests::new_member_in_final_callback_is_not_chased_and_recovery_remains_valid",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; actual unknown directory member write completed; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=newMember",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "remove-late-cancel",
+      "test": "worktrees::remove_native_windows_tests::cancellation_in_final_callback_preserves_source_and_valid_recovery",
+      "manual": true,
+      "category": "ownedActualFinalCallbackPreservation",
+      "source": "src-tauri/src/worktrees/remove_native_windows_tests.rs",
+      "phase": "real removal::delete final before_dispatch callback; actual cancellation flag stored; reached.set(true), before returning Ok(())",
+      "phaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=cancel",
+      "phaseAssertion": "reached.get(): the actual final callback was not reached: {result:?}",
+      "preservationAssertion": "result is Err(cleanupUnknown); independently verified original recovery equals the pre-injection verification",
+      "followingAssertions": "original payload, retained late material where asserted, original Git pointer, common config and Manifest remain readable and unchanged",
+      "earlyFailurePolicy": "FullSecurity denial, fixture preparation failure, missing exact test, or failure before injection is not a passed preservation control",
+      "executionPolicy": "candidate preservation control; only exact real execution and all assertions passing count as passed; public Remove and cold Recover are verified separately"
+    },
+    {
+      "name": "public-remove-cold-recover",
+      "test": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+      "manual": true,
+      "category": "ownedActualPublicRecoveryWorkflow",
+      "executionPolicy": "candidate public Remove and cold Recover control; only exact real execution and original assertions passing count as passed; no Windows runtime success is claimed from source or cross checks"
+    },
+    {
+      "name": "archive-explicit-material-profile",
+      "test": "worktrees::recycle::profile_tests::archive_profiles_are_explicit_and_full_security_is_never_downgraded",
+      "manual": false,
+      "category": "portableArchiveProfile",
+      "requiredEnvironment": "portable",
+      "coverage": "actual profile discriminator: ordinary/full distinct, all other existing profiles/absence reject"
+    },
+    {
+      "name": "ordinary-move-child-close-reacquire",
+      "test": "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original",
+      "manual": false,
+      "category": "ownedActualOrdinaryArchive",
+      "requiredEnvironment": "Windows NTFS",
+      "coverage": "actual descendant-open rename refusal, same-root rename after close, exact original pointer reacquisition and write"
+    },
+    {
+      "name": "ordinary-move-reject-changed-pointer",
+      "test": "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten",
+      "manual": false,
+      "category": "ownedActualOrdinaryArchive",
+      "requiredEnvironment": "Windows NTFS",
+      "coverage": "actual changed pointer after rename rejected; moved tree and foreign bytes remain"
+    },
+    {
+      "name": "ordinary-public-archive-cold-restore",
+      "test": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+      "manual": false,
+      "category": "ownedActualOrdinaryArchive",
+      "requiredEnvironment": "Windows NTFS with full-security access unavailable",
+      "coverage": "actual public create/archive/DB reopen/explicit recheck/restore; source object IDs, staged/dirty/ignored/untracked/ADS/EA/ordinary material and historical row remain; explicit full-security observation still refuses this token"
+    }
+  ],
+  "blockedPositiveCases": [],
+  "expectedFailureObservations": [],
+  "inventoryBoundary": "This current cohort is separate from unchanged historical inventories and their actual 304 selected / 262 passed / 42 failed run. Removed blanket-refusal control is not a positive product test. Final-callback preservation and public Remove/Recover candidates require actual assertion success. Original expected-failure observation records remain in historical evidence."
+}

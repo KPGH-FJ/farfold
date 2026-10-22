@@ -14,9 +14,6 @@ impl Opened {
     pub(super) fn file(&self) -> &File {
         self.pin.file()
     }
-    pub(super) fn path(&self) -> PathBuf {
-        self.pin.guid_path.clone()
-    }
     pub(super) fn verify(&self) -> Result<()> {
         self.pin.verify().map_err(|_| error("recoveryChanged"))
     }

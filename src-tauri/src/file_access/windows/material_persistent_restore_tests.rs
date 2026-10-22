@@ -11,7 +11,7 @@ fn stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespa
     let mut work = WorkBudget::new(records::WORK_LIMIT);
     let cancel = AtomicBool::new(false);
     assert_eq!(
-        rebuild(&mut f.store, &mut work, &cancel).unwrap_err(),
+        rebuild(&mut f.store, None, &mut work, &cancel).unwrap_err(),
         Error::Unsupported
     );
     assert!(f.store.restore.is_none());
@@ -27,6 +27,7 @@ fn missing_native_catalogue_members_refuse_before_any_target_effect() {
     assert_eq!(
         rebuild(
             &mut f.store,
+            None,
             &mut WorkBudget::new(records::WORK_LIMIT),
             &AtomicBool::new(false)
         )
@@ -48,6 +49,7 @@ fn cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material(
         assert_eq!(
             rebuild(
                 &mut f.store,
+                None,
                 &mut WorkBudget::new(limit),
                 &AtomicBool::new(cancel)
             )
@@ -82,7 +84,7 @@ fn failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resource
     let mut f = Fixture::new();
     f.pending(&super::super::tests::bytes());
     f.publish_reopen();
-    f.store.restore = Some(Restore::reserve(&f.store.request.resident).unwrap());
+    f.store.restore = Some(Restore::reserve(&f.store.request.resident, None).unwrap());
     let mut api = FailedAbort {
         attempts: 0,
         aborts: 0,

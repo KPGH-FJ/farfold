@@ -363,7 +363,7 @@ impl Worktrees {
         })
     }
     pub fn prepare(&self, store: &MetaStore, id: &str, input: Create) -> Result<Reply> {
-        super::mutation_supported()?;
+        create::supported()?;
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         let source = {
@@ -430,16 +430,19 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub fn start(&self, store: &MetaStore, id: &str) -> Result<Reply> {
-        super::mutation_supported()?;
         if self.is_recover(store, id)? {
+            super::recover::supported()?;
             return self.start_recover(store, id);
         }
         if self.is_remove(store, id)? {
+            super::removal::supported()?;
             return Err(error("confirmationRequired"));
         }
         if self.is_recycle(store, id)? {
+            super::recycle::supported()?;
             return self.start_recycle(store, id);
         }
+        create::supported()?;
         let own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let global = managed_update::activity().map_err(|_| error("busy"))?;
         let mut i = self.lock()?;
@@ -484,6 +487,10 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     fn run(&self, store: &MetaStore, id: &str, mut intent: Intent, cancel: Arc<AtomicBool>) {
+        // Windows retains the ORIGINAL FILE_CREATE directory and every
+        // completed child/index owner through the final Ready store write.
+        #[cfg(windows)]
+        let mut created: Option<crate::file_access::WorktreeCheckout<'static>> = None;
         let result = (|| -> Result<Snapshot> {
             if cancel.load(Ordering::SeqCst) {
                 return Err(error("cancelled"));
@@ -494,15 +501,25 @@ impl Worktrees {
             if cancel.load(Ordering::SeqCst) {
                 return Err(error("cancelled"));
             }
-            // Atomic mkdir reserves a new, empty leaf. Failure never reuses another directory.
-            std::fs::create_dir(&intent.target).map_err(|e| {
-                error(if e.kind() == std::io::ErrorKind::AlreadyExists {
-                    "targetExists"
-                } else {
-                    "unavailable"
-                })
-            })?;
-            intent.target_stamp = Some(inspect::stamp(Path::new(&intent.target))?);
+            #[cfg(not(windows))]
+            {
+                // Existing Unix path is unchanged.
+                std::fs::create_dir(&intent.target).map_err(|e| {
+                    error(if e.kind() == std::io::ErrorKind::AlreadyExists {
+                        "targetExists"
+                    } else {
+                        "unavailable"
+                    })
+                })?;
+                intent.target_stamp = Some(inspect::stamp(Path::new(&intent.target))?);
+            }
+            #[cfg(windows)]
+            {
+                created = Some(create::reserve(&intent)?);
+                intent.target_stamp = Some(inspect::pinned_stamp(
+                    created.as_ref().ok_or(error("unknown"))?.root(),
+                )?);
+            }
             {
                 let mut i = self.lock()?;
                 let mut next = i.doc.clone();
@@ -526,7 +543,14 @@ impl Worktrees {
                 i.save(store, next)?;
             }
             create::add(&intent, &cancel)?;
+            #[cfg(not(windows))]
             checkout.materialize(&intent, &cancel)?;
+            #[cfg(windows)]
+            checkout.materialize_reserved(
+                &intent,
+                &cancel,
+                created.as_mut().ok_or(error("unknown"))?,
+            )?;
             create::verify(&intent)
         })();
         let Ok(mut i) = self.lock() else {
@@ -541,6 +565,15 @@ impl Worktrees {
             i.working = None;
             return;
         };
+        #[cfg(windows)]
+        let result = result.and_then(|snapshot| {
+            created
+                .as_ref()
+                .ok_or(error("unknown"))?
+                .verify_namespace(&AtomicBool::new(false))
+                .map_err(|_| error("changed"))?;
+            Ok(snapshot)
+        });
         let requested = cancel.load(Ordering::SeqCst);
         match result {
             Ok(s) => {
@@ -565,6 +598,7 @@ impl Worktrees {
             Err(e) => {
                 let has_material = intent.target_stamp.is_some()
                     || intent.dispatched
+                    || (cfg!(windows) && e.code == "unknown")
                     || std::fs::symlink_metadata(&intent.target).is_ok();
                 let state = if has_material {
                     "unknown"
@@ -587,6 +621,8 @@ impl Worktrees {
             }
             i.doc = next;
         }
+        #[cfg(windows)]
+        drop(created);
         i.working = None;
     }
     pub fn status(&self, store: &MetaStore, id: &str) -> Result<Reply> {
@@ -852,16 +888,6 @@ impl Worktrees {
         Ok(Forgotten { forgotten: true })
     }
     pub fn recheck(&self, store: &MetaStore, id: &str) -> Result<Reply> {
-        #[cfg(windows)]
-        {
-            let mut inner = self.lock()?;
-            inner.load(store)?;
-            if inner.doc.operation.as_ref().is_some_and(|op| {
-                op.status.operation_id == id && !matches!(op.request, Request::Adopt { .. })
-            }) {
-                return Err(error("unsupportedGit"));
-            }
-        }
         if self.is_recover(store, id)? {
             return self.recheck_recover(store, id);
         }
@@ -887,6 +913,43 @@ impl Worktrees {
         // Only a previously saved location has a captured identity. Unknown material is retained
         // for explicit review/adoption; matching path alone never proves this operation succeeded.
         if let Some(l) = &op.location {
+            #[cfg(windows)]
+            {
+                let intent = {
+                    let inner = self.lock()?;
+                    let saved = inner
+                        .doc
+                        .operation
+                        .as_ref()
+                        .filter(|s| s.status.operation_id == id)
+                        .ok_or(error("unknown"))?;
+                    match &saved.request {
+                        Request::Adopt { .. } => None,
+                        Request::Create(input) => {
+                            let intent = saved.intent.as_ref().ok_or(error("unknown"))?;
+                            if intent.input != *input
+                                || !intent.dispatched
+                                || intent.target != l.path
+                                || intent.target_stamp.is_none()
+                                || !inner.doc.locations.iter().any(|entry| {
+                                    entry.location.id == l.id
+                                        && entry.location.path == intent.target
+                                        && entry.location.ownership == "created"
+                                        && Some(&entry.identity.root_stamp)
+                                            == intent.target_stamp.as_ref()
+                                })
+                            {
+                                return Err(error("unknown"));
+                            }
+                            Some(intent.clone())
+                        }
+                        _ => return Err(error("unknown")),
+                    }
+                };
+                if let Some(intent) = intent {
+                    create::verify(&intent)?;
+                }
+            }
             let checked = self.check_location(store, &l.id);
             let mut i = self.lock()?;
             let mut next = i.doc.clone();

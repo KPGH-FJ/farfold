@@ -1,6 +1,8 @@
 //! One private import stage while the source repository still exists.
 //! This is neither offline recovery nor authority over a caller-chosen target.
+#[cfg(test)]
 use super::Manifest;
+use super::graph::GraphSource;
 use crate::{
     file_access::PinnedPath,
     worktrees::{git, inspect, storage::Identity, types::*, windows_git::ReadContext},
@@ -275,10 +277,10 @@ pub(super) fn import(
     expected: &Identity,
     retained: &str,
     pack: PinnedPath,
-    manifest: &Manifest,
+    manifest: &impl GraphSource,
     cancel: &AtomicBool,
 ) -> Result<Imported> {
-    super::validate(manifest)?;
+    let manifest = manifest.graph()?;
     cancelled(cancel)?;
     let mut owner = Context::new(
         source,

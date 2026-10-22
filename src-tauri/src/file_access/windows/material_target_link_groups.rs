@@ -18,7 +18,9 @@ use windows_sys::Win32::System::SystemServices::ACCESS_SYSTEM_SECURITY;
 #[path = "material_target_link_parent.rs"]
 mod parent;
 use parent::Parent;
-pub(crate) const MAX_NODES: usize = crate::file_access::material_mixed_tree_records::MAX_NODES;
+// This separate alias-group component retains its original supported bound;
+// extending the mixed single-link tree must not enlarge its fixed reservations.
+pub(crate) const MAX_NODES: usize = 64;
 pub(crate) const ROOT: u32 = crate::file_access::material_mixed_tree_records::ROOT;
 const COLLISION: i32 = 0xc0000035u32 as i32;
 struct Directory {

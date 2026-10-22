@@ -6,6 +6,16 @@ use super::{
     types::*,
 };
 use std::{fs, path::Path, sync::atomic::AtomicBool};
+pub(super) fn supported() -> Result<()> {
+    #[cfg(windows)]
+    {
+        super::git::environment()
+    }
+    #[cfg(not(windows))]
+    {
+        super::mutation_supported()
+    }
+}
 fn overlap(a: &Path, b: &Path) -> bool {
     a.starts_with(b) || b.starts_with(a)
 }
@@ -17,6 +27,7 @@ pub(super) fn absent(path: &Path) -> Result<()> {
     }
 }
 pub(super) fn prepare(
+    owner: &super::material_owner::Owner,
     input: super::RecoverInput,
     recovery: recovery_pack::SavedRecovery,
 ) -> Result<RecoverIntent> {
@@ -56,7 +67,7 @@ pub(super) fn prepare(
             return Err(error("unsafePath"));
         }
     }
-    recovery_pack::verify(&recovery, &AtomicBool::new(false))?;
+    recovery_pack::verify(owner, &recovery, &AtomicBool::new(false))?;
     Ok(RecoverIntent {
         input,
         recovery,
@@ -67,19 +78,26 @@ pub(super) fn prepare(
         dispatched: false,
     })
 }
-pub(super) fn revalidate(i: &RecoverIntent) -> Result<()> {
+pub(super) fn revalidate(owner: &super::material_owner::Owner, i: &RecoverIntent) -> Result<()> {
     inspect::same(&i.parent, &i.parent_stamp)?;
-    let fresh = prepare(i.input.clone(), i.recovery.clone())?;
+    let fresh = prepare(owner, i.input.clone(), i.recovery.clone())?;
     if fresh.target != i.target || fresh.parent_stamp != i.parent_stamp {
         return Err(error("changed"));
     }
     Ok(())
 }
-pub(super) fn verify(i: &RecoverIntent, cancel: &AtomicBool) -> Result<Snapshot> {
+pub(super) fn verify(
+    owner: &super::material_owner::Owner,
+    i: &RecoverIntent,
+    cancel: &AtomicBool,
+) -> Result<Snapshot> {
     inspect::same(&i.parent, &i.parent_stamp)?;
     inspect::same(&i.target, i.target_stamp.as_ref().ok_or(error("unknown"))?)?;
-    let m = recovery_pack::verify(&i.recovery, cancel)?;
+    let m = recovery_pack::verify(owner, &i.recovery, cancel)?;
+    #[cfg(unix)]
     recovery_pack::verify_restored(Path::new(&i.target), &m, cancel)?;
+    #[cfg(windows)]
+    recovery_pack::material::verify_target(owner, Path::new(&i.target), &m, cancel)?;
     let s = inspect::snapshot(Path::new(&i.target))?;
     if s.root != i.target
         || s.repository_root() != i.target

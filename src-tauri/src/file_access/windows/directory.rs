@@ -69,7 +69,6 @@ pub(super) fn collect_from<D: Owner>(
 }
 // This material-only entry still uses the original PinnedPath FileObject and
 // its full-scan cursor guard. It grants no new path/purpose/skip authority.
-#[cfg(test)]
 pub(crate) fn entries_with_work(
     directory: &PinnedPath,
     remaining: u64,
@@ -147,11 +146,11 @@ fn collect_charged_from<D: Owner>(
     Ok(result)
 }
 
-#[cfg(test)]
 #[path = "directory_budget_tests.rs"]
 mod material_budget;
 #[cfg(test)]
 pub(super) use material_budget::collect_budgeted_from;
+pub(super) use material_budget::collect_budgeted_with_work_from;
 
 #[cfg(test)]
 mod tests {

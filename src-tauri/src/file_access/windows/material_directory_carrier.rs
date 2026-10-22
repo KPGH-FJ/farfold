@@ -1,33 +1,41 @@
 //! Internal typed DIRECTORY capture and optional one-owned-target consumer.
 //! No child topology, recursive carrier, TreeFacet completion, or public gate.
 use super::*;
+#[cfg(test)]
 use super::{
     directory::Owner as DirectoryOwner,
     material_directory_facts as facts,
     material_pin::MaterialPin,
     material_restore::{self, Namespace},
 };
+#[cfg(test)]
 use crate::file_access::{
     ea_records::WorkBudget,
-    material_backup_io::{self as transfer, Api, Mode, RetiredContext, Session},
-    material_carrier_records::{
-        self as records, Error, Resident, ResidentLease, Result, check, io_error,
-    },
+    material_backup_io::{self as transfer, RetiredContext, Session},
+    material_carrier_records::{self as records, Resident, ResidentLease, Result, check, io_error},
     material_directory_facet as facet,
     material_directory_records::{self as parser, Profile},
 };
+use crate::file_access::{
+    material_backup_io::{Api, Mode},
+    material_carrier_records::Error,
+};
+use std::ffi::c_void;
+#[cfg(test)]
 use std::{
-    ffi::c_void,
     io::{Seek, SeekFrom},
     panic::AssertUnwindSafe,
     sync::atomic::AtomicBool,
 };
+#[cfg(test)]
 pub(crate) struct DirectoryMemory(Resident);
+#[cfg(test)]
 impl Default for DirectoryMemory {
     fn default() -> Self {
         Self(Resident::new(records::RESIDENT_LIMIT))
     }
 }
+#[cfg(test)]
 pub(crate) struct DirectoryRequest {
     source: MaterialPin,
     leaf: Vec<u16>,
@@ -54,6 +62,7 @@ pub(super) fn pin_error(error: super::material_pin::Failure) -> Error {
         _ => Error::Unsupported,
     }
 }
+#[cfg(test)]
 impl DirectoryRequest {
     pub(crate) fn held(
         pin: PinnedPath,
@@ -72,6 +81,7 @@ impl DirectoryRequest {
         })
     }
 }
+#[cfg(test)]
 pub(crate) struct DirectoryRetirement {
     _source: MaterialPin,
     _namespace: Option<Namespace>,
@@ -82,6 +92,7 @@ pub(crate) struct DirectoryRetirement {
     _memory: ResidentLease,
     _namespace_memory: Option<ResidentLease>,
 }
+#[cfg(test)]
 #[derive(Debug)]
 pub(crate) struct DirectoryReceipt {
     pub source: Identity,
@@ -119,11 +130,13 @@ impl Native {
         self.aborts
     }
 }
+#[cfg(test)]
 pub(super) struct Captured<'a> {
     pub facts: &'a facts::Facts,
     pub parsed: &'a parser::Parsed,
     pub metadata: &'a facet::Metadata,
 }
+#[cfg(test)]
 pub(super) trait DirectoryConsumer {
     fn consume(
         &mut self,
@@ -213,6 +226,7 @@ impl Api for Native {
         }
     }
 }
+#[cfg(test)]
 pub(crate) fn capture_directory(
     request: DirectoryRequest,
     work: &mut WorkBudget,
@@ -221,6 +235,7 @@ pub(crate) fn capture_directory(
 ) -> Result<DirectoryReceipt> {
     capture_with_consumer(request, work, cancel, retirement, None)
 }
+#[cfg(test)]
 pub(super) fn capture_with_consumer(
     request: DirectoryRequest,
     work: &mut WorkBudget,

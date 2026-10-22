@@ -11,7 +11,10 @@ use windows_sys::Win32::{
         Authorization::{ConvertStringSecurityDescriptorToSecurityDescriptorW, SDDL_REVISION_1},
         DACL_SECURITY_INFORMATION, GetKernelObjectSecurity, SetKernelObjectSecurity,
     },
-    Storage::FileSystem::{READ_CONTROL, SYNCHRONIZE, WRITE_DAC},
+    Storage::FileSystem::{
+        FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, READ_CONTROL, SYNCHRONIZE,
+        WRITE_DAC,
+    },
 };
 
 pub(crate) struct OwnedDacl {
@@ -22,8 +25,18 @@ pub(crate) struct OwnedDacl {
 impl OwnedDacl {
     // Every caller supplies its own freshly created tempfile, never a user file.
     pub(crate) fn new(path: &Path) -> Self {
+        Self::open(path, 0)
+    }
+    pub(crate) fn directory(path: &Path) -> Self {
+        Self::open(
+            path,
+            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+        )
+    }
+    fn open(path: &Path, flags: u32) -> Self {
         let file = OpenOptions::new()
             .access_mode(READ_CONTROL | WRITE_DAC | SYNCHRONIZE)
+            .custom_flags(flags)
             .open(path)
             .unwrap();
         let mut original = vec![0u64; 65536 / 8];

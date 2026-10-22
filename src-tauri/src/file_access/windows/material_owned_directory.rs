@@ -1,9 +1,11 @@
 //! One fresh directory under the original private namespace. No destination path.
 use super::super::material_pin::{self, Guid};
 use super::*;
+use crate::file_access::material_carrier_records::Resident;
+#[cfg(test)]
 use crate::file_access::{
     ea_records::WorkBudget,
-    material_carrier_records::{self as records, Resident, charge, check},
+    material_carrier_records::{self as records, charge, check},
 };
 use std::sync::{Mutex, MutexGuard};
 fn raw_guid(file: &File, resident: &Resident) -> Result<Guid> {
@@ -38,6 +40,7 @@ impl State {
             resident: resident.clone(),
         }
     }
+    #[cfg(test)]
     pub fn create(&mut self, root: &File, full: bool) -> Result<()> {
         const LEAF: &[u16] = &[114, 101, 115, 116, 111, 114, 101, 100, 45, 100, 105, 114];
         self.create_named(root, LEAF, full)
@@ -165,6 +168,7 @@ impl State {
         }
         Ok(())
     }
+    #[cfg(test)]
     pub fn empty(
         &self,
         work: &mut WorkBudget,
@@ -205,6 +209,14 @@ impl State {
             basic.FileAttributes = FILE_ATTRIBUTE_NORMAL;
             set_basic(file, &basic)?;
             dispose(file)?;
+        }
+        close(&mut self.file, &mut self.stopped)
+    }
+    // Used only after the whole freshly-created tree has committed to retention.
+    // A failed close remains with this owner; it never falls back to deletion.
+    pub(super) fn release(&mut self) -> Result<()> {
+        if self.pending || !self.stopped.is_empty() {
+            return Err(Error::CleanupUnknown);
         }
         close(&mut self.file, &mut self.stopped)
     }

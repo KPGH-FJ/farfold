@@ -1,4 +1,5 @@
 //! Sealed fresh namespace: never accepts an arbitrary destination path.
+#[cfg(test)]
 use super::material_carrier_native::Basic;
 use super::*;
 use crate::file_access::material_carrier_records::{Error, Result, io_error};
@@ -18,10 +19,14 @@ pub(super) struct Namespace {
     root: Option<File>,
     root_id: Option<Identity>,
     cleaned: bool,
+    #[cfg(test)]
     links: Option<owned_link::State>,
+    #[cfg(test)]
     targets: Option<target_links::State>,
     pub(super) sealed_tree: Option<sealed_tree::State>,
+    #[cfg(test)]
     directory: Option<owned_directory::State>,
+    #[cfg(test)]
     tree: Option<owned_directory_tree::State>,
     stopped_handles: Vec<StoppedHandle>,
     stopped_allocations: Vec<StoppedAllocation>,
@@ -40,10 +45,14 @@ impl Namespace {
             root: None,
             root_id: None,
             cleaned: false,
+            #[cfg(test)]
             links: None,
+            #[cfg(test)]
             targets: None,
             sealed_tree: None,
+            #[cfg(test)]
             directory: None,
+            #[cfg(test)]
             tree: None,
             stopped_handles: Vec::with_capacity(5),
             stopped_allocations: Vec::with_capacity(1),
@@ -54,6 +63,7 @@ impl Namespace {
             tree_carrier: None,
         })
     }
+    #[cfg(test)]
     pub fn open(&mut self) -> Result<()> {
         // OS temporary-directory selection is not a new product env flag. It
         // selects ONLY a parent; authority to delete is NEVER given for it.
@@ -270,13 +280,13 @@ impl Namespace {
     pub(super) fn prepare_sealed_tree(
         &mut self,
         resident: &crate::file_access::material_carrier_records::Resident,
+        count: usize,
     ) -> Result<()> {
-        if self.sealed_tree.is_some()
-            || self.tree.is_some()
-            || self.targets.is_some()
-            || self.directory.is_some()
-            || self.target.is_some()
-        {
+        #[cfg(test)]
+        if self.tree.is_some() || self.targets.is_some() || self.directory.is_some() {
+            return Err(Error::Invalid);
+        }
+        if self.sealed_tree.is_some() || self.target.is_some() {
             return Err(Error::Invalid);
         }
         self.verify()?;
@@ -300,7 +310,7 @@ impl Namespace {
         if fs[..4] != [78, 84, 70, 83] || fs[4] != 0 {
             return Err(Error::Unsupported);
         }
-        self.sealed_tree = Some(sealed_tree::State::reserve(resident)?);
+        self.sealed_tree = Some(sealed_tree::State::reserve(resident, count)?);
         Ok(())
     }
     pub(super) fn create_sealed_node(
@@ -315,6 +325,7 @@ impl Namespace {
             cancel,
         )
     }
+    #[cfg(test)]
     pub fn create_directory_target(
         &mut self,
         full: bool,
@@ -332,9 +343,11 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .create(root, full)
     }
+    #[cfg(test)]
     pub fn directory_target(&self) -> Result<&File> {
         self.directory.as_ref().ok_or(Error::Invalid)?.file()
     }
+    #[cfg(test)]
     pub fn verify_directory_empty(
         &self,
         work: &mut crate::file_access::ea_records::WorkBudget,
@@ -346,15 +359,15 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .empty(work, cancel, resident)
     }
+    #[cfg(test)]
     pub fn prepare_directory_tree(
         &mut self,
         resident: &crate::file_access::material_carrier_records::Resident,
     ) -> Result<()> {
-        if self.tree.is_some()
-            || self.directory.is_some()
-            || self.target.is_some()
-            || self.tree_carrier.is_some()
-        {
+        if self.tree.is_some() || self.directory.is_some() {
+            return Err(Error::Invalid);
+        }
+        if self.target.is_some() || self.tree_carrier.is_some() {
             return Err(Error::Invalid);
         }
         self.verify()?;
@@ -364,17 +377,18 @@ impl Namespace {
     }
     // Separate mixed INPUT carrier, with no restored tree State or target.
     pub fn prepare_mixed_input(&mut self) -> Result<()> {
-        if self.tree.is_some()
-            || self.directory.is_some()
-            || self.target.is_some()
-            || self.tree_carrier.is_some()
-        {
+        #[cfg(test)]
+        if self.tree.is_some() || self.directory.is_some() {
+            return Err(Error::Invalid);
+        }
+        if self.target.is_some() || self.tree_carrier.is_some() {
             return Err(Error::Invalid);
         }
         self.verify()?;
         self.tree_carrier = Some(self.create("mixed-tree.bin", false)?);
         Ok(())
     }
+    #[cfg(test)]
     pub fn create_tree_directory(
         &mut self,
         parent: u32,
@@ -388,9 +402,11 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .create(root, parent, leaf, full)
     }
+    #[cfg(test)]
     pub fn tree_directory(&self, index: usize) -> Result<&File> {
         self.tree.as_ref().ok_or(Error::Invalid)?.file(index)
     }
+    #[cfg(test)]
     pub fn tree_directory_empty(
         &self,
         index: usize,
@@ -403,6 +419,7 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .empty(index, work, cancel, resident)
     }
+    #[cfg(test)]
     pub fn verify_tree_edges(
         &self,
         work: &mut crate::file_access::ea_records::WorkBudget,
@@ -414,6 +431,7 @@ impl Namespace {
             .ok_or(Error::Invalid)?
             .verify_edges(work, cancel, resident)
     }
+    #[cfg(test)]
     pub fn create_target(&mut self) -> Result<()> {
         if self.target.is_some() {
             return Err(Error::Invalid);
@@ -506,18 +524,22 @@ impl Namespace {
         // No-op for every original carrier/restore caller (links == None).
         // Link cleanup keeps its READ alias across the primary close and
         // verifies a fresh, same-object DELETE handle before alias disposal.
+        #[cfg(test)]
         if let Some(links) = self.links.as_mut() {
             links.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
         if let Some(sealed) = self.sealed_tree.as_mut() {
             sealed.cleanup()?;
         }
+        #[cfg(test)]
         if let Some(targets) = self.targets.as_mut() {
             targets.cleanup(self.root.as_ref().ok_or(Error::Invalid)?)?;
         }
+        #[cfg(test)]
         if let Some(tree) = self.tree.as_mut() {
             tree.cleanup()?;
         }
+        #[cfg(test)]
         if let Some(directory) = self.directory.as_mut() {
             directory.cleanup()?;
         }
@@ -666,6 +688,7 @@ fn set_basic(file: &File, basic: &FILE_BASIC_INFO) -> Result<()> {
     }
     Ok(())
 }
+#[cfg(test)]
 pub(super) fn finalize(file: &File, value: &Basic) -> Result<()> {
     // ChangeTime/allocation/fullID describe the NEW object, not restored identity.
     // Source access time is finalized after recapture because reading can change it.
@@ -687,6 +710,7 @@ pub(super) fn flushed(file: &File) -> Result<()> {
     Ok(())
 }
 
+#[cfg(test)]
 #[path = "material_owned_directory_tree.rs"]
 mod owned_directory_tree;
 
@@ -696,9 +720,11 @@ mod owned_directory;
 #[path = "material_sealed_tree_targets.rs"]
 pub(super) mod sealed_tree;
 
+#[cfg(test)]
 #[path = "material_target_link_groups.rs"]
 pub(super) mod target_links;
 
+#[cfg(test)]
 #[path = "material_owned_link.rs"]
 pub(super) mod owned_link;
 

@@ -21,8 +21,53 @@ const LIMIT: u64 = 4 * 1024 * 1024;
 mod evaluator;
 #[path = "git_source_checkout_inputs_windows.rs"]
 mod inputs;
+#[path = "git_selected_checkout_windows.rs"]
+mod selected;
+pub(in crate::worktrees) use selected::SelectedCheckout;
+
+// Recovery keeps its original complete SourceOwner fence. Create supplies a
+// separately admitted current repository and one explicit immutable tree.
+pub(super) trait EvaluationSource {
+    fn context(&self) -> &crate::worktrees::windows_git::ReadContext;
+    fn snapshot(&self) -> &crate::worktrees::inspect::Snapshot;
+    fn selected_oid(&self) -> &str;
+    fn object_format(&self) -> &str;
+    fn recheck(&self, cancel: &AtomicBool) -> Result<()>;
+}
+impl EvaluationSource for SourceOwner {
+    fn context(&self) -> &crate::worktrees::windows_git::ReadContext {
+        &self.source
+    }
+    fn snapshot(&self) -> &crate::worktrees::inspect::Snapshot {
+        &self.expected
+    }
+    fn selected_oid(&self) -> &str {
+        &self.roots.head
+    }
+    fn object_format(&self) -> &str {
+        &self.roots.format
+    }
+    fn recheck(&self, cancel: &AtomicBool) -> Result<()> {
+        SourceOwner::recheck(self, cancel)
+    }
+}
 
 pub(super) fn capture(owner: &SourceOwner, cancel: &AtomicBool) -> Result<(Vec<String>, Vec<u8>)> {
+    capture_source(owner, cancel)
+}
+pub(super) fn capture_source(
+    owner: &dyn EvaluationSource,
+    cancel: &AtomicBool,
+) -> Result<(Vec<String>, Vec<u8>)> {
+    with_profile(owner, cancel, |_, configs, attributes| {
+        Ok((configs.to_vec(), attributes.to_vec()))
+    })
+}
+fn with_profile<T>(
+    owner: &dyn EvaluationSource,
+    cancel: &AtomicBool,
+    consume: impl FnOnce(&evaluator::Evaluator<'_>, &[String], &[u8]) -> Result<T>,
+) -> Result<T> {
     owner.recheck(cancel)?;
     let inputs = inputs::Inputs::capture(owner, cancel)?;
     let mut evaluator = evaluator::Evaluator::new(owner, &inputs.configs, cancel)?;
@@ -56,7 +101,10 @@ pub(super) fn capture(owner: &SourceOwner, cancel: &AtomicBool) -> Result<(Vec<S
     }
     inputs.verify(owner, cancel)?;
     owner.recheck(cancel)?;
-    Ok((inputs.configs, effective))
+    let result = consume(&evaluator, &inputs.configs, &effective)?;
+    inputs.verify(owner, cancel)?;
+    owner.recheck(cancel)?;
+    Ok(result)
 }
 fn mirror(original: &Attributes, local: &Attributes, cancel: &AtomicBool) -> Result<Vec<u8>> {
     let keys: BTreeSet<_> = original.keys().chain(local.keys()).cloned().collect();

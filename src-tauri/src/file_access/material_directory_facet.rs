@@ -38,7 +38,7 @@ pub(super) struct Verified {
     _memory: ResidentLease,
 }
 impl Verified {
-    #[cfg(windows)]
+    #[cfg(all(windows, test))]
     pub(super) fn native_offset(&self) -> Result<u64> {
         (self.metadata.raw_leaf.len() as u64)
             .checked_mul(2)

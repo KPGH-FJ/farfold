@@ -19,10 +19,12 @@ use std::{
 };
 #[derive(Clone, Copy)]
 pub(super) enum Held<'a> {
+    #[cfg(test)]
     Legacy(&'a PinnedPath),
     Material(&'a MaterialPin),
 }
 impl<'a> Held<'a> {
+    #[cfg(test)]
     pub fn legacy(pin: &'a PinnedPath) -> Result<Self> {
         let value = Self::Legacy(pin);
         value.require_full()?;
@@ -35,6 +37,7 @@ impl<'a> Held<'a> {
     }
     fn require_full(self) -> Result<()> {
         let full = match self {
+            #[cfg(test)]
             Self::Legacy(p) => p.full_security_purpose(),
             Self::Material(p) => p.full_security_purpose(),
         };
@@ -45,18 +48,21 @@ impl<'a> Held<'a> {
     }
     fn file(self) -> &'a File {
         match self {
+            #[cfg(test)]
             Self::Legacy(p) => p.file(),
             Self::Material(p) => Owner::file(p),
         }
     }
     fn verify(self) -> io::Result<()> {
         match self {
+            #[cfg(test)]
             Self::Legacy(p) => p.verify(),
             Self::Material(p) => p.verify(),
         }
     }
     fn query(self) -> Result<MutexGuard<'a, ()>> {
         match self {
+            #[cfg(test)]
             Self::Legacy(p) => p.try_observation_owner().map_err(|_| Error::Unsupported),
             Self::Material(p) => p.try_observation_owner().map_err(|_| Error::Unsupported),
         }
@@ -168,6 +174,7 @@ impl<'a> Prepared<'a> {
     }
 }
 impl<'a> Captured<'a> {
+    #[cfg(test)]
     pub fn carrier_identity(&self) -> &Identity {
         &self.carrier
     }

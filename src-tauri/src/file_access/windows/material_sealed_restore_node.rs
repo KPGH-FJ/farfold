@@ -95,6 +95,16 @@ enum Parsed {
     Regular(records::Parsed),
     Directory(dirs::Parsed),
 }
+pub(super) fn validate(
+    file: &File,
+    node: &tree::Node,
+    proof: &NativeProof,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+    resident: &Resident,
+) -> Result<()> {
+    Parsed::parse(Range::new(file, node)?, node, proof, work, cancel, resident).map(|_| ())
+}
 impl Parsed {
     fn parse(
         input: impl Read,
@@ -126,12 +136,14 @@ impl Parsed {
         };
         match &value {
             Self::Regular(v)
-                if v.bytes == node.native_bytes
+                if v.semantic_sha256() == proof.semantic_sha256
+                    && v.bytes == node.native_bytes
                     && v.sha256 == node.native_sha256
                     && v.security == proof.security
                     && v.has_ea() == (proof.ea.count != 0) => {}
             Self::Directory(v)
-                if v.bytes == node.native_bytes
+                if v.semantic_sha256() == proof.semantic_sha256
+                    && v.bytes == node.native_bytes
                     && v.sha256 == node.native_sha256
                     && v.security.as_ref() == Some(&proof.security)
                     && v.has_ea() == (proof.ea.count != 0)

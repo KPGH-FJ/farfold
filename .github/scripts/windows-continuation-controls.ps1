@@ -13,9 +13,14 @@ $binary = (Resolve-Path -LiteralPath $selection.testBinary -ErrorAction Stop).Pa
 $fixture = (Resolve-Path -LiteralPath $selection.fixture -ErrorAction Stop).Path
 if ((Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -ne $selection.testBinarySha256 -or (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -ne $selection.fixtureSha256) { throw 'Continuation controls inputs changed after build' }
 $scriptHash = (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash
+$selectionHelper = Join-Path $PSScriptRoot 'windows-historical-selection.ps1'
+$selectionHelperHash = (Get-FileHash -LiteralPath $selectionHelper -Algorithm SHA256).Hash
+$casePath = Join-Path $PSScriptRoot 'windows-capability-closeout-cases.json'
+$caseHash = (Get-FileHash -LiteralPath $casePath -Algorithm SHA256).Hash
 
 # Closed finite groups only. Manual FullSD cases use the existing token and
-# explicit --ignored --exact; no privilege adjustment, skip, retry or fallback.
+# explicit --ignored --exact; no privilege adjustment, skipped historical case,
+# retry or fallback. New controls run only in their separate current cohort.
 # Synthetic topology/raw-GUID checks are not native capture/restore success.
 $groups = @(
   @{ name = 'mixed-codec'; filter = 'file_access::material_mixed_tree_records::tests::'; expected = 6; exact = $false; manual = $false; category = 'portableCodec'; names = @(
@@ -100,7 +105,8 @@ foreach ($group in $groups) {
   $selectionArguments = @()
   if ($group.manual) { $selectionArguments = @('--ignored', '--exact') }
   elseif ($group.exact) { $selectionArguments = @('--exact') }
-  & $binary $group.filter @selectionArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
+  $historicalArguments = @(& $selectionHelper -Filter $group.filter)
+  & $binary @historicalArguments @selectionArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
   $testExit = $LASTEXITCODE
   $finished = [DateTime]::UtcNow.ToString('o')
   $outText = [IO.File]::ReadAllText($stdout)
@@ -118,6 +124,7 @@ foreach ($group in $groups) {
   $entry = [ordered]@{
     group = $group.name; filter = $group.filter; category = $group.category
     explicitIgnored = $group.manual; exactFilter = $group.exact
+    historicalSelectionArguments = $historicalArguments
     expectedTests = $group.expected; expectedNames = $expectedNames
     actualPassedNames = $actualNames; actualNamedOutcomes = $outcomes
     startedAtUtc = $started; finishedAtUtc = $finished; exitCode = $testExit
@@ -134,11 +141,13 @@ foreach ($group in $groups) {
 $finalHead = (& git rev-parse HEAD).Trim()
 $headStable = $LASTEXITCODE -eq 0 -and $finalHead -ceq $head
 $inputsStable = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash -eq $selection.testBinarySha256 -and (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -eq $selection.fixtureSha256 -and (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash -eq $scriptHash
+$inputsStable = $inputsStable -and (Get-FileHash -LiteralPath $selectionHelper -Algorithm SHA256).Hash -eq $selectionHelperHash -and (Get-FileHash -LiteralPath $casePath -Algorithm SHA256).Hash -eq $caseHash
 $complete = $complete -and $results.Count -eq 15 -and $headStable -and $inputsStable
 [ordered]@{
   schema = 1; head = $head; finalHead = $finalHead; headStable = $headStable
   testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
   runnerScriptSha256 = $scriptHash; inputsStable = $inputsStable
+  historicalSelectionHelperSha256 = $selectionHelperHash; currentCaseManifestSha256 = $caseHash
   plannedOrdinaryTests = 25; plannedManualTests = 5; plannedTotalTests = 30
   groupCount = $results.Count; groups = $results; exactAllGroupsPassed = $complete
   carrier149CountChanged = $false; carrier149Acceptance = $false

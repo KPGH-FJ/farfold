@@ -61,6 +61,10 @@ pub enum MaterialProfile {
     // Full requested descriptor facet, still not full material or restoration.
     #[serde(rename = "windowsDefaultDataEaStreamsLinksFullSecurityV1")]
     WindowsDefaultDataEaStreamsLinksFullSecurityV1,
+    // Complete retained FFMTREE1 bytes plus the single v2 manifest catalog.
+    // Unlike the observations above, bytes/hash describe the whole carrier.
+    #[serde(rename = "windowsRetainedTreeV1")]
+    WindowsRetainedTreeV1,
 }
 // Missing is the historical Unix representation; an explicit null is not
 // silently downgraded to that representation.

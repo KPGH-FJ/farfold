@@ -49,8 +49,8 @@ impl<T> Slot<T> {
             return Err(error("cleanupUnknown"));
         }
         // This guard is the reservation, acquired before any native context.
-        // Contenders fail, not wait. Windows mutation stays closed; its existing
-        // locked finish-recycle verification must move before opening that gate.
+        // Contenders fail, not wait. Native verification, including the recycle
+        // failure recheck, runs outside the manager state mutex.
         let mut retirement = None;
         let result = std::panic::catch_unwind(AssertUnwindSafe(|| f(&mut retirement)));
         if let Some(owner) = retirement {
@@ -70,15 +70,30 @@ enum Retirement {
     Backup {
         _owner: crate::file_access::RetiredBackup,
     },
-    #[cfg(test)]
     Material {
         _owner: crate::file_access::MaterialStoreRetirement,
+    },
+    Mixed {
+        _owner: crate::file_access::MixedRetirement,
     },
 }
 #[cfg(windows)]
 struct PartialRetirement<'a> {
     destination: &'a mut Option<Retirement>,
     value: Option<crate::file_access::RetiredBackup>,
+}
+#[cfg(windows)]
+struct MixedRetirement<'a> {
+    destination: &'a mut Option<Retirement>,
+    value: Option<crate::file_access::MixedRetirement>,
+}
+#[cfg(windows)]
+impl Drop for MixedRetirement<'_> {
+    fn drop(&mut self) {
+        if let Some(value) = self.value.take() {
+            *self.destination = Some(Retirement::Mixed { _owner: value });
+        }
+    }
 }
 #[cfg(windows)]
 impl Drop for PartialRetirement<'_> {
@@ -88,12 +103,12 @@ impl Drop for PartialRetirement<'_> {
         }
     }
 }
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 struct PersistentRetirement<'a> {
     destination: &'a mut Option<Retirement>,
     value: Option<crate::file_access::MaterialStoreRetirement>,
 }
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 impl Drop for PersistentRetirement<'_> {
     fn drop(&mut self) {
         if let Some(value) = self.value.take() {
@@ -107,6 +122,41 @@ pub(super) struct Owner {
     slot: Slot<Retirement>,
 }
 impl Owner {
+    #[cfg(windows)]
+    pub(super) fn capture_complete_tree(
+        &self,
+        request: crate::file_access::MixedRequest,
+        cancel: &AtomicBool,
+    ) -> Result<MaterialSummary> {
+        self.slot.run(|slot| {
+            let mut retirement = MixedRetirement {
+                destination: slot,
+                value: None,
+            };
+            let value = crate::file_access::with_mixed_tree_input(
+                request,
+                &mut crate::file_access::EaWorkBudget::new(crate::file_access::MATERIAL_WORK_LIMIT),
+                cancel,
+                &mut retirement.value,
+                |mut input| input.complete_digest(),
+            )
+            .map_err(|e| {
+                error(match e {
+                    crate::file_access::CarrierFailure::Cancelled => "cancelled",
+                    crate::file_access::CarrierFailure::Limit => "materialLimit",
+                    crate::file_access::CarrierFailure::Changed => "materialChanged",
+                    crate::file_access::CarrierFailure::CleanupUnknown => "cleanupUnknown",
+                    _ => "unsupportedMaterial",
+                })
+            })?;
+            Ok(MaterialSummary {
+                profile: Some(super::MaterialProfile::WindowsRetainedTreeV1),
+                entries: value.nodes as u64,
+                bytes: value.bytes,
+                sha256: material_scan::hex(value.sha256),
+            })
+        })
+    }
     pub(super) fn occupied(&self) -> bool {
         #[cfg(windows)]
         {
@@ -126,6 +176,49 @@ impl Owner {
         {
             Ok(())
         }
+    }
+    #[cfg(windows)]
+    pub(super) fn capture_archive_pin(
+        &self,
+        root: crate::file_access::PinnedPath,
+        cancel: &AtomicBool,
+    ) -> Result<(crate::file_access::PinnedPath, MaterialSummary)> {
+        self.slot.run(|retired| {
+            let mut partial = PartialRetirement {
+                destination: retired,
+                value: None,
+            };
+            material_scan::capture_archive_pin_owned(root, cancel, &mut partial.value)
+        })
+    }
+    #[cfg(windows)]
+    pub(super) fn capture_archive(
+        &self,
+        root: &Path,
+        expected: &super::inspect::Stamp,
+        cancel: &AtomicBool,
+    ) -> Result<MaterialSummary> {
+        self.slot.run(|retired| {
+            let mut partial = PartialRetirement {
+                destination: retired,
+                value: None,
+            };
+            material_scan::capture_archive_owned(root, expected, cancel, &mut partial.value)
+        })
+    }
+    #[cfg(windows)]
+    pub(super) fn capture_security_complete_pin(
+        &self,
+        root: crate::file_access::PinnedPath,
+        cancel: &AtomicBool,
+    ) -> Result<(crate::file_access::PinnedPath, MaterialSummary)> {
+        self.slot.run(|retired| {
+            let mut partial = PartialRetirement {
+                destination: retired,
+                value: None,
+            };
+            material_scan::capture_security_complete_pin_owned(root, cancel, &mut partial.value)
+        })
     }
     #[cfg(windows)]
     pub(super) fn capture_security_complete(
@@ -150,7 +243,7 @@ impl Owner {
     // First real persistent component, kept test-registered until the rpack
     // managed-Git edge and final reconstruction composer can be promoted together.
     // It uses THIS Owner/Slot, never a separate component-local Slot.
-    #[cfg(all(windows, test))]
+    #[cfg(windows)]
     pub(super) fn sealed_material<T, F>(
         &self,
         source: crate::file_access::MixedRequest,
@@ -171,7 +264,7 @@ impl Owner {
             let result = crate::file_access::with_sealed_material(
                 source,
                 destination,
-                &mut crate::file_access::EaWorkBudget::new(crate::file_access::SHAPE_WORK_LIMIT),
+                &mut crate::file_access::EaWorkBudget::new(crate::file_access::MATERIAL_WORK_LIMIT),
                 cancel,
                 &mut retirement.value,
                 consume,
@@ -183,6 +276,43 @@ impl Owner {
                     crate::file_access::CarrierFailure::Changed => "materialChanged",
                     crate::file_access::CarrierFailure::CleanupUnknown => "cleanupUnknown",
                     _ => "unsupportedMaterial",
+                })
+            })
+        })
+    }
+    #[cfg(windows)]
+    pub(super) fn reopen_material<T, F>(
+        &self,
+        destination: crate::file_access::MaterialStoreRequest,
+        expected: &super::WindowsMaterial,
+        cancel: &AtomicBool,
+        consume: F,
+    ) -> Result<(T, crate::file_access::MaterialSealReceipt)>
+    where
+        F: for<'a> FnOnce(
+            &mut crate::file_access::OwnedSealedMaterial<'a>,
+        ) -> std::result::Result<T, crate::file_access::CarrierFailure>,
+    {
+        self.slot.run(|slot| {
+            let mut retirement = PersistentRetirement {
+                destination: slot,
+                value: None,
+            };
+            crate::file_access::with_reopened_material(
+                destination,
+                expected,
+                &mut crate::file_access::EaWorkBudget::new(crate::file_access::MATERIAL_WORK_LIMIT),
+                cancel,
+                &mut retirement.value,
+                consume,
+            )
+            .map_err(|e| {
+                error(match e {
+                    crate::file_access::CarrierFailure::Cancelled => "cancelled",
+                    crate::file_access::CarrierFailure::Limit => "materialLimit",
+                    crate::file_access::CarrierFailure::Changed => "materialChanged",
+                    crate::file_access::CarrierFailure::CleanupUnknown => "cleanupUnknown",
+                    _ => "recoveryInvalid",
                 })
             })
         })
@@ -249,3 +379,7 @@ mod alias_topology_tests;
 #[cfg(all(windows, test))]
 #[path = "material_target_link_group_owner_tests.rs"]
 mod target_link_group_tests;
+
+#[cfg(windows)]
+#[path = "material_owner_remove.rs"]
+mod remove;

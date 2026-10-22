@@ -147,14 +147,19 @@ fn real_recovery_capture_does_not_turn_a_graph_component_into_complete_material(
             .len(),
         4
     );
-    // Material content comparison retains its Windows admission boundary.
-    // No None profile/fake material is supplied to get past it.
-    assert_eq!(
-        crate::worktrees::recovery_pack::capture(&snapshot, &cancel)
-            .unwrap_err()
-            .code,
-        "unsupportedGit"
-    );
+    // Graph observation alone cannot turn an ordinary directory purpose into
+    // complete native-material authority, even when this process has privileges.
+    let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
+    assert!(matches!(
+        crate::worktrees::recovery_pack::material::worktree_source(
+            &SourceGraph::capture(&snapshot, &cancel).unwrap(),
+            ordinary,
+            "owned linked".encode_utf16().collect(),
+            &crate::file_access::MixedMemory::default(),
+            &cancel,
+        ),
+        Err(crate::file_access::CarrierFailure::Unsupported)
+    ));
     assert_eq!(
         fs::read(fixture.private.join("index")).unwrap(),
         EMPTY_INDEX
@@ -393,12 +398,17 @@ fn raw_default_equality_with_extra_ads_does_not_open_complete_content_or_manifes
     assert_eq!(fs::read(&ads).unwrap(), b"must-remain-separate");
     // Equal raw default bytes say nothing about this real extra ADS, EA,
     // labels/full SD, EOL conversion, complete tree coverage or restoration.
-    assert_eq!(
-        crate::worktrees::recovery_pack::capture(&snapshot, &cancel)
-            .unwrap_err()
-            .code,
-        "unsupportedGit"
-    );
+    let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
+    assert!(matches!(
+        crate::worktrees::recovery_pack::material::worktree_source(
+            &SourceGraph::capture(&snapshot, &cancel).unwrap(),
+            ordinary,
+            "owned linked".encode_utf16().collect(),
+            &crate::file_access::MixedMemory::default(),
+            &cancel,
+        ),
+        Err(crate::file_access::CarrierFailure::Unsupported)
+    ));
     assert_eq!(fixture.bytes(), before);
     assert_eq!(
         fs::read(fixture.private.join("index")).unwrap(),

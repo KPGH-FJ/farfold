@@ -38,7 +38,48 @@ pub(super) struct ReadContext {
     pub scope: Scope,
     executable: PinnedPath,
 }
+pub(super) struct MoveContext {
+    pub(super) metadata: super::windows_scope::MoveMetadata,
+    executable: PinnedPath,
+}
+impl MoveContext {
+    pub(super) fn verify(&self) -> Result<()> {
+        git::environment()?;
+        self.metadata.verify()?;
+        self.executable.verify().map_err(|_| error("changed"))
+    }
+    pub(super) fn finish(self, root: &Path) -> Result<ReadContext> {
+        self.verify()?;
+        let scope = Scope::open(root)?;
+        if scope.git.identity() != self.metadata.git.identity()
+            || scope.common.identity() != self.metadata.common.identity()
+            || scope.contains_project(&self.executable)
+        {
+            return Err(error("changed"));
+        }
+        let context = ReadContext {
+            scope,
+            executable: self.executable,
+        };
+        context.validate()?;
+        self.metadata.verify()?;
+        Ok(context)
+    }
+}
 impl ReadContext {
+    pub(super) fn into_move_context(
+        self,
+        forward: &crate::file_access::Identity,
+        backward: &crate::file_access::Identity,
+    ) -> Result<MoveContext> {
+        self.executable.verify().map_err(|_| error("changed"))?;
+        let result = MoveContext {
+            metadata: self.scope.into_move_metadata(forward, backward)?,
+            executable: self.executable,
+        };
+        result.verify()?;
+        Ok(result)
+    }
     pub(super) fn managed_root_git(&self) -> Result<super::windows_scope::managed_git::RootGit> {
         super::windows_scope::managed_git::RootGit::capture(self)
     }
@@ -52,15 +93,19 @@ impl ReadContext {
         let scope = Scope::open(root)?;
         let executable = executable(&scope)?;
         let context = Self { scope, executable };
+        context.validate()?;
+        Ok(context)
+    }
+    fn validate(&self) -> Result<()> {
         // Explicit work-tree selection must not silently override a configured
         // layout. This first slice supports only default main/linked layouts.
-        if context.config("core.worktree", false)?.is_some() {
+        if self.config("core.worktree", false)?.is_some() {
             return Err(error("unsupportedGit"));
         }
-        if context.config("core.bare", true)?.as_deref() == Some("true") {
+        if self.config("core.bare", true)?.as_deref() == Some("true") {
             return Err(error("bare"));
         }
-        Ok(context)
+        Ok(())
     }
     pub fn execute(
         &self,
@@ -174,3 +219,30 @@ pub(super) fn execute(
 #[cfg(test)]
 #[path = "windows_git_launch_matrix_tests.rs"]
 pub(super) mod launch_matrix_tests;
+
+// The same originally selected program and shared metadata outlive only linked
+// body/private read pins. This object exposes verification, never a command.
+pub(super) struct RemovalContext {
+    metadata: super::windows_scope::RemoveMetadata,
+    executable: PinnedPath,
+}
+impl RemovalContext {
+    pub(super) fn verify(&self) -> Result<()> {
+        git::environment()?;
+        self.metadata.verify()?;
+        self.executable.verify().map_err(|_| error("changed"))
+    }
+}
+impl ReadContext {
+    pub(super) fn into_removal_context(
+        self,
+        snapshot: &super::inspect::Snapshot,
+    ) -> Result<RemovalContext> {
+        let value = RemovalContext {
+            metadata: self.scope.into_remove_metadata(snapshot)?,
+            executable: self.executable,
+        };
+        value.verify()?;
+        Ok(value)
+    }
+}

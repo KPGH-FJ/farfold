@@ -38,6 +38,13 @@ enum Action<'a> {
         paths: &'a [u8],
         external: Option<Option<&'a Path>>,
     },
+    Contents {
+        input: &'a [u8],
+    },
+    Filtered {
+        oid: &'a str,
+        path: &'a str,
+    },
 }
 struct FixedFile {
     pin: PinnedPath,
@@ -142,7 +149,7 @@ struct Namespace {
     attributes: Option<FixedFile>,
 }
 pub(super) struct Evaluator<'a> {
-    owner: &'a SourceOwner,
+    owner: &'a dyn EvaluationSource,
     root: PinnedPath,
     objects: PinnedPath,
     roles: Vec<Namespace>,
@@ -155,7 +162,7 @@ pub(super) struct Evaluator<'a> {
 }
 impl<'a> Evaluator<'a> {
     pub(super) fn new(
-        owner: &'a SourceOwner,
+        owner: &'a dyn EvaluationSource,
         configs: &[String],
         cancel: &AtomicBool,
     ) -> Result<Self> {
@@ -164,7 +171,7 @@ impl<'a> Evaluator<'a> {
             .canonicalize()
             .map_err(|_| error("unsafePath"))?;
         let parent = PinnedPath::directory(&parent_path).map_err(|_| error("unsafePath"))?;
-        if owner.source.scope.contains_project(&parent) {
+        if owner.context().scope.contains_project(&parent) {
             return Err(error("unsafePath"));
         }
         let temp = tempfile::tempdir_in(&parent.guid_path).map_err(|_| error("unavailable"))?;
@@ -177,7 +184,7 @@ impl<'a> Evaluator<'a> {
             .collect::<Vec<_>>();
         let root = parent.child(&name, true).map_err(|_| error("unsafePath"))?;
         let objects = owner
-            .source
+            .context()
             .scope
             .common
             .child(&"objects".encode_utf16().collect::<Vec<_>>(), true)
@@ -239,22 +246,29 @@ impl<'a> Evaluator<'a> {
         }
         Ok(())
     }
-    fn run_at(
+    fn command_at(
         &self,
         repo: &PinnedPath,
         action: Action<'_>,
+        worktree: Option<&PinnedPath>,
         cancel: &AtomicBool,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<(
+        Command,
+        git::Input,
+        crate::worktrees::windows_git::paths::Paths,
+    )> {
         self.verify(cancel)?;
         repo.verify().map_err(|_| error("changed"))?;
+        let worktree = worktree.unwrap_or(&self.owner.context().scope.root);
         let paths = crate::worktrees::windows_git::paths::Paths::new(&[
-            self.owner.source.selected_program(),
+            self.owner.context().selected_program(),
             repo,
-            &self.owner.source.scope.root,
+            &self.owner.context().scope.root,
             &self.objects,
             &self.root,
+            worktree,
         ])?;
-        let mut command = Command::new(paths.path(self.owner.source.selected_program())?);
+        let mut command = Command::new(paths.path(self.owner.context().selected_program())?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
@@ -282,13 +296,25 @@ impl<'a> Evaluator<'a> {
                 "checkout.workers=1",
             ])
             .arg("-C")
-            .arg(paths.path(repo)?)
-            .current_dir(paths.path(repo)?);
+            .arg(paths.path(
+                if matches!(action, Action::Contents { .. } | Action::Filtered { .. }) {
+                    worktree
+                } else {
+                    repo
+                },
+            )?)
+            .current_dir(paths.path(
+                if matches!(action, Action::Contents { .. } | Action::Filtered { .. }) {
+                    worktree
+                } else {
+                    repo
+                },
+            )?);
         // Init owns ONLY its new repo: never point its creation path at the
         // original object directory. Other actions only read shared objects.
         if !matches!(action, Action::Init) {
             command
-                .env("GIT_WORK_TREE", paths.path(&self.owner.source.scope.root)?)
+                .env("GIT_WORK_TREE", paths.path(worktree)?)
                 .env("GIT_OBJECT_DIRECTORY", paths.path(&self.objects)?)
                 .env("GIT_INDEX_FILE", paths.path(&self.root)?.join("index"))
                 .args(["-c", "core.bare=false"]);
@@ -308,12 +334,12 @@ impl<'a> Evaluator<'a> {
                 .env("GIT_ATTR_NOSYSTEM", "1")
                 .args(["-c", "core.attributesFile=/dev/null"]);
         }
-        let head = self.owner.roots.head.as_str();
+        let head = self.owner.selected_oid();
         let input = match action {
             Action::Init => {
                 command
                     .args(["init", "--bare", "--template="])
-                    .arg(format!("--object-format={}", self.owner.roots.format));
+                    .arg(format!("--object-format={}", self.owner.object_format()));
                 git::Input::null()
             }
             Action::Type => {
@@ -342,7 +368,27 @@ impl<'a> Evaluator<'a> {
                 command.args(["check-attr", "--cached", "--all", "-z", "--stdin"]);
                 git::Input::from_bytes(paths, git::OUTPUT_LIMIT, cancel)?
             }
+            Action::Contents { input } => {
+                command.args(["cat-file", "--batch", "-z"]);
+                git::Input::from_bytes(input, git::OUTPUT_LIMIT, cancel)?
+            }
+            Action::Filtered { oid, path } => {
+                command
+                    .args(["cat-file", "--filters"])
+                    .arg(format!("--path={path}"))
+                    .arg(oid);
+                git::Input::null()
+            }
         };
+        Ok((command, input, paths))
+    }
+    fn run_at(
+        &self,
+        repo: &PinnedPath,
+        action: Action<'_>,
+        cancel: &AtomicBool,
+    ) -> Result<Vec<u8>> {
+        let (command, input, paths) = self.command_at(repo, action, None, cancel)?;
         let output = git::execute_command_input(
             command,
             input,
@@ -358,11 +404,121 @@ impl<'a> Evaluator<'a> {
         }
         Ok(output.bytes)
     }
+    // Closed official cat-file operation, not an arbitrary Command/File API.
+    // The actual child's stdout remains an anonymous FileObject through Job
+    // quiescence and framing/copy; no named Git temp output is trusted.
+    pub(super) fn contents(
+        &self,
+        worktree: &PinnedPath,
+        entries: &[Entry],
+        cancel: &AtomicBool,
+    ) -> Result<fs::File> {
+        let mut input = Vec::new();
+        for entry in entries {
+            input.extend_from_slice(entry.oid.as_bytes());
+            input.push(0);
+            if input.len() as u64 > git::OUTPUT_LIMIT {
+                return Err(error("tooLarge"));
+            }
+        }
+        self.output_file(
+            worktree,
+            Action::Contents { input: &input },
+            1024 * 1024 * 1024 + 16 * 1024 * 1024,
+            cancel,
+        )
+    }
+    // --batch --filters reports the RAW object's size even when conversion
+    // changes length. Only one filtered object may use this EOF-framed output.
+    pub(super) fn filtered(
+        &self,
+        worktree: &PinnedPath,
+        entry: &Entry,
+        cancel: &AtomicBool,
+    ) -> Result<fs::File> {
+        self.output_file(
+            worktree,
+            Action::Filtered {
+                oid: &entry.oid,
+                path: &entry.path,
+            },
+            256 * 1024 * 1024,
+            cancel,
+        )
+    }
+    fn output_file(
+        &self,
+        worktree: &PinnedPath,
+        action: Action<'_>,
+        limit: u64,
+        cancel: &AtomicBool,
+    ) -> Result<fs::File> {
+        let repo = &self.roles[Role::Mirror.index()].repo;
+        let (command, input, paths) = self.command_at(repo, action, Some(worktree), cancel)?;
+        let file = tempfile::tempfile().map_err(|_| error("unavailable"))?;
+        let output = git::execute_bounded(
+            command,
+            Some(input),
+            cancel,
+            crate::worktrees::recovery_pack::COMMAND_TIME,
+            file.try_clone().map_err(|_| error("unavailable"))?,
+            limit,
+            false,
+        );
+        paths.verify()?;
+        self.verify(cancel)?;
+        worktree.verify().map_err(|_| error("changed"))?;
+        if !output?.success {
+            return Err(error("unsupportedGit"));
+        }
+        Ok(file)
+    }
+    pub(super) fn entries(&self, cancel: &AtomicBool) -> Result<Vec<Entry>> {
+        let raw = self.run(Role::Mirror, Action::Index, cancel)?;
+        let mut result = Vec::new();
+        for record in raw.split(|b| *b == 0).filter(|v| !v.is_empty()) {
+            cancelled(cancel)?;
+            let tab = record
+                .iter()
+                .position(|b| *b == b'\t')
+                .ok_or(error("unsupportedGit"))?;
+            let fields = std::str::from_utf8(&record[..tab])
+                .map_err(|_| error("unsupportedGit"))?
+                .split(' ')
+                .collect::<Vec<_>>();
+            if fields.len() != 3
+                || fields[2] != "0"
+                || !crate::worktrees::types::oid(fields[1])
+                || !matches!(fields[0], "100644" | "100755" | "120000")
+            {
+                return Err(error("unsupportedGit"));
+            }
+            let path = std::str::from_utf8(&record[tab + 1..])
+                .map_err(|_| error("unsafePath"))?
+                .to_owned();
+            crate::file_access::WorktreeCheckout::validate_path(&path)
+                .map_err(|_| error("unsafePath"))?;
+            result.push(Entry {
+                path,
+                oid: fields[1].to_owned(),
+                symlink: fields[0] == "120000",
+            });
+        }
+        Ok(result)
+    }
+    pub(super) fn index(&self) -> Result<&fs::File> {
+        let index = self.index.as_ref().ok_or(error("changed"))?;
+        index.verify()?;
+        Ok(index.pin.file())
+    }
+    pub(super) fn root(&self) -> &PinnedPath {
+        &self.root
+    }
     fn run(&self, role: Role, action: Action<'_>, cancel: &AtomicBool) -> Result<Vec<u8>> {
         self.run_at(&self.roles[role.index()].repo, action, cancel)
     }
     pub(super) fn paths(&self, cancel: &AtomicBool) -> Result<Vec<u8>> {
-        let head = self.owner.roots.head.as_str();
+        let head = self.owner.selected_oid();
         crate::worktrees::inspect::target_objects(head, |args| {
             let action = if args == ["cat-file", "-t", head] {
                 Action::Type
@@ -399,6 +555,12 @@ impl<'a> Evaluator<'a> {
             cancel,
         )?)
     }
+}
+#[derive(Clone)]
+pub(super) struct Entry {
+    pub path: String,
+    pub oid: String,
+    pub symlink: bool,
 }
 fn verify_index(tree: &[u8], index: &[u8], cancel: &AtomicBool) -> Result<()> {
     fn fields(

@@ -358,6 +358,23 @@ pub(super) fn capture_owned(
     windows::capture(root, cancel, retired)
 }
 #[cfg(windows)]
+pub(super) fn capture_archive_owned(
+    root: &Path,
+    expected: &super::inspect::Stamp,
+    cancel: &AtomicBool,
+    retired: &mut Option<crate::file_access::RetiredBackup>,
+) -> Result<MaterialSummary> {
+    windows::capture_archive(root, expected, cancel, retired)
+}
+#[cfg(windows)]
+pub(super) fn capture_archive_pin_owned(
+    root: crate::file_access::PinnedPath,
+    cancel: &AtomicBool,
+    retired: &mut Option<crate::file_access::RetiredBackup>,
+) -> Result<(crate::file_access::PinnedPath, MaterialSummary)> {
+    windows::capture_archive_pin(root, cancel, retired)
+}
+#[cfg(windows)]
 pub(super) fn capture_security_complete_owned(
     root: &Path,
     expected: &super::inspect::Stamp,
@@ -366,9 +383,19 @@ pub(super) fn capture_security_complete_owned(
 ) -> Result<MaterialSummary> {
     windows::capture_security_complete(root, expected, cancel, retired)
 }
+#[cfg(windows)]
+pub(super) fn capture_security_complete_pin_owned(
+    root: crate::file_access::PinnedPath,
+    cancel: &AtomicBool,
+    retired: &mut Option<crate::file_access::RetiredBackup>,
+) -> Result<(crate::file_access::PinnedPath, MaterialSummary)> {
+    windows::capture_security_complete_pin(root, cancel, retired)
+}
+#[cfg(any(unix, test))]
 pub(super) fn content(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
     scan(root, cancel, true)
 }
+#[cfg(any(unix, test))]
 fn scan(root: &Path, cancel: &AtomicBool, content_only: bool) -> Result<MaterialSummary> {
     #[cfg(not(unix))]
     {
