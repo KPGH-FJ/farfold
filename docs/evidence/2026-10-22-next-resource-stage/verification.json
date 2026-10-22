@@ -1,0 +1,236 @@
+{
+  "kind": "SelectedDocxNotesAndFoldedToolInputResourceStageEvidence",
+  "sourceCommit": "420e5a3c0e7ab4889ba1b5e1d7b505bbe936e331",
+  "priorInstalledSource": "01e14daccd4436dab8754bb0467500298d01d1ca",
+  "status": "selectedSourceControlledAndClosedObservedDeliveryPassed",
+  "scope": {
+    "modifiedExisting": [
+      "src/runtime/docx_parse.ts",
+      "src/components/thread-items.tsx",
+      "src/components/ApprovalInput.test.tsx"
+    ],
+    "added": [
+      "src/runtime/docx_notes.test.ts",
+      "src/components/tool-input.materialization.test.tsx"
+    ],
+    "permanentTestsAdded": 13,
+    "productionMembers": 2112,
+    "frozenInputs": 2146,
+    "solePlan": "plans/agent-access.md",
+    "preservedAgentCount": 29,
+    "preservedStandardsPerAgent": 8,
+    "originalRequirementCount": 151,
+    "commonPackages": 16
+  },
+  "controls": {
+    "docx": {
+      "redPassed": 3,
+      "redFailed": 1,
+      "greenPassed": 4,
+      "same512Notes": {
+        "oldXmlPops": 1053200,
+        "newXmlPops": 6161,
+        "oldPeakSameNodeVisits": 513,
+        "newPeakSameNodeVisits": 2,
+        "oldNotePredicates": 524288,
+        "newNotePredicates": 512
+      },
+      "fullPartSafetyAndLiteralIdsRetained": true
+    },
+    "toolInput": {
+      "redPassed": 2,
+      "redFailed": 4,
+      "greenPassed": 6,
+      "closedTargetStringifyCallsBefore": 1,
+      "closedTargetStringifyCallsAfter": 0,
+      "completeOpenAndSearchBodyRetained": true
+    },
+    "focused": {
+      "files": 8,
+      "passed": 74,
+      "typecheckNaturalExit": 0
+    },
+    "testAdaptation": {
+      "files": 3,
+      "passed": 18,
+      "firstSevenFailureRetained": true
+    },
+    "engineering": {
+      "allSevenPassed": true,
+      "inputCount": 18436,
+      "frontend": {
+        "files": 641,
+        "passed": 8386
+      },
+      "rust": {
+        "passed": 2117,
+        "failed": 0,
+        "ignored": 6,
+        "allLogSummaries": [
+          [2117, 0, 6],
+          [0, 0, 0],
+          [0, 0, 0]
+        ]
+      }
+    },
+    "realWebKit": {
+      "rows": 2,
+      "checks": 6,
+      "passed": true,
+      "actualSourceHead": "4ade2a976706bebac9e3ed0825c04978257a218f",
+      "carryBasis": "Only ApprovalInput test changed afterwards; all browser selected input pins remained exact. Context toggles are fixture actions, not loaded-conversation matcher proof."
+    }
+  },
+  "delivery": {
+    "candidateChecks": 9,
+    "installedChecks": 10,
+    "formalPath": "/Applications/Farfold.app",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "7b5b136f8a8ea55c9c72735b5ce9947baa6d9aee16e5141318a27d9acab75b2c",
+    "archive": "src-tauri/target/internal-candidate/2026-10-22-next-resource-stage-420e5a3c/Farfold-0.1.7-420e5a3c.zip",
+    "archiveSha256": "22bdfb74bb82b20c2bdae50d7c92d0e4ece888db31f46723d0335a287b168f70",
+    "duplicateFilesRemoved": 5,
+    "AppOrAgentLaunched": false,
+    "normalQuitEvidence": null
+  },
+  "data": {
+    "phases": ["before", "preinstall", "after"],
+    "manifestSha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95",
+    "completeManifestRows": 232530,
+    "threeManifestsStrictlyEqual": true,
+    "rawMetadataExactlyEqual": true,
+    "privateBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "boundary": "Capture endpoints only; unknown old writers/reopen/differences remain. Before helper retains the actual production checkpoint4ade binding and was not rewritten after capture."
+  },
+  "notCovered": [
+    "NEW-24 actual effective permissions/external interfaces; affected new real sends remain paused",
+    "Native DOCX ZIP/file input, complete Office layout, installed UI/actual approval decisions, real Agent messages/playback",
+    "Full P13/P16/P32/ARCH-49/29x8, wall-clock or RSS improvement and long-running global backpressure",
+    "Windows prior42 failures in304 remain; no rerun"
+  ],
+  "firstFailure": "Initial full-seven frontend had one old ApprovalInput closed SSR eager-body assertion fail; production unchanged after diagnosis, closed/search behavior and original full escaped JSON assertions are now both tested. Original seven result and raw preserved. Preparation/read-only path/schema mistakes are not product RED.",
+  "references": [
+    {
+      "path": "output/2026-10-22-next-resource-stage/start.json",
+      "bytes": 1323,
+      "sha256": "77ba194078907a4c9867141942b5c47ff61849a974c9ff4c089ff8636fa201a2"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/continuation.json",
+      "bytes": 5781,
+      "sha256": "0abc71493d4636355cbcd3a9948d5f75b5b64becc506d0ef0f206b30200d2c19"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/selected-controls.json",
+      "bytes": 3374,
+      "sha256": "b950bf363a5cbb09944a3b84d0d54ef7e2c07097524e09ed4983cba40c154730"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/native-audit/red/execution.json",
+      "bytes": 16021,
+      "sha256": "08b0f603f6d193ad25fd2917efe44326491d0d3cb875a4fd1aa5c1c5c0e65532"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/native-audit/green/execution.json",
+      "bytes": 16076,
+      "sha256": "888de2755f9e96d70ce28cbcb3f9e84994faa4f77b361e1faabf8f30a1609792"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/tool-input-red/execution.json",
+      "bytes": 10223,
+      "sha256": "616ef6fdb3230f32f2c3bfb892d2024d2a95a074fc25ad36d0a9a2f8dcca968e"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/tool-input-green/execution.json",
+      "bytes": 10257,
+      "sha256": "f5ecee897acba9c570d9170829f44951a13f39c27e3811ebefa02a965f0066db"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/focused/verification.json",
+      "bytes": 1059,
+      "sha256": "7a4e3092b1a204c5832255f9f9af10a8b23550e27c41f475e2dfd74b2c75fb33"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/test-adaptation.json",
+      "bytes": 1113,
+      "sha256": "25064649c70a8e1c94ad4edbd500ae52eef8cf4738336955101a7347b55492f4"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/delivery-prep-independent.json",
+      "bytes": 8416,
+      "sha256": "7cb6b19a9df172dbbc58a4363c0f999fa05116f63fe1c809360b5f370f5d3a97"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/delivery-preinstall-readback.json",
+      "bytes": 5793,
+      "sha256": "b838584f36af4f29692efa080a5b47dd7df8ebe442e6251ba93c1264cad38d7c"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/engineering/verification.json",
+      "bytes": 5835,
+      "sha256": "cdc6265f9f5d03ca0e0b59ff4f2189e75ba5a1ab3ece24c128cd5bab493b803d"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/engineering-final/verification.json",
+      "bytes": 5902,
+      "sha256": "6eb796d3506bf60f115c084ab96eee017f2c287146665dabc36ac27f07db9468"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/final-source-review/source-review.json",
+      "bytes": 19871,
+      "sha256": "f20b3fe718dff3cdf33ce70920c899bc2a8610157cb0b2a25391456d2d3dbede"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/browser/verification.json",
+      "bytes": 50664,
+      "sha256": "a1ba91802be9250c5795317ac92940536c443fd1587b763a4e65ce82a0f255d6"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/browser/execution-receipt.json",
+      "bytes": 16218,
+      "sha256": "bc6359b3e14ede617ba45f2686d87ea6cef55ec97c74d76c556908c2c8ce27ac"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/candidate-output/candidate.json",
+      "bytes": 251141,
+      "sha256": "1f3ba3a350248a42c5397794df00b99d176017ec535ac0fc73a7e34de410b918"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/independent/review.json",
+      "bytes": 4239,
+      "sha256": "a0c10cc940b3eec64903b2b9ceff1a7f2506b6b29a30e6987c702350326f7b8a"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "a7b13431a3ed21539214a7bb48dda793a3883b21d600afe17b0b47fa20a78a4a"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "48ea5c488a4afb9d191a2f02e508d755dcdf74538792f198456511b038064470"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "681b4670f29727c97ecb976a00fb30cdb3cc6d6c279b836690785eda2a4e4cd0"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/install-result.json",
+      "bytes": 10670,
+      "sha256": "37473d48512eb2a190ed920934113874033ea0c3fee61321e0f4328b58b727ad"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "64d3382f2a22523498e98c3d3732a0f756722560e27c84e7580f0927d3842fda"
+    },
+    {
+      "path": "output/2026-10-22-next-resource-stage/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "e5ac9f10df97870f4c5279b06ce88f6a23a3c427201ee680bb976bf6833fa568"
+    }
+  ]
+}
