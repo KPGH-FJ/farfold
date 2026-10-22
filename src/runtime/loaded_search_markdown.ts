@@ -1,6 +1,7 @@
 import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { MESSAGE_ATTACHMENTS as A } from "./message_attachment_strings";
 
 const boundaries = new Set([
   "p",
@@ -41,6 +42,7 @@ export function loadedMarkdownFields(text: string): string[] {
     if (
       !isValidElement<{
         children?: ReactNode;
+        alt?: string;
         "aria-hidden"?: boolean | string;
       }>(node)
     )
@@ -50,6 +52,12 @@ export function loadedMarkdownFields(text: string): string[] {
       node.props["aria-hidden"] === "true"
     ) {
       flush();
+      return;
+    }
+    // MessageContent renders images as explicit links with this visible label.
+    // Match that text without including or opening the image destination.
+    if (node.type === "img") {
+      pieces.push(node.props.alt || A.kindNames.image);
       return;
     }
     const block = typeof node.type === "string" && boundaries.has(node.type);

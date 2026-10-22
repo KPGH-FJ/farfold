@@ -199,17 +199,17 @@ export function parseSheet(
     columns: [],
     merges: [],
   };
-  const colStyles: { min: number; max: number; style: number }[] = [];
+  // One entry per permitted column. Zero means unassigned; style IDs are
+  // stored plus one so even a range with the default style detects overlap.
+  const colStyles = new Uint32Array(16385);
   const cols = child(root, "cols");
   if (cols)
     for (const col of children(cols, "col")) {
       const min = integer(attr(col, "min"), 1, 16384),
         max = integer(attr(col, "max"), min, 16384);
-      if (
-        result.columns.length >= 16384 ||
-        colStyles.some((c) => c.min <= max && min <= c.max)
-      )
-        throw new XlsxError("invalid");
+      if (result.columns.length >= 16384) throw new XlsxError("invalid");
+      for (let column = min; column <= max; column++)
+        if (colStyles[column]) throw new XlsxError("invalid");
       const width = attr(col, "width"),
         style = integer(attr(col, "style"), 0, styles.length - 1, 0);
       result.columns.push({
@@ -219,7 +219,7 @@ export function parseSheet(
         ...(attr(col, "style") !== undefined ? { styleId: style } : {}),
         ...(width !== undefined ? { width: decimal(width, 0, 255) } : {}),
       });
-      colStyles.push({ min, max, style });
+      colStyles.fill(style + 1, min, max + 1);
       if (
         boolean(attr(col, "bestFit")) ||
         integer(attr(col, "outlineLevel"), 0, 7, 0)
@@ -264,11 +264,7 @@ export function parseSheet(
       if (coord.row !== index || cellIds.has(ref))
         throw new XlsxError("invalid");
       cellIds.add(ref);
-      const fallback =
-        rowStyle ??
-        colStyles.find((c) => c.min <= coord.column && coord.column <= c.max)
-          ?.style ??
-        0;
+      const fallback = rowStyle ?? Math.max(0, colStyles[coord.column] - 1);
       const style = integer(attr(c, "s"), 0, styles.length - 1, fallback);
       const cell = readCell(
         c,

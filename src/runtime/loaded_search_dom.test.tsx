@@ -14,6 +14,7 @@ import {
   loadedMarkdownFields,
 } from "./loaded_search";
 import { loadedSearchDOMRange } from "./loaded_search_dom";
+import { transcriptTextFields } from "./transcript_find_dom";
 import { MESSAGE_AVIF_TEST_DATA } from "./message_avif_fixtures.test-support";
 
 type TextNode = {
@@ -308,6 +309,34 @@ it.each([
     const root = dom(html);
     for (const hit of hits)
       expect(loadedSearchDOMRange(root, hit)?.range.toString()).toBe(hit.match);
+  },
+);
+it.each([
+  ["![visible label](https://invalid.example/destination)", "visible label"],
+  ["![](https://invalid.example/destination)", "图片"],
+  [
+    "[![中文🙂](https://invalid.example/destination)](https://invalid.example/outer)",
+    "中文🙂",
+  ],
+  ["![file label](file:///never-read/destination.png)", "file label"],
+  ["![embedded label](data:image/png;base64,YWJjZA==)", "embedded label"],
+])(
+  "searches image labels and adjacent text in the actual message DOM: %s",
+  async (image, label) => {
+    const text = `before ${image} after`;
+    for (const query of [label, "after"]) {
+      const { html, hits } = await fixture(text, query);
+      const root = dom(html);
+      const body = root.querySelector<HTMLElement>("[data-loaded-body]")!;
+      expect(loadedMarkdownFields(text)).toEqual(
+        transcriptTextFields(body).map(({ text }) => text),
+      );
+      expect(hits).toHaveLength(1);
+      expect(loadedSearchDOMRange(root, hits[0])?.range.toString()).toBe(query);
+      expect(html).not.toMatch(/<(?:img|link)\b/);
+    }
+    for (const destination of ["destination", "YWJjZA==", "outer"])
+      expect((await fixture(text, destination)).hits).toEqual([]);
   },
 );
 it("finds the fourth folded received text without reading its file or matching generated labels", async () => {
