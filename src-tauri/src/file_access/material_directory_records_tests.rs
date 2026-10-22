@@ -205,11 +205,30 @@ fn material_semantic_digest_retains_directory_ads_and_security_without_backup_or
     let data = frame(4, 0, &named(), b"abc");
     let security = frame(3, 2, &[], &descriptor());
     let expected = [(named(), 3)].into();
-    let a = run(&[data.clone(), security.clone()].concat(), &expected, Profile::WithFullSecurity).unwrap();
-    let b = run(&[security, data].concat(), &expected, Profile::WithFullSecurity).unwrap();
+    let a = run(
+        &[data.clone(), security.clone()].concat(),
+        &expected,
+        Profile::WithFullSecurity,
+    )
+    .unwrap();
+    let b = run(
+        &[security, data].concat(),
+        &expected,
+        Profile::WithFullSecurity,
+    )
+    .unwrap();
     assert_ne!(a.sha256, b.sha256);
     assert!(a.same_contents(&b));
     assert_eq!(a.semantic_sha256(), b.semantic_sha256());
-    let changed = run(&[frame(4, 0, &named(), b"ABC"), frame(3, 2, &[], &descriptor())].concat(), &expected, Profile::WithFullSecurity).unwrap();
+    let changed = run(
+        &[
+            frame(4, 0, &named(), b"ABC"),
+            frame(3, 2, &[], &descriptor()),
+        ]
+        .concat(),
+        &expected,
+        Profile::WithFullSecurity,
+    )
+    .unwrap();
     assert_ne!(a.semantic_sha256(), changed.semantic_sha256());
 }

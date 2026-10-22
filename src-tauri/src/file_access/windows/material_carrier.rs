@@ -1,11 +1,11 @@
 //! Test-registered first real carrier component. No public recovery gate opens.
 use super::*;
-use super::{
-    material_carrier_native::Facts,
-    material_restore,
-};
 #[cfg(test)]
-use super::{material_carrier_native as native, material_regular_shared as shared, material_restore::Namespace};
+use super::{
+    material_carrier_native as native, material_regular_shared as shared,
+    material_restore::Namespace,
+};
+use super::{material_carrier_native::Facts, material_restore};
 #[cfg(test)]
 use crate::file_access::material_carrier_records::{
     RESIDENT_LIMIT, ResidentLease, WORK_LIMIT, check,

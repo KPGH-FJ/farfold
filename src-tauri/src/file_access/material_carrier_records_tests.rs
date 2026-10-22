@@ -177,6 +177,10 @@ fn material_semantic_digest_uses_all_streams_without_backup_order() {
     assert_ne!(a.sha256, b.sha256);
     assert!(a.same_contents(&b));
     assert_eq!(a.semantic_sha256(), b.semantic_sha256());
-    let changed = run(&[stream(1, 0, &[], b"DATA"), stream(3, 2, &[], &descriptor())].concat(), &expected).unwrap();
+    let changed = run(
+        &[stream(1, 0, &[], b"DATA"), stream(3, 2, &[], &descriptor())].concat(),
+        &expected,
+    )
+    .unwrap();
     assert_ne!(a.semantic_sha256(), changed.semantic_sha256());
 }

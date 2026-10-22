@@ -89,8 +89,8 @@ mod preparation_tests;
 mod preparation_windows;
 
 #[cfg(all(windows, test))]
-mod recovery_public_windows_tests;
-#[cfg(all(windows, test))]
 mod recovery_cold_windows_tests;
+#[cfg(all(windows, test))]
+mod recovery_public_windows_tests;
 #[cfg(all(windows, test))]
 mod remove_native_windows_tests;
