@@ -1,6 +1,6 @@
 # Farfold 源码架构
 
-更新：2026-10-21。本页说明当前源码的职责与约束；产品要求以 [PRODUCT.md](../PRODUCT.md) 为准，实际通过、失败、未测和接续安排分别见[当前状态](status.md)与[唯一活动计划](../plans/agent-access.md)。
+更新：2026-10-22。本页说明当前源码的职责与约束；产品要求以 [PRODUCT.md](../PRODUCT.md) 为准，实际通过、失败、未测和接续安排分别见[当前状态](status.md)与[唯一活动计划](../plans/agent-access.md)。
 
 唯一正式应用为 /Applications/Farfold.app，标识 ai.farfold.desktop，内部版本0.1.7、macOS arm64；实际安装的功能源码、程序摘要与验证范围集中见[当前状态](status.md)。后续文档或测试整理提交不等于重新安装，受控样本与安装静态核验不构成真实 Agent 或P13整项验收。
 
@@ -81,6 +81,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 
+[xml_namespace_scope.ts](../src/runtime/xml_namespace_scope.ts)供DOCX/PPTX解析器共用只读声明作用域：无本地声明时共用父作用域，有声明时仅保存本地自有数据并冻结，祖先声明不复制到每个节点。前缀继承、局部覆盖、兄弟隔离及MC分支和MustUnderstand规则保持，特殊名称不触发原型设置。原XML预算及未知格式拒绝不变；本批受控验证中真实Worker所用输入是自有合成parts，文件身份为逻辑夹具标签，不能称为系统文件/ZIP核验或完整Office排版证明。
+
 PDF外层[预览](../src/runtime/pdf_preview.ts)及内层[绘制线程](../src/workers/pdf_render.worker.ts)均将`messageerror`接入各自原有失败路径：外层清画布、计时与取消监听，结束自己的线程并归还原共享名额；内层固定失败消息使迟到结果不再发布成功，已返回的位图由原分支关闭。没有增加第二套名额或等待期限；受控事件与浏览器分项不证明真实反序列化故障、物理线程树停止或内存释放。
 
 PDF文件预览在[组件](../src/components/VisualFilePreview.tsx)先核原文件身份、MIME与编码长度，再向原共用绘制入口交付延后取字节的方法；[pdf_preview.ts](../src/runtime/pdf_preview.ts)取得既有名额后才调用实际字节校验与展开。入口仍接受直接字节；准备失败或取消在原`finally`归还自己的名额，未新增资源池或自动重试。真实受控WebKit验证真实解析、画布像素、满额拒绝和隐藏后迟到位图清理；只暂留已完成结果的交付，不证明物理解析忙态、进程内存或正式应用界面。
@@ -120,6 +122,8 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
 历史用户消息中的内嵌图片由 [UserMessageContent.tsx](../src/components/UserMessageContent.tsx) 在明确展开、祖先可见且取得同一共用配额后，调用原 [draft_images.ts](../src/runtime/draft_images.ts) 检查；8 MiB、静态格式、尺寸及两项尚未结束检查的限制保持。关闭、隐藏、换源及卸载撤下本次来源并释放自己的预览配额，迟到结果不能恢复展示；再次显示或其他媒体释放配额不会自动打开，失败后须明确重试。[draft_images.ts](../src/runtime/draft_images.ts)先核原有常量时间缺失/长度门槛，已有两项检查未结束时在Base64展开及结构扫描前返回忙态；空闲下原校验保持。两项检查的名额仍等解码Promise实际结束才释放，超时或退役不证明物理解码已停止、RSS已下降。原消息与复制内容保持，正式消息和完整资源验证另见状态。
+
+[text_image_links.ts](../src/runtime/text_image_links.ts)在原历史用户文字路径中只检查围栏前至多四个空格；仅真正可能关闭围栏的标记才检查本行剩余文字，行内代码不再查询无用的行尾。原支持格式、代码字面量、原文及UTF-16偏移不变；默认已加载历史搜索继续只索引文字片段，识别为图片的Base64不成为查找字段。受控浏览器核对原文字段与实际DOM Range，不建立正文账本，也不代表真实Agent历史或正式搜索效果已完整验证。
 
 [message-media-visibility.tsx](../src/components/message-media-visibility.tsx) 将工具组、工具详情及保留对话路由的可见性逐层相交，内层展开不能覆盖已隐藏的祖先。[App.tsx](../src/App.tsx) 按实际显示的页面键传递路由可见性，沿原顺序保留带网页或草稿的页面；搜索和带入浮层仅暂停交互，不误作页面隐藏。保留的隐藏文字节点继续存在，但消息媒体来源和配额退役，并撤回此前的媒体展开意图；回到页面或查找揭示不会自动加载，仍需用户明确展开媒体。该边界不核系统休眠、窗口后台、网页内媒体或解码器内存的生命周期。
 

@@ -1,0 +1,465 @@
+{
+  "kind": "CompletedSelectedHistoricalTextAndOfficeNamespaceResourceStage",
+  "sourceCommit": "355ae4eae72b9c20aaf93c3cd9cfb4e5dc89bb0b",
+  "baseInstalledSource": "d466fe22acb486d94f5308c5285524191a8f30ca",
+  "scope": "Selected P13/P16/P32/ARCH-49 common resource increment; not full task completion or29x8 acceptance.",
+  "changes": [
+    "Bounded original historical text fence-line checks and deferred newline lookup only for eligible closing candidates; source/code/image/UTF16 offsets retained.",
+    "DOCX/PPTX share frozen lookup-only namespace scopes, storing local declarations once and reusing parents; XML budgets and MC/MustUnderstand/partial semantics retained.",
+    "Four existing paths modified, two added; seven text and eight XML permanent controls, independently reviewed across two scopes."
+  ],
+  "checks": {
+    "affected": {
+      "files": 6,
+      "passed": 133,
+      "typecheckPassed": true,
+      "session": 17403,
+      "completionChunk": "4e4a3b"
+    },
+    "textRed": {
+      "passed": 1,
+      "failed": 2,
+      "tildeReverseLFCalls": 4094,
+      "narrowForwardLFCalls": 1025
+    },
+    "textSameAssertionGreen": {
+      "passed": 3,
+      "failed": 0,
+      "tildeReverseLFCalls": 0,
+      "narrowForwardLFCalls": 1
+    },
+    "namespaceRed": {
+      "passed": 3,
+      "failed": 2,
+      "inputBytes": 31749,
+      "nodes": 274,
+      "ownBindingsEach": 266890
+    },
+    "namespaceSameAssertionGreen": {
+      "passed": 5,
+      "failed": 0,
+      "uniqueScopesEach": 17,
+      "ownBindingsEach": 1009
+    },
+    "freshSeven": {
+      "session": 86212,
+      "completionChunk": "fae735",
+      "naturalExit": 0,
+      "inputCount": 18431,
+      "frontendFiles": 638,
+      "frontendPassed": 8362,
+      "rustPassed": 2117,
+      "rustExistingIgnored": 6
+    },
+    "sourceReview": {
+      "result": "noBlockingFinding",
+      "productionMembers": 2109,
+      "freezeFiles": 2141,
+      "method": "Actual current candidate SCOPES/admitted; read-only Git blob/mode/SHA join against BASE prior review/freeze. Exact six changed paths are joined to explicit sourceReviewRefs/current JSON pointers; independent text and XML reviews cover three modified production sources, one modified existing test, one new production helper and one new permanent test separately from the source writer. Fresh current authority review covers allowed documentation changes. Not fresh line-by-line review of every inherited product file."
+    },
+    "genuineWebKit": {
+      "session": 13739,
+      "completionChunk": "670572",
+      "naturalExit": 0,
+      "version": "26.5",
+      "rows": 3,
+      "checks": 8,
+      "fullRgba": [255, 0, 0, 255, 0, 128, 255, 255],
+      "workers": 2,
+      "inputsStable": true,
+      "cleanupComplete": true,
+      "scope": "Controlled actual ReactDOM historical UserMessageContent, default in-memory loaded search/DOMRange, genuine WebKit PNG decode/all RGBA, both real Saxes adapters and actual sequential DOCX Workers from two owned logical part captures. File identities are synthetic part-envelope labels, not native file/ZIP receipts. No mocked Image/parser/Worker reply, native read, persisted Agent message, installed Farfold UI, physical busy/RSS or complete P13/P16 claim. Counters are transparent observations, with no elapsed-time success threshold."
+    },
+    "candidate": {
+      "passed": 9,
+      "total": 9
+    },
+    "installed": {
+      "passed": 10,
+      "total": 10
+    }
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identity": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "355ae4eae72b9c20aaf93c3cd9cfb4e5dc89bb0b",
+    "binarySha256": "9c9793680af85cc2c4262da45b8fa08091fb5d893b9c81aabd809b40d6a9e9cc",
+    "phase": "installedVerifiedNotLaunched",
+    "archive": "src-tauri/target/internal-candidate/2026-10-21-next-resource-followup-355ae4ea/Farfold-0.1.7-355ae4ea.zip",
+    "archiveSha256": "ebdd22d39f7b602b2582aa7dec3ea176372de3e07332b7a5c4e3e01f11248814",
+    "archiveBytes": 15901112,
+    "exactFiveAtomicReplacements": true,
+    "duplicateCandidateRemoved": true,
+    "publicSigningNotarizationDistribution": "postponed"
+  },
+  "data": {
+    "manifest": {
+      "counts": {
+        "appData": {
+          "directory": 22245,
+          "file": 209681,
+          "symlink": 335,
+          "special": 0
+        },
+        "webkit": {
+          "directory": 155,
+          "file": 104,
+          "symlink": 0,
+          "special": 0
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "symlink": 0,
+          "special": 0
+        }
+      },
+      "sha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95"
+    },
+    "beforePreinstallAfterExactlyEqual": true,
+    "metadataBackupSha256": "5a531c553bbd8377a0923eb7464e69cf9022a5e84f670db76095b0658638fdd9",
+    "exactFormalProcessObservationsZero": true,
+    "normalQuitEvidence": null,
+    "limit": "Three fresh endpoints only; not continuous idle or no historical changes. Older data differences/unknown writer/reopening remain open.",
+    "supplementalCurrentCapture": {
+      "checkedAtUtc": "2026-10-22T06:27:00.625428+00:00",
+      "session": 67870,
+      "completionChunk": "a5d4d9",
+      "naturalExit": 0,
+      "manifest": {
+        "counts": {
+          "appData": {
+            "directory": 22245,
+            "file": 209681,
+            "symlink": 335,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 155,
+            "file": 104,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "sha256": "d03f70fc65d41c3bee38528b40ba51cd0d6c39b47bbebe12a3f13fb96c33cc95"
+      },
+      "allFourManifestAndRawMetadataEqual": true,
+      "newPrivateBackupShaEqual": true,
+      "boundary": "Original installation three endpoints remain21Oct; separate supplemental full current capture22Oct is equal. No continuous zero-change, normal-quit or unknown-writer/root-cause claim."
+    }
+  },
+  "retainedDiagnosticLimits": [
+    "First two text diagnostic executions timed out with overbroad merged include configurations. Their resolved non-isolation is verified, but exact timeout cause/other tests executed are unknown; neither is valid semantic RED. Corrected R3 isolated test supplied the actual counterexamples.",
+    "Original text independent R1 moving-HEAD readpoint and browser-review path-normalization error retained; corrected static reviews used without product reruns.",
+    "Helper assignment binding retains two declared assignment-line whitespace changes as disclosed by actual independent review; AST guards unchanged."
+  ],
+  "notVerified": [
+    "No installed Farfold UI or real Agent/message/permission/playback run this stage. Known7 local NEW-24 inputs unchanged; actual permissions and external latest versions unknown, affected fresh sends remain paused.",
+    "Synthetic DOCX part captures are logical fixture identities; not native disk/ZIP reads or complete Office layout.",
+    "Own bindings and LF query counts are logical controls, not CPU-comparison counts, physical busy/termination or RSS measurements.",
+    "Full P13/P16/ARCH-49, all29Agents x8, long-running resources and full Windows remain open.",
+    "Original short AAC/FLAC failures/duration disagreements, Windows42failures, historical data differences/unknown writer/reopening remain open."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-21-next-resource-followup/start.json",
+      "bytes": 1369,
+      "sha256": "0408d9cff0add7d86c9c49927ae438f6fea43ff31337897b4d612b9602887d91"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-audit/receipt.json",
+      "bytes": 9322,
+      "sha256": "74c03f91a27b236b8bc8349d374337176cd1c72e96a9822812abeddb53470bd4"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-audit/helper-reuse-dependencies.json",
+      "bytes": 7079,
+      "sha256": "9df5d5b0836ef4139cbf8db30e6517bad8bb83bf824839c8cb5df1c4a8c7e3d8"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/source-checkpoint.json",
+      "bytes": 476,
+      "sha256": "ee829dc057da9c6a75936de6c65faee5801671f93380cd0c8b0a381e2050e65b"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/affected-checks.json",
+      "bytes": 1844,
+      "sha256": "5c6f9fd304044635ca97ad7b75d16840f126de70f4744e0627c5590c423dd5c7"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/resolved-timeout-configs.json",
+      "bytes": 1395,
+      "sha256": "688e237681d2e3e6577fe76806e5fc9f79e3f119c73f04d4d3d626ba8b9e7d09"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/line-start-red/assessment.json",
+      "bytes": 2019,
+      "sha256": "4fb4ac5ea9927d43ec6253063ecc11d57e3f5782d7285f85c58a805b7375e014"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/line-start-red-r2/execution.json",
+      "bytes": 11040,
+      "sha256": "13feb59321534a26821935debe17d626a75e3ee656a04a3a8693f90a916ec18a"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/line-start-red-r3/assessment.json",
+      "bytes": 8192,
+      "sha256": "e747816c38a2b87ba9fc313cf49880eaef770c0187ef3a665bb188e0823bfb40"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/line-start-green/assessment.json",
+      "bytes": 4458,
+      "sha256": "c90bcc7dfab044f7f28668a27d9684411c2f08dba46dca7b33d1928e3ccd4a5f"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/native-audit/office-resource-audit-r1.json",
+      "bytes": 18161,
+      "sha256": "3415ee392e6e4c133e963da5db3dafec6005f42e18b99167c704febeb9703129"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/native-audit/namespace-red/safe-summary.json",
+      "bytes": 10685,
+      "sha256": "4abe863c609f2dc32cbaa0fa8f4e7a4808725bfb3300dc1e88091e8fabfb8d54"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/native-audit/namespace-green/safe-summary.json",
+      "bytes": 6755,
+      "sha256": "398e7ef4e8cdcd80b5b2dcb92c7749a9c09ae88cff52051624db49135026aa8d"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/text-parser-review-r2/source-review.json",
+      "bytes": 7824,
+      "sha256": "da9ff189870ebb8ecf7833506f14bc73a52379c062602d145b9af94d058a6a8b"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/xml-independent-review-r1/source-review.json",
+      "bytes": 13293,
+      "sha256": "dde0288e0a6748117c0cf45a07bfa6ab6732c4d196d4266a56ab00c7ec48f421"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/message-audit/authority-review/current-authority-review.json",
+      "bytes": 14370,
+      "sha256": "8af8e331c07a934053c687cb552a01027b46712604c70bb2486cf81ece2ac964"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/engineering/verification.json",
+      "bytes": 5864,
+      "sha256": "4666f8e79e8e772049d01a610f7305f1c3e8327b8d3a221266cde11bf3ba1c90"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-source-review/actual-seven-completion.json",
+      "bytes": 400,
+      "sha256": "0cc8cfa706644725771def1d468ed14b52e8518e22e63c034a14807e0a44bd65"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-source-review/source-review.json",
+      "bytes": 13672,
+      "sha256": "b5aba02372b2af1b2e7c0e08f616d157db33965eab5122c3267cba6e70cdb848"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-source-review/source-freeze-355ae4ea.json",
+      "bytes": 348217,
+      "sha256": "01a193a45eb421acbe94e809dece0a311af51d17cc3d3652455ccd013277b7a5"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-source-review/review-freeze.json",
+      "bytes": 1698,
+      "sha256": "0d7bfa4a47351bde837de48c8ae95c42eb78305a24926ccfc63cec5f3cd3a621"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/sealer-review/review.json",
+      "bytes": 4265,
+      "sha256": "f8ca9407c1105f55fc73115bcc2ea5ceb39228ce60c276d92fc48546e47e0f19"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/composite-result-review/review.json",
+      "bytes": 3438,
+      "sha256": "01e2302ccd669010a6aa0a4ef96a22788511861ad77d0a8ccbdd124aacc59910"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/native-audit/browser-docx-capture/preparation.json",
+      "bytes": 7319,
+      "sha256": "27e70b04aa0df995f027f5b4bff007fe91ff42930116fc71f0fb4c644b8985ee"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/browser-prep/preparation-index.json",
+      "bytes": 41157,
+      "sha256": "31d28b97e5fa28ce32ddcb09c87577b46553901d15a53692905d21d24327a9a8"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/browser-prep/bound-preparation.json",
+      "bytes": 41156,
+      "sha256": "24f05b52f51709c08beb0606145b06e64c80c1952eb7f5c2313f00e77c55c5a4"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/browser-prep/verification.json",
+      "bytes": 401466,
+      "sha256": "5ed39515e935c46994971e2c2f881e7355fbb1bd02fd832a5baa2ac5537a5649"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/browser-prep/execution-receipt.json",
+      "bytes": 33888,
+      "sha256": "d6639cee04ea2c07ca4c195f3469b008dfe51b8e1d4e9fa626d68b9ddd2d1ec5"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/browser-prep-review/review.json",
+      "bytes": 5247,
+      "sha256": "e7a5b0641a3c4583022a0d6ea20897b456a258e39efbfb668f4e1807dd367e79"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/browser-actual-review/review.json",
+      "bytes": 6559,
+      "sha256": "2ca4dcceca7491e7b604c3ea19f8ab616ccd26f509a7be295d65a20d8396626f"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/delivery-prep/helper-migration-r1/preparation.json",
+      "bytes": 9698,
+      "sha256": "c8bb71ed13598387984b47bae40b867f167162f115d1e9c318b3809ac59557f5"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/initial-helper-binding.json",
+      "bytes": 6707,
+      "sha256": "f6df52d0cb8e0ccb4511a6164807a6ed8512777a48cf9b7fc32de3027379db34"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/helper-binding-review/review.json",
+      "bytes": 17814,
+      "sha256": "c0c73e5ab5d9c37609e10803cfb62342bbb1f80753cc09e23ed554e18db46af5"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/actual-delivery-binding-review-r2/review.json",
+      "bytes": 11374,
+      "sha256": "bc0a33725ac90079af9283a744539bde1fab158d8aaa12fc8a9d78b2f4720ee1"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/install-binding-review/review.json",
+      "bytes": 5291,
+      "sha256": "cfba49a1d84b3570d0d6e2bfd94e0a829d6712c551b7147d67c4fcf14d69f1a5"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/candidate-build-completion.json",
+      "bytes": 417,
+      "sha256": "832a673e21f86bde1de91380ed782e063a97b87b11afe0b85a3576c7925c5332"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/candidate-output/candidate.json",
+      "bytes": 250787,
+      "sha256": "cc3bfe3543b1d2ba8e69cede3b0c3079475f078f7c0fb744e1760a42a3f24112"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/independent/review.json",
+      "bytes": 4242,
+      "sha256": "7644ff7e9f0ffb9321f364e19c9c74b8c4b8611d4948af13eee2b770c364beb4"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "73305b06d52f7d2767d48d97c89330b315e1f46a11f7284f189582cd077f4fe7"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/retention-preinstall-receipt.json",
+      "bytes": 2795,
+      "sha256": "4e0fc194da2126e87d656a1b358783c52829866cb9862f0ed88cdaba9cba2002"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/retention-after-receipt.json",
+      "bytes": 2790,
+      "sha256": "7187313bbffbbd12602196fc3814ad2f7c73399c14128f4117d0b703173d752f"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/install-result.json",
+      "bytes": 10692,
+      "sha256": "c89fde9db46fc0f0f78fc6727e2002a0ba6cd1586d435479b4b1ab7123c21764"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/installed-independent-review-private.json",
+      "bytes": 6491,
+      "sha256": "3fe4d03fb7dff4f6b2e703a92e319fe19b0a63103ac196727371c57f8c4d95bf"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/formal-delivery/install/candidate-cleanup.json",
+      "bytes": 7171,
+      "sha256": "31e12d2361a4b8eba090e472614e095f693a196dc243bde115e0ab48f4ae4024"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/installed10-binding-review/review.json",
+      "bytes": 10000,
+      "sha256": "6f079b38cb3723b3211acca3c98dc655b581c768ddc46866090f0f3c9158cfef"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/cleanup-binding-review/review.json",
+      "bytes": 4068,
+      "sha256": "e458482b4822c33332c8388cee4902ce3dafda79b32928a9f36a44dc0615d36d"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-20261022/binding.json",
+      "bytes": 1425,
+      "sha256": "b65208091a85d333d8222bed052fbbc7f6e62ad4c6be9150c0a7208e9c8c0e00"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-20261022/comparison.json",
+      "bytes": 2173,
+      "sha256": "f61f07161ba51a9cc8e7afe0226d0bb136d8514ffb856cfe5e22c82e53290b1e"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-20261022/data/retention-before-receipt.json",
+      "bytes": 5690,
+      "sha256": "af5e19ab3568dab331569991760ea4bc7cf43c4a2b1a5e8d568831499423127c"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/crossday-observer-binding-review/review.json",
+      "bytes": 3906,
+      "sha256": "d464bb177a6f9da4a6cba1f70cfb899bde9fbd419cda8342cfee6fd5d79ffe45"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/final-independent/docs-assembler-static-review/review.json",
+      "bytes": 4923,
+      "sha256": "a09b7d07ff46f4eb140ad596cdc0f298da69d77179a27648e1033afc5c3dd65f"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/delivery-completions.json",
+      "bytes": 2395,
+      "sha256": "d811b8ecd5f5c7cfa59486197061100042a59cd7424333dc43852d2b3a9ccfb6"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/doc-prep/date-precondition-incident.json",
+      "bytes": 1110,
+      "sha256": "5a69f7f64d5864b44fdd2bfa21bd391709d6cd186688648e05a4dab78827656a"
+    },
+    {
+      "path": "output/2026-10-21-next-resource-followup/continuation-20261022/NEW24-local-delta.json",
+      "bytes": 2489,
+      "sha256": "d7cd71c5438fb22eb75a3f539da2281499cdf09bec1775a734f61336b0f60e0d"
+    }
+  ],
+  "completedAtUtc": "2026-10-22T06:29:51.670858+00:00",
+  "documentationUpdatedDate": "2026-10-22",
+  "documentationAssemblyIncident": {
+    "firstInvocation": {
+      "chunk": "08eaaa",
+      "naturalExit": 1,
+      "beforeAnyTrackedWrites": true
+    },
+    "cause": "Root applied update-date assertion to a requirements reference that intentionally has no update-date header. Actual header inspected; date change limited to the three existing headings.",
+    "actualCorrectedInvocation": {
+      "chunk": "273413",
+      "naturalExit": 0
+    },
+    "limits": "Documentation assembly only; no product/test/install rerun. The missing R2 assessment path was separately caught and corrected to the original execution receipt during static review."
+  },
+  "knownSevenNEW24CrossDay": {
+    "result": "allSevenUnchanged",
+    "checkedAtUtc": "2026-10-22T06:34:34.755669+00:00",
+    "scope": "Package/scripts plus three permission source guards, provenance only; no Agent binary compatibility gates, secrets, config or real request.",
+    "effectivePermissionsAndExternalLatestUnknown": true,
+    "affectedFreshSendsPaused": true
+  }
+}
