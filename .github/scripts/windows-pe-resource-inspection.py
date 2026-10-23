@@ -450,9 +450,16 @@ def rc_expectations(data):
     language = re.findall(r'^BLOCK "([0-9a-fA-F]{8})"\s*$', text, re.M)
     translation = re.findall(r'^VALUE "Translation", (0x[0-9a-fA-F]+), (0x[0-9a-fA-F]+)\s*$', text, re.M)
     require(len(language) == len(translation) == 1, "unsupported RC version language shape")
-    icons = re.findall(r'^(\d+) ICON "([^"\\]*)"\s*$', text, re.M)
+    # tauri-winres canonicalizes the icon path, then escapes backslashes and
+    # apostrophes in its RC string. Decode only those filename escapes; never
+    # interpret arbitrary C escapes or discard an unrecognized ICON row.
+    icons = re.findall(r'^(\d+) ICON "((?:[^"\\\r\n]|\\[\\\'])*)"[ \t\r]*$', text, re.M)
+    icon_rows = [row for row in text.splitlines() if re.match(r'^\S+\s+ICON\b', row)]
+    require(len(icon_rows) == len(icons), "unsupported RC icon string syntax")
     require(len(icons) == 1 and int(icons[0][0]) == 32512, "unexpected RC icon identity/path syntax")
-    return {"fixed": fixed, "tables": {language[0].lower(): strings}, "translation": [[int(value, 0) for value in translation[0]]]}, icons[0][1]
+    icon_path = re.sub(r"\\([\\'])", lambda match: match[1], icons[0][1])
+    require(icon_path and not any(ord(char) < 32 for char in icon_path), "invalid RC icon filename")
+    return {"fixed": fixed, "tables": {language[0].lower(): strings}, "translation": [[int(value, 0) for value in translation[0]]]}, icon_path
 
 
 def icon_entries(data, group=False):
@@ -498,14 +505,17 @@ def main():
         expected_manifest = manifest_semantics(baseline)
         rc_path, cargo_receipt = bind_generated_rc(raw, repo, args.generated_resource_rc)
         rc, rc_receipt = small_input(rc_path, 65536)
+        # Preserve the exact selected input even if its syntax is unsupported.
+        # This is evidence of the input, not a successful resource comparison.
+        report["inputs"] = {"selection": selection_receipt, "baselineManifest": baseline_receipt, "candidateGeneratedRc": rc_receipt, "cargoJson": cargo_receipt, "rcProvenance": "Exact root-package build-script-executed OUT_DIR in this invocation's test-build.stdout.jsonl; never directory freshness."}
+        (output / "baseline-helper.manifest.xml").write_bytes(baseline)
+        (output / "candidate-resource.rc").write_bytes(rc)
         expected_version, icon_name = rc_expectations(rc)
         icon_path = (repo / "src-tauri" / icon_name).absolute()
         require(icon_path.resolve() == (repo / "src-tauri/icons/icon.ico").resolve(), "RC icon differs from current Tauri fallback icon")
         ico, ico_receipt = small_input(icon_path, 16 * 1024 * 1024)
         expected_icons = icon_entries(ico)
-        report["inputs"] = {"selection": selection_receipt, "baselineManifest": baseline_receipt, "candidateGeneratedRc": rc_receipt, "sourceIco": ico_receipt, "cargoJson": cargo_receipt, "rcProvenance": "Exact root-package build-script-executed OUT_DIR in this invocation's test-build.stdout.jsonl; never directory freshness."}
-        (output / "baseline-helper.manifest.xml").write_bytes(baseline)
-        (output / "candidate-resource.rc").write_bytes(rc)
+        report["inputs"]["sourceIco"] = ico_receipt
         report["expectedVersion"] = expected_version
         report["sourceIconFrames"] = expected_icons
         roles = [("helper", "helperBinary", "helperBinarySha256", 1), ("libtest", "testBinary", "testBinarySha256", 1)]

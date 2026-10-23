@@ -1,4 +1,4 @@
-//! Private single-threaded MCP relay. Invoke its entry branch before Tauri,
+//! Private MCP relay with an owned Windows input reader. Invoke its entry before Tauri,
 //! logging, plugins or threads. Bodies never enter stderr, logs or files.
 use super::{
     channel::{self, Stream},
@@ -47,9 +47,9 @@ pub fn run_if_requested() -> Option<i32> {
         let stream = channel::connect(Path::new(&path)).map_err(|_| ())?;
         authenticate(&stream, capability)?;
         // Authentication completes before any stdin read/forwarding.
-        helper_io::prepare().map_err(|_| ())?;
+        let input = helper_io::prepare().map_err(|_| ())?;
         stream.set_nonblocking(true).map_err(|_| ())?;
-        Worker::new(stream).run()
+        Worker::new(stream, input).run()
     })();
     Some(result.unwrap_or(1))
 }
@@ -59,6 +59,11 @@ struct ControlFrame {
     offset: usize,
     deadline: Instant,
     terminal: bool,
+    stop: Option<StopFrame>,
+}
+struct StopFrame {
+    barrier: u64,
+    waiting_input: bool,
 }
 struct OutputFrame {
     bytes: Vec<u8>,
@@ -71,6 +76,7 @@ struct OutputFrame {
 }
 struct Worker {
     stream: Stream,
+    input: helper_io::Input,
     broker_input: Vec<u8>,
     stdin_input: Vec<u8>,
     controls: VecDeque<ControlFrame>,
@@ -82,9 +88,10 @@ struct Worker {
     exit_code: Option<i32>,
 }
 impl Worker {
-    fn new(stream: Stream) -> Self {
+    fn new(stream: Stream, input: helper_io::Input) -> Self {
         Self {
             stream,
+            input,
             broker_input: Vec::new(),
             stdin_input: Vec::new(),
             controls: VecDeque::new(),
@@ -107,22 +114,25 @@ impl Worker {
     }
     fn queue(&mut self, value: Value, terminal: bool, priority: bool) -> Result<bool, ()> {
         let bytes = line(&value, INPUT_LIMIT + 1024)?;
-        if self.controls.len() >= CONTROL_FRAMES {
-            return Err(());
-        }
-        let queued: usize = self.controls.iter().map(|f| f.bytes.len() - f.offset).sum();
-        if !priority && queued + bytes.len() > CONTROL_LIMIT {
-            return Ok(false);
-        }
         let frame = ControlFrame {
             bytes,
             offset: 0,
             deadline: Instant::now() + TIMEOUT,
             terminal,
+            stop: None,
         };
+        self.queue_frame(frame, priority)
+    }
+    fn queue_frame(&mut self, frame: ControlFrame, priority: bool) -> Result<bool, ()> {
+        if self.controls.len() >= CONTROL_FRAMES {
+            return Err(());
+        }
+        let queued: usize = self.controls.iter().map(|f| f.bytes.len() - f.offset).sum();
+        if !priority && queued + frame.bytes.len() > CONTROL_LIMIT {
+            return Ok(false);
+        }
         if priority {
-            // Preserve a partial JSON line and earlier terminal ACKs; put stop
-            // ahead of unsent ordinary request/written packets.
+            // Never overtake an actual partial line or earlier terminal ACK.
             let at = self
                 .controls
                 .iter()
@@ -134,7 +144,61 @@ impl Worker {
         }
         Ok(true)
     }
+    fn queue_stop(
+        &mut self,
+        barrier: u64,
+        closed: bool,
+        waiting_input: bool,
+        deadline: Instant,
+        priority: bool,
+    ) -> Result<(), ()> {
+        let bytes = line(
+            &json!({"kind":"stopped","barrier":barrier,"stdoutClosed":closed}),
+            INPUT_LIMIT + 1024,
+        )?;
+        if !self.queue_frame(
+            ControlFrame {
+                bytes,
+                offset: 0,
+                deadline,
+                terminal: true,
+                stop: Some(StopFrame {
+                    barrier,
+                    waiting_input,
+                }),
+            },
+            priority,
+        )? {
+            return Err(());
+        }
+        Ok(())
+    }
+    fn close_pending_stops(&mut self) -> Result<(), ()> {
+        self.input.retire();
+        self.close_stdout()?;
+        self.stdin_input.clear();
+        self.inflight = None;
+        self.exit_code = Some(0);
+        self.controls.retain(|f| f.offset > 0 || f.terminal);
+        for frame in &mut self.controls {
+            if let Some(stop) = &mut frame.stop
+                && stop.waiting_input
+            {
+                if frame.offset != 0 {
+                    return Err(());
+                }
+                frame.bytes = line(
+                    &json!({"kind":"stopped","barrier":stop.barrier,"stdoutClosed":true}),
+                    INPUT_LIMIT + 1024,
+                )?;
+                stop.waiting_input = false;
+                // Preserve the deadline from receipt, including later stops.
+            }
+        }
+        Ok(())
+    }
     fn terminate(&mut self, packet: Value, code: i32) -> Result<(), ()> {
+        self.input.retire();
         self.close_stdout()?;
         self.stdin_input.clear();
         self.inflight = None;
@@ -151,15 +215,29 @@ impl Worker {
         self.terminate(json!({"kind":"failed"}), 1)
     }
     fn stop(&mut self, barrier: u64, close: bool) -> Result<(), ()> {
-        // Already-observed input must never cross this barrier into a future
-        // grant. Closing is the conservative boundary for buffered requests.
-        if self.stop_requires_close(close) {
-            return self.terminate(
-                json!({"kind":"stopped","barrier":barrier,"stdoutClosed":true}),
-                0,
-            );
+        let deadline = Instant::now() + TIMEOUT;
+        self.stdin_paused = true;
+        let input = self.input.pause().map_err(|_| ())?;
+        if self.stop_requires_close(close) || input == helper_io::InputStop::Dirty {
+            self.close_pending_stops()?;
+            return self.queue_stop(barrier, true, false, deadline, true);
         }
+        self.withdraw_page_output()?;
+        // The ACK remains in the original FIFO, but cannot be written until the
+        // exact original input owner has really completed a non-consuming poll.
+        self.queue_stop(
+            barrier,
+            false,
+            input == helper_io::InputStop::Pending,
+            deadline,
+            false,
+        )
+    }
+    fn withdraw_page_output(&mut self) -> Result<(), ()> {
         if let Some(frame) = self.output.as_mut().filter(|f| f.page) {
+            if frame.offset > 0 {
+                return Err(());
+            }
             let message = if frame.control {
                 protocol::control_unknown(frame.id.clone())
             } else {
@@ -170,18 +248,33 @@ impl Worker {
             frame.page = false;
             frame.deadline = Instant::now() + TIMEOUT;
         }
-        // Preserve existing request/written FIFO: the broker must observe every
-        // old request before this ACK. Pause input until that ACK fully drains.
-        // Controls still drain before stdout, including the replacement error.
-        self.stdin_paused = true;
-        if !self.queue(
-            json!({"kind":"stopped","barrier":barrier,"stdoutClosed":false}),
-            true,
-            false,
-        )? {
-            return Err(());
-        }
         Ok(())
+    }
+    fn pending_input_stop(&self) -> bool {
+        self.controls
+            .iter()
+            .any(|f| f.stop.as_ref().is_some_and(|s| s.waiting_input))
+    }
+    fn advance_input_stop(&mut self) -> Result<(), ()> {
+        if !self.pending_input_stop() {
+            return Ok(());
+        }
+        self.withdraw_page_output()?;
+        match self.input.stop_state().map_err(|_| ())? {
+            helper_io::InputStop::Dirty => self.close_pending_stops(),
+            helper_io::InputStop::Clear => {
+                for frame in &mut self.controls {
+                    if let Some(stop) = &mut frame.stop {
+                        stop.waiting_input = false;
+                    }
+                }
+                Ok(())
+            }
+            helper_io::InputStop::Pending => {
+                // Also scrub a response arriving while this local ACK waits.
+                self.withdraw_page_output()
+            }
+        }
     }
     fn stop_requires_close(&self, close: bool) -> bool {
         close
@@ -219,6 +312,9 @@ impl Worker {
                     id: id.clone(),
                     control,
                 });
+                if self.stdin_paused {
+                    self.withdraw_page_output()?;
+                }
                 Ok(())
             }
             Some("response") if self.exit_code.is_some() => Ok(()),
@@ -327,11 +423,8 @@ impl Worker {
         if self.stdin_eof || self.stdin_input.len() >= INPUT_LIMIT {
             return Ok(());
         }
-        let mut bytes = [0_u8; 8192];
-        let capacity = bytes.len().min(INPUT_LIMIT - self.stdin_input.len());
-        match helper_io::read_stdin(&mut bytes[..capacity]) {
-            Ok(0) => self.stdin_eof = true,
-            Ok(n) => self.stdin_input.extend_from_slice(&bytes[..n]),
+        match self.input.read_into(&mut self.stdin_input, INPUT_LIMIT) {
+            Ok(eof) => self.stdin_eof = eof,
             Err(error)
                 if matches!(
                     error.kind(),
@@ -342,9 +435,13 @@ impl Worker {
         self.forward_stdin()
     }
     fn write_controls(&mut self) -> Result<(), ()> {
+        self.advance_input_stop()?;
         while let Some(frame) = self.controls.front_mut() {
             if Instant::now() >= frame.deadline {
                 return Err(());
+            }
+            if frame.stop.as_ref().is_some_and(|s| s.waiting_input) {
+                return Ok(());
             }
             let bytes = &frame.bytes[frame.offset..];
             let count = match channel::write_nowait(&self.stream, bytes) {
@@ -364,7 +461,10 @@ impl Worker {
                 return Err(());
             }
         }
-        self.stdin_paused = false;
+        if self.stdin_paused && self.exit_code.is_none() {
+            self.input.resume().map_err(|_| ())?;
+            self.stdin_paused = false;
+        }
         Ok(())
     }
     fn write_stdout(&mut self) -> Result<(), ()> {
@@ -501,6 +601,7 @@ impl Worker {
 }
 impl Drop for Worker {
     fn drop(&mut self) {
+        self.input.retire();
         let _ = self.close_stdout();
     }
 }
@@ -596,7 +697,7 @@ mod tests {
     #[test]
     fn review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status() {
         let (stream, _peer) = Stream::pair().unwrap();
-        let mut fixture = MemoryWorker(Worker::new(stream));
+        let mut fixture = MemoryWorker(Worker::new(stream, helper_io::Input));
         let worker = &mut fixture.0;
         worker.inflight = Some(json!(42));
         worker
@@ -637,7 +738,7 @@ mod tests {
     #[test]
     fn queued_read_stop_does_not_trust_page_owned_control_fields() {
         let (stream, _peer) = Stream::pair().unwrap();
-        let mut fixture = MemoryWorker(Worker::new(stream));
+        let mut fixture = MemoryWorker(Worker::new(stream, helper_io::Input));
         let worker = &mut fixture.0;
         worker.inflight = Some(json!(42));
         worker.broker_message(json!({
@@ -660,7 +761,7 @@ mod tests {
     fn partial_page_output_keeps_the_transport_close_boundary_for_read_and_control() {
         for control in [false, true] {
             let (stream, _peer) = Stream::pair().unwrap();
-            let mut fixture = MemoryWorker(Worker::new(stream));
+            let mut fixture = MemoryWorker(Worker::new(stream, helper_io::Input));
             let worker = &mut fixture.0;
             worker.inflight = Some(json!(42));
             worker
@@ -684,7 +785,7 @@ mod tests {
     #[test]
     fn queued_request_does_not_block_active_request_cancellation() {
         let (stream, _peer) = Stream::pair().unwrap();
-        let mut worker = Worker::new(stream);
+        let mut worker = Worker::new(stream, helper_io::Input);
         // This in-memory test owns no process stdout; keep Drop from closing it.
         worker.stdout_closed = true;
         worker.inflight = Some(json!(10));
@@ -709,7 +810,7 @@ mod tests {
     #[test]
     fn cancellation_for_another_request_cannot_jump_the_active_request() {
         let (stream, _peer) = Stream::pair().unwrap();
-        let mut worker = Worker::new(stream);
+        let mut worker = Worker::new(stream, helper_io::Input);
         worker.stdout_closed = true;
         worker.inflight = Some(json!(10));
         for message in [
@@ -728,3 +829,7 @@ mod tests {
         );
     }
 }
+
+#[cfg(all(test, windows))]
+#[path = "helper_windows_input_tests.rs"]
+mod windows_input_tests;

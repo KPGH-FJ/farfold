@@ -6,18 +6,21 @@ use windows_sys::Win32::{
     },
     System::Console::{GetStdHandle, STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, SetStdHandle},
 };
+#[path = "windows_input.rs"]
+mod input;
+pub(crate) use input::Input;
+
 fn input() -> HANDLE {
     unsafe { GetStdHandle(STD_INPUT_HANDLE) }
 }
 fn output() -> HANDLE {
     unsafe { GetStdHandle(STD_OUTPUT_HANDLE) }
 }
-pub(crate) fn prepare() -> io::Result<()> {
-    // SetNamedPipeHandleState explicitly supports CreatePipe handles. Refuse
-    // console/file/unsupported inherited handles instead of allowing blocking I/O.
-    channel::set_nowait(input())?;
+pub(crate) fn prepare() -> io::Result<Input> {
+    // Standard child stdin is read-only. Do not require state-changing access.
+    // The owned reader validates its synchronous mode without changing it.
     channel::set_nowait(output())?;
-    Ok(())
+    Input::from_handle(input())
 }
 pub(crate) fn close_stdout() -> io::Result<()> {
     let handle = output();
@@ -38,9 +41,6 @@ pub(crate) fn close_stdout() -> io::Result<()> {
     }
     Ok(())
 }
-pub(crate) fn read_stdin(bytes: &mut [u8]) -> io::Result<usize> {
-    channel::read_handle(input(), bytes)
-}
 pub(crate) fn write_stdout(bytes: &[u8]) -> io::Result<usize> {
     channel::write_handle(output(), bytes)
 }
@@ -54,3 +54,6 @@ pub(crate) fn wait(
     std::thread::sleep(Duration::from_millis(millis.clamp(0, 5) as u64));
     Ok(())
 }
+
+#[cfg(test)]
+pub(in crate::browser_sharing) use input::{CompletionKind, Step};

@@ -7,3 +7,10 @@ mod windows;
 pub(super) use unix::*;
 #[cfg(windows)]
 pub(super) use windows::*;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(super) enum InputStop {
+    Clear,
+    Pending,
+    Dirty,
+}

@@ -164,6 +164,12 @@ fn actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes() {
     fs::write(xdg.join("owner"), OWNER).unwrap();
     fs::write(xdg.join("git/config"), b"").unwrap();
     fs::write(xdg.join("git/attributes"), b"owned.txt farfoldglobal=xdg\n").unwrap();
+    // canonicalize() returns a verbatim Windows path. Git's inherited XDG
+    // filename parsing needs the DOS spelling, just like its other inputs.
+    // Use the existing held-object alias check, not a string-prefix fallback.
+    let xdg_pin = PinnedPath::directory(&xdg).unwrap();
+    let xdg_paths = crate::worktrees::windows_git::paths::Paths::new(&[&xdg_pin]).unwrap();
+    let git_xdg = xdg_paths.path(&xdg_pin).unwrap();
     let mut log = tempfile::tempfile().unwrap();
     let mut child = Command::new(std::env::current_exe().unwrap())
         .args([
@@ -173,7 +179,7 @@ fn actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes() {
             "--test-threads=1",
             "--nocapture",
         ])
-        .env("XDG_CONFIG_HOME", &xdg)
+        .env("XDG_CONFIG_HOME", git_xdg)
         .stdout(log.try_clone().unwrap())
         .stderr(log.try_clone().unwrap())
         .spawn()
@@ -214,6 +220,8 @@ fn actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes() {
         status.success() && text.contains("FARFOLD_NULL_ATTRIBUTES_CHILD_COMPLETED"),
         "{status}: {text}"
     );
+    xdg_paths.verify().unwrap();
+    xdg_pin.verify().unwrap();
     eprintln!("{text}");
 }
 

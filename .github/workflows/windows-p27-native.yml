@@ -10,7 +10,7 @@ permissions:
 jobs:
   p27_native:
     runs-on: windows-2022
-    timeout-minutes: 35
+    timeout-minutes: 48
     defaults:
       run:
         shell: pwsh
@@ -30,6 +30,8 @@ jobs:
           }
           python -c "import ast, pathlib; ast.parse(pathlib.Path('.github/scripts/windows-pe-resource-inspection.py').read_text(encoding='utf-8'))"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -c "import ast, json, pathlib; ast.parse(pathlib.Path('.github/scripts/windows-helper-stdin-controls.py').read_text(encoding='utf-8')); json.loads(pathlib.Path('.github/scripts/windows-helper-stdin-cases.json').read_text(encoding='utf-8'))"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Prepare pinned Rust toolchain
         timeout-minutes: 7
         run: |
@@ -40,6 +42,12 @@ jobs:
       - name: Actual isolated P27 WebView2 control, one exact owned case
         timeout-minutes: 28
         run: ./.github/scripts/windows-p27-native.ps1 -ExpectedHead '${{ github.sha }}'
+      - name: Separate seven helper stdin controls on the same build
+        if: ${{ always() }}
+        timeout-minutes: 13
+        run: |
+          python .github/scripts/windows-helper-stdin-controls.py --expected-head '${{ github.sha }}' --raw-dir windows-p27-native-raw
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify same-build manifests and existing application resources
         if: ${{ always() }}
         timeout-minutes: 5

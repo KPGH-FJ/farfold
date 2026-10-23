@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "group": "helper-stdin-controls",
+  "cases": [
+    {
+      "name": "readonly-demand-bound",
+      "test": "browser_sharing::helper_io::windows::input::tests::standard_readonly_pipe_preserves_single_chunk_demand_and_limit",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    },
+    {
+      "name": "paused-native-phases",
+      "test": "browser_sharing::helper_io::windows::input::tests::paused_native_phases_keep_real_completion_and_dirty_ownership",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    },
+    {
+      "name": "eof-read-retirement",
+      "test": "browser_sharing::helper_io::windows::input::tests::eof_and_inflight_retirement_do_not_fabricate_completion",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    },
+    {
+      "name": "unsupported-input-modes",
+      "test": "browser_sharing::helper_io::windows::input::tests::overlapped_and_non_pipe_inputs_are_rejected_before_data_io",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    },
+    {
+      "name": "same-binary-helper-idle-stop",
+      "test": "browser_sharing::helper::windows_input_tests::same_binary_helper_idle_stop_keeps_mcp_and_fifo",
+      "ignored": true,
+      "requiresSameBuildHelper": true
+    },
+    {
+      "name": "worker-pending-stop-deadline",
+      "test": "browser_sharing::helper::windows_input_tests::real_worker_pending_peek_keeps_fifo_and_original_one_second_deadline",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    },
+    {
+      "name": "worker-observed-input-stop",
+      "test": "browser_sharing::helper::windows_input_tests::real_worker_positive_unpublished_and_reading_stop_close_before_ack",
+      "ignored": false,
+      "requiresSameBuildHelper": false
+    }
+  ],
+  "scope": "Seven parent controls only. The two fixed ignored child dispatchers are invoked by their owning parents and are not standalone CI cases. These results do not replace the native P27 screenshot case, recovery seven, null-attributes eight, or real-Agent acceptance."
+}

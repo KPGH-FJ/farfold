@@ -12,7 +12,7 @@ function Source-Inputs {
   # Exact tracked crate inputs include case-sensitive native/BrowserWorkspace.*,
   # embedded JS, common Rust dependencies, resources, icons and Cargo/config.
   # Generated target and untracked user/history material are not traversed.
-  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/scripts/windows-pe-resource-inspection.py' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
+  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/scripts/windows-pe-resource-inspection.py' '.github/scripts/windows-helper-stdin-controls.py' '.github/scripts/windows-helper-stdin-cases.json' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
   if ($LASTEXITCODE -ne 0 -or $paths.Count -lt 20) { throw 'Native P27 source input selection incomplete' }
   $map = [ordered]@{}
   foreach ($path in $paths) { $map[$path] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }

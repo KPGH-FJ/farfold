@@ -1,6 +1,8 @@
 use crate::browser_sharing::channel::{self, Stream};
 use std::io;
-pub(crate) fn prepare() -> io::Result<()> {
+pub(crate) struct Input;
+
+pub(crate) fn prepare() -> io::Result<Input> {
     for fd in [0, 1] {
         let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
         if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
@@ -11,7 +13,7 @@ pub(crate) fn prepare() -> io::Result<()> {
     if unsafe { libc::fcntl(1, 73, 1) } < 0 {
         return Err(io::Error::last_os_error());
     }
-    Ok(())
+    Ok(Input)
 }
 pub(crate) fn close_stdout() -> io::Result<()> {
     if unsafe { libc::close(1) } != 0
@@ -22,13 +24,30 @@ pub(crate) fn close_stdout() -> io::Result<()> {
     }
     Ok(())
 }
-pub(crate) fn read_stdin(bytes: &mut [u8]) -> io::Result<usize> {
-    let n = unsafe { libc::read(0, bytes.as_mut_ptr().cast(), bytes.len()) };
-    if n < 0 {
-        Err(io::Error::last_os_error())
-    } else {
-        Ok(n as usize)
+impl Input {
+    pub(crate) fn read_into(&mut self, bytes: &mut Vec<u8>, limit: usize) -> io::Result<bool> {
+        let mut buffer = [0_u8; 8192];
+        let capacity = buffer.len().min(limit.saturating_sub(bytes.len()));
+        if capacity == 0 {
+            return Err(io::ErrorKind::WouldBlock.into());
+        }
+        let n = unsafe { libc::read(0, buffer.as_mut_ptr().cast(), capacity) };
+        if n < 0 {
+            return Err(io::Error::last_os_error());
+        }
+        bytes.extend_from_slice(&buffer[..n as usize]);
+        Ok(n == 0)
     }
+    pub(crate) fn pause(&mut self) -> io::Result<super::InputStop> {
+        Ok(super::InputStop::Clear)
+    }
+    pub(crate) fn stop_state(&self) -> io::Result<super::InputStop> {
+        Ok(super::InputStop::Clear)
+    }
+    pub(crate) fn resume(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+    pub(crate) fn retire(&mut self) {}
 }
 pub(crate) fn write_stdout(bytes: &[u8]) -> io::Result<usize> {
     let n = unsafe { libc::write(1, bytes.as_ptr().cast(), bytes.len()) };
