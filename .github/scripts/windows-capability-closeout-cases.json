@@ -852,6 +852,12 @@
       "test": "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators",
       "manual": false,
       "category": "ownedArchiveGitPointerSyntax"
+    },
+    {
+      "name": "recovery-verbatim-child-reservation-boundaries",
+      "test": "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries",
+      "manual": false,
+      "category": "ownedRecoveryReservationBoundaries"
     }
   ],
   "blockedPositiveCases": [],

@@ -12,6 +12,20 @@ pub(super) struct RemoveTicket {
     plan: Capture,
     created: Instant,
 }
+fn recovery_path(parent: &str, id: &str) -> Result<String> {
+    #[cfg(windows)]
+    {
+        Path::new(parent)
+            .join(format!(".farfold-recovery-{id}"))
+            .to_str()
+            .map(str::to_owned)
+            .ok_or(error("unsafePath"))
+    }
+    #[cfg(not(windows))]
+    {
+        Ok(format!("{parent}/.farfold-recovery-{id}"))
+    }
+}
 fn reject(i: &mut Inner, id: &str, code: &str) -> Reply {
     let mut op = operation(id, "failed", Some(code));
     op.action = "remove".into();
@@ -278,7 +292,7 @@ impl Worktrees {
             return Ok(reject(&mut i, id, "changed"));
         }
         let recovery_id = new_id()?;
-        let recovery_path = format!("{}/.farfold-recovery-{recovery_id}", ticket.saved.parent);
+        let recovery_path = recovery_path(&ticket.saved.parent, &recovery_id)?;
         let intent = RemoveIntent {
             saved: ticket.saved,
             roots: ticket.plan.roots.summary()?,
@@ -778,5 +792,88 @@ impl Worktrees {
         i.save(store, n)?;
         drop(i);
         self.list(store)
+    }
+}
+
+#[cfg(all(test, windows))]
+mod tests {
+    use super::*;
+    use std::{fs, path::Prefix};
+
+    #[test]
+    fn verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries() {
+        let temporary = crate::test_support::tempdir().unwrap();
+        let parent = inspect::canonical(temporary.path()).unwrap();
+        let parent_path = Path::new(&parent);
+        assert!(matches!(
+            parent_path.components().next(),
+            Some(std::path::Component::Prefix(prefix))
+                if matches!(prefix.kind(), Prefix::VerbatimDisk(_))
+        ));
+        let parent_stamp = inspect::stamp(parent_path).unwrap();
+
+        // This is the previous production spelling, not a second path builder.
+        // In a verbatim path its slash belongs to the leaf, so the original
+        // parent check must still refuse it before creating any target.
+        let old = format!("{parent}/.farfold-recovery-old-spelling");
+        assert_eq!(
+            removal::reserve_at(parent_path, &parent_stamp, Path::new(&old))
+                .err()
+                .unwrap()
+                .code,
+            "unsafePath"
+        );
+        assert!(fs::read_dir(parent_path).unwrap().next().is_none());
+
+        let actual = recovery_path(&parent, "owned-child").unwrap();
+        let actual_path = Path::new(&actual);
+        let reserved = removal::reserve_at(parent_path, &parent_stamp, actual_path).unwrap();
+        reserved.verify().unwrap();
+        assert_eq!(actual_path.parent(), Some(parent_path));
+        assert_eq!(
+            actual_path.file_name().unwrap(),
+            ".farfold-recovery-owned-child"
+        );
+        assert_eq!(inspect::stamp(actual_path).unwrap(), reserved.stamp);
+        assert_eq!(inspect::stamp(parent_path).unwrap(), parent_stamp);
+
+        let foreign = parent_path.join("other parent");
+        fs::create_dir(&foreign).unwrap();
+        let foreign_stamp = inspect::stamp(&foreign).unwrap();
+        let foreign_child = recovery_path(foreign.to_str().unwrap(), "outside").unwrap();
+        let wrong_stamp_child = recovery_path(&parent, "wrong-stamp").unwrap();
+        for (stamp, target) in [
+            (&parent_stamp, foreign_child.as_str()),
+            (&foreign_stamp, wrong_stamp_child.as_str()),
+        ] {
+            assert_eq!(
+                removal::reserve_at(parent_path, stamp, Path::new(target))
+                    .err()
+                    .unwrap()
+                    .code,
+                "unsafePath"
+            );
+            assert!(!Path::new(target).exists());
+        }
+        assert!(fs::read_dir(&foreign).unwrap().next().is_none());
+
+        let collision = recovery_path(&parent, "collision").unwrap();
+        fs::create_dir(&collision).unwrap();
+        let collision_stamp = inspect::stamp(Path::new(&collision)).unwrap();
+        let canary = Path::new(&collision).join("external.txt");
+        fs::write(&canary, b"original external bytes").unwrap();
+        assert_eq!(
+            removal::reserve_at(parent_path, &parent_stamp, Path::new(&collision))
+                .err()
+                .unwrap()
+                .code,
+            "targetExists"
+        );
+        assert_eq!(fs::read(canary).unwrap(), b"original external bytes");
+        assert_eq!(
+            inspect::stamp(Path::new(&collision)).unwrap(),
+            collision_stamp
+        );
+        reserved.verify().unwrap();
     }
 }

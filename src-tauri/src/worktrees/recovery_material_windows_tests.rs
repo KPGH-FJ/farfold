@@ -522,15 +522,21 @@ fn restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_unt
     assert_eq!(denied.raw_os_error(), Some(5));
     let memory = MixedMemory::default();
     let owner = Owner::default();
+    eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE before-sealed-call");
     let result = owner.sealed_material(
         f.source(&memory, true).unwrap(),
         f.destination(&memory),
         &AtomicBool::new(false),
         |sealed| {
+            eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE callback-before-verify");
             let before = sealed.verify()?;
+            eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE after-verify-before-reconstruct");
             let tree = sealed.reconstruct_tree()?;
+            eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE after-reconstruct");
             assert_reconstructed(&tree, (2, 1, 1));
+            eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE before-final-verify");
             assert_eq!(sealed.verify()?, before);
+            eprintln!("FARFOLD_RESTRICTIVE_RESTORE_PHASE after-final-verify");
             Ok(tree)
         },
     );

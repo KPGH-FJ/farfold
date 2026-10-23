@@ -110,7 +110,9 @@ fn official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separ
         1
     );
     assert_eq!(
-        reader.text(&root, &["rev-parse", "HEAD"]).unwrap(),
+        reader
+            .text(&root, &["rev-parse", "--verify", "HEAD"])
+            .unwrap(),
         original.head.unwrap()
     );
 }

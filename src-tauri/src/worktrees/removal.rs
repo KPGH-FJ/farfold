@@ -80,15 +80,24 @@ impl Reservation {
 }
 #[cfg(windows)]
 pub(super) fn reserve(i: &RemoveIntent) -> Result<Reservation> {
+    reserve_at(
+        Path::new(&i.saved.parent),
+        &i.saved.parent_stamp,
+        Path::new(&i.recovery_path),
+    )
+}
+#[cfg(windows)]
+pub(super) fn reserve_at(
+    parent_path: &Path,
+    parent_stamp: &inspect::Stamp,
+    path: &Path,
+) -> Result<Reservation> {
     use crate::file_access::{PinnedPath, WorktreeCheckout};
-    let parent =
-        PinnedPath::directory(Path::new(&i.saved.parent)).map_err(|_| error("recoveryChanged"))?;
-    if inspect::pinned_stamp(&parent)? != i.saved.parent_stamp
-        || Path::new(&i.recovery_path).parent() != Some(Path::new(&i.saved.parent))
-    {
+    let parent = PinnedPath::directory(parent_path).map_err(|_| error("recoveryChanged"))?;
+    if inspect::pinned_stamp(&parent)? != *parent_stamp || path.parent() != Some(parent_path) {
         return Err(error("unsafePath"));
     }
-    let leaf = Path::new(&i.recovery_path)
+    let leaf = path
         .file_name()
         .and_then(|v| v.to_str())
         .ok_or(error("unsafePath"))?;

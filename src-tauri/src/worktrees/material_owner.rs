@@ -275,6 +275,8 @@ impl Owner {
                 consume,
             );
             result.map_err(|e| {
+                #[cfg(test)]
+                eprintln!("FARFOLD_SEALED_MATERIAL_FAILURE error={e:?}");
                 error(match e {
                     crate::file_access::CarrierFailure::Cancelled => "cancelled",
                     crate::file_access::CarrierFailure::Limit => "materialLimit",

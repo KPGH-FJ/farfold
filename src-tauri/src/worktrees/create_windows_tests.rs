@@ -55,7 +55,7 @@ fn isolated_full_security(name: &str, body: impl FnOnce()) {
     let arguments: Vec<_> = std::env::args().collect();
     if arguments.iter().any(|s| s == name) && arguments.iter().any(|s| s == "--exact") {
         body();
-        println!("completed:{name}");
+        eprintln!("completed:{name}");
         return;
     }
     use std::io::{Read, Seek};

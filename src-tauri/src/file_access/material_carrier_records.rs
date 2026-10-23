@@ -327,13 +327,12 @@ pub(super) fn parse_profile<R: Read>(
             return Err(Error::Limit);
         }
     }
-    // BackupRead(FALSE) can omit the physical default record for a zero-size
-    // regular file, including one that has EA or named streams. The supplied
-    // inventory already observed that empty default on the same original
-    // handle. Record only its semantic fact: never synthesize carrier bytes,
-    // a successful native write, or a full-security record.
-    if !full && expected.get(&Vec::new()) == Some(&0) && !parts.contains_key(&Key::Data(Vec::new()))
-    {
+    // BackupRead can omit the physical default record for a zero-size regular
+    // file in either security profile, including one with EA or named streams.
+    // The supplied inventory already observed that empty default on the same
+    // original handle. Record only its semantic fact: never synthesize carrier
+    // bytes, a successful native write, or the required full-security record.
+    if expected.get(&Vec::new()) == Some(&0) && !parts.contains_key(&Key::Data(Vec::new())) {
         parts.insert(
             Key::Data(Vec::new()),
             Part {

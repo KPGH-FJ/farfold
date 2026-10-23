@@ -74,11 +74,21 @@ fn all_bytes_utf16_and_every_boundary_use_actual_stream_parser() {
     }
 }
 #[test]
-fn real_zero_data_is_distinct_from_missing_default() {
-    let mut raw = stream(1, 0, &[], &[]);
-    raw.extend(stream(3, 0, &[], &descriptor()));
-    assert!(run(&raw, &[(Vec::new(), 0)].into()).is_ok());
-    assert!(run(&raw[20..], &[(Vec::new(), 0)].into()).is_err());
+fn full_security_observed_empty_default_preserves_physical_bytes_without_padding() {
+    let expected = [(Vec::new(), 0)].into();
+    let security = stream(3, 2, &[], &descriptor());
+    let raw = [stream(1, 0, &[], &[]), security.clone()].concat();
+    let omitted = run(&security, &expected).unwrap();
+    let emitted = run(&raw, &expected).unwrap();
+    assert_eq!(omitted.bytes, security.len() as u64);
+    assert_eq!(omitted.sha256, <[u8; 32]>::from(Sha256::digest(&security)));
+    assert_eq!(emitted.bytes, raw.len() as u64);
+    assert_eq!(emitted.sha256, <[u8; 32]>::from(Sha256::digest(&raw)));
+    assert_ne!(omitted, emitted);
+    assert!(omitted.same_contents(&emitted));
+    assert_eq!(omitted.semantic_sha256(), emitted.semantic_sha256());
+    assert!(omitted.security.is_some());
+    assert_eq!(omitted.security, emitted.security);
 }
 #[test]
 fn every_truncated_prefix_refuses_complete_carrier() {
@@ -292,6 +302,82 @@ fn ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material() {
     }
     assert!(ordinary(&[zero.clone(), zero].concat(), &empty).is_err());
     assert!(ordinary(&stream(3, 2, &[], &descriptor()), &empty).is_err());
-    assert!(run(&stream(3, 2, &[], &descriptor()), &empty).is_err());
+    assert!(run(&[], &empty).is_err());
     assert!(ordinary(&[], &Expected::new()).is_err());
+}
+
+#[test]
+fn full_security_omitted_zero_default_keeps_named_ea_and_security_semantics() {
+    let named: Vec<u16> = ":owned:$DATA".encode_utf16().collect();
+    let expected = [(Vec::new(), 0), (named.clone(), 3)].into();
+    let raw = [
+        stream(2, 0, &[], b"opaque-native-EA"),
+        stream(4, 0, &named, b"ADS"),
+        stream(3, 2, &[], &descriptor()),
+    ]
+    .concat();
+    let observed = run(&raw, &expected).unwrap();
+    let explicit = run(&[stream(1, 0, &[], &[]), raw.clone()].concat(), &expected).unwrap();
+    assert!(observed.has_ea() && observed.security.is_some());
+    assert_eq!(observed.bytes, raw.len() as u64);
+    assert_eq!(observed.sha256, <[u8; 32]>::from(Sha256::digest(&raw)));
+    assert!(observed.same_contents(&explicit));
+    assert_eq!(observed.semantic_sha256(), explicit.semantic_sha256());
+    assert_ne!(observed.sha256, explicit.sha256);
+    for (ea, ads) in [
+        (b"changed-native-EA".as_slice(), b"ADS".as_slice()),
+        (b"opaque-native-EA".as_slice(), b"ads".as_slice()),
+    ] {
+        let changed = run(
+            &[
+                stream(2, 0, &[], ea),
+                stream(4, 0, &named, ads),
+                stream(3, 2, &[], &descriptor()),
+            ]
+            .concat(),
+            &expected,
+        )
+        .unwrap();
+        assert!(!observed.same_contents(&changed));
+        assert_ne!(observed.semantic_sha256(), changed.semantic_sha256());
+    }
+    let mut changed_descriptor = descriptor();
+    changed_descriptor[2..4].copy_from_slice(&0x8014u16.to_le_bytes());
+    let changed = run(
+        &[
+            stream(2, 0, &[], b"opaque-native-EA"),
+            stream(4, 0, &named, b"ADS"),
+            stream(3, 2, &[], &changed_descriptor),
+        ]
+        .concat(),
+        &expected,
+    )
+    .unwrap();
+    assert_ne!(observed.security, changed.security);
+    assert!(!observed.same_contents(&changed));
+    assert_ne!(observed.semantic_sha256(), changed.semantic_sha256());
+}
+
+#[test]
+fn full_security_empty_default_still_requires_all_other_complete_material() {
+    let empty: Expected = [(Vec::new(), 0)].into();
+    let security = stream(3, 2, &[], &descriptor());
+    assert!(run(&[], &empty).is_err());
+    assert!(run(&stream(1, 0, &[], &[]), &empty).is_err());
+    assert!(run(&stream(3, 2, &[], &[]), &empty).is_err());
+    assert!(run(&security, &Expected::new()).is_err());
+    assert!(run(&security, &[(Vec::new(), 1)].into()).is_err());
+    for size in [0, 1] {
+        let named: Vec<u16> = ":required:$DATA".encode_utf16().collect();
+        assert!(run(&security, &[(Vec::new(), 0), (named, size)].into()).is_err());
+    }
+    for end in 0..security.len() {
+        assert!(run(&security[..end], &empty).is_err());
+    }
+    let zero = stream(1, 0, &[], &[]);
+    for end in 1..zero.len() {
+        assert!(run(&[security.clone(), zero[..end].to_vec()].concat(), &empty).is_err());
+    }
+    assert!(run(&[security.clone(), security.clone()].concat(), &empty).is_err());
+    assert!(run(&[security, zero.clone(), zero].concat(), &empty).is_err());
 }
