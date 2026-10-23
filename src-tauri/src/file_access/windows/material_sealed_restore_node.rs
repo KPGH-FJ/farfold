@@ -91,6 +91,55 @@ impl Seek for Range<'_> {
         Ok(self.position)
     }
 }
+fn semantic(proof: &NativeProof, payload: [u8; 32]) -> [u8; 32] {
+    proof
+        .ordinary_security
+        .as_ref()
+        .map_or(payload, |s| s.bind_payload(payload))
+}
+pub(super) fn needs_write(proof: &NativeProof) -> bool {
+    proof.ordinary_security.is_none()
+        || proof.ea.count != 0
+        || proof
+            .expected
+            .iter()
+            .any(|(name, bytes)| !name.is_empty() || *bytes != 0)
+}
+fn apply_security(
+    sealed: &File,
+    target: &File,
+    node: &tree::Node,
+    proof: &NativeProof,
+    io: &mut Io<'_>,
+) -> Result<()> {
+    let Some(section) = &node.ordinary_security else {
+        return Ok(());
+    };
+    let wanted = proof.ordinary_security.as_ref().ok_or(Error::Changed)?;
+    if &section.summary != wanted {
+        return Err(Error::Changed);
+    }
+    let len = usize::try_from(section.summary.bytes).map_err(|_| Error::Limit)?;
+    let _memory = io.resident.lease(len)?;
+    charge(io.work, len)?;
+    check(io.cancel)?;
+    let mut raw = vec![0; len];
+    let mut source = sealed;
+    source
+        .seek(SeekFrom::Start(section.start))
+        .map_err(|e| io_error("ordinaryRestoreSeek", e))?;
+    source
+        .read_exact(&mut raw)
+        .map_err(|e| io_error("ordinaryRestoreRead", e))?;
+    super::super::super::material_ordinary_security::restore(
+        target,
+        &raw,
+        wanted,
+        io.work,
+        io.cancel,
+        io.resident,
+    )
+}
 enum Parsed {
     Regular(records::Parsed),
     Directory(dirs::Parsed),
@@ -118,9 +167,10 @@ impl Parsed {
             return Err(Error::Changed);
         }
         let value = match node.kind {
-            tree::Kind::Regular => Self::Regular(records::parse(
+            tree::Kind::Regular => Self::Regular(records::parse_profile(
                 input,
                 &proof.expected,
+                proof.ordinary_security.is_none(),
                 work,
                 cancel,
                 resident,
@@ -128,7 +178,11 @@ impl Parsed {
             tree::Kind::Directory => Self::Directory(dirs::parse(
                 input,
                 &proof.expected,
-                Profile::WithFullSecurity,
+                if proof.ordinary_security.is_none() {
+                    Profile::WithFullSecurity
+                } else {
+                    Profile::PayloadOnly
+                },
                 work,
                 cancel,
                 resident,
@@ -136,16 +190,16 @@ impl Parsed {
         };
         match &value {
             Self::Regular(v)
-                if v.semantic_sha256() == proof.semantic_sha256
+                if semantic(proof, v.semantic_sha256()) == proof.semantic_sha256
                     && v.bytes == node.native_bytes
                     && v.sha256 == node.native_sha256
                     && v.security == proof.security
                     && v.has_ea() == (proof.ea.count != 0) => {}
             Self::Directory(v)
-                if v.semantic_sha256() == proof.semantic_sha256
+                if semantic(proof, v.semantic_sha256()) == proof.semantic_sha256
                     && v.bytes == node.native_bytes
                     && v.sha256 == node.native_sha256
-                    && v.security.as_ref() == Some(&proof.security)
+                    && v.security == proof.security
                     && v.has_ea() == (proof.ea.count != 0)
                     && v.ea.as_ref().is_none_or(|e| e == &proof.ea) => {}
             _ => return Err(Error::Changed),
@@ -166,7 +220,14 @@ impl Parsed {
             .map_err(|e| io_error("restoreRecaptureParseSeek", e))?;
         match self {
             Self::Regular(source) => {
-                let actual = records::parse(input, &proof.expected, work, cancel, resident)?;
+                let actual = records::parse_profile(
+                    input,
+                    &proof.expected,
+                    proof.ordinary_security.is_none(),
+                    work,
+                    cancel,
+                    resident,
+                )?;
                 if !source.same_contents(&actual) {
                     return Err(Error::Changed);
                 }
@@ -175,7 +236,11 @@ impl Parsed {
                 let actual = dirs::parse(
                     input,
                     &proof.expected,
-                    Profile::WithFullSecurity,
+                    if proof.ordinary_security.is_none() {
+                        Profile::WithFullSecurity
+                    } else {
+                        Profile::PayloadOnly
+                    },
                     work,
                     cancel,
                     resident,
@@ -199,12 +264,25 @@ pub(super) fn facts(
     if !proof.matches(node) {
         return Err(Error::Changed);
     }
+    if let Some(expected) = &proof.ordinary_security {
+        let actual = super::super::super::material_mixed_tree_input::ordinary::Facts::take(
+            file, node.kind, work, cancel, resident,
+        )?;
+        return if actual.expected == proof.expected
+            && actual.ea == proof.ea
+            && actual.security.summary.same_facets(expected)
+        {
+            Ok(())
+        } else {
+            Err(Error::Changed)
+        };
+    }
     match node.kind {
         tree::Kind::Regular => {
             let actual = regular::facts(file, work, cancel, resident)?;
             if actual.expected != proof.expected
                 || actual.ea != proof.ea
-                || actual.security != proof.security
+                || Some(actual.security) != proof.security
             {
                 return Err(Error::Changed);
             }
@@ -213,7 +291,7 @@ pub(super) fn facts(
             let actual = directory::take(file, true, work, cancel, resident)?;
             if actual.expected != proof.expected
                 || actual.ea != proof.ea
-                || actual.security.as_ref() != Some(&proof.security)
+                || actual.security != proof.security
             {
                 return Err(Error::Changed);
             }
@@ -232,16 +310,21 @@ pub(super) fn restore(
         node,
         proof,
     } = input;
-    let work = &mut *io.work;
-    let cancel = io.cancel;
-    let resident = io.resident;
-    let context = &mut *io.context;
     let target_identity = stamp(target.file)
         .map_err(|e| io_error("restoreTargetEntry", e))?
         .identity;
     if target.kind != node.kind || &target_identity != target.identity {
         return Err(Error::Changed);
     }
+    if io.context.is_some() {
+        return Err(Error::CleanupUnknown);
+    }
+    validate(sealed, node, proof, io.work, io.cancel, io.resident)?;
+    apply_security(sealed, target.file, node, proof, io)?;
+    let work = &mut *io.work;
+    let cancel = io.cancel;
+    let resident = io.resident;
+    let context = &mut *io.context;
     let target = target.file;
     check(cancel)?;
     if context.is_some() {
@@ -256,23 +339,27 @@ pub(super) fn restore(
         resident,
     )?;
     let minimum = size_of::<WIN32_STREAM_ID>() + 1;
-    if node.native_bytes < minimum as u64 {
+    let write = needs_write(proof);
+    if write && node.native_bytes < minimum as u64 {
         return Err(Error::Unsupported);
     }
-    let mut api = Native::new(true);
-    let mut session = Session::new(target, &mut api, Mode::Write, context);
-    let result = transfer::restore(
-        &mut session,
-        Range::new(sealed, node)?,
-        node.native_bytes,
-        work,
-        cancel,
-        minimum,
-        resident,
-    );
-    drop(session);
-    result?;
-    if context.is_some() || api.aborts() != 1 {
+    let full = proof.ordinary_security.is_none();
+    let mut api = Native::new(full);
+    if write {
+        let mut session = Session::new(target, &mut api, Mode::Write, context);
+        let result = transfer::restore(
+            &mut session,
+            Range::new(sealed, node)?,
+            node.native_bytes,
+            work,
+            cancel,
+            minimum,
+            resident,
+        );
+        drop(session);
+        result?;
+    }
+    if context.is_some() || api.aborts() != u32::from(write) {
         return Err(Error::CleanupUnknown);
     }
     material_restore::flushed(target)?;
@@ -284,7 +371,7 @@ pub(super) fn restore(
     output
         .rewind()
         .map_err(|e| io_error("restoreRecaptureSeek", e))?;
-    let mut read = Native::new(true);
+    let mut read = Native::new(full);
     let mut session = Session::new(target, &mut read, Mode::Read, context);
     let result = transfer::capture(&mut session, spool, work, cancel, minimum, resident);
     drop(session);

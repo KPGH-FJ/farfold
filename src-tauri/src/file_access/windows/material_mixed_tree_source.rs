@@ -115,9 +115,6 @@ impl Sources {
         cancel: &AtomicBool,
         resident: &Resident,
     ) -> Result<Self> {
-        if !root.full_security_purpose() {
-            return Err(Error::Unsupported);
-        }
         root.directory_carrier_leaf(&leaf).map_err(pin_error)?;
         let mut memory = resident.lease(4096)?;
         let managed_memory = if managed_root_git.is_some() {
@@ -221,7 +218,9 @@ impl Sources {
                 return Err(Error::Unsupported);
             }
             proof.verify(cancel).map_err(|_| Error::Changed)?;
-            let full_root = proof.full_root(cancel).map_err(|_| Error::Unsupported)?;
+            let full_root = proof
+                .root_for(nodes[0].pin.full_security_purpose(), cancel)
+                .map_err(|_| Error::Unsupported)?;
             let pin = MaterialPin::root(full_root, resident, cancel).map_err(pin_error)?;
             let extra = Self::collect(
                 pin,

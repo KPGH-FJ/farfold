@@ -81,14 +81,16 @@ fn verify_node(
 impl FrozenSource {
     pub(in crate::worktrees) fn deletion_request(
         mut self,
+        full: bool,
         cancel: &AtomicBool,
     ) -> Result<MixedRequest> {
         let memory = MixedMemory::default();
         let mut work = EaWorkBudget::new(crate::file_access::MATERIAL_WORK_LIMIT);
         let mut used = 0;
         self.common.verify()?;
-        let root = WorktreeDeleteNode::root(Path::new(&self.snapshot.root), &memory, cancel)
-            .map_err(carrier)?;
+        let root =
+            WorktreeDeleteNode::root_for(Path::new(&self.snapshot.root), &memory, full, cancel)
+                .map_err(carrier)?;
         verify_node(
             &root, &self.root, &memory, &mut work, &mut used, false, cancel,
         )?;
@@ -113,7 +115,7 @@ impl FrozenSource {
             .plain_security(&memory, &mut work, cancel)
             .map_err(carrier)?;
         let private_root =
-            WorktreeDeleteNode::root(Path::new(&self.snapshot.git_dir), &memory, cancel)
+            WorktreeDeleteNode::root_for(Path::new(&self.snapshot.git_dir), &memory, full, cancel)
                 .map_err(carrier)?;
         let mut private: Vec<Held> = Vec::with_capacity(self.private.len());
         let mut baselines = std::mem::take(&mut self.private).into_iter();

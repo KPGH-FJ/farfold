@@ -11,7 +11,7 @@ fn original(parent: &PinnedPath, leaf: &str) -> (Stamp, Vec<u8>) {
 }
 #[test]
 fn actual_pointer_owner_excludes_writers_and_checks_original_identity_and_bytes() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     fs::write(temp.path().join(".git"), b"gitdir: original\n").unwrap();
     let parent = PinnedPath::directory(temp.path()).unwrap();
     let (version, bytes) = original(&parent, ".git");
@@ -34,7 +34,7 @@ fn actual_pointer_owner_excludes_writers_and_checks_original_identity_and_bytes(
 }
 #[test]
 fn second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     fs::write(temp.path().join(".git"), b"gitdir: original\n").unwrap();
     fs::write(temp.path().join("gitdir"), b"original/.git\n").unwrap();
     let parent = PinnedPath::directory(temp.path()).unwrap();

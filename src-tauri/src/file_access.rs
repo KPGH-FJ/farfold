@@ -69,6 +69,8 @@ pub(crate) fn same_object(left: &File, right: &File) -> io::Result<bool> {
 mod material_backup_io;
 #[cfg(any(windows, test))]
 mod material_carrier_records;
+#[cfg(any(windows, test))]
+mod material_ordinary_security_records;
 #[cfg(windows)]
 pub(crate) use material_carrier_records::Error as CarrierFailure;
 #[cfg(windows)]

@@ -138,10 +138,11 @@ fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>
 pub(super) fn capture(
     owner: &super::material_owner::Owner,
     s: &Snapshot,
+    profile: Option<&super::MaterialProfile>,
     cancel: &AtomicBool,
 ) -> Result<Capture> {
     #[cfg(not(windows))]
-    let _ = owner;
+    let _ = (owner, profile);
     #[cfg(windows)]
     let source_graph = git::source_roots::SourceGraph::capture(s, cancel)?;
     #[cfg(windows)]
@@ -209,7 +210,13 @@ pub(super) fn capture(
     #[cfg(unix)]
     let content = material_scan::content(root, cancel)?;
     #[cfg(windows)]
-    let content = material::capture(owner, &source_graph, s, cancel)?;
+    let content = material::capture(
+        owner,
+        &source_graph,
+        s,
+        material::archive_full(profile)?,
+        cancel,
+    )?;
     #[cfg(windows)]
     source_graph.recheck(cancel)?;
     Ok(Capture {
@@ -310,20 +317,28 @@ fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     Ok(())
 }
 pub(super) fn validate(m: &Manifest) -> Result<()> {
-    let material_valid = match (m.version, &m.windows_material) {
-        (1, None) => m.content.profile.is_none(),
-        (2, Some(material)) => {
-            cfg!(windows)
+    let material_valid =
+        match (m.version, &m.windows_material) {
+            (1, None) => m.content.profile.is_none(),
+            (2, Some(material)) => cfg!(windows)
                 && material.validate()
                 && (material.content.nodes as usize) < material.nodes.len()
-                && m.content.profile
-                    == Some(super::recycle_types::MaterialProfile::WindowsRetainedTreeV1)
+                && match material.version {
+                    1 => {
+                        m.content.profile
+                            == Some(super::recycle_types::MaterialProfile::WindowsRetainedTreeV1)
+                    }
+                    2 => m.content.profile
+                        == Some(
+                            super::recycle_types::MaterialProfile::WindowsOrdinaryRetainedTreeV1,
+                        ),
+                    _ => false,
+                }
                 && m.content.entries == material.content.nodes as u64
                 && m.content.bytes == material.content.bytes
-                && m.content.sha256 == material_scan::hex(material.content.sha256)
-        }
-        _ => false,
-    };
+                && m.content.sha256 == material_scan::hex(material.content.sha256),
+            _ => false,
+        };
     if !material_valid
         || !matches!(m.roots.format.as_str(), "sha1" | "sha256")
         || !oid(&m.roots.head)
@@ -1014,6 +1029,7 @@ fn manifest_v1_rejects_partial_windows_content_before_any_filesystem_work() {
         MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1,
         MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1,
         MaterialProfile::WindowsRetainedTreeV1,
+        MaterialProfile::WindowsOrdinaryRetainedTreeV1,
     ] {
         manifest.content.profile = Some(profile);
         assert_eq!(validate(&manifest).unwrap_err().code, "recoveryInvalid");

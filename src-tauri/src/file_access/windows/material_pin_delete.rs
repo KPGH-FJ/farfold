@@ -24,13 +24,14 @@ impl MaterialPin {
             .identity;
         let guid = guid(pin.file(), resident)
             .map_err(super::super::material_directory_carrier::pin_error)?;
+        let full_security = pin.full_security_purpose();
         Ok(Self {
             inner: Arc::new(Node {
                 resource: Resource::DeleteRoot(root),
                 identity,
                 guid,
                 opening,
-                full_security: true,
+                full_security,
                 deletion: true,
                 depth: 0,
                 resident: resident.clone(),

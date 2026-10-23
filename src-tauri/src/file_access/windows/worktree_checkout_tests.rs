@@ -12,7 +12,7 @@ fn source(bytes: &[u8]) -> File {
 }
 #[test]
 fn owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = PinnedPath::directory(temporary.path()).unwrap();
     let mut owner = WorktreeCheckout::new(&root).unwrap();
     let input = source(b"header\0payload\xfffooter");
@@ -42,7 +42,7 @@ fn owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite() {
 }
 #[test]
 fn attribute_guards_cover_each_lookup_level_and_deny_mutation() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = PinnedPath::directory(temporary.path()).unwrap();
     let mut owner = WorktreeCheckout::new(&root).unwrap();
     owner
@@ -69,7 +69,7 @@ fn attribute_guards_cover_each_lookup_level_and_deny_mutation() {
 }
 #[test]
 fn fixed_index_publication_is_exclusive_and_never_replaces_existing_index() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = PinnedPath::directory(temporary.path()).unwrap();
     let original = source(b"owned index bytes\0\xff");
     let publication =
@@ -101,7 +101,7 @@ fn fixed_index_publication_is_exclusive_and_never_replaces_existing_index() {
 }
 #[test]
 fn cancellation_and_outside_range_never_create_destination_files() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = PinnedPath::directory(temporary.path()).unwrap();
     let mut owner = WorktreeCheckout::new(&root).unwrap();
     let input = source(b"owned");
@@ -124,7 +124,7 @@ fn cancellation_and_outside_range_never_create_destination_files() {
 }
 #[test]
 fn created_root_handle_blocks_the_old_path_stamp_replacement_window() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let legacy = temporary.path().join("legacy");
     fs::create_dir(&legacy).unwrap();
     let original = {
@@ -151,7 +151,7 @@ fn created_root_handle_blocks_the_old_path_stamp_replacement_window() {
 }
 #[test]
 fn unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let parent = PinnedPath::directory(temporary.path()).unwrap();
     let mut reserved = WorktreeCheckout::create_under(&parent, "owned").unwrap();
     reserved

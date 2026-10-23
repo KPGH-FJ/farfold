@@ -3,7 +3,7 @@ use std::fs;
 
 #[test]
 fn ordinary_move_releases_child_pointer_and_reacquires_the_exact_original() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let parent = PinnedPath::directory(temp.path()).unwrap();
     let source = temp.path().join("source");
     let target = temp.path().join("target");
@@ -48,7 +48,7 @@ fn ordinary_move_releases_child_pointer_and_reacquires_the_exact_original() {
 
 #[test]
 fn changed_pointer_after_move_is_not_adopted_or_overwritten() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let parent = PinnedPath::directory(temp.path()).unwrap();
     let source = temp.path().join("source");
     let target = temp.path().join("target");
@@ -84,7 +84,7 @@ fn changed_pointer_after_move_is_not_adopted_or_overwritten() {
 #[test]
 #[ignore = "manual: actual NTFS and pre-existing FullSecurity root access; no privilege adjustment"]
 fn actual_move_refuses_collision_and_preserves_identity_after_post_rename_failure() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let parent = PinnedPath::directory(temp.path()).unwrap();
     let from = parent.guid_path.join("source");
     let to = parent.guid_path.join("target");

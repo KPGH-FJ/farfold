@@ -24,7 +24,7 @@ fn parent(path: &Path) -> PinnedPath {
 }
 #[test]
 fn original_handle_closes_readonly_file_then_held_parent_proves_absence() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let path = temp.path().join("readonly.bin");
     fs::write(&path, b"owned original").unwrap();
     let mut permissions = fs::metadata(&path).unwrap().permissions();
@@ -48,7 +48,7 @@ fn original_handle_closes_readonly_file_then_held_parent_proves_absence() {
 }
 #[test]
 fn duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let path = temp.path().join("held.bin");
     fs::write(&path, b"still held").unwrap();
     let file = opened(&path, false);
@@ -77,7 +77,7 @@ fn duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close()
 }
 #[test]
 fn external_nonsharing_reader_prevents_delete_authority_and_preserves_bytes() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let path = temp.path().join("external.bin");
     fs::write(&path, b"external reader").unwrap();
     let reader = OpenOptions::new()
@@ -97,7 +97,7 @@ fn external_nonsharing_reader_prevents_delete_authority_and_preserves_bytes() {
 }
 #[test]
 fn late_unknown_directory_child_survives_and_prevents_parent_disposal() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let path = temp.path().join("owned");
     fs::create_dir(&path).unwrap();
     let directory = opened(&path, true);
@@ -119,7 +119,7 @@ fn late_unknown_directory_child_survives_and_prevents_parent_disposal() {
 }
 #[test]
 fn force_image_section_check_refuses_live_image_mapping_without_unlink() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     // Bounded real system PE copied only into our disposable fixture. No load,
     // execution, access to a user binary or mutation of the source DLL occurs.
     let system = std::env::var_os("SystemRoot").unwrap();

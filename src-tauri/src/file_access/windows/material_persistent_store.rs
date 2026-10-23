@@ -431,7 +431,14 @@ impl OwnedSealedMaterial<'_> {
             .and_then(|v| v.native_catalog.as_ref())
             .ok_or(Error::Unsupported)?;
         let value = crate::worktrees::WindowsMaterial {
-            version: 1,
+            version: if catalog
+                .first()
+                .is_some_and(|p| p.ordinary_security.is_some())
+            {
+                2
+            } else {
+                1
+            },
             volume: receipt.identity.device,
             file_id: receipt.identity.inode.to_le_bytes(),
             bytes: receipt.bytes,

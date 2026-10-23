@@ -24,11 +24,12 @@ fn descriptor() -> WindowsMaterial {
                 logical_bytes: 0,
                 sha256: [4; 32],
             },
-            security: MaterialSecurity {
+            security: Some(MaterialSecurity {
                 aces: 0,
                 returned_bytes: 20,
                 sha256: [5; 32],
-            },
+            }),
+            ordinary_security: None,
         }],
     }
 }
@@ -70,9 +71,9 @@ fn descriptor_rejects_duplicate_identity_partial_default_and_unbounded_fields() 
                 name: vec![],
                 bytes: 0,
             }),
-            4 => invalid.nodes[0].security.returned_bytes = 65_537,
+            4 => invalid.nodes[0].security.as_mut().unwrap().returned_bytes = 65_537,
             5 => invalid.nodes[0].ea.logical_bytes = 65_537,
-            6 => invalid.nodes[0].security.aces = 3,
+            6 => invalid.nodes[0].security.as_mut().unwrap().aces = 3,
             7 => invalid.bytes = MAX_CARRIER + 1,
             _ => invalid.nodes.clear(),
         }

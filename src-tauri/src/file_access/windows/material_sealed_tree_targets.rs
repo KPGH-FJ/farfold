@@ -111,7 +111,13 @@ impl State {
         };
         let node = &mut current[0];
         match &mut node.object {
-            Object::Directory(directory) => directory.create_named(parent, leaf, true)?,
+            Object::Directory(directory) => {
+                if source.ordinary_security.is_some() {
+                    directory.create_named_ordinary(parent, leaf)?;
+                } else {
+                    directory.create_named(parent, leaf, true)?;
+                }
+            }
             Object::Regular(file) => {
                 let unicode = UNICODE_STRING {
                     Length: (leaf.len() * 2) as u16,
@@ -135,7 +141,11 @@ impl State {
                             | DELETE
                             | WRITE_DAC
                             | WRITE_OWNER
-                            | ACCESS_SYSTEM_SECURITY,
+                            | if source.ordinary_security.is_none() {
+                                ACCESS_SYSTEM_SECURITY
+                            } else {
+                                0
+                            },
                         &object,
                         &mut ios,
                         ptr::null(),

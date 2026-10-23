@@ -29,7 +29,9 @@ use std::{
 };
 #[path = "material_mixed_native_proof.rs"]
 mod native_proof;
-pub(super) use native_proof::NativeProof;
+pub(super) use native_proof::{NativeProof, SecurityEvidence};
+#[path = "material_ordinary_capture.rs"]
+pub(super) mod ordinary;
 
 pub(crate) struct MixedMemory(Resident);
 impl MixedMemory {
@@ -119,13 +121,45 @@ impl MixedRequest {
         request.retain_native = true;
         Ok(request)
     }
+    pub(crate) fn worktree_ordinary(
+        pin: PinnedPath,
+        leaf: Vec<u16>,
+        memory: &MixedMemory,
+        cancel: &AtomicBool,
+        proof: crate::worktrees::ManagedRootGitEdge,
+    ) -> Result<Self> {
+        let mut request = Self::held_ordinary(pin, leaf, memory, cancel)?;
+        request.managed_root_git = Some(proof);
+        request.retain_native = true;
+        Ok(request)
+    }
+    pub(crate) fn full_security(&self) -> bool {
+        self.root.full_security_purpose()
+    }
     pub(crate) fn held(
         pin: PinnedPath,
         leaf: Vec<u16>,
         memory: &MixedMemory,
         cancel: &AtomicBool,
     ) -> Result<Self> {
-        if !pin.full_security_purpose() {
+        Self::held_for(pin, leaf, memory, cancel, true)
+    }
+    pub(crate) fn held_ordinary(
+        pin: PinnedPath,
+        leaf: Vec<u16>,
+        memory: &MixedMemory,
+        cancel: &AtomicBool,
+    ) -> Result<Self> {
+        Self::held_for(pin, leaf, memory, cancel, false)
+    }
+    fn held_for(
+        pin: PinnedPath,
+        leaf: Vec<u16>,
+        memory: &MixedMemory,
+        cancel: &AtomicBool,
+        full: bool,
+    ) -> Result<Self> {
+        if pin.full_security_purpose() != full {
             return Err(Error::Unsupported);
         }
         let reserved = memory.0.lease(2048)?;
@@ -493,133 +527,183 @@ where
     let _witness_memory = resident.lease(count.checked_mul(8192).ok_or(Error::Limit)?)?;
     let mut directories: Vec<(usize, dirs::Node)> = Vec::with_capacity(count);
     let mut witnesses = Vec::with_capacity(count);
+    let mut ordinary_witnesses = Vec::with_capacity(count);
     let mut expected: Vec<Expected> = Vec::with_capacity(count);
     let mut native_catalog = resources.retain_native.then(|| Vec::with_capacity(count));
     let mut output = ns.tree_carrier.as_ref().ok_or(Error::Invalid)?;
-    let mut writer = tree::Writer::begin(&mut output, sources.nodes.len(), work, cancel, resident)?;
+    let full = sources
+        .nodes
+        .first()
+        .ok_or(Error::Invalid)?
+        .pin
+        .full_security_purpose();
+    let mut writer = tree::Writer::begin_profile(
+        &mut output,
+        sources.nodes.len(),
+        full,
+        work,
+        cancel,
+        resident,
+    )?;
     for (index, node) in sources.nodes.iter().enumerate() {
         check(cancel)?;
-        let (stored, record) = match node.kind {
-            Kind::Directory => {
-                let mut directory = dirs::Node {
-                    #[cfg(test)]
-                    parent: node.parent,
-                    leaf: node.leaf.clone(),
-                    pin: node.pin.clone(),
-                    facts: None,
-                    bytes: 0,
-                    sha256: [0; 32],
-                    semantic_sha256: [0; 32],
-                };
-                let (record, stored) = dirs::capture_node(
-                    &mut directory,
-                    ns,
+        if node.pin.full_security_purpose() != full {
+            return Err(Error::Changed);
+        }
+        let mut ordinary_security = None;
+        let (stored, record) = if !full {
+            let captured = ordinary::capture(
+                node,
+                ns,
+                &mut Io {
                     work,
                     cancel,
                     resident,
-                    &mut resources.context,
-                )?;
-                let f = directory.facts.as_ref().ok_or(Error::Invalid)?;
-                expected.push(Expected {
-                    bytes: directory.bytes,
-                    sha256: directory.sha256,
-                    basic: f.basic.clone(),
-                });
-                if let Some(catalog) = native_catalog.as_mut() {
-                    catalog.push(NativeProof::from_facts(
-                        &f.stamp.identity,
-                        Kind::Directory,
-                        directory.semantic_sha256,
-                        &f.expected,
-                        &f.ea,
-                        f.security.as_ref().ok_or(Error::Unsupported)?,
-                        resident,
-                    )?);
-                }
-                directories.push((index, directory));
-                (stored, record)
+                    context: &mut resources.context,
+                },
+            )?;
+            expected.push(Expected {
+                bytes: captured.native_bytes,
+                sha256: captured.native_sha256,
+                basic: captured.basic,
+            });
+            if let Some(catalog) = native_catalog.as_mut() {
+                catalog.push(captured.proof);
             }
-            Kind::Regular => {
-                let mut capture = regular::prepare(
-                    Held::material(&node.pin)?,
-                    &mut Io {
-                        work,
-                        cancel,
-                        resident,
-                        context: &mut resources.context,
-                    },
-                )?
-                .capture(
-                    ns,
-                    &mut Io {
-                        work,
-                        cancel,
-                        resident,
-                        context: &mut resources.context,
-                    },
-                )?;
-                expected.push(Expected {
-                    bytes: capture.parsed.bytes,
-                    sha256: capture.parsed.sha256,
-                    basic: capture.facts.basic.clone(),
-                });
-                if let Some(catalog) = native_catalog.as_mut() {
-                    let f = &capture.facts;
-                    catalog.push(NativeProof::from_facts(
-                        &f.stamp.identity,
-                        Kind::Regular,
-                        capture.parsed.semantic_sha256(),
-                        &f.expected,
-                        &f.ea,
-                        &f.security,
-                        resident,
-                    )?);
-                }
-                let result = {
-                    let mut sink = RegularSink {
-                        file: ns.target_carrier.as_ref().ok_or(Error::Invalid)?,
-                        result: None,
+            ordinary_witnesses.push(captured.witness);
+            ordinary_security = Some(captured.security);
+            (captured.bytes, captured.sha256)
+        } else {
+            match node.kind {
+                Kind::Directory => {
+                    let mut directory = dirs::Node {
+                        #[cfg(test)]
+                        parent: node.parent,
+                        leaf: node.leaf.clone(),
+                        pin: node.pin.clone(),
+                        facts: None,
+                        bytes: 0,
+                        sha256: [0; 32],
+                        semantic_sha256: [0; 32],
                     };
-                    capture.consume_bytes(
+                    let (record, stored) = dirs::capture_node(
+                        &mut directory,
                         ns,
-                        &node.leaf,
+                        work,
+                        cancel,
+                        resident,
+                        &mut resources.context,
+                    )?;
+                    let f = directory.facts.as_ref().ok_or(Error::Invalid)?;
+                    expected.push(Expected {
+                        bytes: directory.bytes,
+                        sha256: directory.sha256,
+                        basic: f.basic.clone(),
+                    });
+                    if let Some(catalog) = native_catalog.as_mut() {
+                        catalog.push(NativeProof::from_facts(
+                            &f.stamp.identity,
+                            Kind::Directory,
+                            directory.semantic_sha256,
+                            &f.expected,
+                            &f.ea,
+                            SecurityEvidence::Full(f.security.as_ref().ok_or(Error::Unsupported)?),
+                            resident,
+                        )?);
+                    }
+                    directories.push((index, directory));
+                    (stored, record)
+                }
+                Kind::Regular => {
+                    let mut capture = regular::prepare(
+                        Held::material(&node.pin)?,
                         &mut Io {
                             work,
                             cancel,
                             resident,
                             context: &mut resources.context,
                         },
-                        &mut sink,
+                    )?
+                    .capture(
+                        ns,
+                        &mut Io {
+                            work,
+                            cancel,
+                            resident,
+                            context: &mut resources.context,
+                        },
                     )?;
-                    sink.result.take().ok_or(Error::Invalid)?
-                };
-                witnesses.push(capture.recycle(
-                    ns,
-                    &mut Io {
-                        work,
-                        cancel,
-                        resident,
-                        context: &mut resources.context,
-                    },
-                )?);
-                result
+                    expected.push(Expected {
+                        bytes: capture.parsed.bytes,
+                        sha256: capture.parsed.sha256,
+                        basic: capture.facts.basic.clone(),
+                    });
+                    if let Some(catalog) = native_catalog.as_mut() {
+                        let f = &capture.facts;
+                        catalog.push(NativeProof::from_facts(
+                            &f.stamp.identity,
+                            Kind::Regular,
+                            capture.parsed.semantic_sha256(),
+                            &f.expected,
+                            &f.ea,
+                            SecurityEvidence::Full(&f.security),
+                            resident,
+                        )?);
+                    }
+                    let result = {
+                        let mut sink = RegularSink {
+                            file: ns.target_carrier.as_ref().ok_or(Error::Invalid)?,
+                            result: None,
+                        };
+                        capture.consume_bytes(
+                            ns,
+                            &node.leaf,
+                            &mut Io {
+                                work,
+                                cancel,
+                                resident,
+                                context: &mut resources.context,
+                            },
+                            &mut sink,
+                        )?;
+                        sink.result.take().ok_or(Error::Invalid)?
+                    };
+                    witnesses.push(capture.recycle(
+                        ns,
+                        &mut Io {
+                            work,
+                            cancel,
+                            resident,
+                            context: &mut resources.context,
+                        },
+                    )?);
+                    result
+                }
             }
         };
         let mut typed = ns.target_carrier.as_ref().ok_or(Error::Invalid)?;
         typed
             .seek(SeekFrom::Start(0))
             .map_err(|e| io_error("mixedAppendSeek", e))?;
-        writer.append(
-            tree::Entry {
-                kind: node.kind,
-                parent: node.parent,
-            },
-            &mut typed,
-            stored,
-            record,
-            work,
-            cancel,
-        )?;
+        let entry = tree::Entry {
+            kind: node.kind,
+            parent: node.parent,
+        };
+        if let Some(security) = ordinary_security {
+            writer.append_ordinary(
+                entry,
+                &mut typed,
+                tree::Stored {
+                    bytes: stored,
+                    sha256: record,
+                    security: Some(&security.bytes),
+                },
+                work,
+                cancel,
+            )?;
+        } else {
+            writer.append(entry, &mut typed, stored, record, work, cancel)?;
+        }
         // Only scratch spools recycle. Unified carrier is append-only, NEVER reset.
         reset_raw(ns, &carrier_id, &resources.context)?;
     }
@@ -677,6 +761,9 @@ where
         )?) {
             return Err(Error::Changed);
         }
+    }
+    for witness in &ordinary_witnesses {
+        witness.verify(work, cancel, resident)?;
     }
     sources.verify(work, cancel)?;
     ns.verify()?;
@@ -743,6 +830,9 @@ where
         )?) {
             return Err(Error::Changed);
         }
+    }
+    for witness in &ordinary_witnesses {
+        witness.verify(work, cancel, resident)?;
     }
     sources.verify(work, cancel)?;
     ns.verify()?;

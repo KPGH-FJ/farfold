@@ -71,7 +71,13 @@ pub(super) fn operation(o: &SavedOperation) -> bool {
     let s = &o.status;
     i.saved.valid()
         && if cfg!(windows) {
-            i.content.profile == Some(super::MaterialProfile::WindowsRetainedTreeV1)
+            matches!(
+                i.content.profile,
+                Some(
+                    super::MaterialProfile::WindowsRetainedTreeV1
+                        | super::MaterialProfile::WindowsOrdinaryRetainedTreeV1
+                )
+            )
         } else {
             i.content.profile.is_none()
         }

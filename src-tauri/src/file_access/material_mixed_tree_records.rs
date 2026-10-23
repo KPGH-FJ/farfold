@@ -6,7 +6,7 @@ use super::{
     material_carrier_records::{
         BLOCK, Error, Resident, ResidentLease, Result, charge, check, io_error,
     },
-    material_directory_facet as facet,
+    material_directory_facet as facet, material_ordinary_security_records as ordinary,
 };
 use sha2::{Digest, Sha256};
 use std::{
@@ -41,6 +41,11 @@ pub(super) struct Metadata {
     pub attributes: u32,
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub(super) struct OrdinarySection {
+    pub start: u64,
+    pub summary: ordinary::Summary,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) struct Node {
     pub kind: Kind,
     pub parent: u32,
@@ -51,6 +56,7 @@ pub(super) struct Node {
     pub native_bytes: u64,
     pub native_sha256: [u8; 32],
     pub record_sha256: [u8; 32],
+    pub ordinary_security: Option<OrdinarySection>,
 }
 pub(super) struct Verified {
     pub nodes: Vec<Node>,
@@ -62,6 +68,7 @@ pub(super) struct Writer<'a, W: Write> {
     output: &'a mut W,
     hash: Sha256,
     count: u32,
+    full: bool,
     written: u32,
     buffer: Vec<u8>,
     _memory: ResidentLease,
@@ -76,10 +83,26 @@ fn bytes<W: Write>(
     charge(work, b.len())?;
     out.write_all(b).map_err(|e| io_error("treeWrite", e))
 }
+pub(super) struct Stored<'a> {
+    pub bytes: u64,
+    pub sha256: [u8; 32],
+    pub security: Option<&'a [u8]>,
+}
 impl<'a, W: Write> Writer<'a, W> {
+    #[cfg(test)]
     pub fn begin(
         output: &'a mut W,
         count: usize,
+        work: &mut WorkBudget,
+        cancel: &AtomicBool,
+        resident: &Resident,
+    ) -> Result<Self> {
+        Self::begin_profile(output, count, true, work, cancel, resident)
+    }
+    pub fn begin_profile(
+        output: &'a mut W,
+        count: usize,
+        full: bool,
         work: &mut WorkBudget,
         cancel: &AtomicBool,
         resident: &Resident,
@@ -91,7 +114,7 @@ impl<'a, W: Write> Writer<'a, W> {
         let mut head = [0u8; 16];
         head[..8].copy_from_slice(MAGIC);
         head[8..12].copy_from_slice(&(count as u32).to_le_bytes());
-        head[12] = 1; // only explicit complete-security sources in this profile
+        head[12] = if full { 1 } else { 2 }; // explicit security coverage
         bytes(output, &head, work, cancel)?;
         let mut hash = Sha256::new();
         hash.update(head);
@@ -99,6 +122,7 @@ impl<'a, W: Write> Writer<'a, W> {
             output,
             hash,
             count: count as u32,
+            full,
             written: 0,
             buffer: vec![0; BLOCK],
             _memory: memory,
@@ -118,6 +142,47 @@ impl<'a, W: Write> Writer<'a, W> {
         work: &mut WorkBudget,
         cancel: &AtomicBool,
     ) -> Result<()> {
+        self.append_record(
+            entry,
+            source,
+            Stored {
+                bytes: stored_bytes,
+                sha256: record_sha256,
+                security: None,
+            },
+            work,
+            cancel,
+        )
+    }
+    pub fn append_ordinary<R: Read>(
+        &mut self,
+        entry: Entry,
+        source: &mut R,
+        stored: Stored<'_>,
+        work: &mut WorkBudget,
+        cancel: &AtomicBool,
+    ) -> Result<()> {
+        if self.full || stored.security.is_none() {
+            return Err(Error::Invalid);
+        }
+        self.append_record(entry, source, stored, work, cancel)
+    }
+    fn append_record<R: Read>(
+        &mut self,
+        entry: Entry,
+        source: &mut R,
+        stored: Stored<'_>,
+        work: &mut WorkBudget,
+        cancel: &AtomicBool,
+    ) -> Result<()> {
+        if self.full != stored.security.is_none() {
+            return Err(Error::Invalid);
+        }
+        let Stored {
+            bytes: stored_bytes,
+            sha256: record_sha256,
+            security,
+        } = stored;
         let Entry { kind, parent } = entry;
         if self.written >= self.count
             || (self.written == 0 && parent != ROOT)
@@ -159,6 +224,11 @@ impl<'a, W: Write> Writer<'a, W> {
             != 0
         {
             return Err(Error::Changed);
+        }
+        if let Some(raw) = security {
+            ordinary::decode(raw, work, cancel)?;
+            self.put(&(raw.len() as u32).to_le_bytes(), work, cancel)?;
+            self.put(raw, work, cancel)?;
         }
         self.written += 1;
         Ok(())
@@ -221,9 +291,10 @@ pub(super) fn verify_exact<R: Read>(
     };
     let mut head = [0u8; 16];
     exact(&mut input, &mut head, work, cancel)?;
-    if &head[..8] != MAGIC || head[12] != 1 || head[13..] != [0; 3] {
+    if &head[..8] != MAGIC || !matches!(head[12], 1 | 2) || head[13..] != [0; 3] {
         return Err(Error::Invalid);
     }
+    let full = head[12] == 1;
     let count = u32::from_le_bytes(head[8..12].try_into().expect("fixed")) as usize;
     if count == 0 || count > MAX_NODES {
         return Err(Error::Limit);
@@ -258,7 +329,7 @@ pub(super) fn verify_exact<R: Read>(
             match kind {
                 Kind::Directory => {
                     let node = facet::verify_exact(&mut limited, work, cancel, resident)?;
-                    if !node.metadata.security_full {
+                    if node.metadata.security_full != full {
                         return Err(Error::Unsupported);
                     }
                     let m = node.metadata;
@@ -306,6 +377,24 @@ pub(super) fn verify_exact<R: Read>(
         if limited.limit() != 0 || stored_bytes != stored || record_sha256 != record {
             return Err(Error::Changed);
         }
+        let ordinary_security = if full {
+            None
+        } else {
+            let mut length = [0u8; 4];
+            exact(&mut input, &mut length, work, cancel)?;
+            let length = u32::from_le_bytes(length) as usize;
+            if !(56..=ordinary::MAX_BYTES).contains(&length) {
+                return Err(Error::Limit);
+            }
+            let _scratch = resident.lease(length)?;
+            let start = input.position;
+            let mut raw = vec![0; length];
+            exact(&mut input, &mut raw, work, cancel)?;
+            Some(OrdinarySection {
+                start,
+                summary: ordinary::decode(&raw, work, cancel)?.summary,
+            })
+        };
         if ordinal != 0
             && (nodes[parent as usize].kind != Kind::Directory
                 || nodes[0].metadata.source_volume != metadata.source_volume)
@@ -350,6 +439,7 @@ pub(super) fn verify_exact<R: Read>(
             native_bytes,
             native_sha256,
             record_sha256: record,
+            ordinary_security,
         });
     }
     let hash: [u8; 32] = input.hash.clone().finalize().into();

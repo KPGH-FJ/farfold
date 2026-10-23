@@ -48,7 +48,7 @@ pub(super) fn capture(
             return Err(error("dirtyTracked"));
         }
     }
-    let plan = recovery_pack::capture(material, &s, cancel)?;
+    let plan = recovery_pack::capture(material, &s, saved.material.profile.as_ref(), cancel)?;
     recycle::verify_at(material, saved, true, cancel)?;
     Ok(plan)
 }

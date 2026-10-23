@@ -128,6 +128,7 @@ impl Owner {
         request: crate::file_access::MixedRequest,
         cancel: &AtomicBool,
     ) -> Result<MaterialSummary> {
+        let full = request.full_security();
         self.slot.run(|slot| {
             let mut retirement = MixedRetirement {
                 destination: slot,
@@ -150,7 +151,11 @@ impl Owner {
                 })
             })?;
             Ok(MaterialSummary {
-                profile: Some(super::MaterialProfile::WindowsRetainedTreeV1),
+                profile: Some(if full {
+                    super::MaterialProfile::WindowsRetainedTreeV1
+                } else {
+                    super::MaterialProfile::WindowsOrdinaryRetainedTreeV1
+                }),
                 entries: value.nodes as u64,
                 bytes: value.bytes,
                 sha256: material_scan::hex(value.sha256),

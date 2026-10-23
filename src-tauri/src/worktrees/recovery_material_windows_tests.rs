@@ -450,7 +450,7 @@ fn cold_descriptor_tamper_never_enters_consumer_or_removes_retained_material() {
         match mutation {
             0 => changed.file_id[15] ^= 128,
             1 => changed.sha256[0] ^= 1,
-            2 => changed.nodes[0].security.sha256[0] ^= 1,
+            2 => changed.nodes[0].security.as_mut().unwrap().sha256[0] ^= 1,
             _ => changed.nodes[1].streams[0].bytes += 1,
         }
         let memory = MixedMemory::default();

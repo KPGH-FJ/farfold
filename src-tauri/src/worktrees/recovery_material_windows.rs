@@ -5,6 +5,34 @@ use super::super::{
 };
 use crate::file_access::{MaterialStoreRequest, MixedMemory};
 use std::path::Path;
+pub(in crate::worktrees) fn archive_full(
+    profile: Option<&super::super::MaterialProfile>,
+) -> Result<bool> {
+    use super::super::MaterialProfile::*;
+    match profile {
+        Some(WindowsDefaultDataEaStreamsLinksFullSecurityV1) => Ok(true),
+        Some(WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1) => Ok(false),
+        _ => Err(error("unsupportedMaterial")),
+    }
+}
+pub(in crate::worktrees) fn retained_full(
+    profile: Option<&super::super::MaterialProfile>,
+) -> Result<bool> {
+    use super::super::MaterialProfile::*;
+    match profile {
+        Some(WindowsRetainedTreeV1) => Ok(true),
+        Some(WindowsOrdinaryRetainedTreeV1) => Ok(false),
+        _ => Err(error("unsupportedMaterial")),
+    }
+}
+fn root_for(path: &Path, full: bool) -> Result<crate::file_access::PinnedPath> {
+    if full {
+        crate::file_access::PinnedPath::directory_full_security(path)
+            .map_err(|_| error("unsupportedMaterial"))
+    } else {
+        crate::file_access::PinnedPath::directory(path).map_err(|_| error("unsupportedMaterial"))
+    }
+}
 fn complete_receipt(
     actual: &crate::file_access::MaterialTreeReceipt,
     expected: &super::material_manifest::WindowsMaterial,
@@ -20,7 +48,16 @@ fn complete_receipt(
         && actual.target_ids.len() == nodes
         && actual.directories == directories
         && actual.regulars == nodes - directories
-        && actual.write_aborts as usize == nodes
+        && actual.write_aborts as usize
+            == expected
+                .nodes
+                .iter()
+                .filter(|n| {
+                    n.ordinary_security.is_none()
+                        || n.ea.count != 0
+                        || n.streams.iter().any(|s| !s.name.is_empty() || s.bytes != 0)
+                })
+                .count()
         && actual.read_aborts as usize == nodes
         && actual.all_native_recaptured
         && actual.exact_edges_verified
@@ -31,19 +68,20 @@ pub(super) fn capture(
     owner: &super::super::material_owner::Owner,
     graph: &super::super::git::source_roots::SourceGraph,
     snapshot: &inspect::Snapshot,
+    full: bool,
     cancel: &std::sync::atomic::AtomicBool,
 ) -> Result<super::MaterialSummary> {
-    capture_edge(owner, graph.managed_root_git_edge(), snapshot, cancel)
+    capture_edge(owner, graph.managed_root_git_edge(), snapshot, full, cancel)
 }
 fn capture_edge(
     owner: &super::super::material_owner::Owner,
     edge: crate::worktrees::ManagedRootGitEdge,
     snapshot: &inspect::Snapshot,
+    full: bool,
     cancel: &std::sync::atomic::AtomicBool,
 ) -> Result<super::MaterialSummary> {
     use std::os::windows::ffi::OsStrExt;
-    let root = crate::file_access::PinnedPath::directory_full_security(Path::new(&snapshot.root))
-        .map_err(|_| error("unsupportedMaterial"))?;
+    let root = root_for(Path::new(&snapshot.root), full)?;
     if inspect::pinned_stamp(&root)? != snapshot.root_stamp {
         return Err(error("recoveryChanged"));
     }
@@ -53,8 +91,12 @@ fn capture_edge(
         .ok_or(error("unsafePath"))?
         .encode_wide()
         .collect();
-    let request = crate::file_access::MixedRequest::worktree(root, leaf, &memory, cancel, edge)
-        .map_err(|_| error("unsupportedMaterial"))?;
+    let request = if full {
+        crate::file_access::MixedRequest::worktree(root, leaf, &memory, cancel, edge)
+    } else {
+        crate::file_access::MixedRequest::worktree_ordinary(root, leaf, &memory, cancel, edge)
+    }
+    .map_err(|_| error("unsupportedMaterial"))?;
     owner.capture_complete_tree(request, cancel)
 }
 pub(in crate::worktrees) fn reserved(
@@ -87,13 +129,23 @@ pub(in crate::worktrees) fn worktree_source(
     memory: &MixedMemory,
     cancel: &std::sync::atomic::AtomicBool,
 ) -> std::result::Result<crate::file_access::MixedRequest, crate::file_access::CarrierFailure> {
-    crate::file_access::MixedRequest::worktree(
-        root,
-        leaf,
-        memory,
-        cancel,
-        graph.managed_root_git_edge(),
-    )
+    if root.full_security_purpose() {
+        crate::file_access::MixedRequest::worktree(
+            root,
+            leaf,
+            memory,
+            cancel,
+            graph.managed_root_git_edge(),
+        )
+    } else {
+        crate::file_access::MixedRequest::worktree_ordinary(
+            root,
+            leaf,
+            memory,
+            cancel,
+            graph.managed_root_git_edge(),
+        )
+    }
 }
 #[cfg(test)]
 #[path = "recovery_material_windows_tests.rs"]
@@ -122,8 +174,10 @@ pub(super) fn build(
         return Err(error("recoveryChanged"));
     }
     let memory = MixedMemory::default();
-    let root = crate::file_access::PinnedPath::directory_full_security(Path::new(&snapshot.root))
-        .map_err(|_| error("unsupportedMaterial"))?;
+    let root = root_for(
+        Path::new(&snapshot.root),
+        archive_full(saved.material.profile.as_ref())?,
+    )?;
     if inspect::pinned_stamp(&root)? != snapshot.root_stamp {
         return Err(error("recoveryChanged"));
     }
@@ -252,8 +306,13 @@ pub(in crate::worktrees) fn verify_target(
     let (configs, attributes) = graph.checkout_profile(cancel)?;
     if configs != manifest.configs
         || attributes != manifest.attributes
-        || capture_edge(owner, graph.managed_root_git_edge(), &snapshot, cancel)?
-            != manifest.content
+        || capture_edge(
+            owner,
+            graph.managed_root_git_edge(),
+            &snapshot,
+            retained_full(manifest.content.profile.as_ref())?,
+            cancel,
+        )? != manifest.content
     {
         return Err(error("recoveryChanged"));
     }

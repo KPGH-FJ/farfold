@@ -36,6 +36,16 @@ pub(crate) struct MaterialSecurity {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub(crate) struct MaterialOrdinarySecurity {
+    pub bytes: u64,
+    pub sha256: [u8; 32],
+    pub dacl_aces: u64,
+    pub dacl_sha256: [u8; 32],
+    pub labels: u64,
+    pub label_sha256: [u8; 32],
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct MaterialNode {
     pub kind: MaterialKind,
     pub source_volume: u64,
@@ -43,7 +53,9 @@ pub(crate) struct MaterialNode {
     pub semantic_sha256: [u8; 32],
     pub streams: Vec<MaterialStream>,
     pub ea: MaterialEa,
-    pub security: MaterialSecurity,
+    pub security: Option<MaterialSecurity>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ordinary_security: Option<MaterialOrdinarySecurity>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -66,7 +78,7 @@ pub(crate) struct WindowsMaterial {
 }
 impl WindowsMaterial {
     pub(crate) fn validate(&self) -> bool {
-        if self.version != 1
+        if !matches!(self.version, 1 | 2)
             || self.file_id == [0; 16]
             || !(16..=MAX_CARRIER).contains(&self.bytes)
             || self.content.nodes == 0
@@ -86,8 +98,17 @@ impl WindowsMaterial {
                 || node.streams.len() > BLOCK as usize / 24
                 || node.ea.logical_bytes > BLOCK
                 || node.ea.count > BLOCK / 8
-                || !(20..=BLOCK).contains(&node.security.returned_bytes)
-                || node.security.aces > node.security.returned_bytes / 8
+                || match (&node.security, &node.ordinary_security, self.version) {
+                    (Some(s), None, 1) => {
+                        !(20..=BLOCK).contains(&s.returned_bytes) || s.aces > s.returned_bytes / 8
+                    }
+                    (None, Some(s), 2) => {
+                        !(56..=16 + 2 * BLOCK).contains(&s.bytes)
+                            || s.dacl_aces > BLOCK / 8
+                            || s.labels > BLOCK / 8
+                    }
+                    _ => true,
+                }
             {
                 return false;
             }

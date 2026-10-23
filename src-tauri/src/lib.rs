@@ -53,6 +53,8 @@ mod pty;
 pub mod shell_env;
 mod storage_recovery;
 mod supervisor;
+#[cfg(test)]
+mod test_support;
 mod transport_security;
 mod ui_transport;
 mod update_feed;

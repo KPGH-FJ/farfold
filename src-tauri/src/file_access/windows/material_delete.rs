@@ -41,12 +41,21 @@ impl WorktreeDeleteNode {
         }
         Ok(())
     }
+    #[cfg(test)]
     pub(crate) fn root(
         path: &Path,
         memory: &super::MixedMemory,
         cancel: &AtomicBool,
     ) -> Result<Self> {
-        let root = super::pinned::WorktreeDeleteRoot::open(path).map_err(|e| {
+        Self::root_for(path, memory, true, cancel)
+    }
+    pub(crate) fn root_for(
+        path: &Path,
+        memory: &super::MixedMemory,
+        full: bool,
+        cancel: &AtomicBool,
+    ) -> Result<Self> {
+        let root = super::pinned::WorktreeDeleteRoot::open_for(path, full).map_err(|e| {
             crate::file_access::material_carrier_records::io_error("deleteRootOpen", e)
         })?;
         Ok(Self {
@@ -97,21 +106,37 @@ impl WorktreeDeleteNode {
             .try_observation_owner()
             .map_err(|_| Error::Unsupported)?;
         let resident = memory.shared();
-        let (expected, ea, security) = if self.pin.opening_metadata().kind
-            == MetadataKind::Directory
-        {
+        let (expected, ea, security) = if !self.pin.full_security_purpose() {
+            let kind = if self.pin.opening_metadata().kind == MetadataKind::Directory {
+                crate::file_access::material_mixed_tree_records::Kind::Directory
+            } else {
+                crate::file_access::material_mixed_tree_records::Kind::Regular
+            };
+            let f = super::material_mixed_tree_input::ordinary::Facts::take(
+                self.file(),
+                kind,
+                work,
+                cancel,
+                &resident,
+            )?;
+            (f.expected, f.ea, f.security.summary.bind_payload([0; 32]))
+        } else if self.pin.opening_metadata().kind == MetadataKind::Directory {
             let f =
                 super::material_directory_facts::take(self.file(), true, work, cancel, &resident)?;
-            (f.expected, f.ea, f.security.ok_or(Error::Unsupported)?)
+            (
+                f.expected,
+                f.ea,
+                f.security.ok_or(Error::Unsupported)?.sha256,
+            )
         } else {
             let f = super::material_carrier_native::facts(self.file(), work, cancel, &resident)?;
-            (f.expected, f.ea, f.security)
+            (f.expected, f.ea, f.security.sha256)
         };
         if expected.keys().any(|key| !key.is_empty()) || ea.count != 0 {
             return Err(Error::Unsupported);
         }
         self.verify()?;
-        Ok(security.sha256)
+        Ok(security)
     }
     pub(crate) fn remove(self, raw: &[u16], stopped: &mut Vec<DeleteStoppedHandle>) -> Result<()> {
         self.pin.remove_owned(raw, stopped)

@@ -120,7 +120,11 @@ pub(super) fn facts(
         security,
     })
 }
-fn inventory(file: &File, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<Inventory> {
+pub(super) fn inventory(
+    file: &File,
+    work: &mut WorkBudget,
+    cancel: &AtomicBool,
+) -> Result<Inventory> {
     check(cancel)?;
     let capacity = Inventory::query_capacity(work).map_err(record)?;
     let mut bytes = vec![0u64; BLOCK / 8];

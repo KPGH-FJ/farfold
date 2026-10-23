@@ -620,6 +620,7 @@ mod material_directory_restore;
 #[cfg(test)]
 mod material_directory_tree;
 mod material_directory_tree_source;
+mod material_ordinary_security;
 #[cfg(test)]
 pub(crate) use material_directory_restore::{DirectoryRestoreReceipt, directory_roundtrip};
 #[cfg(test)]

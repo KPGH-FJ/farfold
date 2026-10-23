@@ -19,6 +19,9 @@ pub(crate) mod remembered_pages;
 pub(crate) mod schema;
 mod startup_restore;
 mod storage_recovery;
+#[cfg(test)]
+#[path = "meta_store/test_support.rs"]
+mod test_support;
 mod worktree_impact;
 pub(crate) mod worktree_maintenance;
 mod worktrees;

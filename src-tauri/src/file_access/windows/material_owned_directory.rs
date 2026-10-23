@@ -47,6 +47,18 @@ impl State {
     }
     // Only the original Namespace-owned directory tree calls this raw leaf seam.
     pub(super) fn create_named(&mut self, root: &File, leaf: &[u16], full: bool) -> Result<()> {
+        self.create_named_access(root, leaf, full, false)
+    }
+    pub(super) fn create_named_ordinary(&mut self, root: &File, leaf: &[u16]) -> Result<()> {
+        self.create_named_access(root, leaf, false, true)
+    }
+    fn create_named_access(
+        &mut self,
+        root: &File,
+        leaf: &[u16],
+        full: bool,
+        ordinary: bool,
+    ) -> Result<()> {
         if self.file.is_some()
             || self.identity.is_some()
             || self.guid.is_some()
@@ -85,6 +97,8 @@ impl State {
             | DELETE
             | if full {
                 WRITE_DAC | WRITE_OWNER | ACCESS_SYSTEM_SECURITY
+            } else if ordinary {
+                WRITE_DAC | WRITE_OWNER
             } else {
                 0
             };

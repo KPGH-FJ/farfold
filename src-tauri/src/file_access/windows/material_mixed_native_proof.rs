@@ -1,13 +1,21 @@
 //! Owned transient inventory from ACTUAL captured Facts, never wire authority.
 use super::*;
-use crate::file_access::{ea_records, full_security_records};
+use crate::file_access::{
+    ea_records, full_security_records, material_ordinary_security_records as ordinary,
+};
+#[derive(Clone, Copy)]
+pub(in super::super) enum SecurityEvidence<'a> {
+    Full(&'a full_security_records::Decoded),
+    Ordinary(&'a ordinary::Summary),
+}
 pub(in super::super) struct NativeProof {
     pub(in super::super) identity: Identity,
     pub(in super::super) kind: Kind,
     pub(in super::super) semantic_sha256: [u8; 32],
     pub(in super::super) expected: records::Expected,
     pub(in super::super) ea: ea_records::Observation,
-    pub(in super::super) security: full_security_records::Decoded,
+    pub(in super::super) security: Option<full_security_records::Decoded>,
+    pub(in super::super) ordinary_security: Option<ordinary::Summary>,
     _memory: ResidentLease,
 }
 impl NativeProof {
@@ -36,11 +44,21 @@ impl NativeProof {
                 logical_bytes: self.ea.logical_bytes,
                 sha256: self.ea.sha256,
             },
-            security: MaterialSecurity {
-                aces: self.security.aces,
-                returned_bytes: self.security.returned_bytes,
-                sha256: self.security.sha256,
-            },
+            security: self.security.as_ref().map(|s| MaterialSecurity {
+                aces: s.aces,
+                returned_bytes: s.returned_bytes,
+                sha256: s.sha256,
+            }),
+            ordinary_security: self.ordinary_security.as_ref().map(|s| {
+                crate::worktrees::MaterialOrdinarySecurity {
+                    bytes: s.bytes,
+                    sha256: s.sha256,
+                    dacl_aces: s.dacl_aces,
+                    dacl_sha256: s.dacl_sha256,
+                    labels: s.labels,
+                    label_sha256: s.label_sha256,
+                }
+            }),
         }
     }
     pub(in super::super) fn from_descriptor(
@@ -92,11 +110,22 @@ impl NativeProof {
                 logical_bytes: value.ea.logical_bytes,
                 sha256: value.ea.sha256,
             },
-            security: full_security_records::Decoded {
-                aces: value.security.aces,
-                returned_bytes: value.security.returned_bytes,
-                sha256: value.security.sha256,
-            },
+            security: value
+                .security
+                .as_ref()
+                .map(|s| full_security_records::Decoded {
+                    aces: s.aces,
+                    returned_bytes: s.returned_bytes,
+                    sha256: s.sha256,
+                }),
+            ordinary_security: value.ordinary_security.as_ref().map(|s| ordinary::Summary {
+                bytes: s.bytes,
+                sha256: s.sha256,
+                dacl_aces: s.dacl_aces,
+                dacl_sha256: s.dacl_sha256,
+                labels: s.labels,
+                label_sha256: s.label_sha256,
+            }),
             _memory: memory,
         })
     }
@@ -106,7 +135,7 @@ impl NativeProof {
         semantic_sha256: [u8; 32],
         expected: &records::Expected,
         ea: &ea_records::Observation,
-        security: &full_security_records::Decoded,
+        security: SecurityEvidence<'_>,
         resident: &Resident,
     ) -> Result<Self> {
         // Existing native inventory admits <=64KiB of names. Reserve before
@@ -124,7 +153,14 @@ impl NativeProof {
             semantic_sha256,
             expected: expected.clone(),
             ea: ea.clone(),
-            security: security.clone(),
+            security: match security {
+                SecurityEvidence::Full(s) => Some(s.clone()),
+                _ => None,
+            },
+            ordinary_security: match security {
+                SecurityEvidence::Ordinary(s) => Some(s.clone()),
+                _ => None,
+            },
             _memory: memory,
         })
     }
@@ -132,5 +168,14 @@ impl NativeProof {
         self.kind == node.kind
             && self.identity.device == node.metadata.source_volume
             && self.identity.inode == node.metadata.source_id
+            && match (
+                &self.security,
+                &self.ordinary_security,
+                &node.ordinary_security,
+            ) {
+                (Some(_), None, None) => true,
+                (None, Some(s), Some(section)) => s == &section.summary,
+                _ => false,
+            }
     }
 }

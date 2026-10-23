@@ -57,7 +57,8 @@ mod recovery_pack;
 pub(crate) use recovery_pack::material_manifest::MaterialContent;
 #[cfg(windows)]
 pub(crate) use recovery_pack::material_manifest::{
-    MaterialEa, MaterialKind, MaterialNode, MaterialSecurity, MaterialStream, WindowsMaterial,
+    MaterialEa, MaterialKind, MaterialNode, MaterialOrdinarySecurity, MaterialSecurity,
+    MaterialStream, WindowsMaterial,
 };
 #[cfg(windows)]
 pub(crate) use recovery_pack::private_graph::PreparedRecoveryGit;
@@ -94,3 +95,6 @@ mod recovery_cold_windows_tests;
 mod recovery_public_windows_tests;
 #[cfg(all(windows, test))]
 mod remove_native_windows_tests;
+
+#[cfg(all(windows, test))]
+mod recovery_ordinary_windows_tests;

@@ -9,15 +9,20 @@ pub(crate) struct Repo {
     pub(crate) root: PathBuf,
 }
 pub(crate) fn git(root: &Path, args: &[&str]) -> String {
-    let o = Command::new("/usr/bin/git")
+    #[cfg(windows)]
+    let (program, hooks) = {
+        let hooks = root.join(".fixture-hooks");
+        fs::create_dir_all(&hooks).unwrap();
+        ("git.exe", format!("core.hooksPath={}", hooks.display()))
+    };
+    #[cfg(not(windows))]
+    let (program, hooks) = ("/usr/bin/git", "core.hooksPath=/dev/null".to_owned());
+    let o = Command::new(program)
         .arg("-C")
         .arg(root)
-        .args([
-            "-c",
-            "core.hooksPath=/dev/null",
-            "-c",
-            "core.fsmonitor=false",
-        ])
+        .arg("-c")
+        .arg(hooks)
+        .args(["-c", "core.fsmonitor=false"])
         .args(args)
         .output()
         .unwrap();
@@ -31,7 +36,7 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> String {
 }
 impl Repo {
     pub(crate) fn new() -> Self {
-        let d = tempfile::tempdir().unwrap();
+        let d = crate::test_support::tempdir().unwrap();
         let r = d.path().join("repo");
         fs::create_dir(&r).unwrap();
         git(&r, &["init", "-q"]);
@@ -58,7 +63,7 @@ fn selected_old_commit_filter_is_not_replaced_by_current_index_attributes() {
 }
 
 pub(crate) fn store() -> crate::meta_store::MetaStore {
-    crate::meta_store::MetaStore::open(Path::new(":memory:")).unwrap()
+    crate::meta_store::MetaStore::test_memory()
 }
 pub(crate) fn op(reply: Reply) -> Operation {
     match reply {

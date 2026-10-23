@@ -98,6 +98,7 @@ mod tests {
             native_bytes: 70,
             native_sha256: [8; 32],
             record_sha256: [9; 32],
+            ordinary_security: None,
         }
     }
     fn summary(nodes: &[Node], count: usize) -> Result<MaterialContent> {

@@ -7,6 +7,7 @@ impl Owner {
         cancel: &AtomicBool,
         before: impl FnOnce(MaterialSummary) -> Result<()>,
     ) -> Result<()> {
+        let full = request.full_security();
         self.slot.run(|slot| {
             let mut retirement = MixedRetirement {
                 destination: slot,
@@ -22,7 +23,11 @@ impl Owner {
                 |removal, value| {
                     removal.remove(value, || {
                         let summary = MaterialSummary {
-                            profile: Some(super::super::MaterialProfile::WindowsRetainedTreeV1),
+                            profile: Some(if full {
+                                super::super::MaterialProfile::WindowsRetainedTreeV1
+                            } else {
+                                super::super::MaterialProfile::WindowsOrdinaryRetainedTreeV1
+                            }),
                             entries: value.content.nodes as u64,
                             bytes: value.content.bytes,
                             sha256: material_scan::hex(value.content.sha256),

@@ -352,3 +352,79 @@ fn finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes() {
     head[12] = 1;
     assert!(matches!(verify(&head), Err(Error::Limit)));
 }
+
+#[test]
+fn ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree() {
+    let cancel = AtomicBool::new(false);
+    let resident = Resident::new(super::super::material_carrier_records::RESIDENT_LIMIT);
+    let mut work = WorkBudget::new(super::super::material_carrier_records::WORK_LIMIT);
+    let mut descriptor = vec![0; 20];
+    descriptor[0] = 1;
+    descriptor[2..4].copy_from_slice(&0x8004u16.to_le_bytes());
+    let mut label = descriptor.clone();
+    label[2..4].copy_from_slice(&0x8000u16.to_le_bytes());
+    let security = ordinary::encode(&descriptor, &label, &mut work, &cancel, &resident).unwrap();
+    let mut metadata = directory(1, vec![65]);
+    metadata.security_full = false;
+    let mut typed = Vec::new();
+    facet::append(
+        &mut Cursor::new([]),
+        &mut typed,
+        &metadata,
+        &facet::NativeExtent {
+            bytes: 0,
+            sha256: Sha256::digest([]).into(),
+        },
+        &mut work,
+        &cancel,
+        &resident,
+    )
+    .unwrap();
+    let hash = facet::verify_exact(&mut Cursor::new(&typed), &mut work, &cancel, &resident)
+        .unwrap()
+        .record_sha256;
+    let mut output = Vec::new();
+    let mut writer =
+        Writer::begin_profile(&mut output, 1, false, &mut work, &cancel, &resident).unwrap();
+    writer
+        .append_ordinary(
+            Entry {
+                kind: Kind::Directory,
+                parent: ROOT,
+            },
+            &mut Cursor::new(&typed),
+            Stored {
+                bytes: typed.len() as u64,
+                sha256: hash,
+                security: Some(&security.bytes),
+            },
+            &mut work,
+            &cancel,
+        )
+        .unwrap();
+    writer.finish(&mut work, &cancel).unwrap();
+    let value = verify_exact(
+        &mut Cursor::new(&output),
+        &mut work,
+        &cancel,
+        &resident,
+        |a, b| Ok(a == b),
+    )
+    .unwrap();
+    assert_eq!(value.nodes[0].native_bytes, 0);
+    assert_eq!(
+        value.nodes[0].ordinary_security.as_ref().unwrap().summary,
+        security.summary
+    );
+    output[12] = 1;
+    assert!(
+        verify_exact(
+            &mut Cursor::new(&output),
+            &mut work,
+            &cancel,
+            &resident,
+            |a, b| Ok(a == b)
+        )
+        .is_err()
+    );
+}

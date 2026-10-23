@@ -35,6 +35,11 @@ impl ArchiveObservation {
     }
 }
 
+#[cfg(any(windows, test))]
+pub(super) fn archive_profile_supported(profile: Option<&MaterialProfile>) -> bool {
+    ArchiveObservation::from_profile(profile).is_ok()
+}
+
 fn initial_archive_profile() -> Option<MaterialProfile> {
     #[cfg(windows)]
     {

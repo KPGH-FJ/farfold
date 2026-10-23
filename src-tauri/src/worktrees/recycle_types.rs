@@ -65,6 +65,9 @@ pub enum MaterialProfile {
     // Unlike the observations above, bytes/hash describe the whole carrier.
     #[serde(rename = "windowsRetainedTreeV1")]
     WindowsRetainedTreeV1,
+    // Retained payload + explicit owner/group/DACL and label; audit SACL unobserved.
+    #[serde(rename = "windowsOrdinaryRetainedTreeV1")]
+    WindowsOrdinaryRetainedTreeV1,
 }
 // Missing is the historical Unix representation; an explicit null is not
 // silently downgraded to that representation.

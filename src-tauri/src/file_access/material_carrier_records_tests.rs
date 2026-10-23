@@ -184,3 +184,42 @@ fn material_semantic_digest_uses_all_streams_without_backup_order() {
     .unwrap();
     assert_ne!(a.semantic_sha256(), changed.semantic_sha256());
 }
+
+#[test]
+fn ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security() {
+    let expected: Expected = [(Vec::new(), 0)].into();
+    let raw = stream(1, 0, &[], &[]);
+    let resident = Resident::new(RESIDENT_LIMIT);
+    let cancel = AtomicBool::new(false);
+    let mut work = WorkBudget::new(WORK_LIMIT);
+    let ordinary = parse_profile(
+        Cursor::new(&raw),
+        &expected,
+        false,
+        &mut work,
+        &cancel,
+        &resident,
+    )
+    .unwrap();
+    assert!(ordinary.security.is_none());
+    assert_eq!(ordinary.bytes, 20);
+    assert!(parse(Cursor::new(&raw), &expected, &mut work, &cancel, &resident).is_err());
+    let full = [raw, stream(3, 2, &[], &descriptor())].concat();
+    assert!(
+        parse(Cursor::new(&full), &expected, &mut work, &cancel, &resident)
+            .unwrap()
+            .security
+            .is_some()
+    );
+    assert!(
+        parse_profile(
+            Cursor::new(&full),
+            &expected,
+            false,
+            &mut work,
+            &cancel,
+            &resident
+        )
+        .is_err()
+    );
+}

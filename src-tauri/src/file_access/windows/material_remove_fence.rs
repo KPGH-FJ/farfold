@@ -73,6 +73,7 @@ impl MixedInput<'_> {
 enum Current {
     Directory(directory_facts::Facts),
     Regular(native::Facts),
+    Ordinary(super::super::material_mixed_tree_input::ordinary::Facts),
 }
 impl Current {
     fn take(
@@ -82,6 +83,16 @@ impl Current {
         cancel: &AtomicBool,
     ) -> Result<Self> {
         let file = Owner::file(&node.pin);
+        if !node.pin.full_security_purpose() {
+            return super::super::material_mixed_tree_input::ordinary::Facts::take(
+                file,
+                node.kind,
+                work,
+                cancel,
+                &material.resident,
+            )
+            .map(Self::Ordinary);
+        }
         match node.kind {
             Kind::Directory => directory_facts::take(file, true, work, cancel, &material.resident)
                 .map(Self::Directory),
@@ -94,12 +105,14 @@ impl Current {
         match self {
             Self::Directory(f) => &f.basic,
             Self::Regular(f) => &f.basic,
+            Self::Ordinary(f) => &f.basic,
         }
     }
     fn unchanged(&self, after: &Self) -> bool {
         match (self, after) {
             (Self::Directory(a), Self::Directory(b)) => a.unchanged(b),
             (Self::Regular(a), Self::Regular(b)) => a.unchanged(b),
+            (Self::Ordinary(a), Self::Ordinary(b)) => a.matches(b),
             _ => false,
         }
     }
@@ -109,13 +122,22 @@ impl Current {
                 f.stamp.identity == expected.identity
                     && f.expected == expected.expected
                     && f.ea == expected.ea
-                    && f.security.as_ref() == Some(&expected.security)
+                    && f.security == expected.security
             }
             Self::Regular(f) => {
                 f.stamp.identity == expected.identity
                     && f.expected == expected.expected
                     && f.ea == expected.ea
-                    && f.security == expected.security
+                    && Some(&f.security) == expected.security.as_ref()
+            }
+            Self::Ordinary(f) => {
+                f.stamp.identity == expected.identity
+                    && f.expected == expected.expected
+                    && f.ea == expected.ea
+                    && expected
+                        .ordinary_security
+                        .as_ref()
+                        .is_some_and(|s| s.same_facets(&f.security.summary))
             }
         };
         let actual = self.basic();
@@ -124,7 +146,7 @@ impl Current {
         native
             && actual.created == basic.created
             && actual.attributes == basic.attributes
-            && (after_children && matches!(self, Self::Directory(_))
+            && (after_children && expected.kind == Kind::Directory
                 || actual.modified == basic.modified)
     }
 }
@@ -169,7 +191,7 @@ impl RemovalMaterial {
         }
         // Parse actual BackupRead bytes, including SAME-SIZE ADS edits. No hash
         // inferred from inventory, no path reopen and no native context escapes.
-        let mut api = Native::new(true);
+        let mut api = Native::new(expected.ordinary_security.is_none());
         let mut session = Session::new(Owner::file(&node.pin), &mut api, Mode::Read, context);
         let semantic = transfer::inspect(
             &mut session,
@@ -198,10 +220,47 @@ impl RemovalMaterial {
                 Current::Regular(f) => {
                     let parsed =
                         records::parse(&mut reader, &f.expected, work, cancel, &self.resident)?;
-                    if parsed.security != f.security || parsed.has_ea() != (f.ea.count != 0) {
+                    if parsed.security.as_ref() != Some(&f.security)
+                        || parsed.has_ea() != (f.ea.count != 0)
+                    {
                         return Err(Error::Changed);
                     }
                     Ok(parsed.semantic_sha256())
+                }
+                Current::Ordinary(f) => {
+                    let semantic = match node.kind {
+                        Kind::Regular => {
+                            let parsed = records::parse_profile(
+                                &mut reader,
+                                &f.expected,
+                                false,
+                                work,
+                                cancel,
+                                &self.resident,
+                            )?;
+                            if parsed.has_ea() != (f.ea.count != 0) {
+                                return Err(Error::Changed);
+                            }
+                            parsed.semantic_sha256()
+                        }
+                        Kind::Directory => {
+                            let parsed = directory_records::parse(
+                                &mut reader,
+                                &f.expected,
+                                Profile::PayloadOnly,
+                                work,
+                                cancel,
+                                &self.resident,
+                            )?;
+                            if parsed.ea.as_ref().is_some_and(|e| e != &f.ea)
+                                || parsed.has_ea() != (f.ea.count != 0)
+                            {
+                                return Err(Error::Changed);
+                            }
+                            parsed.semantic_sha256()
+                        }
+                    };
+                    Ok(f.security.summary.bind_payload(semantic))
                 }
             },
         );

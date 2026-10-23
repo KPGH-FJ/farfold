@@ -105,7 +105,7 @@ fn set_ea(path: &Path) {
 
 #[test]
 fn public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let parent = PathBuf::from(inspect::canonical(temporary.path()).unwrap());
     let main = parent.join("owned main");
     fs::create_dir(&main).unwrap();

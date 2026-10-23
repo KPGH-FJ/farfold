@@ -447,6 +447,126 @@
       "category": "ownedActualOrdinaryArchive",
       "requiredEnvironment": "Windows NTFS with full-security access unavailable",
       "coverage": "actual public create/archive/DB reopen/explicit recheck/restore; source object IDs, staged/dirty/ignored/untracked/ADS/EA/ordinary material and historical row remain; explicit full-security observation still refuses this token"
+    },
+    {
+      "name": "ordinary-empty-directory-has-zero-writes-but-actual-readback",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_directory_has_zero_writes_but_actual_readback",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-empty-file-preserves-empty-default-without-fake-native-write",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-file-only-ea-roundtrips-exact-native-observation",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_file_only_ea_roundtrips_exact_native_observation",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-directory-only-ea-roundtrips-exact-native-observation",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_directory_only_ea_roundtrips_exact_native_observation",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-file-only-ads-keeps-zero-default-and-all-named-bytes",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_file_only_ads_keeps_zero_default_and_all_named_bytes",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-directory-only-ads-roundtrips-without-default-stream",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_directory_only_ads_roundtrips_without_default_stream",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-protected-dacl-restores-exact-readable-facet",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-low-integrity-label-is-restored-and-read-back",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_low_integrity_label_is_restored_and_read_back",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-cold-target-collision-retains-foreign-object-and-original",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-descriptor-profile-tamper-refuses-before-target-or-source-change",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_descriptor_profile_tamper_refuses_before_target_or_source_change",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "manual": false,
+      "category": "ownedActualOrdinaryRecovery",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-query-missing-read-control-is-denial-not-absent-security",
+      "test": "file_access::windows::material_ordinary_security::tests::ordinary_query_missing_read_control_is_denial_not_absent_security",
+      "manual": false,
+      "category": "ownedActualOrdinarySecurityRefusal",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-restore-missing-write-dac-keeps-source-and-target-facets",
+      "test": "file_access::windows::material_ordinary_security::tests::ordinary_restore_missing_write_dac_keeps_source_and_target_facets",
+      "manual": false,
+      "category": "ownedActualOrdinarySecurityRefusal",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "ordinary-query-cancel-or-short-work-keeps-exact-held-object",
+      "test": "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object",
+      "manual": false,
+      "category": "ownedActualOrdinarySecurityRefusal",
+      "requiredEnvironment": "Windows NTFS ordinary readable security facets",
+      "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
     }
   ],
   "blockedPositiveCases": [],

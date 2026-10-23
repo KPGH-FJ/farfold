@@ -9,7 +9,12 @@ pub(crate) struct WorktreeDeleteRoot {
     leaf: Vec<u16>,
 }
 impl WorktreeDeleteRoot {
-    pub(crate) fn open(path: &Path) -> io::Result<Self> {
+    pub(crate) fn open_for(path: &Path, full: bool) -> io::Result<Self> {
+        let purpose = if full {
+            ReadPurpose::FullSecurity
+        } else {
+            ReadPurpose::Ordinary
+        };
         let parent_path = path.parent().ok_or_else(invalid)?;
         let leaf = path.file_name().ok_or_else(invalid)?;
         let mut raw = name(leaf)?;
@@ -32,7 +37,7 @@ impl WorktreeDeleteRoot {
         let status = unsafe {
             NtCreateFile(
                 &mut returned,
-                FILE_GENERIC_READ | DELETE | ReadPurpose::FullSecurity.extra_access(),
+                FILE_GENERIC_READ | DELETE | purpose.extra_access(),
                 &object,
                 &mut ios,
                 ptr::null(),
@@ -72,7 +77,7 @@ impl WorktreeDeleteRoot {
         let pin = PinnedPath {
             files,
             identities,
-            purpose: ReadPurpose::FullSecurity,
+            purpose,
             directory_scan: Mutex::new(()),
             path: actual_path,
             guid_path,

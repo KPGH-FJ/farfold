@@ -95,7 +95,7 @@ fn isolated_full_security(name: &str, body: impl FnOnce()) {
 }
 #[test]
 fn public_create_materializes_selected_old_oid_and_source_profile_without_touching_source() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = temporary.path().join("owned source");
     repository(&root);
     fs::write(root.join(".gitattributes"), "*.txt text eol=crlf\n").unwrap();
@@ -163,7 +163,7 @@ fn public_create_materializes_selected_old_oid_and_source_profile_without_touchi
 }
 #[test]
 fn selected_custom_filter_is_rejected_before_target_or_branch_creation() {
-    let temporary = tempfile::tempdir().unwrap();
+    let temporary = crate::test_support::tempdir().unwrap();
     let root = temporary.path().join("owned source");
     repository(&root);
     fs::write(
@@ -200,7 +200,7 @@ fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers(
     isolated_full_security(
         "worktrees::create::windows::tests::public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers",
         || {
-            let temporary = tempfile::tempdir().unwrap();
+            let temporary = crate::test_support::tempdir().unwrap();
             let root = temporary.path().join("owned source");
             repository(&root);
             fs::write(root.join("payload.txt"), b"retained content\n").unwrap();

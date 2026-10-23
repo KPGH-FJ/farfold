@@ -143,10 +143,24 @@ pub(super) fn rebuild(
     let mut reads = 0u32;
     // All target FileObjects already hold their full required rights. No create
     // or pathname reopen follows restoration of a source security descriptor.
-    for kind in [tree::Kind::Regular, tree::Kind::Directory] {
-        for index in (0..verified.nodes.len()).rev() {
+    let ordinary = proofs
+        .first()
+        .is_some_and(|p| p.ordinary_security.is_some());
+    for (phase, kind) in [tree::Kind::Regular, tree::Kind::Directory]
+        .into_iter()
+        .enumerate()
+    {
+        if ordinary && phase != 0 {
+            break;
+        }
+        for ordinal in 0..verified.nodes.len() {
+            let index = if ordinary {
+                ordinal
+            } else {
+                verified.nodes.len() - 1 - ordinal
+            };
             let source = &verified.nodes[index];
-            if source.kind != kind {
+            if !ordinary && source.kind != kind {
                 continue;
             }
             check(cancel)?;
@@ -204,7 +218,7 @@ pub(super) fn rebuild(
         target_ids.push(held.identity.clone());
     }
     if restored.context.is_some()
-        || writes as usize != verified.nodes.len()
+        || writes as usize != proofs.iter().filter(|p| node::needs_write(p)).count()
         || reads as usize != verified.nodes.len()
         || stamp(input).map_err(|e| io_error("treeRestoreSourceFinal", e))? != before
     {

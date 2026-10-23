@@ -181,11 +181,15 @@ impl PreparedRecoveryGit {
         self._root.verify().map_err(|_| error("recoveryChanged"))?;
         self.frozen.verify(cancel)
     }
-    pub(crate) fn full_root(&self, cancel: &AtomicBool) -> Result<PinnedPath> {
+    pub(crate) fn root_for(&self, full: bool, cancel: &AtomicBool) -> Result<PinnedPath> {
         self.verify(cancel)?;
         let root = &self.frozen.nodes[0].pin;
-        let pin = PinnedPath::directory_full_security(&PathBuf::from(&root.path))
-            .map_err(|_| error("unsupportedMaterial"))?;
+        let path = PathBuf::from(&root.path);
+        let pin = if full {
+            PinnedPath::directory_full_security(&path).map_err(|_| error("unsupportedMaterial"))?
+        } else {
+            PinnedPath::directory(&path).map_err(|_| error("unsupportedMaterial"))?
+        };
         if pin.identity() != root.identity() {
             return Err(error("recoveryChanged"));
         }

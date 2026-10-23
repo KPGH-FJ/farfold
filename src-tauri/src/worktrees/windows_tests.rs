@@ -28,7 +28,7 @@ fn repository(root: &Path) {
 }
 #[test]
 fn existing_main_and_linked_tree_require_exact_adopt_then_cold_recheck() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo with spaces");
     repository(&root);
     let linked = directory.path().join("linked tree");
@@ -84,7 +84,7 @@ fn existing_main_and_linked_tree_require_exact_adopt_then_cold_recheck() {
 }
 #[test]
 fn a_project_local_git_executable_is_not_admitted_from_absolute_path() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     let fake = root.join("bin");
@@ -162,7 +162,7 @@ fn expired_or_missing_conditions_refuse_before_retirement_or_durable_intent() {
 }
 #[test]
 fn cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     let store = tests::store();
@@ -204,7 +204,7 @@ fn cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready() {
 
 #[test]
 fn one_context_holds_shared_and_worktree_config_until_its_final_read() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     git(&root, &["config", "extensions.worktreeConfig", "true"]);
@@ -230,7 +230,7 @@ fn one_context_holds_shared_and_worktree_config_until_its_final_read() {
 }
 #[test]
 fn explicit_git_context_does_not_override_a_custom_worktree_layout() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     git(&root, &["config", "core.worktree", "."]);
@@ -243,7 +243,7 @@ fn explicit_git_context_does_not_override_a_custom_worktree_layout() {
 }
 #[test]
 fn a_new_pointer_after_open_invalidates_the_same_context_before_another_read() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     let context = windows_git::ReadContext::open(&root).unwrap();
@@ -256,7 +256,7 @@ fn a_new_pointer_after_open_invalidates_the_same_context_before_another_read() {
 
 #[test]
 fn snapshot_stamps_must_equal_all_held_identities_not_just_reopened_paths() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let root = directory.path().join("repo");
     repository(&root);
     let (snapshot, reader) = inspect::observe(&root).unwrap();

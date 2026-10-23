@@ -132,7 +132,7 @@ pub(super) struct Parsed {
     parts: BTreeMap<Key, Part>,
     pub bytes: u64,
     pub sha256: [u8; 32],
-    pub security: full_security_records::Decoded,
+    pub security: Option<full_security_records::Decoded>,
     _memory: ResidentLease,
 }
 impl PartialEq for Parsed {
@@ -218,6 +218,16 @@ pub(super) fn parse<R: Read>(
     cancel: &AtomicBool,
     resident: &Resident,
 ) -> Result<Parsed> {
+    parse_profile(source, expected, true, budget, cancel, resident)
+}
+pub(super) fn parse_profile<R: Read>(
+    source: R,
+    expected: &Expected,
+    full: bool,
+    budget: &mut WorkBudget,
+    cancel: &AtomicBool,
+    resident: &Resident,
+) -> Result<Parsed> {
     let memory = resident.lease(CATALOG_RESIDENT)?;
     let _scratch = resident.lease(2 * BLOCK)?;
     if !expected.contains_key(&Vec::new()) || expected.len() > BLOCK / 24 {
@@ -254,7 +264,7 @@ pub(super) fn parse<R: Read>(
             return Err(Error::Unsupported);
         }
         // LINK/objectID/reparse/sparse/EFS/TxF/property/unknown never reach BackupWrite.
-        if !matches!(id, 1..=4) {
+        if !matches!(id, 1..=4) || (!full && id == 3) {
             return Err(Error::Unsupported);
         }
         if matches!(id, 2 | 3) && (length != 0 || size > BLOCK as u64) {
@@ -321,12 +331,15 @@ pub(super) fn parse<R: Read>(
     if data_count != expected.len() {
         return Err(Error::Changed);
     }
+    if full && security.is_none() {
+        return Err(Error::Invalid);
+    }
     Ok(Parsed {
         _memory: memory,
         parts,
         bytes: input.total,
         sha256: input.digest.finalize().into(),
-        security: security.ok_or(Error::Invalid)?,
+        security,
     })
 }
 #[cfg(test)]

@@ -29,7 +29,10 @@ pub(in crate::worktrees) fn delete(
     if current != plan {
         return Err(error("recoveryChanged"));
     }
-    let request = frozen.deletion_request(cancel)?;
+    let request = frozen.deletion_request(
+        recovery_pack::material::retained_full(plan.content.profile.as_ref())?,
+        cancel,
+    )?;
     material.remove_complete_tree(request, cancel, |content| {
         current.content = content;
         same_plan(intent, &current)?;

@@ -103,7 +103,7 @@ mod tests {
 
     #[test]
     fn actual_small_listing_charges_data_and_eof_instead_of_admitted_child_capacity() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         fs::write(temp.path().join("one"), b"owned").unwrap();
         let pin = PinnedPath::directory(temp.path()).unwrap();
         let cancel = AtomicBool::new(false);
@@ -119,7 +119,7 @@ mod tests {
 
     #[test]
     fn exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         fs::write(temp.path().join("one"), b"owned").unwrap();
         let pin = PinnedPath::directory(temp.path()).unwrap();
         let cancel = AtomicBool::new(false);
@@ -143,7 +143,7 @@ mod tests {
 
     #[test]
     fn resident_and_cancellation_refuse_before_any_query_work_is_charged() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let pin = PinnedPath::directory(temp.path()).unwrap();
         let mut work = EaWorkBudget::new(PAGE_BYTES as u64);
         assert_eq!(
@@ -189,7 +189,7 @@ mod tests {
     }
     #[test]
     fn actual_failed_native_query_still_consumes_one_prepaid_page() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let owner = NoListAccess {
             file: OpenOptions::new()
                 .access_mode(FILE_READ_ATTRIBUTES | SYNCHRONIZE)
@@ -216,7 +216,7 @@ mod tests {
 
     #[test]
     fn actual_multiple_pages_charge_each_request_and_keep_the_full_raw_namespace() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let mut expected = Vec::new();
         for n in 0..512 {
             let name = format!("{n:04}-{}", "x".repeat(200));

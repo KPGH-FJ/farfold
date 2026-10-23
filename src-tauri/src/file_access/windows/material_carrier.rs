@@ -150,7 +150,7 @@ fn parsed(
         .seek(SeekFrom::Start(0))
         .map_err(|e| io_error("carrierSeek", e))?;
     let value = records::parse(input, &facts.expected, work, cancel, resident)?;
-    if value.security != facts.security || value.has_ea() != (facts.ea.count != 0) {
+    if value.security.as_ref() != Some(&facts.security) || value.has_ea() != (facts.ea.count != 0) {
         return Err(Error::Changed);
     }
     Ok(value)

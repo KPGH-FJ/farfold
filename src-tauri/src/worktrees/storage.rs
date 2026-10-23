@@ -176,6 +176,16 @@ fn path(s: &str) -> bool {
 fn identity(i: &Identity) -> bool {
     path(&i.root) && path(&i.repository_root) && path(&i.git_dir) && path(&i.common_dir)
 }
+pub(super) fn archive_material_profile_valid(profile: Option<&MaterialProfile>) -> bool {
+    #[cfg(windows)]
+    {
+        super::recycle::archive_profile_supported(profile)
+    }
+    #[cfg(not(windows))]
+    {
+        profile.is_none()
+    }
+}
 impl SavedArchive {
     pub fn valid(&self) -> bool {
         let a = &self.archive;
@@ -206,8 +216,8 @@ impl SavedArchive {
             && Path::new(&a.original_path).parent() == Some(Path::new(&self.parent))
             && Path::new(&a.retained_path).parent() == Some(Path::new(&self.retained_parent))
             && Path::new(&self.retained_parent).parent() == Some(Path::new(&self.parent))
-            // Partial read observations are not legacy archive material authority.
-            && self.material.profile.is_none()
+            // Exact same-object archive profiles; retained restoration remains separate.
+            && archive_material_profile_valid(self.material.profile.as_ref())
             && self.material.entries <= 100_000
             && self.material.bytes <= 1024 * 1024 * 1024
             && self.material.sha256.len() == 64
