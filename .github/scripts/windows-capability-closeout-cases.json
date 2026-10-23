@@ -840,6 +840,18 @@
       "manual": false,
       "category": "ownedArchiveReservationHandoff",
       "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "archive-git-pointer-plain-drive-syntax",
+      "test": "worktrees::recycle::windows::pointer_tests::pointer_text_keeps_plain_drive_unicode_and_rejects_other_namespaces",
+      "manual": false,
+      "category": "ownedArchiveGitPointerSyntax"
+    },
+    {
+      "name": "archive-git-pointer-original-object-listing",
+      "test": "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators",
+      "manual": false,
+      "category": "ownedArchiveGitPointerSyntax"
     }
   ],
   "blockedPositiveCases": [],

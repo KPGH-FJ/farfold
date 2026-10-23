@@ -63,6 +63,7 @@ impl Fixture {
     }
 }
 pub(super) fn backup(delete: bool) -> Fixture {
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=entered");
     let temporary = crate::test_support::tempdir().unwrap();
     let parent = PathBuf::from(inspect::canonical(temporary.path()).unwrap());
     let main = parent.join("owned main");
@@ -79,10 +80,13 @@ pub(super) fn backup(delete: bool) -> Fixture {
     git(&main, &["add", "."]);
     git(&main, &["commit", "-qm", "owned root"]);
     let head = git(&main, &["rev-parse", "HEAD"]);
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=owned-git-prepared");
     let database = parent.join("owned metadata.sqlite");
     let store = MetaStore::open(&database).unwrap();
     let manager = Worktrees::default();
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-start");
     let inspection = manager.inspect(&store, main.to_str().unwrap()).unwrap();
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-returned");
     let create = Create {
         inspection_id: inspection.inspection_id,
         parent_path: parent.to_str().unwrap().into(),
@@ -92,14 +96,17 @@ pub(super) fn backup(delete: bool) -> Fixture {
             start_oid: head.clone(),
         },
     };
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-prepare-start");
     let prepared = tests::op(manager.prepare(&store, CREATE, create).unwrap());
     assert_eq!(
         prepared.state, "prepared",
         "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createPrepare code={:?} settled={}",
         prepared.code, prepared.settled
     );
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-start");
     manager.start(&store, CREATE).unwrap();
     let created = wait(&manager, &store, CREATE, false);
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-wait-returned");
     assert_eq!(
         created.state, "ready",
         "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createStart code={:?} settled={}",
@@ -114,6 +121,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
         b"actual named stream",
     )
     .unwrap();
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-inspect-start");
     let inspected = manager
         .recycle_inspect(
             &store,
@@ -127,6 +135,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
         action: inspected.action,
         expected_draft_baseline: inspected.draft_baseline,
     };
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-prepare-start");
     assert_eq!(
         tests::op(
             manager
@@ -136,13 +145,17 @@ pub(super) fn backup(delete: bool) -> Fixture {
         .state,
         "prepared"
     );
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-start");
     manager.start(&store, ARCHIVE).unwrap();
     let archived = wait(&manager, &store, ARCHIVE, false);
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-wait-returned");
     assert_eq!(archived.state, "ready", "{archived:?}");
     let archive = archived.archive.unwrap();
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-inspect-start");
     let inspection = manager
         .remove_inspect(&store, &archive.id, archive.revision)
         .unwrap();
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-start");
     manager
         .prepare_remove(
             &store,
@@ -155,6 +168,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
         )
         .unwrap();
     let prepared = wait(&manager, &store, REMOVE, true);
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-wait-returned");
     assert_eq!(prepared.state, "prepared", "{prepared:?}");
     assert_eq!(prepared.delete_dispatched, Some(false));
     assert!(Path::new(&archive.retained_path).is_dir());
@@ -170,6 +184,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
     assert!(artifact.join("recovery.bundle").is_file());
     assert!(artifact.join("material.bin").is_file());
     if delete {
+        eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-confirm-start");
         manager
             .confirm_remove(
                 &store,
@@ -184,6 +199,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
             )
             .unwrap();
         let removed = wait(&manager, &store, REMOVE, false);
+        eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-confirm-wait-returned");
         assert_eq!(removed.state, "ready", "{removed:?}");
         assert_eq!(removed.delete_dispatched, Some(true));
         assert!(!Path::new(&archive.retained_path).exists());
@@ -192,6 +208,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
             head
         );
     } else {
+        eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=backup-cancel-start");
         assert_eq!(
             tests::op(manager.cancel(&store, REMOVE).unwrap()).state,
             "cancelled"
@@ -200,6 +217,7 @@ pub(super) fn backup(delete: bool) -> Fixture {
     }
     drop(manager);
     drop(store);
+    eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=fixture-return");
     Fixture {
         _temp: temporary,
         parent,

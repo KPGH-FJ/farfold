@@ -123,11 +123,25 @@ fn active(cancel: &AtomicBool) -> Result<()> {
 }
 fn pointer_text(prefix: &str, path: &Path) -> Result<Vec<u8>> {
     let text = path.to_str().ok_or(error("unsafePath"))?;
-    if !path.is_absolute() || text.contains(['\0', '\r', '\n']) || text.len() + prefix.len() > 4095
+    if !path.is_absolute()
+        || !matches!(
+            path.components().next(),
+            Some(std::path::Component::Prefix(value))
+                if matches!(value.kind(), std::path::Prefix::Disk(_))
+        )
+        || text.contains(['\0', '\r', '\n'])
+        || text.len() + prefix.len() > 4095
     {
         return Err(error("unsafePath"));
     }
-    Ok(format!("{prefix}{text}\n").into_bytes())
+    // Both callers supply a DOS spelling already paired with the original held
+    // objects. Only serialize its separators here; this grants no path access.
+    // Git's get_linked_worktree removes the literal "/.git" suffix from gitdir
+    // contents, including on Windows. A native "\\.git" suffix instead makes
+    // the .git FILE appear as the listed worktree root.
+    // https://github.com/git-for-windows/git/blob/v2.56.0.windows.2/worktree.c#L157
+    let git_text = text.replace('\\', "/");
+    Ok(format!("{prefix}{git_text}\n").into_bytes())
 }
 pub(super) fn move_tree(
     material: &super::super::material_owner::Owner,
@@ -313,8 +327,14 @@ pub(super) fn move_tree(
     #[cfg(test)]
     progress.at("read-owner-reacquired");
     let actual = inspect::observe_with_reader(Path::new(to), &reader)?;
+    #[cfg(test)]
+    progress.at("moved-snapshot-observed");
     let staged = reader.read(Path::new(to), &["ls-files", "--stage", "-z"])?;
+    #[cfg(test)]
+    progress.at("moved-index-observed");
     validate_snapshot(saved, to, actual.clone(), &staged)?;
+    #[cfg(test)]
+    progress.at("moved-snapshot-validated");
     absent(from)?;
     if archive_material(
         material,
@@ -333,3 +353,7 @@ pub(super) fn move_tree(
     progress.at("completed");
     Ok(actual)
 }
+
+#[cfg(test)]
+#[path = "recycle_windows_pointer_tests.rs"]
+mod pointer_tests;

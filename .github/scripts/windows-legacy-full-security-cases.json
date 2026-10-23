@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "legacy-owned-carrier-fullsd-1",
+      "test": "worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-carrier-fullsd-2",
+      "test": "worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-carrier-fullsd-3",
+      "test": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-carrier-fullsd-4",
+      "test": "worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-raw-pin-fullsd",
+      "test": "file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-owned-link-fullsd",
+      "test": "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-directory-fullsd",
+      "test": "worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-directory-restore-fullsd",
+      "test": "worktrees::material_owner::directory_restore_tests::full_security_directory_restore_is_explicit_and_recaptures_actual_full_sd",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-directory-tree-fullsd",
+      "test": "worktrees::material_owner::directory_tree_tests::actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-regular-shared-fullsd-1",
+      "test": "worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-regular-shared-fullsd-2",
+      "test": "worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-regular-shared-fullsd-3",
+      "test": "worktrees::material_owner::regular_shared_tests::shared_capture_retains_the_original_links_one_guard_before_any_alias_success",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-continuation-mixed-fullsd-1",
+      "test": "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-continuation-mixed-fullsd-2",
+      "test": "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-continuation-mixed-fullsd-3",
+      "test": "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-continuation-mixed-fullsd-4",
+      "test": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-continuation-mixed-fullsd-5",
+      "test": "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-07",
+      "test": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-08",
+      "test": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-09",
+      "test": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-target-groups-19",
+      "test": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-29",
+      "test": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-30",
+      "test": "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-31",
+      "test": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-32",
+      "test": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-managed-edge-04",
+      "test": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    },
+    {
+      "name": "legacy-owned-material-fullsecuritymanual-managed-edge-05",
+      "test": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+      "manual": true,
+      "category": "legacyFullSecurityConditioned"
+    }
+  ]
+}

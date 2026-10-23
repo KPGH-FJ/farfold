@@ -341,7 +341,23 @@ fn execute_bounded(
                 // Unix still rejects surviving helpers immediately. Windows
                 // reaches this branch only after an original bound/error.
                 stopped = Some(stopped.unwrap_or("unknown"));
+                #[cfg(all(windows, test))]
+                child.group.emit_unsettled_observation(
+                    "beforeOriginalTermination",
+                    child.id(),
+                    status.code(),
+                    stopped,
+                    first_active_query.as_ref(),
+                );
                 child.terminate_group();
+                #[cfg(all(windows, test))]
+                child.group.emit_unsettled_observation(
+                    "afterOriginalTermination",
+                    child.id(),
+                    status.code(),
+                    stopped,
+                    first_active_query.as_ref(),
+                );
                 #[cfg(all(windows, test))]
                 settlement_observation::emit(
                     "groupNotConfirmedInactiveAfterOriginalChild",

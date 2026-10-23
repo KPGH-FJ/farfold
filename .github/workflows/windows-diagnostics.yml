@@ -45,7 +45,7 @@ jobs:
           New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
           $head = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact positives plus strict master-retirement bounded-unknown negative only' } |
+          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact/legacyFullSecurity27SeparateConditioned positives plus strict master-retirement bounded-unknown negative only' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
           & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
           $testBuildExit = $LASTEXITCODE
@@ -1265,10 +1265,18 @@ jobs:
       - name: Current capability closeout, exact current-token FullSecurity controls
         id: capability_closeout_full_sd
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
-        timeout-minutes: 8
+        timeout-minutes: 12
         continue-on-error: true
         run: |
           & ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode FullSecurityManual
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Legacy FullSecurity, 27 original controls in distinct SeSecurity-only children
+        id: legacy_conditioned_full_sd
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 8
+        continue-on-error: true
+        run: |
+          & ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode LegacyFullSecurityManual
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Master retirement bounded unknown, strict manual exact negative observation
         id: master_unknown
@@ -1447,6 +1455,7 @@ jobs:
             owned_link_transition = '${{ steps.owned_link_transition.outcome }}'
             capability_closeout_ordinary = '${{ steps.capability_closeout_ordinary.outcome }}'
             capability_closeout_full_sd = '${{ steps.capability_closeout_full_sd.outcome }}'
+            legacy_conditioned_full_sd = '${{ steps.legacy_conditioned_full_sd.outcome }}'
           }
           $positivesPassed = $build -eq 'success'
           foreach ($outcome in $required.Values) { if ($outcome -ne 'success') { $positivesPassed = $false } }
@@ -1468,7 +1477,8 @@ jobs:
             notExecutedBecauseBuildFailed = $build -ne 'success'
             productOrAllWindowsComplete = $false
             currentCapabilityCloseoutInventory = '.github/scripts/windows-capability-closeout-cases.json'
-            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
+            legacyConditionedFullSecurityInventory = '.github/scripts/windows-legacy-full-security-cases.json'
+            scope = 'selected parser/publication/terminal/auth/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact/legacyFullSecurity27SeparateConditioned controls only; expected master negative101 remains failed test+step; cancelled/skipped/missing/IOerror/mixedowner/earlypanic are incomplete'
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'aggregate.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'aggregate.json')
           if (-not $complete) { exit 1 }

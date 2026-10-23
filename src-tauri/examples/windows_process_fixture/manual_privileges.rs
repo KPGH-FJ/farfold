@@ -272,20 +272,25 @@ fn launch(binary: &Path, case: &str) -> io::Result<Child> {
     })
 }
 fn manual_case(case: &str) -> bool {
-    let Ok(manifest) = serde_json::from_str::<serde_json::Value>(include_str!(
-        "../../../.github/scripts/windows-capability-closeout-cases.json"
-    )) else {
-        return false;
-    };
-    manifest.get("schema").and_then(|v| v.as_u64()) == Some(1)
-        && manifest
-            .get("cases")
-            .and_then(|v| v.as_array())
-            .is_some_and(|cases| {
-                cases
-                    .iter()
-                    .any(|row| row["manual"] == true && row["test"] == case)
-            })
+    [
+        include_str!("../../../.github/scripts/windows-capability-closeout-cases.json"),
+        include_str!("../../../.github/scripts/windows-legacy-full-security-cases.json"),
+    ]
+    .into_iter()
+    .any(|source| {
+        let Ok(manifest) = serde_json::from_str::<serde_json::Value>(source) else {
+            return false;
+        };
+        manifest.get("schema").and_then(|v| v.as_u64()) == Some(1)
+            && manifest
+                .get("cases")
+                .and_then(|v| v.as_array())
+                .is_some_and(|cases| {
+                    cases
+                        .iter()
+                        .any(|row| row["manual"] == true && row["test"] == case)
+                })
+    })
 }
 fn execute(args: &[OsString]) -> io::Result<i32> {
     if args.len() != 3 || args[0] != "manual-granted-privileges" {

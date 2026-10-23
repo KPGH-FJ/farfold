@@ -1,9 +1,12 @@
 //! First active Git Job query plus one bounded test-only association sample.
 //! No new process owner, reaper, PID reopen, retry, or blocking wait.
-//! Emitted only after the original Child and retained Job actually settle.
+//! Completion output waits for actual settlement; an original stop additionally
+//! records already captured state before cleanup, without claiming settlement.
 use super::*;
 use std::io::Write;
 
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
 pub(crate) struct Observation {
     owner_pid: u32,
     query_return: i32,
@@ -16,6 +19,38 @@ pub(crate) struct Observation {
     association: Option<AssociationObservation>,
 }
 impl OwnedGroup {
+    pub(crate) fn emit_unsettled_observation(
+        &self,
+        point: &'static str,
+        original_child_pid: u32,
+        exit_code: Option<i32>,
+        stopped: Option<&str>,
+        first_active: Option<&Observation>,
+    ) {
+        // Snapshot only the existing finite owner after the production query.
+        // Never wait for the owner mutex: contention leaves this sample unknown.
+        // No system query, process open, native wait, retry or mutation occurs.
+        let current = self
+            .job
+            .current
+            .try_lock()
+            .ok()
+            .map(|value| value.observation());
+        let event = serde_json::json!({
+            "point": point,
+            "originalChildPid": original_child_pid,
+            "sameOriginalChildPid": original_child_pid == self.pid,
+            "originalChildExitCode": exit_code,
+            "stoppedReason": stopped,
+            "firstActiveQuery": first_active,
+            "currentMembersAtPoint": current,
+            "scope": "around original termination request; historical first query and current owned fields only; no settlement or complete-membership claim",
+        });
+        let _ = writeln!(
+            std::io::stderr().lock(),
+            "FARFOLD_WINDOWS_GIT_UNSETTLED_OWNER {event}"
+        );
+    }
     pub(crate) fn active_with_observation(
         &self,
         original_child: &std::process::Child,

@@ -3,7 +3,7 @@ param(
   [ValidatePattern('^[0-9a-f]{40}$')]
   [string]$ExpectedHead,
   [Parameter(Mandatory = $true)]
-  [ValidateSet('Ordinary', 'FullSecurityManual')]
+  [ValidateSet('Ordinary', 'FullSecurityManual', 'LegacyFullSecurityManual')]
   [string]$Mode
 )
 
@@ -19,7 +19,8 @@ $scriptHash = (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash
 
 # This explicit cohort is separate from all historical inventories. No test
 # absence, ignored result or environmental failure is a successful execution.
-$casePath = Join-Path $PSScriptRoot 'windows-capability-closeout-cases.json'
+$legacyManual = $Mode -ceq 'LegacyFullSecurityManual'
+$casePath = if ($legacyManual) { Join-Path $PSScriptRoot 'windows-legacy-full-security-cases.json' } else { Join-Path $PSScriptRoot 'windows-capability-closeout-cases.json' }
 $caseHash = (Get-FileHash -LiteralPath $casePath -Algorithm SHA256).Hash
 $manifest = Get-Content -LiteralPath $casePath -Raw | ConvertFrom-Json -ErrorAction Stop
 if ($manifest.schema -ne 1 -or $manifest.cases.Count -lt 1) { throw 'Invalid closeout case manifest' }
@@ -32,7 +33,8 @@ foreach ($case in $cases) {
 if (@($names | Select-Object -Unique).Count -ne $cases.Count -or @($labels | Select-Object -Unique).Count -ne $cases.Count) { throw 'Duplicate closeout exact test or label' }
 $ordinaryCount = @($cases | Where-Object { -not $_.manual }).Count
 $manualCount = @($cases | Where-Object { $_.manual }).Count
-$manualMode = $Mode -ceq 'FullSecurityManual'
+if ($legacyManual -and ($ordinaryCount -ne 0 -or $manualCount -ne 27 -or $cases.Count -ne 27)) { throw 'Legacy FullSecurity cohort must contain exactly 27 explicit manual controls' }
+$manualMode = $Mode -ceq 'FullSecurityManual' -or $legacyManual
 $selected = @($cases | Where-Object { $_.manual -eq $manualMode })
 $expected = if ($manualMode) { $manualCount } else { $ordinaryCount }
 if ($expected -lt 1 -or $selected.Count -ne $expected) { throw 'Empty or inconsistent selected closeout inventory' }
