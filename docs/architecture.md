@@ -170,7 +170,7 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 公开网页使用隔离网页存储；macOS本地HTML专用存档按规范项目/文件范围区分。多文件项目和本地开发服务器通过各自路径、来源与网络规则预览，不把只读预览策略称为操作系统沙箱。网页没有Tauri应用桥，页面内容也不能直接成为工作台指令。
 
-当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；新增生产截图接线仅在系统可检查封闭内容且前后页面/许可一致时工作，编辑区、整页编辑、框架或证据不足均拒绝。旧macOS能力不足继续不可用，新macOS及Windows实际截图尚未验证。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
+当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；生产截图仅在系统可检查封闭内容且前后页面/许可一致时工作，编辑区、整页编辑、框架或证据不足均拒绝。每次截图单独确认，已有文字许可不包含截图；首次截图不产生长期文字许可，失败不降级返回文字，在途请求直到实际回传确认仍可撤回。旧macOS能力不足继续不可用；Windows已取得受控网页经真实WebView2与辅助进程的生产接口分项实测，macOS27、正式界面、远程网页与真实Agent交付仍未验，具体范围见[当前状态](status.md)。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
 
 输入执行前后若发现受保护控件，或已派发输入但无法确认结果，撤回该页原共享许可；晚回包不能继续交付原许可的内容。保留实际派发与未知结果，不自动重试，也不把撤回许可说成敏感网页操作已通过。
 
@@ -196,13 +196,20 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 ### 持久化归属
 
-631已交付的详情呈现仅在展开或搜索时准备正文，完整原始事件和未知字段仍在既有状态保留；搜索节点映射使用单向游标，维持UTF-16边界与全部命中，历史完整数组在完成边界转交所有权。受控浏览器夹具与正式Dirac17处搜索分列，不由此宣称全局事件退役、背压、RSS或长期资源完成。
+历史631批次的交付记录：631已交付的详情呈现仅在展开或搜索时准备正文，完整原始事件和未知字段仍在既有状态保留；搜索节点映射使用单向游标，维持UTF-16边界与全部命中，历史完整数组在完成边界转交所有权。受控浏览器夹具与正式Dirac17处搜索分列，不由此宣称全局事件退役、背压、RSS或长期资源完成。 当前逐项消费、历史读取与所有权转交的实现及验证边界见[当前状态](status.md)，不沿用本段描述作为当前传输能力结论。
 
 [meta_store/schema.rs](../src-tauri/src/meta_store/schema.rs) 当前保留 agents、sessions、settings、dismissed_sessions 四表。内容是Farfold自有接入登记、对话索引、设置与相应整理记录；草稿、准备记录、分组、网页清单等放入受限设置结构。Agent消息、工具事件及完整历史不另建账本。
 
 服务密钥归系统凭据存储，项目成果归用户选定目录，Agent历史/账号/模型配置归各 Agent。工作位置只是请求及文件操作上下文，不保证不同对话的项目文件、账号、依赖和端口隔离。[lifemodel.rs](../src-tauri/src/lifemodel.rs) 仅保留默认关闭设置与空钩子，没有真实采集或注入。
 
 ### 并行工作位置与维护
+
+当前Windows公开新建、同对象归档/还原、独立资料生成、冷恢复及确认删除已接入各自受限路径，见[create.rs](../src-tauri/src/worktrees/create.rs)、[recycle.rs](../src-tauri/src/worktrees/recycle.rs)、[recover.rs](../src-tauri/src/worktrees/recover.rs)与[removal.rs](../src-tauri/src/worktrees/removal.rs)。目录、Git程序、引用、索引及材料仍按原对象和支持范围核验，不支持的对象拒绝处理；源码接通不等于整个Windows生命周期已验收。
+
+Windows资料树与受控独立Git目录共用[recovery_pack.rs](../src-tauri/src/worktrees/recovery_pack.rs)中的唯一Manifest，沿[recovery_material_windows.rs](../src-tauri/src/worktrees/recovery_material_windows.rs)持久保存、重开、独立重建并完整复核。普通资料与完整安全资料显式区分：普通格式保留内容、EA、ADS及可读取的owner/group/DACL/完整性标签，不冒充完整SACL；旧完整安全记录不降级，生产不自动启用权限。当前已有受控Windows成功分项，也仍有进程结束无法确认导致的公开恢复失败；最新运行、具体条件与正式安装边界统一见[当前状态](status.md)。逻辑预算、前后复核与有限样本均不构成原子快照、RSS上限或完整平台证明。
+
+<details>
+<summary>早期Windows组件与运行记录（历史边界，不代表当前入口或未完成清单）</summary>
 
 当前631增量中，Git有限输入在Windows命令重建之后安装；资料对象以同一持有文件核完整卷/128位身份、范围、哈希和前后版本。[private_bare_windows.rs](../src-tauri/src/worktrees/private_bare_windows.rs)及[git_source_export_windows.rs](../src-tauri/src/worktrees/git_source_export_windows.rs)已有受限内部消费者，但真实Windows新增7项/5项均在来源只读连接前提失败，尚未证明消费成功；后续29433以生产者原文件哈希、当前完整身份与关闭写句柄后的严格读取配对补交接；中间存在写入共享窗口，后续复核并不称连续不可变。公开变更入口与Manifest1部分资料拒绝门保持，不因内部模块存在就称完整归档或恢复。
 
@@ -218,11 +225,13 @@ Windows现有目录沿“检查、明确接入、重查”路径保存私有完�
 
 历史源码`e24361c57`、`4e7ef1b83`及后续组件已随e7批次纳入正式安装；当时的未安装、CI待取和未运行说明不再代表当前状态。`ff17f29cb`为Windows固定Git操作保留原选定程序和持有范围，转换成同对象核验的DOS程序、目录参数及固定环境路径表示；原只读策略、执行/清退所有者、Unix行为及公开变更拒绝门保持。目录捕获、FFDIR1读回和新建目录恢复仍是测试注册的内部组件；部分读取与显式完整安全信息读取不混用，目标和载体在成功后清退，未知清退所有者保留。后续Windows运行`39370766363`固定`d004486a7`，304项选定正控245通过/59失败；四项Changed核到已归属硬链接操作前后仅分配量304→4096，具体分配机制未知。当前只在两处该操作前后调用独立非分配量比较，保留完整身份、内容、普通安全信息、时间与属性；内部快照稳定、原严格比较、同时别名、链接数及后续成员核验不变。新增独立一项比较安全控制，原304项断言保持；同源码f019的Windows运行39374585697中，四个原失败及新增1项实际通过，原304项仍255通过/49失败。该批已纳入macOS正式安装，完整Windows仍未完成。后续1dbcc测试诊断从原始同次Job查询保留BOOL及成功时的计数、失败时的错误，原保守判断和清退不变；39382612570实机原304项264通过/40失败，9条成功查询的非零计数不证明具体进程存活或原因，旧5项Unknown本次未复现。此查询源码与6fa正式源码相同，完整Windows及失败原因仍开放。本机、交叉检查与macOS安装不代替真实Windows行为。当前结果见[状态](status.md)；混合树、regular/alias拓扑、持久载体、唯一完整Manifest及公开操作仍有内部缺项，非原子前后复核和逻辑预算不构成RSS或全局背压证明。
 
-当前 [git_activity_observation_tests.rs](../src-tauri/src/windows_process/git_activity_observation_tests.rs) 只在Windows测试中，对原保守判断的失败分支借用原Child做零等待，并单次读取同一Job最多32个关联ID；原查询、生产判断和清退保持。完整、部分与失败列表分别记录，关联ID不授予打开或终止进程的权限，也不直接证明存活或失败根因；单次实际结果与仍失败项见状态。
+</details>
+
+当前[git_activity_observation_tests.rs](../src-tauri/src/windows_process/git_activity_observation_tests.rs)仅在Windows测试中记录原Job首次活动查询、同一原Child的零等待、一次最多32个关联ID的观察，以及原停止分支已有的有限成员状态；[current_members.rs](../src-tauri/src/windows_process/current_members.rs)另在首次不完整观察时记录原调用结果。诊断不改变生产判断，不追加重试或终止权限；关联ID、已持对象及完整/部分/失败列表分别说明，不能证明全部历史成员已结束。实际未确认结束的分支继续保留原所有者，具体失败与系统证明边界见[当前状态](status.md)。
 
 归档前核对连接、进程、工作位置与资料；保留未提交、未跟踪和忽略材料的实际捕获范围，不能称为任意文件全量备份。后台工作仍持有独占操作许可，前端超时、取消等待或卸载不能提前释放。恢复与删除均复核真实目录和材料，不能只信元数据标记。
 
-删除仅针对符合条件的本应用归档位置，先建立并验证独立恢复资料，再经精确确认使用非强制Git操作。独立恢复从已验证材料显式生成新目录，不修改原仓库引用、索引或远端；恢复后仍需另行选择使用，见 [recovery_pack.rs](../src-tauri/src/worktrees/recovery_pack.rs) 与 [remove_manager.rs](../src-tauri/src/worktrees/remove_manager.rs)。
+删除仅针对符合条件的本应用归档位置，先建立并验证独立恢复资料，再经精确确认派发。Unix沿非强制Git移除；Windows沿[remove_windows.rs](../src-tauri/src/worktrees/remove_windows.rs)复核已持有的原资料树后，通过原对象句柄删除，不按路径扫删或用强制Git移除代替。独立恢复从已验证材料显式生成新目录，不修改原仓库引用、索引或远端；恢复后仍需另行选择使用，见[recovery_pack.rs](../src-tauri/src/worktrees/recovery_pack.rs)与[remove_manager.rs](../src-tauri/src/worktrees/remove_manager.rs)。
 
 ### 存储故障与恢复
 

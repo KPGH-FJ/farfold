@@ -1,0 +1,185 @@
+{
+  "kind": "bounded actual installed view and post-use data observation",
+  "installedSource": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "actualEntry": "New conversation;137visible session rows;no loaded audio message established",
+  "normalQuitObserved": true,
+  "originalDataRestoredOrDeleted": false,
+  "newAgentMessageSent": false,
+  "unexpectedAction": "Old AX index reused after full tree refresh; second recovery copy verification clicked, reported missing; no restore/delete. Kept actual changed metadata and evidence.",
+  "postUseData": {
+    "atUtc": "2026-10-23T12:51:12.375385+00:00",
+    "metadataSources": [
+      {
+        "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/metadata-before.sqlite3",
+        "sha256": "672ecdc09c88be602158b08f8f43a35f8ee292b455ef3f58566cd953853b8daa"
+      },
+      {
+        "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/capture/metadata-before.sqlite3",
+        "sha256": "dd1aad8f20bf4b8d08886f7b4aa3011320f0417636320f9634df9fbb45c2720d"
+      }
+    ],
+    "tables": {
+      "agents": {
+        "beforeCount": 40,
+        "afterCount": 40,
+        "added": 0,
+        "removed": 0,
+        "changed": []
+      },
+      "dismissed_sessions": {
+        "beforeCount": 173,
+        "afterCount": 173,
+        "added": 0,
+        "removed": 0,
+        "changed": []
+      },
+      "sessions": {
+        "beforeCount": 138,
+        "afterCount": 138,
+        "added": 0,
+        "removed": 0,
+        "changed": []
+      },
+      "settings": {
+        "beforeCount": 54,
+        "afterCount": 54,
+        "added": 0,
+        "removed": 0,
+        "changed": [
+          {
+            "rowKeySHA256": "905faaba2d3ad758477d22599a64eb8183f88ca9867161de5fb6f0211844a8ee",
+            "fields": ["value"],
+            "settingKey": "worktreeLocations.v1"
+          }
+        ]
+      }
+    },
+    "manifestDelta": {
+      "beforeEntries": 232530,
+      "afterEntries": 232530,
+      "added": 0,
+      "removed": 0,
+      "changed": [
+        {
+          "root": "appData",
+          "path": "farfold.sqlite3-shm",
+          "fields": ["sha256"]
+        },
+        {
+          "root": "appData",
+          "path": "farfold.sqlite3-wal",
+          "fields": ["sha256"]
+        },
+        {
+          "root": "appData",
+          "path": "registry-cache.json",
+          "fields": ["sha256", "size"]
+        },
+        {
+          "root": "webkit",
+          "path": "WebsiteData/ResourceLoadStatistics/observations.db",
+          "fields": ["sha256"]
+        },
+        {
+          "root": "webkit",
+          "path": "WebsiteData/ResourceLoadStatistics/observations.db-shm",
+          "fields": ["sha256"]
+        },
+        {
+          "root": "webkit",
+          "path": "WebsiteData/ResourceLoadStatistics/observations.db-wal",
+          "fields": ["sha256", "size"]
+        },
+        {
+          "root": "webkit",
+          "path": "WebsiteData/ResourceLoadStatistics/pcm.db-shm",
+          "fields": ["sha256"]
+        }
+      ]
+    },
+    "limits": [
+      "Read only sealed normalized copies, no SQLite opened on user originals or first captures.",
+      "No statement of zero byte changes or unknown writer resolution.",
+      "UI verification click on existing missing recovery pack is retained in normal-quit-observation.json; no new send or restore/delete action."
+    ]
+  },
+  "settingDelta": {
+    "settingKey": "worktreeLocations.v1",
+    "changedFields": [
+      {
+        "field": "worktreeLocations.v1/locations/7/location/availability",
+        "before": "verified",
+        "after": "unknown"
+      },
+      {
+        "field": "worktreeLocations.v1/operation/status/code",
+        "presenceBefore": false,
+        "presenceAfter": true
+      },
+      {
+        "field": "worktreeLocations.v1/operation/status/location/availability",
+        "before": "verified",
+        "after": "unknown"
+      },
+      {
+        "field": "worktreeLocations.v1/operation/status/state",
+        "before": "ready",
+        "after": "unknown"
+      },
+      {
+        "field": "worktreeLocations.v1/recoveries/1/receipt/availability",
+        "before": "unknown",
+        "after": "missing"
+      },
+      {
+        "field": "worktreeLocations.v1/recoveries/1/receipt/revision",
+        "before": 1,
+        "after": 2
+      }
+    ],
+    "scope": "structural comparison of sealed copies only; no values restored or changed"
+  },
+  "references": [
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/installed-ui/normal-quit-observation.json",
+      "sha256": "f2696068f2b2baa6e7622226bc2b59b12c773dd5d40d8c2b5b4ca4fba3dd7d9f"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/installed-ui/launch-state-full.txt",
+      "sha256": "bbe23a22e0070aa3a15ea62564a9ffabc8bd558f5b602670f460a3d64a4bca1e"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/installed-ui/launch.png",
+      "sha256": "f1f86a16d529e611a145cf0964acdb7eefab9dbfcb6212cf839e8a54015cf7a9"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/installed-ui/retained-worktree-unknown.txt",
+      "sha256": "ba52f7c5c8a6d8e60d822b08a6c0b98969808f50a7c8ac9a916d0a66521159a8"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/installed-ui/processes-before-normal-quit.json",
+      "sha256": "c9b0eafea0a0a99e5cb49dd3d393ceb141e8f99727c425aae3fc42b653797991"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/preparation-and-delta-review-r1.json",
+      "sha256": "74c70250deb93c463f4d2c4596e96e8fc1cd916afa2c5bebbe283448a2fbc4c5"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/capture/retention-before-receipt.json",
+      "sha256": "550ff8933302dde6141b8795f0ac1ece6f46e8eced6fb7da3e8e8cdf9d6a1746"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/data-comparison.json",
+      "sha256": "6d50f1d1b4cdb17cc8a476bd8515139486f368a4ed670b2960c1af8a2fbe77f5"
+    },
+    {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/worktree-setting-delta.json",
+      "sha256": "c763bc731b633c8af244ef1a818215718b3f33ab45269bec949ec8e087b98c56"
+    }
+  ],
+  "notCovered": [
+    "Actual message audio playback or screenshots delivered to an Agent",
+    "Installed ACK or total RSS/long running behavior",
+    "Historical unknown-writer or automatic-relaunch root cause"
+  ]
+}
