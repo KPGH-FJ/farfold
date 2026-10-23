@@ -210,6 +210,12 @@ impl Peer {
                 .map_err(|_| "helper stderr wait")?
                 .map_err(|_| "helper stderr read")?;
         }
+        // Keep the original child's terminal observation even when the earlier
+        // protocol step failed. Never print MCP bodies or launch credentials.
+        eprintln!(
+            "FARFOLD_P27_NATIVE_PHASE {}",
+            json!({"phase":"original-helper-ended","pid":self.pid,"naturalExit":status.code(),"stderrBytes":stderr.len()})
+        );
         require(
             status.success() && stderr.is_empty(),
             "helper natural exit zero/empty stderr",
@@ -460,11 +466,14 @@ async fn run_cases(app: &AppHandle) -> Result<Value, String> {
     let mut peer = Peer::start(server)?;
     let mut opened = Vec::new();
     let result=async {
+        eprintln!("FARFOLD_P27_NATIVE_PHASE {{\"phase\":\"helper-initialize-request\"}}");
         peer.send(json!({"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"owned-native-p27","version":"1"}}})).await?;
         require(peer.response(1).await?["result"]["serverInfo"]["name"]=="farfold-public-page", "actual helper initialize")?;
+        eprintln!("FARFOLD_P27_NATIVE_PHASE {{\"phase\":\"helper-initialize-replied\"}}");
         peer.send(json!({"jsonrpc":"2.0","method":"notifications/initialized"})).await?;
         peer.send(json!({"jsonrpc":"2.0","id":2,"method":"tools/list"})).await?;
         require(peer.response(2).await?["result"]["tools"].is_array(), "actual helper tool list")?;
+        eprintln!("FARFOLD_P27_NATIVE_PHASE {{\"phase\":\"helper-tools-listed\"}}");
         wait_until(|| owner.state.lock().unwrap_or_else(|e|e.into_inner()).ready).await?;
         let page=open_case(app,&task,"plain").await?;opened.push(page.label.clone());
         browser_share_allow(main_view(app)?,app.clone(),app.state(),task.clone(),page.label.clone(),target.clone(),page.revision).await?;

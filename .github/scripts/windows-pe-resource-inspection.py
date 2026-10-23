@@ -20,6 +20,7 @@ import xml.etree.ElementTree as ET
 
 START = time.monotonic()
 TOTAL_PAYLOAD = 0
+INPUT_OBSERVATIONS = []
 TYPE_NAMES = {3: "RT_ICON", 14: "RT_GROUP_ICON", 16: "RT_VERSION", 24: "RT_MANIFEST"}
 
 
@@ -41,19 +42,111 @@ def unpack(fmt, data, offset=0):
     return struct.unpack_from(fmt, data, offset)
 
 
+class WindowsReadFiles:
+    """Use one documented Win32 metadata vocabulary for path and held handles.
+
+    CPython 3.13.7 win32_xstat maps path st_ctime to birthtime, while its
+    _Py_fstat_noraise returns FILE_BASIC_INFO.ChangeTime. Do not mix those
+    fields as though they were the same timestamp.
+    https://github.com/python/cpython/blob/v3.13.7/Modules/posixmodule.c#L2069
+    https://github.com/python/cpython/blob/v3.13.7/Python/fileutils.c#L1033
+    https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info
+    https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+    """
+
+    def __init__(self):
+        import ctypes
+        import msvcrt
+
+        self.ctypes, self.msvcrt = ctypes, msvcrt
+        self.kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+
+        class FileId(ctypes.Structure):
+            _fields_ = [("volume", ctypes.c_uint64), ("id", ctypes.c_ubyte * 16)]
+
+        class Basic(ctypes.Structure):
+            _fields_ = [(name, ctypes.c_int64) for name in ("creation", "access", "write", "change")] + [("attributes", ctypes.c_uint32)]
+
+        class Standard(ctypes.Structure):
+            _fields_ = [("allocation", ctypes.c_int64), ("size", ctypes.c_int64), ("links", ctypes.c_uint32), ("deleted", ctypes.c_ubyte), ("directory", ctypes.c_ubyte)]
+
+        self.FileId, self.Basic, self.Standard = FileId, Basic, Standard
+        self.kernel.CreateFileW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p]
+        self.kernel.CreateFileW.restype = ctypes.c_void_p
+        self.kernel.CloseHandle.argtypes = [ctypes.c_void_p]
+        self.kernel.CloseHandle.restype = ctypes.c_int
+        self.kernel.GetFileType.argtypes = [ctypes.c_void_p]
+        self.kernel.GetFileType.restype = ctypes.c_uint32
+        self.kernel.GetFileInformationByHandleEx.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, ctypes.c_uint32]
+        self.kernel.GetFileInformationByHandleEx.restype = ctypes.c_int
+
+    def open(self, path):
+        # OPEN_EXISTING; final component is never followed as a reparse point.
+        # Deny new data-write/delete sharing for the lifetime of the original fd.
+        handle = self.kernel.CreateFileW(str(path), 0x80000000, 1, None, 3, 0x00200000, None)
+        if handle == self.ctypes.c_void_p(-1).value:
+            raise self.ctypes.WinError(self.ctypes.get_last_error())
+        try:
+            return self.msvcrt.open_osfhandle(handle, os.O_RDONLY | os.O_BINARY)
+        except BaseException:
+            self.kernel.CloseHandle(handle)
+            raise
+
+    def snapshot(self, fd):
+        handle = self.msvcrt.get_osfhandle(fd)
+        require(self.kernel.GetFileType(handle) == 1, "input handle is not a disk file")
+        def query(kind, structure):
+            value = structure()
+            if not self.kernel.GetFileInformationByHandleEx(handle, kind, self.ctypes.byref(value), self.ctypes.sizeof(value)):
+                raise self.ctypes.WinError(self.ctypes.get_last_error())
+            return value
+        identity, basic, standard = query(18, self.FileId), query(0, self.Basic), query(1, self.Standard)
+        require(any(identity.id), "input file identifier unavailable")
+        return {"volumeSerialNumber": f"{identity.volume:016x}", "fileId128": bytes(identity.id).hex(), "size": standard.size, "links": standard.links, "deletePending": bool(standard.deleted), "directory": bool(standard.directory), "attributes": basic.attributes, "creation100ns": basic.creation, "lastWrite100ns": basic.write, "change100ns": basic.change}
+
+    def path_snapshot(self, path):
+        fd = self.open(path)
+        try:
+            return self.snapshot(fd)
+        finally:
+            os.close(fd)
+
+
+def windows_files():
+    return WindowsReadFiles() if os.name == "nt" else None
+
+
 class HeldFile:
     def __init__(self, path, limit):
         self.path = Path(path).absolute()
+        self.observation = {"inputName": self.path.name[:128], "pythonVersion": sys.version.split()[0], "platform": sys.platform, "stage": "path-lstat"}
+        if len(INPUT_OBSERVATIONS) < 16:
+            INPUT_OBSERVATIONS.append(self.observation)
         before = self.path.lstat()
+        self.observation["pythonPathBefore"] = self.python_facts(before)
         require(stat.S_ISREG(before.st_mode) and not (getattr(before, "st_file_attributes", 0) & 0x400), "input is not an ordinary file")
         require(before.st_size <= limit, "input file exceeds size bound")
-        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-        self.fd = os.open(self.path, flags)
-        self.initial = os.fstat(self.fd)
+        self.windows = windows_files()
+        self.observation["stage"] = "open-read-handle"
+        self.fd = self.windows.open(self.path) if self.windows else os.open(self.path, os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0))
         try:
-            require(self.identity(before) == self.identity(self.initial), "input changed while opening")
-            self.size = self.initial.st_size
+            self.initial = os.fstat(self.fd)
+            self.observation["pythonHeldAtOpen"] = self.python_facts(self.initial)
+            if self.windows:
+                self.observation["stage"] = "same-api-open-identity"
+                self.native_initial = self.windows.snapshot(self.fd)
+                self.observation["win32HeldAtOpen"] = self.native_initial
+                path_snapshot = self.windows.path_snapshot(self.path)
+                self.observation["win32PathAtOpen"] = path_snapshot
+                self.check_windows(self.native_initial, limit)
+                self.check_windows(path_snapshot, limit)
+                require(self.native_initial == path_snapshot, "input path differs from original read handle")
+                self.size = self.native_initial["size"]
+            else:
+                require(self.identity(before) == self.identity(self.initial), "input changed while opening")
+                self.size = self.initial.st_size
             self.sha256 = self.hash()
+            self.observation["stage"] = "held"
         except BaseException:
             os.close(self.fd)
             raise
@@ -61,6 +154,22 @@ class HeldFile:
     @staticmethod
     def identity(value):
         return (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns)
+
+    @staticmethod
+    def python_facts(value):
+        return {key: getattr(value, key, None) for key in ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns", "st_birthtime_ns", "st_file_attributes")}
+
+    @staticmethod
+    def check_windows(value, limit):
+        require(not value["directory"] and not value["deletePending"] and not (value["attributes"] & 0x400), "input handle is not an ordinary non-reparse file")
+        require(0 <= value["size"] <= limit, "input file exceeds size bound")
+
+    def verify_windows(self, phase):
+        held, path = self.windows.snapshot(self.fd), self.windows.path_snapshot(self.path)
+        self.observation["win32" + phase] = {"held": held, "path": path}
+        self.check_windows(held, self.size)
+        self.check_windows(path, self.size)
+        require(held == self.native_initial == path, "input Win32 identity or metadata changed")
 
     def read(self, offset, length):
         budget()
@@ -77,16 +186,23 @@ class HeldFile:
 
     def hash(self):
         result = hashlib.sha256()
-        for offset in range(0, self.initial.st_size, 1024 * 1024):
-            result.update(self.read(offset, min(1024 * 1024, self.initial.st_size - offset)))
+        for offset in range(0, self.size, 1024 * 1024):
+            result.update(self.read(offset, min(1024 * 1024, self.size - offset)))
         return result.hexdigest()
 
     def finish(self):
         try:
-            after = self.path.lstat()
-            require(not (getattr(after, "st_file_attributes", 0) & 0x400), "input became a reparse point")
-            require(self.identity(after) == self.identity(self.initial) == self.identity(os.fstat(self.fd)), "input identity or metadata changed")
+            self.observation["stage"] = "finish-before-hash"
+            if self.windows:
+                self.verify_windows("BeforeFinalHash")
+            else:
+                after = self.path.lstat()
+                require(not (getattr(after, "st_file_attributes", 0) & 0x400), "input became a reparse point")
+                require(self.identity(after) == self.identity(self.initial) == self.identity(os.fstat(self.fd)), "input identity or metadata changed")
             require(self.hash() == self.sha256, "input bytes changed while reading")
+            if self.windows:
+                self.verify_windows("AfterFinalHash")
+            self.observation["stage"] = "verified-closed"
         finally:
             os.close(self.fd)
 
@@ -451,6 +567,7 @@ def main():
     except Exception as error:
         report["error"] = {"type": type(error).__name__, "message": str(error)}
     finally:
+        report["inputObservations"] = INPUT_OBSERVATIONS
         report["elapsedSeconds"] = round(time.monotonic() - START, 3)
         report["staticChecksAllMatched"] = report["parserCompleted"] and bool(report["staticChecks"]) and all(report["staticChecks"].values())
         (output / "summary.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

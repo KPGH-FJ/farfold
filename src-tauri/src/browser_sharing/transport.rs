@@ -490,9 +490,13 @@ impl Worker {
             }
             match listener.accept() {
                 Ok((mut channel, _)) => {
+                    #[cfg(all(test, windows))]
+                    eprintln!("FARFOLD_P27_CHANNEL_PHASE accepted");
                     let _ = channel.set_read_timeout(Some(Duration::from_millis(100)));
                     let _ = channel.set_write_timeout(Some(Duration::from_secs(1)));
                     let Ok(hello) = read_hello(&mut channel) else {
+                        #[cfg(all(test, windows))]
+                        eprintln!("FARFOLD_P27_CHANNEL_PHASE hello-read-failed");
                         continue;
                     };
                     let received = hello
@@ -505,22 +509,38 @@ impl Worker {
                         || Instant::now() >= deadline
                         || self.shutdown.load(Ordering::Acquire)
                     {
+                        #[cfg(all(test, windows))]
+                        eprintln!("FARFOLD_P27_CHANNEL_PHASE hello-rejected");
                         continue;
                     }
                     // One successful authentication consumes this listener/capability.
                     if channel.write_all(b"{\"kind\":\"hello_ack\"}\n").is_err() {
+                        #[cfg(all(test, windows))]
+                        eprintln!("FARFOLD_P27_CHANNEL_PHASE hello-ack-failed");
                         return false;
                     }
                     if channel.set_nonblocking(true).is_err() {
+                        #[cfg(all(test, windows))]
+                        eprintln!("FARFOLD_P27_CHANNEL_PHASE nonblocking-failed");
                         return false;
                     }
+                    #[cfg(all(test, windows))]
+                    eprintln!("FARFOLD_P27_CHANNEL_PHASE authenticated-serving");
                     drop(listener);
                     return self.serve(channel);
                 }
                 Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                     wait_fd(channel::listener_token(&listener), channel::READ, 50)
                 }
-                Err(_) => return true,
+                Err(error) => {
+                    #[cfg(all(test, windows))]
+                    eprintln!(
+                        "FARFOLD_P27_CHANNEL_PHASE accept-failed {:?}",
+                        error.raw_os_error()
+                    );
+                    let _ = error;
+                    return true;
+                }
             }
         }
         true
