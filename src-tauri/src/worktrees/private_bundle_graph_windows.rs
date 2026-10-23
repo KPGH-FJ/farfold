@@ -292,9 +292,13 @@ impl<'a> Context<'a> {
             .encode_wide()
             .collect::<Vec<_>>();
         let root = parent.child(&name, true).map_err(|_| error("unsafePath"))?;
-        fs::create_dir(root.guid_path.join("second")).map_err(|_| error("unavailable"))?;
+        // The independently generated repository becomes the retained .git
+        // subtree. Material capture binds every label to its actual held leaf,
+        // so create that leaf now rather than relabelling a "second" directory.
+        // All Git calls still select this same object through explicit --git-dir.
+        fs::create_dir(root.guid_path.join(".git")).map_err(|_| error("unavailable"))?;
         let second = root
-            .child(&"second".encode_utf16().collect::<Vec<_>>(), true)
+            .child(&".git".encode_utf16().collect::<Vec<_>>(), true)
             .map_err(|_| error("unsafePath"))?;
         if second.identity() == first.imported.observed()?.1.identity() {
             return Err(error("changed"));

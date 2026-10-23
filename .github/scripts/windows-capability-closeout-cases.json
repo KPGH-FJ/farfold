@@ -858,6 +858,31 @@
       "test": "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries",
       "manual": false,
       "category": "ownedRecoveryReservationBoundaries"
+    },
+    {
+      "name": "prepared-git-original-leaf-complete-mixed-rebuild",
+      "test": "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf",
+      "manual": false,
+      "category": "ownedPreparedGitMixedRecovery",
+      "phaseMarker": "FARFOLD_PREPARED_MIXED_CONTROL phase=sealed"
+    },
+    {
+      "name": "restore-failure-layout-numeric-offsets",
+      "test": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_reports_physical_offsets_without_reading_names_or_bodies",
+      "manual": false,
+      "category": "boundedNativeFailureDiagnosticLayout"
+    },
+    {
+      "name": "restore-failure-layout-malformed-extents",
+      "test": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_rejects_truncated_and_unbounded_record_extents",
+      "manual": false,
+      "category": "boundedNativeFailureDiagnosticLayout"
+    },
+    {
+      "name": "restore-failure-layout-bounded-output",
+      "test": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof",
+      "manual": false,
+      "category": "boundedNativeFailureDiagnosticLayout"
     }
   ],
   "blockedPositiveCases": [],

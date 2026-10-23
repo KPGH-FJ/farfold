@@ -313,7 +313,12 @@ pub(super) fn restore<A: Api, R: Read + Seek>(
             input
                 .read_exact(&mut scratch[..offered])
                 .map_err(|e| io_error("carrierRead", e))?;
-            let count = session.write(&scratch[..offered])?;
+            let count = session.write(&scratch[..offered]).inspect_err(|_error| {
+                #[cfg(test)]
+                eprintln!(
+                    "FARFOLD_BACKUP_WRITE_FAILURE successfulPrefix={written} offered={offered} nativeLength={length} error={_error:?}"
+                );
+            })?;
             if count == 0 || count > offered {
                 return Err(Error::Invalid);
             }

@@ -16,6 +16,9 @@ use crate::file_access::{
     material_directory_records::{self as dirs, Profile},
 };
 use std::io::{Read, Seek, SeekFrom};
+#[cfg(test)]
+#[path = "material_sealed_restore_failure_tests.rs"]
+mod failure_diagnostics;
 
 // Borrow the physical sealed FileObject through the exact already-verified
 // native extent inside FFDIR1/FFNODE1. This is not another file/path capability.
@@ -360,6 +363,25 @@ pub(super) fn restore(
             resident,
         );
         drop(session);
+        #[cfg(test)]
+        if full
+            && matches!(
+                &result,
+                Err(Error::Io {
+                    phase: "backupWrite",
+                    ..
+                })
+            )
+        {
+            // Diagnostics observe the failed intermediate target only after
+            // the original BackupWrite context cleanup. They never retry it or
+            // change the original error, cleanup, or acceptance assertions.
+            if context.is_none() && api.aborts() == 1 {
+                failure_diagnostics::observe(sealed, node, proof, target, cancel, resident);
+            } else {
+                eprintln!("FARFOLD_RESTORE_FAILURE_READBACK skipped=cleanup-not-confirmed");
+            }
+        }
         result?;
     }
     if context.is_some() || api.aborts() != u32::from(write) {

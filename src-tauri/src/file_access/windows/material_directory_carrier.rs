@@ -187,7 +187,17 @@ impl Api for Native {
             )
         } == 0
         {
-            Err(io::Error::last_os_error())
+            // Save the native error before test-only diagnostic I/O.
+            let error = io::Error::last_os_error();
+            #[cfg(test)]
+            eprintln!(
+                "FARFOLD_BACKUP_WRITE_NATIVE_FAILURE fullSecurity={} offered={} reportedCount={} code={:?} reportedCountIsSuccessfulPrefix=false",
+                self.full,
+                bytes.len(),
+                count,
+                error.raw_os_error()
+            );
+            Err(error)
         } else {
             Ok(count as usize)
         }

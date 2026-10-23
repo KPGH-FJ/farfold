@@ -224,6 +224,116 @@ fn actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extr
     );
     assert_eq!(fixture.bytes(), before);
 }
+
+#[test]
+fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() {
+    use crate::file_access::{MixedMemory, PinnedPath};
+    use crate::worktrees::{MaterialProfile, material_owner, recovery_pack, removal};
+    use std::os::windows::ffi::OsStrExt;
+
+    let fixture = Fixture::new();
+    let before = fixture.bytes();
+    let cancel = AtomicBool::new(false);
+    let snapshot = inspect::snapshot(&fixture.root).unwrap();
+    let owner = material_owner::Owner::default();
+    let captured = recovery_pack::capture(
+        &owner,
+        &snapshot,
+        Some(&MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1),
+        &cancel,
+    )
+    .unwrap();
+    let (read, expected, retained) = fixture.source();
+    drop(read);
+    let first = windows_first(
+        ExportRequest::new(&expected, &retained, &captured).unwrap(),
+        &cancel,
+    )
+    .unwrap();
+    let mut graph = generate(&first, &captured, &cancel).unwrap();
+    let private_parent = graph.owner.root.guid_path.clone();
+    let private_git = graph.owner.second.guid_path.clone();
+    let private_id = graph.owner.second.identity().clone();
+    // The physical .git name must not turn any command into implicit discovery.
+    // Verify the real production command still selects the held object both as
+    // Git directory and working directory, then run its exact graph check.
+    let (command, paths) = graph.owner.base(false).unwrap();
+    let arguments = command.get_args().collect::<Vec<_>>();
+    for option in ["--git-dir", "-C"] {
+        let at = arguments.iter().position(|a| *a == option).unwrap();
+        assert_eq!(
+            arguments[at + 1],
+            paths.path(&graph.owner.second).unwrap().as_os_str()
+        );
+    }
+    assert_eq!(
+        command.get_current_dir().unwrap(),
+        paths.path(&graph.owner.second).unwrap()
+    );
+    paths.verify().unwrap();
+    drop(paths);
+    drop(command);
+    graph.recheck(&cancel).unwrap();
+    let prepared = graph.into_recovery_git(&captured, &cancel).unwrap();
+    prepared.verify(&cancel).unwrap();
+
+    let source_graph = git::source_roots::SourceGraph::capture(&snapshot, &cancel).unwrap();
+    let memory = MixedMemory::default();
+    let source = recovery_pack::material::worktree_source(
+        &source_graph,
+        PinnedPath::directory(&fixture.root).unwrap(),
+        fixture.root.file_name().unwrap().encode_wide().collect(),
+        &memory,
+        &cancel,
+    )
+    .unwrap()
+    .with_recovery_git(prepared, &cancel)
+    .unwrap();
+    let destination_parent = fixture.root.parent().unwrap();
+    let destination = destination_parent.join(".farfold-recovery-mixed-control");
+    let parent_stamp = inspect::stamp(destination_parent).unwrap();
+    let reservation = removal::reserve_at(destination_parent, &parent_stamp, &destination).unwrap();
+    let output = recovery_pack::material::reserved(
+        destination_parent,
+        &destination,
+        &parent_stamp,
+        &reservation.stamp,
+        &memory,
+    )
+    .unwrap();
+    eprintln!("FARFOLD_PREPARED_MIXED_CONTROL phase=before-seal");
+    let (descriptor, _) = owner
+        .sealed_material(source, output, &cancel, |sealed| {
+            eprintln!("FARFOLD_PREPARED_MIXED_CONTROL phase=consumer");
+            let descriptor = sealed.descriptor()?;
+            assert_eq!(descriptor.version, 2);
+            assert_eq!(descriptor.content.nodes as u64, captured.content.entries);
+            assert_eq!(descriptor.content.bytes, captured.content.bytes);
+            assert_eq!(
+                crate::worktrees::material_scan::hex(descriptor.content.sha256),
+                captured.content.sha256
+            );
+            let git_root = &descriptor.nodes[descriptor.content.nodes as usize];
+            assert_eq!(git_root.source_volume, private_id.device);
+            assert_eq!(git_root.source_file_id, private_id.inode.to_le_bytes());
+            let restored = sealed.reconstruct_tree()?;
+            assert_eq!(restored.nodes, descriptor.nodes.len());
+            assert_eq!(restored.target_ids.len(), restored.nodes);
+            assert!(restored.exact_edges_verified);
+            assert!(restored.all_native_recaptured);
+            assert!(restored.metadata_finalized);
+            assert!(!restored.retained);
+            Ok(descriptor)
+        })
+        .unwrap();
+    eprintln!("FARFOLD_PREPARED_MIXED_CONTROL phase=sealed");
+    assert!(descriptor.validate());
+    assert_eq!(private_git.file_name().unwrap(), ".git");
+    assert!(!private_parent.exists());
+    reservation.verify().unwrap();
+    assert_eq!(fixture.bytes(), before);
+    source_graph.recheck(&cancel).unwrap();
+}
 #[test]
 fn actual_stdin_verify_or_unbundle_rejects_malformed_and_truncated_owned_bundle() {
     let fixture = Fixture::new();
