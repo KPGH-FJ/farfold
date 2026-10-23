@@ -12,7 +12,7 @@ function Source-Inputs {
   # Exact tracked crate inputs include case-sensitive native/BrowserWorkspace.*,
   # embedded JS, common Rust dependencies, resources, icons and Cargo/config.
   # Generated target and untracked user/history material are not traversed.
-  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
+  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
   if ($LASTEXITCODE -ne 0 -or $paths.Count -lt 20) { throw 'Native P27 source input selection incomplete' }
   $map = [ordered]@{}
   foreach ($path in $paths) { $map[$path] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }
@@ -36,9 +36,65 @@ if ($LASTEXITCODE -ne 0) { throw 'Same-source production helper build failed; no
 $helper = (Resolve-Path -LiteralPath 'src-tauri/target/debug/farfold.exe' -ErrorAction Stop).Path
 $binarySha = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash.ToLowerInvariant()
 $helperSha = (Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash.ToLowerInvariant()
-$listed = @(& $binary $case --ignored --exact --list)
-if ($LASTEXITCODE -ne 0 -or @($listed | Where-Object { $_ -eq "${case}: test" }).Count -ne 1) { throw 'Exact native P27 test not present' }
 Write-Record 'build-selection.json' ([ordered]@{ sourceHead = $ExpectedHead; testBinary = $binary; testBinarySha256 = $binarySha; helperBinary = $helper; helperBinarySha256 = $helperSha; helperScope = 'only original --farfold-browser-mcp-helper entry, never application run()' })
+# Preserve the selected build before the first executable launch. A loader exit,
+# a missing exact FQN and an unsettled list process are different observations.
+$listInfo = [Diagnostics.ProcessStartInfo]::new()
+$listInfo.FileName = $binary
+$listInfo.WorkingDirectory = $PWD.Path
+$listInfo.UseShellExecute = $false
+$listInfo.RedirectStandardOutput = $true
+$listInfo.RedirectStandardError = $true
+foreach ($argument in @($case, '--ignored', '--exact', '--list')) { [void]$listInfo.ArgumentList.Add($argument) }
+$listProcess = [Diagnostics.Process]::new()
+$listProcess.StartInfo = $listInfo
+$listStdout = [IO.File]::Create((Join-Path $raw 'list.stdout.log'))
+$listStderr = [IO.File]::Create((Join-Path $raw 'list.stderr.log'))
+$listPid = $null
+$listNatural = $false
+$listTimedOut = $false
+$listSettled = $false
+$listExitCode = $null
+$listStartError = $null
+$listTerminationSettled = $null
+try {
+  if (-not $listProcess.Start()) { throw 'Native list process did not start' }
+  $listPid = $listProcess.Id
+  $listOutTask = $listProcess.StandardOutput.BaseStream.CopyToAsync($listStdout)
+  $listErrTask = $listProcess.StandardError.BaseStream.CopyToAsync($listStderr)
+  if ($listProcess.WaitForExit(15000)) { $listNatural = $true; $listExitCode = $listProcess.ExitCode }
+  else {
+    $listTimedOut = $true
+    try { $listProcess.Kill() } catch { }
+    $listTerminationSettled = $listProcess.WaitForExit(5000)
+  }
+  $listOutSettled = $listOutTask.Wait(5000)
+  $listErrSettled = $listErrTask.Wait(5000)
+  $listSettled = $listOutSettled -and $listErrSettled
+} catch {
+  $listCause = $_.Exception.GetBaseException()
+  $listStartError = [ordered]@{ type = $listCause.GetType().FullName; nativeCode = if ($listCause -is [ComponentModel.Win32Exception]) { $listCause.NativeErrorCode } else { $null } }
+} finally {
+  $listStdout.Dispose()
+  $listStderr.Dispose()
+  $listProcess.Dispose()
+}
+$listOutFile = Get-Item -LiteralPath (Join-Path $raw 'list.stdout.log')
+$listErrFile = Get-Item -LiteralPath (Join-Path $raw 'list.stderr.log')
+$listWithinBound = $listOutFile.Length -le 65536 -and $listErrFile.Length -le 65536
+$listed = if ($listSettled -and $listWithinBound) { @(Get-Content -LiteralPath $listOutFile.FullName) } else { @() }
+$listExactMatches = @($listed | Where-Object { $_ -ceq "${case}: test" }).Count
+$listInputsStable = $false
+$listInputError = $null
+try {
+  $afterList = Source-Inputs
+  Write-Record 'inputs-after-list.json' $afterList
+  $listInputsStable = ($before | ConvertTo-Json -Compress) -ceq ($afterList | ConvertTo-Json -Compress)
+} catch { $listInputError = $_.Exception.GetType().FullName }
+$listPassed = $listNatural -and -not $listTimedOut -and $listSettled -and $listExitCode -eq 0 -and $listWithinBound -and $listExactMatches -eq 1 -and $listInputsStable -and $null -eq $listStartError
+$listClassification = if ($listPassed) { 'exact-test-listed' } elseif ($listStartError) { 'process-start-or-output-error' } elseif ($listTimedOut) { 'list-timeout' } elseif (-not $listNatural -or -not $listSettled) { 'list-unsettled' } elseif ($listExitCode -ne 0) { 'native-list-exit-failed' } elseif (-not $listWithinBound) { 'list-output-over-bound' } elseif (-not $listInputsStable) { 'source-input-changed-or-unverified' } else { 'exact-list-mismatch' }
+Write-Record 'list-execution.json' ([ordered]@{ sourceHead = $ExpectedHead; exactCase = $case; testBinarySha256 = $binarySha; originalListPid = $listPid; arguments = @($case, '--ignored', '--exact', '--list'); naturalCompletionObserved = $listNatural; timedOut = $listTimedOut; exitCode = $listExitCode; exitCodeHex = if ($null -ne $listExitCode) { '0x{0:X8}' -f ([uint32]([int64]$listExitCode -band 0xffffffffL)) } else { $null }; startOrOutputError = $listStartError; terminationSettled = $listTerminationSettled; outputSettled = $listSettled; outputWithinReadBound = $listWithinBound; stdoutBytes = $listOutFile.Length; stderrBytes = $listErrFile.Length; stdoutSha256 = (Get-FileHash -LiteralPath $listOutFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant(); stderrSha256 = (Get-FileHash -LiteralPath $listErrFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant(); exactNameMatches = $listExactMatches; inputsStable = $listInputsStable; inputCheckError = $listInputError; classification = $listClassification; passed = $listPassed })
+if (-not $listPassed) { throw 'Native P27 executable list failed or exact inventory unverified; see list-execution.json and original list logs' }
 $info = [Diagnostics.ProcessStartInfo]::new()
 $info.FileName = $binary
 $info.WorkingDirectory = $PWD.Path

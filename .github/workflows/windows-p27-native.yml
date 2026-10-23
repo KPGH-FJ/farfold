@@ -19,6 +19,15 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ github.sha }}
+      - name: Parse the exact native diagnostic scripts before building
+        timeout-minutes: 1
+        run: |
+          foreach ($path in @('.github/scripts/windows-p27-native.ps1', '.github/scripts/windows-native-loader-diagnostics.ps1')) {
+            $tokens = $null
+            $parseErrors = $null
+            $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$parseErrors)
+            if ($parseErrors.Count -ne 0) { $parseErrors | ForEach-Object { Write-Output $_.Message }; throw "PowerShell syntax invalid: $path" }
+          }
       - name: Prepare pinned Rust toolchain
         timeout-minutes: 7
         run: |
@@ -29,6 +38,13 @@ jobs:
       - name: Actual isolated P27 WebView2 control, one exact owned case
         timeout-minutes: 28
         run: ./.github/scripts/windows-p27-native.ps1 -ExpectedHead '${{ github.sha }}'
+      - name: Preserve loader evidence and a separate manifest-only list control
+        if: ${{ always() }}
+        timeout-minutes: 5
+        run: |
+          if (Test-Path -LiteralPath 'windows-p27-native-raw/build-selection.json') {
+            ./.github/scripts/windows-native-loader-diagnostics.ps1 -ExpectedHead '${{ github.sha }}' -RawDirectory 'windows-p27-native-raw' -Mode P27ManifestControl
+          } else { Write-Output 'No selected native build; loader evidence unavailable.' }
       - name: Keep exact native P27 evidence, including unavailable conditions
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
