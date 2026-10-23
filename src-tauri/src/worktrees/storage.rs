@@ -179,7 +179,10 @@ fn identity(i: &Identity) -> bool {
 pub(super) fn archive_material_profile_valid(profile: Option<&MaterialProfile>) -> bool {
     #[cfg(windows)]
     {
-        super::recycle::archive_profile_supported(profile)
+        // Historical metadata has no profile. Keep it readable without
+        // granting a new observation, removal or full recovery capability.
+        // Those operations still require their exact explicit profile.
+        profile.is_none() || super::recycle::archive_profile_supported(profile)
     }
     #[cfg(not(windows))]
     {

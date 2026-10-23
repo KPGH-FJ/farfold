@@ -67,7 +67,10 @@ fn stored_archive_profiles_share_the_exact_same_object_observation_admission() {
 #[test]
 fn stored_archive_profile_admission_is_platform_specific_and_rejects_retained_carriers() {
     let validate = super::super::storage::archive_material_profile_valid;
-    assert_eq!(validate(None), !cfg!(windows));
+    // Readability of the previously persisted shape is separate from the
+    // strict action admission exercised above. Never relabel old records.
+    assert!(validate(None));
+    assert!(!archive_profile_supported(None));
     for profile in [
         MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1,
         MaterialProfile::WindowsDefaultDataEaStreamsLinksFullSecurityV1,

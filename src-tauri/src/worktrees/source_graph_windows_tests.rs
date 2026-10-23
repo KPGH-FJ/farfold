@@ -150,13 +150,28 @@ fn real_recovery_capture_does_not_turn_a_graph_component_into_complete_material(
     // Graph observation alone cannot turn an ordinary directory purpose into
     // complete native-material authority, even when this process has privileges.
     let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
+    let graph = SourceGraph::capture(&snapshot, &cancel).unwrap();
+    let memory = crate::file_access::MixedMemory::default();
+    // The explicit ordinary route now exists; a request is not captured or
+    // restored material, and it must never mint full-security authority.
+    let request = crate::worktrees::recovery_pack::material::worktree_source(
+        &graph,
+        ordinary,
+        "owned linked".encode_utf16().collect(),
+        &memory,
+        &cancel,
+    )
+    .unwrap();
+    assert!(!request.full_security());
+    drop(request);
+    let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
     assert!(matches!(
-        crate::worktrees::recovery_pack::material::worktree_source(
-            &SourceGraph::capture(&snapshot, &cancel).unwrap(),
+        crate::file_access::MixedRequest::worktree(
             ordinary,
             "owned linked".encode_utf16().collect(),
-            &crate::file_access::MixedMemory::default(),
+            &memory,
             &cancel,
+            graph.managed_root_git_edge(),
         ),
         Err(crate::file_access::CarrierFailure::Unsupported)
     ));
@@ -399,13 +414,28 @@ fn raw_default_equality_with_extra_ads_does_not_open_complete_content_or_manifes
     // Equal raw default bytes say nothing about this real extra ADS, EA,
     // labels/full SD, EOL conversion, complete tree coverage or restoration.
     let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
+    let graph = SourceGraph::capture(&snapshot, &cancel).unwrap();
+    let memory = crate::file_access::MixedMemory::default();
+    // The explicit ordinary route now exists; a request is not captured or
+    // restored material, and it must never mint full-security authority.
+    let request = crate::worktrees::recovery_pack::material::worktree_source(
+        &graph,
+        ordinary,
+        "owned linked".encode_utf16().collect(),
+        &memory,
+        &cancel,
+    )
+    .unwrap();
+    assert!(!request.full_security());
+    drop(request);
+    let ordinary = crate::file_access::PinnedPath::directory(&fixture.root).unwrap();
     assert!(matches!(
-        crate::worktrees::recovery_pack::material::worktree_source(
-            &SourceGraph::capture(&snapshot, &cancel).unwrap(),
+        crate::file_access::MixedRequest::worktree(
             ordinary,
             "owned linked".encode_utf16().collect(),
-            &crate::file_access::MixedMemory::default(),
+            &memory,
             &cancel,
+            graph.managed_root_git_edge(),
         ),
         Err(crate::file_access::CarrierFailure::Unsupported)
     ));

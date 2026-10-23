@@ -146,6 +146,21 @@ fn actual_selected_head_profile_preserves_safe_config_info_and_original_source_b
         fs::read(f.root.join(".gitattributes")).unwrap(),
         b"owned.txt filter=must-not-run\n"
     );
+    // The production constructor creates the missing empty-template directory
+    // against its actual parent. It cannot adopt an existing foreign namespace.
+    let private = tempfile::tempdir().unwrap();
+    let parent = crate::file_access::PinnedPath::directory(private.path()).unwrap();
+    assert!(!private.path().join("info").exists());
+    let owned = evaluator::create_info(&parent).unwrap();
+    owned.verify_namespace(&AtomicBool::new(false)).unwrap();
+    assert!(private.path().join("info").is_dir());
+    fs::write(private.path().join("info/foreign"), b"keep owned probe\n").unwrap();
+    assert!(owned.verify_namespace(&AtomicBool::new(false)).is_err());
+    assert!(matches!(evaluator::create_info(&parent), Err(e) if e.code == "changed"));
+    assert_eq!(
+        fs::read(private.path().join("info/foreign")).unwrap(),
+        b"keep owned probe\n"
+    );
 }
 #[test]
 fn exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback() {
@@ -240,16 +255,26 @@ fn cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery(
         "cancelled"
     );
     assert_eq!(f.bytes(), before);
-    // Successful profile observation still cannot grant full-material purpose
-    // to an ordinary directory pin. Production full capture has separate controls.
+    // The ordinary route remains explicitly ordinary. It cannot grant the
+    // separate full-material purpose to the same ordinary directory pin.
+    let ordinary = crate::file_access::PinnedPath::directory(&f.root).unwrap();
+    let request = crate::worktrees::recovery_pack::material::worktree_source(
+        &graph,
+        ordinary,
+        "owned linked".encode_utf16().collect(),
+        &crate::file_access::MixedMemory::default(),
+        &AtomicBool::new(false),
+    )
+    .unwrap();
+    assert!(!request.full_security());
     let ordinary = crate::file_access::PinnedPath::directory(&f.root).unwrap();
     assert!(matches!(
-        crate::worktrees::recovery_pack::material::worktree_source(
-            &graph,
+        crate::file_access::MixedRequest::worktree(
             ordinary,
             "owned linked".encode_utf16().collect(),
             &crate::file_access::MixedMemory::default(),
             &AtomicBool::new(false),
+            graph.managed_root_git_edge(),
         ),
         Err(crate::file_access::CarrierFailure::Unsupported)
     ));

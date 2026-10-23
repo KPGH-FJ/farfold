@@ -6,8 +6,10 @@ use std::{
     os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle},
     sync::mpsc::{self, Receiver, RecvTimeoutError, Sender},
 };
+use windows_sys::Win32::Foundation::{GetLastError, WAIT_FAILED, WAIT_OBJECT_0};
 use windows_sys::Win32::System::Threading::{
-    OpenProcess, PROCESS_SYNCHRONIZE, WaitForSingleObject,
+    GetExitCodeProcess, OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE,
+    WaitForSingleObject,
 };
 
 // The executing test thread requests one observation of the real branch. This
@@ -51,12 +53,44 @@ fn observed_handle(directory: &Path, name: &str) -> (u32, OwnedHandle) {
     };
     // Both selected processes are still behind actual fixture gates. Hold the
     // exact process object before releasing either, never reopen a dead PID.
-    let raw = unsafe { OpenProcess(PROCESS_SYNCHRONIZE, 0, pid) };
+    let raw = unsafe {
+        OpenProcess(
+            PROCESS_SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION,
+            0,
+            pid,
+        )
+    };
     assert!(!raw.is_null());
     (pid, unsafe { OwnedHandle::from_raw_handle(raw) })
 }
 fn exited(process: &OwnedHandle) -> bool {
     unsafe { WaitForSingleObject(process.as_raw_handle(), 0) == 0 }
+}
+fn finish_exited(process: &OwnedHandle, role: &'static str) -> bool {
+    // Observe the SAME previously held object once, at the original assertion
+    // boundary. A false bool alone cannot distinguish TIMEOUT from WAIT_FAILED.
+    let wait = unsafe { WaitForSingleObject(process.as_raw_handle(), 0) };
+    if wait == WAIT_OBJECT_0 {
+        return true;
+    }
+    let wait_error = (wait == WAIT_FAILED).then(|| unsafe { GetLastError() });
+    let mut exit_code = 0;
+    let queried = unsafe { GetExitCodeProcess(process.as_raw_handle(), &mut exit_code) };
+    let query_error = (queried == 0).then(|| unsafe { GetLastError() });
+    eprintln!(
+        "FARFOLD_WINDOWS_GIT_FINISH_HELD_PROCESS {}",
+        serde_json::json!({
+            "phase": "executorReturnedBeforeHeldProcessSignaled",
+            "role": role,
+            "waitReturn": wait,
+            "waitError": wait_error,
+            "exitCodeQuerySucceeded": queried != 0,
+            "exitCode": (queried != 0).then_some(exit_code),
+            "exitCodeQueryError": query_error,
+            "scope": "single zero-wait of the original test-held process handle; no reopen or retry",
+        })
+    );
+    false
 }
 struct Running<'a> {
     directory: &'a Path,
@@ -85,8 +119,8 @@ impl Running<'_> {
         let result = self.result.recv_timeout(Duration::from_secs(10)).unwrap();
         // A result (including errors) cannot release the caller while either
         // original observed process still runs. No guessed PID is terminated.
-        assert!(exited(&self.original));
-        assert!(exited(&self.descendant));
+        assert!(finish_exited(&self.original, "original"));
+        assert!(finish_exited(&self.descendant, "descendant"));
         result
     }
 }

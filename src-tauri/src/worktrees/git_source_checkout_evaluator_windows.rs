@@ -1,9 +1,6 @@
 //! Three fixed attribute roles; one private selected-HEAD index. No Command escapes.
 use super::*;
-use std::{cell::Cell, fs, marker::PhantomData, os::windows::fs::OpenOptionsExt};
-use windows_sys::Win32::Storage::FileSystem::{
-    FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ, FILE_SHARE_WRITE,
-};
+use std::{cell::Cell, fs, marker::PhantomData};
 
 #[derive(Clone, Copy)]
 pub(super) enum Role {
@@ -68,21 +65,17 @@ impl FixedFile {
         }
         Ok(Self { pin, before })
     }
-    fn create(parent: &PinnedPath, bytes: &[u8], cancel: &AtomicBool) -> Result<Self> {
+    fn create(
+        owner: &mut crate::file_access::WorktreeCheckout<'_>,
+        bytes: &[u8],
+        cancel: &AtomicBool,
+    ) -> Result<Self> {
         if bytes.len() as u64 > LIMIT {
             return Err(error("tooLarge"));
         }
-        parent.verify().map_err(|_| error("changed"))?;
+        owner.root().verify().map_err(|_| error("changed"))?;
         cancelled(cancel)?;
-        let path = parent.guid_path.join("attributes");
-        let mut producer = fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create_new(true)
-            .share_mode(FILE_SHARE_READ)
-            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
-            .open(&path)
-            .map_err(|_| error("changed"))?;
+        let mut producer = tempfile::tempfile().map_err(|_| error("unavailable"))?;
         for chunk in bytes.chunks(65_536) {
             cancelled(cancel)?;
             producer
@@ -90,38 +83,11 @@ impl FixedFile {
                 .map_err(|_| error("unavailable"))?;
         }
         producer.sync_all().map_err(|_| error("unavailable"))?;
-        let pre = stamp(&producer).map_err(|_| error("changed"))?;
-        if !pre.regular || pre.links != 1 || pre.size != bytes.len() as u64 {
-            return Err(error("changed"));
-        }
-        // This bridge keeps the producer's object/name against DELETE. Its
-        // writable-sharing transition is NON-ATOMIC; producer bytes and exact
-        // post-close stamp must both match the subsequent strict read pin.
-        let bridge = fs::OpenOptions::new()
-            .read(true)
-            .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
-            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
-            .open(&path)
-            .map_err(|_| error("changed"))?;
-        if !crate::file_access::same_object(&producer, &bridge).map_err(|_| error("changed"))? {
-            return Err(error("changed"));
-        }
-        drop(producer);
-        let post = stamp(&bridge).map_err(|_| error("changed"))?;
-        if post.identity != pre.identity
-            || post.size != pre.size
-            || post.links != 1
-            || !post.regular
-        {
-            return Err(error("changed"));
-        }
-        let result = Self::existing(parent, "attributes", LIMIT)?;
-        if result.before != post
-            || !crate::file_access::same_object(&bridge, result.pin.file())
-                .map_err(|_| error("changed"))?
-        {
-            return Err(error("changed"));
-        }
+        let copied = owner.copy_regular("attributes", &producer, bytes.len() as u64, cancel);
+        cancelled(cancel)?;
+        copied.map_err(|_| error("changed"))?;
+        verify_info(owner, cancel)?;
+        let result = Self::existing(owner.root(), "attributes", LIMIT)?;
         let mut reader = result
             .pin
             .file()
@@ -137,14 +103,30 @@ impl FixedFile {
             return Err(error("changed"));
         }
         result.verify()?;
-        parent.verify().map_err(|_| error("changed"))?;
+        verify_info(owner, cancel)?;
         cancelled(cancel)?;
         Ok(result)
     }
 }
+// Empty-template Git init deliberately creates no info directory. Create it
+// against the held repository parent, never adopt a pre-existing name, and
+// retain its original FILE_CREATE owner and registered children until exit.
+pub(super) fn create_info(
+    repo: &PinnedPath,
+) -> Result<crate::file_access::WorktreeCheckout<'static>> {
+    crate::file_access::WorktreeCheckout::create_under(repo, "info").map_err(|_| error("changed"))
+}
+fn verify_info(
+    owner: &crate::file_access::WorktreeCheckout<'_>,
+    cancel: &AtomicBool,
+) -> Result<()> {
+    let verified = owner.verify_namespace(cancel);
+    cancelled(cancel)?;
+    verified.map_err(|_| error("changed"))
+}
 struct Namespace {
     repo: PinnedPath,
-    info: PinnedPath,
+    info: crate::file_access::WorktreeCheckout<'static>,
     config: FixedFile,
     attributes: Option<FixedFile>,
 }
@@ -208,9 +190,7 @@ impl<'a> Evaluator<'a> {
                 .child(&role.name().encode_utf16().collect::<Vec<_>>(), true)
                 .map_err(|_| error("unsafePath"))?;
             this.run_at(&repo, Action::Init, cancel)?;
-            let info = repo
-                .child(&"info".encode_utf16().collect::<Vec<_>>(), true)
-                .map_err(|_| error("changed"))?;
+            let info = create_info(&repo)?;
             let config = FixedFile::existing(&repo, "config", LIMIT)?;
             this.roles.push(Namespace {
                 repo,
@@ -235,7 +215,7 @@ impl<'a> Evaluator<'a> {
         self.objects.verify().map_err(|_| error("changed"))?;
         for role in &self.roles {
             role.repo.verify().map_err(|_| error("changed"))?;
-            role.info.verify().map_err(|_| error("changed"))?;
+            verify_info(&role.info, cancel)?;
             role.config.verify()?;
             if let Some(file) = &role.attributes {
                 file.verify()?;
@@ -536,7 +516,7 @@ impl<'a> Evaluator<'a> {
         if target.attributes.is_some() {
             return Err(error("changed"));
         }
-        target.attributes = Some(FixedFile::create(&target.info, bytes, cancel)?);
+        target.attributes = Some(FixedFile::create(&mut target.info, bytes, cancel)?);
         self.verify(cancel)
     }
     pub(super) fn attributes(
