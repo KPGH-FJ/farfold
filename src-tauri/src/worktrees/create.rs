@@ -54,6 +54,8 @@ fn overlap(a: &Path, b: &Path) -> bool {
     a.starts_with(b) || b.starts_with(a)
 }
 pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
+    #[cfg(all(test, windows))]
+    let observation = super::create_observation_tests::Observation::new("validate");
     if !id(&input.inspection_id)
         || input.directory_name.is_empty()
         || input.directory_name.len() > 200
@@ -63,17 +65,27 @@ pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
     {
         return Err(error("unsafePath"));
     }
+    #[cfg(all(test, windows))]
+    observation.at("parent-canonical-and-spelling");
     let parent = inspect::canonical(Path::new(&input.parent_path))?;
     // Reject aliases rather than trusting a different parent than the user reviewed.
     if parent != input.parent_path {
         return Err(error("unsafePath"));
     }
     let target = Path::new(&parent).join(&input.directory_name);
+    #[cfg(all(test, windows))]
+    observation.at("target-absent");
     absent(&target)?;
+    #[cfg(all(test, windows))]
+    observation.at("source-snapshot");
     let current = inspect::snapshot(Path::new(&source.root))?;
+    #[cfg(all(test, windows))]
+    observation.at("source-identity");
     if !Identity::from(source).matches(&current) {
         return Err(error("changed"));
     }
+    #[cfg(all(test, windows))]
+    observation.at("target-overlap");
     if current
         .trees
         .iter()
@@ -82,6 +94,8 @@ pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
     {
         return Err(error("unsafePath"));
     }
+    #[cfg(all(test, windows))]
+    observation.at("branch-format");
     let branch = input.branch.name();
     if branch.is_empty() || branch.len() > 200 || branch.starts_with('-') || branch.contains('\0') {
         return Err(error("invalidRef"));
@@ -89,7 +103,11 @@ pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
     let full = format!("refs/heads/{branch}");
     git::read(Path::new(&current.root), &["check-ref-format", &full])
         .map_err(|_| error("invalidRef"))?;
+    #[cfg(all(test, windows))]
+    observation.at("refs-read");
     let refs = inspect::refs(&current)?;
+    #[cfg(all(test, windows))]
+    observation.at("branch-selection");
     match &input.branch {
         Branch::New { .. } => {
             if refs.iter().any(|r| r.r#ref == full) {
@@ -112,7 +130,11 @@ pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
             }
         }
     }
+    #[cfg(all(test, windows))]
+    observation.at("target-commit-check");
     inspect::check_target(&current, input.branch.oid())?;
+    #[cfg(all(test, windows))]
+    observation.at("intent-parent-stamp");
     Ok(Intent {
         input: input.clone(),
         source: Identity::from(&current),

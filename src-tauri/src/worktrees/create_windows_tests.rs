@@ -213,10 +213,22 @@ fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers(
             let manager = Worktrees::default();
             let request = input(&manager, &store, &root, temporary.path(), &oid);
             let id = "11111111-1111-4111-8111-111111111111";
-            manager.prepare(&store, id, request).unwrap();
+            let prepared = manager.prepare(&store, id, request).unwrap();
+            if let Reply::Operation(operation) = &prepared
+                && operation.state != "prepared"
+            {
+                eprintln!(
+                    "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createPrepare state={} code={:?} settled={}",
+                    operation.state, operation.code, operation.settled
+                );
+            }
             manager.start(&store, id).unwrap();
             let created = super::super::super::recycle_tests::wait(&manager, &store, id);
-            assert_eq!(created.state, "ready", "{created:?}");
+            assert_eq!(
+                created.state, "ready",
+                "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createStart code={:?} settled={}",
+                created.code, created.settled
+            );
             let location = created.location.unwrap();
             let target = Path::new(&location.path);
             fs::write(target.join("untracked.bin"), [0, 255, 2]).unwrap();

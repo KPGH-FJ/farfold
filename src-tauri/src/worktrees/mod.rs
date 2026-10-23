@@ -6,6 +6,8 @@ mod recycle_types;
 pub use recycle_types::*;
 mod checkout;
 mod create;
+#[cfg(all(test, windows))]
+mod create_observation_tests;
 mod inspect;
 mod manager;
 mod material_owner;

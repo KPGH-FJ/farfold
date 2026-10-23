@@ -2,6 +2,18 @@
   "schema": 1,
   "cases": [
     {
+      "name": "ordinary-payload-profile-is-explicit",
+      "test": "file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security",
+      "manual": false,
+      "category": "portableOrdinaryMaterialProfile"
+    },
+    {
+      "name": "ordinary-empty-directory-profile-is-explicit",
+      "test": "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree",
+      "manual": false,
+      "category": "portableOrdinaryMaterialProfile"
+    },
+    {
       "name": "create-public-selected",
       "test": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
       "manual": false,

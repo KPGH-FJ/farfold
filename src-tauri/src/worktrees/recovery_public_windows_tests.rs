@@ -92,13 +92,19 @@ pub(super) fn backup(delete: bool) -> Fixture {
             start_oid: head.clone(),
         },
     };
+    let prepared = tests::op(manager.prepare(&store, CREATE, create).unwrap());
     assert_eq!(
-        tests::op(manager.prepare(&store, CREATE, create).unwrap()).state,
-        "prepared"
+        prepared.state, "prepared",
+        "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createPrepare code={:?} settled={}",
+        prepared.code, prepared.settled
     );
     manager.start(&store, CREATE).unwrap();
     let created = wait(&manager, &store, CREATE, false);
-    assert_eq!(created.state, "ready", "{created:?}");
+    assert_eq!(
+        created.state, "ready",
+        "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createStart code={:?} settled={}",
+        created.code, created.settled
+    );
     let location = created.location.unwrap();
     let linked = Path::new(&location.path);
     fs::create_dir(linked.join("empty retained directory")).unwrap();

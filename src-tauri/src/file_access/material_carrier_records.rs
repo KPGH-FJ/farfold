@@ -329,6 +329,14 @@ pub(super) fn parse_profile<R: Read>(
     }
     let data_count = parts.keys().filter(|k| matches!(k, Key::Data(_))).count();
     if data_count != expected.len() {
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full={full} native_bytes={} expected_data={} actual_data={data_count} expected_zero_default={} actual_default={}",
+            input.total,
+            expected.len(),
+            expected.get(&Vec::new()) == Some(&0),
+            parts.contains_key(&Key::Data(Vec::new())),
+        );
         return Err(Error::Changed);
     }
     if full && security.is_none() {

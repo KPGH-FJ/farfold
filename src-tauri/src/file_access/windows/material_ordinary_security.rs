@@ -107,6 +107,16 @@ pub(super) fn verify(
 ) -> Result<()> {
     let actual = capture(file, work, cancel, resident)?;
     if !actual.summary.same_facets(expected) {
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_ORDINARY_DIAGNOSTIC phase=security-verify dacl_equal={} label_equal={} expected_aces={} actual_aces={} expected_labels={} actual_labels={}",
+            actual.summary.dacl_sha256 == expected.dacl_sha256,
+            actual.summary.label_sha256 == expected.label_sha256,
+            expected.dacl_aces,
+            actual.summary.dacl_aces,
+            expected.labels,
+            actual.summary.labels,
+        );
         return Err(Error::Changed);
     }
     Ok(())
@@ -169,6 +179,13 @@ pub(super) fn restore(
             return Err(Error::Unsupported);
         }
         let control = u16::from_le_bytes(decoded.owner_group_dacl[2..4].try_into().expect("fixed"));
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control={control} initial_control={} expected_aces={} initial_aces={}",
+            u16::from_le_bytes(initial.bytes[18..20].try_into().expect("encoded control")),
+            expected.dacl_aces,
+            initial.summary.dacl_aces,
+        );
         let fields = OWNER_SECURITY_INFORMATION
             | GROUP_SECURITY_INFORMATION
             | DACL_SECURITY_INFORMATION
@@ -200,6 +217,15 @@ pub(super) fn restore(
     let mut present = 0;
     let mut defaulted = 0;
     let current = capture(file, work, cancel, resident)?;
+    #[cfg(test)]
+    eprintln!(
+        "FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control={} dacl_equal={} label_equal={} expected_aces={} current_aces={}",
+        u16::from_le_bytes(current.bytes[18..20].try_into().expect("encoded control")),
+        current.summary.dacl_sha256 == expected.dacl_sha256,
+        current.summary.label_sha256 == expected.label_sha256,
+        expected.dacl_aces,
+        current.summary.dacl_aces,
+    );
     if current.summary.label_sha256 != expected.label_sha256 {
         let mut sacl: *mut ACL = ptr::null_mut();
         if unsafe {

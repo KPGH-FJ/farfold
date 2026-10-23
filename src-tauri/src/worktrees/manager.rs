@@ -487,6 +487,8 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     fn run(&self, store: &MetaStore, id: &str, mut intent: Intent, cancel: Arc<AtomicBool>) {
+        #[cfg(all(test, windows))]
+        let observation = super::create_observation_tests::Observation::new("start");
         // Windows retains the ORIGINAL FILE_CREATE directory and every
         // completed child/index owner through the final Ready store write.
         #[cfg(windows)]
@@ -495,8 +497,14 @@ impl Worktrees {
             if cancel.load(Ordering::SeqCst) {
                 return Err(error("cancelled"));
             }
+            #[cfg(all(test, windows))]
+            observation.at("revalidate");
             create::revalidate(&intent)?;
+            #[cfg(all(test, windows))]
+            observation.at("source-snapshot");
             let source = inspect::snapshot(Path::new(&intent.source.root))?;
+            #[cfg(all(test, windows))]
+            observation.at("checkout-prepare");
             let checkout = super::checkout::Checkout::prepare(&source, intent.input.branch.oid())?;
             if cancel.load(Ordering::SeqCst) {
                 return Err(error("cancelled"));
@@ -515,11 +523,15 @@ impl Worktrees {
             }
             #[cfg(windows)]
             {
+                #[cfg(test)]
+                observation.at("reserve-target");
                 created = Some(create::reserve(&intent)?);
                 intent.target_stamp = Some(inspect::pinned_stamp(
                     created.as_ref().ok_or(error("unknown"))?.root(),
                 )?);
             }
+            #[cfg(all(test, windows))]
+            observation.at("persist-reservation-and-dispatch");
             {
                 let mut i = self.lock()?;
                 let mut next = i.doc.clone();
@@ -542,15 +554,23 @@ impl Worktrees {
                 next.operation.as_mut().ok_or(error("unknown"))?.intent = Some(intent.clone());
                 i.save(store, next)?;
             }
+            #[cfg(all(test, windows))]
+            observation.at("git-add");
             create::add(&intent, &cancel)?;
             #[cfg(not(windows))]
             checkout.materialize(&intent, &cancel)?;
             #[cfg(windows)]
-            checkout.materialize_reserved(
-                &intent,
-                &cancel,
-                created.as_mut().ok_or(error("unknown"))?,
-            )?;
+            {
+                #[cfg(test)]
+                observation.at("materialize-reserved");
+                checkout.materialize_reserved(
+                    &intent,
+                    &cancel,
+                    created.as_mut().ok_or(error("unknown"))?,
+                )?;
+            }
+            #[cfg(all(test, windows))]
+            observation.at("verify-created");
             create::verify(&intent)
         })();
         let Ok(mut i) = self.lock() else {
@@ -567,6 +587,8 @@ impl Worktrees {
         };
         #[cfg(windows)]
         let result = result.and_then(|snapshot| {
+            #[cfg(test)]
+            observation.at("verify-final-namespace");
             created
                 .as_ref()
                 .ok_or(error("unknown"))?

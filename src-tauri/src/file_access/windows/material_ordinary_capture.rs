@@ -85,6 +85,12 @@ impl Facts {
         if directory == inventory.has_default()
             || (!directory && inventory.default_size() != Some(stamp_before.size))
         {
+            #[cfg(test)]
+            eprintln!(
+                "FARFOLD_ORDINARY_DIAGNOSTIC phase=source-inventory directory={directory} has_default={} default_matches_size={}",
+                inventory.has_default(),
+                inventory.default_size() == Some(stamp_before.size),
+            );
             return Err(Error::Changed);
         }
         let expected = inventory.carrier_data();
@@ -93,6 +99,8 @@ impl Facts {
         if stamp(file).map_err(|e| io_error("ordinaryAfter", e))? != stamp_before
             || metadata_file(file).map_err(|_| Error::Invalid)? != version
         {
+            #[cfg(test)]
+            eprintln!("FARFOLD_ORDINARY_DIAGNOSTIC phase=source-facts-after");
             return Err(Error::Changed);
         }
         Ok(Self {
@@ -182,6 +190,11 @@ pub(super) struct Captured {
     pub witness: Witness,
 }
 pub(super) fn capture(node: &Node, ns: &Namespace, io: &mut Io<'_>) -> Result<Captured> {
+    #[cfg(test)]
+    eprintln!(
+        "FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory={}",
+        node.kind == Kind::Directory,
+    );
     let Io {
         work,
         cancel,
@@ -229,6 +242,12 @@ pub(super) fn capture(node: &Node, ns: &Namespace, io: &mut Io<'_>) -> Result<Ca
         Kind::Regular => {
             let p = records::parse_profile(input, &facts.expected, false, work, cancel, resident)?;
             if p.bytes != native_bytes || p.has_ea() != (facts.ea.count != 0) {
+                #[cfg(test)]
+                eprintln!(
+                    "FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-regular-native native_length_equal={} ea_presence_equal={}",
+                    p.bytes == native_bytes,
+                    p.has_ea() == (facts.ea.count != 0),
+                );
                 return Err(Error::Changed);
             }
             (p.sha256, p.semantic_sha256())
@@ -253,6 +272,15 @@ pub(super) fn capture(node: &Node, ns: &Namespace, io: &mut Io<'_>) -> Result<Ca
     };
     let after = Facts::take(source, node.kind, work, cancel, resident)?;
     if !facts.matches(&after) {
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-after version_equal={} stamp_equal={} streams_equal={} ea_equal={} security_equal={}",
+            facts.version == after.version,
+            facts.stamp == after.stamp,
+            facts.expected == after.expected,
+            facts.ea == after.ea,
+            facts.security.summary.same_facets(&after.security.summary),
+        );
         return Err(Error::Changed);
     }
     drop(after);
@@ -345,6 +373,11 @@ pub(super) fn capture(node: &Node, ns: &Namespace, io: &mut Io<'_>) -> Result<Ca
         security: facts.security.summary.clone(),
         _memory: resident.lease(4096)?,
     };
+    #[cfg(test)]
+    eprintln!(
+        "FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory={} native_bytes={native_bytes}",
+        node.kind == Kind::Directory,
+    );
     Ok(Captured {
         bytes,
         sha256,

@@ -20,6 +20,7 @@ $excluded = @(switch -CaseSensitive ($Filter) {
   }
   'file_access::material_carrier_records::tests::' {
     'file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order'
+    'file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security'
   }
   'file_access::material_directory_records::tests::' {
     'file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order'
@@ -28,6 +29,7 @@ $excluded = @(switch -CaseSensitive ($Filter) {
     'file_access::material_mixed_tree_records::tests::more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit'
     'file_access::material_mixed_tree_records::tests::expanded_collision_checks_share_work_and_cancel_before_further_comparisons'
     'file_access::material_mixed_tree_records::tests::finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes'
+    'file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree'
   }
 })
 $arguments = @($Filter)

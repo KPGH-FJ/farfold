@@ -320,7 +320,10 @@ pub(super) fn restore(
         return Err(Error::CleanupUnknown);
     }
     validate(sealed, node, proof, io.work, io.cancel, io.resident)?;
-    apply_security(sealed, target.file, node, proof, io)?;
+    apply_security(sealed, target.file, node, proof, io).inspect_err(|_error| {
+        #[cfg(test)]
+        eprintln!("FARFOLD_ORDINARY_DIAGNOSTIC phase=restore-apply-security error={_error:?}");
+    })?;
     let work = &mut *io.work;
     let cancel = io.cancel;
     let resident = io.resident;
@@ -448,6 +451,14 @@ pub(super) fn verify_final(
         || basic.LastWriteTime != node.metadata.modified
         || basic.FileAttributes != node.metadata.attributes
     {
+        #[cfg(test)]
+        eprintln!(
+            "FARFOLD_ORDINARY_DIAGNOSTIC phase=restore-final-basic created_equal={} accessed_equal={} modified_equal={} attributes_equal={}",
+            basic.CreationTime == node.metadata.created,
+            basic.LastAccessTime == node.metadata.accessed,
+            basic.LastWriteTime == node.metadata.modified,
+            basic.FileAttributes == node.metadata.attributes,
+        );
         return Err(Error::Changed);
     }
     Ok(())
