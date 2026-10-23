@@ -27,7 +27,7 @@ pub(crate) fn prepare_command(command: &mut Command) -> io::Result<PendingGroup>
     Ok(PendingGroup)
 }
 #[cfg(windows)]
-pub(crate) use crate::windows_process::prepare_command;
+pub(crate) use crate::windows_process::{prepare_command, prepare_noninteractive_git_command};
 
 /// A single-owner pipe reader with bounded polling on both platforms. Peek is
 /// used only for this pipe, never a named resource supplied by an Agent.

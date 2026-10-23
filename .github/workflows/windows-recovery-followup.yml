@@ -10,7 +10,7 @@ permissions:
 jobs:
   recovery_followup:
     runs-on: windows-2022
-    timeout-minutes: 72
+    timeout-minutes: 78
     defaults:
       run:
         shell: pwsh
@@ -22,7 +22,7 @@ jobs:
       - name: Parse the exact recovery diagnostic scripts before building
         timeout-minutes: 1
         run: |
-          foreach ($path in @('.github/scripts/windows-recovery-followup-build.ps1', '.github/scripts/windows-capability-closeout.ps1', '.github/scripts/windows-native-loader-diagnostics.ps1')) {
+          foreach ($path in @('.github/scripts/windows-recovery-followup-build.ps1', '.github/scripts/windows-capability-closeout.ps1', '.github/scripts/windows-native-loader-diagnostics.ps1', '.github/scripts/windows-recovery-followup-git-controls.ps1')) {
             $tokens = $null
             $parseErrors = $null
             $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$parseErrors)
@@ -74,6 +74,18 @@ jobs:
         continue-on-error: true
         run: |
           ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode NullAttributes
+      - name: Independent four generic and noninteractive Git launch contracts
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: |
+          ./.github/scripts/windows-recovery-followup-git-controls.ps1 -ExpectedHead '${{ github.sha }}' -Mode LaunchContracts
+      - name: Original seven Git settlement controls using the same build
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: |
+          ./.github/scripts/windows-recovery-followup-git-controls.ps1 -ExpectedHead '${{ github.sha }}' -Mode GitSettlement
       - name: Preserve the original recovery executable loader evidence
         if: ${{ always() }}
         timeout-minutes: 5
@@ -110,3 +122,13 @@ jobs:
           $attributeNames = @('null-exact-spellings', 'null-command-system-policy', 'null-rooted-lookalikes', 'null-owned-xdg-matrix', 'existing-source-profile-info', 'existing-configured-attributes-file', 'existing-held-absence-drive-relative', 'existing-selected-head-attributes' | Sort-Object)
           $actualAttributeNames = @($attributes.selectedCaseNames | Sort-Object)
           if ($attributes.head -cne '${{ github.sha }}' -or $attributes.mode -cne 'NullAttributes' -or $attributes.headStable -ne $true -or $attributes.inputsStable -ne $true -or $attributes.focusedSubsetOnly -ne $false -or $attributes.plannedOrdinaryTests -ne 8 -or $attributes.plannedManualTests -ne 0 -or $attributes.plannedTotalTests -ne 8 -or $attributes.selectedTests -ne 8 -or $attributes.groupCount -ne 8 -or ($actualAttributeNames | ConvertTo-Json -Compress) -cne ($attributeNames | ConvertTo-Json -Compress) -or $attributes.exactAllGroupsPassed -ne $true) { throw 'Independent null-attributes cohort incomplete or failed' }
+          $gitControls = @{
+            LaunchContracts = @('generic-command-shape', 'generic-stdio-contract', 'noninteractive-git-stdio-contract', 'noninteractive-git-error-contract')
+            GitSettlement = @('natural-tail', 'original-nonzero', 'cancel-owned-job', 'original-deadline', 'late-stdout-limit', 'late-stderr-limit', 'changed-input')
+          }
+          foreach ($mode in $gitControls.Keys) {
+            $result = Get-Content -LiteralPath "windows-diagnostics-raw/git-launch-controls-$mode.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
+            $actualNames = @($result.selectedCaseNames | Sort-Object)
+            $expectedNames = @($gitControls[$mode] | Sort-Object)
+            if ($result.head -cne '${{ github.sha }}' -or $result.mode -cne $mode -or $result.headStable -isnot [bool] -or -not $result.headStable -or $result.inputsStable -isnot [bool] -or -not $result.inputsStable -or $result.sourceMapMatchesSelectedBuild -isnot [bool] -or -not $result.sourceMapMatchesSelectedBuild -or $result.selectedTests -ne $expectedNames.Count -or $result.groupCount -ne $expectedNames.Count -or ($actualNames | ConvertTo-Json -Compress) -cne ($expectedNames | ConvertTo-Json -Compress) -or $result.exactAllPassed -isnot [bool] -or -not $result.exactAllPassed) { throw "Independent Git $mode evidence incomplete or failed" }
+          }

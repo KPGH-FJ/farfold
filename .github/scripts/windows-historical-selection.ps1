@@ -45,6 +45,23 @@ $excluded = @(switch -CaseSensitive ($Filter) {
   }
 })
 $arguments = @($Filter)
+if ($Filter -ceq 'worktrees::git::source_roots::profile::tests::') {
+  # These parents have their own eight-case cohort. The fixed ignored child is
+  # called only by its XDG parent, and is not a fourth independent control.
+  $nullManifest = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'windows-null-attributes-cases.json') -Raw | ConvertFrom-Json -ErrorAction Stop
+  if ($nullManifest.schema -ne 1 -or @($nullManifest.cases).Count -ne 8) { throw 'Null-attributes inventory is missing' }
+  $nullParents = @(
+    'worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live'
+    'worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected'
+    'worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes'
+  )
+  foreach ($test in $nullParents) {
+    $entry = @($nullManifest.cases | Where-Object { $_.test -ceq $test })
+    if ($entry.Count -ne 1 -or $entry[0].manual -isnot [bool] -or $entry[0].manual) { throw 'Historical exclusion is not an exact ordinary null-attributes parent' }
+    $arguments += @('--skip', $test)
+  }
+  $arguments += @('--skip', 'worktrees::git::source_roots::profile::tests::null_attributes::owned_xdg_global_attributes_child')
+}
 if ($excluded.Count -gt 0) {
   $manifest = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'windows-capability-closeout-cases.json') -Raw | ConvertFrom-Json -ErrorAction Stop
   if ($manifest.schema -ne 1 -or @($manifest.cases).Count -lt 1) { throw 'Current capability inventory is missing' }

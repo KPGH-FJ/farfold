@@ -1,7 +1,7 @@
 //! These execute a built synthetic helper on Windows, never a real Agent.
 //! CI builds `--example windows_process_fixture` before running this group.
 use super::*;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::time::{Duration, Instant};
 use windows_sys::Win32::System::Threading::{
     OpenProcess, PROCESS_SYNCHRONIZE, WaitForSingleObject,
@@ -254,5 +254,108 @@ fn helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code() {
             .canonicalize()
             .unwrap(),
         directory.path().canonicalize().unwrap()
+    );
+}
+
+fn noninteractive_git_output(mut command: Command, input: &[u8]) -> std::process::Output {
+    let pending = prepare_noninteractive_git_command(&mut command).unwrap();
+    assert_eq!(command.get_args().nth(2), Some(OsStr::new("git-stdio")));
+    let mut child = Parent(
+        command
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap(),
+    );
+    let group = pending.attach(child.0.id()).unwrap();
+    child.0.stdin.take().unwrap().write_all(input).unwrap();
+    until(|| child.0.try_wait().unwrap().is_some());
+    let status = child.0.wait().unwrap();
+    // The selected fixtures emit less than4KiB. Keep original handles and Job
+    // through the same exit checks; an unknown member still fails this control.
+    until(|| !group.active());
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    child
+        .0
+        .stdout
+        .take()
+        .unwrap()
+        .take(4096)
+        .read_to_end(&mut stdout)
+        .unwrap();
+    child
+        .0
+        .stderr
+        .take()
+        .unwrap()
+        .take(4096)
+        .read_to_end(&mut stderr)
+        .unwrap();
+    assert!(stdout.len() < 4096 && stderr.len() < 4096);
+    std::process::Output {
+        status,
+        stdout,
+        stderr,
+    }
+}
+
+#[test]
+fn noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code() {
+    let directory = tempfile::tempdir().unwrap();
+    for remove in [false, true] {
+        let mut command = Command::new(fixture());
+        command
+            .args([
+                "argv",
+                "space value",
+                "& %PATH% literal",
+                "",
+                "quote\"value",
+                "中文🙂",
+                "trailing \\",
+            ])
+            .current_dir(directory.path())
+            .env("FIXTURE_LITERAL", "exact value");
+        if remove {
+            command.env_remove("FIXTURE_LITERAL");
+        }
+        let output = noninteractive_git_output(command, b"synthetic input\nsecond line");
+        assert_eq!(output.status.code(), Some(23));
+        assert!(output.stderr.is_empty());
+        let observed: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(
+            observed["args"],
+            serde_json::json!([
+                "space value",
+                "& %PATH% literal",
+                "",
+                "quote\"value",
+                "中文🙂",
+                "trailing \\",
+            ])
+        );
+        assert_eq!(observed["input"], "synthetic input\nsecond line");
+        assert_eq!(observed["env"], if remove { "" } else { "exact value" });
+        assert_eq!(
+            std::path::PathBuf::from(observed["cwd"].as_str().unwrap())
+                .canonicalize()
+                .unwrap(),
+            directory.path().canonicalize().unwrap()
+        );
+    }
+}
+
+#[test]
+fn noninteractive_git_helper_preserves_stderr_and_original_failure_exit() {
+    let mut command = Command::new(fixture());
+    command.arg("install-error");
+    let output = noninteractive_git_output(command, b"");
+    assert_eq!(output.status.code(), Some(13));
+    assert!(output.stdout.is_empty());
+    assert_eq!(
+        output.stderr,
+        b"npm error code EACCES\nAuthorization: Bearer fixture-secret\nhttps://user:password@example.invalid/private?token=secret\n"
     );
 }

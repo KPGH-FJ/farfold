@@ -25,8 +25,9 @@ use windows_sys::Win32::System::JobObjects::{
 };
 use windows_sys::Win32::System::SystemServices::{JOB_OBJECT_ASSIGN_PROCESS, JOB_OBJECT_QUERY};
 use windows_sys::Win32::System::Threading::{
-    CREATE_NO_WINDOW, GetCurrentProcess, OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION,
-    PROCESS_SYNCHRONIZE, PROCESS_TERMINATE, TerminateProcess, WaitForSingleObject,
+    CREATE_NO_WINDOW, DETACHED_PROCESS, GetCurrentProcess, OpenProcess,
+    PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE, PROCESS_TERMINATE, TerminateProcess,
+    WaitForSingleObject,
 };
 
 #[path = "windows_process/current_members.rs"]
@@ -34,6 +35,37 @@ mod current_members;
 
 const HELPER: &str = "--farfold-owned-process";
 const PREFIX: &str = "Local\\Farfold-process-";
+
+#[derive(Clone, Copy)]
+enum LaunchMode {
+    Stdio,
+    Pty,
+    NoninteractiveGit,
+}
+impl LaunchMode {
+    fn argument(self) -> &'static str {
+        match self {
+            Self::Stdio => "stdio",
+            Self::Pty => "pty",
+            Self::NoninteractiveGit => "git-stdio",
+        }
+    }
+    fn parse(value: &OsStr) -> Option<Self> {
+        match value.to_str()? {
+            "stdio" => Some(Self::Stdio),
+            "pty" => Some(Self::Pty),
+            "git-stdio" => Some(Self::NoninteractiveGit),
+            _ => None,
+        }
+    }
+    fn creation_flags(self) -> Option<u32> {
+        match self {
+            Self::Stdio => Some(CREATE_NO_WINDOW),
+            Self::Pty => None,
+            Self::NoninteractiveGit => Some(DETACHED_PROCESS),
+        }
+    }
+}
 
 struct Handle(HANDLE);
 // Job handles are kernel references, safe to query/terminate concurrently. No
@@ -295,10 +327,26 @@ impl PendingGroup {
         args: impl IntoIterator<Item = OsString>,
         terminal: bool,
     ) -> Vec<OsString> {
+        self.helper_argv_mode(
+            program,
+            args,
+            if terminal {
+                LaunchMode::Pty
+            } else {
+                LaunchMode::Stdio
+            },
+        )
+    }
+    fn helper_argv_mode(
+        &self,
+        program: &OsStr,
+        args: impl IntoIterator<Item = OsString>,
+        mode: LaunchMode,
+    ) -> Vec<OsString> {
         [
             OsString::from(HELPER),
             OsString::from(&self.0.name),
-            OsString::from(if terminal { "pty" } else { "stdio" }),
+            OsString::from(mode.argument()),
             program.to_owned(),
         ]
         .into_iter()
@@ -340,13 +388,28 @@ pub(crate) fn pending() -> io::Result<PendingGroup> {
 /// Rebuild only executable/argv; preserve the selected cwd and every explicit
 /// environment override/removal. Callers set their own stdio after this step.
 pub(crate) fn prepare_command(command: &mut Command) -> io::Result<PendingGroup> {
+    prepare_stdio_command(command, LaunchMode::Stdio)
+}
+
+/// Fixed noninteractive Git only. Both wrapper and selected child detach from
+/// the console; redirected handles, Job ownership and exit checks are unchanged.
+/// https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags
+/// Git-for-Windows compat/mingw.c uses DETACHED_PROCESS with redirected handles
+/// when no console is available. This is not proof that all Job members ended.
+pub(crate) fn prepare_noninteractive_git_command(
+    command: &mut Command,
+) -> io::Result<PendingGroup> {
+    prepare_stdio_command(command, LaunchMode::NoninteractiveGit)
+}
+
+fn prepare_stdio_command(command: &mut Command, mode: LaunchMode) -> io::Result<PendingGroup> {
     use std::os::windows::process::CommandExt;
     let pending = pending()?;
     let mut helper = Command::new(helper_executable()?);
-    helper.args(pending.helper_argv(
+    helper.args(pending.helper_argv_mode(
         command.get_program(),
         command.get_args().map(OsStr::to_owned),
-        false,
+        mode,
     ));
     if let Some(cwd) = command.get_current_dir() {
         helper.current_dir(cwd);
@@ -361,7 +424,9 @@ pub(crate) fn prepare_command(command: &mut Command) -> io::Result<PendingGroup>
             }
         }
     }
-    helper.creation_flags(CREATE_NO_WINDOW);
+    if let Some(flags) = mode.creation_flags() {
+        helper.creation_flags(flags);
+    }
     *command = helper;
     Ok(pending)
 }
@@ -461,11 +526,11 @@ pub(crate) fn run_if_requested() -> Option<i32> {
     let mut failure_phase = "准备启动参数";
     let result = (|| {
         let name = args.next().ok_or_else(|| io::Error::other("missing job"))?;
-        let terminal = match args.next().as_deref() {
-            Some(mode) if mode == "pty" => true,
-            Some(mode) if mode == "stdio" => false,
-            _ => return Err(io::Error::other("invalid launch mode")),
-        };
+        let mode = args
+            .next()
+            .as_deref()
+            .and_then(LaunchMode::parse)
+            .ok_or_else(|| io::Error::other("invalid launch mode"))?;
         let program = args
             .next()
             .filter(|arg| !arg.is_empty())
@@ -473,9 +538,9 @@ pub(crate) fn run_if_requested() -> Option<i32> {
         failure_phase = "加入进程保护";
         enter_job(&name)?;
         let mut command = Command::new(Path::new(&program));
-        if !terminal {
+        if let Some(flags) = mode.creation_flags() {
             use std::os::windows::process::CommandExt;
-            command.creation_flags(CREATE_NO_WINDOW);
+            command.creation_flags(flags);
         }
         failure_phase = "执行或等待程序";
         let status = command

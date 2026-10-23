@@ -219,10 +219,10 @@ fn execute_bounded(
     collect: bool,
 ) -> Result<Output> {
     #[cfg(windows)]
-    let pending =
-        crate::process_platform::prepare_command(&mut cmd).map_err(|_| error("gitUnavailable"))?;
+    let pending = crate::process_platform::prepare_noninteractive_git_command(&mut cmd)
+        .map_err(|_| error("gitUnavailable"))?;
     if let Some(input) = &input {
-        // Windows prepare_command intentionally rebuilds Command. Install the
+        // The Windows wrapper intentionally rebuilds Command. Install the
         // explicit finite input only AFTER that replacement, not on the lost
         // original. The input remains alive until exact child/group cleanup.
         input.install(&mut cmd)?;
