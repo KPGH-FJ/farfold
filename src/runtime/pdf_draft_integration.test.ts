@@ -3,7 +3,12 @@ import { approvedPdf, PDF_URI } from "./pdf_document.test-support";
 import type { DraftAttachment } from "./drafts";
 import type { PromptBlock } from "./session_types";
 const h = vi.hoisted(() => ({ invoke: vi.fn(), verify: vi.fn() }));
-vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: h.invoke,
+  Channel: class {
+    onmessage = (_: unknown) => {};
+  },
+}));
 vi.mock("./document_input", () => ({ verifyDocumentInput: h.verify }));
 import {
   attachmentPromptBlocks,

@@ -109,6 +109,19 @@ impl Admission {
         ready
     }
 }
+impl Drop for Admission {
+    fn drop(&mut self) {
+        // A connection can close before it holds any body. Its registration
+        // must retire without depending on a later, unrelated Lease release.
+        let owned = Arc::as_ptr(&self.wake);
+        self.budget
+            .state
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .waiters
+            .retain(|entry| !std::ptr::eq(entry.as_ptr(), owned));
+    }
+}
 pub(super) struct Lease {
     budget: Arc<Budget>,
     bytes: usize,
@@ -145,6 +158,39 @@ mod tests {
         fn wake(self: Arc<Self>) {
             self.0.fetch_add(1, Ordering::SeqCst);
         }
+    }
+    #[test]
+    fn retired_admissions_leave_no_registration_without_creating_a_lease() {
+        let budget = Budget::new(10, 2);
+        for _ in 0..128 {
+            let admission = budget.watch();
+            assert_eq!(budget.state.lock().unwrap().waiters.len(), 1);
+            drop(admission);
+            assert_eq!(budget.state.lock().unwrap().waiters.len(), 0);
+        }
+        assert_eq!(budget.retained(), (0, 0));
+    }
+    #[test]
+    fn retiring_other_admissions_keeps_the_live_waiter_and_its_wakeup() {
+        let budget = Budget::new(10, 2);
+        let admission = budget.watch();
+        for _ in 0..128 {
+            drop(budget.watch());
+            assert_eq!(budget.state.lock().unwrap().waiters.len(), 1);
+        }
+        let wake = Arc::new(Wakes(AtomicUsize::new(0)));
+        let waker = Waker::from(wake.clone());
+        let cx = Context::from_waker(&waker);
+        let lease = budget.hold(11);
+        assert!(!admission.ready(&cx));
+        drop(budget.watch());
+        assert_eq!(budget.state.lock().unwrap().waiters.len(), 1);
+        assert_eq!(wake.0.load(Ordering::SeqCst), 0);
+        drop(lease);
+        assert_eq!(wake.0.load(Ordering::SeqCst), 1);
+        assert!(admission.ready(&cx));
+        drop(admission);
+        assert_eq!(budget.state.lock().unwrap().waiters.len(), 0);
     }
     #[test]
     fn current_owned_batch_can_cross_watermark_and_only_last_real_release_resumes() {

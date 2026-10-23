@@ -8,6 +8,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { ToolStep } from "../components/thread-items";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 import { applyUpdate, freshThreadState, paneCards, threads } from "./sessions";
 import type { ThreadState, ToolCallView } from "./session_types";
 
@@ -30,6 +31,13 @@ it("restores tool content without claiming replay time as execution time", async
   let channel!: { onmessage: (event: unknown) => void };
   h.invoke.mockImplementation(async (cmd, args) => {
     if (cmd !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "history-time",
+      connectionId: "history-time-connection",
+      resumed: true,
+    };
+    emitOpeningHeader(args, result);
     channel = args.channel;
     channel.onmessage({
       update: {
@@ -59,7 +67,7 @@ it("restores tool content without claiming replay time as execution time", async
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "history-time", resumed: true };
+    return result;
   });
   const state = await threads.open({
     agentId: "fixture",
@@ -174,9 +182,16 @@ it("waits for the matching replay boundary before replacing a restored conversat
   let token!: string;
   h.invoke.mockImplementation(async (cmd, args) => {
     if (cmd !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "boundary",
+      connectionId: "boundary-connection",
+      resumed: true,
+    };
+    emitOpeningHeader(args, result);
     channel = args.channel;
     token = args.openToken;
-    return { cwd: "/p", nativeSessionId: "boundary", resumed: true };
+    return result;
   });
   let finished = false;
   const opening = threads
@@ -224,11 +239,18 @@ it("retains prior history when an acknowledged load has no readable conversation
   });
   h.invoke.mockImplementation(async (cmd, args) => {
     if (cmd !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "empty-body",
+      connectionId: "empty-body-connection",
+      resumed: true,
+    };
+    emitOpeningHeader(args, result);
     args.channel.onmessage({
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "empty-body", resumed: true };
+    return result;
   });
   await expect(
     threads.open({
@@ -249,6 +271,13 @@ it("keeps a partial replay unavailable when its completion marker times out", as
   h.invoke.mockImplementation(async (cmd, args) => {
     if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "incomplete-replay",
+      connectionId: "incomplete-replay-connection",
+      resumed: true,
+    };
+    emitOpeningHeader(args, result);
     channel = args.channel;
     token = args.openToken;
     channel.onmessage({
@@ -257,7 +286,7 @@ it("keeps a partial replay unavailable when its completion marker times out", as
         content: { type: "text", text: "Partial only" },
       },
     });
-    return { cwd: "/p", nativeSessionId: "incomplete-replay", resumed: true };
+    return result;
   });
   const opening = threads.open({
     agentId: "fixture",
@@ -278,6 +307,13 @@ it("accepts a complete history containing only an actual attachment message", as
   h.invoke.mockImplementation(async (cmd, args) => {
     if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "attachment-history",
+      connectionId: "attachment-history-connection",
+      resumed: true,
+    };
+    emitOpeningHeader(args, result);
     args.channel.onmessage({
       update: {
         sessionUpdate: "user_message_chunk",
@@ -288,7 +324,7 @@ it("accepts a complete history containing only an actual attachment message", as
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "attachment-history", resumed: true };
+    return result;
   });
   const state = await threads.open({
     agentId: "fixture",

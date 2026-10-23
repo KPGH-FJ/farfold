@@ -47,6 +47,21 @@ function prior(id: string) {
   return state;
 }
 function replay(args: Record<string, any>, configCheck?: unknown) {
+  const result = {
+    cwd: args.cwd,
+    nativeSessionId: args.nativeSessionId,
+    connectionId: `history-recovery-${args.nativeSessionId}`,
+    resumed: true,
+    configOptions: [],
+    configCheck,
+  };
+  args.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: args.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
   args.channel.onmessage({
     update: {
       sessionUpdate: "agent_message_chunk",
@@ -57,13 +72,7 @@ function replay(args: Record<string, any>, configCheck?: unknown) {
     kind: "session_history_complete",
     openToken: args.openToken,
   });
-  return {
-    cwd: args.cwd,
-    nativeSessionId: args.nativeSessionId,
-    resumed: true,
-    configOptions: [],
-    configCheck,
-  };
+  return result;
 }
 beforeEach(() => {
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
@@ -423,12 +432,21 @@ it("opens only an explicit fresh draft without moving old history or queued work
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_open") {
       if (args.nativeSessionId) throw "该 Agent 不支持恢复历史";
-      return {
+      const result = {
         cwd: args.cwd,
         nativeSessionId: "new-after-unsupported-draft",
+        connectionId: "new-after-unsupported-connection",
         resumed: false,
         configOptions: [],
       };
+      args.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: result.cwd,
+        sessionId: result.nativeSessionId,
+        connectionId: result.connectionId,
+      });
+      return result;
     }
     return command === "settings_get" ? null : [];
   });

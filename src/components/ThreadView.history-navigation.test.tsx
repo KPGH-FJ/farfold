@@ -175,15 +175,24 @@ it("retries a created but unsent draft's exact native target without a second ac
   let reject!: (reason: unknown) => void;
   const retry = new Promise<never>((_resolve, fail) => (reject = fail));
   vi.mocked(invoke).mockImplementation((command, args: any) => {
-    if (command === "session_open")
-      return args.nativeSessionId
-        ? retry
-        : Promise.resolve({
-            cwd: args.cwd,
-            nativeSessionId: "unsent-created-native",
-            resumed: false,
-            configOptions: [],
-          });
+    if (command === "session_open") {
+      if (args.nativeSessionId) return retry;
+      const result = {
+        cwd: args.cwd,
+        nativeSessionId: "unsent-created-native",
+        connectionId: "unsent-created-connection",
+        resumed: false,
+        configOptions: [],
+      };
+      args.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: result.cwd,
+        sessionId: result.nativeSessionId,
+        connectionId: result.connectionId,
+      });
+      return Promise.resolve(result);
+    }
     return Promise.resolve(command === "settings_get" ? null : []);
   });
   const s = await threads.open({

@@ -48,6 +48,19 @@ it("presents a replayed text image as an explicit unopened attachment while pres
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "agent_work_get") return { cwd: "/p", enabled: {} };
     if (command !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: "owned",
+      connectionId: "cold-image-connection",
+      resumed: true,
+    };
+    args.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: args.openToken,
+      cwd: result.cwd,
+      sessionId: result.nativeSessionId,
+      connectionId: result.connectionId,
+    });
     args.channel.onmessage({
       update: {
         sessionUpdate: "user_message_chunk",
@@ -58,7 +71,7 @@ it("presents a replayed text image as an explicit unopened attachment while pres
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "owned", resumed: true };
+    return result;
   });
   const thread = await threads.open({
     agentId: "cold-image-fixture",

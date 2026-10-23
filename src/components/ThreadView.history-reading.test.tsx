@@ -56,12 +56,25 @@ function loaded(
   return {
     cwd: args.cwd,
     nativeSessionId: args.nativeSessionId,
+    connectionId: `history-reading-${args.openToken}`,
     resumed: true,
     configOptions: [],
     service: null,
     serviceContext: null,
     ...overrides,
   };
+}
+function openingHeader(
+  args: Record<string, any>,
+  result: Pick<OpenResult, "cwd" | "nativeSessionId" | "connectionId">,
+) {
+  args.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: args.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
 }
 function boundary(args: Record<string, any>) {
   args.channel.onmessage({
@@ -113,11 +126,13 @@ it("reports an acknowledged config-only load as missing history without claiming
   const queue = state.queued;
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args);
+    openingHeader(args, result);
     args.channel.onmessage({
       update: { sessionUpdate: "config_option_update", configOptions: [] },
     });
     boundary(args);
-    return loaded(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   expect(state.historyUnavailable?.reason).toBe("empty");
@@ -146,13 +161,15 @@ it("classifies an incomplete local boundary separately and ignores its late repl
     if (command !== "session_open") return [];
     args = input;
     channel = args.channel;
+    const result = loaded(args);
+    openingHeader(args, result);
     channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
         content: { type: "text", text: "Partial body" },
       },
     });
-    return loaded(args);
+    return result;
   });
   const opening = expect(open(state)).rejects.toBeTruthy();
   await vi.advanceTimersByTimeAsync(30_000);
@@ -177,9 +194,11 @@ it("does not relabel an observed connection loss as an empty history", async () 
   const state = old("real-lost");
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args);
+    openingHeader(args, result);
     args.channel.onmessage({ kind: "connectionLost" });
     boundary(args);
-    return loaded(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   expect(state.historyUnavailable).toBeNull();
@@ -211,8 +230,10 @@ it("clears an earlier connection loss after acknowledged load while retaining un
   state.stopUnconfirmed = true;
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args);
+    openingHeader(args, result);
     boundary(args);
-    return loaded(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   expect(state.historyUnavailable?.reason).toBe("empty");
@@ -236,8 +257,10 @@ it("does not revive old tool activity when the replacement connection returned a
   state.connectionOutcomeUnknown = true;
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args);
+    openingHeader(args, result);
     boundary(args);
-    return loaded(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   expect(state.connectionLost).toBe(false);
@@ -269,13 +292,15 @@ it("retains the canonical target and confirmed API source for explicit retry and
         configOptions: null,
         service,
       });
-      return loaded(args, {
+      const result = loaded(args, {
         cwd: "/private/tmp/project",
         nativeSessionId: "api-new-draft",
         resumed: false,
         service,
         serviceContext: "original-revision",
       });
+      openingHeader(args, result);
+      return result;
     }
     if (phase === "retry")
       expect(args).toMatchObject({
@@ -284,12 +309,14 @@ it("retains the canonical target and confirmed API source for explicit retry and
         configOptions: null,
         service: null,
       });
-    boundary(args);
-    return loaded(args, {
+    const result = loaded(args, {
       cwd: "/private/tmp/project",
       service,
       serviceContext: "original-revision",
     });
+    openingHeader(args, result);
+    boundary(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   const key = "fixture:/private/tmp/project:api-canonical";
@@ -315,13 +342,16 @@ it("does not invent an existing-settings source when the successful load omitted
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command !== "session_open") return [];
-    boundary(args);
-    return {
+    const result = {
       cwd: args.cwd,
       nativeSessionId: id,
+      connectionId: `source-omitted-${args.openToken}`,
       resumed: true,
       configOptions: [],
     };
+    openingHeader(args, result);
+    boundary(args);
+    return result;
   });
   await expect(
     threads.open({ agentId: "fixture", cwd: "/p", nativeSessionId: id }),
@@ -338,6 +368,14 @@ it("accepts a complete readable retry, clears the history failure and retains fi
   let fail = true;
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args, {
+      configCheck: {
+        status: "blocked",
+        issues: [],
+        current: { choices: [] },
+      },
+    });
+    openingHeader(args, result);
     if (!fail)
       args.channel.onmessage({
         update: {
@@ -346,13 +384,7 @@ it("accepts a complete readable retry, clears the history failure and retains fi
         },
       });
     boundary(args);
-    return loaded(args, {
-      configCheck: {
-        status: "blocked",
-        issues: [],
-        current: { choices: [] },
-      },
-    });
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   fail = false;
@@ -384,14 +416,21 @@ it("retains the returned API identity in a genuinely cold failed placeholder", a
         service,
         configOptions: null,
       });
-      return loaded(args, { nativeSessionId: "cold-api-new", resumed: false });
+      const result = loaded(args, {
+        nativeSessionId: "cold-api-new",
+        resumed: false,
+      });
+      openingHeader(args, result);
+      return result;
     }
-    boundary(args);
-    return loaded(args, {
+    const result = loaded(args, {
       cwd: "/private/tmp/cold",
       service,
       serviceContext: "cold-api-revision",
     });
+    openingHeader(args, result);
+    boundary(args);
+    return result;
   });
   await expect(
     threads.open({ agentId: "fixture", cwd: "/tmp/cold", nativeSessionId: id }),
@@ -413,6 +452,8 @@ it("observes a real loss after failed history without admitting late body or let
   let retried = false;
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    const result = loaded(args);
+    openingHeader(args, result);
     if (!retried) first = args;
     else
       args.channel.onmessage({
@@ -422,7 +463,7 @@ it("observes a real loss after failed history without admitting late body or let
         },
       });
     boundary(args);
-    return loaded(args);
+    return result;
   });
   await expect(open(state)).rejects.toBeTruthy();
   first.channel.onmessage({

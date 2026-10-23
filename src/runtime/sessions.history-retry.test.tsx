@@ -13,6 +13,7 @@ import { composerDrafts, draftPersistence, draftQueues } from "./drafts";
 import { STRINGS } from "./strings";
 import { isHistoryReadFailure } from "./session_recovery";
 import { ThreadView } from "../components/ThreadView";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 interface OpenArgs {
   agentId: string;
@@ -131,6 +132,18 @@ function backend() {
       // Matches pump::open_session_on_connection's check before session/load.
       if (routes.has(key)) throw new Error("fixture: session is already open");
       routes.add(key);
+      const result = {
+        cwd,
+        nativeSessionId: args.nativeSessionId,
+        connectionId: `retry-connection-${opens.length}`,
+        resumed: true,
+        service,
+        serviceContext: "original-api-revision",
+        configOptions: [],
+        configCheck,
+        warnings: [],
+      } satisfies OpenResult;
+      emitOpeningHeader(args, result);
       if (readable)
         args.channel.onmessage({
           update: {
@@ -142,16 +155,7 @@ function backend() {
         kind: "session_history_complete",
         openToken: args.openToken,
       });
-      return {
-        cwd,
-        nativeSessionId: args.nativeSessionId,
-        resumed: true,
-        service,
-        serviceContext: "original-api-revision",
-        configOptions: [],
-        configCheck,
-        warnings: [],
-      } satisfies OpenResult;
+      return result;
     }
     if (command === "session_close") {
       const args = value as CloseArgs;

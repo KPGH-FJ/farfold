@@ -526,6 +526,21 @@ it("invalidates old range references after a real open replaces the projection, 
       channel: { onmessage: (event: unknown) => void };
       openToken: string;
     };
+    const result = {
+      nativeSessionId: s.nativeSessionId,
+      cwd: s.cwd,
+      connectionId: `artifact-range-${s.nativeSessionId}`,
+      resumed: true,
+      configOptions: [],
+      warnings: [],
+    };
+    request.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: request.openToken,
+      cwd: result.cwd,
+      sessionId: result.nativeSessionId,
+      connectionId: result.connectionId,
+    });
     request.channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
@@ -552,13 +567,7 @@ it("invalidates old range references after a real open replaces the projection, 
       kind: "session_history_complete",
       openToken: request.openToken,
     });
-    return {
-      nativeSessionId: s.nativeSessionId,
-      cwd: s.cwd,
-      resumed: true,
-      configOptions: [],
-      warnings: [],
-    };
+    return result;
   });
   const restored = await threads.open({
     agentId: s.agentId,

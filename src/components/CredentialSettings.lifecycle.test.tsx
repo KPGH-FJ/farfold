@@ -18,7 +18,10 @@ const h = vi.hoisted(() => ({
   test: vi.fn(),
   remove: vi.fn(),
 }));
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn(async () => true) }));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(async () => true),
+  Channel: class {},
+}));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
