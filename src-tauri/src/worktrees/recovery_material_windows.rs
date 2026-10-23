@@ -48,7 +48,7 @@ fn complete_receipt(
         && actual.target_ids.len() == nodes
         && actual.directories == directories
         && actual.regulars == nodes - directories
-        && actual.write_aborts as usize
+        && (actual.write_aborts as u64 + actual.direct_data_writes as u64)
             == expected
                 .nodes
                 .iter()
@@ -57,7 +57,7 @@ fn complete_receipt(
                         || n.ea.count != 0
                         || n.streams.iter().any(|s| !s.name.is_empty() || s.bytes != 0)
                 })
-                .count()
+                .count() as u64
         && actual.read_aborts as usize == nodes
         && actual.all_native_recaptured
         && actual.exact_edges_verified

@@ -36,6 +36,82 @@ fn run(raw: &[u8], expected: &Expected) -> Result<Parsed> {
         &Resident::new(RESIDENT_LIMIT),
     )
 }
+#[test]
+fn single_default_payload_proof_keeps_exact_range_hash_and_rejects_other_facets() {
+    let parse = |raw: &[u8], expected: &Expected| {
+        parse_profile(
+            Cursor::new(raw),
+            expected,
+            false,
+            &mut WorkBudget::new(WORK_LIMIT),
+            &AtomicBool::new(false),
+            &Resident::new(RESIDENT_LIMIT),
+        )
+    };
+    for size in 1..=5 {
+        let data = vec![0xab; size];
+        let raw = stream(1, 0, &[], &data);
+        let parsed = parse(&raw, &[(Vec::new(), size as u64)].into()).unwrap();
+        let proof = parsed.single_default_payload().unwrap();
+        assert_eq!(proof.range(), 20..20 + size as u64);
+        assert_eq!(proof.sha256(), <[u8; 32]>::from(Sha256::digest(&data)));
+        assert_eq!(
+            &raw[proof.range().start as usize..proof.range().end as usize],
+            data
+        );
+    }
+    let data = stream(1, 0, &[], &[1, 2, 3]);
+    let named = ":extra:$DATA".encode_utf16().collect::<Vec<_>>();
+    for (raw, expected) in [
+        (
+            [data.clone(), stream(2, 0, &[], b"EA")].concat(),
+            [(Vec::new(), 3)].into(),
+        ),
+        (
+            [data.clone(), stream(4, 0, &named, b"A")].concat(),
+            [(Vec::new(), 3), (named, 1)].into(),
+        ),
+        (stream(1, 0, &[], &[]), [(Vec::new(), 0)].into()),
+        (Vec::new(), [(Vec::new(), 0)].into()),
+    ] {
+        assert!(
+            parse(&raw, &expected)
+                .unwrap()
+                .single_default_payload()
+                .is_none()
+        );
+    }
+    let full = [data, stream(3, 2, &[], &descriptor())].concat();
+    assert!(
+        run(&full, &[(Vec::new(), 3)].into())
+            .unwrap()
+            .single_default_payload()
+            .is_none()
+    );
+}
+#[test]
+fn single_default_payload_never_bypasses_flags_or_complete_framing() {
+    let base = stream(1, 0, &[], &[1, 2, 3]);
+    let expected = [(Vec::new(), 3)].into();
+    for raw in [
+        stream(1, 1, &[], &[1, 2, 3]),
+        base[..base.len() - 1].to_vec(),
+        [base.clone(), vec![0]].concat(),
+        [base.clone(), base].concat(),
+    ] {
+        assert!(
+            parse_profile(
+                Cursor::new(raw),
+                &expected,
+                false,
+                &mut WorkBudget::new(WORK_LIMIT),
+                &AtomicBool::new(false),
+                &Resident::new(RESIDENT_LIMIT),
+            )
+            .is_err()
+        );
+    }
+}
 struct Split<'a> {
     body: &'a [u8],
     first: usize,

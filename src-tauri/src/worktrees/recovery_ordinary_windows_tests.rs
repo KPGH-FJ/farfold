@@ -156,7 +156,10 @@ fn receipt(actual: &crate::file_access::MaterialTreeReceipt, expected: &WindowsM
         .filter(|n| n.ea.count != 0 || n.streams.iter().any(|s| !s.name.is_empty() || s.bytes != 0))
         .count();
     assert_eq!(actual.nodes, expected.nodes.len());
-    assert_eq!(actual.write_aborts as usize, writes);
+    assert_eq!(
+        actual.write_aborts as usize + actual.direct_data_writes as usize,
+        writes
+    );
     assert_eq!(actual.read_aborts as usize, expected.nodes.len());
     assert!(
         actual.exact_edges_verified && actual.all_native_recaptured && actual.metadata_finalized
@@ -234,6 +237,83 @@ fn ordinary_empty_file_preserves_empty_default_without_fake_native_write() {
     fs::write(f.source.join("empty"), []).unwrap();
     let target = f.cold();
     assert_eq!(fs::metadata(target.join("empty")).unwrap().len(), 0);
+}
+#[test]
+fn ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts() {
+    fn counts(actual: &crate::file_access::MaterialTreeReceipt, size: usize) {
+        assert_eq!(actual.nodes, 2);
+        assert_eq!(actual.read_aborts, 2, "each actual native read is retired");
+        assert_eq!(
+            actual.direct_data_writes,
+            u32::from((1..=4).contains(&size))
+        );
+        assert_eq!(actual.write_aborts, u32::from(size == 5));
+    }
+    for size in 0..=5 {
+        let f = Fixture::new();
+        let payload = &[0, 255, 3, 128, 5][..size];
+        fs::write(f.source.join("short.bin"), payload).unwrap();
+        let descriptor: WindowsMaterial = {
+            let memory = MixedMemory::default();
+            let owner = material_owner::Owner::default();
+            let (descriptor, _) = owner
+                .sealed_material(
+                    f.input(&memory),
+                    f.output(&memory),
+                    &AtomicBool::new(false),
+                    |sealed| {
+                        let descriptor = sealed.descriptor()?;
+                        assert_eq!(descriptor.nodes.len(), 2);
+                        assert!(
+                            descriptor
+                                .nodes
+                                .iter()
+                                .all(|n| n.security.is_none() && n.ordinary_security.is_some())
+                        );
+                        let actual = sealed.reconstruct_tree()?;
+                        receipt(&actual, &descriptor);
+                        counts(&actual, size);
+                        assert!(!actual.retained);
+                        Ok(descriptor)
+                    },
+                )
+                .unwrap();
+            owner.available().unwrap();
+            assert_eq!(fs::read(f.source.join("short.bin")).unwrap(), payload);
+            serde_json::from_slice(&serde_json::to_vec(&descriptor).unwrap()).unwrap()
+        };
+        // Only the owned fixture original is removed. A new owner and pool must
+        // reopen the persisted material; no original proof or file is retained.
+        fs::remove_dir_all(&f.source).unwrap();
+        let memory = MixedMemory::default();
+        let owner = material_owner::Owner::default();
+        let parent = PinnedPath::directory(&f.base).unwrap();
+        let target = MaterialTargetRequest::new(
+            &f.base,
+            parent.identity(),
+            "cold short".encode_utf16().collect(),
+            &memory,
+        )
+        .unwrap();
+        let (actual, _) = owner
+            .reopen_material(
+                f.output(&memory),
+                &descriptor,
+                &AtomicBool::new(false),
+                |sealed| sealed.reconstruct_target(target),
+            )
+            .unwrap();
+        owner.available().unwrap();
+        receipt(&actual, &descriptor);
+        counts(&actual, size);
+        assert!(actual.retained);
+        assert!(!f.source.exists());
+        assert!(f.artifact.join("material.bin").is_file());
+        assert_eq!(
+            fs::read(f.base.join("cold short").join("short.bin")).unwrap(),
+            payload
+        );
+    }
 }
 #[test]
 fn ordinary_file_only_ea_roundtrips_exact_native_observation() {

@@ -62,6 +62,7 @@ pub(crate) struct MaterialTreeReceipt {
     pub directories: usize,
     pub regulars: usize,
     pub write_aborts: u32,
+    pub direct_data_writes: u32,
     pub read_aborts: u32,
     pub exact_edges_verified: bool,
     pub all_native_recaptured: bool,
@@ -140,6 +141,7 @@ pub(super) fn rebuild(
         return Err(Error::Changed);
     }
     let mut writes = 0u32;
+    let mut direct_writes = 0u32;
     let mut reads = 0u32;
     // All target FileObjects already hold their full required rights. No create
     // or pathname reopen follows restoration of a source security descriptor.
@@ -171,7 +173,7 @@ pub(super) fn rebuild(
             if stamp(input).map_err(|e| io_error("treeRestoreSourceFence", e))? != before {
                 return Err(Error::Changed);
             }
-            let (w, r) = node::restore(
+            let (w, r, direct) = node::restore(
                 node::Input {
                     sealed: input,
                     node: source,
@@ -187,6 +189,7 @@ pub(super) fn rebuild(
                 },
             )?;
             writes = writes.checked_add(w).ok_or(Error::Limit)?;
+            direct_writes = direct_writes.checked_add(direct).ok_or(Error::Limit)?;
             reads = reads.checked_add(r).ok_or(Error::Limit)?;
             if stamp(input).map_err(|e| io_error("treeRestoreSourceAfterNode", e))? != before {
                 return Err(Error::Changed);
@@ -218,7 +221,8 @@ pub(super) fn rebuild(
         target_ids.push(held.identity.clone());
     }
     if restored.context.is_some()
-        || writes as usize != proofs.iter().filter(|p| node::needs_write(p)).count()
+        || writes.checked_add(direct_writes).ok_or(Error::Limit)? as usize
+            != proofs.iter().filter(|p| node::needs_write(p)).count()
         || reads as usize != verified.nodes.len()
         || stamp(input).map_err(|e| io_error("treeRestoreSourceFinal", e))? != before
     {
@@ -244,6 +248,7 @@ pub(super) fn rebuild(
         directories: sealed.directories,
         regulars: sealed.regulars,
         write_aborts: writes,
+        direct_data_writes: direct_writes,
         read_aborts: reads,
         exact_edges_verified: true,
         all_native_recaptured: true,

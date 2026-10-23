@@ -22,6 +22,8 @@ mod failure_diagnostics;
 #[cfg(test)]
 #[path = "material_security_last_native_tests.rs"]
 mod security_order_tests;
+#[path = "material_short_default_restore.rs"]
+mod short_default;
 
 // Borrow the physical sealed FileObject through the exact already-verified
 // native extent inside FFDIR1/FFNODE1. This is not another file/path capability.
@@ -317,7 +319,7 @@ pub(super) fn restore(
     target: HeldTarget<'_>,
     spool: &File,
     io: &mut Io<'_>,
-) -> Result<(u32, u32)> {
+) -> Result<(u32, u32, u32)> {
     let Input {
         sealed,
         node,
@@ -356,12 +358,30 @@ pub(super) fn restore(
     )?;
     let minimum = size_of::<WIN32_STREAM_ID>() + 1;
     let write = needs_write(proof);
-    if write && node.native_bytes < minimum as u64 {
-        return Err(Error::Unsupported);
-    }
     let full = proof.ordinary_security.is_none();
+    let direct = write && node.native_bytes < minimum as u64;
+    if direct {
+        let Parsed::Regular(parsed) = &source else {
+            return Err(Error::Unsupported);
+        };
+        if full
+            || proof.ea.count != 0
+            || proof.expected.len() != 1
+            || !proof.expected.contains_key(&Vec::new())
+        {
+            return Err(Error::Unsupported);
+        }
+        short_default::restore(
+            Range::new(sealed, node)?,
+            target,
+            parsed,
+            work,
+            cancel,
+            resident,
+        )?;
+    }
     let mut api = Native::new(full);
-    if write {
+    if write && !direct {
         let mut session = Session::new(target, &mut api, Mode::Write, context);
         let input = Range::new(sealed, node)?;
         let result = if full {
@@ -417,7 +437,7 @@ pub(super) fn restore(
         }
         result?;
     }
-    if context.is_some() || api.aborts() != u32::from(write) {
+    if context.is_some() || api.aborts() != u32::from(write && !direct) {
         return Err(Error::CleanupUnknown);
     }
     material_restore::flushed(target)?;
@@ -448,7 +468,7 @@ pub(super) fn restore(
     }
     source.recaptured(spool, proof, work, cancel, resident)?;
     facts(target, node, proof, work, cancel, resident)?;
-    Ok((api.aborts(), read.aborts()))
+    Ok((api.aborts(), read.aborts(), u32::from(direct)))
 }
 pub(super) fn finalize(
     target: &File,

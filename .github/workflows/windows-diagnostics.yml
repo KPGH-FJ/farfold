@@ -816,7 +816,7 @@ jobs:
           } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $raw 'owned-bundle-offline.result.json')
           if (-not $complete) { exit 1 }
-      - name: Owned source, carrier, links and directories, one hundred thirty-seven ordinary controls in forty-four groups
+      - name: Owned source, carrier, links and directories, one hundred thirty-nine ordinary controls in forty-four groups
         id: carrier_portable
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 5
@@ -846,9 +846,11 @@ jobs:
                 'file_access::material_backup_io::tests::write_failure_and_distinct_abort_failure_are_both_retained',
                 'file_access::material_backup_io::tests::observed_cancellation_and_abort_failure_keep_separate_causes'
               ) },
-            @{ name = 'carrier-records'; filter = 'file_access::material_carrier_records::tests::'; expected = 9; names = @(
+            @{ name = 'carrier-records'; filter = 'file_access::material_carrier_records::tests::'; expected = 11; names = @(
                 'file_access::material_carrier_records::tests::all_bytes_utf16_and_every_boundary_use_actual_stream_parser',
-                'file_access::material_carrier_records::tests::real_zero_data_is_distinct_from_missing_default',
+                'file_access::material_carrier_records::tests::full_security_observed_empty_default_preserves_physical_bytes_without_padding',
+                'file_access::material_carrier_records::tests::full_security_omitted_zero_default_keeps_named_ea_and_security_semantics',
+                'file_access::material_carrier_records::tests::full_security_empty_default_still_requires_all_other_complete_material',
                 'file_access::material_carrier_records::tests::every_truncated_prefix_refuses_complete_carrier',
                 'file_access::material_carrier_records::tests::unsupported_streams_and_modified_when_read_never_reach_writer',
                 'file_access::material_carrier_records::tests::duplicate_and_case_changed_names_do_not_silently_merge',

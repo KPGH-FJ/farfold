@@ -138,6 +138,20 @@ pub(super) struct Parsed {
     pub security_record: Option<std::ops::Range<u64>>,
     _memory: ResidentLease,
 }
+// Only a complete ordinary parse can create this data range. It is a source
+// proof, not target/path authority and not permission to omit other facets.
+pub(super) struct SingleDefaultPayload {
+    range: std::ops::Range<u64>,
+    sha256: [u8; 32],
+}
+impl SingleDefaultPayload {
+    pub fn range(&self) -> std::ops::Range<u64> {
+        self.range.clone()
+    }
+    pub fn sha256(&self) -> [u8; 32] {
+        self.sha256
+    }
+}
 impl PartialEq for Parsed {
     fn eq(&self, other: &Self) -> bool {
         self.parts == other.parts
@@ -148,6 +162,20 @@ impl PartialEq for Parsed {
 }
 impl Eq for Parsed {}
 impl Parsed {
+    pub fn single_default_payload(&self) -> Option<SingleDefaultPayload> {
+        if self.parts.len() != 1 || self.security.is_some() || self.security_record.is_some() {
+            return None;
+        }
+        let part = self.parts.get(&Key::Data(Vec::new()))?;
+        let end = 20u64.checked_add(part.size)?;
+        if part.flags != 0 || part.size == 0 || self.bytes != end {
+            return None;
+        }
+        Some(SingleDefaultPayload {
+            range: 20..end,
+            sha256: part.sha256,
+        })
+    }
     pub fn semantic_sha256(&self) -> [u8; 32] {
         let mut hash = Sha256::new();
         hash.update(b"FFNATIVESEM1");

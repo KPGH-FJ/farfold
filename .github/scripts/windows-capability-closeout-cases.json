@@ -925,6 +925,48 @@
       "test": "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort",
       "manual": false,
       "category": "boundedSecurityRecordOrder"
+    },
+    {
+      "name": "ordinary-single-default-proof-exact-range",
+      "test": "file_access::material_carrier_records::tests::single_default_payload_proof_keeps_exact_range_hash_and_rejects_other_facets",
+      "manual": false,
+      "category": "ordinaryShortDefaultPayloadProof"
+    },
+    {
+      "name": "ordinary-single-default-proof-complete-framing",
+      "test": "file_access::material_carrier_records::tests::single_default_payload_never_bypasses_flags_or_complete_framing",
+      "manual": false,
+      "category": "ordinaryShortDefaultPayloadProof"
+    },
+    {
+      "name": "ordinary-short-default-original-file-and-threshold",
+      "test": "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold",
+      "manual": false,
+      "category": "ordinaryShortDefaultOriginalFile"
+    },
+    {
+      "name": "ordinary-short-default-input-integrity",
+      "test": "file_access::windows::material_persistent_store::restore::node::short_default::tests::changed_truncated_extra_or_mispositioned_input_cannot_write_target",
+      "manual": false,
+      "category": "ordinaryShortDefaultOriginalFile"
+    },
+    {
+      "name": "ordinary-short-default-empty-target-budget-cancel",
+      "test": "file_access::windows::material_persistent_store::restore::node::short_default::tests::nonempty_target_budget_and_cancellation_refuse_before_payload_write",
+      "manual": false,
+      "category": "ordinaryShortDefaultOriginalFile"
+    },
+    {
+      "name": "ordinary-short-default-original-write-right",
+      "test": "file_access::windows::material_persistent_store::restore::node::short_default::tests::missing_original_write_right_is_reported_without_reopening_target",
+      "manual": false,
+      "category": "ordinaryShortDefaultOriginalFile"
+    },
+    {
+      "name": "ordinary-zero-through-five-cold-material-counts",
+      "test": "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts",
+      "manual": false,
+      "category": "ordinaryMaterialColdRecoveryBoundary"
     }
   ],
   "blockedPositiveCases": [],
