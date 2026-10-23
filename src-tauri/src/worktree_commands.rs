@@ -20,11 +20,13 @@ fn context(app: &AppHandle, webview: &Webview) -> worktrees::Result<(Worktrees, 
     Ok((app.state::<Worktrees>().inner().clone(), store))
 }
 async fn run<T: Send + 'static>(
-    f: impl FnOnce() -> worktrees::Result<T> + Send + 'static,
+    manager: Worktrees,
+    f: impl FnOnce(Worktrees) -> worktrees::Result<T> + Send + 'static,
 ) -> worktrees::Result<T> {
-    tauri::async_runtime::spawn_blocking(f)
+    let worker = manager.clone();
+    manager
+        .request(worktrees::RequestClass::Work, move || f(worker))
         .await
-        .map_err(|_| worktrees::Failure { code: "unknown" })?
 }
 #[tauri::command]
 pub async fn worktree_inspect(
@@ -33,7 +35,7 @@ pub async fn worktree_inspect(
     path: String,
 ) -> worktrees::Result<worktrees::Inspection> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.inspect(&s, &path)).await
+    run(m, move |m| m.inspect(&s, &path)).await
 }
 #[tauri::command]
 pub async fn worktree_refs(
@@ -43,7 +45,7 @@ pub async fn worktree_refs(
     cursor: Option<String>,
 ) -> worktrees::Result<worktrees::Refs> {
     let (m, _) = context(&app, &webview)?;
-    run(move || m.refs(&inspection_id, cursor.as_deref())).await
+    run(m, move |m| m.refs(&inspection_id, cursor.as_deref())).await
 }
 #[tauri::command]
 pub async fn worktree_list(
@@ -51,7 +53,7 @@ pub async fn worktree_list(
     webview: Webview,
 ) -> worktrees::Result<worktrees::Listing> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.list(&s)).await
+    run(m, move |m| m.list(&s)).await
 }
 #[tauri::command]
 pub async fn worktree_prepare_create(
@@ -64,7 +66,7 @@ pub async fn worktree_prepare_create(
     branch: worktrees::Branch,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || {
+    run(m, move |m| {
         m.prepare(
             &s,
             &operation_id,
@@ -85,7 +87,7 @@ pub async fn worktree_start(
     operation_id: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.start(&s, &operation_id)).await
+    run(m, move |m| m.start(&s, &operation_id)).await
 }
 #[tauri::command]
 pub async fn worktree_status(
@@ -94,7 +96,11 @@ pub async fn worktree_status(
     operation_id: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.status(&s, &operation_id)).await
+    let worker = m.clone();
+    m.request(worktrees::RequestClass::Status, move || {
+        worker.status(&s, &operation_id)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn worktree_cancel(
@@ -103,7 +109,11 @@ pub async fn worktree_cancel(
     operation_id: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.cancel(&s, &operation_id)).await
+    let worker = m.clone();
+    m.request(worktrees::RequestClass::Cancel, move || {
+        worker.cancel(&s, &operation_id)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn worktree_recheck(
@@ -112,7 +122,7 @@ pub async fn worktree_recheck(
     operation_id: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.recheck(&s, &operation_id)).await
+    run(m, move |m| m.recheck(&s, &operation_id)).await
 }
 #[tauri::command]
 pub async fn worktree_adopt(
@@ -123,7 +133,10 @@ pub async fn worktree_adopt(
     tree_path: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.adopt(&s, &operation_id, &inspection_id, &tree_path)).await
+    run(m, move |m| {
+        m.adopt(&s, &operation_id, &inspection_id, &tree_path)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn worktree_check_location(
@@ -132,7 +145,7 @@ pub async fn worktree_check_location(
     location_id: String,
 ) -> worktrees::Result<worktrees::Location> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.check_location(&s, &location_id)).await
+    run(m, move |m| m.check_location(&s, &location_id)).await
 }
 #[tauri::command]
 pub async fn worktree_forget(
@@ -142,7 +155,7 @@ pub async fn worktree_forget(
     expected_revision: u64,
 ) -> worktrees::Result<worktrees::Forgotten> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.forget(&s, &location_id, expected_revision)).await
+    run(m, move |m| m.forget(&s, &location_id, expected_revision)).await
 }
 
 #[tauri::command]
@@ -152,7 +165,7 @@ pub async fn worktree_acknowledge(
     operation_id: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.acknowledge(&s, &operation_id)).await
+    run(m, move |m| m.acknowledge(&s, &operation_id)).await
 }
 
 #[tauri::command]
@@ -164,7 +177,10 @@ pub async fn worktree_recycle_inspect(
     expected_revision: u64,
 ) -> worktrees::Result<worktrees::RecycleInspection> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.recycle_inspect(&s, action, &record_id, expected_revision)).await
+    run(m, move |m| {
+        m.recycle_inspect(&s, action, &record_id, expected_revision)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn worktree_recycle_prepare(
@@ -176,7 +192,7 @@ pub async fn worktree_recycle_prepare(
     expected_draft_baseline: worktrees::DraftBaseline,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || {
+    run(m, move |m| {
         m.prepare_recycle(
             &s,
             &operation_id,
@@ -207,7 +223,10 @@ pub async fn worktree_recycle_check(
     expected_revision: u64,
 ) -> worktrees::Result<worktrees::Listing> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.recycle_check(&s, &record_id, expected_revision)).await
+    run(m, move |m| {
+        m.recycle_check(&s, &record_id, expected_revision)
+    })
+    .await
 }
 
 #[tauri::command]
@@ -218,7 +237,10 @@ pub async fn worktree_remove_inspect(
     expected_revision: u64,
 ) -> worktrees::Result<worktrees::RemoveInspection> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.remove_inspect(&s, &record_id, expected_revision)).await
+    run(m, move |m| {
+        m.remove_inspect(&s, &record_id, expected_revision)
+    })
+    .await
 }
 #[tauri::command]
 pub async fn worktree_remove_prepare(
@@ -229,7 +251,7 @@ pub async fn worktree_remove_prepare(
     expected_draft_baseline: worktrees::DraftBaseline,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || {
+    run(m, move |m| {
         m.prepare_remove(
             &s,
             &operation_id,
@@ -265,7 +287,7 @@ pub async fn worktree_remove_confirm(
     manifest_sha256: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || {
+    run(m, move |m| {
         m.confirm_remove(
             &s,
             &operation_id,
@@ -288,7 +310,10 @@ pub async fn worktree_recovery_check(
     expected_revision: u64,
 ) -> worktrees::Result<worktrees::Listing> {
     let (m, s) = context(&app, &webview)?;
-    run(move || m.recovery_check(&s, &recovery_id, expected_revision)).await
+    run(m, move |m| {
+        m.recovery_check(&s, &recovery_id, expected_revision)
+    })
+    .await
 }
 
 #[tauri::command]
@@ -302,7 +327,7 @@ pub async fn worktree_recover_prepare(
     directory_name: String,
 ) -> worktrees::Result<worktrees::Reply> {
     let (m, s) = context(&app, &webview)?;
-    run(move || {
+    run(m, move |m| {
         m.prepare_recover(
             &s,
             &operation_id,

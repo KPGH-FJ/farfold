@@ -155,7 +155,7 @@ fn storage_failure_while_owned_work_is_in_flight_cannot_be_acknowledged_or_confi
     prepared(&m, &s, &r);
     // This is the production admission/owner state; no claim of an actual OS child here.
     let permit = m.0.admission.activity().unwrap();
-    m.lock().unwrap().working = Some((OP.into(), Arc::new(AtomicBool::new(false))));
+    m.lock().unwrap().working = Some(Working::new(OP, Arc::new(AtomicBool::new(false))));
     conflict_store(&m, &s);
     assert!(!op(m.status(&s, OP).unwrap()).settled);
     assert_eq!(

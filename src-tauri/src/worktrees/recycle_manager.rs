@@ -318,9 +318,11 @@ impl Worktrees {
             }),
         });
         i.maintenance = Some(owner);
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         let save = i.save(store, next);
         drop(i);
+        let _progress = work.scope();
         // Even if the IPC receiver disappears, this blocking owner retains every
         // gate until exact processes have actually retired and metadata is saved.
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -377,13 +379,15 @@ impl Worktrees {
             self.finish_recycle(store, id, Err(error("storageUnknown")), false);
             return self.status(store, id);
         }
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         let manager = self.clone();
         let worker_store = store.clone();
         let key = id.to_owned();
         let spawned = std::thread::Builder::new()
             .name("farfold-worktree-retain".into())
             .spawn(move || {
+                let _progress = work.scope();
                 let store = worker_store;
                 let mut intent = intent;
                 #[cfg(windows)]
@@ -501,7 +505,7 @@ impl Worktrees {
         let requested = i
             .working
             .as_ref()
-            .is_some_and(|(_, c)| c.load(Ordering::SeqCst));
+            .is_some_and(|work| work.cancel.load(Ordering::SeqCst));
         let mut next = i.doc.clone();
         let mut state = "unknown";
         let mut code = result.as_ref().err().map(|e| e.code);
@@ -597,10 +601,10 @@ impl Worktrees {
     }
     pub(super) fn cancel_recycle(&self, store: &MetaStore, id: &str) -> Result<Reply> {
         let mut i = self.lock()?;
-        if let Some((key, flag)) = &i.working
-            && key == id
+        if let Some(work) = &i.working
+            && work.id == id
         {
-            flag.store(true, Ordering::SeqCst);
+            work.cancel.store(true, Ordering::SeqCst);
             let mut next = i.doc.clone();
             if let Some(o) = &mut next.operation {
                 o.status.cancel_requested = true;

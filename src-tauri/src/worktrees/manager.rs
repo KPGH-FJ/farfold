@@ -18,6 +18,14 @@ use std::{
     },
     time::{Duration, Instant},
 };
+#[path = "request_wait.rs"]
+mod request_wait;
+pub(crate) use request_wait::RequestClass;
+#[path = "worker_progress.rs"]
+mod worker_progress;
+use worker_progress::Working;
+#[cfg(windows)]
+pub(super) use worker_progress::mark_unknown;
 #[path = "recycle_manager.rs"]
 mod recycle_manager;
 use recycle_manager::{MaintenanceOwner, RecycleTicket};
@@ -60,12 +68,13 @@ struct Inner {
     requests: HashMap<String, Request>,
     pending_write: Option<Document>,
     preparing: HashSet<String>,
-    working: Option<(String, Arc<AtomicBool>)>,
+    working: Option<Working>,
 }
 struct Shared {
     material: Arc<MaterialOwner>,
     inner: Mutex<Inner>,
     admission: UpdateAdmission,
+    requests: request_wait::Admission,
 }
 impl Default for Shared {
     fn default() -> Self {
@@ -77,6 +86,7 @@ impl Default for Shared {
             }),
             material,
             admission: UpdateAdmission::default(),
+            requests: request_wait::Admission::default(),
         }
     }
 }
@@ -234,7 +244,7 @@ impl Inner {
             .operation
             .as_ref()
             .filter(|o| o.status.operation_id == id)
-            .map(|o| Reply::Operation(Box::new(o.status.clone())))
+            .map(|o| Reply::Operation(Box::new(self.visible_status(&o.status))))
             .or_else(|| {
                 self.rejected
                     .get(id)
@@ -330,13 +340,20 @@ impl Worktrees {
         Ok(result)
     }
     pub fn refs(&self, ticket: &str, cursor: Option<&str>) -> Result<Refs> {
+        self.refs_with_identity(ticket, cursor, Snapshot::identity)
+    }
+    fn refs_with_identity(
+        &self,
+        ticket: &str,
+        cursor: Option<&str>,
+        verify: impl FnOnce(&Snapshot) -> Result<()>,
+    ) -> Result<Refs> {
         let inner = self.lock()?;
         let t = inner
             .tickets
             .get(ticket)
             .filter(|t| t.created.elapsed() < Duration::from_secs(600))
             .ok_or(error("inspectionExpired"))?;
-        t.snapshot.identity()?;
         let offset = match cursor {
             None => 0,
             Some(c) => c
@@ -346,10 +363,23 @@ impl Worktrees {
                 .ok_or(error("inspectionExpired"))?,
         };
         let end = (offset + 100).min(t.refs.len());
-        Ok(Refs {
+        let reply = Refs {
             refs: t.refs[offset..end].to_vec(),
             next_cursor: (end < t.refs.len()).then(|| format!("{ticket}:{end}")),
-        })
+        };
+        let snapshot = t.snapshot.clone();
+        let created = t.created;
+        drop(inner);
+        // Native identity checks may block. Status and cancellation must still
+        // be able to reach the original working owner while this check waits.
+        verify(&snapshot)?;
+        let inner = self.lock()?;
+        if !inner.tickets.get(ticket).is_some_and(|current| {
+            current.created == created && current.created.elapsed() < Duration::from_secs(600)
+        }) {
+            return Err(error("inspectionExpired"));
+        }
+        Ok(reply)
     }
     pub fn list(&self, store: &MetaStore) -> Result<Listing> {
         let mut i = self.lock()?;
@@ -359,7 +389,11 @@ impl Worktrees {
             archives: i.doc.archives.iter().map(|v| v.archive.clone()).collect(),
             materials: i.doc.materials.clone(),
             recoveries: i.doc.recoveries.iter().map(|r| r.receipt.clone()).collect(),
-            operation: i.doc.operation.as_ref().map(|o| o.status.clone()),
+            operation: i
+                .doc
+                .operation
+                .as_ref()
+                .map(|o| i.visible_status(&o.status)),
         })
     }
     pub fn prepare(&self, store: &MetaStore, id: &str, input: Create) -> Result<Reply> {
@@ -466,7 +500,8 @@ impl Worktrees {
         let mut next = i.doc.clone();
         next.operation.as_mut().unwrap().status = operation(id, "running", None);
         i.save(store, next)?;
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         let manager = self.clone();
         let worker_store = store.clone();
         let key = id.to_owned();
@@ -474,6 +509,7 @@ impl Worktrees {
         let spawned = std::thread::Builder::new()
             .name("farfold-worktree".into())
             .spawn(move || {
+                let _progress = work.scope();
                 let _own = own;
                 let _global = global;
                 manager.run(&worker_store, &key, intent, cancel);
@@ -573,6 +609,23 @@ impl Worktrees {
             observation.at("verify-created");
             create::verify(&intent)
         })();
+        #[cfg(windows)]
+        let result = result.and_then(|snapshot| {
+            #[cfg(test)]
+            observation.at("verify-final-namespace");
+            created
+                .as_ref()
+                .ok_or(error("unknown"))?
+                .verify_namespace(&AtomicBool::new(false))
+                .map_err(|_| error("changed"))?;
+            Ok(snapshot)
+        });
+        let has_material = result.as_ref().err().is_some_and(|e| {
+            intent.target_stamp.is_some()
+                || intent.dispatched
+                || (cfg!(windows) && e.code == "unknown")
+                || std::fs::symlink_metadata(&intent.target).is_ok()
+        });
         let Ok(mut i) = self.lock() else {
             return;
         };
@@ -585,17 +638,6 @@ impl Worktrees {
             i.working = None;
             return;
         };
-        #[cfg(windows)]
-        let result = result.and_then(|snapshot| {
-            #[cfg(test)]
-            observation.at("verify-final-namespace");
-            created
-                .as_ref()
-                .ok_or(error("unknown"))?
-                .verify_namespace(&AtomicBool::new(false))
-                .map_err(|_| error("changed"))?;
-            Ok(snapshot)
-        });
         let requested = cancel.load(Ordering::SeqCst);
         match result {
             Ok(s) => {
@@ -618,10 +660,6 @@ impl Worktrees {
                 op.status.location = Some(location);
             }
             Err(e) => {
-                let has_material = intent.target_stamp.is_some()
-                    || intent.dispatched
-                    || (cfg!(windows) && e.code == "unknown")
-                    || std::fs::symlink_metadata(&intent.target).is_ok();
                 let state = if has_material {
                     "unknown"
                 } else if e.code == "cancelled" {
@@ -677,10 +715,10 @@ impl Worktrees {
         if !super::types::id(id) {
             return Err(error("invalidOperation"));
         }
-        if let Some((key, flag)) = &i.working
-            && key == id
+        if let Some(work) = &i.working
+            && work.id == id
         {
-            flag.store(true, Ordering::SeqCst);
+            work.cancel.store(true, Ordering::SeqCst);
             let mut next = i.doc.clone();
             if let Some(op) = &mut next.operation {
                 op.status.state = "cancelling".into();
@@ -764,6 +802,7 @@ impl Worktrees {
             {
                 return Err(error("changed"));
             }
+            scope.matches(&current)?;
             Ok((current, scope))
         })();
         let mut i = self.lock()?;
@@ -814,11 +853,11 @@ impl Worktrees {
             removal: None,
             recovery: None,
         });
-        if let Err(e) = scope.matches(&s) {
-            return Ok(i.reject(id, e.code));
-        }
         i.save(store, next)?;
-        Ok(i.reply(id))
+        let reply = i.reply(id);
+        drop(i);
+        drop(scope);
+        Ok(reply)
     }
     pub fn check_location(&self, store: &MetaStore, id: &str) -> Result<Location> {
         let _permit = self.0.admission.activity().map_err(|_| error("busy"))?;
@@ -848,14 +887,11 @@ impl Worktrees {
             {
                 return Err(error("changed"));
             }
+            scope.matches(&s)?;
             Ok((s, scope))
         })();
         let mut i = self.lock()?;
         i.load(store)?;
-        let checked = checked.and_then(|(s, scope)| {
-            scope.matches(&s)?;
-            Ok((s, scope))
-        });
         let mut next = i.doc.clone();
         let entry = next
             .locations
@@ -880,6 +916,7 @@ impl Worktrees {
         }
         let location = entry.location.clone();
         i.save(store, next)?;
+        drop(i);
         checked?;
         Ok(location)
     }

@@ -144,9 +144,21 @@ impl Job {
         self.active_from_query(&self.activity_query())
     }
     fn observe_current(&self) -> bool {
+        self.observe_current_from_query(&self.activity_query())
+    }
+    fn observe_current_from_query(&self, query: &ActivityQuery) -> bool {
         self.current.lock().map_or(true, |mut current| {
-            current.observe(self.handle.0, self.leader.get().map(|leader| leader.pid))
+            current.observe(
+                self.handle.0,
+                self.leader.get().map(|leader| leader.pid),
+                (query.ok != 0).then_some(query.info.ActiveProcesses),
+            )
         })
+    }
+    fn retirement_unknown(&self) -> bool {
+        self.current
+            .lock()
+            .map_or(true, |current| current.unknown())
     }
     fn active_from_query(&self, query: &ActivityQuery) -> bool {
         let leader_active = self.leader.get().is_some_and(|leader| unsafe {
@@ -157,13 +169,19 @@ impl Job {
             // The exact original leader also covers its pre-Job-entry interval.
             return true;
         }
-        let current_active = self.observe_current();
+        let current_active = self.observe_current_from_query(query);
         if query.not_confirmed_inactive() || leader_active || current_active {
             return true;
         }
         // A member could appear during the bounded observation. Keep the old
         // accounting condition too; held-member waits never replace it.
-        self.activity_query().not_confirmed_inactive()
+        let final_query = self.activity_query();
+        if final_query.ok == 0
+            && let Ok(mut current) = self.current.lock()
+        {
+            current.query_unknown();
+        }
+        final_query.not_confirmed_inactive()
     }
     fn activity_query(&self) -> ActivityQuery {
         let mut info: JOBOBJECT_BASIC_ACCOUNTING_INFORMATION = unsafe { std::mem::zeroed() };
@@ -299,6 +317,9 @@ impl OwnedGroup {
     pub(crate) fn active(&self) -> bool {
         self.job.active()
     }
+    pub(crate) fn retirement_unknown(&self) -> bool {
+        self.job.retirement_unknown()
+    }
 }
 impl Drop for OwnedGroup {
     fn drop(&mut self) {
@@ -357,11 +378,11 @@ pub(crate) fn helper_executable() -> io::Result<std::path::PathBuf> {
 }
 
 pub(crate) fn terminate(pid: u32) {
-    if let Some(job) = groups()
+    let original = groups()
         .lock()
         .ok()
-        .and_then(|groups| groups.get(&pid).and_then(Weak::upgrade))
-    {
+        .and_then(|groups| groups.get(&pid).and_then(Weak::upgrade));
+    if let Some(job) = original {
         job.terminate();
     }
 }
@@ -371,12 +392,14 @@ pub(crate) fn owns(pid: u32) -> bool {
         .is_ok_and(|groups| groups.get(&pid).and_then(Weak::upgrade).is_some())
 }
 pub(crate) fn active(pid: u32) -> bool {
-    groups().lock().map_or(true, |groups| {
-        groups
-            .get(&pid)
-            .and_then(Weak::upgrade)
-            .is_some_and(|job| job.active())
-    })
+    let original = match groups().lock() {
+        Ok(groups) => groups.get(&pid).and_then(Weak::upgrade),
+        Err(_) => return true,
+    };
+    // Only registry lookup uses the shared mutex. The original Arc retains
+    // this exact Job while native observation runs independently of other
+    // Agents' registration and cancellation.
+    original.is_some_and(|job| job.active())
 }
 
 fn valid_job_name(name: &OsStr) -> bool {

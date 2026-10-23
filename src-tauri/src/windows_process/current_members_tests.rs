@@ -142,6 +142,7 @@ fn failed_pending_lookup_survives_empty_snapshot_and_later_resolves_without_latc
         assert!(current.observe_using(
             job.0.handle.0,
             None,
+            Some(0),
             || {
                 queried.set(true);
                 Ok(empty())
@@ -156,7 +157,7 @@ fn failed_pending_lookup_survives_empty_snapshot_and_later_resolves_without_latc
     }
     // An actual successful Open now proves this candidate is foreign. It is
     // discarded without any process termination or privilege change.
-    assert!(!current.observe(job.0.handle.0, None));
+    assert!(!current.observe(job.0.handle.0, None, Some(0)));
     assert!(current.pending.is_empty());
     assert!(current.held.is_empty());
     assert_eq!(
@@ -173,7 +174,13 @@ fn actual_foreign_object_is_never_accepted_or_terminated_as_a_job_member() {
     let mut snapshot = empty();
     snapshot.len = 1;
     snapshot.ids[0] = pid;
-    assert!(!current.observe_using(job.0.handle.0, None, || Ok(snapshot), native_lookup));
+    assert!(!current.observe_using(
+        job.0.handle.0,
+        None,
+        Some(0),
+        || Ok(snapshot),
+        native_lookup
+    ));
     assert!(current.held.is_empty());
     assert_eq!(
         unsafe { WaitForSingleObject(GetCurrentProcess(), 0) },
@@ -182,7 +189,7 @@ fn actual_foreign_object_is_never_accepted_or_terminated_as_a_job_member() {
 }
 
 #[test]
-fn failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal() {
+fn failed_live_snapshot_keeps_original_handle_and_gap_after_later_empty_list() {
     let directory = tempfile::tempdir().unwrap();
     let marker = directory.path().join("held");
     let mut owner = launch(&marker);
@@ -190,10 +197,14 @@ fn failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal(
     until(|| owner.child.try_wait().unwrap().is_some());
     assert!(owner.group.active());
     {
+        let associated = owner.group.job.activity_query();
+        assert_ne!(associated.ok, 0);
+        assert!(associated.info.ActiveProcesses > 0);
         let mut current = owner.group.job.current.lock().unwrap();
         assert!(current.observe_using(
             owner.group.job.handle.0,
             Some(owner.child.id()),
+            Some(associated.info.ActiveProcesses),
             || Err(io::Error::from_raw_os_error(5)),
             native_lookup
         ));
@@ -201,8 +212,19 @@ fn failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal(
     }
     assert_eq!(unsafe { WaitForSingleObject(held.0, 0) }, WAIT_TIMEOUT);
     owner.group.terminate();
-    until(|| !owner.group.active());
-    assert_eq!(unsafe { WaitForSingleObject(held.0, 0) }, WAIT_OBJECT_0);
+    until(|| unsafe { WaitForSingleObject(held.0, 0) } == WAIT_OBJECT_0);
+    until(|| !owner.group.job.activity_query().not_confirmed_inactive());
+    assert!(
+        owner.group.active(),
+        "later empty list cannot identify the lost interval"
+    );
+    let current = owner.group.job.current.lock().unwrap();
+    assert!(current.coverage_gap);
+    assert!(current.unknown());
+    assert!(
+        current.held.is_empty(),
+        "actual signaled handles are still retired"
+    );
 }
 
 #[test]
@@ -234,10 +256,149 @@ fn query_failure_does_not_permanently_latch_an_empty_original_job() {
     assert!(current.observe_using(
         job.0.handle.0,
         None,
+        Some(0),
         || Err(io::Error::from_raw_os_error(5)),
         |_| panic!("failed snapshot supplies no PID")
     ));
-    assert!(!current.observe(job.0.handle.0, None));
+    assert!(!current.observe(job.0.handle.0, None, Some(0)));
     assert!(current.held.is_empty());
     assert!(current.pending.is_empty());
+}
+
+#[test]
+fn unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry() {
+    let job = pending().unwrap();
+    let mut current = Current::new().unwrap();
+    assert!(current.observe_using(job.0.handle.0, None, None, || Ok(empty()), native_lookup));
+    assert!(current.unknown());
+    assert!(
+        !current.coverage_gap,
+        "unknown count does not invent a positive count"
+    );
+    assert!(!current.observe(job.0.handle.0, None, Some(0)));
+    assert!(!current.unknown());
+}
+
+#[test]
+fn unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list() {
+    let job = pending().unwrap();
+    let mut current = Current::new().unwrap();
+    assert!(current.observe_using(
+        job.0.handle.0,
+        None,
+        None,
+        || Err(io::Error::from_raw_os_error(5)),
+        native_lookup
+    ));
+    assert!(current.coverage_gap);
+    assert!(current.unknown());
+    assert!(current.observe(job.0.handle.0, None, Some(0)));
+    assert!(current.held.is_empty());
+    assert!(current.pending.is_empty());
+    assert!(
+        current.unknown(),
+        "empty list cannot fill an unobserved interval"
+    );
+}
+
+#[test]
+fn unresolved_candidate_skipping_a_live_snapshot_preserves_gap_after_resolution() {
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("lookup-gap");
+    let mut owner = launch(&marker);
+    let (pid, held) = descendant(&marker);
+    until(|| owner.child.try_wait().unwrap().is_some());
+    let associated = owner.group.job.activity_query();
+    assert_ne!(associated.ok, 0);
+    assert!(associated.info.ActiveProcesses > 0);
+    let mut current = Current::new().unwrap();
+    current.pending.push(pid);
+    assert!(current.observe_using(
+        owner.group.job.handle.0,
+        Some(owner.child.id()),
+        Some(associated.info.ActiveProcesses),
+        || panic!("unresolved actual candidate prevents complete enumeration"),
+        |_| Err(io::Error::from_raw_os_error(5))
+    ));
+    assert!(current.coverage_gap);
+    // Resolve this exact PID while it is alive, then retire its original
+    // process handle. That proves THIS member, not a missed future member.
+    assert!(current.observe(
+        owner.group.job.handle.0,
+        Some(owner.child.id()),
+        Some(associated.info.ActiveProcesses)
+    ));
+    assert!(current.pending.is_empty());
+    owner.group.terminate();
+    until(|| unsafe { WaitForSingleObject(held.0, 0) } == WAIT_OBJECT_0);
+    assert!(current.observe(owner.group.job.handle.0, Some(owner.child.id()), Some(0)));
+    assert!(current.held.is_empty());
+    assert!(current.unknown());
+}
+
+#[test]
+fn real_member_wait_failure_skipping_enumeration_preserves_live_gap() {
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("wait-gap");
+    let mut owner = launch(&marker);
+    let (pid, held) = descendant(&marker);
+    until(|| owner.child.try_wait().unwrap().is_some());
+    let associated = owner.group.job.activity_query();
+    assert_ne!(associated.ok, 0);
+    assert!(associated.info.ActiveProcesses > 0);
+    let raw = unsafe { OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, pid) };
+    assert!(!raw.is_null());
+    let mut belongs = 0;
+    assert_ne!(
+        unsafe { IsProcessInJob(raw, owner.group.job.handle.0, &mut belongs) },
+        0
+    );
+    assert_ne!(belongs, 0);
+    let mut current = Current::new().unwrap();
+    current.held.push(Member {
+        pid,
+        handle: Handle(raw),
+        admitted: true,
+    });
+    assert!(current.observe_using(
+        owner.group.job.handle.0,
+        Some(owner.child.id()),
+        Some(associated.info.ActiveProcesses),
+        || panic!("failed actual wait prevents complete enumeration"),
+        native_lookup
+    ));
+    assert!(current.coverage_gap);
+    assert_eq!(
+        current.held.len(),
+        1,
+        "failed wait never discards the actual object"
+    );
+    owner.group.terminate();
+    until(|| unsafe { WaitForSingleObject(held.0, 0) } == WAIT_OBJECT_0);
+    assert!(current.unknown());
+}
+
+#[test]
+fn native_current_observation_never_holds_the_shared_process_registry_lock() {
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("registry-boundary");
+    let mut owner = launch(&marker);
+    let (_, held) = descendant(&marker);
+    until(|| owner.child.try_wait().unwrap().is_some());
+    let current = owner.group.job.current.lock().unwrap();
+    let before = std::sync::Arc::strong_count(&owner.group.job);
+    let pid = owner.child.id();
+    let observer = std::thread::spawn(move || super::super::active(pid));
+    // This count observes the original Arc acquired by active(), not a sleep
+    // assumption. Its next real observation is blocked by our Current guard.
+    until(|| std::sync::Arc::strong_count(&owner.group.job) > before);
+    let registry_available = super::super::groups().try_lock().is_ok();
+    drop(current);
+    assert!(observer.join().unwrap());
+    assert!(
+        registry_available,
+        "one Job observation blocked all other owners"
+    );
+    owner.group.terminate();
+    until(|| unsafe { WaitForSingleObject(held.0, 0) } == WAIT_OBJECT_0);
 }

@@ -665,10 +665,15 @@
     },
     {
       "name": "job-current-member-failed-snapshot-keeps-original-live-handle-and-retry-can-finish-after-signal",
-      "test": "windows_process::current_members::tests::failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal",
+      "test": "windows_process::current_members::tests::failed_live_snapshot_keeps_original_handle_and_gap_after_later_empty_list",
       "manual": false,
       "category": "ownedCurrentJobMemberHandles",
-      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow.",
+      "semanticChange": {
+        "previousTest": "windows_process::current_members::tests::failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal",
+        "previousCheckpoint": "86735abc2e195f497c02b27683dd8a99dd608fc2",
+        "change": "The actual held process still must signal and is retired, but failed enumeration while the original Job is not proven empty leaves a coverage gap. A later empty list cannot prove the missing interval ended. This replaces the earlier retry-to-inactive expectation; earlier run evidence remains unchanged."
+      }
     },
     {
       "name": "job-current-member-truncated-capacity-invalid-and-duplicate-lists-are-not-successful-empty-observations",
@@ -709,6 +714,83 @@
       "category": "ownedActualOrdinarySecurityPreservation",
       "requiredEnvironment": "Windows NTFS ordinary readable owner/group/DACL/label",
       "executionPolicy": "Must execute the original file and directory cases with exact retained identity, content and cold re-open comparison; cross compilation or missing native permission is not a passed preservation control."
+    },
+    {
+      "name": "bounded-owner-unknown-accounting-is-never-zero-and-successful-empty-observation-can-retry",
+      "test": "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry",
+      "manual": false,
+      "category": "ownedCurrentJobObservationGap",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-unknown-accounting-with-failed-snapshot-keeps-gap-after-a-later-empty-list",
+      "test": "windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list",
+      "manual": false,
+      "category": "ownedCurrentJobObservationGap",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-unresolved-candidate-skipping-a-live-snapshot-preserves-gap-after-resolution",
+      "test": "windows_process::current_members::tests::unresolved_candidate_skipping_a_live_snapshot_preserves_gap_after_resolution",
+      "manual": false,
+      "category": "ownedCurrentJobObservationGap",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-real-member-wait-failure-skipping-enumeration-preserves-live-gap",
+      "test": "windows_process::current_members::tests::real_member_wait_failure_skipping_enumeration_preserves_live_gap",
+      "manual": false,
+      "category": "ownedCurrentJobObservationGap",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-native-current-observation-never-holds-the-shared-process-registry-lock",
+      "test": "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock",
+      "manual": false,
+      "category": "ownedCurrentJobObservationGap",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-dropped-user-reply-does-not-abort-or-release-original-blocking-work",
+      "test": "worktrees::manager::request_wait::tests::dropped_user_reply_does_not_abort_or_release_original_blocking_work",
+      "manual": false,
+      "category": "boundedOriginalBlockingRequestOwner",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-work-and-status-saturation-do-not-take-the-original-cancel-admission",
+      "test": "worktrees::manager::request_wait::tests::work_and_status_saturation_do_not_take_the_original_cancel_admission",
+      "manual": false,
+      "category": "boundedOriginalBlockingRequestOwner",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-actual-result-and-error-are-preserved-and-panic-is-only-unknown",
+      "test": "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown",
+      "manual": false,
+      "category": "boundedOriginalBlockingRequestOwner",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-timed-out-original-closures-keep-actual-file-handles-and-both-slots",
+      "test": "worktrees::manager::request_wait::tests::timed_out_original_closures_keep_actual_file_handles_and_both_slots",
+      "manual": false,
+      "category": "boundedOriginalBlockingRequestOwner",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-original-scoped-owner-reports-unknown-without-taking-the-manager-lock",
+      "test": "worktrees::manager::worker_progress::tests::original_scoped_owner_reports_unknown_without_taking_the_manager_lock",
+      "manual": false,
+      "category": "sameOriginalWorkingOwnerUnknown",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "bounded-owner-nested-scopes-restore-only-the-original-owner-and-never-cross-threads",
+      "test": "worktrees::manager::worker_progress::tests::nested_scopes_restore_only_the_original_owner_and_never_cross_threads",
+      "manual": false,
+      "category": "sameOriginalWorkingOwnerUnknown",
+      "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
     }
   ],
   "blockedPositiveCases": [],

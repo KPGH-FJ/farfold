@@ -307,9 +307,11 @@ impl Worktrees {
         });
         let cancel = Arc::new(AtomicBool::new(false));
         i.maintenance = Some(owner);
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         let saved = i.save(store, next);
         drop(i);
+        let _progress = work.scope();
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             saved.and_then(|_| retire(Path::new(&intent.saved.archive.retained_path)))
         }))
@@ -325,6 +327,7 @@ impl Worktrees {
         if std::thread::Builder::new()
             .name("farfold-recovery-prepare".into())
             .spawn(move || {
+                let _progress = work.scope();
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     manager.build_recovery(&store_copy, &key, intent, plan, &cancel)
                 }))
@@ -456,7 +459,8 @@ impl Worktrees {
             return self.status(store, id);
         }
         let cancel = Arc::new(AtomicBool::new(false));
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         drop(i);
         let manager = self.clone();
         let s = store.clone();
@@ -464,6 +468,7 @@ impl Worktrees {
         if std::thread::Builder::new()
             .name("farfold-worktree-remove".into())
             .spawn(move || {
+                let _progress = work.scope();
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     let p = removal::capture(&manager.0.material, &intent.saved, &cancel)?;
                     removal::same_plan(&intent, &p)?;
@@ -555,7 +560,7 @@ impl Worktrees {
         op.cancel_requested = old.status.cancel_requested
             || i.working
                 .as_ref()
-                .is_some_and(|(_, c)| c.load(Ordering::SeqCst));
+                .is_some_and(|work| work.cancel.load(Ordering::SeqCst));
         if state == "ready" {
             n.archives
                 .retain(|a| a.archive.id != intent.saved.archive.id);
@@ -590,10 +595,10 @@ impl Worktrees {
     }
     pub(super) fn cancel_remove(&self, store: &MetaStore, id: &str) -> Result<Reply> {
         let mut i = self.lock()?;
-        if let Some((key, c)) = &i.working
-            && key == id
+        if let Some(work) = &i.working
+            && work.id == id
         {
-            c.store(true, Ordering::SeqCst);
+            work.cancel.store(true, Ordering::SeqCst);
             let mut n = i.doc.clone();
             if let Some(o) = &mut n.operation {
                 o.status.state = "cancelling".into();
@@ -751,6 +756,9 @@ impl Worktrees {
                 .ok_or(error("missingRecovery"))?
         };
         let checked = recovery_pack::verify(&self.0.material, &saved, &AtomicBool::new(false));
+        let missing = checked.is_err()
+            && std::fs::symlink_metadata(&saved.receipt.path)
+                .is_err_and(|e| e.kind() == std::io::ErrorKind::NotFound);
         let mut i = self.lock()?;
         let mut n = i.doc.clone();
         let r = n
@@ -761,9 +769,7 @@ impl Worktrees {
         r.receipt.revision = next_revision(revision)?;
         r.receipt.availability = if checked.is_ok() {
             "verified"
-        } else if std::fs::symlink_metadata(&saved.receipt.path)
-            .is_err_and(|e| e.kind() == std::io::ErrorKind::NotFound)
-        {
+        } else if missing {
             "missing"
         } else {
             "changed"

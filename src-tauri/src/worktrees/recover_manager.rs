@@ -154,7 +154,8 @@ impl Worktrees {
         });
         i.save(s, n)?;
         let cancel = Arc::new(AtomicBool::new(false));
-        i.working = Some((id.into(), cancel.clone()));
+        let work = Working::new(id, cancel.clone());
+        i.working = Some(work.clone());
         let manager = self.clone();
         let store = s.clone();
         let key = id.to_owned();
@@ -162,6 +163,7 @@ impl Worktrees {
         if std::thread::Builder::new()
             .name("farfold-worktree-recover".into())
             .spawn(move || {
+                let _progress = work.scope();
                 let _own = own;
                 let _global = global;
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -246,6 +248,27 @@ impl Worktrees {
         recover::verify(&self.0.material, &intent, &AtomicBool::new(false))
     }
     fn finish_recover(&self, s: &MetaStore, id: &str, result: Result<Snapshot>) {
+        // The original worker still owns this operation. A filesystem lookup
+        // can block, so retain the exact target/progress across this short lock;
+        // cancellation remains able to reach that worker's original flag.
+        let target = self.lock().ok().and_then(|i| {
+            i.doc
+                .operation
+                .as_ref()
+                .filter(|o| o.status.operation_id == id)
+                .and_then(|o| o.recovery.as_ref())
+                .map(|intent| {
+                    (
+                        intent.target.clone(),
+                        intent.target_stamp.clone(),
+                        intent.dispatched,
+                    )
+                })
+        });
+        let observed_material = result.is_err()
+            && target.as_ref().is_some_and(|(path, stamp, dispatched)| {
+                stamp.is_none() && !dispatched && std::fs::symlink_metadata(path).is_ok()
+            });
         let Ok(mut i) = self.lock() else { return };
         let Some(old) = i
             .doc
@@ -257,10 +280,19 @@ impl Worktrees {
             return;
         };
         let Some(intent) = old.recovery else { return };
+        if target.as_ref()
+            != Some(&(
+                intent.target.clone(),
+                intent.target_stamp.clone(),
+                intent.dispatched,
+            ))
+        {
+            return;
+        }
         let requested = old.status.cancel_requested
             || i.working
                 .as_ref()
-                .is_some_and(|(_, c)| c.load(Ordering::SeqCst));
+                .is_some_and(|work| work.cancel.load(Ordering::SeqCst));
         let mut n = i.doc.clone();
         let mut op = match result {
             Ok(snapshot) => {
@@ -288,9 +320,8 @@ impl Worktrees {
                 op
             }
             Err(e) => {
-                let material = intent.target_stamp.is_some()
-                    || intent.dispatched
-                    || std::fs::symlink_metadata(&intent.target).is_ok();
+                let material =
+                    intent.target_stamp.is_some() || intent.dispatched || observed_material;
                 if !material {
                     n.materials.retain(|m| m.operation_id != id);
                 }
@@ -320,10 +351,10 @@ impl Worktrees {
     }
     pub(super) fn cancel_recover(&self, s: &MetaStore, id: &str) -> Result<Reply> {
         let mut i = self.lock()?;
-        if let Some((key, c)) = &i.working
-            && key == id
+        if let Some(work) = &i.working
+            && work.id == id
         {
-            c.store(true, Ordering::SeqCst);
+            work.cancel.store(true, Ordering::SeqCst);
             let mut n = i.doc.clone();
             let o = n.operation.as_mut().unwrap();
             o.status.state = "cancelling".into();

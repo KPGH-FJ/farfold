@@ -200,8 +200,10 @@ fn preparation_actual_work_or_maintenance_admission_is_not_bypassed() {
             "busy"
         );
     }
-    m.lock().unwrap().working =
-        Some(("controlled-worker".into(), Arc::new(AtomicBool::new(false))));
+    m.lock().unwrap().working = Some(Working::new(
+        "controlled-worker",
+        Arc::new(AtomicBool::new(false)),
+    ));
     assert_eq!(
         m.preparation_inspect(&s, &l.id, l.revision, "")
             .unwrap_err()

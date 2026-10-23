@@ -27,6 +27,7 @@ mod windows_scope;
 mod windows_tests;
 #[cfg(windows)]
 pub(crate) use git::source_roots::{ManagedRemovalHold, ManagedRootGitEdge};
+pub(crate) use manager::RequestClass;
 pub use manager::Worktrees;
 
 // Shared non-Windows fallback. Windows production operations each use their

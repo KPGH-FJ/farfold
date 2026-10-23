@@ -26,6 +26,8 @@ struct Member {
 pub(super) struct Current {
     held: Vec<Member>,
     pending: Vec<u32>,
+    coverage_gap: bool,
+    observation_unknown: bool,
 }
 #[cfg(test)]
 #[derive(serde::Serialize)]
@@ -34,6 +36,8 @@ pub(super) struct CurrentObservation {
     held_count: usize,
     admitted_count: usize,
     unresolved_candidate_count: usize,
+    coverage_gap: bool,
+    observation_unknown: bool,
     admitted_pids: Vec<u32>,
 }
 enum Lookup {
@@ -55,6 +59,8 @@ impl Current {
             held_count: self.held.len(),
             admitted_count: admitted_pids.len(),
             unresolved_candidate_count: self.pending.len(),
+            coverage_gap: self.coverage_gap,
+            observation_unknown: self.observation_unknown,
             admitted_pids,
         }
     }
@@ -65,31 +71,55 @@ impl Current {
         pending
             .try_reserve_exact(CAPACITY)
             .map_err(io::Error::other)?;
-        Ok(Self { held, pending })
+        Ok(Self {
+            held,
+            pending,
+            coverage_gap: false,
+            observation_unknown: false,
+        })
     }
     /// One bounded observation, with no worker and no blocking process wait.
-    /// Errors keep the same state for a later observation, never poison it into
-    /// a permanent latch. Pending PIDs confer no termination authority.
-    pub(super) fn observe(&mut self, job: HANDLE, leader: Option<u32>) -> bool {
-        self.observe_using(job, leader, || list(job), native_lookup)
+    /// Pending PIDs confer no termination authority. An incomplete observation
+    /// when this SAME accounting query does not prove an empty Job creates a gap:
+    /// later empty lists cannot identify members that disappeared in between.
+    pub(super) fn observe(
+        &mut self,
+        job: HANDLE,
+        leader: Option<u32>,
+        associated: Option<u32>,
+    ) -> bool {
+        self.observe_using(job, leader, associated, || list(job), native_lookup)
+    }
+    pub(super) fn unknown(&self) -> bool {
+        self.coverage_gap || self.observation_unknown
+    }
+    pub(super) fn query_unknown(&mut self) {
+        self.observation_unknown = true;
+    }
+    fn incomplete(&mut self, associated: Option<u32>) -> bool {
+        self.coverage_gap |= associated != Some(0);
+        self.observation_unknown = true;
+        true
     }
     fn observe_using(
         &mut self,
         job: HANDLE,
         leader: Option<u32>,
+        associated: Option<u32>,
         snapshot: impl FnOnce() -> io::Result<Listed>,
         mut lookup: impl FnMut(u32) -> io::Result<Lookup>,
     ) -> bool {
+        self.observation_unknown = associated.is_none();
         if self.poll_held(job).is_err() {
-            return true;
+            return self.incomplete(associated);
         }
         self.resolve_pending(&mut lookup);
         if self.poll_held(job).is_err() || !self.pending.is_empty() {
-            return true;
+            return self.incomplete(associated);
         }
         let listed = match snapshot() {
             Ok(value) => value,
-            Err(_) => return true,
+            Err(_) => return self.incomplete(associated),
         };
         // Every newly listed candidate fits the finite pending array. A full
         // held array defers opens, retaining candidates rather than discarding
@@ -100,7 +130,14 @@ impl Current {
             }
         }
         self.resolve_pending(lookup);
-        self.poll_held(job).is_err() || !self.held.is_empty() || !self.pending.is_empty()
+        if self.poll_held(job).is_err() || !self.pending.is_empty() {
+            // This iteration DID enumerate the complete current list. Keep
+            // every actual candidate and report uncertainty; only a later
+            // skipped enumeration when not proven empty establishes a gap.
+            self.observation_unknown = true;
+            return true;
+        }
+        self.unknown() || !self.held.is_empty()
     }
     fn resolve_pending(&mut self, mut lookup: impl FnMut(u32) -> io::Result<Lookup>) {
         let mut index = 0;

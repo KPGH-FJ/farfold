@@ -310,7 +310,16 @@ export function WorktreeDialog({
                 disabled={busy || state.working}
                 onClick={() =>
                   void act(async () => {
-                    await worktrees.recheck();
+                    const latest = worktrees.snapshot();
+                    if (latest.operationId !== state.operationId) return;
+                    const observed = latest.operation;
+                    if (
+                      !observed ||
+                      observed.kind === "unknownOperation" ||
+                      !observed.settled
+                    )
+                      await worktrees.status();
+                    else await worktrees.recheck();
                   })
                 }
               >

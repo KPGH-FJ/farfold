@@ -132,7 +132,15 @@ impl OwnedProcess {
         }
         #[cfg(windows)]
         {
-            self.group.active()
+            let active = self.group.active();
+            self.report_retirement_unknown();
+            active
+        }
+    }
+    #[cfg(windows)]
+    fn report_retirement_unknown(&self) {
+        if self.group.retirement_unknown() {
+            super::manager::mark_unknown();
         }
     }
 }
@@ -291,6 +299,7 @@ fn execute_bounded(
             #[cfg(all(windows, test))]
             let group_alive = if first_active_query.is_none() {
                 let (active, observation) = child.group.active_with_observation(&child.child);
+                child.report_retirement_unknown();
                 if active {
                     first_active_query = Some(observation);
                 }
