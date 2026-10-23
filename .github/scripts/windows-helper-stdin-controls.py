@@ -317,6 +317,12 @@ def execute(binary, repo, case, directory):
     return record, settled, process
 
 
+def unrecorded_case(case, prepared):
+    # Once execute was entered, a failed evidence write cannot prove no launch.
+    state = "failed-or-incomplete" if case["name"] in prepared else "not-run"
+    return {"name": case["name"], "exactCase": case["test"], "state": state, "passed": False}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--expected-head", required=True)
@@ -330,6 +336,7 @@ def main():
               "caseCount": 7, "passed": False, "inputsStable": False, "programsStable": False,
               "cases": [], "errors": [], "scope": "Seven exact helper input parent controls; separate from native P27, recovery seven, attributes eight, and real-Agent acceptance."}
     programs, cases, build_before, held = None, None, None, []
+    prepared = set()
     group_deadline = time.monotonic() + GROUP_SECONDS
     try:
         require(os.name == "nt", "actual execution requires Windows")
@@ -350,6 +357,7 @@ def main():
             require(programs_unchanged(programs), "program bytes changed before case")
             directory = output / f"{index + 1:02d}-{case['name']}"
             directory.mkdir()
+            prepared.add(case["name"])
             result, settled, original = execute(Path(programs["testBinary"]["path"]), repo, case, directory)
             if original is not None:
                 held.append(original)
@@ -376,7 +384,7 @@ def main():
             report["errors"].append({"phase": "final-identity", "type": type(error).__name__})
         expected = cases or [{"name": f"case-{i + 1}", "test": fqn} for i, (fqn, _) in enumerate(EXPECTED_CASES)]
         for case in expected[len(report["cases"]):]:
-            report["cases"].append({"name": case["name"], "exactCase": case["test"], "state": "not-run", "passed": False})
+            report["cases"].append(unrecorded_case(case, prepared))
         report["passedCount"] = sum(item["passed"] is True for item in report["cases"])
         report["notRunCount"] = sum(item["state"] == "not-run" for item in report["cases"])
         report["failedOrIncompleteCount"] = 7 - report["passedCount"] - report["notRunCount"]
