@@ -45,11 +45,27 @@ foreach ($case in $selected) {
   $started = [DateTime]::UtcNow.ToString('o')
   $selectionArguments = @('--exact')
   if ($manualMode) { $selectionArguments = @('--ignored', '--exact') }
-  & $binary $case.test @selectionArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
+  if ($manualMode) {
+    # Only the owned test child may enable an already granted SeSecurity right.
+    # The launcher checks its own original token is unchanged; no ordinary
+    # invocation, account policy or production process is adjusted.
+    & $fixture 'manual-granted-privileges' $binary $case.test 1> $stdout 2> $stderr
+  } else {
+    & $binary $case.test @selectionArguments --nocapture --test-threads=1 1> $stdout 2> $stderr
+  }
   $testExit = $LASTEXITCODE
   $finished = [DateTime]::UtcNow.ToString('o')
   $outText = [IO.File]::ReadAllText($stdout)
   $errText = [IO.File]::ReadAllText($stderr)
+  $privilegeEvidence = $null
+  $privilegeConditionSatisfied = -not $manualMode
+  if ($manualMode) {
+    $privilegeMarkers = [regex]::Matches($errText, '(?m)^FARFOLD_MANUAL_GRANTED_PRIVILEGES (?<json>[^\r\n]+)\r?$')
+    if ($privilegeMarkers.Count -eq 1) {
+      try { $privilegeEvidence = $privilegeMarkers[0].Groups['json'].Value | ConvertFrom-Json -ErrorAction Stop } catch { $privilegeEvidence = $null }
+    }
+    $privilegeConditionSatisfied = $null -ne $privilegeEvidence -and $privilegeEvidence.schema -eq 1 -and $privilegeEvidence.case -ceq $case.test -and $privilegeEvidence.status -ceq 'testCompleted' -and $privilegeEvidence.testExecuted -eq $true -and $privilegeEvidence.testExitCode -eq $testExit -and $privilegeEvidence.distinctChildToken -eq $true -and $privilegeEvidence.privilegeRequested -ceq 'SeSecurityPrivilege' -and $privilegeEvidence.childBefore.SeSecurityPrivilege.present -eq $true -and $privilegeEvidence.childAfter.SeSecurityPrivilege.enabled -eq $true -and $privilegeEvidence.adjustCalled -eq $true -and $privilegeEvidence.adjustSucceeded -eq $true -and $privilegeEvidence.adjustLastError -eq 0 -and $privilegeEvidence.onlyRequestedPrivilegeChanged -eq $true -and $privilegeEvidence.parentPrivilegeTableUnchanged -eq $true -and $privilegeEvidence.backupRestoreAdjusted -eq $false -and $privilegeEvidence.accountOrPolicyChanged -eq $false
+  }
   $phaseMarker = if ($case.PSObject.Properties.Name -contains 'phaseMarker') { [string]$case.phaseMarker } else { $null }
   $phaseMatches = if ($phaseMarker) { @([regex]::Matches($errText, '(?m)^' + [regex]::Escape($phaseMarker) + '\r?$')) } else { @() }
   $phaseReached = $phaseMarker -and $phaseMatches.Count -eq 1
@@ -59,6 +75,7 @@ foreach ($case in $selected) {
   $actualNames = @($nameMatches | ForEach-Object { $_.Groups['name'].Value })
   $namesExact = $actualNames.Count -eq 1 -and $actualNames[0] -ceq $case.test
   $passed = $testExit -eq 0 -and $null -ne $last -and $last.Groups['status'].Value -ceq 'ok' -and $last.Groups['passed'].Value -eq '1' -and $last.Groups['failed'].Value -eq '0' -and $last.Groups['ignored'].Value -eq '0' -and $namesExact
+  $passed = $passed -and $privilegeConditionSatisfied
   if ($phaseMarker -and -not $phaseReached) { $passed = $false }
   if (-not $passed) { $complete = $false }
   $outcomes = @([regex]::Matches($outText, '(?m)^test (?<name>[A-Za-z0-9_:]+) \.\.\. (?<outcome>ok|FAILED|ignored)(?:, [^\r\n]*)?\r?$') | ForEach-Object {
@@ -74,6 +91,11 @@ foreach ($case in $selected) {
     namesExact = $namesExact; exactGroupPassed = $passed
     expectedPhaseMarker = $phaseMarker; phaseMarkerMatches = $phaseMatches.Count
     injectionPhaseReached = [bool]$phaseReached
+    privilegeCondition = if ($manualMode) { 'granted-existing-SeSecurity-distinct-test-child' } else { 'default-current-token' }
+    privilegeConditionSatisfied = $privilegeConditionSatisfied
+    privilegeConditionEvidence = $privilegeEvidence
+    conditionUnavailable = $manualMode -and $null -ne $privilegeEvidence -and $privilegeEvidence.status -ceq 'conditionUnavailable'
+    testExecuted = if ($manualMode) { if ($null -ne $privilegeEvidence) { $privilegeEvidence.testExecuted } else { $null } } else { $true }
     stdoutSha256 = (Get-FileHash -LiteralPath $stdout -Algorithm SHA256).Hash
     stderrSha256 = (Get-FileHash -LiteralPath $stderr -Algorithm SHA256).Hash
   }
@@ -95,7 +117,9 @@ $complete = $complete -and $results.Count -eq $expected -and $headStable -and $i
   caseManifestSha256 = $caseHash
   selectedTests = $expected; groupCount = $results.Count; groups = $results; exactAllGroupsPassed = $complete
   historicalInventoriesChanged = $false
-  explicitManualFailuresAreSuccessfulTests = $false; privilegesAdjusted = $false; fullSecurityFallbackUsed = $false
+  explicitManualFailuresAreSuccessfulTests = $false
+  privilegesAdjusted = @($results | Where-Object { $null -ne $_.privilegeConditionEvidence -and $_.privilegeConditionEvidence.adjustSucceeded -eq $true }).Count -gt 0
+  ordinaryDefaultTokenAdjusted = $false; fullSecurityFallbackUsed = $false
   syntheticOrOrdinaryRefusalIsNativeSuccess = $false; completePayloadSecurityOrAliasRestoreClaim = $false
   fullTreeOrManifest2Complete = $false; productOrAllWindowsComplete = $false
 } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $raw ('capability-closeout-' + $Mode + '.result.json')) -Encoding utf8

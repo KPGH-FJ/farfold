@@ -12,6 +12,7 @@ pub(crate) struct Observation {
     total_processes: Option<u32>,
     total_terminated_processes: Option<u32>,
     conservative_active: bool,
+    current_members: Option<current_members::CurrentObservation>,
     association: Option<AssociationObservation>,
 }
 impl OwnedGroup {
@@ -19,10 +20,11 @@ impl OwnedGroup {
         &self,
         original_child: &std::process::Child,
     ) -> (bool, Observation) {
-        // Same Arc<Job> and SAME single query as active(), with the same bool.
+        // Same Arc<Job> and initial accounting query as active(). The same
+        // production current-member/leader fence also contributes to the bool.
         // This does not clone a Job/leader handle or consult the PID registry.
         let query = self.job.activity_query();
-        let active = query.not_confirmed_inactive();
+        let active = self.job.active_from_query(&query);
         let succeeded = query.ok != 0;
         let observation = Observation {
             owner_pid: self.pid,
@@ -32,6 +34,12 @@ impl OwnedGroup {
             total_processes: succeeded.then_some(query.info.TotalProcesses),
             total_terminated_processes: succeeded.then_some(query.info.TotalTerminatedProcesses),
             conservative_active: active,
+            current_members: self
+                .job
+                .current
+                .lock()
+                .ok()
+                .map(|value| value.observation()),
             // At most the first active observation needs this bounded sample.
             association: active.then(|| self.observe_association(original_child)),
         };
@@ -60,9 +68,10 @@ impl Observation {
             "totalProcesses": self.total_processes,
             "totalTerminatedProcesses": self.total_terminated_processes,
             "conservativeActive": self.conservative_active,
+            "currentMembers": self.current_members,
             "stoppedReason": stopped,
             "settledNaturally": stopped.is_none(),
-            "scope": "same retained Job, first active query, emitted only after confirmed inactivity",
+            "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members",
         });
         // At most one record for this completed command's settling interval.
         // No cleanup-loop output, argv/env/path/data, retry or blocking wait.

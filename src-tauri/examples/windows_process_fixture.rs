@@ -1,5 +1,8 @@
 //! Synthetic OS-only fixture. Never loads an Agent, account or model.
 #[cfg(windows)]
+#[path = "windows_process_fixture/manual_privileges.rs"]
+mod manual_privileges;
+#[cfg(windows)]
 #[path = "../src/windows_process.rs"]
 #[allow(dead_code)]
 mod ownership;
@@ -79,6 +82,12 @@ fn main() {
     // A synthetic-only barrier exercises cancellation before the trusted helper
     // opens/enters the Job. Production has no environment or timing test hook.
     let raw: Vec<_> = std::env::args_os().skip(1).collect();
+    if raw
+        .first()
+        .is_some_and(|arg| arg == "manual-granted-privileges")
+    {
+        std::process::exit(manual_privileges::run(&raw));
+    }
     if raw
         .first()
         .is_some_and(|arg| arg == "--farfold-owned-process")

@@ -634,6 +634,81 @@
       "manual": false,
       "category": "ownedSameJobNaturalSettlementAndBounds",
       "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=input"
+    },
+    {
+      "name": "job-current-member-known-original-member-stays-held-until-real-signal-and-is-then-retired",
+      "test": "windows_process::current_members::tests::known_original_member_stays_held_until_real_signal_and_is_then_retired",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-later-original-job-member-is-observed-after-the-first-member-snapshot",
+      "test": "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-failed-pending-lookup-survives-empty-snapshot-and-later-resolves-without-latch",
+      "test": "windows_process::current_members::tests::failed_pending_lookup_survives_empty_snapshot_and_later_resolves_without_latch",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-actual-foreign-object-is-never-accepted-or-terminated-as-a-job-member",
+      "test": "windows_process::current_members::tests::actual_foreign_object_is_never_accepted_or_terminated_as_a_job_member",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-failed-snapshot-keeps-original-live-handle-and-retry-can-finish-after-signal",
+      "test": "windows_process::current_members::tests::failed_snapshot_keeps_original_live_handle_and_retry_can_finish_after_signal",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-truncated-capacity-invalid-and-duplicate-lists-are-not-successful-empty-observations",
+      "test": "windows_process::current_members::tests::truncated_capacity_invalid_and_duplicate_lists_are_not_successful_empty_observations",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "job-current-member-query-failure-does-not-permanently-latch-an-empty-original-job",
+      "test": "windows_process::current_members::tests::query_failure_does_not_permanently_latch_an_empty_original_job",
+      "manual": false,
+      "category": "ownedCurrentJobMemberHandles",
+      "executionPolicy": "Actual Windows execution required. Covers the currently observed original Job members and finite failed lookups only; successful controls do not prove completeness for missed short-lived members, failed snapshots or capacity overflow."
+    },
+    {
+      "name": "ordinary-native-empty-default-ordinary-observed-empty-default-needs-no-physical-backup-record",
+      "test": "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record",
+      "manual": false,
+      "category": "portableOrdinaryBackupRecordFraming"
+    },
+    {
+      "name": "ordinary-native-empty-default-ordinary-omitted-zero-default-keeps-exact-named-data-and-ea-semantics",
+      "test": "file_access::material_carrier_records::tests::ordinary_omitted_zero_default_keeps_exact_named_data_and_ea_semantics",
+      "manual": false,
+      "category": "portableOrdinaryBackupRecordFraming"
+    },
+    {
+      "name": "ordinary-native-empty-default-ordinary-empty-default-exception-cannot-hide-missing-or-invalid-material",
+      "test": "file_access::material_carrier_records::tests::ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material",
+      "manual": false,
+      "category": "portableOrdinaryBackupRecordFraming"
+    },
+    {
+      "name": "ordinary-restore-preserves-unprotected-inherited-dacl-across-different-parents",
+      "test": "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents",
+      "manual": false,
+      "category": "ownedActualOrdinarySecurityPreservation",
+      "requiredEnvironment": "Windows NTFS ordinary readable owner/group/DACL/label",
+      "executionPolicy": "Must execute the original file and directory cases with exact retained identity, content and cold re-open comparison; cross compilation or missing native permission is not a passed preservation control."
     }
   ],
   "blockedPositiveCases": [],

@@ -6,6 +6,7 @@ use crate::file_access::{
     material_ordinary_security_records::{self as records, Owned, Summary},
 };
 use std::sync::atomic::AtomicBool;
+use windows_sys::Wdk::Storage::FileSystem::NtSetSecurityObject;
 use windows_sys::Win32::Security::{
     ACL, ATTRIBUTE_SECURITY_INFORMATION,
     Authorization::{SE_FILE_OBJECT, SetSecurityInfo},
@@ -196,21 +197,22 @@ pub(super) fn restore(
             };
         check(cancel)?;
         charge(work, raw.len())?;
-        let status = unsafe {
-            SetSecurityInfo(
-                handle(file),
-                SE_FILE_OBJECT,
-                fields,
-                owner,
-                group,
-                acl,
-                ptr::null(),
-            )
-        };
+        // Apply the recorded descriptor to this same FileObject. The Win32
+        // file-security helper additionally imports the new parent's inherited
+        // ACEs; those belong to the private restore namespace, not the source.
+        // NtSetSecurityObject accepts this bounded self-relative descriptor
+        // with the existing WRITE_OWNER/WRITE_DAC rights. The original control
+        // bits and every requested facet must still pass actual readback.
+        let status =
+            unsafe { NtSetSecurityObject(handle(file), fields, dacl.as_ptr().cast_mut().cast()) };
         if status != 0 {
+            #[cfg(test)]
+            eprintln!(
+                "FARFOLD_ORDINARY_DIAGNOSTIC phase=security-native-set-failed status={status}"
+            );
             return Err(Error::Io {
                 phase: "ordinarySecuritySet",
-                code: Some(status as i32),
+                code: Some(unsafe { RtlNtStatusToDosError(status) } as i32),
             });
         }
     }

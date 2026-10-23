@@ -223,3 +223,75 @@ fn ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security() {
         .is_err()
     );
 }
+
+fn ordinary(raw: &[u8], expected: &Expected) -> Result<Parsed> {
+    parse_profile(
+        Cursor::new(raw),
+        expected,
+        false,
+        &mut WorkBudget::new(WORK_LIMIT),
+        &AtomicBool::new(false),
+        &Resident::new(RESIDENT_LIMIT),
+    )
+}
+
+#[test]
+fn ordinary_observed_empty_default_needs_no_physical_backup_record() {
+    let expected = [(Vec::new(), 0)].into();
+    let absent = ordinary(&[], &expected).unwrap();
+    let emitted = ordinary(&stream(1, 0, &[], &[]), &expected).unwrap();
+    assert_eq!(absent.bytes, 0);
+    assert_eq!(absent.sha256, <[u8; 32]>::from(Sha256::digest([])));
+    assert_eq!(emitted.bytes, 20);
+    assert_ne!(absent.sha256, emitted.sha256);
+    assert_ne!(absent, emitted);
+    assert!(absent.same_contents(&emitted));
+    assert_eq!(absent.semantic_sha256(), emitted.semantic_sha256());
+    assert!(absent.security.is_none());
+}
+
+#[test]
+fn ordinary_omitted_zero_default_keeps_exact_named_data_and_ea_semantics() {
+    let named: Vec<u16> = ":owned:$DATA".encode_utf16().collect();
+    let expected = [(Vec::new(), 0), (named.clone(), 3)].into();
+    let raw = [
+        stream(2, 0, &[], b"opaque-native-EA"),
+        stream(4, 0, &named, b"ADS"),
+    ]
+    .concat();
+    let observed = ordinary(&raw, &expected).unwrap();
+    let explicit = ordinary(&[stream(1, 0, &[], &[]), raw.clone()].concat(), &expected).unwrap();
+    assert!(observed.has_ea());
+    assert_eq!(observed.bytes, raw.len() as u64);
+    assert!(observed.same_contents(&explicit));
+    assert_eq!(observed.semantic_sha256(), explicit.semantic_sha256());
+    assert_ne!(observed.sha256, explicit.sha256);
+    let changed = ordinary(
+        &[
+            stream(2, 0, &[], b"opaque-native-EA"),
+            stream(4, 0, &named, b"ads"),
+        ]
+        .concat(),
+        &expected,
+    )
+    .unwrap();
+    assert!(!observed.same_contents(&changed));
+}
+
+#[test]
+fn ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material() {
+    let empty: Expected = [(Vec::new(), 0)].into();
+    assert!(ordinary(&[], &[(Vec::new(), 1)].into()).is_err());
+    for size in [0, 1] {
+        let named: Vec<u16> = ":required:$DATA".encode_utf16().collect();
+        assert!(ordinary(&[], &[(Vec::new(), 0), (named, size)].into()).is_err());
+    }
+    let zero = stream(1, 0, &[], &[]);
+    for end in 1..zero.len() {
+        assert!(ordinary(&zero[..end], &empty).is_err());
+    }
+    assert!(ordinary(&[zero.clone(), zero].concat(), &empty).is_err());
+    assert!(ordinary(&stream(3, 2, &[], &descriptor()), &empty).is_err());
+    assert!(run(&stream(3, 2, &[], &descriptor()), &empty).is_err());
+    assert!(ordinary(&[], &Expected::new()).is_err());
+}

@@ -21,6 +21,9 @@ $excluded = @(switch -CaseSensitive ($Filter) {
   'file_access::material_carrier_records::tests::' {
     'file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order'
     'file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security'
+    'file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record'
+    'file_access::material_carrier_records::tests::ordinary_omitted_zero_default_keeps_exact_named_data_and_ea_semantics'
+    'file_access::material_carrier_records::tests::ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material'
   }
   'file_access::material_directory_records::tests::' {
     'file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order'

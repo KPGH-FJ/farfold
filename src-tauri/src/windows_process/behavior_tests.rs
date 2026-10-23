@@ -102,7 +102,8 @@ fn cancellation_before_helper_job_entry_never_starts_selected_work() {
     ]);
     let mut child = Parent(child);
     until(|| ready.is_file());
-    assert!(!active(child.0.id()));
+    // The original helper is still a live owned object before entering its Job.
+    assert!(active(child.0.id()));
     terminate(child.0.id());
     std::fs::remove_file(&ready).unwrap();
     until(|| child.0.try_wait().unwrap().is_some());

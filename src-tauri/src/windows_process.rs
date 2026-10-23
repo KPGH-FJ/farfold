@@ -8,10 +8,11 @@ use std::io;
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, OnceLock, Weak};
 
 use windows_sys::Win32::Foundation::{
-    CloseHandle, ERROR_ALREADY_EXISTS, GetLastError, HANDLE, SetLastError,
+    CloseHandle, ERROR_ALREADY_EXISTS, GetLastError, HANDLE, SetLastError, WAIT_OBJECT_0,
 };
 use windows_sys::Win32::Security::Cryptography::{
     BCRYPT_USE_SYSTEM_PREFERRED_RNG, BCryptGenRandom,
@@ -24,8 +25,12 @@ use windows_sys::Win32::System::JobObjects::{
 };
 use windows_sys::Win32::System::SystemServices::{JOB_OBJECT_ASSIGN_PROCESS, JOB_OBJECT_QUERY};
 use windows_sys::Win32::System::Threading::{
-    CREATE_NO_WINDOW, GetCurrentProcess, OpenProcess, PROCESS_TERMINATE, TerminateProcess,
+    CREATE_NO_WINDOW, GetCurrentProcess, OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION,
+    PROCESS_SYNCHRONIZE, PROCESS_TERMINATE, TerminateProcess, WaitForSingleObject,
 };
+
+#[path = "windows_process/current_members.rs"]
+mod current_members;
 
 const HELPER: &str = "--farfold-owned-process";
 const PREFIX: &str = "Local\\Farfold-process-";
@@ -45,7 +50,13 @@ impl Drop for Handle {
 struct Job {
     handle: Handle,
     name: String,
-    leader: OnceLock<Handle>,
+    leader: OnceLock<Leader>,
+    stopping: AtomicBool,
+    current: Mutex<current_members::Current>,
+}
+struct Leader {
+    pid: u32,
+    handle: Handle,
 }
 // One stack-owned result of the EXISTING Job accounting query, no new handle.
 struct ActivityQuery {
@@ -111,19 +122,47 @@ impl Job {
             handle,
             name,
             leader: OnceLock::new(),
+            stopping: AtomicBool::new(false),
+            current: Mutex::new(current_members::Current::new()?),
         }))
     }
     fn terminate(&self) {
+        self.stopping.store(true, Ordering::Release);
+        // Capture currently visible original members BEFORE requesting their
+        // asynchronous termination. Failed lookups remain in the same owner.
+        self.observe_current();
         unsafe {
             // Cancellation can arrive before the helper enters the Job. Retain
             // and terminate its exact kernel object, then all Job descendants.
             if let Some(leader) = self.leader.get() {
-                TerminateProcess(leader.0, 1);
+                TerminateProcess(leader.handle.0, 1);
             }
             TerminateJobObject(self.handle.0, 1);
         }
     }
     fn active(&self) -> bool {
+        self.active_from_query(&self.activity_query())
+    }
+    fn observe_current(&self) -> bool {
+        self.current.lock().map_or(true, |mut current| {
+            current.observe(self.handle.0, self.leader.get().map(|leader| leader.pid))
+        })
+    }
+    fn active_from_query(&self, query: &ActivityQuery) -> bool {
+        let leader_active = self.leader.get().is_some_and(|leader| unsafe {
+            WaitForSingleObject(leader.handle.0, 0) != WAIT_OBJECT_0
+        });
+        if leader_active && !self.stopping.load(Ordering::Acquire) {
+            // Ordinary long-running work does not accumulate member history.
+            // The exact original leader also covers its pre-Job-entry interval.
+            return true;
+        }
+        let current_active = self.observe_current();
+        if query.not_confirmed_inactive() || leader_active || current_active {
+            return true;
+        }
+        // A member could appear during the bounded observation. Keep the old
+        // accounting condition too; held-member waits never replace it.
         self.activity_query().not_confirmed_inactive()
     }
     fn activity_query(&self) -> ActivityQuery {
@@ -174,13 +213,22 @@ impl PendingGroup {
     /// throughout this call. All std/async/PTY spawn owners do so: Windows cannot
     /// reuse that PID while the original process object has a retained handle.
     fn attach(&self, pid: u32) -> io::Result<OwnedGroup> {
-        let leader = unsafe { OpenProcess(PROCESS_TERMINATE, 0, pid) };
+        let leader = unsafe {
+            OpenProcess(
+                PROCESS_TERMINATE | PROCESS_SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION,
+                0,
+                pid,
+            )
+        };
         if leader.is_null() {
             return Err(io::Error::last_os_error());
         }
         self.0
             .leader
-            .set(Handle(leader))
+            .set(Leader {
+                pid,
+                handle: Handle(leader),
+            })
             .map_err(|_| io::Error::other("程序进程已登记"))?;
         let mut groups = groups()
             .lock()

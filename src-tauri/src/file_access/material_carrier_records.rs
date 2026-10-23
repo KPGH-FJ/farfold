@@ -327,6 +327,22 @@ pub(super) fn parse_profile<R: Read>(
             return Err(Error::Limit);
         }
     }
+    // BackupRead(FALSE) can omit the physical default record for a zero-size
+    // regular file, including one that has EA or named streams. The supplied
+    // inventory already observed that empty default on the same original
+    // handle. Record only its semantic fact: never synthesize carrier bytes,
+    // a successful native write, or a full-security record.
+    if !full && expected.get(&Vec::new()) == Some(&0) && !parts.contains_key(&Key::Data(Vec::new()))
+    {
+        parts.insert(
+            Key::Data(Vec::new()),
+            Part {
+                size: 0,
+                flags: 0,
+                sha256: Sha256::digest([]).into(),
+            },
+        );
+    }
     let data_count = parts.keys().filter(|k| matches!(k, Key::Data(_))).count();
     if data_count != expected.len() {
         #[cfg(test)]
