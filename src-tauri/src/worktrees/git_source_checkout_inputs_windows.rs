@@ -162,6 +162,16 @@ struct OptionalFile<'a> {
     file: Option<(PinnedPath, Stamp)>,
     missing: Option<(usize, Vec<u16>, PathBuf)>,
 }
+// Source global-file choice; system attributes remain independently controlled.
+#[derive(Clone, Copy)]
+pub(super) enum GlobalAttributes<'a> {
+    Default,
+    Disabled,
+    File(AttributeSource<'a>),
+}
+fn is_null_attributes_file(raw: &str) -> bool {
+    raw == "/dev/null" || raw.eq_ignore_ascii_case("nul")
+}
 #[derive(Clone, Copy)]
 pub(super) struct AttributeSource<'a> {
     anchor: &'a PinnedPath,
@@ -377,7 +387,10 @@ impl<'a> Inputs<'a> {
         )?;
         #[cfg(test)]
         let mut resolved_attr_path = None;
-        let configured = if let Some(raw) = &attr_path {
+        let configured = if let Some(raw) = attr_path
+            .as_deref()
+            .filter(|raw| !is_null_attributes_file(raw))
+        {
             let (root, names) = configured_path(owner, raw)?;
             #[cfg(test)]
             {
@@ -409,11 +422,18 @@ impl<'a> Inputs<'a> {
         // default global attributes path; absence and no setting differ.
         self.resolved_attr_path.as_deref()
     }
-    pub(super) fn attr_source(&self) -> Result<Option<AttributeSource<'_>>> {
-        self.configured
-            .as_ref()
-            .map(OptionalFile::attribute_source)
-            .transpose()
+    pub(super) fn attr_source(&self) -> Result<GlobalAttributes<'_>> {
+        if self
+            .attr_path
+            .as_deref()
+            .is_some_and(is_null_attributes_file)
+        {
+            return Ok(GlobalAttributes::Disabled);
+        }
+        Ok(match self.configured.as_ref() {
+            Some(file) => GlobalAttributes::File(file.attribute_source()?),
+            None => GlobalAttributes::Default,
+        })
     }
     pub(super) fn check_filter(
         &self,
@@ -449,5 +469,49 @@ impl<'a> Inputs<'a> {
             return Err(error("changed"));
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod null_device_tests {
+    #[test]
+    fn null_device_classifier_accepts_only_documented_exact_spellings() {
+        for raw in [
+            "/dev/null",
+            "NUL",
+            "NUl",
+            "NuL",
+            "Nul",
+            "nUL",
+            "nUl",
+            "nuL",
+            "nul",
+        ] {
+            assert!(super::is_null_attributes_file(raw), "{raw:?}");
+        }
+        for raw in [
+            "",
+            "/DEV/NULL",
+            "/dev/null/",
+            "/dev/null.",
+            "\\dev\\null",
+            "NUL:",
+            "NUL.",
+            "NUL.txt",
+            "NUL::$DATA",
+            "./NUL",
+            "C:\\NUL",
+            "C:NUL",
+            "\\\\?\\C:\\NUL",
+            "NUL ",
+            " NUL",
+            "ＮＵＬ",
+            "nul\\x",
+            "nul\0",
+            "nul\r",
+            "nul\n",
+        ] {
+            assert!(!super::is_null_attributes_file(raw), "{raw:?}");
+        }
     }
 }

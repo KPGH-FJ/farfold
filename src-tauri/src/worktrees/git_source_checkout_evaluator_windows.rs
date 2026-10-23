@@ -8,6 +8,11 @@ pub(super) enum Role {
     Local,
     Mirror,
 }
+#[cfg(test)]
+pub(super) struct AttributeCommandPolicy {
+    pub arguments: Vec<std::ffi::OsString>,
+    pub environment: Vec<(std::ffi::OsString, Option<std::ffi::OsString>)>,
+}
 impl Role {
     fn index(self) -> usize {
         match self {
@@ -33,7 +38,7 @@ enum Action<'a> {
     Index,
     Attributes {
         paths: &'a [u8],
-        external: Option<Option<inputs::AttributeSource<'a>>>,
+        external: Option<inputs::GlobalAttributes<'a>>,
     },
     Contents {
         input: &'a [u8],
@@ -249,7 +254,7 @@ impl<'a> Evaluator<'a> {
             worktree,
         ];
         if let Action::Attributes {
-            external: Some(Some(source)),
+            external: Some(inputs::GlobalAttributes::File(source)),
             ..
         } = &action
         {
@@ -351,14 +356,21 @@ impl<'a> Evaluator<'a> {
                 paths: input_paths,
                 external,
             } => {
-                if let Some(Some(source)) = external {
-                    command.arg("-c").arg(format!(
-                        "core.attributesFile={}",
-                        source
-                            .git_path(&paths)?
-                            .to_str()
-                            .ok_or(error("unsafePath"))?
-                    ));
+                match external {
+                    Some(inputs::GlobalAttributes::Disabled) => {
+                        // Disable only the global file; preserve inherited system policy.
+                        command.args(["-c", "core.attributesFile=/dev/null"]);
+                    }
+                    Some(inputs::GlobalAttributes::File(source)) => {
+                        command.arg("-c").arg(format!(
+                            "core.attributesFile={}",
+                            source
+                                .git_path(&paths)?
+                                .to_str()
+                                .ok_or(error("unsafePath"))?
+                        ));
+                    }
+                    Some(inputs::GlobalAttributes::Default) | None => {}
                 }
                 command.args(["check-attr", "--cached", "--all", "-z", "--stdin"]);
                 git::Input::from_bytes(input_paths, git::OUTPUT_LIMIT, cancel)?
@@ -392,7 +404,7 @@ impl<'a> Evaluator<'a> {
         );
         paths.verify()?;
         if let Action::Attributes {
-            external: Some(Some(source)),
+            external: Some(inputs::GlobalAttributes::File(source)),
             ..
         } = action
         {
@@ -545,7 +557,7 @@ impl<'a> Evaluator<'a> {
         &self,
         role: Role,
         paths: &[u8],
-        external: Option<Option<inputs::AttributeSource<'_>>>,
+        external: Option<inputs::GlobalAttributes<'_>>,
         cancel: &AtomicBool,
     ) -> Result<Attributes> {
         if self.roles[role.index()].attributes.is_none() {
@@ -556,6 +568,33 @@ impl<'a> Evaluator<'a> {
             Action::Attributes { paths, external },
             cancel,
         )?)
+    }
+    #[cfg(test)]
+    pub(super) fn attribute_command_policy(
+        &self,
+        external: Option<inputs::GlobalAttributes<'_>>,
+        cancel: &AtomicBool,
+    ) -> Result<AttributeCommandPolicy> {
+        // Inspect the same constructor used by run_at; no second command path
+        // or inherited-environment override is introduced for these controls.
+        let (command, _, paths) = self.command_at(
+            &self.roles[Role::Original.index()].repo,
+            Action::Attributes {
+                paths: &[],
+                external,
+            },
+            None,
+            cancel,
+        )?;
+        paths.verify()?;
+        self.verify(cancel)?;
+        Ok(AttributeCommandPolicy {
+            arguments: command.get_args().map(|v| v.to_owned()).collect(),
+            environment: command
+                .get_envs()
+                .map(|(k, v)| (k.to_owned(), v.map(|v| v.to_owned())))
+                .collect(),
+        })
     }
 }
 #[derive(Clone)]

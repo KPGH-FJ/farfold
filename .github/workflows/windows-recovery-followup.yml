@@ -68,6 +68,12 @@ jobs:
         continue-on-error: true
         run: |
           ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode FullSecurityManual -CaseNames @('public-retained-cold-recover', 'remove-late-ea', 'remove-late-security', 'public-remove-cold-recover')
+      - name: Independent eight null-attributes regressions using the same build
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode NullAttributes
       - name: Preserve the original recovery executable loader evidence
         if: ${{ always() }}
         timeout-minutes: 5
@@ -99,3 +105,8 @@ jobs:
             $expectedNames = @($expected[$mode] | Sort-Object)
             if ($result.head -cne '${{ github.sha }}' -or $result.headStable -ne $true -or $result.inputsStable -ne $true -or $result.focusedSubsetOnly -ne $true -or $result.selectedTests -ne $expectedNames.Count -or $result.groupCount -ne $expectedNames.Count -or ($actualNames | ConvertTo-Json -Compress) -cne ($expectedNames | ConvertTo-Json -Compress) -or $result.exactAllGroupsPassed -ne $true) { throw "Focused $mode evidence incomplete or failed" }
           }
+          # This separate cohort neither changes nor completes any original inventory.
+          $attributes = Get-Content -LiteralPath 'windows-diagnostics-raw/capability-closeout-NullAttributes.result.json' -Raw -ErrorAction Stop | ConvertFrom-Json
+          $attributeNames = @('null-exact-spellings', 'null-command-system-policy', 'null-rooted-lookalikes', 'null-owned-xdg-matrix', 'existing-source-profile-info', 'existing-configured-attributes-file', 'existing-held-absence-drive-relative', 'existing-selected-head-attributes' | Sort-Object)
+          $actualAttributeNames = @($attributes.selectedCaseNames | Sort-Object)
+          if ($attributes.head -cne '${{ github.sha }}' -or $attributes.mode -cne 'NullAttributes' -or $attributes.headStable -ne $true -or $attributes.inputsStable -ne $true -or $attributes.focusedSubsetOnly -ne $false -or $attributes.plannedOrdinaryTests -ne 8 -or $attributes.plannedManualTests -ne 0 -or $attributes.plannedTotalTests -ne 8 -or $attributes.selectedTests -ne 8 -or $attributes.groupCount -ne 8 -or ($actualAttributeNames | ConvertTo-Json -Compress) -cne ($attributeNames | ConvertTo-Json -Compress) -or $attributes.exactAllGroupsPassed -ne $true) { throw 'Independent null-attributes cohort incomplete or failed' }

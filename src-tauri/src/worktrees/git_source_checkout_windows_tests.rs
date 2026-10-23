@@ -7,6 +7,9 @@ use crate::worktrees::{
 };
 use std::{fs, path::PathBuf};
 
+#[path = "git_source_checkout_null_attributes_windows_tests.rs"]
+mod null_attributes;
+
 struct Fixture {
     temp: tempfile::TempDir,
     root: PathBuf,
@@ -241,7 +244,9 @@ fn held_optional_source_absence_detects_creation_and_drive_relative_config_is_re
     let nested_graph = SourceGraph::capture(&nested.snapshot(), &AtomicBool::new(false)).unwrap();
     let nested_inputs =
         inputs::Inputs::capture(nested_graph.owner.as_ref(), &AtomicBool::new(false)).unwrap();
-    let source = nested_inputs.attr_source().unwrap().unwrap();
+    let inputs::GlobalAttributes::File(source) = nested_inputs.attr_source().unwrap() else {
+        panic!("configured absent file must retain its held source");
+    };
     source.verify().unwrap();
     nested_graph
         .checkout_profile(&AtomicBool::new(false))

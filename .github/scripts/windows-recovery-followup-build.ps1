@@ -5,7 +5,7 @@ New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
 function Inputs {
   $head = (& git rev-parse HEAD).Trim()
   if ($LASTEXITCODE -ne 0 -or $head -cne $ExpectedHead) { throw 'Focused recovery source head changed' }
-  $paths = @(& git ls-files -- 'src-tauri/src' 'src-tauri/native' 'src-tauri/examples' 'src-tauri/Cargo.toml' 'src-tauri/Cargo.lock' 'src-tauri/build.rs' 'src-tauri/*.json' 'src-tauri/*.manifest' '.github/scripts/windows-capability-closeout*' '.github/scripts/windows-recovery-followup*' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/workflows/windows-recovery-followup.yml' | Sort-Object -Unique)
+  $paths = @(& git ls-files -- 'src-tauri/src' 'src-tauri/native' 'src-tauri/examples' 'src-tauri/Cargo.toml' 'src-tauri/Cargo.lock' 'src-tauri/build.rs' 'src-tauri/*.json' 'src-tauri/*.manifest' '.github/scripts/windows-capability-closeout*' '.github/scripts/windows-recovery-followup*' '.github/scripts/windows-null-attributes-cases.json' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/workflows/windows-recovery-followup.yml' | Sort-Object -Unique)
   if ($LASTEXITCODE -ne 0 -or $paths.Count -lt 100) { throw 'Focused recovery source inputs incomplete' }
   $map = [ordered]@{}
   foreach ($path in $paths) { $map[$path] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }

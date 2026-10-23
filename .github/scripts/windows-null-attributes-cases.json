@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "null-exact-spellings",
+      "test": "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+      "manual": false,
+      "category": "null-attributes-new"
+    },
+    {
+      "name": "null-command-system-policy",
+      "test": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+      "manual": false,
+      "category": "null-attributes-new"
+    },
+    {
+      "name": "null-rooted-lookalikes",
+      "test": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "manual": false,
+      "category": "null-attributes-new"
+    },
+    {
+      "name": "null-owned-xdg-matrix",
+      "test": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+      "manual": false,
+      "category": "null-attributes-new"
+    },
+    {
+      "name": "existing-source-profile-info",
+      "test": "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+      "manual": false,
+      "category": "null-attributes-existing"
+    },
+    {
+      "name": "existing-configured-attributes-file",
+      "test": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "manual": false,
+      "category": "null-attributes-existing"
+    },
+    {
+      "name": "existing-held-absence-drive-relative",
+      "test": "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+      "manual": false,
+      "category": "null-attributes-existing"
+    },
+    {
+      "name": "existing-selected-head-attributes",
+      "test": "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+      "manual": false,
+      "category": "null-attributes-existing"
+    }
+  ]
+}
