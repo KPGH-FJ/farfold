@@ -814,7 +814,7 @@ impl Worktrees {
         if let Err(e) = i.idle() {
             return Ok(i.reject(id, e.code));
         }
-        let (s, scope) = match checked {
+        let (s, _scope) = match checked {
             Ok(v) => v,
             Err(e) => return Ok(i.reject(id, e.code)),
         };
@@ -856,7 +856,6 @@ impl Worktrees {
         i.save(store, next)?;
         let reply = i.reply(id);
         drop(i);
-        drop(scope);
         Ok(reply)
     }
     pub fn check_location(&self, store: &MetaStore, id: &str) -> Result<Location> {
