@@ -9,6 +9,11 @@ mod local_html;
 mod local_preview;
 #[path = "browser_workspace/preview_commands.rs"]
 pub(crate) mod preview_commands;
+#[path = "browser_workspace/screenshot.rs"]
+mod screenshot;
+#[cfg(any(windows, test))]
+#[path = "browser_workspace/screenshot_guard.rs"]
+mod screenshot_guard;
 use preview_commands::PreviewSource;
 #[cfg(target_os = "macos")]
 #[path = "browser_workspace/native.rs"]

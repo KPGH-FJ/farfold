@@ -1,3 +1,4 @@
+import { emitOpeningHeader } from "./session_open_test_fixture";
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({
@@ -380,6 +381,11 @@ it("restored sessions retain unknown-configuration protection before model chang
   ];
   h.invoke.mockImplementation(async (cmd: string, args) => {
     if (cmd === "session_open") {
+      emitOpeningHeader(args, {
+        cwd: "/p",
+        nativeSessionId: "loaded",
+        connectionId: "loaded-owner",
+      });
       args.channel.onmessage({
         update: {
           sessionUpdate: "agent_message_chunk",
@@ -393,6 +399,7 @@ it("restored sessions retain unknown-configuration protection before model chang
       return {
         cwd: "/p",
         nativeSessionId: "loaded",
+        connectionId: "loaded-owner",
         resumed: true,
         configOptions: options,
       };
@@ -848,12 +855,14 @@ it("reconnect buffers replacement history and ignores a stale channel", async ()
   const options = {
     cwd: "/p",
     nativeSessionId: "replay",
+    connectionId: "replay-owner",
     resumed: true,
     configOptions: [],
   };
   h.invoke.mockImplementation(async (cmd: string, args) => {
     if (cmd === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (cmd === "session_open") {
+      emitOpeningHeader(args, options);
       args.channel.onmessage({
         update: {
           sessionUpdate: "agent_message_chunk",
@@ -890,6 +899,10 @@ it("reconnect buffers replacement history and ignores a stale channel", async ()
     if (cmd === "session_open") {
       incoming = args.channel as typeof incoming;
       incomingToken = args.openToken;
+      emitOpeningHeader(
+        { channel: incoming, openToken: String(args.openToken) },
+        options,
+      );
       return new Promise((done) => {
         resolve = done;
       });
@@ -1008,6 +1021,11 @@ it("restores pending input as paused and never dispatches during cold opening", 
   );
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    emitOpeningHeader(args, {
+      cwd: "/p",
+      nativeSessionId: "pending",
+      connectionId: "pending-owner",
+    });
     args.channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
@@ -1018,7 +1036,12 @@ it("restores pending input as paused and never dispatches during cold opening", 
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "pending", resumed: true };
+    return {
+      cwd: "/p",
+      nativeSessionId: "pending",
+      connectionId: "pending-owner",
+      resumed: true,
+    };
   });
   const state = await threads.open({
     agentId: "restored-queue",
@@ -1037,15 +1060,17 @@ it("restores pending input as paused and never dispatches during cold opening", 
 
 it("prepares a new empty Agent conversation after an unsent draft's idle connection ended", async () => {
   let created = 0;
-  h.invoke.mockImplementation(async (command) =>
-    command === "session_open"
-      ? {
-          cwd: "/p",
-          nativeSessionId: `idle-draft-${++created}`,
-          resumed: false,
-        }
-      : [],
-  );
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "session_open") return [];
+    const result = {
+      cwd: "/p",
+      nativeSessionId: `idle-draft-${++created}`,
+      connectionId: `idle-owner-${created}`,
+      resumed: false,
+    };
+    emitOpeningHeader(args, result);
+    return result;
+  });
   const original = await threads.open({ agentId: "idle-draft", cwd: "/p" });
   event(original.key, { kind: "connectionLost" });
   const replacement = await threads.open({ agentId: "idle-draft", cwd: "/p" });
@@ -1141,15 +1166,18 @@ it("opens a fresh drift recovery draft without carrying history or queued prompt
   ];
   old.queued = [[{ type: "text", text: "do not send" }]];
   let fail = true;
-  h.invoke.mockImplementation(async (cmd: string) => {
+  h.invoke.mockImplementation(async (cmd: string, args) => {
     if (cmd === "session_open") {
       if (fail) throw new Error("fixture unavailable");
-      return {
+      const result = {
         cwd: "/p",
         nativeSessionId: "drift-new",
+        connectionId: "drift-new-owner",
         resumed: false,
         configOptions: [],
       };
+      emitOpeningHeader(args, result);
+      return result;
     }
     return cmd === "settings_get" ? 0 : [];
   });
@@ -1382,14 +1410,20 @@ it("isolates simultaneous drafts and event channels by selected API and key revi
     async (cmd: string, args: Record<string, unknown>) => {
       if (cmd !== "session_open") return [];
       channels.push(args.channel as { onmessage: (event: unknown) => void });
-      return {
+      const result = {
         cwd: "/source-test",
         nativeSessionId: `source-${++next}`,
+        connectionId: `source-owner-${next}`,
         resumed: false,
         configOptions: [],
         service: args.service,
         serviceContext: `connection-${next}`,
       };
+      emitOpeningHeader(
+        { channel: channels.at(-1)!, openToken: String(args.openToken) },
+        result,
+      );
+      return result;
     },
   );
   const base = { agentId: "source-agent", cwd: "/source-test" };

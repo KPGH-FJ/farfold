@@ -16,6 +16,7 @@ import {
 } from "./session_projection";
 import { archiveActivity } from "./archive_activity";
 import { draftPersistence } from "./drafts";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 const modes = {
   currentModeId: "medium",
@@ -91,6 +92,16 @@ it("uses only modern thinking choices when a restored conversation also advertis
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_open") {
       channel = args.channel;
+      const result = {
+        cwd: "/config-surfaces",
+        nativeSessionId: "modern-dual",
+        connectionId: "modern-dual-connection",
+        resumed: true,
+        configOptions: options(),
+        modes,
+        configCheck: check(),
+      };
+      emitOpeningHeader(args, result);
       channel.onmessage({
         update: {
           sessionUpdate: "agent_message_chunk",
@@ -101,14 +112,7 @@ it("uses only modern thinking choices when a restored conversation also advertis
         kind: "session_history_complete",
         openToken: args.openToken,
       });
-      return {
-        cwd: "/config-surfaces",
-        nativeSessionId: "modern-dual",
-        resumed: true,
-        configOptions: options(),
-        modes,
-        configCheck: check(),
-      };
+      return result;
     }
     if (command === "session_set_config") {
       expect(args.configId).toBe("thought_level");
@@ -203,31 +207,35 @@ it("keeps legacy modes when the unified list contains only a synthesized legacy 
       ],
     },
   });
-  h.invoke.mockImplementation(async (command) =>
-    command === "session_open"
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "session_open") {
+      const result = {
+        cwd: "/config-surfaces",
+        nativeSessionId: "legacy-model-and-mode",
+        connectionId: "legacy-model-and-mode-connection",
+        resumed: false,
+        configOptionsModern: false,
+        modes,
+        configOptions: legacyOptions,
+        configCheck: modelCheck("first"),
+      };
+      emitOpeningHeader(args, result);
+      return result;
+    }
+    return command === "session_set_config"
       ? {
-          cwd: "/config-surfaces",
-          nativeSessionId: "legacy-model-and-mode",
-          resumed: false,
           configOptionsModern: false,
-          modes,
-          configOptions: legacyOptions,
-          configCheck: modelCheck("first"),
+          configOptions: legacyOptions.map((option) => ({
+            ...option,
+            currentValue: "second",
+          })),
+          configCheck: modelCheck("second"),
+          permissionConfigId: null,
+          permissionState: "ready",
+          service: null,
         }
-      : command === "session_set_config"
-        ? {
-            configOptionsModern: false,
-            configOptions: legacyOptions.map((option) => ({
-              ...option,
-              currentValue: "second",
-            })),
-            configCheck: modelCheck("second"),
-            permissionConfigId: null,
-            permissionState: "ready",
-            service: null,
-          }
-        : [],
-  );
+      : [];
+  });
   const state = await threads.open({
     agentId: "config-surfaces-legacy-model",
     cwd: "/config-surfaces",
@@ -260,17 +268,21 @@ it("keeps legacy modes when the unified list contains only a synthesized legacy 
 it.each([{ configOptions: [] }, { configOptions: options() }])(
   "does not expose legacy modes for a declared modern list %j",
   async ({ configOptions }) => {
-    h.invoke.mockImplementation(async (command) =>
-      command === "session_open"
-        ? {
-            cwd: "/config-surfaces",
-            nativeSessionId: `modern-list-${configOptions.length}`,
-            resumed: false,
-            configOptions,
-            modes,
-          }
-        : [],
-    );
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "session_open") {
+        const result = {
+          cwd: "/config-surfaces",
+          nativeSessionId: `modern-list-${configOptions.length}`,
+          connectionId: `modern-list-connection-${configOptions.length}`,
+          resumed: false,
+          configOptions,
+          modes,
+        };
+        emitOpeningHeader(args, result);
+        return result;
+      }
+      return [];
+    });
     const state = await threads.open({
       agentId: `config-surfaces-list-${configOptions.length}`,
       cwd: "/config-surfaces",
@@ -288,13 +300,16 @@ it("preserves a legacy-only choice until a complete modern declaration replaces 
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_open") {
       channel = args.channel;
-      return {
+      const result = {
         cwd: "/config-surfaces",
         nativeSessionId: "legacy-only",
+        connectionId: "legacy-only-connection",
         resumed: false,
         configOptions: null,
         modes,
       };
+      emitOpeningHeader(args, result);
+      return result;
     }
     if (command === "session_set_mode") return undefined;
     return [];

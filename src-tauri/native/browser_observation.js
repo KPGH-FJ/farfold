@@ -144,7 +144,14 @@ const sensitive = (el) => {
     )
   );
 };
+// designMode edits the whole document without requiring a form control or a
+// contenteditable attribute. Refuse before title/body extraction as well as
+// before pixels. https://html.spec.whatwg.org/multipage/interaction.html#designMode
+const designMode = document.designMode;
+const documentEditable =
+  typeof designMode === "string" && designMode.toLowerCase() === "on";
 const pageBlocked = ({ roots, incomplete }) =>
+  documentEditable ||
   incomplete ||
   roots.some((root) =>
     [...root.querySelectorAll("input,textarea,select")].some(
@@ -153,10 +160,32 @@ const pageBlocked = ({ roots, incomplete }) =>
   );
 const blocked = pageBlocked(initialRoots);
 const screenshotReason = () =>
+  documentEditable ||
   roots.length > 1 ||
   document.querySelector(editable + ",iframe,frame,object,embed") !== null
     ? "页面含可编辑内容或嵌入页面，暂不能安全截图"
     : null;
+// This detached capability probe neither changes the displayed document nor
+// replaces page-world attachShadow/prototypes. The native macOS27 world must
+// actually expose a closed root; mere API/selector availability is insufficient.
+const closedRootInspection = (() => {
+  if (typeof inspectClosedRoots === "undefined" || !inspectClosedRoots)
+    return false;
+  try {
+    const host = document.createElement("div");
+    const root = host.attachShadow({ mode: "closed" });
+    return host.shadowRoot === root;
+  } catch {
+    return false;
+  }
+})();
+const viewport = () => ({
+  width: globalThis.innerWidth,
+  height: globalThis.innerHeight,
+  scale: globalThis.devicePixelRatio,
+  x: globalThis.scrollX,
+  y: globalThis.scrollY,
+});
 const clippedText = (el, max) => {
   let text = "",
     count = 0;
@@ -227,6 +256,8 @@ if (mode === "check")
     blocked,
     documentVersion: version(),
     screenshotReason: screenshotReason(),
+    closedRootInspection,
+    viewport: viewport(),
     url: location.href,
   };
 if (mode === "observe") {
@@ -295,6 +326,8 @@ if (mode === "observe") {
     nodes,
     truncated: truncated || text.length >= 65536,
     screenshotReason: screenshotReason(),
+    closedRootInspection,
+    viewport: viewport(),
   };
 }
 const observation = s.observation;

@@ -59,6 +59,7 @@ async fn aliases_share_account_admission_and_busy_api_work_blocks_changes() {
         fork_owned: false,
         native_session_id: None,
         preview_token: None,
+        opening_token: None,
         recorded_config: None,
         config_store: Box::new(ConfigStore {
             store: f.store.clone(),

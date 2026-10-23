@@ -22,7 +22,8 @@ import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
 import { REDESIGN as R } from "./runtime/redesign_strings";
 import { LIBRARY } from "./runtime/library_strings";
 import { preparationFor } from "./runtime/agent_preparation";
-import { requireReadableHistory } from "./runtime/session_recovery";
+import { HistoryReplayProjection } from "./runtime/history_replay_projection";
+import { applySessionEvent } from "./runtime/session_event_projection";
 import {
   allowAutomaticConnection,
   isAutomaticConnectionAllowed,
@@ -91,8 +92,14 @@ function pendingHistory(outcome: "success" | "empty") {
       h.threads.set(canonical, state);
       if (outcome === "success") resolve(state);
       else {
+        const replay = new HistoryReplayProjection(
+          state,
+          "navigation-empty-history",
+          (owner, event) => applySessionEvent(owner, event, false),
+        );
+        replay.mark("navigation-empty-history");
         try {
-          requireReadableHistory(
+          replay.requireReadable(
             "A",
             {
               cwd: "/canonical",
@@ -101,13 +108,13 @@ function pendingHistory(outcome: "success" | "empty") {
               resumed: true,
               warnings: [],
             },
-            [],
-            true,
             false,
           );
           throw new Error("fixture must produce a local empty-history failure");
         } catch (error) {
           reject(error);
+        } finally {
+          replay.clear();
         }
       }
       await promise.catch(() => undefined);

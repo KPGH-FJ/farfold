@@ -10,7 +10,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { threads, type OpenResult, type ThreadState } from "./sessions";
 import { draftPersistence } from "./drafts";
 import { previewHistory } from "./history_import";
-import { requireReadableHistory } from "./session_recovery";
+import { SessionOpenReplay } from "./session_open_replay";
 import type { ForkResult } from "./session_fork_types";
 
 interface Wire {
@@ -37,14 +37,24 @@ const raw = () => ({
   },
   unknownEnvelope: { own: true },
 });
-function deliverPrefix(wire: Wire, extra?: unknown) {
+function opening(wire: Wire, result: OpenResult) {
+  wire.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: wire.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
+}
+function deliverPrefix(wire: Wire, extra?: unknown, complete = true) {
   for (let index = 0; index < SIZE; index++)
     wire.channel.onmessage(message(`history-${index}`));
   if (extra) wire.channel.onmessage(extra);
-  wire.channel.onmessage({
-    kind: "session_history_complete",
-    openToken: wire.openToken,
-  });
+  if (complete)
+    wire.channel.onmessage({
+      kind: "session_history_complete",
+      openToken: wire.openToken,
+    });
 }
 function nextTask<T>(observe: () => T): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -106,12 +116,13 @@ afterEach(() => {
   h.invoke.mockReset();
 });
 
-it("lets a real task run during open's full precheck while preserving the old owner and exact prefix/live order", async () => {
+it("keeps the incrementally projected view private while the original invoke is held, preserving old ownership and exact prefix/live order", async () => {
   const prior = seed("open");
   const originalItems = prior.items;
   const originalQueue = prior.queued;
   const opaque = raw();
   let settled = false;
+  let liveWire!: Wire;
   let checkpoint!: Promise<{
     settled: boolean;
     oldOwner: boolean;
@@ -126,6 +137,9 @@ it("lets a real task run during open's full precheck while preserving the old ow
         outcome: "acknowledged",
       };
     if (command !== "session_open") return [];
+    liveWire = wire;
+    const result = openResult(prior);
+    opening(wire, result);
     wire.admissionChannel!.onmessage({
       kind: "session_history_admission",
       openToken: wire.openToken,
@@ -133,19 +147,20 @@ it("lets a real task run during open's full precheck while preserving the old ow
       historyDelivery: { openToken: wire.openToken, receiptId: 77 },
     });
     deliverPrefix(wire, opaque);
-    checkpoint = nextTask(() => {
-      const observed = {
-        settled,
-        oldOwner: threads.thread(prior.key) === prior,
-        oldItems: prior.items === originalItems,
-        acknowledged: h.invoke.mock.calls.some(
-          ([name]) => name === "session_history_delivery_ack",
-        ),
-      };
-      wire.channel.onmessage(message("Live following, never precheck history"));
-      return observed;
+    return new Promise<OpenResult>((resolve) => {
+      checkpoint = nextTask(() => {
+        const observed = {
+          settled,
+          oldOwner: threads.thread(prior.key) === prior,
+          oldItems: prior.items === originalItems,
+          acknowledged: h.invoke.mock.calls.some(
+            ([name]) => name === "session_history_delivery_ack",
+          ),
+        };
+        resolve(result);
+        return observed;
+      });
     });
-    return openResult(prior);
   });
   const pending = threads.open({
     agentId: prior.agentId,
@@ -167,6 +182,7 @@ it("lets a real task run during open's full precheck while preserving the old ow
     acknowledged: false,
   });
   const opened = await pending;
+  liveWire.channel.onmessage(message("Live following, never precheck history"));
   expect(historyText(opened)).toEqual([
     ...Array.from({ length: SIZE }, (_, index) => `history-${index}`),
     "Live following, never precheck history",
@@ -201,21 +217,29 @@ it("lets a real task run during open's full precheck while preserving the old ow
   ).toBe(false);
 });
 
-it("does not admit a prefix when the same original channel reports loss during cooperative precheck", async () => {
+it("does not admit a prefix when the same original channel reports loss before the held load response", async () => {
   const prior = seed("lost");
   const originalItems = prior.items;
   const originalQueue = prior.queued;
   let checkpoint!: Promise<void>;
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
     if (command !== "session_open") return [];
-    deliverPrefix(wire);
-    checkpoint = nextTask(() =>
-      wire.channel.onmessage({
-        kind: "connectionLost",
-        closeReason: "unexpected",
-      }),
-    );
-    return openResult(prior);
+    const result = openResult(prior);
+    opening(wire, result);
+    deliverPrefix(wire, undefined, false);
+    return new Promise<OpenResult>((resolve) => {
+      checkpoint = nextTask(() => {
+        wire.channel.onmessage({
+          kind: "connectionLost",
+          closeReason: "unexpected",
+        });
+        wire.channel.onmessage({
+          kind: "session_history_complete",
+          openToken: wire.openToken,
+        });
+        resolve(result);
+      });
+    });
   });
   const pending = outcome(
     threads.open({
@@ -249,9 +273,15 @@ it("still rejects the original late JSON TypeError before replacing any old body
   };
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
     if (command !== "session_open") return [];
+    const result = openResult(prior);
+    opening(wire, result);
     deliverPrefix(wire, malformed);
-    checkpoint = nextTask(() => settled);
-    return openResult(prior);
+    return new Promise<OpenResult>((resolve) => {
+      checkpoint = nextTask(() => {
+        resolve(result);
+        return settled;
+      });
+    });
   });
   const pending = outcome(
     threads.open({
@@ -280,14 +310,19 @@ it("still rejects the original late JSON TypeError before replacing any old body
   ).toHaveLength(1);
 });
 
-it("cannot resurrect an old same-key owner closed during its cooperative precheck", async () => {
+it("cannot resurrect an old same-key owner closed while its original load response is held", async () => {
   const prior = seed("closed");
   let checkpoint!: Promise<Promise<void>>;
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
     if (command !== "session_open") return [];
+    const result = openResult(prior);
+    opening(wire, result);
     deliverPrefix(wire);
-    checkpoint = nextTask(() => threads.close(prior.key));
-    return openResult(prior);
+    return new Promise<OpenResult>((resolve) => {
+      checkpoint = nextTask(() =>
+        threads.close(prior.key).then(() => resolve(result)),
+      );
+    });
   });
   const pending = outcome(
     threads.open({
@@ -313,25 +348,31 @@ it("keeps preview projection private between tasks and excludes post-marker foll
   const opaque = raw();
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
     if (command !== "session_import_preview") return [];
-    for (let index = 0; index < SIZE; index++)
-      wire.channel.onmessage(message(`history-${index}`));
-    wire.channel.onmessage(opaque);
-    wire.channel.onmessage({
-      kind: "history_preview_complete",
-      previewToken: wire.openToken,
-    });
-    checkpoint = nextTask(() => {
-      wire.channel.onmessage(message("Following is outside this preview"));
-      return settled;
-    });
-    return {
+    const result = {
       nativeSessionId: "preview-owned",
       cwd: "/owned",
+      connectionId: "preview-owned-connection",
       resumed: true,
       configOptions: [],
       warnings: [],
       previewToken: wire.openToken,
     } satisfies OpenResult & { previewToken: string };
+    opening(wire, result);
+    for (let index = 0; index < SIZE; index++)
+      wire.channel.onmessage(message(`history-${index}`));
+    wire.channel.onmessage(opaque);
+    wire.channel.onmessage({
+      kind: "history_preview_complete",
+      openToken: wire.openToken,
+      previewToken: wire.openToken,
+    });
+    return new Promise<typeof result>((resolve) => {
+      checkpoint = nextTask(() => {
+        wire.channel.onmessage(message("Following is outside this preview"));
+        resolve(result);
+        return settled;
+      });
+    });
   });
   const pending = previewHistory("cooperative-history", {
     nativeSessionId: "preview-owned",
@@ -372,7 +413,7 @@ it("keeps preview projection private between tasks and excludes post-marker foll
   ).toHaveLength(1);
 });
 
-it("keeps the original fork parent and child identity while yielding its independent full precheck", async () => {
+it("keeps the original fork parent and private child identity while its original independent-open result is held", async () => {
   const parent = seed("fork");
   parent.openError = null;
   parent.connectionId = `parent-${parent.nativeSessionId}`;
@@ -387,18 +428,15 @@ it("keeps the original fork parent and child identity while yielding its indepen
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
     if (command !== "session_fork_current")
       return command === "settings_get" ? null : [];
-    deliverPrefix(wire);
-    checkpoint = nextTask(() => ({
-      settled,
-      childInstalled: threads.thread(childKey) !== undefined,
-    }));
     const session: OpenResult = {
       ...openResult(parent),
       nativeSessionId: childId,
       connectionId: `independent-${childId}`,
       configCheck: { status: "ready", issues: [], current: {} },
     };
-    return {
+    opening(wire, session);
+    deliverPrefix(wire);
+    const result = {
       status: "ready",
       operationId: wire.operationId,
       parentConnectionId: wire.connectionId,
@@ -409,6 +447,16 @@ it("keeps the original fork parent and child identity while yielding its indepen
       sourceReleased: true,
       session,
     } satisfies ForkResult;
+    return new Promise<ForkResult>((resolve) => {
+      checkpoint = nextTask(() => {
+        const observed = {
+          settled,
+          childInstalled: threads.thread(childKey) !== undefined,
+        };
+        resolve(result);
+        return observed;
+      });
+    });
   });
   const pending = threads.forkCurrent(parent.key);
   void pending.then(
@@ -451,23 +499,40 @@ it("keeps the original fork parent and child identity while yielding its indepen
   ).toBe(false);
 });
 
-it("keeps the existing synchronous direct-check TypeError contract", () => {
+it("keeps synchronous accept's typed conversion failure on the actual private replay owner", () => {
   const state = seed("sync-negative");
-  expect(() =>
-    requireReadableHistory(
-      state.agentId,
-      openResult(state),
-      [
-        message("Readable before malformed tool"),
-        {
-          update: {
-            sessionUpdate: "tool_call",
-            toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
-          },
-        },
-      ],
-      true,
-      false,
-    ),
-  ).toThrow(TypeError);
+  const items = state.items;
+  const queue = state.queued;
+  const result = openResult(state);
+  const replay = new SessionOpenReplay(
+    {
+      agentId: state.agentId,
+      cwd: state.cwd,
+      nativeSessionId: state.nativeSessionId,
+    },
+    () => state,
+  );
+  replay.push({
+    kind: "sessionOpening",
+    openToken: replay.token,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
+  replay.push(message("Readable before malformed tool"));
+  replay.push({
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+    },
+  });
+  replay.receiveMarker({
+    kind: "session_history_complete",
+    openToken: replay.token,
+  });
+  expect(() => replay.accept(result, null, state)).toThrow(TypeError);
+  expect(state.items).toBe(items);
+  expect(state.queued).toBe(queue);
+  expect(historyText(state)).toEqual(["Original body"]);
+  replay.clear();
 });

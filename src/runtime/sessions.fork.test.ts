@@ -36,7 +36,18 @@ function seed(): ThreadState {
   ];
   return parent;
 }
+function beginChild(args: Record<string, any>) {
+  const opened = response(args).session;
+  args.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: args.openToken,
+    cwd: opened.cwd,
+    sessionId: opened.nativeSessionId,
+    connectionId: opened.connectionId,
+  });
+}
 function ready(args: Record<string, any>, overrides: Partial<OpenResult> = {}) {
+  beginChild(args);
   args.channel.onmessage({
     sessionId: `child-${args.parentSessionId}`,
     update: {
@@ -468,6 +479,7 @@ it("does not count wrapped source replay as readable independent history", async
           },
         },
       });
+      beginChild(args);
       args.channel.onmessage({
         kind: "session_history_complete",
         openToken: args.openToken,
@@ -492,6 +504,7 @@ it("requires the matching channel marker even if the ready RPC arrives first", a
       if (command !== "session_fork_current")
         return command === "settings_get" ? null : [];
       args = value;
+      beginChild(args);
       args.channel.onmessage({
         sessionId: `child-${args.parentSessionId}`,
         update: {
@@ -842,6 +855,7 @@ it.each([
         if (command !== "session_fork_current")
           return command === "settings_get" ? null : [];
         wire = args;
+        beginChild(args);
         args.channel.onmessage({
           sessionId: `child-${args.parentSessionId}`,
           kind,
@@ -945,6 +959,7 @@ it.each(["tool", "config"] as const)(
       async (command: string, args: Record<string, any>) => {
         if (command !== "session_fork_current")
           return command === "settings_get" ? null : [];
+        beginChild(args);
         const bad = JSON.parse('{"toString":null,"valueOf":null}');
         args.channel.onmessage({
           update: {

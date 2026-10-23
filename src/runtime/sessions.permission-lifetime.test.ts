@@ -78,7 +78,26 @@ async function idleDraft() {
   expect(state.queuePaused).toBeNull();
   return state;
 }
-function replay(args: Record<string, any>, unknown = false, readable = true) {
+function replay(
+  args: Record<string, any>,
+  unknown = false,
+  readable = true,
+  cwd = args.cwd,
+) {
+  const result = {
+    cwd,
+    nativeSessionId: args.nativeSessionId,
+    connectionId: `permission-lifetime-${args.nativeSessionId}`,
+    resumed: true,
+    ...confirmed(),
+  };
+  args.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: args.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
   if (readable)
     args.channel.onmessage({
       update: {
@@ -96,12 +115,7 @@ function replay(args: Record<string, any>, unknown = false, readable = true) {
     kind: "session_history_complete",
     openToken: args.openToken,
   });
-  return {
-    cwd: args.cwd,
-    nativeSessionId: args.nativeSessionId,
-    resumed: true,
-    ...confirmed(),
-  };
+  return result;
 }
 beforeEach(() => {
   h.holdConfig = false;
@@ -299,7 +313,7 @@ it("moves a failed recovery's counter without reviving its old-key setter", asyn
   keys.add(targetKey);
   h.invoke.mockImplementationOnce(async (_command, args) => {
     expect(_command).toBe("session_open");
-    return { ...replay(args, false, false), cwd: "/owned/canonical" };
+    return replay(args, false, false, "/owned/canonical");
   });
   await expect(
     threads.open({

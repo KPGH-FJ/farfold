@@ -199,6 +199,8 @@ struct Activity {
     detached_work: u64,
 }
 pub(crate) struct ConnectionLife {
+    pub(super) routes: Arc<super::session_routes::Routes>,
+    pub(super) ingress: super::ingress_permit::ConsumerProbe,
     pub state: Arc<AtomicU8>,
     pub work: Arc<AtomicU64>,
     activity: Mutex<Activity>,
@@ -253,6 +255,8 @@ impl ConnectionLife {
     pub fn new() -> Arc<Self> {
         Arc::new(Self {
             state: Arc::new(AtomicU8::new(CONNECTING)),
+            routes: Arc::new(super::session_routes::Routes::default()),
+            ingress: super::ingress_permit::ConsumerProbe::default(),
             work: Arc::new(AtomicU64::new(0)),
             activity: Mutex::new(Activity {
                 last: Instant::now(),
@@ -385,7 +389,8 @@ impl ConnectionLife {
         if (key == "account_change"
             && (self.work.load(Ordering::SeqCst) != 0
                 || !state.operations.is_empty()
-                || !state.closing_opens.is_empty()))
+                || !state.closing_opens.is_empty()
+                || self.routes.has_unclaimed()))
             || (key != "authentication" && state.operations.contains("account_change"))
         {
             return Err("请先完成此 Agent 的任务、待处理事项及账号操作".into());
@@ -424,7 +429,7 @@ impl ConnectionLife {
         if self.state.load(Ordering::SeqCst) >= CLOSED {
             return Ok(false);
         }
-        if !force && self.work.load(Ordering::SeqCst) != 0 {
+        if !force && (self.work.load(Ordering::SeqCst) != 0 || self.routes.has_unclaimed()) {
             return if idle.is_some() {
                 Ok(false)
             } else {
@@ -459,6 +464,7 @@ impl ConnectionLife {
         if self.work.load(Ordering::SeqCst) != 0
             || !activity.operations.is_empty()
             || !activity.closing_opens.is_empty()
+            || self.routes.has_unclaimed()
         {
             return Err(
                 "此 Agent 仍有进行中的任务、待处理事项或未确认的操作，请先完成后再执行此操作"
@@ -494,6 +500,7 @@ impl ConnectionLife {
             (Vec::new(), None, Vec::new())
         };
         drop(retained);
+        self.routes.retire();
         self.done.send_replace(Some(outcome));
     }
     /// The process owner already confirmed this connection's termination

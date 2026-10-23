@@ -53,6 +53,7 @@ async fn registered_opencode_initialize_through_real_transport() {
     let diagnostics = Diagnostics::open(&logs, "opencode");
     let control = ProcessControl::new(diagnostics.clone());
     let life = ConnectionLife::new();
+    let ingress = life.ingress.clone();
     let transport = ProcessTransport {
         agent: AcpAgent::new(
             AcpAgentConfig::new(command)
@@ -68,34 +69,35 @@ async fn registered_opencode_initialize_through_real_transport() {
     };
     let started = std::time::Instant::now();
     let task = runtime().spawn(async move {
-        Client
-            .builder()
-            .name("farfold")
-            .connect_with(transport, |cx: ConnectionTo<Agent>| async move {
-                // The installed af487016 capability set, before current work.
-                let request = UntypedMessage::new(
-                    "initialize",
-                    json!({
-                        "protocolVersion":1,
-                        "clientInfo":{"name":"farfold","version":"0.1.7"},
-                        "clientCapabilities":{
-                            "fs":{"readTextFile":false,"writeTextFile":false},
-                            "terminal":false,
-                            "session":{"configOptions":{"boolean":{}}},
-                            "elicitation":{"form":{}},"auth":{"terminal":true},
-                            "_meta":{"terminal-auth":true,"jetbrains":{"air":{
-                                "version":1,"capabilities":["sessionFailure"]
-                            }}}
-                        }
-                    }),
-                )?;
-                let response: Value = cx.send_request(request).block_task().await?;
-                Ok(json!({
-                    "protocolVersion":response.get("protocolVersion"),
-                    "knownOpenCodeIdentity":response["agentInfo"]["name"] == "OpenCode",
-                    "knownInstalledVersion":response["agentInfo"]["version"] == "1.18.31"
-                }))
-            })
+        ingress
+            .observe(Client.builder().name("farfold").connect_with(
+                transport,
+                |cx: ConnectionTo<Agent>| async move {
+                    // The installed af487016 capability set, before current work.
+                    let request = UntypedMessage::new(
+                        "initialize",
+                        json!({
+                            "protocolVersion":1,
+                            "clientInfo":{"name":"farfold","version":"0.1.7"},
+                            "clientCapabilities":{
+                                "fs":{"readTextFile":false,"writeTextFile":false},
+                                "terminal":false,
+                                "session":{"configOptions":{"boolean":{}}},
+                                "elicitation":{"form":{}},"auth":{"terminal":true},
+                                "_meta":{"terminal-auth":true,"jetbrains":{"air":{
+                                    "version":1,"capabilities":["sessionFailure"]
+                                }}}
+                            }
+                        }),
+                    )?;
+                    let response: Value = cx.send_request(request).block_task().await?;
+                    Ok(json!({
+                        "protocolVersion":response.get("protocolVersion"),
+                        "knownOpenCodeIdentity":response["agentInfo"]["name"] == "OpenCode",
+                        "knownInstalledVersion":response["agentInfo"]["version"] == "1.18.31"
+                    }))
+                },
+            ))
             .await
     });
     let result = tokio::time::timeout(Duration::from_secs(60), task).await;

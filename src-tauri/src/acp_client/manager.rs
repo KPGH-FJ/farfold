@@ -85,6 +85,7 @@ pub enum ManagerCommand {
         fork_owned: bool,
         native_session_id: Option<String>,
         preview_token: Option<String>,
+        opening_token: Option<String>,
         recorded_config: Option<serde_json::Value>,
         config_store: Box<super::model_guard::ConfigStore>,
         config_options: Vec<(String, serde_json::Value)>,
@@ -603,8 +604,10 @@ impl AcpManager {
         );
         let receive_observer = observer.clone();
         let published_observer = observer.clone();
+        let receive_routes = life.routes.clone();
+        let ingress_probe = life.ingress.clone();
         runtime().spawn(async move {
-            let result = Client
+            let result = ingress_probe.observe(Client
                 .builder()
                 .name("farfold")
                 .on_receive_dispatch(
@@ -616,20 +619,7 @@ impl AcpManager {
                             Handled::Yes => return Ok(Handled::Yes),
                             Handled::No { message, .. } => message,
                         };
-                        // Session-scoped traffic can arrive before the
-                        // per-session dynamic handler is registered (right
-                        // after session/new resolves, or as session/load
-                        // replay ahead of the response). Ask the dispatcher
-                        // to retry it against later dynamic handlers instead
-                        // of dropping it.
-                        let retry = dispatch
-                            .message()
-                            .and_then(|message| message.params().get("sessionId"))
-                            .is_some();
-                        Ok(Handled::No {
-                            message: dispatch,
-                            retry,
-                        })
+                        receive_routes.dispatch(dispatch)
                     },
                     agent_client_protocol::on_receive_dispatch!(),
                 )
@@ -714,7 +704,7 @@ impl AcpManager {
                     }
 
                     Ok(())
-                })
+                }))
                 .await;
             let previous_state = life_for_task.state.load(Ordering::SeqCst);
             let requested = previous_state == CLOSING;

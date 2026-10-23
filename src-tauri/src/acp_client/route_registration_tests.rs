@@ -1,140 +1,69 @@
-//! In-process protocol ordering tests: no timer-based replay assumptions.
-use super::{operations::Operation, pump::await_route_registration};
-use agent_client_protocol::{
-    Agent, Client, ConnectionTo, Dispatch, HandleDispatchFrom, Handled, UntypedMessage,
-};
+//! Current synchronous original-connection routing with the actual official SDK.
+use super::{operations::Operation, session_routes::Routes, transient_pressure::Budget};
+use agent_client_protocol::{Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage};
 use serde_json::json;
-use std::future::{Future, poll_fn};
-use std::sync::{
-    Arc, Mutex,
-    atomic::{AtomicUsize, Ordering},
-};
-use std::task::Poll;
-use tokio::sync::{mpsc, oneshot};
+use std::sync::{Arc, Mutex};
+use tokio::sync::oneshot;
 
-struct CaptureRoute(mpsc::UnboundedSender<Dispatch>);
-impl HandleDispatchFrom<Agent> for CaptureRoute {
-    async fn handle_dispatch_from(
-        &mut self,
-        message: Dispatch,
-        _cx: ConnectionTo<Agent>,
-    ) -> Result<Handled<Dispatch>, agent_client_protocol::Error> {
-        if message.message().is_some_and(|message| {
-            message
-                .params()
-                .get("sessionId")
-                .and_then(serde_json::Value::as_str)
-                == Some("history")
-        }) {
-            self.0.send(message).unwrap();
-            return Ok(Handled::Yes);
-        }
-        Ok(Handled::No {
-            message,
-            retry: false,
-        })
-    }
-    fn describe_chain(&self) -> impl std::fmt::Debug {
-        "test-capture-route"
-    }
-}
-
-async fn blocked_registration(abandon: bool) {
-    let (started, start) = oneshot::channel();
-    let started = Arc::new(Mutex::new(Some(started)));
+async fn busy_dispatcher(abandon: bool) {
+    let routes = Arc::new(Routes::new(Budget::new(4096, 8)));
+    let original = routes.clone();
+    let (entered, entry) = oneshot::channel();
+    let entered = Arc::new(Mutex::new(Some(entered)));
     let (release, released) = oneshot::channel();
     let released = Arc::new(Mutex::new(Some(released)));
-    let loads = Arc::new(AtomicUsize::new(0));
-    let peer_loads = loads.clone();
-    let peer = Agent.builder().on_receive_dispatch(
-        async move |message: Dispatch, cx: ConnectionTo<Client>| {
-            if let Dispatch::Request(request, responder) = message {
-                match request.method() {
-                    "fixture/hold" => cx.send_notification(UntypedMessage::new("fixture/hold", json!({}))?)?,
-                    "session/load" => {
-                        peer_loads.fetch_add(1, Ordering::SeqCst);
-                        cx.send_notification(UntypedMessage::new("session/update", json!({"sessionId":"history","update":{"sessionUpdate":"agent_message_chunk","content":{"type":"text","text":"replayed"}}}))?)?;
+    let (loaded, load_received) = oneshot::channel();
+    let loaded = Arc::new(Mutex::new(Some(loaded)));
+    let peer=Agent.builder().on_receive_dispatch(
+        async move|dispatch:Dispatch,cx:ConnectionTo<Client>|{
+            if let Dispatch::Request(message,responder)=dispatch {
+                match message.method() {
+                    "fixture/hold"=>cx.send_notification(UntypedMessage::new("fixture/hold",json!({}))?)?,
+                    "session/load"=>{
+                        loaded.lock().unwrap().take().unwrap().send(()).unwrap();
+                        cx.send_notification(UntypedMessage::new("session/update",json!({"sessionId":"history","update":{"sessionUpdate":"_raw","_meta":{"same":true}}}))?)?;
                     }
-                    _ => {}
+                    _=>{}
                 }
                 responder.respond(json!({}))?;
                 return Ok(Handled::Yes);
             }
-            Ok(Handled::No { message, retry: false })
-        },
-        agent_client_protocol::on_receive_dispatch!(),
+            Ok(Handled::No{message:dispatch,retry:false})
+        },agent_client_protocol::on_receive_dispatch!(),
     );
-    let connection = Client
-        .builder()
-        .on_receive_dispatch(
-            async move |message: Dispatch, _cx| {
-                if message
-                    .message()
-                    .is_some_and(|message| message.method() == "fixture/hold")
-                {
-                    let notify = started.lock().unwrap().take().unwrap();
-                    let wait = released.lock().unwrap().take().unwrap();
-                    notify.send(()).unwrap();
-                    wait.await.unwrap();
-                    return Ok(Handled::Yes);
-                }
-                let retry = message
-                    .message()
-                    .is_some_and(|message| message.params().get("sessionId").is_some());
-                Ok(Handled::No { message, retry })
-            },
-            agent_client_protocol::on_receive_dispatch!(),
-        )
-        .connect_with(peer, async move |cx| {
-            let hold = cx.send_request_to(Agent, UntypedMessage::new("fixture/hold", json!({}))?);
-            start.await.unwrap();
-            let (send, mut receive) = mpsc::unbounded_channel();
-            let _route = cx.add_dynamic_handler(CaptureRoute(send))?;
-            let operation = Operation::new();
-            let mut load = std::pin::pin!(async {
-                await_route_registration(&cx, &operation).await?;
-                operation
-                    .request(
-                        &cx,
-                        cx.send_request_to(
-                            Agent,
-                            UntypedMessage::new("session/load", json!({"sessionId":"history"}))
-                                .unwrap(),
-                        ),
-                    )
-                    .await
-                    .map_err(super::pump::describe_acp_error)
-            });
-            // The incoming actor is deliberately held. Poll once to establish that
-            // setup cannot publish load while registration is merely queued.
-            poll_fn(|context| {
-                assert!(matches!(load.as_mut().poll(context), Poll::Pending));
-                Poll::Ready(())
-            })
-            .await;
-            assert_eq!(loads.load(Ordering::SeqCst), 0);
-            if abandon {
-                operation.abandon();
-                assert!(load.await.unwrap_err().contains("取消"));
-                assert_eq!(loads.load(Ordering::SeqCst), 0);
-                release.send(()).unwrap();
-            } else {
-                release.send(()).unwrap();
-                load.await.unwrap();
-                assert_eq!(loads.load(Ordering::SeqCst), 1);
-                // The replay preceded the response and must already be in our
-                // exact route's inbox, never waiting in the fallback queue.
-                assert!(
-                    receive
-                        .try_recv()
-                        .unwrap()
-                        .message()
-                        .is_some_and(|message| message.method() == "session/update")
-                );
+    let connection=Client.builder().on_receive_dispatch(
+        async move|dispatch:Dispatch,_cx|{
+            if dispatch.message().is_some_and(|message|message.method()=="fixture/hold") {
+                entered.lock().unwrap().take().unwrap().send(()).unwrap();
+                let wait=released.lock().unwrap().take().unwrap();
+                wait.await.unwrap();
+                return Ok(Handled::Yes);
             }
-            hold.block_task().await?;
-            Ok(())
-        });
+            original.dispatch(dispatch)
+        },agent_client_protocol::on_receive_dispatch!(),
+    ).connect_with(peer,async move|cx|{
+        let hold=cx.send_request(UntypedMessage::new("fixture/hold",json!({}))?);
+        entry.await.unwrap();
+        let operation=Operation::new();
+        let (send,mut receive)=routes.channel();
+        // This returns immediately with the actual map populated even while
+        // the incoming SDK actor is busy. No queued registration/fence request.
+        let _guard=routes.register("history",send,operation.abandoned.clone(),Arc::new(|_|{})).unwrap();
+        if abandon {operation.abandon();}
+        let load=cx.send_request(UntypedMessage::new("session/load",json!({"sessionId":"history"}))?);
+        load_received.await.unwrap();
+        assert!(receive.try_recv().is_err(),"actual dispatcher is still held");
+        release.send(()).unwrap();
+        let _:serde_json::Value=load.block_task().await?;
+        if abandon {
+            assert!(receive.try_recv().is_err(),"abandoned original route cannot receive new UI events");
+        } else {
+            let message=receive.try_recv().unwrap();
+            assert_eq!(message.message().unwrap().params(),&json!({"sessionId":"history","update":{"sessionUpdate":"_raw","_meta":{"same":true}}}));
+        }
+        let _:serde_json::Value=hold.block_task().await?;
+        Ok(())
+    });
     tokio::time::timeout(std::time::Duration::from_secs(3), connection)
         .await
         .unwrap()
@@ -142,11 +71,10 @@ async fn blocked_registration(abandon: bool) {
 }
 
 #[tokio::test]
-async fn load_waits_for_dispatcher_route_registration_before_send() {
-    blocked_registration(false).await;
+async fn actual_route_is_registered_before_load_even_while_official_dispatcher_is_busy() {
+    busy_dispatcher(false).await;
 }
-
 #[tokio::test]
-async fn abandoned_setup_does_not_wait_for_dispatcher_or_publish_load() {
-    blocked_registration(true).await;
+async fn original_abandoned_route_does_not_adopt_late_load_notifications() {
+    busy_dispatcher(true).await;
 }

@@ -44,6 +44,8 @@ for line in sys.stdin:
    prefix=[update()];suffix=[update()]
    if os.path.exists(os.path.join(root,'fault')):
     with open(os.path.join(root,'fault')) as f: mode=f.read()
+    if mode=='flow-load-prefix':
+     prefix.extend({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'agent_message_chunk','content':{'type':'text','text':'row-'+str(i)},'futureIndex':i},'_meta':{'exact':True}}} for i in range(1024))
     if mode in ('load-async-running','load-async-completed','load-async-unknown'):
      prefix.append({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'async_task_spawned','asyncTaskId':'load-task','name':'Live load task','taskType':'shell','canStop':True,'toolCallId':'load-tool'}}})
      if mode!='load-async-running': prefix.append({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'async_task_state_update','asyncTaskId':'load-task','toolCallId':'load-tool','state':'completed' if mode=='load-async-completed' else 'future-state'}}})
@@ -424,6 +426,35 @@ async fn configuration_restore_async_task_terminal_still_allows_saved_selection(
             ("reasoning_effort".into(), "low".into())
         ]
     );
+    assert_eq!(fixture.record(), baseline);
+    fixture.assert_identity_and_no_prompt();
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn flow_load_configuration_before_long_prefix_reaches_original_reply_without_losing_raw_events()
+ {
+    let fixture = Fixture::established().await;
+    let baseline = fixture.record();
+    std::fs::write(fixture.cwd.join("fault"), "flow-load-prefix").unwrap();
+    let restored = tokio::time::timeout(Duration::from_secs(10), fixture.cold())
+        .await
+        .expect("finite load must not wait on its own future reply")
+        .unwrap();
+    assert_eq!(restored.session_id, SESSION);
+    assert_eq!(restored.config_check.status, "ready");
+    let events = fixture.events.lock().unwrap();
+    let raw = events
+        .iter()
+        .filter(|event| event.pointer("/update/futureIndex").is_some())
+        .collect::<Vec<_>>();
+    assert_eq!(raw.len(), 1024);
+    for (index, event) in raw.iter().enumerate() {
+        assert_eq!(event["sessionId"], SESSION);
+        assert_eq!(event["update"]["futureIndex"], index);
+        assert_eq!(event["update"]["content"]["text"], format!("row-{index}"));
+        assert_eq!(event["_meta"]["exact"], true);
+    }
+    drop(events);
     assert_eq!(fixture.record(), baseline);
     fixture.assert_identity_and_no_prompt();
 }

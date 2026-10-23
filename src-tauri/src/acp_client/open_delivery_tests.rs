@@ -78,6 +78,7 @@ fn send_open_history(
         fork_owned: false,
         native_session_id: Some(native.into()),
         preview_token: Some("delivery-fixture".into()),
+        opening_token: None,
         recorded_config: None,
         config_store: Box::new(ConfigStore {
             store: f.store.clone(),
@@ -306,6 +307,7 @@ async fn abandoned_open(timeout: bool) {
             None,
             Some("retry".into()),
             None,
+            None,
         )
         .await;
     assert!(
@@ -324,6 +326,7 @@ async fn abandoned_open(timeout: bool) {
             &f.store,
             None,
             Some("retry-after-reaping".into()),
+            None,
             None,
         )
         .await;

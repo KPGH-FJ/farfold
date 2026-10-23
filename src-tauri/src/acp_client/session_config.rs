@@ -10,6 +10,9 @@ use super::{
 };
 
 pub(crate) const LEGACY_MODEL_ID: &str = "__farfold_legacy_model";
+mod deferred;
+pub(crate) use deferred::Deferred;
+
 const UNCONFIRMED: &str = "Agent 未确认所选模型，请检查后重试";
 
 #[derive(Clone, Default)]
@@ -30,6 +33,19 @@ pub(crate) struct ConfigRequest {
     revision: u64,
 }
 
+fn allows_legacy(options: Option<&Value>) -> bool {
+    options.is_none_or(|options| {
+        options.as_array().is_some_and(|entries| {
+            !entries.iter().any(|option| {
+                option["category"] == "model"
+                    || option["id"] == LEGACY_MODEL_ID
+                    || (option.get("category").is_none_or(Value::is_null)
+                        && option["id"] == "model")
+            })
+        })
+    })
+}
+
 impl SessionConfig {
     pub(crate) fn from_response(response: &Value) -> Self {
         Self {
@@ -40,18 +56,7 @@ impl SessionConfig {
     }
 
     fn legacy_option(&self) -> Option<Value> {
-        if self.has_invalid_options() {
-            return None;
-        }
-        let options = self.options.as_ref().and_then(Value::as_array);
-        if options.is_some_and(|options| {
-            options.iter().any(|option| {
-                option["category"] == "model"
-                    || option["id"] == LEGACY_MODEL_ID
-                    || (option.get("category").is_none_or(Value::is_null)
-                        && option["id"] == "model")
-            })
-        }) {
+        if !allows_legacy(self.options.as_ref()) {
             return None;
         }
         let models = self.models.as_ref()?;
@@ -183,12 +188,6 @@ impl SessionConfig {
             self.options = Some(reply);
         }
         self.options().ok_or_else(|| UNCONFIRMED.into())
-    }
-
-    /// These updates must be interpreted after the initial load response.
-    /// It is an ordering barrier, not permission to discard any other message.
-    pub(crate) fn waits_for_load_response(dispatch: &Dispatch) -> bool {
-        Self::configuration_update(dispatch).is_some()
     }
 
     fn configuration_update(dispatch: &Dispatch) -> Option<&Value> {

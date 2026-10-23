@@ -4,7 +4,7 @@ use super::{
     startup_diagnostics::{Diagnostics, Phase},
 };
 use crate::supervisor;
-use agent_client_protocol::{AcpAgent, Agent, ByteStreams, Channel, Client, ConnectTo};
+use agent_client_protocol::{AcpAgent, Agent, Client, ConnectTo};
 use std::{
     ffi::{OsStr, OsString},
     path::{Path, PathBuf},
@@ -456,37 +456,16 @@ impl ConnectTo<Client> for ProcessTransport {
             .await
             .map_err(|_| agent_client_protocol::util::internal_error("无法确认连接进程"))?
             .map_err(agent_client_protocol::util::internal_error)?;
-        let transport = ByteStreams::new(stdin, stdout);
-        let (wire, wire_future) = ConnectTo::<Client>::into_channel_and_future(transport);
-        let (endpoint, endpoint_future) = client.into_channel_and_future();
-        let outgoing_records = diagnostics.clone();
-        let incoming_records = diagnostics;
-        let bridge = Channel::bridge_with_inspection(
-            endpoint,
-            wire,
-            move |message| {
-                outgoing_records.inspect(message, true);
-                if let Ok(line) = serde_json::to_string(message) {
-                    let mut record = super::tap::diagnostic_record(&line, "out");
-                    outgoing_records.annotate_outgoing_error(message, &mut record);
-                    outgoing_records.record(record);
-                }
-                Ok(())
-            },
-            move |message| {
-                incoming_records.inspect(message, false);
-                if let Ok(line) = serde_json::to_string(message) {
-                    let mut record = super::tap::diagnostic_record(&line, "in");
-                    incoming_records.annotate_incoming_error(message, &mut record);
-                    incoming_records.record(record);
-                }
-                Ok(())
-            },
-        );
-        tokio::select! {
-            outcome = async { tokio::try_join!(wire_future, endpoint_future, bridge).map(|_| ()) } => outcome,
-            outcome = process.closed() => outcome.map_err(agent_client_protocol::util::internal_error),
-        }
+        super::process_bridge::run(
+            stdin,
+            stdout,
+            client,
+            self.life.ingress.clone(),
+            self.life.routes.unclaimed_budget(),
+            diagnostics,
+            process,
+        )
+        .await
     }
 }
 

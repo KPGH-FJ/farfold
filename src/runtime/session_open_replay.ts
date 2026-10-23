@@ -1,7 +1,11 @@
-import { HistoryReplayBuffer } from "./history_replay";
+import { HistoryReplayProjection } from "./history_replay_projection";
+import { OpeningBaseline, type OpeningIdentity } from "./session_open_baseline";
+import { applySessionEvent } from "./session_event_projection";
+import type { OpenInput } from "./session_open_input";
+import { STRINGS } from "./strings";
 import {
   historyProjectionFailure,
-  requireReadableHistoryCooperatively,
+  isHistoryReadFailure,
 } from "./session_recovery";
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
@@ -67,24 +71,55 @@ export function isOwnerHistoryMarker(event: unknown, token: string): boolean {
   );
 }
 
-/** One existing open's temporary replay coordination, never an admission queue. */
+/** One private state consumes the original queue once and transfers on success.
+ * The original command owns the identity header; Agent updates cannot infer it. */
 export class SessionOpenReplay {
-  private buffered = new HistoryReplayBuffer();
-  readonly token = crypto.randomUUID();
-  private complete = false;
+  readonly token: string;
+  private baseline?: OpeningBaseline;
+  private projection: HistoryReplayProjection;
+  private identified = false;
   private lost = false;
   private delivered: (() => void) | null = null;
+  private endWait?: () => void;
+  private permissionChanges = 0;
+
+  constructor(
+    private input: OpenInput,
+    private existing: (key: string) => ThreadState | undefined = () =>
+      undefined,
+    restoreQueue?: (state: ThreadState) => void,
+    token = crypto.randomUUID(),
+    current: () => boolean = () => true,
+  ) {
+    this.token = token;
+    this.baseline = new OpeningBaseline(input, undefined, restoreQueue);
+    this.projection = new HistoryReplayProjection(
+      this.baseline.state,
+      token,
+      (state, event, phase) => {
+        this.baseline?.observe(event, phase);
+        applySessionEvent(state, event, phase === "following");
+      },
+      current,
+    );
+  }
 
   receiveMarker(event: unknown): boolean {
     if (!isOwnerHistoryMarker(event, this.token)) return false;
-    this.buffered.mark(this.token);
-    this.complete = true;
+    if (!this.projection.mark(this.token)) return false;
     this.delivered?.();
     return true;
   }
 
-  push(event: unknown): void {
-    this.buffered.push(event);
+  push(event: unknown): "consumed" | "discarded" {
+    const header = openingIdentity(event, this.token);
+    if (header) {
+      const key = `${this.input.agentId}:${header.cwd}:${header.sessionId}`;
+      this.baseline?.identify(header, this.existing(key));
+      this.identified = true;
+      this.delivered?.();
+      return "consumed";
+    }
     if (
       !hasOwnUpdate(event) &&
       (event as { kind?: unknown } | null)?.kind === "connectionLost"
@@ -92,57 +127,97 @@ export class SessionOpenReplay {
       this.lost = true;
       this.delivered?.();
     }
+    return this.projection.push(event);
   }
 
-  get needsMarker(): boolean {
-    return !this.complete && !this.lost;
-  }
-
-  waitForMarker(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      const timer = setTimeout(resolve, 30_000);
-      this.delivered = () => {
+  async waitForReady(resumed: boolean): Promise<void> {
+    const ready = () =>
+      this.lost || (this.identified && (!resumed || this.projection.complete));
+    if (ready()) return;
+    await new Promise<void>((resolve) => {
+      const finish = () => {
         clearTimeout(timer);
+        this.delivered = null;
+        this.endWait = undefined;
         resolve();
+      };
+      const timer = setTimeout(finish, 30_000);
+      this.endWait = finish;
+      this.delivered = () => {
+        if (ready()) finish();
       };
     });
   }
 
-  async requireReadable(
-    agentId: string,
+  accept(
     result: OpenResult,
-    current: () => boolean,
-  ): Promise<void> {
-    this.delivered = null;
+    savedTitle: string | null | undefined,
+    existing?: ThreadState,
+  ): ThreadState {
     try {
-      await requireReadableHistoryCooperatively(
-        agentId,
-        result,
-        this.buffered.prefixEvents(this.token),
-        this.complete,
-        () => this.lost,
-        current,
-      );
+      if (result.resumed)
+        this.projection.requireReadable(this.input.agentId, result, this.lost);
+      if (!this.identified || !this.baseline)
+        throw new Error(STRINGS.repair.reconnectFailed);
+      this.baseline.accept(result, savedTitle, existing);
+      const state = this.projection.take();
+      this.permissionChanges = this.baseline.acceptedPermissionChanges;
+      this.baseline = undefined;
+      return state;
     } catch (error) {
-      // Only this local conversion can produce a typed failure;
-      // raw Agent JSON and actual connection loss do not acquire this class.
-      if (!this.lost && error instanceof TypeError)
-        throw historyProjectionFailure(agentId, result, error);
+      if (
+        result.resumed &&
+        !this.lost &&
+        error instanceof TypeError &&
+        !isHistoryReadFailure(error)
+      )
+        throw historyProjectionFailure(this.input.agentId, result, error);
       throw error;
     }
   }
 
-  /** Snapshot this decision at failure: a late marker cannot repair an
-   * already timed-out prefix or reopen its retired content channel. */
+  /** Commit only after the caller installs this exact accepted state. Failed or
+   * private history cannot advance the published permission-setter guard. */
+  get acceptedPermissionChanges(): number {
+    return this.permissionChanges;
+  }
+
   get acknowledgedPrefix(): boolean {
-    return this.complete;
+    return this.projection.complete;
   }
-
-  take(resumed: boolean): { prefix: unknown[]; following: unknown[] } {
-    return this.buffered.take(resumed ? this.token : undefined);
-  }
-
   clear(): void {
-    this.buffered.clear();
+    this.projection.clear();
+    this.baseline = undefined;
+    this.permissionChanges = 0;
+    this.endWait?.();
+    this.delivered = null;
   }
+}
+
+function openingIdentity(
+  event: unknown,
+  token: string,
+): OpeningIdentity | undefined {
+  if (
+    !event ||
+    typeof event !== "object" ||
+    Array.isArray(event) ||
+    hasOwnUpdate(event)
+  )
+    return undefined;
+  const e = event as Record<string, unknown>;
+  if (
+    e.kind !== "sessionOpening" ||
+    e.openToken !== token ||
+    Object.keys(e).length !== 5
+  )
+    return undefined;
+  const valid = (value: unknown): value is string =>
+    typeof value === "string" &&
+    value.length > 0 &&
+    !value.includes("\0") &&
+    new TextEncoder().encode(value).length <= 4096;
+  if (!valid(e.cwd) || !valid(e.sessionId) || !valid(e.connectionId))
+    return undefined;
+  return { cwd: e.cwd, sessionId: e.sessionId, connectionId: e.connectionId };
 }

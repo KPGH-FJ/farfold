@@ -26,6 +26,7 @@ it("keeps the acknowledged official replay prefix's media and text order", async
       });
     args.channel.onmessage({
       kind: "history_preview_complete",
+      openToken: args.openToken,
       previewToken: "owned-prefix",
     });
     return {

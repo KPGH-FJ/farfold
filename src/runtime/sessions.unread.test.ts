@@ -1,3 +1,4 @@
+import { emitOpeningHeader } from "./session_open_test_fixture";
 import { beforeEach, expect, it, vi } from "vitest";
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock("@tauri-apps/api/core", () => ({
@@ -23,12 +24,22 @@ it("cold history and its ordered boundary remain read; later background channel 
     if (command === "settings_get") return null;
     if (command !== "session_open") return [];
     channel = args.channel;
+    emitOpeningHeader(args, {
+      cwd: "/p",
+      nativeSessionId: "history",
+      connectionId: "unread-history",
+    });
     channel.onmessage(reply);
     channel.onmessage({
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "history", resumed: true };
+    return {
+      cwd: "/p",
+      nativeSessionId: "history",
+      connectionId: "unread-history",
+      resumed: true,
+    };
   });
   const { threads } = await import("./sessions");
   const { conversationReadState: read } =
@@ -62,12 +73,22 @@ it("history replay preserves persisted unread until readable content is actually
         ? { version: 1, unread: [key] }
         : null;
     if (command !== "session_open") return [];
+    emitOpeningHeader(args, {
+      cwd: "/p",
+      nativeSessionId: "persisted",
+      connectionId: "unread-persisted",
+    });
     args.channel.onmessage(reply);
     args.channel.onmessage({
       kind: "session_history_complete",
       openToken: args.openToken,
     });
-    return { cwd: "/p", nativeSessionId: "persisted", resumed: true };
+    return {
+      cwd: "/p",
+      nativeSessionId: "persisted",
+      connectionId: "unread-persisted",
+      resumed: true,
+    };
   });
   const { threads } = await import("./sessions");
   const { conversationReadState: read } =

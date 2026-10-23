@@ -1,0 +1,271 @@
+import { invoke } from "@tauri-apps/api/core";
+import { observeAuthentication } from "./authentication";
+import { observeDesktopNotification } from "./desktop_notifications";
+import { appendToolOutput } from "./artifacts";
+import { applyConfigCheck, type ConfigCheck } from "./config_check";
+import { receiveAsyncTasks } from "./async_tasks";
+import { receiveWorkActivity } from "./session_work_activity";
+import { hasActiveFork, receiveForkActivity } from "./session_fork_activity";
+import { replacePermissionEffect } from "./permission_effect";
+import { retainReportedDetails } from "./reported_details";
+import { hasOwnUpdate, isHistoryMarkerShape } from "./session_open_replay";
+import { conversationReadState } from "./conversation_read_state";
+import { pauseQueue, removeQueued } from "./queue";
+import { STRINGS } from "./strings";
+import type { ThreadState } from "./session_types";
+import type { PromptRequestOwner } from "./prompt_admission";
+import {
+  applyUpdate,
+  applyTurnEnd,
+  applyConnectionLost,
+  applyPermissionRequest,
+  normalizeConfigOptions,
+  replaceConfigOptions,
+  clearPendingRequests,
+  expirePendingRequest,
+  completeElicitation,
+  applyElicitation,
+  pushRaw,
+  pushNotification,
+  isKnownConfigUpdate,
+} from "./session_projection";
+
+export interface SessionEventEffects {
+  owns(): boolean;
+  promptOwner(): PromptRequestOwner | undefined;
+  configurationChanging(): boolean;
+  receiveConfigCheck(check: ConfigCheck): boolean;
+  finishActivity(): void;
+  permissionChanged(): void;
+  clearStop(): void;
+  closeChannel(): void;
+  emit(): void;
+  drain(): void;
+  refresh(): void;
+  schedule(): void;
+}
+
+/** One event reducer for private historical projection and the published view.
+ * Only an installed view receives effects; hidden work never emits, writes
+ * metadata, sends queued input or creates external execution authority. */
+export function applySessionEvent(
+  s: ThreadState,
+  event: unknown,
+  live: boolean,
+  effects?: SessionEventEffects,
+  activityConnectionId?: string,
+): void {
+  if (!event || typeof event !== "object") return;
+  const e = event as Record<string, unknown>;
+  const updateEnvelope = hasOwnUpdate(e);
+  const kind = updateEnvelope ? undefined : e.kind;
+  const endingOwner = kind === "turnEnd" ? effects?.promptOwner() : undefined;
+  // Validate before notifications or projection can treat an ending as ours.
+  // Unknown Agent envelopes and foreign receipts remain raw observations.
+  if (
+    kind === "turnEnd" &&
+    (Object.hasOwn(e, "sessionId") ||
+      (endingOwner && !endingOwner.ending(e.promptReceiptId)))
+  ) {
+    pushRaw(s, e);
+    effects?.emit();
+    return;
+  }
+  if (effects)
+    observeDesktopNotification(s, updateEnvelope ? {} : e, live, effects.owns);
+  if (kind === "configOptions") {
+    if (!effects?.configurationChanging())
+      replaceConfigOptions(
+        s,
+        normalizeConfigOptions(e.options),
+        e.modern !== false,
+      );
+  } else if (kind === "configCheck") {
+    if (!effects?.receiveConfigCheck(e.check as ConfigCheck))
+      applyConfigCheck(s, e.check as ConfigCheck);
+  } else if (kind === "asyncTasks") {
+    if (!receiveAsyncTasks(s, e)) return;
+    effects?.finishActivity();
+  } else if (kind === "forkActivity") {
+    if (!receiveForkActivity(s, e)) return;
+  } else if (
+    !updateEnvelope &&
+    receiveWorkActivity(s, e, activityConnectionId)
+  ) {
+    effects?.finishActivity();
+  } else if (kind === "permissionState") {
+    // Only the explicit setter's matching reply may enable sending. A late
+    // event can report state, but never undo an unknown result locally.
+    if (typeof e.permissionConfigId === "string")
+      s.permissionConfigId = e.permissionConfigId;
+    replacePermissionEffect(s, e.permissionEffect);
+    if (e.permissionState === "unknown" || e.permissionState === "required") {
+      effects?.permissionChanged();
+      s.permissionState = e.permissionState;
+      pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
+    }
+  } else if (kind === "permissionRequest") {
+    applyPermissionRequest(s, {
+      requestId: String(e.requestId ?? ""),
+      toolCall: e.toolCall,
+      options: e.options,
+      request: e.request,
+    });
+  } else if (kind === "turnEnd") {
+    const owner = endingOwner;
+    if (!s.running && !s.uncertainPrompt && !s.connectionOutcomeUnknown) return;
+    effects?.clearStop();
+    if (s.uncertainPrompt) {
+      removeQueued(s, s.uncertainPrompt);
+      s.uncertainPrompt = null;
+    }
+    const result = applyTurnEnd(s, {
+      stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
+      error: typeof e.error === "string" ? e.error : undefined,
+      failure: e.failure,
+      usage: e.usage,
+    });
+    if (owner) {
+      if (
+        [
+          "end_turn",
+          "max_tokens",
+          "max_turn_requests",
+          "refusal",
+          "cancelled",
+        ].includes(String(e.stopReason))
+      )
+        owner.end();
+      else {
+        s.connectionOutcomeUnknown = true;
+        pauseQueue(s, "uncertain");
+      }
+    }
+    if (effects && e.error === "AUTH_REQUIRED")
+      observeAuthentication(
+        s.agentId,
+        s.cwd,
+        e.error,
+        s.serviceContext,
+        "request",
+      );
+    else if (
+      effects &&
+      !e.error &&
+      !e.failure &&
+      e.stopReason === "end_turn" &&
+      (result === "reply" || result === "tool")
+    )
+      observeAuthentication(
+        s.agentId,
+        s.cwd,
+        undefined,
+        s.serviceContext,
+        "request",
+      );
+    effects?.emit();
+    effects?.finishActivity();
+    effects?.drain();
+    effects?.refresh();
+    return;
+  } else if (kind === "serviceUnavailable" || kind === "deliveryUnavailable") {
+    s.sourceError = true;
+    s.openError =
+      typeof e.message === "string"
+        ? e.message
+        : kind === "deliveryUnavailable"
+          ? STRINGS.repair.deliveryInterrupted
+          : STRINGS.repair.requestFailed;
+    pauseQueue(s, "unavailable");
+  } else if (kind === "connectionLost") {
+    if (hasActiveFork(s) && s.forkOperation) s.forkOperation.status = "unknown";
+    replacePermissionEffect(s, undefined);
+    effects?.clearStop();
+    effects?.promptOwner()?.end();
+    applyConnectionLost(s, e.closeReason);
+    effects?.closeChannel();
+    pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
+  } else if (kind === "interactionsCancelled") {
+    clearPendingRequests(s);
+  } else if (kind === "interactionExpired") {
+    expirePendingRequest(s, String(e.requestId ?? ""));
+  } else if (kind === "elicitationUnavailable") {
+    pushRaw(s, e.params, STRINGS.repair.unsupportedInquiry);
+    pauseQueue(s, "unavailable");
+  } else if (kind === "elicitationComplete") {
+    completeElicitation(s, e);
+  } else if (kind === "elicitation") {
+    applyElicitation(s, e);
+  } else if (kind === "toolOutput") {
+    appendToolOutput(s, e);
+  } else if (kind === "notification") {
+    pushNotification(s, { method: e.method, params: e.params });
+  } else if (kind === "session_history_complete") {
+    if (!isHistoryMarkerShape(e)) pushRaw(s, e);
+  } else if (updateEnvelope || e.update !== undefined) {
+    if (
+      (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
+      "config_option_update"
+    ) {
+      if (!isKnownConfigUpdate(e.update))
+        pushRaw(s, e.update, "config_option_update");
+      retainReportedDetails(s, e.update, e);
+      effects?.emit();
+      return;
+    }
+    try {
+      applyUpdate(s, e.update, e);
+    } catch (error) {
+      // A local conversion of ordinary Agent JSON must not strand Tauri's
+      // ordered Channel index. Keep the entire envelope as opaque data.
+      // History preparation still fails at its original transaction boundary;
+      // no working/unknown/receipt/permission owner is retired by this fallback.
+      if (!live || !(error instanceof TypeError)) throw error;
+      pushRaw(s, e);
+      effects?.emit();
+      return;
+    }
+    if (effects && live) conversationReadState.receiveUpdate(s.key, e.update);
+    if (
+      (e.update as { sessionUpdate?: unknown } | undefined)?.sessionUpdate ===
+      "tool_call_update"
+    )
+      effects?.finishActivity();
+    const update = e.update as {
+      sessionUpdate?: unknown;
+      content?: { type?: unknown; text?: unknown };
+    } | null;
+    if (
+      [
+        "user_message_chunk",
+        "agent_message_chunk",
+        "agent_thought_chunk",
+      ].includes(String(update?.sessionUpdate)) &&
+      update?.content?.type === "text" &&
+      typeof update.content.text === "string"
+    ) {
+      effects?.schedule();
+      return;
+    }
+    if (effects) flushSessionMetadata(s, effects.refresh);
+  }
+  effects?.emit();
+}
+
+/** One metadata write after the accepted view has an actual live owner. */
+export function flushSessionMetadata(
+  s: ThreadState,
+  refresh: () => void,
+): void {
+  if (!s.metaDirty) return;
+  s.metaDirty = false;
+  void invoke("session_touch", {
+    agentId: s.agentId,
+    cwd: s.cwd,
+    sessionId: s.nativeSessionId,
+    title: s.title,
+    configOptions: null,
+  })
+    .then(refresh)
+    .catch(() => undefined);
+}

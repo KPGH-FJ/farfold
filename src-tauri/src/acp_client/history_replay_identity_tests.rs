@@ -81,12 +81,14 @@ async fn load_replay_preserves_official_message_ids_and_unknown_fields_before_lo
         &f.cwd,
         "history".into(),
         "owned-preview".into(),
+        "owned-preview-open",
         channel,
         None,
     )
     .await
     .unwrap();
     let events = events.lock().unwrap();
+    assert_eq!(events.last().unwrap()["openToken"], "owned-preview-open");
     let updates = events
         .iter()
         .filter_map(|event| event.get("update"))
@@ -101,7 +103,9 @@ async fn load_replay_preserves_official_message_ids_and_unknown_fields_before_lo
     }
     assert_eq!(
         events.last(),
-        Some(&json!({"kind":"history_preview_complete","previewToken":"owned-preview"}))
+        Some(
+            &json!({"kind":"history_preview_complete","previewToken":"owned-preview","openToken":"owned-preview-open"})
+        )
     );
     assert_eq!(preview.session.native_session_id, "history");
     assert!(f.store.list_sessions().unwrap().is_empty());
@@ -123,6 +127,7 @@ async fn failed_load_after_partial_replay_never_publishes_a_completion_marker_or
         &f.cwd,
         "fails-after-prefix".into(),
         "failed-preview".into(),
+        "owned-preview-open",
         channel,
         None,
     )

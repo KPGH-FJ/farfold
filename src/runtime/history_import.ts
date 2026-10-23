@@ -12,9 +12,9 @@ import type { ThreadState } from "./session_types";
 import type { IndexRow, OpenResult } from "./sessions";
 import { IMPORT_STRINGS as S } from "./import_strings";
 import { hasReadableMessages } from "./message_attachments";
-import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
+import { HistoryReplayProjection } from "./history_replay_projection";
 import { historyReads } from "./session_history_admission";
-import { consumeHistoryEvents } from "./history_replay_work";
+import { openingInquiries } from "./opening_inquiries";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -71,27 +71,102 @@ export async function previewHistory(
   );
   const delivery = new SessionDeliveryObserver(agentId, openToken);
   const channel = new Channel<unknown>();
-  const buffered = new HistoryReplayBuffer();
   let previewToken: string | null = null;
-  let completeReplay: (() => void) | undefined;
+  let markedPreviewToken: string | null = null;
+  let configOptionsSeen = false;
+  let completeReplay: ((complete: boolean) => void) | undefined;
   let receiving = true;
+  let deliveryFailed = false;
+  const projected = new HistoryReplayProjection(
+    state,
+    openToken,
+    (target, event) => {
+      if (!event || typeof event !== "object") return;
+      if (
+        !Object.hasOwn(event, "update") &&
+        "kind" in event &&
+        event.kind === "configOptions" &&
+        "options" in event
+      ) {
+        replaceConfigOptions(
+          target,
+          normalizeConfigOptions(event.options),
+          !("modern" in event && event.modern === false),
+        );
+        configOptionsSeen = true;
+      } else if ("update" in event) {
+        if (
+          (event.update as { sessionUpdate?: unknown } | null)
+            ?.sessionUpdate === "config_option_update"
+        )
+          pushRaw(target, event.update, "config_option_update");
+        else applyUpdate(target, event.update, event);
+      }
+    },
+    () => receiving,
+  );
+  const inquiry = openingInquiries.begin(readKey, {
+    agentId,
+    cwd: row.cwd,
+    inquiryCurrent: () => receiving,
+    inquiryPermissions: "cancel",
+  });
   channel.onmessage = (input) =>
     delivery.receive(input, (event) => {
       if (!receiving || !event || typeof event !== "object") return "discarded";
-      if (
-        "kind" in event &&
-        event.kind === "history_preview_complete" &&
-        "previewToken" in event &&
-        typeof event.previewToken === "string"
-      ) {
-        buffered.mark(event.previewToken);
-        if (previewToken === event.previewToken) completeReplay?.();
-        return "consumed";
-      } else {
-        admission?.observeRaw();
-        buffered.push(event);
-        return "buffered";
+      // Control-shaped fields inside a raw Agent update are not client control.
+      const control = !Object.hasOwn(event, "update");
+      if (control && inquiry.receive(event)) return "consumed";
+      if (control && "kind" in event && event.kind === "sessionOpening") {
+        // This request already knows its history ID. The native opening header
+        // is local coordination only, never body/configuration or another owner.
+        return Object.keys(event).length === 5 &&
+          "openToken" in event &&
+          event.openToken === openToken &&
+          "sessionId" in event &&
+          event.sessionId === row.nativeSessionId &&
+          "connectionId" in event &&
+          typeof event.connectionId === "string" &&
+          !!event.connectionId &&
+          "cwd" in event &&
+          typeof event.cwd === "string" &&
+          !!event.cwd
+          ? "consumed"
+          : "discarded";
       }
+      if (control && "kind" in event && event.kind === "deliveryUnavailable") {
+        deliveryFailed = true;
+        state.openError = S.loadFailed;
+        completeReplay?.(false);
+        return "consumed";
+      }
+      if (
+        control &&
+        "kind" in event &&
+        event.kind === "history_preview_complete"
+      ) {
+        if (
+          Object.keys(event).length !== 3 ||
+          !("openToken" in event) ||
+          event.openToken !== openToken ||
+          !("previewToken" in event) ||
+          typeof event.previewToken !== "string" ||
+          !event.previewToken
+        )
+          return "discarded";
+        // The first exact request marker seals this private snapshot even when
+        // the invoke result has not arrived. Later traffic cannot mutate it.
+        if (markedPreviewToken === null) {
+          markedPreviewToken = event.previewToken;
+          projected.mark(openToken);
+        }
+        if (previewToken !== null)
+          completeReplay?.(previewToken === markedPreviewToken);
+        return "consumed";
+      }
+      if (projected.complete) return "discarded";
+      admission?.observeRaw();
+      return projected.push(event);
     });
   try {
     admission?.dispatch();
@@ -114,6 +189,18 @@ export async function previewHistory(
       state,
       replayComplete: false,
     };
+    const failed = (): HistoryPreview => {
+      // Only the successful same private view is published. An incomplete or
+      // failed prefix keeps its exact native cleanup receipt, not partial body.
+      const unavailable = freshThreadState(
+        "preview",
+        agentId,
+        result.cwd,
+        result.nativeSessionId,
+      );
+      unavailable.openError = S.loadFailed;
+      return { ...owned, state: unavailable };
+    };
     previewToken = result.previewToken;
     try {
       state.cwd = result.cwd;
@@ -123,69 +210,51 @@ export async function previewHistory(
       state.identity = "established";
       state.service = result.service ?? undefined;
       state.serviceContext = result.serviceContext ?? undefined;
-      state.configOptions = normalizeConfigOptions(result.configOptions);
+      const baseline = normalizeConfigOptions(result.configOptions);
+      if (!configOptionsSeen) state.configOptions = baseline;
       state.permissionConfigId = result.permissionConfigId;
       state.permissionState = result.permissionConfigId ? "required" : "ready";
       if (result.configCheck) applyConfigCheck(state, result.configCheck);
     } catch {
       // This catch covers only local synchronous metadata projection, never
       // invoke/auth failure. The caller receives an ineligible cleanup owner.
-      state.openError = S.loadFailed;
-      return owned;
+      return failed();
     }
     // Invoke and Channel delivery are independent. Only this ordered channel's
     // matching marker proves the renderer has consumed the replay prefix.
     const replayComplete =
-      buffered.complete(previewToken) ||
-      (await new Promise<boolean>((resolve) => {
-        const timer = setTimeout(() => resolve(false), 30_000);
-        completeReplay = () => {
-          clearTimeout(timer);
-          resolve(true);
-        };
-      }));
+      !deliveryFailed &&
+      (markedPreviewToken !== null
+        ? markedPreviewToken === previewToken
+        : await new Promise<boolean>((resolve) => {
+            const timer = setTimeout(() => resolve(false), 30_000);
+            completeReplay = (complete) => {
+              clearTimeout(timer);
+              resolve(complete);
+            };
+          }));
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
     try {
-      await consumeHistoryEvents(buffered.prefixEvents(previewToken), (event) =>
-        delivery.consumeBuffered(() => {
-          if (!event || typeof event !== "object") return;
-          if (
-            "kind" in event &&
-            event.kind === "configOptions" &&
-            "options" in event
-          ) {
-            replaceConfigOptions(
-              state,
-              normalizeConfigOptions(event.options),
-              !("modern" in event && event.modern === false),
-            );
-          } else if ("update" in event) {
-            if (
-              (event.update as { sessionUpdate?: unknown } | null)
-                ?.sessionUpdate === "config_option_update"
-            )
-              pushRaw(state, event.update, "config_option_update");
-            else applyUpdate(state, event.update, event);
-          }
-        }),
-      );
-      finishHistoryPrefix(state);
+      if (!replayComplete || markedPreviewToken !== previewToken)
+        return failed();
+      projected.requireComplete(agentId, result, deliveryFailed);
+      projected.take();
     } catch {
       // An acknowledged native preview is not a successful displayed body.
       // Retain the exact receipt; the existing false flag denies commit and
       // lets the caller retry an unconfirmed exact close without another load.
-      state.openError = S.loadFailed;
-      return owned;
+      return failed();
     }
     // A delivery timeout keeps ownership available for the caller to close or
     // retry. Partial text is never eligible for display or admission.
-    return { ...owned, replayComplete };
+    return { ...owned, replayComplete: replayComplete && !deliveryFailed };
   } finally {
     receiving = false;
+    inquiry.retire();
     delivery.dispose();
     channel.onmessage = () => {};
-    buffered.clear();
+    projected.clear();
     historyReads.finish(readKey, admission);
   }
 }

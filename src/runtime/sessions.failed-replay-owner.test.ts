@@ -60,6 +60,16 @@ function marker(wire: Wire) {
     openToken: wire.openToken,
   });
 }
+function opening(wire: Wire) {
+  const result = response(wire);
+  wire.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: wire.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
+}
 async function open(state: ThreadState): Promise<unknown> {
   return threads.open({
     agentId: state.agentId,
@@ -104,6 +114,7 @@ it("keeps prior tool identities and exact old state when an acknowledged replay 
   };
   h.invoke.mockImplementation(async (name, wire: Wire) => {
     if (name !== "session_open") return [];
+    opening(wire);
     marker(wire);
     return response(wire);
   });
@@ -137,11 +148,12 @@ it("hands matching-marker following raw events and later live tools to that fail
   h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
     wire = value;
+    opening(wire);
     marker(wire);
-    wire.channel.onmessage({ update: pendingRaw });
     return response(wire);
   });
   await expect(open(state)).rejects.toBeTruthy();
+  wire.channel.onmessage({ update: pendingRaw });
   expect(state.items[0]).toBe(original);
   expect(rawPresent(state, pendingRaw)).toBe(true);
   wire.channel.onmessage({ update: laterRaw });
@@ -183,6 +195,7 @@ it("does not let the failed channel mutate its replacement after an explicit clo
     }
     if (name !== "session_open") return [];
     wires.push(value);
+    opening(value);
     if (wires.length > 1)
       value.channel.onmessage({
         update: {
@@ -223,6 +236,7 @@ it("keeps an incomplete owner retired after foreign or late owned markers withou
   h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
     wire = value;
+    opening(wire);
     wire.channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
@@ -267,14 +281,17 @@ it("retains an unprojectable following envelope exactly and still delivers the n
     sessionUpdate: "future-after-bad-live",
     values: [1, null, "🙂"],
   };
-  h.invoke.mockImplementation(async (name, wire: Wire) => {
+  let wire!: Wire;
+  h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
+    wire = value;
+    opening(wire);
     marker(wire);
-    wire.channel.onmessage(bad);
-    wire.channel.onmessage({ update: next });
     return response(wire);
   });
   await expect(open(state)).rejects.toBeTruthy();
+  wire.channel.onmessage(bad);
+  wire.channel.onmessage({ update: next });
   expect(rawPresent(state, bad)).toBe(true);
   expect(rawPresent(state, next)).toBe(true);
   expect(state.historyUnavailable?.reason).toBe("empty");
@@ -289,8 +306,11 @@ it("keeps local JSON conversion failure typed without pretending the Agent conne
     sessionUpdate: "future-live-after-local-conversion",
     exact: [null],
   };
-  h.invoke.mockImplementation(async (name, wire: Wire) => {
+  let wire!: Wire;
+  h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
+    wire = value;
+    opening(wire);
     wire.channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
@@ -304,10 +324,10 @@ it("keeps local JSON conversion failure typed without pretending the Agent conne
       },
     });
     marker(wire);
-    wire.channel.onmessage({ update: live });
     return response(wire);
   });
   const failure = await open(state).catch((error: unknown) => error);
+  wire.channel.onmessage({ update: live });
   expect(failure).toBeInstanceOf(TypeError);
   expect(isHistoryReadFailure(failure)).toBe(true);
   expect(state.items[0]).toBe(original);
@@ -327,6 +347,7 @@ it("still applies an actual separate process-end receipt for this acknowledged f
   const state = seed();
   h.invoke.mockImplementation(async (name, wire: Wire) => {
     if (name !== "session_open") return [];
+    opening(wire);
     marker(wire);
     wire.processEndedChannel.onmessage({
       connectionId: response(wire).connectionId,
@@ -356,6 +377,7 @@ it("cannot turn an Agent's own JSON resembling local failure into a renderer fai
   };
   h.invoke.mockImplementation(async (name, wire: Wire) => {
     if (name !== "session_open") return [];
+    opening(wire);
     wire.channel.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",

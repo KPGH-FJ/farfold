@@ -1,6 +1,8 @@
 export interface OpenInput {
   inquirySignal?: AbortSignal;
   inquiryCurrent?: () => boolean;
+  /** Read-only preparation cannot authorize an Agent operation. */
+  inquiryPermissions?: "ask" | "cancel";
   agentId: string;
   cwd: string;
   nativeSessionId?: string;

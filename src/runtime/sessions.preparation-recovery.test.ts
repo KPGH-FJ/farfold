@@ -58,7 +58,7 @@ function scenario(outcome: Outcome) {
       processEndedChannel = args.processEndedChannel;
       connectionId = `connection-${outcome}-${sequence + 1}`;
       ended = false;
-      return {
+      const result = {
         cwd: args.cwd,
         nativeSessionId: `${outcome}-${++sequence}`,
         connectionId,
@@ -66,6 +66,14 @@ function scenario(outcome: Outcome) {
         resumed: false,
         configOptions: [],
       };
+      channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: result.cwd,
+        sessionId: result.nativeSessionId,
+        connectionId: result.connectionId,
+      });
+      return result;
     }
     if (command === "session_prompt") {
       const promptReceiptId = sequence;

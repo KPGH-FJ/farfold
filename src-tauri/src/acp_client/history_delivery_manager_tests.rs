@@ -62,6 +62,7 @@ async fn actual_manager_load_returns_but_the_next_load_waits_for_original_render
             None,
             None,
             Some(permit),
+            None,
         )
         .await
         .unwrap();
@@ -231,6 +232,7 @@ async fn actual_preview_ack_does_not_consume_its_exact_native_close_receipt_or_m
         &f.cwd,
         "preview".into(),
         "native-preview-close".into(),
+        "owned-preview-open",
         channel,
         Some(permit),
     )
@@ -243,7 +245,8 @@ async fn actual_preview_ack_does_not_consume_its_exact_native_close_receipt_or_m
             .unwrap()
             .iter()
             .any(|event| event["kind"] == "history_preview_complete"
-                && event["previewToken"] == "native-preview-close")
+                && event["previewToken"] == "native-preview-close"
+                && event["openToken"] == "owned-preview-open")
     );
     gate.acknowledge_renderer(&owner, ids.lock().unwrap()[0])
         .unwrap();

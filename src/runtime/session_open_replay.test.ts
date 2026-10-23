@@ -21,7 +21,6 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads } from "./sessions";
-import { HistoryReplayBuffer } from "./history_replay";
 import { STRINGS } from "./strings";
 
 afterEach(() => {
@@ -48,13 +47,25 @@ it.each([false, true])(
     h.invoke.mockImplementation((command, args) => {
       if (command !== "session_open") return Promise.resolve([]);
       deliver = args.channel.onmessage;
+      deliver({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: "/replay",
+        sessionId: args.nativeSessionId,
+        connectionId: "owned-replay-connection",
+      });
       marker = {
         kind: "session_history_complete",
         openToken: args.openToken,
       };
       return new Promise((resolve) => {
         finish = () =>
-          resolve({ cwd: "/replay", nativeSessionId: native, resumed: true });
+          resolve({
+            cwd: "/replay",
+            nativeSessionId: native,
+            connectionId: "owned-replay-connection",
+            resumed: true,
+          });
       });
     });
     const input = {
@@ -104,12 +115,24 @@ it("keeps the 30 second marker deadline and rejects late replay after timeout", 
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
     deliver = args.channel.onmessage;
+    deliver({
+      kind: "sessionOpening",
+      openToken: args.openToken,
+      cwd: "/replay",
+      sessionId: args.nativeSessionId,
+      connectionId: "owned-replay-connection",
+    });
     marker = {
       kind: "session_history_complete",
       openToken: args.openToken,
     };
     deliver(message("unconfirmed", "Unconfirmed replay"));
-    return { cwd: "/replay", nativeSessionId: "marker-timeout", resumed: true };
+    return {
+      cwd: "/replay",
+      nativeSessionId: "marker-timeout",
+      connectionId: "owned-replay-connection",
+      resumed: true,
+    };
   });
   threads.markOpenFailed(
     "extracted-replay:/replay:marker-timeout",
@@ -158,10 +181,22 @@ function wireReplay(native: string) {
   h.invoke.mockImplementation((command, args) => {
     if (command !== "session_open") return Promise.resolve([]);
     deliver = args.channel.onmessage;
+    deliver({
+      kind: "sessionOpening",
+      openToken: args.openToken,
+      cwd: "/replay",
+      sessionId: args.nativeSessionId,
+      connectionId: "owned-replay-connection",
+    });
     marker = { kind: "session_history_complete", openToken: args.openToken };
     return new Promise((resolve) => {
       finish = () =>
-        resolve({ cwd: "/replay", nativeSessionId: native, resumed: true });
+        resolve({
+          cwd: "/replay",
+          nativeSessionId: native,
+          connectionId: "owned-replay-connection",
+          resumed: true,
+        });
     });
   });
   const input = {
@@ -512,9 +547,8 @@ it("rejects a non-coercible JSON tool field before replacing prior readable hist
 });
 
 it.each([false, true])(
-  "borrows the acknowledged precheck prefix without calling the copying prefix API (response first=%s)",
+  "keeps projected historical and following records ordered across result arrival (response first=%s)",
   async (responseFirst) => {
-    const copying = vi.spyOn(HistoryReplayBuffer.prototype, "prefix");
     const w = wireReplay(`borrowed-prefix-${responseFirst}`);
     const unknown = {
       sessionUpdate: "owned_borrow_future",
@@ -531,7 +565,6 @@ it.each([false, true])(
     w.deliver(w.marker());
     if (!responseFirst) w.finish();
     const state = await w.promise;
-    const copies = copying.mock.calls.length;
     try {
       expect(
         state.items.filter((i) => i.kind === "agent").map((i) => i.text),
@@ -546,8 +579,6 @@ it.each([false, true])(
     } finally {
       await threads.close(state.key);
     }
-    // This observes only one avoidable array-copy API, not all allocations/RSS.
-    expect(copies).toBe(0);
   },
 );
 
@@ -600,3 +631,20 @@ it.each(["tool", "config"] as const)(
     await threads.close(key);
   },
 );
+
+it("does not reinstall a hidden historical view after its original retry owner was explicitly closed", async () => {
+  const w = wireReplay("closed-during-read");
+  const key = "wire-raw-fidelity:/replay:closed-during-read";
+  const terminal = w.promise.then(
+    (state) => ({ state }),
+    (error) => ({ error }),
+  );
+  w.deliver(message("prior", "Privately read history"));
+  w.deliver(w.marker());
+  await threads.close(key);
+  expect(threads.thread(key)).toBeUndefined();
+  w.finish();
+  const result = await terminal;
+  expect("error" in result).toBe(true);
+  expect(threads.thread(key)).toBeUndefined();
+});

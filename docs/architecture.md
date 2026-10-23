@@ -57,7 +57,7 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 
-[delivery_observation.rs](../src-tauri/src/acp_client/delivery_observation.rs)在打开、预览和复制对话的实际Tauri通道外包一层交付标记，原始事件保持原样；一次序列化的实际UTF-8长度只作为计数。每个接收端最多一个未回应样本，注册表只保留弱归属和标量，窗口失效及实际对象释放时退役。[session_delivery_observer.ts](../src/runtime/session_delivery_observer.ts)在现有消费路径完成后回应，缓冲阶段只保留数字位置；观测序号不决定内容顺序或去重。此分项不能证明React绘制、完整历史消费、传输背压或内存上限，正式应用观测未验。
+[delivery_flow.rs](../src-tauri/src/acp_client/delivery_flow.rs)让打开、预览与复制对话的Tauri通道只发送轻通知；界面逐项取出并精确确认原事件，缓冲/异步控制转交与消费分别计数。队列保存原事件及逻辑配额，退役不提前释放在途副本债务，窗口实际销毁才清理未归还的副本。[ingress_permit.rs](../src-tauri/src/acp_client/ingress_permit.rs)在官方SDK前按逻辑积压暂停后续读取，单个已接纳有限帧可越过水位；未知归属前缀超额明确结果未知而保留原工作。现有[delivery_observation.rs](../src-tauri/src/acp_client/delivery_observation.rs)采样另算，不用于筛除原始事件，也不把入缓冲当消费。[session_delivery_observer.ts](../src/runtime/session_delivery_observer.ts)只在外层解析交付封套。当前受控检查不证明React绘制、真实多Agent资源或RSS上限，安装版未验。
 
 最新源码由 [history_admission.rs](../src-tauri/src/acp_client/history_admission.rs) 统一限制已有对话打开/读取的同时开始数、纯等待数和保留请求逻辑字节；[cold_history_open.rs](../src-tauri/src/acp_client/cold_history_open.rs) 在入队前后复核保存来源、模型和目标设置，获准后才准备临时网页工具与连接。许可保持到完整读取标记交付，超时或无人接收时随真实进程归属保留；最后释放不在队列、连接或活动状态锁内唤醒下一项。窗口销毁撤回尚未开始的等待，取消只接受当前窗口与请求令牌；已开始仍按原操作结果判断。前端 [HistoryReadStatus.tsx](../src/components/HistoryReadStatus.tsx) 展示独立读取状态，Agent原始事件不经该状态通道筛除。首发、预览、列表、分支及当前停止/审批不纳入此冷读取队列；这不提供传输背压、渲染消费确认或RSS硬上限。该机制已随3845完成完整工程与安装检查；正式界面一次既有Dirac读取的状态和回复回放已验，真实等待取消、并发突发与长期资源仍未验。a371另将审批登记后的事件发布移到审批表锁外，登记及原始请求保持；该修复已包含在5790安装源码中，不能由此推定全部审批真实路径已验。
 
@@ -170,7 +170,7 @@ Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取
 
 公开网页使用隔离网页存储；macOS本地HTML专用存档按规范项目/文件范围区分。多文件项目和本地开发服务器通过各自路径、来源与网络规则预览，不把只读预览策略称为操作系统沙箱。网页没有Tauri应用桥，页面内容也不能直接成为工作台指令。
 
-当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；生产截图仍因系统安全证据不足不可用。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
+当前网页工具包括观察、读取快照以及经确认的节点点击和普通输入；新增生产截图接线仅在系统可检查封闭内容且前后页面/许可一致时工作，编辑区、整页编辑、框架或证据不足均拒绝。旧macOS能力不足继续不可用，新macOS及Windows实际截图尚未验证。节点身份、页面版本与许可需在执行时核对；敏感输入、登录或页面请求不能自行扩权。交付点击命令不等于网站业务动作完成。
 
 输入执行前后若发现受保护控件，或已派发输入但无法确认结果，撤回该页原共享许可；晚回包不能继续交付原许可的内容。保留实际派发与未知结果，不自动重试，也不把撤回许可说成敏感网页操作已通过。
 

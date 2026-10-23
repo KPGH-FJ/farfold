@@ -942,6 +942,7 @@ async fn fork_cross_directory_opening_first_excludes_known_pending_id_only_for_s
                     None,
                     Some("preview".into()),
                     None,
+                    None,
                 )
                 .await
         });
@@ -987,6 +988,7 @@ async fn fork_cross_directory_opening_after_claim_cannot_bypass_same_child_holde
             &f.store,
             None,
             Some("preview".into()),
+            None,
             None,
         )
         .await;

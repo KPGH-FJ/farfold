@@ -136,6 +136,7 @@ async fn import_preview_channel_marks_complete_after_the_entire_replay() {
             &f.cwd,
             session_id.into(),
             "ordered".into(),
+            "owned-preview-open",
             channel,
             None,
         )
@@ -144,15 +145,18 @@ async fn import_preview_channel_marks_complete_after_the_entire_replay() {
         let events = received.lock().unwrap().clone();
         assert_eq!(
             events.last(),
-            Some(&json!({"kind":"history_preview_complete","previewToken":"ordered"}))
+            Some(
+                &json!({"kind":"history_preview_complete","previewToken":"ordered","openToken":"owned-preview-open"})
+            )
         );
-        assert_eq!(
-            events
-                .iter()
-                .filter(|event| event.get("update").is_some())
-                .count(),
-            expected_updates
-        );
+        let updates: Vec<_> = events
+            .iter()
+            .filter_map(|event| event.get("update"))
+            .collect();
+        assert_eq!(updates.len(), expected_updates);
+        assert_eq!(events.first().unwrap()["kind"], "sessionOpening");
+        assert_eq!(events.first().unwrap()["openToken"], "owned-preview-open");
+        assert_eq!(events.first().unwrap()["sessionId"], session_id);
         assert_eq!(preview.preview_token, "ordered");
         if session_id == "replay-batch" {
             assert_eq!(
@@ -163,7 +167,9 @@ async fn import_preview_channel_marks_complete_after_the_entire_replay() {
                 preview.session.meta,
                 Some(json!({"fixture":"untyped-meta"}))
             );
-            assert_eq!(events[31]["update"]["_meta"]["fixture"], 31);
+            for (index, update) in updates.iter().enumerate() {
+                assert_eq!(update["_meta"]["fixture"], index);
+            }
         }
         assert!(f.store.list_sessions().unwrap().is_empty());
         f.manager
@@ -188,7 +194,9 @@ async fn failed_preview_delivery_releases_only_its_own_route() {
         let failed = failure.clone();
         let channel = tauri::ipc::Channel::new(move |body| {
             let value = body.deserialize::<Value>()?;
-            if (value["kind"] == "history_preview_complete") == fail_marker {
+            if (fail_marker && value["kind"] == "history_preview_complete")
+                || (!fail_marker && value.get("update").is_some())
+            {
                 failed.store(true, std::sync::atomic::Ordering::SeqCst);
                 return Err(std::io::Error::other("fixture channel unavailable").into());
             }
@@ -202,6 +210,7 @@ async fn failed_preview_delivery_releases_only_its_own_route() {
             &f.cwd,
             "history".into(),
             "failed-delivery".into(),
+            "owned-preview-open",
             channel,
             None,
         )
@@ -271,6 +280,7 @@ async fn failed_preview_delivery_releases_only_its_own_route() {
         &f.cwd,
         "history".into(),
         "retry".into(),
+        "owned-preview-open",
         tauri::ipc::Channel::new(|_| Ok(())),
         None,
     )
@@ -349,6 +359,7 @@ async fn failed_preview_rollback_retains_the_cleanup_token() {
         &f.cwd,
         "history".into(),
         "cleanup-retained".into(),
+        "owned-preview-open",
         channel,
         None,
     )
@@ -472,6 +483,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 None,
                 Some("preview-live".into()),
                 None,
+                None,
             )
             .await
             .is_err()
@@ -524,6 +536,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         None,
         Some("first".into()),
         None,
+        None,
     );
     let second = f.manager.open_session_owned(
         &f.agent,
@@ -534,6 +547,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         &f.store,
         None,
         Some("second".into()),
+        None,
         None,
     );
     let (a, b) = tokio::join!(first, second);
@@ -601,6 +615,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 None,
                 Some("failed".into()),
                 None,
+                None,
             )
             .await
             .is_err()
@@ -623,6 +638,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("first".into()),
+            None,
             None,
         )
         .await
@@ -649,6 +665,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("second".into()),
+            None,
             None,
         )
         .await
@@ -699,6 +716,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             None,
             Some("late".into()),
             None,
+            None,
         )
         .await
         .unwrap();
@@ -746,6 +764,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             &f.store,
             None,
             Some("refused".into()),
+            None,
             None,
         )
         .await

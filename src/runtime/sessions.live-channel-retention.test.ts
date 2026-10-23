@@ -10,7 +10,9 @@ vi.mock("@tauri-apps/api/core", async (importOriginal) => {
 import { threads } from "./sessions";
 import { draftPersistence } from "./drafts";
 import { archiveActivity } from "./archive_activity";
-import { requireReadableHistory } from "./session_recovery";
+import { historyFailureKey, isHistoryReadFailure } from "./session_recovery";
+import { SessionOpenReplay } from "./session_open_replay";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 type Wire = {
   channel: Channel<unknown>;
@@ -58,7 +60,7 @@ beforeEach(() => {
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "session_open") {
       wire = args;
-      return {
+      const result = {
         cwd: "/owned-channel",
         nativeSessionId: `live-${++serial}`,
         connectionId: `live-connection-${serial}`,
@@ -68,6 +70,14 @@ beforeEach(() => {
         permissionState: "ready",
         configCheck: { status: "ready", issues: [], current: { choices: [] } },
       };
+      emitOpeningHeader(
+        {
+          openToken: args.openToken,
+          channel: { onmessage: (event) => deliver(args.channel, event) },
+        },
+        result,
+      );
+      return result;
     }
     if (command === "session_prompt") {
       deliver(args.admissionChannel, { receiptId: 1, phase: "offered" });
@@ -212,34 +222,48 @@ it.each(["toolCallId", "title"] as const)(
   },
 );
 
-it("keeps the original TypeError history precheck boundary and does not turn malformed replay into a successful open", () => {
+it("keeps the TypeError history boundary without re-projecting the delivered body", () => {
+  const result = {
+    cwd: "/owned-channel",
+    nativeSessionId: "history",
+    connectionId: "history-connection",
+    resumed: true,
+    configOptions: [],
+    warnings: [],
+  };
+  const reader = new SessionOpenReplay({ agentId: "owned", cwd: result.cwd });
+  reader.push({
+    kind: "sessionOpening",
+    openToken: reader.token,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
+  reader.push({
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "READABLE_BEFORE_ERROR" },
+    },
+  });
   const bad = {
     update: {
       sessionUpdate: "tool_call",
       toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
-  expect(() =>
-    requireReadableHistory(
-      "owned",
-      {
-        cwd: "/owned-channel",
-        nativeSessionId: "history",
-        resumed: true,
-        configOptions: [],
-        warnings: [],
-      },
-      [
-        {
-          update: {
-            sessionUpdate: "agent_message_chunk",
-            content: { type: "text", text: "READABLE_BEFORE_ERROR" },
-          },
-        },
-        bad,
-      ],
-      true,
-      false,
-    ),
-  ).toThrow(TypeError);
+  expect(reader.push(bad)).toBe("consumed");
+  reader.receiveMarker({
+    kind: "session_history_complete",
+    openToken: reader.token,
+  });
+  let failure: unknown;
+  try {
+    reader.accept(result, null);
+  } catch (error) {
+    failure = error;
+  }
+  expect(failure).toBeInstanceOf(TypeError);
+  expect(isHistoryReadFailure(failure)).toBe(true);
+  expect(historyFailureKey(failure)).toBe("owned:/owned-channel:history");
+  reader.clear();
 });

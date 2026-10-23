@@ -313,6 +313,7 @@ impl AcpManager {
             selection,
             None,
             None,
+            None,
         )
         .await
     }
@@ -357,6 +358,7 @@ impl AcpManager {
             mcp,
             browser_unavailable,
             history,
+            None,
         )
         .await
     }
@@ -374,6 +376,7 @@ impl AcpManager {
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         history: Option<super::history_admission::Permit>,
+        opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
         if native_session_id.is_some() && history.is_none() {
             return Err("无法确认读取许可，本次尚未开始".into());
@@ -391,6 +394,7 @@ impl AcpManager {
             browser_unavailable,
             None,
             history,
+            opening_token,
         )
         .await
     }
@@ -407,6 +411,7 @@ impl AcpManager {
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
         history: Option<super::history_admission::Permit>,
+        opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
         self.open_session_owned_with_mcp(
             agent,
@@ -421,6 +426,7 @@ impl AcpManager {
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             None,
             history,
+            opening_token,
         )
         .await
     }
@@ -436,6 +442,7 @@ impl AcpManager {
         store: &MetaStore,
         reservation: super::lifecycle::OpenReservation,
         history: Option<super::history_admission::Permit>,
+        opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
         self.open_session_owned_with_mcp(
             agent,
@@ -450,6 +457,7 @@ impl AcpManager {
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             Some(reservation),
             history,
+            opening_token,
         )
         .await
     }
@@ -469,6 +477,7 @@ impl AcpManager {
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         reserved: Option<super::lifecycle::OpenReservation>,
         history: Option<super::history_admission::Permit>,
+        opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
         let fork_owned = reserved.is_some();
@@ -580,6 +589,7 @@ impl AcpManager {
                 fork_owned,
                 native_session_id,
                 preview_token,
+                opening_token,
                 recorded_config,
                 config_store: Box::new(super::model_guard::ConfigStore {
                     store: store.clone(),
@@ -1146,11 +1156,22 @@ impl AcpManager {
         )
     }
 
+    #[cfg(test)]
     pub(crate) fn permission_respond(
         &self,
         request_id: &str,
         option_id: &str,
         session_id: &str,
+    ) -> Result<InteractionReply, String> {
+        self.permission_respond_owned(request_id, Some(option_id), Some(session_id), None)
+    }
+
+    pub(crate) fn permission_respond_owned(
+        &self,
+        request_id: &str,
+        option_id: Option<&str>,
+        session_id: Option<&str>,
+        owner: Option<&Value>,
     ) -> Result<InteractionReply, String> {
         let mut pending = self
             .pending_permissions
@@ -1159,14 +1180,21 @@ impl AcpManager {
         let Some(request) = pending.get_mut(request_id) else {
             return Ok(InteractionReply::new("expired", None));
         };
+        // Opening replies retain the actual connection/session/request owner.
+        // Existing established callers still prove their native session ID.
+        if session_id.is_some_and(|id| id != request.session_id)
+            || match owner {
+                Some(owner) => owner != &request.owner,
+                None => session_id != Some(request.session_id.as_str()),
+            }
+        {
+            return Ok(InteractionReply::new("expired", None));
+        }
         if request.cancelled.is_cancelled() {
             pending.remove(request_id);
             return Ok(InteractionReply::new("expired", None));
         }
-        if request.session_id != session_id {
-            return Ok(InteractionReply::new("expired", None));
-        }
-        if !request.options.iter().any(|id| id == option_id) {
+        if option_id.is_some_and(|option| !request.options.iter().any(|id| id == option)) {
             return Ok(InteractionReply::new(
                 "retryable",
                 Some("审批选项无效，请重新选择"),
@@ -1178,9 +1206,11 @@ impl AcpManager {
                 Some("答复结果尚未确认，请等待"),
             ));
         };
-        match responder
-            .respond(serde_json::json!({"outcome":{"outcome":"selected","optionId":option_id}}))
-        {
+        let outcome = match option_id {
+            Some(option) => serde_json::json!({"outcome":{"outcome":"selected","optionId":option}}),
+            None => serde_json::json!({"outcome":{"outcome":"cancelled"}}),
+        };
+        match responder.respond(outcome) {
             Ok(()) => {
                 pending.remove(request_id);
                 Ok(InteractionReply::new("submitted", None))

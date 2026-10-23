@@ -207,20 +207,9 @@ impl FixedPageReadScope {
                     .observation
                     .lock()
                     .map_err(|_| ToolFailure::Unconfirmed)? = None;
-                // The current public WebKit surface cannot prove that closed
-                // shadow roots contain no protected input. A separate consent
-                // is not a substitute for that product boundary. Keep pixel
-                // capture internal to controlled native verification.
-                let raw = native::observe(app, self.clone(), false).await?;
-                let raw = if screenshot {
-                    let mut value: Value =
-                        serde_json::from_str(&raw).map_err(|_| ToolFailure::Unconfirmed)?;
-                    value["screenshot"] = json!({"status":"unavailable","reason":"当前页面受保护的输入无法可靠核实，暂不提供截图；可以继续读取文字和位置。"});
-                    value.to_string()
-                } else {
-                    raw
-                };
-                self.complete_observation(&raw).map_err(ToolFailure::from)
+                let raw = native::observe(app, self.clone(), screenshot).await?;
+                self.complete_observation_for_request(&raw, screenshot)
+                    .map_err(ToolFailure::from)
             }
             request => {
                 self.preflight_control(&request)?;
@@ -307,7 +296,17 @@ impl FixedPageReadScope {
         .map_err(|_| CONTROL_UNCONFIRMED.to_owned())
     }
 
+    #[cfg(test)]
     fn complete_observation(&self, raw: &str) -> Result<Value, String> {
+        self.complete_observation_for_request(raw, false)
+    }
+
+    fn complete_observation_for_request(
+        &self,
+        raw: &str,
+        screenshot_requested: bool,
+    ) -> Result<Value, String> {
+        self.with_valid(|| Ok(()))?;
         if raw.len() > 550_000 {
             return Err("网页观察内容过大".into());
         }
@@ -316,6 +315,7 @@ impl FixedPageReadScope {
             self.revoke();
             return Err("页面含受保护的输入，已停止共享".into());
         }
+        let screenshot = super::screenshot::checked(&value["screenshot"], screenshot_requested);
         self.with_valid(|| {
             let url = bounded(&value, "url", 8192)?;
             if !self.matches_url(&url) { return Err("网页已变化，请重新确认".into()); }
@@ -324,10 +324,6 @@ impl FixedPageReadScope {
             let nodes: Vec<Node> = serde_json::from_value(value.get("nodes").cloned().ok_or("网页观察未完成")?).map_err(|_| "网页位置不可读取")?;
             if nodes.len() > 256 || nodes.iter().any(|n| n.reference.is_empty() || n.reference.len() > 128 || n.tag.len() > 32 || n.role.len() > 64 || n.label.chars().count() > 160 || n.actions.len() > 2 || n.actions.iter().any(|a| !matches!(a.as_str(), "click" | "input")) || [n.bounds.x,n.bounds.y,n.bounds.width,n.bounds.height].iter().any(|n| !n.is_finite())) {
                 return Err("网页位置不可读取".into());
-            }
-            let mut screenshot = json!({"status":"unavailable","reason":value.pointer("/screenshot/reason").and_then(Value::as_str).filter(|s|s.chars().count()<=256)});
-            if value.pointer("/screenshot/status").and_then(Value::as_str) == Some("captured") {
-                screenshot = json!({"status":"unavailable","reason":"当前页面受保护的输入无法可靠核实，暂不提供截图。"});
             }
             let result = json!({"url":url,"title":bounded(&value,"title",512)?,"text":bounded(&value,"text",65536)?,"observationId":id,"documentVersion":bounded(&value,"documentVersion",180)?,"nodes":nodes,"truncated":value.get("truncated").and_then(Value::as_bool).unwrap_or(true),"screenshot":screenshot});
             *self.observation.lock().map_err(|_| "网页观察已失效")? = Some(Observation { id, at:Instant::now(), nodes });
@@ -484,6 +480,25 @@ mod tests {
         assert_eq!(accepted["screenshot"]["status"], "unavailable");
         assert!(accepted["documentVersion"].is_string());
         assert!(accepted["screenshot"].get("data").is_none());
+    }
+    #[test]
+    fn native_png_requires_an_explicit_request_and_a_still_live_page_grant() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:screenshot", "page");
+        let mut value: Value =
+            serde_json::from_str(include_str!("fixtures/native-directory-observation.json"))
+                .unwrap();
+        value["url"] = json!("https://www.rust-lang.org/");
+        let raw = value.to_string();
+        let image = scope.complete_observation_for_request(&raw, true).unwrap();
+        assert_eq!(image["screenshot"]["status"], "captured");
+        assert_eq!(image["screenshot"]["data"], value["screenshot"]["data"]);
+        assert!(
+            scope.complete_observation_for_request(&raw, false).unwrap()["screenshot"]
+                .get("data")
+                .is_none()
+        );
+        scope.revoke();
+        assert!(scope.complete_observation_for_request(&raw, true).is_err());
     }
     #[test]
     fn scope_withdrawal_reaches_one_shot_but_cancel_does_not_revoke_reading() {

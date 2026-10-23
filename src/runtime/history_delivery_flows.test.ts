@@ -8,7 +8,8 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads, type IndexRow, type OpenResult } from "./sessions";
-import { HistoryReplayBuffer } from "./history_replay";
+import { HistoryReplayProjection } from "./history_replay_projection";
+import type { ThreadState } from "./session_types";
 import { draftPersistence } from "./drafts";
 import {
   closeHistoryPreview,
@@ -54,32 +55,44 @@ const result = (nativeSessionId: string, connectionId: string): OpenResult => ({
 // Characterization, not a capacity RED, allocation/RSS claim or real Agent test.
 // These are three ACTUAL renderer entry paths, unlike the old three labels on
 // the common primitive. Only the Tauri boundary/draft flush are controlled.
-it("observes three real flow-owned replay buffers while their original delivery owners are pending", async () => {
+it("projects three real entry flows into distinct private states without raw replay buffers", async () => {
   const index = deferred<IndexRow[]>(),
     previewReply = deferred<OpenResult & { previewToken: string }>();
   const received = deferred<void>();
   const tokens = new Map<Role, string>();
-  const owners = new Map<
-    Role,
-    { buffer: HistoryReplayBuffer; event: OwnedEvent }
-  >();
+  const owners = new Map<Role, { state: ThreadState; event: OwnedEvent }>();
   const wires = new Map<Role, Wire>();
-  const push = HistoryReplayBuffer.prototype.push;
+  const push = HistoryReplayProjection.prototype.push;
   const spy = vi
-    .spyOn(HistoryReplayBuffer.prototype, "push")
-    .mockImplementation(function (this: HistoryReplayBuffer, event: unknown) {
-      push.call(this, event);
+    .spyOn(HistoryReplayProjection.prototype, "push")
+    .mockImplementation(function (
+      this: HistoryReplayProjection,
+      event: unknown,
+    ) {
+      const outcome = push.call(this, event);
       const owned = event as OwnedEvent | null;
       const role = owned?.update?.ownedRole;
       if (role === "open" || role === "fork" || role === "preview") {
-        owners.set(role, { buffer: this, event: owned! });
+        owners.set(role, { state: this.state!, event: owned! });
         if (owners.size === 3) received.resolve(undefined);
       }
+      return outcome;
     });
   const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   let indexCalls = 0;
   const deliver = (role: Role, wire: Wire) => {
     wires.set(role, wire);
+    if (role !== "preview") {
+      const id = role === "open" ? "open-history" : "fork-child";
+      wire.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: wire.openToken,
+        cwd,
+        sessionId: id,
+        connectionId:
+          role === "open" ? "open-connection" : "fork-child-connection",
+      });
+    }
     wire.admissionChannel?.onmessage({
       kind: "session_history_admission",
       openToken: wire.openToken,
@@ -110,7 +123,11 @@ it("observes three real flow-owned replay buffers while their original delivery 
     });
     wire.channel.onmessage(
       role === "preview"
-        ? { kind: "history_preview_complete", previewToken: token }
+        ? {
+            kind: "history_preview_complete",
+            openToken: wire.openToken,
+            previewToken: token,
+          }
         : { kind: "session_history_complete", openToken: token },
     );
     if (role === "open") {
@@ -213,12 +230,16 @@ it("observes three real flow-owned replay buffers while their original delivery 
     await received.promise;
     await Promise.resolve();
     expect(owners.size).toBe(3);
-    expect(
-      new Set([...owners.values()].map((value) => value.buffer)).size,
-    ).toBe(3);
+    expect(new Set([...owners.values()].map((value) => value.state)).size).toBe(
+      3,
+    );
     let asciiBodyUnits = 0;
-    for (const [role, { buffer, event }] of owners) {
-      expect([...buffer.prefixEvents(tokens.get(role)!)]).toContain(event);
+    for (const [role, { state, event }] of owners) {
+      expect(
+        state.items.some(
+          (item) => item.kind === "raw" && item.update === event.update,
+        ),
+      ).toBe(true);
       expect(event.update.ownedRole).toBe(role);
       expect(event.unknownEnvelope).toEqual({
         nested: [null, false, "🙂"],
@@ -241,7 +262,7 @@ it("observes three real flow-owned replay buffers while their original delivery 
     console.info(
       JSON.stringify({
         kind: "actual-renderer-three-flow-staging",
-        distinctFlowBuffers: owners.size,
+        distinctPrivateStates: owners.size,
         opaqueAsciiBodyCodeUnits: asciiBodyUnits,
         heldIndexCalls: indexCalls,
         realRendererEntrypoints: true,
@@ -268,6 +289,7 @@ it("observes three real flow-owned replay buffers while their original delivery 
       ["fork", child],
       ["preview", previewState.state],
     ] as const) {
+      expect(state).toBe(owners.get(role)!.state);
       expect(
         state?.items.some(
           (item) =>

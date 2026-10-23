@@ -1,6 +1,6 @@
 //! In-process official protocol routes, not installed-product acceptance.
 use super::*;
-use agent_client_protocol::{Client, Error};
+use agent_client_protocol::{Client, Error, Handled};
 use serde_json::json;
 use std::time::Duration;
 
@@ -118,26 +118,23 @@ async fn read(
         .map(|(id, value)| (id.to_owned(), value))
         .collect();
     let (send, receive) = oneshot::channel();
+    let life = ConnectionLife::new();
+    life.ready().unwrap();
+    let routes = life.routes.clone();
     let connection = Client
         .builder()
         .on_receive_dispatch(
-            async move |message: Dispatch, _cx| {
-                Ok(Handled::No {
-                    message,
-                    retry: false,
-                })
-            },
+            async move |message: Dispatch, _cx| routes.dispatch(message),
             agent_client_protocol::on_receive_dispatch!(),
         )
         .connect_with(peer, async move |cx| {
             let sessions = Arc::new(Mutex::new(HashMap::new()));
-            let life = ConnectionLife::new();
-            life.ready().unwrap();
             let pending = Arc::new(Mutex::new(HashMap::new()));
             let open = open_session_on_connection(
                 &cx,
                 &cwd,
                 resumed.then(|| "mode-proof".into()),
+                None,
                 None,
                 recorded,
                 super::super::model_guard::ConfigStore {

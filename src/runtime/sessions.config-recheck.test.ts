@@ -10,7 +10,7 @@ import { threads, type OpenResult, type ThreadState } from "./sessions";
 import { composerDrafts, draftPersistence } from "./drafts";
 import { STRINGS } from "./strings";
 import { freshThreadState } from "./session_projection";
-import { HistoryReplayBuffer } from "./history_replay";
+import { HistoryReplayProjection } from "./history_replay_projection";
 
 const option = {
   id: "model",
@@ -30,21 +30,15 @@ const ready = () => ({
     ],
   },
 });
-function opened(args: Record<string, any>): OpenResult {
+function opened(
+  args: Record<string, any>,
+  beforeMarker?: () => void,
+): OpenResult {
   h.channels.set(args.nativeSessionId, args.channel);
-  args.channel.onmessage({
-    update: {
-      sessionUpdate: "agent_message_chunk",
-      content: { type: "text", text: "Existing history" },
-    },
-  });
-  args.channel.onmessage({
-    kind: "session_history_complete",
-    openToken: args.openToken,
-  });
-  return {
+  const result: OpenResult = {
     cwd: args.cwd,
     nativeSessionId: args.nativeSessionId,
+    connectionId: `recheck-connection-${args.nativeSessionId}`,
     resumed: true,
     configOptions: [option],
     configCheck: ready(),
@@ -52,6 +46,25 @@ function opened(args: Record<string, any>): OpenResult {
     permissionState: "ready",
     warnings: [],
   };
+  args.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: args.openToken,
+    cwd: result.cwd,
+    sessionId: result.nativeSessionId,
+    connectionId: result.connectionId,
+  });
+  args.channel.onmessage({
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "Existing history" },
+    },
+  });
+  beforeMarker?.();
+  args.channel.onmessage({
+    kind: "session_history_complete",
+    openToken: args.openToken,
+  });
+  return result;
 }
 async function seed(id: string) {
   const state = await threads.open({
@@ -340,26 +353,26 @@ it.each(["unknown", "record_failed", "after_ready"])(
     block(old);
     h.invoke.mockImplementation(async (command, args) => {
       if (command === "session_open") {
-        const result = opened(args);
-        if (reason === "after_ready")
+        return opened(args, () => {
+          if (reason === "after_ready")
+            args.channel.onmessage({ kind: "configCheck", check: ready() });
+          args.channel.onmessage({
+            kind: "configCheck",
+            check: {
+              ...ready(),
+              status: reason === "record_failed" ? "record_failed" : "blocked",
+              issues: [
+                {
+                  category: "model",
+                  reason: reason === "unknown" ? "unknown" : "changed",
+                  expected: "confirmed",
+                  current: "other",
+                },
+              ],
+            },
+          });
           args.channel.onmessage({ kind: "configCheck", check: ready() });
-        args.channel.onmessage({
-          kind: "configCheck",
-          check: {
-            ...ready(),
-            status: reason === "record_failed" ? "record_failed" : "blocked",
-            issues: [
-              {
-                category: "model",
-                reason: reason === "unknown" ? "unknown" : "changed",
-                expected: "confirmed",
-                current: "other",
-              },
-            ],
-          },
         });
-        args.channel.onmessage({ kind: "configCheck", check: ready() });
-        return result;
       }
       return command === "settings_get" ? null : [];
     });
@@ -457,12 +470,12 @@ it.each([false, true])(
     if (during)
       h.invoke.mockImplementation(async (command, args) => {
         if (command === "session_open") {
-          const result = opened(args);
-          args.channel.onmessage({
-            kind: "elicitationUnavailable",
-            params: {},
-          });
-          return result;
+          return opened(args, () =>
+            args.channel.onmessage({
+              kind: "elicitationUnavailable",
+              params: {},
+            }),
+          );
         }
         return command === "settings_get" ? null : [];
       });
@@ -504,13 +517,13 @@ it("preserves a new unknown permission signal during configuration reloading", a
   block(old);
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_open") {
-      const result = opened(args);
-      args.channel.onmessage({
-        kind: "permissionState",
-        permissionConfigId: "approval_policy",
-        permissionState: "unknown",
-      });
-      return result;
+      return opened(args, () =>
+        args.channel.onmessage({
+          kind: "permissionState",
+          permissionConfigId: "approval_policy",
+          permissionState: "unknown",
+        }),
+      );
     }
     return command === "settings_get" ? null : [];
   });
@@ -530,7 +543,8 @@ it("retires unbound replay staging after a rejected reload without changing the 
     text: "Preserved during rejected reload",
   }));
   const draft = structuredClone(composerDrafts.read(`session:${old.key}`));
-  const buffered = vi.spyOn(HistoryReplayBuffer.prototype, "push");
+  const project = vi.spyOn(HistoryReplayProjection.prototype, "push");
+  const take = vi.spyOn(HistoryReplayProjection.prototype, "take");
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_open")
       return {
@@ -544,11 +558,16 @@ it("retires unbound replay staging after a rejected reload without changing the 
     return command === "settings_get" ? null : [];
   });
   await expect(threads.recheckConfig(old.key)).rejects.toBeTruthy();
+  expect(project).toHaveBeenCalledTimes(1);
+  expect(take).not.toHaveBeenCalled();
+  expect(
+    (project.mock.contexts[0] as HistoryReplayProjection).state,
+  ).toBeUndefined();
   const items = structuredClone(old.items);
   const lateChannel = h.channels.get(old.nativeSessionId);
-  buffered.mockClear();
-  // Exercise the actual failed opening callback and its real buffer, rather
-  // than inspecting a private collection or relying on garbage collection.
+  project.mockClear();
+  // Exercise the actual retired callback; it must neither project into another
+  // private view nor alter the retained original body or unsent draft.
   for (let index = 0; index < 128; index++)
     lateChannel.onmessage({
       update: {
@@ -558,7 +577,8 @@ it("retires unbound replay staging after a rejected reload without changing the 
         padding: "x".repeat(1024),
       },
     });
-  expect(buffered).not.toHaveBeenCalled();
+  expect(project).not.toHaveBeenCalled();
+  expect(take).not.toHaveBeenCalled();
   expect(threads.thread(old.key)).toBe(old);
   expect(old.items).toEqual(items);
   expect(composerDrafts.read(`session:${old.key}`)).toEqual(draft);
@@ -575,7 +595,8 @@ it("retires unbound replay staging after a rejected reload without changing the 
 
 it("keeps bound live unknown data and connection loss after opening staging settles", async () => {
   const state = await seed("recheck-live-after-replay");
-  const buffered = vi.spyOn(HistoryReplayBuffer.prototype, "push");
+  const project = vi.spyOn(HistoryReplayProjection.prototype, "push");
+  const take = vi.spyOn(HistoryReplayProjection.prototype, "take");
   const update = {
     sessionUpdate: "future_live_after_replay",
     value: [null, false, { full: "原值🙂", count: 17 }],
@@ -586,7 +607,8 @@ it("keeps bound live unknown data and connection loss after opening staging sett
     (item) => item.kind === "raw" && item.update === update,
   );
   expect(retained?.kind === "raw" && retained.update).toBe(update);
-  expect(buffered).not.toHaveBeenCalled();
+  expect(project).not.toHaveBeenCalled();
+  expect(take).not.toHaveBeenCalled();
   channel.onmessage({ kind: "connectionLost", closeReason: "unexpected" });
   expect(state.connectionLost).toBe(true);
   expect(state.connectionCloseReason).toBe("unexpected");

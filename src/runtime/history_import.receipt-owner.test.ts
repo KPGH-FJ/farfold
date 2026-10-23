@@ -28,6 +28,7 @@ const row: DiscoveredConversation = {
   isOpen: false,
 };
 interface Wire {
+  openToken: string;
   channel: { onmessage(event: unknown): void };
 }
 function reply() {
@@ -50,6 +51,7 @@ function readable(wire: Wire) {
 function marker(wire: Wire) {
   wire.channel.onmessage({
     kind: "history_preview_complete",
+    openToken: wire.openToken,
     previewToken: reply().previewToken,
   });
 }
@@ -68,10 +70,12 @@ afterEach(() => vi.restoreAllMocks());
 
 it("retains the acknowledged exact preview owner after local history conversion fails, and keeps failed close retryable", async () => {
   let deliver!: (event: unknown) => void;
+  let openToken!: string;
   let closeCount = 0;
   h.invoke.mockImplementation(async (name: string, args: Wire) => {
     if (name === "session_import_preview") {
       deliver = args.channel.onmessage;
+      openToken = args.openToken;
       readable(args);
       args.channel.onmessage({
         update: {
@@ -115,7 +119,7 @@ it("retains the acknowledged exact preview owner after local history conversion 
       content: { type: "text", text: "LATE_MUST_NOT_REPAIR" },
     },
   });
-  marker({ channel: { onmessage: deliver } });
+  marker({ openToken, channel: { onmessage: deliver } });
   expect(preview.state).toEqual(before);
   expect(preview.replayComplete).toBe(false);
   await expect(closeHistoryPreview(preview)).rejects.toThrow(

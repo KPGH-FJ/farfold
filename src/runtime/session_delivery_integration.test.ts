@@ -7,6 +7,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads } from "./sessions";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 import { previewHistory } from "./history_import";
 import { draftPersistence } from "./drafts";
 
@@ -27,7 +28,11 @@ function send(
     event,
   });
 }
-function replay(args: Record<string, any>, marker: unknown) {
+function replay(
+  args: Record<string, any>,
+  marker: unknown,
+  acknowledgmentsAfter = 1,
+) {
   send(
     args,
     {
@@ -40,7 +45,7 @@ function replay(args: Record<string, any>, marker: unknown) {
     true,
   );
   send(args, marker, 2);
-  expect(acknowledgments()).toHaveLength(0);
+  expect(acknowledgments()).toHaveLength(acknowledgmentsAfter);
 }
 const acknowledgments = () =>
   h.invoke.mock.calls.filter(
@@ -53,12 +58,17 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 it.each([false, true])(
-  "observes actual open/load replay only after it enters the owned thread (resumed=%s)",
+  "observes actual open/load consumption in the private view before publication (resumed=%s)",
   async (resumed) => {
     const native = `observed-open-${++h.next}`;
     const key = `observed:/work:${native}`;
     h.invoke.mockImplementation(async (command, args) => {
       if (command === "session_open") {
+        emitOpeningHeader(args, {
+          cwd: "/work",
+          nativeSessionId: native,
+          connectionId: `connection-${native}`,
+        });
         replay(args, {
           kind: "session_history_complete",
           openToken: args.openToken,
@@ -73,11 +83,7 @@ it.each([false, true])(
         };
       }
       if (command === "session_delivery_observation_ack") {
-        expect(threads.thread(key)?.items).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({ kind: "agent", text: "Observed body" }),
-          ]),
-        );
+        expect(threads.thread(key)).toBeUndefined();
         return true;
       }
       return command === "settings_get" ? null : [];
@@ -88,19 +94,29 @@ it.each([false, true])(
       ...(resumed ? { nativeSessionId: native } : { fresh: true }),
     });
     expect(state.key).toBe(key);
+    expect(state.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ kind: "agent", text: "Observed body" }),
+      ]),
+    );
     expect(acknowledgments()).toHaveLength(1);
     expect(acknowledgments()[0][1].receipt.outcome).toBe("consumed");
   },
 );
 
-it("observes preview consumption after the invoked result rather than after buffering or its marker", async () => {
+it("observes preview consumption when the private view is actually projected before its invoked result", async () => {
   let resultReturned = false;
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_import_preview") {
-      replay(args, {
-        kind: "history_preview_complete",
-        previewToken: "preview",
-      });
+      replay(
+        args,
+        {
+          kind: "history_preview_complete",
+          openToken: args.openToken,
+          previewToken: "preview",
+        },
+        1,
+      );
       resultReturned = true;
       return {
         cwd: "/work",
@@ -111,7 +127,7 @@ it("observes preview consumption after the invoked result rather than after buff
       };
     }
     if (command === "session_delivery_observation_ack") {
-      expect(resultReturned).toBe(true);
+      expect(resultReturned).toBe(false);
       return true;
     }
     return null;
@@ -135,7 +151,7 @@ it("observes preview consumption after the invoked result rather than after buff
   expect(acknowledgments()[0][1].receipt.outcome).toBe("consumed");
 });
 
-it("observes fork replay only after the independent child is installed and reduced", async () => {
+it("observes fork replay after private reduction before independent child publication", async () => {
   const native = `observed-parent-${++h.next}`;
   const parent = threads.markOpenFailed(
     `observed:/work:${native}`,
@@ -152,6 +168,11 @@ it("observes fork replay only after the independent child is installed and reduc
   const key = `observed:/work:child-${native}`;
   h.invoke.mockImplementation(async (command, args) => {
     if (command === "session_fork_current") {
+      emitOpeningHeader(args, {
+        cwd: args.cwd,
+        nativeSessionId: `child-${native}`,
+        connectionId: `independent-${native}`,
+      });
       replay(args, {
         kind: "session_history_complete",
         openToken: args.openToken,
@@ -178,17 +199,18 @@ it("observes fork replay only after the independent child is installed and reduc
       };
     }
     if (command === "session_delivery_observation_ack") {
-      expect(threads.thread(key)?.items).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ kind: "agent", text: "Observed body" }),
-        ]),
-      );
+      expect(threads.thread(key)).toBeUndefined();
       return true;
     }
     return command === "settings_get" ? null : [];
   });
   const child = await threads.forkCurrent(parent.key);
   expect(child?.key).toBe(key);
+  expect(child?.items).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ kind: "agent", text: "Observed body" }),
+    ]),
+  );
   expect(acknowledgments()).toHaveLength(1);
   expect(acknowledgments()[0][1].receipt.outcome).toBe("consumed");
 });

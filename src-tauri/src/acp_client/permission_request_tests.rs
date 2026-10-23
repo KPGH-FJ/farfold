@@ -98,12 +98,31 @@ for line in sys.stdin:
     assert_eq!(event["request"], request);
     assert_eq!(event["toolCall"], request["toolCall"]);
     assert_eq!(event["options"], request["options"]);
+    let owner = &event["owner"];
+    assert_eq!(owner["sessionId"], opened.session_id);
+    assert_eq!(owner["connectionId"], opened.connection_id);
+    assert_eq!(owner["requestId"], event["requestId"]);
+    let mut foreign_owner = owner.clone();
+    foreign_owner["connectionId"] = json!("different-connection");
     assert_eq!(
         manager
-            .permission_respond(
+            .permission_respond_owned(
                 event["requestId"].as_str().unwrap(),
-                "yes",
-                &opened.session_id,
+                Some("yes"),
+                None,
+                Some(&foreign_owner),
+            )
+            .unwrap()
+            .status,
+        "expired"
+    );
+    assert_eq!(
+        manager
+            .permission_respond_owned(
+                event["requestId"].as_str().unwrap(),
+                Some("yes"),
+                None,
+                Some(owner),
             )
             .unwrap()
             .status,

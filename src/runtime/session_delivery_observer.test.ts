@@ -28,6 +28,16 @@ beforeEach(() => {
 });
 
 describe("content-free delivery consumption samples", () => {
+  it("keeps direct delivery consumption and receipts active while only native pulling is paused", () => {
+    const observer = new SessionDeliveryObserver("agent", "open");
+    const resume = observer.pause();
+    const consume = vi.fn(() => "consumed" as const);
+    observer.receive(envelope({ original: true }), consume);
+    expect(consume).toHaveBeenCalledExactlyOnceWith({ original: true });
+    expect(outcomes()).toEqual(["consumed"]);
+    resume();
+    expect(invoke).toHaveBeenCalledTimes(1);
+  });
   it("receipts only after the synchronous reducer returns, never on arrival", () => {
     const observer = new SessionDeliveryObserver("agent", "open");
     observer.receive(envelope({ update: "sample" }), () => {
@@ -180,6 +190,7 @@ describe("content-free delivery consumption samples", () => {
     const state = freshThreadState("key", "agent", "/work", "native");
     const marker = vi.fn(() => true);
     const apply = vi.fn();
+    const project = vi.fn(() => "consumed" as const);
     const consume = openDeliveryConsumer(observer, {
       key: () => "key",
       owns: () => false,
@@ -192,11 +203,12 @@ describe("content-free delivery consumption samples", () => {
       applyFailed: vi.fn(),
       apply,
       receiving: () => true,
-      buffer: vi.fn(),
+      project,
     });
     consume(envelope({ kind: "session_history_complete", openToken: "open" }));
     expect(marker).not.toHaveBeenCalled();
     expect(apply).not.toHaveBeenCalled();
+    expect(project).not.toHaveBeenCalled();
     expect(outcomes()).toEqual(["discarded"]);
   });
 });

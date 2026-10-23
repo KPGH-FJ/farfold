@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 const h = vi.hoisted(() => ({
   channels: [] as { onmessage: (event: unknown) => void }[],
@@ -10,6 +11,17 @@ vi.mock("@tauri-apps/api/core", () => ({
     if (command === "session_open") {
       const channel = args.channel as { onmessage: (event: unknown) => void };
       h.channels.push(channel);
+      const result = {
+        cwd: args.cwd as string,
+        nativeSessionId: args.nativeSessionId as string,
+        connectionId: `notification-connection-${h.channels.length}`,
+        resumed: true,
+        configOptions: [],
+      };
+      emitOpeningHeader(
+        { channel, openToken: args.openToken as string },
+        result,
+      );
       channel.onmessage({
         update: {
           sessionUpdate: "agent_message_chunk",
@@ -21,12 +33,7 @@ vi.mock("@tauri-apps/api/core", () => ({
         kind: "session_history_complete",
         openToken: args.openToken,
       });
-      return {
-        cwd: args.cwd,
-        nativeSessionId: args.nativeSessionId,
-        resumed: true,
-        configOptions: [],
-      };
+      return result;
     }
     if (command === "settings_get" && args.key === "autoArchiveDays")
       return null;

@@ -69,6 +69,7 @@ describe("existing conversation import", () => {
         });
         args.channel.onmessage({
           kind: "history_preview_complete",
+          openToken: args.openToken,
           previewToken: "owned",
         });
         return {
@@ -131,6 +132,7 @@ describe("existing conversation import", () => {
           });
           args.channel.onmessage({
             kind: "history_preview_complete",
+            openToken: args.openToken,
             previewToken: "owned",
           });
           return {
@@ -184,6 +186,7 @@ describe("existing conversation import", () => {
       });
       args.channel.onmessage({
         kind: "history_preview_complete",
+        openToken: args.openToken,
         previewToken: "owned",
       });
       return {
@@ -213,6 +216,7 @@ describe("existing conversation import", () => {
           });
           args.channel.onmessage({
             kind: "history_preview_complete",
+            openToken: args.openToken,
             previewToken: "owned",
           });
           return {
@@ -272,6 +276,7 @@ describe("existing conversation import", () => {
         });
         args.channel.onmessage({
           kind: "history_preview_complete",
+          openToken: args.openToken,
           previewToken: "owned",
         });
         return {
@@ -307,9 +312,11 @@ describe("existing conversation import", () => {
   });
   it("waits for replay on the same channel when invoke returns first", async () => {
     let deliver!: (event: unknown) => void;
+    let openToken!: string;
     invoke.mockImplementation(async (command, args) => {
       if (command === "session_import_preview") {
         deliver = args.channel.onmessage;
+        openToken = args.openToken;
         return {
           cwd: "/canonical/notes",
           nativeSessionId: "native",
@@ -332,7 +339,11 @@ describe("existing conversation import", () => {
         content: { type: "text", text: "Original question" },
       },
     });
-    deliver({ kind: "history_preview_complete", previewToken: "other" });
+    deliver({
+      kind: "history_preview_complete",
+      openToken: "other-request",
+      previewToken: "other",
+    });
     await Promise.resolve();
     expect(settled).toBe(false);
     deliver({
@@ -342,7 +353,11 @@ describe("existing conversation import", () => {
       },
     });
     expect(invoke).toHaveBeenCalledTimes(1);
-    deliver({ kind: "history_preview_complete", previewToken: "owned" });
+    deliver({
+      kind: "history_preview_complete",
+      openToken,
+      previewToken: "owned",
+    });
     const preview = await pending;
     expect(hasPreviewContent(preview)).toBe(true);
     expect(
@@ -363,6 +378,7 @@ describe("existing conversation import", () => {
     invoke.mockImplementationOnce(async (_command, args) => {
       args.channel.onmessage({
         kind: "history_preview_complete",
+        openToken: args.openToken,
         previewToken: "owned",
       });
       return {
@@ -411,8 +427,10 @@ describe("existing conversation import", () => {
   it("retains ownership on a missing completion marker and never admits or later mutates partial replay", async () => {
     vi.useFakeTimers();
     let deliver!: (event: unknown) => void;
+    let openToken!: string;
     invoke.mockImplementationOnce(async (_command, args) => {
       deliver = args.channel.onmessage;
+      openToken = args.openToken;
       deliver({
         update: {
           sessionUpdate: "user_message_chunk",
@@ -441,7 +459,11 @@ describe("existing conversation import", () => {
         content: { type: "text", text: "Late partial text" },
       },
     });
-    deliver({ kind: "history_preview_complete", previewToken: "owned" });
+    deliver({
+      kind: "history_preview_complete",
+      openToken,
+      previewToken: "owned",
+    });
     expect(preview.state.items).toEqual(before);
     expect(preview.replayComplete).toBe(false);
     invoke.mockRejectedValueOnce(new Error("close failed"));

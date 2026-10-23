@@ -151,8 +151,19 @@ async fn run(
             || cx.send_request_to(Agent, wire),
             fork_events,
         ),
-    )
-    .await
+    );
+    tokio::pin!(response);
+    let response = tokio::select! {
+        biased;
+        result = &mut response => result,
+        _ = ops.life.routes.unclaimed_pressure() => {
+            // A finite prefix may exceed the unassigned-message watermark
+            // before the child ID arrives. Report unknown promptly, retaining
+            // this exact request, source reservations and original dispatches.
+            state.fail("message_backlog");
+            response.await
+        }
+    }
     .ok_or("unavailable")?
     .map_err(|_| "unavailable")?;
     (request.events)(
@@ -165,7 +176,13 @@ async fn run(
         .filter(|id| !id.is_empty() && id.len() <= 4096 && !id.chars().any(char::is_control))
         .ok_or("identity_conflict")?
         .to_owned();
-    state.result.lock().expect("fork state").child_session_id = Some(id.clone());
+    {
+        let mut result = state.result.lock().expect("fork state");
+        result.child_session_id = Some(id.clone());
+        if result.reason == Some("message_backlog") {
+            result.reason = None;
+        }
+    }
     state.publish("running");
     if id == request.parent {
         return Err("identity_conflict");
@@ -250,6 +267,7 @@ async fn run(
         &request.cwd,
         Some(id.clone()),
         Some(request.operation_id.clone()),
+        None,
         Some(snapshot.config),
         store.clone(),
         vec![],
@@ -312,6 +330,7 @@ async fn run(
             &store.store,
             opening,
             request.history.clone(),
+            Some(request.open_token.clone()),
         )
         .await
         .map_err(|_| "destination_open_failed")?;

@@ -320,6 +320,8 @@ export const STRINGS = {
       "回复结果未知，请等待 Agent 更新；需要结束时可停止当前任务",
     modelLocked: "已有对话的模型与思考选项请在聊天中调整",
     historyUnavailable: "未能完整读取对话内容，请重试或新开对话",
+    deliveryInterrupted:
+      "界面未能完整接收对话内容，当前工作的结果仍不确定。请重新查看连接状态。",
     historyEmpty: "未能读取对话内容，请重试读取或新开会话",
     historyFailed: "对话读取失败",
     historyTargetHasContent:

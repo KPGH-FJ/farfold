@@ -3,10 +3,8 @@ import { invoke } from "@tauri-apps/api/core";
 import type { OpenInput, OpenResult } from "./sessions";
 import type { ServiceIdentity } from "./credentials";
 import type { ThreadState } from "./session_types";
-import { applyUpdate, freshThreadState } from "./session_projection";
-import { hasReadableMessages } from "./message_attachments";
+import { freshThreadState } from "./session_projection";
 import { STRINGS } from "./strings";
-import { consumeHistoryEvents } from "./history_replay_work";
 import { composerDrafts, hasUnsentWork } from "./drafts";
 
 /** Generated only after this app's successful resumed session_open reply. */
@@ -59,78 +57,20 @@ export function historyFailureKey(error: unknown): string | undefined {
   return isHistoryReadFailure(error) ? error.failedKey : undefined;
 }
 
-/** One unchanged complete preprojection serves synchronous checks and the
- * cooperative production reader. No partial projection becomes the thread. */
-function readableHistoryProjection(
+/** Validate facts from the actual, privately owned projection. The marker
+ * captures readability before following live updates; validation never builds
+ * another body or replays an event. */
+export function requireReadableProjectedHistory(
   agentId: string,
   result: OpenResult,
   complete: boolean,
-  lost: () => boolean,
-) {
-  const verifyConnection = () => {
-    if (lost()) throw new Error(STRINGS.thread.connectionLost);
-  };
-  verifyConnection();
-  const key = `${agentId}:${result.cwd}:${result.nativeSessionId}`;
-  if (!complete) throw new HistoryReadFailure("incomplete", key);
-  const replay = freshThreadState(
-    "replay",
-    agentId,
-    result.cwd,
-    result.nativeSessionId,
-  );
-  return {
-    receive(event: unknown) {
-      verifyConnection();
-      if (event && typeof event === "object" && "update" in event)
-        applyUpdate(replay, event.update);
-    },
-    finish() {
-      verifyConnection();
-      if (!hasReadableMessages(replay.items))
-        throw new HistoryReadFailure("empty", key);
-    },
-  };
-}
-
-/** Keep the synchronous conversion/error contract for existing direct checks. */
-export function requireReadableHistory(
-  agentId: string,
-  result: OpenResult,
-  buffered: Iterable<unknown>,
-  complete: boolean,
+  readablePrefix: boolean,
   lost: boolean,
 ): void {
-  const projection = readableHistoryProjection(
-    agentId,
-    result,
-    complete,
-    () => lost,
-  );
-  for (const event of buffered) projection.receive(event);
-  projection.finish();
-}
-
-/** The same complete validator, with finite work batches. The loss predicate
- * belongs to this original channel; a new callback opportunity is not success. */
-export async function requireReadableHistoryCooperatively(
-  agentId: string,
-  result: OpenResult,
-  buffered: Iterable<unknown>,
-  complete: boolean,
-  lost: () => boolean,
-  current: () => boolean = () => true,
-): Promise<void> {
-  const verifyOwner = () => {
-    if (!current()) throw new Error(STRINGS.repair.reconnectFailed);
-  };
-  const projection = readableHistoryProjection(agentId, result, complete, lost);
-  await consumeHistoryEvents(buffered, (event) => {
-    verifyOwner();
-    projection.receive(event);
-  });
-  verifyOwner();
-  projection.finish();
+  if (lost) throw new Error(STRINGS.thread.connectionLost);
+  const key = `${agentId}:${result.cwd}:${result.nativeSessionId}`;
+  if (!complete) throw new HistoryReadFailure("incomplete", key);
+  if (!readablePrefix) throw new HistoryReadFailure("empty", key);
 }
 
 interface RecoveryInput {

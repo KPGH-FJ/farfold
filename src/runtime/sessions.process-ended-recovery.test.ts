@@ -40,6 +40,13 @@ beforeEach(async () => {
         sessionId: h.reuseSessionId ?? `owned-session-${number}`,
       };
       h.opens.push(row);
+      args.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: args.cwd,
+        sessionId: row.sessionId,
+        connectionId: row.connectionId,
+      });
       if (h.early)
         args.processEndedChannel.onmessage({
           connectionId: row.connectionId,

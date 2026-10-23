@@ -576,7 +576,7 @@ pub(super) enum NativeAction {
     Input { text: String },
 }
 pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<String, String> {
-    let raw = observation::run(app, scope, None).await?;
+    let raw = observation::run(app, scope, None, false).await?;
     let page: Value = serde_json::from_str(&raw).map_err(|_| "网页返回内容无效")?;
     // The ordinary read surface returns text only, matching the common
     // NativeSnapshot contract and its smaller response-size limit.
@@ -591,9 +591,9 @@ pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<S
 pub(super) async fn observe(
     app: &AppHandle,
     scope: FixedPageReadScope,
-    _screenshot: bool,
+    screenshot: bool,
 ) -> Result<String, String> {
-    observation::run(app, scope, None).await
+    observation::run(app, scope, None, screenshot).await
 }
 pub(super) async fn act(
     app: &AppHandle,
@@ -602,7 +602,7 @@ pub(super) async fn act(
     node_ref: String,
     action: NativeAction,
 ) -> Result<String, String> {
-    observation::run(app, scope, Some((observation_id, node_ref, action))).await
+    observation::run(app, scope, Some((observation_id, node_ref, action)), false).await
 }
 
 #[cfg(test)]

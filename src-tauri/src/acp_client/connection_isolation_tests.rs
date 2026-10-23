@@ -316,6 +316,7 @@ async fn failed_new_validation_keeps_known_identity_until_exact_process_reaping(
                 fork_owned: false,
                 native_session_id: None,
                 preview_token: None,
+                opening_token: None,
                 recorded_config: None,
                 config_store: Box::new(crate::acp_client::model_guard::ConfigStore {
                     store: f.store.clone(),

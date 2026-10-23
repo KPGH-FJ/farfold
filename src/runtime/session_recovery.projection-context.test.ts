@@ -7,13 +7,15 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads, type OpenResult } from "./sessions";
-import { requireReadableHistory } from "./session_recovery";
+import { historyFailureKey, isHistoryReadFailure } from "./session_recovery";
+import { SessionOpenReplay } from "./session_open_replay";
 const access = threads as unknown as {
   applyChannelEvent(key: string, event: unknown, live?: boolean): void;
 };
 const result: OpenResult = {
   cwd: "/architecture",
   nativeSessionId: "same",
+  connectionId: "architecture-connection",
   resumed: true,
   configOptions: [],
   warnings: [],
@@ -24,7 +26,41 @@ const readable = {
     content: { type: "text", text: "READABLE" },
   },
 };
-it("precheck config conversion can throw while the real channel deliberately retains that update raw", async () => {
+function replay(event: unknown, reply: OpenResult) {
+  const reader = new SessionOpenReplay({
+    agentId: "architecture",
+    cwd: reply.cwd,
+  });
+  reader.push({
+    kind: "sessionOpening",
+    openToken: reader.token,
+    cwd: reply.cwd,
+    sessionId: reply.nativeSessionId,
+    connectionId: reply.connectionId,
+  });
+  expect(reader.push(readable)).toBe("consumed");
+  expect(reader.push(event)).toBe("consumed");
+  reader.receiveMarker({
+    kind: "session_history_complete",
+    openToken: reader.token,
+  });
+  return reader;
+}
+function expectTypedFailure(reader: SessionOpenReplay, reply: OpenResult) {
+  let failure: unknown;
+  try {
+    reader.accept(reply, null);
+  } catch (error) {
+    failure = error;
+  }
+  expect(failure).toBeInstanceOf(TypeError);
+  expect(isHistoryReadFailure(failure)).toBe(true);
+  expect(historyFailureKey(failure)).toBe(
+    `architecture:${reply.cwd}:${reply.nativeSessionId}`,
+  );
+  reader.clear();
+}
+it("rejects malformed historical config with a typed failure while the live channel retains the same update raw", async () => {
   const state = threads.markOpenFailed(
     "architecture:/architecture:config",
     "architecture",
@@ -42,15 +78,8 @@ it("precheck config conversion can throw while the real channel deliberately ret
       ],
     },
   };
-  expect(() =>
-    requireReadableHistory(
-      "architecture",
-      { ...result, nativeSessionId: state.nativeSessionId },
-      [readable, event],
-      true,
-      false,
-    ),
-  ).toThrow(TypeError);
+  const reply = { ...result, nativeSessionId: state.nativeSessionId };
+  expectTypedFailure(replay(event, reply), reply);
   expect(() => access.applyChannelEvent(state.key, event, false)).not.toThrow();
   expect(
     state.items.some(
@@ -59,7 +88,7 @@ it("precheck config conversion can throw while the real channel deliberately ret
   ).toBe(true);
   await threads.close(state.key);
 });
-it("opened legacy mode context can throw on a field that the blank admission context skips", async () => {
+it("validates malformed historical mode against the actual returned legacy baseline", async () => {
   const state = threads.markOpenFailed(
     "architecture:/architecture:mode",
     "architecture",
@@ -75,15 +104,20 @@ it("opened legacy mode context can throw on a field that the blank admission con
       currentModeId: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
-  expect(() =>
-    requireReadableHistory(
-      "architecture",
-      { ...result, nativeSessionId: state.nativeSessionId },
-      [readable, event],
-      true,
-      false,
-    ),
-  ).not.toThrow();
+  const reply = { ...result, nativeSessionId: state.nativeSessionId };
+  const withoutLegacy = replay(event, reply).accept(reply, null);
+  expect(withoutLegacy.items).toContainEqual(
+    expect.objectContaining({ kind: "agent", text: "READABLE" }),
+  );
+  const legacyReply = {
+    ...reply,
+    configOptionsModern: false,
+    modes: {
+      currentModeId: "ask",
+      availableModes: [{ id: "ask", name: "Ask" }],
+    },
+  };
+  expectTypedFailure(replay(event, legacyReply), legacyReply);
   expect(() => access.applyChannelEvent(state.key, event, false)).toThrow(
     TypeError,
   );

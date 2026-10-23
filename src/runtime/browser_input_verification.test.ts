@@ -235,6 +235,7 @@ describe("one-time native input verification", () => {
       "kind",
       "inputText",
       "deadline",
+      "inspectClosedRoots",
     ]);
     const page = inputPage("INPUT", "macos");
     await page.observe();

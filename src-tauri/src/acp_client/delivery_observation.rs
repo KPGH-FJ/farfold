@@ -47,6 +47,7 @@ impl Totals {
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Snapshot {
+    delivery: super::delivery_flow::Snapshot,
     totals: Totals,
     live_owners: usize,
     pending_samples: usize,
@@ -62,7 +63,10 @@ struct Registered {
     state: Arc<Mutex<State>>,
 }
 #[derive(Default)]
-pub(super) struct Registry(Mutex<RegistryState>);
+pub(super) struct Registry(
+    Mutex<RegistryState>,
+    pub(super) Arc<super::delivery_flow::Registry>,
+);
 struct Pending {
     id: u64,
     sequence: u64,
@@ -82,7 +86,11 @@ pub(super) struct Observation {
     registry: Weak<Registry>,
 }
 impl Registry {
-    fn create(self: &Arc<Self>, owner: Owner, token: String) -> Result<Arc<Observation>, String> {
+    pub(super) fn create(
+        self: &Arc<Self>,
+        owner: Owner,
+        token: String,
+    ) -> Result<Arc<Observation>, String> {
         let mut random = [0_u8; 16];
         getrandom::fill(&mut random).map_err(|_| "无法核对界面接收状态")?;
         let id = random.iter().map(|byte| format!("{byte:02x}")).collect();
@@ -119,6 +127,7 @@ impl Registry {
             .unwrap_or_default()
     }
     pub(super) fn retire_invalid(&self, admission: &super::history_admission::Admission) {
+        self.1.retire_invalid(admission);
         for observation in self.owners() {
             if !admission.current_owner(&observation.owner) {
                 observation.retire();
@@ -126,8 +135,12 @@ impl Registry {
         }
     }
     fn snapshot(&self) -> Snapshot {
+        // Flow snapshots temporarily own queues. Dropping the last such owner
+        // can retire its Observation, which needs this registry's lock.
+        let delivery = self.1.snapshot();
         let registry = self.0.lock().unwrap_or_else(|e| e.into_inner());
         let mut snapshot = Snapshot {
+            delivery,
             totals: registry.retired,
             live_owners: 0,
             pending_samples: 0,
@@ -299,7 +312,9 @@ impl IpcResponse for DeliveryEvent {
 
 #[derive(Clone)]
 pub(super) enum DeliveryChannel {
+    #[cfg(test)]
     Observed(Channel<DeliveryEvent>, Arc<Observation>),
+    Flow(super::delivery_flow::Sender, Arc<Observation>),
     // Existing internal non-WebView callers retain their exact event surface.
     Direct(Channel<Value>),
 }
@@ -314,7 +329,7 @@ impl DeliveryChannel {
         window: &Window,
         agent: &str,
         token: &str,
-        channel: Channel<DeliveryEvent>,
+        channel: Channel<super::delivery_flow::Wake>,
     ) -> Result<Self, String> {
         let owner = manager
             .history_admission
@@ -322,12 +337,37 @@ impl DeliveryChannel {
             .map_err(super::cold_history_open::error)?;
         let observation = manager
             .delivery_observations
-            .create(owner, token.to_owned())?;
-        Ok(Self::Observed(channel, observation))
+            .create(owner.clone(), token.to_owned())?;
+        let flow = manager.delivery_observations.1.create(
+            owner,
+            token.to_owned(),
+            channel,
+            observation.clone(),
+        )?;
+        Ok(Self::Flow(flow, observation))
     }
     pub(super) fn send(&self, event: Value) -> tauri::Result<()> {
         match self {
             Self::Direct(channel) => channel.send(event),
+            Self::Flow(flow, observation) => {
+                let InvokeResponseBody::Json(body) = DeliveryEvent {
+                    event,
+                    observation: observation.clone(),
+                }
+                .body()?
+                else {
+                    unreachable!("JSON delivery envelope")
+                };
+                let result = flow.send(body);
+                if result.is_err()
+                    && let Ok(mut state) = observation.state.lock()
+                    && !state.retired
+                {
+                    state.totals.send_failures = state.totals.send_failures.saturating_add(1);
+                }
+                result
+            }
+            #[cfg(test)]
             Self::Observed(channel, observation) => {
                 let result = channel.send(DeliveryEvent {
                     event,

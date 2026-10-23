@@ -12,6 +12,7 @@ import {
   threads,
   type IndexRow,
 } from "./sessions";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 let stored: IndexRow;
 let channel: { onmessage: (event: unknown) => void };
@@ -32,6 +33,18 @@ beforeEach(() => {
     async (command: string, args: Record<string, unknown>) => {
       if (command === "session_open") {
         channel = args.channel as typeof channel;
+        const result = {
+          nativeSessionId: stored.nativeSessionId!,
+          connectionId: "cold-title-connection",
+          cwd: stored.cwd,
+          resumed: true,
+          configOptions: [],
+          warnings: [],
+        };
+        emitOpeningHeader(
+          { channel, openToken: args.openToken as string },
+          result,
+        );
         channel.onmessage({
           update: {
             sessionUpdate: "session_info_update",
@@ -48,13 +61,7 @@ beforeEach(() => {
           kind: "session_history_complete",
           openToken: args.openToken,
         });
-        return {
-          nativeSessionId: stored.nativeSessionId,
-          cwd: stored.cwd,
-          resumed: true,
-          configOptions: [],
-          warnings: [],
-        };
+        return result;
       }
       if (command === "session_index_list") return [stored];
       if (command === "settings_get") return 0;

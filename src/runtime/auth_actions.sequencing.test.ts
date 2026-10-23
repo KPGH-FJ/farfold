@@ -10,6 +10,7 @@ import { beginAuthentication, beginPreparationAction } from "./auth_actions";
 import { preparationFor } from "./agent_preparation";
 import { applyUpdate, threads, type ThreadState } from "./sessions";
 import { invalidateAuthentication } from "./authentication";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -26,14 +27,18 @@ const calls = (command: string) =>
 beforeEach(() => {
   h.invoke.mockReset();
   h.invoke.mockImplementation(async (command, args) => {
-    if (command === "session_open")
-      return {
+    if (command === "session_open") {
+      const result = {
         cwd: args.cwd,
         nativeSessionId: `preview-${++sequence}`,
+        connectionId: `preview-connection-${sequence}`,
         resumed: false,
         configOptions: [],
         warnings: [],
       };
+      emitOpeningHeader(args, result);
+      return result;
+    }
     if (command === "auth_run")
       return args.viaTerminal
         ? { kind: "terminal", ptyId: "terminal" }
@@ -96,13 +101,14 @@ it("closes an owned unprompted read with startup content before authenticating, 
         content: { type: "text", text },
       },
     });
-  h.invoke.mockImplementation((command, args) => {
+  h.invoke.mockImplementation(async (command, args) => {
+    const result = await original(command, args);
     if (command === "session_open") {
       channel = args.channel;
       initialize("Startup information");
       channel.onmessage({ update: unknown });
     }
-    return original(command, args);
+    return result;
   });
   const f = await preview("startup-content");
   const state = threads.thread(f.key)!;
@@ -138,11 +144,10 @@ it("closes an owned unprompted read with startup content before authenticating, 
   ]);
   expect(state.items[1]).toMatchObject({ update: unknown });
   expect(calls("session_dismiss")).toHaveLength(0);
+  const retained = [...state.items];
   channel!.onmessage({ update: { sessionUpdate: "late_future_startup" } });
-  expect(state.items.at(-1)).toMatchObject({
-    kind: "raw",
-    update: { sessionUpdate: "late_future_startup" },
-  });
+  expect(state.items).toEqual(retained);
+  expect(state.items).toHaveLength(3);
   await job.cancel();
 });
 
@@ -470,13 +475,16 @@ it("waits for an in-flight model read and then closes its returned empty draft",
   });
   const job = start(target);
   expect(calls("auth_run")).toHaveLength(0);
-  open.resolve({
+  const result = {
     cwd: target.cwd,
     nativeSessionId: "delayed",
+    connectionId: "delayed-connection",
     resumed: false,
     configOptions: [],
     warnings: [],
-  });
+  };
+  emitOpeningHeader(calls("session_open").at(-1)![1], result);
+  open.resolve(result);
   await opening;
   await vi.waitFor(() => expect(calls("session_close")).toHaveLength(1));
   expect(calls("auth_run")).toHaveLength(0);
@@ -506,12 +514,15 @@ it("keeps a pending read owned after manual configuration invalidation until str
   // Saving an explicit manual command revokes verification while the read is pending.
   invalidateAuthentication(target.agentId);
   const job = start(target, "terminal", true);
-  open.resolve({
+  const result = {
     cwd: target.cwd,
     nativeSessionId: "manual-delayed",
+    connectionId: "manual-delayed-connection",
     resumed: false,
     configOptions: [],
-  });
+  };
+  emitOpeningHeader(calls("session_open").at(-1)![1], result);
+  open.resolve(result);
   await opening;
   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed"));
   expect(calls("auth_manual_run")).toHaveLength(0);
@@ -547,12 +558,15 @@ it("does not let a delayed model read clear a service configuration's explicit r
     onChanged: async () => {},
   });
   const gate = controller.getSnapshot().explicitReadTargets;
-  open.resolve({
+  const result = {
     cwd: target.cwd,
     nativeSessionId: "configure-delayed",
+    connectionId: "configure-delayed-connection",
     resumed: false,
     configOptions: [],
-  });
+  };
+  emitOpeningHeader(calls("session_open").at(-1)![1], result);
+  open.resolve(result);
   await opening;
   await vi.waitFor(() =>
     expect(calls("agent_preparation_action_run")).toHaveLength(1),

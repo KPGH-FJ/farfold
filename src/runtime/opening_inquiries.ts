@@ -2,12 +2,19 @@ import { invoke } from "@tauri-apps/api/core";
 import { readElicitation, replyToElicitation } from "./elicitation";
 import { INQUIRY as S } from "./elicitation_strings";
 import type { PendingElicitation } from "./session_types";
+import type { ThreadState } from "./session_types";
+import {
+  OpeningPermissions,
+  readOpeningPermission,
+  type OpeningPermission,
+} from "./opening_permissions";
 
 export interface OpeningInquiryView {
   id: string;
   agentId: string;
   cwd: string;
   requests: PendingElicitation[];
+  permissions: OpeningPermission[];
   ended: boolean;
   notice?: string;
   details?: unknown;
@@ -21,16 +28,30 @@ export class OpeningInquiryOwner {
   private epoch = 0;
   private cleanup: (() => void)[] = [];
   private interested: (() => boolean)[] = [];
+  private permissions = new OpeningPermissions(
+    (p) => ({
+      current: () => this.current() && this.view.permissions.includes(p),
+      canSubmit: () => this.current() && this.view.permissions.includes(p),
+      changed: () => this.update({ permissions: [...this.view.permissions] }),
+      remove: () =>
+        this.update({
+          permissions: this.view.permissions.filter((item) => item !== p),
+        }),
+    }),
+    () => this.epoch,
+  );
   constructor(
     agentId: string,
     cwd: string,
     private publish: () => void,
+    private permissionPolicy: "ask" | "cancel" = "ask",
   ) {
     this.view = {
       id: crypto.randomUUID(),
       agentId,
       cwd,
       requests: [],
+      permissions: [],
       ended: false,
     };
   }
@@ -64,6 +85,29 @@ export class OpeningInquiryOwner {
   receive(value: unknown): boolean {
     if (!value || typeof value !== "object") return false;
     const event = value as Record<string, unknown>;
+    if (event.kind === "permissionRequest") {
+      const permission = readOpeningPermission(event);
+      if (!permission) return false;
+      if (!this.current() || this.permissionPolicy === "cancel") {
+        this.permissions.reject(permission);
+        return true;
+      }
+      if (!this.permissions.add(permission)) return true;
+      this.update({ permissions: [...this.view.permissions, permission] });
+      return true;
+    }
+    if (
+      event.kind === "interactionExpired" &&
+      typeof event.requestId === "string"
+    ) {
+      if (this.permissions.expire(event.requestId)) return true;
+    }
+    if (event.kind === "interactionsCancelled") {
+      this.permissions.retire();
+      this.update({ permissions: [] });
+      // Preserve the ordinary channel's cancellation of other interactions.
+      return false;
+    }
     if (event.kind === "elicitation") {
       const item = readElicitation(event);
       if (!item) return false;
@@ -113,10 +157,14 @@ export class OpeningInquiryOwner {
     this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
     this.view.requests.forEach((p) => this.cancelReply(p));
+    this.permissions.retire();
     this.update({
       requests: [],
+      permissions: [],
       ended: true,
-      ...(this.view.requests.length ? { notice: S.closed } : {}),
+      ...(this.view.requests.length || this.view.permissions.length
+        ? { notice: S.closed }
+        : {}),
     });
   }
   retireUninterested() {
@@ -126,13 +174,40 @@ export class OpeningInquiryOwner {
     this.available = false;
     this.interested = [];
     this.cleanup.splice(0).forEach((fn) => fn());
+    this.permissions.retire();
     this.update({
       requests: [],
+      permissions: [],
       ended: true,
-      ...(failed && (this.view.requests.length || this.view.notice)
+      ...(failed &&
+      (this.view.requests.length ||
+        this.view.permissions.length ||
+        this.view.notice)
         ? { notice: S.openEnded }
         : {}),
     });
+  }
+  decidePermission(id: string, optionId: string) {
+    this.permissions.decide(id, optionId);
+  }
+  undoPermission(id: string) {
+    this.permissions.undo(id);
+  }
+  cancelPermission(id: string) {
+    const permission = this.view.permissions.find((p) => p.requestId === id);
+    if (!permission) return;
+    this.permissions.abandon(permission);
+    this.update({
+      permissions: this.view.permissions.filter((p) => p !== permission),
+    });
+  }
+  handoffPermissions(
+    state: ThreadState,
+    current: () => boolean,
+    changed: () => void,
+  ) {
+    this.permissions.handoff(state, current, changed);
+    this.update({ permissions: [] });
   }
   edit(id: string, name: string, value: unknown) {
     const p = this.view.requests.find((p) => p.requestId === id);
@@ -183,7 +258,10 @@ class OpeningInquiries {
     for (const [key] of ended.slice(0, -16)) this.owners.delete(key);
     this.snapshot = [...this.owners.values()]
       .map((owner) => owner.snapshot())
-      .filter((item) => item.requests.length || item.notice);
+      .filter(
+        (item) =>
+          item.requests.length || item.permissions.length || item.notice,
+      );
     this.listeners.forEach((fn) => fn());
   };
   begin(
@@ -193,12 +271,14 @@ class OpeningInquiries {
       cwd: string;
       inquiryCurrent?: () => boolean;
       inquirySignal?: AbortSignal;
+      inquiryPermissions?: "ask" | "cancel";
     },
   ) {
     const owner = new OpeningInquiryOwner(
       input.agentId,
       input.cwd,
       this.publish,
+      input.inquiryPermissions,
     );
     owner.addInterest(input.inquiryCurrent, input.inquirySignal);
     this.owners.set(key, owner);

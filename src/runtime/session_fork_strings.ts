@@ -31,4 +31,6 @@ export const SESSION_FORK_STRINGS = {
   workDisabled: "请先恢复这条对话的工作，再进行复制。",
   ownerEnded:
     "原对话的连接已结束，复制结果仍未确认；请保留本次结果，勿再次复制。",
+  messageBacklog:
+    "Agent 在确认新对话前发送了过多消息，结果尚未确认；请检查此连接，不要重复复制。",
 } as const;

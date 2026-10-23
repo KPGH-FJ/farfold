@@ -70,7 +70,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     let mut permissions = PermissionGuard::new(false, &initial, false);
     let mut opening = None;
     let mut mutation = None;
-    let (send, mut inbox) = mpsc::unbounded_channel();
+    let (send, mut inbox) = super::super::session_routes::Routes::default().channel();
     let envelopes = snapshots
         .iter()
         .enumerate()

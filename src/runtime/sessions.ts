@@ -1,12 +1,14 @@
+import {
+  applySessionEvent,
+  flushSessionMetadata,
+} from "./session_event_projection";
 import { SessionDeliveryObserver } from "./session_delivery_observer";
+import { OwnedSessionChannel, SessionChannels } from "./session_channels";
 import { openDeliveryConsumer } from "./session_open_delivery";
 import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
 import { PromptRequestOwner } from "./prompt_admission";
-import {
-  processEndedReceipt,
-  type ProcessEndedReceipt,
-} from "./session_process_ended";
+import { ProcessEndedChannel } from "./session_process_ended";
 import { retainIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
@@ -16,7 +18,6 @@ import {
   retirePreparationRead,
 } from "./session_draft_cleanup";
 import {
-  applyConfigCheck,
   releaseConfigurationPause,
   sameConfigurationSnapshot,
   type ConfigCheck,
@@ -28,13 +29,10 @@ import {
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
 import { configChangeBusy } from "./protected_config";
-import { retainReportedDetails } from "./reported_details";
-import { receiveAsyncTasks, type AsyncTask } from "./async_tasks";
+import type { AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
-import { receiveWorkActivity } from "./session_work_activity";
 import { hasActiveCompaction } from "./compaction_activity";
-import { hasActiveFork, receiveForkActivity } from "./session_fork_activity";
-import { openedThreadState } from "./session_open_state";
+import { hasActiveFork } from "./session_fork_activity";
 import { SessionForks } from "./session_fork";
 import { threadNeedsAttention } from "./thread_attention";
 /**
@@ -51,11 +49,8 @@ import { threadNeedsAttention } from "./thread_attention";
  * inside this runtime module only (AGENTS.md vocabulary rule).
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
-import {
-  observeDesktopNotification,
-  checkDesktopNotifications,
-} from "./desktop_notifications";
-import { paneCards, appendToolOutput } from "./artifacts";
+import { checkDesktopNotifications } from "./desktop_notifications";
+import { paneCards } from "./artifacts";
 import { artifactPaneCards } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
@@ -71,12 +66,9 @@ import { archiveActivity } from "./archive_activity";
 import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
 import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
-import { finishHistoryPrefix } from "./history_replay";
 import {
   SessionOpenReplay,
   applyFailedHistoryEvent,
-  hasOwnUpdate,
-  isHistoryMarkerShape,
 } from "./session_open_replay";
 import { historyReads } from "./session_history_admission";
 import {
@@ -117,7 +109,6 @@ export interface IndexRow {
 }
 
 import type { OpenResult } from "./session_open_types";
-import { replacePermissionEffect } from "./permission_effect";
 export type { OpenResult } from "./session_open_types";
 
 /** External conversation shape accepted by the sidebar grouping helper. */
@@ -156,26 +147,10 @@ export {
 } from "./session_projection";
 import {
   freshThreadState,
-  applyElicitation,
-  completeElicitation,
-  clearPendingRequests,
-  expirePendingRequest,
-  applyUpdate,
-  applyTurnEnd,
   applyConnectionLost,
-  normalizeConfigOptions,
-  replaceConfigOptions,
-  modelConfigOption,
-  modelValueOf,
-  synthesizeModeOption,
-  applyPermissionRequest,
   nextItemId,
-  pushRaw,
-  pushNotification,
-  isKnownConfigUpdate,
 } from "./session_projection";
 import { ThreadNotifications } from "./thread_notifications";
-import { conversationReadState } from "./conversation_read_state";
 import { observeBrowserRequests } from "./session_browser_attention";
 
 export interface ThreadsSnapshot {
@@ -215,14 +190,18 @@ class ThreadsStore {
     autoArchiveDays: this.autoArchiveDays,
   };
   /** channel kept alive per thread key. */
-  private channels = new Map<string, Channel<unknown>>();
+  private channels = new SessionChannels();
   private permissionRevisions = new Map<string, number>();
   private forks = new SessionForks({
     thread: (key) => this.thread(key),
     rows: () => this.indexRows,
-    install: (state, channel) => {
+    install: (state, channel, permissionChanges) => {
       this.threads.set(state.key, state);
       this.channels.set(state.key, channel);
+      this.recordPermissionChanges(state.key, permissionChanges);
+      flushSessionMetadata(state, () => {
+        void this.refreshIndex();
+      });
     },
     ownsChannel: (key, channel) => this.channels.get(key) === channel,
     apply: (key, event, live) => this.applyChannelEvent(key, event, live),
@@ -403,226 +382,49 @@ class ThreadsStore {
     this.emit();
   }
 
+  private recordPermissionChanges(key: string, count = 1): void {
+    if (count > 0)
+      this.permissionRevisions.set(
+        key,
+        (this.permissionRevisions.get(key) ?? 0) + count,
+      );
+  }
+
   private applyChannelEvent(
     key: string,
     event: unknown,
     live = true,
     activityConnectionId?: string,
   ): void {
-    const s = this.threads.get(key);
-    if (!s || !event || typeof event !== "object") return;
-    const e = event as Record<string, unknown>;
-    const updateEnvelope = hasOwnUpdate(e);
-    const kind = updateEnvelope ? undefined : e.kind;
-    const endingOwner =
-      kind === "turnEnd" ? this.promptOwners.get(s) : undefined;
-    // Validate before notifications or projection can treat an ending as ours.
-    // Unknown Agent envelopes and foreign receipts remain raw observations.
-    if (
-      kind === "turnEnd" &&
-      (Object.hasOwn(e, "sessionId") ||
-        (endingOwner && !endingOwner.ending(e.promptReceiptId)))
-    ) {
-      pushRaw(s, e);
-      this.emit(key);
-      return;
-    }
-    observeDesktopNotification(
-      s,
-      updateEnvelope ? {} : e,
+    const state = this.threads.get(key);
+    if (!state) return;
+    applySessionEvent(
+      state,
+      event,
       live,
-      () => this.thread(key) === s,
+      {
+        owns: () => this.thread(key) === state,
+        promptOwner: () => this.promptOwners.get(state),
+        configurationChanging: () => this.configurations.changing(state),
+        receiveConfigCheck: (check) =>
+          this.configurations.receiveCheck(state, check),
+        finishActivity: () => this.finishArchiveActivity(state),
+        permissionChanged: () => this.recordPermissionChanges(key),
+        clearStop: () => this.stopConfirmation.clear(key),
+        closeChannel: () => {
+          this.channels.delete(key);
+        },
+        emit: () => this.emit(key),
+        drain: () => {
+          void this.drainQueue(key);
+        },
+        refresh: () => {
+          void this.refreshIndex();
+        },
+        schedule: () => this.notifications.schedule(key),
+      },
+      activityConnectionId,
     );
-    if (kind === "configOptions") {
-      if (!this.configurations.changing(s))
-        replaceConfigOptions(
-          s,
-          normalizeConfigOptions(e.options),
-          e.modern !== false,
-        );
-    } else if (kind === "configCheck") {
-      if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
-        applyConfigCheck(s, e.check as ConfigCheck);
-    } else if (kind === "asyncTasks") {
-      if (!receiveAsyncTasks(s, e)) return;
-      this.finishArchiveActivity(s);
-    } else if (kind === "forkActivity") {
-      if (!receiveForkActivity(s, e)) return;
-    } else if (
-      !updateEnvelope &&
-      receiveWorkActivity(s, e, activityConnectionId)
-    ) {
-      this.finishArchiveActivity(s);
-    } else if (kind === "permissionState") {
-      // Only the explicit setter's matching reply may enable sending. A late
-      // event can report state, but never undo an unknown result locally.
-      if (typeof e.permissionConfigId === "string")
-        s.permissionConfigId = e.permissionConfigId;
-      replacePermissionEffect(s, e.permissionEffect);
-      if (e.permissionState === "unknown" || e.permissionState === "required") {
-        this.permissionRevisions.set(
-          key,
-          (this.permissionRevisions.get(key) ?? 0) + 1,
-        );
-        s.permissionState = e.permissionState;
-        pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
-      }
-    } else if (kind === "permissionRequest") {
-      applyPermissionRequest(s, {
-        requestId: String(e.requestId ?? ""),
-        toolCall: e.toolCall,
-        options: e.options,
-        request: e.request,
-      });
-    } else if (kind === "turnEnd") {
-      const owner = endingOwner;
-      if (!s.running && !s.uncertainPrompt && !s.connectionOutcomeUnknown)
-        return;
-      this.stopConfirmation.clear(key);
-      if (s.uncertainPrompt) {
-        removeQueued(s, s.uncertainPrompt);
-        s.uncertainPrompt = null;
-      }
-      const result = applyTurnEnd(s, {
-        stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
-        error: typeof e.error === "string" ? e.error : undefined,
-        failure: e.failure,
-        usage: e.usage,
-      });
-      if (owner) {
-        if (
-          [
-            "end_turn",
-            "max_tokens",
-            "max_turn_requests",
-            "refusal",
-            "cancelled",
-          ].includes(String(e.stopReason))
-        )
-          owner.end();
-        else {
-          s.connectionOutcomeUnknown = true;
-          pauseQueue(s, "uncertain");
-        }
-      }
-      if (e.error === "AUTH_REQUIRED")
-        observeAuthentication(
-          s.agentId,
-          s.cwd,
-          e.error,
-          s.serviceContext,
-          "request",
-        );
-      else if (
-        !e.error &&
-        !e.failure &&
-        e.stopReason === "end_turn" &&
-        (result === "reply" || result === "tool")
-      )
-        observeAuthentication(
-          s.agentId,
-          s.cwd,
-          undefined,
-          s.serviceContext,
-          "request",
-        );
-      this.emit(key);
-      this.finishArchiveActivity(s);
-      void this.drainQueue(key);
-      void this.refreshIndex();
-      return;
-    } else if (kind === "serviceUnavailable") {
-      s.sourceError = true;
-      s.openError =
-        typeof e.message === "string"
-          ? e.message
-          : STRINGS.repair.requestFailed;
-      pauseQueue(s, "unavailable");
-    } else if (kind === "connectionLost") {
-      if (hasActiveFork(s) && s.forkOperation)
-        s.forkOperation.status = "unknown";
-      replacePermissionEffect(s, undefined);
-      this.stopConfirmation.clear(key);
-      this.promptOwners.get(s)?.end();
-      applyConnectionLost(s, e.closeReason);
-      this.channels.delete(key);
-      pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
-    } else if (kind === "interactionsCancelled") {
-      clearPendingRequests(s);
-    } else if (kind === "interactionExpired") {
-      expirePendingRequest(s, String(e.requestId ?? ""));
-    } else if (kind === "elicitationUnavailable") {
-      pushRaw(s, e.params, STRINGS.repair.unsupportedInquiry);
-      pauseQueue(s, "unavailable");
-    } else if (kind === "elicitationComplete") {
-      completeElicitation(s, e);
-    } else if (kind === "elicitation") {
-      applyElicitation(s, e);
-    } else if (kind === "toolOutput") {
-      appendToolOutput(s, e);
-    } else if (kind === "notification") {
-      pushNotification(s, { method: e.method, params: e.params });
-    } else if (kind === "session_history_complete") {
-      if (!isHistoryMarkerShape(e)) pushRaw(s, e);
-    } else if (updateEnvelope || e.update !== undefined) {
-      if (
-        (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
-        "config_option_update"
-      ) {
-        if (!isKnownConfigUpdate(e.update))
-          pushRaw(s, e.update, "config_option_update");
-        retainReportedDetails(s, e.update, e);
-        this.emit(key);
-        return;
-      }
-      try {
-        applyUpdate(s, e.update, e);
-      } catch (error) {
-        // A local conversion of ordinary Agent JSON must not strand Tauri's
-        // ordered Channel index. Keep the entire envelope as opaque data.
-        // History preparation still fails at its original transaction boundary;
-        // no working/unknown/receipt/permission owner is retired by this fallback.
-        if (!live || !(error instanceof TypeError)) throw error;
-        pushRaw(s, e);
-        this.emit(key);
-        return;
-      }
-      if (live) conversationReadState.receiveUpdate(key, e.update);
-      if (
-        (e.update as { sessionUpdate?: unknown } | undefined)?.sessionUpdate ===
-        "tool_call_update"
-      )
-        this.finishArchiveActivity(s);
-      const update = e.update as {
-        sessionUpdate?: unknown;
-        content?: { type?: unknown; text?: unknown };
-      } | null;
-      if (
-        [
-          "user_message_chunk",
-          "agent_message_chunk",
-          "agent_thought_chunk",
-        ].includes(String(update?.sessionUpdate)) &&
-        update?.content?.type === "text" &&
-        typeof update.content.text === "string"
-      ) {
-        this.notifications.schedule(key);
-        return;
-      }
-      if (s.metaDirty) {
-        s.metaDirty = false;
-        void invoke("session_touch", {
-          agentId: s.agentId,
-          cwd: s.cwd,
-          sessionId: s.nativeSessionId,
-          title: s.title,
-          configOptions: null,
-        })
-          .then(() => this.refreshIndex())
-          .catch(() => undefined);
-      }
-    }
-    this.emit(key);
   }
 
   /** Concurrent opens for the same target share one close/load request. */
@@ -684,8 +486,16 @@ class ThreadsStore {
       return pending;
     }
     const inquiry = openingInquiries.begin(openingKey, input);
-    const replay = new SessionOpenReplay();
+    const replay = new SessionOpenReplay(
+      input,
+      (key) => this.threads.get(key),
+      (state) => this.restoreQueue(state),
+      undefined,
+      () => !retryState || this.thread(retryState.key) === retryState,
+    );
+    let resumeDelivery: (() => void) | undefined;
     const delivery = new SessionDeliveryObserver(input.agentId, replay.token);
+    const channel = new OwnedSessionChannel(delivery);
     let deliveryBound = false;
     const admission = historyReads.begin(openingKey, input, replay.token);
 
@@ -702,42 +512,12 @@ class ThreadsStore {
         throw new Error(STRINGS.repair.reconnectFailed);
       routePrepared = true;
       if (retryState) this.channels.delete(retryState.key);
-      const channel = new Channel<unknown>();
       const openToken = replay.token;
       let boundKey: string | null = null;
-      let ended: ProcessEndedReceipt | null = null;
-      let endedState: ThreadState | undefined;
-      const processEndedChannel = new Channel<unknown>();
-      const applyEnded = () => {
-        const state = endedState;
-        if (!state || !ended) return;
-        if (ended.connectionId !== state.connectionId) {
-          ended = null;
-          return;
-        }
-        // This closure owns the captured state even after normal raw-channel
-        // cleanup; a new same-key state or connection never inherits proof.
-        if (this.thread(state.key) !== state) return;
-        state.processEndedConnectionId = ended.connectionId;
-        const reason = ended.closeReason;
-        ended = null;
-        processEndedChannel.onmessage = () => {};
-        this.applyChannelEvent(state.key, {
-          kind: "connectionLost",
-          closeReason: reason,
-        });
-      };
-      processEndedChannel.onmessage = (value) => {
-        const receipt = processEndedReceipt(value);
-        if (
-          !receipt ||
-          (endedState && receipt.connectionId !== endedState.connectionId)
-        )
-          return;
-        // One native SessionEntry can send at most one receipt. No event list.
-        ended ??= receipt;
-        applyEnded();
-      };
+      const processEndedChannel = new ProcessEndedChannel(
+        (key) => this.thread(key),
+        (key, event) => this.applyChannelEvent(key, event),
+      );
       let historyFailed = false;
       let failedLive = false;
       let failedConnectionId: string | undefined;
@@ -757,8 +537,7 @@ class ThreadsStore {
       let recheckObserver = recheck;
       if (recheck)
         abandonRecheck = () => {
-          delivery.dispose();
-          channel.onmessage = () => {};
+          channel.dispose();
           recheckObserver = undefined;
         };
       channel.onmessage = openDeliveryConsumer(delivery, {
@@ -767,15 +546,19 @@ class ThreadsStore {
         thread: (key) => this.thread(key),
         inquiry: (event) => inquiry.receive(event),
         recheck: (event) => recheckObserver?.observe(event),
-        marker: (event) => replay.receiveMarker(event),
+        marker: (event) => {
+          if (!replay.receiveMarker(event)) return false;
+          resumeDelivery ??= delivery.pause();
+          return true;
+        },
         historyFailed: () => historyFailed,
         failedLive: () => failedLive,
         applyFailed: applyFailedLive,
         apply: (key, event) => this.applyChannelEvent(key, event),
         receiving: () => receivingReplay,
-        buffer: (event) => {
+        project: (event) => {
           admission?.observeRaw();
-          replay.push(event);
+          return replay.push(event);
         },
       });
       admission?.dispatch();
@@ -799,100 +582,75 @@ class ThreadsStore {
       });
       opened = result;
       recheck?.validateResult(result);
-      if (result.resumed) {
-        // The command response and Channel can be delivered independently.
-        // Only this operation's ordered marker proves replay was consumed.
-        if (replay.needsMarker) await replay.waitForMarker();
-        try {
-          await replay.requireReadable(
-            input.agentId,
-            result,
-            () => !retryState || this.thread(retryState.key) === retryState,
-          );
-        } catch (error) {
-          if (isHistoryReadFailure(error)) {
-            historyFailed = true;
-            const id = result.connectionId;
-            failedConnectionId =
-              typeof id === "string" &&
-              id.length > 0 &&
-              id.length <= 4096 &&
-              !id.includes("\0")
-                ? id
-                : undefined;
-            failedLive =
-              replay.acknowledgedPrefix && failedConnectionId !== undefined;
-            // Bind only after the outer failure path has installed the exact
-            // retained old state at the canonical key. Until then this same
-            // temporary owner keeps any already-acknowledged live following.
-            bindFailedReplay = (state) => {
-              boundKey = state.key;
-              if (failedConnectionId) state.connectionId = failedConnectionId;
-              this.channels.set(boundKey, channel);
-              deliveryBound = true;
-              const { prefix, following } = replay.take(true);
-              delivery.discardBuffered(prefix.length);
-              if (failedLive)
-                for (const event of following)
-                  delivery.consumeBuffered(() => applyFailedLive(state, event));
-              else delivery.discardBuffered(following.length);
-              endedState = state;
-              applyEnded();
-            };
-          } else {
-            replay.clear();
-            delivery.dispose();
-            channel.onmessage = () => {};
-          }
-          throw error;
-        }
-      }
-      // The backend returns the canonicalized cwd (/tmp → /private/tmp):
-      // the session key must be built from it — the index row the first
-      // prompt will create uses the same canonical path.
+      // The hidden state receives the prefix once; its marker is acknowledged
+      // before pull pauses. The command can return without any further body.
+      await replay.waitForReady(result.resumed);
       const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
       const rows = await invoke<IndexRow[]>("session_index_list").catch(
         () => null,
       );
       if (rows) this.indexRows = retainIndexRows(this.indexRows, rows);
       recheck?.validateResult(result);
-      const existing = this.threads.get(key);
-      // The saved Farfold name is authoritative before replay is delivered.
-      // Older rows do not distinguish generated names from explicit renames.
-      const savedTitle = this.indexRows.find((row) => row.id === key)?.title;
-      const state = openedThreadState(
-        input,
-        result,
-        savedTitle,
-        existing,
-        (s) => this.restoreQueue(s),
-      );
+      let state: ThreadState;
+      try {
+        state = replay.accept(
+          result,
+          this.indexRows.find((row) => row.id === key)?.title,
+          this.threads.get(key),
+        );
+      } catch (error) {
+        if (isHistoryReadFailure(error)) {
+          historyFailed = true;
+          const id = result.connectionId;
+          failedConnectionId =
+            typeof id === "string" &&
+            id.length > 0 &&
+            id.length <= 4096 &&
+            !id.includes("\0")
+              ? id
+              : undefined;
+          failedLive =
+            replay.acknowledgedPrefix && failedConnectionId !== undefined;
+          // Following bodies remain in the same native budgeted queue until
+          // this exact old view is installed. No failed-history copy is retained.
+          bindFailedReplay = (old) => {
+            boundKey = old.key;
+            if (failedConnectionId) old.connectionId = failedConnectionId;
+            this.channels.set(boundKey, channel);
+            deliveryBound = true;
+            processEndedChannel.bind(old);
+          };
+        } else channel.dispose();
+        throw error;
+      }
       observeAuthentication(
         input.agentId,
         input.cwd,
         undefined,
         state.serviceContext,
       );
+      const previous = this.threads.get(key);
+      if (previous) this.forks.retire(previous);
+      this.stopConfirmation.clear(key);
       this.threads.set(key, state);
       this.channels.set(key, channel);
+      this.recordPermissionChanges(key, replay.acceptedPermissionChanges);
       if (!result.resumed) {
         this.drafts.set(draftGroup(input), key);
       }
       boundKey = key;
       deliveryBound = true;
-      const { prefix, following } = replay.take(result.resumed);
-      for (const event of prefix) {
-        delivery.consumeBuffered(() =>
-          this.applyChannelEvent(key, event, false),
-        );
-      }
-      if (result.resumed) finishHistoryPrefix(state);
-      for (const event of following)
-        delivery.consumeBuffered(() => this.applyChannelEvent(key, event));
-      endedState = state;
-      applyEnded();
+      inquiry.handoffPermissions(
+        state,
+        () => this.thread(key) === state && this.channels.get(key) === channel,
+        () => this.emit(key),
+      );
+      processEndedChannel.bind(state);
       recheck?.finish(state, result);
       recheckObserver = undefined;
+      flushSessionMetadata(state, () => {
+        void this.refreshIndex();
+      });
       this.emit();
       void this.refreshIndex();
       return state;
@@ -956,8 +714,10 @@ class ThreadsStore {
       .finally(() => {
         receivingReplay = false;
         delivery.discardBuffered();
-        if (!deliveryBound) delivery.dispose();
+        if (!deliveryBound) channel.dispose();
         replay.clear();
+        resumeDelivery?.();
+        resumeDelivery = undefined;
         historyReads.finish(openingKey, admission);
         inquiry.finish();
         this.openings.delete(openingKey);
@@ -1349,6 +1109,8 @@ class ThreadsStore {
   }
 
   private removeThread(key: string): number {
+    const previous = this.threads.get(key);
+    if (previous) this.forks.retire(previous);
     this.threads.delete(key);
     const revision = this.permissionRevisions.get(key) ?? 0;
     this.permissionRevisions.delete(key);
@@ -1434,8 +1196,8 @@ class ThreadsStore {
       if (retain) applyConnectionLost(s);
       else {
         this.removeThread(key);
-        this.channels.delete(key);
       }
+      this.channels.delete(key);
       if (this.drafts.get(s.draftGroup ?? "") === key)
         this.drafts.delete(s.draftGroup ?? "");
       this.emit(key);

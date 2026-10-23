@@ -8,6 +8,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { threads } from "./sessions";
 import { draftPersistence } from "./drafts";
+import { HistoryReplayProjection } from "./history_replay_projection";
 import {
   previewHistory,
   closeHistoryPreview,
@@ -60,6 +61,8 @@ it("a real fork unknown receipt retains its body observer until a verified termi
     },
   ];
   const original = structuredClone(parent.items);
+  const project = vi.spyOn(HistoryReplayProjection.prototype, "push");
+  const take = vi.spyOn(HistoryReplayProjection.prototype, "take");
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   let wire!: ForkWire;
   let receipt!: Record<string, unknown>;
@@ -71,6 +74,15 @@ it("a real fork unknown receipt retains its body observer until a verified termi
         openToken: args.openToken,
         phase: "starting",
         historyDelivery: { receiptId: 601, openToken: args.openToken },
+      });
+      // The independent channel can identify its private child before an
+      // older still-unknown RPC snapshot reaches this renderer.
+      args.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd,
+        sessionId: "uncertain-owned-child",
+        connectionId: "independent-uncertain-child",
       });
       args.channel.onmessage({
         update: {
@@ -104,6 +116,12 @@ it("a real fork unknown receipt retains its body observer until a verified termi
   expect(acks()).toHaveLength(0);
   expect(parent.items).toEqual(original);
   expect(parent.forkOperation?.status).toBe("unknown");
+  expect(project).toHaveBeenCalledTimes(1);
+  const staged = project.mock.contexts[0] as HistoryReplayProjection;
+  expect(staged.state?.items).toEqual([
+    expect.objectContaining({ text: "Retain uncertain child prefix" }),
+  ]);
+  expect(take).not.toHaveBeenCalled();
   wire.channel.onmessage({
     kind: "forkResult",
     operationId: wire.operationId,
@@ -116,6 +134,13 @@ it("a real fork unknown receipt retains its body observer until a verified termi
     },
   });
   await vi.waitFor(() => expect(acks()).toHaveLength(1));
+  expect(staged.state).toBeUndefined();
+  project.mockClear();
+  wire.channel.onmessage({
+    update: { sessionUpdate: "late_uncertain_child", exact: [null, false] },
+  });
+  expect(project).not.toHaveBeenCalled();
+  expect(take).not.toHaveBeenCalled();
   expect(parent.items).toEqual(original);
   expect(
     h.invoke.mock.calls.filter(([name]) => name === "session_fork_current"),
@@ -147,6 +172,7 @@ it("local preview conversion failure retires only staging and preserves the inde
       });
       args.channel.onmessage({
         kind: "history_preview_complete",
+        openToken: args.openToken,
         previewToken: "exact-preview-close",
       });
       return Promise.resolve({

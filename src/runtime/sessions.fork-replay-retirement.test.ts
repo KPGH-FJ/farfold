@@ -9,7 +9,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { threads, type OpenResult } from "./sessions";
 import { draftPersistence } from "./drafts";
-import { HistoryReplayBuffer } from "./history_replay";
+import { HistoryReplayProjection } from "./history_replay_projection";
 import type { ForkResult } from "./session_fork_types";
 
 interface Wire {
@@ -92,14 +92,22 @@ it.each(["tool", "config"] as const)(
     const originalItems = parent.items;
     const originalItem = parent.items[0];
     const originalQueue = parent.queued;
-    const push = vi.spyOn(HistoryReplayBuffer.prototype, "push");
-    const mark = vi.spyOn(HistoryReplayBuffer.prototype, "mark");
-    const clear = vi.spyOn(HistoryReplayBuffer.prototype, "clear");
+    const push = vi.spyOn(HistoryReplayProjection.prototype, "push");
+    const mark = vi.spyOn(HistoryReplayProjection.prototype, "mark");
+    const clear = vi.spyOn(HistoryReplayProjection.prototype, "clear");
     let wire!: Wire;
     h.invoke.mockImplementation(async (name: string, value: Wire) => {
       if (name !== "session_fork_current")
         return name === "settings_get" ? null : [];
       wire = value;
+      const opened = result(wire).session!;
+      wire.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: wire.openToken,
+        cwd: opened.cwd,
+        sessionId: opened.nativeSessionId,
+        connectionId: opened.connectionId,
+      });
       wire.channel.onmessage({
         update: {
           sessionUpdate: "agent_message_chunk",
@@ -180,13 +188,21 @@ it.each(["tool", "config"] as const)(
 
 it("retires terminal unavailable replay while still accepting late identity/index metadata", async () => {
   const parent = seed();
-  const push = vi.spyOn(HistoryReplayBuffer.prototype, "push");
-  const clear = vi.spyOn(HistoryReplayBuffer.prototype, "clear");
+  const push = vi.spyOn(HistoryReplayProjection.prototype, "push");
+  const clear = vi.spyOn(HistoryReplayProjection.prototype, "clear");
   let wire!: Wire;
   h.invoke.mockImplementation(async (name: string, value: Wire) => {
     if (name !== "session_fork_current")
       return name === "settings_get" ? null : [];
     wire = value;
+    const opened = result(wire).session!;
+    wire.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: wire.openToken,
+      cwd: opened.cwd,
+      sessionId: opened.nativeSessionId,
+      connectionId: opened.connectionId,
+    });
     wire.channel.onmessage({
       update: { sessionUpdate: "future_terminal_prefix" },
     });
@@ -228,12 +244,20 @@ it("retires terminal unavailable replay while still accepting late identity/inde
 
 it("keeps an unsettled unknown buffer usable for a later valid ready receipt and normal live child delivery", async () => {
   const parent = seed();
-  const clear = vi.spyOn(HistoryReplayBuffer.prototype, "clear");
+  const clear = vi.spyOn(HistoryReplayProjection.prototype, "clear");
   let wire!: Wire;
   h.invoke.mockImplementation(async (name: string, value: Wire) => {
     if (name !== "session_fork_current")
       return name === "settings_get" ? null : [];
     wire = value;
+    const opened = result(wire).session!;
+    wire.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: wire.openToken,
+      cwd: opened.cwd,
+      sessionId: opened.nativeSessionId,
+      connectionId: opened.connectionId,
+    });
     return {
       ...result(wire),
       status: "unknown",

@@ -21,6 +21,7 @@ import {
 } from "./authentication";
 import { recheckAuthentication } from "./auth_actions";
 import { draftPersistence } from "./drafts";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 
 afterEach(async () => {
   await draftPersistence.flush();
@@ -35,7 +36,7 @@ it("clears a login requirement only after explicit preparation gets a successful
     if (command === "auth_recheck") return { state: "ready" };
     if (command === "session_open") {
       if (!authenticated) throw new Error("AUTH_REQUIRED");
-      return {
+      const result = {
         cwd: "/account",
         nativeSessionId: "models-after-login",
         connectionId: "connection-models-after-login",
@@ -51,6 +52,8 @@ it("clears a login requirement only after explicit preparation gets a successful
           },
         ],
       };
+      emitOpeningHeader(args, result);
+      return result;
     }
     return [];
   });
@@ -123,7 +126,7 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
       const id = `unauthenticated-models-${++sequence}`;
       channels.set(id, args.channel);
       processEnds.set(id, args.processEndedChannel);
-      return {
+      const result = {
         cwd: args.cwd,
         nativeSessionId: id,
         connectionId: `connection-${id}`,
@@ -131,6 +134,8 @@ it("does not clear a real request's login failure when an unauthenticated Agent 
         resumed: false,
         configOptions: [],
       };
+      emitOpeningHeader(args, result);
+      return result;
     }
     if (command === "session_prompt") {
       const receiptId = sequence;

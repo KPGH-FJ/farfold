@@ -64,6 +64,21 @@ it.each([false, true])(
         ([name]) => name === "session_open_cancel_waiting",
       ),
     ).toBe(false);
+    const result = {
+      cwd: "/work",
+      nativeSessionId: native,
+      connectionId: `history-admission-${native}`,
+      resumed: true,
+      configOptions: [],
+      warnings: [],
+    };
+    raw.onmessage({
+      kind: "sessionOpening",
+      openToken: token,
+      cwd: result.cwd,
+      sessionId: result.nativeSessionId,
+      connectionId: result.connectionId,
+    });
     const unknown: unknown[] = [];
     for (let i = 0; i < 8; i++) {
       raw.onmessage({
@@ -102,7 +117,6 @@ it.each([false, true])(
       });
     }
     expect(historyReads.getSnapshot()[0].phase).toBe("waiting");
-    const result = { cwd: "/work", nativeSessionId: native, resumed: true };
     if (responseFirst) {
       finish(result);
       await Promise.resolve();
@@ -117,15 +131,15 @@ it.each([false, true])(
       },
     });
     raw.onmessage({ kind: "session_history_complete", openToken: token });
+    if (!responseFirst) finish(result);
+    const state = await first;
+    opened.push(state.key);
     raw.onmessage({
       update: {
         sessionUpdate: "agent_message_chunk",
         content: { type: "text", text: "live-following" },
       },
     });
-    if (!responseFirst) finish(result);
-    const state = await first;
-    opened.push(state.key);
     expect(await second).toBe(state);
     expect(state.items.slice(0, 32).map((item) => item.kind)).toEqual(
       Array.from({ length: 8 }, () => ["user", "agent", "tool", "raw"]).flat(),

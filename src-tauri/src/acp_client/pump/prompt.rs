@@ -26,7 +26,7 @@ pub(super) struct Input<'a, 'event> {
     pub config_store: &'a super::super::model_guard::ConfigStore,
     pub model_guard: &'a mut super::super::model_guard::ModelGuard,
     pub permission_guard: &'a mut super::super::permission_guard::PermissionGuard,
-    pub inbox: &'a mut mpsc::UnboundedReceiver<Dispatch>,
+    pub inbox: &'a mut super::super::session_routes::Inbox,
     pub configuration: &'a mut super::super::session_config::SessionConfig,
     pub models: &'a mut HashSet<String>,
     pub opening: &'a mut Option<restore_config::Opening>,

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 const h = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: h.invoke,
@@ -715,22 +716,26 @@ it("keeps unrelated mode and model_config choices editable on an established con
 });
 
 it("reads all repeated categories into the preparation draft without setters, prompts or source changes", async () => {
-  h.invoke.mockImplementation(async (command: string) =>
-    command === "session_open"
-      ? {
-          nativeSessionId: "prepared",
-          cwd: "/categories",
-          resumed: false,
-          configOptions: options(),
-          configCheck: {
-            status: "ready",
-            issues: [],
-            protectedIds: Object.keys(values),
-            current: { choices: choices() },
-          },
-        }
-      : [],
-  );
+  h.invoke.mockImplementation(async (command: string, args) => {
+    if (command === "session_open") {
+      const result = {
+        nativeSessionId: "prepared",
+        connectionId: "prepared-categories-connection",
+        cwd: "/categories",
+        resumed: false,
+        configOptions: options(),
+        configCheck: {
+          status: "ready",
+          issues: [],
+          protectedIds: Object.keys(values),
+          current: { choices: choices() },
+        },
+      };
+      emitOpeningHeader(args, result);
+      return result;
+    }
+    return [];
+  });
   const controller = new AgentPreparation(threads, () => "test-marker");
   await controller.prepare({
     agentId: "category-preparation",

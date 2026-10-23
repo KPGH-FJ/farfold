@@ -2,6 +2,37 @@
 //! state is moved into the normal pump; it is not another session controller.
 use super::*;
 
+/// Until the actual pump takes ownership, every return and cancelled opening
+/// must retire its original inquiry responders, including failures after load.
+pub(super) struct Opening {
+    state: Option<State>,
+    permissions: PendingPermissions,
+    elicitations: PendingElicitations,
+}
+impl Opening {
+    pub(super) fn new(id: Option<&str>, ops: &SessionOps, pending: &PendingPermissions) -> Self {
+        Self {
+            state: id.map(|id| State::new(id, ops)),
+            permissions: pending.clone(),
+            elicitations: ops.elicitations.clone(),
+        }
+    }
+    pub(super) fn as_mut(&mut self) -> Option<&mut State> {
+        self.state.as_mut()
+    }
+    pub(super) fn take(&mut self) -> Option<State> {
+        self.state.take()
+    }
+}
+impl Drop for Opening {
+    fn drop(&mut self) {
+        if let Some(state) = &mut self.state {
+            cancel_permissions(&self.permissions, &mut state.permission_ids);
+            cancel_elicitations(&self.elicitations, &mut state.elicitation_ids);
+        }
+    }
+}
+
 pub(super) struct State {
     pub(super) permission_ids: Vec<String>,
     pub(super) elicitation_ids: Vec<String>,
@@ -11,7 +42,7 @@ pub(super) struct State {
     pub(super) failures: super::super::failures::FailureTracker,
     pub(super) expiry_tx: mpsc::UnboundedSender<String>,
     pub(super) expiry_rx: mpsc::UnboundedReceiver<String>,
-    pub(super) held_dispatch: Option<Dispatch>,
+    pub(super) deferred: super::super::session_config::Deferred,
 }
 
 impl State {
@@ -35,14 +66,14 @@ impl State {
             failures: super::super::failures::FailureTracker::default(),
             expiry_tx,
             expiry_rx,
-            held_dispatch: None,
+            deferred: Default::default(),
         }
     }
 
     pub(super) async fn while_loading<T>(
         &mut self,
         session_id: &str,
-        inbox: &mut mpsc::UnboundedReceiver<Dispatch>,
+        inbox: &mut super::super::session_routes::Inbox,
         events: &SessionSink,
         pending: &PendingPermissions,
         ops: &SessionOps,
@@ -54,17 +85,16 @@ impl State {
                 // A continuously ready replay may not starve the real reply.
                 biased;
                 result = &mut load => return result,
+                expired = self.expiry_rx.recv() => {
+                    if let Some(request_id) = expired {
+                        cancel_permissions(pending, &mut vec![request_id.clone()]);
+                        cancel_elicitations(&ops.elicitations, &mut vec![request_id.clone()]);
+                        events(serde_json::json!({"kind":"interactionExpired", "requestId":request_id}));
+                    }
+                }
                 dispatch = inbox.recv() => {
                     let Some(dispatch) = dispatch else { return load.await; };
-                    if !matches!(&dispatch, Dispatch::Notification(_))
-                        || super::super::session_config::SessionConfig::waits_for_load_response(&dispatch)
-                    {
-                        // Keep the first dependent message intact and stop
-                        // early consumption. Its entire following FIFO remains
-                        // in the original inbox until response-based setup.
-                        self.held_dispatch = Some(dispatch);
-                        return load.await;
-                    }
+                    self.deferred.observe(&dispatch);
                     observe_failure(&dispatch, &mut self.failures, false);
                     let mut context = DispatchContext {
                         session_id,
@@ -79,8 +109,8 @@ impl State {
                         async_tasks: &mut self.async_tasks,
                         prompt_cancelling: false,
                     };
-                    // This is exactly the existing passive-observation/raw
-                    // dispatcher. Never run the early branch for a Request.
+                    // Original raw messages and owned inquiries progress during
+                    // load; only response-dependent configuration effects wait.
                     handle_session_dispatch(dispatch, &mut context);
                 }
             }

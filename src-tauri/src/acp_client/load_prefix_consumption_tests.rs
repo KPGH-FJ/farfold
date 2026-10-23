@@ -45,6 +45,10 @@ for line in sys.stdin:
  if method=='initialize':
   reply(m,{'protocolVersion':1,'agentCapabilities':{'loadSession':True},'authMethods':[],
     '_meta':{'jetbrains':{'air':{'version':1,'capabilities':['asyncTasks']}}}})
+ elif method=='session/new':
+  raw(0)
+  (root/'reply-published').write_text('actual-new-id-response')
+  reply(m,{'sessionId':'concurrent-load-owned','configOptions':[]})
  elif method=='session/load':
   assert m['params']['sessionId']=='concurrent-load-owned'
   if mode in ('handoff','postreply'):
@@ -165,15 +169,17 @@ async fn run(mode: &'static str) {
     };
     store.insert_agent(&row).unwrap();
     // Explicit Farfold-owned saved selection, not an Agent config/history file.
-    touch_session_row(
-        &store,
-        &row.id,
-        &cwd.to_string_lossy(),
-        SESSION,
-        None,
-        Some(json!({"_farfoldConfig":2,"choices":[],"_farfoldService":{"kind":"existing"}})),
-    )
-    .unwrap();
+    if mode != "newheader" {
+        touch_session_row(
+            &store,
+            &row.id,
+            &cwd.to_string_lossy(),
+            SESSION,
+            None,
+            Some(json!({"_farfoldConfig":2,"choices":[],"_farfoldService":{"kind":"existing"}})),
+        )
+        .unwrap();
+    }
     let trace: Trace = Default::default();
     let changed = Arc::new(Notify::new());
     let events = trace.clone();
@@ -190,7 +196,7 @@ async fn run(mode: &'static str) {
                 == Some(if mode == "burst" {
                     (COUNT - 1) as u64
                 } else {
-                    0
+                    1
                 })
         };
         events.lock().unwrap().push((value, reply.exists()));
@@ -205,11 +211,53 @@ async fn run(mode: &'static str) {
     });
     let result = {
         let body = async {
+            let native = (mode != "newheader").then(|| SESSION.to_owned());
+            let history = if let Some(id) = &native {
+                Some(
+                    manager
+                        .admit_cold_history_for_test(&row, &cwd, id, &[], &store, None)
+                        .await
+                        .unwrap(),
+                )
+            } else {
+                None
+            };
             let opened = manager
-                .open_session(&row, &cwd, Some(SESSION.to_owned()), vec![], sink, &store)
+                .open_session_admitted_with_mcp(
+                    &row,
+                    &cwd,
+                    native,
+                    vec![],
+                    sink,
+                    &store,
+                    None,
+                    None,
+                    None,
+                    history,
+                    Some("owned-prefix-token".into()),
+                )
                 .await
                 .expect("load and its original notification consumer must progress concurrently");
             assert_eq!(opened.session_id, SESSION);
+            {
+                let observed = trace.lock().unwrap();
+                let header = observed
+                    .iter()
+                    .position(|(value, _)| {
+                        value.get("update").is_none() && value["kind"] == "sessionOpening"
+                    })
+                    .unwrap();
+                assert_eq!(observed[header].0["connectionId"], opened.connection_id);
+                assert_eq!(observed[header].0["sessionId"], SESSION);
+                assert_eq!(observed[header].0["openToken"], "owned-prefix-token");
+                assert_eq!(observed[header].0["cwd"], cwd.to_string_lossy().as_ref());
+                assert!(
+                    observed
+                        .iter()
+                        .position(|(value, _)| value.get("update").is_some())
+                        .is_none_or(|first| header < first)
+                );
+            }
             let life = manager
                 .session_connection(&row.id, &cwd, SESSION)
                 .unwrap()
@@ -263,6 +311,21 @@ async fn run(mode: &'static str) {
                 })
                 .await;
                 assert_eq!(end["stopReason"], "end_turn");
+            } else if mode == "newheader" {
+                let value = wait_event(&trace, &changed, |value| {
+                    value.pointer("/update/sequence") == Some(&json!(0))
+                })
+                .await;
+                assert_eq!(value, expected(0));
+                let values = trace.lock().unwrap();
+                assert!(
+                    values
+                        .iter()
+                        .filter(|(value, _)| value["kind"] == "sessionOpening"
+                            || value.get("update").is_some())
+                        .all(|(_, after)| *after),
+                    "new identity and its pending prefix must wait for the actual ID response"
+                );
             } else if mode == "configuration" || mode == "request" {
                 let values = trace.lock().unwrap().clone();
                 let first = values
@@ -275,8 +338,8 @@ async fn run(mode: &'static str) {
                     .unwrap();
                 assert!(!values[first].1);
                 assert!(
-                    values[last].1,
-                    "the following FIFO stays behind its exact barrier"
+                    !values[last].1,
+                    "the peer waits for the actual last-prefix consumer before replying"
                 );
                 assert_eq!(values[first].0, expected(0));
                 assert_eq!(values[last].0, expected(1));
@@ -303,8 +366,8 @@ async fn run(mode: &'static str) {
                 };
                 assert!(first < barrier && barrier < last);
                 assert!(
-                    values[barrier].1,
-                    "dependent dispatch is not exposed before its load response"
+                    !values[barrier].1,
+                    "configuration and original requests must not block the following raw prefix"
                 );
             } else {
                 assert!(matches!(mode, "handoff" | "postreply"));
@@ -411,12 +474,12 @@ async fn actual_load_future_and_unknown_prefix_consumer_progress_before_reply() 
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-async fn actual_load_configuration_barrier_keeps_full_following_fifo_and_response_order() {
+async fn actual_load_configuration_and_full_following_fifo_progress_before_response() {
     run("configuration").await;
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-async fn actual_load_request_barrier_keeps_original_unknown_request_response() {
+async fn actual_load_original_unknown_request_and_following_fifo_progress_before_response() {
     run("request").await;
 }
 
@@ -428,4 +491,9 @@ async fn actual_load_handoff_keeps_same_activity_task_and_incident_owners() {
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn ordinary_reply_first_load_preserves_the_existing_activity_and_prompt_control() {
     run("postreply").await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn actual_new_identity_header_precedes_pending_prefix_only_after_real_id_response() {
+    run("newheader").await;
 }

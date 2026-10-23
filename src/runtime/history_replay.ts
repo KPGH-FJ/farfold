@@ -1,66 +1,6 @@
 import { sealStreams } from "./session_projection";
 import type { ThreadState } from "./session_types";
 
-/** Temporary IPC delivery buffer for one open/preview request, never stored.
- * A matching marker acknowledges only its preceding events. Repeated markers
- * cannot expand that prefix, and later events remain available as live work. */
-export class HistoryReplayBuffer {
-  private events: unknown[] = [];
-  private readonly boundaries = new Map<string, number>();
-
-  push(event: unknown): void {
-    this.events.push(event);
-  }
-
-  mark(token: string): void {
-    if (!this.boundaries.has(token))
-      this.boundaries.set(token, this.events.length);
-  }
-
-  complete(token: string): boolean {
-    return this.boundaries.has(token);
-  }
-
-  prefix(token: string): unknown[] {
-    const end = this.boundaries.get(token);
-    return end === undefined ? [] : this.events.slice(0, end);
-  }
-
-  /** Borrow only the first acknowledged prefix for a finite observer.
-   * Capture this array and boundary now: later pushes/clear/repeated markers
-   * cannot change this finite view. It grants no event mutation authority. */
-  prefixEvents(token: string): Iterable<unknown> {
-    const events = this.events;
-    const end = this.boundaries.get(token) ?? 0;
-    return {
-      *[Symbol.iterator]() {
-        for (let index = 0; index < end; index++) yield events[index];
-      },
-    };
-  }
-
-  take(token?: string): { prefix: unknown[]; following: unknown[] } {
-    const end =
-      token === undefined
-        ? this.events.length
-        : (this.boundaries.get(token) ?? 0);
-    // Transfer the owned array at complete/empty boundaries. A partial marker
-    // still needs two independent slices; clear() always starts a fresh owner.
-    const events = this.events;
-    const prefix =
-      end === 0 ? [] : end === events.length ? events : events.slice(0, end);
-    const following =
-      end === 0 ? events : end === events.length ? [] : events.slice(end);
-    this.clear();
-    return { prefix, following };
-  }
-
-  clear(): void {
-    this.events = [];
-    this.boundaries.clear();
-  }
-}
-
 /** The supported replay shapes have no original time; do not invent it from
  * today's load. Call before applying the subsequent live part of the channel. */
 export function finishHistoryPrefix(state: ThreadState): void {

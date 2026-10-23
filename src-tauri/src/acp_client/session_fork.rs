@@ -1,5 +1,6 @@
 //! One explicit official current-context fork. Only index metadata is stored.
-use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
+use super::delivery_flow::Wake;
+use super::delivery_observation::DeliveryChannel;
 use super::{
     manager::{AcpManager, ManagedConnection},
     pump::{SessionControl, SessionSink},
@@ -432,7 +433,7 @@ pub async fn session_fork_current(
     operation_id: String,
     open_token: String,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
-    channel: Channel<DeliveryEvent>,
+    channel: Channel<Wake>,
 ) -> Result<ForkResult, String> {
     if !crate::browser_workspace::caller_allowed(&webview) {
         return Err("请从主界面复制对话".into());

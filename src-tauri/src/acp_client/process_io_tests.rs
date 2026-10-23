@@ -52,6 +52,8 @@ async fn witness(source: &str, closed_input: bool) -> (tempfile::TempDir, Value,
     std::fs::write(&script, source).unwrap();
     let diagnostics = Diagnostics::open(&logs, "pipe-diagnostic-fixture");
     let control = ProcessControl::new(diagnostics.clone());
+    let life = ConnectionLife::new();
+    let ingress = life.ingress.clone();
     let transport = ProcessTransport {
         agent: AcpAgent::new(AcpAgentConfig::new("/usr/bin/python3").args([
             "-u".to_owned(),
@@ -59,7 +61,7 @@ async fn witness(source: &str, closed_input: bool) -> (tempfile::TempDir, Value,
             marker.to_string_lossy().into_owned(),
         ])),
         control: control.clone(),
-        life: ConnectionLife::new(),
+        life,
         data_dir: root.path().to_owned(),
         agent_id: "pipe-diagnostic-fixture".into(),
         cwd: root.path().to_string_lossy().into_owned(),
@@ -68,7 +70,7 @@ async fn witness(source: &str, closed_input: bool) -> (tempfile::TempDir, Value,
     let request_diagnostics = diagnostics.clone();
     let result = tokio::time::timeout(
         Duration::from_millis(500),
-        Client.builder().name("fixture").connect_with(
+        ingress.observe(Client.builder().name("fixture").connect_with(
             transport,
             move |cx: ConnectionTo<Agent>| async move {
                 wait_marker(&marker).await;
@@ -77,7 +79,7 @@ async fn witness(source: &str, closed_input: bool) -> (tempfile::TempDir, Value,
                 let _: Value = cx.send_request(message).block_task().await?;
                 Ok(())
             },
-        ),
+        )),
     )
     .await;
     if closed_input {

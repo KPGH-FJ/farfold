@@ -9,6 +9,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { threads } from "./sessions";
 import { AgentPreparation } from "./agent_preparation";
 import { draftPersistence } from "./drafts";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 const settings = new Map<string, unknown>();
 function localCommand(command: string, args?: Record<string, unknown>) {
   if (command === "settings_get")
@@ -30,11 +31,16 @@ afterEach(async () => {
 });
 
 it("isolates simultaneous preparation and ordinary drafts even when both request a fresh session", async () => {
-  const opens: ((result: unknown) => void)[] = [];
+  const opens: ((
+    result: Parameters<typeof emitOpeningHeader>[1] & { resumed: boolean },
+  ) => void)[] = [];
   h.invoke.mockImplementation((command: string, args) =>
     command === "session_open"
       ? new Promise((resolve) => {
-          opens.push(resolve);
+          opens.push((result) => {
+            emitOpeningHeader(args, result);
+            resolve(result);
+          });
         })
       : Promise.resolve(localCommand(command, args)),
   );
@@ -50,8 +56,18 @@ it("isolates simultaneous preparation and ordinary drafts even when both request
     draftScope: "setup",
   });
   expect(opens).toHaveLength(2);
-  opens[0]({ cwd: "/work", nativeSessionId: "ordinary", resumed: false });
-  opens[1]({ cwd: "/work", nativeSessionId: "preparation", resumed: false });
+  opens[0]({
+    cwd: "/work",
+    nativeSessionId: "ordinary",
+    connectionId: "ordinary-connection",
+    resumed: false,
+  });
+  opens[1]({
+    cwd: "/work",
+    nativeSessionId: "preparation",
+    connectionId: "preparation-connection",
+    resumed: false,
+  });
   const [a, b] = await Promise.all([ordinary, preparing]);
   expect(a.key).not.toBe(b.key);
   expect(await threads.open({ agentId: "scope-test", cwd: "/work" })).toBe(a);
@@ -91,12 +107,16 @@ it("requires explicit preparation of a fresh draft after a rejected test, withou
   let sequence = 0;
   let prompts = 0;
   h.invoke.mockImplementation(async (command: string, args) => {
-    if (command === "session_open")
-      return {
+    if (command === "session_open") {
+      const result = {
         cwd: "/work",
         nativeSessionId: `rejection-${++sequence}`,
+        connectionId: `rejection-connection-${sequence}`,
         resumed: false,
       };
+      emitOpeningHeader(args, result);
+      return result;
+    }
     if (command === "session_prompt")
       return ++prompts === 1
         ? { status: "rejected", reason: "failed" }
@@ -151,9 +171,10 @@ it("retains an unapplied explicit model choice as a read failure until an explic
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "session_open") {
       sequence++;
-      return {
+      const result = {
         cwd: "/work",
         nativeSessionId: `choice-${sequence}`,
+        connectionId: `choice-connection-${sequence}`,
         resumed: false,
         warnings:
           sequence === 1
@@ -177,6 +198,8 @@ it("retains an unapplied explicit model choice as a read failure until an explic
           },
         ],
       };
+      emitOpeningHeader(args, result);
+      return result;
     }
     return localCommand(command, args);
   });
@@ -226,6 +249,19 @@ it("prefers complete modern options over separate modes during model reading", a
   ];
   h.invoke.mockImplementation(async (command: string, args) => {
     if (command === "session_open") {
+      const result = {
+        cwd: "/work",
+        nativeSessionId: "separate-mode",
+        connectionId: "separate-mode-connection",
+        resumed: false,
+        configOptions: options,
+        modes: {
+          currentModeId: "off",
+          availableModes: [{ id: "off", name: "Off" }],
+        },
+        warnings: [],
+      };
+      emitOpeningHeader(args, result);
       args.channel.onmessage({
         update: {
           sessionUpdate: "config_option_update",
@@ -241,17 +277,7 @@ it("prefers complete modern options over separate modes during model reading", a
       args.channel.onmessage({
         update: { sessionUpdate: "current_mode_update", currentModeId: "off" },
       });
-      return {
-        cwd: "/work",
-        nativeSessionId: "separate-mode",
-        resumed: false,
-        configOptions: options,
-        modes: {
-          currentModeId: "off",
-          availableModes: [{ id: "off", name: "Off" }],
-        },
-        warnings: [],
-      };
+      return result;
     }
     return localCommand(command, args);
   });
@@ -287,10 +313,11 @@ it("keeps a real category-less mode at initial open and routes its changes throu
     ],
   };
   h.invoke.mockImplementation(async (command: string, args) => {
-    if (command === "session_open")
-      return {
+    if (command === "session_open") {
+      const result = {
         cwd: "/work",
         nativeSessionId: "real-category-less-mode",
+        connectionId: "real-category-less-mode-connection",
         resumed: false,
         configOptions: [option],
         modes: {
@@ -299,6 +326,9 @@ it("keeps a real category-less mode at initial open and routes its changes throu
         },
         warnings: [],
       };
+      emitOpeningHeader(args, result);
+      return result;
+    }
     if (command === "session_set_config")
       return {
         configOptions: [{ ...option, currentValue: args.value }],

@@ -181,12 +181,14 @@ pub(crate) async fn execute<T>(
     let mut stop = life.stop_receiver();
     tokio::pin!(future);
     let mut started = false;
+    let mut unclaimed = false;
     let outcome = tokio::select! {
         biased;
         _ = stop.changed() => { operation.abandon(); let _ = reply.send(Err("连接已结束".into())); return None; }
         _ = reply.closed() => None,
         _ = tokio::time::sleep_until(deadline) => None,
         value = std::future::poll_fn(|cx| { started = true; future.as_mut().poll(cx) }) => Some(value),
+        _ = life.routes.unclaimed_pressure() => { unclaimed = true; None },
     };
     if let Some(outcome) = outcome {
         return reply.send(outcome).err().and_then(Result::ok);
@@ -196,7 +198,12 @@ pub(crate) async fn execute<T>(
         let _ = reply.send(Err("操作未发送，请重试".into()));
         return None;
     }
-    let _ = reply.send(Err("Agent 无响应，操作结果尚未确认".into()));
+    let message = if unclaimed {
+        "Agent 在确认对话前发送了过多消息，操作结果尚未确认；请检查此连接，不要重复创建"
+    } else {
+        "Agent 无响应，操作结果尚未确认"
+    };
+    let _ = reply.send(Err(message.into()));
     if !retain {
         return None;
     }
@@ -398,6 +405,7 @@ pub(crate) async fn run(
             fork_owned,
             native_session_id,
             preview_token,
+            opening_token,
             recorded_config,
             config_store,
             config_options,
@@ -414,6 +422,7 @@ pub(crate) async fn run(
                 &cwd,
                 native_session_id,
                 preview_token,
+                opening_token,
                 recorded_config,
                 *config_store,
                 config_options,

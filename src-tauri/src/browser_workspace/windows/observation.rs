@@ -6,21 +6,37 @@ const BINDING: &str = "__farfoldManualActivity";
 const PROGRAM: &str = include_str!("../../../native/browser_observation.js");
 const MONITOR: &str = include_str!("../../../native/browser_manual_activity.js");
 const OPERATION: &str = include_str!("../../../native/browser_operation.js");
+#[path = "screenshot.rs"]
+mod screenshot;
 fn cdp(
     view: &Rc<View>,
     method: &'static str,
     params: Value,
     done: impl FnOnce(Result<Value, String>) + 'static,
 ) -> Result<(), String> {
+    cdp_typed(view, method, params, done)
+}
+fn cdp_typed<T: serde::de::DeserializeOwned + 'static>(
+    view: &Rc<View>,
+    method: &'static str,
+    params: Value,
+    done: impl FnOnce(Result<T, String>) + 'static,
+) -> Result<(), String> {
+    cdp_guarded(view, method, params, || true, done)
+}
+fn cdp_guarded<T: serde::de::DeserializeOwned + 'static>(
+    view: &Rc<View>,
+    method: &'static str,
+    params: Value,
+    permitted: impl Fn() -> bool + 'static,
+    done: impl FnOnce(Result<T, String>) + 'static,
+) -> Result<(), String> {
     let callback =
         CallDevToolsProtocolMethodCompletedHandler::create(Box::new(move |result, raw| {
             let result = result
                 .map_err(|_| "网页操作结果未确认".to_owned())
                 .and_then(|_| {
-                    if raw.len() > 550_000 {
-                        return Err("网页返回内容过大".into());
-                    }
-                    serde_json::from_str(&raw).map_err(|_| "网页返回内容无效".into())
+                    crate::browser_workspace::screenshot_guard::decode_reply(&raw, permitted())
                 });
             done(result);
             Ok(())
@@ -122,6 +138,7 @@ pub(super) async fn run(
     app: &AppHandle,
     scope: FixedPageReadScope,
     action: Option<(String, String, NativeAction)>,
+    screenshot_requested: bool,
 ) -> Result<String, String> {
     let (mode, observation, node, kind, input) = match action {
         None => ("observe", String::new(), String::new(), "", String::new()),
@@ -159,6 +176,7 @@ pub(super) async fn run(
     let operation = request.id();
     let (sender, receiver) = oneshot::channel();
     main(app,move||{
+        let capture_scope=scope.clone();
         scope.observe(|id,expected|{
             if sender.is_closed(){return Err("网页操作已取消".into());}
             let view=lookup(id)?;let navigation=scope.navigation();
@@ -177,7 +195,15 @@ pub(super) async fn run(
             *view.pending.borrow_mut()=Some(PendingOperation{id:operation,reply:Some(sender),action:(mode=="act").then(||observation.clone())});
             if mode=="act"{view.action_navigation.set(Some(Instant::now()+Duration::from_secs(5)));}
             let done=view.clone();
-            let result=cdp(&view,"Runtime.callFunctionOn",json!({"functionDeclaration":function,"executionContextId":context,"arguments":args,"returnByValue":true,"awaitPromise":true}),move|result|{
+            let gate_view=view.clone(); let gate_scope=capture_scope.clone(); let gate_url=expected.clone(); let gate_bounds=view.bounds.get();
+            let permitted=move||gate_scope.with_valid(|| {
+                if !gate_view.live() || gate_view.navigation.get()!=navigation || gate_view.context.get()!=Some(context)
+                    || gate_view.source().ok().as_deref()!=Some(gate_url.as_str())
+                    || gate_view.pending.borrow().as_ref().is_none_or(|p|p.id!=operation||p.reply.is_none())
+                    || (screenshot_requested && (!gate_view.visible.get()||gate_view.bounds.get()!=gate_bounds))
+                {Err("网页已变化，请重新观察".into())} else {Ok(())}
+            }).is_ok();
+            let result=cdp_guarded::<Value>(&view,"Runtime.callFunctionOn",json!({"functionDeclaration":function,"executionContextId":context,"arguments":args,"returnByValue":true,"awaitPromise":true}),permitted,move|result|{
                 if done.pending.borrow().as_ref().is_none_or(|pending|pending.id!=operation){return;}
                 if done.pending.borrow().as_ref().is_some_and(|pending|pending.reply.is_none()) {
                     // No serialization or observation revival after retirement.
@@ -187,7 +213,11 @@ pub(super) async fn run(
                 }
                 if !done.live()||done.navigation.get()!=navigation||done.source().ok().as_deref()!=Some(&expected){finish(&done,operation,if mode=="act"{Ok(unknown(&observation))}else{Err("网页已变化，请重新确认分享范围".into())});return;}
                 let value=result.and_then(|result|{if result.get("exceptionDetails").is_some(){return Err("网页操作结果未确认".into());}result.get("result").and_then(|r|r.get("value")).cloned().filter(Value::is_object).ok_or("网页返回内容无效".into())});
-                let result=value.map(|mut value|{if mode=="observe"{if value["blocked"]==false{*done.observation.borrow_mut()=value["observationId"].as_str().map(str::to_owned);}value["screenshotReason"]=json!("当前页面受保护输入无法可靠核实，暂不提供截图");}value.to_string()});
+                if mode=="observe" && screenshot_requested && let Ok(value)=&value && value["blocked"]==false {
+                    screenshot::start(done.clone(),capture_scope.clone(),operation,navigation,expected.clone(),context,value.clone());
+                    return;
+                }
+                let result=value.map(|mut value|{if mode=="observe"{if value["blocked"]==false{*done.observation.borrow_mut()=value["observationId"].as_str().map(str::to_owned);}value["screenshot"]=json!({"status":"unavailable","reason":"本次未请求截图"});}value.to_string()});
                 finish(&done,operation,result);
             });if result.is_err(){finish(&view,started_operation,Err("网页操作未能开始".into()));}result
         })

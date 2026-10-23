@@ -1,7 +1,7 @@
 //! Per-session runtime: message routing, the session pump task, and the
 //! event shapes pushed to the frontend.
 //!
-//! Each opened session registers a [`SessionRoute`] dynamic handler on the
+//! Each opened session registers its inbox with the original connection router on the
 //! connection. Every agent→client message carrying that `sessionId` is
 //! forwarded into the session's inbox; the pump task owns the inbox, the
 //! control channel (prompt/cancel/set-config/close), and the per-session
@@ -30,8 +30,7 @@ use agent_client_protocol::schema::v1::{
     SetSessionModeRequest,
 };
 use agent_client_protocol::{
-    Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
-    RequestCancellation, Responder, UntypedMessage,
+    Agent, ConnectionTo, Dispatch, RequestCancellation, Responder, UntypedMessage,
 };
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
@@ -77,6 +76,7 @@ pub(crate) struct PendingPermission {
     pub cancelled: RequestCancellation,
     _completed: oneshot::Sender<()>,
     pub session_id: String,
+    pub owner: Value,
     pub options: Vec<String>,
     /// The owning connection's open-request gauge — every removal path
     /// (answer, cancel, pump exit) decrements it.
@@ -96,7 +96,7 @@ fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
     }
 }
 
-fn model_ids(options: &Value) -> HashSet<String> {
+pub(super) fn model_ids(options: &Value) -> HashSet<String> {
     options
         .as_array()
         .into_iter()
@@ -170,8 +170,8 @@ pub(crate) struct SessionEntry {
     process_ended_sink: Option<ProcessEndedSink>,
     pub(super) prompt_snapshot: super::active_prompt::PublicSnapshot,
     pub(super) prompt_store: crate::meta_store::MetaStore,
-    /// Keeps the dynamic session handler registered; dropping unregisters it.
-    _guard: DynamicHandlerGuard<Agent>,
+    /// Keeps this original connection route registered until its owner drops.
+    _guard: super::session_routes::Guard,
     _mcp_lease: Option<super::transient_mcp::SessionMcpLease>,
     _retention: super::lifecycle::SessionRetention,
 }
@@ -237,118 +237,6 @@ pub(crate) fn describe_acp_error(error: agent_client_protocol::Error) -> String 
     match &error.data {
         Some(data) => format!("{error} | data={data}"),
         None => error.to_string(),
-    }
-}
-
-/// `sessionId` carried by a dispatch's params, if any.
-fn session_id_of(dispatch: &Dispatch) -> Option<&str> {
-    dispatch
-        .message()
-        .and_then(|message| message.params().get("sessionId"))
-        .and_then(Value::as_str)
-}
-
-/// Dynamic handler that claims every dispatch carrying `session_id` and
-/// forwards it into the session pump's inbox.
-struct SessionRoute {
-    session_id: String,
-    inbox: mpsc::UnboundedSender<Dispatch>,
-    abandoned: Arc<AtomicBool>,
-}
-
-impl SessionRoute {
-    fn new(
-        session_id: &str,
-        inbox: mpsc::UnboundedSender<Dispatch>,
-        abandoned: Arc<AtomicBool>,
-    ) -> Self {
-        Self {
-            session_id: session_id.to_string(),
-            inbox,
-            abandoned,
-        }
-    }
-}
-
-impl HandleDispatchFrom<Agent> for SessionRoute {
-    async fn handle_dispatch_from(
-        &mut self,
-        message: Dispatch,
-        _cx: ConnectionTo<Agent>,
-    ) -> Result<Handled<Dispatch>, agent_client_protocol::Error> {
-        if session_id_of(&message) == Some(self.session_id.as_str()) {
-            if self.abandoned.load(Ordering::SeqCst) {
-                if let Dispatch::Request(_, responder) = message {
-                    let _ = responder
-                        .respond_with_error(agent_client_protocol::Error::request_cancelled());
-                }
-                return Ok(Handled::Yes);
-            }
-            return match self.inbox.send(message) {
-                Ok(()) => Ok(Handled::Yes),
-                // Pump is gone: decline so requests still get an error
-                // response instead of hanging forever.
-                Err(error) => Ok(Handled::No {
-                    message: error.0,
-                    retry: false,
-                }),
-            };
-        }
-        Ok(Handled::No {
-            message,
-            retry: false,
-        })
-    }
-
-    fn describe_chain(&self) -> impl std::fmt::Debug {
-        format!("farfold-session({})", self.session_id)
-    }
-}
-
-/// A public dynamic-handler guard queues removal on drop. The handler itself
-/// is dropped by the incoming actor when it processes that removal (or when
-/// the connection is torn down), after earlier route registrations were handled.
-/// It claims no protocol messages and never sends a request to the Agent.
-struct RouteRegistrationFence(Option<oneshot::Sender<()>>);
-
-impl Drop for RouteRegistrationFence {
-    fn drop(&mut self) {
-        if let Some(ready) = self.0.take() {
-            let _ = ready.send(());
-        }
-    }
-}
-
-impl HandleDispatchFrom<Agent> for RouteRegistrationFence {
-    async fn handle_dispatch_from(
-        &mut self,
-        message: Dispatch,
-        _cx: ConnectionTo<Agent>,
-    ) -> Result<Handled<Dispatch>, agent_client_protocol::Error> {
-        Ok(Handled::No {
-            message,
-            retry: false,
-        })
-    }
-
-    fn describe_chain(&self) -> impl std::fmt::Debug {
-        "farfold-route-registration"
-    }
-}
-
-pub(super) async fn await_route_registration(
-    cx: &ConnectionTo<Agent>,
-    operation: &Operation,
-) -> Result<(), String> {
-    let (ready, receive) = oneshot::channel();
-    let fence = cx
-        .add_dynamic_handler(RouteRegistrationFence(Some(ready)))
-        .map_err(describe_acp_error)?;
-    drop(fence);
-    tokio::select! {
-        biased;
-        _ = operation.cancelled() => Err("对话打开已取消，请重试".into()),
-        result = receive => result.map_err(|_| "对话连接已结束，请重试".into()),
     }
 }
 
@@ -530,6 +418,11 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
             match method {
                 "session/request_permission" => {
                     let request_id = next_request_id();
+                    let owner = serde_json::json!({
+                        "connectionId": ctx.ops.connection_id,
+                        "sessionId": ctx.session_id,
+                        "requestId": request_id,
+                    });
                     let publish = match ctx.pending.lock() {
                         Ok(mut map) => {
                             let Ok(lease) = ctx.ops.life.work() else {
@@ -548,6 +441,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                                     _completed: completed,
                                     lease,
                                     session_id: ctx.session_id.to_string(),
+                                    owner: owner.clone(),
                                     options: params
                                         .get("options")
                                         .and_then(Value::as_array)
@@ -579,6 +473,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                         (ctx.events)(serde_json::json!({
                             "kind": "permissionRequest",
                             "requestId": request_id,
+                            "owner": owner,
                             "request": params.clone(),
                             "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
                             "options": params.get("options").cloned().unwrap_or(Value::Null),
@@ -638,7 +533,7 @@ fn send_session_cancel(
 async fn session_pump(
     cx: ConnectionTo<Agent>,
     session_id: String,
-    mut inbox: mpsc::UnboundedReceiver<Dispatch>,
+    mut inbox: super::session_routes::Inbox,
     mut control: mpsc::UnboundedReceiver<SessionControl>,
     events: SessionSink,
     pending: PendingPermissions,
@@ -669,7 +564,7 @@ async fn session_pump(
         mut failures,
         expiry_tx,
         mut expiry_rx,
-        mut held_dispatch,
+        deferred: _,
     } = received;
     let mut prompt_in_flight = false;
     // A transport/error receipt cannot establish which context was committed.
@@ -775,10 +670,7 @@ async fn session_pump(
                 if let Some(deadline) = task_deadline { tokio::time::sleep_until(deadline).await; }
                 else { std::future::pending::<()>().await; }
             } => { events(ctx.async_tasks.expire()); },
-            dispatch = async {
-                if let Some(dispatch) = held_dispatch.take() { Some(dispatch) }
-                else { inbox.recv().await }
-            } => match dispatch {
+            dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
                     load_notifications::observe_failure(&dispatch, &mut failures, prompt_in_flight);
                     let options = configuration.observe(&dispatch);

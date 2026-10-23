@@ -7,7 +7,8 @@ use std::sync::{
     atomic::{AtomicBool, AtomicU64, Ordering},
 };
 
-use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
+use super::delivery_flow::Wake;
+use super::delivery_observation::DeliveryChannel;
 use serde::Serialize;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -37,7 +38,7 @@ pub async fn session_import_preview(
     session_id: String,
     open_token: String,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
-    channel: Channel<DeliveryEvent>,
+    channel: Channel<Wake>,
 ) -> Result<ImportPreview, String> {
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
@@ -70,6 +71,7 @@ pub async fn session_import_preview(
         &cwd,
         session_id,
         token,
+        &open_token,
         channel,
         Some(history),
     )
@@ -84,6 +86,7 @@ pub(super) async fn open_import_preview(
     cwd: &Path,
     session_id: String,
     token: String,
+    open_token: &str,
     channel: impl Into<DeliveryChannel>,
     history: Option<super::history_admission::Permit>,
 ) -> Result<ImportPreview, String> {
@@ -107,6 +110,7 @@ pub(super) async fn open_import_preview(
             None,
             Some(token.clone()),
             history,
+            Some(open_token.to_owned()),
         )
         .await?;
     let connection = manager.session_connection(&row.id, cwd, &opened.session_id);
@@ -148,6 +152,7 @@ pub(super) async fn open_import_preview(
             .send(serde_json::json!({
                 "kind": "history_preview_complete",
                 "previewToken": token,
+                "openToken": open_token,
             }))
             .is_ok()
     {

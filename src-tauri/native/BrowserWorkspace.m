@@ -592,13 +592,42 @@ int32_t ff_browser_read(uint64_t browserID, uint64_t operationID, const char *ex
     return true;
 }
 
+// These are documented public macOS 27 selectors. The local declarations keep
+// the existing deployment target/older SDK build; never use the private _WK API.
+// https://developer.apple.com/documentation/webkit/wkcontentworld/configuration
+@protocol FFClosedRootConfiguration <NSObject>
+@property(nonatomic) BOOL allowAccessingClosedShadowRoots;
+@end
+@protocol FFConfiguredWorldFactory <NSObject>
++ (WKContentWorld *)worldWithConfiguration:(id)configuration;
+@end
+static BOOL observationInspectsClosedRoots;
+
 // The executable program is fixed here. WebKit arguments carry data only.
 static WKContentWorld *observationWorld(void) {
     // A name is a debugging label, not an identity. Retain the same world so
     // follow-up checks/actions see the exact isolated node map we created.
     static WKContentWorld *world;
     static dispatch_once_t once;
-    dispatch_once(&once, ^{ world = [WKContentWorld worldWithName:@"FarfoldObservation"]; });
+    dispatch_once(&once, ^{
+        if (@available(macOS 27.0, *)) {
+            Class configurationClass = NSClassFromString(@"WKContentWorldConfiguration");
+            Class factory = WKContentWorld.class;
+            id configuration = configurationClass ? [configurationClass new] : nil;
+            if ([configuration respondsToSelector:@selector(setAllowAccessingClosedShadowRoots:)] &&
+                [configuration respondsToSelector:@selector(allowAccessingClosedShadowRoots)] &&
+                [factory respondsToSelector:@selector(worldWithConfiguration:)]) {
+                id<FFClosedRootConfiguration> options = configuration;
+                options.allowAccessingClosedShadowRoots = YES;
+                if (options.allowAccessingClosedShadowRoots) {
+                    world = [(Class<FFConfiguredWorldFactory>)factory worldWithConfiguration:options];
+                    observationInspectsClosedRoots = [world isKindOfClass:WKContentWorld.class];
+                }
+            }
+        }
+        // Older systems still support text/actions, but cannot request pixels.
+        if (!observationInspectsClosedRoots) world = [WKContentWorld worldWithName:@"FarfoldObservation"];
+    });
     return world;
 }
 static NSString *observationProgram(void) {
@@ -636,20 +665,22 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
         FFPublicBrowser *active = weakBrowser;
         if (!active || active.readRequest != request) return;
         if (request.retired) { finishOperation(active,request,nil,nil); return; }
-        if (!operationLive(active,request,navigation,url)) { finishOperation(active,request,nil,@"网页已变化，请重新观察"); return; }
+        if (!operationLive(active,request,navigation,url) || active.view.hidden || !active.view.window || !NSEqualRects(active.view.bounds,bounds)) { finishOperation(active,request,nil,@"网页已变化，请重新观察"); return; }
         NSData *png = nil;
         NSBitmapImageRep *bitmap = image ? [NSBitmapImageRep imageRepWithData:image.TIFFRepresentation] : nil;
         if (bitmap && !error && bitmap.pixelsWide <= 1024 && bitmap.pixelsHigh <= 1024) png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
         NSDictionary *screenshot = png && png.length <= 300000 ?
             @{@"status":@"captured",@"mimeType":@"image/png",@"data":[png base64EncodedStringWithOptions:0],@"width":@(bitmap.pixelsWide),@"height":@(bitmap.pixelsHigh)} :
             @{@"status":@"unavailable",@"reason":@"截图未完成或超过大小限制"};
-        [active.view callAsyncJavaScript:observationProgram() arguments:@{@"mode":@"check",@"epochSeed":NSUUID.UUID.UUIDString} inFrame:nil inContentWorld:observationWorld() completionHandler:^(id checked, NSError *checkError) {
+        [active.view callAsyncJavaScript:observationProgram() arguments:@{@"mode":@"check",@"epochSeed":NSUUID.UUID.UUIDString,@"inspectClosedRoots":@YES} inFrame:nil inContentWorld:observationWorld() completionHandler:^(id checked, NSError *checkError) {
             FFPublicBrowser *current = weakBrowser;
             if (!current || current.readRequest != request) return;
             if (request.retired) { finishOperation(current,request,nil,nil); return; }
-            if (!operationLive(current,request,navigation,url) || checkError || ![checked isKindOfClass:NSDictionary.class]) { finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
+            if (!operationLive(current,request,navigation,url) || current.view.hidden || !current.view.window || !NSEqualRects(current.view.bounds,bounds) || checkError || ![checked isKindOfClass:NSDictionary.class]) { finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
             if ([checked[@"blocked"] boolValue]) { current.observationID = nil; finishOperation(current,request,@{@"blocked":@YES,@"reason":@"页面含敏感输入，请改用公开页面"},nil); return; }
-            if (![checked[@"documentVersion"] isEqual:result[@"documentVersion"]] || ![checked[@"url"] isEqual:url]) { current.observationID = nil; finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
+            if (![checked[@"closedRootInspection"] boolValue] ||
+                ![checked[@"documentVersion"] isEqual:result[@"documentVersion"]] ||
+                ![checked[@"viewport"] isEqual:result[@"viewport"]] || ![checked[@"url"] isEqual:url]) { current.observationID = nil; finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
             result[@"screenshot"] = [checked[@"screenshotReason"] isKindOfClass:NSString.class] ? @{@"status":@"unavailable",@"reason":checked[@"screenshotReason"]} : screenshot;
             finishOperation(current,request,result,nil);
         }];
@@ -671,10 +702,12 @@ static int32_t startObservation(uint64_t browserID, uint64_t operationID, uint64
     // WebKit supplies these shared-program bindings only. Trusted DOM activity
     // is checked by the program's own captured revision; AppKit userActivity:
     // still cancels the request and advances the page token independently.
+    WKContentWorld *world = observationWorld();
     NSMutableDictionary *arguments = [@{@"mode":action ? @"act" : @"observe",@"epochSeed":NSUUID.UUID.UUIDString,@"observationSeed":NSUUID.UUID.UUIDString,@"navigation":[NSString stringWithFormat:@"%llu",(unsigned long long)navigation]} mutableCopy];
     if (action) [arguments addEntriesFromDictionary:@{@"observationId":observationID,@"nodeRef":nodeRef,@"kind":kind,@"inputText":inputText ?: @"",@"deadline":@([NSDate.date timeIntervalSince1970]*1000+5000)}];
+    [arguments addEntriesFromDictionary:@{@"inspectClosedRoots":@(screenshot && observationInspectsClosedRoots)}];
     __weak FFPublicBrowser *weakBrowser = browser;
-    [browser.view callAsyncJavaScript:observationProgram() arguments:arguments inFrame:nil inContentWorld:observationWorld() completionHandler:^(id value, NSError *error) {
+    [browser.view callAsyncJavaScript:observationProgram() arguments:arguments inFrame:nil inContentWorld:world completionHandler:^(id value, NSError *error) {
         FFPublicBrowser *active = weakBrowser;
         if (!active || active.readRequest != request) return;
         if (request.retired) { finishOperation(active,request,nil,nil); return; }
@@ -684,10 +717,13 @@ static int32_t startObservation(uint64_t browserID, uint64_t operationID, uint64
             finishOperation(active,request,result,nil); return;
         }
         if (!live || error || ![value isKindOfClass:NSDictionary.class]) { finishOperation(active,request,nil,@"网页观察未完成，请查看页面后再试"); return; }
+        if (screenshot && (active.view.hidden || !active.view.window)) { finishOperation(active,request,nil,@"网页显示区域已变化，请重新观察"); return; }
         NSMutableDictionary *result = [value mutableCopy];
         if ([result[@"blocked"] boolValue]) { finishOperation(active,request,result,nil); return; }
         active.observationID = result[@"observationId"];
         NSString *reason = [result[@"screenshotReason"] isKindOfClass:NSString.class] ? result[@"screenshotReason"] : nil;
+        if (screenshot && (!observationInspectsClosedRoots || ![result[@"closedRootInspection"] boolValue]))
+            reason = @"当前系统尚不能可靠检查页面的封闭内容，暂不提供截图";
         [result removeObjectForKey:@"screenshotReason"];
         result[@"screenshot"] = @{@"status":@"unavailable",@"reason":reason ?: @"本次未请求截图"};
         if (!screenshot || reason) finishOperation(active,request,result,nil);

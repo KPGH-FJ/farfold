@@ -149,6 +149,32 @@ fn assert_original_payload(observed: &Observed, native: &str) {
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn owned_permission_cancel_requires_the_exact_owner_and_never_selects_an_option() {
+    tokio::time::timeout(Duration::from_secs(20), async {
+        let (f, _) = configured_pair();
+        let probe = Arc::new(Probe::default());
+        let opened = f.manager.open_session(
+            &f.row, &f.cwd, None, vec![], probe.sink(&f.manager), &f.store,
+        ).await.unwrap();
+        prompt(&f, &f.row, &opened.session_id).await;
+        until(|| probe.permissions().len() == 1).await;
+        let request = probe.permissions().remove(0);
+        let owner = &request.event["owner"];
+        assert_eq!(owner["sessionId"], opened.session_id);
+        assert_eq!(owner["connectionId"], opened.connection_id);
+        assert_eq!(owner["requestId"], id(&request));
+        for foreign in [json!(null), json!({"sessionId":opened.session_id}), json!({"connectionId":opened.connection_id,"sessionId":opened.session_id,"requestId":"other"})] {
+            assert_eq!(f.manager.permission_respond_owned(id(&request), None, None, Some(&foreign)).unwrap().status, "expired");
+        }
+        assert!(f.manager.pending_permissions.lock().unwrap().contains_key(id(&request)));
+        assert_eq!(f.manager.permission_respond_owned(id(&request), None, None, Some(owner)).unwrap().status, "submitted");
+        until(|| probe.ended("cancelled")).await;
+        assert_eq!(f.manager.permission_respond_owned(id(&request), Some("allow"), None, Some(owner)).unwrap().status, "expired");
+        assert!(!probe.ended("end_turn"));
+    }).await.expect("bounded original SDK responder cancellation");
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn permission_publication_releases_global_table_before_sink_and_keeps_both_interactions() {
     tokio::time::timeout(Duration::from_secs(20), async {
         let (f, second) = configured_pair();

@@ -8,6 +8,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads } from "./sessions";
+import { emitOpeningHeader } from "./session_open_test_fixture";
 import {
   commitHistoryPreview,
   hasPreviewContent,
@@ -59,17 +60,26 @@ it.each([
     h.invoke.mockImplementation(async (command, args) => {
       if (command !== "session_open") return [];
       deliver = args.channel.onmessage;
+      emitOpeningHeader(args, {
+        cwd: "/boundary",
+        nativeSessionId: native,
+        connectionId: "boundary-owned",
+      });
       const marker = {
         kind: "session_history_complete",
         openToken: args.openToken,
       };
       replay = () => {
         deliver(marker);
-        deliver(message("Not part of the acknowledged history"));
         if (duplicate) deliver(marker);
       };
       if (!responseFirst) replay();
-      return { cwd: "/boundary", nativeSessionId: native, resumed: true };
+      return {
+        cwd: "/boundary",
+        nativeSessionId: native,
+        connectionId: "boundary-owned",
+        resumed: true,
+      };
     });
     const opening = threads.open({
       agentId: "boundary-fixture",
@@ -87,8 +97,11 @@ it.each([
     expect(prior.items).toEqual([
       expect.objectContaining({ text: "Keep prior history" }),
     ]);
-    deliver(message("Even later text cannot repair that failed load"));
-    expect(prior.items).toHaveLength(1);
+    const late = message("Even later text cannot repair that failed load");
+    deliver(late);
+    expect(prior.items).toHaveLength(2);
+    expect(prior.items[0]).toMatchObject({ text: "Keep prior history" });
+    expect(prior.items[1]).toMatchObject({ kind: "raw", update: late });
   },
 );
 
@@ -98,6 +111,11 @@ it("preserves messages and tool activity after the history prefix as live update
     if (command === "agent_work_get") return { cwd: args.cwd, enabled: {} };
     if (command !== "session_open") return [];
     const deliver = args.channel.onmessage;
+    emitOpeningHeader(args, {
+      cwd: "/boundary",
+      nativeSessionId: "live-prefix",
+      connectionId: "boundary-live",
+    });
     deliver(message("Historical body"));
     deliver({
       kind: "session_history_complete",
@@ -113,7 +131,12 @@ it("preserves messages and tool activity after the history prefix as live update
     });
     deliver({ kind: "toolActivity", toolCallIds: ["live-tool"] });
     deliver(message("Live body after the prefix"));
-    return { cwd: "/boundary", nativeSessionId: "live-prefix", resumed: true };
+    return {
+      cwd: "/boundary",
+      nativeSessionId: "live-prefix",
+      connectionId: "boundary-live",
+      resumed: true,
+    };
   });
   const state = await threads.open({
     agentId: "boundary-fixture",
@@ -145,13 +168,23 @@ it("keeps a loss observed after the prefix from admitting a disconnected recover
   );
   h.invoke.mockImplementation(async (command, args) => {
     if (command !== "session_open") return [];
+    emitOpeningHeader(args, {
+      cwd: "/boundary",
+      nativeSessionId: native,
+      connectionId: "boundary-owned",
+    });
     args.channel.onmessage(message("Readable history"));
     args.channel.onmessage({
       kind: "session_history_complete",
       openToken: args.openToken,
     });
     args.channel.onmessage({ kind: "connectionLost" });
-    return { cwd: "/boundary", nativeSessionId: native, resumed: true };
+    return {
+      cwd: "/boundary",
+      nativeSessionId: native,
+      connectionId: "boundary-owned",
+      resumed: true,
+    };
   });
   await expect(
     threads.open({
@@ -184,6 +217,7 @@ it.each([false, true])(
       if (wrongToken)
         args.channel.onmessage({
           kind: "history_preview_complete",
+          openToken: args.openToken,
           previewToken: "another-preview",
         });
       return {
@@ -210,6 +244,7 @@ it.each([false, true])(
       if (readable) deliver(message("Historical preview body"));
       const marker = {
         kind: "history_preview_complete",
+        openToken: args.openToken,
         previewToken: "owned-prefix",
       };
       deliver(marker);

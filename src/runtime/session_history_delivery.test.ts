@@ -53,6 +53,13 @@ it("real open keeps original index-held replay and only acknowledges after insta
   h.invoke.mockImplementation((command, args) => {
     if (command === "session_open") {
       wire = args;
+      args.channel.onmessage({
+        kind: "sessionOpening",
+        openToken: args.openToken,
+        cwd: "/delivery",
+        sessionId: "index-held",
+        connectionId: "held-owner",
+      });
       progress(args.admissionChannel, args.openToken, 101);
       args.channel.onmessage({
         update: {

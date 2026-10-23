@@ -153,6 +153,7 @@ async fn review_regression_logout_reaps_idle_account_copies_and_preserves_api_an
         fork_owned: false,
         native_session_id: None,
         preview_token: None,
+        opening_token: None,
         recorded_config: None,
         config_store: Box::new(ConfigStore {
             store: f.store.clone(),

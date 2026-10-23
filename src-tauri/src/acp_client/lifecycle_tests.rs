@@ -797,6 +797,7 @@ async fn two_service_connections_route_stop_and_interactions_to_their_own_sessio
                 fork_owned: false,
                 native_session_id: None,
                 preview_token: None,
+                opening_token: None,
                 recorded_config: None,
                 config_store: Box::new(ConfigStore {
                     store: f.store.clone(),
@@ -948,6 +949,7 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
                     fork_owned: false,
                     native_session_id: Some(id.into()),
                     preview_token: None,
+                    opening_token: None,
                     recorded_config: None,
                     config_store: Box::new(ConfigStore {
                         store: f.store.clone(),

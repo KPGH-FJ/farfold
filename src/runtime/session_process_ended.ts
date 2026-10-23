@@ -1,3 +1,4 @@
+import { Channel } from "@tauri-apps/api/core";
 import type { ThreadState } from "./session_types";
 import type { ConnectionCloseReason } from "./connection_close";
 
@@ -39,4 +40,48 @@ export function connectionWorkEnded(thread: ThreadState): boolean {
     thread.connectionId &&
     thread.processEndedConnectionId === thread.connectionId,
   );
+}
+
+/** A process receipt outlives raw delivery retirement. It applies only to
+ * its captured state and connection, including a receipt received before bind. */
+export class ProcessEndedChannel extends Channel<unknown> {
+  private ended: ProcessEndedReceipt | null = null;
+  private state?: ThreadState;
+  constructor(
+    private current: (key: string) => ThreadState | undefined,
+    private apply: (key: string, event: unknown) => void,
+  ) {
+    super();
+    this.onmessage = (value) => {
+      const receipt = processEndedReceipt(value);
+      if (
+        !receipt ||
+        (this.state && receipt.connectionId !== this.state.connectionId)
+      )
+        return;
+      this.ended ??= receipt;
+      this.applyEnded();
+    };
+  }
+  bind(state: ThreadState): void {
+    this.state = state;
+    this.applyEnded();
+  }
+  private applyEnded(): void {
+    const state = this.state;
+    const ended = this.ended;
+    if (!state || !ended) return;
+    if (ended.connectionId !== state.connectionId) {
+      this.ended = null;
+      return;
+    }
+    if (this.current(state.key) !== state) return;
+    state.processEndedConnectionId = ended.connectionId;
+    this.ended = null;
+    this.onmessage = () => {};
+    this.apply(state.key, {
+      kind: "connectionLost",
+      closeReason: ended.closeReason,
+    });
+  }
 }

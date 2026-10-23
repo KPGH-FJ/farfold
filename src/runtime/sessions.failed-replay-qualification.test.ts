@@ -50,6 +50,13 @@ async function failedOwner() {
     if (name !== "session_open") return [];
     wire = value;
     wire.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: wire.openToken,
+      cwd: wire.cwd,
+      sessionId: wire.nativeSessionId,
+      connectionId: `actual-${native}`,
+    });
+    wire.channel.onmessage({
       kind: "session_history_complete",
       openToken: wire.openToken,
     });

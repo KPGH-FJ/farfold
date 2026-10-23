@@ -25,6 +25,7 @@ pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
 mod cold_history_open;
 mod compaction_activity;
+pub mod delivery_flow;
 pub mod delivery_observation;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
@@ -152,3 +153,11 @@ mod event_transport_baseline_tests;
 
 #[cfg(test)]
 mod load_prefix_consumption_tests;
+
+mod ingress_permit;
+mod process_bridge;
+mod session_routes;
+mod transient_pressure;
+
+#[cfg(test)]
+mod flow_pressure_tests;

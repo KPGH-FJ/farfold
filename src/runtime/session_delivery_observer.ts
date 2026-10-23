@@ -1,4 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
+import {
+  SessionDeliveryFlow,
+  type DeliveryTransfer,
+} from "./session_delivery_flow";
 
 export type DeliveryOutcome = "consumed" | "discarded" | "error";
 type Consumption = DeliveryOutcome | "buffered";
@@ -27,16 +31,34 @@ export class SessionDeliveryObserver {
   private enqueued = 0;
   private drained = 0;
   private retired = false;
+  private flow: SessionDeliveryFlow;
 
   constructor(
     private agentId: string,
     private openToken: string,
-  ) {}
+  ) {
+    this.flow = new SessionDeliveryFlow(agentId, openToken);
+  }
+
+  /** This flow's next native pull only; it neither buffers direct delivery nor
+   * changes actual control Promise consumption or external Agent execution. */
+  pause(): () => void {
+    return this.flow.pause();
+  }
 
   receive(
     input: unknown,
     consume: (event: unknown) => Consumption | Promise<DeliveryOutcome>,
   ): void {
+    if (this.flow.receive(input, (event) => this.consume(event, consume)))
+      return;
+    this.consume(input, consume);
+  }
+
+  private consume(
+    input: unknown,
+    consume: (event: unknown) => Consumption | Promise<DeliveryOutcome>,
+  ): DeliveryTransfer {
     let event = input;
     let sample: Sample | undefined;
     if (
@@ -75,7 +97,7 @@ export class SessionDeliveryObserver {
     // command channels supply the trusted outer envelope above.
     if (this.retired) {
       if (sample) this.finish(sample, "discarded");
-      return;
+      return "discarded";
     }
     try {
       const result = consume(event);
@@ -93,7 +115,9 @@ export class SessionDeliveryObserver {
             if (sample) this.finish(sample, "error");
           },
         );
+        return "deferred";
       } else if (sample) this.finish(sample, result);
+      return result;
     } catch (error) {
       if (sample) this.finish(sample, "error");
       throw error;
@@ -122,6 +146,7 @@ export class SessionDeliveryObserver {
 
   dispose(): void {
     this.retired = true;
+    this.flow.dispose();
     if (this.pending) this.finish(this.pending, "discarded");
   }
 

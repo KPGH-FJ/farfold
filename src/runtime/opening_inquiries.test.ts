@@ -11,6 +11,26 @@ import { threads } from "./sessions";
 import { OpeningInquiryOwner, openingInquiries } from "./opening_inquiries";
 import { INQUIRY } from "./elicitation_strings";
 import { STRINGS } from "./strings";
+function replyWithIdentity(
+  args: { openToken: string; channel: { onmessage(event: unknown): void } },
+  reply: (value: unknown) => void,
+): (value: unknown) => void {
+  return (value) => {
+    const result = value as {
+      cwd: string;
+      nativeSessionId: string;
+      connectionId: string;
+    };
+    args.channel.onmessage({
+      kind: "sessionOpening",
+      openToken: args.openToken,
+      cwd: result.cwd,
+      sessionId: result.nativeSessionId,
+      connectionId: result.connectionId,
+    });
+    reply(value);
+  };
+}
 const question = {
   kind: "elicitation",
   requestId: "ask",
@@ -30,7 +50,7 @@ it("presents the actual pending session_open inquiry before that command resolve
     if (command === "session_open") {
       args.channel.onmessage(question);
       return new Promise((r) => {
-        resolve = r;
+        resolve = replyWithIdentity(args, r);
       });
     }
     return Promise.resolve([]);
@@ -50,7 +70,79 @@ it("presents the actual pending session_open inquiry before that command resolve
       ),
     ).toBe(false);
   } finally {
-    resolve({ cwd: "/controlled", nativeSessionId: "opened" });
+    resolve({
+      cwd: "/controlled",
+      nativeSessionId: "opened",
+      connectionId: "opened-connection",
+    });
+    await opening;
+  }
+});
+it("permits the original opening approval while session_open is still awaiting its result", async () => {
+  const permission = {
+    kind: "permissionRequest",
+    requestId: "opening-permission",
+    owner: {
+      connectionId: "opening-connection",
+      sessionId: "opening-native",
+      requestId: "opening-permission",
+    },
+    toolCall: { title: "Read controlled file", kind: "read" },
+    options: [{ optionId: "yes", name: "Allow once", kind: "allow_once" }],
+  };
+  let finish!: (result: unknown) => void;
+  h.invoke.mockImplementation((command, args) => {
+    if (command === "session_open") {
+      args.channel.onmessage(permission);
+      return new Promise((resolve) => {
+        finish = replyWithIdentity(args, resolve);
+      });
+    }
+    return Promise.resolve(
+      command === "session_permission_respond" ? { status: "submitted" } : [],
+    );
+  });
+  const opening = threads.open({
+    agentId: "controlled-opening-permission",
+    cwd: "/controlled",
+    fresh: true,
+  });
+  try {
+    const view = openingInquiries
+      .getSnapshot()
+      .find((value) => value.agentId === "controlled-opening-permission")!;
+    expect(view.permissions).toHaveLength(1);
+    expect(
+      [...threads.getSnapshot().threads.values()].some(
+        (state) => state.agentId === view.agentId,
+      ),
+    ).toBe(false);
+    const owner = openingInquiries.owner(view.id)!;
+    owner.decidePermission(permission.requestId, "yes");
+    await vi.waitFor(() =>
+      expect(
+        h.invoke.mock.calls.some(
+          ([name]) => name === "session_permission_respond",
+        ),
+      ).toBe(true),
+    );
+    expect(
+      h.invoke.mock.calls.find(
+        ([name]) => name === "session_permission_respond",
+      )?.[1],
+    ).toEqual({
+      requestId: permission.requestId,
+      requestOwner: permission.owner,
+      sessionId: "opening-native",
+      optionId: "yes",
+    });
+    await vi.waitFor(() => expect(owner.snapshot().permissions).toEqual([]));
+  } finally {
+    finish({
+      cwd: "/controlled",
+      nativeSessionId: "opening-native",
+      connectionId: "opening-connection",
+    });
     await opening;
   }
 });
@@ -82,7 +174,7 @@ it("retains unavailable details and the queue pause when an opening completes", 
     if (command === "session_open") {
       args.channel.onmessage({ kind: "elicitationUnavailable", params });
       return new Promise((r) => {
-        resolve = r;
+        resolve = replyWithIdentity(args, r);
       });
     }
     return Promise.resolve([]);
@@ -99,7 +191,11 @@ it("retains unavailable details and the queue pause when an opening completes", 
         .find((view) => view.agentId === "opening-unsupported-inquiry"),
     ).toMatchObject({ notice: INQUIRY.unavailable, details: params });
   } finally {
-    resolve({ cwd: "/controlled", nativeSessionId: "unsupported-opened" });
+    resolve({
+      cwd: "/controlled",
+      nativeSessionId: "unsupported-opened",
+      connectionId: "unsupported-connection",
+    });
   }
   const state = await opening;
   expect(state.queuePaused).toBe("unavailable");

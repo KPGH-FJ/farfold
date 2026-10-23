@@ -14,7 +14,7 @@ interface Ports {
   applyFailed(state: ThreadState, event: unknown): void;
   apply(key: string, event: unknown): void;
   receiving(): boolean;
-  buffer(event: unknown): void;
+  project(event: unknown): "consumed" | "discarded";
 }
 
 /** The existing open/replay routing, with the consumption boundary explicit. */
@@ -47,7 +47,6 @@ export function openDeliveryConsumer(
         return "consumed";
       }
       if (!ports.receiving()) return "discarded";
-      ports.buffer(event);
-      return "buffered";
+      return ports.project(event);
     });
 }

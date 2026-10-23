@@ -5,7 +5,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use super::delivery_observation::{DeliveryChannel, DeliveryEvent};
+use super::delivery_flow::Wake;
+use super::delivery_observation::DeliveryChannel;
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -36,7 +37,7 @@ pub async fn session_open(
     config_options: Option<Value>,
     service: Option<crate::credentials::ServiceSelection>,
     open_token: String,
-    channel: Channel<DeliveryEvent>,
+    channel: Channel<Wake>,
     process_ended_channel: Channel<ProcessEndedReceipt>,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
 ) -> Result<SessionOpenResult, String> {
@@ -123,6 +124,7 @@ pub async fn session_open(
                 mcp,
                 browser_unavailable,
                 history,
+                Some(open_token.clone()),
             )
             .await
     };
@@ -495,11 +497,16 @@ pub async fn session_confirm_config(
 pub fn session_permission_respond(
     app: AppHandle,
     request_id: String,
-    option_id: String,
-    session_id: String,
+    option_id: Option<String>,
+    session_id: Option<String>,
+    request_owner: Option<Value>,
 ) -> Result<InteractionReply, String> {
-    app.state::<AcpManager>()
-        .permission_respond(&request_id, &option_id, &session_id)
+    app.state::<AcpManager>().permission_respond_owned(
+        &request_id,
+        option_id.as_deref(),
+        session_id.as_deref(),
+        request_owner.as_ref(),
+    )
 }
 
 /// Answer a pending `elicitation/create` (form mode): `accept` with

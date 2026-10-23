@@ -252,7 +252,7 @@ pub(super) fn update(
 
 #[allow(clippy::too_many_arguments)]
 pub(super) fn drain(
-    inbox: &mut mpsc::UnboundedReceiver<Dispatch>,
+    inbox: &mut super::super::session_routes::Inbox,
     ctx: &mut DispatchContext<'_>,
     configuration: &mut super::super::session_config::SessionConfig,
     models: &mut HashSet<String>,

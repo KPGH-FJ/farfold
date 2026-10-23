@@ -54,13 +54,16 @@ export function sessionForkControl(
           title: child?.title ?? undefined,
         }
       : undefined,
-    message: operation?.ownerEnded
-      ? S.ownerEnded
-      : operation?.reason && reasons[operation.reason]
-        ? reasons[operation.reason]
-        : operation && !operation.sourceReleased && phase !== "pending"
-          ? S.sourceUnconfirmed
-          : undefined,
+    message:
+      operation?.reason === "message_backlog"
+        ? S.messageBacklog
+        : operation?.ownerEnded
+          ? S.ownerEnded
+          : operation?.reason && reasons[operation.reason]
+            ? reasons[operation.reason]
+            : operation && !operation.sourceReleased && phase !== "pending"
+              ? S.sourceUnconfirmed
+              : undefined,
     isCurrent: current,
     start: () => {
       if (current()) void threads.forkCurrent(thread.key);

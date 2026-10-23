@@ -41,6 +41,7 @@ pub(crate) async fn open_session_on_connection(
     cwd: &Path,
     native_session_id: Option<String>,
     preview_token: Option<String>,
+    opening_token: Option<String>,
     recorded_config: Option<Value>,
     config_store: super::super::model_guard::ConfigStore,
     config_options: Vec<(String, Value)>,
@@ -75,7 +76,7 @@ pub(crate) async fn open_session_on_connection(
             downstream(value);
         }
     });
-    let (inbox_tx, mut inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
+    let (inbox_tx, mut inbox_rx) = ops.life.routes.channel();
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
     // Questions required by load cannot wait in the pump inbox until load
@@ -85,9 +86,8 @@ pub(crate) async fn open_session_on_connection(
             .opening_session(id, &operation, events.clone())
     });
     let resumed = native_session_id.is_some();
-    let mut received = native_session_id
-        .as_ref()
-        .map(|id| load_notifications::State::new(id, &ops));
+    let mut received =
+        load_notifications::Opening::new(native_session_id.as_deref(), &ops, pending);
     let (session_id, mut response, guard, retention, identity) = match native_session_id {
         None => {
             let params = super::super::transient_mcp::session_params(cwd, None, mcp.as_ref());
@@ -115,33 +115,35 @@ pub(crate) async fn open_session_on_connection(
                 .ok_or_else(|| "session/new response lacks sessionId".to_string())?
                 .to_string();
             ops.verify_session_identity(&session_id, false, &mut identity)?;
-            let guard = cx
-                .add_dynamic_handler(SessionRoute::new(
-                    &session_id,
-                    inbox_tx,
-                    operation.abandoned.clone(),
-                ))
-                .map_err(describe_open_error)?;
-            // New-session events may already be waiting in the fallback queue.
-            // Settle registration before allowing the first prompt to follow.
-            await_route_registration(cx, &operation).await?;
+            if let Some(token) = &opening_token {
+                events(
+                    serde_json::json!({"kind":"sessionOpening", "openToken":token,
+                    "connectionId":ops.connection_id, "sessionId":session_id, "cwd":cwd.to_string_lossy()}),
+                );
+            }
+            let guard = ops.life.routes.register(
+                &session_id,
+                inbox_tx,
+                operation.abandoned.clone(),
+                events.clone(),
+            )?;
             (session_id, response, guard, retention, identity)
         }
         Some(id) => {
-            // Register before `session/load` so replay notifications are
-            // claimed; anything arriving earlier was queued by the
-            // retry-on-sessionId fallback in the connection dispatcher.
-            let guard = cx
-                .add_dynamic_handler(SessionRoute::new(
-                    &id,
-                    inbox_tx,
-                    operation.abandoned.clone(),
-                ))
-                .map_err(describe_open_error)?;
-            // Registration itself is queued by the protocol library. Wait for
-            // its incoming actor before publishing load, so replay cannot remain
-            // in the fallback queue while an empty pump announces readiness.
-            await_route_registration(cx, &operation).await?;
+            // This synchronous original-connection registration precedes load.
+            // No queued SDK registration or hidden retry storage is involved.
+            let guard = ops.life.routes.register(
+                &id,
+                inbox_tx,
+                operation.abandoned.clone(),
+                events.clone(),
+            )?;
+            if let Some(token) = &opening_token {
+                events(
+                    serde_json::json!({"kind":"sessionOpening", "openToken":token,
+                    "connectionId":ops.connection_id, "sessionId":id, "cwd":cwd.to_string_lossy()}),
+                );
+            }
             let params = super::super::transient_mcp::session_params(cwd, Some(&id), mcp.as_ref());
             let request =
                 UntypedMessage::new("session/load", &params).map_err(describe_open_error)?;
@@ -287,10 +289,24 @@ pub(crate) async fn open_session_on_connection(
     if configuration.has_invalid_options() {
         model_guard.change_unknown();
     }
+    let mut deferred_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    if let Some(received) = received.as_mut() {
+        let (models, invalid) = std::mem::take(&mut received.deferred).apply(&mut configuration);
+        deferred_models.extend(models);
+        config_state = configuration.options();
+        if let Some(options) = &config_state {
+            model_guard.observe(options);
+            permission_guard.observe(options);
+        }
+        if invalid {
+            model_guard.change_unknown();
+        }
+    }
     let prompt_snapshot = Arc::new(Mutex::new(model_guard.current_value()));
     let events = super::super::active_prompt::observed_sink(events, prompt_snapshot.clone());
     let (ready_tx, ready_rx) = oneshot::channel();
-    let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    let mut initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
+    initial_models.extend(deferred_models);
     let opening = restore_config::Opening {
         reply: Some(ready_tx),
         operation,
@@ -331,7 +347,9 @@ pub(crate) async fn open_session_on_connection(
                 _retention: retention.registered(),
             },
         );
-    let received = received.unwrap_or_else(|| load_notifications::State::new(&session_id, &ops));
+    let received = received
+        .take()
+        .unwrap_or_else(|| load_notifications::State::new(&session_id, &ops));
     // Publish ownership before the pump can finish or receive a close request.
     // Removing the route then releases the retention under the admission lock.
     let connection_id = ops.connection_id.clone();

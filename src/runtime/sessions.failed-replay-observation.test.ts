@@ -58,6 +58,15 @@ function marker(wire: Wire) {
     openToken: wire.openToken,
   });
 }
+function opening(wire: Wire) {
+  wire.channel.onmessage({
+    kind: "sessionOpening",
+    openToken: wire.openToken,
+    cwd: wire.cwd,
+    sessionId: wire.nativeSessionId,
+    connectionId: `actual-${wire.nativeSessionId}`,
+  });
+}
 function open(state: ReturnType<typeof seed>) {
   return threads.open({
     agentId: state.agentId,
@@ -79,6 +88,7 @@ it("keeps old tools unknown with a real replacement ID until this exact channel 
   h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
     wire = value;
+    opening(wire);
     marker(wire);
     return {
       cwd: wire.cwd,
@@ -170,20 +180,8 @@ it("does not borrow an old connection ID to admit following from a reply that om
   h.invoke.mockImplementation(async (name, value: Wire) => {
     if (name !== "session_open") return [];
     wire = value;
+    opening(wire);
     marker(wire);
-    wire.channel.onmessage({
-      update: {
-        sessionUpdate: "agent_message_chunk",
-        content: { type: "text", text: "UNCONFIRMED_REPAIR" },
-      },
-    });
-    wire.channel.onmessage({
-      update: { sessionUpdate: "future-missing-owner" },
-    });
-    wire.channel.onmessage({
-      kind: "toolActivity",
-      toolCallIds: ["not-owned"],
-    });
     return {
       cwd: wire.cwd,
       nativeSessionId: wire.nativeSessionId,
@@ -193,6 +191,19 @@ it("does not borrow an old connection ID to admit following from a reply that om
     } satisfies OpenResult;
   });
   await expect(open(state)).rejects.toBeTruthy();
+  wire.channel.onmessage({
+    update: {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "UNCONFIRMED_REPAIR" },
+    },
+  });
+  wire.channel.onmessage({
+    update: { sessionUpdate: "future-missing-owner" },
+  });
+  wire.channel.onmessage({
+    kind: "toolActivity",
+    toolCallIds: ["not-owned"],
+  });
   expect(state.items).toEqual(originalItems);
   expect(state.items[0]).toBe(originalItems[0]);
   expect(state.items[1]).toBe(originalItems[1]);

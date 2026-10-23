@@ -707,18 +707,11 @@ enum ObservationOperation {
 pub(super) async fn observe(
     app: &AppHandle,
     scope: FixedPageReadScope,
-    _screenshot: bool,
+    screenshot: bool,
 ) -> Result<String, String> {
-    // Current public WebKit APIs cannot rule out filled controls in closed
-    // shadow trees. Keep pixel capture confined to the direct synthetic native
-    // fixture until that boundary can be enforced; no production Rust caller
-    // can request pixels, even if an upper layer accidentally passes true.
-    observation_operation(
-        app,
-        scope,
-        ObservationOperation::Observe { screenshot: false },
-    )
-    .await
+    // The native owner independently refuses unsupported systems and unsafe
+    // pages. A caller flag never substitutes for closed-root inspection.
+    observation_operation(app, scope, ObservationOperation::Observe { screenshot }).await
 }
 
 pub(super) async fn act(

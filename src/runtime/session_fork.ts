@@ -1,17 +1,15 @@
 import { SessionDeliveryObserver } from "./session_delivery_observer";
-import { Channel, invoke } from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api/core";
+import { OwnedSessionChannel } from "./session_channels";
 import {
   configurationInputBusy,
   sameConfigurationSnapshot,
 } from "./config_check";
 import { draftPersistence } from "./drafts";
-import { finishHistoryPrefix, HistoryReplayBuffer } from "./history_replay";
 import { openingInquiries } from "./opening_inquiries";
 import { historyReads } from "./session_history_admission";
 import { configChangeBusy } from "./protected_config";
-import { openedThreadState } from "./session_open_state";
-import { requireReadableHistoryCooperatively } from "./session_recovery";
-import { hasOwnUpdate, isOwnerHistoryMarker } from "./session_open_replay";
+import { hasOwnUpdate, SessionOpenReplay } from "./session_open_replay";
 import { retireForkControlOwner, validForkId } from "./session_fork_activity";
 import type { ForkOperation, ForkResult } from "./session_fork_types";
 import { SESSION_FORK_STRINGS as S } from "./session_fork_strings";
@@ -52,8 +50,12 @@ export function forkBlockReason(thread: ThreadState): string | undefined {
 interface Ports {
   thread(key: string): ThreadState | undefined;
   rows(): readonly IndexRow[];
-  install(state: ThreadState, channel: Channel<unknown>): void;
-  ownsChannel(key: string, channel: Channel<unknown>): boolean;
+  install(
+    state: ThreadState,
+    channel: OwnedSessionChannel,
+    permissionChanges: number,
+  ): void;
+  ownsChannel(key: string, channel: OwnedSessionChannel): boolean;
   apply(key: string, event: unknown, live?: boolean): void;
   emit(key?: string): void;
   refreshIndex(): Promise<void>;
@@ -62,6 +64,25 @@ interface Ports {
 /** Coordinates delivery only; the backend owns the single official fork and
  * process handoff. A rejected/unknown IPC call never triggers a second fork. */
 export class SessionForks {
+  private unbound = new Map<
+    ThreadState,
+    {
+      operation: ForkOperation;
+      channel: OwnedSessionChannel;
+      clear(): void;
+    }
+  >();
+
+  /** Retire only renderer delivery when its exact source view is removed or
+   * explicitly replaced. Unknown Agent work is neither stopped nor retried. */
+  retire(parent: ThreadState): void {
+    const owner = this.unbound.get(parent);
+    if (!owner) return;
+    this.unbound.delete(parent);
+    owner.clear();
+    owner.channel.dispose();
+  }
+
   private requests = new Map<
     string,
     { operationId: string; promise: Promise<ThreadState | undefined> }
@@ -82,6 +103,7 @@ export class SessionForks {
       !["ready", "rejected"].includes(operation.status)
     )
       return false;
+    this.retire(parent);
     retireForkControlOwner(parent);
     parent.forkOperation = undefined;
     this.ports.emit(key);
@@ -101,6 +123,7 @@ export class SessionForks {
       sourceReleased: false,
       indexed: false,
     };
+    this.retire(parent);
     parent.forkOperation = operation;
     this.ports.emit(parent.key);
     const request = this.perform(parent, operation).finally(() => {
@@ -129,11 +152,29 @@ export class SessionForks {
       service: parent.service,
       serviceContext: parent.serviceContext,
     });
-    const channel = new Channel<unknown>();
-    const buffered = new HistoryReplayBuffer();
     let receivingReplay = true;
     const openToken = crypto.randomUUID();
+    const replay = new SessionOpenReplay(
+      { agentId: parent.agentId, cwd: parent.cwd },
+      undefined,
+      undefined,
+      openToken,
+      current,
+    );
     const delivery = new SessionDeliveryObserver(parent.agentId, openToken);
+    const channel = new OwnedSessionChannel(delivery);
+    this.unbound.set(parent, {
+      operation,
+      channel,
+      clear: () => {
+        receivingReplay = false;
+        replay.clear();
+      },
+    });
+    const transferOwner = () => {
+      if (this.unbound.get(parent)?.operation === operation)
+        this.unbound.delete(parent);
+    };
     const readKey = `fork:${operation.operationId}`;
     const admission = historyReads.begin(
       readKey,
@@ -153,8 +194,6 @@ export class SessionForks {
     });
     let dispatched = false;
     let boundKey: string | undefined;
-    let replayLost = false;
-    let wake: (() => void) | undefined;
     channel.onmessage = (input) =>
       delivery.receive(input, (event) => {
         const received = event as {
@@ -171,6 +210,19 @@ export class SessionForks {
             return "discarded";
           const inner = source.event as Record<string, unknown> | null;
           if (!inner || typeof inner !== "object") return "discarded";
+          if (inner.kind === "permissionRequest") {
+            const owner = inner.owner as Record<string, unknown> | null;
+            const expected =
+              source.childSessionId === null
+                ? operation.parentSessionId
+                : source.childSessionId;
+            if (
+              !owner ||
+              owner.connectionId !== operation.connectionId ||
+              owner.sessionId !== expected
+            )
+              return "discarded";
+          }
           if (source.childSessionId === null) {
             // Before fork returns an ID, reverse requests belong to its actual
             // request scope on the parent connection, not an invented child.
@@ -227,12 +279,8 @@ export class SessionForks {
             () => "error",
           );
         }
-        if (isOwnerHistoryMarker(event, openToken)) {
-          if (!receivingReplay || !current()) return "discarded";
-          buffered.mark(openToken);
-          wake?.();
+        if (receivingReplay && current() && replay.receiveMarker(event))
           return "consumed";
-        }
         if (boundKey) {
           if (
             !this.ports.ownsChannel(boundKey, channel) ||
@@ -246,12 +294,7 @@ export class SessionForks {
         if (!hasOwnUpdate(event) && inquiry.receive(event)) return "consumed";
         if (!receivingReplay) return "discarded";
         admission?.observeRaw();
-        buffered.push(event);
-        if (!hasOwnUpdate(event) && received?.kind === "connectionLost") {
-          replayLost = true;
-          wake?.();
-        }
-        return "buffered";
+        return replay.push(event);
       });
     let updates = Promise.resolve<ThreadState | undefined>(undefined);
     const queueResult = (
@@ -338,47 +381,27 @@ export class SessionForks {
           (opened.serviceContext ?? undefined) !== parent.serviceContext
         )
           throw new Error("incomplete independent fork receipt");
-        if (!buffered.complete(openToken) && !replayLost) {
-          await new Promise<void>((resolve) => {
-            const timer = setTimeout(resolve, 30_000);
-            wake = () => {
-              clearTimeout(timer);
-              resolve();
-            };
-          });
-        }
-        wake = undefined;
-        await requireReadableHistoryCooperatively(
-          parent.agentId,
-          opened,
-          buffered.prefixEvents(openToken),
-          buffered.complete(openToken),
-          () => replayLost,
-          current,
-        );
+        await replay.waitForReady(true);
         const key = `${parent.agentId}:${opened.cwd}:${opened.nativeSessionId}`;
         if (!current() || this.ports.thread(key))
           throw new Error("fork target already present");
         await this.ports.refreshIndex();
         if (!current() || this.ports.thread(key))
           throw new Error("fork owner changed");
-        const state = openedThreadState(
-          {
-            agentId: parent.agentId,
-            cwd: parent.cwd,
-            nativeSessionId: opened.nativeSessionId,
-          },
+        const state = replay.accept(
           opened,
           this.ports.rows().find((row) => row.id === key)?.title,
         );
-        this.ports.install(state, channel);
+        this.ports.install(state, channel, replay.acceptedPermissionChanges);
         boundKey = key;
-        const { prefix, following } = buffered.take(openToken);
-        for (const event of prefix)
-          delivery.consumeBuffered(() => this.ports.apply(key, event, false));
-        finishHistoryPrefix(state);
-        for (const event of following)
-          delivery.consumeBuffered(() => this.ports.apply(key, event));
+        transferOwner();
+        inquiry.handoffPermissions(
+          state,
+          () =>
+            this.ports.thread(key) === state &&
+            this.ports.ownsChannel(key, channel),
+          () => this.ports.emit(key),
+        );
         inquiry.finish();
         operation.status = "ready";
         operation.childKey = key;
@@ -398,8 +421,7 @@ export class SessionForks {
         // receipt metadata observable, but retire its unconsumed body owner.
         if (settled && verified && !boundKey) {
           receivingReplay = false;
-          delivery.discardBuffered();
-          buffered.clear();
+          replay.clear();
         }
         if (settled && verified) historyReads.finish(readKey, admission);
         if (
@@ -468,7 +490,9 @@ export class SessionForks {
       return undefined;
     } finally {
       if (!dispatched) {
-        delivery.dispose();
+        transferOwner();
+        channel.dispose();
+        replay.clear();
         historyReads.finish(readKey, admission);
       }
       this.ports.emit(parent.key);
