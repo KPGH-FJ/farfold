@@ -31,7 +31,7 @@ fn ea(path: &Path) {
 #[test]
 #[ignore = "manual: actual NTFS and pre-existing full SACL access; no privilege adjustment"]
 fn actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let root_path = temp.path().join("original");
     fs::create_dir(&root_path).unwrap();
     fs::write(root_path.join("plain"), b"original data").unwrap();

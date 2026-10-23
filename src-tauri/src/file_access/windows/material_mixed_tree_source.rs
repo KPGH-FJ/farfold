@@ -409,7 +409,7 @@ mod tests {
     #[test]
     #[ignore = "manual: actual NTFS with existing FullSecurity rights; no privilege change"]
     fn more_than_sixty_four_actual_sources_fit_unchanged_pool_and_release_their_leases() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let root_path = temp.path().join("owned mixed root");
         std::fs::create_dir(&root_path).unwrap();
         for n in 0..80 {

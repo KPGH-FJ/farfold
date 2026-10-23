@@ -9,6 +9,10 @@ $ErrorActionPreference = 'Stop'
 # complete names belong to the separate current capability cohort. An unknown
 # additional test still fails the historical runner's exact name/count check.
 $excluded = @(switch -CaseSensitive ($Filter) {
+  'file_access::material_carrier_fragment::tests::' {
+    'file_access::material_carrier_fragment::tests::empty_ordinary_native_extent_roundtrips_without_inventing_payload_or_full_security'
+    'file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers'
+  }
   'file_access::material_backup_io::tests::' {
     'file_access::material_backup_io::tests::direct_inspection_requires_real_eof_and_retires_original_context_once'
     'file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof'

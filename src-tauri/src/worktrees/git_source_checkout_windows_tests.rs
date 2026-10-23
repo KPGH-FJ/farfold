@@ -148,7 +148,7 @@ fn actual_selected_head_profile_preserves_safe_config_info_and_original_source_b
     );
     // The production constructor creates the missing empty-template directory
     // against its actual parent. It cannot adopt an existing foreign namespace.
-    let private = tempfile::tempdir().unwrap();
+    let private = crate::test_support::tempdir().unwrap();
     let parent = crate::file_access::PinnedPath::directory(private.path()).unwrap();
     assert!(!private.path().join("info").exists());
     let owned = evaluator::create_info(&parent).unwrap();
@@ -227,6 +227,30 @@ fn held_optional_source_absence_detects_creation_and_drive_relative_config_is_re
     assert_eq!(
         inputs
             .verify(graph.owner.as_ref(), &AtomicBool::new(false))
+            .unwrap_err()
+            .code,
+        "changed"
+    );
+    // A configured missing ancestor stays an explicit absent input. Creating
+    // that ancestor invalidates the original observation before Git may use it.
+    let nested = Fixture::new();
+    configure(
+        &nested,
+        "\n[core]\n attributesFile = missing-dir/deeper.attributes\n",
+    );
+    let nested_graph = SourceGraph::capture(&nested.snapshot(), &AtomicBool::new(false)).unwrap();
+    let nested_inputs =
+        inputs::Inputs::capture(nested_graph.owner.as_ref(), &AtomicBool::new(false)).unwrap();
+    let source = nested_inputs.attr_source().unwrap().unwrap();
+    source.verify().unwrap();
+    nested_graph
+        .checkout_profile(&AtomicBool::new(false))
+        .unwrap();
+    fs::create_dir(nested.root.join("missing-dir")).unwrap();
+    assert_eq!(source.verify().unwrap_err().code, "changed");
+    assert_eq!(
+        nested_inputs
+            .verify(nested_graph.owner.as_ref(), &AtomicBool::new(false))
             .unwrap_err()
             .code,
         "changed"

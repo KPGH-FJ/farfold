@@ -160,7 +160,43 @@ struct OptionalFile<'a> {
     root: Root<'a>,
     directories: Vec<PinnedPath>,
     file: Option<(PinnedPath, Stamp)>,
-    missing: Option<(usize, Vec<u16>)>,
+    missing: Option<(usize, Vec<u16>, PathBuf)>,
+}
+#[derive(Clone, Copy)]
+pub(super) struct AttributeSource<'a> {
+    anchor: &'a PinnedPath,
+    missing_suffix: Option<&'a Path>,
+}
+impl AttributeSource<'_> {
+    pub(super) fn anchor(&self) -> &PinnedPath {
+        self.anchor
+    }
+    pub(super) fn verify(&self) -> Result<()> {
+        self.anchor.verify().map_err(|_| error("changed"))?;
+        if let Some(suffix) = self.missing_suffix {
+            let Some(Component::Normal(first)) = suffix.components().next() else {
+                return Err(error("changed"));
+            };
+            if metadata_child(self.anchor.file(), first)
+                .map_err(|_| error("changed"))?
+                .is_some()
+            {
+                return Err(error("changed"));
+            }
+        }
+        Ok(())
+    }
+    pub(super) fn git_path(
+        &self,
+        paths: &crate::worktrees::windows_git::paths::Paths,
+    ) -> Result<PathBuf> {
+        self.verify()?;
+        let plain = paths.path(self.anchor)?;
+        Ok(match self.missing_suffix {
+            Some(suffix) => plain.join(suffix),
+            None => plain.to_owned(),
+        })
+    }
 }
 impl<'a> OptionalFile<'a> {
     fn open(root: Root<'a>, names: Vec<String>, cancel: &AtomicBool) -> Result<Self> {
@@ -183,7 +219,7 @@ impl<'a> OptionalFile<'a> {
                 .map_err(|_| error("unavailable"))?;
             let raw = name.encode_utf16().collect::<Vec<_>>();
             let Some(metadata) = metadata else {
-                result.missing = Some((result.directories.len(), raw));
+                result.missing = Some((result.directories.len(), raw, names[n..].iter().collect()));
                 return Ok(result);
             };
             let directory = n + 1 != names.len();
@@ -220,7 +256,7 @@ impl<'a> OptionalFile<'a> {
                 return Err(error("changed"));
             }
         }
-        if let Some((depth, name)) = &self.missing {
+        if let Some((depth, name, _)) = &self.missing {
             let parent = if *depth == 0 {
                 self.root.pin()
             } else {
@@ -235,6 +271,24 @@ impl<'a> OptionalFile<'a> {
             }
         }
         Ok(())
+    }
+    fn attribute_source(&self) -> Result<AttributeSource<'_>> {
+        self.verify()?;
+        if let Some((pin, _)) = &self.file {
+            return Ok(AttributeSource {
+                anchor: pin,
+                missing_suffix: None,
+            });
+        }
+        let (depth, _, suffix) = self.missing.as_ref().ok_or(error("changed"))?;
+        Ok(AttributeSource {
+            anchor: if *depth == 0 {
+                self.root.pin()
+            } else {
+                &self.directories[*depth - 1]
+            },
+            missing_suffix: Some(suffix),
+        })
     }
     fn bytes(&self, cancel: &AtomicBool) -> Result<Vec<u8>> {
         self.verify()?;
@@ -299,6 +353,7 @@ fn configured_path(owner: &dyn EvaluationSource, raw: &str) -> Result<(PathBuf, 
 pub(super) struct Inputs<'a> {
     pub(super) configs: Vec<String>,
     pub(super) attr_path: Option<String>,
+    #[cfg(test)]
     resolved_attr_path: Option<PathBuf>,
     info: OptionalFile<'a>,
     configured: Option<OptionalFile<'a>>,
@@ -313,23 +368,26 @@ impl<'a> Inputs<'a> {
             vec!["info".into(), "attributes".into()],
             cancel,
         )?;
-        let (configured, resolved_attr_path) = if let Some(raw) = &attr_path {
+        #[cfg(test)]
+        let mut resolved_attr_path = None;
+        let configured = if let Some(raw) = &attr_path {
             let (root, names) = configured_path(owner, raw)?;
-            let resolved = names.iter().fold(root.clone(), |p, n| p.join(n));
-            (
-                Some(OptionalFile::open(
-                    Root::Owned(PinnedPath::directory(&root).map_err(|_| error("unsafePath"))?),
-                    names,
-                    cancel,
-                )?),
-                Some(resolved),
-            )
+            #[cfg(test)]
+            {
+                resolved_attr_path = Some(names.iter().fold(root.clone(), |p, n| p.join(n)));
+            }
+            Some(OptionalFile::open(
+                Root::Owned(PinnedPath::directory(&root).map_err(|_| error("unsafePath"))?),
+                names,
+                cancel,
+            )?)
         } else {
-            (None, None)
+            None
         };
         Ok(Self {
             configs,
             attr_path,
+            #[cfg(test)]
             resolved_attr_path,
             info,
             configured,
@@ -338,10 +396,17 @@ impl<'a> Inputs<'a> {
     pub(super) fn info(&self, cancel: &AtomicBool) -> Result<Vec<u8>> {
         self.info.bytes(cancel)
     }
+    #[cfg(test)]
     pub(super) fn attr_file(&self) -> Option<&Path> {
         // Explicit but absent configured file must not fall back to Git's
         // default global attributes path; absence and no setting differ.
         self.resolved_attr_path.as_deref()
+    }
+    pub(super) fn attr_source(&self) -> Result<Option<AttributeSource<'_>>> {
+        self.configured
+            .as_ref()
+            .map(OptionalFile::attribute_source)
+            .transpose()
     }
     pub(super) fn check_filter(
         &self,

@@ -77,7 +77,7 @@ fn with_profile<T>(
     let original = evaluator.attributes(
         evaluator::Role::Original,
         &paths,
-        Some(inputs.attr_file()),
+        Some(inputs.attr_source()?),
         cancel,
     )?;
     inputs.check_filter(owner, &original, cancel)?;
@@ -93,7 +93,7 @@ fn with_profile<T>(
     let repeated = evaluator.attributes(
         evaluator::Role::Original,
         &paths,
-        Some(inputs.attr_file()),
+        Some(inputs.attr_source()?),
         cancel,
     )?;
     if original != mirrored || original != repeated {

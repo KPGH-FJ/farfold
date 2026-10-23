@@ -10,6 +10,87 @@ fn source(bytes: &[u8]) -> File {
     file.seek(SeekFrom::Start(0)).unwrap();
     file
 }
+
+#[test]
+fn reservation_handoff_refuses_existing_populated_registered_and_index_owners() {
+    let temporary = crate::test_support::tempdir().unwrap();
+    let parent = PinnedPath::directory(temporary.path()).unwrap();
+    let cancel = AtomicBool::new(false);
+    assert!(
+        WorktreeCheckout::new(&parent)
+            .unwrap()
+            .into_reserved_directory(&cancel)
+            .is_err()
+    );
+    parent.verify().unwrap();
+
+    let mut populated = WorktreeCheckout::create_under(&parent, "populated").unwrap();
+    populated
+        .copy_regular("owned", &source(b"owned"), 5, &cancel)
+        .unwrap();
+    assert!(populated.into_reserved_directory(&cancel).is_err());
+    assert_eq!(
+        fs::read(temporary.path().join("populated/owned")).unwrap(),
+        b"owned"
+    );
+
+    let registered = WorktreeCheckout::create_under(&parent, "registered").unwrap();
+    fs::write(
+        temporary.path().join("registered/.git"),
+        b"gitdir: original\n",
+    )
+    .unwrap();
+    let mut registered = registered;
+    registered.retain_registration().unwrap();
+    assert!(registered.into_reserved_directory(&cancel).is_err());
+    assert_eq!(
+        fs::read(temporary.path().join("registered/.git")).unwrap(),
+        b"gitdir: original\n"
+    );
+
+    fs::create_dir(temporary.path().join("private-index")).unwrap();
+    let index_parent = PinnedPath::directory(&temporary.path().join("private-index")).unwrap();
+    let mut indexed = WorktreeCheckout::create_under(&parent, "indexed").unwrap();
+    indexed
+        .retain_index(&source(b"owned index"), index_parent, &cancel)
+        .unwrap();
+    assert!(indexed.into_reserved_directory(&cancel).is_err());
+    assert!(temporary.path().join("indexed").is_dir());
+}
+
+#[test]
+fn reservation_handoff_refuses_foreign_member_and_cancel_without_removing_either() {
+    let temporary = crate::test_support::tempdir().unwrap();
+    let parent = PinnedPath::directory(temporary.path()).unwrap();
+    let owner = WorktreeCheckout::create_under(&parent, "foreign").unwrap();
+    fs::write(temporary.path().join("foreign/untouched"), b"foreign bytes").unwrap();
+    assert!(
+        owner
+            .into_reserved_directory(&AtomicBool::new(false))
+            .is_err()
+    );
+    assert_eq!(
+        fs::read(temporary.path().join("foreign/untouched")).unwrap(),
+        b"foreign bytes"
+    );
+    let cancelled = WorktreeCheckout::create_under(&parent, "cancelled").unwrap();
+    let id = cancelled.root().identity().clone();
+    assert_eq!(
+        cancelled
+            .into_reserved_directory(&AtomicBool::new(true))
+            .err()
+            .unwrap()
+            .kind(),
+        io::ErrorKind::Interrupted
+    );
+    assert_eq!(
+        PinnedPath::directory(&temporary.path().join("cancelled"))
+            .unwrap()
+            .identity(),
+        &id
+    );
+}
+
 #[test]
 fn owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite() {
     let temporary = crate::test_support::tempdir().unwrap();

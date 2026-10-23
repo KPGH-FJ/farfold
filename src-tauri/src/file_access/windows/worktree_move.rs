@@ -200,6 +200,8 @@ impl WorktreeMove {
         Ok(target)
     }
     pub(crate) fn rename(&mut self) -> io::Result<()> {
+        #[cfg(test)]
+        let progress = tests::Observation::new();
         self.verify()?;
         if self.moved {
             return Err(invalid());
@@ -227,6 +229,8 @@ impl WorktreeMove {
                 FileRenameInformation,
             )
         };
+        #[cfg(test)]
+        progress.at("rename-information-dispatched");
         if code != 0 {
             return Err(io::Error::from_raw_os_error(
                 unsafe { RtlNtStatusToDosError(code) } as i32,
@@ -235,8 +239,12 @@ impl WorktreeMove {
         // The move already happened. Following errors preserve unknown; never
         // retry or roll a replacement path back into the source name.
         self.moved = true;
+        #[cfg(test)]
+        progress.at("rename-information-succeeded");
         let root = self.root.take().ok_or_else(denied)?;
         self.root = Some(root.after_owned_move(&self.target_parent, &self.target_leaf)?);
+        #[cfg(test)]
+        progress.at("original-root-new-parent-verified");
         // Microsoft FileBasicInfo uses zero attributes to preserve the actual
         // flags; DIRECTORY is not a writable FILE_BASIC_INFO attribute.
         // https://learn.microsoft.com/windows/win32/api/winbase/ns-winbase-file_basic_info
@@ -255,6 +263,8 @@ impl WorktreeMove {
         {
             return Err(io::Error::last_os_error());
         }
+        #[cfg(test)]
+        progress.at("root-basic-restored");
         let mut observed = FILE_BASIC_INFO::default();
         if unsafe {
             GetFileInformationByHandleEx(
@@ -273,8 +283,19 @@ impl WorktreeMove {
             || observed.ChangeTime != self.basic.ChangeTime
             || observed.FileAttributes != self.basic.FileAttributes
         {
+            #[cfg(test)]
+            eprintln!(
+                "FARFOLD_WINDOWS_MOVE_BASIC creationEqual={} accessEqual={} writeEqual={} changeEqual={} attributesEqual={}",
+                observed.CreationTime == self.basic.CreationTime,
+                observed.LastAccessTime == self.basic.LastAccessTime,
+                observed.LastWriteTime == self.basic.LastWriteTime,
+                observed.ChangeTime == self.basic.ChangeTime,
+                observed.FileAttributes == self.basic.FileAttributes,
+            );
             return Err(denied());
         }
+        #[cfg(test)]
+        progress.at("root-basic-verified");
         self.verify()
     }
 }

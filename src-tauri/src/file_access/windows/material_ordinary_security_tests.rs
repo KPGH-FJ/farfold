@@ -197,6 +197,7 @@ fn ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parent
         let decoded = records::decode(&original.bytes, &mut work, &cancel).unwrap();
         let control = u16::from_le_bytes(decoded.owner_group_dacl[2..4].try_into().unwrap());
         assert_eq!(control & SE_DACL_PROTECTED, 0);
+        assert_ne!(control & SE_DACL_AUTO_INHERITED, 0);
         assert_eq!(original.summary.dacl_aces, 2);
         assert_eq!(before.summary.dacl_aces, 1);
         assert_ne!(original.summary.dacl_sha256, before.summary.dacl_sha256);
@@ -233,4 +234,93 @@ fn ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parent
             assert_eq!(std::fs::read(target_path).unwrap(), b"original-target");
         }
     }
+}
+
+#[test]
+fn ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control() {
+    let temp = crate::test_support::tempdir().unwrap();
+    let source_path = temp.path().join("source-legacy-control");
+    let target_path = temp.path().join("target-auto-control");
+    std::fs::write(&source_path, b"source").unwrap();
+    std::fs::write(&target_path, b"target").unwrap();
+    let source = file(&source_path, FILE_GENERIC_READ | WRITE_DAC);
+    let target = file(&target_path, FILE_GENERIC_READ | WRITE_OWNER | WRITE_DAC);
+    let cancel = AtomicBool::new(false);
+    let resident = Resident::new(2_000_000);
+    let mut work = WorkBudget::new(100_000_000);
+    let source_id = stamp(&source).unwrap().identity;
+    let target_id = stamp(&target).unwrap().identity;
+    // Produce a real legacy-control DACL on this disposable source, using the
+    // same public native setter without an auto-inheritance request. No change
+    // to the parent's ACL, token privileges or production capture occurs here.
+    let mut descriptor = query(
+        &source,
+        OWNER_SECURITY_INFORMATION | GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
+        &mut work,
+        &cancel,
+    )
+    .unwrap();
+    assert_ne!(
+        unsafe {
+            SetSecurityDescriptorControl(
+                descriptor.as_mut_ptr().cast(),
+                SE_DACL_AUTO_INHERIT_REQ | SE_DACL_AUTO_INHERITED | SE_DACL_PROTECTED,
+                SE_DACL_PROTECTED,
+            )
+        },
+        0
+    );
+    assert_eq!(
+        unsafe {
+            NtSetSecurityObject(
+                handle(&source),
+                DACL_SECURITY_INFORMATION,
+                descriptor.as_mut_ptr().cast(),
+            )
+        },
+        0
+    );
+    let original = capture(&source, &mut work, &cancel, &resident).unwrap();
+    let control = u16::from_le_bytes(original.bytes[18..20].try_into().unwrap());
+    assert_eq!(
+        control & (SE_DACL_AUTO_INHERIT_REQ | SE_DACL_AUTO_INHERITED),
+        0
+    );
+    assert_ne!(control & SE_DACL_PROTECTED, 0);
+    let before = capture(&target, &mut work, &cancel, &resident).unwrap();
+    assert_ne!(original.summary.dacl_sha256, before.summary.dacl_sha256);
+    restore(
+        &target,
+        &original.bytes,
+        &original.summary,
+        &mut work,
+        &cancel,
+        &resident,
+    )
+    .unwrap();
+    assert!(
+        capture(&target, &mut work, &cancel, &resident)
+            .unwrap()
+            .summary
+            .same_facets(&original.summary)
+    );
+    assert!(
+        capture(&source, &mut work, &cancel, &resident)
+            .unwrap()
+            .summary
+            .same_facets(&original.summary)
+    );
+    assert_eq!(stamp(&source).unwrap().identity, source_id);
+    assert_eq!(stamp(&target).unwrap().identity, target_id);
+    drop((source, target));
+    let reopened = file(&target_path, FILE_GENERIC_READ);
+    assert!(
+        capture(&reopened, &mut work, &cancel, &resident)
+            .unwrap()
+            .summary
+            .same_facets(&original.summary)
+    );
+    assert_eq!(stamp(&reopened).unwrap().identity, target_id);
+    assert_eq!(std::fs::read(source_path).unwrap(), b"source");
+    assert_eq!(std::fs::read(target_path).unwrap(), b"target");
 }

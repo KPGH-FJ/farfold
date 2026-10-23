@@ -33,7 +33,7 @@ enum Action<'a> {
     Index,
     Attributes {
         paths: &'a [u8],
-        external: Option<Option<&'a Path>>,
+        external: Option<Option<inputs::AttributeSource<'a>>>,
     },
     Contents {
         input: &'a [u8],
@@ -240,14 +240,23 @@ impl<'a> Evaluator<'a> {
         self.verify(cancel)?;
         repo.verify().map_err(|_| error("changed"))?;
         let worktree = worktree.unwrap_or(&self.owner.context().scope.root);
-        let paths = crate::worktrees::windows_git::paths::Paths::new(&[
+        let mut pins = vec![
             self.owner.context().selected_program(),
             repo,
             &self.owner.context().scope.root,
             &self.objects,
             &self.root,
             worktree,
-        ])?;
+        ];
+        if let Action::Attributes {
+            external: Some(Some(source)),
+            ..
+        } = &action
+        {
+            source.verify()?;
+            pins.push(source.anchor());
+        }
+        let paths = crate::worktrees::windows_git::paths::Paths::new(&pins)?;
         let mut command = Command::new(paths.path(self.owner.context().selected_program())?);
         command
             .env("GIT_CONFIG_NOSYSTEM", "1")
@@ -338,15 +347,21 @@ impl<'a> Evaluator<'a> {
                 command.args(["ls-files", "--stage", "-z"]);
                 git::Input::null()
             }
-            Action::Attributes { paths, external } => {
-                if let Some(Some(path)) = external {
+            Action::Attributes {
+                paths: input_paths,
+                external,
+            } => {
+                if let Some(Some(source)) = external {
                     command.arg("-c").arg(format!(
                         "core.attributesFile={}",
-                        path.to_str().ok_or(error("unsafePath"))?
+                        source
+                            .git_path(&paths)?
+                            .to_str()
+                            .ok_or(error("unsafePath"))?
                     ));
                 }
                 command.args(["check-attr", "--cached", "--all", "-z", "--stdin"]);
-                git::Input::from_bytes(paths, git::OUTPUT_LIMIT, cancel)?
+                git::Input::from_bytes(input_paths, git::OUTPUT_LIMIT, cancel)?
             }
             Action::Contents { input } => {
                 command.args(["cat-file", "--batch", "-z"]);
@@ -376,6 +391,13 @@ impl<'a> Evaluator<'a> {
             crate::worktrees::recovery_pack::COMMAND_TIME,
         );
         paths.verify()?;
+        if let Action::Attributes {
+            external: Some(Some(source)),
+            ..
+        } = action
+        {
+            source.verify()?;
+        }
         self.verify(cancel)?;
         repo.verify().map_err(|_| error("changed"))?;
         let output = output?;
@@ -523,7 +545,7 @@ impl<'a> Evaluator<'a> {
         &self,
         role: Role,
         paths: &[u8],
-        external: Option<Option<&Path>>,
+        external: Option<Option<inputs::AttributeSource<'_>>>,
         cancel: &AtomicBool,
     ) -> Result<Attributes> {
         if self.roles[role.index()].attributes.is_none() {

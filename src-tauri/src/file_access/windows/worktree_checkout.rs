@@ -174,6 +174,50 @@ impl<'a> WorktreeCheckout<'a> {
     pub(crate) fn root(&self) -> &PinnedPath {
         self.root.pin()
     }
+    // A reservation is an empty directory identity, not a checkout being
+    // published. Retain its already-held no-DELETE pin continuously, but close
+    // its creation writer before a move into it: FileRenameInformation opens
+    // the destination parent for FILE_ADD_SUBDIRECTORY, which conflicts with
+    // that writer's FILE_SHARE_READ-only admission. No namespace is reopened.
+    // https://learn.microsoft.com/openspecs/windows_protocols/ms-fsa/87f86c9b-6c2a-4803-84b7-131a74a434fa
+    pub(crate) fn into_reserved_directory(self, cancel: &AtomicBool) -> io::Result<PinnedPath> {
+        cancelled(cancel)?;
+        if !matches!(&self.root, Root::New { .. })
+            || !self.directories.is_empty()
+            || !self.names.is_empty()
+            || !self.files.is_empty()
+            || self.children.len() != 1
+            || !self.children[0].is_empty()
+            || self.registration.is_some()
+            || self.index.is_some()
+            || self.bytes != 0
+        {
+            return Err(denied());
+        }
+        self.verify()?;
+        // Directory handles preserve identity, not exclusive membership. Any
+        // observed foreign member is rejected; the later move also remains
+        // strictly no-replace if a collision appears after this observation.
+        for _ in 0..2 {
+            if !super::directory::collect_from(self.root(), 1, cancel)
+                .map_err(|_| denied())?
+                .is_empty()
+            {
+                return Err(denied());
+            }
+        }
+        let Root::New { pin, _writer } = self.root else {
+            return Err(denied());
+        };
+        pin.verify()?;
+        if !crate::file_access::same_object(&_writer, pin.file())? {
+            return Err(denied());
+        }
+        cancelled(cancel)?;
+        drop(_writer);
+        pin.verify()?;
+        Ok(pin)
+    }
     pub(crate) fn retain_completed(&mut self, completed: WorktreeCheckout<'_>) -> io::Result<()> {
         if self.root().identity() != completed.root().identity()
             || self.root().guid_path != completed.root().guid_path

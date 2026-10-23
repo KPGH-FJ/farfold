@@ -4,6 +4,38 @@ use crate::file_access::{PinnedPath, WorktreeMove, WorktreePointer};
 use std::io::{Seek, SeekFrom};
 use std::sync::atomic::Ordering;
 
+// Only fixed stages and native error numbers enter disposable test evidence.
+// The public operation retains its original error and unknown semantics.
+fn unknown_io(phase: &'static str, source: std::io::Error) -> super::super::types::Failure {
+    #[cfg(test)]
+    eprintln!(
+        "FARFOLD_WINDOWS_ARCHIVE_NATIVE phase={phase} kind={:?} code={:?}",
+        source.kind(),
+        source.raw_os_error()
+    );
+    #[cfg(not(test))]
+    let _ = (phase, source);
+    error("unknown")
+}
+
+#[cfg(test)]
+struct Observation(std::cell::Cell<&'static str>);
+#[cfg(test)]
+impl Observation {
+    fn at(&self, phase: &'static str) {
+        self.0.set(phase);
+    }
+}
+#[cfg(test)]
+impl Drop for Observation {
+    fn drop(&mut self) {
+        eprintln!(
+            "FARFOLD_WINDOWS_ARCHIVE_BOUNDARY lastReached={}",
+            self.0.get()
+        );
+    }
+}
+
 struct PointerBaseline {
     stamp: crate::file_access::Stamp,
     bytes: Vec<u8>,
@@ -102,11 +134,15 @@ pub(super) fn move_tree(
     intent: &RecycleIntent,
     cancel: &AtomicBool,
 ) -> Result<inspect::Snapshot> {
+    #[cfg(test)]
+    let progress = Observation(std::cell::Cell::new("entered"));
     active(cancel)?;
     let saved = &intent.saved;
     let observation = ArchiveObservation::from_profile(saved.material.profile.as_ref())?;
     let restore = intent.action == RecycleAction::Restore;
     let observed = verify_at(material, saved, restore, cancel)?;
+    #[cfg(test)]
+    progress.at("source-verified");
     let (from, to, from_parent, to_parent) = if restore {
         (
             &saved.archive.retained_path,
@@ -148,6 +184,8 @@ pub(super) fn move_tree(
     // identities/versions/bytes are checked again by the exclusive owners.
     drop((root_pointer, back_pointer));
     let context = context.into_move_context(&forward.stamp.identity, &backward.stamp.identity)?;
+    #[cfg(test)]
+    progress.at("read-owner-transferred");
     let git_paths = super::super::windows_git::paths::Paths::new(&[&context.metadata.git])?;
     let target_forward = pointer_text("gitdir: ", git_paths.path(&context.metadata.git)?)?;
     active(cancel)?;
@@ -180,6 +218,8 @@ pub(super) fn move_tree(
         &backward.bytes,
     )
     .map_err(|_| error("changed"))?;
+    #[cfg(test)]
+    progress.at("move-and-pointers-owned");
     let root = owner.take_root().map_err(|_| error("changed"))?;
     let (root, before) = match observation {
         ArchiveObservation::Ordinary => material.capture_archive_pin(root, cancel),
@@ -189,6 +229,8 @@ pub(super) fn move_tree(
     if before != saved.material {
         return Err(error("materialChanged"));
     }
+    #[cfg(test)]
+    progress.at("same-root-material-verified");
     context.verify()?;
     index.verify(saved)?;
     active(cancel)?;
@@ -199,15 +241,21 @@ pub(super) fn move_tree(
     // this exact pointer again; no changed object or contents may be adopted.
     // https://learn.microsoft.com/openspecs/windows_protocols/ms-fsa/133840e4-778e-44ca-9b41-da2323615075
     drop(forward_owner);
-    owner.rename().map_err(|_| error("unknown"))?;
+    #[cfg(test)]
+    progress.at("rename-dispatched");
+    owner.rename().map_err(|e| unknown_io("rename", e))?;
+    #[cfg(test)]
+    progress.at("same-root-renamed");
     let mut forward_owner = WorktreePointer::open(
-        owner.root().map_err(|_| error("unknown"))?,
+        owner.root().map_err(|e| unknown_io("moved-root", e))?,
         ".git",
         &forward.stamp,
         &forward.bytes,
     )
-    .map_err(|_| error("unknown"))?;
-    let moved_path = owner.git_path().map_err(|_| error("unknown"))?;
+    .map_err(|e| unknown_io("forward-pointer-reacquire", e))?;
+    #[cfg(test)]
+    progress.at("forward-pointer-reacquired");
+    let moved_path = owner.git_path().map_err(|e| unknown_io("git-path", e))?;
     let target_backward = pointer_text("", &moved_path.join(".git"))?;
     // A rename and two pointer writes cannot be atomic. Any cancellation or
     // error from here retains UNKNOWN and the two recorded paths, never retries
@@ -221,20 +269,34 @@ pub(super) fn move_tree(
         &target_backward,
         cancel,
     )
-    .map_err(|_| error("unknown"))?;
-    let root = owner.take_root().map_err(|_| error("unknown"))?;
+    .map_err(|e| unknown_io("pointer-pair-replace", e))?;
+    #[cfg(test)]
+    progress.at("pointer-pair-replaced");
+    let root = owner
+        .take_root()
+        .map_err(|e| unknown_io("capture-root-take", e))?;
     let (root, after) = match observation {
         ArchiveObservation::Ordinary => material.capture_archive_pin(root, &AtomicBool::new(false)),
         ArchiveObservation::FullSecurity => {
             material.capture_security_complete_pin(root, &AtomicBool::new(false))
         }
     }?;
-    owner.return_root(root).map_err(|_| error("unknown"))?;
+    owner
+        .return_root(root)
+        .map_err(|e| unknown_io("capture-root-return", e))?;
     if after != saved.material {
         return Err(error("materialChanged"));
     }
-    owner.verify().map_err(|_| error("unknown"))?;
-    if owner.git_path().map_err(|_| error("unknown"))? != moved_path {
+    #[cfg(test)]
+    progress.at("moved-material-verified");
+    owner
+        .verify()
+        .map_err(|e| unknown_io("moved-owner-verify", e))?;
+    if owner
+        .git_path()
+        .map_err(|e| unknown_io("git-path-recheck", e))?
+        != moved_path
+    {
         return Err(error("unknown"));
     }
     git_paths.verify()?;
@@ -245,7 +307,11 @@ pub(super) fn move_tree(
     // ordinary no-DELETE pins can open. This is an explicit observed handoff,
     // not a claim of an atomic or continuously frozen filesystem snapshot.
     drop((forward_owner, backward_owner, owner));
+    #[cfg(test)]
+    progress.at("exclusive-owners-retired");
     let reader = super::super::read_context::Reader::from_windows(context.finish(Path::new(to))?);
+    #[cfg(test)]
+    progress.at("read-owner-reacquired");
     let actual = inspect::observe_with_reader(Path::new(to), &reader)?;
     let staged = reader.read(Path::new(to), &["ls-files", "--stage", "-z"])?;
     validate_snapshot(saved, to, actual.clone(), &staged)?;
@@ -263,5 +329,7 @@ pub(super) fn move_tree(
     reader.matches(&actual)?;
     index.verify(saved)?;
     active(cancel).map_err(|_| error("unknown"))?;
+    #[cfg(test)]
+    progress.at("completed");
     Ok(actual)
 }

@@ -399,7 +399,7 @@ pub(super) fn move_tree(
 #[cfg(windows)]
 pub(super) fn reserve_parent_owned(
     record: &mut SavedArchive,
-) -> Result<crate::file_access::WorktreeCheckout<'static>> {
+) -> Result<crate::file_access::PinnedPath> {
     inspect::same(&record.parent, &record.parent_stamp)?;
     if record.retained_parent_stamp.is_some() {
         return Err(error("changed"));
@@ -412,11 +412,14 @@ pub(super) fn reserve_parent_owned(
         .ok_or(error("unsafePath"))?;
     let owner = crate::file_access::WorktreeCheckout::create_under(&parent, leaf)
         .map_err(|_| error("unknown"))?;
-    if owner.root().path != record.retained_parent
-        || owner.root().identity().device != parent.identity().device
-    {
+    // Keep the same creation-proven directory pin until finish_recycle. Its
+    // writer must retire before NTFS opens this parent to add the moved root.
+    let pin = owner
+        .into_reserved_directory(&AtomicBool::new(false))
+        .map_err(|_| error("unknown"))?;
+    if pin.path != record.retained_parent || pin.identity().device != parent.identity().device {
         return Err(error("unknown"));
     }
-    record.retained_parent_stamp = Some(inspect::pinned_stamp(owner.root())?);
-    Ok(owner)
+    record.retained_parent_stamp = Some(inspect::pinned_stamp(&pin)?);
+    Ok(pin)
 }

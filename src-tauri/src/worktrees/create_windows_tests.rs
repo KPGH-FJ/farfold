@@ -197,6 +197,27 @@ fn selected_custom_filter_is_rejected_before_target_or_branch_creation() {
 #[test]
 #[ignore = "manual: actual NTFS and existing combined FullSecurity rights; public Create Archive Restore, no privilege adjustment"]
 fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers() {
+    // The original shared 20-second helper can expire before one permitted
+    // Windows Git command (120 seconds), without observing an operation result.
+    // Keep observing this exact operation only; no restart/cancel or state edit.
+    fn wait_public_operation(
+        manager: &Worktrees,
+        store: &crate::meta_store::MetaStore,
+        id: &str,
+    ) -> Operation {
+        let deadline = Instant::now() + Duration::from_secs(180);
+        loop {
+            let operation = tests::op(manager.status(store, id).unwrap());
+            if operation.settled && !operation.maintenance_active {
+                return operation;
+            }
+            assert!(
+                Instant::now() < deadline,
+                "public operation did not settle: {operation:?}"
+            );
+            std::thread::sleep(Duration::from_millis(20));
+        }
+    }
     isolated_full_security(
         "worktrees::create::windows::tests::public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers",
         || {
@@ -223,7 +244,7 @@ fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers(
                 );
             }
             manager.start(&store, id).unwrap();
-            let created = super::super::super::recycle_tests::wait(&manager, &store, id);
+            let created = wait_public_operation(&manager, &store, id);
             assert_eq!(
                 created.state, "ready",
                 "FARFOLD_PUBLIC_FIXTURE_OPERATION phase=createStart code={:?} settled={}",
@@ -249,7 +270,7 @@ fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers(
                 .unwrap();
             super::super::super::recycle_tests::prepare(&manager, &store, archive_id, inspection);
             manager.start(&store, archive_id).unwrap();
-            let archived = super::super::super::recycle_tests::wait(&manager, &store, archive_id);
+            let archived = wait_public_operation(&manager, &store, archive_id);
             assert_eq!(archived.state, "ready", "{archived:?}");
             let archive = archived.archive.unwrap();
             assert!(!target.exists());
@@ -281,7 +302,7 @@ fn public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers(
                 .unwrap();
             super::super::super::recycle_tests::prepare(&manager, &store, restore_id, inspection);
             manager.start(&store, restore_id).unwrap();
-            let restored = super::super::super::recycle_tests::wait(&manager, &store, restore_id);
+            let restored = wait_public_operation(&manager, &store, restore_id);
             assert_eq!(restored.state, "ready", "{restored:?}");
             assert!(!retained.exists());
             assert_eq!(restored.location.unwrap().path, location.path);

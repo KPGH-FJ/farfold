@@ -266,3 +266,83 @@ fn verified_record_retains_its_logical_metadata_reservation_until_drop() {
     drop(saved);
     assert!(resident.lease(2 * BLOCK + 1).is_ok());
 }
+
+#[test]
+fn empty_ordinary_native_extent_roundtrips_without_inventing_payload_or_full_security() {
+    use crate::file_access::material_carrier_records as records;
+    let mut work = WorkBudget::new(WORK_LIMIT);
+    let resident = Resident::new(RESIDENT_LIMIT);
+    let cancel = AtomicBool::new(false);
+    let expected = [(Vec::new(), 0)].into();
+    let parsed = records::parse_profile(
+        Cursor::new([]),
+        &expected,
+        false,
+        &mut work,
+        &cancel,
+        &resident,
+    )
+    .unwrap();
+    assert_eq!(parsed.bytes, 0);
+    let encoded = encode(&[]);
+    let saved = verify(&encoded).unwrap();
+    assert_eq!(saved.metadata, metadata());
+    assert_eq!(saved.native.bytes, parsed.bytes);
+    assert_eq!(saved.native.sha256, parsed.sha256);
+    assert_eq!(saved.stored_bytes as usize, FIXED + 6 + 40);
+    assert_eq!(saved.stored_bytes as usize, encoded.len());
+    // A byte-preservation frame grants no full-security or content authority.
+    assert!(records::parse(Cursor::new([]), &expected, &mut work, &cancel, &resident,).is_err());
+}
+
+#[test]
+fn empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers() {
+    let cancel = AtomicBool::new(false);
+    let resident = Resident::new(RESIDENT_LIMIT);
+    let mut work = WorkBudget::new(WORK_LIMIT);
+    let mut wrong_hash = extent(&[]);
+    wrong_hash.sha256[0] ^= 1;
+    for (source, claimed) in [(vec![0u8], extent(&[])), (Vec::new(), wrong_hash)] {
+        let mut out = Vec::new();
+        assert!(
+            append(
+                &mut Cursor::new(source),
+                &mut out,
+                &metadata(),
+                &claimed,
+                &mut work,
+                &cancel,
+                &resident,
+            )
+            .is_err()
+        );
+        assert!(verify(&out).is_err());
+    }
+    let encoded = encode(&[]);
+    for end in [0, FIXED, encoded.len() - 1] {
+        assert!(verify(&encoded[..end]).is_err());
+    }
+    let mut trailing = encoded.clone();
+    trailing.push(0);
+    assert!(verify(&trailing).is_err());
+    let mut corrupt = encoded;
+    *corrupt.last_mut().unwrap() ^= 1;
+    assert!(verify(&corrupt).is_err());
+    for bytes in 1..20 {
+        let raw = vec![0; bytes];
+        let mut out = Vec::new();
+        assert!(
+            append(
+                &mut Cursor::new(&raw),
+                &mut out,
+                &metadata(),
+                &extent(&raw),
+                &mut work,
+                &cancel,
+                &resident,
+            )
+            .is_err()
+        );
+        assert!(out.is_empty());
+    }
+}

@@ -14,7 +14,8 @@ use windows_sys::Win32::Security::{
     GetSecurityDescriptorDacl, GetSecurityDescriptorGroup, GetSecurityDescriptorLength,
     GetSecurityDescriptorOwner, GetSecurityDescriptorSacl, IsValidSecurityDescriptor,
     LABEL_SECURITY_INFORMATION, OWNER_SECURITY_INFORMATION, PROTECTED_DACL_SECURITY_INFORMATION,
-    SCOPE_SECURITY_INFORMATION, SE_DACL_PROTECTED, UNPROTECTED_DACL_SECURITY_INFORMATION,
+    SCOPE_SECURITY_INFORMATION, SE_DACL_AUTO_INHERIT_REQ, SE_DACL_AUTO_INHERITED,
+    SE_DACL_PROTECTED, SetSecurityDescriptorControl, UNPROTECTED_DACL_SECURITY_INFORMATION,
 };
 fn query(file: &File, fields: u32, work: &mut WorkBudget, cancel: &AtomicBool) -> Result<Vec<u64>> {
     check(cancel)?;
@@ -147,7 +148,7 @@ pub(super) fn restore(
         }
         out
     };
-    let dacl = aligned(decoded.owner_group_dacl);
+    let mut dacl = aligned(decoded.owner_group_dacl);
     let label = aligned(decoded.label);
     if initial.summary.dacl_sha256 != expected.dacl_sha256 {
         let mut owner = ptr::null_mut();
@@ -197,14 +198,31 @@ pub(super) fn restore(
             };
         check(cancel)?;
         charge(work, raw.len())?;
+        // MS-DTYP 2.4.6: DI together with DC requests an auto-inherited DACL;
+        // the stored result retains DI and consumes DC. Passing the captured
+        // DI bit alone to the native setter loses that state. Change only this
+        // transient aligned descriptor, never the saved bytes or expected hash.
+        if control & SE_DACL_AUTO_INHERITED != 0
+            && unsafe {
+                SetSecurityDescriptorControl(
+                    dacl.as_mut_ptr().cast(),
+                    SE_DACL_AUTO_INHERIT_REQ,
+                    SE_DACL_AUTO_INHERIT_REQ,
+                )
+            } == 0
+        {
+            return Err(io_error(
+                "ordinarySecurityDescriptorControl",
+                io::Error::last_os_error(),
+            ));
+        }
         // Apply the recorded descriptor to this same FileObject. The Win32
         // file-security helper additionally imports the new parent's inherited
         // ACEs; those belong to the private restore namespace, not the source.
         // NtSetSecurityObject accepts this bounded self-relative descriptor
         // with the existing WRITE_OWNER/WRITE_DAC rights. The original control
         // bits and every requested facet must still pass actual readback.
-        let status =
-            unsafe { NtSetSecurityObject(handle(file), fields, dacl.as_ptr().cast_mut().cast()) };
+        let status = unsafe { NtSetSecurityObject(handle(file), fields, dacl.as_mut_ptr().cast()) };
         if status != 0 {
             #[cfg(test)]
             eprintln!(

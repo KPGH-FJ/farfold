@@ -15,6 +15,10 @@ impl Observation {
     }
     pub(super) fn at(&self, phase: &'static str) {
         self.phase.set(phase);
+        eprintln!(
+            "FARFOLD_WINDOWS_CREATE_REACHED scope={} phase={phase}",
+            self.scope
+        );
     }
 }
 impl Drop for Observation {

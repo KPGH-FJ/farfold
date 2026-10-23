@@ -791,6 +791,55 @@
       "manual": false,
       "category": "sameOriginalWorkingOwnerUnknown",
       "executionPolicy": "Unexecuted on Windows until this exact case completes. Original-owner or controlled error/queue coverage only; no claim of historical short-lived process completeness or real Agent acceptance."
+    },
+    {
+      "name": "empty-ordinary-native-extent-roundtrips",
+      "test": "file_access::material_carrier_fragment::tests::empty_ordinary_native_extent_roundtrips_without_inventing_payload_or_full_security",
+      "manual": false,
+      "category": "portableOrdinaryEmptyFragment",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "empty-native-extent-keeps-eof-hash-footer",
+      "test": "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers",
+      "manual": false,
+      "category": "portableOrdinaryEmptyFragment",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "ordinary-security-keeps-non-auto-inherited",
+      "test": "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control",
+      "manual": false,
+      "category": "ordinaryReadableSecurity",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "archive-reservation-writer-handoff-original-pin",
+      "test": "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin",
+      "manual": false,
+      "category": "ownedArchiveReservationHandoff",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "archive-reservation-late-collision-preserves-source",
+      "test": "file_access::windows::worktree_move::tests::reserved_parent_handoff_keeps_late_destination_collision_and_source_untouched",
+      "manual": false,
+      "category": "ownedArchiveReservationHandoff",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "archive-reservation-refuses-nonempty-or-other-owners",
+      "test": "file_access::windows::worktree_checkout::tests::reservation_handoff_refuses_existing_populated_registered_and_index_owners",
+      "manual": false,
+      "category": "ownedArchiveReservationHandoff",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
+    },
+    {
+      "name": "archive-reservation-refuses-foreign-member-or-cancel",
+      "test": "file_access::windows::worktree_checkout::tests::reservation_handoff_refuses_foreign_member_and_cancel_without_removing_either",
+      "manual": false,
+      "category": "ownedArchiveReservationHandoff",
+      "executionPolicy": "Not yet executed on Windows. Actual native results required; portable checks, protocol evidence and source review do not establish public archive/recovery acceptance."
     }
   ],
   "blockedPositiveCases": [],

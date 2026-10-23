@@ -57,7 +57,7 @@ fn leaf(raw: &[u16]) -> Result<()> {
 fn header(meta: &Metadata, extent: &NativeExtent) -> Result<Vec<u8>> {
     leaf(&meta.raw_leaf)?;
     if meta.source_id == 0
-        || extent.bytes < 20
+        || (extent.bytes != 0 && extent.bytes < 20)
         || meta.created <= 0
         || meta.accessed <= 0
         || meta.modified <= 0
@@ -132,6 +132,9 @@ fn exact<R: Read>(
 // owned namespace file. It constructs extent only from actual native EOF plus
 // the existing Parsed result; the serializer itself is not native validation.
 // Source is positioned at the first backup byte and must really reach EOF.
+// Ordinary BackupRead may produce zero bytes for an empty file. This frame
+// preserves that exact empty extent/hash, not an invented native DATA header;
+// the caller's selected native parser still determines content/security scope.
 pub(super) fn append<R: Read, W: Write>(
     source: &mut R,
     out: &mut W,
