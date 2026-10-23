@@ -100,7 +100,11 @@ impl Fixture {
         let parent = temp.path().canonicalize().unwrap();
         let root = parent.join("reserved-operation");
         std::fs::create_dir(&root).unwrap();
-        let parent_pin = PinnedPath::directory(&parent).unwrap();
+        Self::in_reserved_directory(temp, root)
+    }
+    fn in_reserved_directory(temp: tempfile::TempDir, root: std::path::PathBuf) -> Self {
+        let parent = root.parent().unwrap();
+        let parent_pin = PinnedPath::directory(parent).unwrap();
         let root_pin = parent_pin
             .child(
                 &"reserved-operation".encode_utf16().collect::<Vec<_>>(),
@@ -128,7 +132,7 @@ impl Fixture {
             "NTFS"
         );
         let request = MaterialStoreRequest::reserved(
-            &parent,
+            parent,
             &root,
             parent_pin.identity(),
             root_pin.identity(),
@@ -207,6 +211,70 @@ impl Fixture {
             )
             .unwrap()
     }
+}
+
+#[test]
+fn actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin() {
+    let temp = tempfile::tempdir().unwrap();
+    let parent = temp.path().canonicalize().unwrap();
+    let parent_pin = PinnedPath::directory(&parent).unwrap();
+    let owner = super::super::worktree_checkout::WorktreeCheckout::<'static>::create_under(
+        &parent_pin,
+        "reserved-operation",
+    )
+    .unwrap();
+    let identity = owner.root().identity().clone();
+    let mut fixture = Fixture::in_reserved_directory(temp, parent.join("reserved-operation"));
+    let payload = bytes();
+    fixture.pending(&payload);
+    fixture
+        .store
+        .verify(
+            &mut WorkBudget::new(records::WORK_LIMIT),
+            &AtomicBool::new(false),
+        )
+        .unwrap();
+    // This is the original production failure, using the actual Nt rename.
+    // No flag/permission relaxation or path-based substitute is involved.
+    assert!(matches!(fixture.store.publish(), Err(Error::NtStatus {
+        phase: "materialPublish", status
+    }) if status as u32 == 0xc0000043));
+    assert!(!fixture.store.published);
+    assert_eq!(fixture.store.request.root.identity(), &identity);
+    assert!(!fixture.root.join("material.bin").exists());
+    let original = fixture.store.file.as_mut().unwrap();
+    original.rewind().unwrap();
+    let mut retained = Vec::new();
+    original.read_to_end(&mut retained).unwrap();
+    assert_eq!(retained, payload);
+    fixture.store.dispose_pending().unwrap();
+    assert!(!fixture.root.join(".material-pending").exists());
+
+    // The test explicitly starts a new owned payload after the empty-directory
+    // handoff. Production has no retry: it performs this handoff before writing.
+    let pin = owner
+        .into_reserved_directory(&AtomicBool::new(false))
+        .unwrap();
+    assert_eq!(pin.identity(), &identity);
+    assert!(
+        crate::file_access::same_object(pin.file(), fixture.store.request.root.file()).unwrap()
+    );
+    fixture.store.sealed_stamp = None;
+    fixture.pending(&payload);
+    let receipt = fixture.publish_reopen();
+    assert!(fixture.store.published);
+    assert_eq!(receipt.bytes, payload.len() as u64);
+    assert_eq!(receipt.sha256, <[u8; 32]>::from(Sha256::digest(&payload)));
+    assert_eq!(
+        std::fs::read(fixture.root.join("material.bin")).unwrap(),
+        payload
+    );
+    assert!(!fixture.root.join(".material-pending").exists());
+    pin.verify().unwrap();
+    parent_pin.verify().unwrap();
+    assert_eq!(pin.identity(), &identity);
+    drop(pin);
+    drop(parent_pin);
 }
 
 #[test]

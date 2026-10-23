@@ -99,6 +99,31 @@ fn actual_parser_pairs_raw_ads_ea_and_full_security_across_short_reads() {
     assert_eq!(p.sha256, hash);
 }
 #[test]
+fn full_directory_security_extent_tracks_original_bytes_without_payload_downgrade() {
+    let security = frame(3, 2, &[], &descriptor());
+    let payload = [frame(2, 0, &[], &ea()), frame(4, 0, &named(), b"a\0\xff")].concat();
+    let expected = [(named(), 3)].into();
+    let first = [security.clone(), payload.clone()].concat();
+    let last = [payload.clone(), security.clone()].concat();
+    let a = run(&first, &expected, Profile::WithFullSecurity).unwrap();
+    let b = run(&last, &expected, Profile::WithFullSecurity).unwrap();
+    assert_eq!(a.security_record, Some(0..security.len() as u64));
+    assert_eq!(
+        b.security_record,
+        Some(payload.len() as u64..last.len() as u64)
+    );
+    assert_ne!(a.sha256, b.sha256);
+    assert!(a.same_contents(&b));
+    assert!(run(&payload, &expected, Profile::WithFullSecurity).is_err());
+    assert!(run(&first, &expected, Profile::PayloadOnly).is_err());
+    assert!(
+        run(&payload, &expected, Profile::PayloadOnly)
+            .unwrap()
+            .security_record
+            .is_none()
+    );
+}
+#[test]
 fn security_profiles_cannot_turn_partial_or_missing_bytes_into_full() {
     let (b, e) = fixture();
     assert_eq!(run(&b, &e, Profile::PayloadOnly), Err(Error::Unsupported));

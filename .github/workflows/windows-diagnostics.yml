@@ -1265,7 +1265,7 @@ jobs:
       - name: Current capability closeout, exact current-token FullSecurity controls
         id: capability_closeout_full_sd
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
-        timeout-minutes: 12
+        timeout-minutes: 18
         continue-on-error: true
         run: |
           & ./.github/scripts/windows-capability-closeout.ps1 -ExpectedHead '${{ github.sha }}' -Mode FullSecurityManual

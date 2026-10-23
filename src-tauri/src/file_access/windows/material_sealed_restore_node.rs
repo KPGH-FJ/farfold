@@ -19,6 +19,9 @@ use std::io::{Read, Seek, SeekFrom};
 #[cfg(test)]
 #[path = "material_sealed_restore_failure_tests.rs"]
 mod failure_diagnostics;
+#[cfg(test)]
+#[path = "material_security_last_native_tests.rs"]
+mod security_order_tests;
 
 // Borrow the physical sealed FileObject through the exact already-verified
 // native extent inside FFDIR1/FFNODE1. This is not another file/path capability.
@@ -158,6 +161,13 @@ pub(super) fn validate(
     Parsed::parse(Range::new(file, node)?, node, proof, work, cancel, resident).map(|_| ())
 }
 impl Parsed {
+    fn security_record(&self) -> Result<std::ops::Range<u64>> {
+        match self {
+            Self::Regular(value) => value.security_record.clone(),
+            Self::Directory(value) => value.security_record.clone(),
+        }
+        .ok_or(Error::Changed)
+    }
     fn parse(
         input: impl Read,
         node: &tree::Node,
@@ -353,15 +363,34 @@ pub(super) fn restore(
     let mut api = Native::new(full);
     if write {
         let mut session = Session::new(target, &mut api, Mode::Write, context);
-        let result = transfer::restore(
-            &mut session,
-            Range::new(sealed, node)?,
-            node.native_bytes,
-            work,
-            cancel,
-            minimum,
-            resident,
-        );
+        let input = Range::new(sealed, node)?;
+        let result = if full {
+            let input = transfer::security_last::SecurityLast::new(
+                input,
+                node.native_bytes,
+                source.security_record()?,
+            )
+            .map_err(|e| io_error("restoreSecurityRecordRange", e))?;
+            transfer::restore(
+                &mut session,
+                input,
+                node.native_bytes,
+                work,
+                cancel,
+                minimum,
+                resident,
+            )
+        } else {
+            transfer::restore(
+                &mut session,
+                input,
+                node.native_bytes,
+                work,
+                cancel,
+                minimum,
+                resident,
+            )
+        };
         drop(session);
         #[cfg(test)]
         if full
@@ -373,6 +402,10 @@ pub(super) fn restore(
                 })
             )
         {
+            eprintln!(
+                "FARFOLD_RESTORE_FAILURE_TRANSFER inputOrder=security-last sourceSecurityRecord={:?} successfulPrefixIsLogical=true",
+                source.security_record().ok()
+            );
             // Diagnostics observe the failed intermediate target only after
             // the original BackupWrite context cleanup. They never retry it or
             // change the original error, cleanup, or acceptance assertions.

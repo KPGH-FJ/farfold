@@ -54,6 +54,50 @@ impl Fixture {
         };
         (source, expected, retained)
     }
+    fn linked_root(&self) -> PathBuf {
+        use crate::worktrees::windows_git::paths::Paths;
+        use std::process::{Command, Stdio};
+
+        // The complete material consumer requires linked private Git metadata;
+        // a main repository's objects/config are not that source role. Create
+        // the input with real Git, leaving the older main-only controls intact.
+        let source = ReadContext::open(&self.root).unwrap();
+        let parent = PinnedPath::directory(self.root.parent().unwrap()).unwrap();
+        let paths = Paths::new(&[source.selected_program(), &source.scope.root, &parent]).unwrap();
+        let root = paths.path(&parent).unwrap().join("owned linked material");
+        let result = Command::new(paths.path(source.selected_program()).unwrap())
+            .arg("-C")
+            .arg(paths.path(&source.scope.root).unwrap())
+            .args([
+                "-c",
+                "core.autocrlf=false",
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+            ])
+            .arg(format!(
+                "core.hooksPath={}",
+                paths.path(source.selected_program()).unwrap().display()
+            ))
+            .args(["worktree", "add", "--detach", "--"])
+            .arg(&root)
+            .arg(COMMIT)
+            .current_dir(paths.path(&source.scope.root).unwrap())
+            .stdin(Stdio::null())
+            .output()
+            .unwrap();
+        assert!(
+            result.status.success(),
+            "owned linked Git fixture failed: {}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        paths.verify().unwrap();
+        source.scope.verify().unwrap();
+        let root = root.canonicalize().unwrap();
+        assert!(root.join(".git").is_file());
+        assert_eq!(fs::read(root.join("owned.txt")).unwrap(), b"public\n");
+        root
+    }
     fn manifest(&self) -> Manifest {
         let mut objects = vec![BLOB.into(), TREE.into(), COMMIT.into()];
         objects.sort();
@@ -233,8 +277,13 @@ fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() 
 
     let fixture = Fixture::new();
     let before = fixture.bytes();
+    let linked = fixture.linked_root();
+    let linked_before =
+        [linked.join(".git"), linked.join("owned.txt")].map(|path| fs::read(path).unwrap());
     let cancel = AtomicBool::new(false);
-    let snapshot = inspect::snapshot(&fixture.root).unwrap();
+    let snapshot = inspect::snapshot(&linked).unwrap();
+    assert_ne!(snapshot.git_stamp, snapshot.common_stamp);
+    assert_eq!(snapshot.head.as_deref(), Some(COMMIT));
     let owner = material_owner::Owner::default();
     let captured = recovery_pack::capture(
         &owner,
@@ -243,10 +292,9 @@ fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() 
         &cancel,
     )
     .unwrap();
-    let (read, expected, retained) = fixture.source();
-    drop(read);
+    let expected = Identity::from(&snapshot);
     let first = windows_first(
-        ExportRequest::new(&expected, &retained, &captured).unwrap(),
+        ExportRequest::new(&expected, &snapshot.root, &captured).unwrap(),
         &cancel,
     )
     .unwrap();
@@ -281,8 +329,8 @@ fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() 
     let memory = MixedMemory::default();
     let source = recovery_pack::material::worktree_source(
         &source_graph,
-        PinnedPath::directory(&fixture.root).unwrap(),
-        fixture.root.file_name().unwrap().encode_wide().collect(),
+        PinnedPath::directory(&linked).unwrap(),
+        linked.file_name().unwrap().encode_wide().collect(),
         &memory,
         &cancel,
     )
@@ -332,6 +380,10 @@ fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() 
     assert!(!private_parent.exists());
     reservation.verify().unwrap();
     assert_eq!(fixture.bytes(), before);
+    assert_eq!(
+        [linked.join(".git"), linked.join("owned.txt")].map(|path| fs::read(path).unwrap()),
+        linked_before
+    );
     source_graph.recheck(&cancel).unwrap();
 }
 #[test]

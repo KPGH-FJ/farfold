@@ -61,17 +61,14 @@ pub(super) fn same_plan(i: &RemoveIntent, m: &Capture) -> Result<()> {
 pub(super) struct Reservation {
     pub stamp: inspect::Stamp,
     #[cfg(windows)]
-    owner: crate::file_access::WorktreeCheckout<'static>,
+    owner: crate::file_access::PinnedPath,
 }
 impl Reservation {
     pub fn verify(&self) -> Result<()> {
         #[cfg(windows)]
         {
-            self.owner
-                .root()
-                .verify()
-                .map_err(|_| error("recoveryChanged"))?;
-            if inspect::pinned_stamp(self.owner.root())? != self.stamp {
+            self.owner.verify().map_err(|_| error("recoveryChanged"))?;
+            if inspect::pinned_stamp(&self.owner)? != self.stamp {
                 return Err(error("recoveryChanged"));
             }
         }
@@ -104,6 +101,12 @@ pub(super) fn reserve_at(
     let owner = WorktreeCheckout::<'static>::create_under(&parent, leaf)
         .map_err(|_| error("targetExists"))?;
     let stamp = inspect::pinned_stamp(owner.root())?;
+    // Keep the original no-DELETE pin throughout the build, but finish the
+    // empty reservation's creation writer before material.bin's no-replace
+    // rename needs FILE_ADD_FILE on this same destination parent.
+    let owner = owner
+        .into_reserved_directory(&AtomicBool::new(false))
+        .map_err(|_| error("recoveryChanged"))?;
     let result = Reservation { stamp, owner };
     result.verify()?;
     parent.verify().map_err(|_| error("recoveryChanged"))?;

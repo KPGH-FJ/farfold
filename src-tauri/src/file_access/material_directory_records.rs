@@ -35,6 +35,7 @@ pub(super) struct Parsed {
     pub bytes: u64,
     pub sha256: [u8; 32],
     pub security: Option<full_security_records::Decoded>,
+    pub security_record: Option<std::ops::Range<u64>>,
     pub ea: Option<ea_records::Observation>,
     _memory: ResidentLease,
 }
@@ -133,6 +134,7 @@ pub(super) fn parse<R: Read>(
     let mut names = 0usize;
     let mut parts = BTreeMap::new();
     let mut security = None;
+    let mut security_record = None;
     let mut ea = None;
     let mut input = Reader {
         source,
@@ -143,6 +145,7 @@ pub(super) fn parse<R: Read>(
     };
     let mut scratch = vec![0u8; BLOCK];
     loop {
+        let record_start = input.total;
         let mut head = [0u8; 20];
         let n = input.read(&mut head[..1])?;
         if n == 0 {
@@ -215,6 +218,7 @@ pub(super) fn parse<R: Read>(
                 full_security_records::complete(&descriptor, input.budget, cancel)
                     .map_err(record)?,
             );
+            security_record = Some(record_start..input.total);
         }
         parts.insert(
             key,
@@ -241,6 +245,7 @@ pub(super) fn parse<R: Read>(
         bytes: input.total,
         sha256: input.digest.finalize().into(),
         security,
+        security_record,
         ea,
     })
 }

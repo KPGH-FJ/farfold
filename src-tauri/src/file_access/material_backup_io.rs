@@ -10,6 +10,8 @@ use std::{
     ptr,
     sync::atomic::AtomicBool,
 };
+#[path = "material_security_last.rs"]
+pub(super) mod security_last;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(super) enum Mode {
     Read,

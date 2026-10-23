@@ -21,8 +21,10 @@ $excluded = @(switch -CaseSensitive ($Filter) {
   }
   'worktrees::recovery_pack::private_graph::tests::' {
     'worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names'
+    'worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf'
   }
   'file_access::material_carrier_records::tests::' {
+    'file_access::material_carrier_records::tests::security_extent_is_exact_for_each_physical_order_and_not_an_ordinary_facet'
     'file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order'
     'file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security'
     'file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record'
@@ -30,6 +32,7 @@ $excluded = @(switch -CaseSensitive ($Filter) {
     'file_access::material_carrier_records::tests::ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material'
   }
   'file_access::material_directory_records::tests::' {
+    'file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade'
     'file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order'
   }
   'file_access::material_mixed_tree_records::tests::' {

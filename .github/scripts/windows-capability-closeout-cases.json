@@ -883,6 +883,48 @@
       "test": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof",
       "manual": false,
       "category": "boundedNativeFailureDiagnosticLayout"
+    },
+    {
+      "name": "material-publish-original-creation-writer-handoff",
+      "test": "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin",
+      "manual": false,
+      "category": "ownedMaterialPublicationIdentity"
+    },
+    {
+      "name": "full-security-original-order-versus-security-last",
+      "test": "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly",
+      "manual": true,
+      "category": "ownedFullSecurityRecordOrderCausality"
+    },
+    {
+      "name": "regular-full-security-original-extent",
+      "test": "file_access::material_carrier_records::tests::security_extent_is_exact_for_each_physical_order_and_not_an_ordinary_facet",
+      "manual": false,
+      "category": "completeSecurityExtentParsing"
+    },
+    {
+      "name": "directory-full-security-original-extent",
+      "test": "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade",
+      "manual": false,
+      "category": "completeSecurityExtentParsing"
+    },
+    {
+      "name": "security-last-exact-bytes-and-seek",
+      "test": "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions",
+      "manual": false,
+      "category": "boundedSecurityRecordOrder"
+    },
+    {
+      "name": "security-last-invalid-and-truncated",
+      "test": "file_access::material_backup_io::security_last::tests::invalid_extents_and_short_sources_cannot_invent_bytes",
+      "manual": false,
+      "category": "boundedSecurityRecordOrder"
+    },
+    {
+      "name": "security-last-original-transfer-lifecycle",
+      "test": "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort",
+      "manual": false,
+      "category": "boundedSecurityRecordOrder"
     }
   ],
   "blockedPositiveCases": [],

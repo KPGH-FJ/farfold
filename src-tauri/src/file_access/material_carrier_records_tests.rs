@@ -74,6 +74,45 @@ fn all_bytes_utf16_and_every_boundary_use_actual_stream_parser() {
     }
 }
 #[test]
+fn security_extent_is_exact_for_each_physical_order_and_not_an_ordinary_facet() {
+    let security = stream(3, 2, &[], &descriptor());
+    let data = stream(1, 0, &[], b"payload");
+    let ea = stream(2, 0, &[], b"opaque-EA");
+    let expected = [(Vec::new(), 7)].into();
+    let mut reference = None;
+    for (raw, start) in [
+        ([security.clone(), data.clone(), ea.clone()].concat(), 0),
+        (
+            [data.clone(), security.clone(), ea.clone()].concat(),
+            data.len(),
+        ),
+        (
+            [data.clone(), ea.clone(), security.clone()].concat(),
+            data.len() + ea.len(),
+        ),
+    ] {
+        let parsed = run(&raw, &expected).unwrap();
+        let extent = parsed.security_record.clone().unwrap();
+        assert_eq!(extent, start as u64..(start + security.len()) as u64);
+        assert_eq!(&raw[extent.start as usize..extent.end as usize], security);
+        assert_eq!(parsed.sha256, <[u8; 32]>::from(Sha256::digest(&raw)));
+        if let Some(previous) = &reference {
+            assert!(parsed.same_contents(previous));
+        }
+        reference = Some(parsed);
+    }
+    let ordinary = parse_profile(
+        Cursor::new(&data),
+        &expected,
+        false,
+        &mut WorkBudget::new(WORK_LIMIT),
+        &AtomicBool::new(false),
+        &Resident::new(RESIDENT_LIMIT),
+    )
+    .unwrap();
+    assert!(ordinary.security_record.is_none());
+}
+#[test]
 fn full_security_observed_empty_default_preserves_physical_bytes_without_padding() {
     let expected = [(Vec::new(), 0)].into();
     let security = stream(3, 2, &[], &descriptor());
