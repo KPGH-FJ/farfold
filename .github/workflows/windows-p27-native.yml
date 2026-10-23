@@ -28,6 +28,8 @@ jobs:
             $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$parseErrors)
             if ($parseErrors.Count -ne 0) { $parseErrors | ForEach-Object { Write-Output $_.Message }; throw "PowerShell syntax invalid: $path" }
           }
+          python -c "import ast, pathlib; ast.parse(pathlib.Path('.github/scripts/windows-pe-resource-inspection.py').read_text(encoding='utf-8'))"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Prepare pinned Rust toolchain
         timeout-minutes: 7
         run: |
@@ -38,6 +40,14 @@ jobs:
       - name: Actual isolated P27 WebView2 control, one exact owned case
         timeout-minutes: 28
         run: ./.github/scripts/windows-p27-native.ps1 -ExpectedHead '${{ github.sha }}'
+      - name: Verify same-build manifests and existing application resources
+        if: ${{ always() }}
+        timeout-minutes: 5
+        run: |
+          if (Test-Path -LiteralPath 'windows-p27-native-raw/build-selection.json') {
+            python .github/scripts/windows-pe-resource-inspection.py --raw-directory windows-p27-native-raw --expected-head '${{ github.sha }}' --baseline-helper-manifest src-tauri/native/WindowsCommonControls.manifest
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          } else { Write-Output 'No selected native build; PE resource evidence unavailable.' }
       - name: Preserve loader evidence and a separate manifest-only list control
         if: ${{ always() }}
         timeout-minutes: 5

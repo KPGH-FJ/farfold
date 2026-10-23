@@ -124,6 +124,32 @@ fn compile_windows_launcher() {
     );
 }
 
+// The library's Windows UI imports also occur in its unit-test executable.
+// Tauri's default bin-only resource does not supply that executable's manifest.
+fn configure_desktop_resources() {
+    let os = env::var("CARGO_CFG_TARGET_OS").expect("Cargo target OS");
+    let target_env = env::var("CARGO_CFG_TARGET_ENV").expect("Cargo target environment");
+    if os == "windows" && target_env == "msvc" {
+        let manifest =
+            PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("Cargo manifest directory"))
+                .join("native/WindowsCommonControls.manifest");
+        println!("cargo:rerun-if-changed=native/WindowsCommonControls.manifest");
+        // Keep Tauri's icon/version resources. Avoid a second RT_MANIFEST in
+        // its bin-only RES when the linker now supplies this same dependency.
+        let attributes = tauri_build::Attributes::new()
+            .windows_attributes(tauri_build::WindowsAttributes::new_without_app_manifest());
+        tauri_build::try_build(attributes).expect("Windows application resources");
+        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
+        // The existing Tauri default has no UAC declaration. MSVC otherwise
+        // inserts a new asInvoker fragment, which would change that contract.
+        println!("cargo:rustc-link-arg=/MANIFESTUAC:NO");
+        println!("cargo:rustc-link-arg=/MANIFESTINPUT:{}", manifest.display());
+    } else {
+        // MSVC switches must not reach the GNU or macOS linker.
+        tauri_build::build();
+    }
+}
+
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=native/BrowserWorkspace.h");
@@ -146,5 +172,5 @@ fn main() {
         "windows" => compile_windows_launcher(),
         other => panic!("unsupported Farfold desktop platform: {other}"),
     }
-    tauri_build::build();
+    configure_desktop_resources();
 }

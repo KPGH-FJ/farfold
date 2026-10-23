@@ -273,6 +273,7 @@ try {
           if ($line -match '\s=\s\S+') { $forwarded.Add($line.Trim()) }
         }
         elseif ($line -match '^\s+\d+\s+[0-9A-Fa-f]+\s+(\S+)\s+=\s+\S+') { [void]$names.Add($Matches[1]); $forwarded.Add($line.Trim()) }
+        elseif ($line -match '^\s+\d+\s+[0-9A-Fa-f]+\s+(\S+)\s+\(forwarded to [^)]+\)\s*$') { [void]$names.Add($Matches[1]); $forwarded.Add($line.Trim()) }
       }
       if ($hashBefore -cne (Hash-File $path)) { throw 'DLL candidate changed during static read' }
       $exportsRecognized = $names.Count -gt 0 -and $text -match 'ordinal\s+hint\s+RVA\s+name'

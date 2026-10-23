@@ -12,7 +12,7 @@ function Source-Inputs {
   # Exact tracked crate inputs include case-sensitive native/BrowserWorkspace.*,
   # embedded JS, common Rust dependencies, resources, icons and Cargo/config.
   # Generated target and untracked user/history material are not traversed.
-  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
+  $paths = @(& git ls-files -- 'src-tauri' '.github/scripts/windows-p27-native.ps1' '.github/scripts/windows-native-loader-diagnostics.ps1' '.github/scripts/windows-pe-resource-inspection.py' '.github/workflows/windows-p27-native.yml' | Sort-Object -Unique)
   if ($LASTEXITCODE -ne 0 -or $paths.Count -lt 20) { throw 'Native P27 source input selection incomplete' }
   $map = [ordered]@{}
   foreach ($path in $paths) { $map[$path] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }
@@ -31,12 +31,29 @@ if ($executables.Count -ne 1) { throw 'Native P27 requires exactly one libtest b
 $binary = (Resolve-Path -LiteralPath $executables[0] -ErrorAction Stop).Path
 $deps = [IO.Path]::GetFullPath((Join-Path $PWD 'src-tauri/target/debug/deps')) + [IO.Path]::DirectorySeparatorChar
 if (-not $binary.StartsWith($deps, [StringComparison]::OrdinalIgnoreCase) -or [IO.Path]::GetExtension($binary) -ne '.exe') { throw 'Unexpected native test binary location' }
-& cargo build --manifest-path src-tauri/Cargo.toml --locked --bin farfold 1> (Join-Path $raw 'helper-build.stdout.log') 2> (Join-Path $raw 'helper-build.stderr.log')
+& cargo build --manifest-path src-tauri/Cargo.toml --locked --bin farfold --message-format=json 1> (Join-Path $raw 'helper-build.stdout.log') 2> (Join-Path $raw 'helper-build.stderr.log')
 if ($LASTEXITCODE -ne 0) { throw 'Same-source production helper build failed; no execution' }
 $helper = (Resolve-Path -LiteralPath 'src-tauri/target/debug/farfold.exe' -ErrorAction Stop).Path
+$library = $null
+$librarySha = $null
+$libraryError = $null
+$debug = [IO.Path]::GetFullPath((Join-Path $PWD 'src-tauri/target/debug')) + [IO.Path]::DirectorySeparatorChar
+try {
+  $libraries = @(Get-Content -LiteralPath (Join-Path $raw 'helper-build.stdout.log') | ForEach-Object {
+    $message = $_ | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+    if ($message.reason -eq 'compiler-artifact' -and $message.target.name -eq 'farfold_lib' -and $message.target.crate_types -contains 'cdylib' -and $message.profile.test -eq $false) {
+      @($message.filenames | Where-Object { [IO.Path]::GetExtension($_) -ieq '.dll' })
+    }
+  } | Select-Object -Unique)
+  if ($libraries.Count -ne 1) { throw 'Expected one same-build desktop library' }
+  $selectedLibrary = (Resolve-Path -LiteralPath $libraries[0] -ErrorAction Stop).Path
+  if (-not $selectedLibrary.StartsWith($debug, [StringComparison]::OrdinalIgnoreCase) -or [IO.Path]::GetFileName($selectedLibrary) -ine 'farfold_lib.dll') { throw 'Unexpected desktop library location' }
+  $library = $selectedLibrary
+  $librarySha = (Get-FileHash -LiteralPath $library -Algorithm SHA256).Hash.ToLowerInvariant()
+} catch { $library = $null; $librarySha = $null; $libraryError = $_.Exception.Message }
 $binarySha = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash.ToLowerInvariant()
 $helperSha = (Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash.ToLowerInvariant()
-Write-Record 'build-selection.json' ([ordered]@{ sourceHead = $ExpectedHead; testBinary = $binary; testBinarySha256 = $binarySha; helperBinary = $helper; helperBinarySha256 = $helperSha; helperScope = 'only original --farfold-browser-mcp-helper entry, never application run()' })
+Write-Record 'build-selection.json' ([ordered]@{ sourceHead = $ExpectedHead; testBinary = $binary; testBinarySha256 = $binarySha; helperBinary = $helper; helperBinarySha256 = $helperSha; cdylibExpected = $true; cdylibBinary = $library; cdylibBinarySha256 = $librarySha; cdylibSelectionError = $libraryError; helperScope = 'only original --farfold-browser-mcp-helper entry, never application run()' })
 # Preserve the selected build before the first executable launch. A loader exit,
 # a missing exact FQN and an unsettled list process are different observations.
 $listInfo = [Diagnostics.ProcessStartInfo]::new()
