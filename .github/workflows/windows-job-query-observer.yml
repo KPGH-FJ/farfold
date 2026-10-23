@@ -15,12 +15,12 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Observe fixed owned original process objects
+      - name: Observe fixed owned original process objects (default)
         timeout-minutes: 2
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $out = Join-Path '${{ runner.temp }}' 'farfold-job-query-${{ github.run_id }}-${{ github.run_attempt }}'
+          $out = Join-Path '${{ runner.temp }}' 'farfold-job-query-default-${{ github.run_id }}-${{ github.run_attempt }}'
           $exitCode = 1
           try {
             & python -I -S -B .github/scripts/windows-job-query-observer.py --output $out
@@ -40,6 +40,35 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
-          name: farfold-job-query-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/farfold-job-query-${{ github.run_id }}-${{ github.run_attempt }}/
+          name: farfold-job-query-default-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/farfold-job-query-default-${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
+      - name: Observe fixed owned original process objects (detached)
+        if: ${{ !cancelled() }}
+        timeout-minutes: 2
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $out = Join-Path '${{ runner.temp }}' 'farfold-job-query-detached-${{ github.run_id }}-${{ github.run_attempt }}'
+          $exitCode = 1
+          try {
+            & python -I -S -B .github/scripts/windows-job-query-observer.py --detached --output $out
+            $exitCode = $LASTEXITCODE
+          } finally {
+            if (Test-Path -LiteralPath $out -PathType Container) {
+              [ordered]@{
+                sourceHead = '${{ github.sha }}'
+                runId = '${{ github.run_id }}'
+                runAttempt = '${{ github.run_attempt }}'
+                observerSha256 = (Get-FileHash -LiteralPath '.github/scripts/windows-job-query-observer.py' -Algorithm SHA256).Hash.ToLowerInvariant()
+                scope = 'Fixed local original Job and process objects only; no product acceptance claim'
+              } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $out 'ci-identity.json') -Encoding utf8
+            }
+          }
+          exit $exitCode
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: farfold-job-query-detached-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/farfold-job-query-detached-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: error

@@ -16,6 +16,7 @@ import time
 
 ITERATIONS, MEMBERS, PAIR_ROUNDS = 12, 3, 6
 SMALL_CAPACITY, FULL_CAPACITY = 1, 256
+CREATE_NO_WINDOW, DETACHED_PROCESS = 0x08000000, 0x00000008
 MAX_SPAWNS = ITERATIONS * MEMBERS
 MAX_TOTAL_CREATED = MAX_SPAWNS + 1  # One original observer plus command fixtures.
 MAX_RECORDS, MAX_LOG_BYTES = 512, 512 * 1024
@@ -127,12 +128,14 @@ class Api:
             raise RuntimeError(f"set-private-job-{error}")
         return h
 
-    def create(self, executable, argv):
+    def create(self, executable, argv, creation_flags=CREATE_NO_WINDOW):
+        if type(creation_flags) is not int or creation_flags not in (CREATE_NO_WINDOW, DETACHED_PROCESS):
+            raise ValueError("fixed-creation-mode-required")
         info, start = ProcessInfo(), Startup(); start.cb = C.sizeof(start)
         command = C.create_unicode_buffer(subprocess.list2cmdline([str(executable), *argv]))
         ok = self.k.CreateProcessW(str(executable), command, None, None, False,
-                                  0x00000004 | 0x08000000, None, str(self.system),
-                                  C.byref(start), C.byref(info))  # SUSPENDED | NO_WINDOW
+                                  0x00000004 | creation_flags, None, str(self.system),
+                                  C.byref(start), C.byref(info))  # SUSPENDED | one fixed mode
         error = C.get_last_error() if not ok else None
         if not ok:
             raise RuntimeError(f"create-owned-suspended-{error}")
@@ -263,9 +266,10 @@ def cleanup(api, job, originals, journal, iteration):
             and all(r["threadClose"] and r["processClose"] for r in closes))
 
 
-def worker(output):
+def worker(output, detached=False):
     api = Api(); job = api.job(); journal = Journal(output / "samples.jsonl")
     deadline = time.monotonic() + WORK_SECONDS
+    creation_flags = DETACHED_PROCESS if detached else CREATE_NO_WINDOW
     spawned, finished, classifications = 0, 0, {}
     complete, failure = False, None
     try:
@@ -278,7 +282,7 @@ def worker(output):
                 for index in range(MEMBERS):
                     if time.monotonic() >= deadline:
                         raise RuntimeError("work-budget-exhausted")
-                    process = api.create(command, ["/d", "/c", "exit", "0"])
+                    process = api.create(command, ["/d", "/c", "exit", "0"], creation_flags)
                     originals.append(process); spawned += 1
                     journal.add({"kind": "original-process-created", "iteration": iteration,
                                  "fixtureIndex": index, "pid": int(process.pid), "suspended": True})
@@ -331,11 +335,12 @@ def worker(output):
         "queriedJob": "private-inner-command-only-job; excludes observer and outer containment Job",
         "systemCommand": str(api.system / "cmd.exe"), "fixedArgs": ["/d", "/c", "exit", "0"],
         "pointerBits": C.sizeof(HANDLE) * 8, "nonAtomicObservations": True,
+        "detached": detached, "commandCreationFlags": creation_flags | 0x00000004,
         "mismatchRequiredForCompletion": False, "productionAcceptance": False})
     return 0 if complete else 1
 
 
-def supervisor(output):
+def supervisor(output, detached=False):
     start = time.monotonic(); deadline = start + TOTAL_SECONDS
     output = output.absolute()
     if any(p.is_symlink() for p in [output, *output.parents]):
@@ -343,6 +348,8 @@ def supervisor(output):
     output.mkdir(mode=0o700, exist_ok=False)
     api, control, child = Api(), None, None
     status = {"observationCompleted": False, "productionAcceptance": False,
+              "detached": detached, "commandCreationFlags": (DETACHED_PROCESS if detached else CREATE_NO_WINDOW) | 0x00000004,
+              "observerCreationFlags": CREATE_NO_WINDOW | 0x00000004,
               "toolSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               "limits": {"totalObservationAndWaitBudgetSeconds": 60, "parentBeforeCleanupSeconds": 55,
                          "maxCommandSpawns": MAX_SPAWNS, "maxObserverSpawns": 1,
@@ -351,7 +358,10 @@ def supervisor(output):
               "scope": "Fixed owned local system-command fixtures only; no Agent/project command/user data. No atomic or exhaustive scheduling claim."}
     try:
         control = api.job()
-        child = api.create(Path(sys.executable).absolute(), ["-I", "-S", "-B", str(Path(__file__).absolute()), "--worker", "--output", str(output)])
+        worker_args = ["-I", "-S", "-B", str(Path(__file__).absolute()), "--worker", "--output", str(output)]
+        if detached:
+            worker_args.append("--detached")
+        child = api.create(Path(sys.executable).absolute(), worker_args)
         ok = int(api.k.AssignProcessToJobObject(control, child.process)); error = C.get_last_error() if not ok else None
         status["observerAssignment"] = {"ok": ok, "error": error}
         if not ok:
@@ -414,8 +424,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--detached", action="store_true", help="Use DETACHED_PROCESS for fixed command fixtures only")
     args = parser.parse_args()
-    return worker(args.output) if args.worker else supervisor(args.output)
+    return worker(args.output, args.detached) if args.worker else supervisor(args.output, args.detached)
 
 
 if __name__ == "__main__":
