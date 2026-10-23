@@ -17,6 +17,7 @@ import sys
 import time
 from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
+import zlib
 
 START = time.monotonic()
 TOTAL_PAYLOAD = 0
@@ -462,6 +463,42 @@ def rc_expectations(data):
     return {"fixed": fixed, "tables": {language[0].lower(): strings}, "translation": [[int(value, 0) for value in translation[0]]]}, icon_path
 
 
+def resource_icon_fields(image, fields):
+    if not image.startswith(b"\x89PNG\r\n\x1a\n"):
+        return fields.copy()
+    # PNG icon resources use one plane and 32 bits per pixel, rather than
+    # copying the ICO directory's unspecified (zero) plane count. Only the
+    # verified RGBA8 shape used by this source icon receives that conversion.
+    require(fields[4] in (0, 1) and fields[5] == 32, "unsupported PNG icon directory format")
+    cursor, chunks, saw_data, ended = 8, 0, False, False
+    while cursor < len(image):
+        require(chunks < 4096 and len(image) - cursor >= 12, "PNG chunk extent/count invalid")
+        size = unpack(">I", image, cursor)[0]
+        require(size <= len(image) - cursor - 12, "truncated PNG chunk")
+        kind = image[cursor + 4:cursor + 8]
+        payload = image[cursor + 8:cursor + 8 + size]
+        require(unpack(">I", image, cursor + 8 + size)[0] == zlib.crc32(kind + payload), "PNG chunk CRC mismatch")
+        if chunks == 0:
+            require(kind == b"IHDR" and size == 13, "PNG header missing")
+            width, height, depth, color, compression, filtering, interlace = unpack(">IIBBBBB", payload)
+            require((width, height) == (fields[0] or 256, fields[1] or 256), "PNG icon dimensions differ")
+            require((depth, color, compression, filtering) == (8, 6, 0, 0) and interlace in (0, 1), "unsupported PNG icon pixels")
+        elif kind == b"IDAT":
+            require(size > 0 and not ended, "invalid PNG image data")
+            saw_data = True
+        elif kind == b"IEND":
+            require(size == 0 and saw_data and cursor + 12 == len(image), "invalid PNG end")
+            ended = True
+        else:
+            # The checked source images contain only IHDR/IDAT/IEND. Future
+            # formats are explicit unsupported input, not unchecked aliases.
+            raise ValueError("unsupported PNG icon chunk")
+        cursor += size + 12
+        chunks += 1
+    require(ended, "PNG end missing")
+    return fields[:4] + [1] + fields[5:]
+
+
 def icon_entries(data, group=False):
     require(unpack("<HH", data) == (0, 1), "invalid icon header")
     count = unpack("<H", data, 4)[0]
@@ -478,9 +515,25 @@ def icon_entries(data, group=False):
         result = {"fields": fields, "id" if group else "offset": position}
         if not group:
             require(position >= 6 + count * width and position <= len(data) and fields[6] <= len(data) - position, "ICO image outside file")
-            result["sha256"] = digest(data[position:position + fields[6]])
+            image = data[position:position + fields[6]]
+            result["sha256"] = digest(image)
+            result["resourceFields"] = resource_icon_fields(image, fields)
         entries.append(result)
     return entries
+
+
+def icon_resources_match(resources, expected_icons):
+    groups = [resource for resource in resources if resource["type"] == 14]
+    icon_match = bool(groups)
+    for group in groups:
+        entries = icon_entries(group["data"], group=True)
+        icon_match &= group["name"] == 32512 and len(entries) == len(expected_icons)
+        for index, entry in enumerate(entries):
+            icons = [item for item in resources if item["type"] == 3 and item["name"] == entry["id"] and item["language"] == group["language"]]
+            icon_match &= len(icons) == 1 and index < len(expected_icons)
+            if len(icons) == 1 and index < len(expected_icons):
+                icon_match &= entry["fields"] == expected_icons[index]["resourceFields"] and icons[0]["size"] == entry["fields"][6] and icons[0]["sha256"] == expected_icons[index]["sha256"]
+    return icon_match
 
 
 def main():
@@ -559,17 +612,7 @@ def main():
                     versions = [resource for resource in resources if resource["type"] == 16]
                     image["decodedVersions"] = [version_info(resource["data"]) for resource in versions]
                     report["staticChecks"]["helperVersionMatchesGeneratedRc"] = bool(versions) and all(value == expected_version for value in image["decodedVersions"])
-                    groups = [resource for resource in resources if resource["type"] == 14]
-                    icon_match = bool(groups)
-                    for group in groups:
-                        entries = icon_entries(group["data"], group=True)
-                        icon_match &= group["name"] == 32512 and len(entries) == len(expected_icons)
-                        for index, entry in enumerate(entries):
-                            icons = [item for item in resources if item["type"] == 3 and item["name"] == entry["id"] and item["language"] == group["language"]]
-                            icon_match &= len(icons) == 1 and index < len(expected_icons)
-                            if len(icons) == 1 and index < len(expected_icons):
-                                icon_match &= entry["fields"] == expected_icons[index]["fields"] and icons[0]["size"] == entry["fields"][6] and icons[0]["sha256"] == expected_icons[index]["sha256"]
-                    report["staticChecks"]["helperIconGroupsAndImageBytesMatchSourceIco"] = icon_match
+                    report["staticChecks"]["helperIconGroupsAndImageBytesMatchSourceIco"] = icon_resources_match(resources, expected_icons)
             finally:
                 held.finish()
                 image["inputUnchanged"] = True
