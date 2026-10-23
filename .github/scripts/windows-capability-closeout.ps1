@@ -4,7 +4,8 @@ param(
   [string]$ExpectedHead,
   [Parameter(Mandatory = $true)]
   [ValidateSet('Ordinary', 'FullSecurityManual', 'LegacyFullSecurityManual')]
-  [string]$Mode
+  [string]$Mode,
+  [string[]]$CaseNames = @()
 )
 
 $ErrorActionPreference = 'Stop'
@@ -38,6 +39,15 @@ $manualMode = $Mode -ceq 'FullSecurityManual' -or $legacyManual
 $selected = @($cases | Where-Object { $_.manual -eq $manualMode })
 $expected = if ($manualMode) { $manualCount } else { $ordinaryCount }
 if ($expected -lt 1 -or $selected.Count -ne $expected) { throw 'Empty or inconsistent selected closeout inventory' }
+$subset = $CaseNames.Count -gt 0
+if ($subset) {
+  if ($legacyManual -or @($CaseNames | Select-Object -Unique).Count -ne $CaseNames.Count) { throw 'Invalid focused inventory' }
+  foreach ($name in $CaseNames) {
+    if (@($selected | Where-Object { $_.name -ceq $name }).Count -ne 1) { throw 'Focused case is not an exact member of this mode' }
+  }
+  $selected = @($selected | Where-Object { $CaseNames -ccontains $_.name })
+  $expected = $CaseNames.Count
+}
 $results = @()
 $complete = $true
 foreach ($case in $selected) {
@@ -117,6 +127,7 @@ $complete = $complete -and $results.Count -eq $expected -and $headStable -and $i
   runnerScriptSha256 = $scriptHash; inputsStable = $inputsStable
   plannedOrdinaryTests = $ordinaryCount; plannedManualTests = $manualCount; plannedTotalTests = $cases.Count
   caseManifestSha256 = $caseHash
+  focusedSubsetOnly = $subset; selectedCaseNames = @($selected | ForEach-Object { $_.name })
   selectedTests = $expected; groupCount = $results.Count; groups = $results; exactAllGroupsPassed = $complete
   historicalInventoriesChanged = $false
   explicitManualFailuresAreSuccessfulTests = $false

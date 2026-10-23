@@ -3,7 +3,7 @@
 use super::{recovery_public_windows_tests::backup, *};
 use crate::meta_store::MetaStore;
 use std::{
-    cell::Cell,
+    cell::{Cell, RefCell},
     fs::{self, OpenOptions},
     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
     path::Path,
@@ -114,9 +114,47 @@ fn ea_record() -> Vec<u8> {
     raw
 }
 
+fn read_ea_record(root: &Path) -> Vec<u8> {
+    let reader = OpenOptions::new()
+        .access_mode(FILE_READ_EA | SYNCHRONIZE)
+        .open(root.join("payload.txt"))
+        .unwrap();
+    let mut aligned = [0_u64; 64];
+    let mut ios = IO_STATUS_BLOCK::default();
+    assert_eq!(
+        unsafe {
+            NtQueryEaFile(
+                reader.as_raw_handle(),
+                &mut ios,
+                aligned.as_mut_ptr().cast(),
+                512,
+                false,
+                std::ptr::null(),
+                0,
+                std::ptr::null(),
+                true,
+            )
+        },
+        0
+    );
+    assert!(ios.Information <= std::mem::size_of_val(&aligned));
+    unsafe { std::slice::from_raw_parts(aligned.as_ptr().cast::<u8>(), ios.Information) }.to_vec()
+}
+
+fn assert_requested_ea(actual: &[u8], requested: &[u8]) {
+    assert_eq!(actual.len(), requested.len());
+    // Compare next-offset, flags, name/value lengths exactly. Only the fixture
+    // name admits the ASCII case normalization observed in the real NTFS query.
+    assert_eq!(&actual[..8], &requested[..8]);
+    let name_end = 8 + usize::from(requested[5]);
+    assert!(actual[8..name_end].eq_ignore_ascii_case(&requested[8..name_end]));
+    assert_eq!(&actual[name_end..], &requested[name_end..]);
+}
+
 #[test]
 #[ignore = "manual: NTFS/full SACL; real callback injection and same-owner terminal material fence"]
 fn late_ea_after_complete_native_fence_must_be_preserved() {
+    let baseline = RefCell::new(None);
     late_change(
         "ea",
         |root, _| {
@@ -140,35 +178,16 @@ fn late_ea_after_complete_native_fence_must_be_preserved() {
             // Close this actual writer before disposition: leaving it open
             // would produce an unrelated delete-pending/absence failure.
             drop(writer);
+            let actual = read_ea_record(root);
+            assert_requested_ea(&actual, &raw);
+            *baseline.borrow_mut() = Some(actual);
         },
         |root| {
-            let reader = OpenOptions::new()
-                .access_mode(FILE_READ_EA | SYNCHRONIZE)
-                .open(root.join("payload.txt"))
-                .unwrap();
-            let mut aligned = [0_u64; 64];
-            let mut ios = IO_STATUS_BLOCK::default();
+            let baseline = baseline.borrow();
             assert_eq!(
-                unsafe {
-                    NtQueryEaFile(
-                        reader.as_raw_handle(),
-                        &mut ios,
-                        aligned.as_mut_ptr().cast(),
-                        512,
-                        false,
-                        std::ptr::null(),
-                        0,
-                        std::ptr::null(),
-                        true,
-                    )
-                },
-                0
+                read_ea_record(root).as_slice(),
+                baseline.as_deref().expect("actual EA write/read completed")
             );
-            let raw = ea_record();
-            assert_eq!(ios.Information, raw.len());
-            let bytes =
-                unsafe { std::slice::from_raw_parts(aligned.as_ptr().cast::<u8>(), raw.len()) };
-            assert_eq!(bytes, raw);
         },
     );
 }

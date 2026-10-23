@@ -229,12 +229,15 @@ impl Worktrees {
         )?;
         #[cfg(windows)]
         {
-            intent.target_stamp = Some(recovery_pack::material::restore_target(
+            let restored = recovery_pack::material::restore_target(
                 &self.0.material,
                 &intent,
                 &manifest,
                 cancel,
-            )?);
+            );
+            #[cfg(test)]
+            crate::worktrees::recovery_windows_diagnostics::step("restore-target", &restored);
+            intent.target_stamp = Some(restored?);
             let mut inner = self.lock()?;
             let mut doc = inner.doc.clone();
             let operation = doc
@@ -245,7 +248,10 @@ impl Worktrees {
             operation.recovery = Some(intent.clone());
             inner.save(s, doc)?;
         }
-        recover::verify(&self.0.material, &intent, &AtomicBool::new(false))
+        let verified = recover::verify(&self.0.material, &intent, &AtomicBool::new(false));
+        #[cfg(all(windows, test))]
+        crate::worktrees::recovery_windows_diagnostics::step("verify-target", &verified);
+        verified
     }
     fn finish_recover(&self, s: &MetaStore, id: &str, result: Result<Snapshot>) {
         // The original worker still owns this operation. A filesystem lookup

@@ -82,6 +82,42 @@ function setup() {
 }
 
 describe("browser sharing boundary", () => {
+  it("can stop an approved screenshot without converting it into a page reading grant", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValue(
+      info({
+        pendingRequest: {
+          ...pending,
+          control: { kind: "screenshot", target: "当前网页可见区域" },
+        },
+      }),
+    );
+    client.respond.mockResolvedValue(info({ phase: "reading", revision: 3 }));
+    const stopped = deferred<BrowserShareInfo>();
+    client.stop.mockReturnValue(stopped.promise);
+    await controller.start();
+    await controller.respond(pending.requestId, true);
+    expect(controller.getSnapshot().info?.phase).toBe("reading");
+    expect(controller.getSnapshot().pendingRequest).toBeNull();
+    expect(controller.getSnapshot().notice).toBe("");
+    await controller.allow();
+    expect(client.allow).not.toHaveBeenCalled();
+    const stopping = controller.stop();
+    expect(client.stop).toHaveBeenCalledExactlyOnceWith({
+      ...scope,
+      label: page.label,
+      expectedRevision: 3,
+    });
+    expect(controller.getSnapshot().operation).toBe("stop");
+    expect(controller.getSnapshot().notice).toBe("");
+    stopped.resolve(info({ revision: 4 }));
+    await stopping;
+    expect(controller.getSnapshot().info?.phase).toBe("unshared");
+    expect(controller.getSnapshot().notice).toBe("已停止共享。");
+    expect(client.respond).toHaveBeenCalledTimes(1);
+    expect(client.allow).not.toHaveBeenCalled();
+  });
+
   it("maps real commands without sending a prompt or reading page content", async () => {
     const invoke = vi.fn(async () => info()) as unknown as Parameters<
       typeof createBrowserSharingClient

@@ -34,7 +34,8 @@ export function BrowserShareControls({
     ],
   );
   const busy = sharing.operation !== null;
-  const canStop = phase === "shared" || phase === "stop_failed";
+  const canStop =
+    phase === "shared" || phase === "reading" || phase === "stop_failed";
   const canAllow =
     sharing.ready &&
     phase === "unshared" &&
@@ -60,15 +61,17 @@ export function BrowserShareControls({
                     ? S.confirmInChat
                     : phase === "shared"
                       ? S.shared
-                      : phase === "preparing"
-                        ? S.preparing
-                        : phase === "unavailable"
-                          ? browserSharingUnavailableReason(
-                              sharing.info?.reason,
-                            )
-                          : !page || page.phase === "closed"
-                            ? S.noPage
-                            : S.unshared;
+                      : phase === "reading"
+                        ? S.reading
+                        : phase === "preparing"
+                          ? S.preparing
+                          : phase === "unavailable"
+                            ? browserSharingUnavailableReason(
+                                sharing.info?.reason,
+                              )
+                            : !page || page.phase === "closed"
+                              ? S.noPage
+                              : S.unshared;
   return (
     <div className="browser-share-controls">
       <div className="browser-share-toggle">

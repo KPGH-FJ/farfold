@@ -183,6 +183,8 @@ fn take(capture: Capture) {
         "Page.captureScreenshot",
         json!({"format":"png","fromSurface":true,"captureBeyondViewport":false,"clip":{"x":x,"y":y,"width":width,"height":height,"scale":scale}}),
         |mut capture, result| {
+            #[cfg(test)]
+            super::super::production_test_support::capture_completed(&capture.scope, &result);
             let image = result.ok().and_then(|v| {
                 v["data"]
                     .as_str()

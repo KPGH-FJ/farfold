@@ -259,8 +259,14 @@ pub(in crate::worktrees) fn restore_target(
         &saved.directory_stamp,
         &memory,
     )?;
-    let parent = crate::file_access::PinnedPath::directory(Path::new(&intent.parent))
-        .map_err(|_| error("unsafePath"))?;
+    let parent = crate::file_access::PinnedPath::directory(Path::new(&intent.parent)).map_err(
+        |failure| {
+            #[cfg(test)]
+            super::super::recovery_windows_diagnostics::io("restore-parent-pin", &failure);
+            let _ = failure;
+            error("unsafePath")
+        },
+    )?;
     let expected_parent = intent
         .parent_stamp
         .windows_identity()
@@ -281,13 +287,19 @@ pub(in crate::worktrees) fn restore_target(
         .windows_material
         .as_ref()
         .ok_or(error("recoveryInvalid"))?;
-    let (actual, _) = owner.reopen_material(request, expected, cancel, |sealed| {
+    let restored = owner.reopen_material(request, expected, cancel, |sealed| {
         sealed.reconstruct_target(target)
-    })?;
+    });
+    #[cfg(test)]
+    super::super::recovery_windows_diagnostics::step("restore-material", &restored);
+    let (actual, _) = restored?;
     if !complete_receipt(&actual, expected, true) {
         return Err(error("recoveryChanged"));
     }
-    let stamp = inspect::stamp(Path::new(&intent.target))?;
+    let stamp = inspect::stamp(Path::new(&intent.target));
+    #[cfg(test)]
+    super::super::recovery_windows_diagnostics::step("restored-target-stamp", &stamp);
+    let stamp = stamp?;
     if stamp.windows_identity().as_ref() != actual.target_ids.first() {
         return Err(error("recoveryChanged"));
     }
@@ -300,10 +312,19 @@ pub(in crate::worktrees) fn verify_target(
     manifest: &super::Manifest,
     cancel: &std::sync::atomic::AtomicBool,
 ) -> Result<()> {
-    let snapshot = inspect::snapshot(target)?;
+    let snapshot = inspect::snapshot(target);
+    #[cfg(test)]
+    super::super::recovery_windows_diagnostics::step("restored-target-snapshot", &snapshot);
+    let snapshot = snapshot?;
     let graph =
-        super::super::git::source_roots::RecoveryGraph::capture(&snapshot, manifest, cancel)?;
-    let (configs, attributes) = graph.checkout_profile(cancel)?;
+        super::super::git::source_roots::RecoveryGraph::capture(&snapshot, manifest, cancel);
+    #[cfg(test)]
+    super::super::recovery_windows_diagnostics::step("restored-target-graph", &graph);
+    let graph = graph?;
+    let profile = graph.checkout_profile(cancel);
+    #[cfg(test)]
+    super::super::recovery_windows_diagnostics::step("restored-target-profile", &profile);
+    let (configs, attributes) = profile?;
     if configs != manifest.configs
         || attributes != manifest.attributes
         || capture_edge(

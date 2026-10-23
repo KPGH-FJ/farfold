@@ -3,6 +3,8 @@
 mod events;
 mod observation;
 mod preview;
+#[cfg(test)]
+pub(crate) mod production_test_support;
 use super::{
     Bounds, BrowserWorkspace, FixedPageReadScope,
     local_html::StoragePartition,
@@ -420,6 +422,8 @@ async fn create_content(
                                         UNFINISHED.with(|owners| owners.borrow_mut().remove(&id));
                                         events::install(&view)?;
                                         preview::install(&view)?;
+                                        #[cfg(test)]
+                                        production_test_support::install(&view)?;
                                         view.resize(bounds)?;
                                         view.navigate(1, view.content.url())?;
                                         Ok(())

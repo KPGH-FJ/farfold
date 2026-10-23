@@ -92,8 +92,12 @@ pub(super) fn stamp(path: &Path) -> Result<Stamp> {
     }
     #[cfg(windows)]
     {
-        let pin =
-            crate::file_access::PinnedPath::directory(path).map_err(|_| error("unsafePath"))?;
+        let pin = crate::file_access::PinnedPath::directory(path).map_err(|failure| {
+            #[cfg(test)]
+            super::recovery_windows_diagnostics::io("inspect-stamp-pin", &failure);
+            let _ = failure;
+            error("unsafePath")
+        })?;
         pinned_stamp(&pin)
     }
 }
@@ -102,7 +106,12 @@ pub(super) fn canonical(path: &Path) -> Result<String> {
     {
         crate::file_access::PinnedPath::directory(path)
             .map(|p| p.path)
-            .map_err(|_| error("unsafePath"))
+            .map_err(|failure| {
+                #[cfg(test)]
+                super::recovery_windows_diagnostics::io("inspect-canonical-pin", &failure);
+                let _ = failure;
+                error("unsafePath")
+            })
     }
     #[cfg(unix)]
     {
@@ -169,7 +178,12 @@ fn git_path(root: &Path, value: String) -> Result<String> {
     {
         crate::file_access::PinnedPath::git_directory(&path)
             .map(|p| p.path)
-            .map_err(|_| error("unsafePath"))
+            .map_err(|failure| {
+                #[cfg(test)]
+                super::recovery_windows_diagnostics::io("inspect-git-pin", &failure);
+                let _ = failure;
+                error("unsafePath")
+            })
     }
     #[cfg(unix)]
     {

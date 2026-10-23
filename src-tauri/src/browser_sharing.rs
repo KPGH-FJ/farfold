@@ -7,9 +7,12 @@ mod permission;
 #[cfg(test)]
 mod prompt_tests;
 mod protocol;
+mod screenshot_owner;
 #[cfg(test)]
 mod state_tests;
 mod transport;
+#[cfg(all(test, windows))]
+mod windows_native_screenshot_tests;
 
 use std::path::Path;
 use std::sync::{Arc, Mutex, OnceLock};
@@ -59,6 +62,7 @@ struct ShareState {
     revision: u64,
     retiring: Option<FixedPageReadScope>,
     pending_request: Option<PendingPermission>,
+    active_screenshot: Option<screenshot_owner::ActiveScreenshot>,
 }
 
 struct ToolSession {
@@ -102,6 +106,7 @@ impl ToolSession {
     // Root state -> shared page -> read lease -> browser state is the only lock order.
     fn take_page(&self, state: &mut ShareState) {
         state.cancel_permission("网页读取请求已结束");
+        state.clear_screenshot();
         let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
         if let Some(old) = page.take() {
             old.revoke();
@@ -150,6 +155,7 @@ impl ToolSession {
                 old.revoke();
                 state.retiring = Some(old);
             }
+            state.retire_screenshot();
             // A broken connection is not proof that a buffered stdout reply stopped.
             state.phase = if state.retiring.is_some() {
                 STOP_FAILED
@@ -184,6 +190,12 @@ impl ToolSession {
                 .as_ref()
                 .map(|page| page.label().to_owned())
                 .or_else(|| state.retiring.as_ref().map(|page| page.label().to_owned()))
+                .or_else(|| {
+                    state
+                        .active_screenshot
+                        .as_ref()
+                        .map(|active| active.scope.label().to_owned())
+                })
                 .or_else(|| state.pending_request.as_ref().map(|p| p.info.label.clone()))
                 .unwrap_or_default()
         } else {
@@ -204,6 +216,12 @@ impl ToolSession {
                         ("shared", None)
                     }
                     Some(_) => ("stopping", Some("page_changed")),
+                    None if state.active_screenshot.as_ref().is_some_and(|active| {
+                        active.scope.task_key() == task && active.scope.label() == label
+                    }) =>
+                    {
+                        ("reading", None)
+                    }
                     None => ("unshared", None),
                 }
             }
@@ -252,6 +270,10 @@ impl ToolSession {
             page.as_ref().is_some_and(owns)
                 || current.retiring.as_ref().is_some_and(owns)
                 || current
+                    .active_screenshot
+                    .as_ref()
+                    .is_some_and(|active| owns(&active.scope))
+                || current
                     .pending_request
                     .as_ref()
                     .is_some_and(|p| p.info.task_key == task && p.info.label == label)
@@ -273,6 +295,7 @@ impl ToolSession {
                 old.revoke();
                 state.retiring = Some(old);
             }
+            state.retire_screenshot();
             state.revision = state.revision.saturating_add(1);
         }
         self.changed();
@@ -306,6 +329,10 @@ impl ToolSession {
             let owns = |p: &FixedPageReadScope| p.task_key() == task && p.label() == label;
             page.as_ref().is_some_and(owns)
                 || state.retiring.as_ref().is_some_and(owns)
+                || state
+                    .active_screenshot
+                    .as_ref()
+                    .is_some_and(|active| owns(&active.scope))
                 || state
                     .pending_request
                     .as_ref()
@@ -344,6 +371,7 @@ impl SessionMcpOwner for ToolSession {
         matches!(state.phase, READY | CLOSED)
             && !state.prompt_active
             && state.pending_request.is_none()
+            && state.active_screenshot.is_none()
             && state.retiring.is_none()
             && page.is_none()
     }
@@ -383,6 +411,7 @@ impl SessionMcpOwner for ToolSession {
                 state.retiring = Some(old);
             }
         }
+        state.retire_screenshot();
         state.ready = false;
         state.phase = if state.retiring.is_some() {
             STOPPING
@@ -435,6 +464,7 @@ impl BrowserSharing {
                 revision: 1,
                 retiring: None,
                 pending_request: None,
+                active_screenshot: None,
             }),
             operation: tokio::sync::Mutex::new(()),
         });
@@ -467,18 +497,7 @@ impl BrowserSharing {
                 let owner = permission_owner.upgrade().ok_or("当前对话已结束")?;
                 let task = owner.task_key().ok_or("网页工具尚未准备完成")?;
                 let page = workspace.permission_page(&task)?;
-                let control = if request.control() {
-                    let grant = owner.page.lock().map_err(|_| "网页状态暂时不可用")?;
-                    Some(
-                        grant
-                            .as_ref()
-                            .ok_or("请先允许读取当前网页")?
-                            .review_control(request)?,
-                    )
-                } else {
-                    None
-                };
-                let wait = owner.request_tool_permission(page.clone(), control)?;
+                let wait = owner.request_page_permission(page.clone(), request)?;
                 // Close the metadata-snapshot -> pending-registration race.
                 // Later changes see the registered request and invalidate it.
                 let current = workspace.permission_page(&task)?;

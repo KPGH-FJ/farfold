@@ -35,6 +35,9 @@ bool ff_browser_navigate_preview(uint64_t id, uint64_t navigation, const char *u
 bool ff_browser_resource_finish(uint64_t id, uint64_t request_id, const uint8_t *bytes,
                                uintptr_t length, const char *mime, const char *headers_json);
 bool ff_browser_persistent_html_supported(void);
+// Read-only prerequisite probe on the main thread: no page, observation or
+// capture is started. True never replaces the per-page capture guards.
+bool ff_browser_screenshot_supported(void);
 // Requires every view for this exact store to be closed; callback acknowledges
 // clearing its page data. Reopening is blocked until completion, including after
 // a caller timeout. Never enumerate or clear other stores.

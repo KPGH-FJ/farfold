@@ -28,6 +28,8 @@ pub(super) struct Current {
     pending: Vec<u32>,
     coverage_gap: bool,
     observation_unknown: bool,
+    #[cfg(test)]
+    first_incomplete: Option<(&'static str, Option<u32>)>,
 }
 #[cfg(test)]
 #[derive(serde::Serialize)]
@@ -76,6 +78,8 @@ impl Current {
             pending,
             coverage_gap: false,
             observation_unknown: false,
+            #[cfg(test)]
+            first_incomplete: None,
         })
     }
     /// One bounded observation, with no worker and no blocking process wait.
@@ -88,7 +92,31 @@ impl Current {
         leader: Option<u32>,
         associated: Option<u32>,
     ) -> bool {
-        self.observe_using(job, leader, associated, || list(job), native_lookup)
+        #[cfg(not(test))]
+        {
+            self.observe_using(job, leader, associated, || list(job), native_lookup)
+        }
+        #[cfg(test)]
+        {
+            let mut native_list = None;
+            let active = self.observe_using(
+                job,
+                leader,
+                associated,
+                || list(job, &mut native_list),
+                native_lookup,
+            );
+            if let Some((reason, associated)) = self.first_incomplete.take() {
+                tests::emit_incomplete(
+                    reason,
+                    leader,
+                    associated,
+                    &self.observation(),
+                    native_list,
+                );
+            }
+            active
+        }
     }
     pub(super) fn unknown(&self) -> bool {
         self.coverage_gap || self.observation_unknown
@@ -96,7 +124,14 @@ impl Current {
     pub(super) fn query_unknown(&mut self) {
         self.observation_unknown = true;
     }
-    fn incomplete(&mut self, associated: Option<u32>) -> bool {
+    fn incomplete(&mut self, associated: Option<u32>, _reason: &'static str) -> bool {
+        #[cfg(test)]
+        // The first transition into the existing sticky gap is the relevant
+        // failure. Earlier incomplete observations with accounting zero must
+        // not consume this diagnostic or hide a later actual coverage gap.
+        if !self.coverage_gap && associated != Some(0) {
+            self.first_incomplete = Some((_reason, associated));
+        }
         self.coverage_gap |= associated != Some(0);
         self.observation_unknown = true;
         true
@@ -111,15 +146,23 @@ impl Current {
     ) -> bool {
         self.observation_unknown = associated.is_none();
         if self.poll_held(job).is_err() {
-            return self.incomplete(associated);
+            return self.incomplete(associated, "held-before-resolution");
         }
         self.resolve_pending(&mut lookup);
-        if self.poll_held(job).is_err() || !self.pending.is_empty() {
-            return self.incomplete(associated);
+        let held_failed = self.poll_held(job).is_err();
+        if held_failed || !self.pending.is_empty() {
+            return self.incomplete(
+                associated,
+                if held_failed {
+                    "held-after-resolution"
+                } else {
+                    "pending-before-snapshot"
+                },
+            );
         }
         let listed = match snapshot() {
             Ok(value) => value,
-            Err(_) => return self.incomplete(associated),
+            Err(_) => return self.incomplete(associated, "snapshot"),
         };
         // Every newly listed candidate fits the finite pending array. A full
         // held array defers opens, retaining candidates rather than discarding
@@ -245,7 +288,10 @@ impl Listed {
         &self.ids[..self.len]
     }
 }
-fn list(job: HANDLE) -> io::Result<Listed> {
+fn list(
+    job: HANDLE,
+    #[cfg(test)] observation: &mut Option<tests::NativeListObservation>,
+) -> io::Result<Listed> {
     let mut native = NativeList {
         assigned: 0,
         listed: 0,
@@ -261,10 +307,22 @@ fn list(job: HANDLE) -> io::Result<Listed> {
             &mut written,
         )
     };
-    if ok == 0 {
-        return Err(io::Error::last_os_error());
+    // Preserve the original error before any test-only metadata work.
+    let result = if ok == 0 {
+        Err(io::Error::last_os_error())
+    } else {
+        parse_list(&native, written)
+    };
+    #[cfg(test)]
+    if let Err(error) = &result {
+        *observation = Some(tests::NativeListObservation::capture(
+            &native,
+            written,
+            ok,
+            error.raw_os_error(),
+        ));
     }
-    parse_list(&native, written)
+    result
 }
 fn parse_list(native: &NativeList, written: u32) -> io::Result<Listed> {
     let offset = std::mem::offset_of!(NativeList, ids);

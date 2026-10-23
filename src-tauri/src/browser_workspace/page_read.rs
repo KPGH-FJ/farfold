@@ -222,6 +222,12 @@ impl FixedPageReadScope {
                 if Arc::ptr_eq(&left.0, &right.0))
     }
 
+    pub(crate) fn same_request(&self, other: &Self) -> bool {
+        self.same_grant(other)
+            && matches!((&self.action_lease, &other.action_lease), (Some(left), Some(right))
+                if Arc::ptr_eq(&left.0, &right.0))
+    }
+
     pub(crate) fn revoke(&self) {
         if let Some(lease) = &self.lease {
             lease.revoke();

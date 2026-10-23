@@ -23,6 +23,9 @@ use std::{
 use tauri::AppHandle;
 use tokio::sync::{oneshot, watch};
 
+#[path = "transport_admission.rs"]
+mod admission;
+
 #[cfg(test)]
 #[path = "transport_lifecycle_tests.rs"]
 mod lifecycle_tests;
@@ -42,7 +45,11 @@ fn operation_error_reply(id: Value, control: bool, error: ToolFailure) -> Value 
         (true, ToolFailure::ControlNotApplied(reason)) => {
             protocol::control_not_applied(id, &reason)
         }
-        (true, ToolFailure::Unconfirmed) => protocol::control_unknown(id),
+        (true, _) => protocol::control_unknown(id),
+        (false, ToolFailure::ScreenshotUnavailable) => protocol::tool_error(
+            id,
+            "本次无法安全提供网页截图，未返回网页内容。如需文字，请另行请求观察。",
+        ),
         (false, _) => protocol::tool_error(
             id,
             "网页读取或观察的结果未确认，请等待或关闭网页；不要自动重试",
@@ -313,6 +320,7 @@ struct Wire {
     waiting: Option<WaitingRead>,
     barrier: Option<Barrier>,
     deferred: Option<protocol::Action>,
+    screenshot_receipt: Option<(Value, super::screenshot_owner::ScreenshotRetirement)>,
 }
 impl Wire {
     fn defer_during_stop(&mut self, action: protocol::Action) -> Result<(), ()> {
@@ -533,34 +541,10 @@ impl Worker {
                 }
             }
             protocol::Action::Read { id, request } => {
-                if wire.pending.is_some() || wire.waiting.is_some() || wire.delivery.is_some() {
-                    return false;
-                }
-                let scope = self.page.lock().ok().and_then(|page| page.clone());
-                if let Some(scope) = scope.filter(|scope| !request.control() && scope.is_valid()) {
-                    self.begin_read(id, scope, request, wire);
-                } else {
-                    match (self.on_permission)(&request) {
-                        Ok(permission) => {
-                            wire.waiting = Some(WaitingRead {
-                                id,
-                                permission,
-                                request,
-                            })
-                        }
-                        Err(error) => {
-                            if wire
-                                .reply(
-                                    permission_error_reply(id, request.control(), &error),
-                                    None,
-                                    false,
-                                )
-                                .is_err()
-                            {
-                                return false;
-                            }
-                        }
-                    }
+                match wire.admit_read(id, request, &self.page, self.on_permission.as_ref()) {
+                    Ok(Some(read)) => self.begin_read(read.id, read.scope, read.request, wire),
+                    Ok(None) => {}
+                    Err(()) => return false,
                 }
             }
         }
@@ -595,36 +579,18 @@ impl Worker {
         });
     }
     fn permission_result(&self, wire: &mut Wire) -> bool {
-        let Some(waiting) = wire.waiting.as_ref() else {
-            return true;
-        };
-        let Some(result) = waiting.permission.poll() else {
-            return true;
-        };
-        let id = waiting.id.clone();
-        let request = waiting.request.clone();
-        wire.waiting = None;
-        match result {
-            Ok(scope) if scope.is_valid() => self.begin_read(id, scope, request, wire),
-            Ok(_) => {
-                return wire
-                    .reply(
-                        protocol::tool_error(id, "网页已变化，本次读取已取消"),
-                        None,
-                        false,
-                    )
-                    .is_ok();
-            }
-            Err(error) => {
-                return wire
-                    .reply(protocol::tool_error(id, &error), None, false)
-                    .is_ok();
-            }
+        match wire.approved_read() {
+            Ok(Some(read)) => self.begin_read(read.id, read.scope, read.request, wire),
+            Ok(None) => {}
+            Err(()) => return false,
         }
         true
     }
+
     fn serve(&mut self, mut channel: Stream) -> bool {
-        let mut protocol = protocol::Protocol::default();
+        let mut protocol = protocol::Protocol::new(
+            crate::browser_workspace::screenshot_capability::for_mcp_worker(&self.app),
+        );
         let mut input = Vec::new();
         let mut wire = Wire::default();
         loop {
@@ -723,15 +689,10 @@ impl Worker {
                         let Some(number) = message.get("delivery").and_then(Value::as_u64) else {
                             return false;
                         };
-                        if wire
-                            .delivery
-                            .as_ref()
-                            .is_some_and(|delivery| delivery.number == number)
+                        if wire.acknowledge_written(number) == Some(true)
+                            && protocol.mark_list_delivered()
                         {
-                            let delivery = wire.delivery.take().expect("checked delivery");
-                            if delivery.list && protocol.mark_list_delivered() {
-                                (self.on_ready)();
-                            }
+                            (self.on_ready)();
                         }
                     }
                     Some("stopped") => {
@@ -757,8 +718,10 @@ impl Worker {
                                 .as_ref()
                                 .is_some_and(|delivery| delivery.scope.is_some())
                             {
-                                wire.delivery = None;
+                                let delivery = wire.delivery.take().expect("checked delivery");
+                                wire.finish_screenshot(&delivery.id);
                             }
+                            wire.finish_stopped_screenshot();
                             if stdout_closed {
                                 drop(channel);
                                 self.notify_closed(true);

@@ -12,7 +12,7 @@ export const BROWSER_SHARING_STRINGS = {
   operationScope:
     "仅允许这一次操作。请检查页面和具体内容；换页或页面变化后需重新观察。取消或停止共享不能撤销已经交付的网站操作。",
   screenshotScope:
-    "提供当前网页可见区域的截图；含受保护输入或其他页面时可能无法提供。",
+    "仅允许这一次观察：向此对话的 Agent 提供本页的标题、地址、可见文字和可操作位置，以及当前可见区域的截图。不会点击或填写，也不会允许后续读取；截图无法安全提供时，本次请求会停止，不改为只返回文字。",
   operationAllow: "允许本次操作",
   operationDeny: "取消本次操作",
   retained: "停止共享不会删除已提供给 Agent 的内容。",
@@ -25,6 +25,7 @@ export const BROWSER_SHARING_STRINGS = {
   viewRequest: "返回对话确认",
   viewPage: "查看网页",
   shared: "已允许读取本页",
+  reading: "正在完成本次网页观察",
   unshared: "尚未允许读取",
   preparing: "正在接通网页工具…",
   unavailable: "此对话尚未接通网页工具。你仍可手动浏览网页。",

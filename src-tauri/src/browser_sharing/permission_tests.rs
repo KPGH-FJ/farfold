@@ -23,6 +23,7 @@ fn fixture() -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope) {
             revision: 1,
             retiring: None,
             pending_request: None,
+            active_screenshot: None,
         }),
         operation: tokio::sync::Mutex::new(()),
     });
@@ -278,6 +279,37 @@ fn explicit_operation_grant_is_one_shot_and_does_not_replace_the_read_grant() {
             ))
             .is_err()
     );
+}
+
+#[test]
+fn approved_screenshot_expired_in_original_wait_retires_without_creating_text_permission() {
+    let (owner, page, scope) = fixture();
+    let mut wait = owner
+        .request_page_permission(
+            page.clone(),
+            &crate::browser_workspace::ToolRequest::Observe { screenshot: true },
+        )
+        .unwrap();
+    let id = pending_id(&owner);
+    owner
+        .respond_permission(TASK, &page.label, &id, true, |_| Ok(scope.clone()))
+        .unwrap();
+    let approved = owner
+        .state
+        .lock()
+        .unwrap()
+        .active_screenshot
+        .as_ref()
+        .unwrap()
+        .scope
+        .clone();
+    wait.deadline = Instant::now() - Duration::from_secs(1);
+    assert!(wait.poll().unwrap().is_err());
+    drop(wait);
+    assert!(!approved.is_valid());
+    assert!(owner.state.lock().unwrap().active_screenshot.is_none());
+    assert!(owner.state.lock().unwrap().retiring.is_none());
+    assert!(owner.page.lock().unwrap().is_none());
 }
 
 #[test]

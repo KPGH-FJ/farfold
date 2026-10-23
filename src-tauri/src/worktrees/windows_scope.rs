@@ -25,7 +25,10 @@ pub(super) struct Scope {
     pointers: Vec<PinnedPath>,
     absent: Vec<PathBuf>,
 }
-fn failure(_: std::io::Error) -> super::types::Failure {
+fn failure(failure: std::io::Error) -> super::types::Failure {
+    #[cfg(test)]
+    super::recovery_windows_diagnostics::io("scope-pin-or-pointer", &failure);
+    let _ = failure;
     error("unsafePath")
 }
 fn resolve(parent: &Path, text: &str) -> Result<PathBuf> {

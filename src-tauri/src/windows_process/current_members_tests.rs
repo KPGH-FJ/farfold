@@ -9,6 +9,135 @@ use std::{
 };
 use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetCurrentProcessId};
 
+// Only the original production list call supplies these values. The logger
+// performs no native query, lookup or wait and retains no process handle.
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(super) struct NativeListObservation {
+    query_return: i32,
+    native_error: Option<i32>,
+    assigned: u32,
+    listed: u32,
+    written: u32,
+    parse_rejections: Vec<&'static str>,
+}
+impl NativeListObservation {
+    pub(super) fn capture(
+        native: &NativeList,
+        written: u32,
+        query_return: i32,
+        native_error: Option<i32>,
+    ) -> Self {
+        let mut parse_rejections = Vec::new();
+        // A failed API call did not produce a valid list to parse.
+        if query_return != 0 {
+            let offset = std::mem::offset_of!(NativeList, ids);
+            let count = native.listed as usize;
+            if offset != std::mem::offset_of!(JOBOBJECT_BASIC_PROCESS_ID_LIST, ProcessIdList) {
+                parse_rejections.push("layout");
+            }
+            if native.assigned != native.listed {
+                parse_rejections.push("assigned-listed-mismatch");
+            }
+            if count > CAPACITY {
+                parse_rejections.push("capacity");
+            }
+            if written as usize > size_of::<NativeList>() {
+                parse_rejections.push("written-exceeds-buffer");
+            }
+            if count
+                .checked_mul(size_of::<usize>())
+                .and_then(|n| offset.checked_add(n))
+                .is_none_or(|needed| needed > written as usize)
+            {
+                parse_rejections.push("truncated-list");
+            }
+            if parse_rejections.is_empty() {
+                for (index, &pid) in native.ids[..count].iter().enumerate() {
+                    if u32::try_from(pid).ok().is_none_or(|pid| pid == 0) {
+                        parse_rejections.push("invalid-pid");
+                        break;
+                    }
+                    if native.ids[..index].contains(&pid) {
+                        parse_rejections.push("duplicate-pid");
+                        break;
+                    }
+                }
+            }
+        }
+        Self {
+            query_return,
+            native_error,
+            assigned: native.assigned,
+            listed: native.listed,
+            written,
+            parse_rejections,
+        }
+    }
+}
+pub(super) fn emit_incomplete(
+    reason: &'static str,
+    leader: Option<u32>,
+    associated: Option<u32>,
+    current: &CurrentObservation,
+    native_list: Option<NativeListObservation>,
+) {
+    eprintln!(
+        "FARFOLD_WINDOWS_CURRENT_MEMBERS_FIRST_INCOMPLETE {}",
+        serde_json::json!({
+            "reason": reason,
+            "originalLeaderPid": leader,
+            "accountingActiveProcesses": associated,
+            "current": current,
+            "originalListCall": native_list,
+            "scope": "first incomplete observation creating a coverage gap; original call metadata; sticky gap unchanged; no extra native query"
+        })
+    );
+}
+
+#[test]
+fn native_list_failure_diagnostic_preserves_api_error_and_exact_parse_categories() {
+    let mut native = NativeList {
+        assigned: 0,
+        listed: 0,
+        ids: [0; CAPACITY],
+    };
+    let offset = std::mem::offset_of!(NativeList, ids) as u32;
+    assert!(parse_list(&native, offset).is_ok());
+    let empty = NativeListObservation::capture(&native, offset, 1, None);
+    assert!(empty.parse_rejections.is_empty());
+    let failed = NativeListObservation::capture(&native, 0, 0, Some(5));
+    assert_eq!(failed.native_error, Some(5));
+    assert!(failed.parse_rejections.is_empty());
+    native.assigned = 1;
+    assert!(parse_list(&native, offset).is_err());
+    assert_eq!(
+        NativeListObservation::capture(&native, offset, 1, None).parse_rejections,
+        ["assigned-listed-mismatch"]
+    );
+    native.listed = 1;
+    assert!(parse_list(&native, offset).is_err());
+    assert_eq!(
+        NativeListObservation::capture(&native, offset, 1, None).parse_rejections,
+        ["truncated-list"]
+    );
+    let one = offset + size_of::<usize>() as u32;
+    assert!(parse_list(&native, one).is_err());
+    assert_eq!(
+        NativeListObservation::capture(&native, one, 1, None).parse_rejections,
+        ["invalid-pid"]
+    );
+    native.assigned = 2;
+    native.listed = 2;
+    native.ids[..2].copy_from_slice(&[42, 42]);
+    let two = offset + 2 * size_of::<usize>() as u32;
+    assert!(parse_list(&native, two).is_err());
+    assert_eq!(
+        NativeListObservation::capture(&native, two, 1, None).parse_rejections,
+        ["duplicate-pid"]
+    );
+}
+
 fn until(mut check: impl FnMut() -> bool) {
     let deadline = Instant::now() + Duration::from_secs(5);
     while !check() {

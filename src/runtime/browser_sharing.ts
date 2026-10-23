@@ -45,6 +45,7 @@ export interface BrowserShareInfo {
     | "preparing"
     | "unshared"
     | "shared"
+    | "reading"
     | "stopping"
     | "stop_failed";
   revision: number;
@@ -433,7 +434,8 @@ export class BrowserSharingController {
   };
   stop = async () => {
     const info = this.snapshot.info;
-    if (!info || !["shared", "stop_failed"].includes(info.phase)) return;
+    if (!info || !["shared", "reading", "stop_failed"].includes(info.phase))
+      return;
     await this.run(
       "stop",
       () =>

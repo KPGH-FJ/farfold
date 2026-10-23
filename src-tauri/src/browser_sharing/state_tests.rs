@@ -24,6 +24,7 @@ pub(super) fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
             revision: 1,
             retiring: None,
             pending_request: None,
+            active_screenshot: None,
         }),
         operation: tokio::sync::Mutex::new(()),
     })

@@ -101,3 +101,5 @@ mod remove_native_windows_tests;
 
 #[cfg(all(windows, test))]
 mod recovery_ordinary_windows_tests;
+#[cfg(all(windows, test))]
+mod recovery_windows_diagnostics;

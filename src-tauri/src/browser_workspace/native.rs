@@ -44,6 +44,7 @@ unsafe extern "C" {
         storage_identifier: *const c_char,
     ) -> bool;
     fn ff_browser_persistent_html_supported() -> bool;
+    fn ff_browser_screenshot_supported() -> bool;
     fn ff_browser_create_preview(
         id: u64,
         parent: *mut c_void,
@@ -512,6 +513,11 @@ async fn create_content(
 pub(super) fn persistent_html_supported() -> bool {
     // Availability only; no store, file, user configuration or page is read.
     unsafe { ff_browser_persistent_html_supported() }
+}
+
+/// Called only inside the main-thread capability task. No page is addressed.
+pub(super) fn screenshot_supported() -> bool {
+    unsafe { ff_browser_screenshot_supported() }
 }
 
 pub(super) async fn clear_html_storage(

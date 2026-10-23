@@ -11,6 +11,8 @@ mod local_preview;
 pub(crate) mod preview_commands;
 #[path = "browser_workspace/screenshot.rs"]
 mod screenshot;
+#[path = "browser_workspace/screenshot_capability.rs"]
+pub(crate) mod screenshot_capability;
 #[cfg(any(windows, test))]
 #[path = "browser_workspace/screenshot_guard.rs"]
 mod screenshot_guard;
@@ -21,6 +23,8 @@ mod native;
 #[cfg(windows)]
 #[path = "browser_workspace/windows/mod.rs"]
 mod native;
+#[cfg(all(test, windows))]
+pub(crate) use native::production_test_support as windows_native_test;
 #[path = "browser_workspace/native_request.rs"]
 mod native_request;
 #[path = "browser_workspace/page_read.rs"]

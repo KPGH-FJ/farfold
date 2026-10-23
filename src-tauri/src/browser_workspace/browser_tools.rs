@@ -58,6 +58,7 @@ pub(crate) enum ToolFailure {
     ControlNotApplied(String),
     // Entering the native action path does not prove dispatch or its absence.
     Unconfirmed,
+    ScreenshotUnavailable,
 }
 
 impl From<String> for ToolFailure {
@@ -88,6 +89,12 @@ impl ToolRequest {
         matches!(self, Self::Click { .. } | Self::Input { .. })
     }
 
+    /// A screenshot is a read, but the standing text grant never authorizes
+    /// pixels. Keep this separate from dispatched-mutation outcome handling.
+    pub(crate) fn requires_request_consent(&self) -> bool {
+        self.control() || matches!(self, Self::Observe { screenshot: true })
+    }
+
     fn target(&self) -> Option<(&str, &str, &'static str)> {
         match self {
             Self::Click {
@@ -111,6 +118,16 @@ pub(crate) struct ControlReview {
     pub target: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
+}
+
+impl ControlReview {
+    pub(crate) fn screenshot() -> Self {
+        Self {
+            kind: "screenshot",
+            target: "当前网页可见区域、可见文字和可操作位置".into(),
+            text: None,
+        }
+    }
 }
 
 pub(super) struct Observation {
@@ -159,11 +176,7 @@ impl FixedPageReadScope {
     pub(crate) fn review_control(&self, request: &ToolRequest) -> Result<ControlReview, String> {
         self.with_valid(|| {
             if matches!(request, ToolRequest::Observe { screenshot: true }) {
-                return Ok(ControlReview {
-                    kind: "screenshot",
-                    target: "当前网页可见区域".into(),
-                    text: None,
-                });
+                return Ok(ControlReview::screenshot());
             }
             let (id, reference, kind) = request.target().ok_or("此请求不需要操作许可")?;
             let observation = self.observation.lock().map_err(|_| "网页观察已失效")?;
@@ -207,9 +220,18 @@ impl FixedPageReadScope {
                     .observation
                     .lock()
                     .map_err(|_| ToolFailure::Unconfirmed)? = None;
-                let raw = native::observe(app, self.clone(), screenshot).await?;
+                let failure = |error| {
+                    if screenshot {
+                        ToolFailure::ScreenshotUnavailable
+                    } else {
+                        ToolFailure::from(error)
+                    }
+                };
+                let raw = native::observe(app, self.clone(), screenshot)
+                    .await
+                    .map_err(failure)?;
                 self.complete_observation_for_request(&raw, screenshot)
-                    .map_err(ToolFailure::from)
+                    .map_err(failure)
             }
             request => {
                 self.preflight_control(&request)?;
@@ -316,6 +338,9 @@ impl FixedPageReadScope {
             return Err("页面含受保护的输入，已停止共享".into());
         }
         let screenshot = super::screenshot::checked(&value["screenshot"], screenshot_requested);
+        if screenshot_requested && screenshot["status"] != "captured" {
+            return Err("本次无法安全提供网页截图".into());
+        }
         self.with_valid(|| {
             let url = bounded(&value, "url", 8192)?;
             if !self.matches_url(&url) { return Err("网页已变化，请重新确认".into()); }
@@ -499,6 +524,31 @@ mod tests {
         );
         scope.revoke();
         assert!(scope.complete_observation_for_request(&raw, true).is_err());
+    }
+    #[test]
+    fn requested_screenshot_unavailable_or_invalid_never_falls_back_to_text_or_nodes() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:screenshot", "page");
+        let raw = observed(&scope);
+        *scope.observation.lock().unwrap() = None;
+        let mut value: Value = serde_json::from_str(&raw).unwrap();
+        value["text"] = json!("CANARY_NO_TEXT_FALLBACK");
+        for screenshot in [
+            json!({"status":"unavailable","reason":"protected page"}),
+            json!({"status":"captured","data":"not-valid-png"}),
+        ] {
+            value["screenshot"] = screenshot;
+            let error = scope
+                .complete_observation_for_request(&value.to_string(), true)
+                .unwrap_err();
+            assert!(!error.contains("CANARY"));
+            assert!(scope.observation.lock().unwrap().is_none());
+        }
+        assert_eq!(
+            scope
+                .complete_observation_for_request(&value.to_string(), false)
+                .unwrap()["text"],
+            "CANARY_NO_TEXT_FALLBACK"
+        );
     }
     #[test]
     fn scope_withdrawal_reaches_one_shot_but_cancel_does_not_revoke_reading() {

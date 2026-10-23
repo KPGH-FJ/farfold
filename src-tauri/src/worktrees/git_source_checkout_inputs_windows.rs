@@ -321,6 +321,13 @@ fn configured_path(owner: &dyn EvaluationSource, raw: &str) -> Result<(PathBuf, 
     if !path.is_absolute()
         && (path.has_root() || matches!(path.components().next(), Some(Component::Prefix(_))))
     {
+        #[cfg(test)]
+        crate::worktrees::recovery_windows_diagnostics::configured_path_refused(
+            path.is_absolute(),
+            path.has_root(),
+            matches!(path.components().next(), Some(Component::Prefix(_))),
+            raw == "/dev/null",
+        );
         return Err(error("unsafePath"));
     }
     let joined = Path::new(&owner.context().scope.root.path).join(path);

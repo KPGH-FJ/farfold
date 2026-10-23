@@ -630,6 +630,11 @@ static WKContentWorld *observationWorld(void) {
     });
     return world;
 }
+bool ff_browser_screenshot_supported(void) {
+    if (!NSThread.isMainThread) return false;
+    (void)observationWorld();
+    return observationInspectsClosedRoots;
+}
 static NSString *observationProgram(void) {
     return
 #include <BrowserObservation.inc>

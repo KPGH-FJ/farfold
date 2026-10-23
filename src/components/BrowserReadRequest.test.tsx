@@ -154,5 +154,11 @@ it("keeps screenshot consent distinct from text reading", () => {
   const html = renderToStaticMarkup(<BrowserReadRequest sharing={sharing} />);
   expect(html).toContain("需要截取当前网页");
   expect(html).toContain("可见区域的截图");
+  expect(html).toContain("标题、地址、可见文字和可操作位置");
+  expect(html).toContain("仅允许这一次观察");
+  expect(html).toContain("不会允许后续读取");
   expect(html).toContain("允许本次操作");
+  findButton(BrowserReadRequest({ sharing }), "允许本次操作").props.onClick();
+  expect(sharing.respond).toHaveBeenCalledWith("request-a", true);
+  expect(sharing.allow).not.toHaveBeenCalled();
 });

@@ -25,14 +25,23 @@ pub(super) struct PendingPermission {
     pub info: PendingRequestInfo,
     deadline: Instant,
     reply: mpsc::Sender<Result<FixedPageReadScope, String>>,
+    retirement: super::screenshot_owner::Receipt,
+    owner: std::sync::Weak<ToolSession>,
 }
 
 pub(super) struct PermissionWait {
     result: mpsc::Receiver<Result<FixedPageReadScope, String>>,
     deadline: Instant,
     finish: Box<dyn Fn() + Send>,
+    retirement: super::screenshot_owner::Receipt,
 }
 impl PermissionWait {
+    pub(super) fn take_retirement(&self) -> Option<super::screenshot_owner::ScreenshotRetirement> {
+        self.retirement
+            .lock()
+            .unwrap_or_else(|error| error.into_inner())
+            .take()
+    }
     pub(super) fn poll(&self) -> Option<Result<FixedPageReadScope, String>> {
         // Check the deadline before consuming even a queued approval.
         if Instant::now() >= self.deadline {
@@ -47,6 +56,11 @@ impl PermissionWait {
 }
 impl Drop for PermissionWait {
     fn drop(&mut self) {
+        // Still in this wait means no native execution was admitted. Once the
+        // worker takes it, that worker owns retirement through delivery ACK.
+        if let Some(mut retirement) = self.take_retirement() {
+            retirement.confirm();
+        }
         (self.finish)();
     }
 }
@@ -72,6 +86,24 @@ impl ToolSession {
         self.request_tool_permission(page, None)
     }
 
+    pub(super) fn request_page_permission(
+        self: &Arc<Self>,
+        page: BrowserInfo,
+        request: &crate::browser_workspace::ToolRequest,
+    ) -> Result<PermissionWait, String> {
+        let review = if request.requires_request_consent() {
+            let grant = self.page.lock().map_err(|_| "网页状态暂时不可用")?;
+            Some(match grant.as_ref() {
+                Some(grant) => grant.review_control(request)?,
+                None if !request.control() => ControlReview::screenshot(),
+                None => return Err("请先允许读取当前网页".into()),
+            })
+        } else {
+            None
+        };
+        self.request_tool_permission(page, review)
+    }
+
     pub(super) fn request_tool_permission(
         self: &Arc<Self>,
         page: BrowserInfo,
@@ -88,7 +120,7 @@ impl ToolSession {
         {
             return Err("当前网页或对话不可读取".into());
         }
-        if state.pending_request.is_some() {
+        if state.pending_request.is_some() || state.active_screenshot.is_some() {
             return Err("请先处理原网页读取请求".into());
         }
         // Fresh per-request nonce, never a credential or a page authority.
@@ -104,6 +136,7 @@ impl ToolSession {
                 PERMISSION_WAIT
             };
         let (reply, result) = mpsc::channel();
+        let retirement = Arc::new(std::sync::Mutex::new(None));
         state.pending_request = Some(PendingPermission {
             info: PendingRequestInfo {
                 request_id: request_id.clone(),
@@ -116,6 +149,8 @@ impl ToolSession {
             },
             deadline,
             reply,
+            retirement: retirement.clone(),
+            owner: Arc::downgrade(self),
         });
         state.revision = state.revision.saturating_add(1);
         drop(state);
@@ -124,6 +159,7 @@ impl ToolSession {
         Ok(PermissionWait {
             result,
             deadline,
+            retirement,
             finish: Box::new(move || {
                 if let Some(owner) = owner.upgrade() {
                     let mut state = owner.state.lock().unwrap_or_else(|e| e.into_inner());
@@ -168,15 +204,26 @@ impl ToolSession {
             self.changed();
             return Err("此网页读取请求已结束，请查看当前对话".into());
         }
-        let control = pending.info.control.is_some();
-        let result = if allow && control {
-            self.page
-                .lock()
-                .map_err(|_| "网页状态暂时不可用")?
-                .as_ref()
-                .filter(|scope| scope.task_key() == task && scope.label() == label)
-                .ok_or_else(|| "请先允许读取当前网页".to_owned())
-                .and_then(FixedPageReadScope::one_shot)
+        // This describes the permission's lifetime, not whether a mutating
+        // browser action was dispatched. Screenshots are still read-only.
+        let one_shot = pending.info.control.is_some();
+        let screenshot = pending
+            .info
+            .control
+            .as_ref()
+            .is_some_and(|review| review.kind == "screenshot");
+        let result = if allow && one_shot {
+            let grant = self.page.lock().map_err(|_| "网页状态暂时不可用")?.clone();
+            match grant {
+                Some(scope) if scope.task_key() == task && scope.label() == label => {
+                    scope.one_shot()
+                }
+                Some(_) => Err("网页或对话已变化，请重新确认".into()),
+                // A first screenshot captures only this confirmed request's
+                // scope. It never creates a standing text/read permission.
+                None if screenshot => capture(&pending.info).and_then(|scope| scope.one_shot()),
+                None => Err("请先允许读取当前网页".into()),
+            }
         } else if allow {
             capture(&pending.info)
         } else {
@@ -188,33 +235,51 @@ impl ToolSession {
             .expect("checked pending permission");
         let mut grant = self.page.lock().unwrap_or_else(|e| e.into_inner());
         let result = result.and_then(|scope| {
-            if (!control && grant.is_some())
+            if (!one_shot && grant.is_some())
                 || !scope.is_valid()
                 || scope.task_key() != task
                 || scope.label() != label
             {
-                if control {
+                if one_shot {
                     scope.cancel_action();
                 } else {
                     scope.revoke();
                 }
                 Err("网页或对话已变化，请重新确认".into())
             } else {
-                if !control {
+                if !one_shot {
                     *grant = Some(scope.clone());
                 }
                 Ok(scope)
             }
         });
         let failure = result.as_ref().err().cloned();
+        if screenshot && let Ok(scope) = &result {
+            *pending
+                .retirement
+                .lock()
+                .unwrap_or_else(|error| error.into_inner()) = Some(state.approve_screenshot(
+                pending.owner.clone(),
+                pending.info.request_id.clone(),
+                scope,
+            ));
+        }
         if let Err(undelivered) = pending.reply.send(result) {
+            if let Some(retirement) = pending
+                .retirement
+                .lock()
+                .unwrap_or_else(|error| error.into_inner())
+                .as_mut()
+            {
+                retirement.confirm();
+            }
             if let Ok(scope) = undelivered.0 {
-                if control {
+                if one_shot {
                     scope.cancel_action();
                 } else {
                     scope.revoke();
                 }
-                if !control
+                if !one_shot
                     && grant
                         .as_ref()
                         .is_some_and(|current| current.same_grant(&scope))

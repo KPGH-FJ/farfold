@@ -53,6 +53,18 @@ it("does not expose a scope confirmation or grant while merely showing the toolb
   expect(sharing.allow).not.toHaveBeenCalled();
 });
 
+it("keeps stop available for one approved observation without claiming a lasting page grant", () => {
+  const sharing = model("reading");
+  const html = renderToStaticMarkup(
+    <BrowserShareControls page={page} sharing={sharing} />,
+  );
+  expect(html).toContain("正在完成本次网页观察");
+  expect(html).toContain("停止共享");
+  expect(html).not.toContain("已允许读取本页");
+  expect(html).not.toContain("disabled");
+  expect(sharing.allow).not.toHaveBeenCalled();
+});
+
 it("explains unavailable tooling without claiming every Agent lacks support", () => {
   const html = renderToStaticMarkup(
     <BrowserShareControls page={page} sharing={model("unavailable")} />,
