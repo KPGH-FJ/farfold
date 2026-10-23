@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T13:45:22.988423+00:00",
+  "kind": "本次选定开发阶段的事实交接；不是第二份活动计划",
+  "sourceCommit": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "soleActivePlan": "plans/agent-access.md",
+  "selectedStageExitReached": true,
+  "exitMeaning": "本次所选四类增量已交付实现和分项回归，缺明确官方/账号/系统/真实输入条件的部分逐项保留；可转入条件具备后的真实流程与29家逐项验收。",
+  "wholeProductOrAll151Complete": false,
+  "all29ByEightAccepted": false,
+  "new24AffectedRealSendsStillPaused": true,
+  "selectedDelivery": [
+    {
+      "id": "Windows H13-H17",
+      "implemented": "普通与完整安全资料分开，独立备份/冷恢复、短默认流、同对象复核和删原前保护；本次末尾只对固定非交互Git及辅助进程采用DETACHED_PROCESS。",
+      "verified": "先前13f当前140项和独立完整安全27项；本次e616原恢复7项、属性8项、启动4项、原收尾7项及诊断1项。不同来源及组别分开。",
+      "limits": "不是Windows正式应用或完整平台验收。原fd89间歇1/0未在本次复现；不证明所有根因已消失，不改变持续未知保护或结束断言。"
+    },
+    {
+      "id": "ARCH-49",
+      "implemented": "原始帧准入、逻辑积压预算、逐项传输与确认、退役中的在途所有权；主打开/分支/预览使用单份私有投影及原对象转交。",
+      "verified": "受控SDK路由及失败/退役分项、完整工程和Mac正式安装；WebKit有限样本观察另列。",
+      "limits": "4MiB/256项是逻辑高水位，不是RSS上限。正式ACK、真实多Agent/长历史、整体资源及长期负载仍待实际验证。"
+    },
+    {
+      "id": "ARCH-44",
+      "implemented": "29家官方客户端回调需要与缺失后果分类；已明确可核的所选源码路径与尚缺的具体官方契约，不盲增客户端执行器。",
+      "verified": "所选源码及Kilo/OpenCode六项受控回调反例。",
+      "limits": "五家路由契约、Nova协议版本和Grok发行源码映射仍缺明确依据；不是仅缺账号。官方确认必要回调后仍须完成相应实现及权限/取消验证。"
+    },
+    {
+      "id": "P27",
+      "implemented": "生产截图入口、逐次独立确认、实际回传确认前撤回和失败拒绝；Windows真实捕获与macOS公开新系统能力桥接线。",
+      "verified": "fd89 Windows受控WebView2/helper原用例七项安全检查及另列输入7项；Mac15能力为假及正式安装已核。",
+      "limits": "macOS27、正式界面、远程页面及真实Agent交付未验证；不同平台或样本不能相互替代。"
+    }
+  ],
+  "sameBatchAudio": {
+    "implemented": "短AAC/FLAC明确兼容播放、受限解码及配额，已随18470安装。",
+    "verified": "五份实际解码及受控WebKit等分项。AAC现有样本18帧/18432采样对应2.304秒，解码及兼容播放一致，未确认本轮代码自行补长。",
+    "limits": "有效时序依据下的首尾完整性、真实消息、可听效果、完整媒体及资源仍未验，不猜裁编码延迟。"
+  },
+  "latestWindowsRun": {
+    "runId": 39958119731,
+    "attempt": 1,
+    "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/39958119731",
+    "groups": {
+      "Ordinary": 3,
+      "FullSecurityManual": 4,
+      "NullAttributes": 8,
+      "LaunchContracts": 4,
+      "GitSettlement": 7,
+      "Diagnostic": 1
+    },
+    "allSelectedParentsVerifiedPassed": true,
+    "rawFiles": 178,
+    "rawBytes": 2862065,
+    "sourceInputPaths": 805,
+    "sourceMapsMatch": true,
+    "sourceObservationBoundary": "构建前后和新增启动/收尾组有完整源图；原恢复/属性组另核程序/fixture/runner/manifest/head，不宣称全程逐字节监测。",
+    "permissions": {
+      "manualParents": 4,
+      "singleRawPrivilegeMarkerEach": true,
+      "status": "testCompleted",
+      "deadlineMsEach": 300000,
+      "timedOutEach": false,
+      "existingSeSecurityEnabledOnlyInDistinctChild": true,
+      "backupAndRestoreRemainDisabled": true,
+      "parentPrivilegeTableUnchanged": true,
+      "defaultModesNotAdjusted": true
+    },
+    "settlementBoundary": "两个自然完成控制及五个预期停止/边界控制通过；自然退出仅指原测试及权限子进程，不泛指被取消的工作子代。",
+    "noWhole140OrLegacyRerunClaim": true,
+    "independentAudit": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/run-39958119731-attempt1-independent-audit-r1.json",
+      "sha256": "c9b7f21af180b2548e43c5fd2a2cea31fd2ad7e0c7676a963b14f780ca427b77"
+    },
+    "completedMetadata": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/run-39958119731-attempt1-completed-metadata.json",
+      "sha256": "1bb6605e87a8d8961635fbed059031081bd6a8ecb435386da3376ce3afff5148"
+    },
+    "singleDownload": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/download-39958119731-attempt1-r1.json",
+      "sha256": "eff08a7f030e138c75a380573c2ca9ec88038a5e83258d33a79f6a0c0d8f59a9"
+    },
+    "readers": [
+      {
+        "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/recovery-39958119731-attempt1-reader-r1.json",
+        "sha256": "0e266a4cd4ace7dbbb85b024b877d49554cc5eec114fe63e86306d25b2a0ec22"
+      },
+      {
+        "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/null-attributes-39958119731-attempt1-reader-r1.json",
+        "sha256": "b9702569c7aaa3e1c1277cb212bde3fb44ff60113b98ec7df33bcb9a3e3729f6"
+      },
+      {
+        "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/git-launch-controls-39958119731-attempt1-reader-r1.json",
+        "sha256": "89706e37b8585612c551f6bf392e623a1d3d2a9003413ca491e7e78fff436320"
+      }
+    ]
+  },
+  "installedMac": {
+    "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+    "binarySha256": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+    "installation": {
+      "path": "docs/evidence/2026-10-22-common-capability-closeout/formal-18470-installation.json",
+      "sha256": "ddcbb35caef3ac51c599e3e421cbb6a03eb3f0ac58828c4b02befb681eef387d"
+    },
+    "boundedUiAndDataObservation": {
+      "path": "docs/evidence/2026-10-22-common-capability-closeout/formal-18470-ui-observation.json",
+      "sha256": "646c745e32a20dab04d1ac55363241544a1fa838151fd6a5120e125ff2e8098d"
+    },
+    "boundary": "后续e616为Windows专用启动/CI改动，不作为已安装Mac源码身份；UI期间非零变化和误点副本核验仍按原观察保留。"
+  },
+  "engineeringEvidence": {
+    "fullSevenFor18470": {
+      "path": "output/2026-10-22-common-capability-closeout/engineering-final-r12/verification.json",
+      "sha256": "af9cdbe8df4479b73eb9b658c736b6a3540c5822ee060708472543289f2eb96f"
+    },
+    "e616AffectedChecks": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-git-detached-stdio-r1/affected-checkpoint.json",
+      "sha256": "a432ebc246871da47b2484b69adb163a6d2fcdaf84250838d73906b781b0de8c"
+    },
+    "windowsAllTargetCross": {
+      "path": "output/2026-10-22-common-capability-closeout/windows/four-gaps-cross-r30.json",
+      "sha256": "9d0a76d49b506320e36ddd4facee75cc3d33a549a1a7a7025d2f07ff2d5d90f6"
+    },
+    "macStrict": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-git-detached-stdio-r1/checks-mac-r2/strict.json",
+      "sha256": "70a97255b51ad50cd0f26943e57d9fc65724a7a89bd073530f4511b168ba78d6"
+    },
+    "macGit23": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-git-detached-stdio-r1/checks-mac-r2/git.json",
+      "sha256": "a249a017c14deab266b5e7d671222027c3ec5a76daf2be775bf1d10838e9f258"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-git-detached-stdio-r1/independent-source-review-r1.json",
+      "sha256": "e04900d655eb60ae790b53f77c297cdfa0104d1a000189da449ad74382334a7a"
+    },
+    "ciReview": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-git-detached-stdio-r1/independent-ci-review-r1.json",
+      "sha256": "5e7503866c70abbfe7a3799fac40607bb0f678385b11d5b33391374b2d86ef34"
+    }
+  },
+  "conditionsAndRetainedHistory": {
+    "officialVersionsMethodsAndFields": {
+      "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/stage-handoff-fields-18470-r1.json",
+      "sha256": "04487f4d09a684899f5a11370239ed460961844fc1e54297b3827b69ec08cc23"
+    },
+    "officialReferenceBoundary": "引用其中具体版本/字段及数据范围；其中旧stageExit=false和待修Windows描述仅属于原时点，不作为当前调度。",
+    "prior140AndIndependent27": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/run-39948790029-attempt1-independent-audit-r1.json",
+      "sha256": "7dbfd033f11db0a81f62e777d5041e3f3e11ad3d1d46c7e1a80875831ccf73a3"
+    },
+    "oldIntermittentFailure": {
+      "path": "output/2026-10-22-common-capability-closeout/windows-ci-tools/recovery-39945651058-attempt1-reader-r1.json",
+      "sha256": "50c03059f40409c8851f3c8d294089cfb7f49c148b1eeb1ecff4f633ce8eaf5a"
+    },
+    "old304": "275原名通过、28原始失败、1退役原名缺失；3替代另计，不合成304全通过。",
+    "remaining": "真实消息与完整交付流程、实际资源/长时负载、Windows完整用户环境、相应截图系统、逐家真实认证/配置/历史/停止恢复及29×8仍开放。签名公证和公开分发仍按原后置范围。"
+  },
+  "documentationReview": {
+    "path": "output/2026-10-22-common-capability-closeout/formal-delivery-r2/docs-selected-stage-independent-review-r1.json",
+    "sha256": "b51cba90362359617e3b551684884b3b75a0924a4d35e12d556ffd94f1c78886"
+  },
+  "requirementsBoundary": "151原ID/原题/完成条件及29×8保持；只更新H13/H14/H15/H17进度。唯一活动计划仍为41行，参考与本回执无调度权。"
+}
