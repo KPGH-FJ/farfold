@@ -19,10 +19,76 @@ fn leave_descendant_after_leader_exit(marker: &std::ffi::OsStr) {
 }
 
 #[cfg(windows)]
+fn settlement_gate(directory: &std::path::Path, name: &str) {
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
+    while !directory.join(name).exists() {
+        assert!(std::time::Instant::now() < deadline, "fixture gate expired");
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+}
+
+#[cfg(windows)]
+#[allow(clippy::zombie_processes)]
+fn settlement_parent(args: &[std::ffi::OsString]) {
+    let directory = std::path::Path::new(&args[1]);
+    // The parent deliberately exits first. Only the executing test's original
+    // Job owns this descendant; the fixture never opens or terminates a PID.
+    std::process::Command::new(std::env::current_exe().unwrap())
+        .arg("settlement-descendant")
+        .arg(directory)
+        .arg(&args[2])
+        .spawn()
+        .unwrap();
+    settlement_gate(directory, "parent-release");
+    println!("selected-output");
+    std::process::exit(args[3].to_str().unwrap().parse().unwrap());
+}
+
+#[cfg(windows)]
+fn settlement_descendant(args: &[std::ffi::OsString]) {
+    use std::io::Write;
+    let directory = std::path::Path::new(&args[1]);
+    std::fs::write(
+        directory.join("descendant-pid"),
+        std::process::id().to_string(),
+    )
+    .unwrap();
+    settlement_gate(directory, "descendant-release");
+    match args[2].to_str().unwrap() {
+        "tail" => println!("descendant-output"),
+        "stdout" => std::io::stdout()
+            .write_all(&vec![b'x'; 4 * 1024 * 1024 + 1])
+            .unwrap(),
+        "stderr" => std::io::stderr()
+            .write_all(&vec![b'x'; 4 * 1024 * 1024 + 1])
+            .unwrap(),
+        "input" => {
+            use std::os::windows::io::AsHandle;
+            let file =
+                std::fs::File::from(std::io::stdin().as_handle().try_clone_to_owned().unwrap());
+            file.set_len(0).unwrap();
+        }
+        _ => panic!("unknown fixture action"),
+    }
+    std::fs::write(directory.join("action-complete"), "ready").unwrap();
+    settlement_gate(directory, "finish-release");
+}
+
+#[cfg(windows)]
 fn main() {
     // A synthetic-only barrier exercises cancellation before the trusted helper
     // opens/enters the Job. Production has no environment or timing test hook.
     let raw: Vec<_> = std::env::args_os().skip(1).collect();
+    if raw
+        .first()
+        .is_some_and(|arg| arg == "--farfold-owned-process")
+        && raw.get(4).is_some_and(|arg| arg == "settlement-parent")
+    {
+        // Test-only handshake before the selected child can exit: the test
+        // opens this exact live helper and holds its handle across exit.
+        let directory = std::path::Path::new(&raw[5]);
+        std::fs::write(directory.join("helper-pid"), std::process::id().to_string()).unwrap();
+    }
     if raw
         .first()
         .is_some_and(|arg| arg == "--farfold-owned-process")
@@ -63,6 +129,8 @@ fn main() {
         Some("orphan") => {
             leave_descendant_after_leader_exit(&args[1]);
         }
+        Some("settlement-parent") => settlement_parent(&args),
+        Some("settlement-descendant") => settlement_descendant(&args),
         Some("parent") => {
             let mut command = std::process::Command::new(std::env::current_exe().unwrap());
             command.arg("wait").arg(&args[1]);

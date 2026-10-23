@@ -1,6 +1,6 @@
-//! Original decisive Git Job query plus one bounded test-only association sample.
+//! First active Git Job query plus one bounded test-only association sample.
 //! No new process owner, reaper, PID reopen, retry, or blocking wait.
-//! Records are emitted only after the original unknown branch terminates its Job.
+//! Emitted only after the original Child and retained Job actually settle.
 use super::*;
 use std::io::Write;
 
@@ -32,16 +32,21 @@ impl OwnedGroup {
             total_processes: succeeded.then_some(query.info.TotalProcesses),
             total_terminated_processes: succeeded.then_some(query.info.TotalTerminatedProcesses),
             conservative_active: active,
-            // Only the existing Unknown branch needs this bounded extra sample.
+            // At most the first active observation needs this bounded sample.
             association: active.then(|| self.observe_association(original_child)),
         };
         (active, observation)
     }
 }
 impl Observation {
-    pub(crate) fn emit(&self, original_child_pid: u32, exit_code: Option<i32>) {
+    pub(crate) fn emit(
+        &self,
+        original_child_pid: u32,
+        exit_code: Option<i32>,
+        stopped: Option<&str>,
+    ) {
         let event = serde_json::json!({
-            "phase": "decisiveGroupQueryAfterOriginalChild",
+            "phase": "firstActiveGroupQueryAfterOriginalChild",
             "originalChildPid": original_child_pid,
             "retainedGroupHelperPid": self.owner_pid,
             "sameOriginalChildPid": original_child_pid == self.owner_pid,
@@ -55,9 +60,11 @@ impl Observation {
             "totalProcesses": self.total_processes,
             "totalTerminatedProcesses": self.total_terminated_processes,
             "conservativeActive": self.conservative_active,
-            "scope": "same retained Job, original query before termination, emitted after original termination call",
+            "stoppedReason": stopped,
+            "settledNaturally": stopped.is_none(),
+            "scope": "same retained Job, first active query, emitted only after confirmed inactivity",
         });
-        // At most one record for this completed command's decisive branch.
+        // At most one record for this completed command's settling interval.
         // No cleanup-loop output, argv/env/path/data, retry or blocking wait.
         // The separate record below reports one borrowed-handle zero-wait and
         // one bounded process-list query; it does not change the original bool.
@@ -72,7 +79,7 @@ impl Observation {
                 "retainedGroupHelperPid": self.owner_pid,
                 "originalChildExitCode": exit_code,
                 "association": association,
-                "scope": "after original accounting query, before original termination; non-atomic observations, no PID reopen",
+                "scope": "after first active accounting query; non-atomic observations, no PID reopen",
             });
             let _ = writeln!(
                 std::io::stderr().lock(),

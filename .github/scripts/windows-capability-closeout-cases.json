@@ -567,6 +567,61 @@
       "category": "ownedActualOrdinarySecurityRefusal",
       "requiredEnvironment": "Windows NTFS ordinary readable security facets",
       "executionPolicy": "Exact actual Windows execution required; native denial, missing test or early failure is not a passed preservation control. Ordinary payload and readable owner/group/DACL/label remain distinct from full SACL."
+    },
+    {
+      "name": "fixture-long-plain-temp-path",
+      "test": "test_support::tempdir_has_long_absolute_git_compatible_spelling",
+      "manual": false,
+      "category": "ownedFixtureGitCompatiblePath"
+    },
+    {
+      "name": "git-settlement-original-exit-waits-for-same-job-natural-end-and-collects-descendant-tail",
+      "test": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "git-settlement-naturally-settled-job-preserves-original-nonzero-exit-code",
+      "test": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "git-settlement-cancellation-after-original-exit-reaps-same-job-before-return",
+      "test": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "git-settlement-original-deadline-still-limits-live-job-after-original-exit",
+      "test": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "git-settlement-late-stdout-over-limit-after-original-exit-is-not-success",
+      "test": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stdout"
+    },
+    {
+      "name": "git-settlement-late-stderr-over-limit-after-original-exit-is-not-success",
+      "test": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stderr"
+    },
+    {
+      "name": "git-settlement-changed-finite-input-after-original-exit-is-not-success",
+      "test": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+      "manual": false,
+      "category": "ownedSameJobNaturalSettlementAndBounds",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=input"
     }
   ],
   "blockedPositiveCases": [],

@@ -258,11 +258,15 @@ fn execute_bounded(
     };
     let started = Instant::now();
     let mut stopped = None;
+    #[cfg(windows)]
+    let mut settling = false;
+    #[cfg(all(windows, test))]
+    let mut first_active_query = None;
     loop {
         let waited = match child.try_wait() {
             Ok(value) => value,
             Err(_wait_error) => {
-                stopped = Some("unknown");
+                stopped.get_or_insert("unknown");
                 child.terminate();
                 #[cfg(all(windows, test))]
                 settlement_observation::emit(
@@ -285,11 +289,48 @@ fn execute_bounded(
         };
         if let Some(status) = waited {
             #[cfg(all(windows, test))]
-            let (group_alive, group_query) = child.group.active_with_observation(&child.child);
+            let group_alive = if first_active_query.is_none() {
+                let (active, observation) = child.group.active_with_observation(&child.child);
+                if active {
+                    first_active_query = Some(observation);
+                }
+                active
+            } else {
+                child.group_alive()
+            };
             #[cfg(not(all(windows, test)))]
             let group_alive = child.group_alive();
+            #[cfg(all(windows, test))]
             if group_alive {
-                // Git should join its helpers. A surviving process is not a successful receipt.
+                settlement_tests::observed_active_after_original_exit(child.id(), status.code());
+            }
+            #[cfg(windows)]
+            {
+                // The retained helper's ExitStatus is not a Job completion
+                // receipt: selected Git/descendant termination can still be
+                // settling. Keep the SAME child, Job, caller admission and
+                // original clock until that Job is confirmed inactive. Every
+                // existing bound continues to apply during this interval.
+                settling |= group_alive;
+                if settling && stopped.is_none() {
+                    stopped = stop_reason(
+                        cancel,
+                        started,
+                        timeout,
+                        &stdout,
+                        &stderr,
+                        limit,
+                        input.as_ref(),
+                    );
+                }
+                if group_alive && stopped.is_none() {
+                    thread::sleep(Duration::from_millis(10));
+                    continue;
+                }
+            }
+            if group_alive {
+                // Unix still rejects surviving helpers immediately. Windows
+                // reaches this branch only after an original bound/error.
                 stopped = Some(stopped.unwrap_or("unknown"));
                 child.terminate_group();
                 #[cfg(all(windows, test))]
@@ -301,13 +342,15 @@ fn execute_bounded(
                     true,
                     stopped,
                 );
-                #[cfg(all(windows, test))]
-                group_query.emit(child.id(), status.code());
                 while child.group_alive() {
                     thread::sleep(Duration::from_millis(10));
                 }
             }
             child.finished = true;
+            #[cfg(all(windows, test))]
+            if let Some(observation) = first_active_query {
+                observation.emit(child.id(), status.code(), stopped);
+            }
             if let Some(code) = stopped {
                 return Err(error(code));
             }
@@ -372,19 +415,15 @@ fn execute_bounded(
             });
         }
         if stopped.is_none() {
-            let over = stdout.metadata().map_or(true, |s| s.len() > limit)
-                || stderr.metadata().map_or(true, |s| s.len() > OUTPUT_LIMIT);
-            let reason = if cancel.load(Ordering::SeqCst) {
-                Some("cancelled")
-            } else if started.elapsed() >= timeout {
-                Some("waitExpired")
-            } else if over {
-                Some("tooLarge")
-            } else if input.as_ref().is_some_and(|input| input.verify().is_err()) {
-                Some("changed")
-            } else {
-                None
-            };
+            let reason = stop_reason(
+                cancel,
+                started,
+                timeout,
+                &stdout,
+                &stderr,
+                limit,
+                input.as_ref(),
+            );
             if let Some(reason) = reason {
                 stopped = Some(reason);
                 child.terminate();
@@ -392,6 +431,29 @@ fn execute_bounded(
             }
         }
         thread::sleep(Duration::from_millis(10));
+    }
+}
+fn stop_reason(
+    cancel: &AtomicBool,
+    started: Instant,
+    timeout: Duration,
+    stdout: &File,
+    stderr: &File,
+    limit: u64,
+    input: Option<&Input>,
+) -> Option<&'static str> {
+    if cancel.load(Ordering::SeqCst) {
+        Some("cancelled")
+    } else if started.elapsed() >= timeout {
+        Some("waitExpired")
+    } else if stdout.metadata().map_or(true, |s| s.len() > limit)
+        || stderr.metadata().map_or(true, |s| s.len() > OUTPUT_LIMIT)
+    {
+        Some("tooLarge")
+    } else if input.is_some_and(|input| input.verify().is_err()) {
+        Some("changed")
+    } else {
+        None
     }
 }
 pub(super) fn read(root: &Path, args: &[&str]) -> Result<Vec<u8>> {
@@ -441,6 +503,9 @@ fn group_exists(group: i32) -> bool {
 #[cfg(all(windows, test))]
 #[path = "git_settlement_observation_tests.rs"]
 mod settlement_observation;
+#[cfg(all(windows, test))]
+#[path = "git_settlement_windows_tests.rs"]
+mod settlement_tests;
 
 #[cfg(test)]
 mod tests {
@@ -461,10 +526,11 @@ mod tests {
         let marker = directory.path().join("descendant-pid");
         let mut command = Command::new(crate::windows_process::helper_executable().unwrap());
         command.arg("orphan").arg(&marker);
-        let output = execute_command(command, &AtomicBool::new(false), Duration::from_secs(5));
-        assert_eq!(output.err().unwrap().code, "unknown");
-        // This fast branch need not let the descendant run as far as its
-        // marker. The separate cancellation case observes an exact handle.
+        let output = execute_command(command, &AtomicBool::new(false), Duration::from_secs(1));
+        assert_eq!(output.err().unwrap().code, "waitExpired");
+        // A live descendant may settle naturally within the original bound;
+        // this 60-second orphan cannot. It must still never become success.
+        // The separate cancellation case observes an exact handle.
         // execute_command only returns after exact-child reap and direct Job
         // inactivity. No descendant PID is signalled through a guessed lookup.
     }

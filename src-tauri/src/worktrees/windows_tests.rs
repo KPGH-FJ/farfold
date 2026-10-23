@@ -13,7 +13,12 @@ fn git(root: &Path, args: &[&str]) -> String {
         .args(args)
         .output()
         .unwrap();
-    assert!(output.status.success(), "fixture Git failed");
+    assert!(
+        output.status.success(),
+        "fixture Git {:?}: {}",
+        args,
+        String::from_utf8_lossy(&output.stderr)
+    );
     String::from_utf8(output.stdout).unwrap().trim().into()
 }
 fn repository(root: &Path) {

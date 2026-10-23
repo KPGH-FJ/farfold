@@ -6,6 +6,7 @@ use crate::file_access::{
 };
 use crate::meta_store::MetaStore;
 use std::{
+    cell::Cell,
     fs,
     path::{Path, PathBuf},
     sync::atomic::AtomicBool,
@@ -63,12 +64,25 @@ impl Fixture {
     fn seal(&self) -> WindowsMaterial {
         let memory = MixedMemory::default();
         let owner = material_owner::Owner::default();
+        // Keep failures attributable to the actual boundary, without logging any
+        // material, descriptor, ACL, path or user data. This separate read-only
+        // capture distinguishes source/native parsing from persistent storage.
+        owner
+            .capture_complete_tree(self.input(&memory), &AtomicBool::new(false))
+            .unwrap_or_else(|failure| {
+                panic!(
+                    "ordinary material phase=source-capture code={}",
+                    failure.code
+                )
+            });
+        let phase = Cell::new("seal-before-consumer");
         let (descriptor, _) = owner
             .sealed_material(
                 self.input(&memory),
                 self.output(&memory),
                 &AtomicBool::new(false),
                 |sealed| {
+                    phase.set("descriptor");
                     let descriptor = sealed.descriptor()?;
                     assert_eq!(descriptor.version, 2);
                     assert!(
@@ -77,12 +91,20 @@ impl Fixture {
                             .iter()
                             .all(|n| n.security.is_none() && n.ordinary_security.is_some())
                     );
+                    phase.set("independent-reconstruction");
                     let actual = sealed.reconstruct_tree()?;
                     receipt(&actual, &descriptor);
+                    phase.set("seal-after-consumer");
                     Ok(descriptor)
                 },
             )
-            .unwrap();
+            .unwrap_or_else(|failure| {
+                panic!(
+                    "ordinary material phase={} code={}",
+                    phase.get(),
+                    failure.code
+                )
+            });
         assert!(
             self.source.exists(),
             "first independent reconstruction never needs original deletion"
@@ -262,18 +284,42 @@ fn security(path: &Path, sddl: &str, label: bool) {
                 ConvertStringSecurityDescriptorToSecurityDescriptorW, SDDL_REVISION_1,
                 SE_FILE_OBJECT, SetSecurityInfo,
             },
-            DACL_SECURITY_INFORMATION, GetSecurityDescriptorDacl, GetSecurityDescriptorSacl,
-            LABEL_SECURITY_INFORMATION, PROTECTED_DACL_SECURITY_INFORMATION,
+            DACL_SECURITY_INFORMATION, GetKernelObjectSecurity, GetSecurityDescriptorDacl,
+            GetSecurityDescriptorSacl, IsValidAcl, LABEL_SECURITY_INFORMATION,
+            PROTECTED_DACL_SECURITY_INFORMATION,
         },
         Storage::FileSystem::{
-            FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT, WRITE_DAC, WRITE_OWNER,
+            BY_HANDLE_FILE_INFORMATION, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT,
+            FILE_READ_ATTRIBUTES, GetFileInformationByHandle, READ_CONTROL, SYNCHRONIZE, WRITE_DAC,
+            WRITE_OWNER,
         },
     };
+    // The writer rights remain facet-specific. READ_CONTROL is for the actual
+    // same-handle readback below; READ_ATTRIBUTES is for its object-identity check.
+    // Neither requests ACCESS_SYSTEM_SECURITY nor changes a token privilege.
     let file = OpenOptions::new()
-        .access_mode(if label { WRITE_OWNER } else { WRITE_DAC })
+        .access_mode(
+            READ_CONTROL
+                | FILE_READ_ATTRIBUTES
+                | SYNCHRONIZE
+                | if label { WRITE_OWNER } else { WRITE_DAC },
+        )
         .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT)
         .open(path)
         .unwrap();
+    let identity = || {
+        let mut value = BY_HANDLE_FILE_INFORMATION::default();
+        assert_ne!(
+            unsafe { GetFileInformationByHandle(file.as_raw_handle(), &mut value) },
+            0
+        );
+        (
+            value.dwVolumeSerialNumber,
+            value.nFileIndexHigh,
+            value.nFileIndexLow,
+        )
+    };
+    let before = identity();
     let wide: Vec<u16> = sddl.encode_utf16().chain(Some(0)).collect();
     let mut raw = ptr::null_mut();
     assert_ne!(
@@ -299,6 +345,10 @@ fn security(path: &Path, sddl: &str, label: bool) {
     };
     assert_ne!(ok, 0);
     assert_ne!(present, 0);
+    assert!(!acl.is_null());
+    assert_ne!(unsafe { IsValidAcl(acl) }, 0);
+    let expected =
+        unsafe { std::slice::from_raw_parts(acl.cast::<u8>(), (*acl).AclSize as usize).to_vec() };
     let status = unsafe {
         SetSecurityInfo(
             file.as_raw_handle(),
@@ -315,7 +365,54 @@ fn security(path: &Path, sddl: &str, label: bool) {
         )
     };
     assert!(unsafe { LocalFree(raw) }.is_null());
-    assert_eq!(status, 0);
+    assert_eq!(status, 0, "ordinary fixture phase=set-security");
+    let mut observed = vec![0u64; 65536 / 8];
+    let mut needed = 0;
+    assert_ne!(
+        unsafe {
+            GetKernelObjectSecurity(
+                file.as_raw_handle(),
+                if label {
+                    LABEL_SECURITY_INFORMATION
+                } else {
+                    DACL_SECURITY_INFORMATION
+                },
+                observed.as_mut_ptr().cast(),
+                65536,
+                &mut needed,
+            )
+        },
+        0,
+        "ordinary fixture phase=readback-security"
+    );
+    assert!((20..=65536).contains(&needed));
+    let mut actual_acl = ptr::null_mut();
+    let read = unsafe {
+        if label {
+            GetSecurityDescriptorSacl(
+                observed.as_mut_ptr().cast(),
+                &mut present,
+                &mut actual_acl,
+                &mut defaulted,
+            )
+        } else {
+            GetSecurityDescriptorDacl(
+                observed.as_mut_ptr().cast(),
+                &mut present,
+                &mut actual_acl,
+                &mut defaulted,
+            )
+        }
+    };
+    assert_ne!(read, 0);
+    assert_ne!(present, 0);
+    assert!(!actual_acl.is_null());
+    assert_ne!(unsafe { IsValidAcl(actual_acl) }, 0);
+    let actual = unsafe {
+        std::slice::from_raw_parts(actual_acl.cast::<u8>(), (*actual_acl).AclSize as usize)
+    };
+    assert!(actual == expected, "ordinary fixture exact ACL readback");
+    assert!(identity() == before, "ordinary fixture exact object");
 }
 fn facet(path: &Path, label: bool) -> [u8; 32] {
     let pin = PinnedPath::directory(path).unwrap();
