@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 3.80s
+

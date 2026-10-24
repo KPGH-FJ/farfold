@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::remove_native_windows_tests::cancellation_in_final_callback_preserves_source_and_valid_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 109.43s
+

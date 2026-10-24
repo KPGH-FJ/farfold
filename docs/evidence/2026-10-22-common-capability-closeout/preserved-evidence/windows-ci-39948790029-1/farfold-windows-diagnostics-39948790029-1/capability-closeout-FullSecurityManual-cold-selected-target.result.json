@@ -1,0 +1,126 @@
+{
+  "group": "cold-selected-target",
+  "filter": "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release",
+  "category": "ownedActualFullSecurityColdMaterial",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:50.6999502Z",
+  "finishedAtUtc": "2026-10-23T12:14:50.8879071Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "AFFF814F57C3665A3D72B564EF48A017C09BE27171BE5340412152A695F40C2D",
+  "stderrSha256": "8EA4F61A5FB005B7F3BAA30494E67133476A49E1EB083AF3A153078DF357F745"
+}

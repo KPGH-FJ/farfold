@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.66s
+

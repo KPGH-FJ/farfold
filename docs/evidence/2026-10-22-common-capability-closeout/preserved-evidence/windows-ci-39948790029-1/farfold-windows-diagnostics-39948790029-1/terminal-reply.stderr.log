@@ -1,0 +1,24 @@
+FARFOLD_CONPTY_BEGIN TerminalCursorReply
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_TERMINAL_CURSOR {"phase":"spawn.enter","replyEnabled":true,"elapsedMillis":0,"bytes":0,"queries":0,"replies":0,"pending":0,"failed":false,"cursorCoverage":"notCovered"}
+FARFOLD_TERMINAL_CURSOR {"phase":"spawn.return","replyEnabled":true,"elapsedMillis":9,"bytes":0,"queries":0,"replies":0,"pending":0,"failed":false,"cursorCoverage":"notCovered"}
+FARFOLD_TERMINAL_CURSOR {"phase":"session.lookup.enter","replyEnabled":true,"elapsedMillis":10,"bytes":0,"queries":0,"replies":0,"pending":0,"failed":false,"cursorCoverage":"notCovered"}
+FARFOLD_TERMINAL_CURSOR {"phase":"session.lookup.return","replyEnabled":true,"elapsedMillis":10,"bytes":0,"queries":0,"replies":0,"pending":0,"failed":false,"cursorCoverage":"notCovered"}
+FARFOLD_TERMINAL_CURSOR {"phase":"marker.wait.enter","replyEnabled":true,"elapsedMillis":11,"bytes":0,"queries":0,"replies":0,"pending":0,"failed":false,"cursorCoverage":"notCovered"}
+FARFOLD_TERMINAL_CURSOR {"phase":"marker.wait.observed","replyEnabled":true,"elapsedMillis":52,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"job.owns.enter","replyEnabled":true,"elapsedMillis":53,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"job.owns.return","replyEnabled":true,"elapsedMillis":54,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"close.enter","replyEnabled":true,"elapsedMillis":55,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"close.return","replyEnabled":true,"elapsedMillis":88,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"job.inactive.check.enter","replyEnabled":true,"elapsedMillis":88,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"job.inactive.check.return","replyEnabled":true,"elapsedMillis":88,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"registry.check.enter","replyEnabled":true,"elapsedMillis":88,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"registry.check.return","replyEnabled":true,"elapsedMillis":89,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"cursor.worker.finish.enter","replyEnabled":true,"elapsedMillis":89,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"cursor.worker.finish.return","replyEnabled":true,"elapsedMillis":89,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"held.session.drop.enter","replyEnabled":true,"elapsedMillis":90,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"held.session.drop.return","replyEnabled":true,"elapsedMillis":90,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"manager.drop.enter","replyEnabled":true,"elapsedMillis":90,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CURSOR {"phase":"manager.drop.return","replyEnabled":true,"elapsedMillis":90,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_CONPTY_DIAGNOSTIC_OWNER {"case":"TerminalCursorReply","terminated":false,"deadlineReached":false,"cancelRequested":false,"invalidPipeObserved":false,"inputFailedObserved":false,"tryWaitErrorObserved":false,"stdinWrittenAndClosed":true,"stdoutEOF":true,"stderrEOF":true,"stdoutFailed":false,"stderrFailed":false,"stdoutOverflow":false,"stderrOverflow":false,"childReaped":true,"directJobInactive":true}
+FARFOLD_CONPTY_OWNER {"case":"TerminalCursorReply","childExit":0,"stdoutEOF":true,"stderrEOF":true,"directJobInactive":true}

@@ -1,0 +1,7 @@
+
+running 2 tests
+test file_access::windows::material_backup_shape::tests::framing_truncation_cancel_and_shared_byte_limit_never_become_completion ... ok
+test file_access::windows::material_backup_shape::tests::observation_retains_unknown_header_and_raw_link_units_without_minting_a_profile ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2322 filtered out; finished in 0.00s
+

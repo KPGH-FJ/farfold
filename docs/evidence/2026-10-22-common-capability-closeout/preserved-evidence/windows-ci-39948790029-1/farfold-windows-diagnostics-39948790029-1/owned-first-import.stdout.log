@@ -1,0 +1,12 @@
+
+running 7 tests
+test worktrees::recovery_pack::private_bare::tests::actual_import_ref_install_fsck_and_exact_reachable_objects_share_the_selected_owner ... ok
+test worktrees::recovery_pack::private_bare::tests::cancelled_or_mismatched_source_identity_does_not_gain_private_execution_authority ... ok
+test worktrees::recovery_pack::private_bare::tests::malformed_pack_and_wrong_object_set_fail_without_changing_the_owned_source ... ok
+test worktrees::recovery_pack::private_bare::tests::original_project_decoy_and_existing_public_read_and_mutation_gates_remain_separate ... ok
+test worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_attributes_has_an_owned_positive ... ok
+test worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_global_has_an_owned_positive_not_a_path_guess ... ok
+test worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_hooks_has_actual_benign_hook_positive_before_guarded_absence ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2317 filtered out; finished in 6.35s
+

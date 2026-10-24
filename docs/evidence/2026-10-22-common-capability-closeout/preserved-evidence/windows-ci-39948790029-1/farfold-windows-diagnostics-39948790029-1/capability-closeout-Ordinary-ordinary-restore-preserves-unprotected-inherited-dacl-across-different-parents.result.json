@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-restore-preserves-unprotected-inherited-dacl-across-different-parents",
+  "filter": "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents",
+  "category": "ownedActualOrdinarySecurityPreservation",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:29.7806830Z",
+  "finishedAtUtc": "2026-10-23T12:14:29.8125420Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "8EA74A03870DA5D901C2DA53D16D07AE62B6FDA4020B056B19595B902EC0F80F",
+  "stderrSha256": "749BDA19D3405F88354219449060A3141AE338CD7D906B76DDE1B168718C1197"
+}

@@ -1,0 +1,27 @@
+{
+  "group": "managed-edge-05",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+  "category": "manualFullSecurityNoFallback",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:13.9739590Z",
+  "finishedAtUtc": "2026-10-23T12:08:15.1355460Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "8AB439D0F5E890B486D1188916C1B6195A1FDB6B92CE067E9FFABE1B1846EA83",
+  "stderrSha256": "66B3A25EE33F628BD4F53396919C84A76EE7B466E42ACB1F8CF63D51C1D057DD"
+}

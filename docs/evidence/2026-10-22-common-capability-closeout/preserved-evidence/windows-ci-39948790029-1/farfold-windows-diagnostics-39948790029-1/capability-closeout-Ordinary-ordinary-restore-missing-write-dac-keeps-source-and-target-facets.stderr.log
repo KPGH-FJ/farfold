@@ -1,0 +1,3 @@
+FARFOLD_OWNED_FIXTURE_TEMP original=<windows-user-path:0a07f0dcebae> selected=<windows-user-path:bf9859e06501>
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=36868 initial_control=32772 expected_aces=1 initial_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-native-set-failed status=-1073741790

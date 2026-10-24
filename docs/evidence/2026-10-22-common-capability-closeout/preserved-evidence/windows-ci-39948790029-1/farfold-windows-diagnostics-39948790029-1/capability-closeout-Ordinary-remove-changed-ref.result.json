@@ -1,0 +1,37 @@
+{
+  "group": "remove-changed-ref",
+  "filter": "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected",
+  "category": "ownedRemovalMetadataHandoffNotPublicDeletion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:01.1350248Z",
+  "finishedAtUtc": "2026-10-23T12:09:02.7398325Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "B4EC9127E80FD96D9536355D86C14C59827231B00474876A45DBE64163D22CF5",
+  "stderrSha256": "F52153078B745A05349A930470DEDF6DF2A58C7D22F162648DAEB6A4014E34E3"
+}

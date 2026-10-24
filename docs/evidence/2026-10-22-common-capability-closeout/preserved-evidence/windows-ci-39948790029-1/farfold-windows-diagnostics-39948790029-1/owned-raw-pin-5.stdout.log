@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

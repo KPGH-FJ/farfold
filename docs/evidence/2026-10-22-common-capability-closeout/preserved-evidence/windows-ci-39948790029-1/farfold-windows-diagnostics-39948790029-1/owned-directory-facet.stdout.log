@@ -1,0 +1,14 @@
+
+running 9 tests
+test file_access::material_directory_facet::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128 ... ok
+test file_access::material_directory_facet::tests::actual_input_extent_or_hash_mismatch_never_emits_completion ... ok
+test file_access::material_directory_facet::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error ... ok
+test file_access::material_directory_facet::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete ... ok
+test file_access::material_directory_facet::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted ... ok
+test file_access::material_directory_facet::tests::empty_partial_directory_has_real_zero_native_extent_but_never_full_security ... ok
+test file_access::material_directory_facet::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output ... ok
+test file_access::material_directory_facet::tests::typed_directory_framing_rejects_regular_or_reparse_kind_and_foreign_magic ... ok
+test file_access::material_directory_facet::tests::verified_record_retains_its_logical_metadata_reservation_until_drop ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2315 filtered out; finished in 0.26s
+

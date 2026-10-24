@@ -1,0 +1,37 @@
+{
+  "group": "existing-configured-attributes-file",
+  "filter": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+  "category": "null-attributes-existing",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T13:30:02.5914987Z",
+  "finishedAtUtc": "2026-10-23T13:30:13.1294262Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "72F7C9A831D1CEC064B880035887497296F8593760ECB020C2DCCAFC69CE9EBE",
+  "stderrSha256": "95154D5DA9A933D94629D6967872970DDA3445DDD7D21D02814E5FB9BE2A4AA7"
+}

@@ -1,0 +1,27 @@
+{
+  "group": "sealed-tree-29",
+  "filter": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+  "category": "manualFullSecurity",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:13.0031651Z",
+  "finishedAtUtc": "2026-10-23T12:08:13.0310676Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "E49879241B02A3F7BF9CE7AF2D9961B1DD94EED1CF77D51A7875AA3FF1CB4595",
+  "stderrSha256": "D50B7D79A13C355B67A2A69482151344672C8914C9F3C780D2B7C98C019054ED"
+}

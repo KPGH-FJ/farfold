@@ -1,0 +1,5 @@
+FARFOLD_OWNED_LINK_TEST_OUTCOME operation=Some(NtStatus { phase: "ownedLinkTargetCreate", status: -1073741727 }) cleanup=None native_status=Some(-1073741727)
+
+thread 'worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows' (5876) panicked at src\worktrees\material_owned_link_owner_tests.rs:251:6:
+called `Result::unwrap()` on an `Err` value: NtStatus { phase: "ownedLinkTargetCreate", status: -1073741727 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

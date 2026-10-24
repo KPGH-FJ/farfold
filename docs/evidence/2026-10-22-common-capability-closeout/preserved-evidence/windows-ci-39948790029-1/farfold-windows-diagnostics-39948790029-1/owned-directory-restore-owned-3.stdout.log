@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::directory_restore_tests::precancel_and_shared_work_failure_preserve_source_without_a_successful_restore ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

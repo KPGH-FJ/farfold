@@ -1,0 +1,37 @@
+{
+  "group": "complete-manifest-semantics",
+  "filter": "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix",
+  "category": "portableRecoveryDescriptor",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:58.8838945Z",
+  "finishedAtUtc": "2026-10-23T12:08:58.8999784Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "6849A2BE42CB85DB2D3CEABDFF6AD8C90EC551FE86A8B3E864A6491CB44BA624",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

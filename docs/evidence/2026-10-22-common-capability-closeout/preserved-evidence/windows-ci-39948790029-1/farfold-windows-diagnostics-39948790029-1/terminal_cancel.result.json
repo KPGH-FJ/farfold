@@ -1,0 +1,26 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated",
+  "startedAtUtc": "2026-10-23T12:04:48.3086120Z",
+  "finishedAtUtc": "2026-10-23T12:04:48.5286635Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "fixtureSettled": true,
+  "observationComplete": true,
+  "cursorPhases": [
+    {
+      "phase": "original-positive.fixture.complete",
+      "replyEnabled": true,
+      "elapsedMillis": 61,
+      "bytes": 98,
+      "queries": 1,
+      "replies": 1,
+      "pending": 0,
+      "failed": false,
+      "cursorCoverage": "observed"
+    }
+  ],
+  "stdoutSha256": "B0522829D15D361F3402434916688A3F5AB9A5D607762E254B977B4E50BF493F",
+  "stderrSha256": "ED972D79657BDBE33B091265BD4C1DD5BF70118DDE66D2D7D6E4542BB62F756F"
+}

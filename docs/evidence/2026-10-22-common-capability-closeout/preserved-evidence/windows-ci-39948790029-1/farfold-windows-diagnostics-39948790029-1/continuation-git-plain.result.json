@@ -1,0 +1,50 @@
+{
+  "group": "git-plain",
+  "filter": "worktrees::windows_git::paths::plain_tests::",
+  "category": "ownedGitReadContext",
+  "explicitIgnored": false,
+  "exactFilter": false,
+  "historicalSelectionArguments": [
+    "worktrees::windows_git::paths::plain_tests::"
+  ],
+  "expectedTests": 4,
+  "expectedNames": [
+    "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects",
+    "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+    "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+    "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+    "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+    "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority",
+    "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:07:59.2859035Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.1629702Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "9CF7049126E0AB1F1DC8CC79F96C237BD6DAA01C69319D55C16E7797D940A4CB",
+  "stderrSha256": "42E14EE5263C76F8D45734AA830E3A85FE21201B58B323B95995B3FD469E15D9"
+}

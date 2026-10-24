@@ -1,0 +1,126 @@
+{
+  "group": "public-retained-cold-recover",
+  "filter": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+  "category": "ownedActualPublicRecoveryWithoutDelete",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T13:22:20.9285209Z",
+  "finishedAtUtc": "2026-10-23T13:23:53.1290369Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "B7160C8F9C7ED7A14B4E357A45C70A72FD9A8B226C1E51BB25D588A7EE5AA20E",
+  "stderrSha256": "ABEC63EF351D1084472CD86888B84239F416ACD78B47A5D7A510AAD23010CDC9"
+}

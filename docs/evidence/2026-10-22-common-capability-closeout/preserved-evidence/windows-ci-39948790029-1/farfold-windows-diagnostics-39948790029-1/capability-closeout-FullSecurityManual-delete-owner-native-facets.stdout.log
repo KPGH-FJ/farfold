@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

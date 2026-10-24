@@ -1,0 +1,15 @@
+{
+  "label": "format",
+  "command": ["corepack", "pnpm", "format:check"],
+  "atUtc": "2026-10-23T12:25:43.131404+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 36.483194042,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-aee361f826b735e8bf81",
+    "bytes": 144,
+    "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+  },
+  "freeBytesAfter": 17881718784
+}

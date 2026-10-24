@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_root_namespace_change_cannot_leave_original_graph_role_verified ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 1.12s
+

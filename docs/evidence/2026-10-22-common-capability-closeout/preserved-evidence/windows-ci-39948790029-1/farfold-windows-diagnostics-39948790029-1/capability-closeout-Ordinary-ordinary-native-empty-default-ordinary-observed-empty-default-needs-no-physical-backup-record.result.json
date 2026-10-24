@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-native-empty-default-ordinary-observed-empty-default-needs-no-physical-backup-record",
+  "filter": "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record",
+  "category": "portableOrdinaryBackupRecordFraming",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record"
+  ],
+  "actualPassedNames": [
+    "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:29.7264412Z",
+  "finishedAtUtc": "2026-10-23T12:14:29.7408288Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "1CB241703A73BA51331AB6F7818240DAF0184CF111E4640D539C1DB1DEC3679D",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

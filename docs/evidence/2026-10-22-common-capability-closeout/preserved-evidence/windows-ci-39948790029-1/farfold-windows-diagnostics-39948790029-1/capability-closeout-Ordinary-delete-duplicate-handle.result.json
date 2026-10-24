@@ -1,0 +1,37 @@
+{
+  "group": "delete-duplicate-handle",
+  "filter": "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close",
+  "category": "ownedNativeDeletePrimitiveNotPublicDeletion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:58.9276157Z",
+  "finishedAtUtc": "2026-10-23T12:08:58.9509451Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "B89D2570FDB39067A50E918EBF095E85F7136FB49E181FED678E293CB7463109",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

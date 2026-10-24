@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

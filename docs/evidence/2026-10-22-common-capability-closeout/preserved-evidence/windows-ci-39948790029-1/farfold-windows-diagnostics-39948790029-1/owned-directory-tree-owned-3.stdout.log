@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::directory_tree_tests::actual_regular_child_is_explicitly_rejected_without_skipping_or_modifying_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

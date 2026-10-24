@@ -1,0 +1,37 @@
+{
+  "group": "material-semantic-suffix",
+  "filter": "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material",
+  "category": "portableMaterialSemantics",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material"
+  ],
+  "actualPassedNames": [
+    "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:07.2421888Z",
+  "finishedAtUtc": "2026-10-23T12:09:07.2626481Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "3CD0481E8B5E127C8E18819CD9FE314AAC3B52EC253A5D0930B4F93E86C97040",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

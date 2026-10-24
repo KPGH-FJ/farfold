@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-10-23T10:23:40.572447+00:00",
+  "reviewer": "windows_gaps (non-author for this Root-authored diagnostic delta)",
+  "baseHead": "48283b0ba52f0b69b5cf7018153cfef56c131fb0",
+  "files": [
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "sha256": "668fb246995a06cb6ce2135fb540a1f2afd6382dd212bab292bd2327bdecc4fb",
+      "bytes": 53651
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/windows_native_screenshot_tests.rs",
+      "sha256": "daac41ac0b3b8a2538d68e27eabfc458550205faf389b9f4e54bc249c7536a4b",
+      "bytes": 24925
+    }
+  ],
+  "scope": "Only the Root-authored test-only phase and original-helper terminal diagnostics. The existing P27 production implementation, authored in part by this reviewer, is not relabeled as independently reviewed.",
+  "diffSha256": "4be94260187aa75951c54a22ca9f6fdc9d867c1d47cb633438a4bd4f2c287f3a",
+  "verdict": "No blocking defect found in the two-file diagnostic delta.",
+  "findings": [
+    {
+      "where": "transport.rs Worker::accept",
+      "review": "All new prints are cfg(all(test,windows)). They emit six fixed phase literals and one raw_os_error Option integer only. Hello, capability, peer address, requests, values and page contents are not printed."
+    },
+    {
+      "where": "transport.rs Worker::accept",
+      "review": "Hello validation fields, exact object size/capability comparison, bootstrap deadline, shutdown gate, read/write timeout, retry on invalid hello, one-shot listener consumption, ACK bytes, nonblocking switch and return values are unchanged. The final Err pattern now binds the same error only for test diagnostics; release behavior is still return true."
+    },
+    {
+      "where": "windows_native_screenshot_tests.rs Peer::finish",
+      "review": "The original owned child is awaited using the existing bounds and termination behavior. After natural status and the existing bounded stderr read, a scalar record logs PID, status.code() and captured stderr byte count before the original success/empty-stderr assertion. The assertion, cleanup sequencing and result precedence remain unchanged."
+    },
+    {
+      "where": "windows_native_screenshot_tests.rs run_cases",
+      "review": "Only fixed markers were inserted before initialize and after its verified reply and verified tools/list reply. No extra request, retry, await, acceptance condition or deadline was introduced."
+    },
+    {
+      "where": "browser_sharing.rs module registration (unchanged)",
+      "review": "The actual Windows driver module is registered only under cfg(all(test,windows)); no test marker becomes normal UI or helper protocol output."
+    }
+  ],
+  "diagnosticLimits": [
+    "This change adds observation only; it neither explains nor fixes the current actual helper stdout EOF.",
+    "original-helper-ended is emitted only after natural status and a successful bounded stderr read. A status/read error or timeout can still end without this marker; absence is not successful termination.",
+    "stderrBytes counts the bytes captured by the existing take(8193), not a proven full stream size if it exceeds that bound. It contains no stderr text.",
+    "The existing early protocol error can still be the final returned failure; the added marker preserves reached terminal facts in stderr without overriding the original error.",
+    "No Cargo, PowerShell, tests, actual Windows run, Agent or app was executed in this review."
+  ]
+}

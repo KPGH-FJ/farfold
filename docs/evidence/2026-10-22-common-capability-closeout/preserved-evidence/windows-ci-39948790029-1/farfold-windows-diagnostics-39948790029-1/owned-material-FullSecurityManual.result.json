@@ -1,0 +1,298 @@
+{
+  "schema": 1,
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "finalHead": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "headStable": true,
+  "mode": "FullSecurityManual",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "runnerScriptSha256": "FDF6062EF100D3EC374FA664EE0BCCF51D67648643E8EE182A4E68DBAD79DA35",
+  "inputsStable": true,
+  "plannedOrdinaryTests": 32,
+  "plannedManualTests": 10,
+  "plannedTotalTests": 42,
+  "selectedTests": 10,
+  "groupCount": 10,
+  "groups": [
+    {
+      "group": "persistent-owner-07",
+      "filter": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+      "category": "currentMerged21",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:12.8112939Z",
+      "finishedAtUtc": "2026-10-23T12:08:12.8751145Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "229E95AF9596832307DC8DA54EF83D7B35D8E7AD779F6EE7AA78035727765DBC",
+      "stderrSha256": "CD502DCC3D0096F2E9B83F207BDD8D71A0800F12457076363DCCD59B0B6F0ECD"
+    },
+    {
+      "group": "persistent-owner-08",
+      "filter": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+      "category": "currentMerged21",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:12.9044778Z",
+      "finishedAtUtc": "2026-10-23T12:08:12.9312502Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "C2063C6E026FBC16CC4D2EF7EA6CF36FB0FAE42BC6069A97CE3161A6943305C6",
+      "stderrSha256": "72AD6965D7E9480130930557C55BEE8F3BF65F729A49357D6EAC23F11F3D0FED"
+    },
+    {
+      "group": "persistent-owner-09",
+      "filter": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+      "category": "currentMerged21",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:12.9360368Z",
+      "finishedAtUtc": "2026-10-23T12:08:12.9611613Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "3E42AF7403A60B426F71AB69F46F39D5367A3EF5F78DE6F11836FDE979AAF10A",
+      "stderrSha256": "5C9E95044EADA6813B8322FB5CEC956B3B33C0D590DE7919BA1106948F3E96E7"
+    },
+    {
+      "group": "target-groups-19",
+      "filter": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+      "category": "currentMerged21",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:12.9664143Z",
+      "finishedAtUtc": "2026-10-23T12:08:12.9982057Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "738D4D6CE48FA33A9763EDEADB4B984E0A5AB3D8264AD3E00FCB883351B15A3C",
+      "stderrSha256": "B2A566963A948CBCCD93BEDAD5A20B854181E1E7861956BAE876CAEC4C6A439E"
+    },
+    {
+      "group": "sealed-tree-29",
+      "filter": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+      "category": "manualFullSecurity",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.0031651Z",
+      "finishedAtUtc": "2026-10-23T12:08:13.0310676Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "E49879241B02A3F7BF9CE7AF2D9961B1DD94EED1CF77D51A7875AA3FF1CB4595",
+      "stderrSha256": "D50B7D79A13C355B67A2A69482151344672C8914C9F3C780D2B7C98C019054ED"
+    },
+    {
+      "group": "sealed-tree-30",
+      "filter": "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup",
+      "category": "manualFullSecurity",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.0358627Z",
+      "finishedAtUtc": "2026-10-23T12:08:13.0663499Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "7889C1B881CCCBED9FA1B09FF3234BB44D77EA7567460A0481B3BFC5DA37A315",
+      "stderrSha256": "48D3117EE49B99B4E7C27FDD4DF76521485E81C42AA0BF8C8A906204B055F13A"
+    },
+    {
+      "group": "sealed-tree-31",
+      "filter": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+      "category": "manualFullSecurity",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.0715568Z",
+      "finishedAtUtc": "2026-10-23T12:08:13.0975452Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "613AA15BE6A4E92FF269F1652DC3ADCD06DD0B5AE8A62501FED009D7439D3F6D",
+      "stderrSha256": "7729965D9A6FF31639B5D4CAB6E11A3A6D6CCA9FBD782842089733113559C02D"
+    },
+    {
+      "group": "sealed-tree-32",
+      "filter": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+      "category": "manualFullSecurity",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.1219913Z",
+      "finishedAtUtc": "2026-10-23T12:08:13.1468648Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "AB06D261958C388A89C8568CA68FBF0ED9763EFCB30B5FBE3735668844D049EB",
+      "stderrSha256": "E794E8D082888FF2A96FA5BE03BE923E3177895227BF062345E25D8DAFE83E73"
+    },
+    {
+      "group": "managed-edge-04",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+      "category": "manualFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.1514625Z",
+      "finishedAtUtc": "2026-10-23T12:08:13.9667356Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "1C5B86ABDC80122126007BAEC35D39ADCF4F7F08E3256A944E2955050610B7EA",
+      "stderrSha256": "DDBF30B785D70D271D6DAF247AAE23F806C342CED2843DE9639D57DE5C0FA821"
+    },
+    {
+      "group": "managed-edge-05",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+      "category": "manualFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:13.9739590Z",
+      "finishedAtUtc": "2026-10-23T12:08:15.1355460Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "8AB439D0F5E890B486D1188916C1B6195A1FDB6B92CE067E9FFABE1B1846EA83",
+      "stderrSha256": "66B3A25EE33F628BD4F53396919C84A76EE7B466E42ACB1F8CF63D51C1D057DD"
+    }
+  ],
+  "exactAllGroupsPassed": false,
+  "oldCarrier149CountChanged": false,
+  "oldContinuation30CountChanged": false,
+  "explicitManualFailuresAreSuccessfulTests": false,
+  "privilegesAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticOrOrdinaryRefusalIsNativeSuccess": false,
+  "completePayloadSecurityOrAliasRestoreClaim": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

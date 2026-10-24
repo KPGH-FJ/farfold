@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

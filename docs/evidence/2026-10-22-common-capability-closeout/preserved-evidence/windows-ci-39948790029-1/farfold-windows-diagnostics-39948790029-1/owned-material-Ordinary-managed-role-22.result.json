@@ -1,0 +1,29 @@
+{
+  "group": "managed-role-22",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:04.6434264Z",
+  "finishedAtUtc": "2026-10-23T12:08:05.3353404Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "5091A64EA4D06DCC21E7683DF137B24C7FEB86DFCC3E60EE312372BC979A42F7",
+  "stderrSha256": "F6CCEB6792129F8BC06074283C4E9D10B5C3E0AF83FA1258BBA6BCA3B6CB9BB8"
+}

@@ -1,0 +1,27 @@
+{
+  "group": "target-groups-19",
+  "filter": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+  "category": "currentMerged21",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:12.9664143Z",
+  "finishedAtUtc": "2026-10-23T12:08:12.9982057Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "738D4D6CE48FA33A9763EDEADB4B984E0A5AB3D8264AD3E00FCB883351B15A3C",
+  "stderrSha256": "B2A566963A948CBCCD93BEDAD5A20B854181E1E7861956BAE876CAEC4C6A439E"
+}

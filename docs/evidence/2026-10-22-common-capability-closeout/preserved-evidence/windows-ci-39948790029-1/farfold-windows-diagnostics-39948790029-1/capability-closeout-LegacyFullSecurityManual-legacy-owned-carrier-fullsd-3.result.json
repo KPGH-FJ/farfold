@@ -1,0 +1,126 @@
+{
+  "group": "legacy-owned-carrier-fullsd-3",
+  "filter": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+  "category": "legacyFullSecurityConditioned",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:32:33.7177865Z",
+  "finishedAtUtc": "2026-10-23T12:32:33.7567711Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "44DE471D90E5DECB18FF2AB353A65D2AB68267EB3837D3DD99DE3B2FE5CA4E7E",
+  "stderrSha256": "FA423F56F9C0B9ECD5803FB89689842DB74AFF04BAF344321B6765FA54B88C73"
+}

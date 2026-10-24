@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-empty-directory-profile-is-explicit",
+  "filter": "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree",
+  "category": "portableOrdinaryMaterialProfile",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree"
+  ],
+  "actualPassedNames": [
+    "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:16.2810442Z",
+  "finishedAtUtc": "2026-10-23T12:08:16.2964795Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "773E1C7D29D9D694614609F7604F1968469B2CDBB58DECE129FDC464AD9BB410",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

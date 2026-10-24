@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::remove_native_windows_tests::new_member_in_final_callback_is_not_chased_and_recovery_remains_valid ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 109.51s
+

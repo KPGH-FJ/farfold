@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-cold-target-collision-retains-foreign-object-and-original",
+  "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original",
+  "category": "ownedActualOrdinaryRecovery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:10:05.4898258Z",
+  "finishedAtUtc": "2026-10-23T12:10:05.6290437Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "BCB2ADE44BFDF2D2383AF9396E7E8AFC6D10A4413E99545367DBD944B32911A6",
+  "stderrSha256": "357ACD9BFBB94667C696F407B5BB6E8BFCAE532FC5812F7CC427B6ECC1499364"
+}

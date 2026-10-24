@@ -1,0 +1,126 @@
+{
+  "group": "full-security-original-order-versus-security-last",
+  "filter": "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly",
+  "category": "ownedFullSecurityRecordOrderCausality",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:32:32.4472950Z",
+  "finishedAtUtc": "2026-10-23T12:32:32.5300989Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "DF52856B22C9A0DED6B345234812303195EDD4633AF3839AFC477D0EA285014A",
+  "stderrSha256": "19429777B20258C2AAA3D065659890779AB7A37B88C0B3764F2AB968FEFE42AE"
+}

@@ -1,0 +1,135 @@
+{
+  "task": "ARCH-44 Nova current official version condition only",
+  "createdAt": "2026-10-23T10:53:56.390370+00:00",
+  "scope": "Read-only official metadata/docs and one bounded archive download, output only. Selected installed 1.1.49 source analysis was not repeated; no Agent/package execution, install, config/HOME/account/model change, Cargo, production edit or V2 migration.",
+  "result": "Fresh npm latest and ACP registry agree on1.1.59; newer V1 permission fix remains unverified because this bounded download cannot be tied to its advertised digests and fixed-version metadata responses are incomplete.",
+  "officialCurrentMetadata": {
+    "version": "1.1.59",
+    "package": "@compass-ai/nova",
+    "registryDistribution": {
+      "npx": {
+        "package": "@compass-ai/nova@1.1.59",
+        "args": ["acp"]
+      }
+    },
+    "httpDate": "Fri, 23 Oct 2026 10:50:34 GMT",
+    "npm": {
+      "path": "evidence:e-ca3b308c45d77c51d257",
+      "sha256": "1556135964c1fb8e03e66491fd61afb63ab0fb4e1e620d515a856473c57f3d2a",
+      "bytes": 21939
+    },
+    "registry": {
+      "path": "evidence:e-17ab01c37cf5042789ec",
+      "sha256": "7997e184d66ed3f172ac072aa02d312fb68066d9210095ead40359787c788fcd",
+      "bytes": 582
+    },
+    "fetches": {
+      "path": "evidence:e-594025513fdab09d6a38",
+      "sha256": "cf3c97ce0c6c75e2f5bf65112b7c9d32a19ad4521fad4cc7c78c9c6a9db91989",
+      "bytes": 3837
+    },
+    "webCacheBoundary": "Zed web cache reports1.1.55, raw-registry web cache1.1.47, npm web cache1.1.55. Direct HTTP bodies above are the fresher observations; no global permanent latest assertion."
+  },
+  "officialDocumentationRead": {
+    "readme": {
+      "path": "evidence:e-916fce1940694714c6fa",
+      "sha256": "475dfd532618a8b1c4b117c0ca3021e80e57488289d86e52ea37a7405ca0bb43",
+      "bytes": 6895
+    },
+    "changelog": {
+      "path": "evidence:e-a276d0b2e08a54f3b13b",
+      "sha256": "edd098bf0c54045c2a23194c41cafea161d23c928bd2a538dedf48a10f69d92b",
+      "bytes": 22527
+    },
+    "releases": {
+      "path": "evidence:e-2457632aa88c53eb2744",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bytes": 2
+    },
+    "releaseRows": 0,
+    "boundedFinding": "Public README documents generic acp invocation; changelog newest heading1.0.66 and no located current1.1.59 permission-method fix/version contract. Empty public GitHub release endpoint is not proof there are no private releases or other documentation.",
+    "sourceLinks": [
+      "https://raw.githubusercontent.com/Compass-Agentic-Platform/nova/main/README.md",
+      "https://raw.githubusercontent.com/Compass-Agentic-Platform/nova/main/CHANGELOG.md",
+      "https://api.github.com/repos/Compass-Agentic-Platform/nova/releases?per_page=3"
+    ]
+  },
+  "distributionIdentityUnclosed": {
+    "archive": {
+      "path": "evidence:e-371f63cb8a1a2a543e67",
+      "sha256": "ab415bfff842385a0216514517ab31d004d2c6a249574e3797dbb1ad6382ae32",
+      "bytes": 27688645
+    },
+    "url": "https://registry.npmjs.org/@compass-ai/nova/-/nova-1.1.59.tgz",
+    "expected": {
+      "shasum": "0a88263486c018d77b4e0ef6a3492579cfc4be4f",
+      "integrity": "sha512-6k0RdQ8fS0/9VGDUv7gcVgUc88p3eA/gV5GdGxUqTR0BakLgFd9kz2TwABHH5fdB9rENFsOVGZK/Brchlbwl3g==",
+      "unpackedSize": 96820754
+    },
+    "actual": {
+      "sha1": "f7ec293745dd425025fbba1976d76660dfc7eb5f",
+      "integrity": "sha512-o938mfQh0/dYC4W+CaiqIghIYGqwr9ApLqPYyLn750ccWRPRtXtFaIAZhSXqvQv9EyHZxbRxipAA097itynEWQ=="
+    },
+    "digestMatch": false,
+    "downloadAttemptCount": 1,
+    "downloadOutcome": "Original bounded download process exited1 at digest assertion; no extraction or bundle analysis proceeded in that process. HTTP response headers were not sealed before that failure and are not reconstructed.",
+    "declaredPackageIdentityOnly": {
+      "path": "evidence:e-b056eee72788ba1ac751",
+      "sha256": "bfdce476563067163c48d98a5a1885954516f7d0540ca931acc2156c466ab26b",
+      "bytes": 22787
+    },
+    "declaredVersion": "1.1.59",
+    "declarationIsNotVerifiedDistributionIdentity": true,
+    "archiveSafety": "Only exact regular package/package.json was read using bounded tar iteration; no bulk extraction, package code execution, or obfuscation processing.",
+    "causeUnknown": "Digest mismatch alone does not establish publisher corruption or a changed release. Transport truncation/proxy/cache effects remain possible; two subsequent small metadata reads are visibly incomplete."
+  },
+  "fixedVersionReads": [
+    {
+      "body": {
+        "path": "evidence:e-e031081609e22189f6c7",
+        "sha256": "1892bfaacb57cdb8b4c8bff0fc461df8155cae3d5854f636acc9d5d9bc0317d1",
+        "bytes": 19144
+      },
+      "receipt": {
+        "path": "evidence:e-c2182e1f94fe4f4fd938",
+        "sha256": "40c77a655126d1f04b4cfff34a3b8d66797ac5eae004018f9eac16124678f546",
+        "bytes": 558
+      },
+      "parsed": false,
+      "error": "JSONDecodeError Unterminated string at character19106"
+    },
+    {
+      "body": {
+        "path": "evidence:e-2cd4d90a241e0367b442",
+        "sha256": "b1332dcf915ce13c69e4aa4c85fbfa453c6b4a8c90009f149811ec66cd8bb9df",
+        "bytes": 21347
+      },
+      "receipt": {
+        "path": "evidence:e-81afc92aaa5ec2eeca06",
+        "sha256": "4532712685f82e5935d6e402381193444255b8453c6288ced5869e03ed6d3da7",
+        "bytes": 688
+      },
+      "parsed": false,
+      "error": "JSONDecodeError Unterminated string at character21330",
+      "advertisedContentLength": 21939,
+      "actualBodyBytes": 21347
+    }
+  ],
+  "priorBoundary": {
+    "path": "evidence:e-dd3155d7dadefa5251e4",
+    "sha256": "b1130f5e8924b6cff424b990cbd0ce21643408adb22808c7dce3fbf5715db63b",
+    "bytes": 8955
+  },
+  "classification": {
+    "confirmedLocalDevelopmentNeed": "No new Farfold implementation gap is proven by this check. Existing V1 permission dispatch matches the official V1 method; do not add vendor permission/request alias or migrate all agents to draft V2 solely for selected Nova1.1.49.",
+    "specificRemainingCondition": "Need coherent official newer release bytes/metadata or explicit publisher-supported V1 fix/version contract, then inspect the exact permission method. The failed bounded transfer does not prove Nova1.1.59 is broken or all Nova versions unsupported.",
+    "realWorkflowStillSeparate": "Actual initialize/permission/request cancellation/file effects with chosen service/model remain independent real-Agent evidence; neither registry version nor a later source comparison would establish them."
+  },
+  "nextWithinExistingPlan": "Root resumes independent stdin implementation review now; retain these specific official-version/transfer conditions for ARCH-44. No further tarball retries or broad29-agent sweep in this branch.",
+  "notClaimed": [
+    "New Nova source fixed or retained the selected1.1.49 V1 mismatch",
+    "Actual Nova request/permission/cancellation observed",
+    "All callback execution is unnecessary",
+    "Formal installed app or29-agent acceptance complete"
+  ]
+}

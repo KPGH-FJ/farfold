@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-move-child-close-reacquire",
+  "filter": "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original",
+  "category": "ownedActualOrdinaryArchive",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:14.6655931Z",
+  "finishedAtUtc": "2026-10-23T12:09:14.7148479Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "92EB2D69A2C44B86B68C90DB84E21B581C36F5CD8C5E9D4B375C747FABB92F4D",
+  "stderrSha256": "1043A65F3825DDE6DB279AF05C9471A7DC511C63BAA33F87006135A22CBBFF86"
+}

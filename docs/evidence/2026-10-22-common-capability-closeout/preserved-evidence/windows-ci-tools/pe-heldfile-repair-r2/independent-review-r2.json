@@ -1,0 +1,66 @@
+{
+  "reviewer": "early_windows_review; non-author of Win32 HeldFile repair and its r2 hash extent delta. Earlier unchanged PE parser authored by this reviewer is outside this incremental approval.",
+  "scope": "Only r1→r2 two-line hash extent repair and associated new synthetic control; preserves r1 independent review and finding.",
+  "decision": "No blocking finding in this selected delta; prior P2 hash-span mismatch is closed for the reviewed implementation. Actual Windows resource verification is still required.",
+  "source": {
+    "path": ".github/scripts/windows-pe-resource-inspection.py",
+    "sha256": "5e4bd3956cbb131dfcbc301e727fbcd41505e285775706ae00791f8ea8f1115e",
+    "bytes": 32318
+  },
+  "handoff": {
+    "path": "evidence:e-87b81aab3809b8e26dc6",
+    "sha256": "c41eea28f7e71cd496ed33b8e67e3410c40c63d9d0ea91140e33d360cb710c9b",
+    "bytes": 3033
+  },
+  "delta": {
+    "path": "evidence:e-d93aa9e498014ac06445",
+    "sha256": "6a4070c275298e7f3f0f99b1aa5590fa71507ea37e8abd59725de0193ff41e72",
+    "bytes": 456
+  },
+  "priorReview": {
+    "path": "evidence:e-14c686893c5422c3c338",
+    "sha256": "d8d82cd9fe581bd3f1c825b747776b539dc2989d0728514e767033a5d5666cb6",
+    "bytes": 6447
+  },
+  "priorCounterexample": {
+    "path": "evidence:e-46f2f89840a647ba745f",
+    "sha256": "dfa161d959e682ceebd43374cbc0bdba366eb06b8caccbd0063884c9f9e3cdfe",
+    "bytes": 926
+  },
+  "verification": {
+    "exactOnlyTwoHashExtentReferencesChanged": true,
+    "currentEqualsAuthorSnapshot": true,
+    "priorTwelveTestBodiesASTUnchanged": true,
+    "onlyOneRegressionAdded": true,
+    "authorThirteenControlLogRead": {
+      "path": "evidence:e-c7661f1808630d764f69",
+      "sha256": "958a5734c6b6fea1ceffb2e1e2138e0ff83a2fb329f3f7f79671aa4b4a70259e",
+      "bytes": 1202
+    },
+    "authorTestSourceRead": {
+      "path": "evidence:e-f7931d0372eaa4041e34",
+      "sha256": "9c661c525498960088904c440249ef2b1589284ddd2e76e1acf9b09c37f92eaa",
+      "bytes": 12286
+    },
+    "independentOwnedFileControl": {
+      "path": "evidence:e-617d71037bbf7c6028e3",
+      "sha256": "9debf6c4ff774d33c4def750cd81a20f50f5e5cbc9efda7bc582851914d8549c",
+      "bytes": 1543
+    }
+  },
+  "reasoning": [
+    "Both initial and final hashing now traverse exactly self.size, which was already selected from bounded original-handle FileStandardInfo on Windows; every byte admitted to reads is covered by SHA.",
+    "The native size is checked against the input limit before hashing; chunks remain at most 1 MiB, each read retains its extent/work-budget/short-read checks, and finishing retains before/after same-API native identity and metadata checks.",
+    "POSIX keeps identical selected length because self.size is initialized from self.initial.st_size. Native ABI, CreateFileW flags, CRT ownership transfer, non-reparse checks, original-handle closure, PE parsing and resource acceptance were untouched.",
+    "Independent current-source control hashes all six bytes despite Python diagnostic sizes 0/3/10; a suffix-only change with unchanged mocked metadata is rejected by final hash and original fd is closed. This proves the extent invariant only, not an actual Windows concurrent-write scenario."
+  ],
+  "limitations": [
+    "No Cargo, CI, Windows API execution, formal app, actual PE inspection or old artifact result reader was run for this review.",
+    "The supplied 13-case author log is reviewed evidence, not claimed as an independently rerun 13-case suite.",
+    "No result of the pending actual Windows resource/manifest checks is inferred; source review and owned-file model controls do not establish those outcomes."
+  ],
+  "preservation": {
+    "r1ReviewStillExact": true,
+    "productionSourceStillExact": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-security-keeps-non-auto-inherited",
+  "filter": "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control",
+  "category": "ordinaryReadableSecurity",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:30.2663445Z",
+  "finishedAtUtc": "2026-10-23T12:14:30.2898360Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "2A51BEB7EE25FA1CCA3B7CDF9CE1F64DC4782DF0CBB9154B4FBC91835765CA20",
+  "stderrSha256": "7968E8C49ABAD85EBE9607AAC4EAA785A6189699D19661C489FAF2B277A667E9"
+}

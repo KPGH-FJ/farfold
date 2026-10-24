@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "phase": "before",
+  "checkedAtUtc": "2026-10-23T12:49:03.590500+00:00",
+  "closedObserved": true,
+  "normalQuitEvidence": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  },
+  "manifest": {
+    "counts": {
+      "appData": {
+        "directory": 22245,
+        "file": 209681,
+        "symlink": 335,
+        "special": 0
+      },
+      "webkit": {
+        "directory": 155,
+        "file": 104,
+        "symlink": 0,
+        "special": 0
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "symlink": 0,
+        "special": 0
+      }
+    },
+    "sha256": "de8f0dd96294dccabdae9982f062eb38fe2dd0a7d4dccaf8281a4ae9ac1cbfbc"
+  },
+  "metadataRawFiles": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234, 65087098, 33188, 512000, 1792335189709944810,
+        1792335189709944810, 501
+      ],
+      "sha256": "155383063bf5f9b264adf96b5e264d7ec41e94229d85c55334048bdb6185209d",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234, 65087100, 33188, 4177712, 1792759536463637419,
+        1792759536463637419, 501
+      ],
+      "sha256": "001c2cbcfa10d66dc1e09a7cc0af14e345a99e6c6266e5c9426298a2f132a3c8",
+      "bytes": 4177712
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234, 65087101, 33188, 32768, 1792759455521508283,
+        1792759545056651445, 501
+      ],
+      "sha256": "133c656799f8ec78374699f81e7745bdfacdace9b2bf98078648ef7e72283c79",
+      "bytes": 32768
+    }
+  },
+  "sharedToolPins": {
+    "output/2026-10-14-browser-tabs-install/install_data_snapshot.py": "cc12f49d05b666cc75b8cf804fa689bdd9b5b010c969d0105738ca7b1c1fc6b6",
+    "output/2026-10-14-browser-tabs-install/data_manifest.py": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+    "output/2026-10-14-browser-tabs-native-data-preparation/revision-2026-10-15/io_support.py": "3a1488a0c9ba0a9cf5bc34952d2b7df0861792b65eb168ce04f9bebc02acfb1a"
+  },
+  "toolSha256": "26291f8a3c53879551bd309f2e74fe9fc8d2e4019e46d469df8a446f0681a1e7",
+  "metadataBackup": {
+    "sourceFiles": {
+      "farfold.sqlite3": {
+        "signature": [
+          16777234, 65087098, 33188, 512000, 1792335189709944810,
+          1792335189709944810, 501
+        ],
+        "sha256": "155383063bf5f9b264adf96b5e264d7ec41e94229d85c55334048bdb6185209d",
+        "bytes": 512000
+      },
+      "farfold.sqlite3-wal": {
+        "signature": [
+          16777234, 65087100, 33188, 4177712, 1792759536463637419,
+          1792759536463637419, 501
+        ],
+        "sha256": "001c2cbcfa10d66dc1e09a7cc0af14e345a99e6c6266e5c9426298a2f132a3c8",
+        "bytes": 4177712
+      },
+      "farfold.sqlite3-shm": {
+        "signature": [
+          16777234, 65087101, 33188, 32768, 1792759455521508283,
+          1792759545056651445, 501
+        ],
+        "sha256": "133c656799f8ec78374699f81e7745bdfacdace9b2bf98078648ef7e72283c79",
+        "bytes": 32768
+      }
+    },
+    "firstCaptureFiles": {
+      "farfold.sqlite3": {
+        "signature": [
+          16777234, 85411132, 33152, 512000, 1792759743590787879,
+          1792759743590787879, 501
+        ],
+        "sha256": "155383063bf5f9b264adf96b5e264d7ec41e94229d85c55334048bdb6185209d",
+        "bytes": 512000
+      },
+      "farfold.sqlite3-wal": {
+        "signature": [
+          16777234, 85411133, 33152, 4177712, 1792759743592728221,
+          1792759743592728221, 501
+        ],
+        "sha256": "001c2cbcfa10d66dc1e09a7cc0af14e345a99e6c6266e5c9426298a2f132a3c8",
+        "bytes": 4177712
+      },
+      "farfold.sqlite3-shm": {
+        "signature": [
+          16777234, 85411134, 33152, 32768, 1792759743594131042,
+          1792759743594131042, 501
+        ],
+        "sha256": "133c656799f8ec78374699f81e7745bdfacdace9b2bf98078648ef7e72283c79",
+        "bytes": 32768
+      }
+    },
+    "backup": {
+      "signature": [
+        16777234, 85411138, 33152, 512000, 1792759743609409620,
+        1792759743609409620, 501
+      ],
+      "sha256": "dd1aad8f20bf4b8d08886f7b4aa3011320f0417636320f9634df9fbb45c2720d",
+      "bytes": 512000
+    },
+    "backupNormalization": {
+      "lockingBeforeBackupOrFirstWalAccess": "exclusive",
+      "modeBefore": "wal",
+      "checkpointBeforeDelete": [0, 0, 0],
+      "modeAfter": "delete",
+      "checkpointAfterDelete": [0, -1, -1],
+      "integrity": "ok",
+      "connectionsClosedVerified": true,
+      "sidecarsAbsentAfterClose": true,
+      "deletedOrMovedSidecars": false,
+      "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly"
+    },
+    "sourceAndFirstCaptureUnchanged": true
+  },
+  "processObservations": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  }
+}

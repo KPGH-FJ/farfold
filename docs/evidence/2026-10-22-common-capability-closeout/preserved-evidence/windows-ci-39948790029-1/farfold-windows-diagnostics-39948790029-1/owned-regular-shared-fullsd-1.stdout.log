@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

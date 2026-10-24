@@ -1,0 +1,29 @@
+{
+  "group": "managed-role-20",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.6870881Z",
+  "finishedAtUtc": "2026-10-23T12:08:03.8847765Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "A2D750F6D8CDF5AC49DEC9512A2171553315932C72BF106AE256B069399702BD",
+  "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+}

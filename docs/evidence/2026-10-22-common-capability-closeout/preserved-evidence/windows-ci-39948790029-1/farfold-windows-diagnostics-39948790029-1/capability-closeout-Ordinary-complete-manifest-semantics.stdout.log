@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

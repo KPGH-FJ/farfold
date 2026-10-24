@@ -1,0 +1,27 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "mode": "GitSettlement",
+  "name": "cancel-owned-job",
+  "filter": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+  "exactFilter": true,
+  "explicitIgnored": false,
+  "startedAtUtc": "2026-10-23T13:30:30.4698724Z",
+  "finishedAtUtc": "2026-10-23T13:30:30.7754615Z",
+  "invocationReturned": true,
+  "terminationRequestedByRunner": false,
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "outcome": "ok"
+    }
+  ],
+  "namesExact": true,
+  "expectedPhaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+  "phaseMarkerMatches": 1,
+  "exactPassed": true,
+  "stdoutSha256": "49AE5496E1015115A32441236F73EB24A0BC666E77C00A8E4A6FD4DDB21D63BA",
+  "stderrSha256": "5A790A5CCE7BF80A4724FD58285A96B4F32E445A289BD944AA8701B3112E6169"
+}

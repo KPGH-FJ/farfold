@@ -1,0 +1,979 @@
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=entered
+FARFOLD_OWNED_FIXTURE_TEMP original=<windows-user-path:0a07f0dcebae> selected=<windows-user-path:bf9859e06501>
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=owned-git-prepared
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-start
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6400,"retainedGroupHelperPid":6400,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6400,"retainedGroupHelperPid":6400,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5876,"retainedGroupHelperPid":5876,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5876,"retainedGroupHelperPid":5876,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-returned
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-prepare-start
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=parent-canonical-and-spelling
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-absent
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=source-snapshot
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3508,"retainedGroupHelperPid":3508,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5688]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3508,"retainedGroupHelperPid":3508,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5688]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=source-identity
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-overlap
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=branch-format
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1508,"retainedGroupHelperPid":1508,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1508,"retainedGroupHelperPid":1508,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=refs-read
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=branch-selection
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-commit-check
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5976,"retainedGroupHelperPid":5976,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5860]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5976,"retainedGroupHelperPid":5976,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5860]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":4904,"retainedGroupHelperPid":4904,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2376]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":4904,"retainedGroupHelperPid":4904,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2376]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5392,"retainedGroupHelperPid":5392,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4944]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5392,"retainedGroupHelperPid":5392,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[4944]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=intent-parent-stamp
+FARFOLD_WINDOWS_CREATE_BOUNDARY scope=validate lastReached=intent-parent-stamp
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-start
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=revalidate
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=parent-canonical-and-spelling
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-absent
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=source-snapshot
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=source-identity
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-overlap
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=branch-format
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=refs-read
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=branch-selection
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=target-commit-check
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_CREATE_REACHED scope=validate phase=intent-parent-stamp
+FARFOLD_WINDOWS_CREATE_BOUNDARY scope=validate lastReached=intent-parent-stamp
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=source-snapshot
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=checkout-prepare
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2448,"retainedGroupHelperPid":2448,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2448,"retainedGroupHelperPid":2448,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=reserve-target
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=persist-reservation-and-dispatch
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=git-add
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=materialize-reserved
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6692,"retainedGroupHelperPid":6692,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[6280]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6692,"retainedGroupHelperPid":6692,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[6280]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=verify-created
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":340,"retainedGroupHelperPid":340,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":340,"retainedGroupHelperPid":340,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_CREATE_REACHED scope=start phase=verify-final-namespace
+FARFOLD_WINDOWS_CREATE_BOUNDARY scope=start lastReached=verify-final-namespace
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-wait-returned
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-inspect-start
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3504,"retainedGroupHelperPid":3504,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2188]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3504,"retainedGroupHelperPid":3504,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2188]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7824,"retainedGroupHelperPid":7824,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[1552]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7824,"retainedGroupHelperPid":7824,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[1552]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-prepare-start
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6236,"retainedGroupHelperPid":6236,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[1052]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6236,"retainedGroupHelperPid":6236,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[1052]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7912,"retainedGroupHelperPid":7912,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5276]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7912,"retainedGroupHelperPid":7912,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5276]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2440,"retainedGroupHelperPid":2440,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[6336]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2440,"retainedGroupHelperPid":2440,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[6336]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3856,"retainedGroupHelperPid":3856,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3640]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3856,"retainedGroupHelperPid":3856,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3640]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-start
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1052,"retainedGroupHelperPid":1052,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[6704]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1052,"retainedGroupHelperPid":1052,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[6704]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":768,"retainedGroupHelperPid":768,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4992]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":768,"retainedGroupHelperPid":768,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[4992]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_MOVE_BOUNDARY lastReached=root-basic-verified
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":8180,"retainedGroupHelperPid":8180,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3336]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":8180,"retainedGroupHelperPid":8180,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3336]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_ARCHIVE_BOUNDARY lastReached=completed
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-wait-returned
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-inspect-start
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7164,"retainedGroupHelperPid":7164,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2516]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7164,"retainedGroupHelperPid":7164,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2516]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2288,"retainedGroupHelperPid":2288,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5164]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2288,"retainedGroupHelperPid":2288,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5164]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":680,"retainedGroupHelperPid":680,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3596]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":680,"retainedGroupHelperPid":680,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3596]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":4904,"retainedGroupHelperPid":4904,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4288]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":4904,"retainedGroupHelperPid":4904,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5852,"retainedGroupHelperPid":5852,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[1136]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5852,"retainedGroupHelperPid":5852,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[1136]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-start
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":304,"retainedGroupHelperPid":304,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":304,"retainedGroupHelperPid":304,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":988,"retainedGroupHelperPid":988,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[1552]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":988,"retainedGroupHelperPid":988,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[1552]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1576,"retainedGroupHelperPid":1576,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1576,"retainedGroupHelperPid":1576,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7900,"retainedGroupHelperPid":7900,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[7460]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7900,"retainedGroupHelperPid":7900,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[7460]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2956,"retainedGroupHelperPid":2956,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2668]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2956,"retainedGroupHelperPid":2956,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2668]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":8156,"retainedGroupHelperPid":8156,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4956]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":8156,"retainedGroupHelperPid":8156,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[4956]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3436,"retainedGroupHelperPid":3436,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[556]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3436,"retainedGroupHelperPid":3436,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[556]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6716,"retainedGroupHelperPid":6716,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3596]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6716,"retainedGroupHelperPid":6716,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7752,"retainedGroupHelperPid":7752,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3760]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7752,"retainedGroupHelperPid":7752,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3760]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2584,"retainedGroupHelperPid":2584,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5804]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2584,"retainedGroupHelperPid":2584,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5804]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6900,"retainedGroupHelperPid":6900,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3292]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6900,"retainedGroupHelperPid":6900,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3292]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5828,"retainedGroupHelperPid":5828,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5888]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5828,"retainedGroupHelperPid":5828,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5888]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":4320,"retainedGroupHelperPid":4320,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[676]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":4320,"retainedGroupHelperPid":4320,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[676]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6080,"retainedGroupHelperPid":6080,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6080,"retainedGroupHelperPid":6080,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":5796,"retainedGroupHelperPid":5796,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4440]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":5796,"retainedGroupHelperPid":5796,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[4440]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3256,"retainedGroupHelperPid":3256,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[988]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3256,"retainedGroupHelperPid":3256,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[988]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1828,"retainedGroupHelperPid":1828,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2460]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1828,"retainedGroupHelperPid":1828,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2460]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=55
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=212
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=165
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=137
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=1176
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=250
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=84
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7584,"retainedGroupHelperPid":7584,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[4852]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7584,"retainedGroupHelperPid":7584,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[4852]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":3740,"retainedGroupHelperPid":3740,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[464]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":3740,"retainedGroupHelperPid":3740,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-wait-returned
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=backup-cancel-start
+FARFOLD_PUBLIC_FIXTURE_REACHED phase=fixture-return
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restore-material","ok":true,"code":null}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-stamp","ok":true,"code":null}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restore-target","ok":true,"code":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1356,"retainedGroupHelperPid":1356,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2516]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1356,"retainedGroupHelperPid":1356,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2516]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7520,"retainedGroupHelperPid":7520,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2248]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7520,"retainedGroupHelperPid":7520,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2248]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":6712,"retainedGroupHelperPid":6712,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[1256]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":6712,"retainedGroupHelperPid":6712,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[1256]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-snapshot","ok":true,"code":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-graph","ok":true,"code":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7008,"retainedGroupHelperPid":7008,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7008,"retainedGroupHelperPid":7008,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2480,"retainedGroupHelperPid":2480,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3352]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2480,"retainedGroupHelperPid":2480,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[3352]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-profile","ok":true,"code":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"verify-target","ok":true,"code":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-before-set source_control=32772 initial_control=32772 expected_aces=3 initial_aces=1
+FARFOLD_ORDINARY_DIAGNOSTIC phase=security-after-dacl-set current_control=32772 dacl_equal=true label_equal=true expected_aces=3 current_aces=3
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7028,"retainedGroupHelperPid":7028,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[3256]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7028,"retainedGroupHelperPid":7028,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7628,"retainedGroupHelperPid":7628,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[988]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7628,"retainedGroupHelperPid":7628,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[988]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-snapshot","ok":true,"code":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7716,"retainedGroupHelperPid":7716,"sameOriginalChildPid":true,"originalChildExitCode":1,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[5840]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7716,"retainedGroupHelperPid":7716,"originalChildExitCode":1,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[5840]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":2736,"retainedGroupHelperPid":2736,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":7,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":0,"admittedCount":0,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":2736,"retainedGroupHelperPid":2736,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":8,"layoutComplete":true,"assignedProcesses":0,"listedProcesses":0,"originalHelperListed":false,"ids":[]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-graph","ok":true,"code":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":1580,"retainedGroupHelperPid":1580,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[768]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":1580,"retainedGroupHelperPid":1580,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[768]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_DECISIVE_JOB_QUERY {"phase":"firstActiveGroupQueryAfterOriginalChild","originalChildPid":7884,"retainedGroupHelperPid":7884,"sameOriginalChildPid":true,"originalChildExitCode":0,"queryClass":"JobObjectBasicAccountingInformation","queryReturn":1,"querySucceeded":true,"nativeError":null,"activeProcesses":1,"totalProcesses":4,"totalTerminatedProcesses":0,"conservativeActive":true,"currentMembers":{"heldCount":1,"admittedCount":1,"unresolvedCandidateCount":0,"coverageGap":false,"observationUnknown":false,"admittedPids":[2628]},"stoppedReason":null,"settledNaturally":true,"scope":"same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"}
+FARFOLD_WINDOWS_GIT_ASSOCIATED_PROCESS_LIST {"phase":"sameJobAssociatedListAfterOriginalChild","originalChildPid":7884,"retainedGroupHelperPid":7884,"originalChildExitCode":0,"association":{"originalChildIdMatches":true,"originalChildWaitReturn":0,"originalChildWaitError":null,"capacity":32,"layoutMatches":true,"listQueryReturn":1,"listQueryError":null,"returnedBytes":16,"layoutComplete":true,"assignedProcesses":1,"listedProcesses":1,"originalHelperListed":false,"ids":[2628]},"scope":"after first active accounting query; non-atomic observations, no PID reopen"}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_RECOVER_STEP {"stage":"restored-target-profile","ok":true,"code":null}
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=true native_bytes=0
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=106
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-enter directory=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=capture-complete directory=false native_bytes=23
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.sparseCheckout","boolean":true,"exitCode":1,"success":false,"stdoutBytes":0}

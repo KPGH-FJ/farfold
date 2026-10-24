@@ -1,0 +1,5 @@
+FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full=true native_bytes=0 expected_data=2 actual_data=0 expected_zero_default=false actual_default=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full=true native_bytes=276 expected_data=2 actual_data=1 expected_zero_default=false actual_default=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full=true native_bytes=40 expected_data=1 actual_data=0 expected_zero_default=false actual_default=false
+FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full=true native_bytes=40 expected_data=2 actual_data=1 expected_zero_default=true actual_default=true
+FARFOLD_ORDINARY_DIAGNOSTIC phase=carrier-data-count full=true native_bytes=40 expected_data=2 actual_data=1 expected_zero_default=true actual_default=true

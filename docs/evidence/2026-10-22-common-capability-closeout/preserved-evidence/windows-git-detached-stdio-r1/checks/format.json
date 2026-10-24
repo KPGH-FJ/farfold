@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "seconds": 1.8346669673919678,
+  "inputsStable": true,
+  "changed": [],
+  "log": "evidence:e-20d38f355a3dd8d2266c",
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

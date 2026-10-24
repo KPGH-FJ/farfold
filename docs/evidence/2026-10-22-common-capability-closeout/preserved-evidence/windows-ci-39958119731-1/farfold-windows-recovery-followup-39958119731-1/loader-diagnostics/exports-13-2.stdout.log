@@ -1,0 +1,127 @@
+
+Dump of file C:\Windows\system32\dwmapi.dll
+
+File Type: DLL
+
+  Section contains the following exports for dwmapi.dll
+
+    00000000 characteristics
+    B97BA7E0 time date stamp
+        0.00 version
+         100 ordinal base
+         101 number of functions
+          44 number of names
+
+    ordinal hint RVA      name
+
+        111    0 00017600 DllCanUnloadNow
+        115    1 00017640 DllGetClassObject
+        116    2 000133B0 DwmAttachMilContent
+        117    3 00002CD0 DwmDefWindowProc
+        118    4 000133B0 DwmDetachMilContent
+        119    5 00006F50 DwmEnableBlurBehindWindow
+        102    6 00012B30 DwmEnableComposition
+        120    7 00003150 DwmEnableMMCSS
+        121    8 000038A0 DwmExtendFrameIntoClientArea
+        122    9 000036A0 DwmFlush
+        123    A 00012710 DwmGetColorizationColor
+        125    B 000043F0 DwmGetCompositionTimingInfo
+        126    C 000133C0 DwmGetGraphicsStreamClient
+        129    D 000133D0 DwmGetGraphicsStreamTransformHint
+        130    E 000133E0 DwmGetTransportAttributes
+        133    F 000112F0 DwmGetUnmetTabRequirements
+        134   10 00002150 DwmGetWindowAttribute
+        149   11 00002000 DwmInvalidateIconicBitmaps
+        186   12 00004BD0 DwmIsCompositionEnabled
+        187   13 00013E50 DwmModifyPreviousDxFrameDuration
+        188   14 00013E80 DwmQueryThumbnailSourceSize
+        189   15 00013FD0 DwmRegisterThumbnail
+        190   16 00013820 DwmRenderGesture
+        191   17 00013E60 DwmSetDxFrameDuration
+        192   18 000140A0 DwmSetIconicLivePreviewBitmap
+        193   19 00014390 DwmSetIconicThumbnail
+        194   1A 00013E70 DwmSetPresentParameters
+        195   1B 00003240 DwmSetWindowAttribute
+        196   1C 00013A00 DwmShowContact
+        197   1D 00013AE0 DwmTetherContact
+        156   1E 00013C00 DwmTetherTextContact
+        198   1F 00015920 DwmTransitionOwnedWindow
+        199   20 00003790 DwmUnregisterThumbnail
+        200   21 00006940 DwmUpdateThumbnailProperties
+        136   22 00006700 DwmpAllocateSecurityDescriptor
+        100   23 00006340 DwmpDxGetWindowSharedSurface
+        101   24 000121E0 DwmpDxUpdateWindowSharedSurface
+        128   25 00001F00 DwmpDxgiIsThreadDesktopComposited
+        143   26 00012CE0 DwmpEnableDDASupport
+        137   27 00006AE0 DwmpFreeSecurityDescriptor
+        127   28 00004920 DwmpGetColorizationParameters
+        135   29 00013C10 DwmpRenderFlick
+        131   2A 000023A0 DwmpSetColorizationParameters
+        183   2B 000068A0 DwmpUpdateProxyWindowForCapture
+        103      00012E10 [NONAME]
+        104      00012910 [NONAME]
+        105      00012CE0 [NONAME]
+        106      00012D00 [NONAME]
+        107      000127D0 [NONAME]
+        108      00012CF0 [NONAME]
+        109      00013410 [NONAME]
+        110      00013400 [NONAME]
+        112      00013420 [NONAME]
+        113      00012470 [NONAME]
+        114      00014930 [NONAME]
+        124      00006B20 [NONAME]
+        132      00004430 [NONAME]
+        138      00002130 [NONAME]
+        139      00005D20 [NONAME]
+        140      00002FC0 [NONAME]
+        141      00005D50 [NONAME]
+        142      000152C0 [NONAME]
+        144      00015A00 [NONAME]
+        145      00002320 [NONAME]
+        146      00013430 [NONAME]
+        147      00004F40 [NONAME]
+        148      00003580 [NONAME]
+        150      000160C0 [NONAME]
+        151      00016030 [NONAME]
+        152      00016150 [NONAME]
+        153      000161E0 [NONAME]
+        154      00016450 [NONAME]
+        155      000162B0 [NONAME]
+        157      00012DB0 [NONAME]
+        158      00013110 [NONAME]
+        159      00001F40 [NONAME]
+        160      00014CB0 [NONAME]
+        161      00007390 [NONAME]
+        162      00006600 [NONAME]
+        163      00014720 [NONAME]
+        164      00015370 [NONAME]
+        165      00013620 [NONAME]
+        166      00014A20 [NONAME]
+        167      00013530 [NONAME]
+        168      00016F50 [NONAME]
+        169      00004990 [NONAME]
+        170      00007260 [NONAME]
+        171      00012E90 [NONAME]
+        172      00015680 [NONAME]
+        173      00012C70 [NONAME]
+        174      00012B90 [NONAME]
+        175      00013270 [NONAME]
+        176      00013070 [NONAME]
+        177      00012F30 [NONAME]
+        178      00016380 [NONAME]
+        179      00015750 [NONAME]
+        180      00013DC0 [NONAME]
+        181      00012C00 [NONAME]
+        182      00012FD0 [NONAME]
+        184      00013310 [NONAME]
+        185      000131D0 [NONAME]
+
+  Summary
+
+        5000 .data
+        1000 .didat
+        2000 .pdata
+        8000 .rdata
+        1000 .reloc
+        5000 .rsrc
+       18000 .text

@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

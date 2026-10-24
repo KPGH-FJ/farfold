@@ -1,0 +1,32 @@
+{
+  "group": "raw-guid-synthetic",
+  "filter": "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias",
+  "category": "windowsSyntheticRawGuidComparison",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:00.1705310Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.1902785Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "9B1D8B37966C6BED1A278BF715163B9A175F0923DBD1E12771D1D79A36D48765",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

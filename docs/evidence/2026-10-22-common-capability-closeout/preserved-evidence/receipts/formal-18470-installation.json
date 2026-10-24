@@ -1,0 +1,93 @@
+{
+  "kind": "actual batch installation evidence, not an execution plan",
+  "capturedAtUtc": "2026-10-23T12:49:35.789439+00:00",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "formalApp": "/Applications/Farfold.app",
+  "binarySha256": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+  "engineering": {
+    "sevenPassed": true,
+    "frontendFiles": 659,
+    "frontendTests": 8537,
+    "rustPassed": 2224,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "inputsStable": true
+  },
+  "independentCandidateChecks": {
+    "passed": 9,
+    "total": 9
+  },
+  "installedChecks": {
+    "passed": 10,
+    "total": 10
+  },
+  "retention": {
+    "threeManifestsEqual": true,
+    "entries": 232530,
+    "manifestSha256": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+    "scope": "before/preinstall/after while app closed; excludes later UI interval"
+  },
+  "duplicateCandidateRemovedFiles": 5,
+  "zipAndBackupsRetained": true,
+  "references": [
+    {
+      "path": "evidence:e-8a438bba3439c247932a",
+      "sha256": "af9cdbe8df4479b73eb9b658c736b6a3540c5822ee060708472543289f2eb96f"
+    },
+    {
+      "path": "evidence:e-cfef516c07f8fe2d3c99",
+      "sha256": "4e3db458813149085b5f924d5ac01c20060cd1c0a61e6cdd3250acb9c21a9910"
+    },
+    {
+      "path": "evidence:e-a7e49f0a6f6a271b06fe",
+      "sha256": "c22f6f14ea42305e251467f81e17b0b1a26ec3b4005f0f767781beecf939cb76"
+    },
+    {
+      "path": "evidence:e-31d1c75144546e9342a8",
+      "sha256": "6f77a3edf480b436598fb5510930b64aed8d09b80241bb7ccd8b18a7f12806e6"
+    },
+    {
+      "path": "evidence:e-6b463f79765fedcf487a",
+      "sha256": "02908633c6564f2181f3155f06b4cde9bd8501002d8e8e4d9b297c7db141730c"
+    },
+    {
+      "path": "evidence:e-ee2c0af87e1a8346bd96",
+      "sha256": "9b3886f20937881cee2dae9291b5658688421158b38c0626ab3bd851b18b10c2"
+    },
+    {
+      "path": "evidence:e-1ae99f3a0a900911a8d4",
+      "sha256": "2d81461a6def58ff62d257aec5adc4dc84f1f85d025f3fce5726ebac549c5d91"
+    },
+    {
+      "path": "evidence:e-ff094dcf70da0466125a",
+      "sha256": "7ecf8ff557ba72a5072101a2e562ed39f5eef1cd8604fa7b50b9bf6a0ff2af74"
+    },
+    {
+      "path": "evidence:e-1b743e09d632174353b5",
+      "sha256": "45cc033a37a3ce8c308a3315022ff78515f4ec25bbe6cd7cc032b9760a074dcb"
+    },
+    {
+      "path": "evidence:e-c1792ef03a76806244f5",
+      "sha256": "111406449ddbaf5cd9d7369980cee4ec7671c17b3e5689388fd97a5d0da0fe6e"
+    },
+    {
+      "path": "evidence:e-c15c113aa8b87311710f",
+      "sha256": "213d48bd3ae3a7e6dcd823a8ebb8a088d0fac3013f74ab543c4d982ece5c9c82"
+    },
+    {
+      "path": "evidence:e-02ed13b2d5305735b73a",
+      "sha256": "cda1eb78df1dc32a5f497290bc7787a196a18760ed7c712d93a91ba37997d5e6"
+    },
+    {
+      "path": "evidence:e-fd7ccecad632c6772df5",
+      "sha256": "0d9b4fa8e850492aa8cbcd420a41c69bb75d306bdb36230da67677dc7fd825ef"
+    }
+  ],
+  "notCovered": [
+    "Actual media playback in a real message",
+    "Installed transport/ACK behavior and total RSS",
+    "Windows product installation or complete platform acceptance",
+    "All29Agents x8 individual criteria",
+    "Original intermittent Windows Job retirement failure root cause"
+  ]
+}

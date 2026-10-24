@@ -1,0 +1,126 @@
+{
+  "group": "legacy-owned-material-fullsecuritymanual-managed-edge-05",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+  "category": "legacyFullSecurityConditioned",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:32:38.0775052Z",
+  "finishedAtUtc": "2026-10-23T12:32:39.3884757Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F1F1BF3C5CED91EB916020DB37E79E73D3116E0E97765EA2502B611F6A3A703D",
+  "stderrSha256": "2AE3849D98ADB2B5CEF53AE7C6B37DE21A8CBF6843D60DD8D000619A4A0D2F4C"
+}

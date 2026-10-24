@@ -1,0 +1,37 @@
+{
+  "group": "delete-readonly-owner",
+  "filter": "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence",
+  "category": "ownedNativeDeletePrimitiveNotPublicDeletion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:58.9025359Z",
+  "finishedAtUtc": "2026-10-23T12:08:58.9248890Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "972E6C94049AF1E539F0A7332379818D4B5312307469122BD873D7FA99C01161",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

@@ -1,0 +1,37 @@
+{
+  "group": "git-settlement-original-deadline-still-limits-live-job-after-original-exit",
+  "filter": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+  "category": "ownedSameJobNaturalSettlementAndBounds",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:25.5910000Z",
+  "finishedAtUtc": "2026-10-23T12:14:28.6348897Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+  "phaseMarkerMatches": 1,
+  "injectionPhaseReached": true,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "72809BCD6C025A3D640BC61803174B9ABE3E7816AB4A316705E26970DEE25407",
+  "stderrSha256": "5CF7731327AEB1649017BEC274071D0559A96B9EBA579C6AE5E15D195EB398A9"
+}

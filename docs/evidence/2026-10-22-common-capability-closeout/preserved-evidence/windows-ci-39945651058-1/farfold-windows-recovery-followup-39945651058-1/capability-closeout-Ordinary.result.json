@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "head": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "finalHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "headStable": true,
+  "mode": "Ordinary",
+  "testBinarySha256": "4A0667E1DE8AA68BF788A2CA96ED9704773937180E1EF8FDA6502CE9380BF7EB",
+  "fixtureSha256": "6F3330791B4E3D703E1B1848627A87B9EFFD4CB9A96B394749C798C80CFD0BB2",
+  "runnerScriptSha256": "7F4168B54DBAE6B73ACA77FCB0453ACFC7CC6AA6757F0125960FEC81FEB9BC7B",
+  "inputsStable": true,
+  "plannedOrdinaryTests": 123,
+  "plannedManualTests": 17,
+  "plannedTotalTests": 140,
+  "caseManifestSha256": "B7CF34951CD8BAFE575DC8AA1794A13A1DEDE745197FF2281CABCCA94A402B3F",
+  "focusedSubsetOnly": true,
+  "selectedCaseNames": [
+    "create-public-selected",
+    "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+    "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material"
+  ],
+  "selectedTests": 3,
+  "groupCount": 3,
+  "groups": [
+    {
+      "group": "create-public-selected",
+      "filter": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "category": "publicCreateOwnedGit",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source"
+      ],
+      "actualPassedNames": [
+        "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:37:29.3670459Z",
+      "finishedAtUtc": "2026-10-23T11:37:59.1746930Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "52E6A852FF3F44ABED6E1E094CF9756397027C9EB71AD21F2668997066D93FB5",
+      "stderrSha256": "DD815800F825CECB7C30BFD404078729530C949912DB504FA0FA9D68E9B01C9F"
+    },
+    {
+      "group": "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+      "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "category": "ownedActualOrdinaryRecovery",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:38:00.2340125Z",
+      "finishedAtUtc": "2026-10-23T11:39:48.3705452Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "ACB25950796715647B0F495F1A87E66522476876C3EAB4D4B63A9ECD71D7A309",
+      "stderrSha256": "96613D6F2EA94DD39D9F75114A752D922AA2D58E67A239A2C3E1576773ED8EE7"
+    },
+    {
+      "group": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+      "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "category": "ownedActualOrdinaryRecovery",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:39:48.5491587Z",
+      "finishedAtUtc": "2026-10-23T11:42:04.2194964Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "F1086B97D1DBC7526D66E7DA313C8D68513DB65507E392FA9EE0A888D4CC3BDE",
+      "stderrSha256": "536E7876CC72B59B8A7BCC3698A8F1E5EA4BA1B29A187462750B75BDAE101825"
+    }
+  ],
+  "exactAllGroupsPassed": true,
+  "historicalInventoriesChanged": false,
+  "explicitManualFailuresAreSuccessfulTests": false,
+  "privilegesAdjusted": false,
+  "ordinaryDefaultTokenAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticOrOrdinaryRefusalIsNativeSuccess": false,
+  "completePayloadSecurityOrAliasRestoreClaim": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

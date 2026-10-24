@@ -1,0 +1,73 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "groups": [
+    {
+      "group": "private-input",
+      "filter": "worktrees::git::input::tests::",
+      "expectedTests": 7,
+      "expectedNames": [
+        "worktrees::git::input::tests::real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild",
+        "worktrees::git::input::tests::explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved",
+        "worktrees::git::input::tests::selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits",
+        "worktrees::git::input::tests::factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors",
+        "worktrees::git::input::tests::empty_finite_file_is_valid_and_not_a_failed_or_truncated_input",
+        "worktrees::git::input::tests::cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer",
+        "worktrees::git::input::tests::common_file_output_path_retains_exact_input_and_original_output_limit_cleanup"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::input::tests::cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer",
+        "worktrees::git::input::tests::common_file_output_path_retains_exact_input_and_original_output_limit_cleanup",
+        "worktrees::git::input::tests::empty_finite_file_is_valid_and_not_a_failed_or_truncated_input",
+        "worktrees::git::input::tests::explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved",
+        "worktrees::git::input::tests::factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors",
+        "worktrees::git::input::tests::real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild",
+        "worktrees::git::input::tests::selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits"
+      ],
+      "startedAtUtc": "2026-10-23T12:04:55.7638885Z",
+      "finishedAtUtc": "2026-10-23T12:04:56.6764418Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 7 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "ADDACA7D95B236C9956ACDEDB9364B9D3869E397A2CB5D0380F6E5F6D39A61E1",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "artifacts",
+      "filter": "worktrees::recovery_pack::artifact::tests::",
+      "expectedTests": 6,
+      "expectedNames": [
+        "worktrees::recovery_pack::artifact::tests::unix_identity_wire_stays_exact_and_foreign_full_ids_never_truncate_or_mix",
+        "worktrees::recovery_pack::artifact::tests::real_fixed_file_set_captures_current_ids_and_hashes_from_the_same_held_objects",
+        "worktrees::recovery_pack::artifact::tests::same_size_edit_never_becomes_verified_and_windows_pins_do_not_silently_widen_shares",
+        "worktrees::recovery_pack::artifact::tests::identical_bytes_at_a_replaced_name_are_rejected_by_the_stored_native_identity",
+        "worktrees::recovery_pack::artifact::tests::held_parent_root_pair_rejects_namespace_replacement_without_falling_back_to_a_path",
+        "worktrees::recovery_pack::artifact::tests::cancellation_and_the_real_reader_cap_refuse_before_publishing_an_observation"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::artifact::tests::cancellation_and_the_real_reader_cap_refuse_before_publishing_an_observation",
+        "worktrees::recovery_pack::artifact::tests::held_parent_root_pair_rejects_namespace_replacement_without_falling_back_to_a_path",
+        "worktrees::recovery_pack::artifact::tests::identical_bytes_at_a_replaced_name_are_rejected_by_the_stored_native_identity",
+        "worktrees::recovery_pack::artifact::tests::real_fixed_file_set_captures_current_ids_and_hashes_from_the_same_held_objects",
+        "worktrees::recovery_pack::artifact::tests::same_size_edit_never_becomes_verified_and_windows_pins_do_not_silently_widen_shares",
+        "worktrees::recovery_pack::artifact::tests::unix_identity_wire_stays_exact_and_foreign_full_ids_never_truncate_or_mix"
+      ],
+      "startedAtUtc": "2026-10-23T12:04:56.7321804Z",
+      "finishedAtUtc": "2026-10-23T12:04:57.1260021Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "2A69A645CA80C2ECC60423B9281D449EDD3DA8B47920D11EF560E75BB45A5216",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    }
+  ],
+  "inputsStable": true,
+  "observationComplete": true,
+  "publicMutationOrPrivateContextComplete": false,
+  "productOrAllWindowsComplete": false
+}

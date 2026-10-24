@@ -1,0 +1,29 @@
+{
+  "group": "persistent-owner-06",
+  "filter": "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.0268027Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.0460732Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "DC4E13D60C5F5F7D02B8FE906E8337AA8AE58A700C37759DFC8D3D2A7D03FF29",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

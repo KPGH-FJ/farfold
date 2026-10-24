@@ -1,0 +1,37 @@
+{
+  "group": "create-public-selected",
+  "filter": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+  "category": "publicCreateOwnedGit",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source"
+  ],
+  "actualPassedNames": [
+    "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T11:37:29.3670459Z",
+  "finishedAtUtc": "2026-10-23T11:37:59.1746930Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "52E6A852FF3F44ABED6E1E094CF9756397027C9EB71AD21F2668997066D93FB5",
+  "stderrSha256": "DD815800F825CECB7C30BFD404078729530C949912DB504FA0FA9D68E9B01C9F"
+}

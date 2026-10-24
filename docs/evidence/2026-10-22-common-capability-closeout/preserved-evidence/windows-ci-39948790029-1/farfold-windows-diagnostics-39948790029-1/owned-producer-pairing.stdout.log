@@ -1,0 +1,8 @@
+
+running 3 tests
+test worktrees::git::source_export::pairing_tests::actual_producer_factory_has_compatible_bridge_but_excludes_writers_and_early_strict_pin ... ok
+test worktrees::git::source_export::pairing_tests::real_owned_concurrent_writer_in_transition_prevents_strict_pin_and_is_joined_before_assertion ... ok
+test worktrees::git::source_export::pairing_tests::transition_is_writable_but_replacement_and_changed_content_cannot_gain_producer_authority ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.04s
+

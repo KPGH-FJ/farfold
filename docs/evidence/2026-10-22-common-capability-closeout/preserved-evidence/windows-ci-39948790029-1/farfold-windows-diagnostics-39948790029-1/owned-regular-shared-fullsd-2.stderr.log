@@ -1,0 +1,4 @@
+
+thread 'worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget' (6776) panicked at src\worktrees\material_regular_shared_owner_tests.rs:36:56:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

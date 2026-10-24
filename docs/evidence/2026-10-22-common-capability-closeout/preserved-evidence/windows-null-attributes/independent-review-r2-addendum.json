@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-10-23T10:22:46.217382+00:00",
+  "reviewer": "windows_gaps (non-author)",
+  "scope": "Read-only delta review of final null-attributes source output line and four CI files; no script parsing/execution, Cargo, tests, CI, downloads or product edits.",
+  "authorHandoff": {
+    "path": "evidence:e-ab9bffafccbd0dd5a9d2",
+    "sha256": "6bf9623868cbc6f9c044e256e23e62d6579ec4040e6a8db1cfb6a3ebf69702a5",
+    "bytes": 7088
+  },
+  "sourceReview": {
+    "path": "evidence:e-ab5e80f990a8bb842c02",
+    "sha256": "18763a2b25851e487580416da13b48dc816f0b388378995f54574cd3f9995358",
+    "bytes": 8727
+  },
+  "files": [
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_inputs_windows.rs",
+      "sha256": "18f4aa97a94e9af9c0ec3beba67b60505dc9db29ac01b1bbc1421510b9ce00bb",
+      "bytes": 17232
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_evaluator_windows.rs",
+      "sha256": "0dc015138d4f2d54cd23b1e2360ba97d2a19996920a47200fe72f0ae75578e15",
+      "bytes": 22849
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_windows_tests.rs",
+      "sha256": "879386f1c8e033d79cec16e4ba3254c617269ce058930c656500c674785511b1",
+      "bytes": 19467
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_null_attributes_windows_tests.rs",
+      "sha256": "3aa7746c4ba35b2f5afd2b9d1d51f57c82ee7cb77e11608dd308ac3dfd92f6e6",
+      "bytes": 14197
+    },
+    {
+      "path": ".github/scripts/windows-capability-closeout.ps1",
+      "sha256": "1ecc3ce7e1411114bf022f0e1bada7ef8ba6b2c141067e3bfcdfc38522e99b54",
+      "bytes": 11107
+    },
+    {
+      "path": ".github/scripts/windows-recovery-followup-build.ps1",
+      "sha256": "d18874fb5a10306ee6650d3ecd7883e7cf113c2e559efc28617d6bcecd9be450",
+      "bytes": 3953
+    },
+    {
+      "path": ".github/scripts/windows-null-attributes-cases.json",
+      "sha256": "984efd0b2983d823240022b34225cb925012210a8b4e41e32e2061e4edd31103",
+      "bytes": 2206
+    },
+    {
+      "path": ".github/workflows/windows-recovery-followup.yml",
+      "sha256": "f465299c8110b3316dacbbc9f52e739a2951605eb139359e3e7dfee0eb6f919c",
+      "bytes": 8469
+    }
+  ],
+  "verdict": "No blocking defect identified in this final eight-file source/CI delta. Actual Windows tests are still required; the existing r4 artifact reader needs its recovery input list updated before reading a future head containing this added manifest.",
+  "checked": [
+    "All eight current byte hashes exactly match author r2 handoff. First three source files unchanged from r1; the new test is exactly parent println to eprintln with whole-file inverse matching r1.",
+    "Eight unique explicit ordinary FQNs exactly equal four new plus four existing affected cases. Ignored fixed child is absent; no subset or manual mode can be selected through NullAttributes.",
+    "NullAttributes uses the selected binary and process fixture, source head and stable build check. It performs no new build, lookup by binary filename guess, token privilege changes or global environment override.",
+    "Existing single exact-name, exit-zero, exactly-one libtest summary and 1/0/0 counts remain shared. Child log is now stderr, preserving this strict parser instead of weakening it.",
+    "New aggregate has an independent prefix. Workflow final guard requires exact eight labels, all count fields, mode, head/input stability, non-subset selection, and exactAllGroupsPassed; missing/incomplete/failed results fail the workflow.",
+    "Removing the one new step and appended independent aggregate check restores the entire old workflow byte-for-byte, including original seven tests, diagnostic control, deadlines, upload ordering and overall job limit.",
+    "The build-script delta is exactly the new manifest SourceInputs path; exact inverse restores old bytes. Existing Parser preflight covers the modified PowerShell files without executing them.",
+    "Original current and legacy manifests are byte-identical to HEAD. No former result or inventory is rewritten."
+  ],
+  "caseNames": [
+    "null-exact-spellings",
+    "null-command-system-policy",
+    "null-rooted-lookalikes",
+    "null-owned-xdg-matrix",
+    "existing-source-profile-info",
+    "existing-configured-attributes-file",
+    "existing-held-absence-drive-relative",
+    "existing-selected-head-attributes"
+  ],
+  "caseFqns": [
+    "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+    "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+    "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+    "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+    "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation"
+  ],
+  "historicalManifests": [
+    {
+      "path": ".github/scripts/windows-capability-closeout-cases.json",
+      "sha256": "fe1523c38e97150d112dd77265e55378a11fd23d4808b5f05db93dd3eae0755a",
+      "bytes": 60035
+    },
+    {
+      "path": ".github/scripts/windows-legacy-full-security-cases.json",
+      "sha256": "030cbb216412d2e67fd0dca8251c85ac5d362a0a8eb948e3f4ba2a99ae7a229c",
+      "bytes": 7717
+    }
+  ],
+  "readerDependency": {
+    "currentReader": {
+      "path": "evidence:e-f9d15968bae8d429b0c4",
+      "sha256": "4102052b26feca35e2eab6e1a4e0b591ec9069695241c03efe1e94fb106ec4af",
+      "bytes": 23989
+    },
+    "status": "Does not yet include .github/scripts/windows-null-attributes-cases.json in recovery source_inputs. Future r2-head artifact will be conservatively rejected as input inventory mismatch, not falsely accepted.",
+    "current48283RunsAffected": false,
+    "requiredNextDelta": "Append this path under recovery selection and independently handle/count NullAttributes aggregate; preserve existing actual reports and original seven-case scope."
+  },
+  "limits": [
+    "No local PowerShell Parser or Windows runtime execution was performed by reviewer.",
+    "Root cross-r1 is successful stable type/lint evidence for pre-eprintln source bytes; it does not execute the eight cases.",
+    "All individual maximum deadlines do not sum within the unchanged 72-minute job limit; an actual job interruption must remain incomplete, never passed.",
+    "The new eight-case result is separate from original seven recovery, current 140 and fixed legacy comparison; no stage, installed-app or 29-Agent acceptance is established."
+  ]
+}

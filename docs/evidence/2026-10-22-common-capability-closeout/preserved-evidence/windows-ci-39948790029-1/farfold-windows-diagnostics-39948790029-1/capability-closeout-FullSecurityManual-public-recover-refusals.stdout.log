@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_public_windows_tests::public_cold_recover_rejects_collision_cancel_and_changed_manifest_without_deletion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 93.14s
+

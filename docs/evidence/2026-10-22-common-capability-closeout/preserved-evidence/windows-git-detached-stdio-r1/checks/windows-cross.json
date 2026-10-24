@@ -1,0 +1,22 @@
+{
+  "command": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--target",
+    "x86_64-pc-windows-gnullvm",
+    "--all-targets",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "naturalExit": 101,
+  "naturalCompletionObserved": true,
+  "seconds": 12.554043054580688,
+  "inputsStable": true,
+  "changed": [],
+  "log": "evidence:e-34f7c39fc9e5ea6f09ef",
+  "logSha256": "ab67e684e831247b181683e080e42fb3d81e11868a14d346bf3933c13a676c82"
+}

@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::worktree_checkout::tests::owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-23T02:50:05.585462+00:00",
+  "task": "ARCH-44",
+  "result": "remainingNineSourceConditionsRefinedNotAccepted",
+  "scope": "原6缺官方材料+3部分变体；不是第二活动计划或29家全量复审。保留所有旧报告与失败读取。",
+  "previous": {
+    "path": "evidence:e-44b8d0fd745ed969e648",
+    "bytes": 18095,
+    "sha256": "6fdade780980d1a92b78a7b4073e6acd6c1ba2f879abf7580ca7297e9808540b"
+  },
+  "originalSixPlusThree": {
+    "originalSixBroadMaterialUnknownNow": {
+      "officialRoutingContractStillUnresolved": 5,
+      "selectedDistributedSourceNowGivesSpecificProtocolQuestion": 1
+    },
+    "originalThreePartialNow": {
+      "mistralBuiltinSourceQuestionClosed": 1,
+      "qoderGuardAndSelectedTerminalRouteRefined": 1,
+      "grokSelectedReleaseSourceMappingUnresolved": 1
+    }
+  },
+  "mutuallyExclusivePrimaryCounts": {
+    "officialRoutingContractUnavailable": 5,
+    "selectedReleaseSourceMappingUnresolved": 1,
+    "selectedSourceConcreteProtocolDifference": 1,
+    "selectedSourceRoutesClarified": 2
+  },
+  "rows": [
+    {
+      "id": "antigravity-acp",
+      "selectedVersion": "1.2.1",
+      "class": "official-routing-contract-unresolved",
+      "officialUrl": "https://www.antigravity.google/docs/ide/extensions/zed/",
+      "missing": "fs读/写与terminal能力的选择、未声明时行为、失败/取消归属。集成认证说明没有这些字段。",
+      "accountOnlyBlocker": false
+    },
+    {
+      "id": "devin",
+      "selectedVersion": "3000.11.3",
+      "class": "official-routing-contract-unresolved",
+      "officialUrl": "https://docs.devin.ai/cli/acp/zed",
+      "missing": "终端输出的呈现不等于terminal/create执行委托；缺所选CLI的选择/缺省/错误/取消语义。",
+      "accountOnlyBlocker": false
+    },
+    {
+      "id": "dimcode",
+      "selectedVersion": "0.5.16",
+      "class": "official-routing-contract-unresolved",
+      "officialUrl": "https://dimcode.dev/en/docs/acp/",
+      "missing": "本地设置复用不决定fs/terminal回调；官方链接的公开仓库明确仅issue tracker，不含应用源码。",
+      "accountOnlyBlocker": false
+    },
+    {
+      "id": "factory-droid",
+      "selectedVersion": "0.230.0",
+      "class": "official-routing-contract-unresolved",
+      "officialUrl": "https://docs.factory.com/ide-integrations",
+      "missing": "ACP启动参数已可核；fs/terminal能力声明、未声明/失败后的选择与清理契约未说明。",
+      "accountOnlyBlocker": false
+    },
+    {
+      "id": "nova",
+      "selectedVersion": "1.1.49",
+      "class": "selected-source-concrete-protocol-version-difference",
+      "availableFact": "真实factory/approval路径已读；V1发permission/request，V2才发官方session/request_permission。旧file/write桥不能当当前必须回调。",
+      "remaining": "官方受支持V1路径/发行版本说明或完整官方V2适配决定；fs/terminal任意插件及真实取消后果尚未验证。不是账号本身可消除的差异。",
+      "accountOnlyBlocker": false,
+      "proof": {
+        "path": "evidence:e-dd3155d7dadefa5251e4",
+        "bytes": 8955,
+        "sha256": "b1130f5e8924b6cff424b990cbd0ce21643408adb22808c7dce3fbf5715db63b"
+      }
+    },
+    {
+      "id": "poolside",
+      "selectedVersion": "1.0.16",
+      "class": "official-routing-contract-unresolved",
+      "officialUrl": "https://docs.poolside.ai/cli/pool",
+      "missing": "当前公开repo列third_party/README/CHANGELOG/LICENSE，未见所选实现；通用权限/沙箱说明未决定ACP fs/terminal选择或缺省后果。",
+      "accountOnlyBlocker": false
+    },
+    {
+      "id": "grok-build",
+      "selectedVersion": "1.0.46",
+      "class": "selected-release-to-reviewed-source-unresolved",
+      "officialUrl": "https://registry.npmjs.org/@xai-official%2fgrok/1.0.46",
+      "missing": "需要真实发行源码映射或所选程序实际路由观察；npm archive签名不证明该Rust源码等价。旧main的本地fallback不能直接写成已装版结论。",
+      "accountOnlyBlocker": false,
+      "selectedReleaseSourceMapping": {
+        "packageGitHead": "2765805b944289c3512e059257732b64cf312853",
+        "reviewedPublicMain": "2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8",
+        "same": false,
+        "selectedCommitLookup": "原公开仓库commit API422/source404，tags返回空；不证明私有或永久不存在。",
+        "proof": {
+          "path": "evidence:e-ab4c0c25fa8cc4113e24",
+          "bytes": 1691,
+          "sha256": "9809860f0923c9aa748704567ac9703dac7e7ae2de79c53c3956361367c353e9"
+        }
+      }
+    },
+    {
+      "id": "mistral-vibe",
+      "selectedVersion": "2.25.8",
+      "class": "selected-builtin-route-source-gap-closed",
+      "availableFact": "公开tag完整adapter/host/executor链已核；legacy各flag分别选择本地或客户端，选中客户端后错误不自动本地重试；unified Agent自己的file/shell executor。启动fallback另列。",
+      "remaining": "实配选择哪套后端、实际工具/失败/取消/进程退出与平台结果仍需条件具备后验证，不把源码本地路径当真实成功。",
+      "accountOnlyBlocker": false,
+      "proof": {
+        "path": "evidence:e-44b8d0fd745ed969e648",
+        "bytes": 18095,
+        "sha256": "6fdade780980d1a92b78a7b4073e6acd6c1ba2f879abf7580ca7297e9808540b"
+      }
+    },
+    {
+      "id": "qoder",
+      "selectedVersion": "0.2.14",
+      "class": "selected-default-route-source-refined",
+      "availableFact": "已静态核完整fs读写guard与真实new/load/HUe引擎dataflow；无fs对象保原服务，flag false或shouldUseFallback走本地。读写已选委托异常不本地重试。实际该终端引擎路径未安装SDK terminal桥；SDK方法定义不是调用。",
+      "remaining": "当前官方文档有IDE fs/terminal概述但不带0.2.14选择/缺省契约；已读路径外动态配置/插件及真实命令/取消退出仍未验，不能宣称终端能力全局不支持或全部不需。",
+      "accountOnlyBlocker": false,
+      "officialUrl": "https://docs.qoder.com/cli/acp",
+      "proof": {
+        "path": "evidence:e-9f509941b8f55df1365f",
+        "bytes": 8447,
+        "sha256": "92277c838ae601a9a3050ac75044b6816b71c87653bbed7ed77b6345e09675d8"
+      }
+    }
+  ],
+  "docsUpdateScope": {
+    "paths": ["docs/status.md:13", "docs/agent-access-requirements.md:127"],
+    "suggestedProgress": "原6家材料不足已收窄为5家仍缺具体官方路由契约、Nova已核到所选V1协议面差异；原3变体中Mistral内建路径源码闭合、Qoder读写guard与所选默认终端路径已明确，Grok发行源码映射仍缺。真实流程与Kilo/OpenCode回调后果未验；未新增客户端执行器，不证明全29无需回调或接入完成。",
+    "notDoneByThisTask": "不写当前文档/计划；不改原条件或151/29×8/NEW24暂停。"
+  },
+  "localDevelopmentConclusion": {
+    "confirmedMissingGenericClientFsTerminalExecutor": false,
+    "novaOfficialProtocolQuestionStillNeedsResolution": true,
+    "privateMethodAliasAuthorized": false,
+    "v2CrateAvailableButFarfoldNotImplemented": true,
+    "v2IsNecessaryForThisReleaseProven": false,
+    "onlyAccountsRemain": false,
+    "boundedNextDecision": "先按Nova精确官方版本/协议支持核决；不能把该差异记作单纯缺账号，也不能把旧非标准写通知当新增执行器需求。其余五家应交付所缺字段，不以无账号替代资料。"
+  },
+  "qoderEvidence": [
+    {
+      "path": "evidence:e-9f509941b8f55df1365f",
+      "bytes": 8447,
+      "sha256": "92277c838ae601a9a3050ac75044b6816b71c87653bbed7ed77b6345e09675d8"
+    },
+    {
+      "path": "evidence:e-e4012a16924e41ba3b5f",
+      "bytes": 6124,
+      "sha256": "adfff03a948dbd84414e9ec1d0678ca0a56ab063e07262d131fc1e3534b146df"
+    },
+    {
+      "path": "evidence:e-cc8abdb292e4a61148e6",
+      "bytes": 1208,
+      "sha256": "b280607aa72107759b9ce993be44fd2263efdf9772ed07ee2169fa7e2c4316a2"
+    },
+    {
+      "path": "evidence:e-a1470c2e52d5ceb4e11d",
+      "bytes": 2218,
+      "sha256": "b365fb251980054472430a1dbf5810069a0415fca04f38a642f8bf328dde509f"
+    },
+    {
+      "path": "evidence:e-494f44dbb93b1f9636d4",
+      "bytes": 188104,
+      "sha256": "cf127c714045c6b673781037e46a3d3bc33f2bfb5df8376d9eee5f64dabed6a5"
+    }
+  ],
+  "mistralEvidenceReuse": "完整selected tag Git blob及读取位置沿previous.sourceProof与mistralSelectionFacts；不复制成第二证明链。",
+  "officialSources": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/tool-calls#requesting-permission",
+      "supports": "官方V1权限方法及toolCall/options形状"
+    },
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/initialization",
+      "supports": "按共同major版本行动；未声明能力不支持"
+    },
+    {
+      "url": "https://agentclientprotocol.com/protocol/v2/tool-calls",
+      "supports": "官方V2 Draft权限方法及subject/title形状"
+    },
+    {
+      "url": "https://github.com/mistralai/mistral-vibe/tree/v2.25.8",
+      "supports": "所选公开tag执行路径"
+    },
+    {
+      "url": "https://docs.qoder.com/cli/acp",
+      "supports": "当前不带版本的fs/terminal能力概述；不是0.2.14精确fallback证明",
+      "latestFetch": "本次网页工具timeout，保留先前已读材料，不用失败当页面不存在"
+    }
+  ],
+  "limits": {
+    "agentStarts": 0,
+    "accountOperations": 0,
+    "newSends": 0,
+    "sourceWrites": 0,
+    "docsWrites": 0,
+    "projectChecks": 0,
+    "cargoRuns": 0,
+    "upstreamProgramExecutions": 0,
+    "analysisOnly": "只读本地选定分发JS/官方源码与资料；hash仅溯源。",
+    "actualFlowResults": "未新增任何真实Agent或正式App结果；源码/受控回调结果不能升级为真实工具写入/取消退出证明。"
+  }
+}

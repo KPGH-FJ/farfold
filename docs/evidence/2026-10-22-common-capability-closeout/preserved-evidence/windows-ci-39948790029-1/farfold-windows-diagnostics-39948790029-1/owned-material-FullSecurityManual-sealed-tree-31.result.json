@@ -1,0 +1,27 @@
+{
+  "group": "sealed-tree-31",
+  "filter": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+  "category": "manualFullSecurity",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:13.0715568Z",
+  "finishedAtUtc": "2026-10-23T12:08:13.0975452Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "613AA15BE6A4E92FF269F1652DC3ADCD06DD0B5AE8A62501FED009D7439D3F6D",
+  "stderrSha256": "7729965D9A6FF31639B5D4CAB6E11A3A6D6CCA9FBD782842089733113559C02D"
+}

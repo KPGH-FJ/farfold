@@ -1,0 +1,29 @@
+{
+  "group": "persistent-store-02",
+  "filter": "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:01.8259469Z",
+  "finishedAtUtc": "2026-10-23T12:08:01.8565626Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "B08B502C7D65275303ABCBDB9ECAFA766CF7A22AD0EC7BD32B9D3E9C41585653",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

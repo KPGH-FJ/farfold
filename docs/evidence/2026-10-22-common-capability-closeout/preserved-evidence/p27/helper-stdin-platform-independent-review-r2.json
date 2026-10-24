@@ -1,0 +1,42 @@
+{
+  "kind": "platform-r2-selected-EOF-delta-independent-review",
+  "baseReview": {
+    "path": "evidence:e-1135e7a6a138f457e137",
+    "sha256": "ce16114373eddc64116f6eca183a8ac97d56d367b635168dd77bbca72ddedccc"
+  },
+  "readpoint": {
+    "path": "evidence:e-697e3e79a16ff6a28e8c",
+    "sha256": "7b7c2ba86917e5566c9b233cd45bb6d688d90cd8023fbb3f74f4eef67770178d"
+  },
+  "source": {
+    "path": "src-tauri/src/browser_sharing/helper_io/windows_input.rs",
+    "sha256": "8e75ea39824dc840f9841165b3397c336b81cb5b67c8c111a950bd31bc04a887"
+  },
+  "decision": "Prior read-origin-eof-loses-observed-input P2 is closed in this source delta; no remaining blocking finding in the reviewed platform4-source scope. Tests, shared Worker and actual Windows are separate.",
+  "exactDeltaProof": "Replacing PeekEof/ReadEof with former Eof and deduplicating the resulting enum/match alternatives reconstructs the r1 source SHA exactly; no other behavior changed.",
+  "reasoning": [
+    "Before a data read, Peek BROKEN_PIPE is PeekEof; only that non-consuming EOF and true NoData classify Clear.",
+    "After positive Peek enters ReadFile, zero/BROKEN_PIPE is ReadEof; published Complete ReadEof remains Dirty until normal relay consumption.",
+    "read_into consumes both variants as actual EOF; diagnostic CompletionKind::Eof stays stable and does not itself prove origin or publication.",
+    "Reader ownership, same-object synchronous-mode admission, pending query retention and buffer bounds are unchanged."
+  ],
+  "otherSourcesUnchanged": [
+    "src-tauri/src/browser_sharing/helper.rs",
+    "src-tauri/src/browser_sharing/helper_io.rs",
+    "src-tauri/src/browser_sharing/helper_io/unix.rs",
+    "src-tauri/src/browser_sharing/helper_io/windows.rs"
+  ],
+  "testReviewStatus": "Delivery author confirms intended ReadEOF control waits for actual Phase::Complete after releasing CompletedBeforePublish; positive/alias drain/read trail and separate PeekEOF control are planned. Test source not yet frozen or reviewed; no result claimed.",
+  "executed": {
+    "cargo": false,
+    "tests": false,
+    "CI": false,
+    "Windows": false,
+    "productionEdits": false
+  },
+  "scopeExclusions": [
+    "Root-owned shared Worker integration review",
+    "New test implementations and real Windows output",
+    "Earlier actual EOF unique-cause attribution"
+  ]
+}

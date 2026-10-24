@@ -1,0 +1,27 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "mode": "LaunchContracts",
+  "name": "generic-command-shape",
+  "filter": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+  "exactFilter": true,
+  "explicitIgnored": false,
+  "startedAtUtc": "2026-10-23T13:30:28.2992548Z",
+  "finishedAtUtc": "2026-10-23T13:30:28.3246092Z",
+  "invocationReturned": true,
+  "terminationRequestedByRunner": false,
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "actualNamedOutcomes": [
+    {
+      "name": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+      "outcome": "ok"
+    }
+  ],
+  "namesExact": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "exactPassed": true,
+  "stdoutSha256": "26C611D4FDF60A75A908A97BD7D7187D28B4B574798DEEC736E6A5498901CE20",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

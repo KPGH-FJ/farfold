@@ -1,0 +1,37 @@
+{
+  "group": "descriptor-null-refusal",
+  "filter": "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade",
+  "category": "portableRecoveryDescriptor",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:07.1980002Z",
+  "finishedAtUtc": "2026-10-23T12:09:07.2177598Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "18DE2AF6B134826E0D856FE6F27430495877854021D504D6A03F7EFC95ED5673",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

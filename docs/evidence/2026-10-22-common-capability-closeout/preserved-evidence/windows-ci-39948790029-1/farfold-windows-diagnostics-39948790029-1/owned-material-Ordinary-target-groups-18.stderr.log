@@ -1,0 +1,1 @@
+FARFOLD_LINK_CHANGED phase=targetGroup.verifyListingCount parent=1 actual=2 expected=1

@@ -1,0 +1,97 @@
+{
+  "atUtc": "2026-10-23T12:51:12.375385+00:00",
+  "metadataSources": [
+    {
+      "path": "evidence:e-194df7584f9ad3c9e14d",
+      "sha256": "672ecdc09c88be602158b08f8f43a35f8ee292b455ef3f58566cd953853b8daa"
+    },
+    {
+      "path": "evidence:e-0ff2360f437490e3a9c7",
+      "sha256": "dd1aad8f20bf4b8d08886f7b4aa3011320f0417636320f9634df9fbb45c2720d"
+    }
+  ],
+  "tables": {
+    "agents": {
+      "beforeCount": 40,
+      "afterCount": 40,
+      "added": 0,
+      "removed": 0,
+      "changed": []
+    },
+    "dismissed_sessions": {
+      "beforeCount": 173,
+      "afterCount": 173,
+      "added": 0,
+      "removed": 0,
+      "changed": []
+    },
+    "sessions": {
+      "beforeCount": 138,
+      "afterCount": 138,
+      "added": 0,
+      "removed": 0,
+      "changed": []
+    },
+    "settings": {
+      "beforeCount": 54,
+      "afterCount": 54,
+      "added": 0,
+      "removed": 0,
+      "changed": [
+        {
+          "rowKeySHA256": "905faaba2d3ad758477d22599a64eb8183f88ca9867161de5fb6f0211844a8ee",
+          "fields": ["value"],
+          "settingKey": "worktreeLocations.v1"
+        }
+      ]
+    }
+  },
+  "manifestDelta": {
+    "beforeEntries": 232530,
+    "afterEntries": 232530,
+    "added": 0,
+    "removed": 0,
+    "changed": [
+      {
+        "root": "appData",
+        "path": "farfold.sqlite3-shm",
+        "fields": ["sha256"]
+      },
+      {
+        "root": "appData",
+        "path": "farfold.sqlite3-wal",
+        "fields": ["sha256"]
+      },
+      {
+        "root": "appData",
+        "path": "registry-cache.json",
+        "fields": ["sha256", "size"]
+      },
+      {
+        "root": "webkit",
+        "path": "WebsiteData/ResourceLoadStatistics/observations.db",
+        "fields": ["sha256"]
+      },
+      {
+        "root": "webkit",
+        "path": "WebsiteData/ResourceLoadStatistics/observations.db-shm",
+        "fields": ["sha256"]
+      },
+      {
+        "root": "webkit",
+        "path": "WebsiteData/ResourceLoadStatistics/observations.db-wal",
+        "fields": ["sha256", "size"]
+      },
+      {
+        "root": "webkit",
+        "path": "WebsiteData/ResourceLoadStatistics/pcm.db-shm",
+        "fields": ["sha256"]
+      }
+    ]
+  },
+  "limits": [
+    "Read only sealed normalized copies, no SQLite opened on user originals or first captures.",
+    "No statement of zero byte changes or unknown writer resolution.",
+    "UI verification click on existing missing recovery pack is retained in normal-quit-observation.json; no new send or restore/delete action."
+  ]
+}

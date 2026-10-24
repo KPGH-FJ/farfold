@@ -1,0 +1,29 @@
+{
+  "group": "managed-role-21",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:03.8909492Z",
+  "finishedAtUtc": "2026-10-23T12:08:04.6379329Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "FABC0DE3FEA31E3E1672FB35E1B118D1902795D90479894827C7E9A3EF43563B",
+  "stderrSha256": "F6CCEB6792129F8BC06074283C4E9D10B5C3E0AF83FA1258BBA6BCA3B6CB9BB8"
+}

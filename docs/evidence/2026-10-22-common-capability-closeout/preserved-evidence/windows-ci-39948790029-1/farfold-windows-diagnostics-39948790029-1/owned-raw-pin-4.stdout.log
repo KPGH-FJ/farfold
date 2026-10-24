@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

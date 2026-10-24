@@ -1,0 +1,37 @@
+{
+  "group": "prepared-independent-git",
+  "filter": "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names",
+  "category": "ownedActualPreparedRecoveryGit",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:53.2602111Z",
+  "finishedAtUtc": "2026-10-23T12:08:58.8802623Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "81FA365A1F78CEA68C09549855987709E48D9C4C2A554F07E90AC578E772F68A",
+  "stderrSha256": "1DDEC8711D0FD3A06015C4B321EC5599877AD052286653F8BA9BF555E566004B"
+}

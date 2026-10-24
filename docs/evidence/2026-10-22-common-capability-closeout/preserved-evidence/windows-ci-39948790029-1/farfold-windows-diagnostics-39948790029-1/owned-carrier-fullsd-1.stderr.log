@@ -1,0 +1,4 @@
+
+thread 'worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture' (1592) panicked at src\worktrees\material_carrier_owner_tests.rs:42:70:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

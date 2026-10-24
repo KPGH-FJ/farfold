@@ -1,0 +1,37 @@
+{
+  "group": "empty-native-extent-keeps-eof-hash-footer",
+  "filter": "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers",
+  "category": "portableOrdinaryEmptyFragment",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers"
+  ],
+  "actualPassedNames": [
+    "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:30.2504252Z",
+  "finishedAtUtc": "2026-10-23T12:14:30.2644486Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "B8995AD70A6D8DAB05E102553CE1D57D2FC042C4BCDA82A1C6998BEAED5EA075",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

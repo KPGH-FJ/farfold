@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-zero-through-five-cold-material-counts",
+  "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts",
+  "category": "ordinaryMaterialColdRecoveryBoundary",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:48.0147666Z",
+  "finishedAtUtc": "2026-10-23T12:14:49.0369284Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "240BEEFD13DDBEB887339683D2AA2912C50F959ABFB3ED50DA2E273B37AAD1B5",
+  "stderrSha256": "450001E413C0A2202613EFDD285BD7119784E6D4275A66F8C3AADA0D8DC9E466"
+}

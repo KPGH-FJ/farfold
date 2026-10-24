@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::create::windows::tests::public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 46.66s
+

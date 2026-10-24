@@ -1,0 +1,9 @@
+
+running 4 tests
+test worktrees::windows_git::paths::tests::a_private_directory_may_change_metadata_while_the_dos_alias_stays_the_same_held_object ... ok
+test worktrees::windows_git::paths::tests::actual_held_dos_spellings_pair_full_identity_and_stamp_without_searching_a_program ... ok
+test worktrees::windows_git::paths::tests::an_existing_different_dos_file_cannot_be_substituted_for_the_original_held_identity ... ok
+test worktrees::windows_git::paths::tests::real_read_context_accepts_missing_worktree_and_reads_allowed_boolean_with_original_selected_program ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2320 filtered out; finished in 0.77s
+

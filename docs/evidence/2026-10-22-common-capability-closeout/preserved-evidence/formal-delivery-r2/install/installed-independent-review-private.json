@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "phase": "installed-10-independent-checks",
+  "checkedAtUtc": "2026-10-23T12:42:51.439669+00:00",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "atomicInstallToolSha256": "a598c2adebb32e406b312f2c0f3c209a21d077a05f451b4038867867081e47be",
+  "atomicInstallReceiptSha256": "213d48bd3ae3a7e6dcd823a8ebb8a088d0fac3013f74ab543c4d982ece5c9c82",
+  "installJournalSha256": "b3a3c61efd3cdf8408bd20369ae0c4e8b29fdd36e612247700cc56e842650e36",
+  "afterReceiptSha256": "111406449ddbaf5cd9d7369980cee4ec7671c17b3e5689388fd97a5d0da0fe6e",
+  "passed": 10,
+  "total": 10,
+  "failures": [],
+  "checks": [
+    {
+      "name": "source-and-production-inputs",
+      "passed": true,
+      "details": {
+        "source": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+        "productionFiles": 2236,
+        "independentLiveAndGitObjectHashMismatches": 0
+      }
+    },
+    {
+      "name": "receipt-and-evidence-seals",
+      "passed": true,
+      "details": {
+        "verified": 30,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "formal-candidate-exact-five-files-and-modes",
+      "passed": true,
+      "details": {
+        "fileCount": 5,
+        "files": {
+          "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+          "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+          "Contents/MacOS/farfold": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+          "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+          "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+        },
+        "modes": {
+          "Contents/Info.plist": 420,
+          "Contents/_CodeSignature/CodeResources": 420,
+          "Contents/MacOS/farfold": 493,
+          "Contents/Resources/icon.icns": 420,
+          "Contents/Resources/release-manifest.json": 420
+        },
+        "symlinks": [],
+        "atomicReplacements": [
+          {
+            "file": "Contents/Info.plist",
+            "oldDevice": 16777234,
+            "oldInode": 84085308,
+            "newDevice": 16777234,
+            "newInode": 85409985
+          },
+          {
+            "file": "Contents/MacOS/farfold",
+            "oldDevice": 16777234,
+            "oldInode": 84085310,
+            "newDevice": 16777234,
+            "newInode": 85409986
+          },
+          {
+            "file": "Contents/Resources/icon.icns",
+            "oldDevice": 16777234,
+            "oldInode": 84085311,
+            "newDevice": 16777234,
+            "newInode": 85409987
+          },
+          {
+            "file": "Contents/Resources/release-manifest.json",
+            "oldDevice": 16777234,
+            "oldInode": 84085314,
+            "newDevice": 16777234,
+            "newInode": 85409988
+          },
+          {
+            "file": "Contents/_CodeSignature/CodeResources",
+            "oldDevice": 16777234,
+            "oldInode": 84085315,
+            "newDevice": 16777234,
+            "newInode": 85409989
+          }
+        ],
+        "finalInodesMatch": true,
+        "existingInodesWritten": false,
+        "appBackupCreated": false,
+        "automaticRetry": false,
+        "restorePerformed": false
+      }
+    },
+    {
+      "name": "bundle-identity",
+      "passed": true,
+      "details": {
+        "CFBundleIdentifier": "ai.farfold.desktop",
+        "CFBundleShortVersionString": "0.1.7",
+        "CFBundleDevelopmentRegion": "zh_CN",
+        "CFBundleLocalizations": ["zh-Hans"],
+        "CFBundleExecutable": "farfold"
+      }
+    },
+    {
+      "name": "arm64-mach-o",
+      "passed": true,
+      "details": {
+        "magic": "0xfeedfacf",
+        "cpu": "0x100000c",
+        "subtype": 0,
+        "lipo": "arm64"
+      }
+    },
+    {
+      "name": "strict-codesign",
+      "passed": true,
+      "details": {
+        "verifyExit": 0,
+        "detailsExit": 0,
+        "detailsSha256": "61198143605120d3a4676ab96be717aa7c4f8fc0fc3f1047053a626e0f416da6",
+        "scope": "adhoc internal signature; no public signing or notarization claim"
+      }
+    },
+    {
+      "name": "archive-exact-five-crc-mode",
+      "passed": true,
+      "details": {
+        "sha256": "135df17d34d06938776ed839fcf9909fc2e9fdb25d837a83e40384c5c1941345",
+        "bytes": 16093603,
+        "members": 5,
+        "mismatches": [],
+        "unzipExit": 0
+      }
+    },
+    {
+      "name": "closed-without-launch-observed",
+      "passed": true,
+      "details": {
+        "recordedZeroProcessObservations": 27,
+        "currentExactProcessCount": 0,
+        "currentProcessObservation": {
+          "checkedAtUtc": "2026-10-23T12:42:42.594308+00:00",
+          "formalProcessCount": 0,
+          "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+        },
+        "noLaunchPerformedByReviewer": true,
+        "normalQuitEvidence": {
+          "publication": "omitted-private-context",
+          "originalRetainedLocally": true
+        },
+        "continuousClosedIntervalNotClaimed": true
+      }
+    },
+    {
+      "name": "metadata-backup-and-first-capture-retained",
+      "passed": true,
+      "details": {
+        "backupSha256": "672ecdc09c88be602158b08f8f43a35f8ee292b455ef3f58566cd953853b8daa",
+        "firstCaptureFiles": 3,
+        "byteMismatches": [],
+        "threeReceiptRawMetadataEqual": true,
+        "reviewerOpenedSql": false,
+        "reviewerReadLiveData": false,
+        "scope": "Retained bytes and existing sealed integrity receipt; SQL integrity was not rerun."
+      }
+    },
+    {
+      "name": "fresh-three-full-manifests-byte-identical",
+      "passed": true,
+      "details": {
+        "manifestSha256": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+        "count": 232530,
+        "countsMatchReceipts": true,
+        "strictByteEqual": true,
+        "priorDifferencesNotWaived": true
+      }
+    }
+  ],
+  "boundaries": [
+    "No reviewer App/Agent launch or quit, SQL, live-data read, source edit, build, restore or cleanup.",
+    "Temporary duplicate candidate cleanup is still required separately.",
+    "Installed recovery/render behavior, current-conversation applicability, native behavior, cold restore and real Agent effects remain unverified by this installed review.",
+    "No claim of continuous process absence or resolution of unknown reopen caller.",
+    "Prior failed candidates and strict data differences remain preserved."
+  ]
+}

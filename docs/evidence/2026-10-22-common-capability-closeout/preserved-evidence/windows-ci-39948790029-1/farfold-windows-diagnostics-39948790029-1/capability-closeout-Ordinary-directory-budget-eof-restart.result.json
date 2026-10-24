@@ -1,0 +1,37 @@
+{
+  "group": "directory-budget-eof-restart",
+  "filter": "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation",
+  "category": "ownedDirectoryQueryBudget",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:13.9221366Z",
+  "finishedAtUtc": "2026-10-23T12:09:13.9462131Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "A4569B2F49F7ADD644FA7DED523F6D55B8302474BF17BC7FEB2A0F78B3F70857",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

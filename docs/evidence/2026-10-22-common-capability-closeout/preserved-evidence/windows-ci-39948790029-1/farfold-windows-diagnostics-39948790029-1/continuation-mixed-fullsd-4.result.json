@@ -1,0 +1,30 @@
+{
+  "group": "mixed-fullsd-4",
+  "filter": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+  "category": "explicitCurrentTokenFullSecurityNoFallback",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:00.6779705Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.7104205Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "67F904EABB3CECC6E21E2895660F947F02D666109FD0633573DE5C1E54AC0FAC",
+  "stderrSha256": "39832A590C864BC7C707CBEC23A2A28CDE58B8520D91F3E018C856BB98302BAA"
+}

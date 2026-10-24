@@ -1,0 +1,29 @@
+{
+  "group": "target-groups-11",
+  "filter": "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.1500237Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.1939555Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "39838269E70B8E42D7AC10DFE52E554BD1FD5E1F49288DFC2A08400E80DEEC9A",
+  "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+}

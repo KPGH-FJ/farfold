@@ -1,0 +1,37 @@
+{
+  "group": "prepared-git-original-leaf-complete-mixed-rebuild",
+  "filter": "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf",
+  "category": "ownedPreparedGitMixedRecovery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:34.4323534Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.6553574Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": "FARFOLD_PREPARED_MIXED_CONTROL phase=sealed",
+  "phaseMarkerMatches": 1,
+  "injectionPhaseReached": true,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "7A412F13040743728DA9720108678E94EDECFD55E34C8C5261F1EA5C4C2D5D11",
+  "stderrSha256": "0300C68A3B0652A8EB55BF70376EFE737C45CB806BD22AC60B29CAD1B24A7A1B"
+}

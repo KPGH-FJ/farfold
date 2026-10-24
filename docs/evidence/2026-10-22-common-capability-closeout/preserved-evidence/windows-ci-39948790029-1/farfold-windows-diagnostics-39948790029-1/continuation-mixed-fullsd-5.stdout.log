@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

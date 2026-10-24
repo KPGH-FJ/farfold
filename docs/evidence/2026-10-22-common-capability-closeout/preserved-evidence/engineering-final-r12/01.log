@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 format:check <private-mac-home:a2369e920572>
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

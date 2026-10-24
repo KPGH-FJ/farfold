@@ -1,0 +1,125 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "groups": [
+    {
+      "group": "first-import",
+      "filter": "worktrees::recovery_pack::private_bare::tests::",
+      "expectedTests": 7,
+      "expectedNames": [
+        "worktrees::recovery_pack::private_bare::tests::actual_import_ref_install_fsck_and_exact_reachable_objects_share_the_selected_owner",
+        "worktrees::recovery_pack::private_bare::tests::malformed_pack_and_wrong_object_set_fail_without_changing_the_owned_source",
+        "worktrees::recovery_pack::private_bare::tests::cancelled_or_mismatched_source_identity_does_not_gain_private_execution_authority",
+        "worktrees::recovery_pack::private_bare::tests::original_project_decoy_and_existing_public_read_and_mutation_gates_remain_separate",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_global_has_an_owned_positive_not_a_path_guess",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_attributes_has_an_owned_positive",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_hooks_has_actual_benign_hook_positive_before_guarded_absence"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::private_bare::tests::actual_import_ref_install_fsck_and_exact_reachable_objects_share_the_selected_owner",
+        "worktrees::recovery_pack::private_bare::tests::cancelled_or_mismatched_source_identity_does_not_gain_private_execution_authority",
+        "worktrees::recovery_pack::private_bare::tests::malformed_pack_and_wrong_object_set_fail_without_changing_the_owned_source",
+        "worktrees::recovery_pack::private_bare::tests::original_project_decoy_and_existing_public_read_and_mutation_gates_remain_separate",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_attributes_has_an_owned_positive",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_global_has_an_owned_positive_not_a_path_guess",
+        "worktrees::recovery_pack::private_bare::tests::real_private_prefix_null_hooks_has_actual_benign_hook_positive_before_guarded_absence"
+      ],
+      "startedAtUtc": "2026-10-23T12:04:57.9243668Z",
+      "finishedAtUtc": "2026-10-23T12:05:04.3811658Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 7 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "F527279329614C6E11B2848D08C808114DEF3F6FBE7EBFF04CAC6EB17CF3AC27",
+      "stderrSha256": "6C49D0C2C2352F155FCD1F2B0CD61AC1EB9781483F171F32C61609F8478BA896"
+    },
+    {
+      "group": "source-export",
+      "filter": "worktrees::recovery_pack::source_export_tests::",
+      "expectedTests": 5,
+      "expectedNames": [
+        "worktrees::recovery_pack::source_export_tests::real_source_export_then_existing_import_checks_exact_objects_without_source_writes",
+        "worktrees::recovery_pack::source_export_tests::real_export_output_and_source_authority_stay_owned_until_import_finishes",
+        "worktrees::recovery_pack::source_export_tests::cancelled_or_wrong_source_request_has_no_export_success",
+        "worktrees::recovery_pack::source_export_tests::roots_cannot_inject_revision_options_and_partial_material_still_cannot_export",
+        "worktrees::recovery_pack::source_export_tests::missing_source_objects_fail_and_absolute_project_program_decoy_is_not_authority"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::source_export_tests::cancelled_or_wrong_source_request_has_no_export_success",
+        "worktrees::recovery_pack::source_export_tests::missing_source_objects_fail_and_absolute_project_program_decoy_is_not_authority",
+        "worktrees::recovery_pack::source_export_tests::real_export_output_and_source_authority_stay_owned_until_import_finishes",
+        "worktrees::recovery_pack::source_export_tests::real_source_export_then_existing_import_checks_exact_objects_without_source_writes",
+        "worktrees::recovery_pack::source_export_tests::roots_cannot_inject_revision_options_and_partial_material_still_cannot_export"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:04.4170555Z",
+      "finishedAtUtc": "2026-10-23T12:05:08.3958170Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 5 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "303908CFEBA798DD157BD63A51FAFC9D8384C119F754D32790733E10D0A93AA3",
+      "stderrSha256": "92D12CA537A8DD767DABC18A3E86CA1DA8A2B9AC995179549D11BC6174DDA9DC"
+    },
+    {
+      "group": "material-entry",
+      "filter": "worktrees::material_scan::windows::entry_pair_tests::",
+      "expectedTests": 5,
+      "expectedNames": [
+        "worktrees::material_scan::windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version",
+        "worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected",
+        "worktrees::material_scan::windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence",
+        "worktrees::material_scan::windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version",
+        "worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected",
+        "worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected",
+        "worktrees::material_scan::windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version",
+        "worktrees::material_scan::windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version",
+        "worktrees::material_scan::windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:08.4049252Z",
+      "finishedAtUtc": "2026-10-23T12:05:08.4427996Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 5 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "2F4E55B459AB1E9005E4E65ED5836C18A843ABC3C6EE580214B9B02A94568299",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "preparation-cache",
+      "filter": "worktrees::preparation_windows::cache_tests::",
+      "expectedTests": 4,
+      "expectedNames": [
+        "worktrees::preparation_windows::cache_tests::earlier_real_listing_pairs_with_stable_current_fixed_file_and_fresh_cache_observation",
+        "worktrees::preparation_windows::cache_tests::current_same_object_complete_metadata_still_changes_the_fixed_observation",
+        "worktrees::preparation_windows::cache_tests::actual_same_object_attribute_change_is_not_hidden_by_namespace_comparison",
+        "worktrees::preparation_windows::cache_tests::actual_access_denial_is_unreadable_and_only_fresh_confirmed_absence_is_missing"
+      ],
+      "actualPassedNames": [
+        "worktrees::preparation_windows::cache_tests::actual_access_denial_is_unreadable_and_only_fresh_confirmed_absence_is_missing",
+        "worktrees::preparation_windows::cache_tests::actual_same_object_attribute_change_is_not_hidden_by_namespace_comparison",
+        "worktrees::preparation_windows::cache_tests::current_same_object_complete_metadata_still_changes_the_fixed_observation",
+        "worktrees::preparation_windows::cache_tests::earlier_real_listing_pairs_with_stable_current_fixed_file_and_fresh_cache_observation"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:08.4468260Z",
+      "finishedAtUtc": "2026-10-23T12:05:08.4822847Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "A9D7C8D0B5DDC437479A814E14CB726C1E3794BC815C261D4FE1B16BFFF7515A",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    }
+  ],
+  "inputsStable": true,
+  "observationComplete": true,
+  "publicMutationOrPrivateContextComplete": false,
+  "productOrAllWindowsComplete": false
+}

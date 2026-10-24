@@ -1,0 +1,9 @@
+{
+  "sourceHead": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinary": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixture": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\examples\\windows_process_fixture.exe",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "testBuildExit": 0,
+  "fixtureBuildExit": 0
+}

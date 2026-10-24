@@ -1,0 +1,12 @@
+
+running 7 tests
+test worktrees::git::input::tests::cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer ... ok
+test worktrees::git::input::tests::common_file_output_path_retains_exact_input_and_original_output_limit_cleanup ... ok
+test worktrees::git::input::tests::empty_finite_file_is_valid_and_not_a_failed_or_truncated_input ... ok
+test worktrees::git::input::tests::explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved ... ok
+test worktrees::git::input::tests::factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors ... ok
+test worktrees::git::input::tests::real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild ... ok
+test worktrees::git::input::tests::selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2317 filtered out; finished in 0.89s
+

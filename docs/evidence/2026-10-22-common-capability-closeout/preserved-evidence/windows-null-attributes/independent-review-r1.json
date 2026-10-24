@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-10-23T10:21:22.080768+00:00",
+  "reviewer": "windows_gaps (non-author)",
+  "scope": "Read-only independent review of null-attributes production semantics and controlled test design; no product edits, test execution, Cargo, CI, network or artifact download.",
+  "baseHead": "48283b0ba52f0b69b5cf7018153cfef56c131fb0",
+  "authorHandoff": {
+    "path": "evidence:e-b8bc4c810e9dab896ba4",
+    "sha256": "518d128f1aafa126d634faa6bcb6170c06d4290a961775bf6fa0275fc021b774",
+    "bytes": 6649
+  },
+  "files": [
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_inputs_windows.rs",
+      "sha256": "18f4aa97a94e9af9c0ec3beba67b60505dc9db29ac01b1bbc1421510b9ce00bb",
+      "bytes": 17232,
+      "r1Sha256": "18f4aa97a94e9af9c0ec3beba67b60505dc9db29ac01b1bbc1421510b9ce00bb",
+      "matchesR1": true
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_evaluator_windows.rs",
+      "sha256": "0dc015138d4f2d54cd23b1e2360ba97d2a19996920a47200fe72f0ae75578e15",
+      "bytes": 22849,
+      "r1Sha256": "0dc015138d4f2d54cd23b1e2360ba97d2a19996920a47200fe72f0ae75578e15",
+      "matchesR1": true
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_windows_tests.rs",
+      "sha256": "879386f1c8e033d79cec16e4ba3254c617269ce058930c656500c674785511b1",
+      "bytes": 19467,
+      "r1Sha256": "879386f1c8e033d79cec16e4ba3254c617269ce058930c656500c674785511b1",
+      "matchesR1": true
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_null_attributes_windows_tests.rs",
+      "sha256": "3aa7746c4ba35b2f5afd2b9d1d51f57c82ee7cb77e11608dd308ac3dfd92f6e6",
+      "bytes": 14197,
+      "r1Sha256": "9b000e226f83f16af72e9fb2c69117569005f5cd6e7d7f77e68754fbb79701db",
+      "matchesR1": false,
+      "deltaFromR1": "One parent-only println!(\"{text}\") changed to eprintln!(\"{text}\"); exact inverse restores complete r1 source bytes."
+    }
+  ],
+  "verdict": "No blocking source defect identified in the reviewed three-state change. The controlled Windows tests remain unexecuted in this review; CI wiring is outside this r1 source review.",
+  "productionFindings": [
+    {
+      "where": "git_source_checkout_inputs_windows.rs:167-174,387-435",
+      "finding": "Default, Disabled and File are distinct. Only exact /dev/null and ASCII-case bare NUL choose Disabled. Other strings continue through the unchanged configured_path and OptionalFile ownership checks; no generic device or rooted-path permission was added."
+    },
+    {
+      "where": "git_source_checkout_evaluator_windows.rs:319-375",
+      "finding": "Some(Disabled) adds only -c core.attributesFile=/dev/null. Some(Default) preserves default global selection. Some(File) uses the original held anchor and verified Git-compatible path. Outer None still disables both system and global attributes independently. GIT_CONFIG_NOSYSTEM/GLOBAL config isolation is not mistaken for GIT_ATTR_NOSYSTEM attribute suppression."
+    },
+    {
+      "where": "git_source_checkout_inputs_windows.rs:258-321,461-469; git_source_checkout_evaluator_windows.rs:254-263,405-413",
+      "finding": "Configured existing/missing file identity, held-parent absence and before/after verification are unchanged. The exact effective config --path return remains in attr_path and is compared again, so semantically equivalent spelling changes are not silently accepted."
+    },
+    {
+      "where": "git_source_checkout_windows.rs:64-107 (unchanged context)",
+      "finding": "The real capture path still reads selected HEAD, source info attributes, official original and local attributes, builds and re-evaluates a mirror, re-evaluates original global/system input, requires equality, and performs input/owner checks before and after consumption."
+    }
+  ],
+  "testReview": {
+    "regularExactTests": [
+      "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+      "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+      "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+    ],
+    "originalRegressions": [
+      "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+      "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+      "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation"
+    ],
+    "fixedChild": "worktrees::git::source_roots::profile::tests::null_attributes::owned_xdg_global_attributes_child",
+    "designAdequacy": [
+      "Classifier covers exact documented null spellings and 20 nonalias counterexamples; real Inputs tests retain unsafe rooted/drive-relative rejection and original bytes.",
+      "Command-policy test inspects the same production constructor and verifies actual held-file write exclusion; it neither installs a second command implementation nor injects prohibited GIT_* environment overrides.",
+      "The fixed child receives only its own standard XDG_CONFIG_HOME, not a private HOME. It checks its owned marker/config/global input and verifies the actual effective setting so external HOME/config precedence becomes a test failure rather than an assumed condition.",
+      "Six actual Git settings cover default, explicit null variants, missing file, existing file; selected repository attributes and held info survive, dirty .gitattributes does not substitute, and returned mirror is reconsumed through official Git.",
+      "Three raw effective-config transitions require old Inputs to return changed and fresh capture to observe the exact new value.",
+      "Timeout/observation error retains the exact owned XDG directory and does not claim completion; original child only is killed and timeout has a bounded two-second observation. No process-tree or name-based termination is added."
+    ],
+    "outputDelta": "Parent forwarding of child libtest output now uses stderr; this avoids a second stdout test-result line. Exact one-line inverse restores r1. Original r1 source/check receipts remain unchanged.",
+    "coverageLimits": [
+      "No actual Windows test was executed by reviewer. Strict cross compilation is type/lint proof only.",
+      "System-attribute policy is asserted through the real Command, not through a deliberately installed nonempty system attributes file.",
+      "The fixed child is not an additional independently counted manual/current/legacy case.",
+      "Success of this design does not establish cold Recover or the complete Windows/product stage; those original public paths require their own actual results."
+    ]
+  },
+  "officialSemanticsBoundary": {
+    "readpoint": {
+      "path": "evidence:e-2ff6fa19d1f84024e4e7",
+      "sha256": "cbb8968eac052b8d87aff64b553f94fcc8022333a8f2d3954ec894628c4482e2",
+      "bytes": 3404
+    },
+    "priorNonAuthorDraftReview": {
+      "path": "evidence:e-3fd967dee9524433ef48",
+      "sha256": "b804b6374f00c7d7c6718c9bac9ace90e9ebe7cd157008308b273c0d1be399cb",
+      "bytes": 7614
+    },
+    "boundary": "This review used the previously sealed pinned official Git source excerpts and the present production call graph. It did not refetch or claim to reread unavailable full official source files."
+  },
+  "otherOwnerCheck": {
+    "receipt": {
+      "path": "evidence:e-fc92320f5ff106f01b9c",
+      "sha256": "ce95218835f8108c121c6d02ee47d0280a304f822445b0292dd8b3ff59333a56",
+      "bytes": 2048
+    },
+    "exitCode": 0,
+    "inputsStable": true,
+    "scope": "all Windows GNU target compile/clippy, not actual Windows tests",
+    "boundary": "Root execution, not reviewer execution. Binds r1 bytes, prior to the parent stdout-to-stderr test-only delta."
+  },
+  "pending": "Author is preparing independent NullAttributes mode and exact eight-case CI wiring. Review that frozen delta separately; no anticipated run result is recorded here."
+}

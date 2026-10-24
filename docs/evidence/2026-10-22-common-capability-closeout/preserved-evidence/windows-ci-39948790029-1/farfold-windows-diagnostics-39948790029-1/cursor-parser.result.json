@@ -1,0 +1,11 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "filter": "pty::windows_tests::terminal_cursor_query_",
+  "startedAtUtc": "2026-10-23T12:04:43.9617588Z",
+  "finishedAtUtc": "2026-10-23T12:04:44.0495639Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 3 passed; 0 failed; 0 ignored;",
+  "exactThreePassed": true,
+  "stdoutSha256": "4998042802692B0142646BFCBB9FB22708DCC73DDDF0F4C6CCF891C06655302E",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

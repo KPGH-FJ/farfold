@@ -1,0 +1,29 @@
+{
+  "group": "managed-edge-03",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source",
+  "category": "ownedOriginalSourceOwnerRoleAndBudget",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:09.7680040Z",
+  "finishedAtUtc": "2026-10-23T12:08:10.8854773Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "D3A5CD2BE7A615DF889DD310DA0331FDE05A990F1E652852AACAD6312CD56029",
+  "stderrSha256": "5660462B6139222352086DC9A5555A8BC0B98FEA9EB2F7E02EF376CF20BE9769"
+}

@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "task": "ARCH-49 bounded content-free delivery observation",
+  "phase": "sourceCheckpointNotStageCompletion",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/delivery_observation.rs",
+      "sha256": "1d9716ff4db6c1940c418b1dee3c0f9f4ddab2dd00bce971787ebbef7cefb61d",
+      "bytes": 12817,
+      "lines": 400
+    },
+    {
+      "path": "src-tauri/src/acp_client/delivery_observation_tests.rs",
+      "sha256": "42826636e5d1538ff8406aa5911364a815a285276470427c9fbfe4112569be51",
+      "bytes": 7458,
+      "lines": 193
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_retention.rs",
+      "sha256": "b0e5493c13bfec198eb8f3bbf171f250d5bac427eff07546a5a1d5361fe5b935",
+      "bytes": 3018,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_admission.rs",
+      "sha256": "c6224b6afe86f3d08809c1e6a65693c6540046c323640a3461b9b23a05a18f37",
+      "bytes": 22555,
+      "lines": 673
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "6366ab8ab4b1a27cb55530d93ee43ad2be9915ac16ebad61a972c9cfa41c5f47",
+      "bytes": 52965,
+      "lines": 1252
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "3d0942e4bd940998751ad587a01aad08e03e89a1126a242dce47cd87a6a6ad37",
+      "bytes": 3153,
+      "lines": 154
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "e6171ea6542acf171632ecc6902bab5df8d715213c784f4ceb256c24e643fa88",
+      "bytes": 27830,
+      "lines": 799
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "sha256": "b84d8c034504631d3b0d9846fb9f76d691449c84d675719686e5b690118c3bee",
+      "bytes": 15524,
+      "lines": 451
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_fork.rs",
+      "sha256": "374b47702809552a4deef4cbd0e98f909da33f6ba4269d35d7800ba412bfcfde",
+      "bytes": 18377,
+      "lines": 536
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "02a091c618d5f8feeec4e05f81de3ddc01d2f3fa3e281811814aef46bc9cee29",
+      "bytes": 23766,
+      "lines": 501
+    },
+    {
+      "path": "src/runtime/session_delivery_observer.ts",
+      "sha256": "37cdf83560a853d0359772bf398a33a4fc73851002420b7a26e34d3eecfdf782",
+      "bytes": 4608,
+      "lines": 143
+    },
+    {
+      "path": "src/runtime/session_delivery_observer.test.ts",
+      "sha256": "2df3dafd0995d0ce7f80e75e8d838da589f0ebb2a97b3decf3f084bf9b8da9c2",
+      "bytes": 7420,
+      "lines": 202
+    },
+    {
+      "path": "src/runtime/session_delivery_integration.test.ts",
+      "sha256": "4da2c87e7781c6e8bc702591939c036a01a440f8c8835eee7a2fb5cbb3ef3e8f",
+      "bytes": 5877,
+      "lines": 194
+    },
+    {
+      "path": "src/runtime/session_open_delivery.ts",
+      "sha256": "91aefb467ea916f68ede0a1b7bef1dd29d9e842946a605a0451956ae07c75ebe",
+      "bytes": 1825,
+      "lines": 53
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "e6e2ed8b2a4532f6da537062d39d4dc07ec414e5b5b81d5324026a0a632146f5",
+      "bytes": 49802,
+      "lines": 1499
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "sha256": "82d460023b84c2400354e22794907420471230a21d75e8ef2262d24bd01ba8e5",
+      "bytes": 8330,
+      "lines": 241
+    },
+    {
+      "path": "src/runtime/session_fork.ts",
+      "sha256": "4f95f5c3f196d141d3a2814f2bf2562b5646884958425cedfdb7ae1928a9c108",
+      "bytes": 17435,
+      "lines": 478
+    }
+  ],
+  "checks": [
+    {
+      "command": "pnpm exec vitest run [8 affected files]",
+      "session": 36428,
+      "exit": 0,
+      "files": 8,
+      "tests": 116,
+      "log": "evidence:e-e86cdc50cd4837621e66",
+      "scope": "includes final routing, mismatch and wrong-order cases; before later synchronous-bridge failure guard"
+    },
+    {
+      "command": "pnpm exec vitest run session_delivery_observer.test.ts session_delivery_integration.test.ts",
+      "exit": 0,
+      "files": 2,
+      "tests": 16,
+      "log": "evidence:e-6cb445f2cffdc9a14836",
+      "scope": "final observer including synchronous IPC throw guard; open/load/fork/preview controlled integration"
+    },
+    {
+      "command": "pnpm typecheck",
+      "session": 2691,
+      "exit": 0,
+      "log": "evidence:e-bb6881bf917502b04280",
+      "scope": "before later try/catch bridge guard and comment; final guard validated by affected Vitest transform"
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked delivery_observation",
+      "session": 41708,
+      "exit": 0,
+      "tests": 5,
+      "log": "evidence:e-5be2c66f6f2c52dfb9f1",
+      "scope": "production Registry/IpcResponse/Channel methods with controlled sinks; no real webview or injected Window"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "inputsStable": true,
+      "scope": "Final 17-file observer source hashes including synchronous IPC throw guard",
+      "log": "evidence:e-bff30d8cf13c70109708",
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "independentReview": {
+    "path": "evidence:e-08870d53b361f3a17f7d",
+    "sha256": "5fdb5b675245a946ae413c500839d9e5fb0434a8f33a392e2e5dd9260775aff2",
+    "unresolvedBlockers": []
+  },
+  "preservedFailures": [
+    {
+      "session": 54909,
+      "exit": 1,
+      "files": 8,
+      "passed": 113,
+      "failed": 1,
+      "cause": "new test beforeEach returned vi.fn, interpreted by Vitest as cleanup; rejected mock called during cleanup. Fixed hook to return void; exact tool output preserved in session; not a production ACK failure."
+    },
+    {
+      "session": 81691,
+      "exit": 101,
+      "log": "evidence:e-1a41dfa4f3cb7de12179",
+      "cause": "new module used undeclared uuid; changed to existing getrandom without dependency. Concurrent Windows test visibility errors separately fixed by owner."
+    },
+    {
+      "session": 52754,
+      "exit": 101,
+      "log": "evidence:e-875fb644e69d99b98158",
+      "cause": "Windows worktrees manager missing recover module qualification; fixed by owner before r3."
+    }
+  ],
+  "notEstablished": [
+    "SDK queue backpressure or maximum retained memory/RSS",
+    "All events or a replay prefix consumed; a sample can be a control event",
+    "React paint, visible output, or actual WebView acknowledgement timing",
+    "Formal installed application transport and snapshot access",
+    "Real-Agent workload or 29-agent acceptance",
+    "Actual Tauri Window injection, random-source failure, command startup failure, and Windows execution"
+  ],
+  "sdkBackpressureImplemented": false,
+  "installedApplicationUpdated": false,
+  "realAgentInvoked": false,
+  "all29Accepted": false
+}

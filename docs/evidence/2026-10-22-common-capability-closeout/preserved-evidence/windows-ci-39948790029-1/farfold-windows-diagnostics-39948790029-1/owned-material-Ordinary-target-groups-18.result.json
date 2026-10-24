@@ -1,0 +1,29 @@
+{
+  "group": "target-groups-18",
+  "filter": "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.6382069Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.6826705Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "EE378CA30819B77D8457FC5475BEE2C3EC63735A317D6782864401A97C7B544C",
+  "stderrSha256": "7173210B78C9ED457EC06D0533D0F9DC9F4FC21B2C9756BAF347599786B98278"
+}

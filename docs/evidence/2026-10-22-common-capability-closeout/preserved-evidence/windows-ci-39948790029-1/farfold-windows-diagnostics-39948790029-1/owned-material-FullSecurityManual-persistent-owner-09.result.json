@@ -1,0 +1,27 @@
+{
+  "group": "persistent-owner-09",
+  "filter": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+  "category": "currentMerged21",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:12.9360368Z",
+  "finishedAtUtc": "2026-10-23T12:08:12.9611613Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "3E42AF7403A60B426F71AB69F46F39D5367A3EF5F78DE6F11836FDE979AAF10A",
+  "stderrSha256": "5C9E95044EADA6813B8322FB5CEC956B3B33C0D590DE7919BA1106948F3E96E7"
+}

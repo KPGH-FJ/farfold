@@ -1,0 +1,3 @@
+FARFOLD_WINDOWS_GIT_TEST_CHILD {"exitCode":1,"stderrPrefix":"","prefixTruncated":false,"observationError":null}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.worktree","boolean":false,"exitCode":1,"success":false,"stdoutBytes":0}
+FARFOLD_WINDOWS_GIT_TEST_CONFIG {"name":"core.bare","boolean":true,"exitCode":0,"success":true,"stdoutBytes":6}

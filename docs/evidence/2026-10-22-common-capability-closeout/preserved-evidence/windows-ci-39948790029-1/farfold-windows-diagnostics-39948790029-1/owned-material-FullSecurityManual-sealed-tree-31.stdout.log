@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

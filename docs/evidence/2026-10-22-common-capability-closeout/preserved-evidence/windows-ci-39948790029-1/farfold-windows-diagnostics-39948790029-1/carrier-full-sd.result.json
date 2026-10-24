@@ -1,0 +1,232 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "groups": [
+    {
+      "group": "carrier-fullsd-1",
+      "filter": "worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.2494254Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.3805898Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "0D192726840DCC4E7B3F9444E87F65432A05CC35AFBF9F40737C8540077E548F",
+      "stderrSha256": "33FA2D945C3C98F48763956F444D61C62E68BFB9CE999893D355356A78D2D321"
+    },
+    {
+      "group": "carrier-fullsd-2",
+      "filter": "worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.4086257Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.4466405Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "AB42ADF0679E4EFAFC94FF7A00D4C513018EB9343C990B4F53703D9374BCEE0B",
+      "stderrSha256": "82C243C26DDB8F963F078762DF5C62E2972225A14F17528ABA2214DE417BBD23"
+    },
+    {
+      "group": "carrier-fullsd-3",
+      "filter": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.4533326Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.4904043Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "BF7E68F59202CD51EDCE1FB300157499372B914E9BA9B070ECB89CCA9E8CE2B5",
+      "stderrSha256": "C5692087E0F9D150C6D4C60873EECE6B48451042FC2E25F821AB4B32B66C86EB"
+    },
+    {
+      "group": "carrier-fullsd-4",
+      "filter": "worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.4961271Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.5462095Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "A0A3FDFCE5CC0FCF4F9074F6957FF3994A3A2CDB34929F4C220203FD0620B911",
+      "stderrSha256": "8FAEB748FB70A16722CB30ECFC8D2CE543A3B269D6AFE07893309D6B32DD8E1B"
+    },
+    {
+      "group": "raw-pin-fullsd",
+      "filter": "file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback",
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.5513426Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.5849462Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "2DEA3C6C59D4308FF2F3B0EC2FAA25B6E7D922173F8976A06DCA6AFC51018243",
+      "stderrSha256": "3D9B6F97D0A6038E3F5CC6EA6A0A9F2CCAE9E74673E94AFB4B4788A15AC679A6"
+    },
+    {
+      "group": "owned-link-fullsd",
+      "filter": "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.5905083Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.6534634Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "EE5CD23631970E215403F52085DF998B724DEFC37AE9ABD35B4B6EE5D478C816",
+      "stderrSha256": "01DDEF0B2525143486B92B51CBC392AD2C67DF605ACD9A60E16235DD8CD4E882"
+    },
+    {
+      "group": "directory-fullsd",
+      "filter": "worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.6824777Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.7422964Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "729ECBF55C1E821EB0D94AE74CD6D30703D6A328D8CFA74E024929E0C4A7790D",
+      "stderrSha256": "7FAC406A1982DB619C505D676B156D20632360B6759DEE40A65F0CD643B3F41E"
+    },
+    {
+      "group": "directory-restore-fullsd",
+      "filter": "worktrees::material_owner::directory_restore_tests::full_security_directory_restore_is_explicit_and_recaptures_actual_full_sd",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_restore_tests::full_security_directory_restore_is_explicit_and_recaptures_actual_full_sd"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.7490455Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.7863877Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "8D8F5951F9799595D2380D41560F857F8B2474A9F7D53F2D8EE7A577BBB4883E",
+      "stderrSha256": "1D37C62D1C15BE719F4CF7F4E29946F8C13C00BAAB765FC7146B28C05BC39141"
+    },
+    {
+      "group": "directory-tree-fullsd",
+      "filter": "worktrees::material_owner::directory_tree_tests::actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.7927951Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.8311155Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "013E3CD91C4EB67697A1783F72BED7841327080A749B84C18B248E6F0AE71B1F",
+      "stderrSha256": "31273287A5FA4953AC72608EFC1ED42168712908A86EB8C1CC8F089D0E198F99"
+    },
+    {
+      "group": "regular-shared-fullsd-1",
+      "filter": "worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.8371447Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.8978162Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "3480FA170F351BAC322E453FDD405514AB8EEBFC18C85B1565ABD29A2966F1CE",
+      "stderrSha256": "2112FD15EFE5428873F38C151C8285B8C8C056E54B5A92521E4361A02C982543"
+    },
+    {
+      "group": "regular-shared-fullsd-2",
+      "filter": "worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.9039014Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.9404262Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "52E61AAE8B4287F8959B744EE2ACDD746040D3F4F057AD8844980747BB3C1D48",
+      "stderrSha256": "2AC62757AAD417716172B10E3996197EA63AE5246AF162E6600A616687FF6E31"
+    },
+    {
+      "group": "regular-shared-fullsd-3",
+      "filter": "worktrees::material_owner::regular_shared_tests::shared_capture_retains_the_original_links_one_guard_before_any_alias_success",
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::regular_shared_tests::shared_capture_retains_the_original_links_one_guard_before_any_alias_success"
+      ],
+      "actualPassedNames": [],
+      "startedAtUtc": "2026-10-23T12:07:57.9464318Z",
+      "finishedAtUtc": "2026-10-23T12:07:57.9852822Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "410CACCC42F148E346BD55A350E9B2DBA8994D5F9599E2985B3F57ECB0E7CBFE",
+      "stderrSha256": "FEA6C4EFA5202977610C6CFA3094B046205D087A37A1C3AB31B233274BC4EA31"
+    }
+  ],
+  "inputsStable": true,
+  "observationComplete": false,
+  "singleNodeCarrierControlsOnly": false,
+  "carrierRawPinOwnedLinkDirectoryCaptureAndRestoreControlsOnly": true,
+  "persistentDirectoryTreeRestoreComplete": false,
+  "explicitIgnoredFullSecurityControls": true,
+  "privilegesAdjusted": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

@@ -1,0 +1,15 @@
+
+running 10 tests
+test worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation ... ok
+test worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes ... ok
+test worktrees::git::source_roots::profile::tests::cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery ... ok
+test worktrees::git::source_roots::profile::tests::custom_filter_and_literal_unset_driver_are_rejected_without_running_a_helper ... ok
+test worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback ... ok
+test worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected ... ok
+test worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live ... ok
+test worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected ... ok
+test worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes ... ok
+test worktrees::git::source_roots::profile::tests::null_attributes::owned_xdg_global_attributes_child ... ignored, Fixed child of actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes
+
+test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2314 filtered out; finished in 124.79s
+

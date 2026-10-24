@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-23T13:03:38.242090+00:00",
+  "result": "noBlockingFindingInTwoFileStaticDelta",
+  "author": "windows_gaps",
+  "reviewer": "early_windows_review",
+  "scope": "New fixed4+7 PowerShell runner plus selected workflow changes from e3fbb. Excludes output-only result reader and its forthcoming tests; no PowerShell/native/CI execution in this review.",
+  "sourceFiles": [
+    {
+      "path": ".github/scripts/windows-recovery-followup-git-controls.ps1",
+      "sha256": "d5eea77798adccdaaeae08346aa9903d0ff533f444f6725868281d0073558cae",
+      "bytes": 9492
+    },
+    {
+      "path": ".github/workflows/windows-recovery-followup.yml",
+      "sha256": "97bcd3740526680651273449e5515ce7c5bb2874cecca5f82f4e757a88440eeb",
+      "bytes": 10594
+    }
+  ],
+  "unchangedRelatedInputs": [
+    {
+      "path": ".github/scripts/windows-recovery-followup-build.ps1",
+      "sha256": "d18874fb5a10306ee6650d3ecd7883e7cf113c2e559efc28617d6bcecd9be450",
+      "bytes": 3953
+    },
+    {
+      "path": ".github/scripts/windows-capability-closeout.ps1",
+      "sha256": "1ecc3ce7e1411114bf022f0e1bada7ef8ba6b2c141067e3bfcdfc38522e99b54",
+      "bytes": 11107
+    },
+    {
+      "path": ".github/scripts/windows-capability-closeout-cases.json",
+      "sha256": "fe1523c38e97150d112dd77265e55378a11fd23d4808b5f05db93dd3eae0755a",
+      "bytes": 60035
+    },
+    {
+      "path": ".github/scripts/windows-null-attributes-cases.json",
+      "sha256": "984efd0b2983d823240022b34225cb925012210a8b4e41e32e2061e4edd31103",
+      "bytes": 2206
+    },
+    {
+      "path": ".github/scripts/windows-legacy-full-security-cases.json",
+      "sha256": "030cbb216412d2e67fd0dca8251c85ac5d362a0a8eb948e3f4ba2a99ae7a229c",
+      "bytes": 7717
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_settlement_windows_tests.rs",
+      "sha256": "49a8455732ac95663d5fec485806de2e89f43740941a8fa1c7d033ceb17583f4",
+      "bytes": 9553
+    }
+  ],
+  "selectedCases": [
+    {
+      "name": "generic-command-shape",
+      "fqn": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+      "phaseMarker": null
+    },
+    {
+      "name": "generic-stdio-contract",
+      "fqn": "windows_process::behavior_tests::helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "phaseMarker": null
+    },
+    {
+      "name": "noninteractive-git-stdio-contract",
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "phaseMarker": null
+    },
+    {
+      "name": "noninteractive-git-error-contract",
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_stderr_and_original_failure_exit",
+      "phaseMarker": null
+    },
+    {
+      "name": "natural-tail",
+      "fqn": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "original-nonzero",
+      "fqn": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "cancel-owned-job",
+      "fqn": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "original-deadline",
+      "fqn": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail"
+    },
+    {
+      "name": "late-stdout-limit",
+      "fqn": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stdout"
+    },
+    {
+      "name": "late-stderr-limit",
+      "fqn": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stderr"
+    },
+    {
+      "name": "changed-input",
+      "fqn": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+      "phaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=input"
+    }
+  ],
+  "checks": {
+    "sameBuild": "Valid expected40hex head, current checkout head and build-selection head/sourceInputsStable required. Complete git-tracked source map is exactly the build script scope and must match original inputs-before and inputs-after. Current runner must be tracked/included; helper/libtest/script SHA checked around execution. No extra build or alternate binary selection.",
+    "fixedSelection": "LaunchContracts has4 fixed ordinary tests; GitSettlement uses original7 exact FQNs and unchanged action marker. Each selected name exists in current expected source; no arbitrary FQN/command input, ignored-child mixing or old140/27/304 modification.",
+    "individualResults": "Native synchronous invocation returns before an individual receipt is written; exact single parent test, one summary1/0/0, exit0 and original marker exactly once are all required. stdout/stderr hashes and head/filter/mode retained. Native failure remains nonpassing; skipped/zero test/duplicate or absent summary/marker cannot pass.",
+    "groupResults": "Group requires all selected cases, stable head/source map/program hashes and stable script. Final workflow requires exact mode/names/counts, true boolean stable/success fields and existing final aggregate; continue-on-error permits remaining independent work only, not missing/failed aggregate acceptance.",
+    "ownershipAndTimeout": "No new PID querying, terminate/kill, retry, privilege change or production deadline change in this runner. Original tests own their processes. Each new step3min; job72->78 only adds outer collection room. External timeout without a complete receipt remains incomplete; no runner-generated stop receipt.",
+    "unchangedOriginalSteps": "Selected build, original ordinary3/manual4 recovery, original list diagnostic, null-attributes8, loader and upload step blocks are byte-identical to base. Parser adds new script; final gate appends independent4+7 requirements. Old manifests and build script unchanged.",
+    "scope": "These controls exercise same-built synthetic fixture and production executor contracts. They do not prove production Git or intermittent coverage_gap repair by mere collection; actual per-case results must be separately read."
+  },
+  "findings": [],
+  "execution": {
+    "pwshParserOrRuntime": false,
+    "cargoOrNative": false,
+    "ci": false,
+    "appAgent": false,
+    "trackedWrites": false,
+    "downloadedProgramExecution": false
+  },
+  "limits": [
+    "Static review does not establish PowerShell syntax/runtime or actual Windows case success. Author pure-parse and future actual results remain separate.",
+    "Source maps bind inputs at capture boundaries, not a continuous filesystem immutability claim.",
+    "Full Windows140/304/27 and original intermittent failure retain separate identities and outcomes.",
+    "This receipt does not cover the author forthcoming output-only result reader."
+  ],
+  "inputsStable": true
+}

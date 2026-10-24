@@ -1,0 +1,37 @@
+{
+  "group": "descriptor-node-capacity",
+  "filter": "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget",
+  "category": "portableRecoveryDescriptor",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:14.5031092Z",
+  "finishedAtUtc": "2026-10-23T12:09:14.5283765Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "CC2105DD193140193D2E330FB641C0FA87730299AD124AC8E477F91FE52AF1E6",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

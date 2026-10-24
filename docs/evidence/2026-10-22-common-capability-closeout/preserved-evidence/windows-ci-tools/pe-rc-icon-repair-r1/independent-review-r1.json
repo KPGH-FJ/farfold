@@ -1,0 +1,116 @@
+{
+  "kind": "non-author-pe-rc-icon-delta-review",
+  "scope": "Root-authored delta from previously reviewed5e4bd source to currentca2e. Current RC escape decoder and earlier exact input preservation only. Earlier whole PE parser authored by this reviewer is not re-approved wholesale here.",
+  "source": {
+    "path": ".github/scripts/windows-pe-resource-inspection.py",
+    "sha256": "ca2e185f048face734e9616c42e4d34c57fc371e2f780c1a8b061eed6753be25",
+    "bytes": 33090
+  },
+  "handoff": {
+    "path": "evidence:e-4ae484585e2e2515a0c2",
+    "sha256": "1037a4adb8c938b426f6c5c7eb3574bdd855bc0b9c9bd8b6dea2d1ee90958186",
+    "bytes": 3302
+  },
+  "diff": {
+    "path": "evidence:e-6274503905e702f6ff37",
+    "sha256": "567ef586474b9ed0d10e06ba2b0cec7f79384a0796fde97172ca0d45725e02d9",
+    "bytes": 3705
+  },
+  "decision": "No blocking finding in this selected delta. Candidate fixes a demonstrated mismatch with the pinned generator. Actual Windows RC/PE inspection remains pending and original failed run remains failed.",
+  "verified": [
+    "Pinned tauri-winres0.3.6 set_icon_with_id canonicalizes with dunce, then write_resource_file applies escape_string to icon filename; escape_string emits doubled backslashes and backslash-apostrophe. Tauri supplies fixed32512.",
+    "New regex accepts only those two filename escape forms and decodes them once. Unrecognized C-style escapes, quotes, empty names and C0 controls remain rejected. It still requires one parsed icon with identity32512.",
+    "Decoded path is still resolved and compared exactly with current src-tauri/icons/icon.ico before any icon source is read. Native held-file identity, admitted extent hash, source-ICO hash and final PE icon/group equality are unchanged.",
+    "AST comparison shows only rc_expectations and main changed; all other functions/classes including HeldFile, PE resource/manifest/version/icon parsing are byte-semantically unchanged at AST level.",
+    "Bound RC and baseline/input receipts are now preserved before RC syntax parsing. Any later failure keeps parserCompleted false and staticChecksAllMatched false; preservation is not a passed comparison."
+  ],
+  "generatorReadpoints": [
+    {
+      "path": "<private-mac-home:c2e950e84759>",
+      "sha256": "0799133b048098251c19b8787e8d36ef36005a65731f20c3a424843b2e085a55",
+      "bytes": 22700
+    },
+    {
+      "path": "<private-mac-home:2607618299a4>",
+      "sha256": "6002442e7b6b208934f0fcbe99a9b94d6fadf322d15719230bb94f4978938435",
+      "bytes": 2209
+    },
+    {
+      "path": "<private-mac-home:5446e8b9f105>",
+      "sha256": "562607e65dca4377ef4a33ade8527990c54fe176514ae460ca00260d1ca2211f",
+      "bytes": 24430
+    }
+  ],
+  "controlEvidenceRead": {
+    "source": {
+      "path": "evidence:e-28f1183073eb2837e288",
+      "sha256": "ca0e3a383b261133603fbdac9e8a21615b2f402bf70f182790eb5da9988e1880",
+      "bytes": 3531
+    },
+    "authorLog": {
+      "path": "evidence:e-073b8fac902db84fc754",
+      "sha256": "f3f9fb73356fbbc516657fab4dfa8eb61cd591ad5c61aadd7b2208b8821ce61e",
+      "bytes": 751
+    },
+    "authorCount": 8,
+    "authorExitCode": 0,
+    "notIndependentlyRerun": true,
+    "initialFixtureFailurePreserved": {
+      "path": "evidence:e-db928a6376e81acfece9",
+      "sha256": "4e28c45fc5ed1ff182927e745b8c8c3a26b1265a786b0e63b35de26c471c6fc1",
+      "bytes": 383
+    },
+    "assessment": "Meaningful old-fails/new-passes canonical Windows escape counterexample plus apostrophe/Unicode/CRLF and identity/extra-row/unsupported-escape/version negative controls. First failure was the test BLOCK layout, separately retained."
+  },
+  "actualOriginal": {
+    "summary": {
+      "path": "evidence:e-7d4defff835e34a01c85",
+      "sha256": "cd6728b5c8738e6025e8ff8657532aab73fdcae1c0aef0c63de76466f399aa95",
+      "bytes": 14295
+    },
+    "parserCompleted": false,
+    "error": {
+      "type": "ValueError",
+      "message": "unexpected RC icon identity/path syntax"
+    },
+    "images": {},
+    "boundInputObservations": [
+      {
+        "inputName": "build-selection.json",
+        "stage": "verified-closed",
+        "pythonVersion": "3.12.10",
+        "pathCtimeNs": 1792752637932293500,
+        "heldCtimeNs": 1792752637932293500
+      },
+      {
+        "inputName": "WindowsCommonControls.manifest",
+        "stage": "verified-closed",
+        "pythonVersion": "3.12.10",
+        "pathCtimeNs": 1792752034342828400,
+        "heldCtimeNs": 1792752034342828400
+      },
+      {
+        "inputName": "test-build.stdout.jsonl",
+        "stage": "verified-closed",
+        "pythonVersion": "3.12.10",
+        "pathCtimeNs": 1792752046672199200,
+        "heldCtimeNs": 1792752501645970300
+      },
+      {
+        "inputName": "resource.rc",
+        "stage": "verified-closed",
+        "pythonVersion": "3.12.10",
+        "pathCtimeNs": 1792752318318783500,
+        "heldCtimeNs": 1792752318318783500
+      }
+    ],
+    "rcSaved": false,
+    "limit": "Actual Python3.12.10 test-build input has different path/held ctime and new same-API native checks completed it. The run then failed before inspecting PE images. Old RC exact text was not saved, so neither the exact failed row nor a unique runtime root cause is asserted."
+  },
+  "boundaries": [
+    "RC parsing remains restricted to the pinned generator shape, including unindented uppercase ICON declarations; it is not a general RC preprocessor or parser.",
+    "No production behavior, Windows loader manifest, privileges, source icon, version metadata or PE acceptance checks were relaxed.",
+    "No Cargo, network, CI dispatch, Windows execution, helper/App/Agent launch or old artifact reader recomputation performed. Read-only existing summary inspection is not a rerun."
+  ],
+  "sourceStillExact": true
+}

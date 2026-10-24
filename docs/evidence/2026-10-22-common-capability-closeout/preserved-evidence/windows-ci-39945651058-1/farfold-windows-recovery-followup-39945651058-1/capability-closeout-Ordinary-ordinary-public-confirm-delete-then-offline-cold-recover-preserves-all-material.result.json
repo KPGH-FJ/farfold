@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+  "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+  "category": "ownedActualOrdinaryRecovery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T11:39:48.5491587Z",
+  "finishedAtUtc": "2026-10-23T11:42:04.2194964Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F1086B97D1DBC7526D66E7DA313C8D68513DB65507E392FA9EE0A888D4CC3BDE",
+  "stderrSha256": "536E7876CC72B59B8A7BCC3698A8F1E5EA4BA1B29A187462750B75BDAE101825"
+}

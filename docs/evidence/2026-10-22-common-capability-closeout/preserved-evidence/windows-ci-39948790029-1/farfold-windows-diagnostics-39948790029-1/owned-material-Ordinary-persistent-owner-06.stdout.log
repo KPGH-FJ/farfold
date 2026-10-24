@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

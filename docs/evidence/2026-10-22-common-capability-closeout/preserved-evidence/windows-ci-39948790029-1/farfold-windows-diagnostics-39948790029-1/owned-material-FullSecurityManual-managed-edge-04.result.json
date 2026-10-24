@@ -1,0 +1,27 @@
+{
+  "group": "managed-edge-04",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+  "category": "manualFullSecurityNoFallback",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:13.1514625Z",
+  "finishedAtUtc": "2026-10-23T12:08:13.9667356Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "1C5B86ABDC80122126007BAEC35D39ADCF4F7F08E3256A944E2955050610B7EA",
+  "stderrSha256": "DDBF30B785D70D271D6DAF247AAE23F806C342CED2843DE9639D57DE5C0FA821"
+}

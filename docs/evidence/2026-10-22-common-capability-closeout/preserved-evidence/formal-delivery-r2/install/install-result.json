@@ -1,0 +1,107 @@
+{
+  "phase": "installedVerifiedNotLaunched",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "installed": true,
+  "onlyFormalAppUpdated": true,
+  "forcedQuit": false,
+  "checkedAtUtc": "2026-10-23T12:41:03.598072+00:00",
+  "filesWritten": [
+    "Contents/Info.plist",
+    "Contents/MacOS/farfold",
+    "Contents/Resources/icon.icns",
+    "Contents/Resources/release-manifest.json",
+    "Contents/_CodeSignature/CodeResources"
+  ],
+  "atomicReplacements": [
+    {
+      "file": "Contents/Info.plist",
+      "oldDevice": 16777234,
+      "oldInode": 84085308,
+      "newDevice": 16777234,
+      "newInode": 85409985
+    },
+    {
+      "file": "Contents/MacOS/farfold",
+      "oldDevice": 16777234,
+      "oldInode": 84085310,
+      "newDevice": 16777234,
+      "newInode": 85409986
+    },
+    {
+      "file": "Contents/Resources/icon.icns",
+      "oldDevice": 16777234,
+      "oldInode": 84085311,
+      "newDevice": 16777234,
+      "newInode": 85409987
+    },
+    {
+      "file": "Contents/Resources/release-manifest.json",
+      "oldDevice": 16777234,
+      "oldInode": 84085314,
+      "newDevice": 16777234,
+      "newInode": 85409988
+    },
+    {
+      "file": "Contents/_CodeSignature/CodeResources",
+      "oldDevice": 16777234,
+      "oldInode": 84085315,
+      "newDevice": 16777234,
+      "newInode": 85409989
+    }
+  ],
+  "existingInodesWritten": false,
+  "appBackupCreated": false,
+  "automaticRetry": false,
+  "restorePerformed": false,
+  "formalFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "formalModes": {
+    "Contents/Info.plist": 420,
+    "Contents/MacOS/farfold": 493,
+    "Contents/Resources/icon.icns": 420,
+    "Contents/Resources/release-manifest.json": 420,
+    "Contents/_CodeSignature/CodeResources": 420
+  },
+  "identity": {
+    "strictVerify": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+    "detailsSha256": "61198143605120d3a4676ab96be717aa7c4f8fc0fc3f1047053a626e0f416da6"
+  },
+  "processObservations": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  },
+  "evidencePins": {
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install-parameters.json": "0ae46bc65e5588290e697134ad4704d4b6889bde6b8528d4f61fb2fc68da6ffe",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/candidate.py": "7c6d8ae8d415cba1eb5ddf93803f78fcb3a75de5547130981581eeb75019bc20",
+    "output/2026-10-14-browser-tabs-native-data-preparation/revision-2026-10-15/io_support.py": "3a1488a0c9ba0a9cf5bc34952d2b7df0861792b65eb168ce04f9bebc02acfb1a",
+    "output/2026-10-14-browser-tabs-install/data_manifest.py": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/candidate-output/candidate.json": "9b3886f20937881cee2dae9291b5658688421158b38c0626ab3bd851b18b10c2",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/independent/review.json": "2d81461a6def58ff62d257aec5adc4dc84f1f85d025f3fce5726ebac549c5d91",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/parameters.json": "ccb1b9f74bd7b7d4998f7c83bc82fe9be3e63a70f306f2ec4cf2fb755bd1c515",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/legacy-seven.json": "4e3db458813149085b5f924d5ac01c20060cd1c0a61e6cdd3250acb9c21a9910",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/01.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/02.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/03.log": "2042abe0af40cdae2399a24d7bffc10b306c51f5890f65537856d1c62456b1af",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/04.log": "ce222642613ba482138d461781ac9c8b6bc7dd45fb9492ed5e36225e0f75963a",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/05.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/06.log": "e68dbb831082090d6aab9641584d06498d66907f4c3e3d2d36c4824da23e94c8",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r12/07.log": "8fa9173f12f8acc4556f3e8f3d6d6522e97957967fde15719abbf0503c8ef20d",
+    "output/2026-10-22-next-resource-stage/formal-delivery/candidate-output/candidate.json": "1f3ba3a350248a42c5397794df00b99d176017ec535ac0fc73a7e34de410b918",
+    "output/2026-10-22-next-resource-stage/formal-delivery/install/installed-independent-review-private.json": "64d3382f2a22523498e98c3d3732a0f756722560e27c84e7580f0927d3842fda",
+    "src-tauri/target/internal-candidate/2026-10-22-common-capability-closeout-18470c63/Farfold-0.1.7-18470c63.zip": "135df17d34d06938776ed839fcf9909fc2e9fdb25d837a83e40384c5c1941345",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/retention.py": "be8592f2cf8970e1f3cdfa0a17906fc0fac894b1b8d96ab1e6c519cb23979c86",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/retention-before-receipt.json": "7ecf8ff557ba72a5072101a2e562ed39f5eef1cd8604fa7b50b9bf6a0ff2af74",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/retention-preinstall-receipt.json": "45cc033a37a3ce8c308a3315022ff78515f4ec25bbe6cd7cc032b9760a074dcb",
+    "output/2026-10-14-browser-tabs-install/install_data_snapshot.py": "cc12f49d05b666cc75b8cf804fa689bdd9b5b010c969d0105738ca7b1c1fc6b6",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/install-data-before.jsonl": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/install-data-preinstall.jsonl": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+    "output/2026-10-22-common-capability-closeout/formal-delivery-r2/install/metadata-before.sqlite3": "672ecdc09c88be602158b08f8f43a35f8ee292b455ef3f58566cd953853b8daa"
+  },
+  "dataUnchangedForCheckedMetadata": true,
+  "afterFullManifestStillRequired": true
+}

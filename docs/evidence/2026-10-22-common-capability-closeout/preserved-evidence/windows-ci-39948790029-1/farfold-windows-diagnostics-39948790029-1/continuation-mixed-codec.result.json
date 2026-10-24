@@ -1,0 +1,70 @@
+{
+  "group": "mixed-codec",
+  "filter": "file_access::material_mixed_tree_records::tests::",
+  "category": "portableCodec",
+  "explicitIgnored": false,
+  "exactFilter": false,
+  "historicalSelectionArguments": [
+    "file_access::material_mixed_tree_records::tests::",
+    "--skip",
+    "file_access::material_mixed_tree_records::tests::more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit",
+    "--skip",
+    "file_access::material_mixed_tree_records::tests::expanded_collision_checks_share_work_and_cancel_before_further_comparisons",
+    "--skip",
+    "file_access::material_mixed_tree_records::tests::finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes",
+    "--skip",
+    "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree"
+  ],
+  "expectedTests": 6,
+  "expectedNames": [
+    "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+    "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+    "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+    "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+    "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures",
+    "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input"
+  ],
+  "actualPassedNames": [
+    "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+    "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+    "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+    "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+    "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input",
+    "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:07:59.0118634Z",
+  "finishedAtUtc": "2026-10-23T12:07:59.0715313Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "62A089E8781B2AFFF9E1744CE0CBF5F456E93B3349512F0CBC83B39F4192E06A",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

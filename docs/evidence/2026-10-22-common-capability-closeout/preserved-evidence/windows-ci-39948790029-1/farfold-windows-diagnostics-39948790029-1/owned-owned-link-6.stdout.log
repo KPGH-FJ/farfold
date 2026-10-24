@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::owned_link_tests::insufficient_shared_work_is_failure_before_mutation_not_a_short_link_success ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

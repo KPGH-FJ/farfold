@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::manager::worker_progress::tests::nested_scopes_restore_only_the_original_owner_and_never_cross_threads ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

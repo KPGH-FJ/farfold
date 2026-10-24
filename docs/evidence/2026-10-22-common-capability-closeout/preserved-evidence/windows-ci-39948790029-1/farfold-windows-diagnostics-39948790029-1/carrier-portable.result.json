@@ -1,0 +1,1238 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "groups": [
+    {
+      "group": "carrier-backup-io",
+      "filter": "file_access::material_backup_io::tests::",
+      "selectionArguments": [
+        "file_access::material_backup_io::tests::",
+        "--skip",
+        "file_access::material_backup_io::tests::direct_inspection_requires_real_eof_and_retires_original_context_once",
+        "--skip",
+        "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof",
+        "--skip",
+        "file_access::material_backup_io::tests::direct_inspection_preserves_native_error_and_unknown_abort_ownership",
+        "--skip",
+        "file_access::material_backup_io::tests::direct_inspection_budget_or_cancel_after_actual_read_still_aborts_once"
+      ],
+      "expectedTests": 11,
+      "expectedNames": [
+        "file_access::material_backup_io::tests::returned_zero_is_real_eof_and_spool_is_exact",
+        "file_access::material_backup_io::tests::partial_writes_use_exact_unconsumed_offset_without_duplicate_data",
+        "file_access::material_backup_io::tests::zero_or_over_count_fails_once_instead_of_spinning_or_skipping",
+        "file_access::material_backup_io::tests::failed_abort_retains_opaque_context_and_is_never_retried",
+        "file_access::material_backup_io::tests::unwind_still_attempts_one_abort_and_preserves_failure",
+        "file_access::material_backup_io::tests::cancelled_or_underbudget_work_is_not_dispatched",
+        "file_access::material_backup_io::tests::partial_progress_with_illegal_final_tail_fails_without_padding",
+        "file_access::material_backup_io::tests::cancellation_after_actual_read_still_aborts_the_same_context",
+        "file_access::material_backup_io::tests::read_failure_and_distinct_abort_failure_are_both_retained",
+        "file_access::material_backup_io::tests::write_failure_and_distinct_abort_failure_are_both_retained",
+        "file_access::material_backup_io::tests::observed_cancellation_and_abort_failure_keep_separate_causes"
+      ],
+      "actualPassedNames": [
+        "file_access::material_backup_io::tests::cancellation_after_actual_read_still_aborts_the_same_context",
+        "file_access::material_backup_io::tests::cancelled_or_underbudget_work_is_not_dispatched",
+        "file_access::material_backup_io::tests::failed_abort_retains_opaque_context_and_is_never_retried",
+        "file_access::material_backup_io::tests::observed_cancellation_and_abort_failure_keep_separate_causes",
+        "file_access::material_backup_io::tests::partial_progress_with_illegal_final_tail_fails_without_padding",
+        "file_access::material_backup_io::tests::partial_writes_use_exact_unconsumed_offset_without_duplicate_data",
+        "file_access::material_backup_io::tests::read_failure_and_distinct_abort_failure_are_both_retained",
+        "file_access::material_backup_io::tests::returned_zero_is_real_eof_and_spool_is_exact",
+        "file_access::material_backup_io::tests::unwind_still_attempts_one_abort_and_preserves_failure",
+        "file_access::material_backup_io::tests::write_failure_and_distinct_abort_failure_are_both_retained",
+        "file_access::material_backup_io::tests::zero_or_over_count_fails_once_instead_of_spinning_or_skipping"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:34.5688358Z",
+      "finishedAtUtc": "2026-10-23T12:05:34.7043806Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 11 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "3A60C8C7ED41A0D547F34A7630FFCBB93CAD732BEDA1C3059C4D16174753AA00",
+      "stderrSha256": "33254A99F325953F09BBCC88B885DF66E0020658443D8FD7901BB50EF868AA37"
+    },
+    {
+      "group": "carrier-records",
+      "filter": "file_access::material_carrier_records::tests::",
+      "selectionArguments": [
+        "file_access::material_carrier_records::tests::",
+        "--skip",
+        "file_access::material_carrier_records::tests::security_extent_is_exact_for_each_physical_order_and_not_an_ordinary_facet",
+        "--skip",
+        "file_access::material_carrier_records::tests::single_default_payload_proof_keeps_exact_range_hash_and_rejects_other_facets",
+        "--skip",
+        "file_access::material_carrier_records::tests::single_default_payload_never_bypasses_flags_or_complete_framing",
+        "--skip",
+        "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order",
+        "--skip",
+        "file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security",
+        "--skip",
+        "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record",
+        "--skip",
+        "file_access::material_carrier_records::tests::ordinary_omitted_zero_default_keeps_exact_named_data_and_ea_semantics",
+        "--skip",
+        "file_access::material_carrier_records::tests::ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material"
+      ],
+      "expectedTests": 11,
+      "expectedNames": [
+        "file_access::material_carrier_records::tests::all_bytes_utf16_and_every_boundary_use_actual_stream_parser",
+        "file_access::material_carrier_records::tests::full_security_observed_empty_default_preserves_physical_bytes_without_padding",
+        "file_access::material_carrier_records::tests::full_security_omitted_zero_default_keeps_named_ea_and_security_semantics",
+        "file_access::material_carrier_records::tests::full_security_empty_default_still_requires_all_other_complete_material",
+        "file_access::material_carrier_records::tests::every_truncated_prefix_refuses_complete_carrier",
+        "file_access::material_carrier_records::tests::unsupported_streams_and_modified_when_read_never_reach_writer",
+        "file_access::material_carrier_records::tests::duplicate_and_case_changed_names_do_not_silently_merge",
+        "file_access::material_carrier_records::tests::header_overflow_and_metadata_cap_refuse_before_body_allocation",
+        "file_access::material_carrier_records::tests::cancellation_and_shared_work_are_real_failures",
+        "file_access::material_carrier_records::tests::valid_payload_drift_is_not_equivalent_even_when_lengths_match",
+        "file_access::material_carrier_records::tests::resident_catalog_reservation_is_released_and_never_overcommitted"
+      ],
+      "actualPassedNames": [
+        "file_access::material_carrier_records::tests::all_bytes_utf16_and_every_boundary_use_actual_stream_parser",
+        "file_access::material_carrier_records::tests::cancellation_and_shared_work_are_real_failures",
+        "file_access::material_carrier_records::tests::duplicate_and_case_changed_names_do_not_silently_merge",
+        "file_access::material_carrier_records::tests::every_truncated_prefix_refuses_complete_carrier",
+        "file_access::material_carrier_records::tests::full_security_empty_default_still_requires_all_other_complete_material",
+        "file_access::material_carrier_records::tests::full_security_observed_empty_default_preserves_physical_bytes_without_padding",
+        "file_access::material_carrier_records::tests::full_security_omitted_zero_default_keeps_named_ea_and_security_semantics",
+        "file_access::material_carrier_records::tests::header_overflow_and_metadata_cap_refuse_before_body_allocation",
+        "file_access::material_carrier_records::tests::resident_catalog_reservation_is_released_and_never_overcommitted",
+        "file_access::material_carrier_records::tests::unsupported_streams_and_modified_when_read_never_reach_writer",
+        "file_access::material_carrier_records::tests::valid_payload_drift_is_not_equivalent_even_when_lengths_match"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:34.7344734Z",
+      "finishedAtUtc": "2026-10-23T12:05:34.8197690Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 11 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "2D911EB7B0DAA5FAC0F2E1766F9CD2744554B336AFBD1D40F43FDA2A04DCA4FB",
+      "stderrSha256": "E19016C4928B5C0993724897FFE344666CA0DE89E22D91F234ECC965F93BFA96"
+    },
+    {
+      "group": "carrier-ordinary-namespace",
+      "filter": "file_access::windows::material_restore::tests::owned_file_create_collision_preserves_original_and_disposes_namespace",
+      "selectionArguments": [
+        "file_access::windows::material_restore::tests::owned_file_create_collision_preserves_original_and_disposes_namespace"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_restore::tests::owned_file_create_collision_preserves_original_and_disposes_namespace"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_restore::tests::owned_file_create_collision_preserves_original_and_disposes_namespace"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:34.8254842Z",
+      "finishedAtUtc": "2026-10-23T12:05:34.8452722Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0B43A294E731CB3CF1E1066348EB135376A6292D9B47312E3BC69C6E4A009A77",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "carrier-ordinary-authority",
+      "filter": "worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request",
+      "selectionArguments": [
+        "worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::carrier_tests::ordinary_read_capability_cannot_mint_full_security_restore_request"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:34.8480931Z",
+      "finishedAtUtc": "2026-10-23T12:05:34.8669678Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "6AD7FEF5571215BC1CE8A502EA5C89CF09E31C0285CC686485A3A12D4F53E07B",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "source-roots",
+      "filter": "worktrees::git::source_roots::tests::",
+      "selectionArguments": ["worktrees::git::source_roots::tests::"],
+      "expectedTests": 4,
+      "expectedNames": [
+        "worktrees::git::source_roots::tests::real_private_roots_consumer_keeps_deleted_reflog_commits_without_mutating_source",
+        "worktrees::git::source_roots::tests::orphan_reflog_fingerprint_changes_even_when_its_commit_set_does_not",
+        "worktrees::git::source_roots::tests::unknown_private_state_noncommit_ref_and_cancel_are_not_silently_omitted",
+        "worktrees::git::source_roots::tests::held_inventory_denies_metadata_writers_and_rechecks_complete_private_namespace"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::tests::held_inventory_denies_metadata_writers_and_rechecks_complete_private_namespace",
+        "worktrees::git::source_roots::tests::orphan_reflog_fingerprint_changes_even_when_its_commit_set_does_not",
+        "worktrees::git::source_roots::tests::real_private_roots_consumer_keeps_deleted_reflog_commits_without_mutating_source",
+        "worktrees::git::source_roots::tests::unknown_private_state_noncommit_ref_and_cancel_are_not_silently_omitted"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:34.8697635Z",
+      "finishedAtUtc": "2026-10-23T12:05:37.4737601Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "5E84D04742468C2F327D4DD4D84F34C65C1DD0B6DE06979A7EE4565C34E892E9",
+      "stderrSha256": "0964C8F1CF0DA4A8FF20EB360259DDDB7D72A8A3D468FAC04082A12E9C87C736"
+    },
+    {
+      "group": "source-graph",
+      "filter": "worktrees::git::source_roots::graph_tests::",
+      "selectionArguments": ["worktrees::git::source_roots::graph_tests::"],
+      "expectedTests": 9,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::actual_source_graph_has_exact_reachable_objects_and_one_program_with_held_private_inventory",
+        "worktrees::git::source_roots::graph_tests::real_recovery_capture_does_not_turn_a_graph_component_into_complete_material",
+        "worktrees::git::source_roots::graph_tests::missing_owned_source_object_and_pre_cancel_never_publish_a_complete_graph",
+        "worktrees::git::source_roots::graph_tests::real_object_parser_rejects_incomplete_duplicate_wrong_width_and_overbudget_sets",
+        "worktrees::git::source_roots::graph_tests::actual_size_parser_keeps_exact_rows_types_and_checked_256mib_sum",
+        "worktrees::git::source_roots::graph_tests::graph_retains_private_namespace_observation_until_explicit_recheck_finishes",
+        "worktrees::git::source_roots::graph_tests::selected_head_binary_blob_over_vec_limit_is_read_from_actual_file_and_compared_in_blocks",
+        "worktrees::git::source_roots::graph_tests::same_size_changed_default_is_a_raw_difference_and_unselected_or_cancelled_reads_refuse",
+        "worktrees::git::source_roots::graph_tests::raw_default_equality_with_extra_ads_does_not_open_complete_content_or_manifest_authority"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::actual_size_parser_keeps_exact_rows_types_and_checked_256mib_sum",
+        "worktrees::git::source_roots::graph_tests::actual_source_graph_has_exact_reachable_objects_and_one_program_with_held_private_inventory",
+        "worktrees::git::source_roots::graph_tests::graph_retains_private_namespace_observation_until_explicit_recheck_finishes",
+        "worktrees::git::source_roots::graph_tests::missing_owned_source_object_and_pre_cancel_never_publish_a_complete_graph",
+        "worktrees::git::source_roots::graph_tests::raw_default_equality_with_extra_ads_does_not_open_complete_content_or_manifest_authority",
+        "worktrees::git::source_roots::graph_tests::real_object_parser_rejects_incomplete_duplicate_wrong_width_and_overbudget_sets",
+        "worktrees::git::source_roots::graph_tests::real_recovery_capture_does_not_turn_a_graph_component_into_complete_material",
+        "worktrees::git::source_roots::graph_tests::same_size_changed_default_is_a_raw_difference_and_unselected_or_cancelled_reads_refuse",
+        "worktrees::git::source_roots::graph_tests::selected_head_binary_blob_over_vec_limit_is_read_from_actual_file_and_compared_in_blocks"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:37.4803438Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.2746431Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 9 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0C824F4FD9587801E03069F54E8CAC4EF7DF0C6804AC90D4CBAA86454EE54397",
+      "stderrSha256": "FEB9F28137A4E8F737BF45884D6908B48640F75EA60D4A4A6CF69C56FC1676B5"
+    },
+    {
+      "group": "carrier-fragment",
+      "filter": "file_access::material_carrier_fragment::tests::",
+      "selectionArguments": [
+        "file_access::material_carrier_fragment::tests::",
+        "--skip",
+        "file_access::material_carrier_fragment::tests::empty_ordinary_native_extent_roundtrips_without_inventing_payload_or_full_security",
+        "--skip",
+        "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers"
+      ],
+      "expectedTests": 7,
+      "expectedNames": [
+        "file_access::material_carrier_fragment::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128",
+        "file_access::material_carrier_fragment::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted",
+        "file_access::material_carrier_fragment::tests::actual_input_extent_or_hash_mismatch_never_emits_completion",
+        "file_access::material_carrier_fragment::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete",
+        "file_access::material_carrier_fragment::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error",
+        "file_access::material_carrier_fragment::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output",
+        "file_access::material_carrier_fragment::tests::verified_record_retains_its_logical_metadata_reservation_until_drop"
+      ],
+      "actualPassedNames": [
+        "file_access::material_carrier_fragment::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128",
+        "file_access::material_carrier_fragment::tests::actual_input_extent_or_hash_mismatch_never_emits_completion",
+        "file_access::material_carrier_fragment::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error",
+        "file_access::material_carrier_fragment::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete",
+        "file_access::material_carrier_fragment::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted",
+        "file_access::material_carrier_fragment::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output",
+        "file_access::material_carrier_fragment::tests::verified_record_retains_its_logical_metadata_reservation_until_drop"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.3119747Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.4928860Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 7 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "E6DD704D29A4CB3DF0294AA80DF88E675F5A722A29225DF10E5D669CDF21F22A",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "material-directory-budget",
+      "filter": "file_access::material_directory_budget::tests::",
+      "selectionArguments": ["file_access::material_directory_budget::tests::"],
+      "expectedTests": 11,
+      "expectedNames": [
+        "file_access::material_directory_budget::tests::zero_pool_refuses_before_query_while_legacy_collector_keeps_its_original_contract",
+        "file_access::material_directory_budget::tests::record_reservation_precedes_name_and_map_allocation_in_the_real_shared_parser",
+        "file_access::material_directory_budget::tests::long_page_does_not_bypass_resident_by_having_only_one_native_page",
+        "file_access::material_directory_budget::tests::retained_parent_listing_blocks_child_until_the_last_real_map_is_dropped",
+        "file_access::material_directory_budget::tests::success_releases_query_storage_but_retains_exact_logical_map_reservation",
+        "file_access::material_directory_budget::tests::same_pool_growth_is_atomic_and_foreign_or_overflow_does_not_mutate_either_pool",
+        "file_access::material_directory_budget::tests::duplicates_dot_repeats_entry_limit_bad_wire_and_query_error_preserve_original_failure",
+        "file_access::material_directory_budget::tests::full128_and_counted_unpaired_utf16_are_preserved_without_new_admission",
+        "file_access::material_directory_budget::tests::pre_and_post_query_cancel_do_not_publish_partial_maps_or_leak_budget",
+        "file_access::material_directory_budget::tests::unwind_drops_query_captures_before_releasing_their_logical_buffer_lease",
+        "file_access::material_directory_budget::tests::exact_empty_eof_can_return_a_zero_charged_map_without_losing_its_owner"
+      ],
+      "actualPassedNames": [
+        "file_access::material_directory_budget::tests::duplicates_dot_repeats_entry_limit_bad_wire_and_query_error_preserve_original_failure",
+        "file_access::material_directory_budget::tests::exact_empty_eof_can_return_a_zero_charged_map_without_losing_its_owner",
+        "file_access::material_directory_budget::tests::full128_and_counted_unpaired_utf16_are_preserved_without_new_admission",
+        "file_access::material_directory_budget::tests::long_page_does_not_bypass_resident_by_having_only_one_native_page",
+        "file_access::material_directory_budget::tests::pre_and_post_query_cancel_do_not_publish_partial_maps_or_leak_budget",
+        "file_access::material_directory_budget::tests::record_reservation_precedes_name_and_map_allocation_in_the_real_shared_parser",
+        "file_access::material_directory_budget::tests::retained_parent_listing_blocks_child_until_the_last_real_map_is_dropped",
+        "file_access::material_directory_budget::tests::same_pool_growth_is_atomic_and_foreign_or_overflow_does_not_mutate_either_pool",
+        "file_access::material_directory_budget::tests::success_releases_query_storage_but_retains_exact_logical_map_reservation",
+        "file_access::material_directory_budget::tests::unwind_drops_query_captures_before_releasing_their_logical_buffer_lease",
+        "file_access::material_directory_budget::tests::zero_pool_refuses_before_query_while_legacy_collector_keeps_its_original_contract"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.4975871Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.5349238Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 11 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "F922B02CB3EF508B76B987E62B6EAD6AC221F310FB8A6DCA3D77875F5E966DFE",
+      "stderrSha256": "7C2145524CE297C52BC9F4AEB4D6A49303FC3EA090DA66A386E1AE30B4231CAF"
+    },
+    {
+      "group": "raw-content-stream",
+      "filter": "worktrees::git::content_stream::tests::",
+      "selectionArguments": ["worktrees::git::content_stream::tests::"],
+      "expectedTests": 12,
+      "expectedNames": [
+        "worktrees::git::content_stream::tests::actual_binary_chunks_and_unequal_short_reads_preserve_byte_alignment",
+        "worktrees::git::content_stream::tests::known_sha256_and_empty_default_are_observed_through_real_readers",
+        "worktrees::git::content_stream::tests::mismatch_after_a_complete_block_is_not_silently_truncated_or_prefix_equal",
+        "worktrees::git::content_stream::tests::different_real_lengths_are_a_complete_raw_difference_not_missing_tail_success",
+        "worktrees::git::content_stream::tests::declared_truncation_and_overlong_input_are_refused_on_both_sides",
+        "worktrees::git::content_stream::tests::byte_budget_and_blob_cap_refuse_before_an_unfunded_read",
+        "worktrees::git::content_stream::tests::pre_cancel_and_cancel_after_actual_read_never_publish_a_comparison",
+        "worktrees::git::content_stream::tests::actual_read_errors_keep_object_or_material_side_and_native_code",
+        "worktrees::git::content_stream::tests::selected_tree_path_and_object_must_belong_to_the_same_admitted_graph",
+        "worktrees::git::content_stream::tests::wrong_width_duplicate_path_and_incomplete_or_empty_records_refuse",
+        "worktrees::git::content_stream::tests::symlinks_gitmodules_oversize_and_bad_size_do_not_become_regular_default_authority",
+        "worktrees::git::content_stream::tests::cancellation_blocks_selection_before_publishing_any_entry"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::content_stream::tests::actual_binary_chunks_and_unequal_short_reads_preserve_byte_alignment",
+        "worktrees::git::content_stream::tests::actual_read_errors_keep_object_or_material_side_and_native_code",
+        "worktrees::git::content_stream::tests::byte_budget_and_blob_cap_refuse_before_an_unfunded_read",
+        "worktrees::git::content_stream::tests::cancellation_blocks_selection_before_publishing_any_entry",
+        "worktrees::git::content_stream::tests::declared_truncation_and_overlong_input_are_refused_on_both_sides",
+        "worktrees::git::content_stream::tests::different_real_lengths_are_a_complete_raw_difference_not_missing_tail_success",
+        "worktrees::git::content_stream::tests::known_sha256_and_empty_default_are_observed_through_real_readers",
+        "worktrees::git::content_stream::tests::mismatch_after_a_complete_block_is_not_silently_truncated_or_prefix_equal",
+        "worktrees::git::content_stream::tests::pre_cancel_and_cancel_after_actual_read_never_publish_a_comparison",
+        "worktrees::git::content_stream::tests::selected_tree_path_and_object_must_belong_to_the_same_admitted_graph",
+        "worktrees::git::content_stream::tests::symlinks_gitmodules_oversize_and_bad_size_do_not_become_regular_default_authority",
+        "worktrees::git::content_stream::tests::wrong_width_duplicate_path_and_incomplete_or_empty_records_refuse"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.5391127Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.5773359Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 12 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "4C07F5C0DA1A9C142B756902AF9C5F59682359498543A8973AA7A9A4A435F21F",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-name",
+      "filter": "file_access::material_raw_name::tests::",
+      "selectionArguments": ["file_access::material_raw_name::tests::"],
+      "expectedTests": 5,
+      "expectedNames": [
+        "file_access::material_raw_name::tests::raw_units_including_unpaired_surrogates_are_admitted_without_rewriting",
+        "file_access::material_raw_name::tests::counted_limit_is_utf16_units_not_unicode_scalars_or_utf8_bytes",
+        "file_access::material_raw_name::tests::relative_separators_controls_streams_and_empty_names_never_pass",
+        "file_access::material_raw_name::tests::dos_devices_and_extensions_keep_existing_material_boundary",
+        "file_access::material_raw_name::tests::unicode_spelling_is_not_normalized_into_an_alias_or_device_name"
+      ],
+      "actualPassedNames": [
+        "file_access::material_raw_name::tests::counted_limit_is_utf16_units_not_unicode_scalars_or_utf8_bytes",
+        "file_access::material_raw_name::tests::dos_devices_and_extensions_keep_existing_material_boundary",
+        "file_access::material_raw_name::tests::raw_units_including_unpaired_surrogates_are_admitted_without_rewriting",
+        "file_access::material_raw_name::tests::relative_separators_controls_streams_and_empty_names_never_pass",
+        "file_access::material_raw_name::tests::unicode_spelling_is_not_normalized_into_an_alias_or_device_name"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.5815598Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.5987403Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 5 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "77EE88FF6F5E7074B3581BD79336F11DEB0590BF49B6E6EB822063FD8777852B",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-1",
+      "filter": "file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::actual_ntfs_unpaired_leaf_is_listed_opened_and_keeps_full128_without_string"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.6018696Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.6313341Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "8549BDB01B64CDAC7B9DF7AF1D50EC3CBBB4E18A783ED5B14D48B247B3B36072",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-2",
+      "filter": "file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::same_fullid_cached_metadata_drift_is_not_a_false_version_but_wrong_id_refuses"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.6338610Z",
+      "finishedAtUtc": "2026-10-23T12:05:46.6536597Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "823C70E7D5C9EC552FB5247334D3A75FFF58FF4EC3528C5F4A3EAD371F9A6CDD",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-3",
+      "filter": "file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::root_and_child_arc_aliases_share_actual_cursor_owner_and_multipage_restart"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:46.6561980Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.2024140Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "6350812808FC9588D2369289A4AAB6706642DECFC9E70D39AA6DA72D27A97B85",
+      "stderrSha256": "82EA4FF1E10F1181F10E9AFC1D2FA58CE57D16861868F7C5DED9FEE55BC05474"
+    },
+    {
+      "group": "raw-pin-4",
+      "filter": "file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::invalid_cancelled_and_missing_do_not_become_a_new_source_capability"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.2055178Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.2271547Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "EE5596E02678F068DB0944B5C6C9EF157F0D62D99C722D1DBEF88349CB336BE6",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-5",
+      "filter": "file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::ancestor_namespace_cannot_be_replaced_until_last_raw_alias_releases_original_pins"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.2296192Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.2497939Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D57A06A86EE1BA431E2CCBEC64E6C2EDCAA28D05EEFFCE0F7A111C6B54C4A559",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-6",
+      "filter": "file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::material_case_alias_listing_is_refused_by_real_os_ordinal_policy"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.2521327Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.2715247Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "F3006BBFA320E46C953B362CBAF774C528D25577BDE59BE0611B3FB110F8A204",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-pin-7",
+      "filter": "file_access::windows::material_pin::tests::material_listing_uses_shared_resident_before_retaining_a_large_owned_map",
+      "selectionArguments": [
+        "file_access::windows::material_pin::tests::material_listing_uses_shared_resident_before_retaining_a_large_owned_map"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::material_listing_uses_shared_resident_before_retaining_a_large_owned_map"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::material_listing_uses_shared_resident_before_retaining_a_large_owned_map"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.2743284Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.7346822Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "4EA20F51C54358A610B32640A6B174D02C816F209B3F6C258925AA76BB081AFC",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "owned-link-1",
+      "filter": "worktrees::material_owner::owned_link_tests::native_link_abi_is_class11_counted_utf16_and_an_aligned_bounded_header",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::native_link_abi_is_class11_counted_utf16_and_an_aligned_bounded_header"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::native_link_abi_is_class11_counted_utf16_and_an_aligned_bounded_header"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::native_link_abi_is_class11_counted_utf16_and_an_aligned_bounded_header"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.7378677Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.7613283Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9FE97A6195F2FE3CBD4C2AB8F632FE361F3F8BC75554DE5E5476549871C4B8A9",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "owned-link-2",
+      "filter": "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_retains_full128_data_ea_and_ordinary_security_then_closes",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_retains_full128_data_ea_and_ordinary_security_then_closes"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_retains_full128_data_ea_and_ordinary_security_then_closes"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_retains_full128_data_ea_and_ordinary_security_then_closes"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.7652458Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.8127858Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "438F8ECFF9FD829F9359C84665E0FF951190FA69E6A4BEABC0A9C08AD586F5DE",
+      "stderrSha256": "7165A18C7DA4810087BEE3E3B3D2E56C62CA77657F33AF21F3E958EAD1441160"
+    },
+    {
+      "group": "owned-link-3",
+      "filter": "worktrees::material_owner::owned_link_tests::owned_ntfs_counted_unpaired_and_255unit_aliases_are_not_string_paths",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_counted_unpaired_and_255unit_aliases_are_not_string_paths"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_counted_unpaired_and_255unit_aliases_are_not_string_paths"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::owned_ntfs_counted_unpaired_and_255unit_aliases_are_not_string_paths"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.8156449Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.8666222Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "36EFD1B22137AD4499DE6391242CDFEDC36B4C77E84B233A0E09A3F718DCD318",
+      "stderrSha256": "DADE2C4228451AE14C470FBACB7590582987AC8A86875599DD2059B71133A47F"
+    },
+    {
+      "group": "owned-link-4",
+      "filter": "worktrees::material_owner::owned_link_tests::replace_false_collision_keeps_original_owned_target_and_returns_exact_status",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::replace_false_collision_keeps_original_owned_target_and_returns_exact_status"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::replace_false_collision_keeps_original_owned_target_and_returns_exact_status"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::replace_false_collision_keeps_original_owned_target_and_returns_exact_status"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.8696789Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.9067740Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "C980E388E00920E20FAB58E93FC31404E079876D6CCEC48B981B7FB08BB75F3F",
+      "stderrSha256": "FC15F00CD9E24C9AD3F7FB605A1FB1A75850760A51FDD8648E773572832483C8"
+    },
+    {
+      "group": "owned-link-5",
+      "filter": "worktrees::material_owner::owned_link_tests::invalid_absolute_stream_traversal_and_precancel_never_create_a_link",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::invalid_absolute_stream_traversal_and_precancel_never_create_a_link"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::invalid_absolute_stream_traversal_and_precancel_never_create_a_link"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::invalid_absolute_stream_traversal_and_precancel_never_create_a_link"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.9095877Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.9444791Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "3F411B0BD86223D08679B391C85DD8B8BB446C564995F16B7DD9263B5C91CB9E",
+      "stderrSha256": "D19E41D45FE4B3E9C225987BE5F2AA6867B121DAB03198F4DA8D85096641BE0A"
+    },
+    {
+      "group": "owned-link-6",
+      "filter": "worktrees::material_owner::owned_link_tests::insufficient_shared_work_is_failure_before_mutation_not_a_short_link_success",
+      "selectionArguments": [
+        "worktrees::material_owner::owned_link_tests::insufficient_shared_work_is_failure_before_mutation_not_a_short_link_success"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::insufficient_shared_work_is_failure_before_mutation_not_a_short_link_success"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::insufficient_shared_work_is_failure_before_mutation_not_a_short_link_success"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.9472667Z",
+      "finishedAtUtc": "2026-10-23T12:05:47.9916707Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "6863E160AC21FE4158BF1A47727347F099F155D3795AEBBE98A58BB3A71B9420",
+      "stderrSha256": "AE51823FDE9E35E1F84852386E346C7B296BAE464053989EF8AF52D3995F62BE"
+    },
+    {
+      "group": "checkout-profile",
+      "filter": "worktrees::git::source_roots::profile::tests::",
+      "selectionArguments": ["worktrees::git::source_roots::profile::tests::"],
+      "expectedTests": 6,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+        "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+        "worktrees::git::source_roots::profile::tests::custom_filter_and_literal_unset_driver_are_rejected_without_running_a_helper",
+        "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+        "worktrees::git::source_roots::profile::tests::cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery",
+        "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+        "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+        "worktrees::git::source_roots::profile::tests::cancelled_profile_never_writes_source_index_or_publishes_a_complete_recovery",
+        "worktrees::git::source_roots::profile::tests::custom_filter_and_literal_unset_driver_are_rejected_without_running_a_helper",
+        "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+        "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:47.9947513Z",
+      "finishedAtUtc": "2026-10-23T12:07:52.9261426Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 9 passed; 0 failed; 1 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "C47E3D8114B1C2ED40E42F9421DCCBA4E57AF8A57ED5483A16FE78B23AB6CF93",
+      "stderrSha256": "54DE5BAA5083AAEA0D4555AF2F5416B5E7900C01D9FCA4B1ADFCB1F2EBB86B98"
+    },
+    {
+      "group": "shape-framing",
+      "filter": "file_access::windows::material_backup_shape::tests::",
+      "selectionArguments": [
+        "file_access::windows::material_backup_shape::tests::"
+      ],
+      "expectedTests": 2,
+      "expectedNames": [
+        "file_access::windows::material_backup_shape::tests::observation_retains_unknown_header_and_raw_link_units_without_minting_a_profile",
+        "file_access::windows::material_backup_shape::tests::framing_truncation_cancel_and_shared_byte_limit_never_become_completion"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_backup_shape::tests::framing_truncation_cancel_and_shared_byte_limit_never_become_completion",
+        "file_access::windows::material_backup_shape::tests::observation_retains_unknown_header_and_raw_link_units_without_minting_a_profile"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:53.4239855Z",
+      "finishedAtUtc": "2026-10-23T12:07:53.4468965Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 2 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "E90753DFA362E6B46161BE8AF06214ACD18233A633864E1E74070E4AD4B8A439",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "shape-owned",
+      "filter": "worktrees::material_owner::shape_tests::",
+      "selectionArguments": ["worktrees::material_owner::shape_tests::"],
+      "expectedTests": 4,
+      "expectedNames": [
+        "worktrees::material_owner::shape_tests::ordinary_owned_empty_directory_shape_reaches_real_eof_and_abort_without_full_security",
+        "worktrees::material_owner::shape_tests::ordinary_owned_directory_ea_and_named_data_have_actual_bounded_record_shapes",
+        "worktrees::material_owner::shape_tests::ordinary_owned_hardlink_aliases_observe_native_link_records_without_assuming_they_exist",
+        "worktrees::material_owner::shape_tests::ordinary_shape_pre_cancel_and_insufficient_shared_work_refuse_without_weakening_source"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::shape_tests::ordinary_owned_directory_ea_and_named_data_have_actual_bounded_record_shapes",
+        "worktrees::material_owner::shape_tests::ordinary_owned_empty_directory_shape_reaches_real_eof_and_abort_without_full_security",
+        "worktrees::material_owner::shape_tests::ordinary_owned_hardlink_aliases_observe_native_link_records_without_assuming_they_exist",
+        "worktrees::material_owner::shape_tests::ordinary_shape_pre_cancel_and_insufficient_shared_work_refuse_without_weakening_source"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:53.4485947Z",
+      "finishedAtUtc": "2026-10-23T12:07:53.5032172Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "887ECDC25C29E907AF5148012C26DEDBC0D8098C2EB31FC8A70EBCBEA57DC086",
+      "stderrSha256": "9DDCA12C76B32A2A3EA3AE9976FB56185880FE96400513B782529F0F14EFD660"
+    },
+    {
+      "group": "git-path-forms",
+      "filter": "worktrees::windows_git::paths::tests::",
+      "selectionArguments": ["worktrees::windows_git::paths::tests::"],
+      "expectedTests": 4,
+      "expectedNames": [
+        "worktrees::windows_git::paths::tests::actual_held_dos_spellings_pair_full_identity_and_stamp_without_searching_a_program",
+        "worktrees::windows_git::paths::tests::an_existing_different_dos_file_cannot_be_substituted_for_the_original_held_identity",
+        "worktrees::windows_git::paths::tests::a_private_directory_may_change_metadata_while_the_dos_alias_stays_the_same_held_object",
+        "worktrees::windows_git::paths::tests::real_read_context_accepts_missing_worktree_and_reads_allowed_boolean_with_original_selected_program"
+      ],
+      "actualPassedNames": [
+        "worktrees::windows_git::paths::tests::a_private_directory_may_change_metadata_while_the_dos_alias_stays_the_same_held_object",
+        "worktrees::windows_git::paths::tests::actual_held_dos_spellings_pair_full_identity_and_stamp_without_searching_a_program",
+        "worktrees::windows_git::paths::tests::an_existing_different_dos_file_cannot_be_substituted_for_the_original_held_identity",
+        "worktrees::windows_git::paths::tests::real_read_context_accepts_missing_worktree_and_reads_allowed_boolean_with_original_selected_program"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:53.5052332Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.3069529Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "FAEE2CD0CBD99385191B36147E2A1D49950FED4C0F86A1D8E9D726DCE1D6DADA",
+      "stderrSha256": "3AB5289D5C7F79B66C593C6D53590E82D5802757261834FDBF59C8B872E8A5D7"
+    },
+    {
+      "group": "directory-records",
+      "filter": "file_access::material_directory_records::tests::",
+      "selectionArguments": [
+        "file_access::material_directory_records::tests::",
+        "--skip",
+        "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade",
+        "--skip",
+        "file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order"
+      ],
+      "expectedTests": 7,
+      "expectedNames": [
+        "file_access::material_directory_records::tests::empty_directory_is_typed_not_a_zero_default_regular_file",
+        "file_access::material_directory_records::tests::actual_parser_pairs_raw_ads_ea_and_full_security_across_short_reads",
+        "file_access::material_directory_records::tests::security_profiles_cannot_turn_partial_or_missing_bytes_into_full",
+        "file_access::material_directory_records::tests::unsupported_kind_duplicate_alias_and_invalid_ea_are_refusals",
+        "file_access::material_directory_records::tests::truncation_budget_and_cancellation_never_complete_a_full_directory",
+        "file_access::material_directory_records::tests::equal_length_native_payload_drift_changes_actual_contents_and_digest",
+        "file_access::material_directory_records::tests::returned_catalog_keeps_shared_resident_until_retired"
+      ],
+      "actualPassedNames": [
+        "file_access::material_directory_records::tests::actual_parser_pairs_raw_ads_ea_and_full_security_across_short_reads",
+        "file_access::material_directory_records::tests::empty_directory_is_typed_not_a_zero_default_regular_file",
+        "file_access::material_directory_records::tests::equal_length_native_payload_drift_changes_actual_contents_and_digest",
+        "file_access::material_directory_records::tests::returned_catalog_keeps_shared_resident_until_retired",
+        "file_access::material_directory_records::tests::security_profiles_cannot_turn_partial_or_missing_bytes_into_full",
+        "file_access::material_directory_records::tests::truncation_budget_and_cancellation_never_complete_a_full_directory",
+        "file_access::material_directory_records::tests::unsupported_kind_duplicate_alias_and_invalid_ea_are_refusals"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.3089965Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.3479855Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 7 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "8196EE707043647DE316C493147D2B732947AB572788F1462371AA74A3BBB4DD",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-facet",
+      "filter": "file_access::material_directory_facet::tests::",
+      "selectionArguments": ["file_access::material_directory_facet::tests::"],
+      "expectedTests": 9,
+      "expectedNames": [
+        "file_access::material_directory_facet::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128",
+        "file_access::material_directory_facet::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted",
+        "file_access::material_directory_facet::tests::actual_input_extent_or_hash_mismatch_never_emits_completion",
+        "file_access::material_directory_facet::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete",
+        "file_access::material_directory_facet::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error",
+        "file_access::material_directory_facet::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output",
+        "file_access::material_directory_facet::tests::verified_record_retains_its_logical_metadata_reservation_until_drop",
+        "file_access::material_directory_facet::tests::empty_partial_directory_has_real_zero_native_extent_but_never_full_security",
+        "file_access::material_directory_facet::tests::typed_directory_framing_rejects_regular_or_reparse_kind_and_foreign_magic"
+      ],
+      "actualPassedNames": [
+        "file_access::material_directory_facet::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128",
+        "file_access::material_directory_facet::tests::actual_input_extent_or_hash_mismatch_never_emits_completion",
+        "file_access::material_directory_facet::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error",
+        "file_access::material_directory_facet::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete",
+        "file_access::material_directory_facet::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted",
+        "file_access::material_directory_facet::tests::empty_partial_directory_has_real_zero_native_extent_but_never_full_security",
+        "file_access::material_directory_facet::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output",
+        "file_access::material_directory_facet::tests::typed_directory_framing_rejects_regular_or_reparse_kind_and_foreign_magic",
+        "file_access::material_directory_facet::tests::verified_record_retains_its_logical_metadata_reservation_until_drop"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.3499322Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.6331214Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 9 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D40D4633EF41C50843BA16F7CBD21A3698BCFA3C187D7A5C6C076943F6BAF75F",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-owned-1",
+      "filter": "worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.6351667Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.6800401Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "F2B725DD89876CDB3CA287707042EFC614C66ED67AEC339388F3BC40DCEF85AE",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-owned-2",
+      "filter": "worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_carrier_tests::ordinary_directory_ea_ads_and_raw_leaf_are_preserved_without_security_claim"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.6816644Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.7290767Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "A6C0F7D2D974358D28AD955AC8897DC52A828CF6FE3AE5F846D2A1BD6BB0D24D",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-owned-3",
+      "filter": "worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_carrier_tests::wrong_kind_label_precancel_and_insufficient_work_never_become_a_facet"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.7307221Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.7636407Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "4EC69587E5FAE996DFBBA85B1062477EC443FF23C73B515E1B7AB4A02DAB30DD",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-restore-transfer",
+      "filter": "file_access::windows::material_directory_restore::tests::",
+      "selectionArguments": [
+        "file_access::windows::material_directory_restore::tests::"
+      ],
+      "expectedTests": 3,
+      "expectedNames": [
+        "file_access::windows::material_directory_restore::tests::actual_typed_file_view_bounds_seek_and_partial_transfer_to_native_extent",
+        "file_access::windows::material_directory_restore::tests::typed_transfer_retains_distinct_write_error_and_failed_abort_once",
+        "file_access::windows::material_directory_restore::tests::typed_transfer_cancellation_after_partial_write_keeps_failed_abort_owner"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_directory_restore::tests::actual_typed_file_view_bounds_seek_and_partial_transfer_to_native_extent",
+        "file_access::windows::material_directory_restore::tests::typed_transfer_cancellation_after_partial_write_keeps_failed_abort_owner",
+        "file_access::windows::material_directory_restore::tests::typed_transfer_retains_distinct_write_error_and_failed_abort_once"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.7661459Z",
+      "finishedAtUtc": "2026-10-23T12:07:54.9486155Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 3 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "EEBFEC9D7F7FDD615D9F5427C38D1A3FC79CD3FB31575E4F0D59853D9A6CCD59",
+      "stderrSha256": "CB53341C2CE45DB2DBC56E35A90DE7E803CA61B04AE37DE1B197E42A1AB76A0E"
+    },
+    {
+      "group": "directory-restore-owned-1",
+      "filter": "worktrees::material_owner::directory_restore_tests::empty_partial_directory_creates_real_owned_target_without_fabricated_write_context",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_restore_tests::empty_partial_directory_creates_real_owned_target_without_fabricated_write_context"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_restore_tests::empty_partial_directory_creates_real_owned_target_without_fabricated_write_context"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_restore_tests::empty_partial_directory_creates_real_owned_target_without_fabricated_write_context"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:54.9503394Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.0383146Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D89115D1D0985A0365D10462B4B027E7653D7F19832F401CCD6AABA80F73A784",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-restore-owned-2",
+      "filter": "worktrees::material_owner::directory_restore_tests::ordinary_directory_ea_ads_roundtrip_keeps_actual_source_and_finalizes_childless_metadata_last",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_restore_tests::ordinary_directory_ea_ads_roundtrip_keeps_actual_source_and_finalizes_childless_metadata_last"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_restore_tests::ordinary_directory_ea_ads_roundtrip_keeps_actual_source_and_finalizes_childless_metadata_last"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_restore_tests::ordinary_directory_ea_ads_roundtrip_keeps_actual_source_and_finalizes_childless_metadata_last"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.0400806Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.1259473Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9860C8B30C25CB41D039F1C20375F4D005A1BB07EC0AF34626E9515E2526ED99",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-restore-owned-3",
+      "filter": "worktrees::material_owner::directory_restore_tests::precancel_and_shared_work_failure_preserve_source_without_a_successful_restore",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_restore_tests::precancel_and_shared_work_failure_preserve_source_without_a_successful_restore"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_restore_tests::precancel_and_shared_work_failure_preserve_source_without_a_successful_restore"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_restore_tests::precancel_and_shared_work_failure_preserve_source_without_a_successful_restore"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.1313099Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.1873371Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0D2DBF50B869340A11AF76D6683A78A19CBA443BEA0245FD5109A966CA66C1B9",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-tree-codec",
+      "filter": "file_access::material_directory_tree_records::tests::",
+      "selectionArguments": [
+        "file_access::material_directory_tree_records::tests::"
+      ],
+      "expectedTests": 6,
+      "expectedNames": [
+        "file_access::material_directory_tree_records::tests::streaming_two_actual_typed_records_keep_raw_parent_full_ids_and_native_ranges",
+        "file_access::material_directory_tree_records::tests::regular_alias_and_future_tags_are_not_skeleton_success",
+        "file_access::material_directory_tree_records::tests::forward_parent_cycle_and_duplicate_directory_identity_are_refused",
+        "file_access::material_directory_tree_records::tests::exact_sibling_duplicates_and_native_comparison_policy_are_not_ignored",
+        "file_access::material_directory_tree_records::tests::truncation_payload_tamper_suffix_and_budget_fail_without_a_completed_tree",
+        "file_access::material_directory_tree_records::tests::cancellation_and_unfinished_writer_cannot_emit_a_tree_completion"
+      ],
+      "actualPassedNames": [
+        "file_access::material_directory_tree_records::tests::cancellation_and_unfinished_writer_cannot_emit_a_tree_completion",
+        "file_access::material_directory_tree_records::tests::exact_sibling_duplicates_and_native_comparison_policy_are_not_ignored",
+        "file_access::material_directory_tree_records::tests::forward_parent_cycle_and_duplicate_directory_identity_are_refused",
+        "file_access::material_directory_tree_records::tests::regular_alias_and_future_tags_are_not_skeleton_success",
+        "file_access::material_directory_tree_records::tests::streaming_two_actual_typed_records_keep_raw_parent_full_ids_and_native_ranges",
+        "file_access::material_directory_tree_records::tests::truncation_payload_tamper_suffix_and_budget_fail_without_a_completed_tree"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.2286726Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.3394988Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "39DAE636E8DAC46DAB140B1A33E2B07DDDF559FDEB536282EAF37B6F683FDAED",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-tree-owned-1",
+      "filter": "worktrees::material_owner::directory_tree_tests::actual_three_directory_empty_tree_uses_one_namespace_and_finalizes_descendants_first",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_tree_tests::actual_three_directory_empty_tree_uses_one_namespace_and_finalizes_descendants_first"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_three_directory_empty_tree_uses_one_namespace_and_finalizes_descendants_first"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_three_directory_empty_tree_uses_one_namespace_and_finalizes_descendants_first"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.3478198Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.4835005Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "1BDDDD9C77E70945953B7799DE0B79768C6176F53FD149C8DC95BA0249449FAC",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-tree-owned-2",
+      "filter": "worktrees::material_owner::directory_tree_tests::actual_raw_utf16_parent_child_directory_ea_ads_are_carried_and_recaptured",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_utf16_parent_child_directory_ea_ads_are_carried_and_recaptured"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_utf16_parent_child_directory_ea_ads_are_carried_and_recaptured"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_utf16_parent_child_directory_ea_ads_are_carried_and_recaptured"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.4859964Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.6034259Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0AA2EE1E0119F46B2969300338932E05B23552A25102C846BB13451CD8A4D421",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-tree-owned-3",
+      "filter": "worktrees::material_owner::directory_tree_tests::actual_regular_child_is_explicitly_rejected_without_skipping_or_modifying_it",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_tree_tests::actual_regular_child_is_explicitly_rejected_without_skipping_or_modifying_it"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_regular_child_is_explicitly_rejected_without_skipping_or_modifying_it"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_regular_child_is_explicitly_rejected_without_skipping_or_modifying_it"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.6058375Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.6319746Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "3492AE612979998B86A50A04F5D5706D5FC00000DDA5D8283027AF180D25BBE9",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "directory-tree-owned-4",
+      "filter": "worktrees::material_owner::directory_tree_tests::source_tree_precancel_and_shared_work_limit_remain_failures",
+      "selectionArguments": [
+        "worktrees::material_owner::directory_tree_tests::source_tree_precancel_and_shared_work_limit_remain_failures"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::source_tree_precancel_and_shared_work_limit_remain_failures"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_tree_tests::source_tree_precancel_and_shared_work_limit_remain_failures"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.6345825Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.6619613Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "5B0797FC0C798E80B774D757334DFA008FD2B53AE63FC3384BDEF605EF8227F8",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "regular-shared-guard-purpose",
+      "filter": "file_access::windows::material_regular_shared::tests::ordinary_held_source_is_rejected_before_work_pool_or_native_context",
+      "selectionArguments": [
+        "file_access::windows::material_regular_shared::tests::ordinary_held_source_is_rejected_before_work_pool_or_native_context"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_regular_shared::tests::ordinary_held_source_is_rejected_before_work_pool_or_native_context"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_regular_shared::tests::ordinary_held_source_is_rejected_before_work_pool_or_native_context"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.6644906Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.7073128Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "515DAC56EC5099958A8147FCF838A4827B8C8A010EABA49341AD8AA7DD0F13D3",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "regular-shared-guard-inert-abort",
+      "filter": "file_access::windows::material_regular_shared::tests::existing_failed_abort_blocks_a_new_prepare_without_replacing_the_original_context",
+      "selectionArguments": [
+        "file_access::windows::material_regular_shared::tests::existing_failed_abort_blocks_a_new_prepare_without_replacing_the_original_context"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_regular_shared::tests::existing_failed_abort_blocks_a_new_prepare_without_replacing_the_original_context"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_regular_shared::tests::existing_failed_abort_blocks_a_new_prepare_without_replacing_the_original_context"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.7381539Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.8080909Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9C2BA5A75FCBEEC80186A891BE81F47C588A50DE04E254E7C55717D19BF58403",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "regular-shared-owned-purpose",
+      "filter": "worktrees::material_owner::regular_shared_tests::ordinary_parent_cannot_mint_two_full_security_shared_capture_sources",
+      "selectionArguments": [
+        "worktrees::material_owner::regular_shared_tests::ordinary_parent_cannot_mint_two_full_security_shared_capture_sources"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::regular_shared_tests::ordinary_parent_cannot_mint_two_full_security_shared_capture_sources"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::regular_shared_tests::ordinary_parent_cannot_mint_two_full_security_shared_capture_sources"
+      ],
+      "startedAtUtc": "2026-10-23T12:07:55.8386694Z",
+      "finishedAtUtc": "2026-10-23T12:07:55.9310045Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "A5546AE1223D77F847DD5CC7A8270E335C3BCDD5B38B257822D9A2205D0DBF66",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    }
+  ],
+  "historicalSelectorSha256": "BF6139991EE7C99A33BB3F8C9658CDF5EE8E27130DB1990864793013B31C1822",
+  "inputsStable": true,
+  "observationComplete": false,
+  "singleNodeCarrierControlsOnly": false,
+  "ownedSourceCarrierLinkDirectoryCaptureAndRestoreControlsOnly": true,
+  "inertTraitFakeAbortGuardIncluded": true,
+  "inertTraitFakeIsNativeBackupSuccess": false,
+  "persistentDirectoryTreeRestoreComplete": false,
+  "explicitIgnoredFullSecurityControls": false,
+  "privilegesAdjusted": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

@@ -1,0 +1,5 @@
+FARFOLD_TARGET_LINK_GROUP_OUTCOME operation=Some(NtStatus { phase: "targetGroupPrimary", status: -1073741727 }) cleanup=None native_status=Some(("targetGroupPrimary", -1073741727))
+
+thread 'worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore' (7912) panicked at src\worktrees\material_target_link_group_owner_tests.rs:390:6:
+called `Result::unwrap()` on an `Err` value: NtStatus { phase: "targetGroupPrimary", status: -1073741727 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

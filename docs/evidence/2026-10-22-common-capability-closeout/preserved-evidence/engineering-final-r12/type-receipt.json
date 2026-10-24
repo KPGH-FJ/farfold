@@ -1,0 +1,15 @@
+{
+  "label": "type",
+  "command": ["corepack", "pnpm", "typecheck"],
+  "atUtc": "2026-10-23T12:26:19.616126+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 13.415680166999998,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-e633f645564e6fc5ba26",
+    "bytes": 78,
+    "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+  },
+  "freeBytesAfter": 17881378816
+}

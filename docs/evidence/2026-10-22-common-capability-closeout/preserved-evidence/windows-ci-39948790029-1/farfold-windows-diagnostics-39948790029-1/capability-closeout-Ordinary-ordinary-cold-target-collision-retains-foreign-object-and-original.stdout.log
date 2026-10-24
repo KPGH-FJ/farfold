@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.12s
+

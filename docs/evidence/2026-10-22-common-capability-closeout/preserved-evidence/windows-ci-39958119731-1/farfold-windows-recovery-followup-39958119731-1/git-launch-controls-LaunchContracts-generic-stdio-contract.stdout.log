@@ -1,0 +1,6 @@
+
+running 1 test
+test windows_process::behavior_tests::helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.03s
+

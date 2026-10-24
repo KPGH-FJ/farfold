@@ -1,0 +1,9 @@
+
+running 4 tests
+test worktrees::git::source_roots::tests::held_inventory_denies_metadata_writers_and_rechecks_complete_private_namespace ... ok
+test worktrees::git::source_roots::tests::orphan_reflog_fingerprint_changes_even_when_its_commit_set_does_not ... ok
+test worktrees::git::source_roots::tests::real_private_roots_consumer_keeps_deleted_reflog_commits_without_mutating_source ... ok
+test worktrees::git::source_roots::tests::unknown_private_state_noncommit_ref_and_cancel_are_not_silently_omitted ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2320 filtered out; finished in 2.57s
+

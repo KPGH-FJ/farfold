@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_persistent_store::restore::tests::cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.05s
+

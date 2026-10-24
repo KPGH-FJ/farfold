@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

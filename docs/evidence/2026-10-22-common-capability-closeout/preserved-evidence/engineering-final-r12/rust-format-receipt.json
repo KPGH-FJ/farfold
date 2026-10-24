@@ -1,0 +1,21 @@
+{
+  "label": "rust-format",
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "atUtc": "2026-10-23T12:27:55.443112+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 3.7347012500000005,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-5f52742581f324f59b70",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "freeBytesAfter": 17818009600
+}

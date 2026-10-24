@@ -1,0 +1,29 @@
+{
+  "group": "persistent-store-01",
+  "filter": "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:01.7404913Z",
+  "finishedAtUtc": "2026-10-23T12:08:01.7912132Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "0DDD58BCA0F0E07DA1F8DBB6624C2600B02C7F12EC341DAE1C7F6375D1F9BCFF",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

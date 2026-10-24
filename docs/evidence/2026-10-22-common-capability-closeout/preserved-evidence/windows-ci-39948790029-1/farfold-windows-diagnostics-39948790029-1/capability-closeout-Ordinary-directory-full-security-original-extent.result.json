@@ -1,0 +1,37 @@
+{
+  "group": "directory-full-security-original-extent",
+  "filter": "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade",
+  "category": "completeSecurityExtentParsing",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade"
+  ],
+  "actualPassedNames": [
+    "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.8176056Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.8321769Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "E85B9F228208B62E38C2BB1414F7EA59079C5F8D95E77559645AA0D012F2C440",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

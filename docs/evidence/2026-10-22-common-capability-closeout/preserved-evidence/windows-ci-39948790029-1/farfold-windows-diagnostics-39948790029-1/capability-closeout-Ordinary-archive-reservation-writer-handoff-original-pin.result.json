@@ -1,0 +1,37 @@
+{
+  "group": "archive-reservation-writer-handoff-original-pin",
+  "filter": "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin",
+  "category": "ownedArchiveReservationHandoff",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:30.2918622Z",
+  "finishedAtUtc": "2026-10-23T12:14:30.3381115Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "8F078E2E1AD55D349F04887A9530E619D1DB2812FEA4024647AAFA87734ED18A",
+  "stderrSha256": "1043A65F3825DDE6DB279AF05C9471A7DC511C63BAA33F87006135A22CBBFF86"
+}

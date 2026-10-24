@@ -1,0 +1,1358 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "groups": [
+    {
+      "mode": "Ordinary",
+      "count": 3,
+      "issues": [],
+      "sha256": "6a50eb66f31be2f836dfd9de4c4a3a75aeac0beb2d3d689e5e57bd274f804fb2"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "count": 4,
+      "issues": [],
+      "sha256": "75ebe2a19105a7a67f1da21b432a6c1a7184bedcd3dea07f7587288e26dbbd7b"
+    },
+    {
+      "mode": "NullAttributes",
+      "count": 8,
+      "issues": [],
+      "sha256": "71c9c86568771a7da92e28755c4452da98c162cb29a7179a72286d4b95c87b43"
+    },
+    {
+      "mode": "LaunchContracts",
+      "count": 4,
+      "issues": [],
+      "sha256": "f5ebe886a1f944f8aaf6430161043efab597ca91968b07da515c80e344a257e4"
+    },
+    {
+      "mode": "GitSettlement",
+      "count": 7,
+      "issues": [],
+      "sha256": "acace651feac7a6b0cf9372219bce480f0e388ee2ddd09b8f610bf790309a413"
+    }
+  ],
+  "cases": [
+    {
+      "group": "Ordinary",
+      "name": "create-public-selected",
+      "fqn": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 24.862718,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "b0566972c4d2bcf483811a6ad1c4972ac875b5b013f322284161b625bd35f851",
+      "stdoutSha256": "d61487681c8503769753533706f56c7c79b03841e34440f96f6481ec7f2429d6",
+      "stderrSha256": "801f57ddec1b1c1d4b487797e6db9dc70b88907c9c86cbdb9a7628d7deb3a451"
+    },
+    {
+      "group": "Ordinary",
+      "name": "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 92.380461,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [
+        {
+          "stage": "restore-material",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-stamp",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restore-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "verify-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        }
+      ],
+      "settlementObservation": {},
+      "receiptSha256": "f9fb5a05b5edb8888cef10cce7cd8e4fb87dc18b61d6339531303cd6f5b9cd0c",
+      "stdoutSha256": "f20f54a807d4872752b62997183c5c0ebb3cb42e7fd29cdeef4bc79e05149434",
+      "stderrSha256": "90bc67e4ed0f27b3b19ff532a97798854e965a895087dec163d215c32dad1663"
+    },
+    {
+      "group": "Ordinary",
+      "name": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 117.323606,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [
+        {
+          "stage": "restore-material",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-stamp",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restore-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "verify-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        }
+      ],
+      "settlementObservation": {},
+      "receiptSha256": "b1387f5ce5779302f31777acc45ba686d897c8d95ef51193d0add4ef71271793",
+      "stdoutSha256": "984d0e7dc840543e0cf782c3ae841d5034672c2c9aa9cfcee274a72b16309522",
+      "stderrSha256": "f84b6be163d0b56c7bf8e530ec16279d0d36679ac39e5ee4d6d783011880b6da"
+    },
+    {
+      "group": "FullSecurityManual",
+      "name": "public-retained-cold-recover",
+      "fqn": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 92.200516,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": {
+        "schema": 1,
+        "case": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "recoveryStages": [
+        {
+          "stage": "restore-material",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-stamp",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restore-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "verify-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        }
+      ],
+      "settlementObservation": {},
+      "receiptSha256": "faf83328c8768d1fcd3e1fcc33ad1f2d61433a8e7a446d5a44b79ebfa72c0976",
+      "stdoutSha256": "b7160c8f9c7ed7a14b4e357a45c70a72fd9a8b226c1e51bb25d588a7ee5aa20e",
+      "stderrSha256": "abec63ef351d1084472cd86888b84239f416acd78b47a5d7a510aad23010cdc9"
+    },
+    {
+      "group": "FullSecurityManual",
+      "name": "remove-late-ea",
+      "fqn": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 88.202972,
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=ea",
+      "markerCount": 1,
+      "privilegeEvidence": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "445da3a343af70a4b05ca2e992d7c58bb901a201fa65253c0232c3bd3466e3e6",
+      "stdoutSha256": "aa46cb6a188f3d7b6613cc47faf2ea613e500527468f270083e429b490f49f4d",
+      "stderrSha256": "d644ede7fb1b03406e8ea4976883b08dc326bc91b311faf15ca6c1f01bccdc41"
+    },
+    {
+      "group": "FullSecurityManual",
+      "name": "remove-late-security",
+      "fqn": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 88.263275,
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=security",
+      "markerCount": 1,
+      "privilegeEvidence": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "550b53c8f863c36eb8019108f38ba94317cbada1debceed6b803f2591792bd5e",
+      "stdoutSha256": "ebe7a0a2d085d7e27f8813a417829e9c541ca981a44bb9986709478173e1ef75",
+      "stderrSha256": "dfee50fd07387699f9eaa8572a1ae0b1885edcd20877c2b7f06539f458963ea5"
+    },
+    {
+      "group": "FullSecurityManual",
+      "name": "public-remove-cold-recover",
+      "fqn": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 117.31051,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": {
+        "schema": 1,
+        "case": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "recoveryStages": [
+        {
+          "stage": "restore-material",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-stamp",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restore-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "verify-target",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-snapshot",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-graph",
+          "ok": true,
+          "code": null
+        },
+        {
+          "stage": "restored-target-profile",
+          "ok": true,
+          "code": null
+        }
+      ],
+      "settlementObservation": {},
+      "receiptSha256": "a9ca5a1fb7dae4cbbfdc9c446dbd055a9d58d73c4f10f989cb7dfd029bc0f51e",
+      "stdoutSha256": "fdcc3c34d6f16f3387fed1542240a8d7453e03d0e5f73829e4d0d2aca57a9394",
+      "stderrSha256": "0a8906c4c507e5320d8cdc9ba2cc664d102ff50d32e9fbb6f593be14696c17cc"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "null-exact-spellings",
+      "fqn": "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.020336,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "d0cbb4a17eb9c222434a6d262826a6cb8679ac36e676d5b0fd3c02e628d7e75c",
+      "stdoutSha256": "5fa615f677f11f6064fc3fc0c135e0d820d005dc26961276dd6ea54c34c55ee2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "null-command-system-policy",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 3.146707,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "e38e65dff7323846612c56b930db56261234b613e33920f1382bb6a165e17d4a",
+      "stdoutSha256": "b0ce76944332ade8dd9bcbdb1be9014837199666a400dc93114457adfca549e5",
+      "stderrSha256": "fd4739c5c2f856ffcf5e0d0b5ea98f2fcf11e6c04f4e91f6318633d80d639599"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "null-rooted-lookalikes",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 7.633783,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "2bd85e7c62b94d7036a46fb341198725e0604a09287c66555c0f8541230473bb",
+      "stdoutSha256": "fb2ecb2da246a4c848ce4e47fccd96cdaea0fddb8c7fc02ea3ba51dd95f1b0b5",
+      "stderrSha256": "cdfcc5ee8ac1f1caac3c38fbde635e8f433681ea13312e21c4fc1b055235ac69"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "null-owned-xdg-matrix",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 58.189892,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "e36001ba7392d3b24801650a8167ec9c5308480d1b440c6616adbf1187e1f105",
+      "stdoutSha256": "7f67afaf7f67362af53d724b91b6fce4a5da90508fb7610d5a637a67298c77cb",
+      "stderrSha256": "8dfa8b4379618ae144ba191d75b89483da0b655fae35a0be4f37280bd741332e"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "existing-source-profile-info",
+      "fqn": "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 5.191026,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "f4eadb8669fe89a7d9f513ddf09766df2cba3ed399bb1f6bd20e57ad7e72c2ec",
+      "stdoutSha256": "f9435541d2715e8c0f6655b8038ae8636aaa02727b1fe97bbdb4c3b069a48d5d",
+      "stderrSha256": "0f15d16f5bfbfa71d87e9c7018709714d1c568ef09b4c94bb17a30a083a8e37a"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "existing-configured-attributes-file",
+      "fqn": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 10.537928,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "c034d2dd6b8eda3383e786cbf3a41f7b654ba94b5b6e3b14d68d205775cd28b2",
+      "stdoutSha256": "72f7c9a831d1cec064b880035887497296f8593760ecb020c2dccafc69ce9ebe",
+      "stderrSha256": "95154d5da9a933d94629d6967872970dda3445ddd7d21d02814e5fb9be2a4aa7"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "existing-held-absence-drive-relative",
+      "fqn": "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 8.120786,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "b08ffc87af6d897cb835049f4fe6104566c769ce12970bdc6b15fc6912f5a565",
+      "stdoutSha256": "a87d31cc9251b74bb63dd88248c50b8a2e43a3eb59823180c1a855119ff15efb",
+      "stderrSha256": "cfd273a89c5d1307e4a2cafba4da7f5fa5e3f043591b2a84c52c4bc5dfe53305"
+    },
+    {
+      "group": "NullAttributes",
+      "name": "existing-selected-head-attributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 5.918428,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "ae48fad47b0a0981c6e1b4f6c980685fbbe81aed40c33cc8d9ad4aca03710e19",
+      "stdoutSha256": "a6327b90bc3bcbd41846bffba955a6c673532dce122ed233109a11f3297b66c0",
+      "stderrSha256": "8a72279250601b790833370c75f878db24c87ccfe55afb9854c7b882bd9e1302"
+    },
+    {
+      "group": "LaunchContracts",
+      "name": "generic-command-shape",
+      "fqn": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.025355,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "6101171320b69fe9f927a429cac24a186494b8ffbc9b55487346bf9a22b00f16",
+      "stdoutSha256": "26c611d4fdf60a75a908a97bd7d7187d28b4b574798deec736e6a5498901ce20",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "group": "LaunchContracts",
+      "name": "generic-stdio-contract",
+      "fqn": "windows_process::behavior_tests::helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.044227,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "7454dce814ceb6b69f39d98d7b8fdd41d425771b2e8eb1e547390bf9f367c499",
+      "stdoutSha256": "3d998bb204364eb47b4a78caf780be4698ebf08684845182e8fe64a3debfbe26",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "group": "LaunchContracts",
+      "name": "noninteractive-git-stdio-contract",
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.059974,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "b192820e33933400342a96a80b7334ef51d66aca849df97a04a1e9d048c11d8a",
+      "stdoutSha256": "ddd4186176286705c7de49ed0b30b77c5c516e6b1af08da10db2503dadce910e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "group": "LaunchContracts",
+      "name": "noninteractive-git-error-contract",
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_stderr_and_original_failure_exit",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.03573,
+      "marker": null,
+      "markerCount": 0,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {},
+      "receiptSha256": "2fd37f6712710ec8b8b1d79c133f9b613b6569bd8d9c2d9e94cfdbb5cd4df6fa",
+      "stdoutSha256": "412d85d7ca074415b0ae4d209ca800edbe040aed9b34dabf4d121deb304768e9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "natural-tail",
+      "fqn": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.358818,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 5936,
+          "retainedGroupHelperPid": 5936,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [3552, 4328]
+          },
+          "stoppedReason": null,
+          "settledNaturally": true,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 5936,
+          "retainedGroupHelperPid": 5936,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [3552, 4328]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "cc1faea9dda67cf2bb12dd550b7a7836f9fb8849aef98ad1cf904e11c8aadf49",
+      "stdoutSha256": "41eba6b02b3bdc8e1718e82160bd186971f0258066f7c19f7e57dfb09f5c82db",
+      "stderrSha256": "f5b6f004f717aae8e2f15a60928d30aacd6dad787f4279b223af235e9bf1daa2"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "original-nonzero",
+      "fqn": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.31375,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 4276,
+          "retainedGroupHelperPid": 4276,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 13,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [5804, 2692]
+          },
+          "stoppedReason": null,
+          "settledNaturally": true,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 4276,
+          "retainedGroupHelperPid": 4276,
+          "originalChildExitCode": 13,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [5804, 2692]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "657bb830d5d57d333ff66dd460a94798a5e6410b1f10b6a1ce21be378a5d9d43",
+      "stdoutSha256": "38d898423dd12876da2f399d5490a822a0b2202358121427c24e14591bcd272e",
+      "stderrSha256": "f0a4ae2de301a1f4406f0b683b6e5bd9810a5f03cce6ca617e0146a7c75263a0"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "cancel-owned-job",
+      "fqn": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.305589,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 3984,
+          "retainedGroupHelperPid": 3984,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [2012, 4016]
+          },
+          "stoppedReason": "cancelled",
+          "settledNaturally": false,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 3984,
+          "retainedGroupHelperPid": 3984,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [2012, 4016]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "0e0c8ef437e60c623f0edcf273b6bb733cd61ab3df3c08b6bb203e78b6a59b60",
+      "stdoutSha256": "49ae5496e1015115a32441236f73eb24a0bc666e77c00a8e4a6fd4ddb21d63ba",
+      "stderrSha256": "5a790a5cce7bf80a4724fd58285a96b4f32e445a289bd944aa8701b3112e6169"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "original-deadline",
+      "fqn": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 3.059967,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 452,
+          "retainedGroupHelperPid": 452,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [5964, 7648]
+          },
+          "stoppedReason": "waitExpired",
+          "settledNaturally": false,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 452,
+          "retainedGroupHelperPid": 452,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [5964, 7648]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "d22d499b0702c81349ce8c061c0581c0361c5558b31b002f3e5a4d9959c6d355",
+      "stdoutSha256": "548525f6be9198b5fcb9394a434845ec21fabfcab9969fa813ae89edc47c65f4",
+      "stderrSha256": "8ad570426fdd9854611694a15dc65b74787c769c3d4858d92028ba243050417e"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "late-stdout-limit",
+      "fqn": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.291129,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stdout",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 8136,
+          "retainedGroupHelperPid": 8136,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [5252, 5888]
+          },
+          "stoppedReason": "tooLarge",
+          "settledNaturally": false,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 8136,
+          "retainedGroupHelperPid": 8136,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [5252, 5888]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "9c559f88734eaf4647dbdbe3981d082653590202a9075e5119072d2187ed4aa7",
+      "stdoutSha256": "0af66ecb195d88715ab84dc234f4b8b1f03c2c988719b6fc8be7d1c820b36ad4",
+      "stderrSha256": "be8d09e687c49ac2fc95f8e5698141edb1644bca93594b8d9e8060dac96d4e22"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "late-stderr-limit",
+      "fqn": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.301942,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stderr",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 6016,
+          "retainedGroupHelperPid": 6016,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [2536, 4228]
+          },
+          "stoppedReason": "tooLarge",
+          "settledNaturally": false,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 6016,
+          "retainedGroupHelperPid": 6016,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [2536, 4228]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "720eb45f7dde858d6b0c75236ef4c674cc101ff45e33f12193de0bb4f131cb7b",
+      "stdoutSha256": "240e85ad2c71cce8575e420a9c44e05c24bae5331882fadca517c1dcf154b765",
+      "stderrSha256": "b1d9c548635a55bf40eb180a1205a55d8563bc9f3ab2786a1812cca3f9cc2d2d"
+    },
+    {
+      "group": "GitSettlement",
+      "name": "changed-input",
+      "fqn": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+      "issues": [],
+      "parentExitCode": 0,
+      "durationSeconds": 0.307296,
+      "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=input",
+      "markerCount": 1,
+      "privilegeEvidence": null,
+      "recoveryStages": [],
+      "settlementObservation": {
+        "decisive": {
+          "phase": "firstActiveGroupQueryAfterOriginalChild",
+          "originalChildPid": 6352,
+          "retainedGroupHelperPid": 6352,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "queryClass": "JobObjectBasicAccountingInformation",
+          "queryReturn": 1,
+          "querySucceeded": true,
+          "nativeError": null,
+          "activeProcesses": 2,
+          "totalProcesses": 4,
+          "totalTerminatedProcesses": 0,
+          "conservativeActive": true,
+          "currentMembers": {
+            "heldCount": 2,
+            "admittedCount": 2,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": false,
+            "observationUnknown": false,
+            "admittedPids": [5144, 2316]
+          },
+          "stoppedReason": "changed",
+          "settledNaturally": false,
+          "scope": "same retained Job, first active query and already held current objects; emitted after production accounting/held-object completion, not proof of all historical members"
+        },
+        "association": {
+          "phase": "sameJobAssociatedListAfterOriginalChild",
+          "originalChildPid": 6352,
+          "retainedGroupHelperPid": 6352,
+          "originalChildExitCode": 0,
+          "association": {
+            "originalChildIdMatches": true,
+            "originalChildWaitReturn": 0,
+            "originalChildWaitError": null,
+            "capacity": 32,
+            "layoutMatches": true,
+            "listQueryReturn": 1,
+            "listQueryError": null,
+            "returnedBytes": 24,
+            "layoutComplete": true,
+            "assignedProcesses": 2,
+            "listedProcesses": 2,
+            "originalHelperListed": false,
+            "ids": [5144, 2316]
+          },
+          "scope": "after first active accounting query; non-atomic observations, no PID reopen"
+        }
+      },
+      "receiptSha256": "4101c71bb6e80276a3f637f3c900977c1946778cdf37d8e86e38f4b244856163",
+      "stdoutSha256": "1985dbfa8988b4b1d19e1de90c15e3bcd4b268e6ee849d6974dccdb3fc94d248",
+      "stderrSha256": "3a2c46d958bc347b3e2469505cbf642d59bcb73fcbd2210ef3928acfde0cf36f"
+    }
+  ],
+  "issues": [],
+  "scope": "Independent direct raw and source-manifest relationship audit; diagnostic and XDG child counted separately by final assembly"
+}

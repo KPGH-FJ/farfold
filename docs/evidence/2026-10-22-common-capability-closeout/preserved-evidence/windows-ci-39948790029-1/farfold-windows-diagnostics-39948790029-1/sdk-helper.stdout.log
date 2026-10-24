@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: official human-origin ACP user text retains its message locator
+ok 1 - official human-origin ACP user text retains its message locator
+  ---
+  duration_ms: 4.863
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"isCompletedLocalCommand":true}
+ok 2 - official transformed command/origin is not user prose {"isCompletedLocalCommand":true}
+  ---
+  duration_ms: 0.2394
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"isQueuedCommand":true}
+ok 3 - official transformed command/origin is not user prose {"isQueuedCommand":true}
+  ---
+  duration_ms: 0.2993
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"task-notification"}}
+ok 4 - official transformed command/origin is not user prose {"origin":{"kind":"task-notification"}}
+  ---
+  duration_ms: 0.1788
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"future-origin"}}
+ok 5 - official transformed command/origin is not user prose {"origin":{"kind":"future-origin"}}
+  ---
+  duration_ms: 0.2515
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"peer","from":"controlled-peer"}}
+ok 6 - official transformed command/origin is not user prose {"origin":{"kind":"peer","from":"controlled-peer"}}
+  ---
+  duration_ms: 0.1445
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"channel","server":"controlled-channel"}}
+ok 7 - official transformed command/origin is not user prose {"origin":{"kind":"channel","server":"controlled-channel"}}
+  ---
+  duration_ms: 0.2078
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human","from":"controlled-peer"}}
+ok 8 - official transformed command/origin is not user prose {"origin":{"kind":"human","from":"controlled-peer"}}
+  ---
+  duration_ms: 0.1249
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human","body":"injected text"}}
+ok 9 - official transformed command/origin is not user prose {"origin":{"kind":"human","body":"injected text"}}
+  ---
+  duration_ms: 0.3852
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human"},"is_meta":true}
+ok 10 - official transformed command/origin is not user prose {"origin":{"kind":"human"},"is_meta":true}
+  ---
+  duration_ms: 0.4836
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human"},"isCompactSummary":true}
+ok 11 - official transformed command/origin is not user prose {"origin":{"kind":"human"},"isCompactSummary":true}
+  ---
+  duration_ms: 0.2239
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human"},"isQueuedCommand":true}
+ok 12 - official transformed command/origin is not user prose {"origin":{"kind":"human"},"isQueuedCommand":true}
+  ---
+  duration_ms: 1.3193
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"origin":{"kind":"human"},"isCompletedLocalCommand":true}
+ok 13 - official transformed command/origin is not user prose {"origin":{"kind":"human"},"isCompletedLocalCommand":true}
+  ---
+  duration_ms: 0.1088
+  type: 'test'
+  ...
+# Subtest: official transformed command/origin is not user prose {"type":"assistant","message":{"role":"assistant","content":"controlled non-user origin"},"origin":{"kind":"human"}}
+ok 14 - official transformed command/origin is not user prose {"type":"assistant","message":{"role":"assistant","content":"controlled non-user origin"},"origin":{"kind":"human"}}
+  ---
+  duration_ms: 0.0774
+  type: 'test'
+  ...
+# Subtest: public wrapper required nullable parent fields stay strict
+ok 15 - public wrapper required nullable parent fields stay strict
+  ---
+  duration_ms: 0.6765
+  type: 'test'
+  ...
+# Subtest: actual API order/options, metadata drift and empty projection
+ok 16 - actual API order/options, metadata drift and empty projection
+  ---
+  duration_ms: 1.0252
+  type: 'test'
+  ...
+# Subtest: meta compact nontext and distinct assistant parts
+ok 17 - meta compact nontext and distinct assistant parts
+  ---
+  duration_ms: 0.3592
+  type: 'test'
+  ...
+# Subtest: bounded unicode byte projection and sentinel always partial
+ok 18 - bounded unicode byte projection and sentinel always partial
+  ---
+  duration_ms: 17.985
+  type: 'test'
+  ...
+# Subtest: unknown record semantics and malformed command flags are not original prose
+ok 19 - unknown record semantics and malformed command flags are not original prose
+  ---
+  duration_ms: 0.513
+  type: 'test'
+  ...
+# Subtest: Windows SDK-facing path grammar is strict without case folding
+ok 20 - Windows SDK-facing path grammar is strict without case folding
+  ---
+  duration_ms: 1.1949
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 190.6326

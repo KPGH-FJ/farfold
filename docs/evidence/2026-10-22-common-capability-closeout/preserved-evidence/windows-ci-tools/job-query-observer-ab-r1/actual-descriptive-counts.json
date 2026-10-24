@@ -1,0 +1,33 @@
+{
+  "farfold-job-query-default-39955633799-1": {
+    "fullQueries": 120,
+    "classifications": {
+      "successful-equal-counts-layout": 120
+    },
+    "listedCounts": {
+      "3": 59,
+      "5": 17,
+      "6": 27,
+      "0": 12,
+      "4": 2,
+      "2": 3
+    },
+    "fullQueriesWithExtraPIDs": 49,
+    "iterationsWithExtraPIDs": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "extraPIDsNotIdentified": true
+  },
+  "farfold-job-query-detached-39955633799-1": {
+    "fullQueries": 120,
+    "classifications": {
+      "successful-equal-counts-layout": 120
+    },
+    "listedCounts": {
+      "3": 74,
+      "1": 11,
+      "0": 35
+    },
+    "fullQueriesWithExtraPIDs": 0,
+    "iterationsWithExtraPIDs": [],
+    "extraPIDsNotIdentified": true
+  }
+}

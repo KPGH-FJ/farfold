@@ -1,0 +1,22 @@
+FARFOLD_CONPTY_BEGIN TerminalCancel
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_TERMINAL_CANCEL {"phase":"spawn.enter","elapsedMillis":0}
+FARFOLD_TERMINAL_CANCEL {"phase":"spawn.return","elapsedMillis":7}
+FARFOLD_TERMINAL_CANCEL {"phase":"marker.wait.enter","elapsedMillis":7}
+FARFOLD_TERMINAL_CANCEL {"phase":"marker.wait.observed","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"session.lookup.enter","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"session.lookup.return","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"job.owns.enter","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"job.owns.return","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"close.enter","elapsedMillis":28}
+FARFOLD_TERMINAL_CANCEL {"phase":"close.return","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"job.inactive.check.enter","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"job.inactive.check.return","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"registry.check.enter","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"registry.check.return","elapsedMillis":61}
+FARFOLD_TERMINAL_CURSOR {"phase":"original-positive.fixture.complete","replyEnabled":true,"elapsedMillis":61,"bytes":98,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_TERMINAL_CANCEL {"phase":"session.drop.enter","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"session.drop.return","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"manager.drop.enter","elapsedMillis":61}
+FARFOLD_TERMINAL_CANCEL {"phase":"manager.drop.return","elapsedMillis":61}
+FARFOLD_CONPTY_OWNER {"case":"TerminalCancel","childExit":0,"stdoutEOF":true,"stderrEOF":true,"directJobInactive":true}

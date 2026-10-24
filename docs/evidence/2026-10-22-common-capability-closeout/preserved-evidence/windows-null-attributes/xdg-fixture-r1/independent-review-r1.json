@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T11:10:12.145436+00:00",
+  "role": "Non-author static review of root-authored fixture-only delta; reviewer authored original null-attributes tests, not this repair.",
+  "scope": {
+    "baseHead": "8010524f68e8f245d529488b9397673123258f9f",
+    "file": "src-tauri/src/worktrees/git_source_checkout_null_attributes_windows_tests.rs",
+    "beforeSha256": "3aa7746c4ba35b2f5afd2b9d1d51f57c82ee7cb77e11608dd308ac3dfd92f6e6",
+    "currentSha256": "2728371f4c9d19b86b6249e6a35f0efec0d14938d932e0c101eee5dd5f52f2d6",
+    "noCargoCiOrExecutableRun": true
+  },
+  "verdict": "No blocking issue found in this selected delta. Actual corrected Windows test outcome remains unverified.",
+  "checks": [
+    {
+      "item": "Exact delta",
+      "result": "Before bytes equal 801 commit. Removing precisely six inserted setup/comment lines, two inserted final verification lines, and restoring the one env value reproduces before bytes exactly."
+    },
+    {
+      "item": "Selected object and spelling",
+      "result": "PinnedPath::directory holds the owned XDG directory; Paths::new uses the existing DOS conversion with strict absolute/name checks, metadata-only original duplicate, same identity/full endpoint stamps/GUID, and fresh DOS-namespace reopen verification. No prefix-only string fallback or arbitrary path acceptance added."
+    },
+    {
+      "item": "Lifetime and verification",
+      "result": "xdg_pin and xdg_paths remain parent-owned across the original child wait. On successful child completion, both are reverified before parent success. Uncertainty still retains the exact owned temp directory through existing branches."
+    },
+    {
+      "item": "Child assertions preserved",
+      "result": "Ignored fixed child is byte-identical: config provenance; Default/Disabled/File; repo/info/global/explicit attribute values; missing configured file non-fallback; raw config-change invalidation; source/data bytes; terminal marker remain unchanged."
+    },
+    {
+      "item": "Authority and bounds",
+      "result": "Only child XDG_CONFIG_HOME value changes to the verified DOS alias of the same owned fixture. No HOME/config/permissions override; git::environment remains; fixed FQN/ignored child, 240-second deadline and 2-second forced-termination grace unchanged."
+    }
+  ],
+  "evidenceBoundary": {
+    "actual801Failure": "Parent101 and child line306 expected XDG attribute missing; this alone does not establish sole dynamic cause.",
+    "currentRepair": "Addresses a concrete Windows verbatim-path fixture mismatch using existing same-object production path bridge; no candidate compile/test was run by reviewer.",
+    "gitVersion": "Original runner exact Git version not recorded; this report does not promote external source-version reasoning into an exact runtime causal proof.",
+    "fullMatrix": "No passing claim for earlier failed child branches until new actual result."
+  },
+  "findings": [],
+  "sourcePins": {
+    "src-tauri/src/worktrees/git_source_checkout_null_attributes_windows_tests.rs": "2728371f4c9d19b86b6249e6a35f0efec0d14938d932e0c101eee5dd5f52f2d6",
+    "output/2026-10-22-common-capability-closeout/windows-null-attributes/xdg-fixture-r1/source-before.rs": "3aa7746c4ba35b2f5afd2b9d1d51f57c82ee7cb77e11608dd308ac3dfd92f6e6",
+    "src-tauri/src/worktrees/windows_git_paths.rs": "71b96ebd302aa68dedbbf6648d463f0594a5629c4dcbe2ed6ab16d1114f13af8",
+    "src-tauri/src/worktrees/windows_git.rs": "9f7bdab98bb8c6077fe6891f34048896e92f215f48c890affb0b740cb11a7d30",
+    "src-tauri/src/file_access/windows/pinned.rs": "c3f44688c692cf6d8052e373120a6381837676443512514eb4cc465ea01305e4",
+    "src-tauri/src/worktrees/windows_git_plain_paths_tests.rs": "57c6ee69e00b5d66f6c9a83896bb838822fb777d7b69938126689650c84f7f75"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T12:23:34.015591+00:00",
+  "reviewer": "early_windows_review; non-author",
+  "conclusion": "No blocking finding in the bounded prepared experiment. Ready for Root final review and a separately authorized actual dispatch; no Windows result claimed.",
+  "scope": {
+    "fullReviewedFiles": [
+      "observer.py",
+      "test_structure.py",
+      "windows-job-query-observer.proposed.yml",
+      "preparation.json",
+      "pure-check.json"
+    ],
+    "sourceOrWorkflowModifiedByReviewer": false,
+    "reviewOutputOnly": true,
+    "cargoOrNativeTestsRun": false,
+    "ciQueriedDispatchedDownloaded": false,
+    "appAgentOrUserDataAccessed": false,
+    "authorSyntheticTestsRerun": false
+  },
+  "bindings": [
+    {
+      "path": "evidence:e-fb4c47b91111b91d2939",
+      "sha256": "75a4f20a7a228f098a336a6c12edfedbc544cdea0f88323a3156e7df6434d797"
+    },
+    {
+      "path": "evidence:e-3396f0faef87cae862da",
+      "sha256": "a05486688ab10ae4bf0e3aa95a5ce3556ae1bdfc8dc299e372cf7c2c35f8b705"
+    },
+    {
+      "path": "evidence:e-f608dd9fbc7745942fad",
+      "sha256": "7e7ec7d7f97dd5b9bff52b0055c49a1e3dca7612819c0c6e890a8008cf6c541a"
+    },
+    {
+      "path": "evidence:e-0a3c78de2b8cb248c2fc",
+      "sha256": "25ed1fd54c08cd13965c2d427cec4babcfb26065d1e164d3de79005ba5360a01"
+    },
+    {
+      "path": "evidence:e-f90aad73f8bb48d37dbd",
+      "sha256": "3dacae72a9b6b896d2b403ea269ef38f8815427e5859355d224e52b16c01b5d9"
+    }
+  ],
+  "closedNonblockingObservation": {
+    "earlyReadpointSha256": "13eb4f19161904e1ba0e14e30529b847bf6d3ca88a80019ab0f5e00b80eaa21e",
+    "issue": "The early validListedIds and successful-complete-listed-snapshot names implied production PID validity/completeness although classify only validates byte layout/count bounds.",
+    "resolution": "Final code calls the field boundedReturnedPrefix and labels equality successful-equal-counts-layout. Raw native values remain unchanged; no PID/termination/history claim added.",
+    "finalDelta": "evidence:e-5b42d6baa70b43f2907b",
+    "finalDeltaSha256": "27586b7cc84ab6259bb052ed9cc05892d89c79c8bc4615ac2b4f98e803f35e97"
+  },
+  "checked": [
+    {
+      "area": "ABI",
+      "finding": "Explicit uint32 DWORD, pointer-sized ULONG_PTR/HANDLE and Windows64 guard; STARTUPINFOW104, PROCESS_INFORMATION24, basic limits64, extended limits144, accounting48. Function argtypes/restype preserve BOOL vs DWORD, writable command buffer and optional LPVOID/LPDWORD; no native ABI execution was performed by reviewer."
+    },
+    {
+      "area": "query identity and raw bounds",
+      "finding": "Every list/accounting query receives the same fresh non-null inner Job handle. Outer containment Job and observer are excluded. Buffer16 at capacity1 and2056 at256; raw BOOL,error,assigned,listed,written,timestamps are recorded before any succeeding native call can overwrite failure error. Prefix reads require capacity and written-length bounds."
+    },
+    {
+      "area": "creation and ownership",
+      "finding": "Fixed exact GetSystemDirectoryW cmd.exe /d /c exit0; no project command, arbitrary command/FQN, OpenProcess, PID cleanup or environment override. Fresh child starts suspended, retains original process/thread handles, assigns before resume; ResumeThread must return1. Private jobs use only kill-on-close."
+    },
+    {
+      "area": "failure cleanup",
+      "finding": "A successful CreateProcess followed by assignment failure still resides in originals and is terminated via its original hProcess. Assigned children are covered by original inner Job; supervisor separately retains original observer handle and outer Job. Stop requests never substitute for original-object signal; forced/unknown/nonzero exits cannot complete."
+    },
+    {
+      "area": "budgets",
+      "finding": "12x3 command children plus one observer=37 created processes;240 list queries and fixed512-record/512KiB journal. Worker45s observation plus one shared5s cleanup per incomplete round, which aborts later rounds; parent55s observation and remaining absolute60s deadline. Windows native and filesystem calls have no universal bounded-return guarantee, explicitly recorded; proposed2min step is an external upper stop boundary, not success evidence."
+    },
+    {
+      "area": "completion semantics",
+      "finding": "observationCompleted requires all fixed iterations,36 original naturally zero exits and handle closes, original observer naturally zero termination, no forced cleanup, final outer handle close and worker journal hash match. No mismatch is required; all API errors and incomplete count samples remain observations. Neither completion nor nonoccurrence of mismatch authorizes clearing production sticky gaps."
+    },
+    {
+      "area": "proposed workflow",
+      "finding": "Manual only, pinned checkout exact github.sha, contents:read and credentials not retained. One isolated Python invocation; no Cargo/install/Agent. Original script exit propagated,5min job/2min observation step, always artifact upload. Missing final identity or summary after timeout remains incomplete. Proposed tracked copies were not written or dispatched by reviewer."
+    }
+  ],
+  "authorCheckEvidence": {
+    "receiptSha256": "3dacae72a9b6b896d2b403ea269ef38f8815427e5859355d224e52b16c01b5d9",
+    "naturalCompletion": true,
+    "exitCode": 0,
+    "pureTests": 8,
+    "inputsStable": true,
+    "stderrSha256": "60bb849356ffbc091f601e17fc6ae0b2eb5e26d734d433da020c6e775efbf97f",
+    "boundary": "Eight portable structure/classification/budget controls only; not Windows API/ownership/runtime results."
+  },
+  "primarySources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_process_id_list",
+      "usedFor": "DWORD count fields and pointer-sized PID array; returned prefix does not establish completeness when counts differ."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-queryinformationjobobject",
+      "usedFor": "Explicit Job handle, information class values1/3/9, DWORD buffer length and returned bytes, BOOL failure/GetLastError."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw",
+      "usedFor": "Exact application name, mutable command buffer, original process/thread outputs and handle inheritance flag."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information",
+      "usedFor": "Nested basic-limits, IO counters and pointer-sized memory fields."
+    }
+  ],
+  "limits": [
+    "This review does not independently audit the preparation trigger run39945651058 raw failure; that cited pre-existing evidence remains separate.",
+    "No Windows experiment has run in this review; observed mismatch frequency, actual API behavior and cleanup outcome remain unknown.",
+    "No production change or acceptance of later empty Job lists is authorized.",
+    "Finite sample completion cannot prove every scheduling interleaving or atomic correspondence between accounting, list and retained-handle waits."
+  ]
+}

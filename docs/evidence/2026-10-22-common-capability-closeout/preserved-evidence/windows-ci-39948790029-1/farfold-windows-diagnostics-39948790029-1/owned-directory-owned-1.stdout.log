@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::directory_carrier_tests::ordinary_empty_directory_captures_zero_native_bytes_into_a_typed_verified_facet ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

@@ -1,0 +1,732 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T13:32:36.338838+00:00",
+  "requested": {
+    "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+    "runId": "39958119731",
+    "attempt": "1"
+  },
+  "context": {
+    "identity": {
+      "sourceHead": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+      "runId": "39958119731",
+      "runAttempt": "1",
+      "scope": "focused follow-up to actual d513 failures; original 140 manifest and separate legacy 27 unchanged; not whole-cohort acceptance"
+    },
+    "buildSelection": {
+      "sourceHead": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+      "testBinary": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe",
+      "testBinarySha256": "1FBCD992CBDD014CB992D945F0B4B255FE90F36BC88D913BC6E95FBAF48F7CB3",
+      "fixture": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\examples\\windows_process_fixture.exe",
+      "fixtureSha256": "3994E5D2867E2286E8D1DC0C957902AF45C43B0AA9744EB078AACBA304719C92",
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "sourceInputsStable": true
+    },
+    "sourceInputs": {
+      "verified": true,
+      "pathCount": 805,
+      "hashMismatchPaths": [],
+      "issues": []
+    },
+    "originalCompilerTestExecutables": [
+      "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe"
+    ],
+    "sourceContracts": {
+      "workflow": {
+        "path": ".github/workflows/windows-recovery-followup.yml",
+        "gitBlobSha256": "97bcd3740526680651273449e5515ce7c5bb2874cecca5f82f4e757a88440eeb"
+      },
+      "script": {
+        "path": ".github/scripts/windows-recovery-followup-build.ps1",
+        "gitBlobSha256": "d18874fb5a10306ee6650d3ecd7883e7cf113c2e559efc28617d6bcecd9be450"
+      },
+      "workflowStepDeadlines": [
+        {
+          "step": "Parse the exact recovery diagnostic scripts before building",
+          "minutes": 1
+        },
+        {
+          "step": "Prepare pinned Rust toolchain",
+          "minutes": 7
+        },
+        {
+          "step": "Build exact source and original process fixture",
+          "minutes": 30
+        },
+        {
+          "step": "Original three ordinary failing cases",
+          "minutes": 11
+        },
+        {
+          "step": "Exact original-list diagnostic parser control",
+          "minutes": 2
+        },
+        {
+          "step": "Original manual failures and unfinished cold recovery",
+          "minutes": 21
+        },
+        {
+          "step": "Independent eight null-attributes regressions using the same build",
+          "minutes": 10
+        },
+        {
+          "step": "Independent four generic and noninteractive Git launch contracts",
+          "minutes": 3
+        },
+        {
+          "step": "Original seven Git settlement controls using the same build",
+          "minutes": 3
+        },
+        {
+          "step": "Preserve the original recovery executable loader evidence",
+          "minutes": 5
+        }
+      ]
+    },
+    "issues": []
+  },
+  "runnerSource": {
+    "path": ".github/scripts/windows-recovery-followup-git-controls.ps1",
+    "gitBlobSha256": "d5eea77798adccdaaeae08346aa9903d0ff533f444f6725868281d0073558cae"
+  },
+  "modes": [
+    {
+      "mode": "LaunchContracts",
+      "issues": [],
+      "aggregateFile": {
+        "path": "evidence:e-30dd4faa51c149b96edd",
+        "present": true,
+        "sha256": "f5ebe886a1f944f8aaf6430161043efab597ca91968b07da515c80e344a257e4",
+        "bytes": 5566
+      },
+      "cases": [
+        {
+          "name": "generic-command-shape",
+          "filter": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.00s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "windows_process::tests::prepared_command_preserves_explicit_values_and_literal_argv",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": null,
+          "markerMatches": 0,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "generic-stdio-contract",
+          "filter": "windows_process::behavior_tests::helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.03s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "windows_process::behavior_tests::helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": null,
+          "markerMatches": 0,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "noninteractive-git-stdio-contract",
+          "filter": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.05s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": null,
+          "markerMatches": 0,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "noninteractive-git-error-contract",
+          "filter": "windows_process::behavior_tests::noninteractive_git_helper_preserves_stderr_and_original_failure_exit",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.02s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "windows_process::behavior_tests::noninteractive_git_helper_preserves_stderr_and_original_failure_exit",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": null,
+          "markerMatches": 0,
+          "issues": [],
+          "status": "passed"
+        }
+      ],
+      "counts": {
+        "passed": 4
+      },
+      "allPassed": true
+    },
+    {
+      "mode": "GitSettlement",
+      "issues": [],
+      "aggregateFile": {
+        "path": "evidence:e-42bae1a93b572f624a0e",
+        "present": true,
+        "sha256": "acace651feac7a6b0cf9372219bce480f0e388ee2ddd09b8f610bf790309a413",
+        "bytes": 9363
+      },
+      "cases": [
+        {
+          "name": "natural-tail",
+          "filter": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.29s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "original-nonzero",
+          "filter": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.28s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "cancel-owned-job",
+          "filter": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.28s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "original-deadline",
+          "filter": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 3.03s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "late-stdout-limit",
+          "filter": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.27s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stdout",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "late-stderr-limit",
+          "filter": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.28s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=stderr",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        },
+        {
+          "name": "changed-input",
+          "filter": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+          "terminal": {
+            "classification": "named_pass",
+            "exactOutcome": "ok",
+            "exitCode": 0,
+            "summaries": [
+              {
+                "status": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "line": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2325 filtered out; finished in 0.28s"
+              }
+            ],
+            "namedOutcomes": [
+              {
+                "name": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+                "outcome": "ok"
+              }
+            ]
+          },
+          "marker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=input",
+          "markerMatches": 1,
+          "issues": [],
+          "status": "passed"
+        }
+      ],
+      "counts": {
+        "passed": 7
+      },
+      "allPassed": true
+    }
+  ],
+  "inputsStableDuringRead": true,
+  "changedDuringRead": [],
+  "allElevenVerifiedPassed": true,
+  "rawFiles": [
+    {
+      "path": "evidence:e-c94cf03ff238d79c962e",
+      "present": true,
+      "sha256": "ac4a6eccd55878ea655d5c8f1b7e88802583910208acac0374d472c2e59f7f65",
+      "bytes": 257
+    },
+    {
+      "path": "evidence:e-9c344a2ca439452d1b60",
+      "present": true,
+      "sha256": "4691fca6408df93440a2c13d034b057059d7682b11f5a6bbae8fc46542bc39b6",
+      "bytes": 541
+    },
+    {
+      "path": "evidence:e-88d1a3ec4c3f7d2c23ce",
+      "present": true,
+      "sha256": "93240043d026c7f15f68ee0906426605988ad90eb5adf660b7a2687d1fe369c9",
+      "bytes": 424527
+    },
+    {
+      "path": "evidence:e-4bdbe432c93f69e10d0f",
+      "present": true,
+      "sha256": "6cb6f3a68a7c8c071127c27413326b293782329fb30ddaef240d6ec654ec7476",
+      "bytes": 23757
+    },
+    {
+      "path": "evidence:e-41a82e05587a73a7b9e3",
+      "present": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence:e-69e1535bdf15cbdf1860",
+      "present": true,
+      "sha256": "6dce3544808ef1eb6a4246457502b51c15e50db0106ffd90f8f2600322f1c3bb",
+      "bytes": 136
+    },
+    {
+      "path": "evidence:e-3f5e769fe0be41e28698",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-8fc18044c626abda1f71",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-30dd4faa51c149b96edd",
+      "present": true,
+      "sha256": "f5ebe886a1f944f8aaf6430161043efab597ca91968b07da515c80e344a257e4",
+      "bytes": 5566
+    },
+    {
+      "path": "evidence:e-ee6be9c7080035f7592f",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-0d1e1cab29e97e57a2ea",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-b336a18002848473870d",
+      "present": true,
+      "sha256": "6101171320b69fe9f927a429cac24a186494b8ffbc9b55487346bf9a22b00f16",
+      "bytes": 1019
+    },
+    {
+      "path": "evidence:e-094ccd7b9604904b4344",
+      "present": true,
+      "sha256": "26c611d4fdf60a75a908a97bd7d7187d28b4b574798deec736e6a5498901ce20",
+      "bytes": 211
+    },
+    {
+      "path": "evidence:e-97eb759ec2abd0002c5f",
+      "present": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence:e-3498c88f6e4c4ddce817",
+      "present": true,
+      "sha256": "7454dce814ceb6b69f39d98d7b8fdd41d425771b2e8eb1e547390bf9f367c499",
+      "bytes": 1060
+    },
+    {
+      "path": "evidence:e-72163bdecf4f94c2eea5",
+      "present": true,
+      "sha256": "3d998bb204364eb47b4a78caf780be4698ebf08684845182e8fe64a3debfbe26",
+      "bytes": 231
+    },
+    {
+      "path": "evidence:e-fe96ea985873e083581d",
+      "present": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence:e-3ae852c2e2302953a17c",
+      "present": true,
+      "sha256": "b192820e33933400342a96a80b7334ef51d66aca849df97a04a1e9d048c11d8a",
+      "bytes": 1109
+    },
+    {
+      "path": "evidence:e-b9d0411be1f86aa85815",
+      "present": true,
+      "sha256": "ddd4186176286705c7de49ed0b30b77c5c516e6b1af08da10db2503dadce910e",
+      "bytes": 250
+    },
+    {
+      "path": "evidence:e-608dabb728b4ce432f64",
+      "present": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence:e-41f0258c30a0b6b02778",
+      "present": true,
+      "sha256": "2fd37f6712710ec8b8b1d79c133f9b613b6569bd8d9c2d9e94cfdbb5cd4df6fa",
+      "bytes": 1067
+    },
+    {
+      "path": "evidence:e-0df8fb5d67c93c21d8f1",
+      "present": true,
+      "sha256": "412d85d7ca074415b0ae4d209ca800edbe040aed9b34dabf4d121deb304768e9",
+      "bytes": 229
+    },
+    {
+      "path": "evidence:e-b11e80948a957fc030ad",
+      "present": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence:e-42bae1a93b572f624a0e",
+      "present": true,
+      "sha256": "acace651feac7a6b0cf9372219bce480f0e388ee2ddd09b8f610bf790309a413",
+      "bytes": 9363
+    },
+    {
+      "path": "evidence:e-8305c8e08caec69fa10f",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-e44b656324b3c66186f9",
+      "present": true,
+      "sha256": "f1029810119507bec50b7485df625836355771b5b5819d0685ececd7e4286e1d",
+      "bytes": 98526
+    },
+    {
+      "path": "evidence:e-5fbe1601c51092dd056e",
+      "present": true,
+      "sha256": "cc1faea9dda67cf2bb12dd550b7a7836f9fb8849aef98ad1cf904e11c8aadf49",
+      "bytes": 1122
+    },
+    {
+      "path": "evidence:e-f159cea16a56d59945a1",
+      "present": true,
+      "sha256": "41eba6b02b3bdc8e1718e82160bd186971f0258066f7c19f7e57dfb09f5c82db",
+      "bytes": 235
+    },
+    {
+      "path": "evidence:e-445d5e870585560d2b95",
+      "present": true,
+      "sha256": "f5b6f004f717aae8e2f15a60928d30aacd6dad787f4279b223af235e9bf1daa2",
+      "bytes": 1423
+    },
+    {
+      "path": "evidence:e-d2a135511f8ce1e39622",
+      "present": true,
+      "sha256": "657bb830d5d57d333ff66dd460a94798a5e6410b1f10b6a1ce21be378a5d9d43",
+      "bytes": 1096
+    },
+    {
+      "path": "evidence:e-b553869f88954c84cbce",
+      "present": true,
+      "sha256": "38d898423dd12876da2f399d5490a822a0b2202358121427c24e14591bcd272e",
+      "bytes": 220
+    },
+    {
+      "path": "evidence:e-b42a7bd8c30c193dbbeb",
+      "present": true,
+      "sha256": "f0a4ae2de301a1f4406f0b683b6e5bd9810a5f03cce6ca617e0146a7c75263a0",
+      "bytes": 1539
+    },
+    {
+      "path": "evidence:e-fff7e9c3b3ac748ddee8",
+      "present": true,
+      "sha256": "0e0c8ef437e60c623f0edcf273b6bb733cd61ab3df3c08b6bb203e78b6a59b60",
+      "bytes": 1102
+    },
+    {
+      "path": "evidence:e-36455d78b645b9497342",
+      "present": true,
+      "sha256": "49ae5496e1015115a32441236f73eb24a0bc666e77c00a8e4a6fd4ddb21d63ba",
+      "bytes": 223
+    },
+    {
+      "path": "evidence:e-3ba6d495c6da50a5e2d9",
+      "present": true,
+      "sha256": "5a790a5cce7bf80a4724fd58285a96b4f32e445a289bd944aa8701b3112e6169",
+      "bytes": 3895
+    },
+    {
+      "path": "evidence:e-ec6046b13059d99529cc",
+      "present": true,
+      "sha256": "d22d499b0702c81349ce8c061c0581c0361c5558b31b002f3e5a4d9959c6d355",
+      "bytes": 1099
+    },
+    {
+      "path": "evidence:e-b1417cac284c2681ac4f",
+      "present": true,
+      "sha256": "548525f6be9198b5fcb9394a434845ec21fabfcab9969fa813ae89edc47c65f4",
+      "bytes": 221
+    },
+    {
+      "path": "evidence:e-1faef943bc563cf207ec",
+      "present": true,
+      "sha256": "8ad570426fdd9854611694a15dc65b74787c769c3d4858d92028ba243050417e",
+      "bytes": 3894
+    },
+    {
+      "path": "evidence:e-7c1ca56ea56290ccc940",
+      "present": true,
+      "sha256": "9c559f88734eaf4647dbdbe3981d082653590202a9075e5119072d2187ed4aa7",
+      "bytes": 1097
+    },
+    {
+      "path": "evidence:e-311f1f0bced1d68ebf5c",
+      "present": true,
+      "sha256": "0af66ecb195d88715ab84dc234f4b8b1f03c2c988719b6fc8be7d1c820b36ad4",
+      "bytes": 219
+    },
+    {
+      "path": "evidence:e-b452d5a4071d434715fb",
+      "present": true,
+      "sha256": "be8d09e687c49ac2fc95f8e5698141edb1644bca93594b8d9e8060dac96d4e22",
+      "bytes": 3893
+    },
+    {
+      "path": "evidence:e-ca1ad21b865c341b0fed",
+      "present": true,
+      "sha256": "720eb45f7dde858d6b0c75236ef4c674cc101ff45e33f12193de0bb4f131cb7b",
+      "bytes": 1097
+    },
+    {
+      "path": "evidence:e-ee239eb773dd169ff2b4",
+      "present": true,
+      "sha256": "240e85ad2c71cce8575e420a9c44e05c24bae5331882fadca517c1dcf154b765",
+      "bytes": 219
+    },
+    {
+      "path": "evidence:e-7cff7a0e1c970808211d",
+      "present": true,
+      "sha256": "b1d9c548635a55bf40eb180a1205a55d8563bc9f3ab2786a1812cca3f9cc2d2d",
+      "bytes": 3893
+    },
+    {
+      "path": "evidence:e-f8f8c505c7954c14dbc5",
+      "present": true,
+      "sha256": "4101c71bb6e80276a3f637f3c900977c1946778cdf37d8e86e38f4b244856163",
+      "bytes": 1088
+    },
+    {
+      "path": "evidence:e-f3dffc0d029cda9dc5da",
+      "present": true,
+      "sha256": "1985dbfa8988b4b1d19e1de90c15e3bcd4b268e6ee849d6974dccdb3fc94d248",
+      "bytes": 217
+    },
+    {
+      "path": "evidence:e-97290991189e496045aa",
+      "present": true,
+      "sha256": "3a2c46d958bc347b3e2469505cbf642d59bcb73fcbd2210ef3928acfde0cf36f",
+      "bytes": 3888
+    }
+  ],
+  "limits": [
+    "Independent four launch/seven settlement controls only; not original recovery7, null8, current140 or legacy inventories.",
+    "Original binary hashes are receipt identity; no binary is loaded, downloaded or executed.",
+    "No installed product, arbitrary process timing, Agent or whole Windows acceptance claim."
+  ],
+  "reader": {
+    "path": "evidence:e-fc768f146a1e6e43051f",
+    "sha256": "e51849dd0b9f1886ac2b2f25014bdb3cf01accc3a4bb23b78a110a43ea2a5080",
+    "dependencySha256": "abb9a7ac8543e86010622fb3664ba83941b29d38a7f618975126d8b2dd2cc8b8"
+  }
+}

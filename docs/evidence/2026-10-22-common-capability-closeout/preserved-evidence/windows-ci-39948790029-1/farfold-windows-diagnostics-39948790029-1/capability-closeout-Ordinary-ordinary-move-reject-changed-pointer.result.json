@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-move-reject-changed-pointer",
+  "filter": "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten",
+  "category": "ownedActualOrdinaryArchive",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:14.7174622Z",
+  "finishedAtUtc": "2026-10-23T12:09:14.7494829Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "DAB982546AC7534008E426900ADC5D774C24A76A25E5826B9CD2F60174397523",
+  "stderrSha256": "DE17E389BDE8A7C4CA9A5F96186C455AECD744B7747011A8657FD3B17D33619B"
+}

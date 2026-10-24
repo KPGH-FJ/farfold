@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

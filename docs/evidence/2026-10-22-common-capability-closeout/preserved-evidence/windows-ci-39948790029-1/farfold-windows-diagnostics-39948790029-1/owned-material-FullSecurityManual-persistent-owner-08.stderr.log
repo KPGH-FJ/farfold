@@ -1,0 +1,4 @@
+
+thread 'worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing' (6764) panicked at src\worktrees\recovery_material_windows_tests.rs:46:63:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

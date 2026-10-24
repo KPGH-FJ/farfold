@@ -1,0 +1,29 @@
+{
+  "group": "owned-link255-1",
+  "filter": "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets",
+  "category": "ordinaryOwnedNtfs255WithOriginalResultAndLimitedCompanion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:11.8262735Z",
+  "finishedAtUtc": "2026-10-23T12:08:11.8515234Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "9023EDAD4D1C723773B5BEBE71FF8775C5F80E8C495F6EE628CE4BBB42B7D66B",
+  "stderrSha256": "7165A18C7DA4810087BEE3E3B3D2E56C62CA77657F33AF21F3E958EAD1441160"
+}

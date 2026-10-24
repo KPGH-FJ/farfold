@@ -1,0 +1,18 @@
+{
+  "name": "exports-01-2",
+  "executable": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\dumpbin.exe",
+  "arguments": ["/NOLOGO", "/EXPORTS", "C:\\Windows\\system32\\ntdll.dll"],
+  "pid": 4756,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 505,
+  "stdout": "exports-01-2.stdout.log",
+  "stderr": "exports-01-2.stderr.log",
+  "stdoutSha256": "b3792934e9bd243e4a094ac37976c8e728ffeede836842801808dc2a1ca301dd",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

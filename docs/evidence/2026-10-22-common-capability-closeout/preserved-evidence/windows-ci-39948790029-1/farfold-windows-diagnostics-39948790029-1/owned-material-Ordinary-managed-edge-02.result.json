@@ -1,0 +1,29 @@
+{
+  "group": "managed-edge-02",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion",
+  "category": "ownedOriginalSourceOwnerRoleAndBudget",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:08.5705600Z",
+  "finishedAtUtc": "2026-10-23T12:08:09.7653708Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "2D000AD692C60564145AD48A14D8ABF874F672D2570B70AE04B82FF44ED46BB2",
+  "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+}

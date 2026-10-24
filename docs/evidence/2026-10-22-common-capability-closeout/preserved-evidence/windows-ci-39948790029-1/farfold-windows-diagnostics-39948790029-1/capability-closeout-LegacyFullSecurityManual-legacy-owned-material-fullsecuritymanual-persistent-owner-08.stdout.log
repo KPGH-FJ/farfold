@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.11s
+

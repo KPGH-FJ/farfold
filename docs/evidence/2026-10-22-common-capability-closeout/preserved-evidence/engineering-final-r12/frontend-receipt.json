@@ -1,0 +1,15 @@
+{
+  "label": "frontend",
+  "command": ["corepack", "pnpm", "test"],
+  "atUtc": "2026-10-23T12:26:33.032624+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 66.10845208399999,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-049cc7941121cabf8839",
+    "bytes": 289,
+    "sha256": "2042abe0af40cdae2399a24d7bffc10b306c51f5890f65537856d1c62456b1af"
+  },
+  "freeBytesAfter": 17849040896
+}

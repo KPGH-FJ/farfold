@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-query-cancel-or-short-work-keeps-exact-held-object",
+  "filter": "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object",
+  "category": "ownedActualOrdinarySecurityRefusal",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:24.7540914Z",
+  "finishedAtUtc": "2026-10-23T12:14:24.7773708Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "545F183BC5D9E0604DE538806CB7CDA975616FB38CC4EEDD084A5E1F853B14A6",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

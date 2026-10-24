@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::worktree_delete_file::tests::force_image_section_check_refuses_live_image_mapping_without_unlink ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

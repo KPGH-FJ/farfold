@@ -1,0 +1,27 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "mode": "LaunchContracts",
+  "name": "noninteractive-git-stdio-contract",
+  "filter": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+  "exactFilter": true,
+  "explicitIgnored": false,
+  "startedAtUtc": "2026-10-23T13:30:28.4134202Z",
+  "finishedAtUtc": "2026-10-23T13:30:28.4733940Z",
+  "invocationReturned": true,
+  "terminationRequestedByRunner": false,
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "actualNamedOutcomes": [
+    {
+      "name": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "outcome": "ok"
+    }
+  ],
+  "namesExact": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "exactPassed": true,
+  "stdoutSha256": "DDD4186176286705C7DE49ED0B30B77C5C516E6B1AF08DA10DB2503DADCE910E",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

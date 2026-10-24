@@ -1,0 +1,37 @@
+{
+  "group": "recovery-verbatim-child-reservation-boundaries",
+  "filter": "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries",
+  "category": "ownedRecoveryReservationBoundaries",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries"
+  ],
+  "actualPassedNames": [
+    "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:34.3908011Z",
+  "finishedAtUtc": "2026-10-23T12:14:34.4302021Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "C572C01880F6D488BAE911CC257CDC992ACFE396D0C494F7B8B1480F470C8000",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

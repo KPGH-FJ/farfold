@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::target_link_group_tests::cross_parent_groups_keep_distinct_real_data_ea_sd_and_complete_name_identity_sets ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.04s
+

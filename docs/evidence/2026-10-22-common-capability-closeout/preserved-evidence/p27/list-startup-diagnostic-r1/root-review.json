@@ -1,0 +1,28 @@
+{
+  "kind": "independent read-only review of list startup evidence change",
+  "reviewer": "root",
+  "author": "delivery_prep",
+  "atUnix": 1792746533.930666,
+  "sourceHead": "a82da3ad579129ab8eb7057d9932f62c9ac6377c",
+  "source": {
+    "path": ".github/scripts/windows-p27-native.ps1",
+    "sha256": "6bdbe617cbd26960a7730fce0a12474cab3b138a97f867c5ce9ab89e46456d41"
+  },
+  "result": "no blocking source finding",
+  "findings": [],
+  "observed": [
+    "build selection saved before original executable invocation",
+    "same exact ignored list command only once, stdout stderr signed/hex exit and bounded held Process lifetime retained",
+    "list success still requires exact FQN, natural integer process exit zero and source stability",
+    "actual driver body and original seven-control success conditions unchanged"
+  ],
+  "checks": {
+    "gitDiffCheck": "natural 0 chunk720d69",
+    "localPowerShellExecution": false,
+    "localPowerShellAvailable": false
+  },
+  "limits": [
+    "No claim of Windows loader cause or successful list/native execution; actual next run required.",
+    "Per-file stream bounds are checked after collection, original list process has finite 15 second wait plus bounded cleanup."
+  ]
+}

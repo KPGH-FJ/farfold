@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "kind": "Independent final selected eight-file integration review",
+  "baseHead": "6f8a3e8fb9e759f480d0f738ec247aa3a35e47f0",
+  "reviewedWorkingTreeFiles": [
+    {
+      "path": "src-tauri/build.rs",
+      "sha256": "264491f3faff2c4ba6b9cb9d9ea0ece546f294438d307dc5904f602e6acbcbe5",
+      "bytes": 7268
+    },
+    {
+      "path": "src-tauri/native/WindowsCommonControls.manifest",
+      "sha256": "4636f3ba46080315ac3277d473d433b79c00863c9cdca1c93c0c83554c6a3d43",
+      "bytes": 392
+    },
+    {
+      "path": ".github/scripts/windows-native-loader-diagnostics.ps1",
+      "sha256": "12225cef56dbe6a5ebead175fe8e55507da301b1ec51b0fd30a5c9f99898412a",
+      "bytes": 27425
+    },
+    {
+      "path": ".github/scripts/windows-p27-native.ps1",
+      "sha256": "eb72266e3431297ef2421aeea083cd2eb8ae290683cd4564984184bae0b4b1a9",
+      "bytes": 13246
+    },
+    {
+      "path": ".github/scripts/windows-pe-resource-inspection.py",
+      "sha256": "d332232eb073708faa72a031a92a7492e35bf852ac35405462c90d534d279c73",
+      "bytes": 25883
+    },
+    {
+      "path": ".github/workflows/windows-p27-native.yml",
+      "sha256": "3828218026efa4e0f3ae1e1504ee58864a52949077e0f86f9c70891519b6b1d8",
+      "bytes": 3259
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "71a015e2461ae9ed26623c7dc2be71baf3569971a725d62b2bf08ad9bd759393",
+      "bytes": 54046
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "5b87e0303ae3a2c459fcfd2565dcbc44f95b6181195fd44557290c8f1c48682d",
+      "bytes": 5110
+    }
+  ],
+  "scope": "Read-only review of Root-authored build/CI/docs delta and exact reuse of previously independently reviewed Python parser; no source changes, Cargo, tests, Windows, CI or downloads by reviewer.",
+  "decision": "No remaining blocker in the selected final delta; initial P2 evidence-only selection failure boundary is closed. Ready for a coherent checkpoint and the original two actual Windows runs, not for functional or installed-product acceptance.",
+  "initialFinding": {
+    "path": "evidence:e-dd349ef96b1b15ceb3a2",
+    "sha256": "8a69e583299d7719e9579b72b2e61cb30dd2c2e8d2cb04f91c0391c9aaaf110b",
+    "bytes": 932
+  },
+  "resolvedFinding": {
+    "id": "P2-extra-DLL-evidence-must-not-block-original-P27",
+    "finalSource": {
+      "path": ".github/scripts/windows-p27-native.ps1",
+      "sha256": "eb72266e3431297ef2421aeea083cd2eb8ae290683cd4564984184bae0b4b1a9",
+      "bytes": 13246
+    },
+    "closure": "Get-Content/ConvertFrom-Json, unique DLL list, path resolution/validation and full hash are all inside one try. Catch clears both library and librarySha and records the error. Build-selection always carries cdylibExpected=true and the error/null fields; original exact list/test path then proceeds. Existing essential helper/libtest build/selection/hash failures remain hard failures.",
+    "validation": "Source review only; no simulated PowerShell success claim."
+  },
+  "fileReview": [
+    {
+      "files": [
+        "src-tauri/build.rs",
+        "src-tauri/native/WindowsCommonControls.manifest"
+      ],
+      "result": "MSVC-only generic cargo:rustc-link-arg supplies EMBED/MANIFESTUAC:NO/MANIFESTINPUT to the root package eligible link targets including unit-test executable/bin/cdylib/examples. Not a test-only flag or changed dependency manifest. Tauri new_without_app_manifest keeps icon/version while avoiding duplicate bin manifest. Actual6f8 helper and new XML have equal full normalized semantics, CC6 only/no UAC. Existing custom NodeLauncher command is unchanged; GNU/macOS still call old tauri_build::build.",
+      "priorPrimaryReview": {
+        "path": "evidence:e-a1151620f74b792c1cbc",
+        "sha256": "d78e7a2b8f475b6ce299d29dbbd20583fb2dd47db906020f175ba0456a2c9195",
+        "bytes": 9053
+      },
+      "actualBaseline": {
+        "path": "evidence:e-866bdd488276b0eae151",
+        "sha256": "a8943b08ccc582f6e15af6b5400ccf9464496b14f0353213f3013bb6503bca3f",
+        "bytes": 402
+      }
+    },
+    {
+      "files": [".github/scripts/windows-native-loader-diagnostics.ps1"],
+      "result": "One anchored elseif recognizes observed blank-RVA (forwarded to ...) names and records raw forwarder rows. Does not assert destination resolution or actual DLL loader selection. Old raw summaries remain unmodified.",
+      "priorAudit": {
+        "path": "evidence:e-48528cd4ed4a994af9e4",
+        "sha256": "e2b118b5c44da30e27cafd441a3e5c4419750a17ff5057a1685e825e1c4e36e7",
+        "bytes": 76565
+      }
+    },
+    {
+      "files": [".github/scripts/windows-p27-native.ps1"],
+      "result": "Existing helper build now emits JSON in the same invocation. Unique normal farfold_lib cdylib filename is selected from compiler-artifact output, no directory freshness scan/new build. Exact filename under debug root is required here and tighter debug root/direct deps constraint remains in the resource parser. Source-Inputs includes Python script and already covers manifest/build via tracked src-tauri. Post-selection original exact-list/driver/timeout/ACK/result/hash path is byte-for-byte unchanged from6f8.",
+      "originalExecutionTailByteEqual": true
+    },
+    {
+      "files": [".github/scripts/windows-pe-resource-inspection.py"],
+      "result": "Exact d332 reviewed parser bytes. Keeps selected PE hashes, actual OUT_DIR RC provenance, fixed baseline manifest semantics, same-build version/icon data, explicit cdylib selection failure, bounded read-only resource inventory. Additional unreferenced icons/general PE layout are not claimed unchanged.",
+      "priorReview": {
+        "path": "evidence:e-ebe892e531ea2b7f399b",
+        "sha256": "ded390b8c1a35be8489cfab743a57c1c46ba5275e243cc39bd1ea6127dc92862",
+        "bytes": 5069
+      }
+    },
+    {
+      "files": [".github/workflows/windows-p27-native.yml"],
+      "result": "AST parse added before build without running the parser. One always static-resource step is after original P27 attempt and before existing always loader/upload. Static failure is retained and does not skip original test execution or overwrite its result. No selection fallback or condition-lowering; job35min/original28min test limits unchanged. Always is not a guarantee after cancellation/job-level timeout."
+    },
+    {
+      "files": ["docs/status.md", "plans/agent-access.md"],
+      "result": "Current6f8 loading failure, absent manifest and forwarded-name parsing facts reflect audited raw; manual SeSecurity enabled, P27 dynamic copy not performed, dynamic unique cause unproved, original recover/screenshot not revalidated. a82/r10/r29 checks explicitly do not cover new build changes. Formal App420e, unmet stage exit, unique plan and151/29x8 requirements unchanged."
+    }
+  ],
+  "otherPartyChecksRead": [
+    {
+      "path": "evidence:e-f3b5b94f9427f9a7cf8c",
+      "sha256": "826cc2d2482997a19b8b92d4f58c4b4fada70536ad9a168ad073906708ba4f52",
+      "bytes": 623
+    },
+    {
+      "path": "evidence:e-1fb3db9e0a7940254ba6",
+      "sha256": "8c579cbb8e7b707b39117050707f8b04a62df2b34c3c163406f362f2850f0808",
+      "bytes": 417
+    },
+    {
+      "path": "evidence:e-e5dfa62882ba1129d09c",
+      "sha256": "35d1df0d12b1ae8e47bd84eda0c8f5c26c2d6765870f7462bbd49412ef21de37",
+      "bytes": 1505
+    }
+  ],
+  "checkInterpretation": "Root macOS production clippy exit0 stable and GNU all-target strict cross r2 exit0 stable were read; originalGNU r1 exit101 due omitted existing compiler environment is preserved. Neither proves actual MSVC linking, Python main correctness on Windows PE, test startup or product flows. Reviewer did not rerun checks. Other format/docs checks are Root-reported, not independently executed here.",
+  "nextRequiredEvidence": "At the coherent candidate head run the original recovery7+diagnostic and exact P27 paths; preserve exact libtest names/markers/terminal state, token facts, input hashes and original failures. Same-build PE resource evidence validates selected manifests/version/icons separately. No added full-engineering or installation gate for this small increment.",
+  "protectedFilesExcluded": [
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md"
+  ]
+}

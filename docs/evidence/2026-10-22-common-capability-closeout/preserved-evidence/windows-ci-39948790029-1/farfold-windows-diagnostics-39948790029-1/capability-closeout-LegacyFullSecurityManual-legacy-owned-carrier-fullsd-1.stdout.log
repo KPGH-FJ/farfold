@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.04s
+

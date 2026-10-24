@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-23T13:01:11.591774+00:00",
+  "result": "noBlockingFindingInFourFileStaticDelta",
+  "author": "delivery_prep",
+  "reviewer": "early_windows_review",
+  "scope": "Complete four-file diff from e3fbb0626022ecfd19685a915317ad1b66b63fdd, relevant unchanged ownership/stdio callers and both new exact behavior controls. No code edits or test execution.",
+  "handoff": {
+    "path": "evidence:e-d0db1e5a0665ccd8cdd4",
+    "sha256": "537ca6c6aa4340ef45b0534ad3ad0389b103fa8142a4cf0a6ce163dcdf8f733d",
+    "bytes": 6956
+  },
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/process_platform.rs",
+      "sha256": "a3f0a0f80c109c9297334d417d481d7edbc696add9107138def7f36cf203bae4",
+      "bytes": 5688
+    },
+    {
+      "path": "src-tauri/src/windows_process.rs",
+      "sha256": "02961ffc26c70c13631e7a3c918569f304e63f9285cb9e2bbb7cf1a87ae7d672",
+      "bytes": 21555
+    },
+    {
+      "path": "src-tauri/src/windows_process/behavior_tests.rs",
+      "sha256": "430159b8ac22d7c52545ee0d2f7a4a17de2e5aecf781dc27ea3068806dd3d8a4",
+      "bytes": 12014
+    },
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "66fb00844ffbf4527c334da649b2f06364ac3f86f2af496fcde89112f7a7156f",
+      "bytes": 22564
+    }
+  ],
+  "exactPatch": {
+    "path": "evidence:e-394df55405ddd7ea89bd",
+    "sha256": "cb83bd3f3e2e6b41235a6a837b7f3938790131109cfdf283001a1e34dffd8659",
+    "bytes": 11820
+  },
+  "unchangedGuardsAndOriginalSeven": [
+    {
+      "path": "src-tauri/src/windows_process/current_members.rs",
+      "sha256": "fbb387bb492c0d8420637444f52cfe75fea392aa1c1b913d8b14584fb9686a7d",
+      "bytes": 12141
+    },
+    {
+      "path": "src-tauri/src/windows_process/current_members_tests.rs",
+      "sha256": "8d6a9a7401eb8a8a219bf8db601727174596546c8cccb2857ec2c69d8f0d8168",
+      "bytes": 18738
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "sha256": "c1bda9e104c4188671b18f706c77dcdf1261d633cc0c0243f6db52f24ebc8417",
+      "bytes": 28509
+    },
+    {
+      "path": "src-tauri/examples/windows_process_fixture.rs",
+      "sha256": "5658870e13213555b5d4dc217f7b496aab6e2f5901fe1e99edebe37b498e8f85",
+      "bytes": 7042
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_settlement_windows_tests.rs",
+      "sha256": "49a8455732ac95663d5fec485806de2e89f43740941a8fa1c7d033ceb17583f4",
+      "bytes": 9553
+    }
+  ],
+  "checks": {
+    "modeSelection": "Private LaunchMode preserves stdio=CREATE_NO_WINDOW and pty=no creation_flags override; new git-stdio=DETACHED_PROCESS. The sole production use is Windows worktrees/git::execute_bounded. Existing helper_argv(bool terminal) retains exact previous mode strings. Unknown or nontext mode remains rejected.",
+    "stdioAndArguments": "Same Command rebuilding preserves selected program/literal args/current_dir and every explicit env override/removal; no shell, env_clear, config switch or dependency. Caller installs finite stdin or Windows null and its captured stdout/stderr after rebuilding. Child inherits exact standard handles; original exit code and failure126 mapping unchanged.",
+    "ownership": "Wrapper enters the already owned named Job before selected child starts. No Job rights, breakaway, arbitrary PID action, current_members gap logic, attach/reap, cancellation, deadline, output limits or original-object cleanup changes. Generic Agent and PTY sources unchanged.",
+    "tests": "Both new Windows behavior tests use the existing same-build fixture and production dedicated wrapper, original Parent/5s until, exact literal empty/space/quote/Unicode/backslash args, cwd, env set/removal, finite input, stdout/stderr and original exit23/13. They require Job inactivity and bounded<4KiB output. Existing generic behavior body preserved byte-for-byte apart from added Read import; original seven settlement tests unchanged.",
+    "fixtureSafety": "Test env variable FIXTURE_LITERAL and synthetic error values reuse the existing fixture; no user configuration, account, Agent or actual user secret. Test fake-fixture results will not substitute actual Git/cold recovery results.",
+    "sourceFreeze": "Four current hashes and their e3fbb before hashes match handoff; exact full patch matches; all5 guard files byte-equal to base. No unreviewed production changes included."
+  },
+  "primarySourcesRead": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags",
+      "readLines": "74-77,113-116",
+      "finding": "DETACHED_PROCESS controls console association, cannot combine with NEW_CONSOLE; NO_WINDOW is ignored with DETACHED. It does not promise no descendants or full Job settlement."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output",
+      "readLines": "128-160",
+      "finding": "Explicit standard handles are supplied through STARTUPINFO with inheritance; console flags and standard handle redirection are distinct mechanisms."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/git-for-windows/git/v2.56.0.windows.2/compat/mingw.c",
+      "readLines": "2099-2162",
+      "finding": "Selected source adds DETACHED_PROCESS when CONOUT$ is unavailable and supplies explicit standard handles. This supports the narrow design, not an installed-version or runtime proof."
+    }
+  ],
+  "execution": {
+    "cargo": false,
+    "windowsOrOtherNativeTests": false,
+    "ci": false,
+    "appAgent": false,
+    "trackedWrites": false,
+    "officialDocsRead": true
+  },
+  "notVerified": [
+    "Compilation and actual new behavior tests are Root-owned follow-up; no RED/GREEN claim here.",
+    "Actual Git finite input/stdout/stderr/cancel/deadline semantics and cold recovery after the flag change still require the planned unchanged regression cases.",
+    "A/B used fixed cmd exit0; extra PID identity and original successful1/0 production gap cause remain unknown. No sticky gap clearing or reliability acceptance follows from this review.",
+    "Formal Mac installed18470 does not contain this subsequent Windows candidate delta."
+  ],
+  "findings": [],
+  "inputsStable": true
+}

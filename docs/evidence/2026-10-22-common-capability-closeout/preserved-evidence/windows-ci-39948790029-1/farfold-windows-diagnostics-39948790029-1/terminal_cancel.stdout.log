@@ -1,0 +1,12 @@
+
+running 1 test
+test pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated ... 
+running 1 test
+test pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.06s
+
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.13s
+

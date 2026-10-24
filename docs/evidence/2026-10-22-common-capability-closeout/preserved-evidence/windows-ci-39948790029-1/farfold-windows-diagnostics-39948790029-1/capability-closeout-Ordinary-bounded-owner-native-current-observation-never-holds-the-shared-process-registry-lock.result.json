@@ -1,0 +1,37 @@
+{
+  "group": "bounded-owner-native-current-observation-never-holds-the-shared-process-registry-lock",
+  "filter": "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock",
+  "category": "ownedCurrentJobObservationGap",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock"
+  ],
+  "actualPassedNames": [
+    "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:29.9705834Z",
+  "finishedAtUtc": "2026-10-23T12:14:30.0289692Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F3A8F143920E17584FDA22783CBDDE73B41EBBF8433B5C9C56572AAA405CE7D9",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

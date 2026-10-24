@@ -1,0 +1,11 @@
+
+running 1 test
+test file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback ... FAILED
+
+failures:
+
+failures:
+    file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

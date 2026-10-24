@@ -1,0 +1,27 @@
+{
+  "group": "persistent-owner-08",
+  "filter": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+  "category": "currentMerged21",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:12.9044778Z",
+  "finishedAtUtc": "2026-10-23T12:08:12.9312502Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "C2063C6E026FBC16CC4D2EF7EA6CF36FB0FAE42BC6069A97CE3161A6943305C6",
+  "stderrSha256": "72AD6965D7E9480130930557C55BEE8F3BF65F729A49357D6EAC23F11F3D0FED"
+}

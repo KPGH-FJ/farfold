@@ -1,0 +1,62 @@
+{
+  "group": "alias-owned",
+  "filter": "worktrees::material_owner::alias_topology_tests::",
+  "category": "ownedAliasTopology",
+  "explicitIgnored": false,
+  "exactFilter": false,
+  "historicalSelectionArguments": [
+    "worktrees::material_owner::alias_topology_tests::"
+  ],
+  "expectedTests": 6,
+  "expectedNames": [
+    "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+    "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+    "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root",
+    "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+    "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+    "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+    "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+    "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer",
+    "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+    "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+    "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+      "outcome": "ok"
+    },
+    {
+      "name": "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:07:59.1818135Z",
+  "finishedAtUtc": "2026-10-23T12:07:59.2806099Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "9A13724A32EDBCE7066CD870EE3933105C1A8157C321B0949A929CE37A9B753E",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

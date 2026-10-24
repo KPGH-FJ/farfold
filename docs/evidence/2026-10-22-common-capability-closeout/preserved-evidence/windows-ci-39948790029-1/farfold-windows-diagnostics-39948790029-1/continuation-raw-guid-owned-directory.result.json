@@ -1,0 +1,32 @@
+{
+  "group": "raw-guid-owned-directory",
+  "filter": "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary",
+  "category": "ownedRawGuidDirectory",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:00.2198201Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.4272502Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "925F09F05ED060D59030F5E894868E1835429AE1CCE940075F1620A38B0F0990",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

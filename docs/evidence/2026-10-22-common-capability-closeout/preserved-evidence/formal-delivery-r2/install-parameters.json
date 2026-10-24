@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "candidateReceiptSha256": "9b3886f20937881cee2dae9291b5658688421158b38c0626ab3bd851b18b10c2",
+  "candidateReviewSha256": "2d81461a6def58ff62d257aec5adc4dc84f1f85d025f3fce5726ebac549c5d91",
+  "beforeReceiptSha256": "7ecf8ff557ba72a5072101a2e562ed39f5eef1cd8604fa7b50b9bf6a0ff2af74",
+  "beforeManifestSha256": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+  "preinstallReceiptSha256": "45cc033a37a3ce8c308a3315022ff78515f4ec25bbe6cd7cc032b9760a074dcb",
+  "preinstallManifestSha256": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31",
+  "formalBaselineBinarySha256": "7b5b136f8a8ea55c9c72735b5ce9947baa6d9aee16e5141318a27d9acab75b2c"
+}

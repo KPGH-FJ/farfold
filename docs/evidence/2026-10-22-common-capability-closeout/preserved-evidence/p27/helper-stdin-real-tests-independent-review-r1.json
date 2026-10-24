@@ -1,0 +1,55 @@
+{
+  "kind": "independent-test-source-review",
+  "reviewer": "windows_gaps",
+  "reviewedAuthor": "delivery_prep",
+  "boundary": "Reviewer authored Input/Worker production changes. This review covers only delivery-authored two new test modules; it is not independent review of production. No source edit/Cargo/Windows/CI performed.",
+  "authorReadpoint": {
+    "path": "evidence:e-74e4a570a93b1ab8cdc0",
+    "sha256": "593ae00e279bc92db59977911a30c572dd8eb0d06f5d3284aa9e4cb9f753ce74"
+  },
+  "files": [
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io/windows_input_tests.rs",
+      "sha256": "e45fe57c44166e689dcddfa918dbf2a5feed4599764f8e16ef1fe2567daa31e1",
+      "lines": 556
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper_windows_input_tests.rs",
+      "sha256": "22e967078d317ef35cfe373e9877d7758deed06f2b6069ebad5d308050530860",
+      "lines": 570
+    }
+  ],
+  "status": "two-narrow-test-findings-pending-author-resolution",
+  "findings": [
+    {
+      "priority": "P2",
+      "file": "src-tauri/src/browser_sharing/helper_io/windows_input_tests.rs",
+      "line": 362,
+      "title": "Admission control does not observe absence of data I/O",
+      "evidence": "Actual owned overlapped server, regular file and invalid handle are refused by Input::from_handle, but test does not use already available observer to assert no data-I/O phase. Thus is_err only verifies refusal, not the title before_data_io.",
+      "requestedDelta": "Use from_handle_observed with same actual handles and assert no Step/Peeking/Reading callback; no native-return replacement, new hook or rights change."
+    },
+    {
+      "priority": "P2",
+      "file": "src-tauri/src/browser_sharing/helper_io/windows_input_tests.rs",
+      "line": 424,
+      "title": "Input parent lacks original-Child abnormal-exit guard",
+      "evidence": "Only the explicit 20-second timeout branch kills and waits the held Child. Earlier setup write, try_wait and event-processing panics drop Child without observed termination. The child 15-second watchdog is fallback, not parent observed cleanup. The helper test module already uses OriginalChild to handle these paths.",
+      "requestedDelta": "Give Input parent the same small RAII held-Child cleanup boundary; keep original natural success, timeout failure and 5-second limit. Never kill by PID or treat unknown as success."
+    }
+  ],
+  "verifiedByStaticRead": [
+    "Stdio::piped standard input is actually inherited, original set_nowait AccessDenied is a negative control, no rights escalation.",
+    "Demand gate checks actual Queued(CHUNK), actual residual 3-byte read and absence of a new demand before consumption.",
+    "Test hooks only gate original thread after actual transitions/native results; real CancelSynchronousIo NOT_FOUND at before-Peek phase remains Pending.",
+    "ReadEOF obtains GetThreadIOPendingFlag on original held reader thread, then closes writer, waits actual Complete and requires Dirty; direct PeekEOF remains separate Clear then actual EOF consumption.",
+    "Worker tests invoke original Worker and real private Stream; false ACK blocked until zero-data completion, original first deadline persists, closed=true follows actual standard stdout cleared.",
+    "Same-build helper parent uses original helper-only MODE/capability hello path and normal read-only Stdio::piped; initialized request contains protocolVersion/capabilities/clientInfo; two stop(false) ACKs then later tools/list must use same still-alive child.",
+    "Six regular parents plus one explicitly ignored helper parent; two ignored child dispatchers selected only inside parents, no environment test switches. Child output not replayed into parent stdout."
+  ],
+  "limits": [
+    "No actual Windows result yet. Gates show concrete production states, not every OS timing or partial native write.",
+    "No test invokes Tauri application, real Agent, screenshot pixels or production permission/broker acceptance.",
+    "Existing child watchdog/process handles do not by themselves prove every abnormal branch is retired; finding above remains explicit."
+  ]
+}

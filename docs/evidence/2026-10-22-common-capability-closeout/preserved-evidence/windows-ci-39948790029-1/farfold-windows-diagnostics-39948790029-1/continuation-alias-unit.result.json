@@ -1,0 +1,44 @@
+{
+  "group": "alias-unit",
+  "filter": "file_access::windows::material_alias_topology::tests::",
+  "category": "windowsSyntheticTopology",
+  "explicitIgnored": false,
+  "exactFilter": false,
+  "historicalSelectionArguments": [
+    "file_access::windows::material_alias_topology::tests::"
+  ],
+  "expectedTests": 3,
+  "expectedNames": [
+    "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+    "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group",
+    "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group",
+    "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+    "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+      "outcome": "ok"
+    },
+    {
+      "name": "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:07:59.1564072Z",
+  "finishedAtUtc": "2026-10-23T12:07:59.1774849Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 3 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "B29CD1481BC9170AE24BF61F0145941BF8589B59035687E7D7E2AEDFC8ED612A",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

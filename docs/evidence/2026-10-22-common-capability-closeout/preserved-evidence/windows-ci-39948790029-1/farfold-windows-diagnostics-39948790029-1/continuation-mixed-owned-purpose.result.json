@@ -1,0 +1,32 @@
+{
+  "group": "mixed-owned-purpose",
+  "filter": "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input",
+  "category": "ownedPurposeRefusalNotFullSecuritySuccess",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:07:59.1236688Z",
+  "finishedAtUtc": "2026-10-23T12:07:59.1506117Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "76B10F4B2E82A1C2E2133259518F5A536E99FB52ABA147F6486844C9DCE54E70",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

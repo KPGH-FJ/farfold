@@ -1,0 +1,18 @@
+{
+  "name": "exports-13-2",
+  "executable": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\dumpbin.exe",
+  "arguments": ["/NOLOGO", "/EXPORTS", "C:\\Windows\\system32\\dwmapi.dll"],
+  "pid": 3264,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 62,
+  "stdout": "exports-13-2.stdout.log",
+  "stderr": "exports-13-2.stderr.log",
+  "stdoutSha256": "844c7fdab142ea07137f742eb426c487bbe44b9931b9a0b6329db2d6d5d64c9e",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

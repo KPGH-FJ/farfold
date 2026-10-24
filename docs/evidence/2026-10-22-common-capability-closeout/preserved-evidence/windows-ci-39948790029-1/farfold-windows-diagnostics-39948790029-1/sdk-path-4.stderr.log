@@ -1,0 +1,2 @@
+FARFOLD_FIXTURE_LOCK {"phase":"WAIT","pid":2556,"test":"acp_client::history_search::claude_tests::sdk_configuration_wait_rechecks_selected_module_before_helper_dispatch"}
+FARFOLD_FIXTURE_LOCK {"phase":"ACQUIRED","pid":2556,"test":"acp_client::history_search::claude_tests::sdk_configuration_wait_rechecks_selected_module_before_helper_dispatch"}

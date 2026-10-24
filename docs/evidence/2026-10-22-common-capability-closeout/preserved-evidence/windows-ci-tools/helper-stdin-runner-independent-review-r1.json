@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T11:15:23.271017+00:00",
+  "role": "Non-author review of selected new runner/manifest and root workflow, source-map and reader deltas. Prior platform r2 review is not repeated.",
+  "verdict": "No blocking issue found in the selected source delta; actual Windows execution remains pending.",
+  "selectedSourcePins": {
+    ".github/scripts/windows-helper-stdin-controls.py": "2765208bb85a5a6b81138c04d3eb7f8c9e33590770f6b80c6da30f6c81ef0698",
+    ".github/scripts/windows-helper-stdin-cases.json": "1aaa5ce3c45a53730e19f712359ea91f3f763bbc8a9c69c75f4789bbcee38b1c",
+    ".github/scripts/windows-p27-native.ps1": "0077a8b046cecb6f6e6104ae143bafd3446c204ccd5fc291f9e0eef81902879c",
+    ".github/workflows/windows-p27-native.yml": "bb54048db91713d24aa8b5c74866e73eced8442e41a4761e857555a4d8e5058d",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/read_focused_native_with_stdin.py": "14a66ccef9ba2d35f16e4fe3b86f86672f3fa0d1edccb9b3e5353929f0e29b43"
+  },
+  "scope": [
+    "Complete windows-helper-stdin-controls.py and windows-helper-stdin-cases.json.",
+    "Current git diff for windows-p27-native.ps1 and windows-p27-native.yml; original P27/PE behavior reviewed only for preservation.",
+    "read_focused_native_with_stdin.py versus frozen read_focused_native.py: only two P27 source-path additions, not a new stdin-results reader."
+  ],
+  "checks": [
+    {
+      "area": "Fixed case inventory",
+      "result": "Exactly seven parent FQNs: six ordinary and one explicitly ignored same-build-helper case. Both ignored child dispatchers excluded. Manifest schema/booleans/helper requirement/FQN order/names are validated and current declarations exist."
+    },
+    {
+      "area": "Same build identity",
+      "result": "Reads original inputs-before and selection at expected head, requires exact current tracked source map, selected libtest in debug/deps and exact sibling debug/farfold.exe, lowercase SHA256 match. Rechecks source and both program hashes before/after each parent and at end. Same-helper fixture derives that exact sibling helper. No rebuild/download/fallback/environment switch."
+    },
+    {
+      "area": "Terminal and raw evidence",
+      "result": "Each parent uses original Popen object, 90-second observation and five-second bounded retirement/drain, no PID relookup or tree kill. Pass requires natural nonterminated exit int0, settled error-free EOF on both pipes, <=1MiB each, exactly one matching ok libtest line and 1/0/0/0 summary, stable inputs/programs. Forced, timed-out, overflowing, unknown output/process cannot pass; unsettled parent/output prevents later parents."
+    },
+    {
+      "area": "Output ownership",
+      "result": "One exclusively new helper-stdin-controls directory and per-case exclusive files. Reader threads own pipe closure and bounded capture buffers; pending reads are not closed by relay. Original parent objects retained; no deletion of source or original evidence."
+    },
+    {
+      "area": "Group separation and workflow",
+      "result": "stdin step is a separate always-run 13-minute group after original P27. Root job budget rises 35 to48 for added work; original P27 28-minute step and PE/loader five-minute steps and pass/fail bodies unchanged. Python nonzero exits propagate; no continue-on-error success conversion. All groups retain separate receipts and native screenshot acceptance is not replaced."
+    },
+    {
+      "area": "Input wiring",
+      "result": "PS delta reverses byte-exactly to HEAD after removing the two new source paths. Runner uses matching seven source patterns. Existing r5 reader remains unchanged; new file AST reverses exactly to r5 by removing just the two path strings. Recovery/null/legacy parsing semantics unchanged."
+    }
+  ],
+  "independentControls": {
+    "path": "evidence:e-387f8e456add5633f450",
+    "sha256": "a277c271858f256e432f1f49a536011cf201d60efd4308a04dfcc19561a0def9",
+    "passed": 36,
+    "kind": "pure parser/in-memory record and manifest controls; no subprocess or Windows API execution",
+    "includes": [
+      "zero/duplicate/missing/mismatched/ignored/invalid stdout",
+      "boolean exit code, failure, timeout, forced termination, overflow, unsettled or error output",
+      "wrong or duplicate parent/extra child/ignored/helper mismatch/duplicate JSON",
+      "exact two-path reader AST inverse"
+    ]
+  },
+  "findings": [],
+  "limits": [
+    "No Windows runner invocation, Cargo/test execution, native pipe or process test performed by this review.",
+    "Native file/process ownership and deadlines are statically assessed; parser controls do not establish actual Windows completion.",
+    "Forced parent termination is never parent-test success; report does not establish all descendant outcomes merely from parent termination.",
+    "Review does not approve fixture body assertions or expand prior platform/source review scope.",
+    "Legacy r5 and previous actual reports were read only, not rerun or overwritten."
+  ],
+  "supportingPins": {
+    "originalR5": "abb9a7ac8543e86010622fb3664ba83941b29d38a7f618975126d8b2dd2cc8b8"
+  }
+}

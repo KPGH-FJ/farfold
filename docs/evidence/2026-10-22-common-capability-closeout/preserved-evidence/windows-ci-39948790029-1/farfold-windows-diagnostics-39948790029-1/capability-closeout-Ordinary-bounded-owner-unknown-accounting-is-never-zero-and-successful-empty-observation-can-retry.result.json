@@ -1,0 +1,37 @@
+{
+  "group": "bounded-owner-unknown-accounting-is-never-zero-and-successful-empty-observation-can-retry",
+  "filter": "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry",
+  "category": "ownedCurrentJobObservationGap",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry"
+  ],
+  "actualPassedNames": [
+    "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:29.8147967Z",
+  "finishedAtUtc": "2026-10-23T12:14:29.8295148Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "37E720A774FF3D002E58155F4846721481FF21B7849DAE9094CEC421D893663E",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

@@ -1,0 +1,7 @@
+
+thread 'worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback' (7036) panicked at src\worktrees\material_mixed_tree_owner_tests.rs:24:52:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback' (7036) panicked at src\worktrees\material_mixed_tree_owner_tests.rs:153:33:
+Slot rejected: Err(Failure { code: "unknown" })

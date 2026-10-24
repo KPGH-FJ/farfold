@@ -1,0 +1,4 @@
+
+thread 'worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target' (944) panicked at src\worktrees\material_carrier_owner_tests.rs:173:14:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

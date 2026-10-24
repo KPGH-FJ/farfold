@@ -1,0 +1,1 @@
+FARFOLD_BACKUP_WRITE_FAILURE successfulPrefix=0 offered=47 nativeLength=47 error=Io { phase: "backupWrite", code: Some(5) }

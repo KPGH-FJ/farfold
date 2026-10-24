@@ -1,0 +1,37 @@
+{
+  "group": "null-owned-xdg-matrix",
+  "filter": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+  "category": "null-attributes-new",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T13:28:59.1712374Z",
+  "finishedAtUtc": "2026-10-23T13:29:57.3611294Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "7F67AFAF7F67362AF53D724B91B6FCE4A5DA90508FB7610D5A637A67298C77CB",
+  "stderrSha256": "8DFA8B4379618AE144BA191D75B89483DA0B655FAE35A0BE4F37280BD741332E"
+}

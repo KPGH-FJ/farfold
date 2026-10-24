@@ -1,0 +1,22 @@
+{
+  "name": "original-imports",
+  "executable": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\dumpbin.exe",
+  "arguments": [
+    "/NOLOGO",
+    "/IMPORTS",
+    "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe"
+  ],
+  "pid": 6632,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 182,
+  "stdout": "original-imports.stdout.log",
+  "stderr": "original-imports.stderr.log",
+  "stdoutSha256": "962da48aa44c7fd5a192258051d9dc293182dfd639332bd8fdccc06514bc7f36",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,37 @@
+{
+  "group": "archive-git-pointer-original-object-listing",
+  "filter": "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators",
+  "category": "ownedArchiveGitPointerSyntax",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators"
+  ],
+  "actualPassedNames": [
+    "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:30.5685809Z",
+  "finishedAtUtc": "2026-10-23T12:14:34.3878679Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "78FB2822D16C028225DC5E3649B6365019DE6E615A4CB070502173D1EC4BF342",
+  "stderrSha256": "3FE1E1DF5E80011268800CEBC0D85487943D96F169A51D5FFAAE4089BB6CBA45"
+}

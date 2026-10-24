@@ -1,0 +1,824 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-23T12:50:59.405100+00:00",
+  "runId": 39955633799,
+  "attempt": 1,
+  "head": "e3fbb0626022ecfd19685a915317ad1b66b63fdd",
+  "result": "both-fixed-mode-observations-verified-no-production-acceptance-claim",
+  "method": "Independent local raw JSON/JSONL inspection and exact git blob hash comparison; no downloaded executable import/run, CI query, download or native execution. All240 queries per mode, full event sequence and original-object cleanup examined.",
+  "identity": {
+    "download": {
+      "path": "evidence:e-eab4ebc222847779e019",
+      "sha256": "9add0383b61bdaa9f052955c42aa2920d12eedf76c0f719fa0153cb7e103001e",
+      "bytes": 2002
+    },
+    "completedMetadata": {
+      "path": "evidence:e-a2989bf80fa15ce57f98",
+      "sha256": "a9d029ea3b6123c09c4d049c6483e9a03d601a4b363a15623473eba2d8f5d8b6",
+      "bytes": 11753
+    },
+    "sourceGitBlobLF": "93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19",
+    "onlyLFtoCRLFComputedSHA256": "3e650307b046328837a2e04311dcad9ad9fcbeb04d8630b08517a8455750936c",
+    "workflowGitBlobLF": "b0d7654a67977a625ff98cd69d56f2d108274bcfa8b9aa8dac4818b3782c2660",
+    "bothCiAndSummaryHashesMatchComputedCRLF": true,
+    "modeArgumentsBoundByReviewedWorkflowAndSummary": true
+  },
+  "rawEvidence": [
+    {
+      "path": "evidence:e-687d452d3babfe93f0fd",
+      "sha256": "3e97768653f2f214939175a37f34d7ca4dd22a49644bdb8798e26d38b89ff370",
+      "bytes": 298
+    },
+    {
+      "path": "evidence:e-6904380848d8427c5a49",
+      "sha256": "f299ebfdffa16452c0852dae7f8ff9f0d60cab11c6cb2387639b1a77a659980d",
+      "bytes": 318138
+    },
+    {
+      "path": "evidence:e-18e6ba907165b13fc5a1",
+      "sha256": "45493f703b1e4c05d7501b37e474e0339811f2fc58fcd6f6ff04dbe83903b98e",
+      "bytes": 2524
+    },
+    {
+      "path": "evidence:e-9362e3faaf1ee7b6e71c",
+      "sha256": "b836591a4234f9f7d02f81b96dc3d7f49e9e5fe0a760955501ab3c9e0bfd07f3",
+      "bytes": 800
+    },
+    {
+      "path": "evidence:e-1c744fc5aa2614963b81",
+      "sha256": "3e97768653f2f214939175a37f34d7ca4dd22a49644bdb8798e26d38b89ff370",
+      "bytes": 298
+    },
+    {
+      "path": "evidence:e-f5cedf20b1cbbd836436",
+      "sha256": "1c22c7c928fa7444d2cdc9a1a7d9e9e140e28f08582339f8ccad81f907284a0e",
+      "bytes": 316186
+    },
+    {
+      "path": "evidence:e-62c01b9642e4b71487b4",
+      "sha256": "0a9cca90270c9b69283c15fbe7a4145e32b97668fe4ac97de09d67c85138b2b8",
+      "bytes": 2507
+    },
+    {
+      "path": "evidence:e-b3adb48ee5c091122fad",
+      "sha256": "89e066d3f7f346fededda7c607f7880726e479fe94f91c1052f610615921c62b",
+      "bytes": 791
+    }
+  ],
+  "modes": {
+    "default": {
+      "status": "fixed-observation-completed-and-raw-verified",
+      "elapsedSeconds": 1.078000000000003,
+      "commandCreationFlags": 134217732,
+      "observerCreationFlags": 134217732,
+      "records": 360,
+      "queries": 240,
+      "ampleQueries": 120,
+      "smallQueries": 120,
+      "originalCommandNaturalExitZero": 36,
+      "originalObserverNaturalExitZero": true,
+      "allOriginalHandlesAndJobsClosed": true,
+      "forcedTermination": false,
+      "classificationCounts": {
+        "api-error": 108,
+        "successful-equal-counts-layout": 132
+      },
+      "ampleRawOkAssignedListedWrittenErrorDistribution": {
+        "1/3/3/32/None": 59,
+        "1/5/5/48/None": 17,
+        "1/6/6/56/None": 27,
+        "1/0/0/8/None": 12,
+        "1/4/4/40/None": 2,
+        "1/2/2/24/None": 3
+      },
+      "smallRawOkAssignedListedWrittenErrorDistribution": {
+        "0/3/1/32/234": 59,
+        "0/5/1/48/234": 16,
+        "0/6/1/56/234": 28,
+        "1/0/0/8/None": 12,
+        "0/4/1/40/234": 2,
+        "0/2/1/24/234": 3
+      },
+      "ampleQueriesWithExtraPidValues": 49,
+      "iterationsWithExtraPidValues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      "perIteration": [
+        {
+          "iteration": 0,
+          "originalPids": [7724, 6192, 7728],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [6448, 6496, 7236],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 1,
+          "originalPids": [8128, 3180, 1648],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [1084, 1576, 6136],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 2,
+          "originalPids": [1332, 6832, 6508],
+          "ampleQueriesWithExtraPidValues": 5,
+          "extraPidValuesRelativeToThisIteration": [2120, 6376, 7188],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 3,
+          "originalPids": [7184, 7452, 7980],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [1948, 2376, 7556],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 4,
+          "originalPids": [2776, 7504, 2192],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [2408, 3300, 4040],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 5,
+          "originalPids": [1852, 5504, 396],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [1384, 2740, 7720],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 6,
+          "originalPids": [4180, 1144, 1392],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [1148, 1184, 2800],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 7,
+          "originalPids": [4836, 4860, 5612],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [2924, 4616, 4880],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 8,
+          "originalPids": [8144, 2248, 2632],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [692, 2160, 2268],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 9,
+          "originalPids": [2164, 5064, 6952],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [3124, 6792, 7180],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 10,
+          "originalPids": [960, 2592, 2636],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [3536, 3548, 5372],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 11,
+          "originalPids": [3756, 3652, 3520],
+          "ampleQueriesWithExtraPidValues": 4,
+          "extraPidValuesRelativeToThisIteration": [4252, 4636, 6912],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        }
+      ],
+      "extraQueries": [
+        {
+          "iteration": 0,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [7724, 6192, 7728],
+          "listedPids": [7724, 6192, 7728, 6496, 6448],
+          "extraPidValues": [6448, 6496],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 0,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [7724, 6192, 7728],
+          "listedPids": [7724, 6192, 7728, 6496, 6448, 7236],
+          "extraPidValues": [6448, 6496, 7236],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 0,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [7724, 6192, 7728],
+          "listedPids": [7724, 6192, 7728, 6496, 6448, 7236],
+          "extraPidValues": [6448, 6496, 7236],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 0,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [7724, 6192, 7728],
+          "listedPids": [6192, 7728, 6496, 6448, 7236],
+          "extraPidValues": [6448, 6496, 7236],
+          "originalWaitBefore": [0, 258, 258],
+          "originalWaitAfter": [0, 258, 258]
+        },
+        {
+          "iteration": 1,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [8128, 3180, 1648],
+          "listedPids": [8128, 3180, 1648, 1576, 6136],
+          "extraPidValues": [1576, 6136],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 1,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [8128, 3180, 1648],
+          "listedPids": [8128, 3180, 1648, 1576, 6136, 1084],
+          "extraPidValues": [1084, 1576, 6136],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 1,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [8128, 3180, 1648],
+          "listedPids": [8128, 3180, 1648, 1576, 6136, 1084],
+          "extraPidValues": [1084, 1576, 6136],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 1,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [8128, 3180, 1648],
+          "listedPids": [8128, 3180, 1576, 6136, 1084],
+          "extraPidValues": [1084, 1576, 6136],
+          "originalWaitBefore": [258, 258, 0],
+          "originalWaitAfter": [258, 258, 0]
+        },
+        {
+          "iteration": 2,
+          "phase": "concurrent-exit-round-0",
+          "originalPids": [1332, 6832, 6508],
+          "listedPids": [1332, 6832, 6508, 6376],
+          "extraPidValues": [6376],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 2,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [1332, 6832, 6508],
+          "listedPids": [1332, 6832, 6508, 6376, 7188],
+          "extraPidValues": [6376, 7188],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 2,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [1332, 6832, 6508],
+          "listedPids": [1332, 6832, 6508, 6376, 7188, 2120],
+          "extraPidValues": [2120, 6376, 7188],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 2,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [1332, 6832, 6508],
+          "listedPids": [1332, 6832, 6508, 6376, 7188, 2120],
+          "extraPidValues": [2120, 6376, 7188],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 2,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [1332, 6832, 6508],
+          "listedPids": [6508, 2120],
+          "extraPidValues": [2120],
+          "originalWaitBefore": [0, 0, 258],
+          "originalWaitAfter": [0, 0, 258]
+        },
+        {
+          "iteration": 3,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [7184, 7452, 7980],
+          "listedPids": [7184, 7452, 7980, 1948, 7556, 2376],
+          "extraPidValues": [1948, 2376, 7556],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 3,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [7184, 7452, 7980],
+          "listedPids": [7184, 7452, 7980, 1948, 7556, 2376],
+          "extraPidValues": [1948, 2376, 7556],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 3,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [7184, 7452, 7980],
+          "listedPids": [7184, 7452, 7980, 1948, 7556, 2376],
+          "extraPidValues": [1948, 2376, 7556],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 3,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [7184, 7452, 7980],
+          "listedPids": [7184, 7452, 7980, 1948, 7556, 2376],
+          "extraPidValues": [1948, 2376, 7556],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 4,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [2776, 7504, 2192],
+          "listedPids": [2776, 7504, 2192, 2408, 4040],
+          "extraPidValues": [2408, 4040],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 4,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [2776, 7504, 2192],
+          "listedPids": [2776, 7504, 2192, 2408, 4040, 3300],
+          "extraPidValues": [2408, 3300, 4040],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 4,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [2776, 7504, 2192],
+          "listedPids": [2776, 7504, 2192, 2408, 4040, 3300],
+          "extraPidValues": [2408, 3300, 4040],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 4,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [2776, 7504, 2192],
+          "listedPids": [7504, 2192, 2408, 4040, 3300],
+          "extraPidValues": [2408, 3300, 4040],
+          "originalWaitBefore": [0, 258, 258],
+          "originalWaitAfter": [0, 258, 258]
+        },
+        {
+          "iteration": 5,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [1852, 5504, 396],
+          "listedPids": [1852, 5504, 396, 1384, 7720],
+          "extraPidValues": [1384, 7720],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 5,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [1852, 5504, 396],
+          "listedPids": [1852, 5504, 396, 1384, 7720, 2740],
+          "extraPidValues": [1384, 2740, 7720],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 5,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [1852, 5504, 396],
+          "listedPids": [1852, 5504, 396, 1384, 7720, 2740],
+          "extraPidValues": [1384, 2740, 7720],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 5,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [1852, 5504, 396],
+          "listedPids": [396, 1384, 7720, 2740],
+          "extraPidValues": [1384, 2740, 7720],
+          "originalWaitBefore": [0, 0, 258],
+          "originalWaitAfter": [0, 0, 258]
+        },
+        {
+          "iteration": 6,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [4180, 1144, 1392],
+          "listedPids": [4180, 1144, 1392, 1184, 2800],
+          "extraPidValues": [1184, 2800],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 6,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [4180, 1144, 1392],
+          "listedPids": [4180, 1144, 1392, 1184, 2800, 1148],
+          "extraPidValues": [1148, 1184, 2800],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 6,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [4180, 1144, 1392],
+          "listedPids": [4180, 1144, 1392, 1184, 2800, 1148],
+          "extraPidValues": [1148, 1184, 2800],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 6,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [4180, 1144, 1392],
+          "listedPids": [4180, 1144, 1392, 1184, 2800, 1148],
+          "extraPidValues": [1148, 1184, 2800],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 7,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [4836, 4860, 5612],
+          "listedPids": [4836, 4860, 5612, 4880, 4616],
+          "extraPidValues": [4616, 4880],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 7,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [4836, 4860, 5612],
+          "listedPids": [4836, 4860, 5612, 4880, 4616, 2924],
+          "extraPidValues": [2924, 4616, 4880],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 7,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [4836, 4860, 5612],
+          "listedPids": [4836, 4860, 5612, 4880, 4616, 2924],
+          "extraPidValues": [2924, 4616, 4880],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 7,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [4836, 4860, 5612],
+          "listedPids": [4860, 4616],
+          "extraPidValues": [4616],
+          "originalWaitBefore": [0, 258, 0],
+          "originalWaitAfter": [0, 258, 0]
+        },
+        {
+          "iteration": 8,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [8144, 2248, 2632],
+          "listedPids": [8144, 2248, 2632, 2160, 2268],
+          "extraPidValues": [2160, 2268],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 8,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [8144, 2248, 2632],
+          "listedPids": [8144, 2248, 2632, 2160, 2268, 692],
+          "extraPidValues": [692, 2160, 2268],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 8,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [8144, 2248, 2632],
+          "listedPids": [8144, 2248, 2632, 2160, 2268, 692],
+          "extraPidValues": [692, 2160, 2268],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 8,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [8144, 2248, 2632],
+          "listedPids": [2248, 2632, 2160, 2268, 692],
+          "extraPidValues": [692, 2160, 2268],
+          "originalWaitBefore": [0, 258, 258],
+          "originalWaitAfter": [0, 258, 258]
+        },
+        {
+          "iteration": 9,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [2164, 5064, 6952],
+          "listedPids": [2164, 5064, 6952, 7180, 6792],
+          "extraPidValues": [6792, 7180],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 9,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [2164, 5064, 6952],
+          "listedPids": [2164, 5064, 6952, 7180, 6792, 3124],
+          "extraPidValues": [3124, 6792, 7180],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 9,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [2164, 5064, 6952],
+          "listedPids": [2164, 5064, 6952, 7180, 6792, 3124],
+          "extraPidValues": [3124, 6792, 7180],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 9,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [2164, 5064, 6952],
+          "listedPids": [5064, 6952, 7180, 6792, 3124],
+          "extraPidValues": [3124, 6792, 7180],
+          "originalWaitBefore": [0, 258, 258],
+          "originalWaitAfter": [0, 258, 258]
+        },
+        {
+          "iteration": 10,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [960, 2592, 2636],
+          "listedPids": [960, 2592, 2636, 5372, 3548],
+          "extraPidValues": [3548, 5372],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 10,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [960, 2592, 2636],
+          "listedPids": [960, 2592, 2636, 5372, 3548, 3536],
+          "extraPidValues": [3536, 3548, 5372],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 10,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [960, 2592, 2636],
+          "listedPids": [960, 2592, 2636, 5372, 3548, 3536],
+          "extraPidValues": [3536, 3548, 5372],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 10,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [960, 2592, 2636],
+          "listedPids": [2636, 3536],
+          "extraPidValues": [3536],
+          "originalWaitBefore": [0, 0, 258],
+          "originalWaitAfter": [0, 0, 258]
+        },
+        {
+          "iteration": 11,
+          "phase": "concurrent-exit-round-1",
+          "originalPids": [3756, 3652, 3520],
+          "listedPids": [3756, 3652, 3520, 4636, 4252],
+          "extraPidValues": [4252, 4636],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 11,
+          "phase": "concurrent-exit-round-2",
+          "originalPids": [3756, 3652, 3520],
+          "listedPids": [3756, 3652, 3520, 4636, 4252, 6912],
+          "extraPidValues": [4252, 4636, 6912],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 11,
+          "phase": "concurrent-exit-round-3",
+          "originalPids": [3756, 3652, 3520],
+          "listedPids": [3756, 3652, 3520, 4636, 4252, 6912],
+          "extraPidValues": [4252, 4636, 6912],
+          "originalWaitBefore": [258, 258, 258],
+          "originalWaitAfter": [258, 258, 258]
+        },
+        {
+          "iteration": 11,
+          "phase": "concurrent-exit-round-4",
+          "originalPids": [3756, 3652, 3520],
+          "listedPids": [3652, 3520, 4636, 4252, 6912],
+          "extraPidValues": [4252, 4636, 6912],
+          "originalWaitBefore": [0, 258, 258],
+          "originalWaitAfter": [0, 258, 258]
+        }
+      ],
+      "originalWaitPatternsByCapacity": {
+        "1": {
+          "(258, 258, 258) -> (258, 258, 258)": 98,
+          "(0, 258, 258) -> (0, 258, 258)": 5,
+          "(0, 0, 0) -> (0, 0, 0)": 12,
+          "(258, 258, 0) -> (258, 258, 0)": 1,
+          "(0, 0, 258) -> (0, 0, 258)": 3,
+          "(0, 258, 0) -> (0, 258, 0)": 1
+        },
+        "256": {
+          "(258, 258, 258) -> (258, 258, 258)": 98,
+          "(0, 258, 258) -> (0, 258, 258)": 5,
+          "(0, 0, 0) -> (0, 0, 0)": 12,
+          "(258, 258, 0) -> (258, 258, 0)": 1,
+          "(0, 0, 258) -> (0, 0, 258)": 3,
+          "(0, 258, 0) -> (0, 258, 0)": 1
+        }
+      },
+      "queryWaitTransitionsByCapacity": {
+        "1": 0,
+        "256": 0
+      },
+      "accountingBeforeAfterChanges": 1,
+      "sameCallSuccessUnequalCountQueries": 0,
+      "sameCallSuccessOneZeroQueries": 0
+    },
+    "detached": {
+      "status": "fixed-observation-completed-and-raw-verified",
+      "elapsedSeconds": 0.953000000000003,
+      "commandCreationFlags": 12,
+      "observerCreationFlags": 134217732,
+      "records": 360,
+      "queries": 240,
+      "ampleQueries": 120,
+      "smallQueries": 120,
+      "originalCommandNaturalExitZero": 36,
+      "originalObserverNaturalExitZero": true,
+      "allOriginalHandlesAndJobsClosed": true,
+      "forcedTermination": false,
+      "classificationCounts": {
+        "api-error": 74,
+        "successful-equal-counts-layout": 166
+      },
+      "ampleRawOkAssignedListedWrittenErrorDistribution": {
+        "1/3/3/32/None": 74,
+        "1/1/1/16/None": 11,
+        "1/0/0/8/None": 35
+      },
+      "smallRawOkAssignedListedWrittenErrorDistribution": {
+        "0/3/1/32/234": 74,
+        "1/1/1/16/None": 11,
+        "1/0/0/8/None": 35
+      },
+      "ampleQueriesWithExtraPidValues": 0,
+      "iterationsWithExtraPidValues": [],
+      "perIteration": [
+        {
+          "iteration": 0,
+          "originalPids": [3884, 7228, 3424],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 1,
+          "originalPids": [5808, 6584, 6876],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 2,
+          "originalPids": [3408, 8176, 5136],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 3,
+          "originalPids": [5184, 5864, 5160],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 4,
+          "originalPids": [5548, 1140, 4032],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 5,
+          "originalPids": [648, 5692, 5992],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 6,
+          "originalPids": [5760, 4344, 7296],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 7,
+          "originalPids": [7848, 3104, 4172],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 8,
+          "originalPids": [2840, 2756, 2752],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 9,
+          "originalPids": [6100, 552, 7592],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 10,
+          "originalPids": [5604, 5580, 5964],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        },
+        {
+          "iteration": 11,
+          "originalPids": [3452, 5200, 5772],
+          "ampleQueriesWithExtraPidValues": 0,
+          "extraPidValuesRelativeToThisIteration": [],
+          "allThreeOriginalsNaturalZeroAndHandlesClosed": true
+        }
+      ],
+      "extraQueries": [],
+      "originalWaitPatternsByCapacity": {
+        "1": {
+          "(258, 258, 258) -> (258, 258, 258)": 74,
+          "(0, 258, 0) -> (0, 258, 0)": 9,
+          "(0, 0, 0) -> (0, 0, 0)": 35,
+          "(0, 0, 258) -> (0, 0, 258)": 2
+        },
+        "256": {
+          "(258, 258, 258) -> (258, 258, 258)": 74,
+          "(0, 258, 0) -> (0, 258, 0)": 9,
+          "(0, 0, 0) -> (0, 0, 0)": 35,
+          "(0, 0, 258) -> (0, 0, 258)": 2
+        }
+      },
+      "queryWaitTransitionsByCapacity": {
+        "1": 0,
+        "256": 0
+      },
+      "accountingBeforeAfterChanges": 0,
+      "sameCallSuccessUnequalCountQueries": 0,
+      "sameCallSuccessOneZeroQueries": 0
+    }
+  },
+  "rootDescriptiveCounts": {
+    "ref": {
+      "path": "evidence:e-5707957bebaf3e692834",
+      "sha256": "63246a925db6137edc109ebbed2d4fe6462f79bdc4dda91d279f8886fafc130c",
+      "bytes": 822
+    },
+    "independentlyReproduced": true
+  },
+  "conclusions": [
+    "Each mode has120 ample-buffer successful equal-count queries, zero observed same-call1/0 or other successful count mismatches. This does not prove those states impossible.",
+    "Default records extra PID values in49/120 ample queries across all12 iterations; detached records none in120 ample queries. Extra means outside the three original PIDs for that iteration; no image identity or retained process handle exists for those values.",
+    "Both modes completed36 original cmd fixtures with natural zero exits and confirmed original process/thread handle closes; the observer and original Jobs also closed successfully. Completion does not establish the identity or terminal state of unheld additional Job members.",
+    "Queries, original-handle waits and accounting are separate calls, never atomic snapshots. Identical assigned/listed counts do not remove scheduling differences or reproduce/resolve the earlier production coverage gap.",
+    "The fixed cmd exit0 experiment does not validate production Git stdio, cancellation, recovery, Agent/PT Y behavior, or justify clearing sticky coverage_gap. Production flag edits require their own source review and actual regressions.",
+    "maxTotalCreatedProcesses37 bounds direct observer+command CreateProcess calls only, not a transitive total of every Job member. Both modes together contain72 original command creates."
+  ],
+  "execution": {
+    "ciQuery": false,
+    "download": false,
+    "native": false,
+    "cargo": false,
+    "app": false,
+    "trackedWrites": false,
+    "rawArtifactsModified": false
+  },
+  "inputsStable": true
+}

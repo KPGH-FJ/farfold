@@ -1,0 +1,36 @@
+{
+  "settingKey": "worktreeLocations.v1",
+  "changedFields": [
+    {
+      "field": "worktreeLocations.v1/locations/7/location/availability",
+      "before": "verified",
+      "after": "unknown"
+    },
+    {
+      "field": "worktreeLocations.v1/operation/status/code",
+      "presenceBefore": false,
+      "presenceAfter": true
+    },
+    {
+      "field": "worktreeLocations.v1/operation/status/location/availability",
+      "before": "verified",
+      "after": "unknown"
+    },
+    {
+      "field": "worktreeLocations.v1/operation/status/state",
+      "before": "ready",
+      "after": "unknown"
+    },
+    {
+      "field": "worktreeLocations.v1/recoveries/1/receipt/availability",
+      "before": "unknown",
+      "after": "missing"
+    },
+    {
+      "field": "worktreeLocations.v1/recoveries/1/receipt/revision",
+      "before": 1,
+      "after": 2
+    }
+  ],
+  "scope": "structural comparison of sealed copies only; no values restored or changed"
+}

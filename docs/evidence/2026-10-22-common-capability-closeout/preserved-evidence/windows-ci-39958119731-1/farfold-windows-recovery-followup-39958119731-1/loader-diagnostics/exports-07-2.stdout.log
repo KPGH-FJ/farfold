@@ -1,0 +1,956 @@
+
+Dump of file C:\Windows\system32\shlwapi.dll
+
+File Type: DLL
+
+  Section contains the following exports for SHLWAPI.dll
+
+    00000000 characteristics
+    E8026522 time date stamp
+        0.00 version
+           1 ordinal base
+         930 number of functions
+         379 number of names
+
+    ordinal hint RVA      name
+
+        579    0 000075B0 AssocCreate
+        584    1 00004290 AssocGetPerceivedType
+        585    2 00019730 AssocIsDangerous
+        586    3 00019F20 AssocQueryKeyA
+        587    4 000073A0 AssocQueryKeyW
+        588    5 0001A020 AssocQueryStringA
+        589    6 0001A1D0 AssocQueryStringByKeyA
+        590    7 000074A0 AssocQueryStringByKeyW
+        591    8 00007290 AssocQueryStringW
+        592    9 000113E0 ChrCmpIA
+        593    A 00011400 ChrCmpIW
+        594    B 0001C6B0 ColorAdjustLuma
+        595    C 0000A120 ColorHLSToRGB
+        607    D 00009F30 ColorRGBToHLS
+        168    E 000099A0 ConnectToConnectionPoint
+        569    F 0001C7F0 DelayLoadFailureHook
+        608   10 00027CF0 DllGetClassObject
+        609   11 00027C20 DllGetVersion
+        270   12          GUIDFromStringW (forwarded to SHCORE.#200)
+         14   13 00011420 GetAcceptLanguagesA
+         15   14 00011440 GetAcceptLanguagesW
+        610   15 00007820 GetMenuPosFromID
+        612   16 00011460 HashData
+        568   17 000152F0 IStream_Copy
+        184   18 0000F370 IStream_Read
+        512   19 000078F0 IStream_ReadPidl
+        596   1A 00001360 IStream_ReadStr
+        213   1B 00015310 IStream_Reset
+        214   1C 0000AB50 IStream_Size
+        212   1D 00015350 IStream_Write
+        513   1E 0000AA80 IStream_WritePidl
+        597   1F 00015330 IStream_WriteStr
+        169   20 00015370 IUnknown_AtomicRelease
+        164   21 00008F20 IUnknown_Exec
+        256   22 00015390 IUnknown_GetSite
+        172   23 00005B80 IUnknown_GetWindow
+        176   24 0000F390 IUnknown_QueryService
+        163   25 0000FBE0 IUnknown_QueryStatus
+        199   26 00008DA0 IUnknown_Set
+        174   27 000016F0 IUnknown_SetSite
+        620   28 00012070 IntlStrEqWorkerA
+        622   29 0000F2F0 IntlStrEqWorkerW
+        623   2A 00011500 IsCharSpaceA
+         29   2B 0000F0A0 IsCharSpaceW
+        553   2C 00011540 IsInternetESCEnabled
+        437   2D 00008EA0 IsOS
+        377   2E 00023BD0 MLLoadLibraryA
+        378   2F 00023BF0 MLLoadLibraryW
+          1   30 00011560 ParseURLA
+          2   31 0000A390 ParseURLW
+        624   32 0000A4C0 PathAddBackslashA
+        625   33 00011580 PathAddBackslashW
+        649   34 000115A0 PathAddExtensionA
+        650   35 000115C0 PathAddExtensionW
+        651   36 000115E0 PathAppendA
+        652   37 0000F0C0 PathAppendW
+        653   38 000153B0 PathBuildRootA
+        654   39 00001670 PathBuildRootW
+        655   3A 00008D60 PathCanonicalizeA
+        656   3B 0000F0E0 PathCanonicalizeW
+        657   3C 00011600 PathCombineA
+        658   3D 00001620 PathCombineW
+        659   3E 00011620 PathCommonPrefixA
+        660   3F 00008AA0 PathCommonPrefixW
+        661   40 00016210 PathCompactPathA
+        662   41 000165A0 PathCompactPathExA
+        663   42 000057B0 PathCompactPathExW
+        664   43 0001AB30 PathCompactPathW
+        665   44 00011640 PathCreateFromUrlA
+        666   45 00011660 PathCreateFromUrlAlloc
+        667   46 000089B0 PathCreateFromUrlW
+        668   47 00008D40 PathFileExistsA
+        446   48 00002350 PathFileExistsAndAttributesW
+        669   49 00008E40 PathFileExistsW
+        670   4A 0000F100 PathFindExtensionA
+        671   4B 000081F0 PathFindExtensionW
+        672   4C 00008E00 PathFindFileNameA
+        673   4D 00008210 PathFindFileNameW
+        674   4E 00011680 PathFindNextComponentA
+        675   4F 0000A3F0 PathFindNextComponentW
+        676   50 000169F0 PathFindOnPathA
+        677   51 00001D00 PathFindOnPathW
+        678   52 00016CA0 PathFindSuffixArrayA
+        679   53 00007610 PathFindSuffixArrayW
+        680   54 000116A0 PathGetArgsA
+        681   55 00008C50 PathGetArgsW
+        682   56 000116C0 PathGetCharTypeA
+        683   57 000092E0 PathGetCharTypeW
+        684   58 000116E0 PathGetDriveNumberA
+        685   59 00008EC0 PathGetDriveNumberW
+        686   5A 00016DA0 PathIsContentTypeA
+        687   5B 0001AF30 PathIsContentTypeW
+        688   5C 00016E60 PathIsDirectoryA
+        689   5D 00016F80 PathIsDirectoryEmptyA
+        690   5E 0001AFF0 PathIsDirectoryEmptyW
+        691   5F 000087A0 PathIsDirectoryW
+        692   60 00011700 PathIsFileSpecA
+        693   61 0000F120 PathIsFileSpecW
+        694   62 00011720 PathIsLFNFileSpecA
+        695   63 00011740 PathIsLFNFileSpecW
+        696   64 000153D0 PathIsNetworkPathA
+        697   65 00008AC0 PathIsNetworkPathW
+        698   66 00011760 PathIsPrefixA
+        699   67 00008C10 PathIsPrefixW
+        700   68 00011780 PathIsRelativeA
+        701   69 00008E80 PathIsRelativeW
+        702   6A 000117A0 PathIsRootA
+        703   6B 00008E60 PathIsRootW
+        704   6C 000117C0 PathIsSameRootA
+        705   6D 000117E0 PathIsSameRootW
+        706   6E 00017070 PathIsSystemFolderA
+        707   6F 00004850 PathIsSystemFolderW
+        708   70 00011800 PathIsUNCA
+        709   71 00011820 PathIsUNCServerA
+        710   72 00011840 PathIsUNCServerShareA
+        711   73 00011860 PathIsUNCServerShareW
+        712   74 00011880 PathIsUNCServerW
+        713   75 00008B00 PathIsUNCW
+        714   76 000118A0 PathIsURLA
+        715   77 00008760 PathIsURLW
+        716   78 00017170 PathMakePrettyA
+        717   79 0000F8C0 PathMakePrettyW
+        718   7A 000171F0 PathMakeSystemFolderA
+        719   7B 0001B0F0 PathMakeSystemFolderW
+        720   7C 0000F150 PathMatchSpecA
+        721   7D 000118D0 PathMatchSpecExA
+        722   7E 000118F0 PathMatchSpecExW
+        723   7F 0000F170 PathMatchSpecW
+        724   80 00011910 PathParseIconLocationA
+        725   81 00008AE0 PathParseIconLocationW
+        726   82 00011930 PathQuoteSpacesA
+        727   83 00001600 PathQuoteSpacesW
+        728   84 00011950 PathRelativePathToA
+        729   85 00011970 PathRelativePathToW
+        730   86 000173B0 PathRemoveArgsA
+        731   87 00008370 PathRemoveArgsW
+        732   88 00011990 PathRemoveBackslashA
+        733   89 000088E0 PathRemoveBackslashW
+        734   8A 000119B0 PathRemoveBlanksA
+        735   8B 00008C30 PathRemoveBlanksW
+        736   8C 000119D0 PathRemoveExtensionA
+        737   8D 00008E20 PathRemoveExtensionW
+        738   8E 000119F0 PathRemoveFileSpecA
+        739   8F 000016D0 PathRemoveFileSpecW
+        740   90 00011A10 PathRenameExtensionA
+        741   91 00011A30 PathRenameExtensionW
+        742   92 00011A50 PathSearchAndQualifyA
+        743   93 0000F190 PathSearchAndQualifyW
+        744   94 000173F0 PathSetDlgItemPathA
+        745   95 0001B2C0 PathSetDlgItemPathW
+        746   96 00011A70 PathSkipRootA
+        747   97 0000A480 PathSkipRootW
+        748   98 0000F1B0 PathStripPathA
+        749   99 0000F1D0 PathStripPathW
+        750   9A 00011A90 PathStripToRootA
+        751   9B 0000A3B0 PathStripToRootW
+        752   9C 00011AB0 PathUnExpandEnvStringsA
+        753   9D 0000F1F0 PathUnExpandEnvStringsW
+        754   9E 00017580 PathUndecorateA
+        755   9F 00009C90 PathUndecorateW
+        756   A0 00017670 PathUnmakeSystemFolderA
+        757   A1 0001B460 PathUnmakeSystemFolderW
+        758   A2 00011AD0 PathUnquoteSpacesA
+        759   A3 0000F210 PathUnquoteSpacesW
+        219   A4 000060A0 QISearch
+          7   A5 000283B0 SHAllocShared
+        345   A6 000153F0 SHAnsiToAnsi
+        215   A7 00015410 SHAnsiToUnicode
+        760   A8 00023D60 SHAutoComplete
+        761   A9 00015430 SHCopyKeyA
+        762   AA 00015450 SHCopyKeyW
+         12   AB 00008BF0 SHCreateMemStream
+        763   AC 00008230 SHCreateShellPalette
+        764   AD 00015470 SHCreateStreamOnFileA
+        765   AE 0000F3B0 SHCreateStreamOnFileEx
+        766   AF 00015490 SHCreateStreamOnFileW
+        767   B0          SHCreateStreamWrapper (forwarded to SHUNIMPL.#471)
+         16   B1 0000AB30 SHCreateThread
+        768   B2 000154B0 SHCreateThreadRef
+        615   B3 0000AB10 SHCreateThreadWithHandle
+        278   B4 00008D80 SHCreateWorkerWindowW
+        769   B5 000154D0 SHDeleteEmptyKeyA
+        770   B6 000154F0 SHDeleteEmptyKeyW
+        771   B7 000016B0 SHDeleteKeyA
+        772   B8 00001380 SHDeleteKeyW
+        773   B9          SHDeleteOrphanKeyA (forwarded to SHUNIMPL.#446)
+        774   BA          SHDeleteOrphanKeyW (forwarded to SHUNIMPL.#447)
+        775   BB 00015510 SHDeleteValueA
+        776   BC 00001480 SHDeleteValueW
+        777   BD 00015530 SHEnumKeyExA
+        778   BE 00015550 SHEnumKeyExW
+        779   BF 00015570 SHEnumValueA
+        780   C0 00015590 SHEnumValueW
+        353   C1 0001BB40 SHFormatDateTimeA
+        354   C2 0000FA00 SHFormatDateTimeW
+         10   C3 000283D0 SHFreeShared
+        781   C4 0001CE70 SHGetInverseCMAP
+        782   C5 0000F3D0 SHGetThreadRef
+        783   C6 000155B0 SHGetValueA
+        784   C7 000155D0 SHGetValueW
+        515   C8 00006110 SHGetViewStatePropertyBag
+        204   C9 00005B40 SHIsChildOrSelf
+        785   CA 00024610 SHIsLowMemoryMachine
+        487   CB 00001690 SHLoadIndirectString
+          8   CC 00028430 SHLockShared
+        185   CD 000246A0 SHMessageBoxCheckA
+        191   CE 00024A50 SHMessageBoxCheckW
+        786   CF 000155F0 SHOpenRegStream2A
+        787   D0 00015610 SHOpenRegStream2W
+        788   D1 00015630 SHOpenRegStreamA
+        789   D2 00015650 SHOpenRegStreamW
+        281   D3 00009B50 SHPackDispParamsV
+        236   D4 000026A0 SHPinDllOfCLSID
+        567   D5 00029AE0 SHPropertyBag_ReadStrAlloc
+        570   D6 00029BA0 SHPropertyBag_WriteBSTR
+        790   D7 00015670 SHQueryInfoKeyA
+        791   D8 00015690 SHQueryInfoKeyW
+        792   D9 000156B0 SHQueryValueExA
+        793   DA 000156D0 SHQueryValueExW
+        794   DB 00011B10 SHRegCloseUSKey
+        795   DC 00011B30 SHRegCreateUSKeyA
+        796   DD 00011B50 SHRegCreateUSKeyW
+        797   DE 00011B70 SHRegDeleteEmptyUSKeyA
+        798   DF 00011B90 SHRegDeleteEmptyUSKeyW
+        799   E0 00011BB0 SHRegDeleteUSValueA
+        800   E1 00011BD0 SHRegDeleteUSValueW
+        801   E2 000156F0 SHRegDuplicateHKey
+        802   E3 00011BF0 SHRegEnumUSKeyA
+        803   E4 00011C10 SHRegEnumUSKeyW
+        804   E5 00011C30 SHRegEnumUSValueA
+        805   E6 00011C50 SHRegEnumUSValueW
+        806   E7 00011C70 SHRegGetBoolUSValueA
+        807   E8 0000A3D0 SHRegGetBoolUSValueW
+        630   E9 0000C5F0 SHRegGetBoolValueFromHKCUHKLM
+        280   EA 00015710 SHRegGetIntW
+        808   EB 00015730 SHRegGetPathA
+        809   EC 00015750 SHRegGetPathW
+        810   ED 00011C90 SHRegGetUSValueA
+        811   EE 00011CB0 SHRegGetUSValueW
+        812   EF 00015770 SHRegGetValueA
+        629   F0 0000BCF0 SHRegGetValueFromHKCUHKLM
+        813   F1 00008DE0 SHRegGetValueW
+        814   F2 00011CD0 SHRegOpenUSKeyA
+        815   F3 00011CF0 SHRegOpenUSKeyW
+        816   F4 00011D10 SHRegQueryInfoUSKeyA
+        817   F5 00011D30 SHRegQueryInfoUSKeyW
+        818   F6 00011D50 SHRegQueryUSValueA
+        819   F7 00011D70 SHRegQueryUSValueW
+        820   F8 00015790 SHRegSetPathA
+        821   F9 000157B0 SHRegSetPathW
+        822   FA 00011D90 SHRegSetUSValueA
+        823   FB 00011DB0 SHRegSetUSValueW
+        824   FC 00011DD0 SHRegWriteUSValueA
+        825   FD 00011DF0 SHRegWriteUSValueW
+        826   FE 00033410 SHRegisterValidateTemplate
+        827   FF 000157D0 SHReleaseThreadRef
+        467  100 0001A4F0 SHRunIndirectRegClientCommand
+        432  101 00024DC0 SHSendMessageBroadcastA
+        433  102 00001330 SHSendMessageBroadcastW
+        828  103 0000AB70 SHSetThreadRef
+        829  104 000157F0 SHSetValueA
+        830  105 0000AA60 SHSetValueW
+        831  106 000058E0 SHSkipJunction
+        832  107 00015810 SHStrDupA
+        833  108 00008F00 SHStrDupW
+        203  109 00025030 SHStripMneumonicA
+        225  10A 00005FF0 SHStripMneumonicW
+        217  10B 00015830 SHUnicodeToAnsi
+        218  10C          SHUnicodeToAnsiCP (forwarded to SHCORE.#151)
+        346  10D 00015850 SHUnicodeToUnicode
+          9  10E 00028470 SHUnlockShared
+        834  10F 00018020 ShellMessageBoxA
+        388  110 0001C450 ShellMessageBoxW
+        835  111 0000F230 StrCSpnA
+        836  112 00011E30 StrCSpnIA
+        837  113 00011E50 StrCSpnIW
+        838  114 00011E70 StrCSpnW
+        839  115 00011E90 StrCatBuffA
+        840  116 00011EB0 StrCatBuffW
+        841  117 00011ED0 StrCatChainW
+        842  118 0001C8C0 StrCatW
+        843  119 0000F250 StrChrA
+        844  11A 00011EF0 StrChrIA
+        845  11B 00011F10 StrChrIW
+        846  11C 00011F30 StrChrNIW
+        847  11D 00011F50 StrChrNW
+        848  11E 000058C0 StrChrW
+        155  11F 00011F70 StrCmpCA
+        156  120 00008970 StrCmpCW
+        157  121 000081D0 StrCmpICA
+        158  122 00007D30 StrCmpICW
+        849  123 0000A9A0 StrCmpIW
+        850  124 0000F270 StrCmpLogicalW
+        851  125 0000F290 StrCmpNA
+        151  126 00011F90 StrCmpNCA
+        152  127 00011FB0 StrCmpNCW
+        852  128 0000F2B0 StrCmpNIA
+        153  129 00011FD0 StrCmpNICA
+        154  12A 00008DC0 StrCmpNICW
+        853  12B 00011FF0 StrCmpNIW
+        854  12C 00006C70 StrCmpNW
+        855  12D 00005390 StrCmpW
+        856  12E 0000F2D0 StrCpyNW
+        857  12F 0000FAA0 StrCpyW
+        858  130 00012050 StrDupA
+        859  131 00007C50 StrDupW
+        860  132 0001C9B0 StrFormatByteSize64A
+        861  133 0001CA30 StrFormatByteSizeA
+        862  134 00001530 StrFormatByteSizeEx
+        863  135 0000FAD0 StrFormatByteSizeW
+        864  136 0001CA40 StrFormatKBSizeA
+        865  137 0001CAC0 StrFormatKBSizeW
+        866  138 0001CEC0 StrFromTimeIntervalA
+        867  139 0001CF50 StrFromTimeIntervalW
+        868  13A 00012070 StrIsIntlEqualA
+        869  13B 0000F2F0 StrIsIntlEqualW
+        870  13C 0001C910 StrNCatA
+        871  13D 0001C960 StrNCatW
+        872  13E 00012090 StrPBrkA
+        873  13F 0000A4E0 StrPBrkW
+        874  140 000120B0 StrRChrA
+        875  141 000120D0 StrRChrIA
+        876  142 00009F10 StrRChrIW
+        877  143 0000A1C0 StrRChrW
+        878  144 0000F310 StrRStrIA
+        879  145 000120F0 StrRStrIW
+        880  146 0001CAE0 StrRetToBSTR
+        881  147 0001CB00 StrRetToBufA
+        882  148 00008930 StrRetToBufW
+        883  149 0001CBC0 StrRetToStrA
+        884  14A 00008950 StrRetToStrW
+        885  14B 00012110 StrSpnA
+        886  14C 00012130 StrSpnW
+        887  14D 00012150 StrStrA
+        888  14E 0000F330 StrStrIA
+        889  14F 00008EE0 StrStrIW
+        890  150 00012170 StrStrNIW
+        891  151 00012190 StrStrNW
+        892  152 000013A0 StrStrW
+        893  153 000121B0 StrToInt64ExA
+        894  154 000121D0 StrToInt64ExW
+        895  155 0000F350 StrToIntA
+        896  156 000121F0 StrToIntExA
+        897  157 0000A7A0 StrToIntExW
+        898  158 00005CD0 StrToIntW
+        899  159 00012210 StrTrimA
+        900  15A 00009DE0 StrTrimW
+        901  15B 00012230 UrlApplySchemeA
+        902  15C 00012250 UrlApplySchemeW
+        903  15D 00012270 UrlCanonicalizeA
+        904  15E 00008840 UrlCanonicalizeW
+        905  15F 00012290 UrlCombineA
+        906  160 00008A80 UrlCombineW
+        907  161 000122B0 UrlCompareA
+        908  162 000122D0 UrlCompareW
+        909  163 000122F0 UrlCreateFromPathA
+        910  164 00012310 UrlCreateFromPathW
+        911  165 00012330 UrlEscapeA
+        912  166 00008990 UrlEscapeW
+        462  167 00012350 UrlFixupW
+        913  168 00012370 UrlGetLocationA
+        914  169 00012390 UrlGetLocationW
+        915  16A 000123B0 UrlGetPartA
+        916  16B 00007CC0 UrlGetPartW
+        917  16C 000123D0 UrlHashA
+        918  16D 000123F0 UrlHashW
+        919  16E 00012410 UrlIsA
+        920  16F 00012430 UrlIsNoHistoryA
+        921  170 0000A4A0 UrlIsNoHistoryW
+        922  171 00012450 UrlIsOpaqueA
+        923  172 00012470 UrlIsOpaqueW
+        924  173 00007D50 UrlIsW
+        925  174 00012490 UrlUnescapeA
+        926  175 00008780 UrlUnescapeW
+        276  176 00025230 WhichPlatform
+        927  177 0000FAF0 wnsprintfA
+        928  178 0001D880 wnsprintfW
+        929  179 0001D8E0 wvnsprintfA
+        930  17A 0001D930 wvnsprintfW
+          3      00016900 [NONAME]
+          4      00002230 [NONAME]
+          5      00016A00 [NONAME]
+          6      00001D10 [NONAME]
+         11      00028450 [NONAME]
+         13               [NONAME] (forwarded to SHUNIMPL.#429)
+         17      000076C0 [NONAME]
+         18      00004CF0 [NONAME]
+         19      00008900 [NONAME]
+         20      00005DB0 [NONAME]
+         21      00007090 [NONAME]
+         22      00005CF0 [NONAME]
+         23      0001CCC0 [NONAME]
+         24      00002B70 [NONAME]
+         25               [NONAME] (forwarded to user32.IsCharAlphaW)
+         26               [NONAME] (forwarded to user32.IsCharUpperW)
+         27               [NONAME] (forwarded to user32.IsCharLowerW)
+         28               [NONAME] (forwarded to user32.IsCharAlphaNumericW)
+         30      00011480 [NONAME]
+         31      000114E0 [NONAME]
+         32      000114A0 [NONAME]
+         33      000114C0 [NONAME]
+         34      00011520 [NONAME]
+         35      0001CD50 [NONAME]
+         36               [NONAME] (forwarded to USER32.AppendMenuW)
+         37               [NONAME] (forwarded to USER32.CallWindowProcW)
+         38               [NONAME] (forwarded to USER32.CharLowerW)
+         39               [NONAME] (forwarded to USER32.CharLowerBuffW)
+         40               [NONAME] (forwarded to USER32.CharNextW)
+         41               [NONAME] (forwarded to USER32.CharPrevW)
+         42               [NONAME] (forwarded to USER32.CharToOemW)
+         43               [NONAME] (forwarded to USER32.CharUpperW)
+         44               [NONAME] (forwarded to USER32.CharUpperBuffW)
+         45               [NONAME] (forwarded to KERNEL32.CompareStringW)
+         46               [NONAME] (forwarded to USER32.CopyAcceleratorTableW)
+         47               [NONAME] (forwarded to USER32.CreateAcceleratorTableW)
+         48               [NONAME] (forwarded to GDI32.CreateDCW)
+         49               [NONAME] (forwarded to USER32.CreateDialogParamW)
+         50               [NONAME] (forwarded to KERNEL32.CreateDirectoryW)
+         51               [NONAME] (forwarded to KERNEL32.CreateEventW)
+         52               [NONAME] (forwarded to KERNEL32.CreateFileW)
+         53               [NONAME] (forwarded to GDI32.CreateFontIndirectW)
+         54               [NONAME] (forwarded to GDI32.CreateICW)
+         55               [NONAME] (forwarded to USER32.CreateWindowExW)
+         56               [NONAME] (forwarded to USER32.DefWindowProcW)
+         57               [NONAME] (forwarded to KERNEL32.DeleteFileW)
+         58               [NONAME] (forwarded to USER32.DialogBoxIndirectParamW)
+         59               [NONAME] (forwarded to USER32.DialogBoxParamW)
+         60               [NONAME] (forwarded to USER32.DispatchMessageW)
+         61               [NONAME] (forwarded to USER32.DrawTextW)
+         62               [NONAME] (forwarded to GDI32.EnumFontFamiliesW)
+         63               [NONAME] (forwarded to GDI32.EnumFontFamiliesExW)
+         64               [NONAME] (forwarded to KERNEL32.EnumResourceNamesW)
+         65               [NONAME] (forwarded to KERNEL32.FindFirstFileW)
+         66               [NONAME] (forwarded to KERNEL32.FindResourceW)
+         67               [NONAME] (forwarded to USER32.FindWindowW)
+         68               [NONAME] (forwarded to KERNEL32.FormatMessageW)
+         69               [NONAME] (forwarded to USER32.GetClassInfoW)
+         70               [NONAME] (forwarded to USER32.GetClassLongW)
+         71               [NONAME] (forwarded to USER32.GetClassNameW)
+         72               [NONAME] (forwarded to USER32.GetClipboardFormatNameW)
+         73               [NONAME] (forwarded to KERNEL32.GetCurrentDirectoryW)
+         74               [NONAME] (forwarded to USER32.GetDlgItemTextW)
+         75               [NONAME] (forwarded to KERNEL32.GetFileAttributesW)
+         76               [NONAME] (forwarded to KERNEL32.GetFullPathNameW)
+         77               [NONAME] (forwarded to KERNEL32.GetLocaleInfoW)
+         78               [NONAME] (forwarded to USER32.GetMenuStringW)
+         79               [NONAME] (forwarded to USER32.GetMessageW)
+         80               [NONAME] (forwarded to KERNEL32.GetModuleFileNameW)
+         81               [NONAME] (forwarded to KERNEL32.GetSystemDirectoryW)
+         82               [NONAME] (forwarded to KERNEL32.SearchPathW)
+         83               [NONAME] (forwarded to KERNEL32.GetModuleHandleW)
+         84               [NONAME] (forwarded to GDI32.GetObjectW)
+         85               [NONAME] (forwarded to KERNEL32.GetPrivateProfileIntW)
+         86               [NONAME] (forwarded to KERNEL32.GetProfileStringW)
+         87               [NONAME] (forwarded to USER32.GetPropW)
+         88               [NONAME] (forwarded to KERNEL32.GetStringTypeExW)
+         89               [NONAME] (forwarded to KERNEL32.GetTempFileNameW)
+         90               [NONAME] (forwarded to KERNEL32.GetTempPathW)
+         91               [NONAME] (forwarded to GDI32.GetTextExtentPoint32W)
+         92               [NONAME] (forwarded to GDI32.GetTextFaceW)
+         93               [NONAME] (forwarded to GDI32.GetTextMetricsW)
+         94               [NONAME] (forwarded to USER32.GetWindowLongW)
+         95               [NONAME] (forwarded to USER32.GetWindowTextW)
+         96               [NONAME] (forwarded to USER32.GetWindowTextLengthW)
+         97               [NONAME] (forwarded to KERNEL32.GetWindowsDirectoryW)
+         98               [NONAME] (forwarded to USER32.InsertMenuW)
+         99               [NONAME] (forwarded to USER32.IsDialogMessageW)
+        100               [NONAME] (forwarded to USER32.LoadAcceleratorsW)
+        101               [NONAME] (forwarded to USER32.LoadBitmapW)
+        102               [NONAME] (forwarded to USER32.LoadCursorW)
+        103               [NONAME] (forwarded to USER32.LoadIconW)
+        104               [NONAME] (forwarded to USER32.LoadImageW)
+        105               [NONAME] (forwarded to KERNEL32.LoadLibraryExW)
+        106               [NONAME] (forwarded to USER32.LoadMenuW)
+        107               [NONAME] (forwarded to USER32.LoadStringW)
+        108               [NONAME] (forwarded to USER32.MessageBoxIndirectW)
+        109               [NONAME] (forwarded to USER32.ModifyMenuW)
+        110               [NONAME] (forwarded to GDI32.GetCharWidth32W)
+        111               [NONAME] (forwarded to GDI32.GetCharacterPlacementW)
+        112               [NONAME] (forwarded to KERNEL32.CopyFileW)
+        113               [NONAME] (forwarded to KERNEL32.MoveFileW)
+        114               [NONAME] (forwarded to USER32.OemToCharW)
+        115               [NONAME] (forwarded to KERNEL32.OutputDebugStringW)
+        116               [NONAME] (forwarded to USER32.PeekMessageW)
+        117               [NONAME] (forwarded to USER32.PostMessageW)
+        118               [NONAME] (forwarded to USER32.PostThreadMessageW)
+        119               [NONAME] (forwarded to SHUNIMPL.#448)
+        120      00028170 [NONAME]
+        121      00028190 [NONAME]
+        122               [NONAME] (forwarded to SHUNIMPL.#449)
+        123      000281D0 [NONAME]
+        124      00028290 [NONAME]
+        125      00028270 [NONAME]
+        126      000282C0 [NONAME]
+        127      00028370 [NONAME]
+        128      00028350 [NONAME]
+        129               [NONAME] (forwarded to SHUNIMPL.#450)
+        130      00028390 [NONAME]
+        131               [NONAME] (forwarded to USER32.RegisterClassW)
+        132               [NONAME] (forwarded to USER32.RegisterClipboardFormatW)
+        133               [NONAME] (forwarded to USER32.RegisterWindowMessageW)
+        134               [NONAME] (forwarded to USER32.RemovePropW)
+        135               [NONAME] (forwarded to USER32.SendDlgItemMessageW)
+        136               [NONAME] (forwarded to USER32.SendMessageW)
+        137               [NONAME] (forwarded to KERNEL32.SetCurrentDirectoryW)
+        138               [NONAME] (forwarded to USER32.SetDlgItemTextW)
+        139               [NONAME] (forwarded to USER32.SetMenuItemInfoW)
+        140               [NONAME] (forwarded to USER32.SetPropW)
+        141               [NONAME] (forwarded to USER32.SetWindowLongW)
+        142               [NONAME] (forwarded to USER32.SetWindowsHookExW)
+        143               [NONAME] (forwarded to USER32.SetWindowTextW)
+        144               [NONAME] (forwarded to GDI32.StartDocW)
+        145               [NONAME] (forwarded to USER32.SystemParametersInfoW)
+        146               [NONAME] (forwarded to USER32.TranslateAcceleratorW)
+        147               [NONAME] (forwarded to USER32.UnregisterClassW)
+        148               [NONAME] (forwarded to USER32.VkKeyScanW)
+        149               [NONAME] (forwarded to USER32.WinHelpW)
+        150               [NONAME] (forwarded to USER32.wvsprintfW)
+        159               [NONAME] (forwarded to KERNEL32.CompareStringW)
+        160      0001DB00 [NONAME]
+        161               [NONAME] (forwarded to SHUNIMPL.#472)
+        162      00011E10 [NONAME]
+        165      000085E0 [NONAME]
+        166               [NONAME] (forwarded to SHCORE.#102)
+        167      0000A210 [NONAME]
+        170      00017E80 [NONAME]
+        171               [NONAME] (forwarded to SHUNIMPL.#246)
+        173      0000A6F0 [NONAME]
+        175               [NONAME] (forwarded to SHCORE.#142)
+        177      00024620 [NONAME]
+        178      0000A2F0 [NONAME]
+        179      00009E60 [NONAME]
+        180      00024C80 [NONAME]
+        181      000240F0 [NONAME]
+        182      00023F30 [NONAME]
+        183      00024BF0 [NONAME]
+        186      00024F40 [NONAME]
+        187      00007770 [NONAME]
+        188               [NONAME] (forwarded to SHUNIMPL.#451)
+        189               [NONAME] (forwarded to SHUNIMPL.#452)
+        190      00023780 [NONAME]
+        192      00009D40 [NONAME]
+        193      00008860 [NONAME]
+        194               [NONAME] (forwarded to SHCORE.#160)
+        195      00024540 [NONAME]
+        196               [NONAME] (forwarded to SHUNIMPL.#243)
+        197      00005080 [NONAME]
+        198      00024D90 [NONAME]
+        200      00023CD0 [NONAME]
+        201      00023C10 [NONAME]
+        202      00023B10 [NONAME]
+        205               [NONAME] (forwarded to SHCORE.#124)
+        206               [NONAME] (forwarded to SHCORE.#125)
+        207               [NONAME] (forwarded to SHUNIMPL.#453)
+        208      0000A650 [NONAME]
+        209      00009CF0 [NONAME]
+        210      0000A500 [NONAME]
+        211      00009C50 [NONAME]
+        216               [NONAME] (forwarded to SHCORE.#150)
+        220      00024DF0 [NONAME]
+        221      00024CF0 [NONAME]
+        222               [NONAME] (forwarded to SHUNIMPL.#139)
+        223               [NONAME] (forwarded to SHUNIMPL.#140)
+        224               [NONAME] (forwarded to SHUNIMPL.#141)
+        226               [NONAME] (forwarded to SHUNIMPL.#244)
+        227               [NONAME] (forwarded to SHUNIMPL.#245)
+        228      00033630 [NONAME]
+        229      00033850 [NONAME]
+        230      000336E0 [NONAME]
+        231      000083C0 [NONAME]
+        232      00033790 [NONAME]
+        233      00008410 [NONAME]
+        234      00033530 [NONAME]
+        235      00033560 [NONAME]
+        237      00024C60 [NONAME]
+        238      000250A0 [NONAME]
+        239      000052E0 [NONAME]
+        240      00005D40 [NONAME]
+        241               [NONAME] (forwarded to SHUNIMPL.#142)
+        242               [NONAME] (forwarded to SHUNIMPL.#143)
+        243               [NONAME] (forwarded to SHUNIMPL.#144)
+        244               [NONAME] (forwarded to SHUNIMPL.#145)
+        245               [NONAME] (forwarded to SHUNIMPL.#146)
+        246               [NONAME] (forwarded to SHUNIMPL.#147)
+        247               [NONAME] (forwarded to SHUNIMPL.#148)
+        248               [NONAME] (forwarded to SHUNIMPL.#149)
+        249               [NONAME] (forwarded to SHUNIMPL.#150)
+        250               [NONAME] (forwarded to SHUNIMPL.#152)
+        251               [NONAME] (forwarded to SHUNIMPL.#153)
+        252               [NONAME] (forwarded to SHUNIMPL.#154)
+        253               [NONAME] (forwarded to SHUNIMPL.#155)
+        254               [NONAME] (forwarded to SHUNIMPL.#156)
+        255               [NONAME] (forwarded to SHUNIMPL.#157)
+        257      00023F50 [NONAME]
+        258               [NONAME] (forwarded to SHUNIMPL.#158)
+        259               [NONAME] (forwarded to SHUNIMPL.#159)
+        260               [NONAME] (forwarded to SHCORE.#162)
+        261               [NONAME] (forwarded to SHUNIMPL.#160)
+        262               [NONAME] (forwarded to SHUNIMPL.#161)
+        263      000284B0 [NONAME]
+        264               [NONAME] (forwarded to SHUNIMPL.#162)
+        265      00028490 [NONAME]
+        266      00001AE0 [NONAME]
+        267      00004890 [NONAME]
+        268      00004C80 [NONAME]
+        269      0000A410 [NONAME]
+        271      00001240 [NONAME]
+        272               [NONAME] (forwarded to SHUNIMPL.#163)
+        273               [NONAME] (forwarded to SHUNIMPL.#164)
+        274               [NONAME] (forwarded to SHUNIMPL.#316)
+        275               [NONAME] (forwarded to SHUNIMPL.#317)
+        277               [NONAME] (forwarded to SHUNIMPL.#240)
+        279      00024510 [NONAME]
+        282      00009B20 [NONAME]
+        283      000093A0 [NONAME]
+        284      00009490 [NONAME]
+        285      00027F20 [NONAME]
+        286      00027F50 [NONAME]
+        287      00009300 [NONAME]
+        288      00009410 [NONAME]
+        289               [NONAME] (forwarded to WINMM.PlaySoundW)
+        290               [NONAME] (forwarded to SHUNIMPL.#247)
+        291      00024810 [NONAME]
+        292      00024940 [NONAME]
+        293               [NONAME] (forwarded to SHUNIMPL.#165)
+        294      00032CF0 [NONAME]
+        295      00032DA0 [NONAME]
+        296               [NONAME] (forwarded to SHUNIMPL.#314)
+        297               [NONAME] (forwarded to SHUNIMPL.#315)
+        298               [NONAME] (forwarded to KERNEL32.WritePrivateProfileStringW)
+        299               [NONAME] (forwarded to GDI32.ExtTextOutW)
+        300               [NONAME] (forwarded to GDI32.CreateFontW)
+        301               [NONAME] (forwarded to USER32.DrawTextExW)
+        302               [NONAME] (forwarded to USER32.GetMenuItemInfoW)
+        303               [NONAME] (forwarded to USER32.InsertMenuItemW)
+        304               [NONAME] (forwarded to GDI32.CreateMetaFileW)
+        305               [NONAME] (forwarded to KERNEL32.CreateMutexW)
+        306               [NONAME] (forwarded to KERNEL32.ExpandEnvironmentStringsW)
+        307               [NONAME] (forwarded to KERNEL32.CreateSemaphoreW)
+        308               [NONAME] (forwarded to KERNEL32.IsBadStringPtrW)
+        309               [NONAME] (forwarded to KERNEL32.LoadLibraryW)
+        310               [NONAME] (forwarded to KERNEL32.GetTimeFormatW)
+        311               [NONAME] (forwarded to KERNEL32.GetDateFormatW)
+        312               [NONAME] (forwarded to KERNEL32.GetPrivateProfileStringW)
+        313               [NONAME] (forwarded to SHELL32.SHGetFileInfoW)
+        314               [NONAME] (forwarded to USER32.RegisterClassExW)
+        315               [NONAME] (forwarded to USER32.GetClassInfoExW)
+        316      00005100 [NONAME]
+        317      00008B50 [NONAME]
+        318               [NONAME] (forwarded to SHELL32.DragQueryFileW)
+        319               [NONAME] (forwarded to USER32.FindWindowExW)
+        320               [NONAME] (forwarded to SHUNIMPL.#454)
+        321               [NONAME] (forwarded to SHUNIMPL.#455)
+        322               [NONAME] (forwarded to SHUNIMPL.#456)
+        323               [NONAME] (forwarded to SHUNIMPL.#457)
+        324               [NONAME] (forwarded to SHUNIMPL.#458)
+        325               [NONAME] (forwarded to SHUNIMPL.#459)
+        326               [NONAME] (forwarded to SHUNIMPL.#460)
+        327               [NONAME] (forwarded to SHUNIMPL.#461)
+        328               [NONAME] (forwarded to SHUNIMPL.#462)
+        329               [NONAME] (forwarded to SHUNIMPL.#463)
+        330               [NONAME] (forwarded to SHUNIMPL.#464)
+        331      000280E0 [NONAME]
+        332               [NONAME] (forwarded to USER32.CallMsgFilterW)
+        333               [NONAME] (forwarded to SHELL32.SHBrowseForFolderW)
+        334               [NONAME] (forwarded to SHELL32.SHGetPathFromIDListW)
+        335               [NONAME] (forwarded to SHELL32.ShellExecuteExW)
+        336               [NONAME] (forwarded to SHELL32.SHFileOperationW)
+        337               [NONAME] (forwarded to SHELL32.ExtractIconExW)
+        338               [NONAME] (forwarded to KERNEL32.SetFileAttributesW)
+        339               [NONAME] (forwarded to KERNEL32.GetNumberFormatW)
+        340               [NONAME] (forwarded to USER32.MessageBoxW)
+        341               [NONAME] (forwarded to KERNEL32.FindNextFileW)
+        342      00024290 [NONAME]
+        343               [NONAME] (forwarded to SHUNIMPL.#166)
+        344      0000C690 [NONAME]
+        347      000281B0 [NONAME]
+        348      0001B700 [NONAME]
+        349      00017A60 [NONAME]
+        350      00027DE0 [NONAME]
+        351      00027E00 [NONAME]
+        352      00027E40 [NONAME]
+        355      00023570 [NONAME]
+        356               [NONAME] (forwarded to SHUNIMPL.#167)
+        357               [NONAME] (forwarded to SHELL32.SHGetNewLinkInfoW)
+        358               [NONAME] (forwarded to SHELL32.SHDefExtractIconW)
+        359               [NONAME] (forwarded to KERNEL32.OpenEventW)
+        360               [NONAME] (forwarded to KERNEL32.RemoveDirectoryW)
+        361               [NONAME] (forwarded to KERNEL32.GetShortPathNameW)
+        362               [NONAME] (forwarded to SHUNIMPL.#465)
+        363      000242B0 [NONAME]
+        364      00017980 [NONAME]
+        365      00002F10 [NONAME]
+        366      00028220 [NONAME]
+        367               [NONAME] (forwarded to KERNEL32.WritePrivateProfileStructW)
+        368               [NONAME] (forwarded to KERNEL32.GetPrivateProfileStructW)
+        369               [NONAME] (forwarded to KERNEL32.CreateProcessW)
+        370               [NONAME] (forwarded to SHELL32.ExtractIconW)
+        371               [NONAME] (forwarded to USER32.DdeInitializeW)
+        372               [NONAME] (forwarded to USER32.DdeCreateStringHandleW)
+        373               [NONAME] (forwarded to USER32.DdeQueryStringW)
+        374               [NONAME] (forwarded to SHUNIMPL.#344)
+        375               [NONAME] (forwarded to SHUNIMPL.#345)
+        376               [NONAME] (forwarded to KERNEL32.GetThreadUILanguage)
+        379               [NONAME] (forwarded to SHELL32.Shell_GetCachedImageIndexW)
+        380               [NONAME] (forwarded to SHELL32.Shell_GetCachedImageIndexA)
+        381      00019600 [NONAME]
+        382      00033890 [NONAME]
+        383      00033A90 [NONAME]
+        384      00024D50 [NONAME]
+        385               [NONAME] (forwarded to SHUNIMPL.#338)
+        386               [NONAME] (forwarded to SHUNIMPL.#339)
+        387               [NONAME] (forwarded to SHUNIMPL.#340)
+        389               [NONAME] (forwarded to COMDLG32.GetSaveFileNameW)
+        390               [NONAME] (forwarded to SHUNIMPL.#209)
+        391               [NONAME] (forwarded to MPR.WNetGetLastErrorW)
+        392               [NONAME] (forwarded to USER32.EndDialog)
+        393               [NONAME] (forwarded to USER32.CreateDialogIndirectParamW)
+        394               [NONAME] (forwarded to SHELL32.SHChangeNotify)
+        395               [NONAME] (forwarded to USER32.WinHelpA)
+        396               [NONAME] (forwarded to SHUNIMPL.#320)
+        397               [NONAME] (forwarded to USER32.WinHelpW)
+        398               [NONAME] (forwarded to SHUNIMPL.#321)
+        399      00012010 [NONAME]
+        400      00012030 [NONAME]
+        401               [NONAME] (forwarded to COMDLG32.PageSetupDlgW)
+        402               [NONAME] (forwarded to COMDLG32.PrintDlgW)
+        403               [NONAME] (forwarded to COMDLG32.GetOpenFileNameW)
+        404               [NONAME] (forwarded to SHUNIMPL.#313)
+        405               [NONAME] (forwarded to SHUNIMPL.#466)
+        406               [NONAME] (forwarded to SHUNIMPL.#467)
+        407      00019AE0 [NONAME]
+        408      00019D20 [NONAME]
+        409      00019820 [NONAME]
+        410      00019760 [NONAME]
+        411               [NONAME] (forwarded to SHUNIMPL.#238)
+        412               [NONAME] (forwarded to SHUNIMPL.#239)
+        413      0001BF60 [NONAME]
+        414               [NONAME] (forwarded to SHUNIMPL.#323)
+        415               [NONAME] (forwarded to SHUNIMPL.#322)
+        416               [NONAME] (forwarded to SHUNIMPL.#325)
+        417               [NONAME] (forwarded to SHUNIMPL.#324)
+        418               [NONAME] (forwarded to SHUNIMPL.#468)
+        419               [NONAME] (forwarded to SHELL32.SHFlushSFCache)
+        420               [NONAME] (forwarded to SHUNIMPL.#241)
+        421               [NONAME] (forwarded to SHUNIMPL.#242)
+        422               [NONAME] (forwarded to SHUNIMPL.#168)
+        423               [NONAME] (forwarded to SHUNIMPL.#169)
+        424               [NONAME] (forwarded to SHUNIMPL.#170)
+        425               [NONAME] (forwarded to USER32.DeleteMenu)
+        426               [NONAME] (forwarded to USER32.DestroyMenu)
+        427               [NONAME] (forwarded to USER32.TrackPopupMenu)
+        428               [NONAME] (forwarded to USER32.TrackPopupMenuEx)
+        429               [NONAME] (forwarded to SHUNIMPL.#331)
+        430               [NONAME] (forwarded to SHUNIMPL.#332)
+        431               [NONAME] (forwarded to SHUNIMPL.#333)
+        434               [NONAME] (forwarded to USER32.SendMessageTimeoutW)
+        435      00023470 [NONAME]
+        436      00023490 [NONAME]
+        438      0001C200 [NONAME]
+        439               [NONAME] (forwarded to SHCORE.#126)
+        440               [NONAME] (forwarded to SHUNIMPL.#469)
+        441               [NONAME] (forwarded to SHUNIMPL.#470)
+        442               [NONAME] (forwarded to KERNEL32.GetEnvironmentVariableW)
+        443               [NONAME] (forwarded to KERNEL32.GetSystemWindowsDirectoryA)
+        444               [NONAME] (forwarded to KERNEL32.GetSystemWindowsDirectoryW)
+        445      000167D0 [NONAME]
+        447      000160E0 [NONAME]
+        448      0000F7D0 [NONAME]
+        449      00016120 [NONAME]
+        450      0001AA40 [NONAME]
+        451      000160B0 [NONAME]
+        452      0001AA10 [NONAME]
+        453      00016080 [NONAME]
+        454      0000F7A0 [NONAME]
+        455      000118C0 [NONAME]
+        456      0000F140 [NONAME]
+        457               [NONAME] (forwarded to KERNEL32.GetLongPathNameW)
+        458               [NONAME] (forwarded to KERNEL32.GetLongPathNameA)
+        459      00011AF0 [NONAME]
+        460      00001460 [NONAME]
+        461               [NONAME] (forwarded to SHUNIMPL.#428)
+        463      000179B0 [NONAME]
+        464      00006CE0 [NONAME]
+        465      00017550 [NONAME]
+        466      00002430 [NONAME]
+        468      0001A330 [NONAME]
+        469      0001A3C0 [NONAME]
+        470               [NONAME] (forwarded to SHUNIMPL.#346)
+        471      000045F0 [NONAME]
+        472      000296B0 [NONAME]
+        473               [NONAME] (forwarded to SHUNIMPL.#171)
+        474               [NONAME] (forwarded to SHUNIMPL.#172)
+        475               [NONAME] (forwarded to SHUNIMPL.#211)
+        476               [NONAME] (forwarded to SHCORE.#193)
+        477      00029920 [NONAME]
+        478      00005700 [NONAME]
+        479      00005650 [NONAME]
+        480               [NONAME] (forwarded to SHUNIMPL.#341)
+        481      0000FB40 [NONAME]
+        482               [NONAME] (forwarded to SHUNIMPL.#369)
+        483               [NONAME] (forwarded to SHUNIMPL.#370)
+        484      00009830 [NONAME]
+        485               [NONAME] (forwarded to SHCORE.#103)
+        486               [NONAME] (forwarded to SHCORE.#104)
+        488               [NONAME] (forwarded to SHUNIMPL.#347)
+        489               [NONAME] (forwarded to KERNEL32.GlobalAddAtomW)
+        490               [NONAME] (forwarded to KERNEL32.GlobalFindAtomW)
+        491      00024270 [NONAME]
+        492               [NONAME] (forwarded to SHUNIMPL.#357)
+        493      00029B20 [NONAME]
+        494      00029AC0 [NONAME]
+        495      00029CE0 [NONAME]
+        496      000299E0 [NONAME]
+        497      00029C00 [NONAME]
+        498               [NONAME] (forwarded to SHUNIMPL.#348)
+        499      00029B80 [NONAME]
+        500               [NONAME] (forwarded to SHCORE.#210)
+        501               [NONAME] (forwarded to SHCORE.#211)
+        502               [NONAME] (forwarded to SHCORE.#212)
+        503               [NONAME] (forwarded to SHCORE.#213)
+        504      0001D630 [NONAME]
+        505      000299C0 [NONAME]
+        506      00029BE0 [NONAME]
+        507      000299A0 [NONAME]
+        508      00029BC0 [NONAME]
+        509      00008660 [NONAME]
+        510      00028410 [NONAME]
+        511      00002290 [NONAME]
+        514               [NONAME] (forwarded to SHCORE.#140)
+        516      00003D00 [NONAME]
+        517      00003DA0 [NONAME]
+        518      00025100 [NONAME]
+        519      0000A000 [NONAME]
+        520      00029980 [NONAME]
+        521      00029A20 [NONAME]
+        522      00029C40 [NONAME]
+        523      00029A80 [NONAME]
+        524      00029CA0 [NONAME]
+        525      00029A40 [NONAME]
+        526      00029C60 [NONAME]
+        527      00029AA0 [NONAME]
+        528      00029CC0 [NONAME]
+        529      00029A00 [NONAME]
+        530      00029C20 [NONAME]
+        531      00029B00 [NONAME]
+        532      00029D00 [NONAME]
+        533      0000FF20 [NONAME]
+        534      00029960 [NONAME]
+        535      00029940 [NONAME]
+        536      000089D0 [NONAME]
+        537      00023F20 [NONAME]
+        538      00023850 [NONAME]
+        539      00023900 [NONAME]
+        540      000242E0 [NONAME]
+        541      00024470 [NONAME]
+        542      000234B0 [NONAME]
+        543               [NONAME] (forwarded to GDI32.CreateColorSpaceW)
+        544      00005890 [NONAME]
+        545      00024110 [NONAME]
+        546      000234C0 [NONAME]
+        547               [NONAME] (forwarded to SHUNIMPL.#173)
+        548      000066E0 [NONAME]
+        549      00029010 [NONAME]
+        550               [NONAME] (forwarded to SHUNIMPL.#174)
+        551               [NONAME] (forwarded to SHUNIMPL.#175)
+        552               [NONAME] (forwarded to SHUNIMPL.#176)
+        554               [NONAME] (forwarded to SHUNIMPL.#177)
+        555               [NONAME] (forwarded to SHUNIMPL.#178)
+        556               [NONAME] (forwarded to SHUNIMPL.#179)
+        557               [NONAME] (forwarded to SHUNIMPL.#180)
+        558               [NONAME] (forwarded to SHUNIMPL.#181)
+        559               [NONAME] (forwarded to SHUNIMPL.#443)
+        560               [NONAME] (forwarded to SHCORE.#191)
+        561      00019620 [NONAME]
+        562      00011540 [NONAME]
+        563               [NONAME] (forwarded to SHUNIMPL.#167)
+        564               [NONAME] (forwarded to SHUNIMPL.#182)
+        565               [NONAME] (forwarded to SHUNIMPL.#183)
+        566               [NONAME] (forwarded to SHUNIMPL.#180)
+        571      00024360 [NONAME]
+        572      00001550 [NONAME]
+        573               [NONAME] (forwarded to SHUNIMPL.#349)
+        574               [NONAME] (forwarded to SHUNIMPL.#350)
+        575      00023A10 [NONAME]
+        576               [NONAME] (forwarded to SHCORE.#127)
+        577      00029B40 [NONAME]
+        578      00029D20 [NONAME]
+        580      00026350 [NONAME]
+        581      00007A30 [NONAME]
+        582      00026890 [NONAME]
+        583      000265A0 [NONAME]
+        598               [NONAME] (forwarded to SHUNIMPL.#210)
+        599               [NONAME] (forwarded to SHCORE.#152)
+        600               [NONAME] (forwarded to SHCORE.#153)
+        601               [NONAME] (forwarded to SHUNIMPL.#352)
+        602               [NONAME] (forwarded to SHUNIMPL.#351)
+        603               [NONAME] (forwarded to SHUNIMPL.#353)
+        604               [NONAME] (forwarded to SHUNIMPL.#354)
+        605               [NONAME] (forwarded to SHUNIMPL.#355)
+        606               [NONAME] (forwarded to SHUNIMPL.#356)
+        611               [NONAME] (forwarded to SHCORE.#141)
+        613      00029C80 [NONAME]
+        614      00029A60 [NONAME]
+        616      00028C20 [NONAME]
+        617      000014A0 [NONAME]
+        618               [NONAME] (forwarded to SHCORE.#190)
+        619               [NONAME] (forwarded to SHCORE.#192)
+        621      00032520 [NONAME]
+        626      000295C0 [NONAME]
+        627               [NONAME] (forwarded to SHCORE.#110)
+        628               [NONAME] (forwarded to SHCORE.#109)
+        631      0000C6B0 [NONAME]
+        632               [NONAME] (forwarded to SHCORE.#130)
+        633               [NONAME] (forwarded to SHCORE.#131)
+        634               [NONAME] (forwarded to SHCORE.#132)
+        635      00003E40 [NONAME]
+        636      00029B60 [NONAME]
+        637      00029D40 [NONAME]
+        638      0000FCB0 [NONAME]
+        639      00024320 [NONAME]
+        640      000244C0 [NONAME]
+        641      000283F0 [NONAME]
+        642               [NONAME] (forwarded to SHUNIMPL.#442)
+        643      0001B430 [NONAME]
+        644               [NONAME] (forwarded to SHCORE.#107)
+        645               [NONAME] (forwarded to SHCORE.#108)
+        646               [NONAME] (forwarded to SHCORE.#101)
+        647               [NONAME] (forwarded to SHCORE.#100)
+        648               [NONAME] (forwarded to SHCORE.#161)
+
+  Summary
+
+        2000 .data
+        1000 .didat
+        3000 .pdata
+       21000 .rdata
+        1000 .reloc
+        1000 .rsrc
+       35000 .text

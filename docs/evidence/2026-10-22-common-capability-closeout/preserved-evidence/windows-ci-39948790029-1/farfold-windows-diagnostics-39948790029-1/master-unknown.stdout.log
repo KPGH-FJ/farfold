@@ -1,0 +1,13 @@
+
+running 1 test
+test pty::windows_tests::terminal_master_drop_retains_bounded_unknown_isolated ... 
+running 1 test
+test pty::windows_tests::terminal_master_drop_retains_bounded_unknown_child ... FAILED
+
+failures:
+
+failures:
+    pty::windows_tests::terminal_master_drop_retains_bounded_unknown_isolated
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 20.02s
+

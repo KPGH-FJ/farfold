@@ -1,0 +1,10 @@
+
+running 5 tests
+test worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_attribute_change_after_capture_is_still_rejected ... ok
+test worktrees::material_scan::windows::entry_pair_tests::actual_same_identity_metadata_change_after_capture_is_still_rejected ... ok
+test worktrees::material_scan::windows::entry_pair_tests::already_cancelled_end_fence_cannot_publish_a_stable_version ... ok
+test worktrees::material_scan::windows::entry_pair_tests::real_enumeration_snapshot_can_precede_a_stable_current_handle_version ... ok
+test worktrees::material_scan::windows::entry_pair_tests::same_name_and_length_replacement_cannot_pass_the_full_identity_fence ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2319 filtered out; finished in 0.02s
+

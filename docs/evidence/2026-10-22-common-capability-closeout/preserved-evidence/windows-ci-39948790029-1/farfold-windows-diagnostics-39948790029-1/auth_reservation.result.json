@@ -1,0 +1,26 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "auth::tests::windows_login_child_keeps_program_reserved_until_exit_isolated",
+  "startedAtUtc": "2026-10-23T12:04:49.2323557Z",
+  "finishedAtUtc": "2026-10-23T12:04:49.5358452Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "fixtureSettled": true,
+  "observationComplete": true,
+  "cursorPhases": [
+    {
+      "phase": "auth-reservation.fixture.complete",
+      "replyEnabled": true,
+      "elapsedMillis": 163,
+      "bytes": 106,
+      "queries": 1,
+      "replies": 1,
+      "pending": 0,
+      "failed": false,
+      "cursorCoverage": "observed"
+    }
+  ],
+  "stdoutSha256": "0FE68D0ABA155D7E48968E06303BDF691F3842228DEE5BA4FC753679F04CFF50",
+  "stderrSha256": "70949F90CA2AB1D15D6860970BD05AC9B21F9FAFC81D4E3F95F82BC1C61C07AD"
+}

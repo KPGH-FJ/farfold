@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

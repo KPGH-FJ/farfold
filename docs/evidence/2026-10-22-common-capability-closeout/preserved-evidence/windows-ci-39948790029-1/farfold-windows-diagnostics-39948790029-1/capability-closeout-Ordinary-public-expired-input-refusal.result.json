@@ -1,0 +1,37 @@
+{
+  "group": "public-expired-input-refusal",
+  "filter": "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent",
+  "category": "changedPublicAdmissionControl",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:11.1854638Z",
+  "finishedAtUtc": "2026-10-23T12:09:11.2108662Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "80B2131BA72D236320377C069B9BBE06B41DBEC952C617D955F1952A6F3B4A92",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

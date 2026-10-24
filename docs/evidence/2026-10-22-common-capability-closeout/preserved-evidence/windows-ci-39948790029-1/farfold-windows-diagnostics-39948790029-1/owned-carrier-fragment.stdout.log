@@ -1,0 +1,12 @@
+
+running 7 tests
+test file_access::material_carrier_fragment::tests::actual_file_spool_preserves_all_bytes_and_unpaired_utf16_and_full128 ... ok
+test file_access::material_carrier_fragment::tests::actual_input_extent_or_hash_mismatch_never_emits_completion ... ok
+test file_access::material_carrier_fragment::tests::actual_partial_output_failure_keeps_incomplete_bytes_and_original_error ... ok
+test file_access::material_carrier_fragment::tests::cancelled_or_insufficient_shared_budget_does_not_become_complete ... ok
+test file_access::material_carrier_fragment::tests::data_metadata_footer_mutation_and_trailing_bytes_are_not_accepted ... ok
+test file_access::material_carrier_fragment::tests::invalid_namespace_spelling_and_zero_identity_are_refused_before_output ... ok
+test file_access::material_carrier_fragment::tests::verified_record_retains_its_logical_metadata_reservation_until_drop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2317 filtered out; finished in 0.12s
+

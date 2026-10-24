@@ -1,0 +1,20 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "file_access::windows::material_restore::owned_link::snapshot::tests::owned_link_transition_accepts_only_allocation_and_strict_checks_stay_strict",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "expectedTests": 1,
+  "startedAtUtc": "2026-10-23T12:04:45.6051465Z",
+  "finishedAtUtc": "2026-10-23T12:04:45.6305363Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "caseCount": 1,
+  "exactExpectedCase": true,
+  "exactOnePassed": true,
+  "inputsStable": true,
+  "observationComplete": true,
+  "productOrAllWindowsComplete": false,
+  "stdoutSha256": "85D84819546FE005BAD81A1E88EA179EC495E46E25F8755DE5A1F5BDEDC9CBCE",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

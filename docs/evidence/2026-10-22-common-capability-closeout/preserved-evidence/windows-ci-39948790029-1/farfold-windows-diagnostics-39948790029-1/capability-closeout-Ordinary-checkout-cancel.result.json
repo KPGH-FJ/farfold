@@ -1,0 +1,37 @@
+{
+  "group": "checkout-cancel",
+  "filter": "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files",
+  "category": "ownedNativeDestination",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:53.0209117Z",
+  "finishedAtUtc": "2026-10-23T12:08:53.0569941Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "FD9462BBEDF7ADF2121D295BC3D92858DF14AFBBA64208DAB59643AAE8D24F52",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

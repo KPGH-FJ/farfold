@@ -1,0 +1,10 @@
+FARFOLD_CONPTY_BEGIN TerminalMasterBoundedUnknown
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_TERMINAL_BOUNDED_UNKNOWN {"case":"TerminalMasterBoundedUnknown","marker_observed":false,"cursor_queries":1,"cursor_replies":0,"cursor_pending":0,"cursor_failed":false,"close_returned_error":true,"close_elapsed_millis":5002,"registry_retained":true,"registry_reference_count":1,"exit_receipt_absent":true,"exit_frames_observed":0,"master_transferred":true,"activity_blocked":true,"stop_requested":true,"group_owner_known":true,"group_inactive":true,"process_not_running":true}
+FARFOLD_TERMINAL_BOUNDED_UNKNOWN_PARK TerminalMasterBoundedUnknown
+FARFOLD_CONPTY_BOUNDED_UNKNOWN_OWNER {"case":"TerminalMasterBoundedUnknown","terminated":true,"deadlineReached":true,"cancelRequested":false,"invalidPipeObserved":false,"inputFailedObserved":false,"tryWaitErrorObserved":false,"stdinWrittenAndClosed":true,"stdoutEOF":true,"stderrEOF":true,"stdoutFailed":false,"stderrFailed":false,"stdoutOverflow":false,"stderrOverflow":false,"childReaped":true,"directJobInactive":true,"childAliveBeforeDeadlineKill":true}
+
+thread 'pty::windows_tests::terminal_master_drop_retains_bounded_unknown_isolated' (6536) panicked at src\platform_tests\windows_conpty.rs:325:5:
+owned case TerminalMasterBoundedUnknown exceeded its budget or output/input failed; child was terminated, not successful
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

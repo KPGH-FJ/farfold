@@ -1,0 +1,72 @@
+{
+  "createdAt": "2026-10-23T11:56:49.552579+00:00",
+  "scope": "Independent non-author review of Root PNG planes comparator delta only; no production source authorship claimed, no Cargo/CI/PE execution.",
+  "conclusion": "No blocker found in the selected change. Narrow PNG resource field normalization is supported by the original artifact and retained identity/content checks.",
+  "files": {
+    ".github/scripts/windows-pe-resource-inspection.py": "62245b4b1577fc8e78b845b25887c0f6d57d1db8ce432649c1b9209bda1c09cc",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/pe-png-planes-repair-r1/windows-pe-resource-inspection.before.py": "ca2e185f048face734e9616c42e4d34c57fc371e2f780c1a8b061eed6753be25",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/pe-png-planes-repair-r1/test_png_icon.py": "6984e3d71a7569e9e3fb227c79cb71c3694414151d005a879dc10c046920e69f",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/pe-png-planes-repair-r1/independent_boundary_controls.py": "f7b92c1ded2023a58a82cd51b60d4e1c092d72f18e446a06aca4779b9282ba35"
+  },
+  "exactDelta": {
+    "baselineMatchesHEAD": true,
+    "inverseOnlyKnownFunctionsAndZlibImportRestoresBaseline": true,
+    "toolChunk": "0f6b09",
+    "newFunctions": ["resource_icon_fields", "icon_resources_match"],
+    "changedOldFunctions": ["icon_entries", "main"],
+    "PEReaderIdentityManifestVersionRCUnchanged": true
+  },
+  "findings": [
+    "Only complete recognized PNG signature plus bounded chunk framing/CRC, first and unique IHDR, exact ICO dimensions, RGBA8 with compression/filter0, supported interlace0/1, at least one nonempty IDAT and exact final IEND can normalize. Unknown ancillary/critical chunks and duplicate IHDR are refused in this deliberately narrow source format.",
+    "Source planes must be0 or1 and depth32; normalized expectation is resource planes1. Wrong group planes (including0 for a proven PNG or2), other fields, sizes, same-language ID resolution and whole payload SHA remain checked.",
+    "Non-PNG does not receive normalization. Its previous literal field comparison remains unchanged; this delta does not claim comprehensive validation of every historical DIB format.",
+    "The extracted comparison keeps original group32512, count/order and exactly one same-language RT_ICON check. PE parser still computes each SHA from held original bytes, so changing resource data cannot preserve a fabricated digest in production.",
+    "New resourceFields is derived alongside and does not overwrite raw sourceIconFrames.fields, preserving the recorded0->1 distinction.",
+    "No source ICO, PE bytes, manifest/version expectations, Windows driver result, test deadline, or original actual false receipt is modified."
+  ],
+  "evidence": {
+    "priorActualAudit": {
+      "path": "evidence:e-a05f33bc2b1e959df765",
+      "sha256": "0c58d22c375fa5c48badea0cf0ef781ceffa0a4a840068f67a0df9e6e4dbffe4"
+    },
+    "root12Controls": {
+      "testSourceRead": true,
+      "methodCount": 12,
+      "executionReportedByRoot": {
+        "naturalExit": 0,
+        "toolChunk": "492e39"
+      },
+      "coverage": "Original retained seven-frame old-field mismatch/new full-comparator success; planes2, other group fields, changed bytes/SHA, length, ID/language, missing/duplicate resource, malformed PNG CRC/extents/end/dimensions/depth, non-PNG literal behavior and canonical source1. Original old-mismatch assertion and original actual summary=false retained.",
+      "notIndependentRerun": true
+    },
+    "independentSix": {
+      "naturalExit": 0,
+      "toolChunk": "a1d587",
+      "count": 6,
+      "coverage": [
+        "CRC-valid duplicate IHDR rejected",
+        "CRC-valid unknown ancillary chunk unsupported",
+        "missing or empty IDAT rejected",
+        "early IEND rejected",
+        "two consecutive valid IDAT chunks accepted by the bounded format helper",
+        "non-PNG cannot gain plane normalization"
+      ],
+      "level": "Output-only Python parser/helper controls over retained bytes. No image decompression/rendering or PE execution. Full selected-resource equality is separately covered by Root12 and prior raw audit."
+    },
+    "sourceHashBeforeAndAfterIndependentControlsIdentical": true,
+    "reviewToolErrorRetained": {
+      "chunk": "35b08b",
+      "detail": "Reviewer inverse-byte analysis initially expected one too many blank lines and asserted before result; corrected whitespace accounting in0f6b09 then exact inverse matched. Not a project/test failure."
+    }
+  },
+  "bounds": [
+    "PNG validation here establishes bounded structure, header semantics and CRC, not zlib image decode/renderability. Full PNG image bytes remain exact to the selected source ICO.",
+    "This does not independently execute or rehash full Windows PE files; saved resource bytes and original checked source/PE receipts remain the evidence.",
+    "Whole run39945643500 original job/static-check failure remains historical fact; pure corrected comparison is a distinct later evidence result."
+  ],
+  "reviewerWrites": [
+    "evidence:e-6b48f32f6654a98c7f28",
+    "evidence:e-9a7b3bb95e412bbe35f6"
+  ],
+  "trackedSourceEditedByReviewer": false
+}

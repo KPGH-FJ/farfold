@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T09:57:19.132586+00:00",
+  "result": "completedSelectedRealWebKitConsumptionObservation",
+  "sourceHead": "6f8a3e8fb9e759f480d0f738ec247aa3a35e47f0",
+  "evidence": {
+    "verification": {
+      "path": "evidence:e-dad4328af782c0374d0f",
+      "sha256": "f49349c1c989cd833a533a5e41a0e6eb23eb4b30b15618ee781cf3ba4c316029",
+      "bytes": 340386
+    },
+    "execution": {
+      "path": "evidence:e-ca6791712ff0eecfbb41",
+      "sha256": "f1f9a75fd72bcc460c6b63b8735b3612e35371d4f8aa94b9b797b29ac7fb6b5f",
+      "bytes": 161171
+    },
+    "preparation": {
+      "path": "evidence:e-9906d2eaa6f3cf8ec481",
+      "sha256": "a83fbd4fcff58e46ac6a9ba161f694e9c05d352ca6e4a17db8494c95e356d73b",
+      "bytes": 162130
+    },
+    "runner": {
+      "path": "evidence:e-3217b36fc3e323f89c49",
+      "sha256": "37958b5e4599d667e0b52a99a51faed03829ff755bef9509265d1832b76f3b86",
+      "bytes": 6583
+    },
+    "fixture": {
+      "path": "evidence:e-451b42b361ecf6941174",
+      "sha256": "2914ca3f65e71d28b51f8e1ef38a575c56dc1ddfcf8f9a9083dddbab8c414406",
+      "bytes": 3818
+    },
+    "driver": {
+      "path": "evidence:e-f04f0165fc6965535b87",
+      "sha256": "af80fe80bb813f304284d532fd4f70a636a8d18e8744e69bc4d8ba04a2f07fce",
+      "bytes": 9851
+    }
+  },
+  "actualExecution": {
+    "session": 79345,
+    "completionChunk": "673e31",
+    "exitCode": 0,
+    "elapsedSeconds": 2.8398899999999996,
+    "timedOut": false,
+    "signals": [],
+    "sourceInputsStable": true,
+    "runtimePinsStable": true,
+    "sourceFiles": 1393,
+    "pageContextBrowserServerClosed": true,
+    "browserOriginalExitCode": 0,
+    "originalNodeGroupGone": true,
+    "originalBrowserGroupRemaining": [],
+    "port1607OpenAfterClose": false
+  },
+  "observations": {
+    "inputPayloadCharacters": 16384,
+    "inputCompactSerializedBytesAfterMeasurement": 16501,
+    "originalSourceSha256AfterMeasurement": "52fcb5e81228b6d1f90d7e1625a921cd0703826bbf9ac2dce1a6cb44f062a44b",
+    "iterationsSameBrowser": 3,
+    "sampledEndpoints": 14,
+    "eachExplicitOpenCumulativeSerializations": [1, 2, 3],
+    "fullInputDomCharsWhenOpen": 16535,
+    "fullInputDomCharsAfterEachCollapse": [0, 0, 0],
+    "finalUnmountDomNodes": 0,
+    "originalInputIdentityAtEveryPoint": true,
+    "sourceIntegrityAfterMeasurement": true,
+    "ipcCalls": 0,
+    "outsidePageRequests": 0,
+    "clickToSampleMs": {
+      "sampledMinimum": 28,
+      "sampledMaximum": 96,
+      "meaning": "event capture to two-animation-frame sampled DOM after automation wait; includes coordination/observer overhead, not paint or interaction latency percentile"
+    },
+    "perProcessRssEndpoints": [
+      {
+        "pid": 75770,
+        "command": "<private-mac-home:00d2e9ab4d6a>",
+        "firstRssKiB": 1105808,
+        "lastRssKiB": 1142400
+      },
+      {
+        "pid": 75790,
+        "command": "bash",
+        "firstRssKiB": 1856,
+        "lastRssKiB": 1856
+      },
+      {
+        "pid": 75796,
+        "command": "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/Playwright.app/Contents/MacOS/Playwright",
+        "firstRssKiB": 108624,
+        "lastRssKiB": 109904
+      }
+    ]
+  },
+  "limits": [
+    "Only the owned16KiB source and three DOM lifecycles; not large-history/multiAgent/long-running or whole ARCH49/P13 acceptance.",
+    "No Farfold.app/Agent process, request, native IPC/ACK, decoding or real history load occurred.",
+    "RSS only covers the exact observed held Node/browser process groups. No renderer identity or total renderer/decoded-memory RSS was established. No sum of shared RSS, peak memory, freed allocations or savings is claimed.",
+    "Full original history/model input intentionally remains owned after DOM retirement. No forced GC or memory-return assertion.",
+    "No full input JSON copy is precomputed or retained by the observer during measurement; source integrity serialization occurs after all DOM/RSS points."
+  ],
+  "firstExecutionPreserved": {
+    "verification": {
+      "path": "evidence:e-0ff2c4e2875bdf7f52e6",
+      "sha256": "35413941ec21bf111bb2741b16bc50d29935fd9f3fd1e8e3aed12e608d274369",
+      "bytes": 324013
+    },
+    "execution": {
+      "path": "evidence:e-3713d54797200872f344",
+      "sha256": "5c63e29ee51360efeac89b624ecc9cd2d26dfac55ab2fd57899c34482731a740",
+      "bytes": 161163
+    },
+    "naturalExit": 1,
+    "cause": "measurement wait selector matched ordinary command/cwd and full input (3 elements), not a product or environment failure",
+    "r2Delta": "same sample, three cycles, budget, component and fixture bytes; only namespace and two exact detail-body wait selectors changed; inverse exact checked before run"
+  },
+  "next": "Formal native ACK/resource observations remain separate, using existing delivery snapshot only when a real event source is available. Do not expand this observation into P13-wide long-load acceptance."
+}

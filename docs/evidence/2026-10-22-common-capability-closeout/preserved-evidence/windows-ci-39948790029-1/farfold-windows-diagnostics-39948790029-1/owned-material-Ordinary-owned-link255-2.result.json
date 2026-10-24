@@ -1,0 +1,29 @@
+{
+  "group": "owned-link255-2",
+  "filter": "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result",
+  "category": "ordinaryOwnedNtfs255WithOriginalResultAndLimitedCompanion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:11.8535184Z",
+  "finishedAtUtc": "2026-10-23T12:08:11.8999281Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "4EB3191A47FECABEBBD2853FB88DBAC34CDB97DC79B193E9B654DA97F1E93BA2",
+  "stderrSha256": "26F61E12F69F0DAC047F953C6C81CB6A5366C110C6DD5F20B3603D64F872C995"
+}

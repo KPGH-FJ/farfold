@@ -1,0 +1,27 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "mode": "GitSettlement",
+  "name": "original-deadline",
+  "filter": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+  "exactFilter": true,
+  "explicitIgnored": false,
+  "startedAtUtc": "2026-10-23T13:30:30.7807318Z",
+  "finishedAtUtc": "2026-10-23T13:30:33.8406986Z",
+  "invocationReturned": true,
+  "terminationRequestedByRunner": false,
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "outcome": "ok"
+    }
+  ],
+  "namesExact": true,
+  "expectedPhaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+  "phaseMarkerMatches": 1,
+  "exactPassed": true,
+  "stdoutSha256": "548525F6BE9198B5FCB9394A434845EC21FABFCAB9969FA813AE89EDC47C65F4",
+  "stderrSha256": "8AD570426FDD9854611694A15DC65B74787C769C3D4858D92028BA243050417E"
+}

@@ -1,0 +1,15 @@
+--- post-ui/retention.py
++++ formal-delivery-r2/post-ui/retention.py
+@@ -14,9 +14,9 @@
+ 
+ sys.dont_write_bytecode = True
+ ROOT = Path('<private-mac-home:a2369e920572>')
+-PREP = ROOT / 'output/2026-10-22-common-capability-closeout/post-ui'
+-OUT = ROOT / 'output/2026-10-22-common-capability-closeout/post-ui/capture'
+-SOURCE_COMMIT = '420e5a3c0e7ab4889ba1b5e1d7b505bbe936e331'
++PREP = ROOT / 'output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui'
++OUT = ROOT / 'output/2026-10-22-common-capability-closeout/formal-delivery-r2/post-ui/capture'
++SOURCE_COMMIT = '18470c63c915a4865b3d0a4ebd4724d5bd91e2a2'
+ SOURCE = Path('<private-mac-home:8fcded45688e> Support/ai.farfold.desktop')
+ NAMES = ('farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm')
+ SHARED = {

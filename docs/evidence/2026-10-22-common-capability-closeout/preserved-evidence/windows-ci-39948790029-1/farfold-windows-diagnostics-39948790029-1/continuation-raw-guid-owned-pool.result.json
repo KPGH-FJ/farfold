@@ -1,0 +1,32 @@
+{
+  "group": "raw-guid-owned-pool",
+  "filter": "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool",
+  "category": "ownedRawGuidLogicalPool",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:00.1954414Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.2144083Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "1D635414F3357E30E2F54307C9535F6627492FD95970BF8E5893170BD783938C",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

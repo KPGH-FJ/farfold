@@ -1,0 +1,2333 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T12:45:24.265844+00:00",
+  "scope": "Independent local raw-evidence audit only; no CI, executable, Cargo, App, network, or tracked-file action.",
+  "requested": {
+    "runId": "39948790029",
+    "attempt": 1,
+    "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555"
+  },
+  "readerReports": [
+    {
+      "path": "evidence:e-1bb7ef8998b59c048d79",
+      "sha256": "f5b5baee82a2ed7e2846a940d6d01a73dd8888bea4d0800632ac766e5f892da6"
+    },
+    {
+      "path": "evidence:e-cc93023172e48ce2fb2b",
+      "sha256": "0bab9f02c9999130f5d84b22c2be45a2a2ab5e51463cb846dea4f3f701f67c40"
+    },
+    {
+      "path": "evidence:e-deafd09b4c139551f9d6",
+      "sha256": "a2ff7de566b35c2a0050217fb0a4d57c5eacbd3399d74107368353e9ce6a6533"
+    }
+  ],
+  "artifactFilesVerifiedAgainstOriginalDownloadReceipt": 900,
+  "buildIdentity": {
+    "sourceHead": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+    "testBinary": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe",
+    "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+    "fixture": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\examples\\windows_process_fixture.exe",
+    "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+    "testBuildExit": 0,
+    "fixtureBuildExit": 0
+  },
+  "sourceBlobsReadAtActualHead": {
+    ".github/scripts/windows-capability-closeout.ps1": "1ecc3ce7e1411114bf022f0e1bada7ef8ba6b2c141067e3bfcdfc38522e99b54",
+    ".github/workflows/windows-diagnostics.yml": "e813c5e2db779b6782974445ddac8d52579883bd25adacb7d99a072f37eb3917",
+    "src-tauri/examples/windows_process_fixture/manual_privileges.rs": "4d49ecef3d49f0ace27274c058443f8a66f617d1d926077845034c0465d4af9d",
+    "src-tauri/src/worktrees/remove_native_windows_tests.rs": "691892eedc1e19aafcd1498f927cefc92afa60126370a6d5a05c9e11da737aef",
+    "src-tauri/src/worktrees/recovery_public_windows_tests.rs": "58ba414ddfbec102df4c0d9039cd739cd479997611b6db74dcff04518ad93971",
+    "src-tauri/src/worktrees/recovery_cold_windows_tests.rs": "850e5f6bfd9e7e3db9ad0c46f5852c4ccb215c326ec4949095ff6ca971e464c3",
+    "src-tauri/src/worktrees/git_source_checkout_windows_tests.rs": "879386f1c8e033d79cec16e4ba3254c617269ce058930c656500c674785511b1",
+    "src-tauri/src/worktrees/git_source_checkout_null_attributes_windows_tests.rs": "2728371f4c9d19b86b6249e6a35f0efec0d14938d932e0c101eee5dd5f52f2d6"
+  },
+  "current140": {
+    "ordinaryPassed": 123,
+    "manualPassed": 17,
+    "failed": 0,
+    "missing": 0,
+    "allExactRawReceiptsVerified": true
+  },
+  "separateLegacy27": {
+    "passed": 27,
+    "failed": 0,
+    "sameExact27FqnsAsDefaultTokenFailures": true
+  },
+  "manualPermissionEvidence": {
+    "count": 44,
+    "childSeSecurityOnly": true,
+    "distinctChildTokens": true,
+    "parentTablesUnchanged": true,
+    "backupRestoreNotEnabled": true,
+    "allNaturalCompletedNotTimedOut": true,
+    "cases": [
+      {
+        "mode": "FullSecurityManual",
+        "case": "cold-reopen",
+        "source": "capability-closeout-FullSecurityManual-cold-reopen.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "cold-tamper",
+        "source": "capability-closeout-FullSecurityManual-cold-tamper.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "cold-selected-target",
+        "source": "capability-closeout-FullSecurityManual-cold-selected-target.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "public-recover-refusals",
+        "source": "capability-closeout-FullSecurityManual-public-recover-refusals.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "archive-native-identity",
+        "source": "capability-closeout-FullSecurityManual-archive-native-identity.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "public-create-archive-restore",
+        "source": "capability-closeout-FullSecurityManual-public-create-archive-restore.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "public-retained-cold-recover",
+        "source": "capability-closeout-FullSecurityManual-public-retained-cold-recover.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "delete-owner-native-facets",
+        "source": "capability-closeout-FullSecurityManual-delete-owner-native-facets.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "mixed-source-node-capacity",
+        "source": "capability-closeout-FullSecurityManual-mixed-source-node-capacity.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-ads",
+        "source": "capability-closeout-FullSecurityManual-remove-late-ads.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-ea",
+        "source": "capability-closeout-FullSecurityManual-remove-late-ea.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-same-size-ads",
+        "source": "capability-closeout-FullSecurityManual-remove-late-same-size-ads.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-security",
+        "source": "capability-closeout-FullSecurityManual-remove-late-security.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-member",
+        "source": "capability-closeout-FullSecurityManual-remove-late-member.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "remove-late-cancel",
+        "source": "capability-closeout-FullSecurityManual-remove-late-cancel.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "public-remove-cold-recover",
+        "source": "capability-closeout-FullSecurityManual-public-remove-cold-recover.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "FullSecurityManual",
+        "case": "full-security-original-order-versus-security-last",
+        "source": "capability-closeout-FullSecurityManual-full-security-original-order-versus-security-last.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-carrier-fullsd-1",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-carrier-fullsd-1.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-carrier-fullsd-2",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-carrier-fullsd-2.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-carrier-fullsd-3",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-carrier-fullsd-3.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-carrier-fullsd-4",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-carrier-fullsd-4.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-raw-pin-fullsd",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-raw-pin-fullsd.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-owned-link-fullsd",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-owned-link-fullsd.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-directory-fullsd",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-directory-fullsd.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-directory-restore-fullsd",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-directory-restore-fullsd.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-directory-tree-fullsd",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-directory-tree-fullsd.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-regular-shared-fullsd-1",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-regular-shared-fullsd-1.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-regular-shared-fullsd-2",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-regular-shared-fullsd-2.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-regular-shared-fullsd-3",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-regular-shared-fullsd-3.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-continuation-mixed-fullsd-1",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-continuation-mixed-fullsd-1.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-continuation-mixed-fullsd-2",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-continuation-mixed-fullsd-2.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-continuation-mixed-fullsd-3",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-continuation-mixed-fullsd-3.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-continuation-mixed-fullsd-4",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-continuation-mixed-fullsd-4.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-continuation-mixed-fullsd-5",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-continuation-mixed-fullsd-5.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-persistent-owner-07",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-persistent-owner-07.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-persistent-owner-08",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-persistent-owner-08.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-persistent-owner-09",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-persistent-owner-09.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-target-groups-19",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-target-groups-19.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-sealed-tree-29",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-sealed-tree-29.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-sealed-tree-30",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-sealed-tree-30.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-sealed-tree-31",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-sealed-tree-31.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-sealed-tree-32",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-sealed-tree-32.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-managed-edge-04",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-managed-edge-04.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      },
+      {
+        "mode": "LegacyFullSecurityManual",
+        "case": "legacy-owned-material-fullsecuritymanual-managed-edge-05",
+        "source": "capability-closeout-LegacyFullSecurityManual-legacy-owned-material-fullsecuritymanual-managed-edge-05.stderr.log",
+        "naturallyCompleted": true,
+        "distinctChildSeSecurityEnabledOnly": true
+      }
+    ]
+  },
+  "finalSixActualCallbacks": [
+    {
+      "case": "remove-late-ads",
+      "fqn": "worktrees::remove_native_windows_tests::late_named_stream_after_complete_native_fence_must_be_preserved",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=namedStream",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "fb86f8f2a7a6ca989927d4b5f362bd0d50b0c8b70a1b7da178a6066226fb9b13",
+      "stderrSha256": "fec1aa74fa0e16d4f1d9aaab2823e90952f472e346c656ef5c2dc7e3e4139903"
+    },
+    {
+      "case": "remove-late-ea",
+      "fqn": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=ea",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "7860d670c78c2245b4753c83fb3cb3f8c395db6871dc87546560af3c5a9553ea",
+      "stderrSha256": "cb6518bf870d21d47d058145a68da3bb4be0e813ecce8374302bcfb267fa5251"
+    },
+    {
+      "case": "remove-late-same-size-ads",
+      "fqn": "worktrees::remove_native_windows_tests::same_size_named_stream_change_in_final_callback_is_rejected_with_valid_recovery",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=sameSizeNamedStream",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "34bcd4dddfbf05eaa6fc62027735ccb152af1714811bf143cda71cdc5b6d6b8f",
+      "stderrSha256": "b9c09d3867a15a4e85e8a824935539cce3a49cb6ebbb3665d826b4f435e54734"
+    },
+    {
+      "case": "remove-late-security",
+      "fqn": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=security",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "d201a0c427f0aa7fdb2f89dd9543f1f3ab8f25ac89362724cb286d88a026dc72",
+      "stderrSha256": "689e545d455abfbee931cbe3c0f3c6e2ea959d7273491269547719563f175c16"
+    },
+    {
+      "case": "remove-late-member",
+      "fqn": "worktrees::remove_native_windows_tests::new_member_in_final_callback_is_not_chased_and_recovery_remains_valid",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=newMember",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "f53e4c4e9d2c98e78615fbde399587307b1934693a27dfdebf8777d1da188798",
+      "stderrSha256": "0a9332a25f1ea17445d5617e31233b0d6570b493a17d5f3c9bcbeebd404d5bcf"
+    },
+    {
+      "case": "remove-late-cancel",
+      "fqn": "worktrees::remove_native_windows_tests::cancellation_in_final_callback_preserves_source_and_valid_recovery",
+      "marker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=cancel",
+      "matches": 1,
+      "exitCode": 0,
+      "stdoutSha256": "9862bc3a613b6c5e41cb6254ddd9d7577a4bb6956546b9180d16edb4aad519b1",
+      "stderrSha256": "fea2af376ca6562cdc77a0dcb9afabf227ed268fe515ba9bd015b34ef8a6ec13"
+    }
+  ],
+  "fixedHistorical304": {
+    "nameSetSha256": "08e6abad9952b8f29312e78bb2f765f7fa9e78960dc02f854ca7b19c11c38386",
+    "observed": 303,
+    "passed": 275,
+    "failed": 28,
+    "missingRetired": [
+      "file_access::material_carrier_records::tests::real_zero_data_is_distinct_from_missing_default"
+    ],
+    "failedDefaultFullSecurity": [
+      {
+        "fqn": "file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback",
+        "prefix": "owned-raw-pin-fullsd",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+        "prefix": "owned-material-FullSecurityManual-managed-edge-05",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+        "prefix": "owned-material-FullSecurityManual-managed-edge-04",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding",
+        "prefix": "owned-carrier-fullsd-2",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture",
+        "prefix": "owned-carrier-fullsd-1",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile",
+        "prefix": "owned-carrier-fullsd-4",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+        "prefix": "owned-carrier-fullsd-3",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile",
+        "prefix": "owned-directory-fullsd",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::directory_restore_tests::full_security_directory_restore_is_explicit_and_recaptures_actual_full_sd",
+        "prefix": "owned-directory-restore-fullsd",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::directory_tree_tests::actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback",
+        "prefix": "owned-directory-tree-fullsd",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup",
+        "prefix": "continuation-mixed-fullsd-5",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback",
+        "prefix": "continuation-mixed-fullsd-1",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+        "prefix": "continuation-mixed-fullsd-4",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup",
+        "prefix": "continuation-mixed-fullsd-3",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material",
+        "prefix": "continuation-mixed-fullsd-2",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows",
+        "prefix": "owned-owned-link-fullsd",
+        "actualError": "FARFOLD_OWNED_LINK_TEST_OUTCOME operation=Some(NtStatus { phase: \"ownedLinkTargetCreate\", status: -1073741727 }) cleanup=None native_status=Some(-1073741727)"
+      },
+      {
+        "fqn": "worktrees::material_owner::regular_shared_tests::shared_capture_retains_the_original_links_one_guard_before_any_alias_success",
+        "prefix": "owned-regular-shared-fullsd-3",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget",
+        "prefix": "owned-regular-shared-fullsd-2",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes",
+        "prefix": "owned-regular-shared-fullsd-1",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+        "prefix": "owned-material-FullSecurityManual-target-groups-19",
+        "actualError": "FARFOLD_TARGET_LINK_GROUP_OUTCOME operation=Some(NtStatus { phase: \"targetGroupPrimary\", status: -1073741727 }) cleanup=None native_status=Some((\"targetGroupPrimary\", -1073741727))"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+        "prefix": "owned-material-FullSecurityManual-persistent-owner-07",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+        "prefix": "owned-material-FullSecurityManual-sealed-tree-32",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+        "prefix": "owned-material-FullSecurityManual-persistent-owner-09",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+        "prefix": "owned-material-FullSecurityManual-sealed-tree-31",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup",
+        "prefix": "owned-material-FullSecurityManual-sealed-tree-30",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+        "prefix": "owned-material-FullSecurityManual-persistent-owner-08",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      },
+      {
+        "fqn": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+        "prefix": "owned-material-FullSecurityManual-sealed-tree-29",
+        "actualError": "called `Result::unwrap()` on an `Err` value: AccessCondition { phase: \"fullSecurityOpen\", code: 1314, required_access: 16908288 }"
+      }
+    ],
+    "intentionalMasterNegativeFailed": 1,
+    "threeReplacementControls": [
+      {
+        "fqn": "file_access::material_carrier_records::tests::full_security_empty_default_still_requires_all_other_complete_material",
+        "outcome": "ok"
+      },
+      {
+        "fqn": "file_access::material_carrier_records::tests::full_security_observed_empty_default_preserves_physical_bytes_without_padding",
+        "outcome": "ok"
+      },
+      {
+        "fqn": "file_access::material_carrier_records::tests::full_security_omitted_zero_default_keeps_named_ea_and_security_semantics",
+        "outcome": "ok"
+      }
+    ],
+    "threeSeparateObservations": [
+      {
+        "fqn": "file_access::windows::material_restore::owned_link::snapshot::tests::owned_link_transition_accepts_only_allocation_and_strict_checks_stay_strict",
+        "outcome": "ok"
+      },
+      {
+        "fqn": "worktrees::windows_git::launch_matrix_tests::owned_same_program_known_config_extended_plain_observations_preserve_original_owner",
+        "outcome": "ok"
+      },
+      {
+        "fqn": "worktrees::windows_git::launch_matrix_tests::owned_same_program_path_matrix_observes_original_executor_without_granting_admission",
+        "outcome": "ok"
+      }
+    ],
+    "newNullAttributesOutsideHistoricalSet": [
+      {
+        "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+        "outcome": "ok",
+        "prefix": "owned-checkout-profile"
+      },
+      {
+        "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+        "outcome": "ok",
+        "prefix": "owned-checkout-profile"
+      },
+      {
+        "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+        "outcome": "ok",
+        "prefix": "owned-checkout-profile"
+      },
+      {
+        "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::owned_xdg_global_attributes_child",
+        "outcome": "ignored",
+        "prefix": "owned-checkout-profile"
+      }
+    ],
+    "duplicateNames": []
+  },
+  "workflowFailure": {
+    "metadataConclusion": "failure",
+    "requiredPositiveFailedSteps": [
+      "carrier_portable",
+      "carrier_full_sd",
+      "continuation_controls",
+      "owned_material_full_sd"
+    ],
+    "carrierPortableCause": "Expected original six checkout-profile names; actual six originals plus three new null-attributes parent controls passed and one fixed child was ignored. Exit 0 but exact-name/count guard failed.",
+    "otherThreeStepCause": "12 + 5 + 10 original FullSecurity controls failed under unchanged default token (25 AccessCondition 1314 and two NtStatus -1073741727); corresponding separately granted 27 passed.",
+    "masterNegative": "Natural failed test/step 101 is the intentional retained-master observation; final workflow accepts its complete negative observation, so it is not by itself the overall failure cause.",
+    "aggregateDiagnosticsComplete": false
+  },
+  "assertionCoverageFromActualHead": [
+    "remove_native_windows_tests.rs:28-81: same actual before_dispatch callback marker, cleanupUnknown, full independent recovery verify equality, source material/pointer/common config/manifest unchanged; six individual variants all naturally passed.",
+    "recovery_public_windows_tests.rs:158-225: prepared backup delete_dispatched=false; confirm-remove ready and delete_dispatched=true; retained source absent; original branch remains. Fixed backup(false) preserves original source.",
+    "recovery_public_windows_tests.rs:267-323: original main repository removed before public Recover; prepared->ready, bytes/ADS/untracked/empty-dir/.git/HEAD/fsck/no-alternates; drop/reopen manager requires unknown then explicit recheck ready.",
+    "recovery_cold_windows_tests.rs:27-124: original retained source and metadata survive; independent target restored; fresh manager unknown and explicit recheck ready."
+  ],
+  "cases": [
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-payload-profile-is-explicit",
+      "fqn": "file_access::material_carrier_records::tests::ordinary_payload_is_explicit_and_cannot_accept_or_downgrade_full_security",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:16.2176340Z",
+      "finishedAtUtc": "2026-10-23T12:08:16.2387870Z",
+      "stdoutSha256": "e917130a2fa751dd8178c4af40814a70196464d5cd819207bab6fce1d5ea405a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-empty-directory-profile-is-explicit",
+      "fqn": "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:16.2810442Z",
+      "finishedAtUtc": "2026-10-23T12:08:16.2964795Z",
+      "stdoutSha256": "773e1c7d29d9d694614609f7604f1968469b2cdbb58dece129fdc464ad9bb410",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "create-public-selected",
+      "fqn": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:16.3008247Z",
+      "finishedAtUtc": "2026-10-23T12:08:46.6408790Z",
+      "stdoutSha256": "19617c09b56f649189b825f58a8429bc694f5ba42a44f63b2168f9156b4f608b",
+      "stderrSha256": "3e8203cf49494f63d21ed32ceafe87c784039750af4dda7229efaf0186d29b01"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "create-filter-refusal",
+      "fqn": "worktrees::create::windows::tests::selected_custom_filter_is_rejected_before_target_or_branch_creation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:46.6727398Z",
+      "finishedAtUtc": "2026-10-23T12:08:52.8338122Z",
+      "stdoutSha256": "55df3fdfbfc83ae3e4596b3e26f1e512d637c808e29c9372c7ed64805aae1618",
+      "stderrSha256": "b3e88d26e6ffdaf558026c23f0aad8d871bc28ad124d47b273f6a0a7fbca2ed8"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-range",
+      "fqn": "file_access::windows::worktree_checkout::tests::owned_range_copy_preserves_bytes_and_refuses_case_alias_overwrite",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:52.8604231Z",
+      "finishedAtUtc": "2026-10-23T12:08:52.9146458Z",
+      "stdoutSha256": "908dcac48f072c676220ea91cb671b70587004c763fc7feac9e681be6a6b64fc",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-attributes",
+      "fqn": "file_access::windows::worktree_checkout::tests::attribute_guards_cover_each_lookup_level_and_deny_mutation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:52.9192050Z",
+      "finishedAtUtc": "2026-10-23T12:08:52.9584352Z",
+      "stdoutSha256": "5143acb3872558ac70720a280ee449515f5ab0eb228d767751ef5290525a9602",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-index",
+      "fqn": "file_access::windows::worktree_checkout::tests::fixed_index_publication_is_exclusive_and_never_replaces_existing_index",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:52.9629632Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.0153746Z",
+      "stdoutSha256": "4f9993d8a07f6f75696244cfa94f8037b78c7562cf23cfe9663e07c80b32e66f",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-cancel",
+      "fqn": "file_access::windows::worktree_checkout::tests::cancellation_and_outside_range_never_create_destination_files",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.0209117Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.0569941Z",
+      "stdoutSha256": "fd9462bbedf7adf2121d295bc3d92858df14afbba64208dab59643aae8d24f52",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-owned-root",
+      "fqn": "file_access::windows::worktree_checkout::tests::created_root_handle_blocks_the_old_path_stamp_replacement_window",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.0611944Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.0940992Z",
+      "stdoutSha256": "d79fa54c8cdd031c1091f8579472208e023501efca6901ded292c3cf54010022",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "checkout-reject-extra",
+      "fqn": "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.1001260Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.1422529Z",
+      "stdoutSha256": "f21ec7b00f95c46943df42f7b934b37f5a7a73b93bac6df8c4f53e3efafec39b",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "pointer-exclusive-owner",
+      "fqn": "file_access::windows::worktree_pointer::tests::actual_pointer_owner_excludes_writers_and_checks_original_identity_and_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.1464580Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.1898234Z",
+      "stdoutSha256": "4d2ff954c7646c8d62edb809d82f82f26cb2026dbe5a295b54173d9dccf6375e",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "pointer-pair-rejection",
+      "fqn": "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.1950914Z",
+      "finishedAtUtc": "2026-10-23T12:08:53.2552725Z",
+      "stdoutSha256": "445489f7113b8cd5f6a450ba300ad6d9e6b48a41bdd02d3335ac2220064bb5d2",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "prepared-independent-git",
+      "fqn": "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:53.2602111Z",
+      "finishedAtUtc": "2026-10-23T12:08:58.8802623Z",
+      "stdoutSha256": "81fa365a1f78cea68c09549855987709e48d9c4c2a554f07e90ac578e772f68a",
+      "stderrSha256": "1ddec8711d0fd3a06015c4b321ec5599877ad052286653f8ba9bf555e566004b"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "complete-manifest-semantics",
+      "fqn": "worktrees::recovery_pack::material_manifest::tests::complete_manifest_requires_its_exact_user_prefix_digest_and_controlled_git_suffix",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:58.8838945Z",
+      "finishedAtUtc": "2026-10-23T12:08:58.8999784Z",
+      "stdoutSha256": "6849a2be42cb85db2d3ceabdff6ad8c90ec551fe86a8b3e864a6491cb44ba624",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "delete-readonly-owner",
+      "fqn": "file_access::windows::worktree_delete_file::tests::original_handle_closes_readonly_file_then_held_parent_proves_absence",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:58.9025359Z",
+      "finishedAtUtc": "2026-10-23T12:08:58.9248890Z",
+      "stdoutSha256": "972e6c94049af1e539f0a7332379818d4b5312307469122bd873d7fa99c01161",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "delete-duplicate-handle",
+      "fqn": "file_access::windows::worktree_delete_file::tests::duplicate_file_object_cannot_be_reported_as_absent_before_last_actual_close",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:58.9276157Z",
+      "finishedAtUtc": "2026-10-23T12:08:58.9509451Z",
+      "stdoutSha256": "b89d2570fdb39067a50e918ebf095e85f7136fb49e181fed678e293cb7463109",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "delete-external-reader",
+      "fqn": "file_access::windows::worktree_delete_file::tests::external_nonsharing_reader_prevents_delete_authority_and_preserves_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:58.9535589Z",
+      "finishedAtUtc": "2026-10-23T12:08:58.9831060Z",
+      "stdoutSha256": "dd9ef6a70e9d6d1ec865489eec7c056e5e3e9ee457090e4b0f5145059c59b4a0",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "delete-late-directory-child",
+      "fqn": "file_access::windows::worktree_delete_file::tests::late_unknown_directory_child_survives_and_prevents_parent_disposal",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:58.9865811Z",
+      "finishedAtUtc": "2026-10-23T12:08:59.0181093Z",
+      "stdoutSha256": "5d7452ae72c51db4b73b83b48831360f7146d84cc976b8259ab2b8f91c488625",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "delete-image-section",
+      "fqn": "file_access::windows::worktree_delete_file::tests::force_image_section_check_refuses_live_image_mapping_without_unlink",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:59.0218294Z",
+      "finishedAtUtc": "2026-10-23T12:08:59.0727264Z",
+      "stdoutSha256": "655ef7e8759a9a30eca89d179a99e7da84622092a8f5772442ca3768ce33c067",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "remove-common-owner",
+      "fqn": "worktrees::windows_scope::remove_metadata::tests::original_common_config_and_selected_ref_stay_held_after_linked_pins_retire",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:08:59.0860798Z",
+      "finishedAtUtc": "2026-10-23T12:09:01.1322162Z",
+      "stdoutSha256": "64dce117abd68114f5226a518d2f1aeb917225e358a509f6a33585a97afd4b01",
+      "stderrSha256": "246a5ab69039295fa0bf18fabd71b757608af3c22509bf52914349749086b81d"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "remove-changed-ref",
+      "fqn": "worktrees::windows_scope::remove_metadata::tests::changed_selected_ref_before_consuming_handoff_is_rejected",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:01.1350248Z",
+      "finishedAtUtc": "2026-10-23T12:09:02.7398325Z",
+      "stdoutSha256": "b4ec9127e80fd96d9536355d86c14c59827231b00474876a45dbe64163d22cf5",
+      "stderrSha256": "f52153078b745a05349a930470dedf6df2a58c7d22f162648daeb6a4014e34e3"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "remove-packed-ref-refusal",
+      "fqn": "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:02.7430694Z",
+      "finishedAtUtc": "2026-10-23T12:09:04.4447993Z",
+      "stdoutSha256": "428bdf09c7bd147303375178db40fed4975ddcd9db91bfed7174d3a7eda39a43",
+      "stderrSha256": "246a5ab69039295fa0bf18fabd71b757608af3c22509bf52914349749086b81d"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "remove-detached-head",
+      "fqn": "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:04.4478084Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.1467201Z",
+      "stdoutSha256": "98ff8de62b6390fcc18da90cb159f994365e6715bcb1bb74f3409f9dbe8a40c8",
+      "stderrSha256": "14c994fe303e3aa92ba649c9db1c1fab11aa3eea9edca6918c24e58f0efa5814"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "descriptor-roundtrip",
+      "fqn": "worktrees::recovery_pack::material_manifest::tests::descriptor_roundtrip_retains_full_file_ids_and_literal_utf16_streams",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.1502732Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.1722904Z",
+      "stdoutSha256": "e56e46d807018f87739541a0b809b734e2c381916b83c784b2bcff6665072daa",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "descriptor-refusals",
+      "fqn": "worktrees::recovery_pack::material_manifest::tests::descriptor_rejects_duplicate_identity_partial_default_and_unbounded_fields",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.1756974Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.1950064Z",
+      "stdoutSha256": "6a75ae0b5df42b3ab16e0643e2d2e5b6f0cac65086c5917edfd4becd4637d7e9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "descriptor-null-refusal",
+      "fqn": "worktrees::recovery_pack::material_manifest::tests::descriptor_unknown_fields_and_null_are_not_a_version_downgrade",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.1980002Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.2177598Z",
+      "stdoutSha256": "18de2af6b134826e0d856fe6f27430495877854021d504d6a03f7efc95ed5673",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "material-semantic-identity",
+      "fqn": "file_access::material_mixed_semantic::tests::new_target_identity_and_root_name_preserve_material_but_every_payload_field_matters",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.2206957Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.2397398Z",
+      "stdoutSha256": "9c6d90728870409700c8ddf9e2523a2df7a31d6d919f67292650fd45fc4c6d18",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "material-semantic-suffix",
+      "fqn": "file_access::material_mixed_semantic::tests::controlled_git_suffix_cannot_hide_other_root_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.2421888Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.2626481Z",
+      "stdoutSha256": "3cd0481e8b5e127c8e18819cd9fe314aac3b52ec253a5d0930b4f93e86c97040",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "regular-semantic-streams",
+      "fqn": "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.2656277Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.2856990Z",
+      "stdoutSha256": "2a87add8f1a473572fbf1324ddfceb91ce55b979fba6d5ed1bde66019ad2b51a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-semantic-streams",
+      "fqn": "file_access::material_directory_records::tests::material_semantic_digest_retains_directory_ads_and_security_without_backup_order",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.2888803Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.3076223Z",
+      "stdoutSha256": "5ffc22123cb95789b24beceb556a165142da60ad5b03ef8cd8dd046cabeafc4e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "mixed-material-node-capacity",
+      "fqn": "file_access::material_mixed_tree_records::tests::more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.3104163Z",
+      "finishedAtUtc": "2026-10-23T12:09:07.3443058Z",
+      "stdoutSha256": "8b55ca89be755d46348fce9e7fd94f1cd3c59fec65f03b3c70faeac2e798d8cf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "public-adopt-cold-recheck",
+      "fqn": "worktrees::windows_tests::existing_main_and_linked_tree_require_exact_adopt_then_cold_recheck",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:07.3932565Z",
+      "finishedAtUtc": "2026-10-23T12:09:11.1814840Z",
+      "stdoutSha256": "0e2bafec61b6c6821beeec0759bd8b03799949f08fd6b6ae98fbc62be821b818",
+      "stderrSha256": "9fb000747c42b1a276be56139466560bdb0b85eb7d47f03acfc030e1e2aaae7a"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "public-expired-input-refusal",
+      "fqn": "worktrees::windows_tests::expired_or_missing_conditions_refuse_before_retirement_or_durable_intent",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:11.1854638Z",
+      "finishedAtUtc": "2026-10-23T12:09:11.2108662Z",
+      "stdoutSha256": "80b2131ba72d236320377c069b9bbe06b41dbec952c617d955f1952a6f3b4a92",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "public-cold-orphan-refusal",
+      "fqn": "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:11.2180185Z",
+      "finishedAtUtc": "2026-10-23T12:09:13.8917728Z",
+      "stdoutSha256": "933dd94e051ae8182237a711b2349f8a8feff38fc66b6164eec6b1ce71dde0e4",
+      "stderrSha256": "7f8e02b6b59abd5432042ac046605b6800d56f1b5a768cebe11f5788bef5008d"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-budget-small-listing",
+      "fqn": "file_access::windows::directory::material_budget::tests::actual_small_listing_charges_data_and_eof_instead_of_admitted_child_capacity",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:13.8951983Z",
+      "finishedAtUtc": "2026-10-23T12:09:13.9199136Z",
+      "stdoutSha256": "1f16ca0df748ac127c5888dd90dbd9a5804a98285e44e42a5c9fcb37f2903230",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-budget-eof-restart",
+      "fqn": "file_access::windows::directory::material_budget::tests::exhausted_before_eof_refuses_and_same_actual_cursor_restarts_on_next_operation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:13.9221366Z",
+      "finishedAtUtc": "2026-10-23T12:09:13.9462131Z",
+      "stdoutSha256": "a4569b2f49f7add644fa7ded523f6d55b8302474bf17bc7feb2a0f78b3f70857",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-budget-before-query",
+      "fqn": "file_access::windows::directory::material_budget::tests::resident_and_cancellation_refuse_before_any_query_work_is_charged",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:13.9485617Z",
+      "finishedAtUtc": "2026-10-23T12:09:13.9715506Z",
+      "stdoutSha256": "6787f04e5df83c5212c703a2ccd87cf75e8e9f53ba7db57232b979a026e53666",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-budget-native-error",
+      "fqn": "file_access::windows::directory::material_budget::tests::actual_failed_native_query_still_consumes_one_prepaid_page",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:13.9736378Z",
+      "finishedAtUtc": "2026-10-23T12:09:13.9956446Z",
+      "stdoutSha256": "4e09ea7e6de2edbb47273a4496a568dc8e03f806ab9211e0ff6112d1e7bade7b",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-budget-multiple-pages",
+      "fqn": "file_access::windows::directory::material_budget::tests::actual_multiple_pages_charge_each_request_and_keep_the_full_raw_namespace",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:13.9977397Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.4565793Z",
+      "stdoutSha256": "a3cbc7fbece5cc7295a4cbc83f551b074cc858fe6442c4a36dc0935cf5ebb7d3",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "mixed-material-comparison-budget",
+      "fqn": "file_access::material_mixed_tree_records::tests::expanded_collision_checks_share_work_and_cancel_before_further_comparisons",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.4595443Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.4843594Z",
+      "stdoutSha256": "f4dbc79c4b9be2249e644378bdc16d3705a129e20f28aa8eba01a36daad29091",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "mixed-material-finite-bound",
+      "fqn": "file_access::material_mixed_tree_records::tests::finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.4864864Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.5009640Z",
+      "stdoutSha256": "18e6236b6f645a81ed8a0f797bb38fd8018f3458058d10ddf74f2b8269a3a62a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "descriptor-node-capacity",
+      "fqn": "worktrees::recovery_pack::material_manifest::tests::larger_descriptor_keeps_all_nodes_within_the_original_aggregate_budget",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.5031092Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.5283765Z",
+      "stdoutSha256": "cc2105dd193140193d2e330fb641c0fa87730299ad124ac8e477f91fe52af1e6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "mixed-source-comparison-budget",
+      "fqn": "file_access::windows::material_mixed_tree_source::tests::comparison_budget_and_cancel_precede_matching_identity_and_raw_names",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.5304777Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.5452790Z",
+      "stdoutSha256": "210609159e4cf5245616b83881a99054f3f6c00b50cefb04c0b77f7fcb77db17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "backup-inspection-eof",
+      "fqn": "file_access::material_backup_io::tests::direct_inspection_requires_real_eof_and_retires_original_context_once",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.5474460Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.5631581Z",
+      "stdoutSha256": "573edcb4621ed09a34243d54ef60694dd15f0aec3437d0acfc07961f913c3a72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "backup-inspection-short-success",
+      "fqn": "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.5652148Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.5835541Z",
+      "stdoutSha256": "f411d48e20a82520345e1bfe88d67f9e73a91cc8a2fbb22e2644ea48b5041d8d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "backup-inspection-original-error",
+      "fqn": "file_access::material_backup_io::tests::direct_inspection_preserves_native_error_and_unknown_abort_ownership",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.5888280Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.6118445Z",
+      "stdoutSha256": "19a357f44c9eb0d0c0ef77e9bb7727b0ab96565e52954df8b41611991c5a1f09",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "backup-inspection-after-read-budget-cancel",
+      "fqn": "file_access::material_backup_io::tests::direct_inspection_budget_or_cancel_after_actual_read_still_aborts_once",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.6154001Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.6381843Z",
+      "stdoutSha256": "dda5208cece1a25ec78cc9d8454df86386fb0141102bc71bbceefa88159a2298",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-explicit-material-profile",
+      "fqn": "worktrees::recycle::profile_tests::archive_profiles_are_explicit_and_full_security_is_never_downgraded",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.6416725Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.6620059Z",
+      "stdoutSha256": "f6075b4055fd0b302f8cba87523bfdadb27f4bcc0c11285ee16cf64ef63b05b7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-move-child-close-reacquire",
+      "fqn": "file_access::windows::worktree_move::tests::ordinary_move_releases_child_pointer_and_reacquires_the_exact_original",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.6655931Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.7148479Z",
+      "stdoutSha256": "92eb2d69a2c44b86b68c90db84e21b581c36f5cd8c5e9d4b375c747fabb92f4d",
+      "stderrSha256": "1043a65f3825dde6db279af05c9471a7dc511c63baa33f87006135a22cbbff86"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-move-reject-changed-pointer",
+      "fqn": "file_access::windows::worktree_move::tests::changed_pointer_after_move_is_not_adopted_or_overwritten",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.7174622Z",
+      "finishedAtUtc": "2026-10-23T12:09:14.7494829Z",
+      "stdoutSha256": "dab982546ac7534008e426900adc5d774c24a76a25e5826b9cd2f60174397523",
+      "stderrSha256": "de17e389bde8a7c4ca9a5f96186c455aecd744b7747011a8657fd3b17d33619b"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-public-archive-cold-restore",
+      "fqn": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:09:14.7517690Z",
+      "finishedAtUtc": "2026-10-23T12:10:03.8665619Z",
+      "stdoutSha256": "f5908b22a063ab751de8652ea1640d262c8bf5b6e8d9dedc2fb2b0c808c84ded",
+      "stderrSha256": "8b082ba2cef4b1ed14d5c534e776bd6aac9c086d4ad27a7534e26126e4880229"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-empty-directory-has-zero-writes-but-actual-readback",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_directory_has_zero_writes_but_actual_readback",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:03.9375813Z",
+      "finishedAtUtc": "2026-10-23T12:10:04.1086630Z",
+      "stdoutSha256": "a5e9d6f265274364ff809f794d2cbab624c7d1490f0f076cc7874e36f9094d7c",
+      "stderrSha256": "357acd9bfbb94667c696f407b5bb6e8bfcae532fc5812f7cc427b6ecc1499364"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-empty-file-preserves-empty-default-without-fake-native-write",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:04.1114928Z",
+      "finishedAtUtc": "2026-10-23T12:10:04.3454242Z",
+      "stdoutSha256": "7a466ad7454fcb080d26f631a6c227ffc54f46f55697f5c2a3192a2ab6ac7bf6",
+      "stderrSha256": "908ad6852912a97cf0a5eb9ee5142bc2e920040d3563ad23df62e3d85fe68a41"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-file-only-ea-roundtrips-exact-native-observation",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_file_only_ea_roundtrips_exact_native_observation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:04.3480025Z",
+      "finishedAtUtc": "2026-10-23T12:10:04.6013351Z",
+      "stdoutSha256": "52fd82354fa451b915595ddbfe082947fb630e8361b777006d3acbbcf938ae9f",
+      "stderrSha256": "917a3f469b39f08ef63466d7f53e469386ec4f3c356bfd89757ca4257a19c786"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-directory-only-ea-roundtrips-exact-native-observation",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_directory_only_ea_roundtrips_exact_native_observation",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:04.6038265Z",
+      "finishedAtUtc": "2026-10-23T12:10:04.7811126Z",
+      "stdoutSha256": "ca0749fbb7724fe74440fa1e1e8f5c7fdc9a744521e18c8dd9c4333f1d0f64e6",
+      "stderrSha256": "3c4ff0512b5c8cfc9b8961b7c15e7b36c38a28ed95995e232471b7edd0091b87"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-file-only-ads-keeps-zero-default-and-all-named-bytes",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_file_only_ads_keeps_zero_default_and_all_named_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:04.7833548Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.0017148Z",
+      "stdoutSha256": "55f7c5b08d4808293fa8da0d13cc76620aa00d3a3793d11a21270190350e7bc0",
+      "stderrSha256": "978b72cd26e474f2fc05007e77e794e87bc9e103fe25f5a34358d0e5e72ff3dc"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-directory-only-ads-roundtrips-without-default-stream",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_directory_only_ads_roundtrips_without_default_stream",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.0046906Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.1885784Z",
+      "stdoutSha256": "e37332a2e2d3aff5a41ef66ccc21191c8b18db3d116647dd2e95f63dccb13759",
+      "stderrSha256": "a582798e102a5f2684c755f08e8b09ae18ae74107fe1eb1e7e589e8d9b9b5d3e"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-protected-dacl-restores-exact-readable-facet",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.1907768Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.3344469Z",
+      "stdoutSha256": "1ab1272cb6d80cf1579b12764badd41c3c13343136bfbb12bcb12dc540879242",
+      "stderrSha256": "0db456b2ef1c25ac32a6c59971dcf6b9b1735abf023858fcc2e47b804cef6896"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-low-integrity-label-is-restored-and-read-back",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_low_integrity_label_is_restored_and_read_back",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.3368214Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.4875273Z",
+      "stdoutSha256": "71f9e07bc374051d18d67cf14d7c25ee7061f9f21dd02ea2bc129e5631416ca8",
+      "stderrSha256": "d5a15022aeb66fa1c639501b6f7900dee94d01df2dc564847263d0d7a11710f6"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-cold-target-collision-retains-foreign-object-and-original",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_cold_target_collision_retains_foreign_object_and_original",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.4898258Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.6290437Z",
+      "stdoutSha256": "bcb2ade44bfdf2d2383af9396e7e8afc6d10a4413e99545367dbd944b32911a6",
+      "stderrSha256": "357acd9bfbb94667c696f407b5bb6e8bfcae532fc5812f7cc427b6ecc1499364"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-descriptor-profile-tamper-refuses-before-target-or-source-change",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_descriptor_profile_tamper_refuses_before_target_or_source_change",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.6318497Z",
+      "finishedAtUtc": "2026-10-23T12:10:05.7692493Z",
+      "stdoutSha256": "8c2db653d83bafa47663d613239747227d74f125798e128c44cdb0ce05fbf341",
+      "stderrSha256": "357acd9bfbb94667c696f407b5bb6e8bfcae532fc5812f7cc427b6ecc1499364"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:10:05.7720120Z",
+      "finishedAtUtc": "2026-10-23T12:11:58.5057752Z",
+      "stdoutSha256": "62ae27c275a95045db78e73eab53ab99b36c6f66140b30f54b49fa309988934a",
+      "stderrSha256": "ff67a41b0434bba053eb9133d484143b9dac988c395e9edb113d85751f43cffc"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:11:58.6233254Z",
+      "finishedAtUtc": "2026-10-23T12:14:24.4607020Z",
+      "stdoutSha256": "9ca54001856f91cc5c5da086207b9efbf19974e3ea1bcc6c237bc975754425cf",
+      "stderrSha256": "14a111ba56a4047b63b3326dfd084bcdbe636167b29488d7d025942d7d096992"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-query-missing-read-control-is-denial-not-absent-security",
+      "fqn": "file_access::windows::material_ordinary_security::tests::ordinary_query_missing_read_control_is_denial_not_absent_security",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:24.6438110Z",
+      "finishedAtUtc": "2026-10-23T12:14:24.7171928Z",
+      "stdoutSha256": "733f809efa7e555db5743f3dda8101c0a03aefe3f207756bab1711680ecac85d",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-restore-missing-write-dac-keeps-source-and-target-facets",
+      "fqn": "file_access::windows::material_ordinary_security::tests::ordinary_restore_missing_write_dac_keeps_source_and_target_facets",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:24.7201873Z",
+      "finishedAtUtc": "2026-10-23T12:14:24.7516661Z",
+      "stdoutSha256": "3f80b767724c4425d22c9883e2b72a3bf10c11f8183371bdfd9c7f0d529a5b94",
+      "stderrSha256": "3dd1d4c2bc430364f238a4bd94a9cd3eae104aad8713e8d45ff449cbdaf57cf8"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-query-cancel-or-short-work-keeps-exact-held-object",
+      "fqn": "file_access::windows::material_ordinary_security::tests::ordinary_query_cancel_or_short_work_keeps_exact_held_object",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:24.7540914Z",
+      "finishedAtUtc": "2026-10-23T12:14:24.7773708Z",
+      "stdoutSha256": "545f183bc5d9e0604de538806cb7cda975616fb38cc4eedd084a5e1f853b14a6",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "fixture-long-plain-temp-path",
+      "fqn": "test_support::tempdir_has_long_absolute_git_compatible_spelling",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:24.7793578Z",
+      "finishedAtUtc": "2026-10-23T12:14:24.8005736Z",
+      "stdoutSha256": "9d17f534cefb6f343278fae7346aec267f030044b89cee27ae2e09ad37ea7098",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-original-exit-waits-for-same-job-natural-end-and-collects-descendant-tail",
+      "fqn": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:24.8028522Z",
+      "finishedAtUtc": "2026-10-23T12:14:25.0465855Z",
+      "stdoutSha256": "f51c92aa074a4061da170f9f75f189a69a78bb6b30492cfec07069e8f73e641a",
+      "stderrSha256": "c60d05d41e13ab7f67fbee35af4d06a45c145446f9fcc4e191a0ce4df20cc7fe"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-naturally-settled-job-preserves-original-nonzero-exit-code",
+      "fqn": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:25.0563646Z",
+      "finishedAtUtc": "2026-10-23T12:14:25.3115349Z",
+      "stdoutSha256": "7e782a61734af49f2b768e8721bff284ad5aef58c7eaf87f9354058a0af3398e",
+      "stderrSha256": "550421d3494071ca82778845e6027fe99b6f9aa0ab7d9e17bcdf952b7fc2b1bf"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-cancellation-after-original-exit-reaps-same-job-before-return",
+      "fqn": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:25.3147531Z",
+      "finishedAtUtc": "2026-10-23T12:14:25.5887461Z",
+      "stdoutSha256": "cb37057c5094eeb0cf28da62dd843329f4a7eec397e1e47b4b4f594ea29b1eaa",
+      "stderrSha256": "e696970a1b0f47649069c6df313da5e59a655b99ca76cf8a74832549917d6ebf"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-original-deadline-still-limits-live-job-after-original-exit",
+      "fqn": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:25.5910000Z",
+      "finishedAtUtc": "2026-10-23T12:14:28.6348897Z",
+      "stdoutSha256": "72809bcd6c025a3d640bc61803174b9abe3e7816ab4a316705e26970dee25407",
+      "stderrSha256": "5cf7731327aeb1649017bec274071d0559a96b9eba579c6ae5e15d195eb398a9"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-late-stdout-over-limit-after-original-exit-is-not-success",
+      "fqn": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:28.6372493Z",
+      "finishedAtUtc": "2026-10-23T12:14:28.9050572Z",
+      "stdoutSha256": "d6b906f941330baa06e2c7d0699e36e0fc11c8b607e1ba0ac5ff750af898a2e0",
+      "stderrSha256": "df158dd67001738421308dcbc04de2971443db042705568c069bfcac76b155f8"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-late-stderr-over-limit-after-original-exit-is-not-success",
+      "fqn": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:28.9102076Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.1785614Z",
+      "stdoutSha256": "f054a021b4b84c2d1ce0c0bdca83659b5811ec71ecada55f25fb1df11f540c05",
+      "stderrSha256": "030790a731940f272634463effce8d1d2d6b47f4eb8770ff086b82c9a73f4b74"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "git-settlement-changed-finite-input-after-original-exit-is-not-success",
+      "fqn": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.1813517Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.4444799Z",
+      "stdoutSha256": "ac0edcbf37d51f2e4f1e17499cebc70bfeac3bf3ebee28ff55e8c4de5a81df90",
+      "stderrSha256": "e1776c638e69e2a99a62dfd33b4eb9442728cd5fb1802e31d7b792e8c6532275"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-known-original-member-stays-held-until-real-signal-and-is-then-retired",
+      "fqn": "windows_process::current_members::tests::known_original_member_stays_held_until_real_signal_and_is_then_retired",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.4470594Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.5025670Z",
+      "stdoutSha256": "75585b7b1a067b4f43f81003e7a0a5829c172856a513b02f8f5a2d6f75a73418",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-later-original-job-member-is-observed-after-the-first-member-snapshot",
+      "fqn": "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.5048628Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.5931283Z",
+      "stdoutSha256": "3c7732e245887866cf13e73e0fcb6ec71c026650fc547df3477d1da52b87e3bf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-failed-pending-lookup-survives-empty-snapshot-and-later-resolves-without-latch",
+      "fqn": "windows_process::current_members::tests::failed_pending_lookup_survives_empty_snapshot_and_later_resolves_without_latch",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.5953268Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.6106970Z",
+      "stdoutSha256": "2fa499409259f7add31c4d39668b57173765e3cada714cb563db55ed845e1da8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-actual-foreign-object-is-never-accepted-or-terminated-as-a-job-member",
+      "fqn": "windows_process::current_members::tests::actual_foreign_object_is_never_accepted_or_terminated_as_a_job_member",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.6128930Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.6277018Z",
+      "stdoutSha256": "f5f712a64ea18e7740c2360e9341c6169a29fc2ba41feac2d74e8e1a014a7d86",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-failed-snapshot-keeps-original-live-handle-and-retry-can-finish-after-signal",
+      "fqn": "windows_process::current_members::tests::failed_live_snapshot_keeps_original_handle_and_gap_after_later_empty_list",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.6303036Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.6893092Z",
+      "stdoutSha256": "cc679a65a3c7b20c0c147b2240eb1d40dc33f69f2e1d9ae799f5129e4bc36f60",
+      "stderrSha256": "efd5956830d115158d8e211476c2e5ede4a807f381c7c8a975c868d709cde82a"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-truncated-capacity-invalid-and-duplicate-lists-are-not-successful-empty-observations",
+      "fqn": "windows_process::current_members::tests::truncated_capacity_invalid_and_duplicate_lists_are_not_successful_empty_observations",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.6918575Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.7081544Z",
+      "stdoutSha256": "ed68c5d110856ba9c778e395ea73cffcfbba5935433e9702847fefa2e528063f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "job-current-member-query-failure-does-not-permanently-latch-an-empty-original-job",
+      "fqn": "windows_process::current_members::tests::query_failure_does_not_permanently_latch_an_empty_original_job",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.7102424Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.7244509Z",
+      "stdoutSha256": "b471cb38f4f93a5b3b3c43e109ac88563a85f56023c8ab759a7c937857c2e5a3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-native-empty-default-ordinary-observed-empty-default-needs-no-physical-backup-record",
+      "fqn": "file_access::material_carrier_records::tests::ordinary_observed_empty_default_needs_no_physical_backup_record",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.7264412Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.7408288Z",
+      "stdoutSha256": "1cb241703a73ba51331ab6f7818240daf0184cf111e4640d539c1db1dec3679d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-native-empty-default-ordinary-omitted-zero-default-keeps-exact-named-data-and-ea-semantics",
+      "fqn": "file_access::material_carrier_records::tests::ordinary_omitted_zero_default_keeps_exact_named_data_and_ea_semantics",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.7428716Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.7570557Z",
+      "stdoutSha256": "a7d2bd02cdca125a6c8244237cee3cbeb4914a8c79c986eb19c01bff89e24118",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-native-empty-default-ordinary-empty-default-exception-cannot-hide-missing-or-invalid-material",
+      "fqn": "file_access::material_carrier_records::tests::ordinary_empty_default_exception_cannot_hide_missing_or_invalid_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.7589708Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.7785755Z",
+      "stdoutSha256": "672ffc70a616a0b7f0fca6f802acc8eafa8969eaac00eb92e91ab2121514c8e8",
+      "stderrSha256": "966402b4a33a5217810b113da3ba5256d7d13ae3c426f18d252bd5e454d62c31"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-restore-preserves-unprotected-inherited-dacl-across-different-parents",
+      "fqn": "file_access::windows::material_ordinary_security::tests::ordinary_restore_preserves_unprotected_inherited_dacl_across_different_parents",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.7806830Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.8125420Z",
+      "stdoutSha256": "8ea74a03870da5d901c2da53d16d07ae62b6fda4020b056b19595b902ec0f80f",
+      "stderrSha256": "749bda19d3405f88354219449060a3141ae338cd7d906b76dde1b168718c1197"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-unknown-accounting-is-never-zero-and-successful-empty-observation-can-retry",
+      "fqn": "windows_process::current_members::tests::unknown_accounting_is_never_zero_and_successful_empty_observation_can_retry",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.8147967Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.8295148Z",
+      "stdoutSha256": "37e720a774ff3d002e58155f4846721481ff21b7849dae9094cec421d893663e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-unknown-accounting-with-failed-snapshot-keeps-gap-after-a-later-empty-list",
+      "fqn": "windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.8333748Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.8521926Z",
+      "stdoutSha256": "39c4e5b50e9517913fda7da5accab7a460bc35664b76eca1162cec3464e6738e",
+      "stderrSha256": "83fab1e995b1ec7f9858da60a5725a5dbd45a4564d6ef2999ae28007cc585405"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-unresolved-candidate-skipping-a-live-snapshot-preserves-gap-after-resolution",
+      "fqn": "windows_process::current_members::tests::unresolved_candidate_skipping_a_live_snapshot_preserves_gap_after_resolution",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.8542892Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.9123984Z",
+      "stdoutSha256": "f924c436890bd66d3e3a56d75695ce587090698b38de74939b1a1c62b0636532",
+      "stderrSha256": "e194424194ef523fa11c2343370dd69208e512152185e6ace84c9fe4ed5b7381"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-real-member-wait-failure-skipping-enumeration-preserves-live-gap",
+      "fqn": "windows_process::current_members::tests::real_member_wait_failure_skipping_enumeration_preserves_live_gap",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.9146561Z",
+      "finishedAtUtc": "2026-10-23T12:14:29.9685741Z",
+      "stdoutSha256": "8b283e67bf27c7d7dcb5cba509814eec91bea4bfe7ce54e7411d04a5bad71d61",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-native-current-observation-never-holds-the-shared-process-registry-lock",
+      "fqn": "windows_process::current_members::tests::native_current_observation_never_holds_the_shared_process_registry_lock",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:29.9705834Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.0289692Z",
+      "stdoutSha256": "f3a8f143920e17584fda22783cbdde73b41ebbf8433b5c9c56572aaa405ce7d9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-dropped-user-reply-does-not-abort-or-release-original-blocking-work",
+      "fqn": "worktrees::manager::request_wait::tests::dropped_user_reply_does_not_abort_or_release_original_blocking_work",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.0311726Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.0466073Z",
+      "stdoutSha256": "ec0ab4d50fecc0a8f4a19b8732133dce3fc24dbcc75dacf45bb83fd6e50b2b5a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-work-and-status-saturation-do-not-take-the-original-cancel-admission",
+      "fqn": "worktrees::manager::request_wait::tests::work_and_status_saturation_do_not_take_the_original_cancel_admission",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.0485398Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.0636338Z",
+      "stdoutSha256": "5c36dcfc6bdb4689ed5dcac189094a35c7ee86cb8442b461211c9ea0395558e4",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-actual-result-and-error-are-preserved-and-panic-is-only-unknown",
+      "fqn": "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.0660991Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.0879492Z",
+      "stdoutSha256": "a4e3d134f45f09b2f251a758d45b82eef2889f30b6e634d629ceeb92380ca79e",
+      "stderrSha256": "9b5c147c8068d125656d01fe060b0996cc98d0b2d20c29ada88a5276f2b964f8"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-timed-out-original-closures-keep-actual-file-handles-and-both-slots",
+      "fqn": "worktrees::manager::request_wait::tests::timed_out_original_closures_keep_actual_file_handles_and_both_slots",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.0901122Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.1998233Z",
+      "stdoutSha256": "ac680e5a19ac58f21917742b033565571852d907467b404cdfd2d1bf9b7f05df",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-original-scoped-owner-reports-unknown-without-taking-the-manager-lock",
+      "fqn": "worktrees::manager::worker_progress::tests::original_scoped_owner_reports_unknown_without_taking_the_manager_lock",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2019576Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.2166923Z",
+      "stdoutSha256": "2ce4b44722a75135e1e4b18f36fb5341f159153aa70cc65be6a5135651543c99",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "bounded-owner-nested-scopes-restore-only-the-original-owner-and-never-cross-threads",
+      "fqn": "worktrees::manager::worker_progress::tests::nested_scopes_restore_only_the_original_owner_and_never_cross_threads",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2186628Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.2324190Z",
+      "stdoutSha256": "f240462b8fcdef896099a4ec208df279f5e0eb1e818033e5bcdbd6ae304a0d07",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "empty-ordinary-native-extent-roundtrips",
+      "fqn": "file_access::material_carrier_fragment::tests::empty_ordinary_native_extent_roundtrips_without_inventing_payload_or_full_security",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2344683Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.2485648Z",
+      "stdoutSha256": "b1dc5a65c62176da2dea08de9477e1d95a40649403e2631891200c57429f38a0",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "empty-native-extent-keeps-eof-hash-footer",
+      "fqn": "file_access::material_carrier_fragment::tests::empty_native_extent_requires_exact_eof_hash_and_footer_and_refuses_partial_headers",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2504252Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.2644486Z",
+      "stdoutSha256": "b8995ad70a6d8dab05e102553ce1d57d2fc042c4bcda82a1c6998beaed5ea075",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-security-keeps-non-auto-inherited",
+      "fqn": "file_access::windows::material_ordinary_security::tests::ordinary_restore_keeps_non_auto_inherited_source_without_promoting_its_control",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2663445Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.2898360Z",
+      "stdoutSha256": "2a51beb7ee25fa1cca3b7cdf9ce1f64dc4782df0cbb9154b4fbc91835765ca20",
+      "stderrSha256": "7968e8c49abad85ebe9607aac4eaa785a6189699d19661c489faf2b277a667e9"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-reservation-writer-handoff-original-pin",
+      "fqn": "file_access::windows::worktree_move::tests::ordinary_move_into_created_parent_requires_writer_retirement_and_keeps_original_pin",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.2918622Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.3381115Z",
+      "stdoutSha256": "8f078e2e1ad55d349f04887a9530e619d1db2812fea4024647aafa87734ed18a",
+      "stderrSha256": "1043a65f3825dde6db279af05c9471a7dc511c63baa33f87006135a22cbbff86"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-reservation-late-collision-preserves-source",
+      "fqn": "file_access::windows::worktree_move::tests::reserved_parent_handoff_keeps_late_destination_collision_and_source_untouched",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.3409432Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.3959789Z",
+      "stdoutSha256": "78f29df53694b8e0a553ea66174b39b1666ce6e293a1f484099f7f12b265893f",
+      "stderrSha256": "e63373241eff7a734eb382c287a869ce2e36d6510364bcbd1b050983e6abbb60"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-reservation-refuses-nonempty-or-other-owners",
+      "fqn": "file_access::windows::worktree_checkout::tests::reservation_handoff_refuses_existing_populated_registered_and_index_owners",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.4007780Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.4995288Z",
+      "stdoutSha256": "4aa8f6158b46db478fccb10bccbb51722b0fde194df3bdb736e96ebf81bb50e4",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-reservation-refuses-foreign-member-or-cancel",
+      "fqn": "file_access::windows::worktree_checkout::tests::reservation_handoff_refuses_foreign_member_and_cancel_without_removing_either",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.5019487Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.5423111Z",
+      "stdoutSha256": "e01d448e1eec034b1fc1efe13a88f3040219a0366a1941df236552e66b56eb05",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-git-pointer-plain-drive-syntax",
+      "fqn": "worktrees::recycle::windows::pointer_tests::pointer_text_keeps_plain_drive_unicode_and_rejects_other_namespaces",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.5458135Z",
+      "finishedAtUtc": "2026-10-23T12:14:30.5653811Z",
+      "stdoutSha256": "241788612e03b031cf14e44ab7b3b1bd44c55ab765eebeefcc75349de154a600",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "archive-git-pointer-original-object-listing",
+      "fqn": "worktrees::recycle::windows::pointer_tests::official_git_lists_original_root_only_after_owned_back_pointer_uses_git_separators",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:30.5685809Z",
+      "finishedAtUtc": "2026-10-23T12:14:34.3878679Z",
+      "stdoutSha256": "78fb2822d16c028225dc5e3649b6365019de6e615a4cb070502173d1ec4bf342",
+      "stderrSha256": "3fe1e1df5e80011268800cebc0d85487943d96f169a51d5ffaae4089bb6cba45"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "recovery-verbatim-child-reservation-boundaries",
+      "fqn": "worktrees::manager::remove_manager::tests::verbatim_recovery_child_reserves_original_parent_and_rejects_wrong_boundaries",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:34.3908011Z",
+      "finishedAtUtc": "2026-10-23T12:14:34.4302021Z",
+      "stdoutSha256": "c572c01880f6d488bae911cc257cdc992acfe396d0c494f7b8b1480f470c8000",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "prepared-git-original-leaf-complete-mixed-rebuild",
+      "fqn": "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:34.4323534Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.6553574Z",
+      "stdoutSha256": "7a412f13040743728da9720108678e94edecfd55e34c8c5261f1ea5c4c2d5d11",
+      "stderrSha256": "0300c68a3b0652a8eb55bf70376efe737c45cb806bd22ac60b29cad1b24a7a1b"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "restore-failure-layout-numeric-offsets",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_reports_physical_offsets_without_reading_names_or_bodies",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.6992308Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.7142256Z",
+      "stdoutSha256": "e8f1ecc6b73bf257661383704c911fb428f1babacdcb89c465bfa1f273f6dd37",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "restore-failure-layout-malformed-extents",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_rejects_truncated_and_unbounded_record_extents",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.7167128Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.7311320Z",
+      "stdoutSha256": "d8289fa07662ddd91ed4649b879aef07987a6af1ac779fbaee7d10419821b6c0",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "restore-failure-layout-bounded-output",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.7331119Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.7464694Z",
+      "stdoutSha256": "c026200f24944ba977becde21602ffe054c8a354b2f6fe2d61129834c61a9c43",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "material-publish-original-creation-writer-handoff",
+      "fqn": "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.7483488Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.7983696Z",
+      "stdoutSha256": "2269f70c982c94e180a281d221646b59f4dbc7a29149d2d50dccf2b07f2d2e32",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "regular-full-security-original-extent",
+      "fqn": "file_access::material_carrier_records::tests::security_extent_is_exact_for_each_physical_order_and_not_an_ordinary_facet",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.8005077Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.8156661Z",
+      "stdoutSha256": "06f49619afc008c2741dc4968f44a80cd27a580864111fec7e9ad124c3c2ae50",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "directory-full-security-original-extent",
+      "fqn": "file_access::material_directory_records::tests::full_directory_security_extent_tracks_original_bytes_without_payload_downgrade",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.8176056Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.8321769Z",
+      "stdoutSha256": "e85b9f228208b62e38c2bb1414f7ea59079c5f8d95e77559645aa0d012f2c440",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "security-last-exact-bytes-and-seek",
+      "fqn": "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.8344706Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.8619531Z",
+      "stdoutSha256": "7c58bbc9fc2fc64b9108751430632f02dac978300b26db78f157ff50b40ae7c4",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "security-last-invalid-and-truncated",
+      "fqn": "file_access::material_backup_io::security_last::tests::invalid_extents_and_short_sources_cannot_invent_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.8640058Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.8778477Z",
+      "stdoutSha256": "0d10399e59da079a1a13b9deeb860b22df8f963b89092a685ff81d7f22b55f72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "security-last-original-transfer-lifecycle",
+      "fqn": "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.8798309Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9010700Z",
+      "stdoutSha256": "2a5877aef4730b7e1e7f7353c0f7c8cef532252d65f31ba08a7e02e2cbbf6864",
+      "stderrSha256": "d4b3dff721a161ce9978e3030b287182a900872fa1f6373eba93e121d3715ca1"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-single-default-proof-exact-range",
+      "fqn": "file_access::material_carrier_records::tests::single_default_payload_proof_keeps_exact_range_hash_and_rejects_other_facets",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9031693Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9186923Z",
+      "stdoutSha256": "66a2800548fca00415deef7ad704ece51512197bb101fdc2f9d7572343cb5f7e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-single-default-proof-complete-framing",
+      "fqn": "file_access::material_carrier_records::tests::single_default_payload_never_bypasses_flags_or_complete_framing",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9207427Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9352757Z",
+      "stdoutSha256": "d175914a9f3e7ba872e92056653f7e871db1e924db89840693034e5cb35f94dd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-short-default-original-file-and-threshold",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9374870Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9547421Z",
+      "stdoutSha256": "b4939405ad18af7f69b7dde68697eff6e733a6fdf056a59164d21d5e8a5998ac",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-short-default-input-integrity",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::short_default::tests::changed_truncated_extra_or_mispositioned_input_cannot_write_target",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9568596Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9722403Z",
+      "stdoutSha256": "25c7697f5e871ab7617ccf01398a853b810ab80b3bcfad49787db5093c1328d1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-short-default-empty-target-budget-cancel",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::short_default::tests::nonempty_target_budget_and_cancellation_refuse_before_payload_write",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9742793Z",
+      "finishedAtUtc": "2026-10-23T12:14:47.9895899Z",
+      "stdoutSha256": "1e3be9ceb684abd3f354173247aef50f3fe71a7fdfeba44aa3de6a7f860cfc66",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-short-default-original-write-right",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::short_default::tests::missing_original_write_right_is_reported_without_reopening_target",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:47.9917114Z",
+      "finishedAtUtc": "2026-10-23T12:14:48.0127409Z",
+      "stdoutSha256": "63021177c8d59ccc01f714999da8b534afea73087e326af049e87ccbca351fc7",
+      "stderrSha256": "c137e64717f28a1f8de5bacc639c6062786fa8202bbffa5f427897fd7281f966"
+    },
+    {
+      "mode": "Ordinary",
+      "name": "ordinary-zero-through-five-cold-material-counts",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_zero_through_five_byte_files_keep_exact_cold_material_and_real_write_counts",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:48.0147666Z",
+      "finishedAtUtc": "2026-10-23T12:14:49.0369284Z",
+      "stdoutSha256": "240beefd13ddbeb887339683d2aa2912c50f959abfb3ed50da2e273b37aad1b5",
+      "stderrSha256": "450001e413c0a2202613efdd285bd7119784e6d4275a66f8c3aada0d8dc9e466"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "cold-reopen",
+      "fqn": "worktrees::recovery_pack::material::tests::persisted_descriptor_reopens_with_new_owner_after_original_source_and_owner_drop",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:50.2849102Z",
+      "finishedAtUtc": "2026-10-23T12:14:50.4961187Z",
+      "stdoutSha256": "47168afe3a03380ea3b6eae68927b48660013accb24d29a221889be69fe1d6f4",
+      "stderrSha256": "1f8c1cdd220fcb5b247a9a431a0548489465f430e49a95a4e6752bdf4519488b"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "cold-tamper",
+      "fqn": "worktrees::recovery_pack::material::tests::cold_descriptor_tamper_never_enters_consumer_or_removes_retained_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:50.5539268Z",
+      "finishedAtUtc": "2026-10-23T12:14:50.6944841Z",
+      "stdoutSha256": "08b59d67218217ccc3a8989e920973411271152ee7710f2250cde8f25aacd40b",
+      "stderrSha256": "4b09fd84b367d12945bc125b06a6ca7fd9d53a673dfa1052985abeecbf9e1931"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "cold-selected-target",
+      "fqn": "worktrees::recovery_pack::material::tests::cold_material_restores_an_absent_selected_target_and_retains_actual_files_after_release",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:50.6999502Z",
+      "finishedAtUtc": "2026-10-23T12:14:50.8879071Z",
+      "stdoutSha256": "afff814f57c3665a3d72b564ef48a017c09be27171be5340412152a695f40c2d",
+      "stderrSha256": "8ea4f61a5fb005b7f3baa30494e67133476a49e1eb083af3a153078df357f745"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "public-recover-refusals",
+      "fqn": "worktrees::recovery_public_windows_tests::public_cold_recover_rejects_collision_cancel_and_changed_manifest_without_deletion",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:14:50.8967763Z",
+      "finishedAtUtc": "2026-10-23T12:16:24.3454554Z",
+      "stdoutSha256": "ccfef00d5b6f7ecdb74203424f285b6555f9f85e73a4b7cd2fe886931f92891f",
+      "stderrSha256": "277600814824bbcd121faecda3def580ef354d3ad4c7247e367f25f8b84ea25b"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "archive-native-identity",
+      "fqn": "file_access::windows::worktree_move::tests::actual_move_refuses_collision_and_preserves_identity_after_post_rename_failure",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:16:27.3547547Z",
+      "finishedAtUtc": "2026-10-23T12:16:27.4061821Z",
+      "stdoutSha256": "63137f6cc30d456ceb5b373eea59acec8890d9df6fc11b50d322533ff61626c5",
+      "stderrSha256": "c3d83c2cfce80cf789935e3f48c21abaaf3ae37213756174a3861c61cdddca7c"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "public-create-archive-restore",
+      "fqn": "worktrees::create::windows::tests::public_create_archive_restore_keeps_same_tree_and_both_official_git_pointers",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:16:27.4101561Z",
+      "finishedAtUtc": "2026-10-23T12:17:14.1701414Z",
+      "stdoutSha256": "283f9d4e6da8ef2a5104fe0fb11875b73fa4f274cf106625ed74d191ac09633c",
+      "stderrSha256": "b0b458dc41c802a1f9c66664b49aeb3654a1bfb33609c39c3bdaaeb4c82db159"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "public-retained-cold-recover",
+      "fqn": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:17:14.2209182Z",
+      "finishedAtUtc": "2026-10-23T12:19:08.4107762Z",
+      "stdoutSha256": "8534cdd01ae13c44c1564b05b15a947fe77e9dd0c2faded89a539adcacf10d5c",
+      "stderrSha256": "cde14d51f25fc9d36b727e94149375569eec5831c62b24f22877c40fbe1b6823"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "delete-owner-native-facets",
+      "fqn": "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:19:08.4789480Z",
+      "finishedAtUtc": "2026-10-23T12:19:08.5427158Z",
+      "stdoutSha256": "c408406c0c65625a95add7dc1154865a365855796c5a010492cdc39a5b9b4d30",
+      "stderrSha256": "759b07c43cc45a7430465964fb1259595ca00e168c54f849cc70e5e8a5fc667f"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "mixed-source-node-capacity",
+      "fqn": "file_access::windows::material_mixed_tree_source::tests::more_than_sixty_four_actual_sources_fit_unchanged_pool_and_release_their_leases",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:19:08.5465103Z",
+      "finishedAtUtc": "2026-10-23T12:19:08.8218094Z",
+      "stdoutSha256": "b9084c102405c5208503a9f56835d3538f908fa5c62d782173958e6f80ceeeac",
+      "stderrSha256": "86a00764d1de22bea59b40fd5f12884ee8b10d01c288afdf40b8b215f3d47454"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-ads",
+      "fqn": "worktrees::remove_native_windows_tests::late_named_stream_after_complete_native_fence_must_be_preserved",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:19:08.8249163Z",
+      "finishedAtUtc": "2026-10-23T12:20:57.9965922Z",
+      "stdoutSha256": "fb86f8f2a7a6ca989927d4b5f362bd0d50b0c8b70a1b7da178a6066226fb9b13",
+      "stderrSha256": "fec1aa74fa0e16d4f1d9aaab2823e90952f472e346c656ef5c2dc7e3e4139903"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-ea",
+      "fqn": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:20:58.0558695Z",
+      "finishedAtUtc": "2026-10-23T12:22:48.3533775Z",
+      "stdoutSha256": "7860d670c78c2245b4753c83fb3cb3f8c395db6871dc87546560af3c5a9553ea",
+      "stderrSha256": "cb6518bf870d21d47d058145a68da3bb4be0e813ecce8374302bcfb267fa5251"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-same-size-ads",
+      "fqn": "worktrees::remove_native_windows_tests::same_size_named_stream_change_in_final_callback_is_rejected_with_valid_recovery",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:22:48.4155616Z",
+      "finishedAtUtc": "2026-10-23T12:24:38.0295394Z",
+      "stdoutSha256": "34bcd4dddfbf05eaa6fc62027735ccb152af1714811bf143cda71cdc5b6d6b8f",
+      "stderrSha256": "b9c09d3867a15a4e85e8a824935539cce3a49cb6ebbb3665d826b4f435e54734"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-security",
+      "fqn": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:24:38.2051035Z",
+      "finishedAtUtc": "2026-10-23T12:26:27.9705848Z",
+      "stdoutSha256": "d201a0c427f0aa7fdb2f89dd9543f1f3ab8f25ac89362724cb286d88a026dc72",
+      "stderrSha256": "689e545d455abfbee931cbe3c0f3c6e2ea959d7273491269547719563f175c16"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-member",
+      "fqn": "worktrees::remove_native_windows_tests::new_member_in_final_callback_is_not_chased_and_recovery_remains_valid",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:26:28.0279058Z",
+      "finishedAtUtc": "2026-10-23T12:28:17.6689818Z",
+      "stdoutSha256": "f53e4c4e9d2c98e78615fbde399587307b1934693a27dfdebf8777d1da188798",
+      "stderrSha256": "0a9332a25f1ea17445d5617e31233b0d6570b493a17d5f3c9bcbeebd404d5bcf"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "remove-late-cancel",
+      "fqn": "worktrees::remove_native_windows_tests::cancellation_in_final_callback_preserves_source_and_valid_recovery",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:28:17.7190097Z",
+      "finishedAtUtc": "2026-10-23T12:30:07.2954813Z",
+      "stdoutSha256": "9862bc3a613b6c5e41cb6254ddd9d7577a4bb6956546b9180d16edb4aad519b1",
+      "stderrSha256": "fea2af376ca6562cdc77a0dcb9afabf227ed268fe515ba9bd015b34ef8a6ec13"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "public-remove-cold-recover",
+      "fqn": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:30:07.4092265Z",
+      "finishedAtUtc": "2026-10-23T12:32:30.4135674Z",
+      "stdoutSha256": "0a81594604c6b112d163925e4709f8c2d1e2ebb193adcb82b3da61d640eebcb2",
+      "stderrSha256": "6bfc4614c8d97ff131812efd58b9cf91ed26228e641391a4c035f69a003940bd"
+    },
+    {
+      "mode": "FullSecurityManual",
+      "name": "full-security-original-order-versus-security-last",
+      "fqn": "file_access::windows::material_persistent_store::restore::node::security_order_tests::same_full_security_carrier_original_order_denies_ads_security_last_recaptures_exactly",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:32.4472950Z",
+      "finishedAtUtc": "2026-10-23T12:32:32.5300989Z",
+      "stdoutSha256": "df52856b22c9a0ded6b345234812303195edd4633af3839afc477d0ea285014a",
+      "stderrSha256": "19429777b20258c2aaa3d065659890779ab7a37b88c0b3764f2ab968fefe42ae"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-carrier-fullsd-1",
+      "fqn": "worktrees::material_owner::carrier_tests::full_security_single_owned_node_has_actual_native_capture_write_recapture",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.4876556Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.5973985Z",
+      "stdoutSha256": "15de88f10d0c3549d394a3b7fd1b6c0401922d9ecb214ceeb23a2a9a3d161b63",
+      "stderrSha256": "a4febbba26b3fd8f9bc2fa0b6be05d1378ff90b538b59f60334f5dd362f8c5e3"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-carrier-fullsd-2",
+      "fqn": "worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.6494471Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.7125082Z",
+      "stdoutSha256": "6599bd6e07dd9e1fa4bcf40f010c15df7a5f0f4b4454655418db481e441b10b8",
+      "stderrSha256": "a9e5a4604ef8d209c7f9ff174ce0ef6035bec9710b164ed26c874b8b127d13d8"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-carrier-fullsd-3",
+      "fqn": "worktrees::material_owner::carrier_tests::source_full128_mismatch_rejects_before_creating_target",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.7177865Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.7567711Z",
+      "stdoutSha256": "44de471d90e5decb18ff2ab353a65d2ab68267eb3837d3dd99de3b2fe5ca4e7e",
+      "stderrSha256": "fa423f56f9c0b9ecd5803fb89689842db74aff04baf344321b6765fa54b88c73"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-carrier-fullsd-4",
+      "fqn": "worktrees::material_owner::carrier_tests::hardlinked_source_is_not_silently_flattened_into_single_node_profile",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.7614797Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.7993858Z",
+      "stdoutSha256": "9f449109fa51dfc54ab9c1ae889e832189e204169a4ab380f57a208b7cfc922c",
+      "stderrSha256": "6fc8467e80018f8176751e0e55b9856e59170b97a9a3680fbbacb5e3257c4f50"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-raw-pin-fullsd",
+      "fqn": "file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.8040590Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.8483902Z",
+      "stdoutSha256": "b89d37c29998b303872ffbe7b03086e952b7179bcc5670b6229e4149e2dea2d0",
+      "stderrSha256": "2fcde27f1837942d2ca1f0eecb3cff4f09de65024bb545931e191864278dffe2"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-owned-link-fullsd",
+      "fqn": "worktrees::material_owner::owned_link_tests::owned_ntfs_relative_link_keeps_actual_full_security_bytes_when_token_allows",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.8585804Z",
+      "finishedAtUtc": "2026-10-23T12:32:33.9272028Z",
+      "stdoutSha256": "9a24edcc35f2fd2ada0317e18d004626c0631a760dff70236de3a91a3b761242",
+      "stderrSha256": "5d8d6f4c3b5843c5b2758de2709838a3cf6f1915b8d62c2405a5b3dab5ef12f9"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-directory-fullsd",
+      "fqn": "worktrees::material_owner::directory_carrier_tests::full_security_directory_is_a_distinct_actual_native_capture_profile",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:33.9553936Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.0117581Z",
+      "stdoutSha256": "f1310d4096f418f8c8a7c36dc2d459f237ccb50a6110f30bb2c2c52c24399d61",
+      "stderrSha256": "2815867016b91ea438d58b2bd6a2bba42a92f1302ce5f7883b62a704c43fd4ba"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-directory-restore-fullsd",
+      "fqn": "worktrees::material_owner::directory_restore_tests::full_security_directory_restore_is_explicit_and_recaptures_actual_full_sd",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.0171682Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.1123543Z",
+      "stdoutSha256": "180428b555d8c4d4502f64b16cf962776e49a92a8318673b8757d69bceaf7da1",
+      "stderrSha256": "64f5fd317994299d77435633244f09a4adf77e9a988e03a246d7dc124f3dc17f"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-directory-tree-fullsd",
+      "fqn": "worktrees::material_owner::directory_tree_tests::actual_two_directory_full_security_tree_uses_explicit_purpose_and_no_fallback",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.1221066Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.2840447Z",
+      "stdoutSha256": "e3c9ef9fe3d750c5dbeb4e1184cd7765268f8845a58f61bc312e575a17b0b314",
+      "stderrSha256": "40b577cf122ac64b9b40133cbcbe54dfb28dea803aed7fc53bbf488aa5512acb"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-regular-shared-fullsd-1",
+      "fqn": "worktrees::material_owner::regular_shared_tests::two_regular_sources_share_actual_spool_pool_budget_and_consume_complete_ffnode_bytes",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.2903341Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.3819070Z",
+      "stdoutSha256": "cfb1e848c92f0f7a11721052a51817adbbe0638e297f0bb219e11f35a1bcb89c",
+      "stderrSha256": "57b0f674623c9f724cb320b04ad0037476cdd88338a5e8a99cd740260e26b575"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-regular-shared-fullsd-2",
+      "fqn": "worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.3873159Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.4246810Z",
+      "stdoutSha256": "dd328df71f8b5551879262148228f2a23126b4b4e1cebc9e8b936db602be9a62",
+      "stderrSha256": "6d038569f4b06e9abb208d2ba98b32caef4ee2777e23c5ddcffba967c702c474"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-regular-shared-fullsd-3",
+      "fqn": "worktrees::material_owner::regular_shared_tests::shared_capture_retains_the_original_links_one_guard_before_any_alias_success",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.4297264Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.4701406Z",
+      "stdoutSha256": "622310ae29b46a7f95505f18526187565f70ada625c66bc481831824ccb21283",
+      "stderrSha256": "2305683528e46f7bcd1cea99c13435262140a462153b2aef113fe9780ff239e0"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-continuation-mixed-fullsd-1",
+      "fqn": "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.4753718Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.5967495Z",
+      "stdoutSha256": "5cba492df8725854d7377248c78d5a6fd78c684c17b0faa4f6d1c394e2b83ccb",
+      "stderrSha256": "e45fd239b9831341987329aa8c4e7c0a96b7c321bfc39780e0b9a9cb033844f5"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-continuation-mixed-fullsd-2",
+      "fqn": "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.6040219Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.6798912Z",
+      "stdoutSha256": "41d38a15bd97237963650886e8ba6774564b71ff7e1eba89bef5203de8f6c502",
+      "stderrSha256": "9181c5df3bca163ce84aa376a877f22080663d55a5128e7040e08709cf85e803"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-continuation-mixed-fullsd-3",
+      "fqn": "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.6904831Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.8344232Z",
+      "stdoutSha256": "17ebf12dc3d47d06ba86e5bf43d0724973821d788cc323202e18963783fbddf9",
+      "stderrSha256": "03799a1bd8f2dd539d1baec3aa8de8027a14bece607a804b1a0b7b554faa62fa"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-continuation-mixed-fullsd-4",
+      "fqn": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.8396757Z",
+      "finishedAtUtc": "2026-10-23T12:32:34.8832878Z",
+      "stdoutSha256": "4385947dc95e728c04ff6ada7844d7569730196efc6b06601795897a08d69dec",
+      "stderrSha256": "3e649d95c7eae655801dce4b334fba79c0408024fb9588e2d27ba1562da388b9"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-continuation-mixed-fullsd-5",
+      "fqn": "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:34.8884335Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.1039131Z",
+      "stdoutSha256": "d197a8ed1823a9941048ebe22ad6afd58deb8ee5dd2a513deabc6adea35ac190",
+      "stderrSha256": "fdd9758cacd90c6377df3526ce742b67b707463a1cad29265cee2a3547e2f275"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-07",
+      "fqn": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.1093907Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.2520423Z",
+      "stdoutSha256": "3eb2e6750c9d39f170091cb2215f8f35ab6d4cb0ddf92e269c90d64d38c463d9",
+      "stderrSha256": "3921d1aec07d6ea24ca8ac6ae4f956d7f4d1f9996c07a78f80a4696920888fb0"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-08",
+      "fqn": "worktrees::recovery_pack::material::tests::root_git_edge_and_existing_final_refuse_without_copying_or_replacing",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.2571665Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.3996734Z",
+      "stdoutSha256": "738ab21dc4106f23664c4c31f10e8f408fc3c9d580a24f77f1c56775c1699337",
+      "stderrSha256": "5665e6c1a6f80731dd5f8cba05e804e94b78b7b2bd3580c046e4f98006c3a06f"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-persistent-owner-09",
+      "fqn": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_is_failure_and_leaves_published_actual_bytes_owned",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.4049880Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.5975416Z",
+      "stdoutSha256": "e3d33b19da1724d6e5ea5040c96e1daaae608a6de242712e21c694f304aab08e",
+      "stderrSha256": "0ebe3366dbddbd42062672045aeda970406d17bca19b4a305b9f9ef460601259"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-target-groups-19",
+      "fqn": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_observe_actual_full_sd_without_claiming_source_sd_restore",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.6046200Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.6802075Z",
+      "stdoutSha256": "a221b209ee65fe48a3dadb46c605039b20d3681d5be27ccd71c1522241a2f7f0",
+      "stderrSha256": "8448242d77c363e7fa575f9c36823724597b99567411095086a9079188c7de44"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-29",
+      "fqn": "worktrees::recovery_pack::material::tests::sealed_actual_tree_reconstructs_raw_parent_edges_data_ea_ads_after_source_removal",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.6896728Z",
+      "finishedAtUtc": "2026-10-23T12:32:35.9565907Z",
+      "stdoutSha256": "2b8dae87f35ad00bcccebed8d09829bdacf06791db1ac51bf19b616844aba085",
+      "stderrSha256": "a69dcedbf8d93d45a0e913a3a50c94ea1761078ea161dee6372f9fa58254dc17"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-30",
+      "fqn": "worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:35.9616033Z",
+      "finishedAtUtc": "2026-10-23T12:32:36.1157268Z",
+      "stdoutSha256": "6c5fe642fe48d248f44eb3cca6b7e94039d5687c7560f72cf1245f4c2002208b",
+      "stderrSha256": "4495a76e49cf50f0c903886d63fed01943fe44c756cb68224027d38fcb45416b"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-31",
+      "fqn": "worktrees::recovery_pack::material::tests::one_store_refuses_a_second_reconstruction_while_original_targets_remain_owned",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:36.1215567Z",
+      "finishedAtUtc": "2026-10-23T12:32:36.2982629Z",
+      "stdoutSha256": "31dac39374c205238d19856ee0e537e900207fbc2d683c66ebc858d26555072a",
+      "stderrSha256": "b01e8457c4bff6f12f10240c4d69e4c468ce014d64509e69ef3e1649031d107d"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-sealed-tree-32",
+      "fqn": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:36.3031329Z",
+      "finishedAtUtc": "2026-10-23T12:32:36.5957305Z",
+      "stdoutSha256": "021a824f8ffaf17afb1f4a7d210f46e3291a2a6ce9291a5ff1cdd67e102eb814",
+      "stderrSha256": "f129966199389a619c979ec54e614f5f794538c89d97a8e9584baf8c42e8501c"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-managed-edge-04",
+      "fqn": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_worktree_capsule_excludes_only_root_git_and_keeps_nested_git_bytes_after_source_close",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:36.6013472Z",
+      "finishedAtUtc": "2026-10-23T12:32:38.0724792Z",
+      "stdoutSha256": "66b5c8d4118ae5869cb3887d912fd8f0c5f6f1c0e49b4d6d7dfae575104f72b0",
+      "stderrSha256": "77a3de546db553f3d70259185d23fae304af980ca9b84cc7f5d21402cec92200"
+    },
+    {
+      "mode": "LegacyFullSecurityManual",
+      "name": "legacy-owned-material-fullsecuritymanual-managed-edge-05",
+      "fqn": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_managed_private_namespace_change_during_consumer_fails_final_source_fence",
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-23T12:32:38.0775052Z",
+      "finishedAtUtc": "2026-10-23T12:32:39.3884757Z",
+      "stdoutSha256": "f1f1bf3c5ced91eb916020db37e79e73d3116e0e97765ea2502b611f6a3a703d",
+      "stderrSha256": "2ae3849d98adb2b5cef53ae7c6b37de21a8cbf6843d60dd8d000619a4a0d2f4c"
+    }
+  ],
+  "stability": {
+    "allLocalReadInputsUnchanged": true,
+    "readFileCount": 905,
+    "changed": [],
+    "runnerInputScope": "Each cohort verifies selected libtest, fixture, runner script, manifest and head before/after. This full diagnostic workflow does not archive an all-Rust source map; do not substitute the focused workflow source-map claim.",
+    "binaryBytesRehashedLocally": false,
+    "binaryBoundary": "Selected binary/helper hashes verified from same-run build and cohort receipts; executable payloads were not downloaded or rerun."
+  },
+  "docsReadyConclusion": "13f768e0 full Windows run39948790029/1: current140 (123 ordinary +17 manual) and independent granted-child FullSecurity27 all passed, including six final injections and public cold restore/remove paths. Original304 comparator remains 275 pass/28 fail/1 retired missing; three replacements and three diagnostic observations remain separate. Whole workflow failed on old default-token FullSecurity expectations and checkout-profile extra-name contamination. This one successful run does not erase prior fd89 run39945651058 natural coverage-gap failure or prove it repaired.",
+  "limits": [
+    "No claim of formal installed Windows UI, real Agent workflow, all 29 eight-standard acceptance, arbitrary timing reliability or whole project completion.",
+    "Current successful callback-injection tests cover their exact injected positions, not all possible future OS mutations.",
+    "No new production fix was made by this audit. Prior intermittent failures remain valid and unresolved until their causal changes are independently established."
+  ]
+}

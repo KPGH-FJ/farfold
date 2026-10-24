@@ -1,0 +1,11 @@
+
+running 6 tests
+test file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent ... ok
+test file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused ... ok
+test file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success ... ok
+test file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority ... ok
+test file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input ... ok
+test file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2318 filtered out; finished in 0.01s
+

@@ -1,0 +1,37 @@
+{
+  "group": "bounded-owner-actual-result-and-error-are-preserved-and-panic-is-only-unknown",
+  "filter": "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown",
+  "category": "boundedOriginalBlockingRequestOwner",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown"
+  ],
+  "actualPassedNames": [
+    "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::manager::request_wait::tests::actual_result_and_error_are_preserved_and_panic_is_only_unknown",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:30.0660991Z",
+  "finishedAtUtc": "2026-10-23T12:14:30.0879492Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "A4E3D134F45F09B2F251A758D45B82EEF2889F30B6E634D629CEEB92380CA79E",
+  "stderrSha256": "9B5C147C8068D125656D01FE060B0996CC98D0B2D20C29ADA88A5276F2B964F8"
+}

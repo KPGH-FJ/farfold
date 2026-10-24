@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-short-default-original-file-and-threshold",
+  "filter": "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold",
+  "category": "ordinaryShortDefaultOriginalFile",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::restore::node::short_default::tests::exact_short_payload_uses_original_file_and_refuses_native_threshold",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.9374870Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.9547421Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "B4939405AD18AF7F69B7DDE68697EFF6E733A6FDF056A59164D21D5E8A5998AC",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

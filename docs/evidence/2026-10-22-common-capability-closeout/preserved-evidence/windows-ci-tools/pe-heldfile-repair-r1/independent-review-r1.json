@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-10-23T10:33:32.360407+00:00",
+  "reviewer": "early_windows_review; not author of HeldFile/Win32 repair (author of earlier unchanged PE resource parser)",
+  "scope": "Only the a65a6f Windows held-file repair delta against d332 original; static read, official ABI/ownership documents, one new owned-file/mock-Win32 extent control. Not whole-product or actual Windows acceptance.",
+  "source": {
+    "path": ".github/scripts/windows-pe-resource-inspection.py",
+    "sha256": "a65a6faca11aa29be177990d13ae997680f2f4827fcebc0826f30cde748e38b7",
+    "bytes": 32340
+  },
+  "baseline": {
+    "path": "evidence:e-41d8cd12b6d393657fd8",
+    "sha256": "d332232eb073708faa72a031a92a7492e35bf852ac35405462c90d534d279c73",
+    "bytes": 25883
+  },
+  "authorHandoff": {
+    "path": "evidence:e-af83f6373f30d2c7680a",
+    "sha256": "377ff6e3268ce96dcff32a5b0a106999486f7dcdc0392735a6f169f420e9bb4a",
+    "bytes": 6971
+  },
+  "decision": "Changes requested: bind full-file hash traversal to the accepted extent before calling the repaired reader ready for actual CI. Other selected repair boundaries show no blocking finding.",
+  "findings": [
+    {
+      "priority": 2,
+      "path": ".github/scripts/windows-pe-resource-inspection.py",
+      "line": 189,
+      "title": "Use the admitted file extent for both hashes",
+      "evidence": "Windows initialization accepts self.size from FileStandardInfo but hash() still iterates earlier self.initial.st_size. There is no equality check between them. The controlled new-file model accepts native size 6 and reads six bytes while hashing only earlier diagnostic size 3; changing the final three bytes does not fail finish.",
+      "minimalFix": "Iterate and chunk self.size in hash() (POSIX already sets self.size=self.initial.st_size), or reject any length disagreement before hashing. Keep full native identity pre/post checks, size bound and final hash equality. Add a targeted old-stat/native-size disagreement control, including final-suffix mutation rejection.",
+      "qualification": "This establishes an unchecked accepted-extent/hash-span invariant. The model is not an actual Windows race; CreateFile FILE_SHARE_READ excludes data-write access and existing writable mappings, so no claim of normal NTFS concurrent-write reproduction.",
+      "control": {
+        "path": "evidence:e-46f2f89840a647ba745f",
+        "sha256": "dfa161d959e682ceebd43374cbc0bdba366eb06b8caccbd0063884c9f9e3cdfe",
+        "bytes": 926
+      }
+    }
+  ],
+  "reviewedBoundaries": [
+    "CreateFileW GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, FILE_FLAG_OPEN_REPARSE_POINT only; no create/truncate/delete/write or Backup/Restore privilege path. Directory and final reparse results reject.",
+    "Original Win32 handle is transferred once to CRT fd. Failed transfer closes original handle; constructor errors close fd. Temporary path fd closes in finally, and finish closes original fd on identity/hash failure as well as success.",
+    "FileIdInfo class18: 64-bit volume plus full128-bit identifier. Basic class0 uses four signed64 timestamps and DWORD attrs. Standard class1 uses two signed64 lengths, DWORD links, two BOOLEAN bytes. Native alignment expected24/40/24; inspected C layouts and ctypes types agree. This is static ABI review, not Windows invocation.",
+    "Same API supplies both held and path-reopened identity/metadata. Query failure or unavailable identifier rejects without fallback. Full id, volume, size, links, creation, write, change, attrs, delete/directory are compared before and after final hash.",
+    "LastAccess is excluded as intended because reads can change it. Attribute/EA access is not barred by share flags; metadata checks are observations, not a claim of atomic filesystem freezing.",
+    "Python stat/ctime fields are diagnostics only for identity. Old actual failure did not record Python version/compared tuples, so original differing field remains unknown.",
+    "Observations have16-entry bound,128-char basename and fixed primitive metadata fields, no file bodies/SD/credentials. Native query types/fields remain distinguishable from Python diagnostics."
+  ],
+  "mechanicalCheck": {
+    "allOtherExistingFunctionsAstUnchanged": [
+      "require",
+      "budget",
+      "digest",
+      "unpack",
+      "small_input",
+      "bind_generated_rc",
+      "pe_resources",
+      "manifest_semantics",
+      "version_info",
+      "rc_expectations",
+      "icon_entries"
+    ],
+    "mainAstOnlyNewInputObservationsAssignment": true,
+    "resourceParsingHashBoundsVersionIconsManifestAcceptanceUnchangedOutsideHeldFile": true
+  },
+  "officialSources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_id_info",
+      "support": "full volume serial and 128-bit ID for two-handle identity comparison"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_basic_info",
+      "support": "four LARGE_INTEGER time fields and DWORD attributes; change and write are distinct"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_standard_info",
+      "support": "AllocationSize/EndOfFile/NumberOfLinks/BOOLEAN DeletePending/Directory layout"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ne-minwinbase-file_info_by_handle_class",
+      "support": "enum indices Basic0,Standard1,Id18"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle?view=msvc-170",
+      "support": "ownership transfers to fd; successful transfer closes through CRT, not double CloseHandle"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew",
+      "support": "OPEN_EXISTING, read sharing/reparse flag semantics; attributes not blocked by sharing; denying write sharing also excludes writable mappings"
+    }
+  ],
+  "notPerformed": [
+    "source edits",
+    "Cargo/CI/App/Agent",
+    "old artifact or old reader rerun",
+    "actual Windows native calls",
+    "inspected PE execution/loading"
+  ],
+  "sourceFreezeStillMatches": true
+}

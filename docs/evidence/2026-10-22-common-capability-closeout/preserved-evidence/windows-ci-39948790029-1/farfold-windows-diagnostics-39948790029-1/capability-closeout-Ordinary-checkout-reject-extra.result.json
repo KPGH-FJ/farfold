@@ -1,0 +1,37 @@
+{
+  "group": "checkout-reject-extra",
+  "filter": "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation",
+  "category": "ownedNativeDestination",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_checkout::tests::unexpected_real_directory_entry_is_rejected_without_adoption_or_selected_mutation",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:53.1001260Z",
+  "finishedAtUtc": "2026-10-23T12:08:53.1422529Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F21EC7B00F95C46943DF42F7B934B37F5A7A73B93BAC6DF8C4F53E3EFAFEC39B",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

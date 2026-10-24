@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T12:56:50.401067+00:00",
+  "status": "source-stable-awaiting-root-checks-and-non-author-review",
+  "workingTreeBaseHead": "e3fbb0626022ecfd19685a915317ad1b66b63fdd",
+  "newSourceCommit": null,
+  "author": "delivery_prep",
+  "sourceFiles": {
+    "src-tauri/src/process_platform.rs": {
+      "beforeSha256": "19c4c458262fcd5635b1b0869ae5d910fdd92670541e64bdd1b3d57e84e88fc7",
+      "sha256": "a3f0a0f80c109c9297334d417d481d7edbc696add9107138def7f36cf203bae4",
+      "bytes": 5688,
+      "lines": 193
+    },
+    "src-tauri/src/windows_process.rs": {
+      "beforeSha256": "5bd0ccf7a560f08ef9d08cad32110fea7d2feab3d871e61614d5d8903a1a0a9a",
+      "sha256": "02961ffc26c70c13631e7a3c918569f304e63f9285cb9e2bbb7cf1a87ae7d672",
+      "bytes": 21555,
+      "lines": 632
+    },
+    "src-tauri/src/windows_process/behavior_tests.rs": {
+      "beforeSha256": "db70bbc68be5088eec0d7cf83277e060a585444a6eabee64b6e89c30fa1f9f97",
+      "sha256": "430159b8ac22d7c52545ee0d2f7a4a17de2e5aecf781dc27ea3068806dd3d8a4",
+      "bytes": 12014,
+      "lines": 361
+    },
+    "src-tauri/src/worktrees/git.rs": {
+      "beforeSha256": "3978da02422126cb004ab6f6c75e006d2da1229f71fd8042c7b0da271a4c39d5",
+      "sha256": "66fb00844ffbf4527c334da649b2f06364ac3f86f2af496fcde89112f7a7156f",
+      "bytes": 22564,
+      "lines": 664
+    }
+  },
+  "diff": {
+    "path": "evidence:e-394df55405ddd7ea89bd",
+    "sha256": "cb83bd3f3e2e6b41235a6a837b7f3938790131109cfdf283001a1e34dffd8659",
+    "bytes": 11820
+  },
+  "implementation": "Only worktrees/git.rs::execute_bounded selects process_platform::prepare_noninteractive_git_command. Private fixed git-stdio mode detaches outer helper and selected child with DETACHED_PROCESS. Generic stdio retains CREATE_NO_WINDOW; pty retains original absence of this override. Literal arguments, selected program, explicit env overrides/removals and cwd use the same rebuilding path; caller still installs stdin/stdout/stderr afterward and helper inherits those exact streams. No new config/env/dependency/Job rights or stop logic.",
+  "unchangedGuards": {
+    "src-tauri/src/windows_process/current_members.rs": "fbb387bb492c0d8420637444f52cfe75fea392aa1c1b913d8b14584fb9686a7d",
+    "src-tauri/src/windows_process/current_members_tests.rs": "8d6a9a7401eb8a8a219bf8db601727174596546c8cccb2857ec2c69d8f0d8168",
+    "src-tauri/src/pty.rs": "c1bda9e104c4188671b18f706c77dcdf1261d633cc0c0243f6db52f24ebc8417",
+    "src-tauri/examples/windows_process_fixture.rs": "5658870e13213555b5d4dc217f7b496aab6e2f5901fe1e99edebe37b498e8f85"
+  },
+  "originalGenericBehaviorTestsExactPrefixPreserved": true,
+  "newTests": [
+    {
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code",
+      "ignored": false,
+      "actualCalls": 2,
+      "scope": "Real selected fixture through production new wrapper/helper: literal empty/quotes/Unicode/backslash argv, set and removed existing fixture variable, cwd, finite stdin, stdout JSON, empty stderr, original exit23."
+    },
+    {
+      "fqn": "windows_process::behavior_tests::noninteractive_git_helper_preserves_stderr_and_original_failure_exit",
+      "ignored": false,
+      "actualCalls": 1,
+      "scope": "Real fixture through new wrapper/helper: exact stderr, empty stdout, original failure exit13."
+    }
+  ],
+  "testConditions": "Same-built Windows example windows_process_fixture.exe, as the original behavior tests already require. No real Agent or installed App. Original retained Child Parent guard and five-second until guard reused; Job must actually become inactive. Original generic fixture tests and Git seven settlement assertions remain unchanged.",
+  "verification": {
+    "standaloneRustfmt": {
+      "exitCode": 0,
+      "toolChunk": "4ab109",
+      "skipChildren": true,
+      "files": [
+        "src-tauri/src/process_platform.rs",
+        "src-tauri/src/windows_process.rs",
+        "src-tauri/src/windows_process/behavior_tests.rs",
+        "src-tauri/src/worktrees/git.rs"
+      ]
+    },
+    "cargo": null,
+    "windowsNative": null,
+    "macAffected": null,
+    "notClaimed": "No compilation, RED/GREEN, actual Git, cancellation or root-cause resolution result in this author handoff."
+  },
+  "rationale": {
+    "actualAB": {
+      "path": "evidence:e-5707957bebaf3e692834",
+      "sha256": "63246a925db6137edc109ebbed2d4fe6462f79bdc4dda91d279f8886fafc130c",
+      "bytes": 822
+    },
+    "independentActualAB": {
+      "path": "evidence:e-9ff78b41fa6ebe525a8d",
+      "sha256": "a848dd3f2312f13f1211da66719b916780ed42e287e01215de2387523282f91f",
+      "bytes": 46973
+    },
+    "boundedFinding": "Only fixed cmd exit0 A/B: default extra PID values in49/120 ample queries and all12iterations, detached0/120. Both36 command originals naturally zero; neither reproduced assigned1/listed0. Extra process identities remain unknown; this is not a proof of Git/STDIO behavior or the production intermittent gap cause.",
+    "primarySources": [
+      {
+        "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags",
+        "sourceLines": "74-77,113-116",
+        "supports": "DETACHED_PROCESS changes console association; CREATE_NO_WINDOW is ignored when combined with it. Only one fixed choice is supplied, not NEW_CONSOLE/breakaway."
+      },
+      {
+        "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output",
+        "sourceLines": "128-160",
+        "supports": "Explicit inherited stdin/stdout/stderr in STARTUPINFO is a separate mechanism from console association."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/git-for-windows/git/v2.56.0.windows.2/compat/mingw.c",
+        "sourceLines": "2099-2162,2233-2236",
+        "supports": "mingw_spawnve_fd uses DETACHED_PROCESS when CONOUT$ is unavailable while passing explicit stdhandles. This is selected-source rationale, not a dependency pin or proof for all versions."
+      }
+    ]
+  },
+  "unresolved": "Sticky coverage_gap/current_members logic is untouched; cannot clear an unobserved interval with later empty lists. Original real Git end/cancel/input/output and intermittent cold-recovery cases must be observed on Windows by Root. New fake-fixture behavior checks are not those results.",
+  "execution": {
+    "sourceFilesEdited": [
+      "src-tauri/src/process_platform.rs",
+      "src-tauri/src/windows_process.rs",
+      "src-tauri/src/windows_process/behavior_tests.rs",
+      "src-tauri/src/worktrees/git.rs"
+    ],
+    "cargoCiAppAgentUserData": false,
+    "commitOrPush": false,
+    "independentApproval": false
+  }
+}

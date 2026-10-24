@@ -1,0 +1,37 @@
+{
+  "group": "pointer-pair-rejection",
+  "filter": "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither",
+  "category": "ownedArchivePointer",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::worktree_pointer::tests::second_pointer_rejection_preserves_first_write_and_cancelled_pair_writes_neither",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:53.1950914Z",
+  "finishedAtUtc": "2026-10-23T12:08:53.2552725Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "445489F7113B8CD5F6A450BA300AD6D9E6B48A41BDD02D3335AC2220064BB5D2",
+  "stderrSha256": "C137E64717F28A1F8DE5BACC639C6062786FA8202BBFFA5F427897FD7281F966"
+}

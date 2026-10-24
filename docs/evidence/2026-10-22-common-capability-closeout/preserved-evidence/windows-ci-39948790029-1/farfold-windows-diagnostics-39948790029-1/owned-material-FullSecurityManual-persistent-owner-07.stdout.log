@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

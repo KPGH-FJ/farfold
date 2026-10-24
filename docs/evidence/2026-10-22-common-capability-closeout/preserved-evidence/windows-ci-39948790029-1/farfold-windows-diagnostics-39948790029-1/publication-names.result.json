@@ -1,0 +1,18 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "file_access::windows::tests::publication_preserves_unicode_and_maximum_leaf_identity_and_collision",
+  "startedAtUtc": "2026-10-23T12:04:46.4325575Z",
+  "finishedAtUtc": "2026-10-23T12:04:46.4963945Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "exactOneFailed": false,
+  "cursorCovered": false,
+  "observationComplete": true,
+  "failureClassification": null,
+  "ownerReceipt": null,
+  "ownerSettled": false,
+  "phases": [],
+  "stdoutSha256": "4DB0CAE24B067128E88188E1CE3B9D0A705DA3DBA67C7F7B6D464C6E348F88FA",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

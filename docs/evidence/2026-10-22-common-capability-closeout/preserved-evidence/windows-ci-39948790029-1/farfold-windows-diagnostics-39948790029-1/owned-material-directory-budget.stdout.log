@@ -1,0 +1,16 @@
+
+running 11 tests
+test file_access::material_directory_budget::tests::duplicates_dot_repeats_entry_limit_bad_wire_and_query_error_preserve_original_failure ... ok
+test file_access::material_directory_budget::tests::exact_empty_eof_can_return_a_zero_charged_map_without_losing_its_owner ... ok
+test file_access::material_directory_budget::tests::full128_and_counted_unpaired_utf16_are_preserved_without_new_admission ... ok
+test file_access::material_directory_budget::tests::long_page_does_not_bypass_resident_by_having_only_one_native_page ... ok
+test file_access::material_directory_budget::tests::pre_and_post_query_cancel_do_not_publish_partial_maps_or_leak_budget ... ok
+test file_access::material_directory_budget::tests::record_reservation_precedes_name_and_map_allocation_in_the_real_shared_parser ... ok
+test file_access::material_directory_budget::tests::retained_parent_listing_blocks_child_until_the_last_real_map_is_dropped ... ok
+test file_access::material_directory_budget::tests::same_pool_growth_is_atomic_and_foreign_or_overflow_does_not_mutate_either_pool ... ok
+test file_access::material_directory_budget::tests::success_releases_query_storage_but_retains_exact_logical_map_reservation ... ok
+test file_access::material_directory_budget::tests::unwind_drops_query_captures_before_releasing_their_logical_buffer_lease ... ok
+test file_access::material_directory_budget::tests::zero_pool_refuses_before_query_while_legacy_collector_keeps_its_original_contract ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 2313 filtered out; finished in 0.01s
+

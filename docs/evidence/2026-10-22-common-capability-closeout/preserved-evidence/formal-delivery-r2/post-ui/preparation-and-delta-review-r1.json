@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-23T12:48:04.580529+00:00",
+  "status": "prepared-and-static-delta-checked-not-executed",
+  "original": {
+    "path": "evidence:e-a86a3ff6f3cfe3860d35",
+    "sha256": "ce6e6b0f82c654a4f58984817720314ee02801495f6d164f2b9dd0c54999c7a4",
+    "bytes": 14343
+  },
+  "files": {
+    "helper": {
+      "path": "evidence:e-c64eaf2bc9c7db8c1a1a",
+      "sha256": "26291f8a3c53879551bd309f2e74fe9fc8d2e4019e46d469df8a446f0681a1e7",
+      "bytes": 14381
+    },
+    "preservedBefore": {
+      "path": "evidence:e-56e4c9502cf47ed75a42",
+      "sha256": "ce6e6b0f82c654a4f58984817720314ee02801495f6d164f2b9dd0c54999c7a4",
+      "bytes": 14343
+    },
+    "diff": {
+      "path": "evidence:e-aa546da3b523a272c7b0",
+      "sha256": "7740d1f1b0b618a757a3c1c5318597e1328fe810c38770201b067a73f3bf2c2a",
+      "bytes": 777
+    }
+  },
+  "exactChangeCount": 3,
+  "changedConstants": ["PREP", "OUT", "SOURCE_COMMIT"],
+  "reverseReplacementByteIdentical": true,
+  "astIdenticalExceptThreeConstants": true,
+  "installedSourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "currentCheckoutHeadRequirement": false,
+  "sourceCommitSemantics": "Existing helper validates the fixed commit literal syntax only. It does not require checkout HEAD equality or independently establish installed App identity. Parent has separately verified installed18470; later diagnostic-only checkout changes do not invalidate this constant.",
+  "sharedPinnedModules": {
+    "snapshot": {
+      "path": "output/2026-10-14-browser-tabs-install/install_data_snapshot.py",
+      "sha256": "cc12f49d05b666cc75b8cf804fa689bdd9b5b010c969d0105738ca7b1c1fc6b6"
+    },
+    "manifest": {
+      "path": "output/2026-10-14-browser-tabs-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    "io": {
+      "path": "output/2026-10-14-browser-tabs-native-data-preparation/revision-2026-10-15/io_support.py",
+      "sha256": "3a1488a0c9ba0a9cf5bc34952d2b7df0861792b65eb168ce04f9bebc02acfb1a"
+    }
+  },
+  "staticReview": {
+    "result": "noBlockingFindingInExactLiteralRebinding",
+    "role": "Read-only verification of reused pinned helper, followed by authorship and byte/AST self-check of only three literal rebindings. This does not claim a separate non-author review of newly authored capture logic.",
+    "writeScope": "Original app metadata is byte-read through owned no-follow handles. SQLite is opened only on new private second-working-copy and consolidated backup paths under capture. Manifest/backup/receipt files are exclusive; helper never launches/quits/installs/restores.",
+    "stability": "Process absence is checked before capture, after complete manifest and at completion; raw metadata inventories and pinned source modules are rechecked. Absence does not prove normal quit or continuous absence between observations.",
+    "freshCapture": "Use inherited phase before exactly once to create a new post-UI snapshot and standalone metadata backup. The phase name before means before any further operation in this new capture directory; it is NOT the pre-UI baseline.",
+    "comparison": "This invocation does not compare with prior install/pre-UI evidence. Parent must separately compare complete manifests and the captured standalone DB against its sealed baseline; mutations must not be silently reclassified as retention success.",
+    "failures": "Preserve partial outputs and failure receipt; no automatic retry, restoration or deletion. Do not reuse an occupied capture destination."
+  },
+  "parentReportedUIContext": {
+    "provenance": "Reported by root; not independently observed in this preparation task.",
+    "newConversation": 137,
+    "audioLoadedForRealPlayback": false,
+    "newSendOrRealAgentLoad": false,
+    "exitPrompt": "Existing H17 location/position remained unknown; that unknown is not resolved by the preparation.",
+    "mistouch": "After a fresh full AX snapshot root used stale index81 and clicked the second recovery copy read-only verify control; UI reported not found. Root subsequently performed Save and Quit and observed App quit.",
+    "metadataMutationPossible": true,
+    "limits": "Do not claim all UI operations were mutation-free. No restore, deletion or modification of the existing unknown status is authorized by this helper preparation."
+  },
+  "runArgv": [
+    "python3",
+    "-B",
+    "evidence:e-c64eaf2bc9c7db8c1a1a",
+    "before",
+    "26291f8a3c53879551bd309f2e74fe9fc8d2e4019e46d469df8a446f0681a1e7"
+  ],
+  "expectedOutputs": {
+    "receipt": "evidence:e-199db03a4bb8142a4f44",
+    "manifest": "evidence:e-5f8e372bab8621f27cce",
+    "sealedStandaloneDB": "evidence:e-0ff2360f437490e3a9c7"
+  },
+  "execution": {
+    "capture": false,
+    "dbQuery": false,
+    "app": false,
+    "install": false,
+    "cargo": false,
+    "ci": false,
+    "trackedWrites": false,
+    "sourceMetadataRead": false,
+    "onlyOutputPreparationWrites": true
+  }
+}

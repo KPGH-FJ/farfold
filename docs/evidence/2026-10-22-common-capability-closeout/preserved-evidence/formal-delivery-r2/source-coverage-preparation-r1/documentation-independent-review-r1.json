@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "sourceCommit": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "baseCommit": "a82da3ad579129ab8eb7057d9932f62c9ac6377c",
+  "reviewer": "delivery_prep (non-author of selected Root docs)",
+  "scope": "Read-only whole a82 to fd89 status and sole-plan progress delta, including later loader/attributes/helper checkpoint wording. No production audit or test rerun.",
+  "result": "noBlockingFindingInSelectedDocumentationDelta",
+  "findings": [],
+  "files": {
+    "docs/status.md": {
+      "path": "docs/status.md",
+      "sha256": "b7b00168f0d3bca363b4c55dfcbd346ebf4d13623d9aa2dcee012dfb38beae77",
+      "bytes": 56142
+    },
+    "plans/agent-access.md": {
+      "path": "plans/agent-access.md",
+      "sha256": "37e7139cacd3bddf511543ea32864052682cfde8f54dbadfb191e6ee0abc3cf7",
+      "bytes": 5051
+    }
+  },
+  "checks": [
+    "801 actual recovery7 all passed and null8=7/1 retained separately; not140/304 and no intermittent Job fix inference.",
+    "91c actual WebView2/private authentication reached, helper exit1 before initialize and driver101 retained. RC syntax failed before image/resource conclusions.",
+    "Current local helper checks four natural0 stable764 records and raw hashes checked; browser_sharing73/0 is local backend, not actual Windows stdin7/screenshots.",
+    "XDG,ReadEOF and RC repairs have scoped independent reviews. Actual current Windows and r11 full7 remain pending; source/local success is not formal acceptance.",
+    "Historical529/532/d513/ab905/a82 results and original failures retain snapshots. Formal420e unchanged remains a stated baseline, no new App/data observation here.",
+    "Sole41-line execution order,151 original conditions,29x8,NEW24 pause and open P13/P16/real-Agent limits unchanged; plan changed only progress."
+  ],
+  "evidence": [
+    {
+      "path": "evidence:e-a56c80139f116d6400f6",
+      "sha256": "8ecd90484bc575d39df4434c084002743275703bbf4e5e61d633033c213126d7",
+      "bytes": 2540
+    },
+    {
+      "path": "evidence:e-6d34a98d378146c4b69c",
+      "sha256": "8ee0b1dd6fc096c9bb209846e6d71154ee494a8b7d96627f84009b7c2cbf3a3d",
+      "bytes": 712278
+    },
+    {
+      "path": "evidence:e-c852e5dc907dedc5f0d2",
+      "sha256": "2f1dded0efde905f9593fdd217201abac1b85900bb9914c07777c7f477969952",
+      "bytes": 110688
+    },
+    {
+      "path": "evidence:e-1c733feb3532b479a01e",
+      "sha256": "cbe4dcc6e14894eaa1d0774d67408f17a5eecb3de5d64340f15e716d250b467f",
+      "bytes": 11917
+    },
+    {
+      "path": "evidence:e-be32d0453529fb49960a",
+      "sha256": "35fd9f3f2e26b972378d09a373e84ff53f478c1f698e3ada622bba0cbf150310",
+      "bytes": 6385
+    },
+    {
+      "path": "evidence:e-6fe229dc4da52ea40263",
+      "sha256": "b40618c5f866ecddb33f6e0ddbb6ad09ad00264178636a21efed38ea6a96d60f",
+      "bytes": 3796
+    },
+    {
+      "path": "evidence:e-f98ae4e10b25a294075a",
+      "sha256": "f707e6185db37c95b4d75e9722257ca2cb661e5f0ef51c02b9cdbebb1423f21a",
+      "bytes": 2336
+    }
+  ],
+  "boundary": "Only source/output read and new output record. No Cargo/tests/App/Agent/CI query/download/artifact execution/data capture or product/document write."
+}

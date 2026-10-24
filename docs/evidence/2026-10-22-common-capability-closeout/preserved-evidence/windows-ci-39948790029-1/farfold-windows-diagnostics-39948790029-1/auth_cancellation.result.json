@@ -1,0 +1,26 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated",
+  "startedAtUtc": "2026-10-23T12:04:50.2427048Z",
+  "finishedAtUtc": "2026-10-23T12:04:50.6388032Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "fixtureSettled": true,
+  "observationComplete": true,
+  "cursorPhases": [
+    {
+      "phase": "auth-cancellation.fixture.complete",
+      "replyEnabled": true,
+      "elapsedMillis": 253,
+      "bytes": 98,
+      "queries": 1,
+      "replies": 1,
+      "pending": 0,
+      "failed": false,
+      "cursorCoverage": "observed"
+    }
+  ],
+  "stdoutSha256": "7B817107144D0AD65F7EF3AD41FB902081A61BE50E3FF350D8C1C8A7A31B82A5",
+  "stderrSha256": "4F138098DC5B95CFB4471D8FA281A1E004EE301C83379F485690D5203200A545"
+}

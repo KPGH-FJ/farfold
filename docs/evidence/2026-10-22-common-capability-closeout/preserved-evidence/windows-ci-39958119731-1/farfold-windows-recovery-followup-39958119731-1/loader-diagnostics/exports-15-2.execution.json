@@ -1,0 +1,18 @@
+{
+  "name": "exports-15-2",
+  "executable": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\dumpbin.exe",
+  "arguments": ["/NOLOGO", "/EXPORTS", "C:\\Windows\\system32\\oleaut32.dll"],
+  "pid": 1072,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 106,
+  "stdout": "exports-15-2.stdout.log",
+  "stderr": "exports-15-2.stderr.log",
+  "stdoutSha256": "d1ddbf4c00009b146355164ce05dfffbaea5eb8b0e88bbddc4bf43ce88f5b861",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

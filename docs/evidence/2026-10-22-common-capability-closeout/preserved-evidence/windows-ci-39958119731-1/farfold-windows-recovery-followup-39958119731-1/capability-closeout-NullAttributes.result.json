@@ -1,0 +1,336 @@
+{
+  "schema": 1,
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "finalHead": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "headStable": true,
+  "mode": "NullAttributes",
+  "testBinarySha256": "1FBCD992CBDD014CB992D945F0B4B255FE90F36BC88D913BC6E95FBAF48F7CB3",
+  "fixtureSha256": "3994E5D2867E2286E8D1DC0C957902AF45C43B0AA9744EB078AACBA304719C92",
+  "runnerScriptSha256": "7F4168B54DBAE6B73ACA77FCB0453ACFC7CC6AA6757F0125960FEC81FEB9BC7B",
+  "inputsStable": true,
+  "plannedOrdinaryTests": 8,
+  "plannedManualTests": 0,
+  "plannedTotalTests": 8,
+  "caseManifestSha256": "B7651EA38C00951178BE03AAAA48A8CDB90B46C4E8E353A96EF37CAC4636119B",
+  "focusedSubsetOnly": false,
+  "selectedCaseNames": [
+    "null-exact-spellings",
+    "null-command-system-policy",
+    "null-rooted-lookalikes",
+    "null-owned-xdg-matrix",
+    "existing-source-profile-info",
+    "existing-configured-attributes-file",
+    "existing-held-absence-drive-relative",
+    "existing-selected-head-attributes"
+  ],
+  "selectedTests": 8,
+  "groupCount": 8,
+  "groups": [
+    {
+      "group": "null-exact-spellings",
+      "filter": "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+      "category": "null-attributes-new",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:28:48.2996786Z",
+      "finishedAtUtc": "2026-10-23T13:28:48.3200146Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "5FA615F677F11F6064FC3FC0C135E0D820D005DC26961276DD6EA54C34C55EE2",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "null-command-system-policy",
+      "filter": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+      "category": "null-attributes-new",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:28:48.3712916Z",
+      "finishedAtUtc": "2026-10-23T13:28:51.5179987Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "B0CE76944332ADE8DD9BCBDB1BE9014837199666A400DC93114457ADFCA549E5",
+      "stderrSha256": "FD4739C5C2F856FFCF5E0D0B5EA98F2FCF11E6C04F4E91F6318633D80D639599"
+    },
+    {
+      "group": "null-rooted-lookalikes",
+      "filter": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "category": "null-attributes-new",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:28:51.5256797Z",
+      "finishedAtUtc": "2026-10-23T13:28:59.1594628Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "FB2ECB2DA246A4C848CE4E47FCCD96CDAEA0FDDB8C7FC02EA3BA51DD95F1B0B5",
+      "stderrSha256": "CDFCC5EE8AC1F1CAAC3C38FBDE635E8F433681EA13312E21C4FC1B055235AC69"
+    },
+    {
+      "group": "null-owned-xdg-matrix",
+      "filter": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+      "category": "null-attributes-new",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:28:59.1712374Z",
+      "finishedAtUtc": "2026-10-23T13:29:57.3611294Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "7F67AFAF7F67362AF53D724B91B6FCE4A5DA90508FB7610D5A637A67298C77CB",
+      "stderrSha256": "8DFA8B4379618AE144BA191D75B89483DA0B655FAE35A0BE4F37280BD741332E"
+    },
+    {
+      "group": "existing-source-profile-info",
+      "filter": "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+      "category": "null-attributes-existing",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:29:57.3964499Z",
+      "finishedAtUtc": "2026-10-23T13:30:02.5874753Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "F9435541D2715E8C0F6655B8038AE8636AAA02727B1FE97BBDB4C3B069A48D5D",
+      "stderrSha256": "0F15D16F5BFBFA71D87E9C7018709714D1C568EF09B4C94BB17A30A083A8E37A"
+    },
+    {
+      "group": "existing-configured-attributes-file",
+      "filter": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "category": "null-attributes-existing",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:30:02.5914987Z",
+      "finishedAtUtc": "2026-10-23T13:30:13.1294262Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "72F7C9A831D1CEC064B880035887497296F8593760ECB020C2DCCAFC69CE9EBE",
+      "stderrSha256": "95154D5DA9A933D94629D6967872970DDA3445DDD7D21D02814E5FB9BE2A4AA7"
+    },
+    {
+      "group": "existing-held-absence-drive-relative",
+      "filter": "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+      "category": "null-attributes-existing",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:30:13.1350745Z",
+      "finishedAtUtc": "2026-10-23T13:30:21.2558605Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "A87D31CC9251B74BB63DD88248C50B8A2E43A3EB59823180C1A855119FF15EFB",
+      "stderrSha256": "CFD273A89C5D1307E4A2CAFBA4DA7F5FA5E3F043591B2A84C52C4BC5DFE53305"
+    },
+    {
+      "group": "existing-selected-head-attributes",
+      "filter": "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+      "category": "null-attributes-existing",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T13:30:21.2697157Z",
+      "finishedAtUtc": "2026-10-23T13:30:27.1881439Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "default-current-token",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": null,
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "A6327B90BC3BCBD41846BFFBA955A6C673532DCE122ED233109A11F3297B66C0",
+      "stderrSha256": "8A72279250601B790833370C75F878DB24C87CCFE55AFB9854C7B882BD9E1302"
+    }
+  ],
+  "exactAllGroupsPassed": true,
+  "historicalInventoriesChanged": false,
+  "explicitManualFailuresAreSuccessfulTests": false,
+  "privilegesAdjusted": false,
+  "ordinaryDefaultTokenAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticOrOrdinaryRefusalIsNativeSuccess": false,
+  "completePayloadSecurityOrAliasRestoreClaim": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

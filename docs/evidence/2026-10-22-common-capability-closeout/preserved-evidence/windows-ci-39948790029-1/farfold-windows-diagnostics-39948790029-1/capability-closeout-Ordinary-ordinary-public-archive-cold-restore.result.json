@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-public-archive-cold-restore",
+  "filter": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+  "category": "ownedActualOrdinaryArchive",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata"
+  ],
+  "actualPassedNames": [
+    "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:14.7517690Z",
+  "finishedAtUtc": "2026-10-23T12:10:03.8665619Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F5908B22A063AB751DE8652EA1640D262C8BF5B6E8D9DEDC2FB2B0C808C84DED",
+  "stderrSha256": "8B082BA2CEF4B1ED14D5C534E776BD6AAC9C086D4AD27A7534E26126E4880229"
+}

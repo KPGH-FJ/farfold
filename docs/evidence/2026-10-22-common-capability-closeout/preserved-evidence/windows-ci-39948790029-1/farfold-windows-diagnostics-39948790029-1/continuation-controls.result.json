@@ -1,0 +1,597 @@
+{
+  "schema": 1,
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "finalHead": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "headStable": true,
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "runnerScriptSha256": "F0BD1705306EFBF5F44EE4BE79CCD2AFEFB09A3E6338F0CB6C8EB64825EEF98D",
+  "inputsStable": true,
+  "historicalSelectionHelperSha256": "BF6139991EE7C99A33BB3F8C9658CDF5EE8E27130DB1990864793013B31C1822",
+  "currentCaseManifestSha256": "B7CF34951CD8BAFE575DC8AA1794A13A1DEDE745197FF2281CABCCA94A402B3F",
+  "plannedOrdinaryTests": 25,
+  "plannedManualTests": 5,
+  "plannedTotalTests": 30,
+  "groupCount": 15,
+  "groups": [
+    {
+      "group": "mixed-codec",
+      "filter": "file_access::material_mixed_tree_records::tests::",
+      "category": "portableCodec",
+      "explicitIgnored": false,
+      "exactFilter": false,
+      "historicalSelectionArguments": [
+        "file_access::material_mixed_tree_records::tests::",
+        "--skip",
+        "file_access::material_mixed_tree_records::tests::more_than_sixty_four_nodes_keep_every_identity_edge_and_shared_budget_limit",
+        "--skip",
+        "file_access::material_mixed_tree_records::tests::expanded_collision_checks_share_work_and_cancel_before_further_comparisons",
+        "--skip",
+        "file_access::material_mixed_tree_records::tests::finite_node_bound_rejects_before_allocating_or_emitting_tree_bytes",
+        "--skip",
+        "file_access::material_mixed_tree_records::tests::ordinary_empty_directory_has_explicit_facets_and_does_not_relabel_full_tree"
+      ],
+      "expectedTests": 6,
+      "expectedNames": [
+        "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+        "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+        "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+        "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+        "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures",
+        "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input"
+      ],
+      "actualPassedNames": [
+        "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+        "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+        "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+        "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+        "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input",
+        "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::material_mixed_tree_records::tests::complete_mixed_actual_typed_bytes_keep_directory_parent_and_raw_regular_extent",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::material_mixed_tree_records::tests::duplicate_full_ids_alias_and_unknown_tags_stay_refused",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::material_mixed_tree_records::tests::old_skeleton_header_and_regular_rejection_do_not_become_mixed_success",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::material_mixed_tree_records::tests::regular_root_or_parent_never_grants_child_authority",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::material_mixed_tree_records::tests::truncated_corrupt_suffix_cancel_and_shared_budget_never_form_complete_input",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::material_mixed_tree_records::tests::typed_kind_mismatch_forward_parent_and_case_insensitive_siblings_are_failures",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:07:59.0118634Z",
+      "finishedAtUtc": "2026-10-23T12:07:59.0715313Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "62A089E8781B2AFFF9E1744CE0CBF5F456E93B3349512F0CBC83B39F4192E06A",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "mixed-owned-purpose",
+      "filter": "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input",
+      "category": "ownedPurposeRefusalNotFullSecuritySuccess",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::ordinary_purpose_is_not_upgraded_to_full_mixed_input",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:07:59.1236688Z",
+      "finishedAtUtc": "2026-10-23T12:07:59.1506117Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "76B10F4B2E82A1C2E2133259518F5A536E99FB52ABA147F6486844C9DCE54E70",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "alias-unit",
+      "filter": "file_access::windows::material_alias_topology::tests::",
+      "category": "windowsSyntheticTopology",
+      "explicitIgnored": false,
+      "exactFilter": false,
+      "historicalSelectionArguments": [
+        "file_access::windows::material_alias_topology::tests::"
+      ],
+      "expectedTests": 3,
+      "expectedNames": [
+        "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+        "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group",
+        "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group",
+        "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+        "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership",
+          "outcome": "ok"
+        },
+        {
+          "name": "file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:07:59.1564072Z",
+      "finishedAtUtc": "2026-10-23T12:07:59.1774849Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 3 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "B29CD1481BC9170AE24BF61F0145941BF8589B59035687E7D7E2AEDFC8ED612A",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "alias-owned",
+      "filter": "worktrees::material_owner::alias_topology_tests::",
+      "category": "ownedAliasTopology",
+      "explicitIgnored": false,
+      "exactFilter": false,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::alias_topology_tests::"
+      ],
+      "expectedTests": 6,
+      "expectedNames": [
+        "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+        "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+        "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root",
+        "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+        "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+        "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+        "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+        "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer",
+        "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+        "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+        "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::actual_cross_parent_raw_names_form_one_closed_full_identity_group",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::actual_outside_alias_is_incomplete_even_with_two_visible_alias_names",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::cancel_and_shared_work_limit_reject_without_calling_the_structural_consumer",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::equal_contents_do_not_merge_distinct_file_objects",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::metadata_change_after_readonly_consumer_must_fail_the_same_source_witness",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::material_owner::alias_topology_tests::single_visible_name_is_not_complete_when_another_link_is_outside_root",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:07:59.1818135Z",
+      "finishedAtUtc": "2026-10-23T12:07:59.2806099Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9A13724A32EDBCE7066CD870EE3933105C1A8157C321B0949A929CE37A9B753E",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "git-plain",
+      "filter": "worktrees::windows_git::paths::plain_tests::",
+      "category": "ownedGitReadContext",
+      "explicitIgnored": false,
+      "exactFilter": false,
+      "historicalSelectionArguments": [
+        "worktrees::windows_git::paths::plain_tests::"
+      ],
+      "expectedTests": 4,
+      "expectedNames": [
+        "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects",
+        "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+        "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+        "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority"
+      ],
+      "actualPassedNames": [
+        "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+        "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+        "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority",
+        "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority",
+          "outcome": "ok"
+        },
+        {
+          "name": "worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:07:59.2859035Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.1629702Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 4 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9CF7049126E0AB1F1DC8CC79F96C237BD6DAA01C69319D55C16E7797D940A4CB",
+      "stderrSha256": "42E14EE5263C76F8D45734AA830E3A85FE21201B58B323B95995B3FD469E15D9"
+    },
+    {
+      "group": "raw-guid-synthetic",
+      "filter": "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias",
+      "category": "windowsSyntheticRawGuidComparison",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_pin::tests::raw_guid_parent_edge_compares_all_units_and_volume_without_utf8_or_prefix_alias",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.1705310Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.1902785Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9B1D8B37966C6BED1A278BF715163B9A175F0923DBD1E12771D1D79A36D48765",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-guid-owned-pool",
+      "filter": "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool",
+      "category": "ownedRawGuidLogicalPool",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_pin::tests::actual_material_raw_guid_buffer_reserves_and_releases_the_same_shared_pool",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.1954414Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.2144083Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "1D635414F3357E30E2F54307C9535F6627492FD95970BF8E5893170BD783938C",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "raw-guid-owned-directory",
+      "filter": "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary",
+      "category": "ownedRawGuidDirectory",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::directory_tree_tests::actual_raw_directory_guid_low_surrogate_and_255_unit_edges_keep_ea_ads_and_string_boundary",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.2198201Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.4272502Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "925F09F05ED060D59030F5E894868E1835429AE1CCE940075F1620A38B0F0990",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "owned-link-sharing-1",
+      "filter": "worktrees::material_owner::owned_link_tests::original_primary_blocks_new_delete_opens_before_and_after_verified_link",
+      "category": "ownedNtfsSharingAndExactCleanup",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::owned_link_tests::original_primary_blocks_new_delete_opens_before_and_after_verified_link"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::original_primary_blocks_new_delete_opens_before_and_after_verified_link"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::original_primary_blocks_new_delete_opens_before_and_after_verified_link"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::owned_link_tests::original_primary_blocks_new_delete_opens_before_and_after_verified_link",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.4335995Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.4840473Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "FEC2EC7848E2FABC2006573E1B4F4C5CE6A6B9D70D633727217C9C8174650E3F",
+      "stderrSha256": "7165A18C7DA4810087BEE3E3B3D2E56C62CA77657F33AF21F3E958EAD1441160"
+    },
+    {
+      "group": "owned-link-sharing-2",
+      "filter": "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner",
+      "category": "ownedNtfsSharingAndExactCleanup",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.4888181Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.5316547Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "95D145AFF469AE950AAB29091069F17A7F7064378C4BF058D3137A8D7C5FCA4D",
+      "stderrSha256": "E12FE4CD316E51A05D4BDD6F2817087C0A7406DFE2725784681CD8479A6655C2"
+    },
+    {
+      "group": "mixed-fullsd-1",
+      "filter": "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback",
+      "category": "explicitCurrentTokenFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::actual_mixed_carrier_retains_every_ffdir_and_ffnode_across_complete_callback",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.5365102Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.5941812Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "952762196634266B8A1D2D9F6E19FE9D765F9F1EC38B65ADCB8E0342E5A7E131",
+      "stderrSha256": "89E69899AAB701B67948E98D633E57DFCCBCD3C7B5459953476448AAE851630B"
+    },
+    {
+      "group": "mixed-fullsd-2",
+      "filter": "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material",
+      "category": "explicitCurrentTokenFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::real_inside_and_outside_links_are_not_cloned_as_independent_regular_material",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.5996847Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.6334972Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "9F2955BB376594CCD6F33199D4E895281F4A4A7BFFCAF8C3366DA2D8BDEA9EB6",
+      "stderrSha256": "3CFE0A51B07D9672CCB2C8DF5AA644BB68C14A24421ED66C0FDA43777DC1AB69"
+    },
+    {
+      "group": "mixed-fullsd-3",
+      "filter": "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup",
+      "category": "explicitCurrentTokenFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::original_source_witness_must_reject_actual_change_after_consumer_before_cleanup",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.6390994Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.6725046Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "175F6599808A57801844D343CB86AE615E5DB673F9483DF4BFEE78E5DB16AD70",
+      "stderrSha256": "C94B3CE0CBEE9A357E91F0C1914A4B553EA6F5E22F4BEE1BB4387664279E817C"
+    },
+    {
+      "group": "mixed-fullsd-4",
+      "filter": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+      "category": "explicitCurrentTokenFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::cancellation_and_exhausted_shared_work_never_invoke_a_mixed_consumer",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.6779705Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.7104205Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "67F904EABB3CECC6E21E2895660F947F02D666109FD0633573DE5C1E54AC0FAC",
+      "stderrSha256": "39832A590C864BC7C707CBEC23A2A28CDE58B8520D91F3E018C856BB98302BAA"
+    },
+    {
+      "group": "mixed-fullsd-5",
+      "filter": "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup",
+      "category": "explicitCurrentTokenFullSecurityNoFallback",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "historicalSelectionArguments": [
+        "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup"
+      ],
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::mixed_tree_tests::actual_consumer_error_and_unwind_preserve_failure_with_original_slot_cleanup",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:00.7160888Z",
+      "finishedAtUtc": "2026-10-23T12:08:00.7522314Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "stdoutSha256": "66936C0707B26BECA20072C5E8AC13A738CB8E8ED8F3D4A8845FF4DC85DD2D5B",
+      "stderrSha256": "B1055B298B7F9D83B8BC4460C68902F256FBCFE37BB15EDF24DB0EF1B3F13EAD"
+    }
+  ],
+  "exactAllGroupsPassed": false,
+  "carrier149CountChanged": false,
+  "carrier149Acceptance": false,
+  "separateGitFiveCallAcceptance": false,
+  "originalMatrixEightCellsAcceptance": false,
+  "privilegesAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticTopologyAndRawGuidAreNativeCaptureSuccess": false,
+  "persistentMixedOrAliasRestoreComplete": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

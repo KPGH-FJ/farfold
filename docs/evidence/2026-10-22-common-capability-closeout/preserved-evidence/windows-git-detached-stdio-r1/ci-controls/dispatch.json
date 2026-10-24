@@ -1,0 +1,19 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "argv": [
+    "gh",
+    "workflow",
+    "run",
+    "windows-recovery-followup.yml",
+    "--repo",
+    "KPGH-FJ/farfold",
+    "--ref",
+    "main"
+  ],
+  "startedAtUnix": 1792760621.322811,
+  "finishedAtUnix": 1792760623.861578,
+  "exitCode": 0,
+  "stdout": "https://github.com/KPGH-FJ/farfold/actions/runs/39958119731\n",
+  "stderr": "",
+  "scope": "One actual Windows build: original recovery7, attribute8, parser1, independent launch4/settlement7; no complete29Agent claim"
+}

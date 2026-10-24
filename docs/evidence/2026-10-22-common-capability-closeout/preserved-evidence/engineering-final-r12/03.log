@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test <private-mac-home:a2369e920572>
+> vitest run
+
+
+ RUN  v4.1.11 <private-mac-home:a2369e920572>
+
+
+ Test Files  659 passed (659)
+      Tests  8537 passed (8537)
+   Start at  20:26:33
+   Duration  61.25s (transform 15.07s, setup 0ms, import 348.18s, tests 111.65s, environment 51ms)
+

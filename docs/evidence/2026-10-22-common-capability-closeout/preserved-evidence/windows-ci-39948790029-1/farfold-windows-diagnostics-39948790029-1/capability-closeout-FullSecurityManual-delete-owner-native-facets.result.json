@@ -1,0 +1,126 @@
+{
+  "group": "delete-owner-native-facets",
+  "filter": "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf",
+  "category": "ownedActualFullSecurityDeletePrimitiveNotPublicDeletion",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:19:08.4789480Z",
+  "finishedAtUtc": "2026-10-23T12:19:08.5427158Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": {
+    "schema": 1,
+    "case": "file_access::windows::material_delete::tests::actual_delete_owner_refuses_live_arc_and_private_ads_ea_then_deletes_only_original_leaf",
+    "status": "testCompleted",
+    "testExecuted": true,
+    "testExitCode": 0,
+    "manualTestDeadlineMs": 300000,
+    "testTimedOut": false,
+    "timeoutTerminationSucceeded": null,
+    "timeoutTerminationError": null,
+    "distinctChildToken": true,
+    "privilegeRequested": "SeSecurityPrivilege",
+    "childBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": true,
+        "attributes": 2
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+    "adjustCalled": true,
+    "adjustSucceeded": true,
+    "adjustLastError": 0,
+    "onlyRequestedPrivilegeChanged": true,
+    "parentBefore": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentAfter": {
+      "SeSecurityPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeBackupPrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      },
+      "SeRestorePrivilege": {
+        "present": true,
+        "enabled": false,
+        "attributes": 0
+      }
+    },
+    "parentPrivilegeTableUnchanged": true,
+    "backupRestoreAdjusted": false,
+    "accountOrPolicyChanged": false,
+    "scope": "owned selected manual test child only; default ordinary caller token untouched"
+  },
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "C408406C0C65625A95ADD7DC1154865A365855796C5A010492CDC39A5B9B4D30",
+  "stderrSha256": "759B07C43CC45A7430465964FB1259595CA00E168C54F849CC70E5E8A5FC667F"
+}

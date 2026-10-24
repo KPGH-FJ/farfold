@@ -1,0 +1,161 @@
+{
+  "scope": "Actual seven commands on current source; no installed App or real Agent claim",
+  "head": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "inputCount": 18580,
+  "before": {
+    "path": "evidence:e-6bc25f88b02ea75d74d4",
+    "bytes": 3758702,
+    "sha256": "40c4c7706638a0f97dd1d8a0369eb0a3a0c4c68292610078405935704ce0fc05"
+  },
+  "after": {
+    "path": "evidence:e-8ccc68cd9240d45b8430",
+    "bytes": 3758702,
+    "sha256": "40c4c7706638a0f97dd1d8a0369eb0a3a0c4c68292610078405935704ce0fc05"
+  },
+  "inputsStable": true,
+  "results": [
+    {
+      "label": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "atUtc": "2026-10-23T12:25:43.131404+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 36.483194042,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-aee361f826b735e8bf81",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "freeBytesAfter": 17881718784
+    },
+    {
+      "label": "type",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "atUtc": "2026-10-23T12:26:19.616126+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 13.415680166999998,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-e633f645564e6fc5ba26",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "freeBytesAfter": 17881378816
+    },
+    {
+      "label": "frontend",
+      "command": ["corepack", "pnpm", "test"],
+      "atUtc": "2026-10-23T12:26:33.032624+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 66.10845208399999,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-049cc7941121cabf8839",
+        "bytes": 289,
+        "sha256": "2042abe0af40cdae2399a24d7bffc10b306c51f5890f65537856d1c62456b1af"
+      },
+      "freeBytesAfter": 17849040896
+    },
+    {
+      "label": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "atUtc": "2026-10-23T12:27:39.143371+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 16.27787712499999,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-88e2b5f59f55798b1ecf",
+        "bytes": 4984,
+        "sha256": "ce222642613ba482138d461781ac9c8b6bc7dd45fb9492ed5e36225e0f75963a"
+      },
+      "freeBytesAfter": 17823784960
+    },
+    {
+      "label": "rust-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "atUtc": "2026-10-23T12:27:55.443112+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 3.7347012500000005,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-5f52742581f324f59b70",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "freeBytesAfter": 17818009600
+    },
+    {
+      "label": "rust-strict",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "atUtc": "2026-10-23T12:27:59.197831+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 1.7658522499999947,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-dc288a11757b28d4bdda",
+        "bytes": 72,
+        "sha256": "e68dbb831082090d6aab9641584d06498d66907f4c3e3d2d36c4824da23e94c8"
+      },
+      "freeBytesAfter": 17818005504
+    },
+    {
+      "label": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "atUtc": "2026-10-23T12:28:00.983499+00:00",
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "elapsedSeconds": 140.79402554099997,
+      "inputsStable": true,
+      "raw": {
+        "path": "evidence:e-13d9846c73b394f671be",
+        "bytes": 254393,
+        "sha256": "8fa9173f12f8acc4556f3e8f3d6d6522e97957967fde15719abbf0503c8ef20d"
+      },
+      "freeBytesAfter": 17813712896
+    }
+  ],
+  "dist": {
+    "path": "evidence:e-f1c1265224b11fbddf03",
+    "bytes": 15213,
+    "sha256": "a6b90e158f5a7e1146e51f3d499cb98f4ac80290852c4c4d6d2faa0aa6771b2c"
+  },
+  "runner": {
+    "path": "evidence:e-839525ecf09af67faed3",
+    "bytes": 7428,
+    "sha256": "5664a66c25a9a9e5202b4caa605cf51ba88a786b497dbbd2d939b96f1292e71d"
+  },
+  "coverage": "Listed product/design/docs/script roots and literal Rust includes; dependency runtime contents and generated Rust OUT_DIR are not a reproducibility archive.",
+  "allSevenPassed": true,
+  "legacyCompatibleActualSeven": {
+    "path": "evidence:e-cfef516c07f8fe2d3c99",
+    "bytes": 5840420,
+    "sha256": "4e3db458813149085b5f924d5ac01c20060cd1c0a61e6cdd3250acb9c21a9910"
+  }
+}

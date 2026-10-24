@@ -1,0 +1,87 @@
+{
+  "phase": "sourceCheckpointNotStageCompletion",
+  "capturedAtUtc": "2026-10-22T13:07:54.004587+00:00",
+  "baseCommit": "b8477c9b3328d93479b65c71dfa045a44ee8254a",
+  "sourceFiles": {
+    "src-tauri/native/AudioPreview.h": "9321a596dc531cf52833b60f259bc8b10c161b962a32cbcbb07dbf859fd5aa17",
+    "src-tauri/native/AudioPreview.m": "0521734d02c7aefe1be01bd5678b7f9f8f5fbadb72b0c993fb2321c9631e285a",
+    "src-tauri/src/audio_preview.rs": "2d481c5e6fc3d88915d4e6ffd42b67737299d997eee7671d46e0a0a18b960aaf",
+    "src-tauri/src/audio_preview_tests.rs": "39736331fe409aebf6b8cb38f27ff629f4772ac843fa0dab8d8a892b8668d2c2",
+    "src-tauri/build.rs": "9240816c4fe4a236b991bfd6cfc2ed224c594807885f69a5501af0b945bbaf47",
+    "src-tauri/src/lib.rs": "aeaef592cb79df0a800d31f8ea1194bab12ca579273abf5509fb38cdc94d0473",
+    "src/components/MessageContent.tsx": "6b21e0de01eb539df4f99d6bbc1e4b9903074c7b67cee6092ef14a3e2c0b0fec",
+    "src/components/MessageAudioCompatibility.tsx": "169975bbf12488ea5759582f9d56cee253d0a59c4c1f6d2a174b5d96112b92c7",
+    "src/runtime/message_audio_compatibility.ts": "66507a1acb128244549611731ad6e16e5c25ae93e189c448f8cbd5b1d20455db",
+    "src/runtime/message_audio_compatibility.test.ts": "cc284ee97c64c1b85ced4a8106153525dd948b8584649dff0abec113e9a3d4c8",
+    "src/runtime/message_attachment_strings.ts": "d2c157743bbdc280efcbbdab9daf5bc93634b0e0bd2fc699a394d5b77b1865e2",
+    "src/components/AsyncTasks.tsx": "c86127188c4c1b0f715958bc22ea9c7a9a0e8b7219ff35d03f174bcd3f96f87a",
+    "src/components/AsyncTasks.test.tsx": "c5f6527c8caed73b1cad6cb1a8c7b920023190a6e8525b60d9f35d3b5068b0d8",
+    "src/runtime/async_task_location.ts": "1b63cdae1d8473ec0924f2382235d91a9d2a7e3f29d818ca6e4e88c8d2fb7467",
+    "src/runtime/async_task_strings.ts": "5fbc09794867d7a3fb3433eab0f79d13b2c8ffe8b23aca2dc88496a404f39569",
+    "src/runtime/transcript_search.ts": "d497cfb793fdddceaaf621a95d4176de09eb7bbb8e5e21fe75c72a7d264f697e",
+    "src/runtime/transcript_search.test.ts": "f48996bd82e59057613325e8faaf9c5689f11e2edb661d1987b6ba77bca660dc",
+    "src/components/showToolLocation.ts": "941f10a3910b4fa032f6347d96aa4f90c5b69f52ce82298220b14798c10fd540",
+    "src/components/ThreadView.tsx": "d16e189d22a72ba579e2767ef1109ebe6feacdbe41089542efd31c9121821360",
+    "src/components/ThreadView.async-update.test.tsx": "7a8dd02c8326e19c5da21d066d6861361ae42ffa27b35702abca0964d70f78ac",
+    "src/components/thread-items.tsx": "a039076116183d8a446dac930fdf7d7c9153de59748b2b5e596600f7382e85cc"
+  },
+  "evidence": {
+    "output/2026-10-22-common-capability-closeout/audio/handoff.json": "f3e69a71fc155f753974f8e5b7ceda2c83c5918784da99f04f2844fe983273d0",
+    "output/2026-10-22-common-capability-closeout/audio-independent-review/source-review-r3.json": "9d0e29a2ed45aa5bdab267c66a919fcc2a88a83d6ec8914a374930633dc03688",
+    "output/2026-10-22-common-capability-closeout/audio/capacity-red-r2.log": "446d13eb1179f05c05c12841056269d41fd547c9c69d9b433bf70e89bfb227c8",
+    "output/2026-10-22-common-capability-closeout/audio/capacity-green.log": "7fccf3f530ffb96a88cce34366d7157450c2594ed9ce93bc9518564559b287cc",
+    "output/2026-10-22-common-capability-closeout/task-location/targeted-tests.log": "2e66ea2daab801473f3ab2ed8e8587c0a2e39a24beffc048d3fb839e6011aba1",
+    "output/2026-10-22-common-capability-closeout/task-location/typecheck.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "output/2026-10-22-common-capability-closeout/task-location/independent-review.json": "39b9e98deffcc1fa25f8a3a794d8df7939929b87cb0a62123a9968862048418b",
+    "output/2026-10-22-common-capability-closeout/task-location/browser/verification.json": "bc5e079b67ca736edb8128cd6d58c383d9c5894a66130a0779c6e3552b3dc3b9",
+    "output/2026-10-22-common-capability-closeout/task-location/browser-r2/verification.json": "205f4ceb8052272a119c95df75cc1a6679050b7cde519cbf20aa5c35e0ed3b31",
+    "output/2026-10-22-common-capability-closeout/task-location/browser-r2/assertion-correction.json": "5419148ab4f48b48af6c5ca7bbeb240a798793eb463caf31c868a5f506a85244",
+    "output/2026-10-22-common-capability-closeout/formal-ui/p35-export-verification.json": "bb44b8ac8b835fbd555ccf728f41e8cc7aba98667787c0c9b4647da02324b04d",
+    "output/2026-10-22-common-capability-closeout/post-ui/data-comparison.json": "a35bea2f1aeb0dbee2b7bc3e214b607484bd78eeea2da3577354a7f4989b2a59"
+  },
+  "audio": {
+    "implementation": "Explicit AAC/FLAC compatibility retry after playback failure, bounded AudioToolbox PCM to checked WAVE, shared media reservations retained until actual work settles, no autoplay or source mutation.",
+    "rustTestsPassed": 6,
+    "frontendTestsPassed": 32,
+    "centralStringsTestsPassed": 2,
+    "typecheck": "passed",
+    "bufferRegression": {
+      "red": "511 capacity increases for511 blocks; actual test failure preserved",
+      "green": "same511-block test, observed capacity <=16MiB and <=16 growth events; overflow leaves length/capacity unchanged"
+    },
+    "nativeSamples": 5,
+    "browser": "eight r2 cases plus corrected budget and error/retry/unmount r3 passed; failed assertion original retained",
+    "limits": [
+      "AAC2s native output2.304s differs from WebAudio by2112frames; no guessed trimming or identical decoder claim",
+      "Logical byte/concurrency bounds are not RSS measurements",
+      "New path not installed or tested through formal Tauri IPC; Windows reports compatibility unavailable"
+    ]
+  },
+  "taskSource": {
+    "implementation": "Locate unique loaded official toolCallId in same connection/session; explicitly open disclosures, scroll/focus, recheck stale ownership; no synthetic hierarchy or added Agent control",
+    "focusedTestsPassed": 33,
+    "testFiles": 4,
+    "typecheck": "passed",
+    "browser": "Real controlled WebKit: unique source opens/focuses/scrolls; missing and ambiguous unavailable. Next Tab remains in source details. Initial text-specific Tab assertion failed, corrected run retained separately.",
+    "limits": [
+      "Controlled official event shapes, not real Agent or installed path",
+      "Independent review preceded formatting-only change to ThreadView wiring test; production source unchanged"
+    ]
+  },
+  "P35": {
+    "installedSource": "420e5a3c0e7ab4889ba1b5e1d7b505bbe936e331",
+    "result": "Formal UI existing loaded Dirac conversation; one current tool-reported48B file selected; ZIP6503B CRC valid and payload exactly equals source; completion UI verified",
+    "zipSha256": "5b560d6bb57b2a5879e0735313806300f70d71655a5e06b812e7b8c8da510091",
+    "limits": [
+      "Earlier Save-disabled observation not reproduced; cause unknown",
+      "No new send, original sent attachment, all history, restore or all-Agent acceptance"
+    ]
+  },
+  "data": {
+    "formalApp": "normally Save and Exit; postcapture exact process absence",
+    "unchanged": "138 session rows,54 settings rows including drafts,173 dismissed rows; no directory additions/deletions",
+    "changed": "one Dirac agent timestamp; seven cache/database/WebKit files; cause not fully attributed",
+    "privateEvidence": "Raw snapshots and exported conversation remain local, not included in this public receipt"
+  },
+  "remaining": "Full engineering batch, formal installation/new real paths, Windows public chains, ARCH44 decision and ARCH49 transport/resource work remain open; NEW24 affected sends paused;29x8 and151conditions unchanged"
+}

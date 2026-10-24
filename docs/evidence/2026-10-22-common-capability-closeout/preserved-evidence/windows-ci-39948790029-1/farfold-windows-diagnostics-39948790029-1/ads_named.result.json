@@ -1,0 +1,14 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "worktrees::material_scan::profile_tests::owned_ntfs_named_data_changes_the_partial_stream_facet_without_changing_default_bytes",
+  "startedAtUtc": "2026-10-23T12:04:51.3508961Z",
+  "finishedAtUtc": "2026-10-23T12:04:51.4044258Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "fixtureSettled": true,
+  "observationComplete": true,
+  "cursorPhases": [],
+  "stdoutSha256": "42EF8F287FBC2F2684E813727BE503C36C20CF2F5BA2FE5D3974CA43646A0C78",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

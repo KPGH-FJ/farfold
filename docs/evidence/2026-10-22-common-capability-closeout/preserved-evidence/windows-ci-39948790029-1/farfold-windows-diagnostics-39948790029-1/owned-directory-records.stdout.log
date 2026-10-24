@@ -1,0 +1,12 @@
+
+running 7 tests
+test file_access::material_directory_records::tests::actual_parser_pairs_raw_ads_ea_and_full_security_across_short_reads ... ok
+test file_access::material_directory_records::tests::empty_directory_is_typed_not_a_zero_default_regular_file ... ok
+test file_access::material_directory_records::tests::equal_length_native_payload_drift_changes_actual_contents_and_digest ... ok
+test file_access::material_directory_records::tests::returned_catalog_keeps_shared_resident_until_retired ... ok
+test file_access::material_directory_records::tests::security_profiles_cannot_turn_partial_or_missing_bytes_into_full ... ok
+test file_access::material_directory_records::tests::truncation_budget_and_cancellation_never_complete_a_full_directory ... ok
+test file_access::material_directory_records::tests::unsupported_kind_duplicate_alias_and_invalid_ea_are_refusals ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2317 filtered out; finished in 0.01s
+

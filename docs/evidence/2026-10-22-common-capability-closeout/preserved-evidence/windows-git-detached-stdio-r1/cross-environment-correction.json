@@ -1,0 +1,13 @@
+{
+  "atUtc": "2026-10-23T13:00:16.019776+00:00",
+  "firstAttempt": {
+    "path": "evidence:e-34f7c39fc9e5ea6f09ef",
+    "sha256": "ab67e684e831247b181683e080e42fb3d81e11868a14d346bf3933c13a676c82",
+    "naturalExit": 101,
+    "classification": "local toolchain selection omitted; ring build could not find x86_64-w64-mingw32-clang; no project diagnostic reached",
+    "evidence": true
+  },
+  "correctedInvocation": "Existing check-with-fixture-inputs.py reused existing local compiler overrides and installed llvm-mingw; no product source or dependency altered",
+  "secondAttemptReceipt": "evidence:e-37f7239e6a3379c31527",
+  "result": "natural0 and inputsStable, compile-only; not actual Windows"
+}

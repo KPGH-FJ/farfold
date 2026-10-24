@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "scope": "output-only 4/7 reader and pure parsing controls; no actual Windows result supplied",
+  "reader": {
+    "path": "evidence:e-8049ce11845932efc3cc",
+    "sha256": "473ce4838efb682cc60ed89b37b9c411fbd33c503d44dd187a580eb38ba7ef28"
+  },
+  "test": {
+    "path": "evidence:e-fc2378defb8b3f56151b",
+    "sha256": "b2ef16b086e12f98048c4c4279b556a4101111952cf3b67fa8b8409e463b74e5"
+  },
+  "dependency": {
+    "path": "evidence:e-4c1e4cd3a272b257eaad",
+    "sha256": "abb9a7ac8543e86010622fb3664ba83941b29d38a7f618975126d8b2dd2cc8b8",
+    "reuse": "original context/Artifacts/source-map/terminal from fd89-compatible focused reader; no original reader modification"
+  },
+  "validation": {
+    "ast": "both parsed",
+    "pureControls": {
+      "count": 12,
+      "exitCode": 0,
+      "toolChunk": "0cf9a3",
+      "log": "evidence:e-263f303e185772112059",
+      "sha256": "f9cda454fd2568f274036a1ee9de03c4437144a1ab742e73a83f806e462801ac",
+      "limits": "Synthetic artifacts. Original requested-head build context is explicitly mocked; this does not prove a build, Windows execution, PowerShell parsing, or future result."
+    },
+    "sourceMapPatterns": "new runner literal pathspec sequence exactly equals original build script; existing wildcard includes new script after commit",
+    "unchangedOriginalStepBodies": [
+      "Original three ordinary failing cases",
+      "Exact original-list diagnostic parser control",
+      "Original manual failures and unfinished cold recovery",
+      "Independent eight null-attributes regressions using the same build"
+    ],
+    "workflowBodyComparison": {
+      "beforeHead": "e3fbb0626022ecfd19685a915317ad1b66b63fdd",
+      "afterHead": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+      "workflowSha256": "97bcd3740526680651273449e5515ce7c5bb2874cecca5f82f4e757a88440eeb"
+    }
+  },
+  "actualInput": "none; no CI/download/executable invocation",
+  "remaining": "Independent reader review and later original artifact audit; unverified/missing evidence cannot count as pass",
+  "supersedesPreparation": "evidence:e-9748affca1d75b19bb88",
+  "priorPreparationSha256": "0c29e4a55b3ef174ddb446c1f7028f2f6a6d22c2936f626242f3eb91f705b201",
+  "preparationCorrection": "Root committed while output preparation ran. R1 current-HEAD step comparison used the already-updated source; R2 explicitly compares the frozen prior source head to current commit. Original execution bodies are proven unchanged by this comparison; Parser preflight is intentionally changed and not an unchanged execution claim."
+}

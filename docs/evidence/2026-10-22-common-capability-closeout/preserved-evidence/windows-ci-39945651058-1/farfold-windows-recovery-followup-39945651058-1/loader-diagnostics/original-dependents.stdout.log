@@ -1,0 +1,48 @@
+
+Dump of file D:\a\farfold\farfold\src-tauri\target\debug\deps\farfold_lib-ec387578f4a9b290.exe
+
+File Type: EXECUTABLE IMAGE
+
+  Image has the following dependencies:
+
+    ntdll.dll
+    KERNEL32.dll
+    bcryptprimitives.dll
+    advapi32.dll
+    kernel32.dll
+    api-ms-win-core-synch-l1-2-0.dll
+    user32.dll
+    comctl32.dll
+    shlwapi.dll
+    ole32.dll
+    version.dll
+    shell32.dll
+    dwmapi.dll
+    gdi32.dll
+    oleaut32.dll
+    bcrypt.dll
+    ws2_32.dll
+    crypt32.dll
+    ADVAPI32.dll
+    WS2_32.dll
+    userenv.dll
+    VCRUNTIME140.dll
+    VCRUNTIME140_1.dll
+    api-ms-win-crt-string-l1-1-0.dll
+    api-ms-win-crt-math-l1-1-0.dll
+    api-ms-win-crt-heap-l1-1-0.dll
+    api-ms-win-crt-utility-l1-1-0.dll
+    api-ms-win-crt-time-l1-1-0.dll
+    api-ms-win-crt-runtime-l1-1-0.dll
+    api-ms-win-crt-convert-l1-1-0.dll
+    api-ms-win-crt-stdio-l1-1-0.dll
+    api-ms-win-crt-locale-l1-1-0.dll
+
+  Summary
+
+       19000 .data
+      49A000 .pdata
+     1062000 .rdata
+       35000 .reloc
+        1000 .rsrc
+     3D07000 .text

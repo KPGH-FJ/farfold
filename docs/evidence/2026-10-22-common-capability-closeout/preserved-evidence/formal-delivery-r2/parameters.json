@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "engineering": {
+    "schema": "p40-scoped-query-actual-seven-v1",
+    "receiptPath": "evidence:e-cfef516c07f8fe2d3c99",
+    "sha256": "4e3db458813149085b5f924d5ac01c20060cd1c0a61e6cdd3250acb9c21a9910"
+  },
+  "formalBaseline": {
+    "receiptPath": "output/2026-10-22-next-resource-stage/formal-delivery/candidate-output/candidate.json",
+    "sha256": "1f3ba3a350248a42c5397794df00b99d176017ec535ac0fc73a7e34de410b918",
+    "installedReceiptPath": "output/2026-10-22-next-resource-stage/formal-delivery/install/installed-independent-review-private.json",
+    "installedSha256": "64d3382f2a22523498e98c3d3732a0f756722560e27c84e7580f0927d3842fda",
+    "binarySha256": "7b5b136f8a8ea55c9c72735b5ce9947baa6d9aee16e5141318a27d9acab75b2c"
+  }
+}

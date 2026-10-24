@@ -1,0 +1,37 @@
+{
+  "group": "restore-failure-layout-bounded-output",
+  "filter": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof",
+  "category": "boundedNativeFailureDiagnosticLayout",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::restore::node::failure_diagnostics::layout_caps_output_and_reports_incomplete_instead_of_inventing_eof",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.7331119Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.7464694Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "C026200F24944BA977BECDE21602FFE054C8A354B2F6FE2D61129834C61A9C43",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

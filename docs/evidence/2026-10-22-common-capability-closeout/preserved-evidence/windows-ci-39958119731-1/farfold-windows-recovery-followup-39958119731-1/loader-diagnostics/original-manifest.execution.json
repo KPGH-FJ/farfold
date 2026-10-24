@@ -1,0 +1,22 @@
+{
+  "name": "original-manifest",
+  "executable": "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\x64\\mt.exe",
+  "arguments": [
+    "-nologo",
+    "-inputresource:D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe;#1",
+    "-out:D:\\a\\farfold\\farfold\\windows-diagnostics-raw\\loader-diagnostics\\original.manifest.xml"
+  ],
+  "pid": 4932,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 39,
+  "stdout": "original-manifest.stdout.log",
+  "stderr": "original-manifest.stderr.log",
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

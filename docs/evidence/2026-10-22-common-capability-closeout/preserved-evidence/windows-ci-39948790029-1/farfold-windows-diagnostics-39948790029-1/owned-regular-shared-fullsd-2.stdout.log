@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::regular_shared_tests::shared_zero_work_is_not_replaced_by_a_fresh_per_node_budget
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

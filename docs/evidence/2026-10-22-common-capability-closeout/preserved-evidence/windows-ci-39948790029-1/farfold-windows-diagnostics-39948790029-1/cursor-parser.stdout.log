@@ -1,0 +1,8 @@
+
+running 3 tests
+test pty::windows_tests::terminal_cursor_query_does_not_reply_to_unrelated_or_partial_sequences ... ok
+test pty::windows_tests::terminal_cursor_query_limits_are_failures_not_successful_truncation ... ok
+test pty::windows_tests::terminal_cursor_query_recognizes_every_chunk_partition ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.04s
+

@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::material_mixed_semantic::tests::new_target_identity_and_root_name_preserve_material_but_every_payload_field_matters ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

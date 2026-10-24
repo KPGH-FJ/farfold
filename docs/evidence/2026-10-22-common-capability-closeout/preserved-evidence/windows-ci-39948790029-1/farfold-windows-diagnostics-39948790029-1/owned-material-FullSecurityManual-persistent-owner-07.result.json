@@ -1,0 +1,27 @@
+{
+  "group": "persistent-owner-07",
+  "filter": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+  "category": "currentMerged21",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::actual_mixed_bytes_remain_readable_after_sources_close_and_owned_source_is_removed",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:12.8112939Z",
+  "finishedAtUtc": "2026-10-23T12:08:12.8751145Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "229E95AF9596832307DC8DA54EF83D7B35D8E7AD779F6EE7AA78035727765DBC",
+  "stderrSha256": "CD502DCC3D0096F2E9B83F207BDD8D71A0800F12457076363DCCD59B0B6F0ECD"
+}

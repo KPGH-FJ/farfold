@@ -1,0 +1,19 @@
+{
+  "createdAtUtc": "2026-10-23T12:31:16.722062+00:00",
+  "head": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "reviewSha256": "6f77a3edf480b436598fb5510930b64aed8d09b80241bb7ccd8b18a7f12806e6",
+  "freezeSha256": "c22f6f14ea42305e251467f81e17b0b1a26ec3b4005f0f767781beecf939cb76",
+  "directSourceAndCommittedBlobPointers": 382,
+  "actualReviewRefsRehashed": 32,
+  "deltaPaths": [
+    ".github/scripts/windows-job-query-observer.py",
+    ".github/scripts/windows-pe-resource-inspection.py",
+    ".github/workflows/windows-job-query-observer.yml",
+    "docs/agent-access-requirements.md",
+    "docs/status.md",
+    "plans/agent-access.md"
+  ],
+  "unchangedSourceRowsExactlyInherited": 376,
+  "scope": "Root independent assembly check only; each nonauthor scoped source review retains original attribution. No whole fresh code review or install/Windows acceptance.",
+  "result": "passed"
+}

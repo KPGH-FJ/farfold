@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

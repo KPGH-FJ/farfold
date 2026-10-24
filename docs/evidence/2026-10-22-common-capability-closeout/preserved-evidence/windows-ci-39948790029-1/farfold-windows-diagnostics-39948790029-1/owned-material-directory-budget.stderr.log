@@ -1,0 +1,4 @@
+
+thread 'file_access::material_directory_budget::tests::unwind_drops_query_captures_before_releasing_their_logical_buffer_lease' (2208) panicked at src\file_access\material_directory_budget_tests.rs:203:13:
+owned query panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

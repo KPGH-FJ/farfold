@@ -1,0 +1,6 @@
+FARFOLD_BACKUP_WRITE_FAILURE successfulPrefix=0 offered=200 nativeLength=200 error=Io { phase: "backupWrite", code: Some(5) }
+
+thread 'file_access::material_backup_io::tests::unwind_still_attempts_one_abort_and_preserves_failure' (3568) panicked at src\file_access\material_backup_io_tests.rs:25:9:
+controlled read panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FARFOLD_BACKUP_WRITE_FAILURE successfulPrefix=0 offered=200 nativeLength=200 error=Io { phase: "backupWrite", code: Some(87) }

@@ -1,0 +1,9 @@
+
+running 4 tests
+test worktrees::windows_git::paths::plain_tests::a_configured_worktree_is_rejected_by_the_real_read_context_instead_of_becoming_absent ... ok
+test worktrees::windows_git::paths::plain_tests::a_real_bare_configuration_is_rejected_instead_of_becoming_absent ... ok
+test worktrees::windows_git::paths::plain_tests::alternate_or_normalized_pin_spellings_cannot_mint_a_plain_path_authority ... ok
+test worktrees::windows_git::paths::plain_tests::real_read_context_command_roles_are_strict_plain_and_same_held_full_objects ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2320 filtered out; finished in 0.81s
+

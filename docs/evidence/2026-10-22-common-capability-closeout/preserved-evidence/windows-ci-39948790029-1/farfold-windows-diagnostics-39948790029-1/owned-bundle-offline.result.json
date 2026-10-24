@@ -1,0 +1,113 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "groups": [
+    {
+      "group": "bundle-graph",
+      "filter": "worktrees::recovery_pack::private_graph::tests::",
+      "selectionArguments": [
+        "worktrees::recovery_pack::private_graph::tests::",
+        "--skip",
+        "worktrees::recovery_pack::private_graph::tests::actual_generated_graph_becomes_a_frozen_independent_git_tree_and_rejects_extra_names",
+        "--skip",
+        "worktrees::recovery_pack::private_graph::tests::actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf"
+      ],
+      "expectedTests": 9,
+      "expectedNames": [
+        "worktrees::recovery_pack::private_graph::tests::real_stdout_bundle_and_two_stdin_commands_verify_independent_exact_graph",
+        "worktrees::recovery_pack::private_graph::tests::actual_stdin_verify_or_unbundle_rejects_malformed_and_truncated_owned_bundle",
+        "worktrees::recovery_pack::private_graph::tests::valid_pack_with_extra_announced_ref_is_not_the_expected_recovery_graph",
+        "worktrees::recovery_pack::private_graph::tests::mismatched_expected_objects_and_partial_profiles_never_gain_graph_success",
+        "worktrees::recovery_pack::private_graph::tests::finalized_bundle_and_namespace_remain_held_until_the_graph_owner_drops",
+        "worktrees::recovery_pack::private_graph::tests::second_repository_ref_tamper_fails_recheck_without_changing_source",
+        "worktrees::recovery_pack::private_graph::tests::actual_output_factory_sharing_denies_writers_and_strict_pin_until_writer_closes",
+        "worktrees::recovery_pack::private_graph::tests::actual_transition_rejects_a_concurrent_writer_without_claiming_immutable_output",
+        "worktrees::recovery_pack::private_graph::tests::changed_bytes_during_real_transition_cannot_become_the_producer_bundle"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::private_graph::tests::actual_output_factory_sharing_denies_writers_and_strict_pin_until_writer_closes",
+        "worktrees::recovery_pack::private_graph::tests::actual_stdin_verify_or_unbundle_rejects_malformed_and_truncated_owned_bundle",
+        "worktrees::recovery_pack::private_graph::tests::actual_transition_rejects_a_concurrent_writer_without_claiming_immutable_output",
+        "worktrees::recovery_pack::private_graph::tests::changed_bytes_during_real_transition_cannot_become_the_producer_bundle",
+        "worktrees::recovery_pack::private_graph::tests::finalized_bundle_and_namespace_remain_held_until_the_graph_owner_drops",
+        "worktrees::recovery_pack::private_graph::tests::mismatched_expected_objects_and_partial_profiles_never_gain_graph_success",
+        "worktrees::recovery_pack::private_graph::tests::real_stdout_bundle_and_two_stdin_commands_verify_independent_exact_graph",
+        "worktrees::recovery_pack::private_graph::tests::second_repository_ref_tamper_fails_recheck_without_changing_source",
+        "worktrees::recovery_pack::private_graph::tests::valid_pack_with_extra_announced_ref_is_not_the_expected_recovery_graph"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:10.0892388Z",
+      "finishedAtUtc": "2026-10-23T12:05:28.7621513Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 9 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D4BE90F04CABDBCBE58A2F3230EC0ECA37B32F5DD5DB3DEB9464D00A8ACA4192",
+      "stderrSha256": "9C3C2E7ED5D1A5050173924859E03880AA39941EE206BBC4FE89D50D6184D216"
+    },
+    {
+      "group": "producer-pairing",
+      "filter": "worktrees::git::source_export::pairing_tests::",
+      "selectionArguments": ["worktrees::git::source_export::pairing_tests::"],
+      "expectedTests": 3,
+      "expectedNames": [
+        "worktrees::git::source_export::pairing_tests::actual_producer_factory_has_compatible_bridge_but_excludes_writers_and_early_strict_pin",
+        "worktrees::git::source_export::pairing_tests::real_owned_concurrent_writer_in_transition_prevents_strict_pin_and_is_joined_before_assertion",
+        "worktrees::git::source_export::pairing_tests::transition_is_writable_but_replacement_and_changed_content_cannot_gain_producer_authority"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_export::pairing_tests::actual_producer_factory_has_compatible_bridge_but_excludes_writers_and_early_strict_pin",
+        "worktrees::git::source_export::pairing_tests::real_owned_concurrent_writer_in_transition_prevents_strict_pin_and_is_joined_before_assertion",
+        "worktrees::git::source_export::pairing_tests::transition_is_writable_but_replacement_and_changed_content_cannot_gain_producer_authority"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:29.0929994Z",
+      "finishedAtUtc": "2026-10-23T12:05:29.1589088Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 3 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "BBFB7424D533DA78D102CFC0A5D58F02C4A32AA7851DA9910DC6E4BA758816E3",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "offline-graph",
+      "filter": "worktrees::recovery_pack::offline_graph::tests::",
+      "selectionArguments": [
+        "worktrees::recovery_pack::offline_graph::tests::"
+      ],
+      "expectedTests": 6,
+      "expectedNames": [
+        "worktrees::recovery_pack::offline_graph::tests::actual_owned_bundle_verifies_after_all_original_source_paths_are_absent_but_full_restore_stays_closed",
+        "worktrees::recovery_pack::offline_graph::tests::missing_origin_remains_readable_but_no_offline_execution_and_explicit_null_unknown_duplicate_are_rejected",
+        "worktrees::recovery_pack::offline_graph::tests::mixed_platform_or_source_identity_metadata_cannot_authorize_installed_program_selection",
+        "worktrees::recovery_pack::offline_graph::tests::old_path_replacement_and_moved_original_directory_ids_both_exclude_decoy_programs",
+        "worktrees::recovery_pack::offline_graph::tests::component_case_boundaries_guid_and_artifact_scope_do_not_expand_exclusions_into_unrelated_names",
+        "worktrees::recovery_pack::offline_graph::tests::actual_graph_mismatch_partial_profile_and_pre_cancel_never_become_full_recovery_proof"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::offline_graph::tests::actual_graph_mismatch_partial_profile_and_pre_cancel_never_become_full_recovery_proof",
+        "worktrees::recovery_pack::offline_graph::tests::actual_owned_bundle_verifies_after_all_original_source_paths_are_absent_but_full_restore_stays_closed",
+        "worktrees::recovery_pack::offline_graph::tests::component_case_boundaries_guid_and_artifact_scope_do_not_expand_exclusions_into_unrelated_names",
+        "worktrees::recovery_pack::offline_graph::tests::missing_origin_remains_readable_but_no_offline_execution_and_explicit_null_unknown_duplicate_are_rejected",
+        "worktrees::recovery_pack::offline_graph::tests::mixed_platform_or_source_identity_metadata_cannot_authorize_installed_program_selection",
+        "worktrees::recovery_pack::offline_graph::tests::old_path_replacement_and_moved_original_directory_ids_both_exclude_decoy_programs"
+      ],
+      "startedAtUtc": "2026-10-23T12:05:29.1636862Z",
+      "finishedAtUtc": "2026-10-23T12:05:33.7176154Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 6 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "FC624B919C8EA631CF9E00CB13849B48FBF59AB7BAB84E822CA9A4531A08140D",
+      "stderrSha256": "8C29C210A1576F717CA3FDADD8FBC74828BD32C49DF9E4788EF6F3E90A21EF4C"
+    }
+  ],
+  "historicalSelectorSha256": "BF6139991EE7C99A33BB3F8C9658CDF5EE8E27130DB1990864793013B31C1822",
+  "inputsStable": true,
+  "observationComplete": true,
+  "publicMutationOrPrivateContextComplete": false,
+  "productOrAllWindowsComplete": false
+}

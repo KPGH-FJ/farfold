@@ -1,0 +1,29 @@
+{
+  "group": "sealed-tree-28",
+  "filter": "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources",
+  "category": "ordinaryWindowsSharedApiFake",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:07.2798665Z",
+  "finishedAtUtc": "2026-10-23T12:08:07.3226479Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "79E42901C2376547CB25EF405694BB118174A7C893EA899770425F3074DEFC08",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

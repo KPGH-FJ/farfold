@@ -1,0 +1,37 @@
+{
+  "group": "git-settlement-cancellation-after-original-exit-reaps-same-job-before-return",
+  "filter": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+  "category": "ownedSameJobNaturalSettlementAndBounds",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:25.3147531Z",
+  "finishedAtUtc": "2026-10-23T12:14:25.5887461Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": "FARFOLD_WINDOWS_GIT_ORIGINAL_EXITED_WITH_HELD_DESCENDANT action=tail",
+  "phaseMarkerMatches": 1,
+  "injectionPhaseReached": true,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "CB37057C5094EEB0CF28DA62DD843329F4A7EEC397E1E47B4B4F594EA29B1EAA",
+  "stderrSha256": "E696970A1B0F47649069C6DF313DA5E59A655B99CA76CF8A74832549917D6EBF"
+}

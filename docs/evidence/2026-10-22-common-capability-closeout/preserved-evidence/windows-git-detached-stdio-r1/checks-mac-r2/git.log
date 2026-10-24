@@ -1,0 +1,37 @@
+   Compiling farfold v0.1.7 (src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 35.81s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-01664cc9237b7aaa)
+
+running 23 tests
+test worktrees::git::content_stream::tests::actual_binary_chunks_and_unequal_short_reads_preserve_byte_alignment ... ok
+test worktrees::git::content_stream::tests::actual_read_errors_keep_object_or_material_side_and_native_code ... ok
+test worktrees::git::content_stream::tests::byte_budget_and_blob_cap_refuse_before_an_unfunded_read ... ok
+test worktrees::git::content_stream::tests::cancellation_blocks_selection_before_publishing_any_entry ... ok
+test worktrees::git::content_stream::tests::declared_truncation_and_overlong_input_are_refused_on_both_sides ... ok
+test worktrees::git::content_stream::tests::different_real_lengths_are_a_complete_raw_difference_not_missing_tail_success ... ok
+test worktrees::git::content_stream::tests::known_sha256_and_empty_default_are_observed_through_real_readers ... ok
+test worktrees::git::content_stream::tests::mismatch_after_a_complete_block_is_not_silently_truncated_or_prefix_equal ... ok
+test worktrees::git::content_stream::tests::pre_cancel_and_cancel_after_actual_read_never_publish_a_comparison ... ok
+test worktrees::git::content_stream::tests::selected_tree_path_and_object_must_belong_to_the_same_admitted_graph ... ok
+test worktrees::git::content_stream::tests::symlinks_gitmodules_oversize_and_bad_size_do_not_become_regular_default_authority ... ok
+test worktrees::git::content_stream::tests::wrong_width_duplicate_path_and_incomplete_or_empty_records_refuse ... ok
+test worktrees::git::input::tests::cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer ... ok
+test worktrees::git::input::tests::common_file_output_path_retains_exact_input_and_original_output_limit_cleanup ... ok
+test worktrees::git::input::tests::empty_finite_file_is_valid_and_not_a_failed_or_truncated_input ... ok
+test worktrees::git::input::tests::explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved ... ok
+test worktrees::git::input::tests::factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors ... ok
+test worktrees::git::input::tests::real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild ... ok
+test worktrees::git::input::tests::selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits ... ok
+test worktrees::git::tests::child_exit_with_live_output_holder_is_not_success ... ok
+test worktrees::git::tests::fast_stderr_over_limit_cannot_be_success ... ok
+test worktrees::git::tests::windows_override_names_are_case_insensitive_without_changing_unix_rules ... ok
+test worktrees::git::unwind_reaps_owned_process_before_directory_permit_can_drop ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 2207 filtered out; finished in 0.28s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-0e6b6bac6f0df49a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

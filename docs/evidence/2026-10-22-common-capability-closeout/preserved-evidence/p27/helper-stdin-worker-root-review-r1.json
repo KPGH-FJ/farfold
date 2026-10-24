@@ -1,0 +1,26 @@
+{
+  "atUnix": 1792754048.3549728,
+  "scope": "non-author root static review of selected helper Worker integration and platform ownership; no dynamic success claim",
+  "files": {
+    "src-tauri/src/browser_sharing/helper.rs": "5efa94ae846bdccbaa67179f1344aa9ce622a30db48313e17b220c2e4b4be113",
+    "src-tauri/src/browser_sharing/helper_io.rs": "e4efcfe98753843a66a29e24018de39dd186acabfef26698148336ba8cb52f58",
+    "src-tauri/src/browser_sharing/helper_io/unix.rs": "c9fa9374ef4e553e748fe3fbe6983838bc57be679f4b635fbecc27a8f65c6185",
+    "src-tauri/src/browser_sharing/helper_io/windows.rs": "23a51881a921c15a5166083b00e8239b90f43375091020264b7eb73810de9950",
+    "src-tauri/src/browser_sharing/helper_io/windows_input.rs": "8e75ea39824dc840f9841165b3397c336b81cb5b67c8c111a950bd31bc04a887"
+  },
+  "observations": [
+    "authentication still precedes input access; Unix keeps original nonblocking descriptor model",
+    "one same-access Windows input owner retains its buffer/handle until actual completion; no relay-thread ReadFile/Peek or join",
+    "all accepted input stays within original raw limit and one 8192-byte slot; no idle prefetch",
+    "stop acknowledgement waits exact original non-consuming completion; positive observation/read/error remains dirty including ReadEof",
+    "pending stops retain receipt deadline and FIFO; partial page output forces close; pending page response is scrubbed",
+    "retire requests cancellation but does not report completion; helper entry process exit is still final lifetime boundary"
+  ],
+  "selectedStaticBlockers": [],
+  "independentPlatformReview": "evidence:e-a7d31bb345ef261fddd7",
+  "pending": [
+    "strict compile and affected native regression",
+    "new real Windows stdin controls",
+    "same-build actual P27 and formal delivery"
+  ]
+}

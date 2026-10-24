@@ -1,0 +1,14 @@
+{
+  "atUnix": 1792759693.8294022,
+  "installedSource": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "formalBinarySha256": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+  "formalProcessesAtObservation": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  },
+  "normalQuit": "CUA clicked Save and Exit on the actual confirmation, tool returned App quit",
+  "realMessageMediaPrerequisite": "Fresh installed view was New Conversation; no loaded audio message established. No message loaded/sent; no compatibility playback or actual ACK verified.",
+  "retainedUnknown": "Existing H17 prepared/retained worktree position remained unknown; no recheck/move/delete applied to this operation.",
+  "unexpectedAction": "After requesting full AX, old index81 was mistakenly reused and clicked Verify recovery copy for the second listed native-remove recovery pack; UI showed recovery copy not found. No restore/delete action. This limited read verification may change metadata; fresh post-UI comparison required.",
+  "noDataZeroChangeClaim": true
+}

@@ -1,0 +1,73 @@
+{
+  "kind": "non-author-platform-input-source-review-r1",
+  "readpoint": {
+    "path": "evidence:e-2bad35915e88ffdc9489",
+    "sha256": "3bd20e25e3f982f4f85278e7b990782a6c82edc908f4c911ab357dc1057ca64a"
+  },
+  "scope": "Complete new windows_input.rs and exact helper_io.rs/windows.rs/unix.rs deltas. Root separately reviews shared Worker integration; new test modules are unfinished and excluded.",
+  "sources": [
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io.rs",
+      "sha256": "e4efcfe98753843a66a29e24018de39dd186acabfef26698148336ba8cb52f58",
+      "bytes": 325
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io/unix.rs",
+      "sha256": "c9fa9374ef4e553e748fe3fbe6983838bc57be679f4b635fbecc27a8f65c6185",
+      "bytes": 2851
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io/windows.rs",
+      "sha256": "23a51881a921c15a5166083b00e8239b90f43375091020264b7eb73810de9950",
+      "bytes": 1874
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io/windows_input.rs",
+      "sha256": "eab4f2970ad0fb440ab29ab284dc8342478513806152c6dd245698d6a7cd7e2d",
+      "bytes": 14327
+    }
+  ],
+  "decision": "One blocking selected-scope stop-classification issue found; source implementation otherwise preserves the reviewed ownership and mode-admission boundaries. No type/build/actual Windows proof.",
+  "findings": [
+    {
+      "id": "read-origin-eof-loses-observed-input",
+      "priority": 2,
+      "path": "src-tauri/src/browser_sharing/helper_io/windows_input.rs",
+      "locations": [
+        "stop_state Phase::Complete matches Outcome::NoData | Outcome::Eof as Clear",
+        "observe positive Peek transitions Phase::Reading",
+        "ReadFile zero or ERROR_BROKEN_PIPE produces the same Outcome::Eof as Peek EOF"
+      ],
+      "trigger": "Positive Peek followed by another alias consuming available bytes and writer closure can complete ReadFile as EOF; once published, a subsequent pause sees Complete(Eof) and returns Clear.",
+      "impact": "The per-operation positive/Reading observation is lost between native completion and relay consumption. stop(false) may classify the unconsumed Read-started result as preserved-tool, contrary to the specified observed-input terminal boundary.",
+      "minimalResolution": "Keep origin/observed state in the completed result, or classify read-started EOF separately as Dirty while retaining its actual EOF meaning for normal consumption. Do not turn cancellation into NoData.",
+      "targetedCounterexample": "Positive Peek, alias consumption and writer close, Read EOF, completion publication, then stop; assert terminal classification. Test a successful Peek0 separately for Clear."
+    }
+  ],
+  "modeAdmissionReview": {
+    "previousDesignP2": "Source now checks mode on same held duplicate before Peek/Read; no FILE_TYPE_PIPE-only admission.",
+    "checks": [
+      "DuplicateHandle DUPLICATE_SAME_ACCESS/non-inheritable; type check on owned duplicate; no path reopen/extra access",
+      "Original reader owns duplicate for lifetime; original JoinHandle borrowed for cancellation",
+      "Heap ModeQuery; require API STATUS_SUCCESS, IOSB status0, exact returned size, synchronous bit",
+      "STATUS_PENDING refuses admission and retains original reader/query/handle in parked loop; main bounded1s wait and helper immediate process exit remain separate lifecycle prerequisites",
+      "Query error, unknown mode and poisoned state do not reach a data read; no cancellation response used as completion"
+    ],
+    "notClaimed": "Actual native acceptance of standard child stdin, mode-query availability/rights and overlapped refusal remain to be tested on Windows."
+  },
+  "ownershipReview": [
+    "Only reader executes Peek/Read and owns active buffer; state remains Peeking/Reading while local completion is unpublished.",
+    "One queued demand, one bounded completion and one8192-byte allocation; no prefetch before main takes previous result.",
+    "Main read_into changes state while holding shared mutex, so no observer can admit another demand before buffer copy completes.",
+    "Drop retires and requests cancellation; it does not close duplicate or join unresolved reader.",
+    "Unix diff retains nonblocking original fd read, EOF/error propagation, stdout and poll behavior through thin Input adapter."
+  ],
+  "validation": "Read-only source/API/ABI review only. No Cargo, rustfmt, tests, CI, real helper or Agent execution; no source edits.",
+  "officialBasis": [
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-ntqueryinformationfile",
+    "https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/ns-ntifs-_file_mode_information",
+    "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+    "https://raw.githubusercontent.com/rust-lang/rust/1.96.0/library/std/src/os/windows/thread.rs"
+  ],
+  "next": "Author notified; await minimal EOF classification delta and finalized tests, then rebind exact bytes and close or retain finding."
+}

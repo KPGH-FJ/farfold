@@ -1,0 +1,37 @@
+{
+  "group": "security-last-exact-bytes-and-seek",
+  "filter": "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions",
+  "category": "boundedSecurityRecordOrder",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions"
+  ],
+  "actualPassedNames": [
+    "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_backup_io::security_last::tests::every_extent_preserves_all_bytes_and_all_seek_positions",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.8344706Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.8619531Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "7C58BBC9FC2FC64B9108751430632F02DAC978300B26DB78F157FF50B40AE7C4",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

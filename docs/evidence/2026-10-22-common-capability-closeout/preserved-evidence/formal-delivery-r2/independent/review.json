@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-23T12:36:00.142806+00:00",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "result": "passed",
+  "checksPassed": 9,
+  "checksTotal": 9,
+  "failures": [],
+  "checks": {
+    "sourceAndEngineering": {
+      "passed": true,
+      "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+      "engineeringInputs": 18580,
+      "frontendFiles": 659,
+      "frontendPassed": 8537,
+      "rustPassed": 2224,
+      "rustIgnored": 6,
+      "commands": 7,
+      "allSevenFreshActual": true,
+      "reusedChecks": false,
+      "priorFailuresNotReclassified": true,
+      "sourceFreezeFiles": 382,
+      "sourceReviewFindings": 0
+    },
+    "productionInputsAndCommitBytes": {
+      "passed": true,
+      "members": 2236,
+      "method": "Independent os.walk and git cat-file committed bytes; builder not imported."
+    },
+    "formalAppUnchanged": {
+      "passed": true,
+      "sourceCommit": "420e5a3c0e7ab4889ba1b5e1d7b505bbe936e331",
+      "files": 5,
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/_CodeSignature/CodeResources": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420
+      }
+    },
+    "candidateExactFilesAndModes": {
+      "passed": true,
+      "files": 5,
+      "hashes": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+        "Contents/MacOS/farfold": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/_CodeSignature/CodeResources": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420
+      }
+    },
+    "identityVersionLocalization": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "developmentRegion": "zh_CN",
+      "localizations": ["zh-Hans"],
+      "releaseManifestMatchesSource": true
+    },
+    "arm64Architecture": {
+      "passed": true,
+      "architecture": "arm64",
+      "machOMagic": "0xfeedfacf",
+      "cpuType": "0x100000c",
+      "cpuSubtype": 0
+    },
+    "strictAdhocSignature": {
+      "passed": true,
+      "strictVerify": "src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\nsrc-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+      "signature": "adhoc",
+      "publicSigningOrNotarization": false,
+      "detailsSha256": "7fae5c3cc587dc5bc79cc35ce347fa2391c56fafe38a17e7effb86eb7d88e244"
+    },
+    "archiveCRCContentsModes": {
+      "passed": true,
+      "members": 5,
+      "bytes": 16093603,
+      "sha256": "135df17d34d06938776ed839fcf9909fc2e9fdb25d837a83e40384c5c1941345",
+      "independentlyRecomputedCRC32": true,
+      "unixModesMatch": true
+    },
+    "finalStabilityAndNoMutation": {
+      "passed": true,
+      "productionMembersStable": 2236,
+      "evidenceRefsStable": 14,
+      "candidateAndFormalStable": true,
+      "thisReviewDidNotBuildInstallLaunchAccessDBOrInvokeAgent": true
+    }
+  },
+  "inputReceipt": {
+    "path": "evidence:e-ee2c0af87e1a8346bd96",
+    "sha256": "9b3886f20937881cee2dae9291b5658688421158b38c0626ab3bd851b18b10c2"
+  },
+  "sourceBuildActualCompletionSuppliedByRoot": {
+    "sessionId": "<session-identifier-omitted>",
+    "chunkId": "971bcc"
+  },
+  "method": "Independent readonly commands/standard libraries; builder module/main not imported.",
+  "notVerified": [
+    "installation",
+    "after-install retention",
+    "installed recovery/render behavior",
+    "real Agent use of this batch",
+    "Windows",
+    "public signing/notarization",
+    "all29/eight standards, full task or plan completion"
+  ]
+}

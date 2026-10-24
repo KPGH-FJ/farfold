@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::recovery_pack::material::tests::restored_readonly_and_restrictive_dacl_keep_original_target_delete_rights_until_cleanup ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.12s
+

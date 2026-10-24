@@ -1,0 +1,171 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "expectedTests": 16,
+  "rustExactResults": [
+    {
+      "test": "file_access::windows::security::tests::actual_held_file_and_directory_security_are_stable_under_the_same_identity",
+      "startedAtUtc": "2026-10-23T12:04:54.4495306Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.4760673Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "FC18B5AB9423A6CDC47DF21F40120AFE6184C9F085CB940437E23D5F51FEF697",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::security::tests::busy_cancel_small_budget_and_poison_do_not_produce_empty_descriptors",
+      "startedAtUtc": "2026-10-23T12:04:54.4960815Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.5601648Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "493A8ACFEAEAD3AC1EFFA3854A85C4E6A04589F6A343803B904B64ED1D571F48",
+      "stderrSha256": "FF83222B2D1E6BBA9FFB6D11739200154E454FC32BB9FC52854834FEDE88346E"
+    },
+    {
+      "test": "file_access::windows::security::tests::missing_read_control_is_actual_access_denied_not_empty_security",
+      "startedAtUtc": "2026-10-23T12:04:54.5632083Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.5790477Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "E5B375491F46161658C4443B193AE73D924A341D79B0590C4A2246D9B879ECF2",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::security::tests::same_held_full_identity_observes_owned_dacl_change_without_reading_file_data",
+      "startedAtUtc": "2026-10-23T12:04:54.5813805Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.5998383Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "5DECCBDACD352ED880A8DECF75F392102A6AA0CA5D1C6585812A8CA5F0511B32",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::integrity::tests::real_label_query_keeps_same_file_and_directory_full_identity_without_privilege_adjustment",
+      "startedAtUtc": "2026-10-23T12:04:54.6022082Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.6204930Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "5E4A4F6A7F2685810669543FDB7F846B0532D15BDC0CA45C3A2A2BDE285C5B2F",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::integrity::tests::label_query_missing_read_control_is_a_real_error_not_absent_label",
+      "startedAtUtc": "2026-10-23T12:04:54.6226160Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.6369290Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "0035E26705A1014FCCA2D210A2C12D14EB021CFBA84080000C71C2E4D1710B90",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::integrity::tests::busy_poison_cancel_and_small_offer_never_produce_an_empty_label",
+      "startedAtUtc": "2026-10-23T12:04:54.6389927Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.6632583Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "255E82E5A84C10077585820BC53EB022AF8EB35DA0B58246C3BFE1B0355FEFE4",
+      "stderrSha256": "22E50B7FD0DA3400D88E35056EC40245BDC82F7F7D6C27CA3EBDA6C131951498"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::real_material_walk_consumes_owned_dacl_without_changing_default_byte_meaning",
+      "startedAtUtc": "2026-10-23T12:04:54.6659867Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.7082584Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "EEC5650DA7EBB7211103BCDB147AA7D10562A4E36BEB882D31E453A3065C23BA",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::hardlink_native::actual_in_tree_aliases_feed_the_real_owner_and_keep_per_name_default_bytes",
+      "startedAtUtc": "2026-10-23T12:04:54.7105155Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.7696549Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "201C2A4AD78A68FE1ABD7ECF69546AFAA45ED3A4681C059747408E6EF52AC973",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::hardlink_native::outside_link_is_refused_without_reading_its_directory_and_explicit_recheck_can_succeed",
+      "startedAtUtc": "2026-10-23T12:04:54.7727308Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.8219110Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "205D1CD5645B77D4A1ECE9E5CC872AA38CBA21D531E4FCA7A9F62A87140AB4E4",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::hardlink_native::skipped_root_git_pointer_cannot_hide_an_unaccounted_link",
+      "startedAtUtc": "2026-10-23T12:04:54.8248271Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.8593065Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "91557D8F75C3FFF8F224B497B4AE51465250F0C271BE12A239840B55FE371F0A",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::real_owner_observes_stored_label_facet_without_changing_data_or_requesting_privilege",
+      "startedAtUtc": "2026-10-23T12:04:54.8616224Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.8955456Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "26A8E624526E99461CF44176FFD239A4F70C97774A9AF5BA2A38103A41313BED",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::actual_owned_default_data_observation_changes_with_body_and_includes_ignored_names",
+      "startedAtUtc": "2026-10-23T12:04:54.8980054Z",
+      "finishedAtUtc": "2026-10-23T12:04:54.9576424Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "EE7BC48EBF7BDF7DC170492A06E64AC53C6200AE10A1AD9333882798B386A624",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "worktrees::material_scan::profile_tests::real_capture_consumes_ea_without_adding_ea_bytes_to_default_data_total",
+      "startedAtUtc": "2026-10-23T12:04:54.9622625Z",
+      "finishedAtUtc": "2026-10-23T12:04:55.0212828Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "8F73C4CF4532C1859C600166E7CE4ED770FB8A341C362343F21F6FFA03EDFC45",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::security_full::tests::ordinary_pin_can_never_mint_full_coverage_even_if_the_process_happens_to_be_privileged",
+      "startedAtUtc": "2026-10-23T12:04:55.0254236Z",
+      "finishedAtUtc": "2026-10-23T12:04:55.0426198Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "307FDD39DA0EFDDB9946C57472004E8D21126B9C9AF336A0A4DCB906EB69263C",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "file_access::windows::security_full::tests::exact_current_token_error_codes_retain_the_combined_requested_access_without_guessing",
+      "startedAtUtc": "2026-10-23T12:04:55.0455736Z",
+      "finishedAtUtc": "2026-10-23T12:04:55.0594051Z",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "2FFA34CDA4A12B47D2A4303C22EB5D50B51E5A1EA5B9DEA7D3E8F204F34AB0ED",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    }
+  ],
+  "observationComplete": true,
+  "partialMaterialControlsOnly": true,
+  "productOrAllWindowsComplete": false
+}

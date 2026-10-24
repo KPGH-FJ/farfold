@@ -1,0 +1,37 @@
+{
+  "group": "material-publish-original-creation-writer-handoff",
+  "filter": "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin",
+  "category": "ownedMaterialPublicationIdentity",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::tests::actual_material_publish_requires_creation_writer_handoff_and_keeps_original_pin",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.7483488Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.7983696Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "2269F70C982C94E180A281D221646B59F4DBC7A29149D2D50DCCF2B07F2D2E32",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

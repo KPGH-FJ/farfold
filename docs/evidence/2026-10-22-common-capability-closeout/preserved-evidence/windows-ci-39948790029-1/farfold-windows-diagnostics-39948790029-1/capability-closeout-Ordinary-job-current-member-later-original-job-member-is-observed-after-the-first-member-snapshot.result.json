@@ -1,0 +1,37 @@
+{
+  "group": "job-current-member-later-original-job-member-is-observed-after-the-first-member-snapshot",
+  "filter": "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot",
+  "category": "ownedCurrentJobMemberHandles",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot"
+  ],
+  "actualPassedNames": [
+    "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "windows_process::current_members::tests::later_original_job_member_is_observed_after_the_first_member_snapshot",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:29.5048628Z",
+  "finishedAtUtc": "2026-10-23T12:14:29.5931283Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "3C7732E245887866CF13E73E0FCB6EC71C026650FC547DF3477D1DA52B87E3BF",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

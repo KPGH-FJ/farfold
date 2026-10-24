@@ -1,0 +1,122 @@
+{
+  "kind": "unapplied minimal architecture text correction",
+  "createdAt": "2026-10-23T12:25:17.930639+00:00",
+  "head": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "scope": "Read-only tracked files; output-only patch and copies. No new activity plan, source implementation, test execution or CI. Parent review/application required.",
+  "beforeSha256": "3b7e642e8564b2d03ac328170071d7477a5a3d2379eebdb473a3214ee81ef2bf",
+  "proposedSha256": "0ef14dbc115a082f351cee5e5159d0a6fe3299f81375126139ba20cb50f74532",
+  "patchSha256": "9b88e4ca6feed8dc2c326aeabb75d1f2176f8bb8cf6a926789e437951600bf1c",
+  "historicalBlock": {
+    "originalLines": [207, 219],
+    "bytes": 7002,
+    "sha256": "c35fa55664d8c118305f8dda1914583ac3e4f3d407be65b70cd2fda4bb84642f",
+    "verbatimPreserved": true,
+    "mechanism": "Wrap original contiguous paragraphs in a clearly historical details block. No old success/failure counts or assertions rewritten."
+  },
+  "changes": [
+    {
+      "originalLine": 173,
+      "reason": "Windows screenshot no longer entirely unverified; actual fd89 controlled production interface passed. Add exact single-request permission/no-text-fallback boundary, keep macOS27/formal UI/remote/realAgent unverified."
+    },
+    {
+      "originalLine": 199,
+      "reason": "Label 631 resource/history statement as historical, link current ownership/flow facts to status instead of pretending the old complete-array description is the current implementation."
+    },
+    {
+      "originalLines": [205, 219],
+      "reason": "Separate current public lifecycle and single persistent Manifest/ordinary-vs-full security routes from old closed-gate/internal-component records. Do not claim complete Windows acceptance; current intermittent retirement failure remains."
+    },
+    {
+      "originalLine": 221,
+      "reason": "Current diagnostics also report existing member fields around original stop and first incomplete observation; preserve no-new-permission/no-settlement-proof boundary."
+    },
+    {
+      "originalLine": 225,
+      "reason": "Current Windows remove implementation uses verified original object handles; non-forced Git removal describes Unix only."
+    }
+  ],
+  "sourceReadpoints": [
+    {
+      "path": "docs/architecture.md",
+      "sha256": "3b7e642e8564b2d03ac328170071d7477a5a3d2379eebdb473a3214ee81ef2bf"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "55cac6a5320920b1e51336bbe7e8e47a68e265a1b0d7b5661fd90979d7309a06"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "sha256": "d9f9dba11b00ce3a6408abc0a2e70943f0625f57466b7791bb169727236dbe61"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "sha256": "a43b5fe5abaf1fec25bd8bfcf70bd29e96aa1ff050e4e4d14fa24b94f5c73d81"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "sha256": "668fb246995a06cb6ce2135fb540a1f2afd6382dd212bab292bd2327bdecc4fb"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "689073f34c813f9940cbecacf6b6fabb4911919a3715f94ff74a8221e7498e34"
+    },
+    {
+      "path": "src-tauri/src/worktrees/create.rs",
+      "sha256": "844b45a7296943563090001145ff0cc5e9110cb96ac283b1c20cf2f408f05141"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle.rs",
+      "sha256": "29849a2a66361b88deda1ad2795215b379437c499885f7dbb944a461d9b333fa"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recover.rs",
+      "sha256": "a2a9516f392b3fd6eab513e464916027b9cd122e28bafa5c018a17a6ac8ab8ce"
+    },
+    {
+      "path": "src-tauri/src/worktrees/removal.rs",
+      "sha256": "0d614e54df3eaa1a5d4c53ea723ccb23e3b2ea6f582cbdde774dd78db978b5ed"
+    },
+    {
+      "path": "src-tauri/src/worktrees/remove_windows.rs",
+      "sha256": "db3e26f4a1d1a5b244ed603081e99569db459521b0c3da161c4c4ea5f7b59972"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recovery_material_windows.rs",
+      "sha256": "5565d9877bc8293a425b38abc84d5baf3d081f37fe4ad62fbc69700e36862f4d"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recovery_pack.rs",
+      "sha256": "46d9cb22e1fe5cf0cf4ce0ba5d99dc3a1cebdaa2bde7f8af5f50571aefd034c7"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recovery_material_manifest.rs",
+      "sha256": "9635e24d3c9ef3a88b71c3e7a62bb28eeed023ef39fae643dc98078c14a2c426"
+    },
+    {
+      "path": "src-tauri/src/windows_process/git_activity_observation_tests.rs",
+      "sha256": "ffe3e76040d48011831d86bd368c0ae9ef4fe517d72967199844badd73cfc08a"
+    },
+    {
+      "path": "src-tauri/src/windows_process/current_members.rs",
+      "sha256": "fbb387bb492c0d8420637444f52cfe75fea392aa1c1b913d8b14584fb9686a7d"
+    }
+  ],
+  "actualReceipts": [
+    "evidence:e-a05f33bc2b1e959df765",
+    "evidence:e-b897d2d82a1bd9352bb5"
+  ],
+  "validation": {
+    "trackedArchitectureUnmodified": true,
+    "historicalVerbatim": true,
+    "allOtherArchitectureTextUnchangedByExactReplacement": true,
+    "cargo": false,
+    "docsCheck": false,
+    "formatter": false,
+    "patchApplied": false
+  },
+  "knownLimits": [
+    "Only the requested local architecture range was reconciled; no whole-document rewrite.",
+    "The latest current facts remain in status. Historical runs inside the details block are not current capability or queue statements.",
+    "No whole-platform or stage completion asserted."
+  ]
+}

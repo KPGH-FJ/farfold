@@ -1,0 +1,17 @@
+
+running 12 tests
+test worktrees::git::content_stream::tests::actual_binary_chunks_and_unequal_short_reads_preserve_byte_alignment ... ok
+test worktrees::git::content_stream::tests::actual_read_errors_keep_object_or_material_side_and_native_code ... ok
+test worktrees::git::content_stream::tests::byte_budget_and_blob_cap_refuse_before_an_unfunded_read ... ok
+test worktrees::git::content_stream::tests::cancellation_blocks_selection_before_publishing_any_entry ... ok
+test worktrees::git::content_stream::tests::declared_truncation_and_overlong_input_are_refused_on_both_sides ... ok
+test worktrees::git::content_stream::tests::different_real_lengths_are_a_complete_raw_difference_not_missing_tail_success ... ok
+test worktrees::git::content_stream::tests::known_sha256_and_empty_default_are_observed_through_real_readers ... ok
+test worktrees::git::content_stream::tests::mismatch_after_a_complete_block_is_not_silently_truncated_or_prefix_equal ... ok
+test worktrees::git::content_stream::tests::pre_cancel_and_cancel_after_actual_read_never_publish_a_comparison ... ok
+test worktrees::git::content_stream::tests::selected_tree_path_and_object_must_belong_to_the_same_admitted_graph ... ok
+test worktrees::git::content_stream::tests::symlinks_gitmodules_oversize_and_bad_size_do_not_become_regular_default_authority ... ok
+test worktrees::git::content_stream::tests::wrong_width_duplicate_path_and_incomplete_or_empty_records_refuse ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 2312 filtered out; finished in 0.02s
+

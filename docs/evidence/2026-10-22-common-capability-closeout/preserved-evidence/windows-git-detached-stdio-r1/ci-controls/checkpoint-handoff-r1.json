@@ -1,0 +1,24 @@
+{
+  "head": "e616dcce0f91a898632327c30da4bdab0e01d0d4",
+  "files": [
+    {
+      "path": ".github/scripts/windows-recovery-followup-git-controls.ps1",
+      "sha256": "d5eea77798adccdaaeae08346aa9903d0ff533f444f6725868281d0073558cae",
+      "matchesHeadBlob": true
+    },
+    {
+      "path": ".github/workflows/windows-recovery-followup.yml",
+      "sha256": "97bcd3740526680651273449e5515ce7c5bb2874cecca5f82f4e757a88440eeb",
+      "matchesHeadBlob": true
+    }
+  ],
+  "ciReview": {
+    "path": "evidence:e-aebfe23646fa12bbc9ec",
+    "sha256": "5e7503866c70abbfe7a3799fac40607bb0f678385b11d5b33391374b2d86ef34"
+  },
+  "readerPreparation": {
+    "path": "evidence:e-158567c438c182f54fce",
+    "sha256": "f764300979c4c6ebee068e951f2c2f77121aef57dc99020d5cd5dd98f7d1b39f"
+  },
+  "noWindowsRunByAuthor": true
+}

@@ -1,0 +1,32 @@
+{
+  "group": "owned-link-sharing-2",
+  "filter": "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner",
+  "category": "ownedNtfsSharingAndExactCleanup",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "historicalSelectionArguments": [
+    "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+  ],
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::owned_link_tests::verified_alias_followed_by_caller_error_still_closes_the_exact_owner",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:00.4888181Z",
+  "finishedAtUtc": "2026-10-23T12:08:00.5316547Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "95D145AFF469AE950AAB29091069F17A7F7064378C4BF058D3137A8D7C5FCA4D",
+  "stderrSha256": "E12FE4CD316E51A05D4BDD6F2817087C0A7406DFE2725784681CD8479A6655C2"
+}

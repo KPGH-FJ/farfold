@@ -1,0 +1,61 @@
+{
+  "createdAt": "2026-10-23T11:32:49.701465+00:00",
+  "scope": "Non-author review of Root-only partial receipt classification delta. Reviewer authored the original runner and does not label this a fresh independent review of the whole runner.",
+  "conclusion": "No blocking issue found in the selected delta.",
+  "files": {
+    ".github/scripts/windows-helper-stdin-controls.py": "282b08c6699d1a42eecdbe113b79130f2d9c8b481313c6de6bbfe9c420c5f7b7",
+    "output/2026-10-22-common-capability-closeout/p27/helper-stdin-runner/partial-receipt-r1/source-before.py": "2765208bb85a5a6b81138c04d3eb7f8c9e33590770f6b80c6da30f6c81ef0698",
+    "output/2026-10-22-common-capability-closeout/p27/helper-stdin-runner/partial-receipt-r1/test_partial_receipt.py": "13e239998420b012797ff9c2bb405288e9dfdbc02cdabe9f711fdfb4ca69ff08",
+    "output/2026-10-22-common-capability-closeout/p27/helper-stdin-runner/partial-receipt-r1/controls.log": "4c7717d5491a96a0f0f5babb2f5782663207d8c5e6b7c9b23400f4a15900cad7",
+    "output/2026-10-22-common-capability-closeout/p27/helper-stdin-runner/test_runner_parse.py": "406f5a71ff41609614a64448cc13c7d3cfa56f75fffb092f1bc9d6e2f2d12abd"
+  },
+  "baseline": {
+    "sourceBeforeMatchesHeadBlob": true,
+    "exactInverseDeltaMatchesBefore": true,
+    "inverseCheckToolChunk": "c73ce7"
+  },
+  "reviewedChanges": [
+    "prepared begins empty; one manifest-unique case name is inserted only after its exclusive directory creation succeeds, immediately before execute. Failure before this point remains not-run.",
+    "If execute or evidence creation raises before a case receipt is appended, the corresponding prepared item is failed-or-incomplete with passed=false. This is conservative uncertainty, not a claim that an OS process definitely launched.",
+    "The existing sequential prefix of recorded cases is retained; only the missing suffix is filled. Manifest name uniqueness and exact seven-case order are unchanged.",
+    "Remaining parents are not invoked after the outer failure. Existing passedCount, notRunCount, failedOrIncompleteCount and all-seven-pass/input/program/error guards remain byte-identical.",
+    "Actual execution, original Child handling, per-case/group/retirement deadlines, raw libtest parsing and source/program identity checks are unchanged."
+  ],
+  "controls": {
+    "sourceReviewed": [
+      "No prepared cases: all seven remain not-run.",
+      "One prepared case: exactly that case is failed-or-incomplete and none is passed.",
+      "Actual main control mocks execute with OSError before a result receipt; main returns1, execute called once, aggregate reports0pass/1failed-or-incomplete/6not-run, no first result.json."
+    ],
+    "rootExecutedThree": {
+      "log": "evidence:e-5d1dae7e2446ef4246eb",
+      "sha256": "4c7717d5491a96a0f0f5babb2f5782663207d8c5e6b7c9b23400f4a15900cad7",
+      "logStatesRan": 3,
+      "logStatesOutcome": "OK",
+      "rootReportedNaturalExit": 0,
+      "rootReportedToolChunk": "41ad60",
+      "reviewerReadLogChunk": "captured in this review call"
+    },
+    "rootExecutedOriginal21": {
+      "rootReportedNaturalExit": 0,
+      "rootReportedToolChunk": "2e7d37",
+      "logFile": null,
+      "verificationLevel": "Root-provided tool execution result; no standalone original21 log read and no independent rerun."
+    }
+  },
+  "reviewerActions": {
+    "readSourceAndDiff": true,
+    "exactInverseByteCheck": true,
+    "parsedTestASTOnly": true,
+    "ranTests": false,
+    "ranCargoOrCI": false,
+    "changedSource": false,
+    "downloadedArtifacts": false,
+    "onlyWrite": "evidence:e-7df5221d4d316bc9dd97"
+  },
+  "limits": [
+    "Pure control mocks execute and identity reads; it does not prove a real Windows child launch, filesystem failure behavior, or helper test outcome.",
+    "A failure writing the aggregate itself remains outside this selected classification repair; no new guarantee of always recoverable output is made.",
+    "This is not a replacement for actual Windows helper controls or installed-app verification."
+  ]
+}

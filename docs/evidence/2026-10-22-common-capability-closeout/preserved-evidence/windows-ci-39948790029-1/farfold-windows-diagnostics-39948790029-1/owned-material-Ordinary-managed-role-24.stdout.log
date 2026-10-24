@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::git::source_roots::graph_tests::managed_root_git_tests::an_original_role_capsule_cannot_be_presented_as_a_different_root_read_context ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.60s
+

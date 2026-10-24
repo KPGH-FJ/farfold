@@ -1,0 +1,11 @@
+
+running 1 test
+test worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding ... FAILED
+
+failures:
+
+failures:
+    worktrees::material_owner::carrier_tests::empty_default_readonly_owned_file_roundtrips_without_padding
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

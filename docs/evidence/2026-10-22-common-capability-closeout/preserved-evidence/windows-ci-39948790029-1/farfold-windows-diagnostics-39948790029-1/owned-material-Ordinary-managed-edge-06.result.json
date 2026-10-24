@@ -1,0 +1,29 @@
+{
+  "group": "managed-edge-06",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing",
+  "category": "ordinaryWindowsOwnedReaderOrSamePinnedActualQuery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:10.8883245Z",
+  "finishedAtUtc": "2026-10-23T12:08:11.7491287Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "13E7B2B3DE996CDD4C6F2E71E2F3AE749727AAED78ACE0810C3E9E6749FC5AE9",
+  "stderrSha256": "D4B5D49954899AF708E8FC00F343BCF4723A1D7E591201244BE4698617256A81"
+}

@@ -1,0 +1,10 @@
+
+running 5 tests
+test file_access::material_raw_name::tests::counted_limit_is_utf16_units_not_unicode_scalars_or_utf8_bytes ... ok
+test file_access::material_raw_name::tests::dos_devices_and_extensions_keep_existing_material_boundary ... ok
+test file_access::material_raw_name::tests::raw_units_including_unpaired_surrogates_are_admitted_without_rewriting ... ok
+test file_access::material_raw_name::tests::relative_separators_controls_streams_and_empty_names_never_pass ... ok
+test file_access::material_raw_name::tests::unicode_spelling_is_not_normalized_into_an_alias_or_device_name ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2319 filtered out; finished in 0.00s
+

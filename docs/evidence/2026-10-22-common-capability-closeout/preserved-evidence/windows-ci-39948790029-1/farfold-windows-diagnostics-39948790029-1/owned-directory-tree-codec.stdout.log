@@ -1,0 +1,11 @@
+
+running 6 tests
+test file_access::material_directory_tree_records::tests::cancellation_and_unfinished_writer_cannot_emit_a_tree_completion ... ok
+test file_access::material_directory_tree_records::tests::exact_sibling_duplicates_and_native_comparison_policy_are_not_ignored ... ok
+test file_access::material_directory_tree_records::tests::forward_parent_cycle_and_duplicate_directory_identity_are_refused ... ok
+test file_access::material_directory_tree_records::tests::regular_alias_and_future_tags_are_not_skeleton_success ... ok
+test file_access::material_directory_tree_records::tests::streaming_two_actual_typed_records_keep_raw_parent_full_ids_and_native_ranges ... ok
+test file_access::material_directory_tree_records::tests::truncation_payload_tamper_suffix_and_budget_fail_without_a_completed_tree ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2318 filtered out; finished in 0.05s
+

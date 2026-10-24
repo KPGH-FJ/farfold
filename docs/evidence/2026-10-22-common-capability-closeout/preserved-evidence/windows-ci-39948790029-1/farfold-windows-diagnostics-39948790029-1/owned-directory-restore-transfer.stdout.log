@@ -1,0 +1,8 @@
+
+running 3 tests
+test file_access::windows::material_directory_restore::tests::actual_typed_file_view_bounds_seek_and_partial_transfer_to_native_extent ... ok
+test file_access::windows::material_directory_restore::tests::typed_transfer_cancellation_after_partial_write_keeps_failed_abort_owner ... ok
+test file_access::windows::material_directory_restore::tests::typed_transfer_retains_distinct_write_error_and_failed_abort_once ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.03s
+

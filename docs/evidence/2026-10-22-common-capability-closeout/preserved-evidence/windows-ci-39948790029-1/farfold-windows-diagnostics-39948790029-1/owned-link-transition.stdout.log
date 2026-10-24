@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_restore::owned_link::snapshot::tests::owned_link_transition_accepts_only_allocation_and_strict_checks_stay_strict ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.01s
+

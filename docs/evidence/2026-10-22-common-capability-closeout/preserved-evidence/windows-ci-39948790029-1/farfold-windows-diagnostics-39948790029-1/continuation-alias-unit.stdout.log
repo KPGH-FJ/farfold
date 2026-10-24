@@ -1,0 +1,8 @@
+
+running 3 tests
+test file_access::windows::material_alias_topology::tests::conflicting_actual_counts_zero_and_overbound_indices_never_mint_closed_group ... ok
+test file_access::windows::material_alias_topology::tests::full128_identity_not_equal_low64_decides_group_membership ... ok
+test file_access::windows::material_alias_topology::tests::observed_name_count_must_equal_reported_count_for_every_group ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.00s
+

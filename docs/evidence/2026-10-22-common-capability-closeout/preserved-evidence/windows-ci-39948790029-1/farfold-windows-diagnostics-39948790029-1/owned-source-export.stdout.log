@@ -1,0 +1,10 @@
+
+running 5 tests
+test worktrees::recovery_pack::source_export_tests::cancelled_or_wrong_source_request_has_no_export_success ... ok
+test worktrees::recovery_pack::source_export_tests::missing_source_objects_fail_and_absolute_project_program_decoy_is_not_authority ... ok
+test worktrees::recovery_pack::source_export_tests::real_export_output_and_source_authority_stay_owned_until_import_finishes ... ok
+test worktrees::recovery_pack::source_export_tests::real_source_export_then_existing_import_checks_exact_objects_without_source_writes ... ok
+test worktrees::recovery_pack::source_export_tests::roots_cannot_inject_revision_options_and_partial_material_still_cannot_export ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2319 filtered out; finished in 3.94s
+

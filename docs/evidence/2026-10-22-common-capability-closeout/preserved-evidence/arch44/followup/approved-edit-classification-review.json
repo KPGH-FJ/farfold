@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-23T00:26:20.939372+00:00",
+  "task": "ARCH-44",
+  "kind": "Independent classification challenge; read-only source investigation, not an activity plan or acceptance",
+  "scope": {
+    "farfoldSourceChanged": false,
+    "agentSourceChanged": false,
+    "realAgentStarted": false,
+    "newProbeRun": false,
+    "cargoRun": false,
+    "all29ReviewedImplementation": false
+  },
+  "readpoint": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c"
+    },
+    {
+      "path": "docs/agent-access-requirements.md",
+      "sha256": "dd6650f65709eed2c11398c4064ea0ac2cfd6efe0291519b629a8e31a35bbc86"
+    },
+    {
+      "path": "evidence:e-c097e1ce64113fb2200a",
+      "sha256": "fe39b86fcc4820831d74a26568c55028cdf0e0594e42ea595c066bf181b6976b"
+    },
+    {
+      "path": "evidence:e-000b078ad37167f0c680",
+      "sha256": "240e8c1613eeebf8a9e40b24e2fca4e375c80537e3136a43a540da4a15116232"
+    },
+    {
+      "path": "evidence:e-577d7840061cd20cf049",
+      "sha256": "b790d7b27ca7fa6875db01e819a8f13d66f3160bfe4b578cab39858b158bda17"
+    },
+    {
+      "path": "evidence:e-164d668354bdf4cfc526",
+      "sha256": "6e62347fc925b2f8bf1cdb6282c659bfedc409fe093d495383acbc59cb2e7519"
+    },
+    {
+      "path": "output/acp-first-batch-research-2026-10-05/group-core-sources/opencode/v1.18.31/packages/opencode/src/acp/permission.ts",
+      "sha256": "b83f1b30015f92f432e56a444a7304e131b1824b06870e7842c70db6bd969743"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "ab998339a89f3be477af250bac7174b58a8292e66999851f563dbaf558396888"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "b669487ad6d239ddcc345863e41cc59b635be2e918e9c504b01f376996e097af"
+    },
+    {
+      "path": "<private-mac-home:93ac151f5572>",
+      "sha256": "4e52924915554d1b1a4ec6940ed6a97fca09420689d2aaa4eeda4b0b589aed99"
+    }
+  ],
+  "conclusion": {
+    "mandatoryGenericClientFsEstablished": false,
+    "pureDiffPreview": false,
+    "compatibilityGapStillOpen": true,
+    "accountOnlyBlocker": false,
+    "allIndependentArch44WorkDeclaredComplete": false,
+    "decision": "Keep fs/terminal capabilities undeclared for the currently reviewed route. The six source controls establish unsolicited write requests and unhandled callback rejection, not sole-write dependency. Do not count the two implementations accepted or call all remaining investigation external-only."
+  },
+  "sourceFacts": [
+    {
+      "claim": "Both complete permission handlers call writeProposedEdit after edit approval, then reply once/always. writeProposedEdit invokes writeTextFile with void; the outer catch does not await its promise. Separate diffContentForPatch handles display.",
+      "localRanges": {
+        "kilo-permission-complete.ts": "93-125 and 195-219",
+        "opencode/permission.ts": "84-114 and 183-207"
+      }
+    },
+    {
+      "claim": "The six existing controlled cases have mocked filesystem/diff/connection ports. Both rejection cases record writeCallback, then permissionReply once, then unhandled rejection. They neither execute the real edit tool nor establish process/file outcome. callback_absent is not an actual AgentSideConnection absence proof.",
+      "evidence": "permission-source-probe.json and .cjs"
+    },
+    {
+      "claim": "OpenCode exact tagged edit tool requests permission, then itself writes through FSUtil, followed by formatting and file events. Client callback is therefore not the only source-visible writer.",
+      "url": "https://raw.githubusercontent.com/anomalyco/opencode/v1.18.31/packages/opencode/src/tool/edit.ts",
+      "lines": "93-106,133-149"
+    },
+    {
+      "claim": "Kilo exact tagged edit tool requests permission, then itself calls EncodedIO.write with original encoding, followed by formatting and sync.",
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/tool/edit.ts",
+      "lines": "121-139,145-185"
+    },
+    {
+      "claim": "Kilo EncodedIO encodes text and executes own filesystem operations through its sandbox-aware path.",
+      "url": "https://raw.githubusercontent.com/Kilo-Org/kilocode/v7.8.1/packages/opencode/src/kilocode/tool/encoded-io.ts",
+      "lines": "7-40"
+    },
+    {
+      "claim": "Official ACP requires checking client fs capability before calling; absence/false disallows the call. write_text_file is an actual write/create operation and empty result means success.",
+      "url": "https://agentclientprotocol.com/protocol/v1/file-system",
+      "lines": "89-112,185-228"
+    },
+    {
+      "claim": "Local official schema write request carries sessionId, absolute path, content and opaque meta. It has no standardized toolCallId, prior-approval token, encoding, expected file version or hash. Their absence does not make implementation impossible, but prevents pretending those facts were supplied.",
+      "evidence": "agent-client-protocol-schema-1.9.1/src/v1/client.rs:1217-1273"
+    },
+    {
+      "claim": "Current Farfold initialize does not advertise file execution capabilities and pump returns official method_not_found for unsupported requests. This remains honest failure, not an implementation or verified compatibility claim.",
+      "evidence": "src-tauri/src/acp_client/manager.rs and pump.rs"
+    }
+  ],
+  "inferencesNotRuntimeProof": [
+    "The callback may serve client/editor synchronization, consistent with ACP documentation, but neither exact handler documents that intent; do not label it merely a preview.",
+    "A blind additional writer can compete with the Agent-owned write/format and may not preserve the Agent-owned encoding/sandbox semantics. No actual lost bytes or sandbox bypass was reproduced here.",
+    "Implementing a successful client writer would not fix the void-promise rejection path for denial, cancellation or IO errors; no-op success would be false evidence."
+  ],
+  "preciseRemainingFacts": [
+    "Actual selected official program behavior when a current capabilities-false client rejects this request: process lifetime, permission response delivery, final tool status, actual file bytes/version and error feedback. Existing probe intercepts unhandledRejection and cannot decide CLI lifecycle.",
+    "Version-matched official behavior or supported route that capability-gates the request or safely consumes rejection. Do not patch/fork the upstream Agent or change its configuration to manufacture success.",
+    "If client fs is chosen for a demonstrated required route: explicit Farfold-owned permission scope and lifetime, exact connection/session ownership, treatment of cancellation with work still in flight, and current-file conflict/encoding semantics. Prior native approval cannot be guessed from opaque metadata alone.",
+    "Six insufficient-material agents still need the exact official callback contract or inspectable selection path listed in requirements-followup. Missing source research is not automatically a missing account or a proven external-only blocker.",
+    "Basic prompt examples for Cursor/Copilot and partial Grok/Mistral/Qoder evidence remain narrower than all tool workflows."
+  ],
+  "implementableBoundary": [
+    "A genuine necessary callback can be implemented through official typed request dispatch, exact session owner validation, real scoped approval and real completion/error responses; that is not a second Agent loop. Generic terminal execution is not justified by these write-only cases.",
+    "Keep existing honest unsupported responses and permission/tool events; do not acknowledge empty success, synthesize tool completion, auto-retry, or ignore callback errors to force acceptance.",
+    "ARCH-44 and shared condition at requirements line 53 permit necessary compliant callbacks. PRODUCT section 11 line 185 describes the file-delivery path and does not by itself prove a universal callback prohibition; it also does not authorize an unrestricted host writer. Original product/data boundaries remain unchanged."
+  ],
+  "notVerified": [
+    "Actual Agent or installed binary execution",
+    "Credential/model condition or NEW-24 resolution",
+    "Filesystem write success from the six controls",
+    "Whole-program global unhandled rejection policy",
+    "All 29 tool/terminal acceptance"
+  ],
+  "evidencePreservation": "Existing six controls and failed/truncated Kilo retrieval remain unchanged. Complete API-derived Kilo source was used; initial truncated HTTP200 source was not treated as a vendor behavior."
+}

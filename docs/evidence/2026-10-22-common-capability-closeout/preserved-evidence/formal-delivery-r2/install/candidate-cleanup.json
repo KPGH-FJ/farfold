@@ -1,0 +1,33 @@
+{
+  "phase": "exactDuplicateCandidateRemoved",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "checkedAtUtc": "2026-10-23T12:43:31.255241+00:00",
+  "removedExactFiles": [
+    "Contents/Info.plist",
+    "Contents/MacOS/farfold",
+    "Contents/Resources/icon.icns",
+    "Contents/Resources/release-manifest.json",
+    "Contents/_CodeSignature/CodeResources"
+  ],
+  "removedExactDirectories": [
+    "Contents/_CodeSignature",
+    "Contents/Resources",
+    "Contents/MacOS",
+    "Contents",
+    ""
+  ],
+  "zipPreservedSha256": "135df17d34d06938776ed839fcf9909fc2e9fdb25d837a83e40384c5c1941345",
+  "formalSourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "formalFiveFilesAndModesUnchanged": true,
+  "processObservations": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  },
+  "toolSha256": "138561003e35a31cce84d81d7c53b3365a460b55a63cd772486c100486fcca2e",
+  "candidateReceiptSha256": "9b3886f20937881cee2dae9291b5658688421158b38c0626ab3bd851b18b10c2",
+  "independentReviewSha256": "2d81461a6def58ff62d257aec5adc4dc84f1f85d025f3fce5726ebac549c5d91",
+  "installedIndependent10Sha256": "cda1eb78df1dc32a5f497290bc7787a196a18760ed7c712d93a91ba37997d5e6",
+  "atomicInstallReceiptSha256": "213d48bd3ae3a7e6dcd823a8ebb8a088d0fac3013f74ab543c4d982ece5c9c82",
+  "sourceHeadOrProductionHashRequired": false,
+  "noDataBuildLaunchQuitRestoreOrAutomaticRetry": true
+}

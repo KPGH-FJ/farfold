@@ -1,0 +1,47 @@
+{
+  "kind": "independent-test-review-addendum",
+  "reviewer": "windows_gaps",
+  "reviewedAuthor": "delivery_prep",
+  "priorReview": {
+    "path": "evidence:e-41a306b7f993fadf468a",
+    "sha256": "61b75f95ad4e67ea704fd73821b7b5e49ea90cb1da130cbb64b70ee646186e72"
+  },
+  "authorReadpoint": {
+    "path": "evidence:e-10282e516fd3071849bf",
+    "sha256": "164cdcf5769efc7679505799a07a28853e83c70c510252a49789d160713560cf"
+  },
+  "files": [
+    {
+      "path": "src-tauri/src/browser_sharing/helper_io/windows_input_tests.rs",
+      "sha256": "39ed22dcc7d290222350ca1cc9489d40b9dcb31ca6aa78af3a3bd16217921bb4",
+      "changed": true
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/helper_windows_input_tests.rs",
+      "sha256": "22e967078d317ef35cfe373e9877d7758deed06f2b6069ebad5d308050530860",
+      "changed": false
+    }
+  ],
+  "checks": {
+    "currentMatchesAfter": true,
+    "beforeHashesMatchR2Review": true,
+    "exactAuthorDiffRecomputed": true,
+    "testNamesAndIgnoreAttributesUnchanged": true
+  },
+  "findingsClosed": [
+    {
+      "prior": "P2 admission lacks data IO observation",
+      "resolution": "Existing observer now records bounded bool and fixed stderr marker for each rejected actual handle. Child requires zero callback at refusal; parent also requires zero marker after original natural Child terminal and complete bounded stderr, covering a later callback before process exit."
+    },
+    {
+      "prior": "P2 Input parent abnormal cleanup lacks held Child guard",
+      "resolution": "OriginalChild installed immediately after spawn and before extracting/writing stdin. All early unwinds use original Child kill and held-handle <=5s observation; timeout retains original failure and same limit. Unknown owner is not claimed terminated or passed. Explicit timeout kill removed to avoid a second cleanup interval."
+    }
+  ],
+  "remainingSelectedDeltaBlockers": [],
+  "boundaries": [
+    "Review covers only the two delivery-authored test modules, not reviewer-authored production.",
+    "No Rust/source edit, Cargo, actual Windows, Agent, app or CI was run.",
+    "The controls remain assertions awaiting actual Windows execution; no static review can prove they passed."
+  ]
+}

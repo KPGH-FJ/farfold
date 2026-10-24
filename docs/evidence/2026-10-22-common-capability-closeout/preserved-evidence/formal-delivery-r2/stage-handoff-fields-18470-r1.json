@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T12:47:10.343933+00:00",
+  "kind": "本批最小阶段交接事实字段；不是活动计划或新验收要求",
+  "sourceSnapshot": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "stageExitReached": false,
+  "architecturePatchReview": {
+    "result": "受影响原条件内未发现降低保护或虚增完成的语义；原补丁未由本任务应用。",
+    "selectedConditionIds": [
+      "ARCH-44",
+      "ARCH-49",
+      "P27",
+      "H13",
+      "H14",
+      "H15",
+      "H16",
+      "H17"
+    ],
+    "conditionsEqualToFormal420eAfterWhitespaceNormalization": true,
+    "productBasis": [
+      "PRODUCT.md:38-62",
+      "PRODUCT.md:148-157",
+      "PRODUCT.md:181-195"
+    ],
+    "patchBoundary": "将旧631/早期Windows叙述明确归历史，补当前受限入口与普通/完整安全资料区别、逐次截图确认及撤回。没有把同句柄复核说成全文件系统原子冻结，也没有把内部成功当实际Agent交付。",
+    "publishFieldsToRefresh": "由Root按实际18470安装和13f Windows140/27结果更新当前status；保留fd89间歇失败、旧304及不同source/平台/界面证据，不直接套用旧等待状态。"
+  },
+  "formalDelivery": {
+    "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+    "engineering": "r12实际7/7，18580输入稳定；只属于18470。",
+    "receiptsRead": "安装回执source18470且installed；安装后10/10，5重复文件清理回执已存在。这里只复用回执，不重复App/数据/进程核验。",
+    "separateUnverified": "安装不是正式界面使用、真实Agent、资源峰值或所有Windows行为证明。"
+  },
+  "categories": [
+    {
+      "id": "ARCH-49",
+      "implemented": "SDK帧准入、逻辑积压预算、逐项pull/ACK、退役在途债务、未知前缀；main/fork/preview单份私有投影与同对象转交、主打开marker暂停已有源码和分层独审。",
+      "actualVerification": "受控SDK/原路由与失败/退役控制、18470完整工程及Mac正式安装；真实WebKit只对16KiB工具输入三轮展开/收起、卸载及点状持有进程RSS留证，不是正式native ACK或渲染器总RSS。",
+      "specificConditions": "正式UI已有历史/工具输入的实际消费、ACK滞后和资源基线可在无需新发送的条件下继续；真实多Agent/长历史需要明确可用事件源与负载，受影响新发送仍暂停。",
+      "stillDevelopable": "本次有界复核未另确证未接线生产缺陷，但正式资源量测和失败发现后的修复是可独立继续的验证/开发，不能写成全缺账号或ARCH49完成；完整P13/P16长期负载不自动并成这次新门槛。"
+    },
+    {
+      "id": "ARCH-44",
+      "implemented": "29家需求和缺失后果已分类，官方capability保持真实；未声明通用客户端fs/terminal执行能力，未支持方法返回method_not_found；未新增盲写/代跑执行器。",
+      "actualVerification": "所选官方源码及Kilo/OpenCode六项受控回调反例；不是真实协商、写入、权限/取消或全29验收。",
+      "specificConditions": "下列5家需具体所选版本的官方路由契约；另Nova/Grok版本/分发映射有明确边界，Mistral/Qoder所选源码分歧已收窄，不能把原9项都记缺材料。",
+      "stillDevelopable": "一旦官方实际表明必需某typed回调，其共用权限、路径、执行归属和取消清理仍是本地实现责任；现有证据既未证明通用写入器是唯一缺口，也未证明全29不需要回调。Nova官方版本核实不是私有method别名授权。"
+    },
+    {
+      "id": "Windows-H13-H17",
+      "implemented": "普通/完整资料profile、完整Manifest、短默认流、同对象发布/原目录与指针、独立冷恢复及删原前复核/未知保留已有生产接线。",
+      "actualVerification": "13f运行39948790029当前140/140及独立granted27/27；原304仅303旧名观察275成功/28原始失败、1退役，3正确替代另列。不能混为原304全通过。",
+      "specificConditions": "普通与独立SeSecurity条件分开；默认令牌27项旧FullSecurity失败不能外推当前granted失败，也不能擦旧失败。其他Windows系统/真实UI覆盖继续按原H18/P49范围。",
+      "stillDevelopable": "fd89单独恢复运行曾真实遇到充足buffer成功但assigned1/listed0，导致sticky未知及verifyingRecovery未结束，删除未派发；本轮全140通过不证明间歇根因消失。Root继续固定命令A/B诊断；尚无已证明安全的生产修复，不能删sticky或用后续空表当历史全结束。"
+    },
+    {
+      "id": "P27",
+      "implemented": "生产工具入口、每次独立截图同意、首次不授长期文字许可、直至实际回传确认的撤回；Windows CDP前后guard/真实capture、macOS公开新系统能力桥与旧系统拒绝已接线，失败不降级文字。",
+      "actualVerification": "fd89 Windows真实HWND/STA/WebView2/同源helper原用例七项及独立stdin7通过；18470源码已完整工程并正式装到Mac。Mac15生产桥能力为假已验，不是Mac27截图成功。",
+      "specificConditions": "Mac27公开closed-root API实际环境；正式界面、远程受控公开页、真实Agent生产交付及其同意/撤回仍需相应实际条件和证据，不能把缺正式UI验证写成缺截图代码。",
+      "stillDevelopable": "本次未再确证已选截图路径的未接线缺陷；具体失败出现后仍修。不能由Windows有限网页样本宣称任意网页/平台或29家交付完成。"
+    }
+  ],
+  "arch44FiveOfficialContracts": [
+    {
+      "id": "antigravity-acp",
+      "selectedSourceVersion": "1.2.1",
+      "officialReference": "https://www.antigravity.google/docs/ide/extensions/zed/",
+      "unresolvedMethods": [
+        "fs/read_text_file",
+        "fs/write_text_file",
+        "terminal/create",
+        "terminal/output",
+        "terminal/wait_for_exit",
+        "terminal/kill",
+        "terminal/release"
+      ],
+      "missingContract": "fs读/写与terminal能力的选择、未声明时行为、失败/取消归属。集成认证说明没有这些字段。",
+      "boundary": "这些是需要核实是否委托客户端的方法集合，不是已证明该Agent必需全部方法；需选择/未声明时行为/失败及取消归属，不等同缺账号。"
+    },
+    {
+      "id": "devin",
+      "selectedSourceVersion": "3000.11.3",
+      "officialReference": "https://docs.devin.ai/cli/acp/zed",
+      "unresolvedMethods": [
+        "fs/read_text_file",
+        "fs/write_text_file",
+        "terminal/create",
+        "terminal/output",
+        "terminal/wait_for_exit",
+        "terminal/kill",
+        "terminal/release"
+      ],
+      "missingContract": "终端输出的呈现不等于terminal/create执行委托；缺所选CLI的选择/缺省/错误/取消语义。",
+      "boundary": "这些是需要核实是否委托客户端的方法集合，不是已证明该Agent必需全部方法；需选择/未声明时行为/失败及取消归属，不等同缺账号。"
+    },
+    {
+      "id": "dimcode",
+      "selectedSourceVersion": "0.5.16",
+      "officialReference": "https://dimcode.dev/en/docs/acp/",
+      "unresolvedMethods": [
+        "fs/read_text_file",
+        "fs/write_text_file",
+        "terminal/create",
+        "terminal/output",
+        "terminal/wait_for_exit",
+        "terminal/kill",
+        "terminal/release"
+      ],
+      "missingContract": "本地设置复用不决定fs/terminal回调；官方链接的公开仓库明确仅issue tracker，不含应用源码。",
+      "boundary": "这些是需要核实是否委托客户端的方法集合，不是已证明该Agent必需全部方法；需选择/未声明时行为/失败及取消归属，不等同缺账号。"
+    },
+    {
+      "id": "factory-droid",
+      "selectedSourceVersion": "0.230.0",
+      "officialReference": "https://docs.factory.com/ide-integrations",
+      "unresolvedMethods": [
+        "fs/read_text_file",
+        "fs/write_text_file",
+        "terminal/create",
+        "terminal/output",
+        "terminal/wait_for_exit",
+        "terminal/kill",
+        "terminal/release"
+      ],
+      "missingContract": "ACP启动参数已可核；fs/terminal能力声明、未声明/失败后的选择与清理契约未说明。",
+      "boundary": "这些是需要核实是否委托客户端的方法集合，不是已证明该Agent必需全部方法；需选择/未声明时行为/失败及取消归属，不等同缺账号。"
+    },
+    {
+      "id": "poolside",
+      "selectedSourceVersion": "1.0.16",
+      "officialReference": "https://docs.poolside.ai/cli/pool",
+      "unresolvedMethods": [
+        "fs/read_text_file",
+        "fs/write_text_file",
+        "terminal/create",
+        "terminal/output",
+        "terminal/wait_for_exit",
+        "terminal/kill",
+        "terminal/release"
+      ],
+      "missingContract": "当前公开repo列third_party/README/CHANGELOG/LICENSE，未见所选实现；通用权限/沙箱说明未决定ACP fs/terminal选择或缺省后果。",
+      "boundary": "这些是需要核实是否委托客户端的方法集合，不是已证明该Agent必需全部方法；需选择/未声明时行为/失败及取消归属，不等同缺账号。"
+    }
+  ],
+  "arch44OtherVersionBoundaries": [
+    {
+      "id": "nova",
+      "selectedVersion": "1.1.49",
+      "boundary": "实际V1 factory/approval发permission/request，与官方V1 session/request_permission不同；V2才用官方方法。既有较新1.1.59官方metadata与一次archive摘要不闭合/固定metadata截断，未证明修好或仍坏；要连贯官方分发/支持说明后再核精确方法，不是单纯缺账号。"
+    },
+    {
+      "id": "grok-build",
+      "selectedVersion": "1.0.46",
+      "boundary": "所选包gitHead2765805b…与已读公开main2bdd1d6…不等，缺发行到源码映射或有条件实际路由；不能把旧main本地fallback当所选版事实。"
+    },
+    {
+      "id": "mistral-vibe / qoder",
+      "selectedVersion": "2.25.8 / 0.2.14",
+      "boundary": "Mistral完整legacy/unified与executor链、Qoder读写选择及所选默认terminal路径已读清；被选客户端回调失败不自动本地重试，未声明路径可有Agent自有本地执行。动态插件/配置及实际工具/取消仍未验，不推成全局无需回调。"
+    }
+  ],
+  "independentOmissionAssessment": "本次仅四类和对应原条件的有界复核，未重扫151，未发现第五个新确证代码反例；仍有Windows间歇结束语义与ARCH44必要回调选择待解决/判断，以及可独立补的正式消费证据。不能据此宣称全部独立开发已完成。",
+  "invariants": {
+    "soleActivePlan": "plans/agent-access.md（18470 tracked plans内只有该文件）",
+    "requirements": "151原项/条件保持；只逐项比较上述8条原完成条件，未重新复审全151",
+    "firstRelease": "29家×八项保持",
+    "new24AffectedSends": "继续暂停；安装、源码与受控通过不解除",
+    "oldReports": "旧stage-gap/four-category报告保留，当前事实不能倒写旧报告。"
+  },
+  "evidence": {
+    "architecturePatch": {
+      "path": "evidence:e-63c3750294c4052d1755",
+      "sha256": "9b88e4ca6feed8dc2c326aeabb75d1f2176f8bb8cf6a926789e437951600bf1c",
+      "bytes": 10493
+    },
+    "architectureProposal": {
+      "path": "evidence:e-994da0bbe76629579633",
+      "sha256": "4a57e1837d1b56be7878828775ea3acd482ce580fb9d9800042930068091c3f8",
+      "bytes": 5516
+    },
+    "sourceBinding": {
+      "path": "evidence:e-31d1c75144546e9342a8",
+      "sha256": "6f77a3edf480b436598fb5510930b64aed8d09b80241bb7ccd8b18a7f12806e6",
+      "bytes": 240333
+    },
+    "engineering": {
+      "path": "evidence:e-8a438bba3439c247932a",
+      "sha256": "af9cdbe8df4479b73eb9b658c736b6a3540c5822ee060708472543289f2eb96f",
+      "bytes": 6046
+    },
+    "installed10": {
+      "path": "evidence:e-02ed13b2d5305735b73a",
+      "sha256": "cda1eb78df1dc32a5f497290bc7787a196a18760ed7c712d93a91ba37997d5e6",
+      "bytes": 6491
+    },
+    "install": {
+      "path": "evidence:e-c15c113aa8b87311710f",
+      "sha256": "213d48bd3ae3a7e6dcd823a8ebb8a088d0fac3013f74ab543c4d982ece5c9c82",
+      "bytes": 10871
+    },
+    "cleanup": {
+      "path": "evidence:e-fd7ccecad632c6772df5",
+      "sha256": "0d9b4fa8e850492aa8cbcd420a41c69bb75d306bdb36230da67677dc7fd825ef",
+      "bytes": 7171
+    },
+    "windows140": {
+      "path": "evidence:e-1bb7ef8998b59c048d79",
+      "sha256": "f5b5baee82a2ed7e2846a940d6d01a73dd8888bea4d0800632ac766e5f892da6",
+      "bytes": 2648948
+    },
+    "windows27": {
+      "path": "evidence:e-cc93023172e48ce2fb2b",
+      "sha256": "0bab9f02c9999130f5d84b22c2be45a2a2ab5e51463cb846dea4f3f701f67c40",
+      "bytes": 276724
+    },
+    "original304": {
+      "path": "evidence:e-deafd09b4c139551f9d6",
+      "sha256": "a2ff7de566b35c2a0050217fb0a4d57c5eacbd3399d74107368353e9ce6a6533",
+      "bytes": 410972
+    },
+    "intermittentFailure": {
+      "path": "evidence:e-b897d2d82a1bd9352bb5",
+      "sha256": "f94f79d1b6acfda67ee455f0d9202371c01ef13cbee865632689bd1596b98920",
+      "bytes": 57313
+    },
+    "arch44SelectedConditions": {
+      "path": "evidence:e-acdb11f919dcd9d5cc25",
+      "sha256": "1bf1f85fb9f9f8159ae6583072a75ed962fe3a0cf27f7e85b2eb853a7e1ef451",
+      "bytes": 10681
+    },
+    "novaNewerVersionBoundary": {
+      "path": "evidence:e-a552fe84fd8cface3ebd",
+      "sha256": "7ba8b96be004c520ac29511642c67f33b74080412eb0114646f858632210b000",
+      "bytes": 8273
+    },
+    "callbackEditBoundary": {
+      "path": "evidence:e-74fa0a1663614a013d02",
+      "sha256": "6c906ada9727fe53fb1105ff3169b9ca71cb380ddc1c638b8c6ead6fecd77a1b",
+      "bytes": 8879
+    },
+    "webkitConsumption": {
+      "path": "evidence:e-3751dc84e542c56fdfd1",
+      "sha256": "56b1ba18116bafdb0e1a7a4e2816055576f5fc37131a2d82f1fb40e453b2c2ee",
+      "bytes": 5532
+    },
+    "screenshotActual": {
+      "path": "evidence:e-a05f33bc2b1e959df765",
+      "sha256": "0c58d22c375fa5c48badea0cf0ef781ceffa0a4a840068f67a0df9e6e4dbffe4",
+      "bytes": 20493
+    },
+    "jobABPrepared": {
+      "path": "evidence:e-76c7d25a563ea7b5636a",
+      "sha256": "ec8e03a76ecc7c1c1d8fb40bf6fcb2b1ca2dcff678a6cac8a5331462503b903b",
+      "bytes": 4940
+    },
+    "product": {
+      "path": "PRODUCT.md",
+      "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+      "sha256": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c",
+      "bytes": 35956
+    },
+    "planSnapshot": {
+      "path": "plans/agent-access.md",
+      "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+      "sha256": "a1e81b5bf8955fa6c9618809a2fee0d3c02fb345d106de35a6e62ccbf3e1b0b3",
+      "bytes": 5082
+    },
+    "statusSnapshot": {
+      "path": "docs/status.md",
+      "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+      "sha256": "55cac6a5320920b1e51336bbe7e8e47a68e265a1b0d7b5661fd90979d7309a06",
+      "bytes": 56345
+    },
+    "requirementsSnapshot": {
+      "path": "docs/agent-access-requirements.md",
+      "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+      "sha256": "79bf8b6032dd33e22c6e021f732bb89e1b6aff08fd2f950ee30621ccd53c8002",
+      "bytes": 102993
+    }
+  },
+  "execution": {
+    "trackedWrites": false,
+    "networkOrCiQueries": false,
+    "cargoOrTests": false,
+    "appAgentOrUserData": false,
+    "outputOnly": true,
+    "boundary": "只读当前材料/正式回执及原条件；既有源码作者范围不冒充独立源码审批。"
+  }
+}

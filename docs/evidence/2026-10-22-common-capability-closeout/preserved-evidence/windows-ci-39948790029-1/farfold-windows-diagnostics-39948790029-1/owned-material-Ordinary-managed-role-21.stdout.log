@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.71s
+

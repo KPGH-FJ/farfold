@@ -1,0 +1,45 @@
+{
+  "allSelectedPassed": false,
+  "sourceInputCount": 2197,
+  "steps": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExit": 0,
+      "naturalCompletionObserved": true,
+      "seconds": 1.8346669673919678,
+      "inputsStable": true,
+      "changed": [],
+      "log": "evidence:e-20d38f355a3dd8d2266c",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--target",
+        "x86_64-pc-windows-gnullvm",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalExit": 101,
+      "naturalCompletionObserved": true,
+      "seconds": 12.554043054580688,
+      "inputsStable": true,
+      "changed": [],
+      "log": "evidence:e-34f7c39fc9e5ea6f09ef",
+      "logSha256": "ab67e684e831247b181683e080e42fb3d81e11868a14d346bf3933c13a676c82"
+    }
+  ],
+  "scope": "affected Mac Git and strict Windows all-target cross; no actual Windows or formal new install claim"
+}

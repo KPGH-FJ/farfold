@@ -1,0 +1,29 @@
+{
+  "group": "persistent-store-05",
+  "filter": "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:01.9833893Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.0226655Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "AEE1F21E6DF42910DA016808CCE22098B045638A07DDC35D52359408709AF740",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

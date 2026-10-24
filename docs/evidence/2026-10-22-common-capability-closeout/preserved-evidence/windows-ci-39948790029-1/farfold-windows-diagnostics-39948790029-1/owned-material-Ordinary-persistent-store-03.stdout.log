@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::windows::material_persistent_store::tests::actual_truncation_corruption_suffix_and_wrong_whole_hash_refuse_before_publish ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.05s
+

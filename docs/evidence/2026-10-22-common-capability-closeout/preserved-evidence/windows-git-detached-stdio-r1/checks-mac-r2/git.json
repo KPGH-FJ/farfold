@@ -1,0 +1,18 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "worktrees::git::",
+    "--",
+    "--test-threads=1"
+  ],
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 37.55660009384155,
+  "inputsStable": true,
+  "log": "evidence:e-17d9064eadf8c49b649a",
+  "logSha256": "96912d77f70b89446ac1e94bd6cd26f3584f4cdf83a43312fa9eece125bc4db2"
+}

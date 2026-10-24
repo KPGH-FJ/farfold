@@ -1,0 +1,37 @@
+{
+  "group": "regular-semantic-streams",
+  "filter": "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order",
+  "category": "portableMaterialSemantics",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order"
+  ],
+  "actualPassedNames": [
+    "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_carrier_records::tests::material_semantic_digest_uses_all_streams_without_backup_order",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:07.2656277Z",
+  "finishedAtUtc": "2026-10-23T12:09:07.2856990Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "2A87ADD8F1A473572FBF1324DDFCEB91CE55B979FBA6D5ED1BDE66019AD2B51A",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

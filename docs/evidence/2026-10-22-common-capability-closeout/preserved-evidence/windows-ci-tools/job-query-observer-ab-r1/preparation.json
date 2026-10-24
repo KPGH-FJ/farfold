@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T12:34:56.658318+00:00",
+  "status": "output-only-A-B-prepared-not-applied-or-executed",
+  "sourceCommit": null,
+  "runId": null,
+  "priorPreparation": {
+    "path": "evidence:e-0a3c78de2b8cb248c2fc",
+    "sha256": "25ed1fd54c08cd13965c2d427cec4babcfb26065d1e164d3de79005ba5360a01",
+    "bytes": 6040
+  },
+  "priorIndependentReview": {
+    "path": "evidence:e-4ab5250e28c5d83367ad",
+    "sha256": "ccbe1d76fc7cf4a129add5424508b9c9bf97f8325e2e01b659cbdcd7db672274",
+    "bytes": 7796
+  },
+  "files": {
+    "observer.py": {
+      "path": "evidence:e-3c90a0a3a6f79fa89aeb",
+      "sha256": "93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19",
+      "bytes": 23890
+    },
+    "test_structure.py": {
+      "path": "evidence:e-6314e472a88a78a9d630",
+      "sha256": "f3036fd35a4f070bea471fc8426362b278e3451c5e1c293891431c1b378d96a7",
+      "bytes": 6081
+    },
+    "windows-job-query-observer.proposed.yml": {
+      "path": "evidence:e-f0656928e28011a8ed4a",
+      "sha256": "b0d7654a67977a625ff98cd69d56f2d108274bcfa8b9aa8dac4818b3782c2660",
+      "bytes": 3401
+    }
+  },
+  "originals": {
+    "observer.py": {
+      "path": "evidence:e-e379ff640b1bcf8f625f",
+      "sha256": "75a4f20a7a228f098a336a6c12edfedbc544cdea0f88323a3156e7df6434d797",
+      "bytes": 22971
+    },
+    "test_structure.py": {
+      "path": "evidence:e-e33a729752f7066b5a93",
+      "sha256": "a05486688ab10ae4bf0e3aa95a5ce3556ae1bdfc8dc299e372cf7c2c35f8b705",
+      "bytes": 2936
+    },
+    "windows-job-query-observer.proposed.yml": {
+      "path": "evidence:e-f7dabd1af4f02bea83c1",
+      "sha256": "7e7ec7d7f97dd5b9bff52b0055c49a1e3dca7612819c0c6e890a8008cf6c541a",
+      "bytes": 1814
+    }
+  },
+  "diffs": {
+    "observer.py": {
+      "path": "evidence:e-cae2621cdc669f23322c",
+      "sha256": "709fcf241e07b0a6a326468853c4f47a025e70ea73de2779e720886ac1339b32",
+      "bytes": 5385
+    },
+    "test_structure.py": {
+      "path": "evidence:e-a69fed643ea9348c5aa6",
+      "sha256": "388804d53cec59de5809a170e5c7850e0ab9304c116487d76fc9d7810f7c1274",
+      "bytes": 3775
+    },
+    "windows-job-query-observer.proposed.yml": {
+      "path": "evidence:e-becc60bee60d75c99549",
+      "sha256": "c16de303cba10d93bdc210e77b57c50bcb97d76f0b0f7e0f383355d08f44cd1d",
+      "bytes": 2960
+    }
+  },
+  "pureCheck": {
+    "path": "evidence:e-a3d14049935d99979b95",
+    "sha256": "60bce8f36d055d3a0b2890bc7aba21b1a8ba05b2c7f24f730e97cf805dd403cd",
+    "bytes": 2635
+  },
+  "delta": "Api.create accepts only exact integer NO_WINDOW or DETACHED_PROCESS plus original suspended flag. Default unchanged. Only command fixtures select detached. Supervisor still creates observer with default NO_WINDOW. Explicit CLI boolean propagated to worker, both summaries record actual selected command flags and supervisor records observer flags. No new native API/PID cleanup or production change.",
+  "workflow": "Same manual workflow first runs original default12 rounds, then detached12 rounds even after a noncancelled first-step failure. Separate fresh output directories, identity files and always-upload artifacts. Both original nonzero exits remain job failures. Each run retains60s observation/wait budget,36 fixed commands,240 queries,512-record/512KiB limit and original-object cleanup; neither mode result implies causality or production settlement.",
+  "boundary": "Root reports the old Job4–6 vs3commands as motivation; extra PIDs remain unidentified. Do not pre-classify them as console processes or expect detached to repair production. This only compares fixed exit0 command creation flags and retained original handles/member lists, not STDIO/Git/stop/recovery semantics. No mismatch or relative improvement is required for a completed observation. Existing r1 evidence remains unchanged.",
+  "execution": {
+    "trackedWrites": false,
+    "windowsApiOrFixtureRun": false,
+    "cargo": false,
+    "ciOrNetwork": false,
+    "appAgentUserData": false
+  }
+}

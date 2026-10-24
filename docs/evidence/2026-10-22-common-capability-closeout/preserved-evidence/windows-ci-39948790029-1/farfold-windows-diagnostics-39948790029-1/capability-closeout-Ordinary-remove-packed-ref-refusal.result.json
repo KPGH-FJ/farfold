@@ -1,0 +1,37 @@
+{
+  "group": "remove-packed-ref-refusal",
+  "filter": "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock",
+  "category": "ownedRemovalMetadataHandoffNotPublicDeletion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:02.7430694Z",
+  "finishedAtUtc": "2026-10-23T12:09:04.4447993Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "428BDF09C7BD147303375178DB40FED4975DDCD9DB91BFED7174D3A7EDA39A43",
+  "stderrSha256": "246A5AB69039295FA0BF18FABD71B757608AF3C22509BF52914349749086B81D"
+}

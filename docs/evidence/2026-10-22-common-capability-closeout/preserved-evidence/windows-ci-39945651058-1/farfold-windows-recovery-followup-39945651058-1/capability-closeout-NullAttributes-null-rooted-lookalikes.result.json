@@ -1,0 +1,37 @@
+{
+  "group": "null-rooted-lookalikes",
+  "filter": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+  "category": "null-attributes-new",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T11:51:47.0164553Z",
+  "finishedAtUtc": "2026-10-23T11:51:56.0673372Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "9B59BCACD9AD2DD20FE9287F0865CFAA916F1CA618DE53D561D09949C1C16AB5",
+  "stderrSha256": "76898EBF94643C3B67C87F1A5CD70D17470334EE8520F67EC7D28C63892B13F2"
+}

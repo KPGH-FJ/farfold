@@ -1,0 +1,37 @@
+{
+  "group": "security-last-original-transfer-lifecycle",
+  "filter": "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort",
+  "category": "boundedSecurityRecordOrder",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort"
+  ],
+  "actualPassedNames": [
+    "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:14:47.8798309Z",
+  "finishedAtUtc": "2026-10-23T12:14:47.9010700Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "2A5877AEF4730B7E1E7F7353C0F7C8CEF532252D65F31BA08A7E02E2CBBF6864",
+  "stderrSha256": "D4B3DFF721A161CE9978E3030B287182A900872FA1F6373EBA93E121D3715CA1"
+}

@@ -1,0 +1,56 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "rustExactResults": [
+    {
+      "test": "acp_client::history_search::claude_tests::sdk_windows_context_uses_one_plain_cwd_and_native_full_identity",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "A43EB3E82F5C6D440D55BF018A206126E38BF1AEDAF86B6C1F7481F3C2A438DC",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "acp_client::history_search::claude_tests::sdk_windows_read_guard_keeps_source_write_denied_until_publication",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "FF38BD9C0879123C198E378BA74B5CD8D807B5151705B37EDBC13A6074B13EDB",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "acp_client::history_search::claude_tests::sdk_windows_disposable_cwd_probe_cannot_authorize_a_changed_module",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "4EDA7A20219519F0A910CCE80C619873630624D58384FD6AF72C91088A712EE4",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "test": "acp_client::history_search::claude_tests::sdk_configuration_wait_rechecks_selected_module_before_helper_dispatch",
+      "exitCode": 0,
+      "exactOnePassed": true,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "stdoutSha256": "0E39C871F0290CFCFA9D05E4EBF21F3C97D3C253280D0EF4141061EA534C899F",
+      "stderrSha256": "E0B4592E4C96EF188E95BDF283E7EA9ADBA643730EB4CDD92B645DB784C16F95"
+    }
+  ],
+  "nodeExit": 0,
+  "node20Passed": true,
+  "nodeSources": [
+    "src-tauri/src/acp_client/history_search/claude_read.mjs",
+    "src-tauri/src/acp_client/history_search/claude_read.test.mjs"
+  ],
+  "nodeSourceHashesBefore": [
+    "7F1B2C1F1FF46655DDD8264ECAB678488D9F4405B51F35781CBFE9DC2F53768D",
+    "696929C87AD66451A0CA427EA0196D0764C558B602D661DC2B74D9AE1C54CC4D"
+  ],
+  "nodeSourceHashesAfter": [
+    "7F1B2C1F1FF46655DDD8264ECAB678488D9F4405B51F35781CBFE9DC2F53768D",
+    "696929C87AD66451A0CA427EA0196D0764C558B602D661DC2B74D9AE1C54CC4D"
+  ],
+  "nodeSourcesStable": true,
+  "nodeStdoutSha256": "C7EA4835D29ABB245A0CAB2E2AF5C083D92E6057718C20E41B51D2702D5A8238",
+  "nodeStderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+  "observationComplete": true,
+  "realAgentOrFullSdkAcceptance": false
+}

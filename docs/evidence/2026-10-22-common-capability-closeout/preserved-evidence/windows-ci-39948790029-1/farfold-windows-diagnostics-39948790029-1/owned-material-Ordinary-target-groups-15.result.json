@@ -1,0 +1,29 @@
+{
+  "group": "target-groups-15",
+  "filter": "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.3793538Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.4655705Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "1B7E833F41EA5B6943CE87739F70F7ED7C4E505CA4ACED368E2E62B676002EF7",
+  "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+}

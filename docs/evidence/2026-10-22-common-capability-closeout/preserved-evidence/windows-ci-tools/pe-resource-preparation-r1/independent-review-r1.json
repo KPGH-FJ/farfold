@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "scope": "Independent read-only review of output-only PE resource inspection draft, final d332 delta included. No script execution, Cargo, Windows, CI, download or source changes.",
+  "author": "early_windows_review",
+  "reviewer": "windows_gaps",
+  "script": {
+    "path": "evidence:e-5901b777b4398fdbe3a3",
+    "sha256": "d332232eb073708faa72a031a92a7492e35bf852ac35405462c90d534d279c73"
+  },
+  "authorHandoff": {
+    "path": "evidence:e-b2e3e8ccf99b620b36f9",
+    "sha256": "1738912ff6ff17e8680b879b363691f25b53dc46f63879e9eb5a13ed4fb64db1"
+  },
+  "finding": "No concrete blocker found within the stated bounded static resource-comparison scope; integration prerequisites and untested full-PE behavior remain explicit.",
+  "reviewedSources": [
+    {
+      "path": "<private-mac-home:c2e950e84759>",
+      "sha256": "0799133b048098251c19b8787e8d36ef36005a65731f20c3a424843b2e085a55"
+    },
+    {
+      "path": "evidence:e-3846e977961dd289fadb",
+      "sha256": "c964e1310af3f56044c0c9a5dc2bae19726371b89edad1f9af482752b00d3280"
+    },
+    {
+      "path": "evidence:e-866bdd488276b0eae151",
+      "sha256": "a8943b08ccc582f6e15af6b5400ccf9464496b14f0353213f3013bb6503bca3f"
+    }
+  ],
+  "checks": {
+    "provenance": "Same build-selection sourceHead and held PE full SHA, exact helper/libtest paths. Root-package URI and build-script-executed OUT_DIR from current invocation, not newest-file scanning. Actual6f8 Cargo record shape matches. Optional cdylib accepts only selected exact farfold_lib.dll at debug root/direct deps; explicit cdylibExpected true or partial selected fields cannot silently omit inspection.",
+    "bounds": "Read-only ordinary held descriptors; lstat/open/fstat identity, full before/after hash, path/metadata recheck. Two-GiB PE cap,96sections, backed unambiguous starting-section RVA extent,4096resource entries,32MiB aggregate selected payload, bounded names/three levels/cycles/duplicates. Time bound is cooperative; a single stalled OS operation is not guaranteed to return within240seconds.",
+    "manifest": "Expected resource1 helper/libtest or2cdylib. Every found manifest must equal full namespace-normalized baseline tree; exact CC6 identity; no trustInfo/requestedPrivileges/requestedExecutionLevel; decode UTF8/UTF16 before DTD/entity refusal. Baseline fixed6f8 provenance must be established by integration, as the script binds the supplied file rather than hardcoding its historical hash.",
+    "versionIcon": "Current tauri-winres0.3.6 emitter410-465 matches accepted generatedRC shape. Same-invocation RC version fixed/string/translation data and icon32512 path checked. Referenced same-language RT_ICON metadata,size and SHA match sourceICO. Unsupported escaped/future RC syntax explicitly rejects.",
+    "effects": "No DLL load/PE execution. Fresh evidence directory, fixed output filenames/rawpayloads/summary. Failure cannot set staticChecksAllMatched true. HeldFile.finish failure prevents successful result. Other resource types intentionally skipped; no general PE validity claim.",
+    "delta": "Finald332 only adjusts header and explicit cdylib selection validation/allowed two exact DLL locations; underlying PE/resource parsing reviewed above is unchanged in intent."
+  },
+  "authorValidationOnly": {
+    "record": {
+      "path": "evidence:e-d5071c3e7d6e8ec39b38",
+      "sha256": "df69ae2964e298cd2b0a398767db97e411e73644ba8442b1a4ea48a2121ceeb8"
+    },
+    "reportedCases": 5,
+    "scope": "Synthetic byte PE primitive controls, plus prior XML/ICO/AST observations; not actual Windows PE, full version parser or integrated main verification. Reviewer did not rerun."
+  },
+  "limitations": [
+    "Whole main and actual candidate PE parsing remain untested; actual resource and original test/list results must be collected together.",
+    "Only group-referenced icon images are compared; extra unreferenced RT_ICON entries are inventoried, not asserted absent. General PE layout/import/signature equality is not claimed.",
+    "Same-build generatedRC equality proves expected current resource values, not old/new complete executable binary equality.",
+    "Static checks do not establish loader startup, actual UI/screenshot/consent, cold recovery, deletion safety or installed-product acceptance."
+  ],
+  "next": "Integrate with same-build exact artifact selection and independently bound actual6f8 baseline, then inspect emitted resources plus original exact list/test outcomes. Preserve parser failures and original6f8 loader failures separately."
+}

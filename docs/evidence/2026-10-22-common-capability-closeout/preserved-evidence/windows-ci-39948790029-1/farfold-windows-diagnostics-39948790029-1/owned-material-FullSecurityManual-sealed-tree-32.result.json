@@ -1,0 +1,27 @@
+{
+  "group": "sealed-tree-32",
+  "filter": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+  "category": "manualFullSecurity",
+  "explicitIgnored": true,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material"
+  ],
+  "actualPassedNames": [],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_pack::material::tests::callback_error_or_unwind_after_real_reconstruction_cleans_same_slot_and_keeps_material",
+      "outcome": "FAILED"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:13.1219913Z",
+  "finishedAtUtc": "2026-10-23T12:08:13.1468648Z",
+  "exitCode": 101,
+  "summaryCount": 1,
+  "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+  "namesExact": false,
+  "exactGroupPassed": false,
+  "stdoutSha256": "AB06D261958C388A89C8568CA68FBF0ED9763EFCB30B5FBE3735668844D049EB",
+  "stderrSha256": "E794E8D082888FF2A96FA5BE03BE923E3177895227BF062345E25D8DAFE83E73"
+}

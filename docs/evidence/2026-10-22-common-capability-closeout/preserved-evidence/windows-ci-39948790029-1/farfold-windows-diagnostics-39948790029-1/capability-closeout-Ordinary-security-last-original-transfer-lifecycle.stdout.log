@@ -1,0 +1,6 @@
+
+running 1 test
+test file_access::material_backup_io::security_last::tests::original_transfer_short_writes_cancel_limit_and_failure_keep_exact_prefix_and_abort ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s
+

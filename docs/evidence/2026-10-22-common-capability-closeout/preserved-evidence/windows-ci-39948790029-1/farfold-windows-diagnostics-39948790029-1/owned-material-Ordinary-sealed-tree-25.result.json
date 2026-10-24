@@ -1,0 +1,29 @@
+{
+  "group": "sealed-tree-25",
+  "filter": "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace",
+  "category": "ordinaryWindows",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace"
+  ],
+  "actualPassedNames": [
+    "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:07.1177431Z",
+  "finishedAtUtc": "2026-10-23T12:08:07.1660533Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "8C7CFA15C04477B12E699F7C94C6337F560802BE17A53C0ED6C9E8AA17CA8EB3",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

@@ -1,0 +1,6 @@
+{
+  "head": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "filter": "windows_process::current_members::tests::native_list_failure_diagnostic_preserves_api_error_and_exact_parse_categories",
+  "exitCode": 0,
+  "exactPassed": true
+}

@@ -1,0 +1,37 @@
+{
+  "group": "remove-detached-head",
+  "filter": "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config",
+  "category": "ownedRemovalMetadataHandoffNotPublicDeletion",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_scope::remove_metadata::tests::detached_original_head_needs_no_common_branch_and_still_retains_config",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:04.4478084Z",
+  "finishedAtUtc": "2026-10-23T12:09:07.1467201Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "98FF8DE62B6390FCC18DA90CB159F994365E6715BCB1BB74F3409F9DBE8A40C8",
+  "stderrSha256": "14C994FE303E3AA92BA649C9DB1C1FAB11AA3EEA9EDCA6918C24E58F0EFA5814"
+}

@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "phase": "after",
+  "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "checkedAtUtc": "2026-10-23T12:41:55.869936+00:00",
+  "closedObserved": true,
+  "normalQuitEvidence": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  },
+  "manifest": {
+    "counts": {
+      "appData": {
+        "directory": 22245,
+        "file": 209681,
+        "symlink": 335,
+        "special": 0
+      },
+      "webkit": {
+        "directory": 155,
+        "file": 104,
+        "symlink": 0,
+        "special": 0
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "symlink": 0,
+        "special": 0
+      }
+    },
+    "sha256": "09a2a11f8d20aa8378bff880aa139a3c3abd66e106ae93df16ccc9a146af1c31"
+  },
+  "metadataRawFiles": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234, 65087098, 33188, 512000, 1792335189709944810,
+        1792335189709944810, 501
+      ],
+      "sha256": "155383063bf5f9b264adf96b5e264d7ec41e94229d85c55334048bdb6185209d",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234, 65087100, 33188, 4177712, 1792671959354732607,
+        1792671959354732607, 501
+      ],
+      "sha256": "4922abcf38b9da7e968c1075d8c1887822679800fec96d3758f3c6f815d3cecd",
+      "bytes": 4177712
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234, 65087101, 33188, 32768, 1792671938961528802,
+        1792672669832313155, 501
+      ],
+      "sha256": "116d9bde416c332a748f2faf60e42fbc3437dbc2b0448ebe1461864ffe0ae948",
+      "bytes": 32768
+    }
+  },
+  "sharedToolPins": {
+    "output/2026-10-14-browser-tabs-install/install_data_snapshot.py": "cc12f49d05b666cc75b8cf804fa689bdd9b5b010c969d0105738ca7b1c1fc6b6",
+    "output/2026-10-14-browser-tabs-install/data_manifest.py": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+    "output/2026-10-14-browser-tabs-native-data-preparation/revision-2026-10-15/io_support.py": "3a1488a0c9ba0a9cf5bc34952d2b7df0861792b65eb168ce04f9bebc02acfb1a"
+  },
+  "toolSha256": "be8592f2cf8970e1f3cdfa0a17906fc0fac894b1b8d96ab1e6c519cb23979c86",
+  "matchesFreshBeforeManifest": true,
+  "processObservations": {
+    "publication": "omitted-private-context",
+    "originalRetainedLocally": true
+  }
+}

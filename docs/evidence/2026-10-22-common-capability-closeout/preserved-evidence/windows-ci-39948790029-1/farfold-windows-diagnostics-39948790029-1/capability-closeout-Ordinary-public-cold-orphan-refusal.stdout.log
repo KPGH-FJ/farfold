@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 2.64s
+

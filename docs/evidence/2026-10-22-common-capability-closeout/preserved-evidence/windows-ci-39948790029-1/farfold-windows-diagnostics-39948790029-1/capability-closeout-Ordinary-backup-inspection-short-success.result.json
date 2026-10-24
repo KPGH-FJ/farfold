@@ -1,0 +1,37 @@
+{
+  "group": "backup-inspection-short-success",
+  "filter": "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof",
+  "category": "portableOriginalNativeSessionOwnership",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof"
+  ],
+  "actualPassedNames": [
+    "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "file_access::material_backup_io::tests::direct_inspection_early_success_does_not_count_as_eof",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:14.5652148Z",
+  "finishedAtUtc": "2026-10-23T12:09:14.5835541Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "F411D48E20A82520345E1BFE88D67F9E73A91CC8A2FBB22E2644EA48B5041D8D",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

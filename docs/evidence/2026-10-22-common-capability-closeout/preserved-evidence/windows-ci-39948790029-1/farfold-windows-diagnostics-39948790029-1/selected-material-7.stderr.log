@@ -1,0 +1,4 @@
+
+thread 'file_access::windows::integrity::tests::busy_poison_cancel_and_small_offer_never_produce_an_empty_label' (5200) panicked at src\file_access\windows\integrity_tests.rs:68:13:
+owned label poison control
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

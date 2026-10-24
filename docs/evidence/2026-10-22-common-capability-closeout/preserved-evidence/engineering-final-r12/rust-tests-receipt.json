@@ -1,0 +1,21 @@
+{
+  "label": "rust-tests",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked"
+  ],
+  "atUtc": "2026-10-23T12:28:00.983499+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 140.79402554099997,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-13d9846c73b394f671be",
+    "bytes": 254393,
+    "sha256": "8fa9173f12f8acc4556f3e8f3d6d6522e97957967fde15719abbf0503c8ef20d"
+  },
+  "freeBytesAfter": 17813712896
+}

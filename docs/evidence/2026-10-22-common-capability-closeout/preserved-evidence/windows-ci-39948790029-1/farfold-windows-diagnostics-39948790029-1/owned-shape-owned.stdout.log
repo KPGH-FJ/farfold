@@ -1,0 +1,9 @@
+
+running 4 tests
+test worktrees::material_owner::shape_tests::ordinary_owned_directory_ea_and_named_data_have_actual_bounded_record_shapes ... ok
+test worktrees::material_owner::shape_tests::ordinary_owned_empty_directory_shape_reaches_real_eof_and_abort_without_full_security ... ok
+test worktrees::material_owner::shape_tests::ordinary_owned_hardlink_aliases_observe_native_link_records_without_assuming_they_exist ... ok
+test worktrees::material_owner::shape_tests::ordinary_shape_pre_cancel_and_insufficient_shared_work_refuse_without_weakening_source ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2320 filtered out; finished in 0.03s
+

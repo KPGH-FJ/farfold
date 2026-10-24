@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-10-23T09:25:58.153160+00:00",
+  "reviewer": "windows_gaps, non-author of these five CI/script changes",
+  "base": "a82da3ad579129ab8eb7057d9932f62c9ac6377c",
+  "decision": "No blocking finding in final selected five-file delta after removal of active copy cleanup and tree termination. Actual PowerShell parse/runtime and Windows diagnostics remain unverified.",
+  "files": [
+    {
+      "path": ".github/scripts/windows-native-loader-diagnostics.ps1",
+      "bytes": 27269,
+      "sha256": "96020090e135219de6bccdf1b452610b3accd2b6b531479201c88cd0a4cbb5ee"
+    },
+    {
+      "path": ".github/scripts/windows-p27-native.ps1",
+      "bytes": 11812,
+      "sha256": "6de8e8c9af1635f0624c3ff25b209faa0c639706dce866a87f6ef29ad687ed01"
+    },
+    {
+      "path": ".github/scripts/windows-recovery-followup-build.ps1",
+      "bytes": 3900,
+      "sha256": "f2efc3303b8d4c4aed6fd972c2dd8c48f797c70dbe88702af429c993c8c1df1f"
+    },
+    {
+      "path": ".github/workflows/windows-p27-native.yml",
+      "bytes": 2445,
+      "sha256": "414e4bb1cb253cce715b569df4fd39cd8885bc49aae9aaafa93b04c308235faa"
+    },
+    {
+      "path": ".github/workflows/windows-recovery-followup.yml",
+      "bytes": 6862,
+      "sha256": "a33d23eaafb577256b1742e9360301eee1f84d7fdfa79d63c329fe49a0e7064c"
+    }
+  ],
+  "trackedDeltaSha256": {
+    ".github/scripts/windows-p27-native.ps1": "9cfa6d424255e2f4dde8eb5383b8daa6bcc5e2c52df7a5044f4580029e33c57a",
+    ".github/scripts/windows-recovery-followup-build.ps1": "3b448bcff8fb2b93a056df6a4f75afcde4bab6ee89e302ca5f4ffb44de3a61d0",
+    ".github/workflows/windows-p27-native.yml": "c110e61112a966a74bf8d4b6961570b6b99a176370546bc1aa00032b7753f764",
+    ".github/workflows/windows-recovery-followup.yml": "6503cfb56cf172f2709aa91f24585ec48ea6c33e28761d7f9294f33f15d0638f"
+  },
+  "checks": [
+    {
+      "topic": "Parser preflight",
+      "result": "Both workflows use Language.Parser.ParseFile and check errors before Rust/build steps; parsing does not execute target scripts. Reviewer did not run a local PowerShell Parser."
+    },
+    {
+      "topic": "Ordering and source identity",
+      "result": "Both loader invocations use always before artifact upload, conditional on original build-selection. Input maps add the sole new diagnostic script. P27 preserves selected binary/helper hashes before list launch; list now records held process, signed/hex exit, stream hashes, timeout/settlement, exactname and input stability separately."
+    },
+    {
+      "topic": "Original tests and guards",
+      "result": "P27 actual-test ProcessStartInfo-through-final-result suffix is byte-identical to a82. Recovery ordinary3, diagnostic1, manual4 and final complete-exact-outcome blocks are individually byte-identical. Original FQNs,240s actualP27 deadline,manual deadlines/conditions and final result checks remain."
+    },
+    {
+      "topic": "Original and system files",
+      "result": "Selected PE path/hash checked; fixed preinstalled VS/SDK dumpbin/mt have Microsoft signatures and hashes. Original PE imports/dependents/headers/manifest and up to two fixed DLL candidates per directmodule are static read paths. No original/source PE or systemDLL write, privilege modification, DLL replacement, LoadLibrary or download is introduced. Original/helper/tools hashes checked afterward."
+    },
+    {
+      "topic": "Finite diagnostic work",
+      "result": "Process/stream loops have15s call and240s shared elapsed checks,1Mi characters perstream,16Mi total,48directmodules and2candidate directories each. Synchronous hash/signature/filesystem calls are not a mathematical240s wall-clock guarantee; workflow5min outer bound still applies. Partial/missing results never count as functional success."
+    },
+    {
+      "topic": "Unknown resolution",
+      "result": "API-set,SxS,forwarded/ordinal/transitive resolution is expressly unknown. Missing named exports are candidate-only, not actual-loader proof. Missing tools/unparsed/overbound/extractionfailure remain incomplete/unknown, with no repair fallback."
+    },
+    {
+      "topic": "P27-only manifest contrast",
+      "result": "Recovery ReadOnly never enters copy path. P27 requires matching original0xC0000139 list receipt/hash/FQN/stability/no exactname, normal COMCTL32.TaskDialogIndirect import and established lack ofv6. Existing helper manifest has DTD/resolver disabled, exact single CommonControls6 allowlist and only optional asInvoker/uiAccessfalse. LocalDLL/sidecar changes reject control. Only new RUNNER_TEMP GUIDcopy is written; imports/readbackmanifest checked, then fixed exactFQN --ignored --exact --list once. This diagnoses a manifest contrast, not a specific sole cause."
+    },
+    {
+      "topic": "Original process and copy retention",
+      "result": "Final code terminates only the original held diagnostic Process with Kill(), not its process tree. It records unsettled termination and keeps failure. All active deletion is removed: the exclusively created RUNNER_TEMP copy remains for ordinary hosted-job cleanup even on success, excluded from raw artifact path. No unknown writer is raced by Remove-Item."
+    },
+    {
+      "topic": "No promotion of acceptance",
+      "result": "diagnosticOnly,formalCasePassCount0 and manifestControl.formalAcceptancefalse remain explicit. Copy list success cannot change originalcase receipts or reverse original workflow failure. Original actual snapshots remain separate; no App/Agent/screenshot/recovery/29x8 completion inferred."
+    }
+  ],
+  "closedFindings": [
+    {
+      "priority": 2,
+      "area": "Early copy-tool timeout followed by attempted directory deletion",
+      "firstFreezeSha256": "1aa35cc614f1ed22662969e2945252243b3ca6e385156e69d0901d5eb3cb9fdc",
+      "intermediateFixSha256": "116d7805114d625c3a990c70a0b4a793da199d0f2a9f7f48dcd40fd7772fda5e",
+      "finalResolution": "Root/author simplified to no active cleanup at all; retain only created temp directory for job cleanup."
+    },
+    {
+      "area": "Unnecessary diagnostic tree-wide termination",
+      "finalResolution": "Root/author changed Kill(true) to held original Process.Kill(); no descendants are explicitly targeted."
+    }
+  ],
+  "unchangedFromA82": {
+    ".github/scripts/windows-capability-closeout.ps1": true,
+    ".github/scripts/windows-capability-closeout-cases.json": true,
+    "src-tauri/build.rs": true,
+    "src-tauri/tauri.conf.json": true
+  },
+  "relatedEvidence": [
+    {
+      "path": "evidence:e-99fba1c5b71b9ef6bac7",
+      "bytes": 8669,
+      "sha256": "8269e21d800d54587be1feb50f6b107858645d5223b36210a15481e5d1fee56b"
+    },
+    {
+      "path": "evidence:e-03a03ca1cb17d7b0a26c",
+      "bytes": 9387,
+      "sha256": "aaaa3b1e40193352822af8ed1402a5dfb8c39101d966967613a8fe178075ab6f"
+    },
+    {
+      "path": "evidence:e-196b0b08cf7b7d100268",
+      "bytes": 6520,
+      "sha256": "6fc54cdda41ca4542b26f2c549f8002e28f76fe4e777c1ba6baa5c3fb1f630d7"
+    },
+    {
+      "path": "evidence:e-d12402e7c34e0fdca007",
+      "bytes": 6174,
+      "sha256": "572ca7fb1892e0a39247e6939c26bc9e1aa24b1cd7e5b5b297de3a6306f5c608"
+    }
+  ],
+  "limits": [
+    "No PowerShell Parser execution locally; actual runner preflight remains necessary.",
+    "always does not guarantee collection/upload after job deadline/runner loss.",
+    "A manifest-copy contrast cannot prove specific missing symbol or v6 as unique cause.",
+    "Static review is not actual executable loading or functional test evidence."
+  ],
+  "execution": {
+    "sourceOrScriptEdits": false,
+    "tests": false,
+    "cargo": false,
+    "ci": false,
+    "networkOrDownload": false,
+    "outputOnly": true
+  },
+  "inputsStableDuringFinalCheck": true
+}

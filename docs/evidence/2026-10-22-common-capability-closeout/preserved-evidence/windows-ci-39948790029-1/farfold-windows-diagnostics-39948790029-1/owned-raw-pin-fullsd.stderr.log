@@ -1,0 +1,4 @@
+
+thread 'file_access::windows::material_pin::tests::full_security_root_child_retains_actual_security_access_without_ordinary_fallback' (2236) panicked at src\file_access\windows\material_pin_tests.rs:331:83:
+called `Result::unwrap()` on an `Err` value: AccessCondition { phase: "fullSecurityOpen", code: 1314, required_access: 16908288 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

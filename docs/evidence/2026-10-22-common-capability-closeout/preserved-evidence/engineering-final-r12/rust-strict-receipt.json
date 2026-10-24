@@ -1,0 +1,24 @@
+{
+  "label": "rust-strict",
+  "command": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "atUtc": "2026-10-23T12:27:59.197831+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 1.7658522499999947,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-dc288a11757b28d4bdda",
+    "bytes": 72,
+    "sha256": "e68dbb831082090d6aab9641584d06498d66907f4c3e3d2d36c4824da23e94c8"
+  },
+  "freeBytesAfter": 17818005504
+}

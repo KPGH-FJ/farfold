@@ -1,0 +1,37 @@
+{
+  "group": "public-cold-orphan-refusal",
+  "filter": "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready",
+  "category": "changedPublicAdmissionControl",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready"
+  ],
+  "actualPassedNames": [
+    "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::windows_tests::cold_non_adopt_operation_cannot_reuse_existing_location_to_become_ready",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:09:11.2180185Z",
+  "finishedAtUtc": "2026-10-23T12:09:13.8917728Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "933DD94E051AE8182237A711B2349F8A8FEFF38FC66B6164EEC6B1CE71DDE0E4",
+  "stderrSha256": "7F8E02B6B59ABD5432042AC046605B6800D56F1B5A768CEBE11F5788BEF5008D"
+}

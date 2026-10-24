@@ -1,0 +1,29 @@
+{
+  "group": "managed-edge-01",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner",
+  "category": "ownedOriginalSourceOwnerRoleAndBudget",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:07.3263749Z",
+  "finishedAtUtc": "2026-10-23T12:08:08.5676793Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "DF4DD7BD340200CC6D63CB0425FCEEFCF75850F257D8F1DAB5037BECA803ACF0",
+  "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+}

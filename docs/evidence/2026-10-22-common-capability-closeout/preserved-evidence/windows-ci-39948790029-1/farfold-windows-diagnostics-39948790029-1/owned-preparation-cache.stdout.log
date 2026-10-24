@@ -1,0 +1,9 @@
+
+running 4 tests
+test worktrees::preparation_windows::cache_tests::actual_access_denial_is_unreadable_and_only_fresh_confirmed_absence_is_missing ... ok
+test worktrees::preparation_windows::cache_tests::actual_same_object_attribute_change_is_not_hidden_by_namespace_comparison ... ok
+test worktrees::preparation_windows::cache_tests::current_same_object_complete_metadata_still_changes_the_fixed_observation ... ok
+test worktrees::preparation_windows::cache_tests::earlier_real_listing_pairs_with_stable_current_fixed_file_and_fresh_cache_observation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2320 filtered out; finished in 0.02s
+

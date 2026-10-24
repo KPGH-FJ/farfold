@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-protected-dacl-restores-exact-readable-facet",
+  "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet",
+  "category": "ownedActualOrdinaryRecovery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_ordinary_windows_tests::ordinary_protected_dacl_restores_exact_readable_facet",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:10:05.1907768Z",
+  "finishedAtUtc": "2026-10-23T12:10:05.3344469Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "1AB1272CB6D80CF1579B12764BADD41C3C13343136BFBB12BCB12DC540879242",
+  "stderrSha256": "0DB456B2EF1C25AC32A6C59971DCF6B9B1735ABF023858FCC2E47B804CEF6896"
+}

@@ -1,0 +1,1072 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-23T12:07:25.713448+00:00",
+  "reviewer": "windows_gaps; non-author read-only actual evidence audit",
+  "run": {
+    "id": "39945651058",
+    "attempt": 1,
+    "head": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+    "rawDirectory": "evidence:e-51fa8469782575c42a37"
+  },
+  "sourceProof": {
+    "identity": {
+      "sourceHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+      "runId": "39945651058",
+      "runAttempt": "1",
+      "scope": "focused follow-up to actual d513 failures; original 140 manifest and separate legacy 27 unchanged; not whole-cohort acceptance"
+    },
+    "buildSelection": {
+      "sourceHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+      "testBinary": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe",
+      "testBinarySha256": "4A0667E1DE8AA68BF788A2CA96ED9704773937180E1EF8FDA6502CE9380BF7EB",
+      "fixture": "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\examples\\windows_process_fixture.exe",
+      "fixtureSha256": "6F3330791B4E3D703E1B1848627A87B9EFFD4CB9A96B394749C798C80CFD0BB2",
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "sourceInputsStable": true
+    },
+    "inputPathCount": 804,
+    "exactExpectedInventoryAndAllHeadBlobHashesVerified": true,
+    "beforeAfterEqual": true,
+    "lineEndingNormalizedMatches": 803,
+    "compilerArtifactSelectionVerified": true,
+    "executablesRehashedLocally": false
+  },
+  "groups": {
+    "Ordinary": {
+      "passed": 3
+    },
+    "FullSecurityManual": {
+      "passed": 3,
+      "failed": 1
+    },
+    "NullAttributes": {
+      "passed": 8
+    }
+  },
+  "cases": [
+    {
+      "name": "create-public-selected",
+      "mode": "Ordinary",
+      "fqn": "worktrees::create::windows::tests::public_create_materializes_selected_old_oid_and_source_profile_without_touching_source",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 29.57,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "52e6a852ff3f44abed6e1e094cf9756397027c9eb71ad21f2668997066d93fb5",
+      "stderrSha256": "dd815800f825cecb7c30bfd404078729530c949912db504fa0fa9d68e9b01c9f",
+      "resultSha256": "ed819cbab46db4be33164677785af05ee187d20d95b35d7f0158582e38c55cdc"
+    },
+    {
+      "name": "ordinary-public-backup-cold-recover-keeps-original-and-rechecks",
+      "mode": "Ordinary",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 107.88,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "acb25950796715647b0f495f1a87e66522476876c3eab4d4b63a9ecd71d7a309",
+      "stderrSha256": "96613d6f2ea94dd39d9f75114a752d922aa2d58e67a239a2c3e1576773ed8ee7",
+      "resultSha256": "1ebba9d03ca79a84e506379d018a0bfadbc1d42bbcd9340488dd3d51d240e786"
+    },
+    {
+      "name": "ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material",
+      "mode": "Ordinary",
+      "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 135.5,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "f1086b97d1dbc7526d66e7da313c8d68513db65507e392fa9ee0a888d4cc3bde",
+      "stderrSha256": "536e7876cc72b59b8a7bcc3698a8f1e5ea4ba1b29a187462750b75bdae101825",
+      "resultSha256": "88a57e1b0244d651e71eb2ddf303529ca78fb9e7650926d56bf968827c176f7f"
+    },
+    {
+      "name": "public-retained-cold-recover",
+      "mode": "FullSecurityManual",
+      "fqn": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 105.96,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "granted-existing-SeSecurity-distinct-test-child",
+      "conditionSatisfied": true,
+      "manualCondition": {
+        "schema": 1,
+        "case": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "2a03b1fe15d14d73c5c2498b2931f5645c19aca4141ec80b4697ec3e4eefa264",
+      "stderrSha256": "995a1738f6fd8ce00ecfb8103fb3dd6f6ef27cba7df7e7b704c1b6dc416293cc",
+      "resultSha256": "e2d8bb55bd4670f0a167f629d590a065089a4cc8ca5f9b0ab4f2a0e7eda56d05"
+    },
+    {
+      "name": "remove-late-ea",
+      "mode": "FullSecurityManual",
+      "fqn": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 105.14,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "granted-existing-SeSecurity-distinct-test-child",
+      "conditionSatisfied": true,
+      "manualCondition": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "requiredMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=ea",
+      "markerLines": [884],
+      "stdoutSha256": "8e7d4e4061934b7ad3a7def2f4abb0d84f5de45badc1ae1334a4648527f4d0b3",
+      "stderrSha256": "431877c679bcf8cfe33ab39897b623f9a83306b16c677ae0d48f890ee93f846c",
+      "resultSha256": "b809e92cd9c71107ef56215c05da53980768c706b702a42e78831347e829115a"
+    },
+    {
+      "name": "remove-late-security",
+      "mode": "FullSecurityManual",
+      "fqn": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 102.81,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "granted-existing-SeSecurity-distinct-test-child",
+      "conditionSatisfied": true,
+      "manualCondition": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "requiredMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=security",
+      "markerLines": [852],
+      "stdoutSha256": "940ef7f2915d89f8395e1ff4e921591f3ca1c637c5a516f32d169391c64acdf4",
+      "stderrSha256": "644dafac5aa318d777cc1972e98257b42963ada5f4d042b76190a97e59e8bfd9",
+      "resultSha256": "73952a239513045311d4eb7a553f22c9f48ec809d72ff82fe1acdd1efeb0bcc3"
+    },
+    {
+      "name": "public-remove-cold-recover",
+      "mode": "FullSecurityManual",
+      "fqn": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+      "status": "failed",
+      "exitCode": 101,
+      "elapsedLibtestSeconds": 260.94,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "granted-existing-SeSecurity-distinct-test-child",
+      "conditionSatisfied": true,
+      "manualCondition": {
+        "schema": 1,
+        "case": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 101,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "e2b9f67927e24b47080c7a8d819a2ae3088a1b6be5d562f3e02066e8e3caa5f5",
+      "stderrSha256": "f5d0d347a0c46838c5595e5ce6e081c2420e0dedeff03f0b8ab6899b55a3919b",
+      "resultSha256": "f589002f9ec16c116298c57af6bfd3a20d6481009672de11ec21db281e311e56"
+    },
+    {
+      "name": "null-exact-spellings",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::inputs::null_device_tests::null_device_classifier_accepts_only_documented_exact_spellings",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 0.0,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "858af830fd88fb31d689ddbad955954ca31fc36bef27690739e611fa7458f691",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "resultSha256": "2f4eddeac56934787968117b29929dc844f2f14fc8bdb0e4689c10dbf02aec85"
+    },
+    {
+      "name": "null-command-system-policy",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_attribute_command_keeps_system_policy_separate_and_file_pin_live",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 3.71,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "a90016f00d2030aa944883a912def7d730c2bb382eedc55e23f4fccbf4445734",
+      "stderrSha256": "fd4739c5c2f856ffcf5e0d0b5ea98f2fcf11e6c04f4e91f6318633d80d639599",
+      "resultSha256": "0865b41d9c7bb29a8d78fc8c797277140136e7cc75bf25d35d6b39df659c5091"
+    },
+    {
+      "name": "null-rooted-lookalikes",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_null_lookalikes_keep_rooted_and_drive_relative_paths_rejected",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 8.98,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "9b59bcacd9ad2dd20fe9287f0865cfaa916f1ca618de53d561d09949c1c16ab5",
+      "stderrSha256": "76898ebf94643c3b67c87f1a5cd70d17470334ee8520f67ec7d28c63892b13f2",
+      "resultSha256": "8bb31ccfaeefbee93900ba21cbdad2862b1ffb1f46ad685f0a94add6155aa188"
+    },
+    {
+      "name": "null-owned-xdg-matrix",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::null_attributes::actual_owned_xdg_defaults_disabled_missing_file_and_raw_changes",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 67.95,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "31814fb0036ca660e952ccafe994903a550cb356d7f49296618bfc36e2d8407b",
+      "stderrSha256": "97eb26cb523e41b0d51cd56acb169ddd822660b8c4078328f276b487b42de32f",
+      "resultSha256": "7773baeb0a74b940e6da2893c183659719cbcbaa03dda3287c8520a229f1e30a"
+    },
+    {
+      "name": "existing-source-profile-info",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::actual_selected_head_profile_preserves_safe_config_info_and_original_source_bytes",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 6.03,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "1283f18a0083684b3c321a9f092c5e829a6c06285128b1fecf95aaf713d6b8d9",
+      "stderrSha256": "ff3a27a044939afa7f65510372576534f6d0ba8461f139d0a7791b56f4746631",
+      "resultSha256": "83568c1ce41a3b35e8c6fcdf4307b495a9ea00df937f5ccf35438a0f7a2cebfc"
+    },
+    {
+      "name": "existing-configured-attributes-file",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::exact_configured_attributes_file_is_used_and_missing_setting_is_not_default_fallback",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 12.17,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "cdebeb56cc62ce9f64115885faeffec49d709b9f88b8d2d871d9502bf69bdb9c",
+      "stderrSha256": "71209aac9ca8d634f9f486db609aa86549e734abee2ff89e6a79c023fb246d25",
+      "resultSha256": "128e4d3ffdb829292a3d72211a13b5137593844ee61184ce7ca45268f9b4a150"
+    },
+    {
+      "name": "existing-held-absence-drive-relative",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::held_optional_source_absence_detects_creation_and_drive_relative_config_is_rejected",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 9.33,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "66d3b2f754672f693e09152f1e5fdbac5df619dbfdb3075bb5be6218ff220cc5",
+      "stderrSha256": "d9d62f99a3751fcd1894b45573b162046185898dcbb6db0ac5aafb8dc414c984",
+      "resultSha256": "8d716c16015e30ca438cdb25b93dcd140598a260983ec259e3c583f124761909"
+    },
+    {
+      "name": "existing-selected-head-attributes",
+      "mode": "NullAttributes",
+      "fqn": "worktrees::git::source_roots::profile::tests::actual_cached_head_attributes_override_dirty_worktree_and_survive_mirror_evaluation",
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedLibtestSeconds": 6.68,
+      "exactSingleStdoutTestAndSummary": true,
+      "condition": "default-current-token",
+      "conditionSatisfied": true,
+      "manualCondition": null,
+      "requiredMarker": null,
+      "markerLines": [],
+      "stdoutSha256": "b12f422ce50a05c2014004239cd3830e245498d11cc1b0a9d034a76f7acc9e17",
+      "stderrSha256": "bd9a65c836c1149eaccfef9df0fe76ea9d361d5c9213f2ad307294d1ddd1b66f",
+      "resultSha256": "8ab889f40a44ef80d2281e5af2e21bd1868a983d8e69c46859d370cd8736d70e"
+    }
+  ],
+  "originalReaderReferences": [
+    {
+      "path": "evidence:e-a18b57e844cd9575fd06",
+      "sha256": "50c03059f40409c8851f3c8d294089cfb7f49c148b1eeb1ecff4f633ce8eaf5a",
+      "allReferencedRawHashesVerified": true
+    },
+    {
+      "path": "evidence:e-5ea8280ccb33efddcbbe",
+      "sha256": "c7b1c1b1b44a4b87c47f843292087302aa575e12d0973c29c96a2aeda79bcf15",
+      "allReferencedRawHashesVerified": true
+    }
+  ],
+  "separateDiagnostic": {
+    "fqn": "windows_process::current_members::tests::native_list_failure_diagnostic_preserves_api_error_and_exact_parse_categories",
+    "passed": true,
+    "notIncludedInSevenOrEight": true
+  },
+  "failure": {
+    "case": "public-remove-cold-recover",
+    "naturalLibtestExit": 101,
+    "libtestSeconds": 260.94,
+    "manual300sTimeout": false,
+    "SeSecurityActuallyEnabled": true,
+    "firstIncomplete": [
+      {
+        "line": 692,
+        "data": {
+          "reason": "snapshot",
+          "originalLeaderPid": 7564,
+          "accountingActiveProcesses": 1,
+          "current": {
+            "heldCount": 0,
+            "admittedCount": 0,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": true,
+            "observationUnknown": true,
+            "admittedPids": []
+          },
+          "originalListCall": {
+            "queryReturn": 1,
+            "nativeError": null,
+            "assigned": 1,
+            "listed": 0,
+            "written": 16,
+            "parseRejections": ["assigned-listed-mismatch"]
+          },
+          "scope": "first incomplete observation creating a coverage gap; original call metadata; sticky gap unchanged; no extra native query"
+        }
+      }
+    ],
+    "beforeAfterTermination": [
+      {
+        "line": 693,
+        "data": {
+          "point": "beforeOriginalTermination",
+          "originalChildPid": 7564,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "stoppedReason": "waitExpired",
+          "firstActiveQuery": {
+            "ownerPid": 7564,
+            "queryReturn": 1,
+            "nativeError": null,
+            "activeProcesses": 1,
+            "totalProcesses": 4,
+            "totalTerminatedProcesses": 0,
+            "conservativeActive": true,
+            "currentMembers": {
+              "heldCount": 0,
+              "admittedCount": 0,
+              "unresolvedCandidateCount": 0,
+              "coverageGap": true,
+              "observationUnknown": true,
+              "admittedPids": []
+            },
+            "association": {
+              "originalChildIdMatches": true,
+              "originalChildWaitReturn": 0,
+              "originalChildWaitError": null,
+              "capacity": 32,
+              "layoutMatches": true,
+              "listQueryReturn": 1,
+              "listQueryError": null,
+              "returnedBytes": 8,
+              "layoutComplete": true,
+              "assignedProcesses": 0,
+              "listedProcesses": 0,
+              "originalHelperListed": false,
+              "ids": []
+            }
+          },
+          "currentMembersAtPoint": {
+            "heldCount": 0,
+            "admittedCount": 0,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": true,
+            "observationUnknown": false,
+            "admittedPids": []
+          },
+          "scope": "around original termination request; historical first query and current owned fields only; no settlement or complete-membership claim"
+        }
+      },
+      {
+        "line": 694,
+        "data": {
+          "point": "afterOriginalTermination",
+          "originalChildPid": 7564,
+          "sameOriginalChildPid": true,
+          "originalChildExitCode": 0,
+          "stoppedReason": "waitExpired",
+          "firstActiveQuery": {
+            "ownerPid": 7564,
+            "queryReturn": 1,
+            "nativeError": null,
+            "activeProcesses": 1,
+            "totalProcesses": 4,
+            "totalTerminatedProcesses": 0,
+            "conservativeActive": true,
+            "currentMembers": {
+              "heldCount": 0,
+              "admittedCount": 0,
+              "unresolvedCandidateCount": 0,
+              "coverageGap": true,
+              "observationUnknown": true,
+              "admittedPids": []
+            },
+            "association": {
+              "originalChildIdMatches": true,
+              "originalChildWaitReturn": 0,
+              "originalChildWaitError": null,
+              "capacity": 32,
+              "layoutMatches": true,
+              "listQueryReturn": 1,
+              "listQueryError": null,
+              "returnedBytes": 8,
+              "layoutComplete": true,
+              "assignedProcesses": 0,
+              "listedProcesses": 0,
+              "originalHelperListed": false,
+              "ids": []
+            }
+          },
+          "currentMembersAtPoint": {
+            "heldCount": 0,
+            "admittedCount": 0,
+            "unresolvedCandidateCount": 0,
+            "coverageGap": true,
+            "observationUnknown": false,
+            "admittedPids": []
+          },
+          "scope": "around original termination request; historical first query and current owned fields only; no settlement or complete-membership claim"
+        }
+      }
+    ],
+    "earlySettlement": [
+      {
+        "line": 695,
+        "data": {
+          "phase": "groupNotConfirmedInactiveAfterOriginalChild",
+          "originalChildPid": 7564,
+          "originalChildExitCode": 0,
+          "tryWaitError": null,
+          "groupNotConfirmedInactive": true,
+          "preservedStopReason": "waitExpired"
+        }
+      }
+    ],
+    "operationAtPanic": {
+      "rawLine": 698,
+      "action": "remove",
+      "state": "unknown",
+      "settled": false,
+      "maintenanceActive": true,
+      "removalPhase": "verifyingRecovery",
+      "deleteDispatched": false
+    },
+    "fixturePhases": [
+      {
+        "line": 1,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=entered"
+      },
+      {
+        "line": 3,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=owned-git-prepared"
+      },
+      {
+        "line": 4,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-start"
+      },
+      {
+        "line": 16,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=inspect-returned"
+      },
+      {
+        "line": 17,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-prepare-start"
+      },
+      {
+        "line": 70,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-start"
+      },
+      {
+        "line": 237,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=create-wait-returned"
+      },
+      {
+        "line": 238,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-inspect-start"
+      },
+      {
+        "line": 263,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-prepare-start"
+      },
+      {
+        "line": 273,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-start"
+      },
+      {
+        "line": 309,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-wait-returned"
+      },
+      {
+        "line": 310,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-inspect-start"
+      },
+      {
+        "line": 374,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-start"
+      },
+      {
+        "line": 657,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-prepare-wait-returned"
+      },
+      {
+        "line": 658,
+        "marker": "FARFOLD_PUBLIC_FIXTURE_REACHED phase=remove-confirm-start"
+      }
+    ],
+    "scope": "180-second same-operation polling assertion failed at recovery_public_windows_tests.rs:37 after coverageGap remained true. backup(true) did not return; destructive completion and following cold Recover were not reached. Not missingSeSecurity or300s runner timeout. This audit does not decide API interpretation/unseen-process lifetime or repair."
+  },
+  "historicalRunKeptSeparate": {
+    "path": "evidence:e-6d34a98d378146c4b69c",
+    "sha256": "8ee0b1dd6fc096c9bb209846e6d71154ee494a8b7d96627f84009b7c2cbf3a3d",
+    "run": {
+      "suite": "recovery",
+      "runId": "39939783382",
+      "head": "8010524f68e8f245d529488b9397673123258f9f",
+      "runAttempt": "1"
+    },
+    "sevenPassedBelongsOnlyToThatRun": true
+  },
+  "documentationReview": {
+    "files": [
+      {
+        "path": "docs/status.md",
+        "sha256": "55cac6a5320920b1e51336bbe7e8e47a68e265a1b0d7b5661fd90979d7309a06"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "a1e81b5bf8955fa6c9618809a2fee0d3c02fb345d106de35a6e62ccbf3e1b0b3"
+      },
+      {
+        "path": "docs/agent-access-requirements.md",
+        "sha256": "79bf8b6032dd33e22c6e021f732bb89e1b6aff08fd2f950ee30621ccd53c8002"
+      }
+    ],
+    "selectedFactDeltaNoBlocker": true,
+    "supportingEvidence": [
+      {
+        "path": "evidence:e-a05f33bc2b1e959df765",
+        "sha256": "0c58d22c375fa5c48badea0cf0ef781ceffa0a4a840068f67a0df9e6e4dbffe4"
+      },
+      {
+        "path": "evidence:e-9a7b3bb95e412bbe35f6",
+        "sha256": "766832aa810ea36820daa245d83de8c92818a32636ed99276f6e64e66d6950d0"
+      },
+      {
+        "path": "evidence:e-19936bfb6cdbbf3b5bd8",
+        "sha256": "ecf91583c2fd70ad821ca63d91f580acb2ba68a4eea32ae0313149b62b923cfb"
+      },
+      {
+        "path": "evidence:e-19a2425a081156f6244a",
+        "sha256": "5a65b0021e917f8cd84ff8b0f1c75365f5d0267d2edcfc523b89c5fda5a5bd45"
+      }
+    ],
+    "onlyP27ProgressSemanticallyChangedInRequirements": true,
+    "originalConditionsAnd151And29x8Unchanged": true,
+    "full7R11CountsCheckedAgainstOriginalLogs": {
+      "inputCount": 18578,
+      "frontendFiles": 659,
+      "frontendTests": 8537,
+      "rustPassed": 2224,
+      "rustFailed": 0,
+      "rustIgnored": 6
+    },
+    "limitsPreserved": [
+      "Actual recovery6/1 and attributes8/8 separate from old801 seven passes and whole140/304/27.",
+      "P27 one test with7internal checks distinct from7input parents and realAgent/remote/installedUI/macOS27 still unverified.",
+      "OriginalWindowsiconfalse retained; strict purecomparatorGreen does not rewrite actual job or rerun Windows.",
+      "Full7r11 belongs tofd89 inputs; laterCI comparator delta and formalinstall excluded.",
+      "Stage remains open.",
+      "New39948790029 in-progress line is parent dispatch status; not queried or converted into completed evidence by this audit."
+    ]
+  },
+  "auditAttempts": [
+    {
+      "chunk": "c4dc1c",
+      "outcome": "reviewer stopped before receipt on literal single-line diff assumption after tableformat; no product execution"
+    },
+    {
+      "chunk": "92620a",
+      "outcome": "reviewer stopped before receipt on table-separator width normalization; rawchecks unaffected"
+    },
+    {
+      "chunk": "dfd860",
+      "outcome": "identified only table-separator width andP27progress semantic changes; final comparison handles separators"
+    }
+  ],
+  "readSetHashes": {
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/inputs-before.json": "ecc396a57b741be52be76d9b9f152e4d3ddba4c794faac523f85384b169a5137",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/inputs-after.json": "ecc396a57b741be52be76d9b9f152e4d3ddba4c794faac523f85384b169a5137",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/identity.json": "058863975607b6d823104e46813eefef100b9ba6746f289dfcaa93535aeb53a0",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/build-selection.json": "b2d218d5692df0e031732bb2edb95fe276b3f374faaa3af365b766ff5bc09336",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary.result.json": "9e890d47a96bb6e296bf074df102d8dd599912a4262334667fc1b24ac29f1941",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-create-public-selected.result.json": "ed819cbab46db4be33164677785af05ee187d20d95b35d7f0158582e38c55cdc",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-create-public-selected.stdout.log": "52e6a852ff3f44abed6e1e094cf9756397027c9eb71ad21f2668997066d93fb5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-create-public-selected.stderr.log": "dd815800f825cecb7c30bfd404078729530c949912db504fa0fa9d68e9b01c9f",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-backup-cold-recover-keeps-original-and-rechecks.result.json": "1ebba9d03ca79a84e506379d018a0bfadbc1d42bbcd9340488dd3d51d240e786",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-backup-cold-recover-keeps-original-and-rechecks.stdout.log": "acb25950796715647b0f495f1a87e66522476876c3eab4d4b63a9ecd71d7a309",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-backup-cold-recover-keeps-original-and-rechecks.stderr.log": "96613d6f2ea94dd39d9f75114a752d922aa2d58e67a239a2c3e1576773ed8ee7",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material.result.json": "88a57e1b0244d651e71eb2ddf303529ca78fb9e7650926d56bf968827c176f7f",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material.stdout.log": "f1086b97d1dbc7526d66e7da313c8d68513db65507e392fa9ee0a888d4cc3bde",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-Ordinary-ordinary-public-confirm-delete-then-offline-cold-recover-preserves-all-material.stderr.log": "536e7876cc72b59b8a7bcc3698a8f1e5ea4ba1b29a187462750b75bdae101825",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual.result.json": "0a9c123a1946f6de24386607ae5b21975a70157242c1088bdcb1b7064a0d8fb5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-retained-cold-recover.result.json": "e2d8bb55bd4670f0a167f629d590a065089a4cc8ca5f9b0ab4f2a0e7eda56d05",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-retained-cold-recover.stdout.log": "2a03b1fe15d14d73c5c2498b2931f5645c19aca4141ec80b4697ec3e4eefa264",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-retained-cold-recover.stderr.log": "995a1738f6fd8ce00ecfb8103fb3dd6f6ef27cba7df7e7b704c1b6dc416293cc",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-ea.result.json": "b809e92cd9c71107ef56215c05da53980768c706b702a42e78831347e829115a",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-ea.stdout.log": "8e7d4e4061934b7ad3a7def2f4abb0d84f5de45badc1ae1334a4648527f4d0b3",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-ea.stderr.log": "431877c679bcf8cfe33ab39897b623f9a83306b16c677ae0d48f890ee93f846c",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-security.result.json": "73952a239513045311d4eb7a553f22c9f48ec809d72ff82fe1acdd1efeb0bcc3",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-security.stdout.log": "940ef7f2915d89f8395e1ff4e921591f3ca1c637c5a516f32d169391c64acdf4",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-remove-late-security.stderr.log": "644dafac5aa318d777cc1972e98257b42963ada5f4d042b76190a97e59e8bfd9",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-remove-cold-recover.result.json": "f589002f9ec16c116298c57af6bfd3a20d6481009672de11ec21db281e311e56",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-remove-cold-recover.stdout.log": "e2b9f67927e24b47080c7a8d819a2ae3088a1b6be5d562f3e02066e8e3caa5f5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-FullSecurityManual-public-remove-cold-recover.stderr.log": "f5d0d347a0c46838c5595e5ce6e081c2420e0dedeff03f0b8ab6899b55a3919b",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes.result.json": "82a7afc0a17c12d41e6d839c2b517d87b61fdaad82219c7b3d8ca6b18d6ee7b3",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-exact-spellings.result.json": "2f4eddeac56934787968117b29929dc844f2f14fc8bdb0e4689c10dbf02aec85",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-exact-spellings.stdout.log": "858af830fd88fb31d689ddbad955954ca31fc36bef27690739e611fa7458f691",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-exact-spellings.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-command-system-policy.result.json": "0865b41d9c7bb29a8d78fc8c797277140136e7cc75bf25d35d6b39df659c5091",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-command-system-policy.stdout.log": "a90016f00d2030aa944883a912def7d730c2bb382eedc55e23f4fccbf4445734",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-command-system-policy.stderr.log": "fd4739c5c2f856ffcf5e0d0b5ea98f2fcf11e6c04f4e91f6318633d80d639599",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-rooted-lookalikes.result.json": "8bb31ccfaeefbee93900ba21cbdad2862b1ffb1f46ad685f0a94add6155aa188",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-rooted-lookalikes.stdout.log": "9b59bcacd9ad2dd20fe9287f0865cfaa916f1ca618de53d561d09949c1c16ab5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-rooted-lookalikes.stderr.log": "76898ebf94643c3b67c87f1a5cd70d17470334ee8520f67ec7d28c63892b13f2",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-owned-xdg-matrix.result.json": "7773baeb0a74b940e6da2893c183659719cbcbaa03dda3287c8520a229f1e30a",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-owned-xdg-matrix.stdout.log": "31814fb0036ca660e952ccafe994903a550cb356d7f49296618bfc36e2d8407b",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-null-owned-xdg-matrix.stderr.log": "97eb26cb523e41b0d51cd56acb169ddd822660b8c4078328f276b487b42de32f",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-source-profile-info.result.json": "83568c1ce41a3b35e8c6fcdf4307b495a9ea00df937f5ccf35438a0f7a2cebfc",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-source-profile-info.stdout.log": "1283f18a0083684b3c321a9f092c5e829a6c06285128b1fecf95aaf713d6b8d9",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-source-profile-info.stderr.log": "ff3a27a044939afa7f65510372576534f6d0ba8461f139d0a7791b56f4746631",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-configured-attributes-file.result.json": "128e4d3ffdb829292a3d72211a13b5137593844ee61184ce7ca45268f9b4a150",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-configured-attributes-file.stdout.log": "cdebeb56cc62ce9f64115885faeffec49d709b9f88b8d2d871d9502bf69bdb9c",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-configured-attributes-file.stderr.log": "71209aac9ca8d634f9f486db609aa86549e734abee2ff89e6a79c023fb246d25",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-held-absence-drive-relative.result.json": "8d716c16015e30ca438cdb25b93dcd140598a260983ec259e3c583f124761909",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-held-absence-drive-relative.stdout.log": "66d3b2f754672f693e09152f1e5fdbac5df619dbfdb3075bb5be6218ff220cc5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-held-absence-drive-relative.stderr.log": "d9d62f99a3751fcd1894b45573b162046185898dcbb6db0ac5aafb8dc414c984",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-selected-head-attributes.result.json": "8ab889f40a44ef80d2281e5af2e21bd1868a983d8e69c46859d370cd8736d70e",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-selected-head-attributes.stdout.log": "b12f422ce50a05c2014004239cd3830e245498d11cc1b0a9d034a76f7acc9e17",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/capability-closeout-NullAttributes-existing-selected-head-attributes.stderr.log": "bd9a65c836c1149eaccfef9df0fe76ea9d361d5c9213f2ad307294d1ddd1b66f",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/recovery-39945651058-attempt1-reader-r1.json": "50c03059f40409c8851f3c8d294089cfb7f49c148b1eeb1ecff4f633ce8eaf5a",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/test-build.stdout.jsonl": "0cbd0ea32336ee0c7603f54f0ba84765e386d3226c8abec3f3027d10bc868de2",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/test-build.stderr.log": "f5483c6fa655185e2a507c0a450166c30c5bf6fd8dd92e403a992c6439875865",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/fixture-build.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/fixture-build.stderr.log": "6dce3544808ef1eb6a4246457502b51c15e50db0106ffd90f8f2600322f1c3bb",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/original-list-control.result.json": "9205ca6e33990053c15f37e0a4b369ccd65f58fb8cde7971c067625d79d4ef8d",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/original-list-control.stdout.log": "c53db0c491109fcb35cb54190f25e2ff79939a6828a94a157a539593e3eb2ff6",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945651058-1/farfold-windows-recovery-followup-39945651058-1/original-list-control.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/null-attributes-39945651058-attempt1-reader-r1.json": "c7b1c1b1b44a4b87c47f843292087302aa575e12d0973c29c96a2aeda79bcf15",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/recovery-39939783382-attempt1-reader-r1.json": "8ee0b1dd6fc096c9bb209846e6d71154ee494a8b7d96627f84009b7c2cbf3a3d",
+    "output/2026-10-22-common-capability-closeout/p27/actual-39945643500-independent-review-r1.json": "0c58d22c375fa5c48badea0cf0ef781ceffa0a4a840068f67a0df9e6e4dbffe4",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/pe-png-planes-repair-r1/independent-review-r1.json": "766832aa810ea36820daa245d83de8c92818a32636ed99276f6e64e66d6950d0",
+    "output/2026-10-22-common-capability-closeout/windows-ci-tools/helper-stdin-39945643500-attempt1-reader-r3.json": "ecf91583c2fd70ad821ca63d91f580acb2ba68a4eea32ae0313149b62b923cfb",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/verification.json": "5a65b0021e917f8cd84ff8b0f1c75365f5d0267d2edcfc523b89c5fda5a5bd45",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/inputs-before.json": "1d0ecb5cc5c37e29bb08816b568a3c0c339dc9d043908ba78ec7c1baf90e4a50",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/inputs-after.json": "1d0ecb5cc5c37e29bb08816b568a3c0c339dc9d043908ba78ec7c1baf90e4a50",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/01.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/02.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/03.log": "c91ebfee8ef82b8de490b915950171888f04f0de0c1fa6d9b4604165262a4c18",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/04.log": "6e6aea1a91df16a4984a6cb0d65fb6e14fc13995fc908245fa5a9c41e0db8a32",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/05.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/06.log": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0",
+    "output/2026-10-22-common-capability-closeout/engineering-final-r11/07.log": "9ae3b3feaef1fd4d0089c9126f093002b450ea371f33d344a4b167f2d32f2b86",
+    "docs/agent-access-requirements.md": "79bf8b6032dd33e22c6e021f732bb89e1b6aff08fd2f950ee30621ccd53c8002",
+    "docs/status.md": "55cac6a5320920b1e51336bbe7e8e47a68e265a1b0d7b5661fd90979d7309a06",
+    "plans/agent-access.md": "a1e81b5bf8955fa6c9618809a2fee0d3c02fb345d106de35a6e62ccbf3e1b0b3"
+  },
+  "readSetStableAtFinalRead": true,
+  "actions": {
+    "sourceEdits": false,
+    "cargoOrCi": false,
+    "programOrAppOrAgentRun": false,
+    "networkOrDownload": false,
+    "userDataAccess": false
+  },
+  "limits": [
+    "Originalbinaryhashes remain runner receipts,not localPE rehash.",
+    "Defaulttoken doesnot prove nonadminaccount.",
+    "Exactpasses prove only sourceboundfixture assertions.",
+    "No mechanismrepair or new experiment performed."
+  ]
+}

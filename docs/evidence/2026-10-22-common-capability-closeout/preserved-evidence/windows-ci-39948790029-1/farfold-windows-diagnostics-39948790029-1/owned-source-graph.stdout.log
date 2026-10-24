@@ -1,0 +1,14 @@
+
+running 9 tests
+test worktrees::git::source_roots::graph_tests::actual_size_parser_keeps_exact_rows_types_and_checked_256mib_sum ... ok
+test worktrees::git::source_roots::graph_tests::actual_source_graph_has_exact_reachable_objects_and_one_program_with_held_private_inventory ... ok
+test worktrees::git::source_roots::graph_tests::graph_retains_private_namespace_observation_until_explicit_recheck_finishes ... ok
+test worktrees::git::source_roots::graph_tests::missing_owned_source_object_and_pre_cancel_never_publish_a_complete_graph ... ok
+test worktrees::git::source_roots::graph_tests::raw_default_equality_with_extra_ads_does_not_open_complete_content_or_manifest_authority ... ok
+test worktrees::git::source_roots::graph_tests::real_object_parser_rejects_incomplete_duplicate_wrong_width_and_overbudget_sets ... ok
+test worktrees::git::source_roots::graph_tests::real_recovery_capture_does_not_turn_a_graph_component_into_complete_material ... ok
+test worktrees::git::source_roots::graph_tests::same_size_changed_default_is_a_raw_difference_and_unselected_or_cancelled_reads_refuse ... ok
+test worktrees::git::source_roots::graph_tests::selected_head_binary_blob_over_vec_limit_is_read_from_actual_file_and_compared_in_blocks ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2315 filtered out; finished in 8.74s
+

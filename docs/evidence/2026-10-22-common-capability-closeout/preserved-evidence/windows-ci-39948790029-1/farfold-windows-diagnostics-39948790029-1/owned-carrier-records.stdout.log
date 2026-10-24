@@ -1,0 +1,16 @@
+
+running 11 tests
+test file_access::material_carrier_records::tests::all_bytes_utf16_and_every_boundary_use_actual_stream_parser ... ok
+test file_access::material_carrier_records::tests::cancellation_and_shared_work_are_real_failures ... ok
+test file_access::material_carrier_records::tests::duplicate_and_case_changed_names_do_not_silently_merge ... ok
+test file_access::material_carrier_records::tests::every_truncated_prefix_refuses_complete_carrier ... ok
+test file_access::material_carrier_records::tests::full_security_empty_default_still_requires_all_other_complete_material ... ok
+test file_access::material_carrier_records::tests::full_security_observed_empty_default_preserves_physical_bytes_without_padding ... ok
+test file_access::material_carrier_records::tests::full_security_omitted_zero_default_keeps_named_ea_and_security_semantics ... ok
+test file_access::material_carrier_records::tests::header_overflow_and_metadata_cap_refuse_before_body_allocation ... ok
+test file_access::material_carrier_records::tests::resident_catalog_reservation_is_released_and_never_overcommitted ... ok
+test file_access::material_carrier_records::tests::unsupported_streams_and_modified_when_read_never_reach_writer ... ok
+test file_access::material_carrier_records::tests::valid_payload_drift_is_not_equivalent_even_when_lengths_match ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 2313 filtered out; finished in 0.06s
+

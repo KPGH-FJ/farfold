@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-23T11:27:36.193335+00:00",
+  "kind": "New finding addendum; original independent review is preserved unchanged",
+  "priorReview": {
+    "path": "evidence:e-2ed30527a48dc3631e54",
+    "sha256": "db51a8c90d258d058fac2a59924828cefe2a7390f51282bb818a99b21aef6a15"
+  },
+  "source": {
+    "path": ".github/scripts/windows-helper-stdin-controls.py",
+    "sha256": "2765208bb85a5a6b81138c04d3eb7f8c9e33590770f6b80c6da30f6c81ef0698"
+  },
+  "finding": {
+    "priority": 2,
+    "title": "Started parent with failed evidence write can be mislabeled not-run",
+    "locations": [308, 352, 353, 363, 378, 379, 382],
+    "trigger": "The original parent may have run or still have unsettled output when execute writes stdout/stderr, or after execute returns before result.json/report append. An OSError at these writes reaches main catch before report.cases append. Finally pads all remaining expected cases as not-run.",
+    "impact": "passed remains false, so this does not fabricate successful execution. However notRunCount may include a launched or unknown parent and therefore misstate observed execution coverage.",
+    "basis": "Static control-flow construction, not a reproduced Windows or storage failure. Synthetic reader control preserves a prepared empty parent directory with a padded not-run entry as incomplete.",
+    "minimalRepairSuggestion": "Track the exact current parent after directory preparation and before execute. On exception, retain an explicit failed-or-incomplete entry for that current attempt, preserving known PID/terminal/evidence error if available. Only parents never prepared/launched should be padded not-run. Do not infer settlement from receipt writing failure or kill a process tree.",
+    "readerMitigation": "Only absent original per-parent directory plus exact bound not-run aggregate entry becomes not_run. Existing empty/partial evidence directory remains incomplete_or_unverified.",
+    "trackedSourceChangedByReviewer": false
+  },
+  "status": "Root notified; runner frozen while checks/Windows continue. Source repair and actual validation remain pending."
+}

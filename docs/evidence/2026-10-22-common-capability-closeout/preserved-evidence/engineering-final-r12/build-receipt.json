@@ -1,0 +1,15 @@
+{
+  "label": "build",
+  "command": ["corepack", "pnpm", "build"],
+  "atUtc": "2026-10-23T12:27:39.143371+00:00",
+  "naturalExit": 0,
+  "naturalCompletionObserved": true,
+  "elapsedSeconds": 16.27787712499999,
+  "inputsStable": true,
+  "raw": {
+    "path": "evidence:e-88e2b5f59f55798b1ecf",
+    "bytes": 4984,
+    "sha256": "ce222642613ba482138d461781ac9c8b6bc7dd45fb9492ed5e36225e0f75963a"
+  },
+  "freeBytesAfter": 17823784960
+}

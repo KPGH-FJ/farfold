@@ -1,0 +1,18 @@
+{
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "test": "file_access::windows::metadata::ci5_native_phase_tests::ci5_canonical_exact_create_sync_publish_reopen_and_collision_phases",
+  "startedAtUtc": "2026-10-23T12:04:44.7521112Z",
+  "finishedAtUtc": "2026-10-23T12:04:44.8993311Z",
+  "exitCode": 0,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "exactOnePassed": true,
+  "exactOneFailed": false,
+  "cursorCovered": false,
+  "observationComplete": true,
+  "failureClassification": null,
+  "ownerReceipt": null,
+  "ownerSettled": false,
+  "phases": [],
+  "stdoutSha256": "1D438459129D9BE432E63F25A4BB4B1DBA144DFA1C6D5A5F72DC83FD7E7A26E0",
+  "stderrSha256": "CBDAD4369777BA53E7256AB9999CC973AAD1EEE15A5C061AE2D476DC3B4B9C3D"
+}

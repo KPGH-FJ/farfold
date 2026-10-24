@@ -1,0 +1,333 @@
+{
+  "createdAt": "2026-10-23T11:51:47.564309+00:00",
+  "runId": "39945643500",
+  "runAttempt": 1,
+  "sourceHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "scope": "Read-only independent audit of this actual P27 result and static icon comparator failure; no Cargo/CI/PE execution/download/source edit.",
+  "p27": {
+    "result": "1 exact test naturally passed; seven required assertions reached",
+    "fqn": "browser_sharing::windows_native_screenshot_tests::real_windows_public_screenshot_keeps_permission_pixels_and_retirement",
+    "execution": {
+      "sourceHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+      "exactCase": "browser_sharing::windows_native_screenshot_tests::real_windows_public_screenshot_keeps_permission_pixels_and_retirement",
+      "originalTestPid": 1316,
+      "naturalCompletionObserved": true,
+      "timedOut": false,
+      "exitCode": 0,
+      "inputsStable": true,
+      "completedRecordCount": 1,
+      "checksExact": true,
+      "actual": {
+        "checks": [
+          "actual-permitted-PNG-center",
+          "text-grant-does-not-authorize-screenshot",
+          "denial-preserves-text",
+          "closed",
+          "design",
+          "frame",
+          "same-scope-revoked-at-actual-capture-callback"
+        ],
+        "positivePngBytes": 3659,
+        "positivePngSha256": "8f530f9c0537dcbce0290dfaa8b3c7fd3c50935fb7fbea09d348d89332f0b42d",
+        "positiveCenterRgb": [12, 132, 44],
+        "native": {
+          "documents": 5,
+          "refusedResources": 0,
+          "captureCallbacks": 2,
+          "actualCallbackRevocations": 1,
+          "revokedCallbackHadPng": true,
+          "closedPageScriptConfirmed": false,
+          "designModeScriptConfirmed": false,
+          "runtimeVersion": "131.0.2903.86"
+        },
+        "helper": {
+          "pid": 2908,
+          "binarySha256": "c60f0925af5e1f9c6da499b3f9d02584ba13f7c391e8640e73e70baa255ad1b5",
+          "naturalExit": 0,
+          "stderrBytes": 0
+        },
+        "cleanupAcknowledged": true
+      },
+      "passed": true,
+      "limits": "controlled WebResourceRequested HTTPS fixture; real Wry/HWND/STA/WebView2/CDP/pixels/permission/helper ACK. Not remote-site TLS, installed UI, real Agent receipt, dynamic DOM mutation completeness or every platform."
+    },
+    "sourceIdentity": {
+      "pathCount": 820,
+      "mapsBeforeAfterAndAfterListIdentical": true,
+      "gitTreeExactNames": true,
+      "mismatchPaths": [],
+      "permittedCRLFCount": 804
+    },
+    "sourceAssertionReadpoints": {
+      "src-tauri/src/browser_sharing/windows_native_screenshot_tests.rs": {
+        "gitBlobSha256": "daac41ac0b3b8a2538d68e27eabfc458550205faf389b9f4e54bc249c7536a4b",
+        "lines": "111-224, 432-596"
+      },
+      "src-tauri/src/browser_workspace/windows/production_test_support.rs": {
+        "gitBlobSha256": "99fd7f295a1f810475d37a10b594e45efefe1494918e94ae6aadf7db54140583",
+        "lines": "22-87"
+      }
+    },
+    "closedDesignFinalFalseExplained": "facts() scans currently retained views. Driver requires closedPageScriptConfirmed=true/designModeScriptConfirmed=true while each negative page is alive, then closes it before collecting final facts on late page. Final false fields are not accumulated stage flags.",
+    "retirementBoundary": "Five owned documents, real Wry main STA and WebView2 runtime131.0.2903.86. Page-close API cleanup acknowledged, app.run_return code0, original helper PID2908 natural exit0/stderr0, libtest PID1316 natural exit0. No claim that every separate WebView2 process was independently reaped.",
+    "limits": [
+      "Controlled fixed WebResourceRequested HTTPS response, not remote TLS/site acceptance.",
+      "No installed product, real Agent or per-provider receipt proof.",
+      "PNG SHA/center recorded by actual bound test assertions; PNG response bytes not separately retained in artifact for local re-decoding."
+    ]
+  },
+  "iconFailure": {
+    "classification": "Comparator format-semantics false negative, not lost/changed icon image payload in this artifact.",
+    "exactCause": "windows-pe-resource-inspection.py compares all seven directory fields byte-for-value at line573. Every source PNG ICONDIRENTRY has wPlanes0, compiled resource GRPICONDIRENTRY has wPlanes1. All other shared fields and each complete PNG image match.",
+    "scriptGitBlobSha256": "ca2e185f048face734e9616c42e4d34c57fc371e2f780c1a8b061eed6753be25",
+    "sourceIcoSha256": "6749c4166600cd30646d6c3f278cb921e6c2fa53dc8de014f8bee34544eeb5e7",
+    "sourceIcoBytes": 24642,
+    "group": {
+      "type": 14,
+      "name": 32512,
+      "language": 1033,
+      "codepage": 0,
+      "rva": 55211016,
+      "fileOffset": 55184904,
+      "size": 104,
+      "sha256": "3005bf7254f09420c33bd01c680ec7e68ed7e27902e9010e63783693db1c21f1",
+      "file": "helper-007-RT_GROUP_ICON.bin"
+    },
+    "frames": [
+      {
+        "index": 0,
+        "sourceFields": [16, 16, 0, 0, 0, 32, 554],
+        "groupFields": [16, 16, 0, 0, 1, 32, 554],
+        "sourceOffset": 118,
+        "resourceId": 1,
+        "language": 1033,
+        "bytes": 554,
+        "imageSha256": "e519f5dcf2a8cd88c688a5495777bc53e458f38f1fc9180c59fc2577c49f90d5",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 16,
+          "height": 16,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 1,
+        "sourceFields": [24, 24, 0, 0, 0, 32, 869],
+        "groupFields": [24, 24, 0, 0, 1, 32, 869],
+        "sourceOffset": 672,
+        "resourceId": 2,
+        "language": 1033,
+        "bytes": 869,
+        "imageSha256": "1f3e0c2d0e6349ef1f0b62532cd18772a3f73ac6f6e357ed9fa710704047302d",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 24,
+          "height": 24,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 2,
+        "sourceFields": [32, 32, 0, 0, 0, 32, 1193],
+        "groupFields": [32, 32, 0, 0, 1, 32, 1193],
+        "sourceOffset": 1541,
+        "resourceId": 3,
+        "language": 1033,
+        "bytes": 1193,
+        "imageSha256": "ece3f53233dac3d5d349aaf46700c1580525b418a588baced9c185c22f363de8",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 32,
+          "height": 32,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 3,
+        "sourceFields": [48, 48, 0, 0, 0, 32, 1913],
+        "groupFields": [48, 48, 0, 0, 1, 32, 1913],
+        "sourceOffset": 2734,
+        "resourceId": 4,
+        "language": 1033,
+        "bytes": 1913,
+        "imageSha256": "7d0721bd88450d5b98abc90667f2fdfeb3ea1f70fc798ac67d3acd1b07e1327c",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 48,
+          "height": 48,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 4,
+        "sourceFields": [64, 64, 0, 0, 0, 32, 2384],
+        "groupFields": [64, 64, 0, 0, 1, 32, 2384],
+        "sourceOffset": 4647,
+        "resourceId": 5,
+        "language": 1033,
+        "bytes": 2384,
+        "imageSha256": "3848b2a69828710e2c2af8844af8e73bcf177a5e11e68f6dc7c4e4d5120c2bcd",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 64,
+          "height": 64,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 5,
+        "sourceFields": [128, 128, 0, 0, 0, 32, 5253],
+        "groupFields": [128, 128, 0, 0, 1, 32, 5253],
+        "sourceOffset": 7031,
+        "resourceId": 6,
+        "language": 1033,
+        "bytes": 5253,
+        "imageSha256": "ed0c58bcecc20ca099f97e9723acfb63063c03dfb43adbf2ce7286d684ae3270",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 128,
+          "height": 128,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      },
+      {
+        "index": 6,
+        "sourceFields": [0, 0, 0, 0, 0, 32, 12358],
+        "groupFields": [0, 0, 0, 0, 1, 32, 12358],
+        "sourceOffset": 12284,
+        "resourceId": 7,
+        "language": 1033,
+        "bytes": 12358,
+        "imageSha256": "77701ae9ac2c8648214ab5c45078d903d60774ccae1d25b86cdad9d0fdff2c7e",
+        "rawImageByteEqual": true,
+        "onlyDifferentField": "wPlanes: ICO0 -> resource1",
+        "pngIHDR": {
+          "width": 256,
+          "height": 256,
+          "bitDepth": 8,
+          "colorType": 6,
+          "compression": 0,
+          "filter": 0,
+          "interlace": 0
+        },
+        "allChunkCrcsAndExactEndValid": true,
+        "chunkKinds": ["IHDR", "IDAT", "IEND"]
+      }
+    ],
+    "originalStaticResultPreserved": {
+      "helperManifestMatchesBaselineAtExpectedId": true,
+      "helperVersionMatchesGeneratedRc": true,
+      "helperIconGroupsAndImageBytesMatchSourceIco": false,
+      "libtestManifestMatchesBaselineAtExpectedId": true,
+      "cdylibManifestMatchesBaselineAtExpectedId": true
+    },
+    "originalParserCompleted": true,
+    "otherResources": "Original helper version/generated RC and all three expected-ID manifest checks true; local saved resource hashes verified. Full executable bytes are not present and were not rehashed locally.",
+    "inferenceBoundary": "Actual artifact proves compiler output0->1 and unchanged valid PNGs; published LLVM compiler source corroborates normalization, but this review does not claim LLVM produced this MSVC run or infer Windows shell visual rendering."
+  },
+  "officialFormatSources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)",
+      "support": "ICO directory versus resource group layout and per-ID image indirection."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/menurc/resdir",
+      "support": "Resource Planes, BitCount, BytesInRes and IconCursorId semantics."
+    },
+    {
+      "url": "https://devblogs.microsoft.com/oldnewthing/20101022-00/?p=12473",
+      "support": "Windows PNG icon payload is a PNG image without bitmap header; 32bpp format."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-20.1.8/llvm/tools/llvm-rc/ResourceFileWriter.cpp",
+      "lines": "884-898",
+      "support": "Primary compiler source derives BMP fields or emits PNG Planes1/BitCount32, rather than copying ICO directory fields literally."
+    }
+  ],
+  "strictRepairRecommendation": {
+    "changeScope": "Comparator only; keep original source ICO, compiled product and all original failure evidence unchanged.",
+    "rule": "Recognize the exact PNG payload safely, derive/check its width/height and supported RGBA8/32bpp semantics, and only for proven PNG allow source Planes0 to canonical resource Planes1 (source Planes1 also canonical). Require source/resource bitcount32, other fields exact, original dimension encoding, group ID32512, count/order, same language unique RT_ICON, exact lengths and full image SHA/bytes as before. Do not ignore Planes globally, normalize arbitrary2 values, or treat non-PNG as PNG.",
+    "necessaryEvidence": [
+      "Original same-artifact comparison remains RED on old comparator; corrected pure comparison over the retained seven actual resource blobs should pass without rebuilding or executing PE.",
+      "Negative controls: changed payload/hash, size, width/height, depth, Planes2, wrong ID/language, missing/duplicate image, malformed/truncated PNG or CRC, and non-PNG0->1 must remain rejected.",
+      "Existing metadata/identity/manifest/version checks unchanged; later actual same-checkpoint script run remains distinct from this local byte-analysis result."
+    ]
+  },
+  "rawSha256": {
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/identity.json": "61b69e587f7ac3d8d88935de2c256de0de5ef960033c47a0bafaec2cceec6008",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/build-selection.json": "605c17821c9435069b7aedecc6dc44e0843e584d195509e53155d746972425b3",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/execution.json": "bd9bebce3b3b0cb3e996e905e1c3b23b11690ae49580bee1c6874117acf362c5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/native.stdout.log": "4dbf479ba933128b3a5588f5a66a1b34f3115514376bc87a592a62f234fc39dd",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/native.stderr.log": "224d9e655c1d67775baa0d0c09e7782028f0320bc723c5f869bd3199fc86d072",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/inputs-before.json": "ef794680ca84a92fb1e4713d9ffaec6372d747d81a618eba1f459e2e438796b2",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/inputs-after.json": "ef794680ca84a92fb1e4713d9ffaec6372d747d81a618eba1f459e2e438796b2",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/inputs-after-list.json": "ef794680ca84a92fb1e4713d9ffaec6372d747d81a618eba1f459e2e438796b2",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/summary.json": "38aa65b41010161562130d40a6f35ea79fcc455caa63c538f01cba648657faf9",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/candidate-resource.rc": "acfac19180f578b4801c1d499aae7caf573405024c41ace5c0bfedbd5323665c",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/cdylib-000-RT_MANIFEST.bin": "762d0813795d198ff575b5fa06bad8a7640bfff1b1206d94e12d61424ff4df3d",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-000-RT_ICON.bin": "e519f5dcf2a8cd88c688a5495777bc53e458f38f1fc9180c59fc2577c49f90d5",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-001-RT_ICON.bin": "1f3e0c2d0e6349ef1f0b62532cd18772a3f73ac6f6e357ed9fa710704047302d",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-002-RT_ICON.bin": "ece3f53233dac3d5d349aaf46700c1580525b418a588baced9c185c22f363de8",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-003-RT_ICON.bin": "7d0721bd88450d5b98abc90667f2fdfeb3ea1f70fc798ac67d3acd1b07e1327c",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-004-RT_ICON.bin": "3848b2a69828710e2c2af8844af8e73bcf177a5e11e68f6dc7c4e4d5120c2bcd",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-005-RT_ICON.bin": "ed0c58bcecc20ca099f97e9723acfb63063c03dfb43adbf2ce7286d684ae3270",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-006-RT_ICON.bin": "77701ae9ac2c8648214ab5c45078d903d60774ccae1d25b86cdad9d0fdff2c7e",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-007-RT_GROUP_ICON.bin": "3005bf7254f09420c33bd01c680ec7e68ed7e27902e9010e63783693db1c21f1",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-008-RT_VERSION.bin": "93b804ed9a44722e2c48897df10edde2be0a969656c38a9d0e9b133d78a9ac99",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/helper-009-RT_MANIFEST.bin": "762d0813795d198ff575b5fa06bad8a7640bfff1b1206d94e12d61424ff4df3d",
+    "output/2026-10-22-common-capability-closeout/windows-ci-39945643500-1/farfold-windows-p27-native-39945643500-1/pe-resource-evidence/libtest-000-RT_MANIFEST.bin": "762d0813795d198ff575b5fa06bad8a7640bfff1b1206d94e12d61424ff4df3d"
+  },
+  "readerReceipt": {
+    "path": "evidence:e-f61374b35aa64516b753",
+    "sha256": "0d62cb4aa8985b5b7f35c845ef391ff37ea8c0b3f5bb4a2df60eb8f456844f03"
+  },
+  "notPerformed": [
+    "No executable/library loaded or executed.",
+    "No screenshot/App/Agent/Cargo/CI launch.",
+    "No new artifact download or repository source change.",
+    "No icon comparison fix applied."
+  ],
+  "sourceAndRawComparisonTool": "This one output-only Python analysis consumed Git blobs and saved byte resources; no project test run."
+}

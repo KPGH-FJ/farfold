@@ -1,0 +1,22 @@
+{
+  "name": "original-dependents",
+  "executable": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\dumpbin.exe",
+  "arguments": [
+    "/NOLOGO",
+    "/DEPENDENTS",
+    "D:\\a\\farfold\\farfold\\src-tauri\\target\\debug\\deps\\farfold_lib-ec387578f4a9b290.exe"
+  ],
+  "pid": 4316,
+  "naturalCompletion": true,
+  "exitCode": 0,
+  "exitCodeHex": "0x00000000",
+  "abortReason": null,
+  "terminationSettled": null,
+  "streamsSettled": true,
+  "error": null,
+  "elapsedMilliseconds": 53,
+  "stdout": "original-dependents.stdout.log",
+  "stderr": "original-dependents.stderr.log",
+  "stdoutSha256": "f092c06ed5c95f36648a345b260b4cac50dea309f8b19f08ab3b4d127a033cd5",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,37 @@
+{
+  "group": "ordinary-empty-file-preserves-empty-default-without-fake-native-write",
+  "filter": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write",
+  "category": "ownedActualOrdinaryRecovery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write"
+  ],
+  "actualPassedNames": [
+    "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::recovery_ordinary_windows_tests::ordinary_empty_file_preserves_empty_default_without_fake_native_write",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:10:04.1114928Z",
+  "finishedAtUtc": "2026-10-23T12:10:04.3454242Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "expectedPhaseMarker": null,
+  "phaseMarkerMatches": 0,
+  "injectionPhaseReached": false,
+  "privilegeCondition": "default-current-token",
+  "privilegeConditionSatisfied": true,
+  "privilegeConditionEvidence": null,
+  "conditionUnavailable": false,
+  "testExecuted": true,
+  "stdoutSha256": "7A466AD7454FCB080D26F631A6C227FFC54F46F55697F5C2A3192A2AB6AC7BF6",
+  "stderrSha256": "908AD6852912A97CF0A5EB9EE5142BC2E920040D3563AD23DF62E3D85FE68A41"
+}

@@ -1,0 +1,2 @@
+FARFOLD_OWNED_LINK_255_COMPANION {"operationError":null,"nativeStatus":0,"beforeAttributes":32,"afterAttributes":32,"afterBasicError":null,"sameFullIdentity":true,"beforeLinks":1,"afterLinks":2,"afterStampError":null}
+FARFOLD_OWNED_LINK_TEST_OUTCOME operation=None cleanup=None native_status=Some(0)

@@ -1,0 +1,11 @@
+
+running 6 tests
+test worktrees::recovery_pack::artifact::tests::cancellation_and_the_real_reader_cap_refuse_before_publishing_an_observation ... ok
+test worktrees::recovery_pack::artifact::tests::held_parent_root_pair_rejects_namespace_replacement_without_falling_back_to_a_path ... ok
+test worktrees::recovery_pack::artifact::tests::identical_bytes_at_a_replaced_name_are_rejected_by_the_stored_native_identity ... ok
+test worktrees::recovery_pack::artifact::tests::real_fixed_file_set_captures_current_ids_and_hashes_from_the_same_held_objects ... ok
+test worktrees::recovery_pack::artifact::tests::same_size_edit_never_becomes_verified_and_windows_pins_do_not_silently_widen_shares ... ok
+test worktrees::recovery_pack::artifact::tests::unix_identity_wire_stays_exact_and_foreign_full_ids_never_truncate_or_mix ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2318 filtered out; finished in 0.38s
+

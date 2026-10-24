@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.02s
+

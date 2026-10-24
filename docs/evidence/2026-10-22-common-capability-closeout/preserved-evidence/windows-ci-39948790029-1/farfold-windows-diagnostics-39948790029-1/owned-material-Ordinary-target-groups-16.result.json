@@ -1,0 +1,29 @@
+{
+  "group": "target-groups-16",
+  "filter": "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot",
+  "category": "currentMerged21",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot"
+  ],
+  "actualPassedNames": [
+    "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:02.4698790Z",
+  "finishedAtUtc": "2026-10-23T12:08:02.5157530Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "531CCE4D1261755A75A6FDCF5B8BA88FDC4831FAD9B4115CD89C1FA377697EF2",
+  "stderrSha256": "506A7EB76D7D08FBD56578B637103EA977663840CF7B192899605525E28EB486"
+}

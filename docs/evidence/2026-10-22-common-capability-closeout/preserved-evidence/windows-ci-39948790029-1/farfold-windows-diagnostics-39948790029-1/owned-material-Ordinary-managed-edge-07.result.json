@@ -1,0 +1,29 @@
+{
+  "group": "managed-edge-07",
+  "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit",
+  "category": "ordinaryWindowsOwnedReaderOrSamePinnedActualQuery",
+  "explicitIgnored": false,
+  "exactFilter": true,
+  "expectedTests": 1,
+  "expectedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit"
+  ],
+  "actualPassedNames": [
+    "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit"
+  ],
+  "actualNamedOutcomes": [
+    {
+      "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit",
+      "outcome": "ok"
+    }
+  ],
+  "startedAtUtc": "2026-10-23T12:08:11.7515036Z",
+  "finishedAtUtc": "2026-10-23T12:08:11.7972170Z",
+  "exitCode": 0,
+  "summaryCount": 1,
+  "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+  "namesExact": true,
+  "exactGroupPassed": true,
+  "stdoutSha256": "09037FFE6AF95A072B2D0ED456EA14FBB0324D24D08A804D5208E71329C59692",
+  "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+}

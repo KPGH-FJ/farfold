@@ -1,0 +1,956 @@
+{
+  "schema": 1,
+  "head": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "finalHead": "13f768e0b398b4b5e08952b1d59e8119dbe40555",
+  "headStable": true,
+  "mode": "Ordinary",
+  "testBinarySha256": "75C6E2A4573B5CD3F114F2A4F3547D1FC831EF453BFF82B03E8B617113211CFB",
+  "fixtureSha256": "AD5DF74ED68C6B8F3706471878D6237BED03B3AE6E3E4F8F52A53477AB0C40EC",
+  "runnerScriptSha256": "FDF6062EF100D3EC374FA664EE0BCCF51D67648643E8EE182A4E68DBAD79DA35",
+  "inputsStable": true,
+  "plannedOrdinaryTests": 32,
+  "plannedManualTests": 10,
+  "plannedTotalTests": 42,
+  "selectedTests": 32,
+  "groupCount": 32,
+  "groups": [
+    {
+      "group": "persistent-store-01",
+      "filter": "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::tests::actual_fixed_file_survives_close_and_independent_reopen_without_memory_payload",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:01.7404913Z",
+      "finishedAtUtc": "2026-10-23T12:08:01.7912132Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0DDD58BCA0F0E07DA1F8DBB6624C2600B02C7F12EC341DAE1C7F6375D1F9BCFF",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "persistent-store-02",
+      "filter": "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::tests::actual_no_replace_collision_preserves_sentinel_and_discards_only_owned_pending",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:01.8259469Z",
+      "finishedAtUtc": "2026-10-23T12:08:01.8565626Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "B08B502C7D65275303ABCBDB9ECAFA766CF7A22AD0EC7BD32B9D3E9C41585653",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "persistent-store-03",
+      "filter": "file_access::windows::material_persistent_store::tests::actual_truncation_corruption_suffix_and_wrong_whole_hash_refuse_before_publish",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_truncation_corruption_suffix_and_wrong_whole_hash_refuse_before_publish"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::tests::actual_truncation_corruption_suffix_and_wrong_whole_hash_refuse_before_publish"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::tests::actual_truncation_corruption_suffix_and_wrong_whole_hash_refuse_before_publish",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:01.8607135Z",
+      "finishedAtUtc": "2026-10-23T12:08:01.9285459Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "74935E3885AB9F17C87BEF18C8D1AA289CE2B82A0F43A5C86A56EA0E249E68B5",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "persistent-store-04",
+      "filter": "file_access::windows::material_persistent_store::tests::cancelled_and_exhausted_verification_never_publish_or_leave_pending",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::tests::cancelled_and_exhausted_verification_never_publish_or_leave_pending"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::tests::cancelled_and_exhausted_verification_never_publish_or_leave_pending"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::tests::cancelled_and_exhausted_verification_never_publish_or_leave_pending",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:01.9324225Z",
+      "finishedAtUtc": "2026-10-23T12:08:01.9793442Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "313E0E95EA3A55772C941550D043273935CD25F6DF39CBC413F5BAEC9453E134",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "persistent-store-05",
+      "filter": "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::tests::reader_pins_real_file_and_full_version_rejects_actual_write_attributes_change",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:01.9833893Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.0226655Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "AEE1F21E6DF42910DA016808CCE22098B045638A07DDC35D52359408709AF740",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "persistent-owner-06",
+      "filter": "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_pack::material::tests::ordinary_source_and_foreign_reserved_stamp_never_gain_full_material_authority",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.0268027Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.0460732Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "DC4E13D60C5F5F7D02B8FE906E8337AA8AE58A700C37759DFC8D3D2A7D03FF29",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "target-groups-10",
+      "filter": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_keep_distinct_real_data_ea_sd_and_complete_name_identity_sets",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_groups_keep_distinct_real_data_ea_sd_and_complete_name_identity_sets"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_groups_keep_distinct_real_data_ea_sd_and_complete_name_identity_sets"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::cross_parent_groups_keep_distinct_real_data_ea_sd_and_complete_name_identity_sets",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.0498788Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.1446015Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "6A6396B3B2856BE3D9D6D72DD2B66F2FF29CEB6B2BB731BE435AF84575D6D39B",
+      "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+    },
+    {
+      "group": "target-groups-11",
+      "filter": "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::empty_default_data_has_real_cross_parent_links_without_a_fabricated_payload",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.1500237Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.1939555Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "39838269E70B8E42D7AC10DFE52E554BD1FD5E1F49288DFC2A08400E80DEEC9A",
+      "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+    },
+    {
+      "group": "target-groups-12",
+      "filter": "worktrees::material_owner::target_link_group_tests::cross_parent_counted_unpaired_utf16_and_max_leaf_are_actual_names",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_counted_unpaired_utf16_and_max_leaf_are_actual_names"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_counted_unpaired_utf16_and_max_leaf_are_actual_names"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::cross_parent_counted_unpaired_utf16_and_max_leaf_are_actual_names",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.1992326Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.2508156Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "605C28E436366D2611F4217544612E3D85D9F831E0938FE8BF39B71711E8A8F6",
+      "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+    },
+    {
+      "group": "target-groups-13",
+      "filter": "worktrees::material_owner::target_link_group_tests::cross_parent_replace_false_collision_preserves_both_existing_groups",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_replace_false_collision_preserves_both_existing_groups"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::cross_parent_replace_false_collision_preserves_both_existing_groups"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::cross_parent_replace_false_collision_preserves_both_existing_groups",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.2558508Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.3087171Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "81D4DE8B12A7AD590F3B7CAF4976DE7AF099D68219718B3037F772CA3F97D26F",
+      "stderrSha256": "D92AB1A88807054800651D33893CD7580D91F841ED0D421FE70DD9846D6B7CCC"
+    },
+    {
+      "group": "target-groups-14",
+      "filter": "worktrees::material_owner::target_link_group_tests::invalid_names_precancel_and_insufficient_shared_work_do_not_mutate_any_group",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::invalid_names_precancel_and_insufficient_shared_work_do_not_mutate_any_group"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::invalid_names_precancel_and_insufficient_shared_work_do_not_mutate_any_group"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::invalid_names_precancel_and_insufficient_shared_work_do_not_mutate_any_group",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.3138080Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.3733018Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "F760525DEF89A226C4E3E18E234FA48179FDB3E1FEAE5A72E874A8D1075807FE",
+      "stderrSha256": "F89CD87F0C59F514B6716973F1A4C41CB064F18FB0611A9CAB8545867F424752"
+    },
+    {
+      "group": "target-groups-15",
+      "filter": "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::actual_target_parent_denies_new_delete_before_and_after_cross_parent_links",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.3793538Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.4655705Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "1B7E833F41EA5B6943CE87739F70F7ED7C4E505CA4ACED368E2E62B676002EF7",
+      "stderrSha256": "2C5107DDCF00860FC523E610A03E85C56A32AF73FB004D48071E853442BBA545"
+    },
+    {
+      "group": "target-groups-16",
+      "filter": "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::caller_error_after_verified_cross_parent_effect_still_closes_original_slot",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.4698790Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.5157530Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "531CCE4D1261755A75A6FDCF5B8BA88FDC4831FAD9B4115CD89C1FA377697EF2",
+      "stderrSha256": "506A7EB76D7D08FBD56578B637103EA977663840CF7B192899605525E28EB486"
+    },
+    {
+      "group": "target-groups-17",
+      "filter": "worktrees::material_owner::target_link_group_tests::all_directory_and_member_nodes_share_one_fixed_admission_limit",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::all_directory_and_member_nodes_share_one_fixed_admission_limit"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::all_directory_and_member_nodes_share_one_fixed_admission_limit"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::all_directory_and_member_nodes_share_one_fixed_admission_limit",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.5201162Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.6336535Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D890249CB99AE5093D8105BC07B25BE2F2611915F18A251A4CB8AFAB26681FBE",
+      "stderrSha256": "E4C478BC848D74214CADCDB844C3B63FD1910CB0E7D804D8874C99A3DDA1E276"
+    },
+    {
+      "group": "target-groups-18",
+      "filter": "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::target_link_group_tests::undeclared_real_alias_cannot_be_forgiven_or_deleted_and_retains_the_same_slot",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.6382069Z",
+      "finishedAtUtc": "2026-10-23T12:08:02.6826705Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "EE378CA30819B77D8457FC5475BEE2C3EC63735A317D6782864401A97C7B544C",
+      "stderrSha256": "7173210B78C9ED457EC06D0533D0F9DC9F4FC21B2C9756BAF347599786B98278"
+    },
+    {
+      "group": "managed-role-20",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::real_linked_graph_retains_original_root_git_role_through_complete_recheck",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:02.6870881Z",
+      "finishedAtUtc": "2026-10-23T12:08:03.8847765Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "A2D750F6D8CDF5AC49DEC9512A2171553315932C72BF106AE256B069399702BD",
+      "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+    },
+    {
+      "group": "managed-role-21",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_main_read_context_role_does_not_widen_private_graph_inventory_or_material_gate",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:03.8909492Z",
+      "finishedAtUtc": "2026-10-23T12:08:04.6379329Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "FABC0DE3FEA31E3E1672FB35E1B118D1902795D90479894827C7E9A3EF43563B",
+      "stderrSha256": "F6CCEB6792129F8BC06074283C4E9D10B5C3E0AF83FA1258BBA6BCA3B6CB9BB8"
+    },
+    {
+      "group": "managed-role-22",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::root_git_role_does_not_accept_a_correct_pointer_to_a_nondefault_private_directory",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:04.6434264Z",
+      "finishedAtUtc": "2026-10-23T12:08:05.3353404Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "5091A64EA4D06DCC21E7683DF137B24C7FEB86DFCC3E60EE312372BC979A42F7",
+      "stderrSha256": "F6CCEB6792129F8BC06074283C4E9D10B5C3E0AF83FA1258BBA6BCA3B6CB9BB8"
+    },
+    {
+      "group": "managed-role-23",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_root_namespace_change_cannot_leave_original_graph_role_verified",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_root_namespace_change_cannot_leave_original_graph_role_verified"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_root_namespace_change_cannot_leave_original_graph_role_verified"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::actual_root_namespace_change_cannot_leave_original_graph_role_verified",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:05.3407619Z",
+      "finishedAtUtc": "2026-10-23T12:08:06.4820312Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "0247F961A80C1588F13F5DF5587469F2496ED1650F08A6F25593E205D3F3F584",
+      "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+    },
+    {
+      "group": "managed-role-24",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::an_original_role_capsule_cannot_be_presented_as_a_different_root_read_context",
+      "category": "currentMerged21",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::an_original_role_capsule_cannot_be_presented_as_a_different_root_read_context"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_root_git_tests::an_original_role_capsule_cannot_be_presented_as_a_different_root_read_context"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_root_git_tests::an_original_role_capsule_cannot_be_presented_as_a_different_root_read_context",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:06.4860455Z",
+      "finishedAtUtc": "2026-10-23T12:08:07.1134985Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "E7913838A8488768C852B1B632E291E08049AABD8493615C2E8028F07D378CDA",
+      "stderrSha256": "3AB5289D5C7F79B66C593C6D53590E82D5802757261834FDBF59C8B872E8A5D7"
+    },
+    {
+      "group": "sealed-tree-25",
+      "filter": "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace",
+      "category": "ordinaryWindows",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::restore::tests::stored_synthetic_typed_bytes_without_actual_facts_never_open_a_target_namespace",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:07.1177431Z",
+      "finishedAtUtc": "2026-10-23T12:08:07.1660533Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "8C7CFA15C04477B12E699F7C94C6337F560802BE17A53C0ED6C9E8AA17CA8EB3",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "sealed-tree-26",
+      "filter": "file_access::windows::material_persistent_store::restore::tests::missing_native_catalogue_members_refuse_before_any_target_effect",
+      "category": "ordinaryWindows",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::missing_native_catalogue_members_refuse_before_any_target_effect"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::missing_native_catalogue_members_refuse_before_any_target_effect"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::restore::tests::missing_native_catalogue_members_refuse_before_any_target_effect",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:07.1723149Z",
+      "finishedAtUtc": "2026-10-23T12:08:07.2110094Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "3A018B444D5E089B9FE785B578BFB130DD4A0C21162FCAC6D765B69A729586FC",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "sealed-tree-27",
+      "filter": "file_access::windows::material_persistent_store::restore::tests::cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material",
+      "category": "ordinaryWindows",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::restore::tests::cancelled_or_exhausted_rebuild_does_not_offer_native_write_or_erase_material",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:07.2145315Z",
+      "finishedAtUtc": "2026-10-23T12:08:07.2764655Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "965F9C77D7C32F0474B426E9F0F0B6357ED26E519636221BA82CCB4BCFD10FA0",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "sealed-tree-28",
+      "filter": "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources",
+      "category": "ordinaryWindowsSharedApiFake",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources"
+      ],
+      "actualPassedNames": [
+        "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "file_access::windows::material_persistent_store::restore::tests::failed_native_abort_prevents_actual_store_cleanup_and_keeps_the_same_resources",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:07.2798665Z",
+      "finishedAtUtc": "2026-10-23T12:08:07.3226479Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "79E42901C2376547CB25EF405694BB118174A7C893EA899770425F3074DEFC08",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "managed-edge-01",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner",
+      "category": "ownedOriginalSourceOwnerRoleAndBudget",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_managed_edge_keeps_original_read_context_after_outer_graph_drop_until_last_owner",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:07.3263749Z",
+      "finishedAtUtc": "2026-10-23T12:08:08.5676793Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "DF4DD7BD340200CC6D63CB0425FCEEFCF75850F257D8F1DAB5037BECA803ACF0",
+      "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+    },
+    {
+      "group": "managed-edge-02",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion",
+      "category": "ownedOriginalSourceOwnerRoleAndBudget",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::real_foreign_root_raw_name_and_actual_foreign_edge_never_mint_an_exclusion",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:08.5705600Z",
+      "finishedAtUtc": "2026-10-23T12:08:09.7653708Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "2D000AD692C60564145AD48A14D8ABF874F672D2570B70AE04B82FF44ED46BB2",
+      "stderrSha256": "AC2B6997F79C804FD138280C9827FF57B0B8F60931CA05E542BB8E5F6EE4A4E9"
+    },
+    {
+      "group": "managed-edge-03",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source",
+      "category": "ownedOriginalSourceOwnerRoleAndBudget",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::managed_recheck_uses_original_shared_work_and_cancel_without_advancing_source",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:09.7680040Z",
+      "finishedAtUtc": "2026-10-23T12:08:10.8854773Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "D3A5CD2BE7A615DF889DD310DA0331FDE05A990F1E652852AACAD6312CD56029",
+      "stderrSha256": "5660462B6139222352086DC9A5555A8BC0B98FEA9EB2F7E02EF376CF20BE9769"
+    },
+    {
+      "group": "managed-edge-06",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing",
+      "category": "ordinaryWindowsOwnedReaderOrSamePinnedActualQuery",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_same_pinned_inventory_query_charges_returned_bytes_and_preserves_complete_legacy_listing",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:10.8883245Z",
+      "finishedAtUtc": "2026-10-23T12:08:11.7491287Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "13E7B2B3DE996CDD4C6F2E71E2F3AE749727AAED78ACE0810C3E9E6749FC5AE9",
+      "stderrSha256": "D4B5D49954899AF708E8FC00F343BCF4723A1D7E591201244BE4698617256A81"
+    },
+    {
+      "group": "managed-edge-07",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit",
+      "category": "ordinaryWindowsOwnedReaderOrSamePinnedActualQuery",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_reader_keeps_complete_eof_for_zero_small_and_existing_file_limit",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:11.7515036Z",
+      "finishedAtUtc": "2026-10-23T12:08:11.7972170Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "09037FFE6AF95A072B2D0ED456EA14FBB0324D24D08A804D5208E71329C59692",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "managed-edge-08",
+      "filter": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_growth_shrink_cancel_and_over_limit_refuse_with_size_plus_one_offer",
+      "category": "ordinaryWindowsOwnedReaderOrSamePinnedActualQuery",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_growth_shrink_cancel_and_over_limit_refuse_with_size_plus_one_offer"
+      ],
+      "actualPassedNames": [
+        "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_growth_shrink_cancel_and_over_limit_refuse_with_size_plus_one_offer"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::git::source_roots::graph_tests::managed_material_tests::actual_git_metadata_growth_shrink_cancel_and_over_limit_refuse_with_size_plus_one_offer",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:11.7997965Z",
+      "finishedAtUtc": "2026-10-23T12:08:11.8243332Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "47B158D99A24591C9E22E25DAC8391721CA4357445C13077BFF80088E2A1F273",
+      "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "group": "owned-link255-1",
+      "filter": "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets",
+      "category": "ordinaryOwnedNtfs255WithOriginalResultAndLimitedCompanion",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::owned_link_tests::empty_255unit_owned_link_keeps_established_archive_and_exact_empty_facets",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:11.8262735Z",
+      "finishedAtUtc": "2026-10-23T12:08:11.8515234Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "9023EDAD4D1C723773B5BEBE71FF8775C5F80E8C495F6EE628CE4BBB42B7D66B",
+      "stderrSha256": "7165A18C7DA4810087BEE3E3B3D2E56C62CA77657F33AF21F3E958EAD1441160"
+    },
+    {
+      "group": "owned-link255-2",
+      "filter": "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result",
+      "category": "ordinaryOwnedNtfs255WithOriginalResultAndLimitedCompanion",
+      "explicitIgnored": false,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result"
+      ],
+      "actualPassedNames": [
+        "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::material_owner::owned_link_tests::filled_255unit_alias_keeps_same_fileobject_diagnostics_and_original_result",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T12:08:11.8535184Z",
+      "finishedAtUtc": "2026-10-23T12:08:11.8999281Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "stdoutSha256": "4EB3191A47FECABEBBD2853FB88DBAC34CDB97DC79B193E9B654DA97F1E93BA2",
+      "stderrSha256": "26F61E12F69F0DAC047F953C6C81CB6A5366C110C6DD5F20B3603D64F872C995"
+    }
+  ],
+  "exactAllGroupsPassed": true,
+  "oldCarrier149CountChanged": false,
+  "oldContinuation30CountChanged": false,
+  "explicitManualFailuresAreSuccessfulTests": false,
+  "privilegesAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticOrOrdinaryRefusalIsNativeSuccess": false,
+  "completePayloadSecurityOrAliasRestoreClaim": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}

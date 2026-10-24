@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "sourceRoots": [
+    "docs/evidence/2026-10-22-common-capability-closeout/selected-stage-e616.json",
+    "docs/evidence/2026-10-22-common-capability-closeout/formal-18470-installation.json",
+    "docs/evidence/2026-10-22-common-capability-closeout/formal-18470-ui-observation.json"
+  ],
+  "originalsChanged": false,
+  "historicalCommandsRerun": false,
+  "applicationOrAgentStarted": false,
+  "databasesOrCompleteUserManifestsOpened": false,
+  "scope": "direct receipt dependencies; current r12/e616 directories; one bounded report dependency hop; three raw CI cohorts",
+  "publishedFilesIncludingCatalog": 1361,
+  "publishedBytesIncludingCatalog": 35329267,
+  "localOnlyReferences": 223,
+  "transformations": {
+    "repository-home-prefix-removed": 154,
+    "evidence-reference-mapped": 2148,
+    "private-mac-home": 25,
+    "credential-token": 24,
+    "email": 12,
+    "session-identifier-omitted": 1,
+    "private-process-or-ui-subtree-omitted": 12,
+    "windows-user-path": 2908,
+    "historical-version-reference-resolved": 3
+  },
+  "rawCiIntegrity": [
+    {
+      "runId": 39958119731,
+      "files": 178,
+      "originalBytes": 2862065,
+      "publishedCopies": 178,
+      "downloadReceiptFileMapEntries": 178,
+      "downloadMapMismatches": []
+    },
+    {
+      "runId": 39945651058,
+      "files": 139,
+      "originalBytes": 3000407,
+      "publishedCopies": 139,
+      "downloadReceiptFileMapEntries": 139,
+      "downloadMapMismatches": []
+    },
+    {
+      "runId": 39948790029,
+      "files": 900,
+      "originalBytes": 3661752,
+      "publishedCopies": 900,
+      "downloadReceiptFileMapEntries": 900,
+      "downloadMapMismatches": []
+    }
+  ],
+  "residualPatternFindings": [],
+  "historicalMutablePathVersions": [
+    {
+      "sha256": "473ce4838efb682cc60ed89b37b9c411fbd33c503d44dd187a580eb38ba7ef28",
+      "exactRetainedOriginalPath": "output/2026-10-22-common-capability-closeout/windows-ci-tools/git-launch-controls-reader-repair-r1/before-read_git_launch_controls.py",
+      "publishedCopyPath": "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/windows-ci-tools/git-launch-controls-reader-repair-r1/before-read_git_launch_controls.py"
+    },
+    {
+      "sha256": "b2ef16b086e12f98048c4c4279b556a4101111952cf3b67fa8b8409e463b74e5",
+      "exactRetainedOriginalPath": "output/2026-10-22-common-capability-closeout/windows-ci-tools/git-launch-controls-reader-repair-r1/before-test_read_git_launch_controls.py",
+      "publishedCopyPath": "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/windows-ci-tools/git-launch-controls-reader-repair-r1/before-test_read_git_launch_controls.py"
+    },
+    {
+      "sha256": "4102052b26feca35e2eab6e1a4e0b591ec9069695241c03efe1e94fb106ec4af",
+      "exactRetainedOriginalPath": "output/2026-10-22-common-capability-closeout/windows-ci-tools/focused-native-reader-r4-originals/read_focused_native.py",
+      "publishedCopyPath": "docs/evidence/2026-10-22-common-capability-closeout/preserved-evidence/windows-ci-tools/focused-native-reader-r4-originals/read_focused_native.py"
+    }
+  ],
+  "missingCatalogSources": [],
+  "privacyLimits": [
+    "Pattern checks and structural exclusion do not prove universal secret absence.",
+    "Controlled CI raw logs and reports are transformed copies; use original SHA-256 values to verify local originals and published SHA-256 values for copies.",
+    "Accessibility trees, screenshots, process arguments, user data manifests, databases and sidecars remain local; protected contents were not opened by this preservation script.",
+    "Only selected current-stage evidence is published, not the complete transitive historical record.",
+    "No new product acceptance or test success is claimed; historical failures and unresolved unknown-writer observations remain."
+  ]
+}

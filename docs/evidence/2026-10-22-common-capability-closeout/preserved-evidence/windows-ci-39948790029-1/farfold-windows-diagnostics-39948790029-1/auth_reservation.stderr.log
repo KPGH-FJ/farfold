@@ -1,0 +1,5 @@
+FARFOLD_CONPTY_BEGIN Reservation
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_CONPTY_ENV {"os":[10,0,20348],"modules":[{"module":"conpty.dll","loaded":false,"version":null},{"module":"kernel32.dll","loaded":true,"version":[6,2,20348,5622]}],"selection":"loaded candidates; actual DLL choice not inferred from runner label"}
+FARFOLD_TERMINAL_CURSOR {"phase":"auth-reservation.fixture.complete","replyEnabled":true,"elapsedMillis":163,"bytes":106,"queries":1,"replies":1,"pending":0,"failed":false,"cursorCoverage":"observed"}
+FARFOLD_CONPTY_OWNER {"case":"Reservation","childExit":0,"stdoutEOF":true,"stderrEOF":true,"directJobInactive":true}

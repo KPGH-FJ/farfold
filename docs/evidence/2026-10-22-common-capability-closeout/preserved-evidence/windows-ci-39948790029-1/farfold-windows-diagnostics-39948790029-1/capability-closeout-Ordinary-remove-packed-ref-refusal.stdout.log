@@ -1,0 +1,6 @@
+
+running 1 test
+test worktrees::windows_scope::remove_metadata::tests::packed_only_selected_ref_is_explicitly_refused_without_claiming_absence_lock ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 1.68s
+

@@ -1,0 +1,538 @@
+{
+  "schema": 1,
+  "head": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "finalHead": "fd89b57ed07bd2e2cc3564b761fc29675932d68e",
+  "headStable": true,
+  "mode": "FullSecurityManual",
+  "testBinarySha256": "4A0667E1DE8AA68BF788A2CA96ED9704773937180E1EF8FDA6502CE9380BF7EB",
+  "fixtureSha256": "6F3330791B4E3D703E1B1848627A87B9EFFD4CB9A96B394749C798C80CFD0BB2",
+  "runnerScriptSha256": "7F4168B54DBAE6B73ACA77FCB0453ACFC7CC6AA6757F0125960FEC81FEB9BC7B",
+  "inputsStable": true,
+  "plannedOrdinaryTests": 123,
+  "plannedManualTests": 17,
+  "plannedTotalTests": 140,
+  "caseManifestSha256": "B7CF34951CD8BAFE575DC8AA1794A13A1DEDE745197FF2281CABCCA94A402B3F",
+  "focusedSubsetOnly": true,
+  "selectedCaseNames": [
+    "public-retained-cold-recover",
+    "remove-late-ea",
+    "remove-late-security",
+    "public-remove-cold-recover"
+  ],
+  "selectedTests": 4,
+  "groupCount": 4,
+  "groups": [
+    {
+      "group": "public-retained-cold-recover",
+      "filter": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+      "category": "ownedActualPublicRecoveryWithoutDelete",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck"
+      ],
+      "actualPassedNames": [
+        "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:42:05.9406672Z",
+      "finishedAtUtc": "2026-10-23T11:43:52.3136494Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": {
+        "schema": 1,
+        "case": "worktrees::recovery_cold_windows_tests::public_cold_recover_with_original_retained_keeps_source_and_requires_explicit_recheck",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "2A03B1FE15D14D73C5C2498B2931F5645C19ACA4141EC80B4697EC3E4EEFA264",
+      "stderrSha256": "995A1738F6FD8CE00ECFB8103FB3DD6F6EF27CBA7DF7E7B704C1B6DC416293CC"
+    },
+    {
+      "group": "remove-late-ea",
+      "filter": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+      "category": "ownedActualFinalCallbackPreservation",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved"
+      ],
+      "actualPassedNames": [
+        "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:43:52.5754607Z",
+      "finishedAtUtc": "2026-10-23T11:45:37.9753391Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=ea",
+      "phaseMarkerMatches": 1,
+      "injectionPhaseReached": true,
+      "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::late_ea_after_complete_native_fence_must_be_preserved",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "8E7D4E4061934B7AD3A7DEF2F4ABB0D84F5DE45BADC1AE1334A4648527F4D0B3",
+      "stderrSha256": "431877C679BCF8CFE33AB39897B623F9A83306B16C677AE0D48F890EE93F846C"
+    },
+    {
+      "group": "remove-late-security",
+      "filter": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+      "category": "ownedActualFinalCallbackPreservation",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery"
+      ],
+      "actualPassedNames": [
+        "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery"
+      ],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+          "outcome": "ok"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:45:38.0966224Z",
+      "finishedAtUtc": "2026-10-23T11:47:21.0598903Z",
+      "exitCode": 0,
+      "summaryCount": 1,
+      "finalSummary": "test result: ok. 1 passed; 0 failed; 0 ignored;",
+      "namesExact": true,
+      "exactGroupPassed": true,
+      "expectedPhaseMarker": "FARFOLD_REMOVE_FINAL_CALLBACK_INJECTED kind=security",
+      "phaseMarkerMatches": 1,
+      "injectionPhaseReached": true,
+      "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": {
+        "schema": 1,
+        "case": "worktrees::remove_native_windows_tests::security_change_in_final_callback_is_rejected_with_valid_recovery",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 0,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "940EF7F2915D89F8395E1FF4E921591F3CA1C637C5A516F32D169391C64ACDF4",
+      "stderrSha256": "644DAFAC5AA318D777CC1972E98257B42963ADA5F4D042B76190A97E59E8BFD9"
+    },
+    {
+      "group": "public-remove-cold-recover",
+      "filter": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+      "category": "ownedActualPublicRecoveryWorkflow",
+      "explicitIgnored": true,
+      "exactFilter": true,
+      "expectedTests": 1,
+      "expectedNames": [
+        "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository"
+      ],
+      "actualPassedNames": [],
+      "actualNamedOutcomes": [
+        {
+          "name": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+          "outcome": "FAILED"
+        }
+      ],
+      "startedAtUtc": "2026-10-23T11:47:21.1132286Z",
+      "finishedAtUtc": "2026-10-23T11:51:42.1883621Z",
+      "exitCode": 101,
+      "summaryCount": 1,
+      "finalSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored;",
+      "namesExact": false,
+      "exactGroupPassed": false,
+      "expectedPhaseMarker": null,
+      "phaseMarkerMatches": 0,
+      "injectionPhaseReached": false,
+      "privilegeCondition": "granted-existing-SeSecurity-distinct-test-child",
+      "privilegeConditionSatisfied": true,
+      "privilegeConditionEvidence": {
+        "schema": 1,
+        "case": "worktrees::recovery_public_windows_tests::public_remove_then_cold_recover_keeps_native_material_and_git_without_original_repository",
+        "status": "testCompleted",
+        "testExecuted": true,
+        "testExitCode": 101,
+        "manualTestDeadlineMs": 300000,
+        "testTimedOut": false,
+        "timeoutTerminationSucceeded": null,
+        "timeoutTerminationError": null,
+        "distinctChildToken": true,
+        "privilegeRequested": "SeSecurityPrivilege",
+        "childBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": true,
+            "attributes": 2
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "childStateObservation": "before and after enablement, both before the test primary thread resumes",
+        "adjustCalled": true,
+        "adjustSucceeded": true,
+        "adjustLastError": 0,
+        "onlyRequestedPrivilegeChanged": true,
+        "parentBefore": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentAfter": {
+          "SeSecurityPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeBackupPrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          },
+          "SeRestorePrivilege": {
+            "present": true,
+            "enabled": false,
+            "attributes": 0
+          }
+        },
+        "parentPrivilegeTableUnchanged": true,
+        "backupRestoreAdjusted": false,
+        "accountOrPolicyChanged": false,
+        "scope": "owned selected manual test child only; default ordinary caller token untouched"
+      },
+      "conditionUnavailable": false,
+      "testExecuted": true,
+      "stdoutSha256": "E2B9F67927E24B47080C7A8D819A2AE3088A1B6BE5D562F3E02066E8E3CAA5F5",
+      "stderrSha256": "F5D0D347A0C46838C5595E5CE6E081C2420E0DEDEFF03F0B8AB6899B55A3919B"
+    }
+  ],
+  "exactAllGroupsPassed": false,
+  "historicalInventoriesChanged": false,
+  "explicitManualFailuresAreSuccessfulTests": false,
+  "privilegesAdjusted": true,
+  "ordinaryDefaultTokenAdjusted": false,
+  "fullSecurityFallbackUsed": false,
+  "syntheticOrOrdinaryRefusalIsNativeSuccess": false,
+  "completePayloadSecurityOrAliasRestoreClaim": false,
+  "fullTreeOrManifest2Complete": false,
+  "productOrAllWindowsComplete": false
+}
