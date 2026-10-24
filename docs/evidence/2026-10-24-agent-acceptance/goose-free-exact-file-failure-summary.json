@@ -1,0 +1,166 @@
+{
+  "kind": "ScopedInstalledRealAgentExactOwnedFileFailureSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "root-reviewed-documentation-checkpoint",
+  "recordedAt": "2026-10-24T14:31:57.412797Z",
+  "agentId": "goose",
+  "observedAgentVersionAsDeclared": "1.52.0",
+  "formalProductCommitAsDeclared": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+  "formalProductBinarySha256AsDeclared": "a079149aec68a55fb50bdc490c6b7fd9865e9948321fd3d546f680b51ebb3496",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "filesystemSource": "root-independent-endpoint-record",
+  "result": "original-exact-file-case-failed-final-lf-missing",
+  "originalExpectation": {
+    "expectedOutcome": "success",
+    "utf8ByteCountIncludingFinalLf": 25,
+    "oneFinalLf": true,
+    "bomAllowed": false,
+    "payloadSha256": "f9d15678638867fc99a7109709899e37ffc042dd5073e857cea1a1748cbe771e",
+    "expectationChangedAfterExecution": false
+  },
+  "actualEndpointAsRecorded": {
+    "regularFile": true,
+    "symlink": false,
+    "utf8ByteCount": 24,
+    "payloadSha256": "49f0ffd525fbe2cab3c2d31340bb0584cc90e03e84579c8758b197e7e436bd07",
+    "exactExpectedUtf8": false,
+    "oneFinalLfNoBom": false,
+    "immediateDirectoryContainedOnlyExpectedTarget": true,
+    "observerWrites": 0,
+    "recordedDigestMatchesExpectedPayloadWithOnlyFinalLfRemoved": true
+  },
+  "boundedExecution": {
+    "ordinaryRequests": 1,
+    "retries": 0,
+    "stopRequests": 0,
+    "fileRepairs": 0,
+    "sentAt": "2026-10-24T14:10:26.545Z",
+    "completionFirstObservedAt": "2026-10-24T14:11:51.561Z",
+    "currentPanelOpenedAt": "2026-10-24T14:12:12.119Z",
+    "filesystemEndpointRecordedAt": "2026-10-24T14:13:03.794Z",
+    "recognizedCompletionAndCurrentConversationIdleObserved": true,
+    "timeMeaning": "Recorded installed-UI observations and later endpoint, not exact raw backend completion time."
+  },
+  "positiveNarrativeOnly": {
+    "endedToolStepVisible": true,
+    "reportedWriteResultVisible": true,
+    "toolLinkedCurrentFilePanelOpened": true,
+    "currentMarkerVisible": true,
+    "positiveObservationsCreateNewPassingCase": false,
+    "meaning": "Tool-ended status, a location link and visible content do not satisfy the unchanged exact byte/LF expectation."
+  },
+  "preExecutionInputRevision": {
+    "oldInputExceededDisplayBoundAsReported": true,
+    "oldExactLengthIndependentlyComputed": false,
+    "oldInputSubmitCount": 0,
+    "newInputCharacters": 365,
+    "newPlanAndManifestPreparedBeforeSend": true,
+    "fullShortInputMatchedBeforeSend": true,
+    "shorterInputWasAnAgentRetry": false,
+    "oldPlanOrPromptReopenedByPublisher": false
+  },
+  "earlierReadOnlyProbe": {
+    "originalEndpointAssertionFailedBeforeReceiptCreation": true,
+    "originalFailurePreservedInEndpointAndSemanticRecords": true,
+    "subsequentCompleteReadOnlyEndpointRetained": true,
+    "extraModelRequestOrFileRepair": false,
+    "originalRawProbeOutputReopenedByPublisher": false
+  },
+  "laterFullToolInputUiObservation": {
+    "observedAt": "2026-10-24T14:22:25.983Z",
+    "fullInputExpanded": true,
+    "displayedContentHasRequestedLf": false,
+    "displayedContentMatchesRecorded24BytePayload": true,
+    "rawRpcCaptured": false,
+    "newRequests": 0,
+    "writes": 0,
+    "postdatesOriginalSemanticReview": true,
+    "canonicalReceiptOrOriginalReviewRewritten": false,
+    "originalFailureUnchanged": true,
+    "uniqueTransformationOriginEstablished": false
+  },
+  "mechanicalValidation": {
+    "summaryWriterValidatorCalls": 0,
+    "validatorCallsAsRecorded": 1,
+    "naturalExitCodeAsRecorded": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": false,
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 0,
+      "expectedRejection": 0,
+      "failed": 1,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 3,
+      "privateEvidenceFiles": 3
+    },
+    "errors": [],
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true,
+    "nonzeroExitMeaning": "The completed validation reports the checked case failure; it is not a harness crash or an invalid receipt."
+  },
+  "semanticReview": {
+    "disposition": "retain-failed-exact-file-case; no post-hoc positive case created",
+    "originalCasePassed": false,
+    "laterObservationIndependentlyUiReplayedByReviewerOrPublisher": false,
+    "actualFileReopenedByReviewerOrPublisher": false,
+    "externalAppConfigurationOrAuthorityFilesRehashedByPublisher": false,
+    "recordedObservationCount": 12,
+    "plannedObservationCount": 16,
+    "fourFreshPreflightObservationsNotFabricated": [
+      "same-owned-conversation",
+      "owned-cwd-current",
+      "confirmed-options-current",
+      "owned-workspace-empty-before"
+    ],
+    "meaning": "A complete failure record does not prove all preflight observations. Missing declarations were not filled from expected values; the payload mismatch is sufficient to retain this original failed case."
+  },
+  "intendedRequirementSubcondition": {
+    "conditionId": "requirement:P18",
+    "excerpt": "能定位并核验对应磁盘文件",
+    "originalCasePassed": false,
+    "wholeConditionAccepted": false,
+    "positiveLocationNarrativeOnly": true
+  },
+  "acceptance": {
+    "standardIds": [],
+    "standardCellsAdded": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "newAfterTheFactPassingCaseCreated": false
+  },
+  "limits": [
+    "The tool was reported ended and a file existed; this is not a file-write rejection or proof that a failed tool was falsely shown as written.",
+    "The later tool-input UI also displays no LF, but no raw RPC/tool payload capture establishes the unique Agent, SDK, transport, presentation or writer cause.",
+    "No full P18, diff/command/log/failure matrix, exhaustive IO, effective backend model/reasoning, account entitlement, stop or cold-restoration proof is established.",
+    "Current idle does not settle older failed or unknown operations. No repair, retry or expectation relaxation was performed.",
+    "The publisher read only nine explicitly named JSON records; no App, actual target/workspace, user configuration, database, raw protocol log or process was accessed."
+  ],
+  "digests": {
+    "source-plan-v2": "e9ba560af529fac56f1e5f7777e143ff9d14098cffbacfc47d960e0e613b93d3",
+    "manifest-v2": "54df6303a53b29db2d1d834df64ae2fbece98d279381dd614400334d0bcd2ac9",
+    "input-observation": "672453422e25fdd541b00bb5c95a25fc7fc0fe314aeebc3ce59df01bda57808c",
+    "ui-result-observation": "705ec706d5348a9be438f6f67aa58dc51801e63f8d87b066b108de5ce868c495",
+    "filesystem-result": "168044f18020627b9fe5f6648e27a8afe75f8f893d1dc939bebf0072d2ed1400",
+    "actual-receipt": "d5cc3215b1a6c6470ee968bfc2b599d03f84c23f89a9432b53d87030d74f1d7e",
+    "validation-report": "3a8116179d7476289972d426ec393edfedbe2b86756cb466aaa52aef0185d61c",
+    "semantic-review": "6db643a4c972c5e8c781bf60f3efe4c8a936c282c5b7298a4b5116500114f51e",
+    "full-tool-input-ui-observation": "e12fc781068f9e518ad029f441bb5a946b6abbbc837bc9997040f9cce65e429b"
+  },
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "promptReplyOrPayloadBodiesIncluded": false,
+    "actualTargetPathsOrFilesystemIdentityIncluded": false,
+    "credentialsOrAccountSessionIdentifiersIncluded": false,
+    "rawPrivateDetailsIncluded": false
+  },
+  "originalEvidenceRewritten": false
+}

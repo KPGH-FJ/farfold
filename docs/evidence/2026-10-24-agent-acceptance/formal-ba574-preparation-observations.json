@@ -1,0 +1,62 @@
+{
+  "kind": "ScopedInstalledPreparationAndModelPresentationObservation",
+  "recordedAt": "2026-10-24T15:00:34.386681+00:00",
+  "formalSourceCommit": "ba574aba0f62a5d749c1c02346a9c12e6758a993",
+  "formalBinarySha256": "68cb005b057cf566554afa67848dd96e6c86890d5861a6459b2cd95345711c0b",
+  "directObservationChannel": "installed-ui",
+  "scope": "Three own empty new-draft preparation observations; no ordinary prompts, retries, login or explicit configuration confirmations.",
+  "newOrdinaryRequests": 0,
+  "retries": 0,
+  "explicitConfigurationConfirmations": 0,
+  "observations": [
+    {
+      "agentId": "pi",
+      "preparations": 1,
+      "result": "failed",
+      "message": "创建会话失败：设置尚未确认，请检查后重试。Agent 当前未提供某项已保存设置。",
+      "correctionEntryVisible": true,
+      "modelDialogMirrorsSameError": true,
+      "existingModelChoiceDisabled": true,
+      "savedChoiceChangedByObserver": false,
+      "uniqueMissingKeyEstablished": false,
+      "canonicalCatalogId": "pi-acp"
+    },
+    {
+      "agentId": "devin",
+      "preparations": 1,
+      "result": "failed",
+      "message": "创建会话失败：设置尚未确认，请检查后重试。已保存的选择当前不可用。",
+      "correctionEntryVisible": true,
+      "savedChoiceChangedByObserver": false,
+      "uniqueUnavailableKeyEstablished": false
+    },
+    {
+      "agentId": "copilot",
+      "preparations": 1,
+      "result": "prepared-ui-only",
+      "modelDialog": "Auto · Let Copilot pick the best model · Auto",
+      "visibleSelectedRows": 1,
+      "modeLabel": "Agent",
+      "allowAllLabel": "Off",
+      "otherModelOptionClicked": false,
+      "inferenceEffectVerified": false
+    }
+  ],
+  "limits": [
+    "Preparation used a previously created own test folder, different from some older observations; this is not an identical-input comparison.",
+    "No exact unavailable or missing setting key was observed; the messages do not prove a unique backend failure cause.",
+    "One current selected Auto row does not prove every model catalog or all distinct same-name options.",
+    "The observer did not delete saved keys, accept defaults, confirm new choices, retry failures or send a model request.",
+    "This is direct UI observation, not a mechanically validated real-Agent prompt case or full configuration-effect proof."
+  ],
+  "completeStandardsNewlyAccepted": 0,
+  "completeRequirementsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "privacy": {
+    "credentialsIncluded": false,
+    "accountIdentifiersIncluded": false,
+    "userBodiesIncluded": false,
+    "absoluteUserPathsIncluded": false
+  },
+  "agentIdNamespace": "Local display aliases only, not canonical acceptance-index keys; no standard-cell claims."
+}

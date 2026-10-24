@@ -1,0 +1,247 @@
+{
+  "kind": "FormalBa574InstallationAndFirstLaunchPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "root-reviewed-documentation-checkpoint",
+  "recordedAt": "2026-10-24T14:55:21.031300Z",
+  "sourceCommit": "ba574aba0f62a5d749c1c02346a9c12e6758a993",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "68cb005b057cf566554afa67848dd96e6c86890d5861a6459b2cd95345711c0b",
+    "liveAppRehashedByPublisher": false
+  },
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "engineering": {
+    "allSevenSucceededAsRecorded": true,
+    "inputCount": 2261,
+    "frontend": {
+      "files": 673,
+      "passed": 8866,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2256,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "checksRanBeforeCommitAtHead": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+    "checksRanAtFinalCommit": false,
+    "sourceEndpointEqualityAsRecorded": true,
+    "independentReviewNoBlockers": true,
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/engineering-summary.json",
+      "sha256": "1c99033b42fafdbddb54d0d26b6492bab061f7f10035fb604d967e547ef199a4"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/independent-engineering-review.json",
+      "sha256": "708338a3e36a6fce7d4b8e11c6311a02d99fa547eb0837c53035f9ee6f193f58"
+    },
+    "meaning": "Existing full-seven and independent evidence apply to the exact declared input map. This publisher did not rerun checks or reopen logs; endpoint equality is not uninterrupted writer or environment proof."
+  },
+  "candidate": {
+    "actualBuildCommandsStarted": 1,
+    "naturalBuildExitCode": 0,
+    "rebuilds": 0,
+    "sourceInputCount": 2261,
+    "evidencePinCount": 20,
+    "preparationTextPinCount": 8,
+    "candidateIndependentChecksPassed": 9,
+    "candidateIndependentChecksTotal": 9,
+    "exactBundleFileCount": 5,
+    "architecture": "arm64",
+    "archiveSha256": "d26bbe428bed5cf93791b5bf7486726fd973065237145a822f04d00d361a22b5",
+    "archiveBytes": 16092621,
+    "rootBuildCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/root-candidate-build-completion.json",
+      "sha256": "38fe0f272b5bb7dec8adb3622763d2004d768a1000042cf1cf60904faf3f8865"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/independent/review-v2.json",
+      "sha256": "7a29e98ea9f6349b78ba1c55f653e517ea9d11a74a6476f5df18239f5c9e43ee"
+    }
+  },
+  "preservedPreparationHistory": {
+    "preBuildCliRejections": 2,
+    "actualBuildCommandsStartedByRejectedCalls": 0,
+    "preBuildFailuresAreNotProductFailuresOrRebuilds": true,
+    "originalParametersCheckerTemplatesAndEarlierRecordsRetained": true,
+    "currentInstalledTenCheckerLabelAsRootReported": "v5",
+    "earlierPrivatePublicDraftRetained": {
+      "path": "output/2026-10-24-agent-acceptance/ba574-install-public-draft.json",
+      "sha256": "ba666528ce6a6c0064ef1449187c84d128ab57069048aa33ccf18c046c379008"
+    },
+    "parameterCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/parameters-v2-correction.json",
+      "sha256": "1fd998a0ae8793ae1386894b7119ae43f6181fbfb52339641a142e82855db36c"
+    },
+    "meaning": "Earlier preparation and checker-compatibility records remain historical evidence. The current installed-ten result is recorded separately; no earlier result is overwritten.",
+    "installedCheckerEvolution": [
+      {
+        "checker": "v3",
+        "classification": "static-compatibility-adjustment-only",
+        "actualExecutionClaimed": false,
+        "change": "Read engineering base from already pinned before/after/report rather than missing redundant freeze engineeringBaseHead."
+      },
+      {
+        "checker": "v4",
+        "classification": "one-actual-failed-command-before-result",
+        "naturalExitCode": 1,
+        "error": "KeyError: sourceBefore",
+        "failureReceipt": {
+          "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/installed-ten-v4-schema-failure.json",
+          "sha256": "da37d597459a9ff8198531fbe46c741b64d25e64b688fde96b670accb66d24e3"
+        }
+      },
+      {
+        "checker": "v5",
+        "classification": "one-actual-passing-command",
+        "naturalExitCode": 0,
+        "checksPassed": 10,
+        "change": "Use pinned candidate evidence map for before/after links; retain frozen engineeringSummary, full input maps and remaining checks.",
+        "scriptSha256": "8e356e8468381486a59e0b52767f92726808ce9e7fabc41733063f03c429bb31"
+      }
+    ]
+  },
+  "normalQuit": {
+    "quitRequestedAt": "2026-10-24T14:35:43.280Z",
+    "saveAndQuitAt": "2026-10-24T14:36:02.214Z",
+    "recordedAt": "2026-10-24T14:36:28.117610+00:00",
+    "normalSaveAndQuitRecordedByRoot": true,
+    "existingExplicitUserAuthorityAsRecorded": true,
+    "forcedQuit": false,
+    "oldUnknownOutcomesSettled": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/root-normal-quit.json",
+      "sha256": "7dd95fb24520bb6849914cd43543eb25e85731915df44838c809ab315f67990b"
+    },
+    "meaning": "Normal update exit does not determine old unknown request terminal states. No live process information is published."
+  },
+  "dataRetentionAsRecorded": {
+    "endpoints": ["before", "preinstall", "after"],
+    "entriesPerEndpoint": 232530,
+    "threeFullManifestsByteIdenticalAsIndependentlyRecorded": true,
+    "rootAlsoReportedAllThreeCaptureCommandsNaturalZero": true,
+    "retainedMetadataBackupAndFirstCaptureCheckPassedAsRecorded": true,
+    "rawDataArtifactsOpenedByPublisher": false,
+    "dataFingerprintsBackupDigestsAndDataPathsPublished": false,
+    "evidence": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "6525053ffdad469b80bf21865a0e25e707648460466f4f240332695674231b4b"
+    },
+    "meaning": "Counts and equality are projections of the named installed-ten metadata and root completion report. This publisher did not open any retention receipt, full manifest, capture, backup, SQL or actual user record."
+  },
+  "atomicInstallation": {
+    "phaseAsRecorded": "installedVerifiedNotLaunched",
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileReplacementCount": 5,
+    "eachReplacementUsedNewInodeAsRecorded": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "recordedAt": "2026-10-24T14:40:10.214948+00:00",
+    "afterFullManifestStillRequiredAtReceiptTime": true,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/install/install-result.json",
+      "sha256": "69976ece1e2441c2b1d6e317d8ebd980dcd5c01a77acaa5416945abb9c2a70c1"
+    },
+    "meaning": "This original receipt predates after capture, installed-ten, cleanup and first launch; its stage flags are historical, not the current state."
+  },
+  "installedIndependentReview": {
+    "status": "passed-as-recorded",
+    "passed": 10,
+    "total": 10,
+    "failureCount": 0,
+    "recordedAt": "2026-10-24T14:50:13.033995+00:00",
+    "scope": "Source and evidence seals, exact five files and modes, identity, arm64, internal strict signature, archive, recorded closed/no-launch observations, retained metadata and three-endpoint data equality.",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "6525053ffdad469b80bf21865a0e25e707648460466f4f240332695674231b4b"
+    },
+    "meaning": "The reviewer record is read and projected, not rerun by this publisher. Its historical no-launch stage is distinct from the later first-launch observation.",
+    "continuousProcessAbsenceClaimed": false
+  },
+  "duplicateCandidateCleanup": {
+    "status": "completed-as-recorded",
+    "exactGeneratedFilesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "zipPreservedAfterCleanup": true,
+    "recordedAt": "2026-10-24T14:50:36.089824+00:00",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-focus-install-preparation/install/candidate-cleanup.json",
+      "sha256": "51280a26d3f3d6c9924544127b204eb0e6618fe06fe279058c8ffa1823a0e270"
+    }
+  },
+  "firstLaunch": {
+    "status": "root-observed",
+    "recordedAt": "2026-10-24T14:52:54.888542+00:00",
+    "formalIdentityMatchesRecordedCommitAndBinary": true,
+    "newConversationAndPreservedDraftVisible": true,
+    "visibleModelOptionMouseSelectionOpenedReview": true,
+    "reviewShowedCurrentAndPendingChoices": true,
+    "cancelReadBackOriginalChoice": true,
+    "configurationConfirmations": 0,
+    "newRequests": 0,
+    "modelChanged": false,
+    "initialOutsideMenuCoordinateDismissalCountedAsModelSelection": false,
+    "clippingReproduced": true,
+    "clippingFixed": false,
+    "allMenuIssuesResolved": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/ba574-first-launch-ui-observation.json",
+      "sha256": "17589355e61f6dee8e2f25294263668359ca85b1bef42a9c6934c7cc3712a265"
+    },
+    "meaning": "One visible mouse option reached Review and Cancel retained the original choice. The top and nested search/list clipping remained visible. This is a narrow installed interaction observation, not confirmation of a new model or any inference effect."
+  },
+  "earlierGooseExactFileCase": {
+    "expectedBytesIncludingOneLineFeed": 25,
+    "observedBytes": 24,
+    "missingFinalLineFeed": true,
+    "passed": 0,
+    "failed": 1,
+    "laterToolInputUiPositiveDoesNotCreatePostHocPass": true,
+    "uniqueFarfoldDefectOrCauseEstablished": false,
+    "repairRetryOrNewRequestByThisSummary": false,
+    "meaning": "The earlier one-request file case remains failed despite completion and positive tool/path observations. Without raw protocol evidence, the missing line feed is not attributed uniquely to Farfold."
+  },
+  "completeStandardsNewlyAccepted": 0,
+  "completeRequirementsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "Source, engineering, candidate, installation, narrow installed interaction and real-Agent outcome evidence remain separate. All 29 agents, eight standards and 151 original conditions remain in scope; complete acceptance remains unfinished.",
+    "Normal exit, installation and launch do not settle old unknown request outcomes or reconstruct lost historical facts.",
+    "The current pointer Review/Cancel observation does not prove all menu issues fixed. Clipping was reproduced and remains unresolved.",
+    "No new App, Agent, model request, helper, test, build, data inspection or configuration action was executed by this publisher."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "userDataRecordsOrPathsIncluded": false,
+    "userBodiesIncluded": false,
+    "credentialsOrAccountSessionIdentifiersIncluded": false,
+    "processDetailsIncluded": false,
+    "dataFingerprintsOrPrivateBackupDigestIncluded": false,
+    "rawPrivateCheckDetailsIncluded": false
+  },
+  "supersedesIntermediateDraft": {
+    "path": "output/2026-10-24-agent-acceptance/ba574-install-public-final-draft.json",
+    "sha256": "181b0c7623b7c0f47c7fd45367e2b1545a11dd8e9d1ee339fa47429cee3b6eaa",
+    "reason": "Clarify that recorded no-launch observations are not continuous absence, and unfinished complete acceptance does not reset earlier partial results."
+  }
+}
