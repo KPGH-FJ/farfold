@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "kind": "EvidenceToolingInheritedDefinitionFinalSummary",
+  "preparedAt": "2026-10-24T03:23:55.798Z",
+  "scope": "inherited-run-context-input-and-selected-dependency-definition-binding",
+  "evidenceLevel": "shared",
+  "previousCheckpoint": {
+    "path": "docs/evidence/2026-10-24-agent-acceptance/requirement-only-tooling-summary.json",
+    "sha256": "40ca4b63f11a456c98d71b0fd1ea6c5e2308b3e52161a053516169c859503ea3",
+    "bytes": 4443,
+    "status": "preserved-incomplete-for-inherited-definition-reuse",
+    "testsPassed": 107,
+    "testsFailed": 0,
+    "independentDefinitionCounterexamples": 10,
+    "independentPublicProjectionNegativeControls": 4
+  },
+  "definition": {
+    "algorithm": "sha256-canonical-json",
+    "fields": ["case", "context", "inputs", "dependencies"],
+    "case": "complete-expected-case",
+    "context": "complete-run-context",
+    "inputs": "complete-run-inputs",
+    "dependencies": "full-declarations-filtered-by-case-dependency-ids",
+    "reportAndRevalidation": "same-helper",
+    "newSchemaFields": 0,
+    "oldCaseOnlyDigest": "revalidate",
+    "missingOrChangedDigest": "revalidate",
+    "cleanPriorResult": "matches-current-expected-outcome",
+    "unrelatedDependencyChange": "unaffected-case-remains-reuse-candidate",
+    "unchangedDefinition": "reuse-candidate",
+    "originalResults": "retained",
+    "originalManifestReferences": "retained",
+    "priorFailedEvidence": "retained",
+    "originalEvidenceRewritten": false,
+    "automaticAcceptance": false
+  },
+  "checks": {
+    "inheritedCounterexampleRed": {
+      "files": 2,
+      "tests": 121,
+      "passed": 108,
+      "failed": 13
+    },
+    "finalImplementation": {
+      "files": 2,
+      "tests": 122,
+      "passed": 122,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "finalIndependent": {
+      "files": 2,
+      "tests": 122,
+      "passed": 122,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "inheritedMutationTestRows": 12,
+    "additionalIndependentInheritedVariants": {
+      "total": 6,
+      "revalidated": 6,
+      "failed": 0
+    },
+    "independentUnchangedTwoCaseControl": "both-reuse-candidate",
+    "independentOldCaseOnlyDigestControl": "both-revalidate",
+    "independentDependencyClosureControl": "related-revalidate-unrelated-reuse-candidate",
+    "formatting": "passed",
+    "whitespace": "passed",
+    "sourceHashesBeforeAfterIndependentReview": "matched",
+    "maxSourceLines": 1188,
+    "sourceLineLimit": 1500
+  },
+  "unchangedSemantics": {
+    "explicitEmptyStandardIds": "requirement-only",
+    "requirementIdsMinimum": 1,
+    "requirementConditions": "required",
+    "requirementQuery": "retained",
+    "standardCellObservations": 0,
+    "installedNonModelSelection": "optional",
+    "installedAppIdentity": "required",
+    "installedObservedAgentVersion": "required",
+    "providedSelection": "strict-shape-and-context-equality",
+    "realAgentSelection": "required"
+  },
+  "sourceRefs": [
+    {
+      "path": "scripts/acceptance-receipts.mjs",
+      "sha256": "a65f507066ec543798226134cbe8c5b26bcf5929074630905ea9370d49c98009",
+      "bytes": 34734
+    },
+    {
+      "path": "scripts/acceptance-receipts.test.mjs",
+      "sha256": "24e7a218e247f7f27d631ce4a285259ebb7103168b82218c17e790bb97b0bd3e",
+      "bytes": 42791
+    },
+    {
+      "path": "scripts/acceptance-index.mjs",
+      "sha256": "2b5da7ec3d9810a00def9d46893ea45899452e7222be8dcd68d065e8922fc04e",
+      "bytes": 24937
+    },
+    {
+      "path": "scripts/acceptance-index.test.mjs",
+      "sha256": "f73e46c9e67120a16d692120427206e7e8c740195f9ce8d26bc9b72d15f51ee4",
+      "bytes": 30433
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/requirement-only-tooling/implementation-final.json",
+      "sha256": "e0d8e1ad57defeebf801c81917fb3993adac7fb6b76e30128ea01282ccd545a6",
+      "bytes": 4606
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/requirement-only-tooling/independent-review-final.json",
+      "sha256": "4b97869f8cd16d605a0ade3401fc8246e59c1ed6771be728d162c8399bfabaa4",
+      "bytes": 5391
+    }
+  ],
+  "boundaries": {
+    "appOrAgentActions": false,
+    "realUiRepeated": false,
+    "productSourceChanged": false,
+    "productUiChanged": false,
+    "productPlanChanged": false,
+    "authorityConditionsChanged": false,
+    "publicProjectionTrustBoundaryExpanded": false,
+    "installedProductBehaviorVerified": false,
+    "completeRequirementAccepted": false,
+    "standardAccepted": false,
+    "agentAccepted": false,
+    "acceptedGridCells": 0,
+    "p40RealEvidenceIncluded": false,
+    "automaticAcceptance": false,
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  }
+}

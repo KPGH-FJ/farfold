@@ -222,6 +222,181 @@ describe("explicit mapping and dependency protection", () => {
 });
 
 describe("evidence observations cannot become acceptance", () => {
+  it("keeps unmapped P32 observations by requirement and never projects them into a standard, even if a later relation is added", () => {
+    const p32 = authorities.requirements.find((item) => item.id === "P32");
+    const only = observation({
+      caseId: "p32-requirement-only",
+      standardIds: [],
+      requirementIds: ["P32"],
+      coveredConditions: [
+        {
+          conditionId: "requirement:P32",
+          condition: p32.completion,
+          excerpt: "附件内容查找、来源和跳转",
+        },
+      ],
+    });
+    for (const chosenMapping of [
+      undefined,
+      {
+        links: [{ standardId: "S8", requirementIds: ["P32"] }],
+        newPackages: {},
+      },
+    ]) {
+      const index = buildAcceptanceIndex({
+        authorities,
+        mapping: chosenMapping,
+        coverage: [only],
+      });
+      expect(index.coverage).toEqual([only]);
+      expect(index.cells).toHaveLength(232);
+      expect(
+        index.cells.every(
+          (cell) =>
+            cell.acceptance === "unreviewed" &&
+            evidenceLevels.every(
+              (level) => cell.observations[level].length === 0,
+            ),
+        ),
+      ).toBe(true);
+      expect(
+        queryAcceptanceIndex(index, { requirementId: "P32" }, { authorities })
+          .coverage,
+      ).toEqual([only]);
+      expect(
+        queryAcceptanceIndex(
+          index,
+          { agentId, requirementId: "P32" },
+          { authorities },
+        ).coverage,
+      ).toEqual([only]);
+      expect(
+        queryAcceptanceIndex(index, { standardId: "S8" }, { authorities })
+          .coverage,
+      ).toEqual([]);
+      expect(
+        validateAcceptanceIndex(index, authorities).acceptanceVerified,
+      ).toBe(false);
+    }
+    const mixed = buildAcceptanceIndex({
+      authorities,
+      mapping,
+      coverage: [observation(), only],
+    });
+    expect(
+      queryAcceptanceIndex(mixed, { standardId: "S5" }, { authorities })
+        .coverage,
+    ).toEqual([observation()]);
+    expect(
+      queryAcceptanceIndex(mixed, { requirementId: "P32" }, { authorities })
+        .coverage,
+    ).toEqual([only]);
+    expect(
+      mixed.cells.filter((cell) => cell.observations.installed.length > 0),
+    ).toHaveLength(1);
+  });
+
+  it("requires real requirement conditions for requirement-only successes and never borrows another NEW package assignment", () => {
+    const p32 = authorities.requirements.find((item) => item.id === "P32");
+    const only = observation({
+      standardIds: [],
+      requirementIds: ["P32"],
+      coveredConditions: [
+        {
+          conditionId: "requirement:P32",
+          condition: p32.completion,
+          excerpt: "附件内容查找、来源和跳转",
+        },
+      ],
+    });
+    for (const change of [
+      { requirementIds: [] },
+      { requirementIds: ["P999"] },
+      { requirementIds: ["P32", "P18"] },
+      {
+        coveredConditions: [authorities.common[0]].map((entry) => ({
+          ...entry,
+          excerpt: entry.condition,
+        })),
+      },
+      {
+        coveredConditions: [
+          {
+            conditionId: "standard:S3",
+            condition: authorities.standards[2].condition,
+            excerpt: "真实正文",
+          },
+        ],
+      },
+      {
+        coveredConditions: [
+          {
+            ...only.coveredConditions[0],
+            condition: only.coveredConditions[0].excerpt,
+          },
+        ],
+      },
+      {
+        coveredConditions: [
+          { ...only.coveredConditions[0], excerpt: "invented" },
+        ],
+      },
+      {
+        attemptResults: [
+          {
+            attemptId: "failed-first",
+            status: "failed",
+            outcome: "failure",
+            level: "installed",
+            issues: [],
+          },
+        ],
+      },
+      { acceptanceVerified: true },
+    ])
+      expect(() =>
+        validateCoverage({ ...only, ...change }, authorities),
+      ).toThrow();
+    expect(() =>
+      validateCoverage(
+        observation({
+          requirementIds: [],
+          coveredConditions: [
+            {
+              conditionId: "standard:S5",
+              condition: authorities.standards[4].condition,
+              excerpt: "Agent工作能力完整",
+            },
+          ],
+        }),
+        authorities,
+      ),
+    ).toThrow();
+    const new29 = authorities.requirements.find((item) => item.id === "NEW-29");
+    const new24 = authorities.requirements.find((item) => item.id === "NEW-24");
+    const newOnly = observation({
+      standardIds: [],
+      requirementIds: ["NEW-24", "NEW-29"],
+      coveredConditions: [new24, new29].map((entry) => ({
+        conditionId: entry.conditionId,
+        condition: entry.completion,
+        excerpt: entry.completion,
+      })),
+    });
+    expect(() =>
+      validateCoverage(newOnly, authorities, {
+        links: [],
+        newPackages: { "NEW-24": ["C", "K"] },
+      }),
+    ).toThrow(/NEW-29/);
+    expect(
+      validateCoverage(newOnly, authorities, {
+        links: [],
+        newPackages: { "NEW-24": ["C", "K"], "NEW-29": ["C", "D", "K"] },
+      }).mechanicallyValid,
+    ).toBe(true);
+  });
+
   it("retains real successes and earlier failures as partial unreviewed observations at their exact level", () => {
     const cases = evidenceLevels.map((level) =>
       observation({ caseId: `case-${level}`, level }),
@@ -322,6 +497,8 @@ describe("evidence observations cannot become acceptance", () => {
       { acceptanceVerified: true },
       { requiresIndependentReview: false },
       { standardPassed: true },
+      { caseDefinitionSha256: "private-not-a-digest" },
+      { caseDefinitionSha256: null },
     ])
       expect(() =>
         validateCoverage(observation(changed), authorities, mapping),
@@ -557,147 +734,186 @@ describe("read-only query and command-line contract", () => {
 });
 
 describe("receipt validator to acceptance index integration", () => {
-  it("indexes real validator summaries against original conditions while preserving evidence corruption as invalid", async () => {
-    const temporaryRoot = await mkdtemp(
-      resolve(tmpdir(), "farfold-index-receipt-"),
-    );
-    const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
-    try {
-      await mkdir(resolve(temporaryRoot, "output/run"), { recursive: true });
-      const context = {
-        agentId,
-        platform: "darwin-arm64",
-        productCommit: "abcdef12",
-      };
-      const inputs = { source: "synthetic-source-revision" };
-      const manifest = {
-        schemaVersion: 1,
-        runId: "synthetic-integration-run",
-        preparedAt: "2026-10-24T00:00:00Z",
-        reviewBy: "2026-10-25T00:00:00Z",
-        context,
-        inputs,
-        dependencies: [
-          { id: "source:diff", kind: "source", fingerprint: "test-revision" },
-        ],
-        expectedCases: [
-          {
-            caseId: "synthetic-diff-case",
-            agentId,
-            standardIds: ["S5"],
-            requirementIds: ["P18"],
-            level: "shared",
-            expectedOutcome: "success",
-            safety: "observation",
-            coveredConditions: observation().coveredConditions,
-            requiredObservations: [
-              {
-                observationId: "synthetic-file",
-                kind: "content-confirmed",
-                source: "test-runner",
-                expectedValue: "synthetic-content-only",
-              },
-            ],
-            dependencies: ["source:diff"],
+  it.each([
+    [false, "shared"],
+    [true, "shared"],
+    [true, "installed"],
+  ])(
+    "indexes validator summaries without inventing standards or model selection (requirement only: %s, level: %s)",
+    async (requirementOnly, level) => {
+      const temporaryRoot = await mkdtemp(
+        resolve(tmpdir(), "farfold-index-receipt-"),
+      );
+      const digest = (bytes) =>
+        createHash("sha256").update(bytes).digest("hex");
+      try {
+        await mkdir(resolve(temporaryRoot, "output/run"), { recursive: true });
+        const context = {
+          agentId,
+          platform: "darwin-arm64",
+          productCommit: "abcdef12",
+          ...(level === "installed"
+            ? {
+                app: {
+                  bundleId: "ai.farfold.desktop",
+                  version: "0.1.7",
+                  binarySha256: "a".repeat(64),
+                  installedPath: "/Applications/Farfold.app",
+                },
+                observedAgentVersion: "synthetic-observed-version",
+              }
+            : {}),
+        };
+        const source = level === "installed" ? "installed-ui" : "test-runner";
+        const inputs = { source: "synthetic-source-revision" };
+        const manifest = {
+          schemaVersion: 1,
+          runId: "synthetic-integration-run",
+          preparedAt: "2026-10-24T00:00:00Z",
+          reviewBy: "2026-10-25T00:00:00Z",
+          context,
+          inputs,
+          dependencies: [
+            { id: "source:diff", kind: "source", fingerprint: "test-revision" },
+          ],
+          expectedCases: [
+            {
+              caseId: "synthetic-diff-case",
+              agentId,
+              standardIds: requirementOnly ? [] : ["S5"],
+              requirementIds: ["P18"],
+              level,
+              expectedOutcome: "success",
+              safety: "observation",
+              coveredConditions: observation().coveredConditions,
+              requiredObservations: [
+                {
+                  observationId: "synthetic-file",
+                  kind: "content-confirmed",
+                  source,
+                  expectedValue: "synthetic-content-only",
+                },
+              ],
+              dependencies: ["source:diff"],
+            },
+          ],
+        };
+        const evidenceBytes = Buffer.from(
+          "Synthetic integration fixture; no installed or Agent effect.\n",
+        );
+        await writeFile(
+          resolve(temporaryRoot, "output/run/evidence.txt"),
+          evidenceBytes,
+        );
+        const manifestBytes = Buffer.from(`${JSON.stringify(manifest)}\n`);
+        await writeFile(
+          resolve(temporaryRoot, "output/run/manifest.json"),
+          manifestBytes,
+        );
+        const receipt = {
+          schemaVersion: 1,
+          runId: manifest.runId,
+          manifest: {
+            path: "output/run/manifest.json",
+            sha256: digest(manifestBytes),
+            visibility: "public",
+            privacyReviewed: true,
           },
-        ],
-      };
-      const evidenceBytes = Buffer.from(
-        "Synthetic integration fixture; no installed or Agent effect.\n",
-      );
-      await writeFile(
-        resolve(temporaryRoot, "output/run/evidence.txt"),
-        evidenceBytes,
-      );
-      const manifestBytes = Buffer.from(`${JSON.stringify(manifest)}\n`);
-      await writeFile(
-        resolve(temporaryRoot, "output/run/manifest.json"),
-        manifestBytes,
-      );
-      const receipt = {
-        schemaVersion: 1,
-        runId: manifest.runId,
-        manifest: {
-          path: "output/run/manifest.json",
-          sha256: digest(manifestBytes),
-          visibility: "public",
-          privacyReviewed: true,
-        },
-        attempts: [
-          {
-            attemptId: "synthetic-attempt-1",
-            caseId: "synthetic-diff-case",
-            startedAt: "2026-10-24T00:01:00Z",
-            finishedAt: "2026-10-24T00:02:00Z",
-            status: "completed",
-            outcome: "success",
-            level: "shared",
-            context,
-            inputsBefore: inputs,
-            inputsAfter: inputs,
-            observations: [
-              {
-                observationId: "synthetic-file",
-                kind: "content-confirmed",
-                source: "test-runner",
-                value: "synthetic-content-only",
-                evidenceIndexes: [0],
-              },
-            ],
-            evidence: [
-              {
-                path: "output/run/evidence.txt",
-                sha256: digest(evidenceBytes),
-                visibility: "private",
-                level: "shared",
-                source: "test-runner",
-              },
-            ],
-          },
-        ],
-        inputsAfter: inputs,
-        finishedAt: "2026-10-24T00:03:00Z",
-      };
-      const report = await validateReceipt(receipt, { rootDir: temporaryRoot });
-      expect(report.errors).toEqual([]);
-      expect(report.mechanicallyValid).toBe(true);
-      expect(report.cases[0].result).toBe("passed");
-      const index = buildAcceptanceIndex({
-        authorities,
-        mapping,
-        coverage: report.cases,
-      });
-      expect(index.coverage[0].runId).toBe(manifest.runId);
-      expect(
-        index.cells.every((cell) => cell.acceptance === "unreviewed"),
-      ).toBe(true);
-      const cell = index.cells.find(
-        (item) => item.agentId === agentId && item.standardId === "S5",
-      );
-      expect(cell.observations.shared).toHaveLength(1);
-      expect(cell.observations["real-agent"]).toEqual([]);
+          attempts: [
+            {
+              attemptId: "synthetic-attempt-1",
+              caseId: "synthetic-diff-case",
+              startedAt: "2026-10-24T00:01:00Z",
+              finishedAt: "2026-10-24T00:02:00Z",
+              status: "completed",
+              outcome: "success",
+              level,
+              context,
+              inputsBefore: inputs,
+              inputsAfter: inputs,
+              observations: [
+                {
+                  observationId: "synthetic-file",
+                  kind: "content-confirmed",
+                  source,
+                  value: "synthetic-content-only",
+                  evidenceIndexes: [0],
+                },
+              ],
+              evidence: [
+                {
+                  path: "output/run/evidence.txt",
+                  sha256: digest(evidenceBytes),
+                  visibility: "private",
+                  level,
+                  source,
+                },
+              ],
+            },
+          ],
+          inputsAfter: inputs,
+          finishedAt: "2026-10-24T00:03:00Z",
+        };
+        const report = await validateReceipt(receipt, {
+          rootDir: temporaryRoot,
+        });
+        expect(report.errors).toEqual([]);
+        expect(report.mechanicallyValid).toBe(true);
+        expect(report.cases[0].result).toBe("passed");
+        const index = buildAcceptanceIndex({
+          authorities,
+          mapping,
+          coverage: report.cases,
+        });
+        expect(index.coverage[0].runId).toBe(manifest.runId);
+        expect(index.coverage[0].caseDefinitionSha256).toBe(
+          report.cases[0].caseDefinitionSha256,
+        );
+        expect(
+          index.cells.every((cell) => cell.acceptance === "unreviewed"),
+        ).toBe(true);
+        const cell = index.cells.find(
+          (item) => item.agentId === agentId && item.standardId === "S5",
+        );
+        expect(cell.observations.shared).toHaveLength(requirementOnly ? 0 : 1);
+        if (requirementOnly) {
+          expect(index.coverage[0].standardIds).toEqual([]);
+          expect(
+            queryAcceptanceIndex(
+              index,
+              { requirementId: "P18" },
+              { authorities },
+            ).coverage,
+          ).toEqual(report.cases);
+          expect(
+            queryAcceptanceIndex(index, { standardId: "S5" }, { authorities })
+              .coverage,
+          ).toEqual([]);
+        }
+        expect(cell.observations["real-agent"]).toEqual([]);
 
-      await writeFile(
-        resolve(temporaryRoot, "output/run/evidence.txt"),
-        "Changed fixture bytes\n",
-      );
-      const invalidReport = await validateReceipt(receipt, {
-        rootDir: temporaryRoot,
-      });
-      expect(invalidReport.mechanicallyValid).toBe(false);
-      expect(invalidReport.cases[0].result).toBe("invalid");
-      const invalidIndex = buildAcceptanceIndex({
-        authorities,
-        mapping,
-        coverage: invalidReport.cases,
-      });
-      expect(invalidIndex.coverage[0].result).toBe("invalid");
-      expect(
-        invalidIndex.coverage[0].attemptResults[0].issues.length,
-      ).toBeGreaterThan(0);
-      expect(invalidIndex.acceptanceVerified).toBe(false);
-    } finally {
-      await rm(temporaryRoot, { recursive: true });
-    }
-  });
+        await writeFile(
+          resolve(temporaryRoot, "output/run/evidence.txt"),
+          "Changed fixture bytes\n",
+        );
+        const invalidReport = await validateReceipt(receipt, {
+          rootDir: temporaryRoot,
+        });
+        expect(invalidReport.mechanicallyValid).toBe(false);
+        expect(invalidReport.cases[0].result).toBe("invalid");
+        const invalidIndex = buildAcceptanceIndex({
+          authorities,
+          mapping,
+          coverage: invalidReport.cases,
+        });
+        expect(invalidIndex.coverage[0].result).toBe("invalid");
+        expect(
+          invalidIndex.coverage[0].attemptResults[0].issues.length,
+        ).toBeGreaterThan(0);
+        expect(invalidIndex.acceptanceVerified).toBe(false);
+      } finally {
+        await rm(temporaryRoot, { recursive: true });
+      }
+    },
+  );
 });

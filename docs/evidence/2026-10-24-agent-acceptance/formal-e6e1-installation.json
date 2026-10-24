@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalInternalInstallationPublicSummary",
+  "recordedAt": "2026-10-24T03:02:21.700418+00:00",
+  "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "formal": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+    "onlyFormalAppUpdated": true,
+    "newInodeFiles": 5,
+    "appBackupCreated": false,
+    "strictAdhocSignatureVerified": true,
+    "publicSigningOrNotarization": false
+  },
+  "candidateReview": {
+    "passed": 9,
+    "total": 9,
+    "productionInputs": 2242
+  },
+  "installedReview": {
+    "passed": 10,
+    "total": 10,
+    "journalEntries": 17
+  },
+  "retention": {
+    "freshSnapshots": 3,
+    "entries": 232530,
+    "allThreeManifestsEqual": true,
+    "manifestSha256": "c77e33196d0050dd5717f87dd6bcdfa61429565dcf5452ca35d4fdf20177e96a",
+    "ownUnsentFourAttachmentDraftBackupVerified": true,
+    "retentionProofScope": "closed_application_interval_before_first_updated_launch"
+  },
+  "installationAttempts": [
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "formalFilesWritten": 0,
+      "journalCreated": false,
+      "preserved": true,
+      "cause": "preparation_recursive_chmod_changed_private_capture_ctime",
+      "exactInstallerFailureCodeEmitted": false
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "freshSnapshotsBeforeRetry": true,
+      "strictGatesUnchanged": true,
+      "explicitBoundedAttemptAfterKnownState": true
+    }
+  ],
+  "preparationCorrection": {
+    "originalZeroDatabaseByteReadClaimInaccurate": true,
+    "privateBackupBytesWereHashedAndCtimeChanged": true,
+    "databaseSqlByPreparationAgent": false,
+    "backupBytesUnchanged": true,
+    "originalRecordsPreserved": true
+  },
+  "duplicateCandidate": {
+    "removedFiles": 5,
+    "formalAppPreserved": true,
+    "archivePreserved": true,
+    "archiveSha256": "47635d80b3862ce48a728edba0cedf1757db6f94f60ca8aed1ad9bfee7fda5ee"
+  },
+  "launch": {
+    "updatedFormalLaunchedAfterTenChecksAndCleanup": true,
+    "startupConversationCount": 137,
+    "ownFourAttachmentDraftRestoredInUi": true,
+    "noNewAgentPromptAtLaunch": true
+  },
+  "limits": {
+    "formalFeatureRetests": "in_progress",
+    "realAgentAcceptance": "not_completed",
+    "all29EightStandardsAccepted": false,
+    "new24AffectedPromptsPaused": true,
+    "fullSourcePreEngineeringFreezeCaptured": false,
+    "checksRanAtFinalCommit": false,
+    "testRelocationDeltaSeparate": true
+  },
+  "evidenceHashes": {
+    "candidate": "7dc3f8864effd92035d71ba34be3c05fe40819a3c0aa022d4f25917b0ac8de49",
+    "candidateReview": "585b9be606bd44e0bd3892e0db83ca2d6e15cc8889b93f976187c5b834f31efc",
+    "install": "8722298ed0238c4fae1d88e8a3ec31a8a866407c602d558d4c169bffca4e8db2",
+    "installedReview": "0e474cc493686e85f68283bba96fab232d13b8eaf1f233d0380efeb9e9dcf327",
+    "cleanup": "4a24d27f12116106684a172bd4ed7d5010df9b4900b666d4a52c7ded4710b2b5",
+    "firstFailure": "f31bcc659c5e23dd5d80af26bc6a44a1a1ebc4cea6cc8a859789c636cf1c4fd5",
+    "scopeCorrection": "25967f675bdcf0e138821204cac613aad8538c4c2938d6541801bbb2ed47b1ab"
+  }
+}

@@ -266,30 +266,47 @@ export function validateCoverage(coverage, authorities, mapping) {
       "result",
       "acceptanceVerified",
     ],
-    ["runId", "attemptResults", "requiresIndependentReview"],
+    [
+      "runId",
+      "attemptResults",
+      "requiresIndependentReview",
+      "caseDefinitionSha256",
+    ],
     "coverage",
   );
   nonempty(coverage.caseId, "caseId");
   if (coverage.runId !== undefined) nonempty(coverage.runId, "runId");
+  if (coverage.caseDefinitionSha256 !== undefined)
+    assert.ok(
+      typeof coverage.caseDefinitionSha256 === "string" &&
+        /^[a-f0-9]{64}$/.test(coverage.caseDefinitionSha256),
+      "case definition digest must be a SHA256 string",
+    );
   assert.ok(authorities.agents.includes(coverage.agentId), "unknown agentId");
-  unique(coverage.standardIds, "coverage standardIds");
-  unique(coverage.requirementIds, "coverage requirementIds", {
+  unique(coverage.standardIds, "coverage standardIds", {
     allowEmpty: true,
   });
+  unique(coverage.requirementIds, "coverage requirementIds");
   const standards = new Set(authorities.standards.map((item) => item.id));
   const requirements = new Set(authorities.requirements.map((item) => item.id));
   for (const id of coverage.standardIds)
     assert.ok(standards.has(id), `unknown standard: ${id}`);
   for (const id of coverage.requirementIds) {
     assert.ok(requirements.has(id), `unknown requirement: ${id}`);
-    assert.ok(
-      normalized.links.some(
-        (link) =>
-          coverage.standardIds.includes(link.standardId) &&
-          link.requirementIds.includes(id),
-      ),
-      `unmapped coverage requirement: ${id}`,
-    );
+    if (id.startsWith("NEW-"))
+      assert.ok(
+        Object.hasOwn(normalized.newPackages, id),
+        `NEW requirement ${id} needs explicit newPackages; no inferred owner`,
+      );
+    if (coverage.standardIds.length > 0)
+      assert.ok(
+        normalized.links.some(
+          (link) =>
+            coverage.standardIds.includes(link.standardId) &&
+            link.requirementIds.includes(id),
+        ),
+        `unmapped coverage requirement: ${id}`,
+      );
   }
   for (const id of coverage.standardIds)
     assert.ok(
@@ -420,6 +437,18 @@ export function validateCoverage(coverage, authorities, mapping) {
     assert.ok(!seen.has(key), "duplicate covered condition excerpt");
     seen.add(key);
   }
+  if (
+    coverage.standardIds.length === 0 &&
+    ["passed", "expectedRejection"].includes(coverage.result)
+  )
+    assert.ok(
+      coverage.requirementIds.every((id) =>
+        coverage.coveredConditions.some(
+          (item) => item.conditionId === `requirement:${id}`,
+        ),
+      ),
+      "requirement-only success needs each declared requirement condition",
+    );
   return {
     mechanicallyValid: true,
     acceptanceVerified: false,

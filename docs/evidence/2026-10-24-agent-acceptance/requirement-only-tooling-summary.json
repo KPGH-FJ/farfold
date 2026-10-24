@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "kind": "EvidenceToolingPublicSummary",
+  "preparedAt": "2026-10-24T03:15:41.067Z",
+  "scope": "requirement-only-installed-context-and-definition-revalidation",
+  "evidenceLevel": "shared",
+  "requirementOnly": {
+    "standardIdsMinimum": 0,
+    "requirementIdsMinimum": 1,
+    "explicitEmptyStandardIds": "allowed",
+    "eachRequirementCondition": "required",
+    "conditionExcerpt": "exact",
+    "unknownRequirement": "rejected-by-authority-index",
+    "newRequirementPackageAssignment": "explicit-per-requirement",
+    "standardConditionWithEmptyStandardIds": "rejected",
+    "requirementQuery": "retained",
+    "standardCellObservations": 0,
+    "completeRequirementAccepted": false,
+    "standardAccepted": false
+  },
+  "context": {
+    "installedAppIdentity": "required",
+    "installedObservedAgentVersion": "required",
+    "installedNonModelSelection": "optional",
+    "providedSelection": "strict-shape-and-context-equality",
+    "realAgentSelection": "required",
+    "mixedRunContainingRealAgentSelection": "required",
+    "installedSchemaValidityProvesModelUse": false
+  },
+  "revalidation": {
+    "definitionDigest": "sha256-canonical-json-complete-expected-case",
+    "definitionFields": [
+      "caseId",
+      "agentId",
+      "standardIds",
+      "requirementIds",
+      "level",
+      "expectedOutcome",
+      "safety",
+      "coveredConditions",
+      "requiredObservations",
+      "dependencies"
+    ],
+    "missingOrChangedDefinition": "revalidate",
+    "missingOrChangedOwnerOrScope": "revalidate",
+    "cleanPriorResult": "matches-current-expected-outcome",
+    "unchangedDefinition": "reuse-candidate",
+    "digestScope": "expected-case-only",
+    "originalManifestReference": "retained",
+    "priorResults": "retained",
+    "originalReceiptsRewritten": false,
+    "originalRunManifestsRewritten": false,
+    "oldFailedResults": "retained",
+    "oldMissingDigest": "revalidate",
+    "automaticAcceptance": false
+  },
+  "checks": {
+    "implementationTargeted": {
+      "files": 2,
+      "passed": 107,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "independentTargeted": {
+      "files": 2,
+      "passed": 107,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "independentDefinitionChangeCounterexamples": {
+      "total": 10,
+      "revalidated": 10,
+      "failed": 0
+    },
+    "independentUnchangedDefinitionControl": "reuse-candidate",
+    "publicProjectionNegativeControls": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "formatting": "passed",
+    "typecheck": "passed",
+    "whitespace": "passed",
+    "maxSourceLines": 1115,
+    "sourceLineLimit": 1500,
+    "sourceHashesBeforeAfterIndependentReview": "matched",
+    "originalFailureEvidence": "retained"
+  },
+  "sourceRefs": [
+    {
+      "path": "scripts/acceptance-receipts.mjs",
+      "sha256": "e4ce1860071ca210df4483b22c42807dd757782e7b263d70fa797ab87d227d3f",
+      "bytes": 34463
+    },
+    {
+      "path": "scripts/acceptance-receipts.test.mjs",
+      "sha256": "c36b4633f40a922cfa826f02f97a7418c2e194c182962f0b92fbd1b0cb0539f4",
+      "bytes": 37941
+    },
+    {
+      "path": "scripts/acceptance-index.mjs",
+      "sha256": "2b5da7ec3d9810a00def9d46893ea45899452e7222be8dcd68d065e8922fc04e",
+      "bytes": 24937
+    },
+    {
+      "path": "scripts/acceptance-index.test.mjs",
+      "sha256": "f73e46c9e67120a16d692120427206e7e8c740195f9ce8d26bc9b72d15f51ee4",
+      "bytes": 30433
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/requirement-only-tooling/implementation.json",
+      "sha256": "79ffac6424fd5f4357a1d9a2a3dfbc65c085e93b0f5a8403e6a219c3df409a6f",
+      "bytes": 7547
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/requirement-only-tooling/independent-review.json",
+      "sha256": "f44390f4b12551c09eef703a8623e442d1ce1f88d4282b1864b0788d34e9a821",
+      "bytes": 4685
+    }
+  ],
+  "boundaries": {
+    "productSourceChanged": false,
+    "productUiChanged": false,
+    "productPlanChanged": false,
+    "authorityConditionsChanged": false,
+    "appOrAgentActions": false,
+    "modelWorkVerified": false,
+    "installedProductBehaviorVerified": false,
+    "completeRequirementAccepted": false,
+    "standardAccepted": false,
+    "agentAccepted": false,
+    "acceptedGridCells": 0,
+    "p40RealEvidenceIncluded": false,
+    "automaticAcceptance": false,
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  }
+}

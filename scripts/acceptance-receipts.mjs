@@ -52,14 +52,43 @@ export function canonicalJson(value) {
   return JSON.stringify(value);
 }
 
+function caseDefinitionSha256(expected, manifest) {
+  return createHash("sha256")
+    .update(
+      canonicalJson({
+        case: expected,
+        context: manifest.context,
+        inputs: manifest.inputs,
+        dependencies: manifest.dependencies.filter((entry) =>
+          expected.dependencies.includes(entry.id),
+        ),
+      }),
+    )
+    .digest("hex");
+}
+
 const equal = (a, b) => canonicalJson(a) === canonicalJson(b);
 const subsetKeys = (value, allowed) =>
   object(value) && Object.keys(value).every((key) => allowed.includes(key));
-const uniqueIds = (values) =>
+const uniqueIds = (values, { allowEmpty = false } = {}) =>
   Array.isArray(values) &&
-  values.length > 0 &&
+  (allowEmpty || values.length > 0) &&
   values.every(identifier) &&
   new Set(values).size === values.length;
+
+// Declaration scope only, never applicability or acceptance. Keep the public
+// projection safe even when called directly with a rejected/untrusted report.
+function caseClaimScope(entry) {
+  if (
+    !uniqueIds(entry.standardIds, { allowEmpty: true }) ||
+    !entry.standardIds.every((id) => /^S[1-8]$/.test(id)) ||
+    !uniqueIds(entry.requirementIds)
+  )
+    return null;
+  return entry.standardIds.length === 0
+    ? "requirement-only"
+    : "includes-standard-claim";
+}
 
 function inputMap(value) {
   return (
@@ -84,7 +113,10 @@ function hasForbiddenMetadata(value, agentScope = false) {
   );
 }
 
-function contextValid(context, requiresInstalled) {
+function contextValid(
+  context,
+  { requiresInstalled = false, requiresSelection = false } = {},
+) {
   if (
     !subsetKeys(context, [
       "agentId",
@@ -132,11 +164,13 @@ function contextValid(context, requiresInstalled) {
   ) {
     return false;
   }
+  // Installed UI/official management does not necessarily use a model. Never
+  // manufacture a selection for it; supplied selections still passed the exact
+  // validation above and must match every attempt. Real Agent work requires it.
   return (
-    !requiresInstalled ||
-    (app !== undefined &&
-      selection !== undefined &&
-      text(context.observedAgentVersion))
+    (!requiresInstalled ||
+      (app !== undefined && text(context.observedAgentVersion))) &&
+    (!requiresSelection || selection !== undefined)
   );
 }
 
@@ -311,7 +345,15 @@ function validateManifest(manifest, runId, errors) {
   const installed = manifest.expectedCases.some((entry) =>
     ["installed", "real-agent"].includes(entry?.level),
   );
-  if (!contextValid(manifest.context, installed)) {
+  const realAgent = manifest.expectedCases.some(
+    (entry) => entry?.level === "real-agent",
+  );
+  if (
+    !contextValid(manifest.context, {
+      requiresInstalled: installed,
+      requiresSelection: realAgent,
+    })
+  ) {
     errors.push({ code: "invalid-run-context" });
   }
   const caseIds = new Set();
@@ -333,7 +375,7 @@ function validateManifest(manifest, runId, errors) {
       !identifier(entry.caseId) ||
       caseIds.has(entry.caseId) ||
       entry.agentId !== manifest.context?.agentId ||
-      !uniqueIds(entry.standardIds) ||
+      !uniqueIds(entry.standardIds, { allowEmpty: true }) ||
       !entry.standardIds.every((id) => /^S[1-8]$/.test(id)) ||
       !uniqueIds(entry.requirementIds) ||
       !EVIDENCE_LEVELS.includes(entry.level) ||
@@ -357,6 +399,23 @@ function validateManifest(manifest, runId, errors) {
           !text(condition.excerpt) ||
           !condition.condition.includes(condition.excerpt),
       )
+    ) {
+      code("invalid-condition-coverage");
+    } else if (
+      entry.standardIds.length === 0 &&
+      (!entry.requirementIds.every((id) =>
+        entry.coveredConditions.some(
+          (condition) => condition.conditionId === `requirement:${id}`,
+        ),
+      ) ||
+        entry.coveredConditions.some(
+          (condition) =>
+            condition.conditionId.startsWith("standard:") ||
+            (condition.conditionId.startsWith("requirement:") &&
+              !entry.requirementIds.includes(
+                condition.conditionId.slice("requirement:".length),
+              )),
+        ))
     ) {
       code("invalid-condition-coverage");
     }
@@ -451,10 +510,10 @@ function validateAttempt(attempt, expected, manifest, previous, errors, index) {
     add("non-completed-attempt-claims-success");
   }
   if (
-    !contextValid(
-      attempt.context,
-      ["installed", "real-agent"].includes(attempt.level),
-    ) ||
+    !contextValid(attempt.context, {
+      requiresInstalled: ["installed", "real-agent"].includes(attempt.level),
+      requiresSelection: attempt.level === "real-agent",
+    }) ||
     !equal(attempt.context, manifest.context)
   ) {
     add("attempt-context-mismatch");
@@ -738,6 +797,7 @@ export async function validateReceipt(
       requirementIds: expected.requirementIds,
       level: expected.level,
       coveredConditions: expected.coveredConditions,
+      caseDefinitionSha256: caseDefinitionSha256(expected, manifest),
       result,
       acceptanceVerified: false,
       requiresIndependentReview: true,
@@ -861,12 +921,38 @@ export function planRevalidation(manifest, changeSet = {}) {
     );
     if (
       prior.length !== 1 ||
-      !["passed", "expectedRejection"].includes(prior[0].result)
+      prior[0].result !==
+        (expected.expectedOutcome === "rejection"
+          ? "expectedRejection"
+          : "passed")
     ) {
       reasons.push("prior-result-missing-or-not-clean");
     }
+    if (
+      prior.length !== 1 ||
+      ![
+        "agentId",
+        "standardIds",
+        "requirementIds",
+        "level",
+        "coveredConditions",
+      ].every(
+        (key) =>
+          Object.hasOwn(prior[0], key) && equal(prior[0][key], expected[key]),
+      )
+    ) {
+      reasons.push("prior-scope-missing-or-changed");
+    }
+    if (
+      prior.length !== 1 ||
+      !HEX.test(prior[0].caseDefinitionSha256 ?? "") ||
+      prior[0].caseDefinitionSha256 !== caseDefinitionSha256(expected, manifest)
+    ) {
+      reasons.push("prior-definition-missing-or-changed");
+    }
     result.cases.push({
       caseId: expected.caseId,
+      claimScope: caseClaimScope(expected),
       action: reasons.length ? "revalidate" : "reuse-candidate",
       reasons: [...new Set(reasons)],
     });
@@ -901,6 +987,7 @@ export function publicReceiptSummary(report) {
     })),
     cases: (report.cases ?? []).map((entry, caseIndex) => ({
       caseIndex,
+      claimScope: caseClaimScope(entry),
       level: enumValue(entry.level, EVIDENCE_LEVELS),
       result: enumValue(entry.result, [
         "passed",
@@ -1009,11 +1096,14 @@ async function main() {
       `${JSON.stringify(
         {
           ...planned,
-          cases: planned.cases.map(({ action, reasons }, caseIndex) => ({
-            caseIndex,
-            action,
-            reasons,
-          })),
+          cases: planned.cases.map(
+            ({ action, reasons, claimScope }, caseIndex) => ({
+              caseIndex,
+              claimScope,
+              action,
+              reasons,
+            }),
+          ),
         },
         null,
         2,

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "P40FormalHistoricalSubObservationSummary",
+  "recordedDate": "2026-10-24",
+  "requirementId": "P40",
+  "formalSourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "schedulingAuthority": "none",
+  "acceptanceVerified": false,
+  "independentSemanticReviewCompleted": true,
+  "scope": "One installed management flow; operator UI summaries and official readbacks. No full requirement, standard or current-conversation adoption accepted.",
+  "mechanical": {
+    "originalResult": "invalid-run-manifest",
+    "originalFailurePreserved": true,
+    "canonicalExpectedCases": 2,
+    "canonicalPassed": 2,
+    "semanticTwoOfTwoClaimed": false,
+    "finalToolingRecalculation": "Same original canonical receipt; two mechanical cases retained, no semantic upgrade. Earlier canonical report preserved."
+  },
+  "semanticCoverage": {
+    "packageInventoryObservations": 1,
+    "packageInventorySkillDiscoveryCoverageAccepted": false,
+    "historicalRequirementOnlyReadRecoverySubObservations": 1,
+    "readRecoveryScope": "Two initial read rejections exposed recovery actions; explicit fresh source and owned inventory checks returned current results.",
+    "rawRpcFailureCodesCaptured": false,
+    "exactExpiryRootCauseProved": false,
+    "allBackendWorkZeroClaimed": false,
+    "cancellationOrUnknownWriteRecoveryProved": false,
+    "currentConversationSkillAdoptionProved": false,
+    "standardIds": [],
+    "standardCellsAdded": 0,
+    "completeRequirementsClosed": 0,
+    "currentReusableObservations": 0,
+    "postCleanupRevalidationCases": 2
+  },
+  "cleanup": {
+    "normalUiPackageRemoveConfirmations": 1,
+    "ownPackageAbsent": true,
+    "ownSourceAbsent": true,
+    "otherInstalledPackageObjectsEqualFreshBeforeRemoval": 25,
+    "earlierPostInitialInstallBaseline": "Different; no cause or initial-install isolation inferred.",
+    "otherSourceObjectsEqualFreshBeforeRemoval": 3,
+    "originalThreeSourceObjectsPreserved": true,
+    "sourceRemovalMethod": "official-external-cli",
+    "productUiSourceManagementProved": false,
+    "fixtureAndEvidenceRetained": true,
+    "requirementOrStandardCoverageAdded": 0
+  },
+  "timestampProvenance": {
+    "originalFormat": "Python UTC offset with microsecond precision",
+    "derivedFormat": "UTC Z with millisecond precision",
+    "derivedCreatedAfterRun": true,
+    "onlyTimestampsAndManifestReferenceChanged": true,
+    "caseDefinitionsContextInputsObservationsOutcomesUnchanged": true,
+    "originalSubmillisecondPrecisionRetained": true,
+    "derivedIsOriginalPreRunManifest": false,
+    "rawToolTraceRemainsPrivate": true
+  },
+  "limitations": [
+    "Package rows and installed/enabled state do not prove skill discovery or use.",
+    "Read recovery is one historical P40 sub-observation; the whole failure-recovery condition and P40 remain open.",
+    "Cleanup changed the live fixture setup, so both recorded cases require revalidation for reuse.",
+    "External source removal does not prove product UI source management.",
+    "No current conversation skill adoption, real model request, all29 or eight-standard completion is claimed."
+  ],
+  "evidenceDigests": {
+    "independentSemanticReview": "ff3403009f78f61d503c1db843f96ea9c242aee6b6c6f0ac7975b470d5e79fd7",
+    "originalManifest": "204170c7b4fa75f692754be81d029a931ce25e9b302ba5d8d39e61a005de39d8",
+    "derivedManifest": "ebfb5b4fafeb00fd1c93aa9d8c657a77d0c36189151625e23b34a441b6f08257",
+    "originalMechanicalValidation": "6fdcb51c37f5d558920be94b2bfd9f3aaa21a0cebdbeaf4e63dc0a130e441978",
+    "canonicalMechanicalValidation": "758b79961dcc2d5c74d59b23016283a4be9911015fd4456aacd7e5caaf3fec09",
+    "timestampCanonicalizationProvenance": "005f3fadc7b140eb45522447e0866abb244e12de593e84dc3d3a3b6ec5bb54ca",
+    "readRecoveryOperatorObservation": "a3979202031bdfcd654892d604ce49b424afb68a51c0525f7bb37e35f1776c16",
+    "finalCleanupReadback": "c2782b21ff2ad80bc4f735290fc6e08907f8cc260a56e6fd39138c3dd24222a1",
+    "sourceRollbackReadback": "275587b71ee526d4f7837fed188e603b089376fe39524aac1c73a22cc2efdd5c",
+    "postCleanupRevalidation": "6083c058a45eb36232525173d63a0e466f1b9a6c85537330bb013fbcf33eebea",
+    "finalToolingMechanicalValidation": "9ab126240f53b72d1a7e0673d9d228108c03d70bd65bcd9be3ba8f468d3a1178",
+    "finalToolingValidationProvenance": "f04eacd67fdb91b51f8aeb6c65fc8ea99b1cad34ca8de648e46e0e7daa4f9f04",
+    "finalReceiptToolSource": "a65f507066ec543798226134cbe8c5b26bcf5929074630905ea9370d49c98009"
+  }
+}
