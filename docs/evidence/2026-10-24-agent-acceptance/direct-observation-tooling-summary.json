@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "DirectObservationToolingAndSevenEngineeringSummary",
+  "evidenceLevel": "controlled",
+  "acceptanceVerified": false,
+  "channelPolicy": {
+    "installedRequiredSource": "installed-ui",
+    "realAgentRequiredOneOf": ["installed-ui", "official-interface"],
+    "uiObservationClaimsRawOfficialCapture": false,
+    "contextAndEvidenceChecksUnchanged": true,
+    "observationLabelsRequireIndependentReview": true
+  },
+  "sourceSha256": {
+    "acceptanceReceipts": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164",
+    "acceptanceReceiptsTests": "3c8054b06c62f341b81d3a2b720a9096b51b2779f9becc8416d8f3800818728e",
+    "acceptanceIndex": "2b5da7ec3d9810a00def9d46893ea45899452e7222be8dcd68d065e8922fc04e",
+    "acceptanceIndexTests": "f73e46c9e67120a16d692120427206e7e8c740195f9ce8d26bc9b72d15f51ee4"
+  },
+  "controlledRed": {
+    "tests": 107,
+    "passed": 104,
+    "failed": 3,
+    "originalPreserved": true
+  },
+  "targetedTests": {
+    "files": 2,
+    "passed": 131,
+    "failed": 0,
+    "exitCode": 0,
+    "independentPassed": 131,
+    "independentFailed": 0,
+    "independentExitCode": 0
+  },
+  "independentReviewSha256": "652fd7bd3d4c14b341cde819c18d7d9f8807810cd6407126ba70933acf200ab3",
+  "engineering": {
+    "checksSucceeded": 7,
+    "checksFailed": 0,
+    "allNaturalExitCodesZero": true,
+    "checksRanBeforeCommit": true,
+    "baseHead": "39be685ebaae985af1af38a7c57da6a7e8631706",
+    "inputCount": 2243,
+    "sourceEndpointsEqual": true,
+    "headEndpointsEqual": true,
+    "frontend": {
+      "files": 664,
+      "passed": 8732,
+      "failed": 0
+    },
+    "native": {
+      "passed": 2228,
+      "failed": 0,
+      "ignored": 6
+    },
+    "summarySha256": "00a791c43ff1eda23c18c8b7db18ab5955863b30e25d3d889c50b84f12042233",
+    "sourceBeforeSha256": "5cf8d11556bca205a3dfa6c4ca5966f36449e955602c1c05dde188d204cfdc69",
+    "sourceAfterSha256": "e0ce82a572b95eb9f7d58b505abe650d56a578fa66cbf986f4c0d575393cc06f",
+    "readbackVerificationSha256": "16d52af193594e0bedf6ad436c3148f4a27fb9d27e1397999aeed4167311ea01"
+  },
+  "limits": {
+    "formalInstalled": false,
+    "realAffectedPathVerified": false,
+    "oldCandidateMatchesCurrentSource": false,
+    "endpointEqualityProvesIntermediateImmutability": false,
+    "dependencyInstallBytesFrozen": false,
+    "environmentFrozen": false,
+    "wholeRequirementsAccepted": 0,
+    "standardsAccepted": 0,
+    "wholeAgentsAccepted": 0
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "kind": "MistralCurrentOwnedFileRecheckPublicSummary",
+  "recordedAt": "2026-10-24T05:09:30.548Z",
+  "agentId": "mistral-vibe",
+  "observedProgramVersion": "2.25.8",
+  "evidenceLevel": "installed",
+  "formal": {
+    "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+    "identityOrigin": "Root-recorded existing formal App baseline; no new App inspection or launch by the semantic reviewer"
+  },
+  "coverage": {
+    "requirementIds": ["P18"],
+    "conditionExcerpt": "能定位并核验对应磁盘文件",
+    "standardIds": [],
+    "claimScope": "requirement-only",
+    "fullP18Closed": false,
+    "standardCellsAdded": 0,
+    "all29Accepted": false,
+    "realAgentWriteFailureVerified": false
+  },
+  "preCase": {
+    "preparedAt": "2026-10-24T05:03:24.856Z",
+    "rootFirstUiBaselineAt": "2026-10-24T05:05:10.496Z",
+    "originalManifestAndSourcePlanPreserved": true,
+    "localBirthTimesPrecedeFirstRecordedUiBaseline": true,
+    "tamperProofTimestampClaim": false
+  },
+  "observations": {
+    "missingCurrentFile": {
+      "rootActionStartedAt": "2026-10-24T05:05:40.693Z",
+      "rootRecordedAt": "2026-10-24T05:06:12.390Z",
+      "currentFileReadsRecorded": 1,
+      "explicitReadFailure": true,
+      "oldCurrentTextRemoved": true,
+      "historicalCreatedToolResultRetained": true,
+      "rawOsErrorOrAgentWriteFailureVerified": false
+    },
+    "restoredCurrentFile": {
+      "rootActionStartedAt": "2026-10-24T05:06:20.160Z",
+      "rootRecordedAt": "2026-10-24T05:06:40.311Z",
+      "currentFileReopensRecorded": 1,
+      "currentDisplayedTextMatchesOwnedFixture": true,
+      "readFailureGone": true,
+      "exactOwnedTarget": "mistral-proof.txt",
+      "independentDiskBytes": 22,
+      "independentDiskSha256": "587199e106b0960773269f1dc7f4b5077d7545cbc6cdfe22a987da797ba903f6",
+      "independentDiskTrailingLf": true,
+      "independentReadAt": "2026-10-24T05:07:46.079Z",
+      "independentReadSameOriginalInode": true
+    },
+    "restoration": {
+      "rootReportedExclusiveRenameOutAndBack": true,
+      "rootReportedSameInodeAndBytes": true,
+      "rootReportedRetainedPathAbsent": true,
+      "intentionalCtimeChangesRecorded": true,
+      "rootReportedContentWrites": 0,
+      "rootReportedDataUnlinks": 0,
+      "independentRenameReplay": false
+    }
+  },
+  "mechanicalValidation": {
+    "method": "actual validateReceipt API invocation on the two-case frozen manifest and derived actualreceipt.json",
+    "validatorSha256": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164",
+    "expectedCases": 2,
+    "attempts": 2,
+    "expectedRejection": 1,
+    "passed": 1,
+    "failed": 0,
+    "invalid": 0,
+    "errors": 0,
+    "allExpectedOutcomesMatched": true,
+    "acceptanceVerified": false
+  },
+  "semanticReview": {
+    "result": "two narrow installed current-file observations supported",
+    "blockingFindings": 0,
+    "independentExactOwnedFileRead": true,
+    "originalUiReplay": false,
+    "originalRootEvidenceRewritten": false
+  },
+  "limitations": [
+    "The missing-path case is an expected current-file read rejection after a controlled reversible rename; it is not an Agent tool-write failure test.",
+    "Original UI and rename observations are attributed to Root records. The reviewer independently read only the restored exact owned22B file and parent metadata.",
+    "Visible text does not establish raw LF bytes; the separate filesystem read establishes the bytes and LF at its own later read time.",
+    "The same restored-read JSON records both UI and filesystem measurements; duplicate receipt references do not create independent raw sensors.",
+    "No account identity, effective model/reasoning, exhaustive no-other-I/O, full P18, standard cell, or whole Agent acceptance follows from these cases."
+  ],
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/manifest.json",
+      "sha256": "58db26190570ad5b48a50e1c3a830f8fc153300bba7783a3e6ef92d904b4401d",
+      "bytes": 3799
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/source-plan.json",
+      "sha256": "6ab09a98b765c9620f32716de3a37185e50797f8d9d7a716ed85ea7915065902",
+      "bytes": 5901
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/before-move.json",
+      "sha256": "d727a17a55fbbde724551c8e4188cbc4102807a8c77edf3ed61fcd18a8d5b18d",
+      "bytes": 918
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/move-operation.json",
+      "sha256": "0298e74f79355184c36e7c78937af5944519aa321f6f084efd99dda63f468b60",
+      "bytes": 691
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/missing-read-ui-observation.json",
+      "sha256": "d68765f252a30f443f78c26f3b9f8f779fa24fcf0907f9ae7bf471e402b1719d",
+      "bytes": 714
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/restore-operation.json",
+      "sha256": "6b7f9d348694afe47a2ed2e99e52fe22cd46e6931781d1ee2c454ae16a525c4c",
+      "bytes": 802
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/restored-read-observation.json",
+      "sha256": "245c38991b37fa9341f76118232e2be325b353c88b51b5e69f90542c40c7a989",
+      "bytes": 870
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/independent-file-readback.json",
+      "sha256": "cd616ca60b3bc2bc0ed1546fff03a1d41675731fc10fd46308dcebc9c4e0b414",
+      "bytes": 686
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/actualreceipt.json",
+      "sha256": "a1e928096f7d47503ddaa5d7610395700333351a6f3312df26b56e63a3b06117",
+      "bytes": 6101
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/validate-report.json",
+      "sha256": "bedaab114394fe32930dff2c249162c7e5beb73c672ac03d5df99303be6c3195",
+      "bytes": 1999
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/receipt-validation-execution.json",
+      "sha256": "ebbf67dbd4cd2e0c3a7f230d8b3f7bd5970dbde84fb30d261b9e61488d57f1e4",
+      "bytes": 1700
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-current-file-recheck/semantic-review.json",
+      "sha256": "3681c380455da6008ef3b4321e8780dcdaed362d921fc95a61f042f725e0fb7a",
+      "bytes": 7182
+    }
+  ]
+}

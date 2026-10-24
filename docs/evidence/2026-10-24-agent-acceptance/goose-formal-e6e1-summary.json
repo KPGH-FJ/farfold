@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "kind": "GooseFormalE6e1FailedAnswerAndUnexecutedFileSummary",
+  "agentId": "goose",
+  "formalProductCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "observedProgramVersion": "1.52.0",
+  "evidenceLevel": "real-agent",
+  "acceptanceVerified": false,
+  "caseResults": [
+    {
+      "caseId": "goose-answer-ack",
+      "standardIds": ["S5"],
+      "requirementIds": ["ARCH-34"],
+      "result": "failed",
+      "scope": "answer-and-visible-reply-only"
+    },
+    {
+      "caseId": "goose-own-file-current-readback",
+      "standardIds": [],
+      "requirementIds": ["P18"],
+      "result": "incomplete",
+      "execution": "not-run-precondition-failed"
+    }
+  ],
+  "counts": {
+    "expectedCases": 2,
+    "ordinarySends": 1,
+    "attempts": 1,
+    "failed": 1,
+    "incomplete": 1,
+    "passed": 0,
+    "invalid": 0,
+    "visibleToolSteps": 0,
+    "fileCaseAttempts": 0,
+    "retries": 0,
+    "cancellations": 0,
+    "wholeRequirementsAccepted": 0,
+    "standardsAccepted": 0
+  },
+  "observations": {
+    "exactPlannedInputMatched": true,
+    "expectedAckObserved": false,
+    "responseEvidence": "ui-visible-error-prefix-only",
+    "displayedErrorCodeText": "404",
+    "selectedModelProviderUnavailableTextVisible": true,
+    "recognizedUiCompletionVisible": true,
+    "uiIdleVisible": true,
+    "modelChoiceChanged": false,
+    "workspaceImmediateEntryCountReportedAfterAnswer": 0
+  },
+  "mechanicalReport": {
+    "mechanicallyValid": false,
+    "complete": false,
+    "allExpectedOutcomesMatched": false,
+    "errorCodes": ["missing-case"],
+    "scope": "The second fixed-manifest case was not executed; original partial report retained."
+  },
+  "proofLimits": {
+    "rawHttpExchangeCaptured": false,
+    "rawHttpStatusIndependentlyVerified": false,
+    "fullReplyOrAvailableModelListVerified": false,
+    "effectiveProviderOrModelIdentityVerified": false,
+    "authenticationOrPaidEntitlementVerified": false,
+    "noHiddenIoEstablished": false,
+    "allBackgroundIdleEstablished": false,
+    "fileWriteOrCurrentPanelAcceptanceVerified": false,
+    "replacementModelChoiceConfirmed": false
+  },
+  "history": {
+    "unusedPreCaseV1V2Preserved": true,
+    "originalFinalPreCasePreserved": true,
+    "sourcePolicyRedAndOriginalSchemaRejectionPreserved": true,
+    "automaticRetry": false,
+    "originalConditionsUnchanged": true
+  },
+  "digests": {
+    "finalManifest": "4e0ac123d7c2b803b42a57a59c0ccda13f15e3e964da7487e761fab6ad4ec26c",
+    "finalSourcePlan": "3c45c579887b5412433a1c1a1eb3025f7317284240eeb90d31618ad2adbf44cc",
+    "rootPreCaseReview": "24b608f3386be5270524db48fe363d3458b456ec8e005e9917f854ec07e8f7bf",
+    "actualInputObservation": "e3b4f9898b30446233d0a00b1e9c988085c44724a4e0ae82f354fd2bb03f8bcf",
+    "failedAnswerObservation": "8ec2b3de59931d0871ee47667f8bcbac083a96224639a75105a7f57e56403dae",
+    "actualReceipt": "8dca33065c811b12cb8e54cbfcee63bffe255f9253ebd95de7007d92271ce8aa",
+    "validationReport": "fcc1a4a1363b22cf2b62577a15f5b24a6e98746f9cdb318d7156252916adabb4",
+    "semanticReview": "ce4e9a71eb95d99266399a257fad8dbd6234020cdd5414a612df2d8e91bb0e34",
+    "receiptTool": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164"
+  },
+  "publicContentPolicy": "Fixed classes, counts, public program version and necessary evidence digests only; no prompt/reply text, account values, private paths, conversation IDs, model list or raw diagnostics."
+}

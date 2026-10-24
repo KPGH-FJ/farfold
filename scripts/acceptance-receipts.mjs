@@ -446,18 +446,23 @@ function validateManifest(manifest, runId, errors) {
       code("invalid-observation-requirements");
     }
     if (
-      ["installed", "real-agent"].includes(entry.level) &&
+      entry.level === "installed" &&
       !entry.requiredObservations.some((item) => item.source === "installed-ui")
     ) {
       code("missing-installed-observation");
     }
+    // Execution origin and measurement channel are different declarations.
+    // Direct Agent content may be observed in the installed UI or through its
+    // official interface; neither label establishes truth or acceptance here.
     if (
       entry.level === "real-agent" &&
       !entry.requiredObservations.some(
-        (item) => item.source === "official-interface",
+        (item) =>
+          item.source === "official-interface" ||
+          item.source === "installed-ui",
       )
     ) {
-      code("missing-official-observation");
+      code("missing-direct-agent-observation");
     }
   }
   return true;

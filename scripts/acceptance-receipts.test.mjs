@@ -166,9 +166,89 @@ async function fixture(level = "shared") {
   return { root, receipt, manifest, saveManifest };
 }
 
+async function directChannelFixture(source) {
+  const f = await fixture("real-agent");
+  const attempt = f.receipt.attempts[0];
+  for (const [
+    index,
+    item,
+  ] of f.manifest.expectedCases[0].requiredObservations.entries()) {
+    item.source = source;
+    item.kind = "actual-agent-content-visible";
+    attempt.observations[index].source = source;
+    attempt.observations[index].kind = item.kind;
+    attempt.evidence[index].source = source;
+  }
+  await f.saveManifest();
+  return f;
+}
+
 const codes = (report) => report.errors.map((entry) => entry.code);
 
 describe("acceptance receipt integrity", () => {
+  it.each(["installed-ui", "official-interface"])(
+    "accepts a real-Agent observation through the actual %s direct channel without demanding a second capture channel",
+    async (source) => {
+      const f = await directChannelFixture(source);
+      const report = await validateReceipt(f.receipt, { rootDir: f.root });
+      expect(report.mechanicallyValid).toBe(true);
+      expect(report.allExpectedOutcomesMatched).toBe(true);
+      expect(report.cases[0].level).toBe("real-agent");
+      expect(report.acceptanceVerified).toBe(false);
+      expect(report.requiresIndependentReview).toBe(true);
+      expect(
+        planRevalidation(f.manifest, {
+          currentInputs: f.manifest.inputs,
+          now: f.manifest.preparedAt,
+        }),
+      ).not.toHaveProperty("error");
+    },
+  );
+
+  it.each(["controlled-peer", "filesystem", "os-observation"])(
+    "does not turn %s-only evidence into a real-Agent observation by renaming its kind",
+    async (source) => {
+      const f = await directChannelFixture(source);
+      const report = await validateReceipt(f.receipt, { rootDir: f.root });
+      expect(report.mechanicallyValid).toBe(false);
+      expect(report.counts.passed).toBe(0);
+      expect(report.acceptanceVerified).toBe(false);
+    },
+  );
+
+  it.each(["app", "selection"])(
+    "still requires real-Agent %s context for an installed-UI-only observation",
+    async (field) => {
+      const f = await directChannelFixture("installed-ui");
+      delete f.manifest.context[field];
+      f.receipt.attempts[0].context = clone(f.manifest.context);
+      await f.saveManifest();
+      expect(
+        codes(await validateReceipt(f.receipt, { rootDir: f.root })),
+      ).toContain("invalid-run-context");
+    },
+  );
+
+  it("keeps the direct observation tied to the actual evidence reference source", async () => {
+    const f = await directChannelFixture("installed-ui");
+    f.receipt.attempts[0].evidence[0].source = "controlled-peer";
+    const report = await validateReceipt(f.receipt, { rootDir: f.root });
+    expect(codes(report)).toContain("required-observation-not-confirmed");
+    expect(report.counts.passed).toBe(0);
+  });
+
+  it("still requires an installed UI observation for installed management cases", async () => {
+    const f = await fixture("installed");
+    f.manifest.expectedCases[0].requiredObservations[0].source =
+      "official-interface";
+    f.receipt.attempts[0].observations[0].source = "official-interface";
+    f.receipt.attempts[0].evidence[0].source = "official-interface";
+    await f.saveManifest();
+    expect(
+      codes(await validateReceipt(f.receipt, { rootDir: f.root })),
+    ).toContain("missing-installed-observation");
+  });
+
   it("retains requirement-only observations with an explicit empty standard claim and a safe public scope", async () => {
     const f = await fixture();
     f.manifest.expectedCases[0].standardIds = [];

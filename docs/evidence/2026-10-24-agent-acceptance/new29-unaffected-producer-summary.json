@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "kind": "new29-unaffected-producer-source-summary",
+  "recordedAt": "2026-10-24T05:00:37.622169+00:00",
+  "requirementId": "NEW-29",
+  "evidenceLevel": "source",
+  "sourceAnalysis": {
+    "path": "output/2026-10-24-agent-acceptance/new29-unaffected-producer-readiness.json",
+    "sha256": "23730d25c1241fd3371fdd0f1f5967eae06a77edfe167749469418ede76c5113"
+  },
+  "result": "no-confirmed-ready-typed-live-producer-in-four-inspected-routes",
+  "acceptance": {
+    "new29Closed": false,
+    "wholeAgentsAdded": 0,
+    "standardsAdded": 0,
+    "installedCompactionTestsAdded": 0,
+    "realAgentCompactionTestsAdded": 0
+  },
+  "existingConsumerScope": {
+    "eventKinds": ["compaction_update", "compaction_summary_chunk"],
+    "identity": "Owned session and nonempty compactionId for the same live entity.",
+    "liveAndTerminal": "A live in_progress update followed by a valid same-id completed, failed or cancelled update is the relevant activity lifecycle; chunks, text or history alone do not prove this path.",
+    "replay": "Historical and ended identifiers must not become new live work.",
+    "noNewRequirementOrGate": true
+  },
+  "candidates": [
+    {
+      "agentId": "goose",
+      "releaseVersion": "1.52.0",
+      "result": "source-route-negative",
+      "testedLive": false,
+      "releaseChain": "Exact v1.52.0 CompactionOperation -> native message/status -> ACP forward_agent_stream -> optional Goose status_message custom notification.",
+      "actualEventClasses": [
+        "ordinary Message",
+        "_goose/unstable/session/update: status_message",
+        "message_usage statistics"
+      ],
+      "gap": "The inspected converter has no dedicated compaction identity, typed compaction terminal or summary chunk. isCompaction is a statistics boolean. Custom status requires goose.customNotifications; without it this status sender returns without sending.",
+      "sourceCondition": "Provider-managed context skips this compaction operation. Otherwise manual/threshold/limited context-error paths can trigger internal work; this does not turn the inspected status output into typed activity.",
+      "primaryRefs": [
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/Cargo.toml#L8-L15",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/agents/state_machine/ops_compaction.rs#L205-L307",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1609-L1655",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1989-L2114",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose-sdk-types/src/custom_notifications.rs#L4-L35"
+      ]
+    },
+    {
+      "agentId": "mistral-vibe",
+      "releaseVersion": "2.25.8",
+      "result": "source-route-negative",
+      "testedLive": false,
+      "releaseChain": "Exact v2.25.8 vibe-acp -> vibe.acp.entrypoint:main -> ACP session_updates_for_event.",
+      "actualEventClasses": [
+        "checkpoint tool_call",
+        "checkpoint tool_call_update"
+      ],
+      "gap": "Checkpoint conversion has toolCallId=entry.id, kind=think and in_progress/completed, with checkpoint_kind metadata. It is shared by replay and live checkpoint handling; it is not compaction_update or compaction_summary_chunk and does not supply a dedicated typed compaction identity/terminal.",
+      "primaryRefs": [
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/pyproject.toml#L1-L3",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/pyproject.toml#L168-L170",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L700-L701",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/session_updates.py#L124-L181",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/session_updates.py#L688-L722"
+      ]
+    },
+    {
+      "agentId": "opencode",
+      "releaseVersion": "1.18.31",
+      "result": "source-route-negative",
+      "testedLive": false,
+      "releaseChain": "Exact v1.18.31 ACP entry -> ACPEvent global event subscription and converter.",
+      "actualEventClasses": [
+        "internal session.compacted with sessionID only",
+        "ACP message/tool/status handlers"
+      ],
+      "gap": "The complete ACP converter handles session.status, permission.asked, message.part.updated and message.part.delta. It does not handle session.compacted or emit either typed compaction event or compactionId. An internal completion event alone is not a live lifecycle.",
+      "completeConverterEvidence": {
+        "sha256": "bbbfe1e210ba7ddf7b76a8d7d829e6f7e44d4d714c79dce832681ced9314d9ca",
+        "bytes": 12434,
+        "typedCompactionKindLiteralCount": 0,
+        "compactionIdLiteralCount": 0
+      },
+      "primaryRefs": [
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/package.json",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/event.ts#L93-L106",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/event.ts#L152-L164",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/event.ts#L191-L258",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/schema/src/session-compaction-event.ts#L6-L13"
+      ]
+    },
+    {
+      "agentId": "pi",
+      "programPackage": {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "0.87.1"
+      },
+      "reportedTransportPackage": {
+        "name": "pi-acp",
+        "version": "0.0.34"
+      },
+      "result": "source-route-negative-with-selected-transport-binding-unknown",
+      "testedLive": false,
+      "releaseChain": "Official program package 0.87.1 native AgentSessionEvent -> RPC JSON forwarding; separately, official pi-acp v0.0.34 RPC event converter. The two version numbers describe different layers.",
+      "actualEventClasses": [
+        "program: compaction_start(reason)",
+        "program: compaction_end(reason,result,aborted,willRetry,errorMessage?)",
+        "transport converter: auto_compaction_start / auto_compaction_end -> ordinary agent_message_chunk"
+      ],
+      "gap": "The program module start/end declarations have no dedicated compaction identity. RPC JSON conversion preserves non-message_update event names. The complete v0.0.34 converter recognizes the older auto_compaction_* names, emits ordinary text and has no typed compaction kinds or compactionId; current compaction_* names reach its default branch in this source comparison.",
+      "bindingLimit": "The currently selected transport distribution was not identified or inspected. Exact release/package module source is not proof of the running program/transport combination or of compiled-bundle equivalence; this is not a live compatibility failure.",
+      "completeTransportConverterEvidence": {
+        "sha256": "d2ffc844f1e4f079c89cca828b6f12a574aa86281cdad1355117a3844ed69e4f",
+        "bytes": 34962,
+        "typedCompactionKindLiteralCount": 0,
+        "compactionIdLiteralCount": 0
+      },
+      "primaryRefs": [
+        "https://github.com/earendil-works/pi/tree/v0.87.1",
+        "https://api.github.com/repos/earendil-works/pi/git/ref/tags/v0.87.1",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/package.json",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/pi-rpc/process.ts#L117-L139",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/session.ts#L865-L912"
+      ],
+      "programSourceBasis": "The named selected official package module declarations and implementation were read. The exact v0.87.1 Git tag was separately verified through the official GitHub reference API; no whole tag source or program binary equivalence is claimed."
+    }
+  ],
+  "safeContinuation": "Keep NEW-29 real-Agent coverage open for these inspected routes. A suitable official identity-bearing lifecycle surface or confirmed relevant transport mapping can support a later bounded observation. This source finding authorizes no long-prompt forcing, Agent patch/fork, synthetic identity or new acceptance gate.",
+  "limits": [
+    "Only these four exact release/package routes were inspected; no claim about all 29 Agents or all official surfaces.",
+    "No Agent, App, model, compact command or RPC was executed by this source task.",
+    "Source evidence is separate from installed-product, real-Agent, compaction success and live failure evidence.",
+    "Installed executable/source equivalence and unobserved current runtime conditions remain unknown.",
+    "Source-file digests identify reviewed evidence only; no Agent executable hash or version pin is a compatibility condition."
+  ]
+}

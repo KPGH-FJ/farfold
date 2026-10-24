@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "kind": "MistralFormalBoundedObservationsSummary",
+  "preparedAt": "2026-10-24T04:45:02.318Z",
+  "evidenceLevel": "installed",
+  "agentId": "mistral-vibe",
+  "recordedProgramVersion": "2.25.8",
+  "recordedFormalProductCommitPrefix": "e6e1c3796",
+  "identitySource": "operator-recorded existing formal UI; no new binary or account inspection by the semantic reviewer",
+  "observations": {
+    "preparation": {
+      "programCheckReturnedUsable": true,
+      "existingRouteContinuationReturnedUsable": true,
+      "accountIdentity": "not-provided",
+      "accountPlan": "not-provided",
+      "authenticationEvidence": "UI-reported-login-material-detected-only"
+    },
+    "newDraftRestoration": {
+      "distinctWorkingDirectoriesObserved": 2,
+      "displayLabelsAsRecorded": {
+        "Model": "Mistral Medium3.5",
+        "source": "Mistral Vibe已有设置",
+        "工作模式": "Accept Edits",
+        "Thinking": "High"
+      },
+      "labelsAreEffectiveBackendProof": false,
+      "manualChoiceChangeReported": false
+    },
+    "oneAnswer": {
+      "sendsRecorded": 1,
+      "startedAt": "2026-10-24T04:35:49.151Z",
+      "finishedObservedAt": "2026-10-24T04:36:38.680Z",
+      "operatorRecordedPromptMatchesPlan": true,
+      "operatorRecordedReplyMatchesExpectedMarker": true,
+      "terminalAndNotRunningUiObserved": true,
+      "toolStepsObservedInUi": 0,
+      "rawReplyBytesOrNoOtherIoVerified": false
+    },
+    "oneOwnedFile": {
+      "sendsRecorded": 1,
+      "startedAt": "2026-10-24T04:37:53.490Z",
+      "terminalObservedAt": "2026-10-24T04:38:41.255Z",
+      "target": "mistral-proof.txt",
+      "beforeAbsent": "operator-predeclared; not reviewer-observed before snapshot",
+      "completedEditCreateStepsObserved": 1,
+      "replyRecorded": "done",
+      "bytes": 22,
+      "sha256": "587199e106b0960773269f1dc7f4b5077d7545cbc6cdfe22a987da797ba903f6",
+      "independentDiskReadMatchesExactPlannedUtf8": true,
+      "endsWithSingleLF": true,
+      "precisePathOpenedAndCurrentSingleLineVisible": "root-observed",
+      "comparisonUiRecorded": "未完整比较;缺少修改前文本，无法比较",
+      "fullBeforeAfterDiffVerified": false,
+      "approvalVisibleInThisSelectedCase": false,
+      "noOtherIoGuaranteed": false
+    }
+  },
+  "semanticReview": {
+    "result": "narrow-observations-supported-with-explicit-limits",
+    "blockingFindings": 0,
+    "predeclaredPlanFiles": 4,
+    "localFileBirthTimesBeforeRecordedActionStarts": true,
+    "rawRecordStringsRewritten": false,
+    "displayLabelMapping": "Recorded label strings are preserved; correspondence to prior saved choices is semantic, not raw response or effective-model proof."
+  },
+  "acceptanceBoundary": {
+    "boundedPromptSendsRecorded": 2,
+    "effectiveModelOrHighReasoningEstablished": false,
+    "accountIdentityOrEntitlementEstablished": false,
+    "fullRequirementClosed": false,
+    "standardCellsAdded": 0,
+    "all29Accepted": false,
+    "automaticAcceptance": false,
+    "permissionsDenialCancellationOrUnknownRecoveryVerified": false
+  },
+  "limitations": [
+    "Two prepared draft locations and matching visible Model/Accept Edits/High choices do not prove backend-effective model, service or reasoning.",
+    "The answer marker matches the operator-recorded UI string; raw stream bytes and exhaustive tool/file/network absence were not inspected.",
+    "The file case supports one exact owned target creation/result/path display and independent22-byte disk verification; it excludes full before/after comparison and broader permission or no-other-IO claims.",
+    "The previous source-only hidden-key analysis is not used as actual effective-High evidence.",
+    "The reviewer did not operate App/Agent, inspect configuration/history/database or change original evidence."
+  ],
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/preparation-plan.json",
+      "sha256": "ed6a6ea673181d44ba7c631a04576d58635a3de01de3ef1161e9395a69e592df",
+      "bytes": 841
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/preparation-observation.json",
+      "sha256": "8a30c235609de0a62c715abe26e044d9dca8c858d95d287474018b21086f4838",
+      "bytes": 1179
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/new-draft-restore-plan.json",
+      "sha256": "d975e9be11fdaa5d158aedcb4867559aed34eab1ce552ad70bafc44e8a8196d5",
+      "bytes": 925
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/new-draft-restore-observation.json",
+      "sha256": "c86b5d88485d1b16036b77a843a29b0f6c548e1933868f1f90e859406966c1ca",
+      "bytes": 941
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/one-answer-plan.json",
+      "sha256": "f5297f1c4800e50959dc7483e71e0e3889757757eef2d476da5b96fe7757fa82",
+      "bytes": 1023
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/one-answer-observation.json",
+      "sha256": "6d02ff5fda841b5be863031a732fa918797f46285c5723f5bc23886ab4ca0165",
+      "bytes": 790
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/one-file-plan.json",
+      "sha256": "56fabde03ff9f6ac2842ffedb4617820d7a86392f72b88e5fb5dadd928cea10f",
+      "bytes": 1280
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/one-file-observation.json",
+      "sha256": "a400aa26959f4b821224c72be019be9b4393a74fdb5479184c447f0e9dbcbd97",
+      "bytes": 1145
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/one-file-disk-readback.json",
+      "sha256": "4a5fd66a71de853c46d0efa0896a86dda9f6bdf03ffe48d0b643e3ebb1e695f9",
+      "bytes": 618
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/semantic-review.json",
+      "sha256": "508990a36a8f2fc5794090f76428e61dee697290540d8f1a938e6c767b90da9d"
+    }
+  ],
+  "registryId": "registry:mistral-vibe"
+}
