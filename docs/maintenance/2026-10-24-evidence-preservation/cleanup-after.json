@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-24T00:49:56.436119+00:00",
+  "phase": "cleaned",
+  "deletedTargets": [
+    "output/2026-10-10-quicklook-feasibility/module-cache",
+    "output/2026-10-13-pptx-uno-prototype/engine",
+    "output/2026-10-13-pptx-uno-prototype/sdk",
+    "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64.dmg",
+    "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64_sdk.dmg",
+    "output/2026-10-13-pptx-uno-prototype/java-context-probe/jdk-extracted",
+    "output/2026-10-13-pptx-uno-prototype/java-context-probe/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.12.1_1.tar.gz"
+  ],
+  "remainingTargets": [],
+  "totalRegularFileBytesRemoved": 2283126875,
+  "totalAllocatedBytesBefore": 2411384832,
+  "occupancyImmediatelyBeforeDeletion": {
+    "lsofExitCode": 0,
+    "lsofWarningBytes": 0,
+    "psExitCode": 0,
+    "targetOpenFileMatches": 0,
+    "targetProcessCommandMatches": 0
+  },
+  "protected": {
+    "inventoryScope": "All output paths including ignored and nested-repository paths; excludes seven cleanup targets, local private receipts and mounted volume contents",
+    "allNonTargetJsonlCount": 915,
+    "allNonTargetJsonlBytes": 24582685929,
+    "allNonTargetJsonlMetadataSha256": "24f242c7b4ec2f6f8585afe83b01da2d813a069b07b09074ed1c9bf0da4d20bb",
+    "allNonTargetJsonlVerification": "All lstat metadata; historical JSONL contents are not fully reread",
+    "manifestCount": 417,
+    "manifestBytes": 24408172454,
+    "manifestMetadataSha256": "1437fac46ac915361e7769c0b6d9e5937042dba2732ca01f9857ef70ee15af2c",
+    "manifestVerification": "All lstat metadata; latest manifest content SHA-256; no full historical JSONL reread",
+    "latestManifestSha256": "de8f0dd96294dccabdae9982f062eb38fe2dd0a7d4dccaf8281a4ae9ac1cbfbc",
+    "manifestSummaryCount": 423,
+    "manifestSummaryContentSha256": "d3ad60fbddd0f3dda02f018af1b4fefc22065208b8cff30b9754933827d13039",
+    "databaseCount": 1790,
+    "databaseBytes": 1264816100,
+    "databaseMetadataAndContentSha256": "97dc8f5ece5adf52fd99a3f805c6d1cf53fe69cfdad1dd78e32e766b717baa6d",
+    "nestedRepositoryCount": 13,
+    "dirtyNestedRepositoryCount": 1,
+    "nestedRepositoryStateSha256": "2af76141d5cac89f61835fc7e452c4a9f4606e60cc9b817dd6dc796696295af2",
+    "dirtyNestedRepositoryStatusRecords": 798,
+    "protectedMountCount": 1,
+    "protectedMountMetadataSha256": "1a6dbac18761787f5c914b91e76f93650eca89601b6e14ae11e745688c2fb7ee",
+    "installedExecutableSha256": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab"
+  },
+  "protectedSummaryUnchanged": true,
+  "privateAfterInventorySha256": "64f09312a2dd97cd039fb8c73dedcd0700eba96f22680a6a6d04edcd03e1c57e",
+  "diskImmediatelyBeforeDeletion": {
+    "totalBytes": 245107195904,
+    "usedBytes": 226445246464,
+    "freeBytes": 18661949440
+  },
+  "diskImmediatelyAfterDeletion": {
+    "totalBytes": 245107195904,
+    "usedBytes": 224007122944,
+    "freeBytes": 21100072960
+  },
+  "observedFreeBytesChange": 2438123520,
+  "diskMeasurementLimit": "APFS free-space delta is a whole-volume observation; concurrent writes, clones and snapshots affect it",
+  "scope": "No mount unmounted, database or data manifest removed, nested Git changed, or installed app replaced"
+}

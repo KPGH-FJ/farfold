@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "scope": "Seven exact targets authorized on 2026-10-24; execute only after the two evidence batches are pushed",
+  "paths": [
+    "output/2026-10-10-quicklook-feasibility/module-cache",
+    "output/2026-10-13-pptx-uno-prototype/engine",
+    "output/2026-10-13-pptx-uno-prototype/sdk",
+    "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64.dmg",
+    "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64_sdk.dmg",
+    "output/2026-10-13-pptx-uno-prototype/java-context-probe/jdk-extracted",
+    "output/2026-10-13-pptx-uno-prototype/java-context-probe/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.12.1_1.tar.gz"
+  ],
+  "protected": "All data manifests, databases, mount directory and nested Git; LLVM, WebKit and PowerShell are outside this scope",
+  "deleteMode": "Unlink files; fd-safe recursive deletion without following symlinks; never unmount"
+}

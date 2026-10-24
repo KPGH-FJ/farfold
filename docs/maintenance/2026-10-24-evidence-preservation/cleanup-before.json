@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-24T00:43:39.374974+00:00",
+  "phase": "prepared-no-deletion",
+  "targets": [
+    {
+      "target": "output/2026-10-10-quicklook-feasibility/module-cache",
+      "identity": {
+        "path": "output/2026-10-10-quicklook-feasibility/module-cache",
+        "mode": 16872,
+        "size": 1472,
+        "device": 16777234,
+        "inode": 70102221,
+        "mtimeNs": 1791575133864007262
+      },
+      "entries": 346,
+      "regularFileBytes": 208072680,
+      "allEntryApparentBytes": 208083976,
+      "allocatedBytes": 208777216,
+      "symlinks": 0,
+      "treeMetadataSha256": "46142e925308fa7161e3e317246c1c9aeda4679c097092dbf4cdf98e9991fcb6",
+      "fileSha256": null,
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/engine",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/engine",
+        "mode": 16832,
+        "size": 96,
+        "device": 16777234,
+        "inode": 73641853,
+        "mtimeNs": 1791821968376105033
+      },
+      "entries": 18631,
+      "regularFileBytes": 797625326,
+      "allEntryApparentBytes": 798288716,
+      "allocatedBytes": 839614464,
+      "symlinks": 25,
+      "treeMetadataSha256": "2b423c68deb00779ef2cf0027894c8f51cde4034151d6a510bfe6fbd7c2ebd57",
+      "fileSha256": null,
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/sdk",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/sdk",
+        "mode": 16832,
+        "size": 96,
+        "device": 16777234,
+        "inode": 73660575,
+        "mtimeNs": 1791821986318093699
+      },
+      "entries": 31727,
+      "regularFileBytes": 369801532,
+      "allEntryApparentBytes": 370831612,
+      "allocatedBytes": 454402048,
+      "symlinks": 0,
+      "treeMetadataSha256": "6623869fc6752bafa4e8f6e2d88c26e4295297f00a927ffcc5714911e8c0e58c",
+      "fileSha256": null,
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64.dmg",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64.dmg",
+        "mode": 33152,
+        "size": 297798926,
+        "device": 16777234,
+        "inode": 73641821,
+        "mtimeNs": 1791821937838023746
+      },
+      "entries": 1,
+      "regularFileBytes": 297798926,
+      "allEntryApparentBytes": 297798926,
+      "allocatedBytes": 297799680,
+      "symlinks": 0,
+      "treeMetadataSha256": "3cc81654f26610bbda100736440682446898f166313968b079149837435891e0",
+      "fileSha256": "94bb3248df074c225490a8a6d1d9dc87c7d6783dbb7a8e9f0d0c3d94348552af",
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64_sdk.dmg",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/LibreOffice_26.2.6_MacOS_aarch64_sdk.dmg",
+        "mode": 33152,
+        "size": 58749136,
+        "device": 16777234,
+        "inode": 73641822,
+        "mtimeNs": 1791821937910276446
+      },
+      "entries": 1,
+      "regularFileBytes": 58749136,
+      "allEntryApparentBytes": 58749136,
+      "allocatedBytes": 58753024,
+      "symlinks": 0,
+      "treeMetadataSha256": "e2b78def7294bb7cf59c757f339681819a8b66b78234cccaa5f7d25c4ea9c461",
+      "fileSha256": "662ae871204abeb0a4efb3986b846f324501125954f8201f6759528d5513ae23",
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/java-context-probe/jdk-extracted",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/java-context-probe/jdk-extracted",
+        "mode": 16832,
+        "size": 96,
+        "device": 16777234,
+        "inode": 73709381,
+        "mtimeNs": 1791827755432579454
+      },
+      "entries": 551,
+      "regularFileBytes": 351005871,
+      "allEntryApparentBytes": 351029359,
+      "allocatedBytes": 351961088,
+      "symlinks": 0,
+      "treeMetadataSha256": "1904a1903fa2be777d71569c04396c35150f7ed25529626a37c0b6942563d0c3",
+      "fileSha256": null,
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    },
+    {
+      "target": "output/2026-10-13-pptx-uno-prototype/java-context-probe/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
+      "identity": {
+        "path": "output/2026-10-13-pptx-uno-prototype/java-context-probe/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
+        "mode": 33152,
+        "size": 200073404,
+        "device": 16777234,
+        "inode": 73705593,
+        "mtimeNs": 1791827629686061339
+      },
+      "entries": 1,
+      "regularFileBytes": 200073404,
+      "allEntryApparentBytes": 200073404,
+      "allocatedBytes": 200077312,
+      "symlinks": 0,
+      "treeMetadataSha256": "b478d6fcb688ddcab48f0ed1796da95d7fbe8f2aebb68bd8252a0394d9c45891",
+      "fileSha256": "3623232f33a9c3baadf304480b2535f9a3cba8a58d42ecbb438ba267315d9998",
+      "rootSymlink": false,
+      "mountWithinTarget": false,
+      "nestedGitWithinTarget": false,
+      "protectedDataWithinTarget": false
+    }
+  ],
+  "occupancy": {
+    "lsofExitCode": 0,
+    "lsofWarningBytes": 0,
+    "psExitCode": 0,
+    "targetOpenFileMatches": 0,
+    "targetProcessCommandMatches": 0
+  },
+  "protected": {
+    "manifestCount": 417,
+    "manifestBytes": 24408172454,
+    "manifestMetadataSha256": "1437fac46ac915361e7769c0b6d9e5937042dba2732ca01f9857ef70ee15af2c",
+    "manifestVerification": "All lstat metadata; latest manifest content SHA-256; no full historical JSONL reread",
+    "latestManifestSha256": "de8f0dd96294dccabdae9982f062eb38fe2dd0a7d4dccaf8281a4ae9ac1cbfbc",
+    "manifestSummaryCount": 423,
+    "manifestSummaryContentSha256": "d3ad60fbddd0f3dda02f018af1b4fefc22065208b8cff30b9754933827d13039",
+    "databaseCount": 1790,
+    "databaseBytes": 1264816100,
+    "databaseMetadataAndContentSha256": "97dc8f5ece5adf52fd99a3f805c6d1cf53fe69cfdad1dd78e32e766b717baa6d",
+    "nestedRepositoryCount": 13,
+    "dirtyNestedRepositoryCount": 1,
+    "nestedRepositoryStateSha256": "2af76141d5cac89f61835fc7e452c4a9f4606e60cc9b817dd6dc796696295af2",
+    "dirtyNestedRepositoryStatusRecords": 798,
+    "protectedMountCount": 1,
+    "protectedMountMetadataSha256": "1a6dbac18761787f5c914b91e76f93650eca89601b6e14ae11e745688c2fb7ee",
+    "installedExecutableSha256": "afa123e9370b002df62ad840de9dbdb54148d18af3f9b5f7b523134e1e7c8fab",
+    "inventoryScope": "All output paths including ignored and nested-repository paths; excludes seven cleanup targets, local private receipts and mounted volume contents",
+    "allNonTargetJsonlCount": 915,
+    "allNonTargetJsonlBytes": 24582685929,
+    "allNonTargetJsonlMetadataSha256": "24f242c7b4ec2f6f8585afe83b01da2d813a069b07b09074ed1c9bf0da4d20bb",
+    "allNonTargetJsonlVerification": "All lstat metadata; historical JSONL contents are not fully reread"
+  },
+  "disk": {
+    "totalBytes": 245107195904,
+    "usedBytes": 226563162112,
+    "freeBytes": 18544033792
+  },
+  "totalRegularFileBytes": 2283126875,
+  "totalAllocatedBytes": 2411384832,
+  "privateInventorySha256": "7bc897428e4e705d3530e136afb5e3e363375e0b9ea38f8bd058cd9c3cc08da8",
+  "scope": "Seven enumerated targets only; data manifests, databases, mount, all nested Git and installed app protected",
+  "jsonlProtectionAddedAt": "2026-10-24T00:44:25.338423+00:00"
+}
