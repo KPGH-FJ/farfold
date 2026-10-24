@@ -1,0 +1,116 @@
+{
+  "kind": "ScopedInstalledRealAgentExactReplySummary",
+  "schemaVersion": 1,
+  "agentId": "codebuddy-code",
+  "observedAgentVersion": "2.160.0",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "expected-reply-completion-and-current-idle-observed",
+  "observed": {
+    "ordinaryRequests": 1,
+    "attachments": 0,
+    "retryCancelOrModelChanges": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyMatched": true,
+    "sameOwnedConversation": true,
+    "sameCwd": true,
+    "confirmedVisibleLabelsAndSavedSelectionPreserved": true,
+    "recognizedCompletionVisible": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "exactBackendCompletionTimeKnown": false,
+    "rawProtocolBodyBytesCaptured": false,
+    "rawStopReasonCaptured": false,
+    "exhaustiveNoIoProof": false,
+    "effectiveBackendModelOrReasoningVerified": false,
+    "accountOrEntitlementVerified": false,
+    "allOtherProcessesRequestFreeVerified": false,
+    "allBackgroundIdleVerified": false
+  },
+  "additionalUi": {
+    "collapsedThinkingAndExtensionHeadersObserved": true,
+    "bodiesExpandedOrInspected": false,
+    "thinkingContentValidated": false,
+    "wholeThinkingOrEventCoverageClaimed": false
+  },
+  "mechanicalValidation": {
+    "validatorCalls": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "errors": [],
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 3,
+      "privateEvidenceFiles": 3
+    },
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "semanticReview": {
+    "reviewedPrimaryOriginalCount": 4,
+    "additionalRootPreparationRecordCount": 3,
+    "originalHashesUnchanged": true,
+    "originalReferencesMatch": true,
+    "preparedBeforeInputAndSend": true,
+    "executionRepeated": false,
+    "actualUiObservationPerformedByReviewer": false,
+    "appIdentityBasis": "root-static-baseline-no-replacement",
+    "appBundleRehashedByThisReview": false,
+    "declaredOriginFilesRehashed": 11,
+    "sourcePlanDigestAlsoMatched": true,
+    "originsPlusSourcePlanReferencesChecked": 12,
+    "inputRecordedPreSendOriginChecks": 11,
+    "completionTimestampMeaning": "Attempt finishedAt is first observed completed-and-idle UI, not exact backend completion time.",
+    "inputFingerprintMeaning": "Before/after maps retain frozen declarations. Exact originals, eleven static origin files and the source-plan digest matched; no global live dependency or installed-App recheck is claimed.",
+    "scope": "Only the exact-reply positive branch and formal-UI completion/current-conversation idle. Preserved labels do not prove backend model, reasoning effect, account identity or raw response bytes."
+  },
+  "preparation": {
+    "factoryVersion": "v2",
+    "factoryInvokedByReviewer": false,
+    "originalManifestOrSourcePlanRewritten": false,
+    "agentRequestsAddedByReview": 0
+  },
+  "coveredSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "wholeConditionAccepted": false
+    }
+  ],
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "sourcePlan": "e93d9cd6a9c1a8da54aa729cc820d964f61c1474ebf0da699ed128e9b18385a6",
+    "manifest": "6be2d1af492e1ff278505c5faa81b197c89ed46e14fdf65c1a180ad3a4f0ade6",
+    "inputObservation": "c61023ddaf81e2a12c9dac3db7982f3c47aaa0ce36ca374d219d0eac4e506502",
+    "resultObservation": "cfa376722f61f13eabcb1dd7eec66f1ecd1f35b14fc1341505a585542f5d8646",
+    "actualReceipt": "e4751789dfd292debe140254b55ea3f3aad432a313e34ce9bd23b2f19dc41696",
+    "validationReport": "86610a9eb27e05119215f83eb293d66a5d87e19717e3be3ace8dca9567306e33",
+    "sourceRefReview": "d789337786a5c6c0853a61b2070f2ef5c78f707c2985fe5526c422c21c9e865a",
+    "semanticReview": "324ae44b3810d9edc470c796c2de18ee85c2ae39c4e891820e64d9fdbd6e71cf",
+    "receiptToolSource": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164",
+    "offlineFactory": "82c69783eb5d15b85d5d448cb5df3b2105f493af910e5e3a84a2af9051da4340"
+  }
+}

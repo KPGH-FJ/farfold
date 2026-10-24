@@ -1,0 +1,119 @@
+{
+  "kind": "ScopedInstalledRealAgentUnknownReplySummary",
+  "schemaVersion": 1,
+  "agentId": "factory-droid",
+  "observedAgentVersion": "0.230.0",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "ui-error-visible-request-outcome-unknown",
+  "observed": {
+    "ordinaryRequests": 1,
+    "attachments": 0,
+    "retries": 0,
+    "cancels": 0,
+    "manualChoiceChanges": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyObserved": false,
+    "confirmedVisibleLabelsAndSavedSelectionPreserved": true,
+    "uiErrorText": "Error: 401 status code (no body)",
+    "uiResultUnknown": true,
+    "sendingPaused": true,
+    "visibleToolSteps": 0,
+    "recognizedCompletionObserved": false,
+    "requestTerminalConfirmed": false,
+    "currentConversationIdleConfirmed": false,
+    "rawHttpResponseAcquired": false,
+    "rawStopReasonCaptured": false,
+    "effectiveBackendModelOrReasoningVerified": false,
+    "accountOrEntitlementVerified": false,
+    "exhaustiveNoIoProof": false,
+    "allBackgroundIdleVerified": false,
+    "backendWorkConfirmedActive": false,
+    "backendWorkConfirmedEnded": false
+  },
+  "requestProtection": {
+    "attemptStatus": "started",
+    "attemptOutcome": "unknown",
+    "attemptFinishedAtPresent": false,
+    "noNewRequestPreserved": true,
+    "stopOrRetryAddedByReview": 0,
+    "statusMeaning": "Dispatched request without a confirmed terminal; not proof that backend computation remains active."
+  },
+  "mechanicalValidation": {
+    "validatorCalls": 1,
+    "mechanicallyValid": true,
+    "complete": false,
+    "allExpectedOutcomesMatched": false,
+    "errors": [],
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 0,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 1,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 3,
+      "privateEvidenceFiles": 3
+    },
+    "commandNaturalExitCode": 1,
+    "exitMeaning": "planned-successful-ACK-not-established",
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "semanticReview": {
+    "reviewedPrimaryOriginalCount": 4,
+    "additionalRootPreparationRecordCount": 3,
+    "originalHashesUnchanged": true,
+    "preparedBeforeInputAndSend": true,
+    "executionRepeated": false,
+    "actualUiObservationPerformedByReviewer": false,
+    "appIdentityBasis": "root-static-baseline-no-replacement",
+    "appBundleRehashedByThisReview": false,
+    "declaredOriginFilesRehashed": 11,
+    "sourcePlanDigestAlsoMatched": true,
+    "originsPlusSourcePlanReferencesChecked": 12,
+    "inputRecordedPreSendOriginChecks": 11,
+    "runFinishedAtMeaning": "Observation-window cutoff at first error-and-unknown UI only; no request completion or safe-idle claim.",
+    "inputFingerprintMeaning": "Maps retain frozen declarations; exact originals and declared static refs matched, without a global live dependency or installed-App recheck.",
+    "scope": "UI error text is not an acquired raw HTTP status or account diagnosis. No successful reply, confirmed terminal, safe idle, effective model, reasoning content, exhaustive IO or all-background result is established."
+  },
+  "plannedSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "successfulObservation": false,
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "successfulObservation": false,
+      "wholeConditionAccepted": false
+    }
+  ],
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "sourcePlan": "8e9ae65b13cb38cc575aed8fe3e06a046f715167a0facccd906860fb1e653fc8",
+    "manifest": "f01b1220ab510fc43607f2b2aa5737449eeee1e4cccb55fcf766a93df40b876b",
+    "inputObservation": "a151e3e6c2df93162ea87e8495eec96eed4dd35394bc43e9a78f88062377e4ec",
+    "resultObservation": "2c27ce00228fa46545a546d9807fb9eff6c2c4659cff973b1c8cbce22f73a937",
+    "actualReceipt": "2a7326c5f49e533942cef9d1fc3d77d01ea016f1a183fb108095b9ddf2dc4721",
+    "validationReport": "abc88418ce0e2aa62d0b672ca294af8c26510dad0fd080e036fd2650deeea4d6",
+    "sourceRefReview": "0492d62e3fcec3de052a79c8cbe971c52485eba0024f79f65b402110f2901e86",
+    "semanticReview": "757f0cdf031c629dd48257855ee7a82b01e6afcf5a90f882cabb09f73e1229b4",
+    "receiptToolSource": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164",
+    "offlineFactory": "82c69783eb5d15b85d5d448cb5df3b2105f493af910e5e3a84a2af9051da4340"
+  }
+}

@@ -15,6 +15,12 @@ import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
 import { toUiNotice, type UiNotice } from "../runtime/ui_error";
+import {
+  configurationRestoreNotice,
+  isConfigurationRestoreNotice,
+  requireRestoredConfigurationValues,
+  requireSavedConfigurationOption,
+} from "../runtime/configuration_restore_feedback";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { ServiceChoice } from "./ServicePicker";
 import {
@@ -290,7 +296,8 @@ export function EmptyState({
       panel:
         explicitReadRequired ||
         (!needsAuthentication &&
-          draftError?.message === STRINGS.repair.configFailed)
+          (draftError?.message === STRINGS.repair.configFailed ||
+            isConfigurationRestoreNotice(draftError)))
           ? "model"
           : agentRepairPanel(draft, needsAuthentication),
       needsAuthentication,
@@ -585,38 +592,24 @@ export function EmptyState({
               readRequired()
             )
               return;
-            const option = threads
-              .thread(state.key)
-              ?.configOptions.find((item) => item.id === id);
-            if (
-              !option ||
-              (value !== option.currentValue &&
-                option.type === "select" &&
-                !option.options.some((item) => item.value === value))
-            )
-              throw new Error(STRINGS.repair.configFailed);
+            const option = requireSavedConfigurationOption(
+              threads.thread(state.key)?.configOptions,
+              id,
+              value,
+            );
             if (value !== option.currentValue)
               await threads.setConfig(state.key, id, value);
             if (rejectOpened()) return;
-            if (
-              threads
-                .thread(state.key)
-                ?.configOptions.find((item) => item.id === id)?.currentValue !==
-              value
-            )
-              throw new Error(STRINGS.repair.configFailed);
+            requireRestoredConfigurationValues(
+              threads.thread(state.key)?.configOptions,
+              [[id, value]],
+            );
           }
-          if (
-            !cancelled &&
-            choices.some(
-              ([id, value]) =>
-                threads
-                  .thread(state.key)
-                  ?.configOptions.find((item) => item.id === id)
-                  ?.currentValue !== value,
-            )
-          )
-            throw new Error(STRINGS.repair.configFailed);
+          if (!cancelled)
+            requireRestoredConfigurationValues(
+              threads.thread(state.key)?.configOptions,
+              choices,
+            );
           if (rejectOpened()) return;
           preparedComposerOwner.open(state.key);
           setDraftKey(state.key);
@@ -631,7 +624,10 @@ export function EmptyState({
             !(error instanceof DraftArchiveBlockedError)
           ) {
             failedPairRef.current = pair;
-            setDraftError(toUiNotice(error, STRINGS.repair.requestFailed));
+            setDraftError(
+              configurationRestoreNotice(error) ??
+                toUiNotice(error, STRINGS.repair.requestFailed),
+            );
           }
         })
         .finally(() => {

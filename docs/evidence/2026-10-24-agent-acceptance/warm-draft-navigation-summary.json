@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "kind": "InstalledUiWarmDraftNavigationPublicSummary",
+  "recordedAt": "2026-10-24T06:56:23.225629+00:00",
+  "formal": {
+    "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+    "identityBasis": "prior root exact static baseline, no replacement since; not a new bundle read by this observation"
+  },
+  "requirementIds": ["P01"],
+  "level": "installed-ui",
+  "cases": [
+    {
+      "agentId": "codebuddy-code",
+      "draftSetObservedAt": "2026-10-24T06:48:08.562Z",
+      "readbackObservedAt": "2026-10-24T06:48:57.281Z",
+      "textIncludingChineseAndEmojiExact": true,
+      "oneOwnAttachmentNameListExact": true,
+      "otherCaseDraftAbsent": true,
+      "originalInputAndReplyVisible": true,
+      "currentConversationIdleVisible": true
+    },
+    {
+      "agentId": "qwen-code",
+      "draftSetObservedAt": "2026-10-24T06:48:51.875Z",
+      "readbackObservedAt": "2026-10-24T06:49:02.941Z",
+      "textIncludingChineseAndEmojiExact": true,
+      "oneOwnAttachmentNameListExact": true,
+      "otherCaseDraftAbsent": true,
+      "originalInputAndReplyVisible": true,
+      "currentConversationIdleVisible": true
+    }
+  ],
+  "rootFixtureReadback": [
+    {
+      "owner": "codebuddy-code",
+      "sha256": "10da180ccfaad499791a6da3969b0de1be58048243c2a2ca8e7ec0215610b160",
+      "bytes": 35,
+      "unchanged": true
+    },
+    {
+      "owner": "qwen-code",
+      "sha256": "819cf11d7db5348506f34cfe3c2f7fe1a5c19a22f14da4dc7cb09232257042f2",
+      "bytes": 30,
+      "unchanged": true
+    }
+  ],
+  "actions": {
+    "ordinaryModelRequests": 0,
+    "sendActions": 0,
+    "stopActions": 0,
+    "retry": 0,
+    "configChanges": 0,
+    "quitOrRestart": 0
+  },
+  "results": {
+    "positiveUiObservations": 2,
+    "failedUiObservations": 0,
+    "receiptValidatorApiCalls": 0,
+    "mechanicalReceiptAcceptanceClaimed": false,
+    "fullRequirementsAccepted": 0,
+    "fullStandardsAccepted": 0,
+    "fullAgentsAccepted": 0
+  },
+  "retained": {
+    "ownDraftTextAndAttachmentSelections": true,
+    "ownFixtureFiles": true,
+    "protectedUnknownWork": true
+  },
+  "limits": [
+    "Warm in-process navigation only; no database persistence or cold restart proof",
+    "Attachment filename/list presence is not preview, reread validation or actual Agent consumption",
+    "Original body/reply remain visible on these pages; no official history replay or native context continuation asserted",
+    "No new model request, cancellation, configuration change, app quit or restart",
+    "Independent semantic review checked root record hashes/scope; it did not independently read the fixture files",
+    "No broader P01, S6, S7 or29x8 acceptance"
+  ],
+  "evidenceHashes": {
+    "preActionPlan": "02699266b88558ddb1817f678b33cff8c3f93ccdb27aabc01525d4a16083c805",
+    "rootObservation": "dbe1c457ca31f2687263ef5b0293cd3ec71183f2de54cb18378fd4cb81ec2ea0"
+  },
+  "scopeDescription": "未发送文字与附件在导航后保持；不自动发送"
+}

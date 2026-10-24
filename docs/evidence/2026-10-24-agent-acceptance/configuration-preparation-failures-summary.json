@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "InstalledUiConfigurationPreparationFailurePublicSummary",
+  "recordedAt": "2026-10-24T07:01:17.002069+00:00",
+  "formal": {
+    "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4"
+  },
+  "cases": [
+    {
+      "agentId": "pi-acp",
+      "appAgentId": "pi",
+      "oneStartAt": "2026-10-24T06:27:44.700Z",
+      "firstFailureObservedAt": "2026-10-24T06:29:39.374Z",
+      "outcome": "configuration-not-confirmed",
+      "adapterPackageVersion": "0.0.34",
+      "selectedCliPackageVersion": "0.87.1",
+      "twoVersionsAreDifferentLayers": true,
+      "actualRuntimeCliMapping": "not-completely-confirmed",
+      "metadataWindow": {
+        "initializeSucceeded": true,
+        "sessionNewResponseObserved": true,
+        "setterResponsesWithoutProtocolError": 2,
+        "setterFieldsOrValuesAcquired": false,
+        "timeCorrelationOnly": true
+      }
+    },
+    {
+      "agentId": "devin",
+      "observedProgramVersion": "3000.11.3",
+      "oneStartAt": "2026-10-24T06:52:03.099Z",
+      "firstFailureObservedAt": "2026-10-24T06:53:01.867Z",
+      "outcome": "configuration-not-confirmed",
+      "setterFieldsOrValuesAcquired": false
+    }
+  ],
+  "ui": {
+    "fixedFailureVisible": true,
+    "sendDisabled": true,
+    "settingsAndRetryAvailable": true
+  },
+  "actions": {
+    "modelPrompts": 0,
+    "manualChoiceChanges": 0,
+    "saveOrAdopt": 0,
+    "retry": 0,
+    "login": 0
+  },
+  "piSourceFindings": {
+    "selectedLocalPublicAdapterJsRead": true,
+    "modernOptions": ["model", "thought_level"],
+    "modernModeOption": false,
+    "legacyModeAndModernThoughtLevelUseSameThinkingSetter": true,
+    "missingSavedModeWithTwoPriorSettings": "statically-reachable-explanation",
+    "uniqueCauseOfActualFailureConfirmed": false,
+    "officialNetworkTruncationEvidencePreserved": true,
+    "sourceFingerprintIsNotBinaryAdmissionHash": true
+  },
+  "results": {
+    "preparationFailuresObserved": 2,
+    "fullRequirementsAccepted": 0,
+    "fullStandardsAccepted": 0,
+    "fullAgentsAccepted": 0
+  },
+  "limits": [
+    "Generic UI error does not identify the failed key or unique cause",
+    "Two successful setter RPC responses do not prove which fields or effective values were confirmed",
+    "No manual choice change does not mean no external configuration action; App may restore earlier fields before failing",
+    "Selected local package static source does not prove already-running bytes or complete wrapper-to-CLI execution mapping",
+    "No saved key removed, mode remapped, model adopted, retry or prompt performed",
+    "Protected siGit unknown and affected NEW24 pause retained"
+  ],
+  "evidenceHashes": {
+    "piPlan": "b1813172eb6c3edb2218ed65d024d4c6392ed985956061513fbc70b6551484a8",
+    "piUi": "61ac3a73523703565d5a38965b1a426d43d3099bb8010f025834afae627f6228",
+    "piContentFreeWindow": "490601bd1634f55cb8c52509026fe45b7aea7da41ee40b40c51cc631b7da8ff7",
+    "piInitialSourceAnalysis": "9c579c7a7b87a4d914b41ef5268d77ca8b10d5399948b9579285b1d33a30ce0c",
+    "piCurrentWhitelistedLaunchProjection": "54d9b4f93c55d8f2b56a1bc6d2b4c30c6a7518f4236f6814fd92d5244653cf92",
+    "piSelectedPublicPackageProjection": "b80cb96e34bd70b9518e8ae8fdaffb3b47b57f56614c610a516ffa8d217f2c3c",
+    "piSelectedLocalSourceAnalysis": "81927e33dc225d55ad985cc102de9dfd71a53566b147fe57b1a6b13720003db1",
+    "devinPlan": "93c2663832122f8eb3a0963493b734a9ddb7e3992d6278a15c34a47e88c1eb90",
+    "devinUi": "39568353613bbd183564754d8998e6de0b33cb1fe84d7c9c2ffad9673cd0bc5b"
+  }
+}

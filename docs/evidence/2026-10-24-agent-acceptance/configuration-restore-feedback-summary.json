@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "kind": "SavedConfigurationRestoreFeedbackSourceAndEngineeringPublicSummary",
+  "recordedAt": "2026-10-24T07:07:53.364807+00:00",
+  "checkedBaseHead": "5a671e0ab9e0dbfe21d89bc14311669192a1fdc0",
+  "scope": {
+    "requirementIds": ["ARCH-18", "ARCH-20", "ARCH-22", "P36"],
+    "countercontrol": ["P01"],
+    "packages": ["B", "F", "C", "K"],
+    "wholeConditionsClosed": false
+  },
+  "change": {
+    "finiteLocalReasons": [
+      "saved-option-missing",
+      "saved-select-value-unavailable",
+      "saved-value-readback-unconfirmed"
+    ],
+    "fixedUserLanguage": true,
+    "rawIdsValuesPathsOrBackendTextInterpolated": false,
+    "modelRepairRoutePreservedByLocalTypedNotice": true,
+    "unstructuredSetterErrorsKeepExistingHandling": true,
+    "savedKeysModelFirstAllKeyChecksOwnerCancelGuardsDraftAndNoAutoSendPreserved": true,
+    "silentMigrationOrModelAdoption": false
+  },
+  "controlled": {
+    "validPreFixRed": {
+      "files": 1,
+      "tests": 10,
+      "passed": 6,
+      "failed": 4
+    },
+    "finalAffectedGreen": {
+      "files": 5,
+      "passed": 98,
+      "failed": 0
+    },
+    "independentGreen": {
+      "files": 2,
+      "passed": 26,
+      "failed": 0
+    },
+    "typeFormatAndScopedDiffPassed": true,
+    "countsNotAddedTogether": true
+  },
+  "engineering": {
+    "commands": 7,
+    "allSucceeded": true,
+    "frontend": {
+      "files": 664,
+      "passed": 8748,
+      "failed": 0
+    },
+    "rust": [
+      {
+        "passed": 2228,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "inputCount": 2244,
+    "sourceEndpointsEqual": true,
+    "eachCommandSourceEndpointsEqual": true,
+    "fourteenLogHashesAnd0600Verified": true,
+    "checksRanBeforeCommit": true,
+    "sourceMapRecheckedAfterEngineering": true
+  },
+  "sourceInputs": [
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "343a073400d8a9c0752529f0033e6e3186b431385e752ab1e538ce74d4b882cf",
+      "bytes": 49085,
+      "lineCount": 1496
+    },
+    {
+      "path": "src/components/EmptyState.model-error.test.tsx",
+      "sha256": "f1ed9fc8c8492d9a40ba20de3ccc198781eaf2e7f75cb6ab5d9ef4cc45487efc",
+      "bytes": 17850,
+      "lineCount": 521
+    },
+    {
+      "path": "src/runtime/configuration_restore_feedback.ts",
+      "sha256": "7d787fa69f30d86658c869f03bce29e4f95bea161c43a1d9cd5a3c40128d5ff4",
+      "bytes": 2229,
+      "lineCount": 69
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "71b486bc75c8fcb691ba0046845d017f217bb8693a701fc91daa0ae3c5698f78",
+      "bytes": 33553,
+      "lineCount": 748
+    }
+  ],
+  "preservedRecordCorrections": {
+    "oldReporterNoOutputNotProductRed": true,
+    "initialFixtureMissingPreparationIntentNotProductRed": true,
+    "threeMetadataLiteralTrailingNewlineOriginalsRetained": true,
+    "canonicalMetadataOnlySuffixCorrected": true,
+    "oneRequestedTestFilterAbsentNotClaimedAsCoverage": true
+  },
+  "limits": {
+    "installedAffectedUiVerified": false,
+    "formalAppStillE6e1": true,
+    "piUniqueDynamicCauseConfirmed": false,
+    "fullRequirementsAccepted": 0,
+    "standardCellsAccepted": 0,
+    "fullAgentsAccepted": 0,
+    "prepared196CandidateSourceStale": true,
+    "normalExitConditionPending": true
+  },
+  "evidenceHashes": {
+    "implementation": "27f2e5aa44574efa134bc714b3f51f9fdf843d65fa2ffdf44f2e203d32a4be3d",
+    "independentReview": "cbeb8ce14154bed8265130c187bf83888af23cf67395658d3c89dcf677fcca24",
+    "engineeringSummary": "0e4cb6d085b86ae63291f787d336f1e54f19f6a83d4cd646f87b7d927f16c0ff",
+    "sourceBefore": "5c0612136f0d64c7e2b30cdfb787d3903faac4b61c7b2879007db02814c629a2",
+    "sourceAfter": "77628e6d1e3214247b50fa117ecbd8b2827959f988468d3fed9b95fe45dd2a93",
+    "rootExecutionReview": "3fabae04589c42ddb69c40932a2bded7933bf9f8d86d749e31f163ec2c2cb0ad",
+    "runner": "08964f611eff0d66d5cdec19f16beb1996646e3d7bcd9e10de58dab91158cb79"
+  }
+}

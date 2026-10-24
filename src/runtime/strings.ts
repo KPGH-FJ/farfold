@@ -331,6 +331,12 @@ export const STRINGS = {
     archiveBusy: "请先处理此对话的任务和未发送内容，再归档",
     archiveDirectoryUnknown: "暂时无法核对资料文件夹，请确认它可访问后再归档。",
     configFailed: "设置尚未确认，请检查后重试",
+    savedConfigMissing:
+      "设置尚未确认，请检查后重试。Agent 当前未提供某项已保存设置。",
+    savedConfigUnavailable:
+      "设置尚未确认，请检查后重试。已保存的选择当前不可用。",
+    savedConfigReadback:
+      "设置尚未确认，请检查后重试。读回结果与已保存的选择不一致。",
     reconnectFailed: "重新连接失败，原内容已保留，请重试",
     requestFailed: "请求未完成，请检查 Agent 后重试",
     serviceFailed: "服务未能完成请求，请检查模型是否可用后重试",

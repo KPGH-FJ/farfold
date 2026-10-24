@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { AgentCardModel } from "../runtime/agents";
-import type { ThreadState } from "../runtime/session_types";
+import type { ConfigOptionView, ThreadState } from "../runtime/session_types";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -109,6 +109,7 @@ import { freshThreadState } from "../runtime/session_projection";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { ERROR_STRINGS as E } from "../runtime/error_strings";
+import { STRINGS } from "../runtime/strings";
 
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof EmptyState>;
@@ -308,4 +309,213 @@ it("does not let a rejected old Agent preparation contaminate a newly selected p
   expect(h.open).toHaveBeenCalledTimes(2);
   expect(h.setConfig).not.toHaveBeenCalled();
   expect(composerDrafts.read("new").text).toBe("Keep this draft");
+});
+
+const restoreCopy = {
+  missing: "设置尚未确认，请检查后重试。Agent 当前未提供某项已保存设置。",
+  unavailable: "设置尚未确认，请检查后重试。已保存的选择当前不可用。",
+  readback: "设置尚未确认，请检查后重试。读回结果与已保存的选择不一致。",
+};
+function configOption(
+  id: string,
+  currentValue: string,
+  values: string[],
+): ConfigOptionView {
+  return {
+    id,
+    name: id === "model" ? "Model" : "Thinking",
+    category: id === "model" ? "model" : "thought_level",
+    type: "select",
+    currentValue,
+    options: values.map((value) => ({ value, name: value })),
+  };
+}
+function startRestore(config: Record<string, unknown>) {
+  newConversationChoice.config = config;
+  h.live = freshThreadState("prepared-a", "A", "/owned-fixture", "owned-a");
+  h.live.configOptions = [
+    configOption("model", "initial", ["initial", "kept-choice"]),
+    configOption("thought_level", "low", ["low"]),
+  ];
+  h.open.mockResolvedValue(h.live);
+  h.setConfig.mockImplementation(async (_key, id, value) => {
+    if (id === "model")
+      h.live!.configOptions = [
+        configOption("model", value, ["initial", "kept-choice"]),
+        configOption("thought_level", "low", ["low", "medium"]),
+      ];
+    else
+      h.live!.configOptions.find((option) => option.id === id)!.currentValue =
+        value;
+  });
+  (
+    render().root.find((node) => node.props["aria-label"] === W.modelChoice)!
+      .props.onClick as () => void
+  )();
+  render();
+}
+async function expectRestoreFailure(
+  copy: string,
+  before: ReturnType<typeof composerDrafts.read>,
+  choice: Record<string, unknown>,
+) {
+  await vi.advanceTimersByTimeAsync(300);
+  const failed = await settle();
+  expect((failed.composer.props.note as { message: string }).message).toContain(
+    copy,
+  );
+  expect(failed.composer.props.disabled).toBe(true);
+  expect(failed.composer.props.thread).toBeNull();
+  expect(failed.composer.props.sendRequest).toBe(0);
+  expect(props.onStarted).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual(choice);
+  expect(composerDrafts.read("new")).toBe(before);
+  await vi.advanceTimersByTimeAsync(1000);
+  render();
+  expect(h.open).toHaveBeenCalledTimes(1);
+  (failed.composer.props.onGoSettings as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith(
+    "A",
+    expect.objectContaining({ panel: "model" }),
+  );
+  return failed;
+}
+
+it("explains a missing saved mode after restoring modern model and thinking without dropping any key", async () => {
+  const choice = {
+    model: "kept-choice",
+    thought_level: "medium",
+    mode: "medium",
+  };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  await expectRestoreFailure(restoreCopy.missing, before, choice);
+  expect(h.setConfig.mock.calls.map((call) => call[1])).toEqual([
+    "model",
+    "thought_level",
+  ]);
+});
+
+it("explains an unavailable saved select value before calling its setter", async () => {
+  const choice = { model: "kept-choice" };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  h.live!.configOptions[0].options = [{ value: "initial", name: "Initial" }];
+  await expectRestoreFailure(restoreCopy.unavailable, before, choice);
+  expect(h.setConfig).not.toHaveBeenCalled();
+});
+
+it("explains a setter acknowledgement whose current value does not match the saved choice", async () => {
+  const choice = { model: "kept-choice" };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  h.setConfig.mockResolvedValue(undefined);
+  await expectRestoreFailure(restoreCopy.readback, before, choice);
+  expect(h.setConfig).toHaveBeenCalledTimes(1);
+});
+
+it("explains a final saved-model mismatch after a later thinking setting", async () => {
+  const choice = { model: "kept-choice", thought_level: "medium" };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  const restore = h.setConfig.getMockImplementation()!;
+  h.setConfig.mockImplementation(async (...args) => {
+    await restore(...args);
+    if (args[1] === "thought_level")
+      h.live!.configOptions[0].currentValue = "initial";
+  });
+  await expectRestoreFailure(restoreCopy.readback, before, choice);
+  expect(h.setConfig).toHaveBeenCalledTimes(2);
+});
+
+it("keeps source-unknown setter failure generic and preserves the existing repair route", async () => {
+  const choice = { model: "kept-choice" };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  h.setConfig.mockRejectedValue(new Error(STRINGS.repair.configFailed));
+  const failed = await expectRestoreFailure(
+    STRINGS.repair.configFailed,
+    before,
+    choice,
+  );
+  expect(
+    (failed.composer.props.note as { message: string }).message,
+  ).not.toContain("某项已保存设置");
+  expect(
+    (failed.composer.props.note as { message: string }).message,
+  ).not.toContain("选择当前不可用");
+  expect(h.setConfig).toHaveBeenCalledTimes(1);
+});
+
+it("keeps an opaque setter error behind the existing safe fallback without classifying it", async () => {
+  startRestore({ model: "kept-choice" });
+  h.setConfig.mockRejectedValue(new Error("CONTROLLED_OPAQUE_SETTER_FAILURE"));
+  await vi.advanceTimersByTimeAsync(300);
+  const failed = await settle();
+  expect((failed.composer.props.note as { message: string }).message).toContain(
+    STRINGS.repair.requestFailed,
+  );
+  expect(
+    (failed.composer.props.note as { message: string }).message,
+  ).not.toContain("CONTROLLED_OPAQUE_SETTER_FAILURE");
+  (failed.composer.props.onGoSettings as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith(
+    "A",
+    expect.objectContaining({ panel: "program" }),
+  );
+  expect(failed.composer.props.sendRequest).toBe(0);
+});
+
+it("restores model first and re-reads its changed thinking options before exposing the unsent draft", async () => {
+  const choice = { thought_level: "medium", model: "kept-choice" };
+  const before = composerDrafts.read("new");
+  startRestore({ ...choice });
+  await vi.advanceTimersByTimeAsync(300);
+  const prepared = await settle();
+  expect(h.setConfig.mock.calls.map((call) => call[1])).toEqual([
+    "model",
+    "thought_level",
+  ]);
+  expect(prepared.composer.props.thread).toBe(h.live);
+  expect(prepared.composer.props.disabled).toBe(false);
+  expect(prepared.composer.props.note).toBeNull();
+  expect(prepared.composer.props.sendRequest).toBe(0);
+  expect(props.onStarted).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual(choice);
+  expect(composerDrafts.read("new")).toBe(before);
+});
+
+it("does not expose a late old-pair restore failure on the newly selected prepared draft", async () => {
+  let reject!: (error: Error) => void;
+  const before = composerDrafts.read("new");
+  startRestore({ model: "kept-choice" });
+  h.setConfig.mockImplementation(
+    () =>
+      new Promise((_resolve, fail) => {
+        reject = fail;
+      }),
+  );
+  await vi.advanceTimersByTimeAsync(300);
+  (
+    render().root.find((n) => n.props["aria-label"] === W.agentChoice)!.props
+      .onClick as () => void
+  )();
+  const picker = render().root.find(
+    (n) => n.type === NewConversationAgentDialog,
+  )!;
+  h.live = freshThreadState("prepared-b", "B", "/owned-fixture", "owned-b");
+  h.open.mockResolvedValue(h.live);
+  (picker.props.onPick as (id: string) => void)("B");
+  render();
+  await vi.advanceTimersByTimeAsync(300);
+  await settle();
+  reject(new Error(STRINGS.repair.configFailed));
+  const current = await settle();
+  expect(current.composer.props.note).toBeNull();
+  expect(current.composer.props.thread).toBe(h.live);
+  expect(newConversationChoice.agentId).toBe("B");
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(current.composer.props.sendRequest).toBe(0);
+  expect(h.open).toHaveBeenCalledTimes(2);
+  expect(h.setConfig).toHaveBeenCalledTimes(1);
 });
