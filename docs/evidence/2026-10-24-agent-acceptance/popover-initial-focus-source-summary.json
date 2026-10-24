@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "kind": "PublicSharedPopoverSourceAndEngineeringSummary",
+  "status": "implemented-engineering-and-independent-review-passed-not-installed",
+  "preparedAt": "2026-10-24T15:39:43.964Z",
+  "scope": {
+    "changes": [
+      "initial-focus-existing-summary-candidate",
+      "focus-visible-first-candidate-or-parent",
+      "cancelled-frame-and-detached-parent-protection",
+      "preserve-focus-changed-after-scheduling"
+    ],
+    "sourceStage": "implemented-and-affected-checks-completed",
+    "installedStage": "not-installed",
+    "nativeInnerPickerClipping": "unresolved-not-proven-fixed"
+  },
+  "sourceFiles": [
+    {
+      "path": "src/components/WorkspacePopover.tsx",
+      "sha256": "d4c2a8227757768208b84b9b0126366704f13a955d555472457b7a156ac86a7a",
+      "lines": 190
+    },
+    {
+      "path": "scripts/check-model-picker-pointer.mjs",
+      "sha256": "f80a6d72ef2f2d0c5ea62d083a07988c567f0be1bd885b15ca67590a5b01a30d",
+      "lines": 523
+    },
+    {
+      "path": "src/components/ModelPicker.test.tsx",
+      "sha256": "488be97fbf93ade723956183dd71ab6559e988300ced02e65cbd9255b4d46a3f",
+      "lines": 421
+    }
+  ],
+  "validationHistory": [
+    {
+      "kind": "original-production-browser-red",
+      "channel": "owned-headless-dom",
+      "perEngine": {
+        "total": 7,
+        "passed": 5,
+        "failed": 2,
+        "pageErrors": 0
+      },
+      "engines": ["chromium", "webkit"],
+      "failedScopes": [
+        "long-account-initial-title-visibility",
+        "constrained-viewport-initial-title-visibility"
+      ]
+    },
+    {
+      "kind": "preserved-intermediate-oracle-failure",
+      "channel": "owned-headless-dom",
+      "perEngine": {
+        "total": 9,
+        "passed": 8,
+        "failed": 1,
+        "pageErrors": 0
+      },
+      "engines": ["chromium", "webkit"],
+      "classification": "test-oracle-parent-border-box-compared-with-own-client-box",
+      "productFailure": false
+    },
+    {
+      "kind": "corrected-oracle-frozen-source-red",
+      "channel": "owned-headless-dom",
+      "perEngine": {
+        "total": 9,
+        "passed": 7,
+        "failed": 2,
+        "pageErrors": 0
+      },
+      "engines": ["chromium", "webkit"],
+      "productionDiskRollback": false
+    },
+    {
+      "kind": "preserved-test-host-engineering-failure",
+      "channel": "focused-unit",
+      "total": 66,
+      "passed": 65,
+      "failed": 1,
+      "classification": "missing-asynchronous-cancellable-frame-host-api",
+      "productRed": false,
+      "originalAssertionsChanged": false
+    },
+    {
+      "kind": "independent-p2-red",
+      "channel": "owned-chromium-native-tab",
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "pageErrors": 0,
+      "classification": "delayed-parent-initial-focus-reclaimed-newer-control-focus"
+    },
+    {
+      "kind": "v2-permanent-browser-red",
+      "channel": "owned-dom-focus-call",
+      "perEngine": {
+        "total": 10,
+        "passed": 9,
+        "failed": 1,
+        "pageErrors": 0
+      },
+      "engines": ["chromium", "webkit"],
+      "nativeTabClaim": false
+    },
+    {
+      "kind": "v2-permanent-browser-green",
+      "channel": "owned-headless-dom",
+      "perEngine": {
+        "total": 10,
+        "passed": 10,
+        "failed": 0,
+        "pageErrors": 0
+      },
+      "engines": ["chromium", "webkit"]
+    },
+    {
+      "kind": "independent-p2-recheck-green",
+      "channel": "owned-chromium-native-tab",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pageErrors": 0,
+      "runnerUnchangedFromIndependentRed": true
+    }
+  ],
+  "countsAreNotAdditive": true,
+  "finalAffectedChecks": {
+    "unitFiles": 5,
+    "unitPassed": 66,
+    "unitFailed": 0,
+    "typecheckExitCode": 0,
+    "threeFileFormatExitCode": 0,
+    "scopedDiffExitCode": 0
+  },
+  "independentReview": {
+    "verdict": "no-blocking-findings-in-reviewed-v2-scope",
+    "nativeTabCaseScope": "same-held-frame-three-case-sample",
+    "allTimingCombinationsClaimed": false
+  },
+  "fullEngineering": {
+    "state": "passed",
+    "allSevenSucceeded": true,
+    "counts": {
+      "frontend": {
+        "files": 673,
+        "passed": 8866,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2256,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    "inputCount": 2261,
+    "baseHeadBeforeCommit": "a1271c9adf4bb31a820366cc55a23d9519749180",
+    "checksRanBeforeNextCommit": true,
+    "sourceEndpointEquality": true,
+    "environmentFrozen": false,
+    "continuousNoWriterClaimed": false,
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-engineering/engineering-summary.json",
+      "sha256": "89f13fa0c2864d69d3bcae11caad1b8dbadd15e960c5350cc541d6762fe68e5f"
+    },
+    "sourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-engineering/source-before.json",
+      "sha256": "ccdf70b5fc9857b0fab2f54eba21b632a4bb3d9d8ee9129ac746c1be57ebe07d"
+    },
+    "sourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-engineering/source-after.json",
+      "sha256": "c12c7dedd385a3e5802ce7292e8b23a92d87adcd57b248d084dad260f18a6e00"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-engineering/independent-engineering-review.json",
+      "sha256": "b5a732bd806bc29b77aeba6c0ce4ef1fa61f8e8d25fbbc792184d9bef767f8f1"
+    },
+    "independentReviewBlockingFindings": 0
+  },
+  "evidenceDigests": {
+    "implementationV1": "778466b01e75f8fbbf8226154d515cce62b46405ba056ad3af81e827f7771ef5",
+    "implementationV2": "8533e39d9d870a5b3f7a316b0b2fa8d593e663de3e24c562d27e1e994c2c6d3f",
+    "originalRed": "14ede76f775b30baa1e742aa94c6b552e424bdf9285fb138b4ccdb4dd555a1cc",
+    "independentP2Review": "f56e382eab2e7105771205789b8d550c785193cc724bf7e92e1c8a6711670741",
+    "independentP2RedCommand": "6c13a19d006ccefb522d51427ea09fa4ac5c5b1e068e58b4e86ac5256cf360af",
+    "v2PermanentRed": "73a311ea058e6263febe88e04a7381bb131bc87e2b0daeed03bd6e7c14a0a6fb",
+    "v2ChromiumGreenCommand": "e3815fbd2708e6aa65b2c60f93992896b7bc1e64bec92ba4f8860dc723fd2004",
+    "v2WebkitGreenCommand": "85a44418095a35a3c2f75fd19a2477775537b97e05d77f38249498e436fb9d36",
+    "v2AffectedChecks": "34f1aeb26838d81e3d6ada34166d0b89083445db89d864c988d9e78fd04b35ca",
+    "independentV2Review": "0b905a84422cd41942f4ede1fa3057ae90c5b73497f3dc956797ff72edbb0c17",
+    "independentV2NativeTabCommand": "c6ae36ff252f734fa1598c7f966702c719c4d1222707e68691b2f585f6226143"
+  },
+  "boundaries": {
+    "normalInitialFocusAndChangedFocusProtection": "source-and-listed-owned-samples-only",
+    "existingOutsideEscapeResizeAndSelectionLogic": "retained",
+    "newKeyboardSemantics": false,
+    "newPortalOrAgentSpecificBranch": false,
+    "installedNativeLayoutVerified": false,
+    "effectiveModelOrAccountIdentityVerified": false,
+    "agentOrModelRequests": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "sourceOrTrackedDocumentsModifiedByDraftPreparation": false,
+    "originalRecordsPreserved": true
+  }
+}

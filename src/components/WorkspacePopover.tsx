@@ -75,11 +75,36 @@ export function WorkspacePopover({
   }, [open, browserReady, children]);
   useLayoutEffect(() => {
     if (!open || !browserReady) return;
-    (
-      panel.current?.querySelector<HTMLElement>(
-        "button:not(:disabled), input:not(:disabled), select:not(:disabled)",
-      ) ?? panel.current
-    )?.focus();
+    const element = panel.current;
+    if (!element) return;
+    const activeWhenScheduled = document.activeElement;
+    // Position state commits before this frame; later content changes must not
+    // pull focus away from the user's current control.
+    const frame = requestAnimationFrame(() => {
+      if (
+        panel.current !== element ||
+        !element.isConnected ||
+        document.activeElement !== activeWhenScheduled
+      )
+        return;
+      const candidate = element.querySelector<HTMLElement>(
+        "button:not(:disabled), input:not(:disabled), select:not(:disabled), summary",
+      );
+      const bounds = element.getBoundingClientRect();
+      const top = bounds.top + element.clientTop;
+      const left = bounds.left + element.clientLeft;
+      const rect = candidate?.getBoundingClientRect();
+      const visible =
+        rect &&
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.top >= top &&
+        rect.bottom <= top + element.clientHeight &&
+        rect.left >= left &&
+        rect.right <= left + element.clientWidth;
+      (visible ? candidate : element)?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [open, browserReady]);
   useEffect(() => {
     if (disabled) setOpen(false);

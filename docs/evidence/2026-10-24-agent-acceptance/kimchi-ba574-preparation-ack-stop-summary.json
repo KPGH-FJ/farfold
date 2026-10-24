@@ -1,0 +1,161 @@
+{
+  "kind": "ScopedKimchiPreparationUnknownAckAndSeparateStopPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationState": "root-reviewed-documentation-checkpoint",
+  "recordedAt": "2026-10-24T15:42:57.309866Z",
+  "agentId": "kimchi",
+  "formalProductCommit": "ba574aba0f62a5d749c1c02346a9c12e6758a993",
+  "formalProductBinarySha256": "68cb005b057cf566554afa67848dd96e6c86890d5861a6459b2cd95345711c0b",
+  "directObservationChannel": "installed-ui",
+  "preparation": {
+    "programVersionAsUiDeclared": "1.3.0",
+    "modelAndPermissionLabelsMatchedBeforeSend": true,
+    "additionalAutomaticModelOptionReadOccurred": true,
+    "explicitModelOrModeConfirmations": 0,
+    "opaquePreparationEntriesNotTreatedAsRequestUnknown": true,
+    "inputDeliveryCorrectedBeforeOnlySend": true,
+    "sendDuringMalformedInput": false,
+    "correctionWasModelRetry": false,
+    "meaning": "准备界面的程序版本及所选模型/权限标签只证明该次读回；不证明实际后端模型、账号或完整基线保护。输入变形在唯一发送前纠正，原因未确定。"
+  },
+  "originalAckWindow": {
+    "oneSendAt": "2026-10-24T15:15:25.661Z",
+    "unknownFirstObservedAt": "2026-10-24T15:16:00.153Z",
+    "requestFinishedAt": null,
+    "receiptWindowClosedAt": "2026-10-24T15:16:00.153Z",
+    "ordinarySendActions": 1,
+    "attempts": 1,
+    "retries": 0,
+    "stopRequests": 0,
+    "expectedSuccessUnchanged": true,
+    "expectedReplyObserved": false,
+    "recognizedCompletionObserved": false,
+    "idleConfirmed": false,
+    "postFailureSelectionReadbackPerformed": false,
+    "resultUnknownAndSendingPaused": true,
+    "newVisibleToolSteps": 0,
+    "mechanical": {
+      "mechanicallyValid": true,
+      "complete": false,
+      "allExpectedOutcomesMatched": false,
+      "passed": 0,
+      "failed": 0,
+      "incomplete": 1,
+      "invalid": 0,
+      "naturalExitCodeAsRecorded": 1
+    },
+    "meaning": "finishedAt仅关闭15:16观察记录，未确认请求结束。未取得原期望回答，不改为确定失败或通过，也不补造失败后选择读回。"
+  },
+  "laterIndependentStop": {
+    "stopClickedAt": "2026-10-24T15:20:48.206Z",
+    "lastUiObservedAt": "2026-10-24T15:22:47.549Z",
+    "stopActions": 1,
+    "secondStopActions": 0,
+    "newOrdinaryPrompts": 0,
+    "stoppingThenUnknownObserved": true,
+    "sendingRemainedPaused": true,
+    "draftAndPendingCopiesRetainedAsUiReported": true,
+    "cancellationConfirmed": false,
+    "terminalStateKnown": false,
+    "forcedQuit": false,
+    "originalAckReclassified": false,
+    "meaning": "这是另行有界清理的一次Stop，未获停止确认。既不能说仍在后台执行，也不能说已取消或空闲；原ACK窗口的Stop零不变。"
+  },
+  "limitedConnectionMetadata": {
+    "windowUtc": ["2026-10-24T15:14:00Z", "2026-10-24T15:23:00Z"],
+    "inventoryFilesAsRecorded": 6,
+    "stableReadEndpointsAsRecorded": true,
+    "oneFileGroupContains": [
+      {
+        "atUtc": "2026-10-24T15:15:25.715+00:00",
+        "direction": "out",
+        "event": "session/prompt"
+      },
+      {
+        "atUtc": "2026-10-24T15:15:27.380+00:00",
+        "direction": "in",
+        "event": "response",
+        "errorClass": "internal_error",
+        "responseIdNull": false,
+        "beforeInitializeAccepted": false
+      },
+      {
+        "atUtc": "2026-10-24T15:20:48.218+00:00",
+        "direction": "out",
+        "event": "session/cancel"
+      }
+    ],
+    "uniquePromptResponseCorrelationEstablished": false,
+    "peerCancelReceiptOrCancellationEstablished": false,
+    "continuousCoverageOrAbsenceProofEstablished": false,
+    "meaning": "Root read a bounded fixed-field metadata window. One connection file contains prompt, internal_error response and cancel, without response request or method association. Temporal proximity does not establish unique correlation, peer cancellation receipt or background idleness. No log filename or raw log is published."
+  },
+  "sourceContext": {
+    "officialReleaseInspected": "v1.3.0",
+    "analysisIsConditionalNotRuntimeCauseProof": true,
+    "finding": "官方错误结算清turn后，后续cancel不补原请求cancelled；关闭路径也可提前拒请求。现有诊断缺少响应归属字段，因此当前终态及原因仍未知。",
+    "newProductFixConclusion": false,
+    "newPromptLoginRestartFallbackOrSecondStopScheduled": false
+  },
+  "acceptance": {
+    "intendedExcerpts": ["S5:回答", "ARCH-34:真实回复"],
+    "replySubconditionPassed": false,
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "all29Accepted": false
+  },
+  "limits": [
+    "准备、未知ACK、后续Stop及连接元数据分别留证；后来的旁证不改原预期、原计数或原回执。",
+    "界面错误与internal_error不确定认证、模型、网络、SDK或Farfold的唯一原因；零可见工具不等于全面无IO。",
+    "The prior semantic review covers the original ACK only. Later Stop and connection metadata use named Root observations, without a second Stop or independent dynamic replay."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/public-summary-draft.json",
+      "sha256": "5946f8069393830118fc256fdb34ab96f19c0e893b74168bbf826476e690e610"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/semantic-review-acceptance-receipts.json",
+      "sha256": "bef57b38794a7387f7038015197e28be0195be1ebeb218822c4e0f549b5250c0"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-single-stop-observation.json",
+      "sha256": "30230c318ca63cee28ec8c1d4602487db10346b345a82f78bc90e8a60ea8ee8e"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/limited-content-free-protocol-window.json",
+      "sha256": "87234ca08bbcbd9a2205ed4898c7aab815f3ce39373b904ed758c8de3463e51a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-preparation-observation.json",
+      "sha256": "f46d79d559c1705ecc1737a311d6f6cc11ba8d1ccb201534954af10c35706236"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/actual-receipt.json",
+      "sha256": "943ba7726ba130a67abfdcdb880cf1018b96dad5202c6396d43d5db4a4b4a261"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/validation-report.json",
+      "sha256": "c73614c4eb888deae17693493a06a587992e4de8c06401e26457fcdb9c5fc636"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/official-1.3.0-source-analysis.json",
+      "sha256": "c9a27e455e2c3ad98ea3047aa53c4ecb8c678d34b24766c8137c0ba07e33bb4c"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/farfold-content-free-diagnostics-source-analysis.json",
+      "sha256": "d7ab0f01802a1ac4708803a51a3221c60bb4f29f6db16e9c8232afb62d13b67d"
+    }
+  ],
+  "privacy": {
+    "privateAbsolutePathsIncluded": false,
+    "logFilenamesOrRawLogRecordsIncluded": false,
+    "promptReplyBodiesIncluded": false,
+    "credentialsAccountOrNativeSessionIdentifiersIncluded": false,
+    "rawProviderConfigurationIncluded": false
+  },
+  "originalEvidenceRewritten": false
+}

@@ -90,6 +90,8 @@ class Host {
   );
 }
 const listeners = new Map<string, Set<(event: unknown) => void>>();
+const frames = new Map<number, ReturnType<typeof setTimeout>>();
+let nextFrame = 0;
 function mount<P>(component: (props: P) => ReactNode, props: P) {
   const slots: typeof h.slots = [];
   const hosts = new Map<string, Host>();
@@ -174,6 +176,23 @@ beforeEach(() => {
   active = null;
   listeners.clear();
   h.effects.length = 0;
+  // Preserve asynchronous, cancellable frames in this minimal browser host.
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    const id = ++nextFrame;
+    frames.set(
+      id,
+      setTimeout(() => {
+        frames.delete(id);
+        callback(performance.now());
+      }, 16),
+    );
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+    const timer = frames.get(id);
+    if (timer !== undefined) clearTimeout(timer);
+    frames.delete(id);
+  });
   vi.stubGlobal("document", { body: new Host() });
   vi.stubGlobal("window", {
     innerWidth: 1000,
@@ -188,6 +207,8 @@ beforeEach(() => {
   });
 });
 afterEach(() => {
+  for (const timer of frames.values()) clearTimeout(timer);
+  frames.clear();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
