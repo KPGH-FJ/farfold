@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "kind": "SanitizedPointerFocusAndExplicitQueueProtectionSourceCheckpoint",
+  "recordedAt": "2026-10-24T14:02:50.123Z",
+  "change": {
+    "production": "Shared model option prevents primary mousedown default focus transfer to parent popup; existing click selection, disabled, keyboard and outside dismissal remain.",
+    "productionFilesChanged": 1,
+    "newBrowserRegressionScripts": 1,
+    "newProtectionTests": 1,
+    "noQueueProductionChange": true,
+    "sourceFiles": [
+      {
+        "path": "src/components/ModelPicker.tsx",
+        "sha256": "17c41a90886710414b690a2f7a09cc85d3a62fb4c1fa3deb08684ff226c79a18"
+      },
+      {
+        "path": "scripts/check-model-picker-pointer.mjs",
+        "sha256": "76c0af0e49a37665397e60a68d22ad2d95f316a8eba41eb7f8326b1da2db9950"
+      },
+      {
+        "path": "src/runtime/sessions.empty-queue-config-pause.test.ts",
+        "sha256": "4727b1b90d69c827daa75f2d093bfc50478b8ef061511d830ca691fba2e834cd"
+      }
+    ]
+  },
+  "controlledEvidence": {
+    "originalChrome": {
+      "passed": 3,
+      "failed": 1
+    },
+    "originalWebKit": {
+      "passed": 3,
+      "failed": 1
+    },
+    "cause": "Actual pointer hits option, then default focusin reaches parent popup and inner picker dismisses before click/onPick; keyboard, standalone and fixture focus control succeed.",
+    "postPatchChrome": {
+      "passed": 4,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "postPatchWebKit": {
+      "passed": 4,
+      "failed": 0,
+      "pageErrors": 0
+    },
+    "existingUnit": {
+      "files": 5,
+      "passed": 36
+    },
+    "queueProtection": {
+      "passed": 5,
+      "failed": 0,
+      "isProductRed": false,
+      "scope": "Blocked-to-ready history and matching setter retain pause; one new queued input dispatches only after explicit continuation; current unknown/stop/permission/configuration blocks do not dispatch."
+    },
+    "countsAreSeparateAndNotAdditive": true,
+    "implementation": {
+      "path": "output/2026-10-24-agent-acceptance/model-picker-pointer-layout-investigation/implementation.json",
+      "sha256": "65cf95d4c6b518e5c3bc73907495468a0aa896345aaa11d98374cac8d8dfeb6b"
+    },
+    "postPatchWebKitCommand": {
+      "path": "output/2026-10-24-agent-acceptance/model-picker-pointer-layout-investigation/green-webkit-command.json",
+      "sha256": "2f2c57779ec3615b569568bc540483cfc1a580498e4694cd1cb019460a288440"
+    },
+    "overflowObservation": {
+      "path": "output/2026-10-24-agent-acceptance/model-picker-pointer-layout-investigation/overflow-supplement.json",
+      "sha256": "06917e0dd45d4917b60ad7fafbbabae54c9301f0a5e4145b0189cf3686ad9524"
+    },
+    "queueProtectionRecord": {
+      "path": "output/2026-10-24-agent-acceptance/empty-queue-config-pause-protection/source-analysis-and-protection-result.json",
+      "sha256": "d2956eaabda12b90b938050208749e9389bb3d9f0906f104bd65202012a33ce9"
+    }
+  },
+  "engineering": {
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/engineering-summary.json",
+      "sha256": "1c99033b42fafdbddb54d0d26b6492bab061f7f10035fb604d967e547ef199a4"
+    },
+    "sourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/source-before.json",
+      "sha256": "427a66eb5409eeff6d7b307d82ff8079326e25269e3a08e6a5c07c2b9abd3658"
+    },
+    "sourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/source-after.json",
+      "sha256": "14af90022f8121de75faf5755dcaac4f0816eaa1593ff0668c7d047e0f4cb5a9"
+    },
+    "inputCount": 2261,
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 673,
+      "passed": 8866,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2256,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "checksBeforeCommitAtHead": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+    "sameInputMapAtEveryRecordedCommandEndpoint": true,
+    "session": 36157,
+    "finalToolChunk": "6b7eac",
+    "naturalExitCode": 0,
+    "limits": "Input endpoint equality does not freeze dependency installs or environment; checks ran before the eventual commit."
+  },
+  "independentReviews": {
+    "source": {
+      "disposition": "reviewed-no-blockers",
+      "pointerSourceAndRecordedEvidence": {
+        "path": "output/2026-10-24-agent-acceptance/model-picker-pointer-layout-investigation/independent-review-acceptance-receipts.json",
+        "sha256": "d333256248af8a572c5def687c3e8649501dc29940675bb174f7384801960067"
+      },
+      "scope": "Peer reviewed the three-line production change, persistent browser script and original named evidence; root separately read the new protection test."
+    },
+    "engineering": {
+      "disposition": "reviewed-no-blockers",
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/pointer-and-reopen-engineering/independent-engineering-review.json",
+        "sha256": "708338a3e36a6fce7d4b8e11c6311a02d99fa547eb0837c53035f9ee6f193f58"
+      },
+      "scope": "Read-only review of seven natural zero exits, fourteen log digests, actual frontend/native counts and the full pre/post 2261-input maps at the before-commit checkpoint. Per-command source-match flags are from the original receipts; no continuous writer-exclusion claim or test replay."
+    }
+  },
+  "formalAtThisCheckpoint": {
+    "sourceCommit": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+    "containsNewPointerFix": false,
+    "newBuildOrInstallPerformed": false
+  },
+  "limits": [
+    "Actual installed screenshot clipping was not reproduced in owned Chrome/WebKit normal and overflow geometry cases; this is not claimed fixed.",
+    "No Agent loop, provider/model/reasoning choice, permission, pause, credential or storage behavior changed.",
+    "Actual Goose free ACK is separately recorded under installed15c58, not proof of this uninstalled pointer fix.",
+    "No whole standard, requirement or Agent closed."
+  ],
+  "wholeStandardsClosed": 0,
+  "wholeRequirementsClosed": 0,
+  "wholeAgentsClosed": 0
+}

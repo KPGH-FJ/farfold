@@ -1,0 +1,230 @@
+{
+  "kind": "Formal15c58InstallationPublicSummary",
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-24T13:27:14.468433Z",
+  "sourceCommit": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+  "status": "formal-installed-independent-ten-passed",
+  "proofScope": "source-build-and-installed-bundle-verification",
+  "draftOnly": false,
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "formalIdentity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "a079149aec68a55fb50bdc490c6b7fd9865e9948321fd3d546f680b51ebb3496"
+  },
+  "candidateHistoricalRecord": {
+    "phaseAsOriginallyRecorded": "internalCandidatePreparedNotInstalled",
+    "buildExitCode": 0,
+    "sourceInputCountAsRecorded": 2259,
+    "architecture": "arm64",
+    "exactBundleFileCount": 5,
+    "originalInstalledFlag": false,
+    "originalFormalAppReplacedFlag": false,
+    "checksRanAtFinalCommit": false,
+    "evidence": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/candidate-output/candidate.json",
+      "sha256": "53651ce3a08977e9ea3f218830cdb8a196c840cc57b85c329754818c921cd892"
+    },
+    "meaning": "The original prepared-not-installed build receipt is retained. Later installed verification is separate evidence."
+  },
+  "candidateIndependentReviewHistory": {
+    "firstReview": {
+      "passed": 8,
+      "total": 9,
+      "soleFailureCode": "actual-frontend-counts",
+      "causeAsReportedByRoot": "stale reviewer byte literals expected the previous frontend counts",
+      "oldExpectedFrontendCounts": {
+        "files": 668,
+        "passed": 8832
+      },
+      "actualFrontendCounts": {
+        "files": 672,
+        "passed": 8861
+      },
+      "originalRetained": true,
+      "rootReportedEvidence": {
+        "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/independent/review.json",
+        "sha256": "9dfea07e63e5b0625567720f742e079f6d6e8a699d37d0cd4ce8d330867924e3"
+      },
+      "publisherReopenedFirstReview": false
+    },
+    "correctedReview": {
+      "passed": 9,
+      "total": 9,
+      "failureCount": 0,
+      "recordedAt": "2026-10-24T13:07:24.617Z",
+      "checks": {
+        "sourceFreeze": true,
+        "actualBuild": true,
+        "exactBundleFiles": true,
+        "identityManifestLocalization": true,
+        "architecture": true,
+        "signature": true,
+        "archive": true,
+        "formalBaselineUnchanged": true,
+        "pinnedEvidenceAndPhase": true
+      },
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/independent/review-v2.json",
+        "sha256": "acc4529737af50755b28c4a613a7bc65c5e110dcdf1ca56edf7e3ea51a508b16"
+      }
+    },
+    "sameCandidateRechecked": true,
+    "rebuildsAfterReviewerCorrection": 0,
+    "productFailureClaimedByFirstReview": false,
+    "meaning": "The reviewer count expectation was corrected; the same candidate passed all nine checks. The failed first review remains historical evidence, and no second build is claimed."
+  },
+  "normalQuit": {
+    "saveAndQuitActionAt": "2026-10-24T13:10:28.779Z",
+    "recordedAt": "2026-10-24T13:11:28.589701+00:00",
+    "normalQuitRecordedByRoot": true,
+    "forcedQuit": false,
+    "oldRequestStopSuccessClaimed": false,
+    "oldUnknownOutcomesSettled": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/root-normal-quit.json",
+      "sha256": "4ab1b569520c74dd849b6c3b22f5d0e1a87ca26459845a904db86eba8fe80364"
+    },
+    "meaning": "Normal save-and-quit for this update does not determine earlier unknown request outcomes."
+  },
+  "retention": {
+    "captures": [
+      {
+        "phase": "before",
+        "recordedAt": "2026-10-24T13:12:17.264932+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "3b5ccd2b9107c783a3613aa68256ce1a0c24a52bff2acd17ac3635580a675b99",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/retention-before-receipt.json",
+          "sha256": "34762108ffa62f0573f1722de09abae7abb13d831a80ec8acec33464fad8b32c"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/install-data-before-summary.json",
+          "sha256": "3feee942be3f5145173840b985bc8afaa93e400b597d3841c20ff6000788c2b9"
+        }
+      },
+      {
+        "phase": "preinstall",
+        "recordedAt": "2026-10-24T13:13:28.401228+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "3b5ccd2b9107c783a3613aa68256ce1a0c24a52bff2acd17ac3635580a675b99",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/retention-preinstall-receipt.json",
+          "sha256": "a726685f2b881b7830d37362acaba88291874b1d2f7d2afe05b5ec6fa33007d8"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/install-data-preinstall-summary.json",
+          "sha256": "3feee942be3f5145173840b985bc8afaa93e400b597d3841c20ff6000788c2b9"
+        }
+      },
+      {
+        "phase": "after",
+        "recordedAt": "2026-10-24T13:17:55.370038+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "3b5ccd2b9107c783a3613aa68256ce1a0c24a52bff2acd17ac3635580a675b99",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/retention-after-receipt.json",
+          "sha256": "c812865a39c2395a8785b8403df9d4cc140f664b4a48819fd45a52f7cee63152"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/install-data-after-summary.json",
+          "sha256": "3feee942be3f5145173840b985bc8afaa93e400b597d3841c20ff6000788c2b9"
+        }
+      }
+    ],
+    "captureCount": 3,
+    "entriesPerCapture": 232530,
+    "sameThreeRootSummaryAndDigest": true,
+    "commonManifestSha256": "3b5ccd2b9107c783a3613aa68256ce1a0c24a52bff2acd17ac3635580a675b99",
+    "independentFullManifestByteEqualityCheckPassed": true,
+    "firstCaptureAndMetadataBackupRetentionCheckPassed": true,
+    "meaning": "The three receipt summaries match, and installed-ten independently reports full-manifest byte equality and retained capture/backup integrity. This publisher did not open the manifests, captures, backups or database."
+  },
+  "atomicInstallation": {
+    "phaseAsRecorded": "installedVerifiedNotLaunched",
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileReplacementCount": 5,
+    "eachReplacementUsedNewInode": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "recordedAt": "2026-10-24T13:16:07.792994+00:00",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/install-result.json",
+      "sha256": "2c90500af0d3ee9767f370c3de3c700693f492ead952986a67fbdbf6fa4bed4f"
+    }
+  },
+  "installedIndependentReview": {
+    "phase": "installed-10-independent-checks",
+    "passed": 10,
+    "total": 10,
+    "failureCount": 0,
+    "checks": {
+      "source-and-production-inputs": true,
+      "receipt-and-evidence-seals": true,
+      "formal-candidate-exact-five-files-and-modes": true,
+      "bundle-identity": true,
+      "arm64-mach-o": true,
+      "strict-codesign": true,
+      "archive-exact-five-crc-mode": true,
+      "closed-without-launch-observed": true,
+      "metadata-backup-and-first-capture-retained": true,
+      "fresh-three-full-manifests-byte-identical": true
+    },
+    "recordedAt": "2026-10-24T13:19:58.441159+00:00",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "300142bcf28915c7be1c9decff7417b2b9a99c0bbae26cc37039f4a4dbec21d6"
+    },
+    "meaning": "Actual installed-ten verification, separate from candidate-nine and any later launch or affected-feature observation. Private paths, inode signatures and process details are not copied."
+  },
+  "duplicateCandidateCleanup": {
+    "phase": "exactDuplicateCandidateRemoved",
+    "recordedAt": "2026-10-24T13:21:17.254468+00:00",
+    "exactGeneratedFilesRemoved": 5,
+    "exactGeneratedDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "zipPreservedSha256": "e1e92f97946c1dc051d6ae5338c3bf75e3a72d8eec3e6adf79a87f8399881afa",
+    "archiveBytesAsRecorded": 16092560,
+    "noDataBuildLaunchQuitRestoreOrAutomaticRetry": true,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-install-preparation/install/candidate-cleanup.json",
+      "sha256": "41d0c1a01b39f7f7822c971446513b93e4d6b5c9387b56316ce89ab0812c31e7"
+    },
+    "meaning": "Only the exact generated duplicate was removed after installed-ten; the formal app and ZIP archive were retained."
+  },
+  "firstLaunch": {
+    "includedInThisSummary": false,
+    "affectedFeatureUiVerifiedByThisSummary": false
+  },
+  "limits": [
+    "Only source/build, installed-bundle, signature/archive, recorded data-retention endpoints and exact duplicate cleanup are covered.",
+    "The three captures do not prove uninterrupted absence of intermediate writers or changes outside the checked roots.",
+    "The publisher opened only the named receipts and small summaries; no manifest, backup, database, user configuration/body, App or live process information was read.",
+    "Original candidate, first failed review, corrected review and install receipts were retained; this summary does not rewrite their historical flags.",
+    "Normal exit and update do not establish cancelled or successful terminal outcomes for earlier unknown requests.",
+    "First launch, affected-feature behavior, real-Agent effects, complete history restoration, model effectiveness, Windows and full 29-by-8/151 acceptance are not established here."
+  ],
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "userBodiesIncluded": false,
+    "accountOrCredentialFieldsIncluded": false,
+    "processInformationIncluded": false,
+    "rawPrivateCheckDetailsIncluded": false
+  },
+  "originalEvidenceRewritten": false,
+  "publication": {
+    "method": "Whitelist projection from the named current-batch installation receipts and their small summaries. The first failed-review count and reference are explicitly root-reported and were not reopened by the publisher.",
+    "referencedCurrentBatchReceiptsAndSummariesHashVerified": 12,
+    "publisherPerformedNewInstallationChecks": false
+  }
+}

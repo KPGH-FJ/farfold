@@ -1,0 +1,162 @@
+{
+  "kind": "ScopedInstalledRealAgentExactReplySummary",
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-24T14:03:04.507189Z",
+  "agentId": "goose",
+  "observedAgentVersion": "1.52.0",
+  "formalProductCommit": "15c58e72f317a2235a73fe6b2f1201c8f8f8a892",
+  "formalProductBinarySha256": "a079149aec68a55fb50bdc490c6b7fd9865e9948321fd3d546f680b51ebb3496",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "expected-reply-completion-and-current-idle-observed",
+  "observed": {
+    "ordinaryRequests": 1,
+    "addToQueueActions": 1,
+    "explicitContinueActions": 1,
+    "attachments": 0,
+    "fileCases": 0,
+    "retries": 0,
+    "stopRequests": 0,
+    "configurationChangesDuringRequest": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyMatched": true,
+    "sameOwnedConversationAndCwd": true,
+    "confirmedSelectionPreservedAtReadback": true,
+    "recognizedCompletionVisible": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "rawProtocolBodyOrStopReasonCaptured": false,
+    "thinkingBodyExpandedOrValidated": false,
+    "exhaustiveNoIoProof": false,
+    "effectiveBackendModelProviderOrReasoningVerified": false,
+    "accountOrEntitlementVerified": false,
+    "allBackgroundIdleVerified": false
+  },
+  "executionRoute": {
+    "kind": "explicit-add-to-queue-and-continue",
+    "prospectivePlanRecordedAt": "2026-10-24T13:48:39.465Z",
+    "addToQueueAt": "2026-10-24T13:49:19.803Z",
+    "continueAt": "2026-10-24T13:49:41.397Z",
+    "firstCompletedAndIdleObservedAt": "2026-10-24T13:50:29.677Z",
+    "selectionReadbackAt": "2026-10-24T13:51:18.082Z",
+    "receiptFinishedAt": "2026-10-24T13:51:18.082Z",
+    "timeMeaning": "UI observation times and later selection endpoint, not exact backend completion time.",
+    "automaticRetryOrOldRequestResend": false
+  },
+  "preflightDeviation": {
+    "originalReadyDeclarationAcceptedAsActualAdmission": false,
+    "originalHoldRetained": true,
+    "explicitQueuePlanRecordedBeforeAction": true,
+    "inputReplySelectionAndConditionsUnchanged": true,
+    "meaning": "The old offline factory/preflight declaration was corrected when the queue-only action contradicted readiness. Execution followed a prospective bounded plan through existing protected queue controls; this does not determine older unknown outcomes."
+  },
+  "selectedConfigurationReadback": {
+    "freeModelSelectionRetained": true,
+    "providerLabel": "OpenRouter",
+    "modeLabel": "auto",
+    "reasoningLabel": "off",
+    "effectiveBackendOrReasoningProof": false
+  },
+  "mechanicalValidation": {
+    "summaryWriterValidatorCalls": 0,
+    "recordedReportCount": 2,
+    "retainedOriginalResult": "invalid",
+    "retainedOriginalIssue": "required-observation-not-confirmed",
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 6,
+      "privateEvidenceFiles": 6
+    },
+    "errors": [],
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "receiptReferenceCorrection": {
+    "originalInvalidReportRetained": true,
+    "rootReportedChange": "Remove filesystem index5 from one installed-UI observation. Direct UI evidence remains at indexes0and2; filesystem endpoint evidence remains in the receipt.",
+    "directSavedSelectionEvidenceIndexes": [0, 2],
+    "observationCount": 11,
+    "valuesInputContextTimesAndOutcomeDeclaredPreserved": true,
+    "caseManifestAndSourcePlanUnchanged": true,
+    "newRequestsOrRetriesFromCorrection": 0,
+    "originalV1ReceiptReopenedByReviewerOrPublisher": false,
+    "exactV1ToV2ByteDiffIndependentlyVerified": false,
+    "meaning": "The correction digest links and v2 direct-UI references were checked; the original invalid report remains. This is evidence-reference maintenance, not another Agent attempt."
+  },
+  "semanticReview": {
+    "disposition": "retain-narrow-installed-ui-answer-positive-only",
+    "reviewedNamedRecordCount": 12,
+    "originalReferenceHashesVerified": true,
+    "actualUiReplayedByReviewer": false,
+    "externalAppSourceGuardFilesRehashedByReviewer": false,
+    "endpointEqualityIsNotContinuousFreeze": true,
+    "scope": "Only this explicit installed-UI answer request, completion/current-idle observations and preserved selection, with the preflight correction and prospective queue route retained."
+  },
+  "coveredSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "wholeConditionAccepted": false
+    }
+  ],
+  "priorDifferentModelResultRetained": {
+    "failedAckCases": 1,
+    "notRunFileCases": 1,
+    "paidFallbackPerformed": false,
+    "currentFreeRequestIsNotAReplayOfTheOldAttempt": true
+  },
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "limits": [
+    "Zero visible tool steps is not exhaustive proof of no file, tool or network activity.",
+    "No full S5 or ARCH-34, skills, stop/cancellation, cold restoration, effective backend model/reasoning/provider or account proof is established.",
+    "Current idle and successful output do not settle older failed or unknown requests.",
+    "Later pointer-focus source changes and browser controls are outside this request. No installed screenshot-clipping repair or later-source installed validation is claimed.",
+    "The publisher verified named JSON records only; no App, Agent, database, user configuration, raw protocol log or live process was accessed."
+  ],
+  "digests": {
+    "namedReferenceIndex": "41d11ab7add489e4dd539ac027aa9b8bdf875508beb4ac89ff07874891f6b4c1",
+    "sourcePlan": "b3e986ac7a7f6b128da7588f6612c1de7bdf9541f5a5995a8cd31239a6b0a76f",
+    "manifest": "c6693de98a516eeaf254b2040b7d60be464a98928686e528abc4785fc31ca70a",
+    "selectionConfirmation": "fd1c0246fbbf8f99ebd918cd6e1930451f578697bfc6323e4c1410109b277647",
+    "preExecutionHold": "818115a008acf3d12206adc59ac881db087238b4de3e6a7d2653c59e10248f47",
+    "explicitQueuePlan": "9fbb095236ba46cdb5e2668a532eba88269907f4b10a7116e46da27c85df0bb5",
+    "oneRequestStarted": "598da5e3056cde3018c4fe64089322b676a9612eab6c2314477b27db59ef1671",
+    "resultObservation": "98dc18eb81b0e88c0c02a91f3f51f4d73fe4363fc159291c7941a7612d520cba",
+    "endpointRecheck": "e496512010ca182049cc5441c51d81925346b7f2d8b9b04ebdde92450d98eae0",
+    "actualReceiptV2": "61757de124ee3686bfb500407e1c06f7ea1e84fe895a091ef150d147aa061397",
+    "validationReportV2": "ed85a88aac82546cad4c22a2d57143317e54016eb5c106722db2abf8214e8bcb",
+    "retainedInvalidValidationReport": "19c6ba9c77b93c15ad180b25cb41f18125ea5a5eb941de53b6ab289bb2a7b8e8",
+    "receiptCorrection": "ff90554102d8c3ce863f19f9534c43058844c7d3630cee9bf305aa8d7ee7f03e",
+    "semanticReview": "f8a7f40bff883c4779229c14ca2829d53d7bb976b238f7180a55b649d1392610"
+  },
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "promptOrReplyBodiesIncluded": false,
+    "sessionOrAccountIdentifiersIncluded": false,
+    "credentialsIncluded": false,
+    "rawPrivateDetailsIncluded": false
+  }
+}

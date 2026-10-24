@@ -234,6 +234,9 @@ export function ModelPicker({
                   data-idx={idx}
                   className={`mp-opt${idx === hi ? " hi" : ""}${entry.choice.value === current ? " cur" : ""}`}
                   onMouseEnter={() => setHi(idx)}
+                  onMouseDown={(event) => {
+                    if (event.button === 0) event.preventDefault();
+                  }}
                   onClick={() => pick(entry.choice.value)}
                 >
                   <span
