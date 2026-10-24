@@ -28,6 +28,7 @@ import {
   hasConfigurationRecheckRecovery,
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
+import { confirmSavedConfiguration } from "./saved_configuration_restore";
 import { configChangeBusy } from "./protected_config";
 import type { AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
@@ -1072,6 +1073,16 @@ class ThreadsStore {
       s.configuring = false;
       this.emit(key);
     }
+  }
+
+  confirmRestoredConfig(
+    key: string,
+    savedSelection: Record<string, unknown>,
+  ): Promise<void> {
+    return confirmSavedConfiguration(this.thread(key), savedSelection, {
+      current: () => this.thread(key),
+      emit: () => this.emit(key),
+    });
   }
 
   recheckConfig(

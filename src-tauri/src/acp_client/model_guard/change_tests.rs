@@ -17,7 +17,7 @@ fn options(model: &str, effort: Option<&str>) -> Value {
 
 fn established() -> ModelGuard {
     let mut guard = ModelGuard::new(&options("a", Some("low")), None, false);
-    guard.lock();
+    guard.saved_session();
     guard
 }
 

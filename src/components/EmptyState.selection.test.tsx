@@ -93,6 +93,7 @@ vi.mock("../runtime/sessions", async (original) => ({
   threads: {
     open: h.open,
     setConfig: h.setConfig,
+    confirmRestoredConfig: vi.fn().mockResolvedValue(undefined),
     discardDraft: h.discardDraft,
     thread: (key: string) => (key === h.live?.key ? h.live : null),
   },
@@ -235,7 +236,6 @@ afterEach(() => {
   vi.unstubAllGlobals();
   composerDrafts.clear("new");
 });
-
 function folderButton() {
   return render().find(
     (node) =>

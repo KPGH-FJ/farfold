@@ -606,6 +606,7 @@ it("an archive discovered during config await rejects and discards the returned 
     "/project",
     "native",
   );
+  state.service = { id: "api", model: "model", fingerprint: "new-source" };
   state.configOptions = [
     {
       id: "mode",

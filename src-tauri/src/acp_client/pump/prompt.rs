@@ -108,7 +108,7 @@ pub(super) async fn send(
         (ctx.events)(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));
         return Err("CONFIG_RECORD_FAILED".into());
     }
-    model_guard.lock();
+    model_guard.saved_session();
     if let Err(error) = config_store.validate_service().await {
         (ctx.events)(serde_json::json!({"kind":"serviceUnavailable","message":error}));
         return Err("SERVICE_UNAVAILABLE".into());

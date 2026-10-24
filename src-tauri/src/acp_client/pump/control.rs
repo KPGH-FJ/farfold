@@ -41,6 +41,7 @@ pub(crate) enum SessionControl {
     },
     ConfirmConfig {
         displayed: Value,
+        restore_selection: Option<Value>,
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Value, String>>,
     },

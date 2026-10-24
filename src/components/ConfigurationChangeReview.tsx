@@ -16,12 +16,14 @@ export function ConfigurationChangeReview({
   value,
   onCancel,
   onSaved,
+  onApply,
 }: {
   thread: ThreadState;
   option: ConfigOptionView;
   value: unknown;
   onCancel: () => void;
   onSaved: () => void;
+  onApply?: (id: string, value: unknown) => Promise<void>;
 }) {
   const [saving, setSaving] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -47,7 +49,9 @@ export function ConfigurationChangeReview({
     setSaving(true);
     setFailed(false);
     try {
-      await threads.setConfig(thread.key, option.id, value);
+      await (onApply
+        ? onApply(option.id, value)
+        : threads.setConfig(thread.key, option.id, value));
       onSaved();
     } catch {
       setFailed(true);

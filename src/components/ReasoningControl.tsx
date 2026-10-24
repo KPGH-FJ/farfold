@@ -10,6 +10,7 @@ import {
 } from "../runtime/protected_config";
 import { configValueLabel, type ThreadState } from "../runtime/sessions";
 import { ModelPicker } from "./ModelPicker";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 
 export const isReasoningOption = isThoughtConfigOption;
 
@@ -17,11 +18,13 @@ export const isReasoningOption = isThoughtConfigOption;
 export function ReasoningControl({
   thread,
   inactive = false,
+  onApply,
 }: {
   thread: ThreadState;
   /** Menus/dialogs above the composer keep the control mounted but disabled,
    *  so sibling controls do not disappear or reflow (W3-2). */
   inactive?: boolean;
+  onApply?: (id: string, value: unknown) => Promise<void>;
 }) {
   useAuthenticationActivity(thread.agentId);
   const [pending, setPending] = useState<{
@@ -29,12 +32,25 @@ export function ReasoningControl({
     previous: unknown;
     value: unknown;
   } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
   const option = thread.configOptions.find(isReasoningOption);
   if (!option) return null;
-  const blocked = inactive || configOptionChangeBlocked(thread, option.id);
+  const blocked =
+    saving || inactive || configOptionChangeBlocked(thread, option.id);
   const select = (value: unknown) => {
-    if (inactive || configOptionChangeBlocked(thread, option.id)) return;
+    if (saving || inactive || configOptionChangeBlocked(thread, option.id))
+      return;
     if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
+    setFailed(false);
+    if (value === option.currentValue && onApply) {
+      setPending(null);
+      setSaving(true);
+      void onApply(option.id, value)
+        .catch(() => setFailed(true))
+        .finally(() => setSaving(false));
+      return;
+    }
     setPending(
       value === option.currentValue
         ? null
@@ -54,6 +70,7 @@ export function ReasoningControl({
             value={pending.value}
             onCancel={() => setPending(null)}
             onSaved={() => setPending(null)}
+            onApply={onApply}
           />
         </div>
       </WorkspaceDialog>
@@ -77,6 +94,7 @@ export function ReasoningControl({
             }}
           />
         </label>
+        {failed && <p role="alert">{R.optionSaveError}</p>}
         {review}
       </>
     );
@@ -105,6 +123,7 @@ export function ReasoningControl({
           }}
         />
       </label>
+      {failed && <p role="alert">{R.optionSaveError}</p>}
       {review}
     </>
   );

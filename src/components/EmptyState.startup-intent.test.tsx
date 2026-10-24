@@ -103,6 +103,7 @@ vi.mock("../runtime/sessions", async (original) => ({
     thread: (key: string) => h.threads.get(key),
     discardDraft: h.discard,
     setConfig: h.setConfig,
+    confirmRestoredConfig: vi.fn().mockResolvedValue(undefined),
     send: h.send,
     dequeue: vi.fn(),
   },

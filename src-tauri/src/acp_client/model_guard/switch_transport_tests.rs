@@ -11,7 +11,7 @@ use tokio::sync::mpsc;
 
 const SESSION: &str = "switch-proof";
 const PEER: &str = r#"
-import sys,json,time,os
+import sys,json,time,os,threading
 state_path=sys.argv[1]
 root=os.path.dirname(state_path)
 if os.path.exists(state_path):
@@ -23,7 +23,23 @@ else:
 def save():
  with open(state_path+'.tmp','w') as f: json.dump(state,f)
  os.replace(state_path+'.tmp',state_path)
-def send(x): print(json.dumps(dict(jsonrpc='2.0',**x)),flush=True)
+send_lock=threading.Lock()
+def send(x):
+ with send_lock: print(json.dumps(dict(jsonrpc='2.0',**x)),flush=True)
+def notifications():
+ while True:
+  path=os.path.join(root,'inject-update.json')
+  if os.path.exists(path):
+   with open(path) as f: update=json.load(f)
+   options=json.loads(json.dumps(update.get('options',state['options'])))
+   for option in options:
+    if option['id'] in update['values']: option['currentValue']=update['values'][option['id']]
+   session=update.get('sessionId','switch-proof')
+   if session=='switch-proof': state['options']=options;save()
+   send({'method':'session/update','params':{'sessionId':session,'update':{'sessionUpdate':'config_option_update','configOptions':options}}})
+   os.remove(path)
+  time.sleep(.005)
+threading.Thread(target=notifications,daemon=True).start()
 for line in sys.stdin:
  m=json.loads(line); p=m.get('params',{}); method=m.get('method'); result={}
  if method is None: continue
@@ -64,8 +80,10 @@ struct Fixture {
     cwd: PathBuf,
     sink: SessionSink,
     events: mpsc::UnboundedReceiver<Value>,
+    event_hook: Arc<std::sync::Mutex<Option<EventHook>>>,
     _dir: tempfile::TempDir,
 }
+type EventHook = Box<dyn Fn(&Value) + Send + Sync>;
 impl Drop for Fixture {
     fn drop(&mut self) {
         self.manager.stop_for_shutdown();
@@ -96,7 +114,13 @@ impl Fixture {
         };
         store.insert_agent(&row).unwrap();
         let (tx, events) = mpsc::unbounded_channel();
+        let event_hook: Arc<std::sync::Mutex<Option<EventHook>>> =
+            Arc::new(std::sync::Mutex::new(None));
+        let hook = event_hook.clone();
         let sink: SessionSink = Arc::new(move |value| {
+            if let Some(callback) = hook.lock().unwrap().as_ref() {
+                callback(&value);
+            }
             let _ = tx.send(value);
         });
         let fixture = Self {
@@ -106,6 +130,7 @@ impl Fixture {
             cwd,
             sink,
             events,
+            event_hook,
             _dir: dir,
         };
         let opened = fixture
@@ -261,6 +286,9 @@ fn assert_choices(snapshot: &Value, model: &str, effort: &str) {
         assert_eq!(choice["type"], "select");
     }
 }
+
+#[path = "saved_restore_tests.rs"]
+mod saved_restore_tests;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_change_transport_notifies_before_ack_persists_and_cold_loads_same_session() {

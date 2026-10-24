@@ -69,7 +69,7 @@ pub(super) async fn save_confirmed_change(
     if let Some(confirmed) = pending_store.take() {
         *store = confirmed;
     }
-    guard.confirm_saved();
+    guard.saved_session();
     Ok(())
 }
 

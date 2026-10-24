@@ -788,6 +788,7 @@ impl AcpManager {
         .await?
     }
 
+    #[cfg(test)]
     pub(crate) async fn confirm_config(
         &self,
         agent_id: &str,
@@ -795,11 +796,24 @@ impl AcpManager {
         session_id: &str,
         displayed: Value,
     ) -> Result<Value, String> {
+        self.confirm_config_selection(agent_id, cwd, session_id, displayed, None)
+            .await
+    }
+
+    pub(crate) async fn confirm_config_selection(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        displayed: Value,
+        restore_selection: Option<Value>,
+    ) -> Result<Value, String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
         let (result, receive) = oneshot::channel();
         control
             .send(SessionControl::ConfirmConfig {
                 displayed,
+                restore_selection,
                 result,
                 deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
             })

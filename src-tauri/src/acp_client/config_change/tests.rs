@@ -91,6 +91,7 @@ async fn configuration_change_failed_save_retries_source_and_guard_together() {
     let mut guard = ModelGuard::new(&options("farfold_fixture/a", "low"), None, false);
     guard.lock();
     context.save("same-session", guard.record()).await.unwrap();
+    guard.saved_session();
     let before = stored(&context);
     let original = guard.clone();
     let choice = guard
@@ -156,6 +157,7 @@ async fn configuration_change_undelivered_reply_never_saves_or_authorizes() {
     let mut guard = ModelGuard::new(&options("farfold_fixture/a", "low"), None, false);
     guard.lock();
     context.save("same-session", guard.record()).await.unwrap();
+    guard.saved_session();
     let before = stored(&context);
     let original = guard.clone();
     let choice = guard

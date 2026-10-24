@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "kind": "saved-selection-baseline-source-summary",
+  "recordedAt": "2026-10-24T09:14:09.756287+00:00",
+  "evidenceLevel": "source-and-controlled",
+  "baseHead": "85e263b1fd28e04d97f016eff357aabb93d5250c",
+  "sourceFilesChanged": 25,
+  "requirements": ["ARCH-19", "ARCH-20", "ARCH-21", "ARCH-24", "P01"],
+  "problem": "新对话恢复保存选择或用户明确选择成功后，共用确认接线不足；普通配置通知还可能把当前模型或思考值改写成已保存意图。此为源码可达问题，不认定某次真实 Agent 失败的唯一原因。",
+  "implementation": [
+    "复用现有确认接口传递原保存或明确选择意图，严格失败反馈；不使用吞错的手动确认路径，不刷新会话索引或自动发送。",
+    "恢复保持模型优先、逐项及最终完整读回；原保存的真实模型或思考选择均可确认，空配置和仅普通设置不制造受保护意图。",
+    "模型、思考和更多设置的明确操作共用确认路径；同值点击不需要额外设置调用，单独思考选择无需虚构模型选择。",
+    "明确服务模型只取原选择值，并要求实际声明和同值读回；缺少实际模型选项时保留能力未知，不从默认通知倒推意图。",
+    "普通镜像只保留原受保护选择并更新当前非受保护设置；保留权限等共用设置语义、原草稿和附件及归属保护。",
+    "确认回复可先于排队事件完成；移除强制先收到新事件的额外条件，同时要求回复与当前状态均就绪且内容一致，不用回复覆盖已观察的新状态。",
+    "后端在同一现有保护快照上确认原保存或明确意图；仅实际写入对话索引后标为已建立，准备确认不写空历史。",
+    "保存或明确思考选择同样受保护；已知漂移、未知设置、来源变化、待回应和迟到结果不能由部分选择洗掉。",
+    "当前已确认值可不在下一可切换列表中；保留原数组外形，不新增标签必填、官方事件标识或整表解析门槛。"
+  ],
+  "authorValidation": {
+    "frontend": {
+      "initialStableCheckpoint": {
+        "testFiles": 17,
+        "tests": 297,
+        "passed": 297,
+        "failed": 0,
+        "typecheckExitCode": 0,
+        "scopedFormatExitCode": 0,
+        "scopedDiffExitCode": 0,
+        "scopedSourceFiles": 13,
+        "sourceEndpointsEqual": true
+      },
+      "replyOrderingDelta": {
+        "testFiles": 4,
+        "tests": 58,
+        "passed": 58,
+        "failed": 0,
+        "typecheckExitCode": 0,
+        "scopedFormatExitCode": 0,
+        "scopedDiffExitCode": 0,
+        "changedProductionFiles": 1,
+        "changedTestFiles": 1,
+        "otherScopedFilesUnchanged": 11
+      },
+      "overlap": "delta 的四个测试文件属于原十七个文件范围，多数用例重叠并含修改后的反例；297 与 58 不相加，也不据此声称最终全部十七个文件重新通过。原 297 只对应其当时源码，最终两文件增量对应单独 58 项证据。",
+      "redRuns": [
+        {
+          "checkpoint": "initial-caller-and-bridge-preparation",
+          "tests": 34,
+          "passed": 18,
+          "failed": 16,
+          "behaviorFailures": 3,
+          "newMethodNotWiredFailures": 13,
+          "note": "13 项缺方法属于接线未就绪，不计作 13 个独立产品行为反例；随后思考选择语义纠正不倒改原记录。"
+        },
+        {
+          "checkpoint": "caller-intent-and-mirror-delta",
+          "tests": 46,
+          "passed": 37,
+          "failed": 9,
+          "behaviorFailures": 9,
+          "note": "独立受控调用链与镜像反例，不与首轮合并，不证明真实 Agent 或后端保护效果。"
+        },
+        {
+          "checkpoint": "reply-before-channel-delta",
+          "tests": 16,
+          "passed": 15,
+          "failed": 1,
+          "behaviorFailures": 1,
+          "note": "同归属、同当前值且本地仍为原就绪对象时，实际就绪回复先到应正常完成。"
+        }
+      ],
+      "retainedCounterexamples": [
+        "较新阻塞状态",
+        "较新不同当前值",
+        "迟到归属或服务来源变化",
+        "连接变化",
+        "未知工作",
+        "完整原选择读回不符",
+        "默认通知不得制造意图"
+      ],
+      "intermediateFailuresRetained": true,
+      "fullSevenEngineeringChecksPerformed": false,
+      "nativeValidationIncluded": false
+    },
+    "native": {
+      "originalCheckpoint": {
+        "passed": 70,
+        "failed": 0
+      },
+      "finalDelta": {
+        "passed": 15,
+        "failed": 0,
+        "fmtExitCode": 0,
+        "clippyExitCode": 0
+      },
+      "membershipRed": {
+        "passed": 0,
+        "failed": 2
+      },
+      "intermediateLabelCompatibilityRed": {
+        "passed": 0,
+        "failed": 1
+      },
+      "overlap": "70与15属于不同源码的相交检查，不相加；中间SDK版本及全部旧失败保留。",
+      "legacyManualConfirmUnchanged": true,
+      "newConfirmationCreatesIndexRows": 0
+    }
+  },
+  "independentSourceReview": {
+    "sourceFiles": 25,
+    "openBlockers": 0,
+    "testsExecutedByReviewer": 0,
+    "sourcePinsMatch": true,
+    "maxLines": 1500,
+    "record": {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-fix/independent-review-acceptance-index-final.json",
+      "sha256": "ca33cef90b3047dccf6923b97c1c108278750f5417bf7173695dc19c55fe6dc9"
+    }
+  },
+  "fullEngineering": {
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-engineering/engineering-summary.json",
+      "sha256": "1f39b0530f1b8af063bc29e5406879dfeabf575f02d3f4f9e510e5bdbf09987e"
+    },
+    "rootReview": {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-engineering/root-execution-review.json",
+      "sha256": "3e7c4f17d5b7114af3bab32b78922579174731b1d95f650d5354840bb2b50915"
+    },
+    "checksSucceeded": 7,
+    "sourceInputs": 2252,
+    "sourceUnchangedAtEndpointsAndPerCommand": true,
+    "checksRanBeforeCommit": true,
+    "counts": {
+      "frontend": {
+        "files": 667,
+        "passed": 8811,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2250,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    }
+  },
+  "sourceEvidence": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-fix/frontend/implementation.json",
+      "sha256": "dc911b25bcb2de381d4c96fa782419551ecd8e5e170b2473e1aced0355e94996"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-fix/frontend/reply-before-channel-delta/implementation.json",
+      "sha256": "839b54161fb16837b0e72fb4f15f06dc02992d62641f446222aa2ffb114978b5"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-fix/native/implementation.json",
+      "sha256": "289b16132d98eb865d90ead4af87cb8443cca9a78a1cde415f66e9015203a6b9"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/saved-selection-baseline-fix/native/delta/implementation.json",
+      "sha256": "9ea2f0232e387537d74aeb420bdaeb7b4820463186ae6e0d22f127f21305ebaf"
+    }
+  ],
+  "acceptance": {
+    "installedValidationForThisBatch": false,
+    "realAgentValidationForThisBatch": false,
+    "wholeStandardsClosed": 0,
+    "wholeRequirementsClosed": 0,
+    "wholeAgentsAccepted": 0
+  },
+  "limits": [
+    "未安装本批修复，未验证正式配置生效或完整历史恢复；Kimchi已观察差异的唯一原因仍未知。",
+    "后端未交付确认会回滚此前内存保护；同归属前端失败反馈和未发布准备状态继续阻止发送，不把此前可能就绪的后端称为永久阻塞。",
+    "源码端点相同不冻结依赖或环境，也不证明不存在期间恶意改回。",
+    "全部29家八项标准与151项原条件保持，完整标准、要求及整家新增关闭均为0。"
+  ]
+}

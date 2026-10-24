@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "kind": "later-formal-preparation-and-stop-summary",
+  "recordedAt": "2026-10-24T09:14:09.758151+00:00",
+  "evidenceLevel": "formal-ui-observation",
+  "formalSource": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "observations": [
+    {
+      "agent": "factory-droid",
+      "oneStopAt": "2026-10-24T08:22:49.178Z",
+      "cutoffAt": "2026-10-24T08:23:39.880Z",
+      "result": "尚未收到停止确认；界面结果未知、发送暂停，重试停止入口可见但未点击。",
+      "additionalModelPrompts": 0,
+      "secondStop": 0,
+      "limits": "未证明仍在执行、可确认终态、所有后台空闲或工作位置释放。"
+    },
+    {
+      "agent": "amp-acp",
+      "oneStartAt": "2026-10-24T08:40:10.506Z",
+      "preparedObservedAt": "2026-10-24T08:41:38.233Z",
+      "programVersionLabel": "0.0.1790740844-g023754",
+      "selectedModelLabel": "Medium",
+      "modeOrPermissionsLabel": "Default",
+      "draft": "空；保留此前自有Cursor草稿一次，预览前缀及数量1可见，未恢复或发送。",
+      "modelPrompts": 0,
+      "limits": "Medium不推断具体模型或思考；旧登记版本属于不同层，不冒称同一产物；预览不证明完整字节或冷恢复。"
+    },
+    {
+      "agent": "kimchi",
+      "result": "界面auto仍只作为原准备观察；后续一次六字段本地投影仍为较早保存模型，但不是Start时内存/磁盘状态。",
+      "modelPrompts": 0,
+      "limits": "SQLite读取过数据库页，只输出限定字段，未输出完整设置或凭据；不认定本次自动改选或唯一原因。"
+    },
+    {
+      "agent": "kimi",
+      "oneStartAt": "2026-10-24T09:07:31.128Z",
+      "preparedObservedAt": "2026-10-24T09:08:28.656Z",
+      "programVersionLabel": "1.52.0",
+      "selectedModelLabel": "kimi-for-coding (thinking)",
+      "modeOrPermissionsLabel": "Default",
+      "separateThoughtLevelObserved": false,
+      "draft": "空；原保留草稿数量1，未打开或发送。",
+      "modelPrompts": 0,
+      "limits": "旧保存投影未在Start前重采；模型标签不证明实际后端或思考等级生效。"
+    }
+  ],
+  "evidence": [
+    {
+      "agent": "factory-droid",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/droid-unknown-stop-e6e1/observation.json",
+        "sha256": "f4f601915fdbd7f5e1c3e0a116606b863b37ab17e6716c7cd498837fbd4d4b9d"
+      }
+    },
+    {
+      "agent": "amp-acp",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/amp-new-draft-e6e1/observation.json",
+        "sha256": "88f85cfc79035371f0e4e0926eaddb666e615be465e896cf85c05bd8fa448ed3"
+      }
+    },
+    {
+      "agent": "kimchi",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/kimchi-new-draft-e6e1/observation.json",
+        "sha256": "1c50237136f2abef49575a148e63d54c213fb6333d7cc7dd5753315c9532075a"
+      }
+    },
+    {
+      "agent": "kimi",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/kimi-new-draft-e6e1/observation.json",
+        "sha256": "f3e0fc922300aa8028acea68bd3e38099ca74c899c7df3b8f01185a7a662dc00"
+      }
+    },
+    {
+      "agent": "kimchi",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/kimchi-new-draft-e6e1/current-saved-choice-projection.json",
+        "sha256": "5e2cc5ab22776be97974d983821b9ef181ddbecc1e90bc440e769ad123f83c7d"
+      }
+    },
+    {
+      "agent": "amp-acp",
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/amp-new-draft-e6e1/current-saved-choice-projection.json",
+        "sha256": "408ccf63de5383eb75d3527cbb483f44ee5ff00e5e2f48f35f506bca13904879"
+      }
+    }
+  ],
+  "boundaries": {
+    "noNewModelRequestForThesePreparationObservations": true,
+    "manualModelOrPermissionChanges": 0,
+    "adoptCurrentOrLogin": 0,
+    "retryUnknownPrompts": 0,
+    "forceStopOrExit": 0,
+    "installedUpdatedForCurrentSourceBatch": false,
+    "siGitAndDroidUnknownWorkPreserved": true,
+    "completeStandardsNewlyAccepted": 0,
+    "completeRequirementsNewlyAccepted": 0,
+    "completeAgentsNewlyAccepted": 0
+  }
+}

@@ -1,4 +1,10 @@
 import { audioCapability } from "../runtime/audio_input";
+import {
+  captureConfigurationOwner,
+  configurationRestoreIntent,
+  mirroredConfigurationChoice,
+  restoreSavedConfiguration,
+} from "../runtime/saved_configuration_restore";
 /** 开始页：仅本次明确选择或首发准备草稿，恢复的选择不会自动打开。 */
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationLocationBar } from "./NewConversationLocationBar";
@@ -18,8 +24,6 @@ import { toUiNotice, type UiNotice } from "../runtime/ui_error";
 import {
   configurationRestoreNotice,
   isConfigurationRestoreNotice,
-  requireRestoredConfigurationValues,
-  requireSavedConfigurationOption,
 } from "../runtime/configuration_restore_feedback";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { ServiceChoice } from "./ServicePicker";
@@ -579,38 +583,32 @@ export function EmptyState({
             !isAutomaticConnectionAllowed(agentId)
           )
             return;
-          const modelId = modelConfigOption(state.configOptions)?.id;
-          const choices = Object.entries(requestedConfig).sort(
-            ([a], [b]) => Number(b === modelId) - Number(a === modelId),
+          const sameOwner = captureConfigurationOwner(state);
+          const restored = await restoreSavedConfiguration(
+            state,
+            configurationRestoreIntent(state, requestedConfig, service?.model),
+            {
+              current: () =>
+                !rejectOpened() &&
+                !cancelled &&
+                threads.thread(state.key) === state &&
+                sameOwner() &&
+                state.agentId === agentId &&
+                state.cwd === requestCwd &&
+                (service
+                  ? state.service?.id === service.id &&
+                    state.service.model === service.model
+                  : !state.service) &&
+                isCurrentCandidate(agentId) &&
+                isAutomaticConnectionAllowed(agentId) &&
+                !readRequired(),
+              validateService: requireCurrentService,
+              set: (id, value) => threads.setConfig(state.key, id, value),
+              confirm: (selection) =>
+                threads.confirmRestoredConfig(state.key, selection),
+            },
           );
-          for (const [id, value] of choices) {
-            if (rejectOpened()) return;
-            if (
-              cancelled ||
-              !isCurrentCandidate(agentId) ||
-              !isAutomaticConnectionAllowed(agentId) ||
-              readRequired()
-            )
-              return;
-            const option = requireSavedConfigurationOption(
-              threads.thread(state.key)?.configOptions,
-              id,
-              value,
-            );
-            if (value !== option.currentValue)
-              await threads.setConfig(state.key, id, value);
-            if (rejectOpened()) return;
-            requireRestoredConfigurationValues(
-              threads.thread(state.key)?.configOptions,
-              [[id, value]],
-            );
-          }
-          if (!cancelled)
-            requireRestoredConfigurationValues(
-              threads.thread(state.key)?.configOptions,
-              choices,
-            );
-          if (rejectOpened()) return;
+          if (!restored || rejectOpened()) return;
           preparedComposerOwner.open(state.key);
           setDraftKey(state.key);
         })
@@ -684,8 +682,9 @@ export function EmptyState({
       applyingModel.current === draft.key
     )
       return;
-    newConversationChoice.config = Object.fromEntries(
-      draft.configOptions.map((option) => [option.id, option.currentValue]),
+    newConversationChoice.config = mirroredConfigurationChoice(
+      draft,
+      newConversationChoice.config,
     );
   }, [
     agentId,
@@ -695,6 +694,7 @@ export function EmptyState({
     explicitReadRequired,
     draft?.key,
     draft?.configOptions,
+    draft?.configCheck,
     draft?.configuring,
     draft?.configError,
     draftError,
@@ -1027,6 +1027,55 @@ export function EmptyState({
     setChoiceDialog(null);
     onGoSettings(id);
   };
+  const applyDraftConfig = async (id: string, value: unknown) => {
+    const state = draft;
+    const request = requestedAgent.current;
+    const epoch = selectionEpoch.current;
+    const sameOwner = state && captureConfigurationOwner(state);
+    const current = () =>
+      !!state &&
+      mounted.current &&
+      activeRef.current &&
+      !!agentId &&
+      isCurrentCandidate(agentId) &&
+      !readRequired() &&
+      currentPair.current === pair &&
+      selectionEpoch.current === epoch &&
+      requestedAgent.current === request &&
+      threads.thread(state.key) === state &&
+      state.agentId === agentId &&
+      state.cwd === requestCwd &&
+      sameOwner?.() === true &&
+      (service
+        ? state.service?.id === service.id &&
+          state.service.model === service.model
+        : !state.service);
+    if (!state || !current()) throw new Error(STRINGS.repair.configFailed);
+    const expected = configurationRestoreIntent(
+      state,
+      { ...newConversationChoice.config, [id]: value },
+      service?.model,
+    );
+    applyingModel.current = state.key;
+    try {
+      const restored = await restoreSavedConfiguration(state, expected, {
+        current,
+        validateService: requireCurrentService,
+        set: (optionId, optionValue) =>
+          threads.setConfig(state.key, optionId, optionValue),
+        confirm: (selection) =>
+          threads.confirmRestoredConfig(state.key, selection),
+      });
+      if (!restored || !current()) throw new Error(STRINGS.repair.configFailed);
+      newConversationChoice.config = expected;
+      setDraftError(null);
+    } catch (reason) {
+      if (current()) setDraftError({ message: STRINGS.repair.configFailed });
+      throw reason;
+    } finally {
+      if (applyingModel.current === state.key) applyingModel.current = null;
+    }
+  };
   const applyModel = async (choice: NewConversationModelChoice) => {
     locationOwner.current.retire();
     if (
@@ -1036,16 +1085,6 @@ export function EmptyState({
       !isCurrentCandidate(agentId)
     )
       throw new Error(STRINGS.repair.configFailed);
-    const request = requestedAgent.current;
-    const epoch = selectionEpoch.current;
-    const ownsApplication = () =>
-      mounted.current &&
-      activeRef.current &&
-      isCurrentCandidate(agentId) &&
-      !readRequired() &&
-      currentPair.current === pair &&
-      selectionEpoch.current === epoch &&
-      requestedAgent.current === request;
     const sameService =
       (!choice.service && !service) ||
       (!!choice.service &&
@@ -1072,76 +1111,24 @@ export function EmptyState({
         !modelOption.options.some((item) => item.value === choice.modelValue)
       )
         throw new Error(STRINGS.repair.configFailed);
-      if (modelOption.currentValue === choice.modelValue && !draftError)
-        return true;
-      const expected = {
-        ...newConversationChoice.config,
-        [modelOption.id]: choice.modelValue,
-      };
-      applyingModel.current = draft.key;
+      const request = requestedAgent.current;
+      const epoch = selectionEpoch.current;
       try {
-        if (modelOption.currentValue !== choice.modelValue)
-          await threads.setConfig(draft.key, modelOption.id, choice.modelValue);
-        if (!ownsApplication()) return false;
-        if (
-          threads
-            .thread(draft.key)
-            ?.configOptions.find((item) => item.id === modelOption.id)
-            ?.currentValue !== choice.modelValue
-        )
-          throw new Error(STRINGS.repair.configFailed);
-        for (const [id, value] of Object.entries(expected)) {
-          if (!ownsApplication()) return false;
-          const current = threads.thread(draft.key);
-          const option = current?.configOptions.find((item) => item.id === id);
-          if (
-            !option ||
-            current?.configError ||
-            current?.configuring ||
-            (option.type === "select" &&
-              value !== option.currentValue &&
-              !option.options.some((item) => item.value === value))
-          )
-            throw new Error(STRINGS.repair.configFailed);
-          if (value !== option.currentValue)
-            await threads.setConfig(draft.key, id, value);
-          if (
-            threads
-              .thread(draft.key)
-              ?.configOptions.find((item) => item.id === id)?.currentValue !==
-            value
-          )
-            throw new Error(STRINGS.repair.configFailed);
-        }
-        const confirmed = threads.thread(draft.key);
-        if (
-          !confirmed ||
-          confirmed.configError ||
-          confirmed.configuring ||
-          Object.entries(expected).some(
-            ([id, value]) =>
-              confirmed.configOptions.find((item) => item.id === id)
-                ?.currentValue !== value,
-          )
-        )
-          throw new Error(STRINGS.repair.configFailed);
-        if (ownsApplication()) {
-          newConversationChoice.config = Object.fromEntries(
-            confirmed.configOptions.map((option) => [
-              option.id,
-              option.currentValue,
-            ]),
-          );
-          setDraftError(null);
-        }
+        await applyDraftConfig(modelOption.id, choice.modelValue);
       } catch (reason) {
-        if (ownsApplication())
-          setDraftError({ message: STRINGS.repair.configFailed });
+        if (
+          !mounted.current ||
+          !activeRef.current ||
+          !isCurrentCandidate(agentId) ||
+          readRequired() ||
+          currentPair.current !== pair ||
+          selectionEpoch.current !== epoch ||
+          requestedAgent.current !== request
+        )
+          return false;
         throw reason;
-      } finally {
-        if (applyingModel.current === draft.key) applyingModel.current = null;
       }
-      return ownsApplication();
+      return true;
     }
     // Choosing a different source only replaces the unsent draft's selection.
     // The normal preparation path checks it before sending is allowed.
@@ -1211,7 +1198,11 @@ export function EmptyState({
         <CaretDownIcon size={10} />
       </button>
       {candidateSelected && draft && (
-        <ReasoningControl thread={draft} inactive={!active} />
+        <ReasoningControl
+          thread={draft}
+          inactive={!active}
+          onApply={applyDraftConfig}
+        />
       )}
       {candidateSelected && draft && (
         <PermissionControl thread={draft} inactive={!active} />
@@ -1227,7 +1218,11 @@ export function EmptyState({
           title={R.moreSettings}
           disabled={!active}
         >
-          <SessionOptionsList thread={draft} composer />
+          <SessionOptionsList
+            thread={draft}
+            composer
+            onApply={applyDraftConfig}
+          />
         </WorkspacePopover>
       )}
     </>

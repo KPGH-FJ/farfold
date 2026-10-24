@@ -37,9 +37,11 @@ function optionLabel(option: ConfigOptionView) {
 function OptionRow({
   thread,
   option,
+  onApply,
 }: {
   thread: ThreadState;
   option: ConfigOptionView;
+  onApply?: (id: string, value: unknown) => Promise<void>;
 }) {
   useAuthenticationActivity(thread.agentId);
   const [selection, setSelection] = useState<{
@@ -71,8 +73,17 @@ function OptionRow({
         ? STRINGS.options.modeDescription
         : option.description || R.descriptionUnknown;
   const choose = (value: unknown) => {
-    if (configOptionChangeBlocked(thread, option.id)) return;
+    if (saving || configOptionChangeBlocked(thread, option.id)) return;
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
     setFailed(false);
+    if (Object.is(value, option.currentValue) && onApply && recorded) {
+      setSelection(null);
+      setSaving(true);
+      void onApply(option.id, value)
+        .catch(() => setFailed(true))
+        .finally(() => setSaving(false));
+      return;
+    }
     setSelection(
       Object.is(value, option.currentValue)
         ? null
@@ -90,7 +101,9 @@ function OptionRow({
     setSaving(true);
     setFailed(false);
     try {
-      await threads.setConfig(thread.key, option.id, pending.value);
+      await (onApply
+        ? onApply(option.id, pending.value)
+        : threads.setConfig(thread.key, option.id, pending.value));
       setSelection(null);
     } catch {
       setFailed(true);
@@ -186,15 +199,22 @@ export function sessionOptions(thread: ThreadState, composer = false) {
 export function SessionOptionsList({
   thread,
   composer = false,
+  onApply,
 }: {
   thread: ThreadState;
   composer?: boolean;
+  onApply?: (id: string, value: unknown) => Promise<void>;
 }) {
   const rest = sessionOptions(thread, composer);
   return (
     <>
       {rest.map((option) => (
-        <OptionRow key={option.id} thread={thread} option={option} />
+        <OptionRow
+          key={option.id}
+          thread={thread}
+          option={option}
+          onApply={onApply}
+        />
       ))}
     </>
   );

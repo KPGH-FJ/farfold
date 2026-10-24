@@ -266,3 +266,83 @@ it("keeps reasoning at its confirmed value until the explicit comparison is acce
   ).toBe(false);
   expect(change).not.toHaveBeenCalled();
 });
+
+it.each(["low", "high"])(
+  "routes explicit reasoning %s through the supplied confirmation action, including equal clicks",
+  async (value) => {
+    const thread = freshThreadState("explicit-reasoning", "example", "/p", "s");
+    thread.configOptions = [
+      {
+        id: "effort",
+        name: "Thinking",
+        category: "thought_level",
+        type: "select",
+        currentValue: "low",
+        options: [
+          { value: "low", name: "Low" },
+          { value: "high", name: "High" },
+        ],
+      },
+    ];
+    const apply = vi.fn().mockResolvedValue(undefined);
+    const setter = vi.spyOn(threads, "setConfig").mockResolvedValue(undefined);
+    const read = () => ReasoningControl({ thread, onApply: apply });
+    let view = render(read);
+    expect(apply).not.toHaveBeenCalled();
+    (
+      view.find((node) => node.type === ModelPicker)!.props.onPick as (
+        v: string,
+      ) => void
+    )(value);
+    if (value !== "low") {
+      view = render(read);
+      const review = view.find(
+        (node) => node.type === ConfigurationChangeReview,
+      )!;
+      h.slots = [];
+      const reviewView = render(() =>
+        ConfigurationChangeReview(
+          review.props as Parameters<typeof ConfigurationChangeReview>[0],
+        ),
+      );
+      (
+        reviewView.find((node) => node.props.children === R.optionChange)!.props
+          .onClick as () => void
+      )();
+    }
+    await vi.waitFor(() => expect(apply).toHaveBeenCalledWith("effort", value));
+    expect(setter).not.toHaveBeenCalled();
+  },
+);
+it("uses the supplied action for an equal explicit protected More Settings option without a setter", async () => {
+  const thread = freshThreadState("explicit-extra", "example", "/p", "s");
+  thread.configOptions = [
+    {
+      id: "extra-thought",
+      name: "Thinking detail",
+      category: "thought_level",
+      type: "select",
+      currentValue: "low",
+      options: [{ value: "low", name: "Low" }],
+    },
+  ];
+  const apply = vi.fn().mockResolvedValue(undefined);
+  const setter = vi.spyOn(threads, "setConfig").mockResolvedValue(undefined);
+  const read = () => {
+    const row = Children.toArray(
+      SessionOptionsList({ thread, onApply: apply }).props.children,
+    )[0] as Element;
+    return (row.type as (props: unknown) => ReactNode)(row.props);
+  };
+  const view = render(read);
+  expect(apply).not.toHaveBeenCalled();
+  (
+    view.find((node) => node.type === ModelPicker)!.props.onPick as (
+      v: string,
+    ) => void
+  )("low");
+  await vi.waitFor(() =>
+    expect(apply).toHaveBeenCalledWith("extra-thought", "low"),
+  );
+  expect(setter).not.toHaveBeenCalled();
+});

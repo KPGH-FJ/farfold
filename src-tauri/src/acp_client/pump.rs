@@ -1123,9 +1123,54 @@ async fn session_pump(
                         MutationReply::Config(result), operation, lease, deadline,
                         future));
                 }
-                SessionControl::ConfirmConfig { displayed, result, .. } => {
+                SessionControl::ConfirmConfig { displayed, restore_selection, deadline, result } => {
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
+                    if let Some(selection) = restore_selection {
+                        let before = if mutation.is_some() || prompt_in_flight
+                            || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
+                            || restore_config::busy(&ctx)
+                            || !matches!(permission_guard.state(), "ready" | "required")
+                            || awaiting || result.is_closed() || tokio::time::Instant::now() >= deadline {
+                            Err("当前设置已变化或无法确认，请重新检查".to_string())
+                        } else { config_store.validate_service().await };
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
+                            &mut permission_guard, &mut opening, &mut mutation);
+                        let candidate = before.and_then(|()| {
+                            if mutation.is_some() || prompt_in_flight
+                                || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
+                                || restore_config::busy(&ctx)
+                                || !matches!(permission_guard.state(), "ready" | "required")
+                                || result.is_closed() || tokio::time::Instant::now() >= deadline {
+                                return Err("当前设置已变化或无法确认，请重新检查".into());
+                            }
+                            let options = configuration.options().unwrap_or(Value::Null);
+                            config_store.validate_model(&options)?;
+                            model_guard.confirm_restored_selection(&displayed, &selection, &options)
+                        });
+                        match candidate {
+                            Ok(candidate) => {
+                                let prior = std::mem::replace(&mut model_guard, candidate);
+                                let check = serde_json::to_value(model_guard.check()).unwrap();
+                                events(serde_json::json!({"kind":"configCheck", "check":check}));
+                                // No Agent or storage side effect occurred. If interest
+                                // closes at delivery, do not claim the baseline succeeded.
+                                if result.is_closed() || tokio::time::Instant::now() >= deadline {
+                                    model_guard = prior;
+                                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                                    let _ = result.send(Err("当前设置已变化或无法确认，请重新检查".into()));
+                                } else if result.send(Ok(check)).is_err() {
+                                    model_guard = prior;
+                                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                                }
+                            }
+                            Err(error) => {
+                                events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                                let _ = result.send(Err(error));
+                            }
+                        }
+                        continue;
+                    }
                     let outcome = if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
                     } else if let Err(error) = save_confirmed_change(&session_id, &mut model_guard,

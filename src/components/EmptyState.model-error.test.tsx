@@ -19,6 +19,7 @@ const h = vi.hoisted(() => ({
   effects: [] as (() => void)[],
   open: vi.fn(),
   setConfig: vi.fn(),
+  confirmRestored: vi.fn(),
   live: null as ThreadState | null,
   credentials: vi.fn(),
   capabilities: vi.fn(),
@@ -87,6 +88,7 @@ vi.mock("../runtime/sessions", async (original) => ({
   threads: {
     open: h.open,
     setConfig: h.setConfig,
+    confirmRestoredConfig: h.confirmRestored,
     discardDraft: vi.fn(),
     thread: (key: string) => (key === h.live?.key ? h.live : null),
   },
@@ -98,6 +100,7 @@ vi.mock(
 
 import { EmptyState } from "./EmptyState";
 import { Composer } from "./Composer";
+import { ReasoningControl } from "./ReasoningControl";
 import {
   NewConversationAgentDialog,
   NewConversationModelDialog,
@@ -182,6 +185,7 @@ beforeEach(() => {
   h.live = null;
   h.open.mockReset();
   h.setConfig.mockReset();
+  h.confirmRestored.mockReset().mockResolvedValue(undefined);
   h.credentials.mockReset().mockResolvedValue([]);
   h.capabilities
     .mockReset()
@@ -527,6 +531,130 @@ function startRestore(config: Record<string, unknown>) {
   )();
   render();
 }
+
+it("confirms the original saved baseline after zero-setter equal restoration before exposing the draft", async () => {
+  const before = composerDrafts.read("new");
+  startRestore({ model: "kept-choice", thought_level: "low" });
+  h.live!.configOptions[0].currentValue = "kept-choice";
+  let release!: () => void;
+  h.confirmRestored.mockImplementation(
+    () =>
+      new Promise<void>((done) => {
+        release = done;
+      }),
+  );
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.confirmRestored).toHaveBeenCalledWith("prepared-a", {
+    model: "kept-choice",
+    thought_level: "low",
+  });
+  expect(render().composer.props.disabled).toBe(true);
+  expect(render().composer.props.thread).toBeNull();
+  release();
+  const ready = await settle();
+  expect(ready.composer.props.disabled).toBe(false);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(before);
+});
+
+it("confirms only after model-first setters and the final saved thought readback", async () => {
+  const saved = { thought_level: "medium", model: "kept-choice" };
+  startRestore(saved);
+  h.confirmRestored.mockImplementation(async (_key, selection) => {
+    expect(h.setConfig.mock.calls.map((call) => call[1])).toEqual([
+      "model",
+      "thought_level",
+    ]);
+    expect(selection).toEqual(saved);
+    expect(
+      h.live!.configOptions.find((item) => item.id === "thought_level")
+        ?.currentValue,
+    ).toBe("medium");
+  });
+  await vi.advanceTimersByTimeAsync(300);
+  expect((await settle()).composer.props.disabled).toBe(false);
+  expect(h.confirmRestored).toHaveBeenCalledOnce();
+});
+
+it.each([{}, { mode: "safe" }])(
+  "does not confirm defaults or only ordinary saved settings: %j",
+  async (saved) => {
+    startRestore(saved);
+    h.live!.configOptions.push({
+      ...configOption("mode", "safe", ["safe"]),
+      category: "mode",
+    });
+    await vi.advanceTimersByTimeAsync(300);
+    await settle();
+    expect(h.confirmRestored).not.toHaveBeenCalled();
+  },
+);
+
+it("confirms an original thought-only selection without requiring a declared model", async () => {
+  startRestore({ thought_level: "low" });
+  h.live!.configOptions = h.live!.configOptions.filter(
+    (option) => option.id !== "model",
+  );
+  await vi.advanceTimersByTimeAsync(300);
+  expect((await settle()).composer.props.disabled).toBe(false);
+  expect(h.confirmRestored).toHaveBeenCalledWith("prepared-a", {
+    thought_level: "low",
+  });
+});
+it("does not manufacture protected saved choices from default or later blocked notifications", async () => {
+  startRestore({});
+  await vi.advanceTimersByTimeAsync(300);
+  await settle();
+  expect(newConversationChoice.config).toEqual({});
+  newConversationChoice.config = { model: "kept-choice" };
+  h.live!.configOptions = [
+    configOption("model", "initial", ["initial", "kept-choice"]),
+    { ...configOption("mode", "safe", ["safe"]), category: "mode" },
+  ];
+  h.live!.configCheck = {
+    status: "blocked",
+    issues: [],
+    protectedIds: ["model"],
+    current: {},
+  };
+  h.live!.modelDrift = true;
+  render();
+  expect(newConversationChoice.config).toEqual({
+    model: "kept-choice",
+    mode: "safe",
+  });
+});
+it("confirms an explicit same-value model click without a setter or converting inherited thought into intent", async () => {
+  startRestore({});
+  h.live!.configOptions[0].currentValue = "kept-choice";
+  await vi.advanceTimersByTimeAsync(300);
+  const view = await settle();
+  await (view.dialog!.props.onApply as (choice: unknown) => Promise<void>)({
+    service: null,
+    modelValue: "kept-choice",
+  });
+  expect(h.confirmRestored).toHaveBeenCalledWith("prepared-a", {
+    model: "kept-choice",
+  });
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual({ model: "kept-choice" });
+});
+
+it("keeps the input and saved choice blocked when restored-baseline confirmation fails", async () => {
+  const before = composerDrafts.read("new");
+  startRestore({ model: "kept-choice" });
+  h.confirmRestored.mockRejectedValue(
+    new Error(STRINGS.repair.confirmConfigFailed),
+  );
+  await vi.advanceTimersByTimeAsync(300);
+  const failed = await settle();
+  expect(h.confirmRestored).toHaveBeenCalledOnce();
+  expect(failed.composer.props.disabled).toBe(true);
+  expect(failed.composer.props.thread).toBeNull();
+  expect(newConversationChoice.config).toEqual({ model: "kept-choice" });
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
 async function expectRestoreFailure(
   copy: string,
   before: ReturnType<typeof composerDrafts.read>,
@@ -692,3 +820,50 @@ it("does not expose a late old-pair restore failure on the newly selected prepar
   expect(h.open).toHaveBeenCalledTimes(2);
   expect(h.setConfig).toHaveBeenCalledTimes(1);
 });
+
+it("confirms an explicit thought-only action from the actual new-draft control without synthesizing model intent", async () => {
+  const before = composerDrafts.read("new");
+  startRestore({});
+  await vi.advanceTimersByTimeAsync(300);
+  const view = await settle();
+  const control = view.root.find((node) => node.type === ReasoningControl)!;
+  await (
+    control.props.onApply as (id: string, value: unknown) => Promise<void>
+  )("thought_level", "low");
+  expect(h.confirmRestored).toHaveBeenCalledWith("prepared-a", {
+    thought_level: "low",
+  });
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(newConversationChoice.config).toEqual({ thought_level: "low" });
+  expect(composerDrafts.read("new")).toBe(before);
+});
+it.each(["owner", "source"])(
+  "does not publish an explicit choice after late %s change",
+  async (reason) => {
+    const before = composerDrafts.read("new");
+    startRestore({});
+    await vi.advanceTimersByTimeAsync(300);
+    const view = await settle();
+    let release!: () => void;
+    h.confirmRestored.mockImplementation(
+      () =>
+        new Promise<void>((done) => {
+          release = done;
+        }),
+    );
+    const control = view.root.find((node) => node.type === ReasoningControl)!;
+    const pending = (
+      control.props.onApply as (id: string, value: unknown) => Promise<void>
+    )("thought_level", "low");
+    for (let i = 0; i < 8; i++) await Promise.resolve();
+    expect(h.confirmRestored).toHaveBeenCalledOnce();
+    if (reason === "owner")
+      h.live = freshThreadState("replacement", "B", "/other", "other-native");
+    else h.live!.serviceContext = "changed-source";
+    release();
+    await expect(pending).rejects.toThrow();
+    expect(newConversationChoice.config).toEqual({});
+    expect(composerDrafts.read("new")).toBe(before);
+    expect(props.onStarted).not.toHaveBeenCalled();
+  },
+);

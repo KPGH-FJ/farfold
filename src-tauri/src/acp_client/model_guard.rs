@@ -4,6 +4,7 @@ use serde_json::{Value, json};
 use std::collections::BTreeSet;
 
 mod format;
+mod restore_selection;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Choice {
@@ -65,6 +66,7 @@ pub(crate) struct ModelGuard {
     expected: Snapshot,
     model_known: bool,
     locked: bool,
+    established: bool,
     pending: Option<Snapshot>,
     authorized_change: Option<Snapshot>,
     change_unknown: bool,
@@ -92,6 +94,7 @@ impl ModelGuard {
             expected: baseline.snapshot,
             model_known: baseline.model_known,
             locked: restored,
+            established: restored,
             pending: None,
             authorized_change: None,
             change_unknown: false,
@@ -105,7 +108,7 @@ impl ModelGuard {
         (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
     }
     pub(crate) fn is_established(&self) -> bool {
-        self.locked
+        self.established
     }
     pub(crate) fn choice_request(&self, id: &str, value: &Value) -> Result<Option<Choice>, String> {
         if !self.may_set(id) {
@@ -293,6 +296,11 @@ impl ModelGuard {
         self.pending = None;
         self.authorized_change = None;
         self.change_unknown = false;
+    }
+    /// Only a successful session-index save establishes a conversation.
+    pub(crate) fn saved_session(&mut self) {
+        self.established = true;
+        self.lock();
     }
     pub(crate) fn record_failed(&mut self) {
         self.pending = Some(self.current.clone());
