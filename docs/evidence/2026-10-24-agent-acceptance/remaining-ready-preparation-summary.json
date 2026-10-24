@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "kind": "partial-remaining-ready-preparation-observations",
+  "recordedAt": "2026-10-24T09:43:49.549475+00:00",
+  "evidenceLevel": "formal-ui-observation",
+  "formalSource": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "plan": {
+    "path": "output/2026-10-24-agent-acceptance/remaining-ready-preparations-e6e1/plan.json",
+    "sha256": "96c039c627fda5a4725e79b8d0be48f1ea387674e21bb78242ea698a1583f135"
+  },
+  "observations": [
+    {
+      "agent": "dirac",
+      "programVersionLabel": "0.5.21",
+      "oneStartAt": "2026-10-24T09:25:32.502Z",
+      "preparedFirstObservedAt": "2026-10-24T09:26:43.659Z",
+      "selectedUi": {
+        "selectedModelLabel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "thoughtControlLabel": "Medium",
+        "workMode": "Act",
+        "autoApprove": false,
+        "yolo": false,
+        "providerLabel": "OpenRouter",
+        "thinkingBudgetLabel": "Off"
+      },
+      "modelPrompts": 0,
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/remaining-ready-preparations-e6e1/dirac-observation.json",
+        "sha256": "ab00be27ee54e6d456d26936bcd2b39bddd1f60055c099ac1b56d1afe77645f5"
+      }
+    },
+    {
+      "agent": "fast-agent",
+      "programVersionLabel": "0.10.1",
+      "oneStartAt": "2026-10-24T09:33:49.980Z",
+      "preparedFirstObservedAt": "2026-10-24T09:34:50.403Z",
+      "selectedUi": {
+        "selectedModelLabel": "沿用 Agent 当前模型",
+        "workMode": "Agent",
+        "separateThoughtControlObserved": false,
+        "directoryDefaultModelLabel": "codexplan"
+      },
+      "modelPrompts": 0,
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/remaining-ready-preparations-e6e1/fast-agent-observation.json",
+        "sha256": "68e54bd80501675e3e5330e12f5a5db6a13934de6e79e65b21c937593eafe0f7"
+      }
+    },
+    {
+      "agent": "minimax-code",
+      "programVersionLabel": "0.2.7",
+      "oneStartAt": "2026-10-24T09:37:33.713Z",
+      "preparedFirstObservedAt": "2026-10-24T09:38:47.903Z",
+      "selectedUi": {
+        "selectedModelLabel": "MiniMax-M2.7",
+        "modeLabel": "Permission mode: Auto",
+        "separateThoughtLevelControlObserved": false
+      },
+      "modelPrompts": 0,
+      "record": {
+        "path": "output/2026-10-24-agent-acceptance/remaining-ready-preparations-e6e1/minimax-observation.json",
+        "sha256": "d0815b092984f5631beb59bc823910ac24290f0cbde475823d82e6cdc75463a8"
+      }
+    }
+  ],
+  "plannedButNotYetStarted": ["poolside", "qoder"],
+  "boundaries": {
+    "manualProgramCheckRefreshInstall": 0,
+    "newModelPrompts": 0,
+    "manualModelOrPermissionChoices": 0,
+    "adoptCurrentOrLogin": 0,
+    "retryUnknownRequests": 0,
+    "forceStopOrExit": 0,
+    "completeStandardsNewlyAccepted": 0,
+    "completeRequirementsNewlyAccepted": 0,
+    "completeAgentsNewlyAccepted": 0
+  },
+  "limits": [
+    "One preparation and current owner/config labels per Agent only. The older saved projection is not actual Start-time state. No account,backend,thought-effectiveness or complete-standard proof.",
+    "fast-agent only shows inherited-current model; directory codexplan default is not a confirmed backend. No model prompt was sent.",
+    "Dirac Medium and Thinking Budget Off are separate observed labels, with no inferred interaction. MiniMax Auto does not prove approval effects.",
+    "Zero manual choice is not zero automatic restore setter. Retained draft count is not full-byte or cold-restore proof.",
+    "siGit and Droid unknown requests remain protected; formal app was not updated to current source."
+  ]
+}

@@ -56,6 +56,7 @@ import {
 import { configCheckMessage } from "../runtime/config_check";
 import { streamTailItem } from "../runtime/session_streams";
 import { ReportedDetails } from "./ReportedDetails";
+import { CompressionDescription } from "./CompressionDescription";
 import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
@@ -941,6 +942,9 @@ export function ThreadView({
                           attachments={first.attachments}
                           contentOrder={first.contentOrder}
                           onOpenFile={openFile}
+                        />
+                        <CompressionDescription
+                          details={first.reportedDetails}
                         />
                         {thread.running && first.streaming && (
                           <span className="caret" />

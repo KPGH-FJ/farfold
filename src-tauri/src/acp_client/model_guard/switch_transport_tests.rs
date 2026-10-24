@@ -49,6 +49,9 @@ for line in sys.stdin:
  elif method in ('session/new','session/load'):
   if method=='session/load' and p['sessionId']!='switch-proof': raise ValueError('wrong session')
   result=dict(configOptions=state['options'],**({'sessionId':'switch-proof'} if method=='session/new' else {}))
+  if os.path.exists(os.path.join(root,'legacy-mode')):
+   result.pop('configOptions',None)
+   result['modes']={'currentModeId':'first','availableModes':[{'id':'first','name':'First'},{'id':'second','name':'Second'}]}
  elif method=='session/set_config_option':
   if p['sessionId']!='switch-proof': raise ValueError('changed session')
   for o in state['options']:
@@ -66,7 +69,10 @@ for line in sys.stdin:
     if time.monotonic()>until: raise TimeoutError('test never released reply')
     time.sleep(.005)
   result={'configOptions':state['options']}
- elif method=='session/prompt': result={'stopReason':'end_turn'}
+ elif method=='session/prompt':
+  if os.path.exists(os.path.join(root,'prompt-error')):
+   save();send({'id':m['id'],'error':{'code':-32603,'message':'Fixture unknown prompt outcome'}});continue
+  result={'stopReason':'end_turn'}
  elif method=='session/cancel':
   save();continue
  save()
@@ -91,9 +97,15 @@ impl Drop for Fixture {
 }
 impl Fixture {
     async fn open() -> Self {
+        Self::open_variant(false).await
+    }
+    async fn open_variant(legacy: bool) -> Self {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
         std::fs::write(cwd.join("peer.py"), PEER).unwrap();
+        if legacy {
+            std::fs::write(cwd.join("legacy-mode"), "").unwrap();
+        }
         let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
         let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
         let row = AgentRow {
@@ -289,6 +301,9 @@ fn assert_choices(snapshot: &Value, model: &str, effort: &str) {
 
 #[path = "saved_restore_tests.rs"]
 mod saved_restore_tests;
+
+#[path = "unknown_prompt_config_tests.rs"]
+mod unknown_prompt_config_tests;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_change_transport_notifies_before_ack_persists_and_cold_loads_same_session() {

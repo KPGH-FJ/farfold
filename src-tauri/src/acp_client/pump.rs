@@ -1061,7 +1061,7 @@ async fn session_pump(
                     let permission = permission_guard.is_permission(&config_id);
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.may_set(&config_id) {
+                    if mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.may_set(&config_id) {
                         let _ = result.send(Err("当前无法修改此设置，请等待已发出的请求结束".into()));
                         continue;
                     }
@@ -1099,7 +1099,7 @@ async fn session_pump(
                         }
                         let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                             || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                        if !model_guard.admissible() || !permission_guard.admissible() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting {
+                        if prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || !model_guard.admissible() || !permission_guard.admissible() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting {
                             let _ = result.send(Err("当前设置或待处理事项已变化，请重新检查此对话".into()));
                             continue;
                         }
@@ -1171,7 +1171,7 @@ async fn session_pump(
                         }
                         continue;
                     }
-                    let outcome = if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
+                    let outcome = if mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
                     } else if let Err(error) = save_confirmed_change(&session_id, &mut model_guard,
                         &mut config_store, &mut pending_config_store).await {
@@ -1213,6 +1213,9 @@ async fn session_pump(
                         }
                         SessionControl::SetMode { result, .. } if permission_guard.id().is_some() => {
                             let _ = result.send(Err("请通过权限选项重新选择并确认".into())); continue;
+                        }
+                        SessionControl::SetMode { result, .. } if prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) => {
+                            let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into())); continue;
                         }
                         SessionControl::SetMode { mode_id, result, deadline } => (MutationKind::Mode, result, deadline,
                             "session/set_mode", serde_json::json!({"sessionId":session_id, "modeId":mode_id})),

@@ -1,0 +1,168 @@
+{
+  "kind": "shared-unknown-configuration-and-compression-source-summary",
+  "proofScope": "source-and-controlled-tests",
+  "changes": [
+    {
+      "id": "unknown-request-configuration-admission",
+      "problem": "前端已阻止结果未知时改配置，但底层当前对话的设置及手动确认入口缺少相同未解决请求检查。",
+      "fix": "复用现有请求状态补齐模型、思考、旧式模式及手动确认的入口保护，并在设置等待后再次检查；仅保护正确对话，不增加全进程工作限制或新状态。",
+      "controlledResult": "未知路径拒绝且模拟设置调用为零，原工作与配置基线保留；已确认有限终态后的正常变更继续可用。",
+      "limits": "不据此认定某次真实请求的唯一失败原因，也不证明停止成功或可以释放真实未知工作。"
+    },
+    {
+      "id": "idless-compression-description",
+      "problem": "官方结构化整理元数据已保留在消息详情，普通消息缺少共用说明；不能把官方整理 ID 当作理解该信息的前提。",
+      "fix": "Read the existing slash_command contextCompression metadata and describe progress, done or noop; show paired finite supplied counts and estimation flags. Preserve existing body/detail rendering. Unknown or malformed values remain in original details.",
+      "controlledResult": "历史描述不赋活动权；说明不会改变未知请求、暂停队列或独立整理活动。无需整理与整理成功明确区分，不计算节省。",
+      "limits": "没有新增整理执行、请求归属、活动权或终态规则；描述不证明实时活动、有效节省或模型效果。"
+    }
+  ],
+  "authorValidation": {
+    "native": {
+      "effectiveRed": {
+        "tests": 6,
+        "passed": 2,
+        "failed": 4
+      },
+      "green": {
+        "passed": 93,
+        "failed": 0,
+        "includesNewCases": 6
+      },
+      "fmtExitCode": 0,
+      "clippyExitCode": 0,
+      "scopedDiffExitCode": 0,
+      "overlap": "93 项包含全部 6 个新增用例；先前较小 RED 与此有效 RED 交叠，不相加。先前类型准备失败未运行测试，不计作行为反例。"
+    },
+    "frontend": {
+      "red": {
+        "tests": 19,
+        "passed": 10,
+        "failed": 9
+      },
+      "intermediate": {
+        "tests": 136,
+        "passed": 133,
+        "failed": 3,
+        "classification": "3 项失败来自测试把既有可选字段误期为 null；仅修正测试预期，原渲染前后状态比较已通过，不称产品新增行为失败。"
+      },
+      "green": {
+        "testFiles": 11,
+        "tests": 136,
+        "passed": 136,
+        "failed": 0,
+        "newFocusedCases": 21
+      },
+      "typecheckExitCode": 0,
+      "scopedFormatExitCode": 0,
+      "scopedDiffExitCode": 0,
+      "overlap": "136 项包含最终 21 个新文件用例。最初 19 项 RED 与最终测试输入不同，原件分开保留；中间和最终 136 项不累加。"
+    },
+    "combinedTotalReported": false,
+    "scope": "两侧测试覆盖不同层，并含各自重测；不合并为一个独立用例总数，不替代完整工程、安装或真实 Agent 验证。"
+  },
+  "independentNativeSourceReview": {
+    "disposition": "no-blockers-in-scoped-final-source",
+    "openBlockers": 0,
+    "newTestsByReviewer": 0
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/unknown-prompt-config-admission-fix/native/implementation.json",
+      "sha256": "5cf2dc8c8120813e48786aac354e3191747b4cea29931f4114a3fb88e91c127f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/unknown-prompt-config-admission-fix/independent-review-acceptance-index.json",
+      "sha256": "76eb3eaf13fa326e6df3ea162c06fc4bfbad6c85fc2a0b67edd7955c5cd14c2a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/unknown-prompt-config-admission-fix/native/red-all-inputs.json",
+      "sha256": "e38552f9604f3a4d9d82b4f97d174ad8e3490d8b389d2f82f5539505c509229c"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/unknown-prompt-config-admission-fix/native/checks.json",
+      "sha256": "6588146129b1388cd16d682b2f5a7e5ebfe9bf9ba42c3aef47e65ae55b2bbf47"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/idless-compression-description-fix/frontend/implementation.json",
+      "sha256": "85f6954a9d58e2eeb8515ed13e4b0a96cf9acc33d77d0af6abee8d1effa225d7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/idless-compression-description-fix/frontend/red.json",
+      "sha256": "0ddbb7bdf87160e89d069667461bb9317de52529a02e8b7a3d531e3720af43eb"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/idless-compression-description-fix/frontend/green-01.json",
+      "sha256": "ed0951b5c4245c3ba42423655821a409e2ea60eeb97a36106c2a931719c7f4af"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/idless-compression-description-fix/frontend/green-02.json",
+      "sha256": "376d13c713c46f361e69b387aefe76e2482340a6a380f600547e3e3c2f94f5e1"
+    }
+  ],
+  "acceptance": {
+    "installedValidationForTheseChanges": false,
+    "realNew29CompactionValidation": false,
+    "wholeRequirementsClosed": 0,
+    "wholeStandardsClosed": 0,
+    "wholeAgentsAccepted": 0
+  },
+  "limits": [
+    "No formal installation of this batch, actual compaction, or new affected real configuration operation. Formal e6e1 observations do not prove current source effects.",
+    "Bounded manual compaction retains the existing request and work protection. Descriptive rendering does not close possible prompt-external activity gaps; NEW-29 remains open.",
+    "The 29 Agents, eight standards,151 original conditions,unknown-request resources and sole plan are unchanged.",
+    "Original failures, compilation preparation errors and overlapping checks remain separate."
+  ],
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-24T09:43:49.546900+00:00",
+  "baseHead": "92dddba0bd920f2ac3889c111782fc08344cfc9d",
+  "sourceFilesChanged": 8,
+  "independentCombinedSourceReview": {
+    "openBlockers": 0,
+    "files": 8,
+    "testsExecutedByReviewer": 0,
+    "record": {
+      "path": "output/2026-10-24-agent-acceptance/unknown-config-and-compression-engineering/independent-combined-source-review.json",
+      "sha256": "245107eb9f950d396cb0eb8ee833dd2bd48aab5531a12fa65fdaa7d6a462ac0e"
+    }
+  },
+  "fullEngineering": {
+    "checksSucceeded": 7,
+    "sourceInputs": 2255,
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/unknown-config-and-compression-engineering/engineering-summary.json",
+      "sha256": "bd10dbabf94e935c3fad9efae3b16ff6dbffbaf0b8912f0bd9fb85f2121ce983"
+    },
+    "rootReview": {
+      "path": "output/2026-10-24-agent-acceptance/unknown-config-and-compression-engineering/root-execution-review.json",
+      "sha256": "6e2b48a8ed0aa2f072d90651f0ae9bc9c03b03e64529faf63faee3430eb645f6"
+    },
+    "sourceUnchangedAtEndpointsAndPerCommand": true,
+    "checksRanBeforeCommit": true,
+    "counts": {
+      "frontend": {
+        "files": 668,
+        "passed": 8832,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2256,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    "sourceEndPointLimit": "Does not freeze dependency-install bytes or environment or prove absence of an intermediate writer."
+  }
+}

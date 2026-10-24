@@ -44,6 +44,10 @@ Kimchi本次新稿显示auto，与较早保存投影不同，Start前未重采�
 
 Droid随后仅作一次停止，仍未收到确认，未再次停止或发送；siGit原未知继续保护，正式更新未开始。Amp和Kimi各一次新稿准备，选中Medium/Default与kimi-for-coding (thinking)/Default，均零模型请求；标签不证明具体后端或思考生效。Amp保留原自有Cursor草稿，数量和截断预览可见，未恢复或发送，不能证明完整字节或冷恢复。Kimchi后续限定字段投影不替代Start时状态。以上仅为[后续准备与停止窄观察](evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json)，完整标准、要求和整家新增关闭均为0。
 
+后端直调配置入口现补齐已有未解决请求检查，覆盖模型、思考、旧式模式和满足确认条件的手动保存；原前端未知保护已存在。有效受控基线6项中2通过/4失败，修复后受影响93项通过，原未知工作继续保留。另给已核slash_command来源的无独立ID整理元数据增加共用说明，保留原正文与详情，历史说明不授活动权；前端有效基线19项中10通过/9失败，最终136项通过。8份源码独审无阻断，完整七项通过：前端668文件8832项、Rust2256通过及6既有忽略，2255项输入及逐命令端点相同。工程在提交前完成，未安装或验证真实整理，NEW-29仍开放，见[源码与工程摘要](evidence/2026-10-24-agent-acceptance/unknown-config-and-compression-source-summary.json)。
+
+Dirac、fast-agent与MiniMax各一次新稿准备就绪，零模型请求、手动改选或登录；当前归属与标签读回见[前三项窄观察](evidence/2026-10-24-agent-acceptance/remaining-ready-preparation-summary.json)。Dirac分别显示Medium和Thinking Budget Off，不推断实际作用；fast-agent仅显示沿用当前模型，目录默认codexplan不是后端确认；MiniMax-M2.7与Auto不证明模型或审批生效。原保存投影不是Start时状态，保留草稿数量不证明完整字节或冷恢复。该五目标准备计划中的Poolside与Qoder在此检查点尚未开始，继续推进；完整标准、要求和整家新增关闭均为0。
+
 Goose沿原所选Claude Sonnet 4仅发一次短回答请求，界面显示404及所选模型不可用，预期ACK失败1；文件用例前置未满足，未执行1，未自动重试或切换模型。该路径等待用户明确可用替代；不把界面错误前缀当原始HTTP状态或账号权益证明，见[失败与未执行摘要](evidence/2026-10-24-agent-acceptance/goose-formal-e6e1-summary.json)。
 
 NEW-29已查Goose、Mistral、OpenCode和Pi四条精确官方发行/分发源码链，记录其事件与当前带ID消费者的映射缺口；这不等于官方能力不足，原条件不要求compactionId或特定事件名。Pi程序与转换层映射仍有未知。未执行真实整理，不推出全部29家不支持，也不关闭NEW-29，见[源码盘点](evidence/2026-10-24-agent-acceptance/new29-unaffected-producer-summary.json)。

@@ -13,6 +13,10 @@ export const COMPACTION = {
   roundPending: "整理尚未结束",
   roundFailed: "整理未完成",
   roundUnknown: "整理结果待确认",
+  reportedStatus: "Agent 提供的整理状态",
+  reportedTokens: "Agent 提供的 token 数",
+  notNeeded: "无需整理上下文",
+  estimated: "（估算）",
 } as const;
 
 export function maintenanceLabel(result?: string): string | null {
