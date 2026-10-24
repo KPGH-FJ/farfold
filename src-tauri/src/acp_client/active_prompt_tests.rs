@@ -418,12 +418,7 @@ async fn original_deadline_and_queued_config_drift_cannot_dispatch_after_grant()
             });
             tokio::pin!(pending);
             tokio::select! {_=waiting(&mut progress)=>{},_=&mut pending=>panic!("expected queue")}
-            assert!(
-                pending
-                    .await
-                    .unwrap_err()
-                    .contains("PROMPT_QUEUE_CANCELLED")
-            );
+            assert!(pending.await.unwrap_err().contains("PROMPT_QUEUE_TIMEOUT"));
             let (request, mut progress) =
                 s.request(&c, "drift", Instant::now() + Duration::from_secs(60));
             let (bc, _) = blocks(3);
@@ -612,3 +607,6 @@ fn same_wire_blocks_whole_charge_includes_metadata_and_boundary() {
     );
     assert_eq!(serde_json::to_value(&blocks).unwrap(), before);
 }
+
+#[path = "active_prompt_timeout_tests.rs"]
+mod timeout_tests;

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "additional-formal-preparation-observations",
+  "recordedAt": "2026-10-24T07:57:59.950884+00:00",
+  "formalSourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "evidenceLevel": "formal-ui-narrow-observations",
+  "cases": [
+    {
+      "agentId": "github-copilot-cli",
+      "result": "one-preparation-entered-newdraft-no-model-request",
+      "source": {
+        "path": "output/2026-10-24-agent-acceptance/copilot-new-draft-e6e1/observation.json",
+        "sha256": "23af18b79a536f24513bcc83ac9820346e14dd2c1e36149266b196f0120368d7"
+      },
+      "observed": [
+        "Copilot selected",
+        "Three Auto rows visibly checked at once",
+        "Agent mode and Allow All Off"
+      ],
+      "limits": [
+        "No actual reply or account/model effectiveness proof",
+        "Duplicate choice source is not uniquely attributed; common component counterexample under investigation"
+      ]
+    },
+    {
+      "agentId": "grok-build",
+      "result": "one-preparation-not-confirmed-send-disabled",
+      "source": {
+        "path": "output/2026-10-24-agent-acceptance/grok-new-draft-e6e1/observation.json",
+        "sha256": "a8d3a51e44fafb511289f94fe554a46c6d11df096ca1a699c8fceb882f7377e4"
+      },
+      "diagnostic": {
+        "path": "output/2026-10-24-agent-acceptance/grok-new-draft-e6e1/diagnostic-window.json",
+        "sha256": "deca2848f0477aa685c59f285466ec955404127c9d11f80800af6a24b05bdc8a"
+      },
+      "observed": [
+        "Creating hint ended; original input retained; send disabled; no error/action notice visible",
+        "Grok absent from candidate picker after preparation; no remaining candidate checked",
+        "One time-selected content-free diagnostic file has an auth_required-class response after session/new"
+      ],
+      "limits": [
+        "Timing-selected diagnostics do not uniquely prove owner or actual account cause",
+        "Saved model/reasoning were not confirmed; inherited-model placeholder is not adoption",
+        "No login or retry; no reply case executed"
+      ]
+    }
+  ],
+  "actions": {
+    "startClicks": 2,
+    "sendClicks": 0,
+    "manualConfigChanges": 0,
+    "saveAdopt": 0,
+    "login": 0,
+    "retry": 0
+  },
+  "protection": "Existing unrelated drafts, attachments and siGit/Droid unknown requests retained. Old Cursor input never sent to these Agents.",
+  "acceptance": {
+    "wholeRequirementsClosed": 0,
+    "standardsAdded": 0,
+    "wholeAgentsAdded": 0,
+    "realReplyCasesAdded": 0
+  }
+}

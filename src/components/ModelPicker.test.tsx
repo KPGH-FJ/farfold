@@ -268,6 +268,84 @@ it("filters to real options and never commits an empty search result", () => {
   expect(view.props.onPick).toHaveBeenCalledTimes(1);
 });
 
+it("uses one displayed and keyboard action for repeated values while preserving source descriptions", () => {
+  const view = picker();
+  view.props.option = {
+    ...view.props.option!,
+    currentValue: "auto",
+    options: [
+      {
+        value: "auto",
+        name: "Auto",
+        group: "First",
+        description: "First detail",
+      },
+      {
+        value: "auto",
+        name: "Automatic",
+        group: "Second",
+        description: "Second detail",
+      },
+      { value: "auto", name: "Auto", group: "Third" },
+      { value: "other", name: "Other" },
+    ],
+  };
+  const original = JSON.stringify(view.props.option);
+  let tree = view.render();
+  expect(options(tree)).toHaveLength(2);
+  expect(
+    options(tree).filter((node) => node.props["aria-selected"]),
+  ).toHaveLength(1);
+  const text = (node: ReactNode): string =>
+    Children.toArray(node)
+      .map((child) =>
+        isValidElement<{ children?: ReactNode }>(child)
+          ? text(child.props.children)
+          : String(child),
+      )
+      .join("");
+  const visible = text(options(tree)[0].props.children as ReactNode);
+  for (const label of [
+    "Auto",
+    "Automatic",
+    "First",
+    "Second",
+    "Third",
+    "First detail",
+    "Second detail",
+  ])
+    expect(visible).toContain(label);
+  call(search(tree), "onChange", { target: { value: "Second detail" } });
+  tree = view.render();
+  expect(options(tree)).toHaveLength(1);
+  call(search(tree), "onKeyDown", keyboard("Enter"));
+  expect(view.props.onPick).toHaveBeenCalledExactlyOnceWith("auto");
+  expect(JSON.stringify(view.props.option)).toBe(original);
+});
+
+it("keeps same-name different model values distinguishable and never selects an unknown value", () => {
+  const view = picker();
+  view.props.option = {
+    ...view.props.option!,
+    currentValue: "unknown",
+    options: [
+      { value: "auto-a", name: "Auto" },
+      { value: "auto-b", name: "Auto" },
+    ],
+  };
+  const tree = view.render();
+  expect(options(tree)).toHaveLength(2);
+  expect(
+    options(tree).every((node) => node.props["aria-selected"] === false),
+  ).toBe(true);
+  expect(options(tree)[0].props["aria-label"]).toContain("auto-a");
+  expect(options(tree)[1].props["aria-label"]).toContain("auto-b");
+  expect(view.props.onPick).not.toHaveBeenCalled();
+  call(search(tree), "onKeyDown", keyboard("ArrowDown"));
+  call(search(view.render()), "onKeyDown", keyboard("Enter"));
+  expect(view.props.onPick).toHaveBeenCalledExactlyOnceWith("auto-b");
+});
+
 it("consumes one Escape before the real outer popover handler and restores the picker trigger", () => {
   const outer = mount(WorkspacePopover, {
     title: "Settings",

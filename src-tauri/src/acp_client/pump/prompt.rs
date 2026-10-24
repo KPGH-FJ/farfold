@@ -137,14 +137,17 @@ pub(super) async fn send(
         (ctx.events)(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));
         return Err("CONFIG_BLOCKED".into());
     }
-    if result.is_closed() || tokio::time::Instant::now() >= grant.deadline {
+    if result.is_closed() {
         return Err("请求等待已结束，消息尚未发送".into());
     }
     let observation = ctx
         .ops
         .prompt_escrow
         .commit(&grant.permit, lease, grant.deadline)
-        .map_err(|_| "PROMPT_QUEUE_CANCELLED")?;
+        .map_err(|error| match error {
+            super::super::history_admission::Failure::Timeout => "PROMPT_QUEUE_TIMEOUT",
+            _ => "PROMPT_QUEUE_CANCELLED",
+        })?;
     // Commit is conservative: a panic/SDK registration error from here cannot
     // return an unsent rejection or release the exact process resource.
     let _ = (grant.progress)(Progress {

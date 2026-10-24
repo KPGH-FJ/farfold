@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "kind": "configuration-feedback-candidate-not-installed-summary",
+  "recordedAt": "2026-10-24T07:57:59.952926+00:00",
+  "sourceCommit": "3896128f485eabbe5db343d0bd58138dd8828361",
+  "candidateReceipt": {
+    "path": "output/2026-10-24-agent-acceptance/configuration-feedback-install-preparation/candidate-output/candidate.json",
+    "sha256": "94ee3ad01411d00a81021233bb3cf547d317536355554c28f05b5e4277c59b11"
+  },
+  "independentReview": {
+    "path": "output/2026-10-24-agent-acceptance/configuration-feedback-install-preparation/independent/review.json",
+    "sha256": "6a521210b36d5e3fc7890809ac79dfe34c8c48088eb8f80465320750528b448c"
+  },
+  "candidate": {
+    "oneBuildNaturalExitCode": 0,
+    "sourceInputs": 2244,
+    "evidencePins": 20,
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "architecture": "arm64",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "strictAdhocSignatureVerified": true,
+    "archiveSha256": "55b7b2db07467079a1b0e1f4dd503836ce0f2863e803c3454178ea7895f0e2f8",
+    "candidateBinarySha256": "0ea2b0174fe8e9bf67bf15eed4b22039ac5fd42d6ae4d53eebaafc6cfbc3c54a"
+  },
+  "status": "Historical prepared candidate; subsequent source changes invalidate strict installation against current source.",
+  "formal": {
+    "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "staticFiveFilesUnchangedAtReview": true,
+    "normalExitVerified": false,
+    "dataRetentionVerifiedForThisCandidate": false,
+    "replaced": false
+  },
+  "protectedUnknownRequests": ["sigit", "factory-droid"],
+  "actionsNotRun": [
+    "normal quit",
+    "new data-retention capture",
+    "installation",
+    "post-install launch or affected UI validation"
+  ],
+  "acceptance": {
+    "wholeRequirementsClosed": 0,
+    "standardsAdded": 0,
+    "wholeAgentsAdded": 0
+  }
+}

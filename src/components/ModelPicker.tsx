@@ -7,6 +7,10 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { ConfigChoice, ConfigOptionView } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
+import {
+  modelChoiceView,
+  type ModelChoiceView,
+} from "../runtime/model_choice_view";
 
 function groupOf(choice: ConfigChoice): string {
   if (choice.group) return choice.group;
@@ -41,7 +45,10 @@ export function ModelPicker({
   const listRef = useRef<HTMLDivElement | null>(null);
   const listId = useId();
 
-  const options = useMemo(() => option?.options ?? [], [option]);
+  const options = useMemo(
+    () => modelChoiceView(["option", option?.id ?? ""], option?.options ?? []),
+    [option],
+  );
   const current =
     option && typeof option.currentValue === "string"
       ? option.currentValue
@@ -53,17 +60,15 @@ export function ModelPicker({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return options;
-    return options.filter(
-      (o) =>
-        o.name.toLowerCase().includes(q) ||
-        o.value.toLowerCase().includes(q) ||
-        groupOf(o).toLowerCase().includes(q),
+    return options.filter((o) =>
+      o.searchTerms.some((term) => term.toLowerCase().includes(q)),
     );
   }, [options, query]);
 
   /** 有序（分组内原序）扁平列表 + 组边界，供渲染与键盘导航共用。 */
   const flat = useMemo(() => {
-    const out: { choice: ConfigChoice; group: string; first: boolean }[] = [];
+    const out: { choice: ModelChoiceView; group: string; first: boolean }[] =
+      [];
     let lastGroup = "";
     for (const choice of filtered) {
       const group = groupOf(choice);
@@ -214,14 +219,16 @@ export function ModelPicker({
               <div className="mp-empty">{STRINGS.palette.empty}</div>
             )}
             {flat.map((entry, idx) => (
-              <div key={entry.choice.value}>
+              <div key={entry.choice.key}>
                 {entry.first && entry.group && (
                   <div className="mp-group">{entry.group}</div>
                 )}
                 <div
                   id={`${listId}-option-${idx}`}
                   role="option"
-                  aria-label={entry.choice.name}
+                  aria-label={[entry.choice.name, entry.choice.detail]
+                    .filter(Boolean)
+                    .join(" · ")}
                   aria-selected={entry.choice.value === current}
                   aria-disabled={disabled === true}
                   data-idx={idx}
@@ -229,7 +236,17 @@ export function ModelPicker({
                   onMouseEnter={() => setHi(idx)}
                   onClick={() => pick(entry.choice.value)}
                 >
-                  <span className="mp-name">{entry.choice.name}</span>
+                  <span
+                    className="mp-name"
+                    title={[entry.choice.name, entry.choice.detail]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  >
+                    {entry.choice.name}
+                    {entry.choice.detail && (
+                      <small> · {entry.choice.detail}</small>
+                    )}
+                  </span>
                   {entry.choice.value === current && (
                     <span className="mp-check">✓</span>
                   )}

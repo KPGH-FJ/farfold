@@ -38,7 +38,9 @@ pub(super) fn error(failure: Failure) -> String {
         Failure::Payload => "读取所需设置较大，暂时无法开始；原记录与设置已保留。",
         Failure::Closed => "应用正在退出，本次读取尚未开始",
         Failure::Cancelled => "已取消等待读取",
-        Failure::Invalid | Failure::Unavailable => "无法确认读取状态，请重新打开",
+        Failure::Invalid | Failure::Unavailable | Failure::Timeout => {
+            "无法确认读取状态，请重新打开"
+        }
     }
     .into()
 }

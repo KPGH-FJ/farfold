@@ -959,6 +959,9 @@ export function EmptyState({
     : null;
   const note =
     (selectionNeedsReview ? R.selectionReview : null) ??
+    (needsAuthentication
+      ? A[service ? "apiAuthRequired" : "authRequired"]
+      : null) ??
     (explicitReadRequired ? C.readRequired : null) ??
     (!connectionAllowed ? A.disconnectedHint : null) ??
     work.error ??
@@ -978,7 +981,8 @@ export function EmptyState({
 
   // Sending policy never changes whether the selected program is prepared.
   const needsPreparation =
-    !preparationComplete || !currentAgent || !candidateSelected;
+    needsAuthentication ||
+    !(preparationComplete && currentAgent && candidateSelected);
   const pickAgent = (id: string) => {
     if (
       !activeRef.current ||
@@ -1333,7 +1337,7 @@ export function EmptyState({
         }
         editableWhenDisabled
         prepareAction={
-          folder && needsPreparation
+          (folder || needsAuthentication) && needsPreparation
             ? explicitReadRequired || needsAuthentication
               ? openRepair
               : !candidateSelected

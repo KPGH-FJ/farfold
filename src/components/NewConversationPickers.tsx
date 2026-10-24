@@ -25,6 +25,7 @@ import { useModalDialog } from "./useModalDialog";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
+import { modelChoiceView } from "../runtime/model_choice_view";
 import "../new-conversation-pickers.css";
 
 function PickerDialog({
@@ -297,20 +298,25 @@ export function NewConversationModelDialog({
       item.models.length > 0 &&
       capability?.apiTypes.includes(item.apiType),
   );
-  const options =
-    existingOption?.type === "select" ? existingOption.options : [];
+  const options = modelChoiceView(
+    ["option", existingOption?.id ?? ""],
+    existingOption?.type === "select" ? existingOption.options : [],
+  );
   const term = query.trim().toLocaleLowerCase();
   const matches = (...values: string[]) =>
     !term || values.some((text) => text.toLocaleLowerCase().includes(term));
   const visibleOptions = options.filter((model) =>
-    matches(model.name, model.value, S.existingTitle(agent.name)),
+    matches(...model.searchTerms, S.existingTitle(agent.name)),
   );
   const visibleServices = services
     .map((item) => ({
       ...item,
-      models: item.models.filter((model) => matches(model, item.label)),
+      choices: modelChoiceView(
+        ["service", item.id, item.revision],
+        item.models.map((value) => ({ value, name: value })),
+      ).filter((model) => matches(...model.searchTerms, item.label)),
     }))
-    .filter((item) => item.models.length > 0);
+    .filter((item) => item.choices.length > 0);
   const showCurrent =
     options.length === 0 &&
     matches(S.currentModel, S.existingTitle(agent.name));
@@ -321,7 +327,7 @@ export function NewConversationModelDialog({
   /** W3-1：与 ModelPicker 同一交互——单击或 Enter 即提交，不再有单独确认步。 */
   const flat: { key: string; choice: NewConversationModelChoice }[] = [
     ...visibleOptions.map((model) => ({
-      key: `option:${model.value}`,
+      key: model.key,
       choice: {
         service: null,
         modelValue: model.value,
@@ -339,10 +345,10 @@ export function NewConversationModelDialog({
         ]
       : []),
     ...visibleServices.flatMap((item) =>
-      item.models.map((model) => ({
-        key: `service:${item.id}:${item.revision}:${model}`,
+      item.choices.map((model) => ({
+        key: model.key,
         choice: {
-          service: { id: item.id, revision: item.revision, model },
+          service: { id: item.id, revision: item.revision, model: model.value },
           modelValue: null,
         } as NewConversationModelChoice,
       })),
@@ -485,19 +491,21 @@ export function NewConversationModelDialog({
               aria-pressed={
                 !selection.service && selection.modelValue === model.value
               }
-              data-idx={flatIndex.get(`option:${model.value}`)}
+              data-idx={flatIndex.get(model.key)}
               className={
                 (!selection.service && selection.modelValue === model.value
                   ? "selected"
-                  : "") +
-                (flatIndex.get(`option:${model.value}`) === hiIndex
-                  ? " hi"
-                  : "")
+                  : "") + (flatIndex.get(model.key) === hiIndex ? " hi" : "")
               }
               disabled={applying || readingModels || !!readError}
               onClick={() => commit({ service: null, modelValue: model.value })}
             >
-              <span>{model.name}</span>
+              <span
+                title={[model.name, model.detail].filter(Boolean).join(" · ")}
+              >
+                {model.name}
+                {model.detail && <small> · {model.detail}</small>}
+              </span>
               {!selection.service && selection.modelValue === model.value && (
                 <Check size={16} />
               )}
@@ -555,22 +563,21 @@ export function NewConversationModelDialog({
           visibleServices.map((item) => (
             <section key={item.id}>
               <small>{item.label}</small>
-              {item.models.map((model) => {
+              {item.choices.map((model) => {
                 const selected =
                   selection.service?.id === item.id &&
-                  selection.service.model === model &&
+                  selection.service.model === model.value &&
                   selection.service.revision === item.revision;
-                const rowKey = `service:${item.id}:${item.revision}:${model}`;
                 return (
                   <button
-                    key={model}
+                    key={model.value}
                     ref={selected ? selectedItem : undefined}
                     type="button"
                     aria-pressed={selected}
-                    data-idx={flatIndex.get(rowKey)}
+                    data-idx={flatIndex.get(model.key)}
                     className={
                       (selected ? "selected" : "") +
-                      (flatIndex.get(rowKey) === hiIndex ? " hi" : "")
+                      (flatIndex.get(model.key) === hiIndex ? " hi" : "")
                     }
                     disabled={applying}
                     onClick={() =>
@@ -578,13 +585,13 @@ export function NewConversationModelDialog({
                         service: {
                           id: item.id,
                           revision: item.revision,
-                          model,
+                          model: model.value,
                         },
                         modelValue: null,
                       })
                     }
                   >
-                    <span>{model}</span>
+                    <span>{model.name}</span>
                     {selected && <Check size={16} />}
                   </button>
                 );

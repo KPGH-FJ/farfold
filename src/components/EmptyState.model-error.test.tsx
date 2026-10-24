@@ -110,9 +110,16 @@ import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { ERROR_STRINGS as E } from "../runtime/error_strings";
 import { STRINGS } from "../runtime/strings";
+import { ACCESS_STRINGS as A } from "../runtime/access_strings";
+import { observeAuthentication } from "../runtime/authentication";
 
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof EmptyState>;
+const authObservations: { cwd: string; source?: string }[] = [];
+function requireAuthentication(cwd: string, source?: string) {
+  authObservations.push({ cwd, source });
+  observeAuthentication("A", cwd, "AUTH_REQUIRED", source);
+}
 function walk(tree: ReactNode): Element[] {
   const out: Element[] = [];
   Children.forEach(tree, (node) => {
@@ -210,8 +217,174 @@ beforeEach(() => {
 });
 afterEach(() => {
   for (const slot of h.slots) slot.cleanup?.();
+  for (const { cwd, source } of authObservations.splice(0))
+    observeAuthentication("A", cwd, undefined, source);
   composerDrafts.clear("new");
   vi.useRealTimers();
+});
+
+it("keeps a same-owner authentication recovery exit when auth publication cancels the opening error callback", async () => {
+  let reject!: (error: Error) => void;
+  h.open.mockImplementation(
+    () =>
+      new Promise((_resolve, fail) => {
+        reject = fail;
+      }),
+  );
+  const before = composerDrafts.read("new");
+  const choice = structuredClone(newConversationChoice.config);
+  (
+    render().root.find((n) => n.props["aria-label"] === W.modelChoice)!.props
+      .onClick as () => void
+  )();
+  render();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).toHaveBeenCalledTimes(1);
+  // sessions.open publishes auth before rejecting; a subscribed render may
+  // clean up this effect before its guarded error callback receives the error.
+  requireAuthentication("/owned-fixture");
+  render();
+  reject(new Error("AUTH_REQUIRED"));
+  const failed = await settle();
+  expect(failed.composer.props.disabled).toBe(true);
+  expect(failed.composer.props.note).toBe(A.authRequired);
+  expect(failed.composer.props.prepareAction).toBeTypeOf("function");
+  (failed.composer.props.prepareAction as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith("A", {
+    panel: "account",
+    needsAuthentication: true,
+    sourceContext: undefined,
+  });
+  await vi.advanceTimersByTimeAsync(1000);
+  render();
+  expect(h.open).toHaveBeenCalledTimes(1);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(props.onStarted).not.toHaveBeenCalled();
+  expect(failed.composer.props.sendRequest).toBe(0);
+  expect(newConversationChoice.agentId).toBe("A");
+  expect(newConversationChoice.config).toEqual(choice);
+  expect(composerDrafts.read("new")).toBe(before);
+});
+
+it.each([false, true])(
+  "keeps the existing %s source authentication repair available without a selected folder",
+  async (api) => {
+    const service = api
+      ? { id: "owned-api", model: "kept-model", revision: "one" }
+      : null;
+    newConversationChoice.cwd = null;
+    newConversationChoice.service = service;
+    const before = composerDrafts.read("new");
+    const choice = structuredClone(newConversationChoice.config);
+    const source = service ? JSON.stringify(service) : undefined;
+    requireAuthentication("/owned-fixture", source);
+    const failed = render();
+    expect(failed.composer.props.disabled).toBe(true);
+    expect(failed.composer.props.note).toBe(
+      api ? A.apiAuthRequired : A.authRequired,
+    );
+    expect(failed.composer.props.prepareAction).toBeTypeOf("function");
+    (failed.composer.props.prepareAction as () => void)();
+    expect(props.onGoSettings).toHaveBeenCalledWith("A", {
+      panel: "account",
+      needsAuthentication: true,
+      sourceContext: source,
+    });
+    await vi.advanceTimersByTimeAsync(1000);
+    render();
+    expect(h.open).not.toHaveBeenCalled();
+    expect(h.setConfig).not.toHaveBeenCalled();
+    expect(props.onStarted).not.toHaveBeenCalled();
+    expect(failed.composer.props.sendRequest).toBe(0);
+    expect(newConversationChoice.agentId).toBe("A");
+    expect(newConversationChoice.service).toEqual(service);
+    expect(newConversationChoice.config).toEqual(choice);
+    expect(composerDrafts.read("new")).toBe(before);
+  },
+);
+
+it.each(["source", "cwd"])(
+  "does not apply a foreign %s authentication failure to the current preparation",
+  async (foreign) => {
+    let resolve!: (value: ThreadState) => void;
+    h.open.mockImplementation(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+    );
+    const before = composerDrafts.read("new");
+    (
+      render().root.find((n) => n.props["aria-label"] === W.modelChoice)!.props
+        .onClick as () => void
+    )();
+    render();
+    await vi.advanceTimersByTimeAsync(300);
+    requireAuthentication(
+      foreign === "cwd" ? "/foreign-fixture" : "/owned-fixture",
+      foreign === "source" ? "foreign-source" : undefined,
+    );
+    render();
+    h.live = freshThreadState("prepared-a", "A", "/owned-fixture", "owned-a");
+    h.live.configOptions = [
+      configOption("model", "kept-choice", ["kept-choice"]),
+    ];
+    resolve(h.live);
+    const current = await settle();
+    expect(current.composer.props.disabled).toBe(false);
+    expect(current.composer.props.note).toBeNull();
+    expect(current.composer.props.prepareAction).toBeUndefined();
+    expect(current.composer.props.thread).toBe(h.live);
+    expect(props.onGoSettings).not.toHaveBeenCalled();
+    expect(h.open).toHaveBeenCalledTimes(1);
+    expect(h.setConfig).not.toHaveBeenCalled();
+    expect(newConversationChoice.agentId).toBe("A");
+    expect(composerDrafts.read("new")).toBe(before);
+  },
+);
+
+it("keeps an old Agent authentication publication and rejection out of a newly selected B draft", async () => {
+  let reject!: (error: Error) => void;
+  h.open.mockImplementation((input: { agentId: string }) =>
+    input.agentId === "A"
+      ? new Promise((_resolve, fail) => {
+          reject = fail;
+        })
+      : Promise.resolve(h.live),
+  );
+  const before = composerDrafts.read("new");
+  (
+    render().root.find((n) => n.props["aria-label"] === W.modelChoice)!.props
+      .onClick as () => void
+  )();
+  render();
+  await vi.advanceTimersByTimeAsync(300);
+  (
+    render().root.find((n) => n.props["aria-label"] === W.agentChoice)!.props
+      .onClick as () => void
+  )();
+  const picker = render().root.find(
+    (n) => n.type === NewConversationAgentDialog,
+  )!;
+  h.live = freshThreadState("prepared-b", "B", "/owned-fixture", "owned-b");
+  (picker.props.onPick as (id: string) => void)("B");
+  render();
+  await vi.advanceTimersByTimeAsync(300);
+  await settle();
+  requireAuthentication("/owned-fixture");
+  render();
+  reject(new Error("AUTH_REQUIRED"));
+  const current = await settle();
+  expect(current.composer.props.note).toBeNull();
+  expect(current.composer.props.disabled).toBe(false);
+  expect(current.composer.props.prepareAction).toBeUndefined();
+  expect(newConversationChoice.agentId).toBe("B");
+  expect(current.composer.props.thread).toBe(h.live);
+  expect(h.open).toHaveBeenCalledTimes(2);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(props.onGoSettings).not.toHaveBeenCalled();
+  expect(props.onStarted).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(before);
 });
 
 it("bridges a real preparation rejection into the already open model dialog without retrying, sending or changing the draft choice", async () => {

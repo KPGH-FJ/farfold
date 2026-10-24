@@ -24,6 +24,10 @@ impl RequestGuard {
     pub(super) fn cancel(&self) -> Result<Cancel, Failure> {
         self.gate.cancel(self.receipt_id, &self.owner)
     }
+    pub(super) fn expire(&self, deadline: tokio::time::Instant) -> Result<Cancel, Failure> {
+        self.gate
+            .expire_prompt(self.receipt_id, &self.owner, deadline)
+    }
 }
 impl Drop for RequestGuard {
     fn drop(&mut self) {

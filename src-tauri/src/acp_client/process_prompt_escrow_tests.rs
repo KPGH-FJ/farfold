@@ -201,7 +201,7 @@ async fn granted_cancel_window_close_deadline_and_reaped_process_cannot_offer() 
     let permit = grant(&g, "expired").await;
     assert!(matches!(
         cell.commit(&permit, life.work().unwrap(), Instant::now()),
-        Err(Failure::Cancelled)
+        Err(Failure::Timeout)
     ));
     cell.process_reaped(reaped());
     assert!(matches!(
@@ -228,6 +228,33 @@ async fn old_cold_granted_owner_still_uses_last_clone_drop_and_is_not_prompt_com
     drop(permit);
     assert_eq!(g.counts(), (1, 0, 128));
     drop(clone);
+    assert_eq!(g.counts(), (0, 0, 0));
+}
+
+#[tokio::test]
+async fn send_wait_timeout_at_atomic_commit_is_distinct_but_prior_cancel_wins() {
+    let g = gate();
+    let life = life();
+    let cell = PromptEscrow::for_pool(g.clone());
+    let permit = grant(&g, "expired-origin").await;
+    let error = cell
+        .commit(&permit, life.work().unwrap(), Instant::now())
+        .err()
+        .unwrap();
+    assert_eq!(format!("{error:?}"), "Timeout");
+    assert_eq!(life.work.load(Ordering::SeqCst), 0);
+    drop(permit);
+    let owner = g.fixture_owner("owned-window", "cancel-first", "agent");
+    let waiting = g.enqueue_prompt(owner.clone(), 128).unwrap();
+    let id = waiting.id();
+    let permit = waiting.acquire().await.unwrap();
+    assert_eq!(g.cancel(id, &owner), Ok(Cancel::CancelledWaiting));
+    let error = cell
+        .commit(&permit, life.work().unwrap(), Instant::now())
+        .err()
+        .unwrap();
+    assert_eq!(format!("{error:?}"), "Cancelled");
+    drop(permit);
     assert_eq!(g.counts(), (0, 0, 0));
 }
 

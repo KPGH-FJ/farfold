@@ -22,6 +22,7 @@ export interface PromptAdmission {
     | "send_wait_limit"
     | "send_wait_payload"
     | "send_wait_cancelled"
+    | "send_wait_timeout"
     | "work_disabled"
     | "unavailable"
     | "uncertain"

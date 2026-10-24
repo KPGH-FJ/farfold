@@ -54,6 +54,20 @@ pub(crate) enum DispatchResult {
     // SDK offer/registration may fail after the request entered its queue.
     Offered(Result<(), String>),
 }
+pub(super) enum DispatchFailure {
+    Error(String),
+    Deadline,
+}
+impl From<String> for DispatchFailure {
+    fn from(error: String) -> Self {
+        Self::Error(error)
+    }
+}
+impl From<&str> for DispatchFailure {
+    fn from(error: &str) -> Self {
+        Self::Error(error.into())
+    }
+}
 pub(super) struct Input<'a> {
     pub agent: &'a str,
     pub cwd: &'a Path,
@@ -78,9 +92,20 @@ pub(super) fn failure(error: Failure) -> String {
             Failure::Full => "PROMPT_QUEUE_FULL",
             Failure::Payload => "PROMPT_QUEUE_PAYLOAD",
             Failure::Cancelled => "PROMPT_QUEUE_CANCELLED",
+            Failure::Timeout => "PROMPT_QUEUE_TIMEOUT",
             Failure::Closed | Failure::Invalid | Failure::Unavailable => "PROMPT_QUEUE_UNAVAILABLE",
         }
     )
+}
+
+fn deadline_failure(guard: &RequestGuard, deadline: Instant) -> String {
+    match guard.expire(deadline) {
+        Ok(Cancel::CancelledWaiting) => failure(Failure::Timeout),
+        Err(Failure::Cancelled) => failure(Failure::Cancelled),
+        // An elapsed wait is not proof of an unsent request. Keep missing,
+        // closed, poisoned and already committed observations unknown.
+        _ => "session prompt deadline elapsed".into(),
+    }
 }
 
 /// Read-only copy of the ONE current public report. It only rejects early;
@@ -150,7 +175,7 @@ impl AcpManager {
         }
         drop(public_current); // Do not retain a second snapshot while waiting.
         if Instant::now() >= request.deadline {
-            return Err(failure(Failure::Cancelled));
+            return Err(failure(Failure::Timeout));
         }
         let cost = super::prompt_charge::whole_request(
             &request.owner,
@@ -179,10 +204,16 @@ impl AcpManager {
         };
         (request.progress)(Progress { receipt_id, phase })
             .map_err(|_| failure(Failure::Unavailable))?;
-        let permit = tokio::time::timeout_at(request.deadline, waiting.acquire())
-            .await
-            .map_err(|_| failure(Failure::Cancelled))?
-            .map_err(failure)?;
+        let permit = {
+            let acquire = tokio::time::timeout_at(request.deadline, waiting.acquire());
+            tokio::pin!(acquire);
+            match acquire.as_mut().await {
+                Ok(result) => result.map_err(failure)?,
+                // Keep Waiting/any granted Slot alive until the mutex decides
+                // whether this deadline, cancellation, or offer won first.
+                Err(_) => return Err(deadline_failure(&guard, request.deadline)),
+            }
+        };
         (request.progress)(Progress {
             receipt_id,
             phase: Phase::Preparing,
@@ -200,16 +231,24 @@ impl AcpManager {
         };
         // This entire wait is OUTSIDE the existing canonical-cwd work gate.
         // The same absolute deadline covers queue + cwd gate + pump checks.
-        let outcome = match tokio::time::timeout_at(
+        let dispatch = tokio::time::timeout_at(
             request.deadline,
-            crate::work_policy::admit(store, agent, cwd, || {
-                self.send_granted_prompt(agent, cwd, session, blocks, granted)
+            crate::work_policy::admit(store, agent, cwd, || async {
+                // Preserve the inner reply timer's origin separately from
+                // work-policy or SDK errors; never infer it from error text.
+                Ok(self
+                    .send_granted_prompt(agent, cwd, session, blocks, granted)
+                    .await)
             }),
-        )
-        .await
-        {
-            Ok(outcome) => outcome,
-            Err(_) => Err("session prompt deadline elapsed".to_string()),
+        );
+        tokio::pin!(dispatch);
+        let outcome = match dispatch.as_mut().await {
+            Ok(Ok(Ok(()))) => Ok(()),
+            Ok(Ok(Err(DispatchFailure::Error(error)))) | Ok(Err(error)) => Err(error),
+            Ok(Ok(Err(DispatchFailure::Deadline))) | Err(_) => {
+                // Retain the same future/Granted until withdrawal is classified.
+                return Err(deadline_failure(&guard, request.deadline));
+            }
         };
         match outcome {
             Ok(()) => Ok(()),

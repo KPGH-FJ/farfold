@@ -13,6 +13,61 @@ fn owner(g: &Admission, agent: &str, token: &str) -> Owner {
 }
 
 #[tokio::test]
+async fn send_wait_timeout_withdraws_only_its_live_reserved_owner() {
+    use tokio::time::Instant;
+    let g = gate(1, 2, 4096);
+    let a = owner(&g, "a", "first");
+    let first = g.enqueue_prompt(a.clone(), 128).unwrap();
+    let first_id = first.id();
+    let first = first.acquire().await.unwrap();
+    assert_eq!(
+        g.expire_prompt(first_id, &owner(&g, "other", "wrong"), Instant::now()),
+        Ok(Cancel::NotFound)
+    );
+    assert_eq!(
+        g.expire_prompt(
+            first_id,
+            &a,
+            Instant::now() + std::time::Duration::from_secs(5)
+        ),
+        Err(Failure::Invalid)
+    );
+    assert_eq!(g.counts(), (1, 0, 128));
+    let b = owner(&g, "b", "waiting");
+    let waiting = g.enqueue_prompt(b.clone(), 128).unwrap();
+    let id = waiting.id();
+    assert_eq!(
+        g.expire_prompt(id, &b, Instant::now()),
+        Ok(Cancel::CancelledWaiting)
+    );
+    assert!(matches!(waiting.acquire().await, Err(Failure::Timeout)));
+    assert_eq!(g.counts(), (1, 0, 128));
+    let committed = first
+        .commit_prompt(Instant::now() + std::time::Duration::from_secs(5))
+        .unwrap();
+    assert_eq!(
+        g.expire_prompt(first_id, &a, Instant::now()),
+        Ok(Cancel::AlreadyStarting)
+    );
+    drop(first);
+    assert_eq!(g.counts(), (1, 0, 128));
+    committed.release();
+    assert_eq!(g.counts(), (0, 0, 0));
+
+    let c = owner(&g, "c", "manual-first");
+    let waiting = g.enqueue_prompt(c.clone(), 128).unwrap();
+    let id = waiting.id();
+    let permit = waiting.acquire().await.unwrap();
+    assert_eq!(g.cancel(id, &c), Ok(Cancel::CancelledWaiting));
+    assert_eq!(
+        g.expire_prompt(id, &c, Instant::now()),
+        Err(Failure::Cancelled)
+    );
+    drop(permit);
+    assert_eq!(g.counts(), (0, 0, 0));
+}
+
+#[tokio::test]
 async fn count_bytes_and_last_owner_are_independent() {
     let g = gate(1, 1, 30);
     let a = g

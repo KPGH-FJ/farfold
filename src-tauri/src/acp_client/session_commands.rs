@@ -219,6 +219,7 @@ fn prompt_failure_admission(error: &str) -> PromptAdmission {
         "FAILED: PROMPT_QUEUE_FULL" => "send_wait_limit",
         "FAILED: PROMPT_QUEUE_PAYLOAD" => "send_wait_payload",
         "FAILED: PROMPT_QUEUE_CANCELLED" => "send_wait_cancelled",
+        "FAILED: PROMPT_QUEUE_TIMEOUT" => "send_wait_timeout",
         "FAILED: PROMPT_QUEUE_UNAVAILABLE" => "unavailable",
         "UNAVAILABLE" | "FAILED: SESSION_UNAVAILABLE" => "unavailable",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN" => "embedded_context_unknown",
@@ -274,6 +275,30 @@ fn permission_scope_rejection_is_definite_only_with_pre_dispatch_failure_prefix(
         let unknown = serde_json::to_value(prompt_failure_admission(unknown)).unwrap();
         assert_eq!(
             unknown,
+            serde_json::json!({"status":"unknown","reason":"uncertain"})
+        );
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn send_wait_timeout_serialization_requires_exact_unsent_native_code() {
+    assert_eq!(
+        serde_json::to_value(prompt_failure_admission("FAILED: PROMPT_QUEUE_TIMEOUT")).unwrap(),
+        serde_json::json!({"status":"rejected","reason":"send_wait_timeout"})
+    );
+    assert_eq!(
+        serde_json::to_value(prompt_failure_admission("FAILED: PROMPT_QUEUE_CANCELLED")).unwrap(),
+        serde_json::json!({"status":"rejected","reason":"send_wait_cancelled"})
+    );
+    for error in [
+        "PROMPT_QUEUE_TIMEOUT",
+        "session prompt deadline elapsed",
+        "lost reply",
+        "cancel unconfirmed",
+    ] {
+        assert_eq!(
+            serde_json::to_value(prompt_failure_admission(error)).unwrap(),
             serde_json::json!({"status":"unknown","reason":"uncertain"})
         );
     }

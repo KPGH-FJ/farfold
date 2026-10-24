@@ -137,6 +137,52 @@ function event(value: unknown) {
 const calls = (name: string) =>
   h.invoke.mock.calls.filter(([command]) => command === name);
 
+it("a definite wait timeout keeps the existing conversation queue and rejects late offered progress without retry", async () => {
+  const draft = drafts.composerDrafts.read(`session:${state.key}`);
+  const { request, args, resolve } = await send();
+  progress(args, "waiting");
+  resolve({ status: "rejected", reason: "send_wait_timeout" });
+  await expect(request).resolves.toEqual({
+    status: "rejected",
+    reason: "send_wait_timeout",
+  });
+  progress(args, "offered");
+  expect(state.items).toContainEqual(
+    expect.objectContaining({
+      kind: "notice",
+      message:
+        "等待发送已结束，原内容已保留。请检查正在进行的任务，再明确重试。",
+    }),
+  );
+  expect(state.identity).toBe("established");
+  expect(state.running).toBe(false);
+  expect(state.submitting).toBe(false);
+  expect(state.uncertainPrompt).toBeNull();
+  expect(state.promptAdmission).toBeNull();
+  expect(state.queuePaused).toBe("unavailable");
+  expect(state.queued).toEqual([blocks]);
+  expect(drafts.composerDrafts.read(`session:${state.key}`)).toBe(draft);
+  expect(state.items.some((item) => item.kind === "user")).toBe(false);
+  expect(calls("session_prompt")).toHaveLength(1);
+  expect(calls("session_prompt_cancel")).toHaveLength(0);
+  expect(calls("session_cancel")).toHaveLength(0);
+});
+
+it.each(["accepted", "unknown"] as const)(
+  "an incidental timeout reason on %s cannot create an unsent notice or downgrade the conversation",
+  async (status) => {
+    const { request, resolve } = await send();
+    resolve({ status, reason: "send_wait_timeout" });
+    await request;
+    expect(state.items.some((item) => item.kind === "notice")).toBe(false);
+    expect(state.identity).toBe("established");
+    expect(state.uncertainPrompt).toBe(status === "unknown" ? blocks : null);
+    expect(state.connectionOutcomeUnknown).toBe(status === "unknown");
+    expect(state.queued).toEqual(status === "unknown" ? [blocks] : []);
+    expect(calls("session_prompt")).toHaveLength(1);
+  },
+);
+
 it("real send waits without claiming Agent work and keeps the exact queue/draft before a confirmed cancel", async () => {
   const before = drafts.composerDrafts.read(`session:${state.key}`);
   const { request, args, resolve } = await send();

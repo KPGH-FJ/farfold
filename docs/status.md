@@ -32,9 +32,17 @@ Pi和Devin各一次新稿准备显示设置未确认，未发模型请求、重�
 
 Droid沿原保存选择准备就绪后，仅发一次精确回复请求；界面出现401文字及请求结果未知，发送暂停，未取得预期回复或可确认终态。回执结构有效但一项未完成，未重试、取消、改选或登录；不从界面文字断言真实HTTP状态、账号原因或后台空闲，见[未知结果摘要](evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json)。该自有未知请求与siGit原未知一并保护，正式更新仍未开始。
 
+`3896128f4`配置恢复反馈候选已一次打包、独立九项通过，当时2244项源码输入及20项证据摘要匹配，正式五文件静态身份保持；随后发送反馈与模型列表源码继续变化，该候选不能用于当前源码的严格安装。未正常退出、采集本候选数据保留或安装，见[候选摘要](evidence/2026-10-24-agent-acceptance/configuration-feedback-candidate-summary.json)。
+
+Copilot沿保存选择完成一次新稿准备，零模型请求；模型弹窗实际出现三行同时选中的Auto。Grok一次准备后未就绪、发送禁用且未显示错误或继续准备入口；同一限定诊断窗口出现auth_required分类，不据此唯一归因账号或当前进程。保存模型与思考未确认，未登录、重试或改选，旧Cursor输入未向两家发送。两项只支持准备与呈现窄观察，共用列表及失败反馈继续定位，见[补充分项](evidence/2026-10-24-agent-acceptance/additional-preparation-observations-summary.json)。
+
+发送反馈、原子超时来源、模型列表展示及认证恢复四项共用修复已稳定，27份源码完成独立审阅和受影响检查；完整工程前端665文件8775项、Rust2235通过及6既有忽略。格式与类型先通过，随后pnpm参数解析在测试启动前拒绝；原失败保留，同源续接其余五项完成，2247项输入及逐命令端点保持。正式受影响界面未更新复验，见[源码与工程摘要](evidence/2026-10-24-agent-acceptance/common-send-and-preparation-source-summary.json)。
+
+Kimchi本次新稿显示auto，与较早保存投影不同，Start前未重采保存值，故不认定自动改选或此次唯一原因；零发送。另从源码发现条件性保护缺口：已保存选择恢复成功后，新稿首次发送前的合法配置更新仍可能沿未锁定基线被接纳，下一增量继续修复，不计本批已解决或任何标准通过。
+
 Goose沿原所选Claude Sonnet 4仅发一次短回答请求，界面显示404及所选模型不可用，预期ACK失败1；文件用例前置未满足，未执行1，未自动重试或切换模型。该路径等待用户明确可用替代；不把界面错误前缀当原始HTTP状态或账号权益证明，见[失败与未执行摘要](evidence/2026-10-24-agent-acceptance/goose-formal-e6e1-summary.json)。
 
-NEW-29已查Goose、Mistral、OpenCode和Pi四条精确官方发行/分发源码链，尚无已确认可用于当前带ID实时整理及终态观察的producer；Pi程序与转换层映射仍有未知。未执行真实整理，不推出全部29家不支持，也不关闭NEW-29，见[源码盘点](evidence/2026-10-24-agent-acceptance/new29-unaffected-producer-summary.json)。
+NEW-29已查Goose、Mistral、OpenCode和Pi四条精确官方发行/分发源码链，记录其事件与当前带ID消费者的映射缺口；这不等于官方能力不足，原条件不要求compactionId或特定事件名。Pi程序与转换层映射仍有未知。未执行真实整理，不推出全部29家不支持，也不关闭NEW-29，见[源码盘点](evidence/2026-10-24-agent-acceptance/new29-unaffected-producer-summary.json)。
 
 本批三个共用修复已完成源码与独审：NEW-29配置请求首次实际执行后接收当前整理忙态；附件检查保留有限错误分类，新普通文件按位置交付，显式文字选择保持文字意图，旧无标记草稿不猜测迁移；P40两种确证未开始执行的读取前置拒绝可重新检查，写入及其他结果未知保护保持。完整工程检查通过：前端662文件8659项，Rust2228项通过、6项既有忽略，格式、类型、构建与Clippy通过；随后仅搬移一项测试，生产源码未变，受影响58项及类型、格式、独审通过。详见[修复与验证摘要](evidence/2026-10-24-agent-acceptance/product-batch-summary.json)，其中未安装字段属于该次源码检查点。
 

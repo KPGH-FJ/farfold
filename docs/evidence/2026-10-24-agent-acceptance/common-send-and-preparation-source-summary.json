@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "kind": "common-send-and-preparation-source-summary",
+  "recordedAt": "2026-10-24T08:15:42.696135+00:00",
+  "evidenceLevel": "source-and-controlled",
+  "baseHead": "3896128f485eabbe5db343d0bd58138dd8828361",
+  "sourceFilesChanged": 27,
+  "sourceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/send-admission-feedback-fix/frontend/implementation.json",
+      "sha256": "51e35f51b4c09a78eff86a7c2b66f9b317e87c7fe7e17ed3f645e24f31218145"
+    },
+    {
+      "path": "output/send-admission-feedback-fix/native/implementation.json",
+      "sha256": "bffb6930e2c7113400a5b684f42ebc087d74ad315c102dbf06e42a8e545ccb5d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/model-choice-view-fix/implementation.json",
+      "sha256": "369f083da1a6c1969ba00a9b6898b88647ae47db771fa68b17e4db488b8fb99b"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/authentication-recovery-feedback-fix/implementation.json",
+      "sha256": "b03bd0d1641ef8060c9d0fc92525ba2edfc03530ff937d0b8966fb4e71da2171"
+    }
+  ],
+  "fixes": [
+    {
+      "scope": "first-message-and-existing-queue-feedback",
+      "change": "Use the same finite notice mapping for definite rejection, including distinct timeout; preserve first-message draft and attachments, unknown outcomes and explicit retry.",
+      "red": {
+        "tests": 34,
+        "passed": 29,
+        "failed": 5
+      },
+      "finalAffected": {
+        "files": 6,
+        "passed": 98
+      },
+      "typesAndFormatPassed": true
+    },
+    {
+      "scope": "atomic-pre-offer-timeout-origin",
+      "change": "Only an actual elapsed deadline that first withdraws its still-reserved owner atomically yields send_wait_timeout. Preserve earlier cancellation, committed offers and uncertainty; capacity policy and leases unchanged.",
+      "red": {
+        "tests": 5,
+        "passed": 1,
+        "failed": 4
+      },
+      "finalFocused": {
+        "passed": 7
+      },
+      "finalAffected": {
+        "passed": 46,
+        "includesFocused": true
+      },
+      "formatAndClippyPassed": true,
+      "preservedHarnessFailure": "First GREEN attempt did not compile; it is preserved and not a test pass."
+    },
+    {
+      "scope": "model-choice-presentation",
+      "change": "One displayed and keyboard action per exact value within its source; preserve aliases, groups, descriptions and distinct values/services/revisions without changing stored configuration or setters.",
+      "red": {
+        "tests": 26,
+        "passed": 22,
+        "failed": 4
+      },
+      "finalAffected": {
+        "files": 6,
+        "passed": 53
+      },
+      "typesAndFormatPassed": true,
+      "preservedHarnessFailure": "First targeted tests passed but typecheck failed on an old choice annotation; corrected final inputs passed."
+    },
+    {
+      "scope": "authentication-recovery-feedback",
+      "change": "Current-source authentication blocking shows a finite notice and correct account recovery action, including without a folder; preserve selection, draft, attachments and all owner guards, with no automatic login, retry or send.",
+      "red": {
+        "tests": 16,
+        "passed": 13,
+        "failed": 3
+      },
+      "finalAffected": {
+        "files": 8,
+        "passed": 128
+      },
+      "typesAndFormatPassed": true
+    }
+  ],
+  "reviewRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/send-admission-feedback-fix/root-frontend-source-review.json",
+      "sha256": "422499c67e99574bd961d5c393379f372cccda212ee170f01a3f2e4aa47e9620"
+    },
+    {
+      "path": "output/send-admission-feedback-fix/native/independent-review-acceptance-index.json",
+      "sha256": "d2b52e7a8598cc242fbcfa52483bb2c2c726d29292d95d7766f9c44000cc1ddb"
+    }
+  ],
+  "testCountRule": "Affected groups overlap; do not sum them. The native46 already includes focused7.",
+  "fullEngineering": {
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/send-and-preparation-engineering-resume/engineering-summary.json",
+      "sha256": "42588ba84cf5be76aca72dad3984eb1bfb12c622af6efe4fa0cdca5542af683a"
+    },
+    "rootReview": {
+      "path": "output/2026-10-24-agent-acceptance/send-and-preparation-engineering-resume/root-execution-review.json",
+      "sha256": "f616499de543fe9d747ccb964509dc1704b185ec73f3da8613957ac038ba5cc0"
+    },
+    "sourceInputs": 2247,
+    "checksSucceeded": 7,
+    "sourceUnchangedAtEndpointsAndPerCommand": true,
+    "checksRanBeforeCommit": true,
+    "frontend": {
+      "files": 665,
+      "passed": 8775,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2235,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "preservedCommandFailure": "Original format/type passed; pnpm maxWorkers argument parsing rejected before test. The unchanged successful pair was retained; an explicit new resume session ran the remaining five checks with the same package test script through Vitest. Original failure and all logs retained.",
+    "dependencyAndEnvironmentFrozen": false
+  },
+  "installedApplication": {
+    "sourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "updatedForTheseChanges": false,
+    "realAffectedPathsVerified": false
+  },
+  "runtimeAttribution": "Controlled defects do not establish the unique Cursor/Copilot/Grok runtime cause. The Kimchi current model differs from an older saved projection, which was not refreshed immediately before Start; its cause remains open.",
+  "acceptance": {
+    "wholeRequirementsClosed": 0,
+    "standardsAdded": 0,
+    "wholeAgentsAdded": 0,
+    "installedAffectedTestsAdded": 0
+  },
+  "remainingModelBaselineGap": "Separate static source analysis found that an already saved choice restored in a fresh draft can still receive a later legal config update before its first prompt while the native baseline remains unlocked. This conditional gap needs a further fix; it is not uniquely attributed to the Kimchi observation and is not covered as fixed by this batch."
+}

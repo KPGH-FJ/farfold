@@ -649,14 +649,14 @@ impl AcpManager {
         session_id: &str,
         blocks: Vec<ContentBlock>,
         grant: super::active_prompt::Granted,
-    ) -> Result<(), String> {
+    ) -> Result<(), super::active_prompt::DispatchFailure> {
         // Declarations and the sending entry belong to this one actual owner;
         // cached cards and preparation connections cannot authorize this prompt.
         let connection = self
             .session_connection(agent_id, cwd, session_id)
             .map_err(|_| "FAILED: SESSION_UNAVAILABLE".to_string())?;
         if connection.connection_id != grant.connection_id || session_id != grant.session_id {
-            return Err("FAILED: SESSION_UNAVAILABLE".into());
+            return Err("FAILED: SESSION_UNAVAILABLE".to_string().into());
         }
         let control =
             session_control(&connection, session_id).map_err(|error| format!("FAILED: {error}"))?;
@@ -673,11 +673,15 @@ impl AcpManager {
             .map_err(|_| "FAILED: session is closed".to_string())?;
         match tokio::time::timeout_at(deadline, result_rx).await {
             Ok(Ok(super::active_prompt::DispatchResult::Rejected(error))) => {
-                Err(format!("FAILED: {error}"))
+                Err(format!("FAILED: {error}").into())
             }
-            Ok(Ok(super::active_prompt::DispatchResult::Offered(result))) => result,
-            Ok(Err(_)) => Err("session prompt channel closed".into()),
-            Err(_) => Err("session prompt deadline elapsed".into()),
+            Ok(Ok(super::active_prompt::DispatchResult::Offered(result))) => {
+                result.map_err(super::active_prompt::DispatchFailure::Error)
+            }
+            Ok(Err(_)) => Err(super::active_prompt::DispatchFailure::Error(
+                "session prompt channel closed".into(),
+            )),
+            Err(_) => Err(super::active_prompt::DispatchFailure::Deadline),
         }
     }
 

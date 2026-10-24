@@ -8,7 +8,7 @@
     "path": "output/2026-10-24-agent-acceptance/new29-unaffected-producer-readiness.json",
     "sha256": "23730d25c1241fd3371fdd0f1f5967eae06a77edfe167749469418ede76c5113"
   },
-  "result": "no-confirmed-ready-typed-live-producer-in-four-inspected-routes",
+  "result": "four-source-routes-current-consumer-mapping-gaps-real-compaction-unverified",
   "acceptance": {
     "new29Closed": false,
     "wholeAgentsAdded": 0,
@@ -18,8 +18,8 @@
   },
   "existingConsumerScope": {
     "eventKinds": ["compaction_update", "compaction_summary_chunk"],
-    "identity": "Owned session and nonempty compactionId for the same live entity.",
-    "liveAndTerminal": "A live in_progress update followed by a valid same-id completed, failed or cancelled update is the relevant activity lifecycle; chunks, text or history alone do not prove this path.",
+    "identity": "The current dedicated typed-event consumer associates an owned session with a nonempty compactionId. This describes that implementation only; NEW-29 does not mandate this official field.",
+    "liveAndTerminal": "This dedicated consumer currently recognizes in_progress followed by valid same-id completed, failed or cancelled. Other official semantics and existing request ownership/protection must be assessed against the original condition; absence of these exact events alone does not disqualify them. History or unowned text alone is not live protection proof.",
     "replay": "Historical and ended identifiers must not become new live work.",
     "noNewRequirementOrGate": true
   },
@@ -27,7 +27,7 @@
     {
       "agentId": "goose",
       "releaseVersion": "1.52.0",
-      "result": "source-route-negative",
+      "result": "current-consumer-mapping-gap",
       "testedLive": false,
       "releaseChain": "Exact v1.52.0 CompactionOperation -> native message/status -> ACP forward_agent_stream -> optional Goose status_message custom notification.",
       "actualEventClasses": [
@@ -48,7 +48,7 @@
     {
       "agentId": "mistral-vibe",
       "releaseVersion": "2.25.8",
-      "result": "source-route-negative",
+      "result": "current-consumer-mapping-gap",
       "testedLive": false,
       "releaseChain": "Exact v2.25.8 vibe-acp -> vibe.acp.entrypoint:main -> ACP session_updates_for_event.",
       "actualEventClasses": [
@@ -67,7 +67,7 @@
     {
       "agentId": "opencode",
       "releaseVersion": "1.18.31",
-      "result": "source-route-negative",
+      "result": "current-consumer-mapping-gap",
       "testedLive": false,
       "releaseChain": "Exact v1.18.31 ACP entry -> ACPEvent global event subscription and converter.",
       "actualEventClasses": [
@@ -99,7 +99,7 @@
         "name": "pi-acp",
         "version": "0.0.34"
       },
-      "result": "source-route-negative-with-selected-transport-binding-unknown",
+      "result": "current-consumer-mapping-gap-with-selected-transport-binding-unknown",
       "testedLive": false,
       "releaseChain": "Official program package 0.87.1 native AgentSessionEvent -> RPC JSON forwarding; separately, official pi-acp v0.0.34 RPC event converter. The two version numbers describe different layers.",
       "actualEventClasses": [
@@ -108,7 +108,7 @@
         "transport converter: auto_compaction_start / auto_compaction_end -> ordinary agent_message_chunk"
       ],
       "gap": "The program module start/end declarations have no dedicated compaction identity. RPC JSON conversion preserves non-message_update event names. The complete v0.0.34 converter recognizes the older auto_compaction_* names, emits ordinary text and has no typed compaction kinds or compactionId; current compaction_* names reach its default branch in this source comparison.",
-      "bindingLimit": "The currently selected transport distribution was not identified or inspected. Exact release/package module source is not proof of the running program/transport combination or of compiled-bundle equivalence; this is not a live compatibility failure.",
+      "bindingLimit": "During the original four-route source task, the selected transport distribution had not been identified or inspected. Later inspection identified the selected local pi-acp 0.0.34 entry and read its public bundle; the actual wrapper-to-running CLI relationship, source equivalence and live compaction remain unverified. Exact release/package source is not proof of the running combination, and this source comparison is not a live compatibility failure.",
       "completeTransportConverterEvidence": {
         "sha256": "d2ffc844f1e4f079c89cca828b6f12a574aa86281cdad1355117a3844ed69e4f",
         "bytes": 34962,
@@ -125,12 +125,26 @@
       "programSourceBasis": "The named selected official package module declarations and implementation were read. The exact v0.87.1 Git tag was separately verified through the official GitHub reference API; no whole tag source or program binary equivalence is claimed."
     }
   ],
-  "safeContinuation": "Keep NEW-29 real-Agent coverage open for these inspected routes. A suitable official identity-bearing lifecycle surface or confirmed relevant transport mapping can support a later bounded observation. This source finding authorizes no long-prompt forcing, Agent patch/fork, synthetic identity or new acceptance gate.",
+  "safeContinuation": "Keep untested NEW-29 coverage open. Assess verified official compaction semantics with their actual session/request ownership, replay boundary, valid terminal and existing resource protection; do not reject a route only because it lacks an official compactionId or the current dedicated typed kinds. This source review authorizes no new execution, forced long prompt, Agent patch/fork, raw-frame identity fabrication or new acceptance gate.",
   "limits": [
     "Only these four exact release/package routes were inspected; no claim about all 29 Agents or all official surfaces.",
     "No Agent, App, model, compact command or RPC was executed by this source task.",
     "Source evidence is separate from installed-product, real-Agent, compaction success and live failure evidence.",
     "Installed executable/source equivalence and unobserved current runtime conditions remain unknown.",
     "Source-file digests identify reviewed evidence only; no Agent executable hash or version pin is a compatibility condition."
-  ]
+  ],
+  "interpretationCorrection": {
+    "recordedAt": "2026-10-24T07:55:18.714991+00:00",
+    "previousPublicSummarySha256": "c754ca712ead053dedeb2b7a14d7f4e0587f451505e0da49e7c5d9c4b2109e83",
+    "review": {
+      "path": "output/2026-10-24-agent-acceptance/new29-consumer-gate-document-review.json",
+      "sha256": "768ee769b6c7d3029d2ac173ddd78c077e94d413b8bd206196bb093ed2e0071d"
+    },
+    "qwenSupplement": {
+      "path": "output/2026-10-24-agent-acceptance/new29-qwen-consumer-contract-supplement.json",
+      "sha256": "4b8254c54d68609c5e09ccf0360bb58f093d9693b7d1181eb023e5c58c573297"
+    },
+    "scope": "Withdraw the inference that official compactionId or the dedicated typed event names are prerequisites of NEW-29. Original source analysis and event-shape observations remain unchanged. A foreground request may already protect manual work; lack of dedicated semantic mapping is not by itself a proven protection defect.",
+    "newRuntimeOrAcceptanceEvidence": false
+  }
 }

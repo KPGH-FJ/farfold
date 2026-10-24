@@ -18,6 +18,7 @@ pub(super) enum Failure {
     Payload,
     Closed,
     Cancelled,
+    Timeout,
     Invalid,
     Unavailable,
 }
@@ -393,10 +394,48 @@ impl Admission {
         }
     }
     pub(super) fn cancel(self: &Arc<Self>, id: u64, owner: &Owner) -> Result<Cancel, Failure> {
+        self.cancel_with_deadline(id, owner, None)
+    }
+    /// A timer can classify only its own first withdrawal of an unoffered
+    /// prompt. Already-cancelled, closed, missing and committed owners do not
+    /// become timeout rejections merely because the clock has advanced.
+    pub(super) fn expire_prompt(
+        self: &Arc<Self>,
+        id: u64,
+        owner: &Owner,
+        deadline: tokio::time::Instant,
+    ) -> Result<Cancel, Failure> {
+        self.cancel_with_deadline(id, owner, Some(deadline))
+    }
+    fn cancel_with_deadline(
+        self: &Arc<Self>,
+        id: u64,
+        owner: &Owner,
+        deadline: Option<tokio::time::Instant>,
+    ) -> Result<Cancel, Failure> {
         let mut s = self.state.lock().map_err(|_| Failure::Unavailable)?;
         let Some(e) = s.entries.get(&id).filter(|e| e.owner == *owner) else {
             return Ok(Cancel::NotFound);
         };
+        if let Some(deadline) = deadline {
+            if s.closed
+                || !s
+                    .windows
+                    .get(&owner.window)
+                    .is_some_and(|authority| Arc::ptr_eq(authority, &owner.authority))
+            {
+                return Err(Failure::Closed);
+            }
+            if e.offer == Offer::Cancelled {
+                return Err(Failure::Cancelled);
+            }
+            if e.offer != Offer::Reserved {
+                return Ok(Cancel::AlreadyStarting);
+            }
+            if tokio::time::Instant::now() < deadline {
+                return Err(Failure::Invalid);
+            }
+        }
         if e.phase == Phase::Granted {
             if e.offer == Offer::Reserved {
                 s.entries.get_mut(&id).expect("same locked entry").offer = Offer::Cancelled;
@@ -414,7 +453,11 @@ impl Admission {
         let deliveries = self.grant(&mut s);
         drop(s);
         if let Some(send) = e.reply {
-            let _ = send.send(Err(Failure::Cancelled));
+            let _ = send.send(Err(if deadline.is_some() {
+                Failure::Timeout
+            } else {
+                Failure::Cancelled
+            }));
         }
         self.deliver(deliveries);
         Ok(Cancel::CancelledWaiting)
@@ -558,9 +601,6 @@ impl Permit {
         if s.closed {
             return Err(Failure::Closed);
         }
-        if tokio::time::Instant::now() >= deadline {
-            return Err(Failure::Cancelled);
-        }
         let e = s.entries.get(&self._slot.id).ok_or(Failure::Invalid)?;
         if !s
             .windows
@@ -574,6 +614,9 @@ impl Permit {
         }
         if e.phase != Phase::Granted || e.offer != Offer::Reserved {
             return Err(Failure::Invalid);
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return Err(Failure::Timeout);
         }
         s.entries
             .get_mut(&self._slot.id)

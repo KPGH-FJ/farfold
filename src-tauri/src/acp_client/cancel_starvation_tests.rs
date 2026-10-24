@@ -223,6 +223,12 @@ async fn cancellation_with_backlog(order: QueueOrder) {
             manager
                 .send_granted_prompt(&row.id, &cwd, &opened.session_id, blocks, granted)
                 .await
+                .map_err(|error| match error {
+                    super::active_prompt::DispatchFailure::Error(error) => error,
+                    super::active_prompt::DispatchFailure::Deadline => {
+                        "session prompt deadline elapsed".into()
+                    }
+                })
         } else {
             manager
                 .session_prompt(&row.id, &cwd, &opened.session_id, blocks)

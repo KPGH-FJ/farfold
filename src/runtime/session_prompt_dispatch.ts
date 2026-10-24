@@ -22,7 +22,6 @@ import { uiError } from "./ui_error";
 import type { ThreadState, ThreadItem } from "./session_types";
 import type { StopConfirmation } from "./stop_confirmation";
 import { PromptRequestOwner } from "./prompt_admission";
-import { PROMPT_ADMISSION as P } from "./prompt_admission_strings";
 type SendAdmission = PromptAdmission | { status: "queued" };
 export interface PromptHooks {
   thread(key: string): ThreadState | undefined;
@@ -156,22 +155,7 @@ export async function drainPrompt(
         s.stopping = false;
         s.stopUnconfirmed = false;
         s.items = s.items.filter((i) => i !== item);
-        const waitMessage =
-          result.reason === "send_wait_limit"
-            ? P.full
-            : result.reason === "send_wait_payload"
-              ? P.payload
-              : result.reason === "send_wait_cancelled"
-                ? P.cancelled
-                : null;
-        const notice: ThreadItem | null = waitMessage
-          ? {
-              kind: "notice",
-              id: nextItemId(),
-              message: waitMessage,
-              time: Date.now(),
-            }
-          : promptRejectionItem(result, nextItemId);
+        const notice = promptRejectionItem(result, nextItemId);
         if (notice) s.items.push(notice);
         pauseQueue(
           s,

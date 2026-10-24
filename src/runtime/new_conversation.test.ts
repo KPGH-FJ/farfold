@@ -8,6 +8,8 @@ import { threads, normalizeConfigOptions, type PromptBlock } from "./sessions";
 import { sendNewConversation } from "./new_conversation";
 import { composerDrafts, draftPersistence } from "./drafts";
 import { DRAFT_STORAGE_KEY } from "./draft_storage";
+import { STRINGS } from "./strings";
+import { PROMPT_ADMISSION as P } from "./prompt_admission_strings";
 import {
   rememberPendingConversation,
   finishPendingConversation,
@@ -227,4 +229,158 @@ it("does not turn an unknown first-message result into a retryable editor draft"
   await expect(sendNewConversation(state.key, blocks)).resolves.toBeUndefined();
   expect(state.uncertainPrompt).toBe(blocks);
   expect(state.identity).toBe("established");
+});
+
+it.each([
+  ["send_wait_limit", P.full],
+  ["send_wait_payload", P.payload],
+  ["send_wait_cancelled", P.cancelled],
+  [
+    "send_wait_timeout",
+    "等待发送已结束，原内容已保留。请检查正在进行的任务，再明确重试。",
+  ],
+])(
+  "preserves the definite %s first-send reason and original attachment draft",
+  async (reason, message) => {
+    const state = permissionDraft(`first-rejected-${reason}`);
+    const attachment = {
+      id: "owned-file",
+      kind: "file" as const,
+      name: "owned.txt",
+      uri: "file:///controlled/owned.txt",
+      deliveryMode: "location" as const,
+    };
+    const blocks: PromptBlock[] = [
+      { type: "text", text: "Keep this input" },
+      { type: "resource_link", name: attachment.name, uri: attachment.uri },
+    ];
+    composerDrafts.update("new", () => ({
+      text: "Keep this input",
+      attachments: [attachment],
+      sendPending: true,
+    }));
+    const attempt = await rememberPendingConversation(
+      "new",
+      composerDrafts.read("new"),
+      state,
+    );
+    mock.invoke.mockImplementation(async (command, args) =>
+      command === "session_prompt"
+        ? { status: "rejected", reason }
+        : command === "draft_attachment_check"
+          ? null
+          : localCommand(command, args),
+    );
+    await expect(sendNewConversation(state.key, blocks)).rejects.toThrow(
+      message,
+    );
+    finishPendingConversation(attempt, "rejected");
+    expect(composerDrafts.read("new")).toMatchObject({
+      text: "Keep this input",
+      attachments: [attachment],
+      sendPending: false,
+    });
+    expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+    expect(state.identity).toBe("draft");
+    expect(state.uncertainPrompt).toBeNull();
+    expect(state.queued).toEqual([]);
+    expect(blocks[1]).toMatchObject({ uri: attachment.uri });
+    expect(
+      mock.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(1);
+    expect(
+      mock.invoke.mock.calls.filter(
+        ([name]) => name === "draft_attachment_check",
+      ),
+    ).toHaveLength(1);
+  },
+);
+
+it.each(["unrecognized_PRIVATE_MARKER", "constructor", "__proto__"])(
+  "does not expose or interpret an opaque rejected first-send reason: %s",
+  async (reason) => {
+    const state = permissionDraft(`first-opaque-${reason}`);
+    mock.invoke.mockImplementation(async (command, args) =>
+      command === "session_prompt"
+        ? { status: "rejected", reason }
+        : localCommand(command, args),
+    );
+    await expect(
+      sendNewConversation(state.key, [{ type: "text", text: "keep" }]),
+    ).rejects.toThrow(STRINGS.repair.sendFailed);
+    expect(state.queued).toEqual([]);
+    expect(
+      mock.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(1);
+  },
+);
+
+it.each(["accepted", "unknown"] as const)(
+  "does not interpret a timeout reason on a %s first-send result as unsent",
+  async (status) => {
+    const state = permissionDraft(`first-nonrejection-${status}`);
+    const blocks: PromptBlock[] = [{ type: "text", text: "once only" }];
+    mock.invoke.mockImplementation(async (command, args) =>
+      command === "session_prompt"
+        ? { status, reason: "send_wait_timeout" }
+        : localCommand(command, args),
+    );
+    await expect(
+      sendNewConversation(state.key, blocks),
+    ).resolves.toBeUndefined();
+    expect(state.identity).toBe("established");
+    expect(state.uncertainPrompt).toBe(status === "unknown" ? blocks : null);
+    expect(state.queued).toEqual(status === "unknown" ? [blocks] : []);
+    expect(
+      mock.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(1);
+  },
+);
+
+it("keeps an invalid attachment in the first-send editor without dispatch or a forged timeout reason", async () => {
+  const state = permissionDraft("first-attachment-check-failed");
+  const attachment = {
+    id: "unreadable-file",
+    kind: "file" as const,
+    name: "unreadable.txt",
+    uri: "file:///controlled/unreadable.txt",
+    deliveryMode: "location" as const,
+  };
+  const blocks: PromptBlock[] = [
+    { type: "text", text: "retain this attachment" },
+    { type: "resource_link", name: attachment.name, uri: attachment.uri },
+  ];
+  composerDrafts.update("new", () => ({
+    text: "retain this attachment",
+    attachments: [attachment],
+    sendPending: true,
+  }));
+  const attempt = await rememberPendingConversation(
+    "new",
+    composerDrafts.read("new"),
+    state,
+  );
+  mock.invoke.mockImplementation(async (command, args) => {
+    if (command === "draft_attachment_check")
+      throw new Error("FAILED: PROMPT_QUEUE_TIMEOUT");
+    return localCommand(command, args);
+  });
+  await expect(sendNewConversation(state.key, blocks)).rejects.toThrow(
+    STRINGS.repair.sendFailed,
+  );
+  finishPendingConversation(attempt, "rejected");
+  expect(composerDrafts.read("new")).toMatchObject({
+    text: "retain this attachment",
+    attachments: [attachment],
+    sendPending: false,
+  });
+  expect(state.identity).toBe("draft");
+  expect(state.queued).toEqual([]);
+  expect(state.uncertainPrompt).toBeNull();
+  expect(
+    mock.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+  ).toHaveLength(0);
+  expect(
+    mock.invoke.mock.calls.filter(([name]) => name === "session_prompt_cancel"),
+  ).toHaveLength(0);
 });

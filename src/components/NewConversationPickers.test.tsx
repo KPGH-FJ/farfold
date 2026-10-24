@@ -320,6 +320,129 @@ it("groups compatible saved services and applies the clicked model", async () =>
   expect(props.onClose).toHaveBeenCalledTimes(1);
 });
 
+it("shows one action for a repeated model value while retaining every declared label and group", async () => {
+  props.value.modelValue = "auto";
+  props.existingOption = {
+    ...props.existingOption!,
+    currentValue: "auto",
+    options: [
+      {
+        value: "auto",
+        name: "Auto",
+        group: "First",
+        description: "First detail",
+      },
+      {
+        value: "auto",
+        name: "Automatic",
+        group: "Second",
+        description: "Second detail",
+      },
+      { value: "auto", name: "Auto", group: "Third" },
+      { value: "other", name: "Other" },
+    ],
+  };
+  const original = JSON.stringify(props.existingOption);
+  const tree = await loaded();
+  const choices = tree.filter(
+    (node) => node.props["aria-pressed"] !== undefined,
+  );
+  expect(choices.filter((node) => node.props["aria-pressed"])).toHaveLength(1);
+  expect(new Set(choices.map((node) => node.props["data-idx"])).size).toBe(
+    choices.length,
+  );
+  const selected = choices.find((node) => node.props["aria-pressed"])!;
+  const visible = text(selected.props.children as ReactNode);
+  for (const label of [
+    "Auto",
+    "Automatic",
+    "First",
+    "Second",
+    "Third",
+    "First detail",
+    "Second detail",
+  ])
+    expect(visible).toContain(label);
+  (selected.props.onClick as () => void)();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: null,
+    modelValue: "auto",
+  });
+  expect(JSON.stringify(props.existingOption)).toBe(original);
+});
+
+it("keeps same-name distinct values and service sources separate with searchable identity details", async () => {
+  props.value.modelValue = "auto-a";
+  props.existingOption = {
+    ...props.existingOption!,
+    currentValue: "auto-a",
+    options: [
+      { value: "auto-a", name: "Auto", group: "First" },
+      { value: "auto-b", name: "Auto", group: "Second" },
+    ],
+  };
+  h.list.mockResolvedValue([
+    { ...service, models: ["auto-a"] },
+    { ...service, id: "service-other", revision: "r2", models: ["auto-a"] },
+  ]);
+  let tree = await loaded();
+  const choices = tree.filter(
+    (node) => node.props["aria-pressed"] !== undefined,
+  );
+  expect(choices).toHaveLength(4);
+  expect(choices.filter((node) => node.props["aria-pressed"])).toHaveLength(1);
+  expect(text(choices[0].props.children as ReactNode)).toContain("auto-a");
+  expect(text(choices[1].props.children as ReactNode)).toContain("auto-b");
+  const search = tree.find((node) => node.type === "input")!;
+  (search.props.onChange as (event: unknown) => void)({
+    target: { value: "Second" },
+  });
+  tree = render();
+  expect(
+    tree.filter((node) => node.props["aria-pressed"] !== undefined),
+  ).toHaveLength(1);
+  (
+    tree.find((node) => node.type === "input")!.props.onKeyDown as (
+      event: unknown,
+    ) => void
+  )({
+    key: "Enter",
+    nativeEvent: { isComposing: false },
+    preventDefault: vi.fn(),
+  });
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: null,
+    modelValue: "auto-b",
+  });
+});
+
+it("keeps one selected source when two saved services and an existing setting share the model value", async () => {
+  props.value = {
+    service: { id: "service-other", revision: "r2", model: "current" },
+    modelValue: null,
+  };
+  h.list.mockResolvedValue([
+    { ...service, models: ["current", "current"] },
+    { ...service, id: "service-other", revision: "r2", models: ["current"] },
+  ]);
+  const tree = await loaded();
+  const choices = tree.filter(
+    (node) => node.props["aria-pressed"] !== undefined,
+  );
+  expect(choices).toHaveLength(4);
+  const selected = choices.filter((node) => node.props["aria-pressed"]);
+  expect(selected).toHaveLength(1);
+  expect(selected[0].props["data-idx"]).toBe(3);
+  (selected[0].props.onClick as () => void)();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: { id: "service-other", revision: "r2", model: "current" },
+    modelValue: null,
+  });
+});
+
 it("never applies a stale saved selection; a fresh pick uses the current revision", async () => {
   props.value = {
     service: { id: "service", revision: "r1", model: "api-two" },

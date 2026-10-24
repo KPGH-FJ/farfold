@@ -11,6 +11,7 @@ import { DOCUMENT_INPUT_STRINGS as S } from "./document_input_strings";
 import type { PromptAdmission } from "./queue";
 import { documentMediaFormat } from "./document_media_type";
 import { COMPOSER_CONTROLS as C } from "./composer_strings";
+import { PROMPT_ADMISSION as P } from "./prompt_admission_strings";
 
 export function promptText(
   blocks: readonly PromptBlock[],
@@ -29,6 +30,16 @@ export function titleFromBlocks(blocks: readonly PromptBlock[]): string {
 }
 export function promptRejectionNotice(result: PromptAdmission): string | null {
   if (result.status !== "rejected") return null;
+  switch (result.reason) {
+    case "send_wait_limit":
+      return P.full;
+    case "send_wait_payload":
+      return P.payload;
+    case "send_wait_cancelled":
+      return P.cancelled;
+    case "send_wait_timeout":
+      return P.timeout;
+  }
   const audioReasons = {
     audio_unknown: AUDIO_INPUT.capabilityUnknown,
     audio_unsupported: AUDIO_INPUT.capabilityUnsupported,
@@ -37,7 +48,7 @@ export function promptRejectionNotice(result: PromptAdmission): string | null {
     audio_format_unsupported: AUDIO_INPUT.unsupported,
     audio_duration_limit: AUDIO_INPUT.durationLimit,
   };
-  if (result.reason && result.reason in audioReasons)
+  if (result.reason && Object.hasOwn(audioReasons, result.reason))
     return audioReasons[result.reason as keyof typeof audioReasons];
   if (result.reason === "permission_scope_unverified")
     return C.permissionScopeUnverified;
