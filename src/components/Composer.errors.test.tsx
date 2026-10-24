@@ -358,6 +358,164 @@ it("does not submit an attachment read after its exact draft has changed", async
   expect(revised.attachments).toHaveLength(1);
 });
 
+it.each(["pptx", "pdf", "xlsx", "docx"])(
+  "keeps the entire four-file draft and never calls onSend when the %s preparation rejects unsupported text",
+  async (first) => {
+    const extensions = [
+      first,
+      ...["pptx", "pdf", "xlsx", "docx"].filter((item) => item !== first),
+    ];
+    composerDrafts.update("new", () => ({
+      text: "Only ACK; do not use tools",
+      attachments: extensions.map((extension) => ({
+        id: extension,
+        kind: "file" as const,
+        name: `owned.${extension}`,
+        uri: `file:///private/owned-fixtures/owned.${extension}`,
+      })),
+    }));
+    const original = composerDrafts.read("new");
+    vi.mocked(invoke).mockRejectedValueOnce({ code: "unsupportedText" });
+    const onSend = vi.fn();
+    const props = {
+      thread: null,
+      draftKey: "new",
+      imageEnabled: false,
+      embedContext: true,
+      onGoSettings() {},
+      onSend,
+    };
+    const send = render(props).find(
+      (element) => element.props["aria-label"] === STRINGS.composer.sendTitle,
+    )!;
+    await (send.props.onClick as () => Promise<void>)();
+    expect(onSend).not.toHaveBeenCalled();
+    expect(composerDrafts.read("new")).toBe(original);
+    expect(original.attachments).toHaveLength(4);
+    expect(original.sendPending).not.toBe(true);
+    expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_check", {
+      uri: original.attachments[0].uri,
+      embed: true,
+    });
+    await vi.waitFor(() =>
+      expect(
+        render(props).some((element) => element.type === ErrorNotice),
+      ).toBe(true),
+    );
+    const notice = render(props).find(
+      (element) => element.type === ErrorNotice,
+    )!;
+    expect(notice.props.message).toContain("不能直接作为文字发送");
+    expect(String(notice.props.message).includes("加入文字")).toBe(
+      first !== "pptx",
+    );
+    expect(notice.props.detail).toBeUndefined();
+  },
+);
+
+it("retains an explicit text draft after capability loss and never calls onSend or reads its file", async () => {
+  composerDrafts.update("new", () => ({
+    text: "keep text",
+    attachments: [
+      {
+        id: "text",
+        kind: "file",
+        name: "notes.txt",
+        uri: "file:///owned/notes.txt",
+        deliveryMode: "text",
+        content: "previous text",
+      },
+    ],
+  }));
+  const original = composerDrafts.read("new");
+  const onSend = vi.fn();
+  const props = {
+    thread: null,
+    draftKey: "new",
+    imageEnabled: false,
+    embedContext: false,
+    onGoSettings() {},
+    onSend,
+  };
+  const send = render(props).find(
+    (element) => element.props["aria-label"] === STRINGS.composer.sendTitle,
+  )!;
+  await (send.props.onClick as () => Promise<void>)();
+  await vi.waitFor(() =>
+    expect(
+      render(props).some(
+        (element) =>
+          element.type === ErrorNotice &&
+          String(element.props.message).includes("不支持接收附件文字"),
+      ),
+    ).toBe(true),
+  );
+  expect(onSend).not.toHaveBeenCalled();
+  expect(invoke).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(original);
+  expect(original.sendPending).not.toBe(true);
+});
+
+it("passes four explicitly located files to onSend as links without trying text conversion", async () => {
+  const extensions = ["pptx", "pdf", "xlsx", "docx"];
+  composerDrafts.update("new", () => ({
+    text: "only ACK",
+    attachments: extensions.map((extension) => ({
+      id: extension,
+      kind: "file",
+      name: `owned.${extension}`,
+      uri: `file:///owned/owned.${extension}`,
+      deliveryMode: "location",
+    })),
+  }));
+  vi.mocked(invoke).mockImplementation(async (command, args) => {
+    if (
+      command === "draft_attachment_check" &&
+      (args as { embed: boolean }).embed
+    )
+      throw { code: "unsupportedText" };
+    return null;
+  });
+  const onSend = vi.fn().mockResolvedValue(false);
+  const props = {
+    thread: null,
+    draftKey: "new",
+    imageEnabled: false,
+    embedContext: true,
+    onGoSettings() {},
+    onSend,
+  };
+  vi.stubGlobal("requestAnimationFrame", vi.fn());
+  try {
+    const send = render(props).find(
+      (element) => element.props["aria-label"] === STRINGS.composer.sendTitle,
+    )!;
+    await (send.props.onClick as () => Promise<void>)();
+    await vi.waitFor(() => expect(onSend).toHaveBeenCalledTimes(1));
+    expect(onSend.mock.calls[0][0]).toEqual([
+      { type: "text", text: "only ACK" },
+      ...extensions.map((extension) => ({
+        type: "resource_link",
+        name: `owned.${extension}`,
+        uri: `file:///owned/owned.${extension}`,
+      })),
+    ]);
+    expect(invoke).toHaveBeenCalledTimes(4);
+    expect(
+      vi
+        .mocked(invoke)
+        .mock.calls.every(
+          ([command, args]) =>
+            command === "draft_attachment_check" &&
+            (args as { embed: boolean }).embed === false,
+        ),
+    ).toBe(true);
+    expect(composerDrafts.read("new").attachments).toHaveLength(4);
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
+
 it("allows stop retry after confirmation expires even while the first cancel call is unresolved", async () => {
   vi.useFakeTimers();
   const thread = threads.markOpenFailed(

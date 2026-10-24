@@ -15,7 +15,7 @@ use tokio::sync::mpsc;
 const PEER: &str = r#"
 import sys,json,pathlib,threading,time
 lock=threading.Lock();loaded=False
-options=[{'id':'format','name':'Format','type':'select','currentValue':'one','options':[{'value':v,'name':v} for v in ['one','two']]}]
+options=[{'id':'format','name':'Format','type':'select','currentValue':'one','options':[{'value':v,'name':v} for v in ['one','two','start-compaction']]}]
 def send(v):
  with lock: print(json.dumps(dict(jsonrpc='2.0',**v)),flush=True)
 def update(status,id='c'):
@@ -40,6 +40,7 @@ for line in sys.stdin:
   result={'stopReason':'end_turn'}
  elif method=='session/set_config_option':
   if loaded:update('in_progress','history')
+  if p['value']=='start-compaction':update('in_progress','setter')
   options[0]['currentValue']=p['value'];result={'configOptions':options}
  if method and 'id' in m:send({'id':m['id'],'result':result})
 "#;
@@ -141,6 +142,23 @@ impl Fixture {
     async fn release(&mut self, status: &str) -> Value {
         std::fs::write(self.cwd.join("release"), status).unwrap();
         self.next("compactionActivity").await
+    }
+    async fn raw_release(&mut self, update: Value) {
+        std::fs::write(
+            self.cwd.join("release"),
+            serde_json::to_vec(&update).unwrap(),
+        )
+        .unwrap();
+        tokio::time::timeout(Duration::from_secs(5), async {
+            loop {
+                let event = self.events.recv().await.unwrap();
+                if event.get("update") == Some(&update) {
+                    break;
+                }
+            }
+        })
+        .await
+        .expect("exact raw update reaches its original fixture route");
     }
 }
 impl Drop for Fixture {
@@ -328,8 +346,92 @@ async fn historical_compaction_does_not_become_current_work() {
         .session_set_config(&f.agent.id, &f.cwd, &f.session_id, "format", json!("two"))
         .await
         .unwrap();
+    assert_eq!(
+        owner.life.work.load(Ordering::SeqCst),
+        0,
+        "a setter must not revive an already observed historical identity"
+    );
     f.manager
         .close_session(&f.agent.id, &f.cwd, &f.session_id)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn compaction_activity_from_first_explicit_setter_retains_live_work() {
+    let mut f = Fixture::new(false).await;
+    let owner = f
+        .manager
+        .session_connection(&f.agent.id, &f.cwd, &f.session_id)
+        .unwrap();
+    assert_eq!(owner.life.work.load(Ordering::SeqCst), 0);
+    assert!(
+        f.manager
+            .session_set_config(
+                &f.agent.id,
+                &f.cwd,
+                &f.session_id,
+                "format",
+                json!({"invalid": true}),
+            )
+            .await
+            .is_err(),
+        "invalid input must not be admitted or start live observation"
+    );
+    f.raw_release(json!({"sessionUpdate":"compaction_update", "compactionId":"delayed-history", "status":"in_progress"}))
+        .await;
+    assert_eq!(
+        owner.life.work.load(Ordering::SeqCst),
+        0,
+        "a rejected setter cannot convert delayed pre-request replay into work"
+    );
+    f.manager
+        .session_set_config(
+            &f.agent.id,
+            &f.cwd,
+            &f.session_id,
+            "format",
+            json!("start-compaction"),
+        )
+        .await
+        .unwrap();
+    assert!(
+        owner.life.work.load(Ordering::SeqCst) > 0,
+        "a fresh admitted setter's typed compaction survives its ordinary reply"
+    );
+    let started = f.next("compactionActivity").await;
+    assert_eq!(started["connectionId"], owner.connection_id);
+    assert_eq!(started["sessionId"], f.session_id);
+    assert_eq!(started["compactionIds"], json!(["setter"]));
+    assert!(owner.life.operation("account_change".into()).is_err());
+    assert!(
+        f.manager
+            .session_set_config(&f.agent.id, &f.cwd, &f.session_id, "format", json!("two"))
+            .await
+            .is_err(),
+        "a second setter is blocked until this compaction actually terminates"
+    );
+    f.raw_release(
+        json!({"sessionUpdate":"compaction_update", "compactionId":"other", "status":"completed"}),
+    )
+    .await;
+    assert!(owner.life.work.load(Ordering::SeqCst) > 0);
+    let released = f
+        .release(
+            r#"{"sessionUpdate":"compaction_update","compactionId":"setter","status":"completed"}"#,
+        )
+        .await;
+    assert_eq!(released["compactionIds"], json!([]));
+    assert_eq!(owner.life.work.load(Ordering::SeqCst), 0);
+    f.raw_release(json!({"sessionUpdate":"compaction_update", "compactionId":"setter", "status":"in_progress"}))
+        .await;
+    assert_eq!(
+        owner.life.work.load(Ordering::SeqCst),
+        0,
+        "late replay of the settled live identity must not reacquire work"
+    );
+    f.manager
+        .session_set_config(&f.agent.id, &f.cwd, &f.session_id, "format", json!("two"))
         .await
         .unwrap();
 }

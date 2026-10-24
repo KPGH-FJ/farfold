@@ -12,6 +12,7 @@ import {
   type DraftAttachment,
 } from "./drafts";
 import {
+  DraftAttachmentCheckError,
   prepareDraftAttachments,
   validateQueuedAttachments,
 } from "./draft_attachments";
@@ -208,7 +209,9 @@ export async function confirmAttachmentReview(
       if (!isCurrent()) return false;
       if (
         error instanceof DocumentInputError ||
-        error instanceof AudioInputError
+        error instanceof AudioInputError ||
+        (error instanceof DraftAttachmentCheckError &&
+          error.code !== "unreadable")
       )
         throw error;
       throw new Error(S.unreadable(entry.label));
@@ -246,7 +249,9 @@ export async function confirmAttachmentReview(
         if (!isCurrent()) return false;
         if (
           error instanceof DocumentInputError ||
-          error instanceof AudioInputError
+          error instanceof AudioInputError ||
+          (error instanceof DraftAttachmentCheckError &&
+            error.code !== "unreadable")
         )
           throw error;
         throw new Error(S.unreadable(entry.label));

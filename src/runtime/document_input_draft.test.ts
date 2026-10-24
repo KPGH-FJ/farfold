@@ -21,6 +21,7 @@ async function fixture(
         kind: "file",
         name: "fixture.docx",
         uri: "file:///docs/fixture.docx",
+        deliveryMode: "location",
         ...(loading === "false" ? { loading: false } : {}),
       },
     ],
@@ -90,6 +91,7 @@ it("confirms into the exact existing draft once and preserves memory if saving f
   await expect(save.flush()).rejects.toThrow();
   expect(d.read(key).text).toBe("Keep this input");
   expect(d.read(key).attachments[0]).toMatchObject({
+    deliveryMode: "text",
     documentText: approved,
     loading: false,
     recovered: false,

@@ -12,6 +12,18 @@ export const DRAFT_STRINGS = {
   tooLarge: "未发送内容过多，暂未保存。请减少附件后重试。",
   retry: "重试保存",
   attachmentFailed: "附件已无法读取，请重新选择或移除后再发送。",
+  attachmentUnsupportedReview:
+    "此附件不能直接作为文字发送。请使用附件的“加入文字”，确认内容后再发送。原内容已保留。",
+  attachmentUnsupportedText:
+    "此附件不能直接作为文字发送。请改为文字文件，或移除这个附件后再发送。原内容已保留。",
+  attachmentTooLargeReview:
+    "此附件超过直接加入文字的 256 KiB 上限。可先使用附件的“加入文字”选择并确认内容。原内容已保留。",
+  attachmentTooLarge:
+    "此附件超过直接加入文字的 256 KiB 上限。请减少内容或移除此附件后再发送。原内容已保留。",
+  attachmentNotFile:
+    "此附件位置不是普通文件。请重新选择文件或移除此附件。原内容已保留。",
+  attachmentInvalidLocation:
+    "附件位置无效。请重新选择文件或移除此附件。原内容已保留。",
   attachmentIncomplete: "图片尚未准备完成，请重新添加。",
   recovered: "已恢复未发送内容；发送前会重新检查附件。",
   uncertain: "上次发送结果尚未确认。请先查看对应对话，再决定是否重试。",

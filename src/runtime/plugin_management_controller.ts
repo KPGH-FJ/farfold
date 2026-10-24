@@ -283,9 +283,34 @@ export class PluginManagementController {
         if (!this.attached(f) || !f.view.unresolved || f.epoch !== epoch)
           return;
         const code = pluginFailure(reason) ?? "unavailable";
+        // These exact initial read rejections happen before Requests::begin:
+        // Sources has no usable selection; Inventory has no source-report job.
+        // A later status/cancel failure or any lost reply proves no such fact.
+        const freshReadRejected =
+          epoch === 1 &&
+          !cancellation &&
+          !f.lost &&
+          !f.view.operation &&
+          ((f.view.request?.action === "sources" &&
+            code === "selectionChanged") ||
+            (f.view.request?.action === "inventory" &&
+              code === "unknownRequest"));
+        if (freshReadRejected) {
+          this.stale(f);
+          this.staleSources(f);
+          this.publish(f, {
+            unresolved: false,
+            review: null,
+            reviewRetired: true,
+            checking: false,
+            // The absent source report cannot authorize another query. This
+            // is not an unknown process or an outcome for the retained write.
+            error: code === "unknownRequest" ? "targetUnavailable" : code,
+          });
+        }
         // These explicit fresh-confirm rejections precede admission. A lost reply,
         // status failure or timeout does not establish that nothing was written.
-        if (
+        else if (
           freshConfirmation &&
           !f.lost &&
           !f.view.operation &&

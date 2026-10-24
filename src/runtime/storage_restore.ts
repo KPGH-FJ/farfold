@@ -114,7 +114,15 @@ function strictDraft(value: unknown) {
     if (draft.savedChoice !== undefined) strictChoice(draft.savedChoice);
     if (!Array.isArray(draft.attachments)) throw new Error(S.unsupported);
     draft.attachments.forEach((item) =>
-      known(item, ["id", "name", "kind", "uri", "data", "mimeType"]),
+      known(item, [
+        "id",
+        "name",
+        "kind",
+        "uri",
+        "data",
+        "mimeType",
+        "deliveryMode",
+      ]),
     );
     if (draft.pendingConversation !== undefined) {
       const pending = known(draft.pendingConversation, [

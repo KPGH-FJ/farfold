@@ -647,3 +647,143 @@ it.each(["reviewExpired", "reviewConsumed"] as const)(
     await flush();
   },
 );
+
+it.each(["sources", "inventory"] as const)(
+  "settles only the fresh %s pre-admission rejection and retires expired reports",
+  async (action) => {
+    const x = await setup();
+    if (action === "sources") {
+      vi.mocked(x.port.sources).mockRejectedValueOnce({
+        code: "selectionChanged",
+      });
+      expect(x.client.begin(x.owner, "/controlled", pluginTicket)).toBe(true);
+    } else {
+      const source = x.client.get(x.owner.agentId).sourceResult!;
+      vi.mocked(x.port.inventory).mockRejectedValueOnce({
+        code: "unknownRequest",
+      });
+      expect(x.client.inventory(x.owner, source, source.catalog.items[0])).toBe(
+        true,
+      );
+    }
+    await flush();
+    const rejected = x.client.get(x.owner.agentId);
+    expect(rejected.unresolved).toBe(false);
+    expect(rejected.operation).toBeNull();
+    expect(rejected.error).toBe(
+      action === "sources" ? "selectionChanged" : "targetUnavailable",
+    );
+    expect(rejected.sourceResult?.stale).toBe(true);
+    expect(rejected.result?.stale).toBe(true);
+    expect(x.port.confirm).not.toHaveBeenCalled();
+    expect(x.port.status).not.toHaveBeenCalled();
+    expect(x.port.cancel).not.toHaveBeenCalled();
+    expect(x.port.sources).toHaveBeenCalledTimes(action === "sources" ? 2 : 1);
+    expect(x.port.inventory).toHaveBeenCalledTimes(
+      action === "inventory" ? 2 : 1,
+    );
+    // A fresh capability/source check is a new, explicit read, never a retry.
+    expect(x.client.begin(x.owner, "/controlled", pluginTicket)).toBe(true);
+    await flush();
+    expect(x.client.get(x.owner.agentId).unresolved).toBe(false);
+  },
+);
+
+it.each(["sources", "inventory"] as const)(
+  "does not reinterpret a %s status failure after a lost initial reply as pre-admission",
+  async (action) => {
+    const x = await setup();
+    const pending = deferred();
+    if (action === "sources") {
+      vi.mocked(x.port.sources).mockImplementationOnce(() => pending.promise);
+      x.client.begin(x.owner, "/controlled", pluginTicket);
+    } else {
+      const source = x.client.get(x.owner.agentId).sourceResult!;
+      vi.mocked(x.port.inventory).mockImplementationOnce(() => pending.promise);
+      x.client.inventory(x.owner, source, source.catalog.items[0]);
+    }
+    await flush();
+    await vi.advanceTimersByTimeAsync(101);
+    const request = x.client.get(x.owner.agentId).request!;
+    x.client.check(x.owner.agentId, request.requestId);
+    await flush();
+    x.status.reject({
+      code: action === "sources" ? "selectionChanged" : "unknownRequest",
+    });
+    await flush();
+    expect(x.client.get(x.owner.agentId).unresolved).toBe(true);
+    expect(x.client.begin(x.owner, "/controlled", pluginTicket)).toBe(false);
+  },
+);
+
+it.each(["sources", "inventory"] as const)(
+  "keeps a late initial %s rejection unknown after the observation deadline",
+  async (action) => {
+    const x = await setup();
+    const pending = deferred();
+    if (action === "sources") {
+      vi.mocked(x.port.sources).mockImplementationOnce(() => pending.promise);
+      x.client.begin(x.owner, "/controlled", pluginTicket);
+    } else {
+      const source = x.client.get(x.owner.agentId).sourceResult!;
+      vi.mocked(x.port.inventory).mockImplementationOnce(() => pending.promise);
+      x.client.inventory(x.owner, source, source.catalog.items[0]);
+    }
+    await flush();
+    await vi.advanceTimersByTimeAsync(101);
+    pending.reject({
+      code: action === "sources" ? "selectionChanged" : "unknownRequest",
+    });
+    await flush();
+    expect(x.client.get(x.owner.agentId).unresolved).toBe(true);
+    expect(x.port.status).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["sources", "inventory"] as const)(
+  "does not broaden the native pre-admission code mapping for %s",
+  async (action) => {
+    const x = await setup();
+    if (action === "sources") {
+      vi.mocked(x.port.sources).mockRejectedValueOnce({
+        code: "unknownRequest",
+      });
+      x.client.begin(x.owner, "/controlled", pluginTicket);
+    } else {
+      const source = x.client.get(x.owner.agentId).sourceResult!;
+      vi.mocked(x.port.inventory).mockRejectedValueOnce({
+        code: "selectionChanged",
+      });
+      x.client.inventory(x.owner, source, source.catalog.items[0]);
+    }
+    await flush();
+    expect(x.client.get(x.owner.agentId).unresolved).toBe(true);
+  },
+);
+
+it("does not release an inspect failure using the fresh inventory pre-admission rule", async () => {
+  const x = await setup();
+  vi.mocked(x.port.inspect).mockRejectedValueOnce({ code: "unknownRequest" });
+  await x.startInspect();
+  expect(x.client.get(x.owner.agentId).unresolved).toBe(true);
+});
+
+it("keeps the original dispatched write and readback target after a fresh source rejection", async () => {
+  const x = await unknownConfirmation();
+  vi.mocked(x.port.sources).mockRejectedValueOnce({ code: "selectionChanged" });
+  x.client.begin(x.owner, "/controlled", pluginTicket);
+  await flush();
+  const rejected = x.client.get(x.owner.agentId);
+  expect(rejected.unresolved).toBe(false);
+  expect(rejected.originalOperation).toBe(x.original);
+  expect(rejected.originalOperation?.outcome).toBe("unknown");
+  expect(x.client.recheck(x.owner.agentId, rejected.request!.requestId)).toBe(
+    true,
+  );
+  await flush();
+  expect(x.port.recheck).toHaveBeenCalledWith({
+    agentId: x.owner.agentId,
+    requestId: x.client.get(x.owner.agentId).request!.requestId,
+    operationId: x.confirmation.requestId,
+  });
+});

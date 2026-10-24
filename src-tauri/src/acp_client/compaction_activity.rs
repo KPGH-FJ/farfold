@@ -1,7 +1,14 @@
 //! Transient ownership of live official compaction reports, never history storage.
 use super::lifecycle::{ConnectionLife, WorkLease};
 use serde_json::{Value, json};
-use std::{collections::BTreeMap, sync::Arc};
+use std::{
+    collections::BTreeMap,
+    future::Future,
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
+};
 
 const LIMIT: usize = 512;
 fn block(value: &Value) -> bool {
@@ -44,7 +51,7 @@ pub(super) struct CompactionActivity {
     session: String,
     entries: BTreeMap<String, State>,
     unaddressed: bool,
-    live: bool,
+    live: Arc<AtomicBool>,
     lease: Option<WorkLease>,
 }
 impl CompactionActivity {
@@ -55,14 +62,31 @@ impl CompactionActivity {
             session,
             entries: BTreeMap::new(),
             unaddressed: false,
-            live: false,
+            live: Arc::new(AtomicBool::new(false)),
             lease: None,
         }
     }
     /// Only a locally admitted request establishes live observation. A received
     /// load prefix and delayed pre-request replay do not become current work.
     pub(super) fn begin_live(&mut self) {
-        self.live = true;
+        self.live.store(true, Ordering::SeqCst);
+    }
+    /// A lazy mutation may be rejected before its first poll. Start observing
+    /// only when that exact request future is polled, never merely queued.
+    /// Polling is not proof of successful transport delivery; only subsequent
+    /// owned typed reports can hold work, including after a request error.
+    pub(super) fn live_request<F>(
+        &self,
+        request: F,
+    ) -> impl Future<Output = F::Output> + Send + 'static
+    where
+        F: Future + Send + 'static,
+    {
+        let live = self.live.clone();
+        async move {
+            live.store(true, Ordering::SeqCst);
+            request.await
+        }
     }
     pub(super) fn busy(&self) -> bool {
         self.unaddressed
@@ -89,7 +113,7 @@ impl CompactionActivity {
             .get("compactionId")
             .and_then(Value::as_str)
             .filter(|id| !id.is_empty() && id.len() <= 4096 && !id.contains('\0'));
-        if !self.live {
+        if !self.live.load(Ordering::SeqCst) {
             if let Some(id) = id
                 && self.entries.len() < LIMIT
             {
@@ -266,5 +290,75 @@ mod tests {
         c.observe(&patch(json!("untracked-active"), json!("in_progress")));
         assert!(c.busy());
         assert_eq!(c.event()["uncertain"], true);
+    }
+
+    #[tokio::test]
+    async fn unpolled_cancelled_or_expired_mutation_does_not_start_live_observation() {
+        use super::super::{
+            mutation::{self, Kind, Mutation, Reply},
+            operations::Operation,
+            session_config::SessionConfig,
+        };
+        use std::time::Duration;
+        use tokio::sync::oneshot;
+        for caller_closed in [true, false] {
+            let mut c = activity();
+            let called = Arc::new(AtomicBool::new(false));
+            let was_called = called.clone();
+            let request = c.live_request(async move {
+                was_called.store(true, Ordering::SeqCst);
+                Ok(Value::Null)
+            });
+            let (reply, receive) = oneshot::channel();
+            let _receive = if caller_closed {
+                drop(receive);
+                None
+            } else {
+                Some(receive)
+            };
+            let deadline = if caller_closed {
+                tokio::time::Instant::now() + Duration::from_secs(5)
+            } else {
+                tokio::time::Instant::now() - Duration::from_secs(1)
+            };
+            let mut pending = Some(Mutation::new(
+                Kind::Config {
+                    request: SessionConfig::default()
+                        .prepare("format", &json!("one"))
+                        .unwrap(),
+                    permission_value: None,
+                    choice: None,
+                    prior_guard: None,
+                    config_store: None,
+                },
+                Reply::Config(reply),
+                Operation::new(),
+                c.life.operation("configuration".into()).unwrap(),
+                deadline,
+                request,
+            ));
+            assert!(mutation::next(&mut pending).await.unwrap().is_err());
+            assert!(!pending.as_ref().unwrap().started());
+            assert!(!called.load(Ordering::SeqCst));
+            drop(pending);
+            assert!(
+                c.observe(&patch(json!("delayed-history"), json!("in_progress")))
+                    .is_none()
+            );
+            assert!(!c.busy());
+            // A polled request error is not proof of no external work. Keep
+            // accepting owned typed activity without reviving known history.
+            assert!(
+                c.live_request(async { Err::<Value, String>("request failed".into()) })
+                    .await
+                    .is_err()
+            );
+            assert!(!c.busy(), "the marker alone must not hold work");
+            c.observe(&patch(json!("delayed-history"), json!("in_progress")));
+            assert!(!c.busy(), "known history must remain history");
+            c.observe(&patch(json!("current"), json!("in_progress")));
+            assert!(c.busy());
+            assert_eq!(c.life.work.load(Ordering::SeqCst), 1);
+        }
     }
 }

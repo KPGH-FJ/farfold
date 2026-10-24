@@ -118,6 +118,7 @@ export function folderSendSignature(draft: ComposerDraft) {
       item.kind,
       item.name,
       item.uri ?? "",
+      item.deliveryMode ?? "",
       item.data?.length ?? 0,
     ]),
   ]);

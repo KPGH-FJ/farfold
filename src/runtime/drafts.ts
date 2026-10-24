@@ -36,6 +36,9 @@ export interface DraftAttachment {
   data?: string;
   mimeType?: string;
   content?: string;
+  /** Explicit unsent file delivery intent. Absence retains legacy behavior;
+   * cached body presence and current Agent capabilities never infer intent. */
+  deliveryMode?: "location" | "text";
   /** Explicitly chosen document text, retained only while input is unsent. */
   documentText?: ApprovedDocumentText;
   loading?: boolean;
@@ -587,6 +590,12 @@ function parseComposer(value: unknown): ComposerDraft {
         )
       )
         throw new Error("invalid attachment");
+      if (
+        a.deliveryMode !== undefined &&
+        (a.kind !== "file" ||
+          (a.deliveryMode !== "location" && a.deliveryMode !== "text"))
+      )
+        throw new Error("invalid attachment delivery");
       const documentText =
         a.documentText === undefined
           ? undefined
@@ -612,6 +621,9 @@ function parseComposer(value: unknown): ComposerDraft {
         uri: a.kind === "audio" && !audioSource ? undefined : uri,
         data: typeof a.data === "string" ? a.data : undefined,
         mimeType: typeof a.mimeType === "string" ? a.mimeType : undefined,
+        ...(a.deliveryMode !== undefined
+          ? { deliveryMode: a.deliveryMode as DraftAttachment["deliveryMode"] }
+          : {}),
         ...(documentText ? { documentText } : {}),
         recovered: true,
       };

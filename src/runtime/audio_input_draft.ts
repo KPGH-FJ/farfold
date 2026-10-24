@@ -129,6 +129,7 @@ export function createAudioInputTarget(
             ? {
                 ...item,
                 kind: "audio",
+                deliveryMode: undefined,
                 content: undefined,
                 data: capture.data,
                 mimeType: capture.mimeType,

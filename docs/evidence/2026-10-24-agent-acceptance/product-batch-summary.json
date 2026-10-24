@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 1,
+  "kind": "product_batch_public_summary",
+  "schedulingAuthority": "none",
+  "acceptanceVerified": false,
+  "originalEvidencePolicy": "frozen_originals_preserved",
+  "scope": {
+    "agents": 29,
+    "standards": 8,
+    "cells": 232,
+    "requirements": 151,
+    "overallAcceptance": "unverified"
+  },
+  "reviewedDocumentation": {
+    "status": "reviewed_not_modified",
+    "statusInput": {
+      "sha256": "f05412108abbba8aaa0d4d1a5ddd37c6c01797179d0a05f64ffd50d8449e583a",
+      "bytes": 63120
+    },
+    "activePlanInput": {
+      "sha256": "b3299c2b7cac3ee2c5fe17b01728645c77508ee857a7699a67a45928b282a803",
+      "bytes": 5078
+    }
+  },
+  "productChanges": [
+    {
+      "taskId": "NEW-29",
+      "kind": "config_compaction_lifetime_guard",
+      "implementation": "implemented",
+      "installed": "not_installed",
+      "realAgent": "unverified",
+      "behaviors": [
+        "lazy_mutation_first_poll_marks_live",
+        "unpolled_mutation_does_not_activate",
+        "history_ended_not_revived",
+        "marker_alone_does_not_hold_lease",
+        "owner_session_filters_preserved"
+      ],
+      "excludedBehavior": "tool_activity_start_timing_not_changed",
+      "sourcePaths": [
+        "src-tauri/src/acp_client/compaction_activity.rs",
+        "src-tauri/src/acp_client/compaction_activity_wire_tests.rs",
+        "src-tauri/src/acp_client/pump.rs"
+      ],
+      "targeted": {
+        "evidenceKind": "operator_summary_from_tool_session_receipt",
+        "originalLogsRetained": false,
+        "trueRed": {
+          "passed": 15,
+          "failed": 1,
+          "exitCode": 101
+        },
+        "reportedFinalRuns": [
+          {
+            "kind": "compaction_activity",
+            "passed": 17,
+            "failed": 0,
+            "exitCode": 0
+          },
+          {
+            "kind": "session_config",
+            "passed": 18,
+            "failed": 0,
+            "exitCode": 0
+          },
+          {
+            "kind": "permission_guard",
+            "passed": 4,
+            "failed": 0,
+            "exitCode": 0
+          }
+        ],
+        "reportedFinalPassed": 39,
+        "independentExecution": false
+      },
+      "independentReview": {
+        "evidenceKind": "conversation_only_source_review",
+        "status": "approved_for_source_test_scope",
+        "blockingFindings": 0,
+        "independentExecution": false
+      }
+    },
+    {
+      "taskIds": ["P08", "P32"],
+      "kind": "attachment_failure_classification_and_delivery_intent",
+      "implementation": "implemented",
+      "installed": "not_installed",
+      "realAgent": "unverified",
+      "behaviors": [
+        "fixed_safe_check_codes",
+        "ordinary_picker_location",
+        "project_mention_text",
+        "text_requires_embedded_context",
+        "no_failure_downgrade",
+        "marker_persisted_without_automatic_body",
+        "typed_queue_representation_preserved",
+        "legacy_unmarked_behavior_preserved",
+        "media_document_review_preserved",
+        "mode_change_revokes_pending_send_arm"
+      ],
+      "safeCheckCodes": [
+        "unsupportedText",
+        "tooLarge",
+        "notFile",
+        "invalidLocation",
+        "unreadable",
+        "checkPending",
+        "checkBusy"
+      ],
+      "sourcePaths": [
+        "src/runtime/drafts.ts",
+        "src/runtime/storage_restore.ts",
+        "src/runtime/composer_attachment_import.ts",
+        "src/runtime/prompt_blocks.ts",
+        "src/runtime/draft_attachments.ts",
+        "src/runtime/composer_strings.ts",
+        "src/runtime/audio_input_draft.ts",
+        "src/runtime/document_input_draft.ts",
+        "src/components/useDraftArchiveGuard.tsx",
+        "src/runtime/draft_attachment_delivery.test.ts",
+        "src/runtime/storage_restore.preview.test.ts",
+        "src/components/Composer.errors.test.tsx",
+        "src/runtime/audio_input_draft.test.ts",
+        "src/runtime/document_input_draft.test.ts",
+        "src/components/useDraftSendIntent.test.ts",
+        "src-tauri/src/draft_attachment.rs",
+        "src/runtime/attachment_review.test.ts",
+        "src/runtime/attachment_review.ts",
+        "src/runtime/draft_attachments.test.ts",
+        "src/runtime/draft_storage.ts"
+      ],
+      "focusedBeforeRelocation": {
+        "files": 19,
+        "passed": 282,
+        "failed": 0
+      },
+      "independentReview": {
+        "status": "approved_for_source_test_scope",
+        "executions": [
+          {
+            "kind": "production_frontend_mock_native",
+            "files": 3,
+            "passed": 55,
+            "failed": 0
+          },
+          {
+            "kind": "production_send_intent_mock_react",
+            "files": 1,
+            "passed": 2,
+            "failed": 0
+          }
+        ],
+        "blockingFindings": 0
+      },
+      "remaining": [
+        "existing_unmarked_formal_draft_keeps_legacy",
+        "real_link_content_use_unverified",
+        "four_format_message_search_unverified",
+        "cold_replay_gap_open"
+      ]
+    },
+    {
+      "taskId": "P40",
+      "kind": "pre_admission_read_rejection_state",
+      "implementation": "implemented",
+      "installed": "not_installed",
+      "realAgent": "unverified",
+      "behaviors": [
+        "exact_initial_read_rejection_pairs_only",
+        "epoch_one_no_lost_reply_no_operation",
+        "stale_read_report_retired",
+        "explicit_new_read_required",
+        "prior_operation_confirmation_retained",
+        "writes_status_cancel_late_transport_unknown_preserved"
+      ],
+      "sourcePaths": [
+        "src/runtime/plugin_management_controller.ts",
+        "src/runtime/plugin_management_controller.test.ts"
+      ],
+      "liveTtlAttribution": "inferred",
+      "independentReview": {
+        "status": "approved_for_source_test_scope",
+        "executions": [
+          {
+            "kind": "permanent_regressions_mock_native",
+            "passed": 30,
+            "failed": 0
+          },
+          {
+            "kind": "production_controller_mock_port",
+            "passed": 3,
+            "failed": 0
+          }
+        ],
+        "blockingFindings": 0
+      }
+    }
+  ],
+  "engineering": {
+    "fullRun": {
+      "stage": "before_test_relocation",
+      "kind": "engineering_not_acceptance",
+      "frontend": {
+        "format": "passed",
+        "typecheck": "passed",
+        "build": "passed",
+        "testFiles": 662,
+        "passed": 8659,
+        "failed": 0,
+        "allCompleted": true
+      },
+      "native": {
+        "format": "passed",
+        "clippy": "passed",
+        "passed": 2228,
+        "failed": 0,
+        "ignoredExisting": 6
+      }
+    },
+    "afterRelocation": {
+      "kind": "affected_checks_only",
+      "productSourcesChanged": false,
+      "sourceScope": "same_product_bytes_as_full_run",
+      "testFiles": 2,
+      "passed": 58,
+      "failed": 0,
+      "typecheck": "passed",
+      "format": "passed",
+      "formatFiles": 2,
+      "originalSelectionTest": "restored_exactly_to_head",
+      "relocationCodePaths": [
+        "src/components/EmptyState.selection.test.tsx",
+        "src/components/useDraftSendIntent.test.ts"
+      ],
+      "fullSuiteRerun": false,
+      "currentFullSuiteCount": "not_recomputed"
+    },
+    "lineLimit": {
+      "maximum": 1500,
+      "productBatchSourceFiles": 25,
+      "passed": true
+    }
+  },
+  "formal": {
+    "sourceCommit": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+    "version": "0.1.7",
+    "platform": "macos_arm64",
+    "batchReplacement": "not_performed"
+  },
+  "p40Formal": {
+    "install": "installed_read_back",
+    "installedCount": 1,
+    "enabledCount": 1,
+    "packageRemoval": "not_attempted",
+    "sourceRemoval": "not_attempted",
+    "cleanup": "incomplete",
+    "sessionAdoption": "unverified",
+    "rollback": {
+      "complete": false,
+      "expectedCases": 3,
+      "passed": 1,
+      "incomplete": 2
+    }
+  },
+  "remaining": {
+    "P32": "real_search_and_cold_replay_unverified",
+    "NEW29": "formal_and_real_busy_guard_unverified",
+    "P40": "normal_ui_cleanup_and_adoption_unverified",
+    "NEW24": "affected_new_work_paused",
+    "overall": "continuous_development_not_complete"
+  },
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/compaction_activity_wire_tests.rs",
+      "sha256": "ed5ef38d29ad114c2428b0a67597c99166bbb9558b6cb5d95eb210aa56a23cbf",
+      "bytes": 15054,
+      "lines": 437
+    },
+    {
+      "path": "src-tauri/src/acp_client/compaction_activity.rs",
+      "sha256": "a16861ad516ec0ad5a4b99823cc13a545dd550cede00bf47d856aa439975fdf5",
+      "bytes": 14386,
+      "lines": 364
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "1ab5e82c6b81629325cbd46957b9f9d1571068bdfe36e40d66c18a160b48d2a9",
+      "bytes": 68440,
+      "lines": 1277
+    },
+    {
+      "path": "src-tauri/src/draft_attachment.rs",
+      "sha256": "9b276ecc0498641a540218542200a0aaf5339498d0a56886e1b5f8a914352b58",
+      "bytes": 10821,
+      "lines": 281
+    },
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "sha256": "2c48cf259805b95d71ed78bffc97ba73897c3b5bdee66ef691e1739357ad32a7",
+      "bytes": 19999,
+      "lines": 634
+    },
+    {
+      "path": "src/components/useDraftArchiveGuard.tsx",
+      "sha256": "e0d5c9adefb78a314e96b3218a35dd613c5880f539a8d481cd6fdbc1afb1b35c",
+      "bytes": 3892,
+      "lines": 125
+    },
+    {
+      "path": "src/components/useDraftSendIntent.test.ts",
+      "sha256": "e9131035597007df4008236a71e25a07f982a004aab539f473a6a97ac2e14e3a",
+      "bytes": 2630,
+      "lines": 94
+    },
+    {
+      "path": "src/runtime/attachment_review.test.ts",
+      "sha256": "cc2758a1420a5bfa4369b78fa7f128d9066223a403b5aec6874e7b636c96a85c",
+      "bytes": 11377,
+      "lines": 334
+    },
+    {
+      "path": "src/runtime/attachment_review.ts",
+      "sha256": "6199f0a96c65c258ec01b0e321dce4e70ec315197517513bf2723f31e9174570",
+      "bytes": 8920,
+      "lines": 295
+    },
+    {
+      "path": "src/runtime/audio_input_draft.test.ts",
+      "sha256": "fff6f5bb26121ac1252e4f77e143be9790494fc9260231388e015b8b4acd5a40",
+      "bytes": 9146,
+      "lines": 257
+    },
+    {
+      "path": "src/runtime/audio_input_draft.ts",
+      "sha256": "ba7e4acbd1bb1ff0436788365ac3c618bff76a75fc8a66988bf26271f556ea0e",
+      "bytes": 4382,
+      "lines": 147
+    },
+    {
+      "path": "src/runtime/composer_attachment_import.ts",
+      "sha256": "66daa404fe2ca7c100162f964a9c5f15b4d36931e5aa8fb59a24adc49d4cca53",
+      "bytes": 8122,
+      "lines": 273
+    },
+    {
+      "path": "src/runtime/composer_strings.ts",
+      "sha256": "b43f8395dfc7469fe3d6fd293abae6f4e631d7aa0a9c9644f37c0b1656178964",
+      "bytes": 3701,
+      "lines": 74
+    },
+    {
+      "path": "src/runtime/document_input_draft.test.ts",
+      "sha256": "a1f7be7077aabbff79182e38375933eb5c41a5653f7089ed6832440d827ebaf8",
+      "bytes": 5022,
+      "lines": 164
+    },
+    {
+      "path": "src/runtime/document_input_draft.ts",
+      "sha256": "edb7141d83e9a96551d082751a1e58b93c52f36b76d1cc569128c1b0d5a95479",
+      "bytes": 3836,
+      "lines": 123
+    },
+    {
+      "path": "src/runtime/draft_attachment_delivery.test.ts",
+      "sha256": "23bf90ce1d75aa63497c8f09d1602688883b17c6b97128051a5cbadfea67435b",
+      "bytes": 16700,
+      "lines": 515
+    },
+    {
+      "path": "src/runtime/draft_attachments.test.ts",
+      "sha256": "4dcc9dedec70012789f99d521af6bce743fdd0d8d054af35063b509ea6b1f102",
+      "bytes": 6797,
+      "lines": 210
+    },
+    {
+      "path": "src/runtime/draft_attachments.ts",
+      "sha256": "5b4c001a5f28e6a855c574a02a942eed08cf3c96b23171e69b4b8da4f8af205b",
+      "bytes": 11311,
+      "lines": 337
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "c7466b5772b98c8e0bdc0b781ccdeeca4ec8c4ad46acaadf4f41d594ba40a807",
+      "bytes": 7236,
+      "lines": 197
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "74042c68c359da45f6308151239cdcec999365a83ffca91809c18846000bdfda",
+      "bytes": 27840,
+      "lines": 844
+    },
+    {
+      "path": "src/runtime/plugin_management_controller.test.ts",
+      "sha256": "0e12382be83a8ad56d65a867acda31d0c79551f11a25b77e9cb4dbe168f2baf1",
+      "bytes": 28522,
+      "lines": 789
+    },
+    {
+      "path": "src/runtime/plugin_management_controller.ts",
+      "sha256": "2fbe4030f908d3dcbdb2f6ce7c4be23577a7246fe6d003722b947865340d9fa1",
+      "bytes": 19263,
+      "lines": 647
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "sha256": "ddd1d6a491890b24de89a78dbc470c0f519cca6e24b3c98db71463c68a5c6db3",
+      "bytes": 7552,
+      "lines": 219
+    },
+    {
+      "path": "src/runtime/storage_restore.preview.test.ts",
+      "sha256": "6406ed8e4af556ef4f4851885e5f87edafc4819c1bc9b34e324a2f9f415ff43f",
+      "bytes": 8697,
+      "lines": 267
+    },
+    {
+      "path": "src/runtime/storage_restore.ts",
+      "sha256": "9cf81da89c548447b5681690602b46aec661dc4f22337c9779b3b6fb3dec778b",
+      "bytes": 8700,
+      "lines": 286
+    }
+  ],
+  "evidenceHashes": {
+    "frontend_checks": {
+      "sha256": "f64a4c26bb16e510fc630dabab6563f8b03f744179778c3a8a94e859da086b6d",
+      "bytes": 1967
+    },
+    "native_checks": {
+      "sha256": "f9a0852fb8ea9db6895b5587b948b8f459df4c61a67ed8096e09ce4b71418786",
+      "bytes": 2048
+    },
+    "frontend_format_log": {
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    "frontend_typecheck_log": {
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    "frontend_full_test_log": {
+      "sha256": "a72131cd7d890038ea0c43c4c2f019c3efb4b7b4d56b6114964a02bbb34c17b7",
+      "bytes": 225
+    },
+    "frontend_build_log": {
+      "sha256": "40b6cf3269c7b50464bf1298a15fd4b2cbf2a0478ae563806745ef7a3682baf7",
+      "bytes": 4984
+    },
+    "native_format_log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "native_clippy_log": {
+      "sha256": "94bda18d0fc38425a1ce7d48302a1b1522d5c567f54c13c66e9137ea9e02a89b",
+      "bytes": 8937
+    },
+    "native_full_test_log": {
+      "sha256": "ac2ad7f2ae628db61163ee1e7bd7f14501bde12683a3ab712afbf48b08d49fc8",
+      "bytes": 254927
+    },
+    "new29_later_operator_summary": {
+      "sha256": "5b2fd1993e8f0817fade400c2cc4c062862da3ec8ac1921edfc6e6fdb76f2730",
+      "bytes": 4000
+    },
+    "p32_classification_implementation": {
+      "sha256": "9bfbf867203bd18bdefa6173c69334cbe0ba3332c5e06907cf1b19d215678f3d",
+      "bytes": 7746
+    },
+    "p32_intent_implementation_final": {
+      "sha256": "21b515da47ceda90bb54b1fcbdaa588b66e30d61e98c0c4968dba74de80c277d",
+      "bytes": 7700
+    },
+    "p32_test_relocation_final": {
+      "sha256": "c5e1ababb935c626958b933b9c9aa75a762e21d6ea8242e342512c55291ed960",
+      "bytes": 8356
+    },
+    "p32_intent_independent_review": {
+      "sha256": "89588a7a40ddff62beaa5b29c0546c4f59dcfba50a80571aec5d70322dd319e6",
+      "bytes": 5761
+    },
+    "p32_test_relocation_independent_review": {
+      "sha256": "486c8d116c55a7ce3109e41b034fb76de43af65c96c5a92f8c36ba2bbb89c092",
+      "bytes": 4956
+    },
+    "p32_test_relocation_delta": {
+      "sha256": "813acc9ee2a89a9a823ac8698470fbd2e625eb751ede61465cc9997d79cf41b3",
+      "bytes": 18900
+    },
+    "p40_pre_admission_implementation": {
+      "sha256": "c84d682c5431c5d375d2f5378903362d810e1d315e813c6a391c91f5ea007dff",
+      "bytes": 5917
+    },
+    "p40_independent_review": {
+      "sha256": "9c565da1e422469e1fa5fd12e9b7374edb6e7e5048a2cee85c281a3b1b8155a5",
+      "bytes": 2748
+    },
+    "p40_official_install_readback": {
+      "sha256": "51023338fda3f6823f91005c258060e698d16911eef91a7479e192df60bce1b9",
+      "bytes": 526
+    },
+    "p40_ui_operator_observation": {
+      "sha256": "61336e70b66ab3ad3e62a6f0f6e4c2f25c0f47b66a6711fa4d83bb0a73cf188c",
+      "bytes": 1461
+    },
+    "p40_rollback_incomplete_summary": {
+      "sha256": "188a3c3810b16285908c1980d81a08bd697813d5401d5a01125af530c7a2dbcb",
+      "bytes": 1048
+    }
+  }
+}

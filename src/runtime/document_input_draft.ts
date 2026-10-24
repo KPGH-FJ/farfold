@@ -108,6 +108,7 @@ export function createDocumentInputTarget(
           item === selected
             ? {
                 ...item,
+                deliveryMode: "text",
                 documentText: approved,
                 content: undefined,
                 loading: false,

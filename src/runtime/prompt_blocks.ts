@@ -107,6 +107,7 @@ export function resourceDraftAttachment(
     uri,
     mimeType:
       block.type === "resource" ? block.resource.mimeType : block.mimeType,
+    deliveryMode: block.type === "resource" ? "text" : "location",
     ...(documentText
       ? {
           documentText: structuredClone(documentText),

@@ -102,6 +102,89 @@ it("preserves pending flags and attachments in a valid preview without sending",
   expect(parsed?.queues[0][1].uncertainIndex).toBe(0);
   expect(h.invoke).not.toHaveBeenCalled();
 });
+
+it.each(["location", "text"])(
+  "allows a known %s file delivery marker in a recovery preview without body reads",
+  async (deliveryMode) => {
+    const { previewEntries } = await import("./storage_restore");
+    const { parseDraftSnapshot } = await import("./drafts");
+    const value = {
+      ...candidate(),
+      composers: {
+        new: {
+          text: "keep",
+          attachments: [
+            {
+              id: "file",
+              kind: "file",
+              name: "notes.txt",
+              uri: "file:///owned/notes.txt",
+              deliveryMode,
+            },
+          ],
+        },
+      },
+    };
+    expect(
+      previewEntries(
+        {
+          id: "a".repeat(48),
+          sourcePath: "/copy",
+          values: {
+            "unsentWork.v1": JSON.stringify(value),
+            "agentSetup.v1": null,
+          },
+        },
+        ["unsentWork.v1"],
+      )[0].valid,
+    ).toBe(true);
+    expect(
+      parseDraftSnapshot(value)?.composers[0][1].attachments[0],
+    ).toMatchObject({ deliveryMode, recovered: true });
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["blob", true, null])(
+  "refuses unknown delivery semantics %j in recovery without hydrating or dispatching",
+  async (deliveryMode) => {
+    const { previewEntries } = await import("./storage_restore");
+    const { composerDrafts } = await import("./drafts");
+    const before = composerDrafts.read("new");
+    const value = {
+      ...candidate(),
+      composers: {
+        new: {
+          text: "keep",
+          attachments: [
+            {
+              id: "file",
+              kind: "file",
+              name: "notes.txt",
+              uri: "file:///owned/notes.txt",
+              deliveryMode,
+            },
+          ],
+        },
+      },
+    };
+    expect(
+      previewEntries(
+        {
+          id: "a".repeat(48),
+          sourcePath: "/copy",
+          values: {
+            "unsentWork.v1": JSON.stringify(value),
+            "agentSetup.v1": null,
+          },
+        },
+        ["unsentWork.v1"],
+      )[0].valid,
+    ).toBe(false);
+    expect(composerDrafts.read("new")).toBe(before);
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
 it("distinguishes missing records from explicit empty content", async () => {
   const { previewEntries } = await import("./storage_restore");
   expect(

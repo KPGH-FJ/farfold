@@ -7,6 +7,7 @@ import {
 } from "./draft_attachments";
 import type { DraftAttachment } from "./drafts";
 import { DRAFT_STRINGS } from "./draft_storage";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import type { PromptBlock } from "./session_types";
 import {
   PNG_IMAGE_TEST_DATA,
@@ -72,6 +73,65 @@ it("leaves the original batch intact and starts no later read after a failure", 
   ]);
   expect(selected).toEqual(original);
 });
+
+it.each(["docx", "xlsx", "pdf", "pptx"])(
+  "keeps an unsupported %s attachment and reports its actual text-input limit without reading another file",
+  async (extension) => {
+    const selected = [
+      {
+        id: "owned",
+        kind: "file" as const,
+        name: `owned.${extension}`,
+        uri: `file:///private/chosen/owned.${extension}`,
+      },
+      ...files(),
+    ];
+    const original = structuredClone(selected);
+    h.invoke.mockRejectedValueOnce({ code: "unsupportedText" });
+    const error = await prepareDraftAttachments(selected, true).catch(
+      (reason: unknown) => reason,
+    );
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain("不能直接作为文字发送");
+    expect((error as Error).message.includes("加入文字")).toBe(
+      extension !== "pptx",
+    );
+    expect((error as Error).message).not.toContain("/private/");
+    expect(selected).toEqual(original);
+    expect(h.invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_check", {
+      uri: selected[0].uri,
+      embed: true,
+    });
+  },
+);
+
+it.each([
+  ["checkPending", FILE_DELIVERY_STRINGS.checkWaitExpired],
+  ["checkBusy", FILE_DELIVERY_STRINGS.checkBusy],
+  ["tooLarge", "超过直接加入文字的 256 KiB 上限"],
+  ["notFile", "不是普通文件"],
+  ["invalidLocation", "附件位置无效"],
+])("preserves the safe native %s distinction", async (code, expected) => {
+  h.invoke.mockRejectedValueOnce({ code });
+  await expect(prepareDraftAttachments(files(), true)).rejects.toThrow(
+    expected,
+  );
+});
+
+it.each([
+  "private OS path /private/secret",
+  { code: "unknown-private-code", message: "/private/secret" },
+  { code: "unsupportedText", path: "/private/secret" },
+  { code: "unreadable" },
+])(
+  "keeps unknown or unreadable failures behind the generic fallback: %j",
+  async (native) => {
+    h.invoke.mockRejectedValueOnce(native);
+    await expect(prepareDraftAttachments(files(), true)).rejects.toThrow(
+      DRAFT_STRINGS.attachmentFailed,
+    );
+  },
+);
 
 it("reads a local image again before preparing and dispatching, preserving its source", async () => {
   vi.stubGlobal("Image", TestImageDecoder);

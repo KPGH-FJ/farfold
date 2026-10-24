@@ -18,6 +18,7 @@ import {
 } from "./attachment_review";
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
 import { canDrain } from "./queue";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { startQueueEditor, queueEditorKey } from "./queue_edit";
 import {
   PNG_IMAGE_TEST_DATA,
@@ -173,6 +174,33 @@ it("never publishes a partial confirmation when a later file is unreadable, and 
     embed: false,
   });
 });
+
+it.each(["draft", "queue"])(
+  "preserves the check-pending result during %s recovery without granting readiness or resending",
+  async (source) => {
+    const state = seed(
+      source === "queue"
+        ? [[text("keep queued body"), resource("owned.pptx")]]
+        : [],
+    );
+    const key = `session:${state.key}`;
+    composerDrafts.update(key, () => ({
+      text: "keep draft body",
+      attachments: source === "draft" ? [file("owned.pptx")] : [],
+    }));
+    const review = captureAttachmentReview(key, state);
+    h.invoke.mockRejectedValueOnce({ code: "checkPending" });
+    const send = vi.spyOn(threads, "send");
+    const resume = vi.spyOn(threads, "continueQueue");
+    await expect(
+      confirmAttachmentReview(review, keepAll(review), true, () => true),
+    ).rejects.toThrow(FILE_DELIVERY_STRINGS.checkWaitExpired);
+    expect(composerDrafts.read(key)).toBe(review.draft);
+    expect(state.queued).toEqual(review.queue);
+    expect(send).not.toHaveBeenCalled();
+    expect(resume).not.toHaveBeenCalled();
+  },
+);
 
 it.each([false, true])(
   "canceling before or during validation leaves all input unchanged: during=%s",

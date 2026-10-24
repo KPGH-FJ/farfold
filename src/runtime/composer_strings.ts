@@ -2,7 +2,7 @@ export const COMPOSER_CONTROLS = {
   addQueued: "加入待发",
   queuedShort: "待发",
   addTitle: "添加到这段对话",
-  addFileHint: "带上一份资料，让对话更具体",
+  addFileHint: "附上文件位置；部分文档可另选“加入文字”",
   chooseFolderHint: "需要查看或修改本地内容时使用",
   findProjectFile: "查找项目文件",
   findProjectFileHint: "输入 @ 搜索文件名",

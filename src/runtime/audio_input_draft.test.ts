@@ -12,6 +12,7 @@ const original = (): DraftAttachment => ({
   uri: "file:///chosen/sample.wav",
   name: "sample.wav",
   mimeType: "audio/wav",
+  deliveryMode: "location",
 });
 beforeEach(async () => {
   vi.resetModules();
@@ -59,6 +60,24 @@ it("approves once and does not transmit or mutate the originally selected file p
   expect(
     h.invoke.mock.calls.every(([cmd]) => cmd.startsWith("settings_")),
   ).toBe(true);
+});
+it("does not retain a file delivery marker when an explicit audio review replaces the located file, and remains restorable", async () => {
+  const selected = d.composerDrafts.read("new").attachments[0];
+  expect(selected.deliveryMode).toBe("location");
+  const target = create("new", selected, () => true);
+  expect(target.apply(audioCapture())).toBe(true);
+  expect(
+    d.composerDrafts.read("new").attachments[0].deliveryMode,
+  ).toBeUndefined();
+  await d.draftPersistence.flush();
+  const saved = h.invoke.mock.calls
+    .filter(([command]) => command === "settings_set")
+    .at(-1)![1].value;
+  expect(
+    d.parseDraftSnapshot(saved)?.composers.find(([key]) => key === "new")![1]
+      .attachments[0],
+  ).toMatchObject({ kind: "audio", recovered: true });
+  expect(selected.deliveryMode).toBe("location");
 });
 it.each([
   "text",

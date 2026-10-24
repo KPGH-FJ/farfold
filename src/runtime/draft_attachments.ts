@@ -13,21 +13,135 @@ import { verifyDocumentInput } from "./document_input";
 import { DocumentInputError } from "./document_input_types";
 import { documentSourceError } from "./document_source_error";
 import { resourceDocumentText } from "./prompt_blocks";
+import { localResourcePath } from "./file_delivery";
+import { documentMediaFormat } from "./document_media_type";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import {
   isBitmapMime,
   readFileImage,
   validateDraftImage,
 } from "./draft_images";
 
-async function checkFile(uri: string, embed: boolean): Promise<string | null> {
+type AttachmentCheckCode =
+  | "unsupportedText"
+  | "tooLarge"
+  | "notFile"
+  | "invalidLocation"
+  | "unreadable"
+  | "checkPending"
+  | "checkBusy";
+
+/** Transient, safe input feedback only; never store a native error or path. */
+export class DraftAttachmentCheckError extends Error {
+  constructor(
+    readonly code: AttachmentCheckCode,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+function checkFailure(
+  reason: unknown,
+  uri: string,
+  attachment?: { name?: string; mimeType?: string },
+): DraftAttachmentCheckError {
+  const value = reason as { code?: unknown } | null;
+  const code =
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 1 &&
+    Object.hasOwn(value, "code")
+      ? value.code
+      : null;
+  // This is only a conservative hint to an existing visible action. MIME alone
+  // enables that action for PDF; the other current readers use the name/path.
+  // It grants no permission, parses no document, and never changes the payload.
+  const reviewAvailable =
+    /\.(docx|xlsx|pdf)$/i.test(attachment?.name ?? "") ||
+    /\.(docx|xlsx|pdf)$/i.test(localResourcePath(uri) ?? "") ||
+    documentMediaFormat(attachment?.mimeType) === "pdf";
+  switch (code) {
+    case "unsupportedText":
+      return new DraftAttachmentCheckError(
+        code,
+        reviewAvailable
+          ? DRAFT_STRINGS.attachmentUnsupportedReview
+          : DRAFT_STRINGS.attachmentUnsupportedText,
+      );
+    case "tooLarge":
+      return new DraftAttachmentCheckError(
+        code,
+        reviewAvailable
+          ? DRAFT_STRINGS.attachmentTooLargeReview
+          : DRAFT_STRINGS.attachmentTooLarge,
+      );
+    case "notFile":
+      return new DraftAttachmentCheckError(
+        code,
+        DRAFT_STRINGS.attachmentNotFile,
+      );
+    case "invalidLocation":
+      return new DraftAttachmentCheckError(
+        code,
+        DRAFT_STRINGS.attachmentInvalidLocation,
+      );
+    case "checkPending":
+      return new DraftAttachmentCheckError(
+        code,
+        FILE_DELIVERY_STRINGS.checkWaitExpired,
+      );
+    case "checkBusy":
+      return new DraftAttachmentCheckError(
+        code,
+        FILE_DELIVERY_STRINGS.checkBusy,
+      );
+    default:
+      return new DraftAttachmentCheckError(
+        "unreadable",
+        DRAFT_STRINGS.attachmentFailed,
+      );
+  }
+}
+
+async function checkFile(
+  uri: string,
+  embed: boolean,
+  attachment?: { name?: string; mimeType?: string },
+): Promise<string | null> {
   try {
     return await invoke<string | null>("draft_attachment_check", {
       uri,
       embed,
     });
-  } catch {
-    throw new Error(DRAFT_STRINGS.attachmentFailed);
+  } catch (error) {
+    throw checkFailure(error, uri, attachment);
   }
+}
+
+/** Capability admits an explicit text choice; it never chooses a delivery
+ * mode. Unmarked drafts retain the previous behavior without guessing origin. */
+function checkFileDeliveryMode(attachment: DraftAttachment): void {
+  if (
+    attachment.deliveryMode !== undefined &&
+    attachment.deliveryMode !== "location" &&
+    attachment.deliveryMode !== "text"
+  )
+    throw new Error(DRAFT_STRINGS.attachmentFailed);
+}
+
+function readsFileText(attachment: DraftAttachment, embed: boolean): boolean {
+  if (attachment.deliveryMode === "text") {
+    if (!embed) throw new DocumentInputError("capabilityUnsupported");
+    return true;
+  }
+  if (attachment.deliveryMode === "location") return false;
+  return (
+    embed &&
+    !isBitmapMime(attachment.mimeType) &&
+    !audioNameCandidate(attachment.name, attachment.mimeType)
+  );
 }
 
 /** Check explicit user attachments at dispatch, including those restored after
@@ -44,7 +158,7 @@ export async function validateQueuedAttachments(
       continue;
     }
     if (block.type === "resource_link" && block.uri.startsWith("file:"))
-      await checkFile(block.uri, false);
+      await checkFile(block.uri, false, block);
     if (block.type === "resource") {
       const documentText = resourceDocumentText(block);
       if (documentText) {
@@ -53,7 +167,11 @@ export async function validateQueuedAttachments(
           signal: options.signal,
         });
       } else if (block.resource.uri.startsWith("file:")) {
-        const content = await checkFile(block.resource.uri, true);
+        const content = await checkFile(
+          block.resource.uri,
+          true,
+          block.resource,
+        );
         if (content !== null) block.resource.text = content;
       }
     }
@@ -109,6 +227,7 @@ export async function prepareDraftAttachments(
       continue;
     }
     if (!attachment.uri) throw new Error(DRAFT_STRINGS.attachmentFailed);
+    checkFileDeliveryMode(attachment);
     if (attachment.documentText !== undefined) {
       try {
         if (!embed) throw new DocumentInputError("capabilityUnsupported");
@@ -124,15 +243,13 @@ export async function prepareDraftAttachments(
       prepared.push({ ...attachment, recovered: false, loading: false });
       continue;
     }
-    const content = await checkFile(
-      attachment.uri,
-      embed &&
-        !isBitmapMime(attachment.mimeType) &&
-        !audioNameCandidate(attachment.name, attachment.mimeType),
-    );
+    const readText = readsFileText(attachment, embed);
+    const content = await checkFile(attachment.uri, readText, attachment);
+    if (attachment.deliveryMode === "text" && typeof content !== "string")
+      throw new Error(DRAFT_STRINGS.attachmentFailed);
     prepared.push({
       ...attachment,
-      content: content ?? undefined,
+      content: readText ? (content ?? undefined) : undefined,
       recovered: false,
       loading: false,
     });
@@ -176,6 +293,7 @@ export function attachmentPromptBlocks(
         ...(attachment.uri ? { uri: attachment.uri } : {}),
       });
     } else if (attachment.kind === "file" && attachment.uri) {
+      checkFileDeliveryMode(attachment);
       if (attachment.documentText !== undefined) {
         if (!embed) throw new DocumentInputError("capabilityUnsupported");
         if (!attachment.documentText.local)
@@ -189,27 +307,30 @@ export function attachmentPromptBlocks(
           },
           localDocumentText: structuredClone(attachment.documentText.local),
         });
-      } else if (
-        embed &&
-        !isBitmapMime(attachment.mimeType) &&
-        !audioNameCandidate(attachment.name, attachment.mimeType) &&
-        attachment.content !== undefined
-      )
-        out.push({
-          type: "resource",
-          resource: {
+      } else {
+        const readText = readsFileText(attachment, embed);
+        if (
+          attachment.deliveryMode === "text" &&
+          attachment.content === undefined
+        )
+          throw new Error(DRAFT_STRINGS.attachmentFailed);
+        if (readText && attachment.content !== undefined)
+          out.push({
+            type: "resource",
+            resource: {
+              uri: attachment.uri,
+              mimeType: "text/plain",
+              text: attachment.content,
+            },
+          });
+        else
+          out.push({
+            type: "resource_link",
+            name: attachment.name,
             uri: attachment.uri,
-            mimeType: "text/plain",
-            text: attachment.content,
-          },
-        });
-      else
-        out.push({
-          type: "resource_link",
-          name: attachment.name,
-          uri: attachment.uri,
-          ...(attachment.mimeType ? { mimeType: attachment.mimeType } : {}),
-        });
+            ...(attachment.mimeType ? { mimeType: attachment.mimeType } : {}),
+          });
+      }
     }
   }
   return out;

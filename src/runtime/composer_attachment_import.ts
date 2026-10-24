@@ -105,6 +105,7 @@ export async function addPickedAttachments(
         kind: "file",
         name: fileBasename(path),
         uri,
+        deliveryMode: project ? "text" : "location",
         loading: true,
       },
     ];
@@ -137,6 +138,7 @@ export async function addPickedAttachments(
           work.patch(attachment, {
             kind: "file",
             mimeType: audio ?? "audio/unknown",
+            deliveryMode: "location",
             loading: false,
           });
           continue;
@@ -150,7 +152,8 @@ export async function addPickedAttachments(
                 path: project.path,
               });
             } catch {
-              /* Ordinary files retain their existing link fallback. */
+              // Preserve the explicit text choice. Sending rechecks this
+              // source and never turns a failed text read into a file link.
             }
           }
           work.patch(attachment, {
@@ -180,6 +183,7 @@ export async function addPickedAttachments(
           if (
             !work.patch(attachment, {
               kind: "image",
+              deliveryMode: undefined,
               mimeType: candidate.mimeType,
               data: candidate.data ?? undefined,
               imageChecked: undefined,

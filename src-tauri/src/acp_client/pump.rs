@@ -760,8 +760,7 @@ async fn session_pump(
                 // The received load prefix was handled as history. This
                 // locally admitted setter owns any following reported work.
                 ctx.tools.begin_live();
-                ctx.compactions.begin_live();
-                let future = request.send(&cx, &session_id, &initial.operation);
+                let future = ctx.compactions.live_request(request.send(&cx, &session_id, &initial.operation));
                 mutation = Some(Mutation::new(MutationKind::Restore { plan:Box::new(plan), request },
                     MutationReply::Open(initial.reply.take().unwrap()), initial.operation.clone(), lease,
                     tokio::time::Instant::now()+std::time::Duration::from_secs(60), future));
@@ -1115,7 +1114,9 @@ async fn session_pump(
                         Err(error) => { let _ = result.send(Err(error)); continue; }
                     };
                     let operation = Operation::new();
-                    let future = request.send(&cx, &session_id, &operation);
+                    // Match actual mutation polling, not a merely queued setter.
+                    // Previously observed history IDs remain historical.
+                    let future = ctx.compactions.live_request(request.send(&cx, &session_id, &operation));
                     if permission { permission_guard.begin(); events(permission_guard.event()); }
                     mutation = Some(Mutation::new(
                         MutationKind::Config { request, permission_value: permission.then_some(value), choice, prior_guard, config_store: candidate_store },
