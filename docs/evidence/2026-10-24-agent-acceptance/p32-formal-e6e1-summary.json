@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32FormalHistoricalAttachmentSearchSubObservationSummary",
+  "recordedDate": "2026-10-24",
+  "formalSourceCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+  "schedulingAuthority": "none",
+  "acceptanceVerified": false,
+  "independentSemanticReviewCompleted": true,
+  "mechanical": {
+    "expectedCases": 8,
+    "attempts": 4,
+    "passed": 4,
+    "incomplete": 4,
+    "failed": 0,
+    "mechanicallyValid": false,
+    "complete": false,
+    "allExpectedOutcomesMatched": false,
+    "originalReportPreserved": true
+  },
+  "formats": [
+    {
+      "format": "docx",
+      "historicalCurrentSearchHits": 1,
+      "sourceAndAttachmentJumpObserved": true,
+      "coldSearchAttempts": 0,
+      "coldResult": "not-executed-missing-restored-attachment-source"
+    },
+    {
+      "format": "xlsx",
+      "historicalCurrentSearchHits": 1,
+      "sourceAndAttachmentJumpObserved": true,
+      "coldSearchAttempts": 0,
+      "coldResult": "not-executed-missing-restored-attachment-source"
+    },
+    {
+      "format": "pdf",
+      "historicalCurrentSearchHits": 1,
+      "sourceAndAttachmentJumpObserved": true,
+      "coldSearchAttempts": 0,
+      "coldResult": "not-executed-missing-restored-attachment-source"
+    },
+    {
+      "format": "pptx",
+      "historicalCurrentSearchHits": 1,
+      "sourceAndAttachmentJumpObserved": true,
+      "coldSearchAttempts": 0,
+      "coldResult": "not-executed-missing-restored-attachment-source"
+    }
+  ],
+  "semanticCoverage": {
+    "historicalCurrentMessageSubObservationsRetained": 4,
+    "scope": "explicitly-selected-current-local-file-partial-text",
+    "completeDocumentScopeProved": false,
+    "fullSnippetByteEqualityClaimed": false,
+    "docxRecordedContextWhitespaceDifference": true,
+    "coldMissingOriginalAttachmentSources": 4,
+    "coldSearchesNotExecuted": 4,
+    "searchAlgorithmFailureProved": false,
+    "officialHistoryOrProductProjectionRootCauseProved": false,
+    "currentReusableObservations": 0,
+    "standardIds": [],
+    "standardCellsAdded": 0,
+    "completeRequirementsClosed": 0,
+    "postColdRevalidationCases": 8
+  },
+  "operationalSetup": {
+    "realRequests": 1,
+    "sendClicks": 1,
+    "completedIdleObserved": true,
+    "exactResponseObserved": true,
+    "completionOperationStepObserved": true,
+    "noToolsComplianceProved": false,
+    "documentConsumptionProved": false,
+    "accountIdentityProved": false,
+    "effectiveModelSelectionProved": false,
+    "nativeIdentityBeforeAfterCorrelated": false,
+    "legacyReviewTypedRefusalPreserved": true,
+    "legacySendAttempts": 0,
+    "ordinaryPickerOwnedFilesReselected": 4,
+    "newModelRequestsAfterRestart": 0
+  },
+  "evidenceDigests": {
+    "manifest": "d52f61b82adaddbaff9e661f0b86afc5fda3762bfd228b771eff41c448166602",
+    "finite-setup-plan": "3b3a795d34aced6b1d242f7ed6b0f9327b0c389fe70598be3224b71f6c0f4ce9",
+    "current-docx-observation": "c575b3444caf12ad066dc8efefe67fdb8d439c4e2c7e6142e7088624089bf6c5",
+    "current-xlsx-observation": "062554adcb5b31e090680af33fc41cf962b013f95d91a62808082d9631a231ff",
+    "current-pdf-observation": "ad85b1b498656388a32a86e0495d8002aeb5db1b5f474d813e0e9300c8bcdd2b",
+    "current-pptx-observation": "8620c9c78ced7b342bf622defa8735474733c26e13bd7e9a68fbd4262d08c3df",
+    "ack-request-observation": "1c2991c5680ae8cb796a8c62537d8dc42b1e783951fea38b2595cd6336c51ab4",
+    "cold-reopen-observation": "b1c03cd4fb0b9f2dbb2de4b31afa7272d81ce840c74e136dc4b8999edceddd4d",
+    "coverage-limitations": "d4834d58f1adebb194eb8622d23c6235dbbac9ad832034bae899ede10a3d5d9e",
+    "legacy-review-and-reselection": "1ec15354479567f688267ca67667960af06909f009822db2baa362dbe8aefd1f",
+    "receipt": "f52bf80e0083f41d985c3913a04eb0a2264a2374abb9845eabd2b5220d9a6ea5",
+    "mechanical-validation": "a5b09d803c3e87f3fa6066a57489e172c601addff282080efc11ae82300ef0b1",
+    "public-mechanical-summary": "fd63f00c1469aa638ad91175c363f98d51db1b11b874584d499442225c5e0338",
+    "fixtures": "0d41e308c279247490a69a508a3b15d67b24a00520b95b8109d3645713179b17",
+    "semanticReview": "b0c3a81d078f61fe9c34af207336bcd0e3021dd006c89d6078befc5cedcd5121",
+    "officialHistorySourceAnalysis": "56bdc63909b1d210627925ccad991181d360784fce7d28aee70eaf3d0cc6570f",
+    "semanticReviewSupplement": "abc89f799c0d7e4aa05e729bf7381b0368da72049776187f7e4ecc6d91bf8e30"
+  },
+  "ownedFixtureDigests": [
+    {
+      "format": "docx",
+      "sha256": "3544d6a467cea9e2ddcadb5b177a57b22c8687b5507ed34d6310e00360061799",
+      "bytes": 2452
+    },
+    {
+      "format": "xlsx",
+      "sha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d",
+      "bytes": 4089
+    },
+    {
+      "format": "pdf",
+      "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba",
+      "bytes": 1022
+    },
+    {
+      "format": "pptx",
+      "sha256": "0d650216e33b6c37c40f3b7e4684d2289a2ec7aaebeffc980145c2fcf9aeba7f",
+      "bytes": 7189
+    }
+  ],
+  "limits": {
+    "operatorUiSummariesNotRawIncomingPayload": true,
+    "currentSuccessesAreHistoricalAfterColdReopen": true,
+    "completeRequirementAccepted": false,
+    "standardAccepted": false,
+    "agentAccepted": false,
+    "all29EightStandardsAccepted": false,
+    "persistentBodyLedgerCreated": false,
+    "originalEvidenceRewritten": false,
+    "reviewAppOrAgentActions": false,
+    "automaticAcceptance": false
+  },
+  "officialSourceAnalysis": {
+    "conditionalIncompleteReplayPathLocated": true,
+    "completeOriginalUserAttachmentRecoveryInterfaceLocated": false,
+    "supportedFarfoldContentDiscardDefectEstablished": false,
+    "specificPrivateSessionCauseEstablished": false,
+    "privateJournalRead": false,
+    "workaroundLedgerOrAgentForkUsed": false
+  }
+}
