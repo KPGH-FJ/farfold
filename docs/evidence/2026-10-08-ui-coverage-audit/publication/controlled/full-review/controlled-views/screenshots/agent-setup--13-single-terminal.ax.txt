@@ -1,0 +1,28 @@
+- dialog "接入 OpenCode":
+  - banner:
+    - heading "接入 OpenCode" [level=2]
+    - button "关闭准备" [active]:
+  - generic "普通对话": 第 2 步，共 3 步
+  - generic: 未完成设置
+  - tablist "Agent 设置分类":
+    - tab "程序"
+    - tab "账号与服务" [selected]
+    - tab "模型" [disabled]
+  - tabpanel "账号与服务":
+    - region "登录与账号设置":
+      - heading "接入方式" [level=3]
+      - group "接入方式":
+        - generic: 接入方式
+        - radio "已有设置 沿用 Agent 已有的账号、订阅或设置。"
+        - strong: 已有设置
+        - generic: 沿用 Agent 已有的账号、订阅或设置。
+        - radio "模型服务 在终端中完成设置。" [checked]
+        - strong: 模型服务
+        - generic: 在终端中完成设置。
+      - paragraph: 请通过 OpenCode 的官方渠道注册账号
+      - generic "更多登录选项"
+      - generic "管理接入"
+  - contentinfo:
+    - button "返回程序"
+    - button "暂时返回"
+    - button "继续"

@@ -1,0 +1,481 @@
+{
+  "schema": 1,
+  "scope": "UI publication batch only",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "48f6657c50d3d4abc25f06adfa14793e497fb9c76e12f3a73d65452cd030fe9b",
+      "bytes": 11591
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "e308d31843a5d7c39f5dc1a202c5534017f134009573405a24860f5fdfaa08df",
+      "bytes": 2389
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/README.md",
+      "sha256": "28d4af233ad35b1166f6f865d7cd39ba8441f6f2e76bc3b7f281e712b5faa468",
+      "bytes": 1894
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--01-account-key.ax.txt",
+      "sha256": "773d80eee0c290a0da88cf51f66295dc81d19e800606e5bba46540a5dab96b80",
+      "bytes": 1256
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--01-account-key.jpg",
+      "sha256": "46b7574a14a6273310541bfc0c6dbef5c2d42b0032c7064294919ecbc092706e",
+      "bytes": 32503
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--02-terminal-api.ax.txt",
+      "sha256": "54cd92361f6e6d3f36533c36f772671dc2e3507820b9033464a118b69cd3daf7",
+      "bytes": 1285
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--02-terminal-api.jpg",
+      "sha256": "1d96319d89ba722b3749d98b37945618eb74a1c4c14ee557f04aa905cdf7e447",
+      "bytes": 31860
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--03-three-methods.ax.txt",
+      "sha256": "c583db78035c839e1064b2d33c63fa1259dfcb4b27deb5d4f2c6cbcea3f893ad",
+      "bytes": 1448
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--03-three-methods.jpg",
+      "sha256": "a5fcb9330146ee20b44587ba89b2d63b6766ce098850d63c465202dbd61e3652",
+      "bytes": 34803
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--04-account-summary.ax.txt",
+      "sha256": "3a71f10c63948e9c4cee9eb9d5526753e0cb75d2afd5c7f97b7f2e0a4adee7ea",
+      "bytes": 663
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--04-account-summary.jpg",
+      "sha256": "d46f0fc13555b410581a18e2cebb956d448a7d2c6f51baebf47670d3ec514de4",
+      "bytes": 22288
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.ax.txt",
+      "sha256": "7f2d103abf0e255994e4a7da6172b0e6061424bc281cae2f2528a89f7056f84c",
+      "bytes": 727
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.jpg",
+      "sha256": "1748685890db6b6075630d4dd3a771b522506e18962d17b409fe855771d145ae",
+      "bytes": 21597
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--06-service-step.ax.txt",
+      "sha256": "34796595bf4153b06688e30abca121167eb5f3106f81ef1fda533a56ce942fec",
+      "bytes": 799
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--06-service-step.jpg",
+      "sha256": "7614c377b988135d9c04d5f909b6670589bec25007317f70bcb2a44d960b166a",
+      "bytes": 21280
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--07-service-summary.ax.txt",
+      "sha256": "c0c992bd8a970c669e4f6298dfe28de74222d7c671029e5621534d9e51451a5d",
+      "bytes": 775
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--07-service-summary.jpg",
+      "sha256": "48819d946a8ec487a40a6a0558c8093250ea69572a77235c02e1383a023c2428",
+      "bytes": 22735
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--08-model-step.ax.txt",
+      "sha256": "f0a1681c670bc3f8ec677d67855290f5830522f17cbace209560966f63f44737",
+      "bytes": 1159
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--08-model-step.jpg",
+      "sha256": "64d536920a21e797e0e616841b7d00b2d717c3e54fd5f4427952c7a1c06d1eff",
+      "bytes": 31752
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--09-model-selected.ax.txt",
+      "sha256": "d98b2cba8a8852961719df3a81f7731c487b3ea329b97753f536c1aa3a2aeda3",
+      "bytes": 1089
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--09-model-selected.jpg",
+      "sha256": "e923927ac5eeeb377832ee3c3db9c01ec6228b79c4cbe24085ea6cb8bfd3fe35",
+      "bytes": 31941
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--10-program-list.ax.txt",
+      "sha256": "14ed002f8f10945947ec546c10a9f69219b417bfbca0df792326d3c3bdfd0c11",
+      "bytes": 810
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--10-program-list.jpg",
+      "sha256": "b96f83ad7e12504f415a2e76f1d453eeb43622a045873851bd6905a1b1eae429",
+      "bytes": 23461
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--11-program-connected.ax.txt",
+      "sha256": "df2b86bfd9dda37f804be8f740a97a6491f6b2088d6a6e022b2d1981adc64852",
+      "bytes": 749
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--11-program-connected.jpg",
+      "sha256": "f3527f968300e617dd8534a89b886b2c5b79ef4805b6e52b5570e2df28afb31c",
+      "bytes": 22815
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--12-service-editing.ax.txt",
+      "sha256": "5564665613f73bf8131aa9d4edb4fc8b2e2cf96e1419a97a90057f562cce2d5a",
+      "bytes": 799
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--12-service-editing.jpg",
+      "sha256": "7fc95c169c655ed19f8986e94becff437b8cc4e916ddb2f11e8bda1737c2ebdd",
+      "bytes": 21347
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--13-single-terminal.ax.txt",
+      "sha256": "e36192da58cd8303365e824919ed173e22f6c3716fd3c093b25d17bd2d48b2f6",
+      "bytes": 1050
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--13-single-terminal.jpg",
+      "sha256": "f9c67539882bc3209a49a48e6baf886d8e8436c166a0e9184a9158294a9a7ed6",
+      "bytes": 28194
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--14-key-detail.ax.txt",
+      "sha256": "cd6a973db493515d4b84c2cdb0e80dbed9f1a4cac00552690d24cdaa7ea031d1",
+      "bytes": 894
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--14-key-detail.jpg",
+      "sha256": "77caa36cbb564692921e8051ec33a8ac412c7eeef0999b50d6000301e44a0c2b",
+      "bytes": 24597
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.ax.txt",
+      "sha256": "890a8c865f57ff59e843cf65316dd851d858a0ff0553c298a13fda58191428f2",
+      "bytes": 693
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.jpg",
+      "sha256": "10d82b21a8b2767df06e25b7e64bc95986cb2d1bc8919b358931280cd4745766",
+      "bytes": 19963
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--16-program-ready.ax.txt",
+      "sha256": "ef1cc17b6e3d40f7cb56a0defedf290f361f54c7c1e6984a780cfa8bcf10a3d2",
+      "bytes": 721
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--16-program-ready.jpg",
+      "sha256": "0165a922366995a8c93037448d95395b0a2461858797e7b763963c2a3023ff7b",
+      "bytes": 21032
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--17-program-missing.ax.txt",
+      "sha256": "42fc7d716bf3427bc6beb698833dc1597ae1cba02dff5a91db1be1054b6f44a4",
+      "bytes": 968
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/agent-setup--17-program-missing.jpg",
+      "sha256": "dc30d8caf9eba76294169dabfbf75d46af5531e86a03abe7c61021827b728599",
+      "bytes": 27433
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--01-start-light.ax.txt",
+      "sha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261",
+      "bytes": 1308
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--01-start-light.jpg",
+      "sha256": "cb3afb68f71b705613bd0fa5f5755fd59689e278e8671d6caa0b8f4092d96e17",
+      "bytes": 23286
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--02-start-dark.ax.txt",
+      "sha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261",
+      "bytes": 1308
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--02-start-dark.jpg",
+      "sha256": "485f80c49dcec2ca7a19ced25674fbbed01eca0870d5ce72f397e63ba2c4d531",
+      "bytes": 21993
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--03-thread-light.ax.txt",
+      "sha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1",
+      "bytes": 1370
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--03-thread-light.jpg",
+      "sha256": "4a81802f5e2a81249b8b0fc3438e2ccaac02b79e1b297eaef8f901da569f6e7e",
+      "bytes": 24529
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--04-thread-dark.ax.txt",
+      "sha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1",
+      "bytes": 1370
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--04-thread-dark.jpg",
+      "sha256": "4d67515d0fffb8fbd5d6828a05f74b03bba88f5df601a4155bb43d92a57c8869",
+      "bytes": 23527
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--05-running-light.ax.txt",
+      "sha256": "50fe2a8258c63dcdd1a8795e43735c02e4891137ef6968d3923bbd57f7632a9d",
+      "bytes": 1417
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/composer--05-running-light.jpg",
+      "sha256": "af0e6907ce87ded427917febd29f8835814e2ee7f1494d261c7916de8673c0d9",
+      "bytes": 23434
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--01-approval-pending.ax.txt",
+      "sha256": "ae1a37ea289d9efa591f1a1a0912373434c393f3ed90b133a835c732b8591966",
+      "bytes": 427
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--01-approval-pending.jpg",
+      "sha256": "b3f8b3793496dbd30f6e3e9e82d6217396efa3f1fc9347a4761610f45fa743df",
+      "bytes": 15560
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--02-approval-stop-waiting.ax.txt",
+      "sha256": "bf1dc6bed4f0ca2b143906a94d893ab792abde6e4e81452b67e7582eeead89ca",
+      "bytes": 449
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--02-approval-stop-waiting.jpg",
+      "sha256": "ce254e7096a726e26a77bb65e569d9694e4d7ca7af8849995a4f2899e6cdd3b4",
+      "bytes": 15037
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--03-question-pending.ax.txt",
+      "sha256": "66de55874d514dd2635edcf6383408b775eaa064c9b836fc6f6d1b937d54aeb9",
+      "bytes": 135
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--03-question-pending.jpg",
+      "sha256": "526ff04b8c6581d9ce74c20051c8cc921c2d9cfe7cc2f80f8288ddbb9df879cc",
+      "bytes": 8894
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--04-question-uncertain.ax.txt",
+      "sha256": "de95f445e1a709fc9e1dee40856a058347cd794b67e2aa008a6014ece45fb0bb",
+      "bytes": 198
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--04-question-uncertain.jpg",
+      "sha256": "ba68613d072aa8eaf3050f4769c09363a351aef6e2abbe16dd17b28c5b42bf3c",
+      "bytes": 10545
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--05-queue-paused.ax.txt",
+      "sha256": "48b075e274c76a146b381c7619e0ada00539ec2a6d8b69e7f9499ce2aa691d4f",
+      "bytes": 636
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--05-queue-paused.jpg",
+      "sha256": "c5b9cceb96454b4b52f796ff61ee02824dfa157e3a3242a05005edadf8adb0ad",
+      "bytes": 17110
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--06-queue-editing.ax.txt",
+      "sha256": "20f67f75d49be3b60fa2594c570128dd78086a386f950ce92196f2ff996448b1",
+      "bytes": 1156
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--06-queue-editing.jpg",
+      "sha256": "f54852cb39233b4dca64750006d243c9e4dfdfe27f63f8c7d2f9c8ff5344a706",
+      "bytes": 16635
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--07-stop-unknown.ax.txt",
+      "sha256": "40200c2cdb49bd50f5374ebae43e7746f9fb8463f7b93fc7f602e45c4d7793aa",
+      "bytes": 535
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--07-stop-unknown.jpg",
+      "sha256": "fb442b912108d5ae2f0806002c7ec521ea19d6dd9df84acdd8fbc97601393278",
+      "bytes": 15760
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--08-work-read-error.ax.txt",
+      "sha256": "4e7eaaafbe7ae2d4f586a1efe6353e9cfd942b6d2ba5f8a9fa0ba60b21222630",
+      "bytes": 242
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--08-work-read-error.jpg",
+      "sha256": "ea5c9777cff084973d4ad6b2f2b6f46c0afb9330b7b061208245714fab602439",
+      "bytes": 9836
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--09-diff-fragment.ax.txt",
+      "sha256": "cff9fcf71092542af9c57adb367814caae12349b50940084fb43d81564e05dd4",
+      "bytes": 743
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--09-diff-fragment.jpg",
+      "sha256": "2b94f873e49e15dad976c1ab12bc57aeb3e102ad88d4b6b9eccbd469d4ec3251",
+      "bytes": 12602
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--10-diff-split.ax.txt",
+      "sha256": "44057c98e044ebb64c83822272d6cdd1d34b62654d8234bb212d62a0d0897c3b",
+      "bytes": 155
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--10-diff-split.jpg",
+      "sha256": "9f4aeb96895029af86eca0551e59d1dbf4917d70cab9e9c15ae75f663983deb3",
+      "bytes": 5150
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--11-media-collapsed.ax.txt",
+      "sha256": "07f040fd6761f822aa5ea4d38e4a1a80e60f5bb9c2a39ac1360cbb11d0fb0427",
+      "bytes": 169
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--11-media-collapsed.jpg",
+      "sha256": "b6df9c34ce1f8b0b856ce39d447e8f4951f1ff4563ac9b66f4ce68452d519339",
+      "bytes": 5821
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--12-media-expanded.ax.txt",
+      "sha256": "1db3b81f1de02f4907f7436ab953766528c857e91697963963b5b2947528ecba",
+      "bytes": 507
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/controlled/full-review/controlled-views/screenshots/states--12-media-expanded.jpg",
+      "sha256": "731ca1d0a461f9c2b178d9a8dae712f2ed144bb45219f131185e186b1dbf0ee7",
+      "bytes": 15084
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/file-inventory.html",
+      "sha256": "b4c2c65e131661b7e29aea39495c04137aafa5b98b67ee3d0ac4dbfdb398c3e3",
+      "bytes": 140483
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/index.html",
+      "sha256": "832189c8042826d1a961dbee6aa7d0d6e3be1309b6799cb2f4554cf29c62e896",
+      "bytes": 17608
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/manifest.json",
+      "sha256": "91622f322e9ebd47ae1c20acb5838ef6cd9a37241b9899de6d10fa27dfff8266",
+      "bytes": 184566
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/README.md",
+      "sha256": "8cb3810fbf99767fdc9ed61c38c50d872d3ba833aa86d0d74d7f5cf72057021a",
+      "bytes": 15704
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/README.md",
+      "sha256": "df396b4d2ee3054460a144cab6d2aa96175c3596e520a9512a6c4136a8a8d4b8",
+      "bytes": 5098
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/agent-variant-map.md",
+      "sha256": "ec339a455cdf7dad807cc40f8f3d0a028b0603c65c6dcfaf0505658559bc38a8",
+      "bytes": 34949
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/all-pages/README.md",
+      "sha256": "b03a7e4be7df8293097433351549943d701c2bb4a13737a3952ceb5ee1134344",
+      "bytes": 4883
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/all-pages/review-agents-summary.md",
+      "sha256": "afd7208c67ae80f30e3a1935460c063f131a0063fcbb4b14dfc59eb4bb0641ce",
+      "bytes": 4050
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/annotated/generation-record.md",
+      "sha256": "bddf84ac83ddb74214262b20071775db77c4d4c881de9f6e9adaffe24e9c4a11",
+      "bytes": 4398
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/controlled-views/states/README.md",
+      "sha256": "cc55e8878938d2ab02cbc71ce7d9718ea6c99d3884551ddd17c8855f79ba9d09",
+      "bytes": 4295
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/coverage-ledger.md",
+      "sha256": "e495d578e81ce352f64e16e17b70368cd69b711d0bb2a92ccd03f14e5735453b",
+      "bytes": 39195
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/fixtures/sample.md",
+      "sha256": "ef7a4f13c78d380c55b9f903db0f2789889afbc18f0b5d131f735cbe75714060",
+      "bytes": 382
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/fixtures/uiux-conversation-export.md",
+      "sha256": "2118f9fad15d09b848d2c109be1c1bd6d936a924ec9777c6c7a0e12cd400d946",
+      "bytes": 810
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/independent-observations.md",
+      "sha256": "4b62138f1435dc6d15676cd99b67cd503c916d4775f2a27643abf3dca47aaf3f",
+      "bytes": 44542
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/product-flow-map.md",
+      "sha256": "e74e1a6724b97223228fa4664332f5a2a44ed1d9ecaa0da235ebba34bf950798",
+      "bytes": 37380
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/review.md",
+      "sha256": "c75d0f7f94354c45396f2f76a9458060670b8dfe69c10932b64d1c0d4a7b02b3",
+      "bytes": 9014
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/full-review/state-coverage-options.md",
+      "sha256": "effb216b4b24869d6f6f13ecd1d5d6111dd425376b059429ee6bf3bb7eb08a96",
+      "bytes": 42870
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/original-14-review.md",
+      "sha256": "fc652d25370a6604e6dc25a81c2692c586f56579aca43e90b4fc8e4f40eadd8b",
+      "bytes": 37508
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reports/surface-inventory.md",
+      "sha256": "b1a6d42ce0247ad14062c81feac36c452e5a3c97ce93c837d25d07b5ff42a610",
+      "bytes": 45482
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reproduction/full-review/controlled-views/state-export.config.ts",
+      "sha256": "f22a44253bf631c2c9676039f99c8b54379905f07af9a5a953c3d2955797244b",
+      "bytes": 328
+    },
+    {
+      "path": "docs/evidence/2026-10-08-ui-coverage-audit/publication/reproduction/full-review/controlled-views/state-export.test.tsx",
+      "sha256": "c7bee4b488c562fb37ac3e32f4312a34fbf4e999d0bc6b3adb1225ba0fac093a",
+      "bytes": 14360
+    },
+    {
+      "path": "docs/maintenance/2026-10-24-evidence-preservation/ui-export.py",
+      "sha256": "7218eab9d6904ebb7d07c7f499cad1c56af8e875efb10a0d392a25bee42371a9",
+      "bytes": 11009
+    },
+    {
+      "path": "docs/maintenance/2026-10-24-evidence-preservation/ui-verification.json",
+      "sha256": "fa6a1d6c52e8c6a704f8b647bada023625d3f0f49b5fbc4995dc0aabb5508e4e",
+      "bytes": 1166
+    },
+    {
+      "path": "docs/maintenance/2026-10-24-evidence-preservation/ui-verify.py",
+      "sha256": "e86fc9c0158b7b8c32c8a4df5427b57f1ed8f0fe369865841b8aeec17b952b1e",
+      "bytes": 4381
+    }
+  ]
+}

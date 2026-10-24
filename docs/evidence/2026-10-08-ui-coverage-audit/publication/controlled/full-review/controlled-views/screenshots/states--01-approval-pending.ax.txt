@@ -1,0 +1,16 @@
+- generic: 需要批准
+- generic: Run command
+- generic: 运行命令
+- generic: 命令
+- generic: touch '/tmp/approval file.txt' && printf '<review>'
+- generic: 执行目录
+- generic: /tmp/execution folder
+- generic "完整输入"
+- button "批准 Allow once ⌘↵":
+  - generic: 批准
+  - generic: Allow once
+  - generic: ⌘↵
+- button "拒绝 Reject ⌘⌫":
+  - generic: 拒绝
+  - generic: Reject
+  - generic: ⌘⌫

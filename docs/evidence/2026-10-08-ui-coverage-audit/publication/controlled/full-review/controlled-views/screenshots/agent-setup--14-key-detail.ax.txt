@@ -1,0 +1,27 @@
+- dialog "接入 Codex":
+  - banner:
+    - heading "接入 Codex" [level=2]
+    - button "关闭准备" [active]:
+  - generic "普通对话": 第 2 步，共 3 步
+  - generic: 未完成设置
+  - tablist "Agent 设置分类":
+    - tab "程序"
+    - tab "账号与服务" [selected]
+    - tab "模型" [disabled]
+  - tabpanel "账号与服务":
+    - region "登录与账号设置":
+      - heading "OpenAI API Key" [level=3]
+      - button "返回接入方式"
+      - region "API Key":
+        - generic: 密钥名称
+        - textbox "密钥名称":
+          - /placeholder: 例如：工作账号
+        - generic: API Key
+        - textbox "API Key"
+        - button "取消"
+        - paragraph: 密钥安全保存，仅在验证时使用。
+      - generic "管理接入"
+  - contentinfo:
+    - button "返回程序"
+    - button "暂时返回"
+    - button "保存密钥" [disabled]

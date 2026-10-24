@@ -1,0 +1,6 @@
+- generic: 需要你
+- generic: First question
+- generic: answer*
+- textbox "answer*": first answer
+- button "提交"
+- button "取消"

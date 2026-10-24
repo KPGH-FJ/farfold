@@ -1,0 +1,7 @@
+- generic: 需要你
+- generic: Second question
+- alert: 回复结果未知
+- generic: answer*
+- textbox "answer*" [disabled]: second answer
+- button "提交" [disabled]
+- button "取消" [disabled]

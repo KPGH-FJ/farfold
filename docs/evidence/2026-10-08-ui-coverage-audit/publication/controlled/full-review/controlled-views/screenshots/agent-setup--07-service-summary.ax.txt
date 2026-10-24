@@ -1,0 +1,24 @@
+- dialog "示 接入 示例 Agent":
+  - banner:
+    - heading "示 接入 示例 Agent" [level=2]:
+      - generic: 示
+      - text: 接入 示例 Agent
+    - button "关闭准备" [active]:
+  - generic "普通对话": 第 2 步，共 3 步
+  - generic: 未完成设置
+  - tablist "Agent 设置分类":
+    - tab "程序"
+    - tab "账号与服务" [selected]
+    - tab "模型"
+  - tabpanel "账号与服务":
+    - region "登录与账号设置":
+      - heading "模型 API 服务" [level=3]
+      - button "返回接入方式"
+      - strong: 示例模型服务
+      - paragraph: Chat Completions
+      - generic: 服务已选择
+      - generic "管理接入"
+  - contentinfo:
+    - button "返回程序"
+    - button "暂时返回"
+    - button "继续选择模型"

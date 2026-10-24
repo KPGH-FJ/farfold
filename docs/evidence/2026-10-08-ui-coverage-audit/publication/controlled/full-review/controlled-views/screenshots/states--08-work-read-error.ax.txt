@@ -1,0 +1,8 @@
+- alert:
+  - generic: Unable to read policy
+  - button "重试"
+- textbox "对话内容" [active]:
+  - /placeholder: 发送消息…
+- button "添加文件或图片":
+- button "发送" [disabled]:
+- generic: Enter 发送 · Shift Enter 换行

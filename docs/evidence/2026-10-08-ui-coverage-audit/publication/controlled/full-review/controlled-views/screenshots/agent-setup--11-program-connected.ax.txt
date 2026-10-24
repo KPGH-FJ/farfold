@@ -1,0 +1,24 @@
+- dialog "示 示例 Agent 设置":
+  - banner:
+    - heading "示 示例 Agent 设置" [level=2]:
+      - generic: 示
+      - text: 示例 Agent 设置
+    - button "关闭准备" [active]:
+  - generic "普通对话": 连接管理
+  - generic: 未完成设置
+  - tablist "Agent 设置分类":
+    - tab "程序" [selected]
+    - tab "账号与服务"
+    - tab "模型" [disabled]
+  - tabpanel "程序":
+    - region "程序与版本":
+      - heading "当前程序" [level=3]
+      - button "刷新"
+      - strong: 示例 Agent
+      - generic: 已连接
+      - generic "安装详情"
+      - generic "管理程序与版本"
+    - button "移除 Agent…"
+  - contentinfo:
+    - button "暂时返回"
+    - button "继续设置账号与服务"

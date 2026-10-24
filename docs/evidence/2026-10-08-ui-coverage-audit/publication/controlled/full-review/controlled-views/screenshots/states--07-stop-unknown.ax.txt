@@ -1,0 +1,15 @@
+- generic: 第一条消息即开始会话
+- status "停止状态":
+  - strong: 结果未知
+  - paragraph: 尚未收到停止确认，任务可能仍在执行。发送已暂停，草稿与待发消息已保留。
+- textbox "对话内容" [active]:
+  - /placeholder: 发消息即创建新会话…
+- button "添加文件或图片":
+- button "模型与来源":
+  - generic: a
+  - generic: 默认模型
+- button "命令与模板":
+- button "重试停止":
+  - generic: 重试停止
+- button "发送" [disabled]:
+- generic: 发送已暂停

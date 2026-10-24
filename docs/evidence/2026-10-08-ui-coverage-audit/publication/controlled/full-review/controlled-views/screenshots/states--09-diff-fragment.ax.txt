@@ -1,0 +1,25 @@
+- generic: 文件内容
+- combobox "查看方式":
+  - option "差异" [selected]
+  - option "修改后"
+  - option "修改前"
+- group "选择内容":
+  - generic "snippet.ts"
+  - button "统一" [pressed]:
+    - generic: 统一
+  - button "并排":
+    - generic: 并排
+  - button "复制文件路径":
+  - button "复制所示差异":
+  - button "补充意见":
+- button "修改前 · 片段第 1 行": "1"
+- button [disabled]
+- generic: −
+- code: old
+- button [disabled]
+- button "修改后 · 片段第 1 行": "1"
+- generic: +
+- code: new
+- note:
+  - generic: 显示 Agent 报告的差异或文件内容，不代表文件当前状态。
+  - generic: 按片段显示，行号从所示内容开头计数，不代表文件中的行号。

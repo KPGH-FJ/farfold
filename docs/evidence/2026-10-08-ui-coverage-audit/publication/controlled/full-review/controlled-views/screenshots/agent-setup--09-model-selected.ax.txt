@@ -1,0 +1,30 @@
+- dialog "示 接入 示例 Agent":
+  - banner:
+    - heading "示 接入 示例 Agent" [level=2]:
+      - generic: 示
+      - text: 接入 示例 Agent
+    - button "关闭准备" [active]:
+  - generic "普通对话": 第 3 步，共 3 步
+  - generic: 未完成设置
+  - tablist "Agent 设置分类":
+    - tab "程序"
+    - tab "账号与服务"
+    - tab "模型" [selected]
+  - tabpanel "模型":
+    - heading "选择模型" [level=3]
+    - paragraph: 从所选服务中，选择本次对话使用的模型。
+    - generic: 模型
+    - combobox "模型":
+      - option "选择一个模型" [disabled]
+      - option "example-fast" [selected]
+      - option "example-reasoner"
+    - status: 从已选择的 API 服务中选择本次模型。
+    - generic "查看当前选择"
+    - status: 已读取当前模型选项
+    - paragraph: 读取选项不会发送模型请求。
+    - button "重新读取模型"
+    - generic "发送一条短消息测试（可选）"
+  - contentinfo:
+    - button "返回账号与服务"
+    - button "暂时返回"
+    - button "使用此 Agent"

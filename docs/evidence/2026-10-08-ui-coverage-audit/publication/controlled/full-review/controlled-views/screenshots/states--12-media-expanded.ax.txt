@@ -1,0 +1,17 @@
+- group "消息附件":
+  - generic "图片":
+    - generic: 图片
+  - figure "图片 · image/png":
+    - generic: 图片 · image/png
+    - img "图片"
+  - generic "notes.md":
+    - generic: notes.md
+  - figure "notes.md":
+    - generic: notes.md
+    - generic: file:///notes.md
+    - generic: <script>not executable</script>
+  - generic "unsupported":
+    - generic: unsupported
+  - figure "unsupported · text/html":
+    - generic: unsupported · text/html
+    - paragraph: 此附件暂不支持预览

@@ -1,0 +1,3529 @@
+{
+  "schema": 1,
+  "sourceDate": "2026-10-08",
+  "publicationDate": "2026-10-24",
+  "scope": "privacy-reviewed preservation, no new product acceptance",
+  "sourceFileCount": 324,
+  "sourceInventoryMerkleSha256": "af60bf9c2686990eb1a8f1751ab0b373fe51d9ed3d1e0b9b4af567af8b90bc73",
+  "files": [
+    {
+      "id": "file-001",
+      "source": "README.md",
+      "bytes": 15601,
+      "sourceSha256": "fb55176627a886817b640b4121024e7144620ea9fc0da29a97f8176b0628303c",
+      "decision": "publish-sanitized-report",
+      "published": "reports/README.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "8cb3810fbf99767fdc9ed61c38c50d872d3ba833aa86d0d74d7f5cf72057021a"
+    },
+    {
+      "id": "file-002",
+      "source": "annotated/04-agent-details.png",
+      "bytes": 1282974,
+      "sourceSha256": "ab73724e61025f5783200d60c105008ba3588c24b6a2a0163d5cbe3a3d8ae65b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-003",
+      "source": "annotated/06-agent-program.png",
+      "bytes": 1265507,
+      "sourceSha256": "d66a6b94e8d5c2c5515e0995b82a5ea32008b672fca7ba1b49de9f08fe2a3f8b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-004",
+      "source": "annotated/18-agent-model-step.png",
+      "bytes": 1276199,
+      "sourceSha256": "bd9a657a3556686797a1f6eb54a423e2a65c3e732cf6b2f038d592d089f07d91",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-005",
+      "source": "annotated/26-api-guide-next.png",
+      "bytes": 1274959,
+      "sourceSha256": "0e3ee586de1b61fa986a89c1a48c74ebb686044762c3f133d5625161dc55bbfa",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-006",
+      "source": "annotated/29-data-privacy.png",
+      "bytes": 1275906,
+      "sourceSha256": "9d76f06a9fad59c08101570ca5c24efe03148dd918eb80e35a1f317960b8e72f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-007",
+      "source": "annotated/42-commands.png",
+      "bytes": 1405686,
+      "sourceSha256": "1424e92536bd5761bd8848f06e961363f6eabf0eee17e6e7675aadfdbfd43f46",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-008",
+      "source": "annotated/annotations-original-prompts.json",
+      "bytes": 5432,
+      "sourceSha256": "1d619235189ba320ed523d6bbb4be91096996f5e6e34b2b40da0b5bda8b6b2dc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-009",
+      "source": "annotations-new-prompts.json",
+      "bytes": 8424,
+      "sourceSha256": "d55c8aee7e5b45d1d5f6620dcf372ed816ff92d717e2cb0e78d479c9dfe19424",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-010",
+      "source": "evidence-manifest.json",
+      "bytes": 15324,
+      "sourceSha256": "c73acfbab8dd93b9e429f09c710e84578ce21fb8d6a33d09201217e56d55425a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-011",
+      "source": "full-review/README.md",
+      "bytes": 4712,
+      "sourceSha256": "b61516ad720e1da4f32276cb11a8f5fbd9404454964d00a7d46645501fe382f3",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/README.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "df396b4d2ee3054460a144cab6d2aa96175c3596e520a9512a6c4136a8a8d4b8"
+    },
+    {
+      "id": "file-012",
+      "source": "full-review/actions.jsonl",
+      "bytes": 139938,
+      "sourceSha256": "f5cc89d9e21ebd7eeb3c9cb937fffa3144022e90c44a62dd072de8c9ac9a4cdc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-013",
+      "source": "full-review/agent-variant-map.md",
+      "bytes": 34663,
+      "sourceSha256": "0055c3763ca9f9539e61388aba14429d91a737a908860b0ea5eaeaad4e814efd",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/agent-variant-map.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "ec339a455cdf7dad807cc40f8f3d0a028b0603c65c6dcfaf0505658559bc38a8"
+    },
+    {
+      "id": "file-014",
+      "source": "full-review/all-pages/README.md",
+      "bytes": 4464,
+      "sourceSha256": "39bc43b997fc3a29b6460937f32f498434f6c0d4fc406e55779d2de099bbf763",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/all-pages/README.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "b03a7e4be7df8293097433351549943d701c2bb4a13737a3952ceb5ee1134344"
+    },
+    {
+      "id": "file-015",
+      "source": "full-review/all-pages/additional-actions.json",
+      "bytes": 1037,
+      "sourceSha256": "38608f07bdde84c8c81d52ea496df8b2d3e1f374469e334815c9fd7b7b54d201",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-016",
+      "source": "full-review/all-pages/additional-observations.json",
+      "bytes": 2166,
+      "sourceSha256": "585dc01d165bd76f3df730c70b0f914bcf10754d24b5a35a9dc3d3ebda2dbb63",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-017",
+      "source": "full-review/all-pages/build-report.py",
+      "bytes": 11423,
+      "sourceSha256": "4c906e08ee31a20ab1843003ddf3d41f30e68beb124f713ccecd12daa947bf60",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-018",
+      "source": "full-review/all-pages/data.js",
+      "bytes": 279717,
+      "sourceSha256": "d53d6cad6dfdd228c4af59bd4a533368d0c5baceecba2a0747cc165638d85476",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-019",
+      "source": "full-review/all-pages/data.json",
+      "bytes": 384361,
+      "sourceSha256": "f9b348172522d01adc457a7737d62c6df64aa44ecf8ec9d7b9290fced16ee9a4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-020",
+      "source": "full-review/all-pages/index.html",
+      "bytes": 3735,
+      "sourceSha256": "159c8075677bb7f4edfb44566abf526d0ac9739488b2fcd545be26c63cb33366",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-021",
+      "source": "full-review/all-pages/input-agents.json",
+      "bytes": 27501,
+      "sourceSha256": "ab7f99d8724297aafaa82a21ace8aa45c4b6c0d37255eec83dca6d9ffa69af7c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-022",
+      "source": "full-review/all-pages/input-conversation.json",
+      "bytes": 33540,
+      "sourceSha256": "ce841ef8f592c3a43d922a844a576bbc573448e7954cdd22744c79337fc0f90b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-023",
+      "source": "full-review/all-pages/input-settings_library.json",
+      "bytes": 34101,
+      "sourceSha256": "1c910c43d66e0aa1e560537456b648999a285ddd0d99e030bc46d3ea13dc0e63",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-024",
+      "source": "full-review/all-pages/inventory.json",
+      "bytes": 103617,
+      "sourceSha256": "70fa145656160cd08fcf99b171d55600de284d4e9044adf622c93cfd31feb957",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-025",
+      "source": "full-review/all-pages/preview/browser-qa.json",
+      "bytes": 1220,
+      "sourceSha256": "e71a60c726a463fc9e2c507656f08447d241882481d25b6968597506c31fcc18",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-026",
+      "source": "full-review/all-pages/preview/model-redboxes.png",
+      "bytes": 70022,
+      "sourceSha256": "b76a024cb4af39340a245625af9dcd8eea7441ee264aa86f0bf633cef2cfcbd5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-027",
+      "source": "full-review/all-pages/qa-independent.json",
+      "bytes": 7363,
+      "sourceSha256": "c17b02dba781960250dd121e264ae5ccbe497ce485a6c9f35e9ae792a55260f8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-028",
+      "source": "full-review/all-pages/report.js",
+      "bytes": 8070,
+      "sourceSha256": "a5f64610814852ae6b7bbcd9dc919de5cc44cabfde380c51298b0f033d105135",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-029",
+      "source": "full-review/all-pages/review-adjustments.json",
+      "bytes": 705,
+      "sourceSha256": "e86209dd0ac538479721606b1e9125b38716667adff521a7ffcf5299bc40f89c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-030",
+      "source": "full-review/all-pages/review-agents-summary.md",
+      "bytes": 3775,
+      "sourceSha256": "a18f08a1f782f2348cbd436de89d9d3c6a079dc0a269ed8c56a6f877ee9c273b",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/all-pages/review-agents-summary.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "afd7208c67ae80f30e3a1935460c063f131a0063fcbb4b14dfc59eb4bb0641ce"
+    },
+    {
+      "id": "file-031",
+      "source": "full-review/all-pages/review-agents.json",
+      "bytes": 78547,
+      "sourceSha256": "c27e6485a655c05a7e4b7bbba35a208118eda0c0e7ca610604502c7370a09651",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-032",
+      "source": "full-review/all-pages/review-conversation.json",
+      "bytes": 126107,
+      "sourceSha256": "453856ddf1603f70750e3799a9d85e20acbba2d74df51285365e6e4dc9a5a012",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-033",
+      "source": "full-review/all-pages/review-settings_library.json",
+      "bytes": 76885,
+      "sourceSha256": "b0d25c34cd906d22ec4bd5ea1d26bd33a21531f111059ca5d4fb50eeff64c18d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-034",
+      "source": "full-review/all-pages/review-supplement.json",
+      "bytes": 15458,
+      "sourceSha256": "e3eea050611334bef715b7a3de6025776e878d2d16185d34521b1d3cda4e6cd1",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-035",
+      "source": "full-review/all-pages/screenshots/N001-agent-search-empty.ax.txt",
+      "bytes": 3128,
+      "sourceSha256": "cc213dfb5dbb975d7ccbc091bcaa9de56b17431445d322df8b398473b025bdbf",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-036",
+      "source": "full-review/all-pages/screenshots/N001-agent-search-empty.jpg",
+      "bytes": 232226,
+      "sourceSha256": "755eb46a851bbd1f68fb6fd193cad1451d3c9ff081e08f7ff842d305a6befa42",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-037",
+      "source": "full-review/all-pages/screenshots/N002-claude-capability-detail.ax.txt",
+      "bytes": 1449,
+      "sourceSha256": "6e19dce7b7feb8f5dfdd8606fa582f7e0deb42826bfc2e46e13ee85c4cd1b255",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-038",
+      "source": "full-review/all-pages/screenshots/N002-claude-capability-detail.jpg",
+      "bytes": 247397,
+      "sourceSha256": "296d26728f4f4e5ca1f8bfc52babbbc78c898c1481f2d4c8cb53d74822ffb2b3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-039",
+      "source": "full-review/all-pages/screenshots/N003-custom-unsaved-close.ax.txt",
+      "bytes": 9818,
+      "sourceSha256": "9c39f3539649d14f45eafe3a9695d12db027f0aba410897828d800588648c5df",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-040",
+      "source": "full-review/all-pages/screenshots/N003-custom-unsaved-close.jpg",
+      "bytes": 355267,
+      "sourceSha256": "c6e0536cfb161db27a7f112126be198bd418677bc87380f26940734b73112de3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-041",
+      "source": "full-review/all-pages/screenshots/N004-custom-filled-before-close.ax.txt",
+      "bytes": 1717,
+      "sourceSha256": "2f88cc97fa46950cd85041bd449b986cc8f2eb3c9324f16de443ee22c9f38a74",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-042",
+      "source": "full-review/all-pages/screenshots/N004-custom-filled-before-close.jpg",
+      "bytes": 244078,
+      "sourceSha256": "9bf7c8be76c7777975639350be32b7303c89357c75a74236821a26e2a933aa5b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-043",
+      "source": "full-review/all-pages/screenshots/N005-custom-reopened-blank.ax.txt",
+      "bytes": 1653,
+      "sourceSha256": "93d17c378040deb0b32f0796b5d12ebf030653082e469d8968ce8d1ed9dec55b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-044",
+      "source": "full-review/all-pages/screenshots/N005-custom-reopened-blank.jpg",
+      "bytes": 240063,
+      "sourceSha256": "ae1058ce0933174ca1a3cc0d4aa69fab3781a39430806415472c3756212560b4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-045",
+      "source": "full-review/all-pages/screenshots/N006-final-restored-draft.ax.txt",
+      "bytes": 2943,
+      "sourceSha256": "883903e275a1cb6f6cd038419cd821272c42bf0a458fda1a97a3aa380e3b4c7c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-046",
+      "source": "full-review/all-pages/screenshots/N006-final-restored-draft.jpg",
+      "bytes": 179111,
+      "sourceSha256": "628c6fed2839cd296564c095a8c8d50c35e9c552ceb2685631cb9ade54791431",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-047",
+      "source": "full-review/all-pages/style.css",
+      "bytes": 6057,
+      "sourceSha256": "21d06a0909831d4d7c4efd89a39fbdc2fe479524495edc91bef1274429cd6a78",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-048",
+      "source": "full-review/annotated/U011-folder-guidance-annotated.png",
+      "bytes": 1130892,
+      "sourceSha256": "11cd33ffc6cef0bdbb12d64dea5a2080591f739bb847bce4077fa9fdfbff5e85",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-049",
+      "source": "full-review/annotated/U021-file-preview-annotated.png",
+      "bytes": 1249474,
+      "sourceSha256": "7f30c03c704e53754af47137f1b7238bc03422f53b1be568c72d71b89f3d7161",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-050",
+      "source": "full-review/annotated/U030-data-responsibility-annotated.png",
+      "bytes": 1275667,
+      "sourceSha256": "e2db977eda63e694180f9b540e000b0b5d1fb3b04232b946af308747f9256db4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-051",
+      "source": "full-review/annotated/U036-export-menu-annotated.png",
+      "bytes": 1227292,
+      "sourceSha256": "f7d2fe2857854904d457f7c38a6b19fc49a7de7912ce9ba5d24609deb7b9b10c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-052",
+      "source": "full-review/annotated/U037-command-picker-annotated.png",
+      "bytes": 1466689,
+      "sourceSha256": "f6bafbc90ddb2b74ce3713b96f25c2634940178600b0e52a6a03ba7953a5ad8f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-053",
+      "source": "full-review/annotated/U045-draft-layout-annotated.png",
+      "bytes": 1002256,
+      "sourceSha256": "126858ddfaebd80e67f8fd09c3b3c4d9aab47361547db662c3f771e1ab06a35a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-054",
+      "source": "full-review/annotated/generation-record.md",
+      "bytes": 4231,
+      "sourceSha256": "ab977184dd6db0b6fd76b26233f3060f17602e0c4afa241da2f98e44a6ce481a",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/annotated/generation-record.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "bddf84ac83ddb74214262b20071775db77c4d4c881de9f6e9adaffe24e9c4a11"
+    },
+    {
+      "id": "file-055",
+      "source": "full-review/annotated/index.html",
+      "bytes": 8632,
+      "sourceSha256": "5eacd0e5792e2b4f17d366f58428912b275a5f40a5b19d2661f2c92e8ec8240a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-056",
+      "source": "full-review/annotated/prompts-U036-U045.json",
+      "bytes": 2843,
+      "sourceSha256": "75cd0e87c61a2c49398d81ad06ecc90d8d5d13409f7e989d14e64f513e012527",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-057",
+      "source": "full-review/annotated/prompts-U037.json",
+      "bytes": 1545,
+      "sourceSha256": "ec290ac4c6f165c18c29da8e5d01dd792836ad2752e2f08d03c104905fd82ec6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-058",
+      "source": "full-review/annotated/prompts.json",
+      "bytes": 4785,
+      "sourceSha256": "7c1c9b4a7364378f47b373e701198268a92f17fbc753e62739f05c025e8885c2",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-059",
+      "source": "full-review/controlled-views/agent-setup/01-account-key.html",
+      "bytes": 199782,
+      "sourceSha256": "1e062f129cf0966e85859f06a0afb2f9a54b61473cd49f3e8fcad30a9ae7be4c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-060",
+      "source": "full-review/controlled-views/agent-setup/02-terminal-api.html",
+      "bytes": 197744,
+      "sourceSha256": "5c5464d9ac2abb02a0c3a8379967cdcdbec5be3cf37040840793bab1041d64fc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-061",
+      "source": "full-review/controlled-views/agent-setup/03-three-methods.html",
+      "bytes": 198059,
+      "sourceSha256": "85f489a8ab18c0ba1143407aaa9f475cf3ccbc87e770c69a9bf34a2adcfb7ed9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-062",
+      "source": "full-review/controlled-views/agent-setup/04-account-summary.html",
+      "bytes": 198987,
+      "sourceSha256": "0109e872a896d90ad8f558b1248de5ef8673f5d6d02aee6401213d437f68aa80",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-063",
+      "source": "full-review/controlled-views/agent-setup/05-terminal-summary.html",
+      "bytes": 196821,
+      "sourceSha256": "1db46daea14fd8253bc717dced704efe9f55e03ddc691e3506046a647ea633cd",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-064",
+      "source": "full-review/controlled-views/agent-setup/06-service-step.html",
+      "bytes": 196859,
+      "sourceSha256": "1bd5c3c60f260209af926b04822977b5aad6a0f8ba14738460a40253344673c9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-065",
+      "source": "full-review/controlled-views/agent-setup/07-service-summary.html",
+      "bytes": 196973,
+      "sourceSha256": "e58aadbef043e04ea9740c411adeb3b858400c42fc3fd65f78c5c3602a554158",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-066",
+      "source": "full-review/controlled-views/agent-setup/08-model-step.html",
+      "bytes": 197916,
+      "sourceSha256": "4264c3c2e12bb56a57d0b6cdfb28868da11ac729f6834e960b79132c3f04cf97",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-067",
+      "source": "full-review/controlled-views/agent-setup/09-model-selected.html",
+      "bytes": 197843,
+      "sourceSha256": "15e7df7122f998f438ef580252817eda69f2c4c0f740f7665f9e34d961100478",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-068",
+      "source": "full-review/controlled-views/agent-setup/10-program-list.html",
+      "bytes": 198031,
+      "sourceSha256": "292b9b92a82f0506c675fb34e44ecaade1104ce6ed387852edf89caedbc77b5e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-069",
+      "source": "full-review/controlled-views/agent-setup/11-program-connected.html",
+      "bytes": 197864,
+      "sourceSha256": "97ff80a3aa39f2d62d80f14901cc11ac6d8039f2db1369ffbd73359db7b30b43",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-070",
+      "source": "full-review/controlled-views/agent-setup/12-service-editing.html",
+      "bytes": 196868,
+      "sourceSha256": "1bc7fdadd06ad8d87f12026979cdef68b43ce6a0be72cc74e8724efe58dfb7e1",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-071",
+      "source": "full-review/controlled-views/agent-setup/13-single-terminal.html",
+      "bytes": 197920,
+      "sourceSha256": "4887fb13736615a05569ff149a931b0ec21e83fd28155c53b18f4140398222ac",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-072",
+      "source": "full-review/controlled-views/agent-setup/14-key-detail.html",
+      "bytes": 199513,
+      "sourceSha256": "5e5f2776b5376d3788d81d5ba511c291a2ecdcb4e8307c10d4f25a1fdfad9e1d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-073",
+      "source": "full-review/controlled-views/agent-setup/15-api-old-auth.html",
+      "bytes": 196593,
+      "sourceSha256": "3709709ab3ccab949016b3c3f2c613612277be36875c73953eb1ee73a3284cbc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-074",
+      "source": "full-review/controlled-views/agent-setup/16-program-ready.html",
+      "bytes": 199122,
+      "sourceSha256": "8d5b8d3b1c02f19d680518ace431846aff81f6afa258d30791067235ac502213",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-075",
+      "source": "full-review/controlled-views/agent-setup/17-program-missing.html",
+      "bytes": 210839,
+      "sourceSha256": "a91f8a3d60e59f32f4002fd5f0b121956ce23678405d9fcf467c79a7d16e1cf6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-076",
+      "source": "full-review/controlled-views/agent-setup/export-manifest.json",
+      "bytes": 8400,
+      "sourceSha256": "26f3153bef4bc81103754ee1edc62614ca871892a6ddf4ad8382708d66e054ca",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-077",
+      "source": "full-review/controlled-views/composer/01-start-light.html",
+      "bytes": 112105,
+      "sourceSha256": "43f81a5ebce9b4ceb35dcb5e2ae41596f5d9a5727818cfb406eb01ba97dd74f8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-078",
+      "source": "full-review/controlled-views/composer/02-start-dark.html",
+      "bytes": 112104,
+      "sourceSha256": "2ed2d539ed8117c1015e4ae7f8240a42cbc7311d3e82f6867d005a3581b0d906",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-079",
+      "source": "full-review/controlled-views/composer/03-thread-light.html",
+      "bytes": 112096,
+      "sourceSha256": "62a1d730e2066c8a4502488c6bfd4492b9de61ca334c1fe6163404103ff34d97",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-080",
+      "source": "full-review/controlled-views/composer/04-thread-dark.html",
+      "bytes": 112095,
+      "sourceSha256": "75bc0a11fbdd67d2a4bce07b04b1330e596ac78eb652b6f560ca80adf06333b8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-081",
+      "source": "full-review/controlled-views/composer/05-running-light.html",
+      "bytes": 112243,
+      "sourceSha256": "daabf5d62caf77d201e24ed2a6cfaac67ee3f6d9bdefe8317ca7c85eae11ecf3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-082",
+      "source": "full-review/controlled-views/receipt.json",
+      "bytes": 81731,
+      "sourceSha256": "3390ae1d0c1b556ca217b2f6a3e03cecf5ecb25b2cc6b6759fedbe2a7c654436",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-083",
+      "source": "full-review/controlled-views/screenshots/agent-setup--01-account-key.ax.txt",
+      "bytes": 1256,
+      "sourceSha256": "773d80eee0c290a0da88cf51f66295dc81d19e800606e5bba46540a5dab96b80",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--01-account-key.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "773d80eee0c290a0da88cf51f66295dc81d19e800606e5bba46540a5dab96b80"
+    },
+    {
+      "id": "file-084",
+      "source": "full-review/controlled-views/screenshots/agent-setup--01-account-key.jpg",
+      "bytes": 32503,
+      "sourceSha256": "46b7574a14a6273310541bfc0c6dbef5c2d42b0032c7064294919ecbc092706e",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--01-account-key.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "46b7574a14a6273310541bfc0c6dbef5c2d42b0032c7064294919ecbc092706e"
+    },
+    {
+      "id": "file-085",
+      "source": "full-review/controlled-views/screenshots/agent-setup--02-terminal-api.ax.txt",
+      "bytes": 1285,
+      "sourceSha256": "54cd92361f6e6d3f36533c36f772671dc2e3507820b9033464a118b69cd3daf7",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--02-terminal-api.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "54cd92361f6e6d3f36533c36f772671dc2e3507820b9033464a118b69cd3daf7"
+    },
+    {
+      "id": "file-086",
+      "source": "full-review/controlled-views/screenshots/agent-setup--02-terminal-api.jpg",
+      "bytes": 31860,
+      "sourceSha256": "1d96319d89ba722b3749d98b37945618eb74a1c4c14ee557f04aa905cdf7e447",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--02-terminal-api.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "1d96319d89ba722b3749d98b37945618eb74a1c4c14ee557f04aa905cdf7e447"
+    },
+    {
+      "id": "file-087",
+      "source": "full-review/controlled-views/screenshots/agent-setup--03-three-methods.ax.txt",
+      "bytes": 1448,
+      "sourceSha256": "c583db78035c839e1064b2d33c63fa1259dfcb4b27deb5d4f2c6cbcea3f893ad",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--03-three-methods.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "c583db78035c839e1064b2d33c63fa1259dfcb4b27deb5d4f2c6cbcea3f893ad"
+    },
+    {
+      "id": "file-088",
+      "source": "full-review/controlled-views/screenshots/agent-setup--03-three-methods.jpg",
+      "bytes": 34803,
+      "sourceSha256": "a5fcb9330146ee20b44587ba89b2d63b6766ce098850d63c465202dbd61e3652",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--03-three-methods.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "a5fcb9330146ee20b44587ba89b2d63b6766ce098850d63c465202dbd61e3652"
+    },
+    {
+      "id": "file-089",
+      "source": "full-review/controlled-views/screenshots/agent-setup--04-account-summary.ax.txt",
+      "bytes": 663,
+      "sourceSha256": "3a71f10c63948e9c4cee9eb9d5526753e0cb75d2afd5c7f97b7f2e0a4adee7ea",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--04-account-summary.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "3a71f10c63948e9c4cee9eb9d5526753e0cb75d2afd5c7f97b7f2e0a4adee7ea"
+    },
+    {
+      "id": "file-090",
+      "source": "full-review/controlled-views/screenshots/agent-setup--04-account-summary.jpg",
+      "bytes": 22288,
+      "sourceSha256": "d46f0fc13555b410581a18e2cebb956d448a7d2c6f51baebf47670d3ec514de4",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--04-account-summary.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "d46f0fc13555b410581a18e2cebb956d448a7d2c6f51baebf47670d3ec514de4"
+    },
+    {
+      "id": "file-091",
+      "source": "full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.ax.txt",
+      "bytes": 727,
+      "sourceSha256": "7f2d103abf0e255994e4a7da6172b0e6061424bc281cae2f2528a89f7056f84c",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "7f2d103abf0e255994e4a7da6172b0e6061424bc281cae2f2528a89f7056f84c"
+    },
+    {
+      "id": "file-092",
+      "source": "full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.jpg",
+      "bytes": 21597,
+      "sourceSha256": "1748685890db6b6075630d4dd3a771b522506e18962d17b409fe855771d145ae",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--05-terminal-summary.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "1748685890db6b6075630d4dd3a771b522506e18962d17b409fe855771d145ae"
+    },
+    {
+      "id": "file-093",
+      "source": "full-review/controlled-views/screenshots/agent-setup--06-service-step.ax.txt",
+      "bytes": 799,
+      "sourceSha256": "34796595bf4153b06688e30abca121167eb5f3106f81ef1fda533a56ce942fec",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--06-service-step.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "34796595bf4153b06688e30abca121167eb5f3106f81ef1fda533a56ce942fec"
+    },
+    {
+      "id": "file-094",
+      "source": "full-review/controlled-views/screenshots/agent-setup--06-service-step.jpg",
+      "bytes": 21280,
+      "sourceSha256": "7614c377b988135d9c04d5f909b6670589bec25007317f70bcb2a44d960b166a",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--06-service-step.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "7614c377b988135d9c04d5f909b6670589bec25007317f70bcb2a44d960b166a"
+    },
+    {
+      "id": "file-095",
+      "source": "full-review/controlled-views/screenshots/agent-setup--07-service-summary.ax.txt",
+      "bytes": 775,
+      "sourceSha256": "c0c992bd8a970c669e4f6298dfe28de74222d7c671029e5621534d9e51451a5d",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--07-service-summary.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "c0c992bd8a970c669e4f6298dfe28de74222d7c671029e5621534d9e51451a5d"
+    },
+    {
+      "id": "file-096",
+      "source": "full-review/controlled-views/screenshots/agent-setup--07-service-summary.jpg",
+      "bytes": 22735,
+      "sourceSha256": "48819d946a8ec487a40a6a0558c8093250ea69572a77235c02e1383a023c2428",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--07-service-summary.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "48819d946a8ec487a40a6a0558c8093250ea69572a77235c02e1383a023c2428"
+    },
+    {
+      "id": "file-097",
+      "source": "full-review/controlled-views/screenshots/agent-setup--08-model-step.ax.txt",
+      "bytes": 1159,
+      "sourceSha256": "f0a1681c670bc3f8ec677d67855290f5830522f17cbace209560966f63f44737",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--08-model-step.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "f0a1681c670bc3f8ec677d67855290f5830522f17cbace209560966f63f44737"
+    },
+    {
+      "id": "file-098",
+      "source": "full-review/controlled-views/screenshots/agent-setup--08-model-step.jpg",
+      "bytes": 31752,
+      "sourceSha256": "64d536920a21e797e0e616841b7d00b2d717c3e54fd5f4427952c7a1c06d1eff",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--08-model-step.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "64d536920a21e797e0e616841b7d00b2d717c3e54fd5f4427952c7a1c06d1eff"
+    },
+    {
+      "id": "file-099",
+      "source": "full-review/controlled-views/screenshots/agent-setup--09-model-selected.ax.txt",
+      "bytes": 1089,
+      "sourceSha256": "d98b2cba8a8852961719df3a81f7731c487b3ea329b97753f536c1aa3a2aeda3",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--09-model-selected.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "d98b2cba8a8852961719df3a81f7731c487b3ea329b97753f536c1aa3a2aeda3"
+    },
+    {
+      "id": "file-100",
+      "source": "full-review/controlled-views/screenshots/agent-setup--09-model-selected.jpg",
+      "bytes": 31941,
+      "sourceSha256": "e923927ac5eeeb377832ee3c3db9c01ec6228b79c4cbe24085ea6cb8bfd3fe35",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--09-model-selected.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "e923927ac5eeeb377832ee3c3db9c01ec6228b79c4cbe24085ea6cb8bfd3fe35"
+    },
+    {
+      "id": "file-101",
+      "source": "full-review/controlled-views/screenshots/agent-setup--10-program-list.ax.txt",
+      "bytes": 810,
+      "sourceSha256": "14ed002f8f10945947ec546c10a9f69219b417bfbca0df792326d3c3bdfd0c11",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--10-program-list.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "14ed002f8f10945947ec546c10a9f69219b417bfbca0df792326d3c3bdfd0c11"
+    },
+    {
+      "id": "file-102",
+      "source": "full-review/controlled-views/screenshots/agent-setup--10-program-list.jpg",
+      "bytes": 23461,
+      "sourceSha256": "b96f83ad7e12504f415a2e76f1d453eeb43622a045873851bd6905a1b1eae429",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--10-program-list.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "b96f83ad7e12504f415a2e76f1d453eeb43622a045873851bd6905a1b1eae429"
+    },
+    {
+      "id": "file-103",
+      "source": "full-review/controlled-views/screenshots/agent-setup--11-program-connected.ax.txt",
+      "bytes": 749,
+      "sourceSha256": "df2b86bfd9dda37f804be8f740a97a6491f6b2088d6a6e022b2d1981adc64852",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--11-program-connected.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "df2b86bfd9dda37f804be8f740a97a6491f6b2088d6a6e022b2d1981adc64852"
+    },
+    {
+      "id": "file-104",
+      "source": "full-review/controlled-views/screenshots/agent-setup--11-program-connected.jpg",
+      "bytes": 22815,
+      "sourceSha256": "f3527f968300e617dd8534a89b886b2c5b79ef4805b6e52b5570e2df28afb31c",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--11-program-connected.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "f3527f968300e617dd8534a89b886b2c5b79ef4805b6e52b5570e2df28afb31c"
+    },
+    {
+      "id": "file-105",
+      "source": "full-review/controlled-views/screenshots/agent-setup--12-service-editing.ax.txt",
+      "bytes": 799,
+      "sourceSha256": "5564665613f73bf8131aa9d4edb4fc8b2e2cf96e1419a97a90057f562cce2d5a",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--12-service-editing.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "5564665613f73bf8131aa9d4edb4fc8b2e2cf96e1419a97a90057f562cce2d5a"
+    },
+    {
+      "id": "file-106",
+      "source": "full-review/controlled-views/screenshots/agent-setup--12-service-editing.jpg",
+      "bytes": 21347,
+      "sourceSha256": "7fc95c169c655ed19f8986e94becff437b8cc4e916ddb2f11e8bda1737c2ebdd",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--12-service-editing.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "7fc95c169c655ed19f8986e94becff437b8cc4e916ddb2f11e8bda1737c2ebdd"
+    },
+    {
+      "id": "file-107",
+      "source": "full-review/controlled-views/screenshots/agent-setup--13-single-terminal.ax.txt",
+      "bytes": 1050,
+      "sourceSha256": "e36192da58cd8303365e824919ed173e22f6c3716fd3c093b25d17bd2d48b2f6",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--13-single-terminal.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "e36192da58cd8303365e824919ed173e22f6c3716fd3c093b25d17bd2d48b2f6"
+    },
+    {
+      "id": "file-108",
+      "source": "full-review/controlled-views/screenshots/agent-setup--13-single-terminal.jpg",
+      "bytes": 28194,
+      "sourceSha256": "f9c67539882bc3209a49a48e6baf886d8e8436c166a0e9184a9158294a9a7ed6",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--13-single-terminal.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "f9c67539882bc3209a49a48e6baf886d8e8436c166a0e9184a9158294a9a7ed6"
+    },
+    {
+      "id": "file-109",
+      "source": "full-review/controlled-views/screenshots/agent-setup--14-key-detail.ax.txt",
+      "bytes": 894,
+      "sourceSha256": "cd6a973db493515d4b84c2cdb0e80dbed9f1a4cac00552690d24cdaa7ea031d1",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--14-key-detail.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "cd6a973db493515d4b84c2cdb0e80dbed9f1a4cac00552690d24cdaa7ea031d1"
+    },
+    {
+      "id": "file-110",
+      "source": "full-review/controlled-views/screenshots/agent-setup--14-key-detail.jpg",
+      "bytes": 24597,
+      "sourceSha256": "77caa36cbb564692921e8051ec33a8ac412c7eeef0999b50d6000301e44a0c2b",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--14-key-detail.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "77caa36cbb564692921e8051ec33a8ac412c7eeef0999b50d6000301e44a0c2b"
+    },
+    {
+      "id": "file-111",
+      "source": "full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.ax.txt",
+      "bytes": 693,
+      "sourceSha256": "890a8c865f57ff59e843cf65316dd851d858a0ff0553c298a13fda58191428f2",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "890a8c865f57ff59e843cf65316dd851d858a0ff0553c298a13fda58191428f2"
+    },
+    {
+      "id": "file-112",
+      "source": "full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.jpg",
+      "bytes": 19963,
+      "sourceSha256": "10d82b21a8b2767df06e25b7e64bc95986cb2d1bc8919b358931280cd4745766",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--15-api-old-auth.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "10d82b21a8b2767df06e25b7e64bc95986cb2d1bc8919b358931280cd4745766"
+    },
+    {
+      "id": "file-113",
+      "source": "full-review/controlled-views/screenshots/agent-setup--16-program-ready.ax.txt",
+      "bytes": 721,
+      "sourceSha256": "ef1cc17b6e3d40f7cb56a0defedf290f361f54c7c1e6984a780cfa8bcf10a3d2",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--16-program-ready.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "ef1cc17b6e3d40f7cb56a0defedf290f361f54c7c1e6984a780cfa8bcf10a3d2"
+    },
+    {
+      "id": "file-114",
+      "source": "full-review/controlled-views/screenshots/agent-setup--16-program-ready.jpg",
+      "bytes": 21032,
+      "sourceSha256": "0165a922366995a8c93037448d95395b0a2461858797e7b763963c2a3023ff7b",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--16-program-ready.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "0165a922366995a8c93037448d95395b0a2461858797e7b763963c2a3023ff7b"
+    },
+    {
+      "id": "file-115",
+      "source": "full-review/controlled-views/screenshots/agent-setup--17-program-missing.ax.txt",
+      "bytes": 968,
+      "sourceSha256": "42fc7d716bf3427bc6beb698833dc1597ae1cba02dff5a91db1be1054b6f44a4",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--17-program-missing.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "42fc7d716bf3427bc6beb698833dc1597ae1cba02dff5a91db1be1054b6f44a4"
+    },
+    {
+      "id": "file-116",
+      "source": "full-review/controlled-views/screenshots/agent-setup--17-program-missing.jpg",
+      "bytes": 27433,
+      "sourceSha256": "dc30d8caf9eba76294169dabfbf75d46af5531e86a03abe7c61021827b728599",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/agent-setup--17-program-missing.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "dc30d8caf9eba76294169dabfbf75d46af5531e86a03abe7c61021827b728599"
+    },
+    {
+      "id": "file-117",
+      "source": "full-review/controlled-views/screenshots/composer--01-start-light.ax.txt",
+      "bytes": 1308,
+      "sourceSha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--01-start-light.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261"
+    },
+    {
+      "id": "file-118",
+      "source": "full-review/controlled-views/screenshots/composer--01-start-light.jpg",
+      "bytes": 23286,
+      "sourceSha256": "cb3afb68f71b705613bd0fa5f5755fd59689e278e8671d6caa0b8f4092d96e17",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--01-start-light.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "cb3afb68f71b705613bd0fa5f5755fd59689e278e8671d6caa0b8f4092d96e17"
+    },
+    {
+      "id": "file-119",
+      "source": "full-review/controlled-views/screenshots/composer--02-start-dark.ax.txt",
+      "bytes": 1308,
+      "sourceSha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--02-start-dark.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "000041121d8d2782a158ccc972d016b1f757c80abd0b6c23983e465237ceb261"
+    },
+    {
+      "id": "file-120",
+      "source": "full-review/controlled-views/screenshots/composer--02-start-dark.jpg",
+      "bytes": 21993,
+      "sourceSha256": "485f80c49dcec2ca7a19ced25674fbbed01eca0870d5ce72f397e63ba2c4d531",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--02-start-dark.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "485f80c49dcec2ca7a19ced25674fbbed01eca0870d5ce72f397e63ba2c4d531"
+    },
+    {
+      "id": "file-121",
+      "source": "full-review/controlled-views/screenshots/composer--03-thread-light.ax.txt",
+      "bytes": 1370,
+      "sourceSha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--03-thread-light.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1"
+    },
+    {
+      "id": "file-122",
+      "source": "full-review/controlled-views/screenshots/composer--03-thread-light.jpg",
+      "bytes": 24529,
+      "sourceSha256": "4a81802f5e2a81249b8b0fc3438e2ccaac02b79e1b297eaef8f901da569f6e7e",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--03-thread-light.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "4a81802f5e2a81249b8b0fc3438e2ccaac02b79e1b297eaef8f901da569f6e7e"
+    },
+    {
+      "id": "file-123",
+      "source": "full-review/controlled-views/screenshots/composer--04-thread-dark.ax.txt",
+      "bytes": 1370,
+      "sourceSha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--04-thread-dark.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "5180c28156548ed3bbe919640278947f5dba923553fc3b40bef99821714370b1"
+    },
+    {
+      "id": "file-124",
+      "source": "full-review/controlled-views/screenshots/composer--04-thread-dark.jpg",
+      "bytes": 23527,
+      "sourceSha256": "4d67515d0fffb8fbd5d6828a05f74b03bba88f5df601a4155bb43d92a57c8869",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--04-thread-dark.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "4d67515d0fffb8fbd5d6828a05f74b03bba88f5df601a4155bb43d92a57c8869"
+    },
+    {
+      "id": "file-125",
+      "source": "full-review/controlled-views/screenshots/composer--05-running-light.ax.txt",
+      "bytes": 1417,
+      "sourceSha256": "50fe2a8258c63dcdd1a8795e43735c02e4891137ef6968d3923bbd57f7632a9d",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--05-running-light.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "50fe2a8258c63dcdd1a8795e43735c02e4891137ef6968d3923bbd57f7632a9d"
+    },
+    {
+      "id": "file-126",
+      "source": "full-review/controlled-views/screenshots/composer--05-running-light.jpg",
+      "bytes": 23434,
+      "sourceSha256": "af0e6907ce87ded427917febd29f8835814e2ee7f1494d261c7916de8673c0d9",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/composer--05-running-light.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "af0e6907ce87ded427917febd29f8835814e2ee7f1494d261c7916de8673c0d9"
+    },
+    {
+      "id": "file-127",
+      "source": "full-review/controlled-views/screenshots/manifest.json",
+      "bytes": 3708,
+      "sourceSha256": "3d6fcacd23f53758fe80ca2ae2a18ef1a6802d5027e450ddbdd6cadec745c45a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-128",
+      "source": "full-review/controlled-views/screenshots/states--01-approval-pending.ax.txt",
+      "bytes": 427,
+      "sourceSha256": "ae1a37ea289d9efa591f1a1a0912373434c393f3ed90b133a835c732b8591966",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--01-approval-pending.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "ae1a37ea289d9efa591f1a1a0912373434c393f3ed90b133a835c732b8591966"
+    },
+    {
+      "id": "file-129",
+      "source": "full-review/controlled-views/screenshots/states--01-approval-pending.jpg",
+      "bytes": 15560,
+      "sourceSha256": "b3f8b3793496dbd30f6e3e9e82d6217396efa3f1fc9347a4761610f45fa743df",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--01-approval-pending.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "b3f8b3793496dbd30f6e3e9e82d6217396efa3f1fc9347a4761610f45fa743df"
+    },
+    {
+      "id": "file-130",
+      "source": "full-review/controlled-views/screenshots/states--02-approval-stop-waiting.ax.txt",
+      "bytes": 449,
+      "sourceSha256": "bf1dc6bed4f0ca2b143906a94d893ab792abde6e4e81452b67e7582eeead89ca",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--02-approval-stop-waiting.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "bf1dc6bed4f0ca2b143906a94d893ab792abde6e4e81452b67e7582eeead89ca"
+    },
+    {
+      "id": "file-131",
+      "source": "full-review/controlled-views/screenshots/states--02-approval-stop-waiting.jpg",
+      "bytes": 15037,
+      "sourceSha256": "ce254e7096a726e26a77bb65e569d9694e4d7ca7af8849995a4f2899e6cdd3b4",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--02-approval-stop-waiting.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "ce254e7096a726e26a77bb65e569d9694e4d7ca7af8849995a4f2899e6cdd3b4"
+    },
+    {
+      "id": "file-132",
+      "source": "full-review/controlled-views/screenshots/states--03-question-pending.ax.txt",
+      "bytes": 135,
+      "sourceSha256": "66de55874d514dd2635edcf6383408b775eaa064c9b836fc6f6d1b937d54aeb9",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--03-question-pending.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "66de55874d514dd2635edcf6383408b775eaa064c9b836fc6f6d1b937d54aeb9"
+    },
+    {
+      "id": "file-133",
+      "source": "full-review/controlled-views/screenshots/states--03-question-pending.jpg",
+      "bytes": 8894,
+      "sourceSha256": "526ff04b8c6581d9ce74c20051c8cc921c2d9cfe7cc2f80f8288ddbb9df879cc",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--03-question-pending.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "526ff04b8c6581d9ce74c20051c8cc921c2d9cfe7cc2f80f8288ddbb9df879cc"
+    },
+    {
+      "id": "file-134",
+      "source": "full-review/controlled-views/screenshots/states--04-question-uncertain.ax.txt",
+      "bytes": 198,
+      "sourceSha256": "de95f445e1a709fc9e1dee40856a058347cd794b67e2aa008a6014ece45fb0bb",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--04-question-uncertain.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "de95f445e1a709fc9e1dee40856a058347cd794b67e2aa008a6014ece45fb0bb"
+    },
+    {
+      "id": "file-135",
+      "source": "full-review/controlled-views/screenshots/states--04-question-uncertain.jpg",
+      "bytes": 10545,
+      "sourceSha256": "ba68613d072aa8eaf3050f4769c09363a351aef6e2abbe16dd17b28c5b42bf3c",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--04-question-uncertain.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "ba68613d072aa8eaf3050f4769c09363a351aef6e2abbe16dd17b28c5b42bf3c"
+    },
+    {
+      "id": "file-136",
+      "source": "full-review/controlled-views/screenshots/states--05-queue-paused.ax.txt",
+      "bytes": 636,
+      "sourceSha256": "48b075e274c76a146b381c7619e0ada00539ec2a6d8b69e7f9499ce2aa691d4f",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--05-queue-paused.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "48b075e274c76a146b381c7619e0ada00539ec2a6d8b69e7f9499ce2aa691d4f"
+    },
+    {
+      "id": "file-137",
+      "source": "full-review/controlled-views/screenshots/states--05-queue-paused.jpg",
+      "bytes": 17110,
+      "sourceSha256": "c5b9cceb96454b4b52f796ff61ee02824dfa157e3a3242a05005edadf8adb0ad",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--05-queue-paused.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "c5b9cceb96454b4b52f796ff61ee02824dfa157e3a3242a05005edadf8adb0ad"
+    },
+    {
+      "id": "file-138",
+      "source": "full-review/controlled-views/screenshots/states--06-queue-editing.ax.txt",
+      "bytes": 1156,
+      "sourceSha256": "20f67f75d49be3b60fa2594c570128dd78086a386f950ce92196f2ff996448b1",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--06-queue-editing.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "20f67f75d49be3b60fa2594c570128dd78086a386f950ce92196f2ff996448b1"
+    },
+    {
+      "id": "file-139",
+      "source": "full-review/controlled-views/screenshots/states--06-queue-editing.jpg",
+      "bytes": 16635,
+      "sourceSha256": "f54852cb39233b4dca64750006d243c9e4dfdfe27f63f8c7d2f9c8ff5344a706",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--06-queue-editing.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "f54852cb39233b4dca64750006d243c9e4dfdfe27f63f8c7d2f9c8ff5344a706"
+    },
+    {
+      "id": "file-140",
+      "source": "full-review/controlled-views/screenshots/states--07-stop-unknown.ax.txt",
+      "bytes": 535,
+      "sourceSha256": "40200c2cdb49bd50f5374ebae43e7746f9fb8463f7b93fc7f602e45c4d7793aa",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--07-stop-unknown.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "40200c2cdb49bd50f5374ebae43e7746f9fb8463f7b93fc7f602e45c4d7793aa"
+    },
+    {
+      "id": "file-141",
+      "source": "full-review/controlled-views/screenshots/states--07-stop-unknown.jpg",
+      "bytes": 15760,
+      "sourceSha256": "fb442b912108d5ae2f0806002c7ec521ea19d6dd9df84acdd8fbc97601393278",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--07-stop-unknown.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "fb442b912108d5ae2f0806002c7ec521ea19d6dd9df84acdd8fbc97601393278"
+    },
+    {
+      "id": "file-142",
+      "source": "full-review/controlled-views/screenshots/states--08-work-read-error.ax.txt",
+      "bytes": 242,
+      "sourceSha256": "4e7eaaafbe7ae2d4f586a1efe6353e9cfd942b6d2ba5f8a9fa0ba60b21222630",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--08-work-read-error.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "4e7eaaafbe7ae2d4f586a1efe6353e9cfd942b6d2ba5f8a9fa0ba60b21222630"
+    },
+    {
+      "id": "file-143",
+      "source": "full-review/controlled-views/screenshots/states--08-work-read-error.jpg",
+      "bytes": 9836,
+      "sourceSha256": "ea5c9777cff084973d4ad6b2f2b6f46c0afb9330b7b061208245714fab602439",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--08-work-read-error.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "ea5c9777cff084973d4ad6b2f2b6f46c0afb9330b7b061208245714fab602439"
+    },
+    {
+      "id": "file-144",
+      "source": "full-review/controlled-views/screenshots/states--09-diff-fragment.ax.txt",
+      "bytes": 743,
+      "sourceSha256": "cff9fcf71092542af9c57adb367814caae12349b50940084fb43d81564e05dd4",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--09-diff-fragment.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "cff9fcf71092542af9c57adb367814caae12349b50940084fb43d81564e05dd4"
+    },
+    {
+      "id": "file-145",
+      "source": "full-review/controlled-views/screenshots/states--09-diff-fragment.jpg",
+      "bytes": 12602,
+      "sourceSha256": "2b94f873e49e15dad976c1ab12bc57aeb3e102ad88d4b6b9eccbd469d4ec3251",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--09-diff-fragment.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "2b94f873e49e15dad976c1ab12bc57aeb3e102ad88d4b6b9eccbd469d4ec3251"
+    },
+    {
+      "id": "file-146",
+      "source": "full-review/controlled-views/screenshots/states--10-diff-split.ax.txt",
+      "bytes": 155,
+      "sourceSha256": "44057c98e044ebb64c83822272d6cdd1d34b62654d8234bb212d62a0d0897c3b",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--10-diff-split.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "44057c98e044ebb64c83822272d6cdd1d34b62654d8234bb212d62a0d0897c3b"
+    },
+    {
+      "id": "file-147",
+      "source": "full-review/controlled-views/screenshots/states--10-diff-split.jpg",
+      "bytes": 5150,
+      "sourceSha256": "9f4aeb96895029af86eca0551e59d1dbf4917d70cab9e9c15ae75f663983deb3",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--10-diff-split.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "9f4aeb96895029af86eca0551e59d1dbf4917d70cab9e9c15ae75f663983deb3"
+    },
+    {
+      "id": "file-148",
+      "source": "full-review/controlled-views/screenshots/states--11-media-collapsed.ax.txt",
+      "bytes": 169,
+      "sourceSha256": "07f040fd6761f822aa5ea4d38e4a1a80e60f5bb9c2a39ac1360cbb11d0fb0427",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--11-media-collapsed.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "07f040fd6761f822aa5ea4d38e4a1a80e60f5bb9c2a39ac1360cbb11d0fb0427"
+    },
+    {
+      "id": "file-149",
+      "source": "full-review/controlled-views/screenshots/states--11-media-collapsed.jpg",
+      "bytes": 5821,
+      "sourceSha256": "b6df9c34ce1f8b0b856ce39d447e8f4951f1ff4563ac9b66f4ce68452d519339",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--11-media-collapsed.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "b6df9c34ce1f8b0b856ce39d447e8f4951f1ff4563ac9b66f4ce68452d519339"
+    },
+    {
+      "id": "file-150",
+      "source": "full-review/controlled-views/screenshots/states--12-media-expanded.ax.txt",
+      "bytes": 507,
+      "sourceSha256": "1db3b81f1de02f4907f7436ab953766528c857e91697963963b5b2947528ecba",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--12-media-expanded.ax.txt",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "1db3b81f1de02f4907f7436ab953766528c857e91697963963b5b2947528ecba"
+    },
+    {
+      "id": "file-151",
+      "source": "full-review/controlled-views/screenshots/states--12-media-expanded.jpg",
+      "bytes": 15084,
+      "sourceSha256": "731ca1d0a461f9c2b178d9a8dae712f2ed144bb45219f131185e186b1dbf0ee7",
+      "decision": "publish-byte-identical-controlled-fixture",
+      "published": "controlled/full-review/controlled-views/screenshots/states--12-media-expanded.jpg",
+      "reason": "合成受控组件；无真实账号/历史；OCR/AX及元数据复核",
+      "publishedSha256": "731ca1d0a461f9c2b178d9a8dae712f2ed144bb45219f131185e186b1dbf0ee7"
+    },
+    {
+      "id": "file-152",
+      "source": "full-review/controlled-views/state-export.config.ts",
+      "bytes": 328,
+      "sourceSha256": "f22a44253bf631c2c9676039f99c8b54379905f07af9a5a953c3d2955797244b",
+      "decision": "publish-byte-identical-reproduction-source",
+      "published": "reproduction/full-review/controlled-views/state-export.config.ts",
+      "reason": "测试侧导出源码，仅供追溯，未执行",
+      "publishedSha256": "f22a44253bf631c2c9676039f99c8b54379905f07af9a5a953c3d2955797244b"
+    },
+    {
+      "id": "file-153",
+      "source": "full-review/controlled-views/state-export.test.tsx",
+      "bytes": 14360,
+      "sourceSha256": "c7bee4b488c562fb37ac3e32f4312a34fbf4e999d0bc6b3adb1225ba0fac093a",
+      "decision": "publish-byte-identical-reproduction-source",
+      "published": "reproduction/full-review/controlled-views/state-export.test.tsx",
+      "reason": "测试侧导出源码，仅供追溯，未执行",
+      "publishedSha256": "c7bee4b488c562fb37ac3e32f4312a34fbf4e999d0bc6b3adb1225ba0fac093a"
+    },
+    {
+      "id": "file-154",
+      "source": "full-review/controlled-views/states/01-approval-pending.html",
+      "bytes": 195700,
+      "sourceSha256": "a94310a4ced9d2f2d023ae15abc419222aad2d22277b33dfa12ea0f806bbd9a9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-155",
+      "source": "full-review/controlled-views/states/02-approval-stop-waiting.html",
+      "bytes": 195729,
+      "sourceSha256": "4493988919d9e0c160d40293b60c194da9339e9f2127229c8ebf90980e582fc0",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-156",
+      "source": "full-review/controlled-views/states/03-question-pending.html",
+      "bytes": 195170,
+      "sourceSha256": "50d1d9610685b7d0dcd9badae33fa529926237910dfb5df3642282c3ca4316c7",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-157",
+      "source": "full-review/controlled-views/states/04-question-uncertain.html",
+      "bytes": 195270,
+      "sourceSha256": "a9c60ffca158a6d9c726be78fdf134c76ff4f12b1cdadc7bcacb8f5fe6cb4c7d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-158",
+      "source": "full-review/controlled-views/states/05-queue-paused.html",
+      "bytes": 204798,
+      "sourceSha256": "2828fa881edb0a4a02431edf68a114c866a8095139bb07c760c3ae2827d134b0",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-159",
+      "source": "full-review/controlled-views/states/06-queue-editing.html",
+      "bytes": 206655,
+      "sourceSha256": "0b38dada1df16a3f0f68217452516e6f4339c5a47593c3ddd95979d464fae5cb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-160",
+      "source": "full-review/controlled-views/states/07-stop-unknown.html",
+      "bytes": 204507,
+      "sourceSha256": "2d40d634867bc74b29a7a36e5b9f23381679b41e7457255eea4d20cc8d18e0fe",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-161",
+      "source": "full-review/controlled-views/states/08-work-read-error.html",
+      "bytes": 195979,
+      "sourceSha256": "43bf708299eab975c2259d58e617c1e822956c7f1349c2e3ed9d6faec6622f17",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-162",
+      "source": "full-review/controlled-views/states/09-diff-fragment.html",
+      "bytes": 198794,
+      "sourceSha256": "ddaabf616116b25c05d0976618dbf17d26cf88c49e4c3af612dd2d2142801c3f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-163",
+      "source": "full-review/controlled-views/states/10-diff-split.html",
+      "bytes": 195203,
+      "sourceSha256": "7d9243e6cb8885729ce268963303894ddef0a756b6b8a38f36e584bdb48afb0a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-164",
+      "source": "full-review/controlled-views/states/11-media-collapsed.html",
+      "bytes": 198148,
+      "sourceSha256": "83da48a1313e09e3c649a28a78d686b1b101b40d4c774403452af493807aae91",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-165",
+      "source": "full-review/controlled-views/states/12-media-expanded.html",
+      "bytes": 198237,
+      "sourceSha256": "12c5eb19494c801c98214b46d22300b12bbf7a1805f2d82a82d35d0051b49507",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-166",
+      "source": "full-review/controlled-views/states/README.md",
+      "bytes": 3646,
+      "sourceSha256": "44721c9b7e3e45faca2c4774bbc35f281f9eac378fb833d75f214e19ac72a8b2",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/controlled-views/states/README.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "cc55e8878938d2ab02cbc71ce7d9718ea6c99d3884551ddd17c8855f79ba9d09"
+    },
+    {
+      "id": "file-167",
+      "source": "full-review/controlled-views/states/export-receipt.json",
+      "bytes": 1460,
+      "sourceSha256": "14e117a23a8d2645f65b28dce8854803a7873fbe8b79f3d2d779c72f9482465d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-168",
+      "source": "full-review/controlled-views/states/manifest.json",
+      "bytes": 47300,
+      "sourceSha256": "81eefcf9b01f02527d7fd2a31bfaf810e8159adb7f5226fc866e76d808416053",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-169",
+      "source": "full-review/controlled-views/states-screenshots.json",
+      "bytes": 4105,
+      "sourceSha256": "142078da296c94c1814ad26ac8a53a3aa715e66b898b60c8433213938cea0f0c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-170",
+      "source": "full-review/coverage-ledger.md",
+      "bytes": 38416,
+      "sourceSha256": "a7117996a7cecafee703931b7e0189db8a022498b9e8c145cb1312e01bc23900",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/coverage-ledger.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "e495d578e81ce352f64e16e17b70368cd69b711d0bb2a92ccd03f14e5735453b"
+    },
+    {
+      "id": "file-171",
+      "source": "full-review/data.js",
+      "bytes": 54294,
+      "sourceSha256": "67338beaab73b3c07926b9e9165aeb2167bed33bf393aecadf009191b2febe68",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-172",
+      "source": "full-review/fixtures/sample.html",
+      "bytes": 208,
+      "sourceSha256": "d3cf4334db2cb5d3d250ceace33375ada5139de652ef04ca18c87c4a719a57ea",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-173",
+      "source": "full-review/fixtures/sample.md",
+      "bytes": 106,
+      "sourceSha256": "e1734ec364fc1aedb9d044abc3a8b63c35722a213e4d40d9bc867ac97ec4de9d",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/fixtures/sample.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "ef7a4f13c78d380c55b9f903db0f2789889afbc18f0b5d131f735cbe75714060"
+    },
+    {
+      "id": "file-174",
+      "source": "full-review/fixtures/uiux-conversation-export.md",
+      "bytes": 842,
+      "sourceSha256": "102a12be183b7185ff258f175ee23647822ff40f924adc331203e2b419c791bd",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/fixtures/uiux-conversation-export.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "2118f9fad15d09b848d2c109be1c1bd6d936a924ec9777c6c7a0e12cd400d946"
+    },
+    {
+      "id": "file-175",
+      "source": "full-review/gallery.js",
+      "bytes": 18241,
+      "sourceSha256": "5521cdc6e76fa16a40d7634c956a6c687fc4b7e125b4b389cec553c8e99f9c64",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-176",
+      "source": "full-review/independent-observations.md",
+      "bytes": 44852,
+      "sourceSha256": "d432eafaa5aaca2afb4a941a60b77503564b93007d07fc31f69c1debc71e1766",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/independent-observations.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "4b62138f1435dc6d15676cd99b67cd503c916d4775f2a27643abf3dca47aaf3f"
+    },
+    {
+      "id": "file-177",
+      "source": "full-review/index.html",
+      "bytes": 8224,
+      "sourceSha256": "392cb4437c60ededdd7c937394cce776b42aae9f5c93353aec88d32132658862",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-178",
+      "source": "full-review/observations.json",
+      "bytes": 15976,
+      "sourceSha256": "074ba078b7c3201eeee94e797d9386ea42b55f27350e6af540d3de331b76582e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-179",
+      "source": "full-review/preview/browser-qa.json",
+      "bytes": 692,
+      "sourceSha256": "77900f2623c4abc1aac20940e776bff7ec4a9a30de28c1bd88d0e05e6b7bd7fa",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-180",
+      "source": "full-review/preview/gallery-U037.jpg",
+      "bytes": 52290,
+      "sourceSha256": "cdd9f1d29459b0ff97d9869ed6461c530be6dab452de18a8121337bfc5424903",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-181",
+      "source": "full-review/preview/gallery-U045-final.jpg",
+      "bytes": 42326,
+      "sourceSha256": "cddb675dddebfc7846686e1cdb968851909760c8e466ba48551be60cda0b61bb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-182",
+      "source": "full-review/preview/redbox-page-visible.jpg",
+      "bytes": 42294,
+      "sourceSha256": "eb758ce1f3b6ec64cefa6c52a3253801b8f8f5f21029c9dd173f283cb6aec503",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-183",
+      "source": "full-review/preview/redbox-visibility-qa.json",
+      "bytes": 878,
+      "sourceSha256": "a0c816e265cf1f13ad1f077ca2b4c11b295f19ec607d44361f4a9808033e2541",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-184",
+      "source": "full-review/product-flow-map.md",
+      "bytes": 36964,
+      "sourceSha256": "6df9b59ffabcc98db129a12be22630a24238b2fb6d0be155b4d9142acf03907b",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/product-flow-map.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "e74e1a6724b97223228fa4664332f5a2a44ed1d9ecaa0da235ebba34bf950798"
+    },
+    {
+      "id": "file-185",
+      "source": "full-review/refresh-gallery-data.py",
+      "bytes": 23234,
+      "sourceSha256": "dd02f4250aaeae646c9c9b665867a966da75d23cfb8ff3d6284b8a91b071c8f2",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-186",
+      "source": "full-review/review.md",
+      "bytes": 8777,
+      "sourceSha256": "ff38ba7e70d44121b6d832a5f4c8b885a47f5499606bd3eb0dd7d0216aa0b54f",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/review.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "c75d0f7f94354c45396f2f76a9458060670b8dfe69c10932b64d1c0d4a7b02b3"
+    },
+    {
+      "id": "file-187",
+      "source": "full-review/screenshots/U001-library-start.ax.txt",
+      "bytes": 25421,
+      "sourceSha256": "506cec4fa473ea102508952d3de707cebb8d0f32cd0c3b975749bf3a781e40f9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-188",
+      "source": "full-review/screenshots/U001-library-start.jpg",
+      "bytes": 262080,
+      "sourceSha256": "9a8b0b9cf13d5cccbd96fbe9dc0f91739ff546056fc325ba3e3a5e03edea52fb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-189",
+      "source": "full-review/screenshots/U002-library-agent-filter.ax.txt",
+      "bytes": 5668,
+      "sourceSha256": "3336cb455fea184bf4919355acee7c1470de5b6b59f06be3e0f304ab4673ac3d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-190",
+      "source": "full-review/screenshots/U002-library-agent-filter.jpg",
+      "bytes": 347530,
+      "sourceSha256": "dd44c63eb75b696df57c4757720f915372fcf0dd2f3ef6b8227b01be83a81f5e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-191",
+      "source": "full-review/screenshots/U003-library-no-match.ax.txt",
+      "bytes": 2865,
+      "sourceSha256": "f84571fa09ec5dd6bb2f2e6b837c0e03acaf29b78e9be40e65b6799b2c5de5ad",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-192",
+      "source": "full-review/screenshots/U003-library-no-match.jpg",
+      "bytes": 200801,
+      "sourceSha256": "62a3d30e6b3820140fd7a6cd84dd09ad3df67a04236dc9c2f5db850f53f5b4ca",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-193",
+      "source": "full-review/screenshots/U004-library-batch-selected.ax.txt",
+      "bytes": 3328,
+      "sourceSha256": "0b148bdbaa796c33f9aa31f117d3a2ae2edc841e815d33a699e05a2c6642c5e7",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-194",
+      "source": "full-review/screenshots/U004-library-batch-selected.jpg",
+      "bytes": 245407,
+      "sourceSha256": "ed511543db93869e96375ca564ac3c6e23f1d64055640a84d6b856071d393765",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-195",
+      "source": "full-review/screenshots/U005-library-move-group.ax.txt",
+      "bytes": 696,
+      "sourceSha256": "32bf751b653e30ba182b6a93fd473cef9e1f0203a60320c9892679cf72cc842d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-196",
+      "source": "full-review/screenshots/U005-library-move-group.jpg",
+      "bytes": 147030,
+      "sourceSha256": "476014764b4226200573206f42f303e220d6e0a4f0a103b882f1aa1b07a237f4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-197",
+      "source": "full-review/screenshots/U006-library-row-menu.ax.txt",
+      "bytes": 3222,
+      "sourceSha256": "c0aa32f18cd753962f06fdda213c12f5e2eaacdc5f647feafeb68fa5d0ad5031",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-198",
+      "source": "full-review/screenshots/U006-library-row-menu.jpg",
+      "bytes": 236981,
+      "sourceSha256": "68018e910c57d6264878d2bcea7cca3a02a8310db672fe9ddf6efa9bd2ee0c4b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-199",
+      "source": "full-review/screenshots/U007-library-rename.ax.txt",
+      "bytes": 806,
+      "sourceSha256": "b70cd6d779bc303316980122d3acdb75c2821df3c56709b5989fe407e90b67eb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-200",
+      "source": "full-review/screenshots/U007-library-rename.jpg",
+      "bytes": 142628,
+      "sourceSha256": "92f7bb38facd75d643e6f65775d3634678d125feebbe83c0e09903747fe3db38",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-201",
+      "source": "full-review/screenshots/U008-draft-start.ax.txt",
+      "bytes": 2867,
+      "sourceSha256": "464afb226636224a7bf2303214ab511aeb60a87cd883f2cb0fc339d0e4ff3f62",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-202",
+      "source": "full-review/screenshots/U008-draft-start.jpg",
+      "bytes": 178231,
+      "sourceSha256": "8d059c3b709365df4b960624c334dde84c80a790ce772311a5c339539f1bab91",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-203",
+      "source": "full-review/screenshots/U009-draft-no-folder.ax.txt",
+      "bytes": 2631,
+      "sourceSha256": "81d1905c239569f550daec64e2fd3d816bb3bb3cf573389f4e07a3e191c67069",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-204",
+      "source": "full-review/screenshots/U009-draft-no-folder.jpg",
+      "bytes": 201286,
+      "sourceSha256": "273421cd41ea9fe93c9a2bad3ef6af9923959b3a19cd4f9dd64b776580d116ce",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-205",
+      "source": "full-review/screenshots/U010-send-needs-folder.ax.txt",
+      "bytes": 5487,
+      "sourceSha256": "8e33df0f387d79710f85627b57ced9cb125fe9254cc42da7e387d3c6fe5c50f2",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-206",
+      "source": "full-review/screenshots/U010-send-needs-folder.jpg",
+      "bytes": 141766,
+      "sourceSha256": "0e098ea728e54983c6317cfb2706503f532878c4cf27e38bbe6066a7c2d6efd8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-207",
+      "source": "full-review/screenshots/U011-send-cancel-preserves-draft.ax.txt",
+      "bytes": 2645,
+      "sourceSha256": "1db2917daa75a14a3d3a12d031eedc20c4ca3a34dadbde762170991be36115c6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-208",
+      "source": "full-review/screenshots/U011-send-cancel-preserves-draft.jpg",
+      "bytes": 209703,
+      "sourceSha256": "fd3507ab47878d0871980dc47ed0d702cbd36c8aa49d496827cd09703bc8b099",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-209",
+      "source": "full-review/screenshots/U012-folder-selected-draft.ax.txt",
+      "bytes": 2769,
+      "sourceSha256": "785462b9070ab1abd44b46703d1db9b4bdf13ec9f6d48f3ec0df5b436a32aa6b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-210",
+      "source": "full-review/screenshots/U012-folder-selected-draft.jpg",
+      "bytes": 205127,
+      "sourceSha256": "da078278283f188a8e9d0fea7819ffbe48f412567443ba8d6973b49f36fa8bfe",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-211",
+      "source": "full-review/screenshots/U013-pre-send-model-source.ax.txt",
+      "bytes": 1452,
+      "sourceSha256": "cfe1f47deeb68cd9901ce42434a481e3d16b3978fe3c09ac3c000506195e2451",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-212",
+      "source": "full-review/screenshots/U013-pre-send-model-source.jpg",
+      "bytes": 192970,
+      "sourceSha256": "28210f1c86d15b44105d7a78536466522c2dec3393ea5b79cf021236b9e7c257",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-213",
+      "source": "full-review/screenshots/U014-send-running.ax.txt",
+      "bytes": 3338,
+      "sourceSha256": "7c961ae2d3aa869e2d9a7a58df9255dbf5d2f25956da6e7756f39b6d3e5df86e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-214",
+      "source": "full-review/screenshots/U014-send-running.jpg",
+      "bytes": 210994,
+      "sourceSha256": "1714154630f644d883f53a6453b4200e2eb2cc50664b5fd1a53498c74c68d5c8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-215",
+      "source": "full-review/screenshots/U015-first-response.ax.txt",
+      "bytes": 3257,
+      "sourceSha256": "c7c1d60d99285776cac141e000e24d1514c9bd418a6634cdbef3cc35a31507c4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-216",
+      "source": "full-review/screenshots/U015-first-response.jpg",
+      "bytes": 215696,
+      "sourceSha256": "81cdb4e9f73806cb9d89de0445d2caef4979094e254cee5be674eb8c4a452252",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-217",
+      "source": "full-review/screenshots/U016-message-actions.ax.txt",
+      "bytes": 3316,
+      "sourceSha256": "923c257286179cd7596bc0c6363ee239c90912dccf5d5f85dd40837897e3c50f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-218",
+      "source": "full-review/screenshots/U016-message-actions.jpg",
+      "bytes": 219134,
+      "sourceSha256": "a1c75dbc160ec741d51b0dcb5174da808d06b3ca30a30f419807d14325004f38",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-219",
+      "source": "full-review/screenshots/U017-edit-message.ax.txt",
+      "bytes": 3323,
+      "sourceSha256": "9c10e7015fbc14acf1f7542d60236adf63c15158156a398e6164f37c478b9226",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-220",
+      "source": "full-review/screenshots/U017-edit-message.jpg",
+      "bytes": 228480,
+      "sourceSha256": "9eb559aa05a02d7da0adce1ac7b5b4ab9d9b15b594de9bfdcb32f9f31b370042",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-221",
+      "source": "full-review/screenshots/U018-content-sidebar.ax.txt",
+      "bytes": 4448,
+      "sourceSha256": "ce8952f7b54a36f8dd2433af9d12d726eaae97a54fc8461da876cbdc9c569128",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-222",
+      "source": "full-review/screenshots/U018-content-sidebar.jpg",
+      "bytes": 302515,
+      "sourceSha256": "6d9b3d6ef159eed56ce7db7e203f9a9bb40238f7f70165fc2026e8774419f4d7",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-223",
+      "source": "full-review/screenshots/U019-file-preview.ax.txt",
+      "bytes": 4530,
+      "sourceSha256": "ea68f1dca463bb3b9693d27617bff19e435ed5aa7b2806c5c692e6c7ebe56074",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-224",
+      "source": "full-review/screenshots/U019-file-preview.jpg",
+      "bytes": 309741,
+      "sourceSha256": "0712168596e60ca68f887a8bc9174d968ca409372f9f90019aa3061734a999bb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-225",
+      "source": "full-review/screenshots/U020-file-preview-loaded.ax.txt",
+      "bytes": 4530,
+      "sourceSha256": "ea68f1dca463bb3b9693d27617bff19e435ed5aa7b2806c5c692e6c7ebe56074",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-226",
+      "source": "full-review/screenshots/U020-file-preview-loaded.jpg",
+      "bytes": 307387,
+      "sourceSha256": "32023fb612e861565d1410f4b42705dc70d08ca406f29f84bdfac13bdef46c40",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-227",
+      "source": "full-review/screenshots/U021-file-loading-persistent.ax.txt",
+      "bytes": 4828,
+      "sourceSha256": "34f1bfb68d7e4e512e0a3876162f5b75c6f97be01778b607de8b38a0a40a1fcb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-228",
+      "source": "full-review/screenshots/U021-file-loading-persistent.jpg",
+      "bytes": 338481,
+      "sourceSha256": "21c14fa58f390f7ccda10a168eafdab0438ae61eedae1210e9b45f8aa7e04597",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-229",
+      "source": "full-review/screenshots/U022-thread-search.ax.txt",
+      "bytes": 5098,
+      "sourceSha256": "1b0b3a75338f30e30d88072abc88efa31f604c2d81f2d60612c7d6f46a53d3bc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-230",
+      "source": "full-review/screenshots/U022-thread-search.jpg",
+      "bytes": 358424,
+      "sourceSha256": "74b6d3c66eb1ccec08a1212ae3a02ee2b0e20c2a19a1998e49a6ff08c974203c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-231",
+      "source": "full-review/screenshots/U023-html-file-attempt.ax.txt",
+      "bytes": 4668,
+      "sourceSha256": "a1cd30549abed2c0a6e1588ab74ccf214bb7f10f71cf0aaa0a58bd76086437b3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-232",
+      "source": "full-review/screenshots/U023-html-file-attempt.jpg",
+      "bytes": 324186,
+      "sourceSha256": "f6133ecc1e8a6d1b486d63d90ed8a2fb03463621b3c754485e586f716be24f97",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-233",
+      "source": "full-review/screenshots/U024-browser-empty.ax.txt",
+      "bytes": 5248,
+      "sourceSha256": "23e43b5947d56125c561f2e937582ffbc954f359fc8c96e91afd44f8c38dcb25",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-234",
+      "source": "full-review/screenshots/U024-browser-empty.jpg",
+      "bytes": 339730,
+      "sourceSha256": "27381f4f93b890e0bb2a606afe926a2e7cf93578064271065d560017d873b873",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-235",
+      "source": "full-review/screenshots/U025-browser-permission.ax.txt",
+      "bytes": 6960,
+      "sourceSha256": "073c068d86fa6c939d6092d75f594b55ada6122b6b9c70e2a013336371c8fdf6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-236",
+      "source": "full-review/screenshots/U025-browser-permission.jpg",
+      "bytes": 496773,
+      "sourceSha256": "562c7d4191453b2f35270fd29fde891b16533ffd619a209e57373409ade995a1",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-237",
+      "source": "full-review/screenshots/U026-browser-reopened.ax.txt",
+      "bytes": 6662,
+      "sourceSha256": "7135a32cdfbbebfae61041ce7c8c0afaaa845c016ffd66bf3f04ee6d0031b13e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-238",
+      "source": "full-review/screenshots/U026-browser-reopened.jpg",
+      "bytes": 488116,
+      "sourceSha256": "fcec4bd27f1a017b14062a10a38a21804edbe4c8fe6a9a04d0b8a10ce5dde7c5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-239",
+      "source": "full-review/screenshots/U027-thread-menu.ax.txt",
+      "bytes": 4723,
+      "sourceSha256": "5e9350b38fc77dbb6ab03ee98271e9a30236734c33cac0fee67e2eaec80bb508",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-240",
+      "source": "full-review/screenshots/U027-thread-menu.jpg",
+      "bytes": 299432,
+      "sourceSha256": "4e70d28fb5fa59cf033e1667b9432fe6367017f69457111b35bd0786a37b2b54",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-241",
+      "source": "full-review/screenshots/U028-export-result.ax.txt",
+      "bytes": 4894,
+      "sourceSha256": "c2c44ebeae01e4470639ab36ff25ef614c7da2f73fc54f4685d10fb33404754a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-242",
+      "source": "full-review/screenshots/U028-export-result.jpg",
+      "bytes": 296045,
+      "sourceSha256": "4ac8db3d8c8b078cc59bcac80e302e5fad6952a931ac51c40c438e2735c5cd3b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-243",
+      "source": "full-review/screenshots/U029-settings-navigation.ax.txt",
+      "bytes": 4484,
+      "sourceSha256": "a074d89eeb19a8b106aee2231526e28d1458239a25f901a8a4e77a9cf31bd854",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-244",
+      "source": "full-review/screenshots/U029-settings-navigation.jpg",
+      "bytes": 245193,
+      "sourceSha256": "96c212293c90492dbb1fb397b41efe7e6ec4726506a07a8e5cbf9c0bb4d52ae0",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-245",
+      "source": "full-review/screenshots/U030-data-responsibility.ax.txt",
+      "bytes": 2047,
+      "sourceSha256": "b26d4f96982ab85186594adaec524108d479683b17def19876f0e1770cf61463",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-246",
+      "source": "full-review/screenshots/U030-data-responsibility.jpg",
+      "bytes": 224027,
+      "sourceSha256": "f936a12e2fc057a43804f104dbff9e127cbb5d8faa6ca88a4241325e40f99761",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-247",
+      "source": "full-review/screenshots/U031-clear-confirmation-only.ax.txt",
+      "bytes": 3254,
+      "sourceSha256": "a200d85c484b0b5ddf5afe9f7ae1fb76bc7fcc96c58b83924db9e3591f03feb4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-248",
+      "source": "full-review/screenshots/U031-clear-confirmation-only.jpg",
+      "bytes": 269112,
+      "sourceSha256": "0f478dff90325a72158e3515a96b05c668e9b60837ae39bb22365f1b526898be",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-249",
+      "source": "full-review/screenshots/U032-agent-account-management.ax.txt",
+      "bytes": 9850,
+      "sourceSha256": "dd294e0f38baed0ca06e063a4dafeba8005090f4ad916a6c1046399d76f557a6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-250",
+      "source": "full-review/screenshots/U032-agent-account-management.jpg",
+      "bytes": 354124,
+      "sourceSha256": "19929692dd798c4a788d20d59eb082263cf3bc109dc3632e4c4eaeb318216cb5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-251",
+      "source": "full-review/screenshots/U033-claude-setup.ax.txt",
+      "bytes": 1382,
+      "sourceSha256": "5c49b532a173d2514f0858756f52beeda6cbf572f25bcfa3c9333f725874fb40",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-252",
+      "source": "full-review/screenshots/U033-claude-setup.jpg",
+      "bytes": 179529,
+      "sourceSha256": "3e7bf950bcb40f4dc766916e7b6069593ba074cdc49aaf04e823ecb34a0d17e7",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-253",
+      "source": "full-review/screenshots/U034-claude-auth-options.ax.txt",
+      "bytes": 2084,
+      "sourceSha256": "9cfd12292facddc0500ab3f236caaf1b963ea85330824344f58184b081c7daa9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-254",
+      "source": "full-review/screenshots/U034-claude-auth-options.jpg",
+      "bytes": 233545,
+      "sourceSha256": "bdb12afaf46fc9d65c0db578fceb6af1b46850ffa823de4e46df30c8c8733937",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-255",
+      "source": "full-review/screenshots/U035-program-details-expanded.ax.txt",
+      "bytes": 1726,
+      "sourceSha256": "b0eb561cf40db565cb16945b0321e43999a24f2bc9abb2ca9856ee9a61ea270b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-256",
+      "source": "full-review/screenshots/U035-program-details-expanded.jpg",
+      "bytes": 202714,
+      "sourceSha256": "6c52e800bab81d83d693bf99495f50817f970a2842579a3f18386f03bc3ad01f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-257",
+      "source": "full-review/screenshots/U036-export-still-pending.ax.txt",
+      "bytes": 4894,
+      "sourceSha256": "c2c44ebeae01e4470639ab36ff25ef614c7da2f73fc54f4685d10fb33404754a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-258",
+      "source": "full-review/screenshots/U036-export-still-pending.jpg",
+      "bytes": 289294,
+      "sourceSha256": "c0ed75783544375a835aea62b3141527b786132c6bd8046fcc8f49a54cd8c8c8",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-259",
+      "source": "full-review/screenshots/U037-command-picker.ax.txt",
+      "bytes": 33248,
+      "sourceSha256": "8e5fbb3124b845384dfad673ff010dabf3a9cfa59aab13d455fd428739d4e684",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-260",
+      "source": "full-review/screenshots/U037-command-picker.jpg",
+      "bytes": 481532,
+      "sourceSha256": "c7ba22354ef96d9b266177a89e40e6ffe381938cdcf15d0cd03bf9d4e9e36092",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-261",
+      "source": "full-review/screenshots/U038-about.ax.txt",
+      "bytes": 303,
+      "sourceSha256": "8ec4d53dc417293f6e90ad0a8f8787214cd12b0b4eee94607ce4440bd4fedb8c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-262",
+      "source": "full-review/screenshots/U038-about.jpg",
+      "bytes": 11685,
+      "sourceSha256": "29b3d7f67e651ce2ef9d4d64245759762d6e4628231fafc7021e9f32d6c827aa",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-263",
+      "source": "full-review/screenshots/U039-global-search.ax.txt",
+      "bytes": 1317,
+      "sourceSha256": "83b5ea928b1ffdc11aec83bf0d5d1eda45727c4915f009e6718f58b01b4e5524",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-264",
+      "source": "full-review/screenshots/U039-global-search.jpg",
+      "bytes": 217229,
+      "sourceSha256": "4006875db6794b1aadf3a4b407c5ebff9aaecb4758f02e29eb94cd63674fb787",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-265",
+      "source": "full-review/screenshots/U040-import-entry.ax.txt",
+      "bytes": 3338,
+      "sourceSha256": "92047361a0c5e54502fde20cef162922160e4c6ef1cd3a48321b955dcacca5aa",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-266",
+      "source": "full-review/screenshots/U040-import-entry.jpg",
+      "bytes": 270530,
+      "sourceSha256": "37e09e1e713949dfe427d595972ae18ef5022b38056b124a28f5dba58ccdb799",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-267",
+      "source": "full-review/screenshots/U041-import-results.ax.txt",
+      "bytes": 5178,
+      "sourceSha256": "087abdad8dd78a99bde868adf23b8a8f8f977530e8c87a139728f8227cab3487",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-268",
+      "source": "full-review/screenshots/U041-import-results.jpg",
+      "bytes": 228295,
+      "sourceSha256": "f27ae66233745d092417962d00f8b8240f247cc916a72c9314c2acc77e31cc8a",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-269",
+      "source": "full-review/screenshots/U042-import-readonly-preview.ax.txt",
+      "bytes": 6913,
+      "sourceSha256": "e98549f7fee6aa4bfd02b272dd89aa92cb4063faa63b7462227992d5dcb2db25",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-270",
+      "source": "full-review/screenshots/U042-import-readonly-preview.jpg",
+      "bytes": 304634,
+      "sourceSha256": "fffda4de4eca44b7af3d8da3411a22cd6cfcdf7aca063a00643c03451346c4f4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-271",
+      "source": "full-review/screenshots/U043-import-preview-body.ax.txt",
+      "bytes": 6913,
+      "sourceSha256": "e98549f7fee6aa4bfd02b272dd89aa92cb4063faa63b7462227992d5dcb2db25",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-272",
+      "source": "full-review/screenshots/U043-import-preview-body.jpg",
+      "bytes": 314891,
+      "sourceSha256": "f254df794c51d871beaa4f706c004aba2709b0fefaf68332cd1c52d14b57782d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-273",
+      "source": "full-review/screenshots/U044-returned-test-thread.ax.txt",
+      "bytes": 3425,
+      "sourceSha256": "aff51c6ef58d60953600802beab6fa3823e43c906fbd3debdbb4b38353dcf606",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-274",
+      "source": "full-review/screenshots/U044-returned-test-thread.jpg",
+      "bytes": 192220,
+      "sourceSha256": "f08f47f385771f42a3136d7f7340085db81bf8a1ecbf8f5cc69774a07cbc06fd",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-275",
+      "source": "full-review/screenshots/U045-final-draft-restored.ax.txt",
+      "bytes": 2943,
+      "sourceSha256": "883903e275a1cb6f6cd038419cd821272c42bf0a458fda1a97a3aa380e3b4c7c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-276",
+      "source": "full-review/screenshots/U045-final-draft-restored.jpg",
+      "bytes": 176135,
+      "sourceSha256": "0c9394908bc59f28429962523f4af273d0748a176bb75d98e7fbfd750d8763f7",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-277",
+      "source": "full-review/screenshots/U046-diagnostics-scope.ax.txt",
+      "bytes": 1623,
+      "sourceSha256": "fcdf380c05b704ec4c849cec0b4a04d4a2b9e606eb0c5168ee2c75f5e735b328",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-278",
+      "source": "full-review/screenshots/U046-diagnostics-scope.jpg",
+      "bytes": 201909,
+      "sourceSha256": "f9f141d3cacdd98121e9d7e885ded43498ac5a17a950f29a2cd631fe0beaf32d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-279",
+      "source": "full-review/screenshots/U047-diagnostics-preview-list.ax.txt",
+      "bytes": 4170,
+      "sourceSha256": "f36c7c5155233f033b3c26417fbf351c3f8a7851430da9030edaa97968e47bd3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-280",
+      "source": "full-review/screenshots/U047-diagnostics-preview-list.jpg",
+      "bytes": 225497,
+      "sourceSha256": "ae19656081f77c9ebeda9d615438c01fef360fdcbffb07fda4199dfbfd463d4f",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-281",
+      "source": "full-review/screenshots/U048-update-unconfigured-channel.ax.txt",
+      "bytes": 756,
+      "sourceSha256": "43460f881ee4222777ffb3d869362f8727ee01542bbc57d94eda44020ede9a96",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-282",
+      "source": "full-review/screenshots/U048-update-unconfigured-channel.jpg",
+      "bytes": 145249,
+      "sourceSha256": "6ce486092c0c5373af64467bba89c98950a0ad14d397414d720236d33753def5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-283",
+      "source": "full-review/screenshots/U049-final-return-to-draft.ax.txt",
+      "bytes": 2943,
+      "sourceSha256": "883903e275a1cb6f6cd038419cd821272c42bf0a458fda1a97a3aa380e3b4c7c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-284",
+      "source": "full-review/screenshots/U049-final-return-to-draft.jpg",
+      "bytes": 176230,
+      "sourceSha256": "4d82b7042d12209d2c42690421cff75609283811ad9d168519cbc42a6a437f20",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-285",
+      "source": "full-review/state-coverage-options.md",
+      "bytes": 42761,
+      "sourceSha256": "e4af0a8b1502d1fc8178cd7d0df3986aef9ffcd63aa61208c1483bc287dfce3e",
+      "decision": "publish-sanitized-report",
+      "published": "reports/full-review/state-coverage-options.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "effb216b4b24869d6f6f13ecd1d5d6111dd425376b059429ee6bf3bb7eb08a96"
+    },
+    {
+      "id": "file-286",
+      "source": "full-review/style.css",
+      "bytes": 12840,
+      "sourceSha256": "1e12c775f24edc2638568c35434e9e5595df84a6f2d5a9a4a2cba0f799d3cb53",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-287",
+      "source": "full-review/verification.json",
+      "bytes": 181559,
+      "sourceSha256": "a62e4069c957dd5dba99d3d60717d3fe1e827ca03a8d6be9f8a5e8f6e7922edc",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-288",
+      "source": "full-review/verify-artifacts.py",
+      "bytes": 15378,
+      "sourceSha256": "d2d829d8e78c31907bc102f3f5208b156b0e87668d20915c5744cae3985c8e6c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-289",
+      "source": "index.html",
+      "bytes": 54301,
+      "sourceSha256": "a5882e3928ad772f6780b5fc5d90ddb640ab764e4276177e04c713af292d4ba6",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-290",
+      "source": "original-14-review.md",
+      "bytes": 37530,
+      "sourceSha256": "764cbac2bd8fc3e0fe9047b625527c5b40fd440e0eed4628c39353e5410fee46",
+      "decision": "publish-sanitized-report",
+      "published": "reports/original-14-review.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "fc652d25370a6604e6dc25a81c2692c586f56579aca43e90b4fc8e4f40eadd8b"
+    },
+    {
+      "id": "file-291",
+      "source": "preview/gallery-42.png",
+      "bytes": 60174,
+      "sourceSha256": "06ae6056a99d8dcb7926379b7435728819e6e3a324818389f3ec30bd277b99e3",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-292",
+      "source": "screenshots/15-agent-before-connect.png",
+      "bytes": 202766,
+      "sourceSha256": "043331d5def3532733399e6f20b4cfd69ada0c78bcd828a28aa7ee6dd377fd32",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-293",
+      "source": "screenshots/16-agent-connection-result.png",
+      "bytes": 198506,
+      "sourceSha256": "991ae42c8cac70f4a2a499d351a804a3d023504a9a75ff558039c8f19a0733a5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-294",
+      "source": "screenshots/17-agent-login-options.png",
+      "bytes": 270048,
+      "sourceSha256": "c800104a6f369dd918c922290ea8ba6c4bd2a1b25bff4c072612f20386ccd9a4",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-295",
+      "source": "screenshots/18-agent-model-step.png",
+      "bytes": 225953,
+      "sourceSha256": "8c917d2606bec90db467e586dea7c3913c6e108a6e1f915f15a9c8dc7203bf51",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-296",
+      "source": "screenshots/19-agent-test-form.png",
+      "bytes": 242940,
+      "sourceSha256": "cf5849527b09ec5f2e9b7f1232615c95d2a41567311e747bc8dea5bdc3494126",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-297",
+      "source": "screenshots/20-agent-service-source.png",
+      "bytes": 188266,
+      "sourceSha256": "12526ffda5bc9d361ae6a154e65dd2a8740bb440472ad0c30cc0d8b038105280",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-298",
+      "source": "screenshots/21-agent-service-details.png",
+      "bytes": 202891,
+      "sourceSha256": "d65ac539cfb8bd01672605cef241fbfb4539404b555fad2a9ecdefb12a38dd15",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-299",
+      "source": "screenshots/22-custom-agent-form.png",
+      "bytes": 236850,
+      "sourceSha256": "e5fcc3b94debb1c90411aca2e6b14b4657603670efe49ebc1bb648d04f9d8a28",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-300",
+      "source": "screenshots/23-custom-agent-form-bottom.png",
+      "bytes": 241942,
+      "sourceSha256": "46d674b7d01d1ce7a386432ec08911d0e2ef6c2370c9a920e359b2ca4d370674",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-301",
+      "source": "screenshots/24-api-add-form.png",
+      "bytes": 248744,
+      "sourceSha256": "7b7113c4ab0fd28ee2903de8c074ebdfce01c061052a19a65dbef74a16e90ca5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-302",
+      "source": "screenshots/25-api-guide.png",
+      "bytes": 162520,
+      "sourceSha256": "7a0aa656e15ddec2196539369120c27b3dd0e1cdc0af5a457af4d5dbafcef92e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-303",
+      "source": "screenshots/26-api-guide-next.png",
+      "bytes": 169413,
+      "sourceSha256": "3bee5f3bb050516af75f44e55436b911abd1b01727ba5113077f5bd452933135",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-304",
+      "source": "screenshots/27-unsaved-form-confirm.png",
+      "bytes": 169364,
+      "sourceSha256": "e40d7e1b28ed56e051ea888802424545acbc3d4c7b5b160ad8de4f9c35ebba30",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-305",
+      "source": "screenshots/28-keyboard-shortcuts.png",
+      "bytes": 173146,
+      "sourceSha256": "3d2b8458cd8717098b0fc25b3fc7ea799997e021a87482e0d3019e0ec935c45d",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-306",
+      "source": "screenshots/29-data-privacy.png",
+      "bytes": 225893,
+      "sourceSha256": "7c624eec0e28adb6b4303760ec406f0f797b527e59658fa9ebdd4b840ee66563",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-307",
+      "source": "screenshots/30-data-privacy-overflow.png",
+      "bytes": 160002,
+      "sourceSha256": "30eeed37866cb58a57f5d061222c66235244eb912b7b2869fe467e5d93abc4d0",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-308",
+      "source": "screenshots/31-clear-data-confirm.png",
+      "bytes": 277876,
+      "sourceSha256": "ee4a7954de8cb9db217a9e7c8ddfba05dacea46f03fe317de19fb27100db645b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-309",
+      "source": "screenshots/32-advanced-settings.png",
+      "bytes": 250983,
+      "sourceSha256": "c3870b1cf597fe7b7327db5628ec596df15d466bf9df04d6863eedb5ab9eb6ac",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-310",
+      "source": "screenshots/33-dispatch-management.png",
+      "bytes": 259285,
+      "sourceSha256": "a97ca3f8db4331df8fb9b888ecdd8aad176f615b99781bf4710f31f1e2786587",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-311",
+      "source": "screenshots/34-search-dialog.png",
+      "bytes": 203369,
+      "sourceSha256": "76eaf71bdbf78251b5b63bc3d4e07e48f7ebcb94ba03fb222efecb8f1aafe175",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-312",
+      "source": "screenshots/35-search-empty.png",
+      "bytes": 162402,
+      "sourceSha256": "104975c035d62d6166ff4455effc9b664ea6ebe7305c04e4a9574964b9b7143c",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-313",
+      "source": "screenshots/36-favorites-empty.png",
+      "bytes": 186957,
+      "sourceSha256": "e0e3479450ec6c5d643d3127126227a3422b6420aee0ddf8f5fd572b270d16ca",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-314",
+      "source": "screenshots/37-import-history.png",
+      "bytes": 266871,
+      "sourceSha256": "8b9bd6bb8a337cb81d6ce5c055722cd27b2ad3ebcbc00305efdb8a5e169ab7a5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-315",
+      "source": "screenshots/38-new-group.png",
+      "bytes": 130865,
+      "sourceSha256": "a05a03da077ff0714a37c989a2de748091098dd1e05e00d0b1a920cd06f7825e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-316",
+      "source": "screenshots/39-permission-menu.png",
+      "bytes": 227966,
+      "sourceSha256": "4e6415da65af63f36745ff314c570c64a638070c6da87522e7cdc0832972b314",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-317",
+      "source": "screenshots/40-model-picker.png",
+      "bytes": 192205,
+      "sourceSha256": "82bcb3ad011ce36a6e0e89d8574d60b3293f69263047ec9d7f6ab2d8ab910866",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-318",
+      "source": "screenshots/41-conversation-options.png",
+      "bytes": 194889,
+      "sourceSha256": "c0cfade9220a40538395385fade509c8aa0c434d40080d0741fc85d84152fb5b",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-319",
+      "source": "screenshots/42-commands.png",
+      "bytes": 398491,
+      "sourceSha256": "4956a8c3dcca9fe3ec436197808f33e553c29494634eeb79eeb698cd9ba8f397",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-320",
+      "source": "screenshots/43-commands-reopened.png",
+      "bytes": 398487,
+      "sourceSha256": "7829211cb76e556f30d1459d5691342a4fb845a599a934a27ebacafa0a81e9b9",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-321",
+      "source": "screenshots/44-attachment-menu.png",
+      "bytes": 186248,
+      "sourceSha256": "ac006860dec41177fba71abf605790b70f107efa40faf1850cc7628de9356edb",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-322",
+      "source": "screenshots/45-conversation-menu.png",
+      "bytes": 203368,
+      "sourceSha256": "6fc639e33f63f224c6073cd2933c13f18555e0347cdc63d291ebea5a5ac630f5",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    },
+    {
+      "id": "file-323",
+      "source": "surface-inventory.md",
+      "bytes": 45631,
+      "sourceSha256": "a293e530a280cfb62e66644670f59ae621d61e76e680624182ca56846de3b540",
+      "decision": "publish-sanitized-report",
+      "published": "reports/surface-inventory.md",
+      "reason": "报告保留结论与边界；路径/本机生成标识脱敏、重写导航，末尾换行统一为一个LF",
+      "publishedSha256": "b1a6d42ce0247ad14062c81feac36c452e5a3c97ce93c837d25d07b5ff42a610"
+    },
+    {
+      "id": "file-324",
+      "source": "verification.json",
+      "bytes": 606,
+      "sourceSha256": "1087e3df0972b6d016b27ae46eaebb579b970eada89d312379a3a433b233474e",
+      "decision": "local-only",
+      "published": null,
+      "reason": "实拍/标注/预览、原始AX/动作/中间数据或旧生成程序；含/可能关联私人历史、本机路径和会话上下文，保留本地原件，不新增公开"
+    }
+  ],
+  "externalDependencies": [
+    {
+      "id": "external-99c4592a76e2b016",
+      "source": "src/runtime/agents.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-7594d987e36501b4",
+      "source": "src/components/agent_auth_options.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-0c324b3ba85aef69",
+      "source": "src/components/AgentAuthSection.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-ab431d8b20f75225",
+      "source": "src/runtime/auth_method.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-59c654e67446d803",
+      "source": "src-tauri/src/acp_client/auth_route.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-8040f12898cb037b",
+      "source": "src-tauri/src/acp_client/api_key_auth.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-4d4f7f7ec077563f",
+      "source": "src-tauri/src/acp_client/account_query.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-bac6bb26058e59d3",
+      "source": "src-tauri/src/acp_client/service_config.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-9d7cb97954bbbb9f",
+      "source": "src/components/AgentPrerequisites.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-fbdcdeed0afac7f1",
+      "source": "src/components/ProgramManager.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-bee110b0f4e69d31",
+      "source": "src/components/AgentInstallOptions.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-8678415c0f106500",
+      "source": "src-tauri/src/acp_client/recipes.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-1ac278e69f063246",
+      "source": "src-tauri/src/acp_client/installation_parameters.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-307100e496476e47",
+      "source": "src-tauri/src/acp_client/session_config.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-37811093615b5040",
+      "source": "src/runtime/session_projection.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-c240182dc0beea07",
+      "source": "src/components/SessionOptionsMenu.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-5b2efa2ce3790c22",
+      "source": "src/components/ModelConfigRows.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-ea1aedf0388884d1",
+      "source": "src/components/ReasoningControl.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-0f632a6a51c11dd8",
+      "source": "src/runtime/protected_config.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-63c55291e967070a",
+      "source": "docs/agent-first-release.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-a9dc505c838d3e3e",
+      "source": "src-tauri/src/acp_client/first_release.rs",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-00ee4b969b67ca65",
+      "source": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-f1d96db1bf7f9994",
+      "source": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-689e7ea9f3dd4dc1",
+      "source": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-26e806eb6301e564",
+      "source": "docs/evidence/2026-10-06-agent-standard-review/current-installed-metadata.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-a2642aa2214fecac",
+      "source": "docs/evidence/2026-10-06-macos-batch1/agent-current-summary.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-a54ff182c7e8acf5",
+      "source": "AGENTS.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-211481d78d1a6589",
+      "source": "PRODUCT.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-140eef3ba41bdcf4",
+      "source": "docs/architecture.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-a0cf92a1f39a72be",
+      "source": "docs/status.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-dcb02de40ea4c85a",
+      "source": "plans/agent-access.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-56a816c7cf593497",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/README.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-1b5322552edb199e",
+      "source": "docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-7ae45ad102eab3b6",
+      "source": "package.json",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-1cd8b18798a1a103",
+      "source": "src/main.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-74f14fe79aed1f84",
+      "source": "src/components/AgentSetup.r5-render.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-0a2463ae1145ef9a",
+      "source": "src/components/Composer.visual-render.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-363de6bd476339ee",
+      "source": "src/components/ApprovalInput.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-c367aa3d77527d16",
+      "source": "src/components/ElicitationCard.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-07a644474a536fea",
+      "source": "src/components/Composer.stop.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-7b3c270cd423574f",
+      "source": "src/components/Composer.work.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-d3252b826df4c7a0",
+      "source": "src/components/ConfigCheckReview.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-f2b5a0c8d77c7e31",
+      "source": "src/components/DraftStartup.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-8ae1a8dd931dcefd",
+      "source": "src/components/FileArtifactView.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-d2d0f95f705915a1",
+      "source": "src/components/FileArtifactView.feedback.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-4766dc34b22330cc",
+      "source": "src/components/OpenedFileView.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-6cbf7cddd05dd1db",
+      "source": "src/components/FileDeliveryActions.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-df917da9e607aba2",
+      "source": "src/components/ThreadView.cold-images.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-d287f9cf7e71512e",
+      "source": "docs/evidence/2026-10-04-desktop-browser-ui/visual/desktop-render.test.tsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-0ae5b420c9ba4da3",
+      "source": "docs/evidence/2026-10-05-file-links-layout/layout-check/README.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-b7cba89554052d04",
+      "source": "docs/evidence/2026-10-04-desktop-browser-ui/visual/README.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-2ee894bf23aa44ff",
+      "source": "vitest.config.ts",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-bf90a829c898e540",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/src/ReviewToolbar.jsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-671beabb3c8de525",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/src/AppV2.jsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-ac9578d555c604df",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/src/prototype-persistence.js",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-628566ccd304a96c",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/src/ExecutionReviewControls.jsx",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-04f94ba5afb56fb4",
+      "source": ".design/2026-09-26-agent-access-redesign/workbench/src/workspace-scenarios.js",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-1fc0595a2602c6a7",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/09-content-panel.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-65606ecef24fa6f4",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/10-browser-empty.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-2f52882fa21c63c9",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/01-new-conversation.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-ed591b5e05fa7f42",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/02-agent-picker.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-c973d8211c460722",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/03-agent-catalog.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-d0e1929aa26e35ca",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/04-agent-details.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-98b8be826f6bfa6a",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/05-agent-settings.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-23e5c201cde97327",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/06-agent-program.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-17da6e95c8dc753d",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/07-conversation-library.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-34d295cacbc57e91",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/08-conversation.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-97d79e097d99ef7f",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/11-general-settings.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-37954a32c2170dea",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/12-lifemodel.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-06f281d60a409968",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/13-api-settings.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-e5b9f429557056bb",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/screenshots/14-agent-account-navigation.png",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    },
+    {
+      "id": "external-9a5a624534cd50a9",
+      "source": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "existsAtPublication": true,
+      "decision": "not-copied",
+      "reason": "历史报告外部依赖或当时缺失产物；不复制、不视为本批验收；仓库原路径可供定位"
+    }
+  ],
+  "privacy": {
+    "textFilesScanned": 187,
+    "imagesOcrScanned": 137,
+    "ocrErrors": 0,
+    "rawOcrCommitted": false,
+    "originalsRewritten": false,
+    "imagesEdited": false,
+    "publishedControlledImages": 34,
+    "withheldImages": 103,
+    "limitations": "OCR可能漏字；实拍及派生图全部保守留本地，未依赖阴性OCR结果放行。仅受控合成图与AX入库；未重新运行历史业务/验证脚本。"
+  }
+}

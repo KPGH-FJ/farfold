@@ -1,0 +1,22 @@
+- generic: 第一条消息即开始会话
+- generic: 已排队 1 条
+- generic: original A
+- button "编辑待发消息"
+- button "移除待发消息": ×
+- generic: 已排队 2 条
+- generic: original B
+- button "编辑待发消息"
+- button "移除待发消息": ×
+- generic: 待发消息已暂停
+- button "继续发送"
+- textbox "对话内容" [active]:
+  - /placeholder: 发送消息…
+  - text: draft remains
+- button "添加文件或图片":
+- button "模型与来源":
+  - generic: a
+  - generic: 未提供
+- button "命令与模板":
+- button "加入待发":
+  - generic: 待发
+- generic: Enter 发送 · Shift Enter 换行

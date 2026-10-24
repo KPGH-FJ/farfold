@@ -1,0 +1,46 @@
+- complementary:
+  - img "Farfold"
+  - button "收起导航":
+  - button "新对话 ⌘ N":
+    - generic: 新对话
+    - generic: ⌘ N
+  - button "搜索对话 ⌘ K":
+    - generic: 搜索对话
+    - generic: ⌘ K
+  - navigation "所有对话":
+    - button "所有对话 0":
+      - generic: 所有对话
+      - generic: "0"
+    - button "收藏 0":
+      - generic: 收藏
+      - generic: "0"
+    - button "探索 Agent":
+      - generic: 探索 Agent
+  - button "我的 Agent" [expanded]:
+    - text: 我的 Agent
+  - button "探索 Agent":
+  - button "分组" [expanded]:
+    - text: 分组
+  - button "新建分组":
+  - button "设置":
+    - text: 设置
+  - generic: 属于你的 Agent，在一处相遇。
+- main:
+  - heading "项目计划" [level=1]
+  - text: 项目计划.md
+  - button "移除 项目计划.md": ×
+  - textbox "对话内容":
+    - /placeholder: 输入消息，或添加文件开始工作…
+    - text: 请整理这份计划中的待办事项，先列出需要确认的问题。
+  - button "添加文件或图片":
+  - button "OpenCode":
+    - generic: OpenCode
+  - button "示例模型":
+    - generic: 示例模型
+  - text: 思考
+  - combobox "思考":
+    - option "标准" [selected]
+  - button "命令与模板":
+  - button "发送":
+  - generic: 受控展示 · 不连接 Agent
+  - generic: Enter 发送 · Shift Enter 换行
