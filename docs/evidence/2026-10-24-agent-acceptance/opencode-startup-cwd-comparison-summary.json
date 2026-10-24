@@ -1,0 +1,113 @@
+{
+  "kind": "ScopedInstalledStartupChangedInputComparisonSummary",
+  "schemaVersion": 1,
+  "agentId": "opencode",
+  "observedAgentVersion": "1.18.31",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "installed",
+  "result": "changed-input-preparation-ready-ui",
+  "review": {
+    "kind": "IndependentSemanticReviewOfOperatorRecords",
+    "reviewedInputCount": 4,
+    "executionRepeated": false,
+    "liveUiOrFilesystemRechecked": false,
+    "priorSourceAnalysisAuthoredByThisReviewer": true,
+    "scope": "The predeclared comparison and subsequent operator observation are consistent with one changed-cwd preparation. This review checks their scope and references; it does not independently repeat their physical or UI observations.",
+    "blockingSemanticIssues": 0
+  },
+  "comparison": {
+    "plannedBeforeExecution": true,
+    "samePreviouslyFailedUnsentDraft": true,
+    "changedInput": "cwd",
+    "priorCwdClass": "owned-empty-directory-inside-git-ancestry",
+    "comparisonCwdClass": "owned-canonical-empty-directory-outside-git-ancestry",
+    "canonicalDirectoryAndAncestryCheckSource": "operator-record",
+    "ancestorGitMarkerChecks": 4,
+    "newInitializationAttempts": 1,
+    "retryButtonClicks": 0,
+    "managerRechecks": 0,
+    "ordinaryPromptsSent": 0,
+    "inputCorrectionBeforePreparation": true,
+    "extraInitializationsFromInputCorrection": 0,
+    "programChoiceChangeRequested": false,
+    "modelAndModeChoicesChanged": false,
+    "reasoningChoiceChanged": false,
+    "returnedDefaultsAdopted": false,
+    "directoryEntriesAfterCount": 0,
+    "firstReadyUiObserved": true,
+    "exactReadyTimeKnown": false,
+    "uiRunningAtReadyObservation": false,
+    "globalInputsTimingAndConcurrencyControlled": false
+  },
+  "laterComparisonMetadata": {
+    "kind": "RootWhitelistedContentFreeStartupWindow",
+    "correlation": "time-only-without-unique-agent-connection-session-identity",
+    "fileCount": 1,
+    "recordCount": 10,
+    "startupRecordCount": 5,
+    "initializeStartedAt": "2026-10-24T05:31:11.644Z",
+    "initializeResponse": "matched_result",
+    "initializeAccepted": true,
+    "initializeAcceptedAt": "2026-10-24T05:31:12.227Z",
+    "startupOutcome": "success",
+    "startupSuccessAt": "2026-10-24T05:31:12.228Z",
+    "protocolMetadataEventCounts": {
+      "initialize": 1,
+      "response": 2,
+      "session/new": 1,
+      "session/update": 1,
+      "session/prompt": 0
+    },
+    "sampledFileStableDuringRead": true,
+    "allFutureLogBytesImmutable": false,
+    "scope": "This later time-correlated window records a matched initialize result, accepted handshake and startup success, followed by session/new and response/update metadata. It does not establish exact UI-ready time, response-body contents, effective model or account identity, inference, or Git causation. Zero prompt events applies only to this sampled window; it does not establish that every other process made no request. The original first-ready UI observation and its timing limitation are unchanged."
+  },
+  "preservedFailure": {
+    "uiClass": "AGENT_INITIALIZE_TIMEOUT",
+    "originalFailureRetained": true,
+    "replacedByLaterReadyResult": false,
+    "associatedStartupWindow": {
+      "correlation": "time-only-without-unique-agent-connection-session-identity",
+      "initializeResponse": "not_observed",
+      "parentStdinBytes": 486,
+      "parentStdoutBytes": 0,
+      "parentStderrBytes": 0,
+      "applicationCleanupTermRequested": true,
+      "killRequested": false,
+      "childReaped": true,
+      "groupEnded": true,
+      "connectionRemoved": true,
+      "scope": "The previously captured time window records startup timeout and application cleanup. Parent input bytes do not prove child consumption. It does not identify all running Agents or establish all-background idle. No new cleanup observation for the ready comparison was reviewed."
+    }
+  },
+  "interpretation": {
+    "supported": "The preserved inside-Git startup failure was followed by one predeclared outside-Git changed-cwd preparation with a ready UI observation and no ordinary prompt.",
+    "sourceContext": "The prior exact-release source analysis identifies awaited project discovery, configuration and plugin work before the protocol receiver. Global startup work and network paths remain possible.",
+    "actualCause": "unknown",
+    "uniqueGitCauseEstablished": false,
+    "originalStartupFailureResolutionProven": false,
+    "effectiveModelIdentityVerified": false,
+    "accountOrEntitlementVerified": false,
+    "modelInferenceVerified": false,
+    "kiloComparisonIncluded": false,
+    "allBackgroundIdleVerified": false
+  },
+  "acceptance": {
+    "standardIds": [],
+    "standardCellsAdded": 0,
+    "fullStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "predeclaredPlan": "e6166a4ae4eb41af6f5ea18b6506ad32d747131a36f33b9b7705c11f1ffc5e1c",
+    "changedInputObservation": "42498a6f37750294cef9b480af3c3c96847fbf66212cb17ccc709713b4ee4527",
+    "priorSourceAnalysis": "9863142f75664dd571578f533d6d364a008d962226e60850cc26d2398c816b2b",
+    "originalStartupFailure": "819232d56fbb23cb9caab4043c58e12ef0347f76049e118945bc1da7e7cce547",
+    "originalWhitelistedStartupWindow": "eec2f2d1d70ec5095b0b4144f44e8a498192f5e1ae17f08a6e6903e6c2b7a9a0",
+    "comparisonWhitelistedStartupWindow": "40ddf09c908fdae90a0ddc6354af5063703b9a086b1e2b3499a6ae37525d20de"
+  }
+}

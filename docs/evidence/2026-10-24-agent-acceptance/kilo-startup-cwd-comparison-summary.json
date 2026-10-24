@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "kind": "ScopedInstalledKiloChangedCwdStartupComparisonSummary",
+  "recordedAt": "2026-10-24T05:56:55.080Z",
+  "agentId": "kilo",
+  "programVersionDescriptive": "7.8.1",
+  "formalProductCommitPrefix": "e6e1c3796",
+  "evidenceLevel": "installed",
+  "result": "one-changed-cwd-startup-ready-observed",
+  "preCase": {
+    "finalPlanPreparedAt": "2026-10-24T05:43:27.771Z",
+    "recordedStartAt": "2026-10-24T05:43:46.295Z",
+    "planPreparedBeforeRecordedAction": true,
+    "unusedEarlierDraft": "operator-reported-unexecuted-and-excluded",
+    "unverifiedRawOptionKeysRemovedBeforeAction": true,
+    "manifestForAckAddedRetroactively": false
+  },
+  "operatorObservations": {
+    "changedInput": "working-directory",
+    "comparisonLocationClass": "owned-empty-location-reported-outside-git-ancestry",
+    "priorLocationClass": "previous-location-ancestry-not-established-by-this-review",
+    "oneStartupAction": true,
+    "managerChecks": 0,
+    "retryButtonClicks": 0,
+    "ordinaryPromptsInThisStartupCase": 0,
+    "savedChoicesChangedReported": false,
+    "firstReadyUiObservedAt": "2026-10-24T05:44:51.215Z",
+    "exactUiReadyTimeKnown": false,
+    "idleUiObserved": true,
+    "savedChoiceLabelsVisible": "operator-recorded-semantic-match-only",
+    "rawCurrentConfigOptionIdsCaptured": false,
+    "modelSelectionCheckmarkSource": "Root observation of actual tool image; separate pixel artifact not saved or independently reviewed",
+    "priorSealedSelectionSource": "whitelisted previous projection present only in this observation; its private origin was not reopened",
+    "effectiveModelOrReasoningOrAccountProven": false
+  },
+  "contentFreeStartupWindow": {
+    "correlation": "time-only-without-unique-agent-connection-or-session-identity",
+    "fileCount": 1,
+    "recordCount": 12,
+    "version2StartupRecords": 5,
+    "version1ProtocolRecords": 7,
+    "initializeStartedAt": "2026-10-24T05:43:46.680Z",
+    "initializeMatchedResultAt": "2026-10-24T05:43:48.036Z",
+    "initializeAcceptedAt": "2026-10-24T05:43:48.037Z",
+    "startupSuccessAt": "2026-10-24T05:43:48.037Z",
+    "initializeAccepted": true,
+    "startupOutcome": "success",
+    "protocolEventCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/update": 1,
+      "response": 3,
+      "session/prompt": 0
+    },
+    "sampledFileSha256": "dea7ad49cb6c188d9869b8125224876057f08f0dfaf08a9e095d7ad448d96636",
+    "sampledFileStableDuringRead": true,
+    "futureAppendOrOtherLogImmutabilityProven": false,
+    "setConfigObservation": "one method event and a later response are metadata only; response payload and raw current option identity were not captured",
+    "zeroPromptScope": "this fixed sampled window and the operator-recorded startup case only; no assertion that all other processes were request-free"
+  },
+  "semanticReview": {
+    "kind": "independent-read-only-review-of-three-operator-records",
+    "reviewedOriginalCount": 3,
+    "originalDigestsMatched": true,
+    "newUiOrFilesystemObservationPerformed": false,
+    "executionRepeated": false,
+    "sourceCodeOrPrivateInventoryRead": false,
+    "blockingFindings": 0,
+    "supported": "One predeclared changed-location Kilo startup reached a ready UI observation with a time-correlated accepted initialization and success metadata window.",
+    "originalFailure": "prior initialization timeout preserved as a different-input observation",
+    "uniqueGitOrDirectoryCauseEstablished": false,
+    "originalTimeoutResolutionProven": false,
+    "globalConfigurationDatabasePluginNetworkTimingControlled": false,
+    "currentSettingsEffectivenessAccepted": false,
+    "scope": "startup readiness and operator-recorded label observation only; this plan does not supply raw model keys or retrofit later ACK conditions"
+  },
+  "acceptance": {
+    "standardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false,
+    "modelInferenceVerifiedByThisStartupCase": false,
+    "allBackgroundIdleVerified": false
+  },
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-outside-git-comparison/plan.json",
+      "sha256": "618e8ecd394c5edd4aac84a7db1bfed513843e2f668ab3cf07b23999b7f1a6d3",
+      "bytes": 1838
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-outside-git-comparison/observation.json",
+      "sha256": "5f24cccd30769e8eeff5d3a80f91a364eb65cea26489dd7fc6535dc7b0f4900f",
+      "bytes": 1491
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-outside-git-comparison/startup-diagnostic-window.json",
+      "sha256": "2cc3c54775a21be7202c1f69abdc3bf68276d5bc1dbd2cd5ae69358e046e9c06",
+      "bytes": 5516
+    }
+  ]
+}

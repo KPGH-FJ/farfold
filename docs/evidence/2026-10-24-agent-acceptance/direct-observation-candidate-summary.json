@@ -1,0 +1,59 @@
+{
+  "kind": "ScopedInternalCandidateBuildAndIndependentReviewSummary",
+  "schemaVersion": 1,
+  "sourceCommit": "19614e016257771d4ab05756769d2da888a5e5d8",
+  "claimScope": "build-and-independent-review-snapshot-only",
+  "build": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "result": "internal-candidate-prepared-not-installed",
+    "sourceInputCount": 2243,
+    "evidencePinCount": 20,
+    "preparationTextPinCount": 8,
+    "checksRanAtFinalCommit": false,
+    "checksRanBeforeCommitOnExactInputMap": true
+  },
+  "independentReview": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "failedChecks": 0,
+    "independentAlgorithms": true,
+    "headAndDiskMatchedFrozenCommitAtReview": true,
+    "formalStaticFilesChecked": 5,
+    "formalHashSizeModeDeviceAndInodeUnchanged": true
+  },
+  "oldGeneratedCandidateRetirement": {
+    "sourceCommit": "39be685ebaae985af1af38a7c57da6a7e8631706",
+    "exactFilesRemoved": 5,
+    "bytesRemoved": 38091990,
+    "archivePreserved": true,
+    "allFiveArchivePayloadsAndModesMatched": true,
+    "formalAppOrUserDataModified": false
+  },
+  "limits": {
+    "formalInstalled": false,
+    "normalQuitVerified": false,
+    "freshDataRetentionVerified": false,
+    "affectedUiVerified": false,
+    "realAgentAcceptanceVerified": false,
+    "laterSourceChangesCovered": false,
+    "installationSourceChecksMayBeBypassed": false,
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0
+  },
+  "digests": {
+    "candidateReceipt": "771467038f73af247335b2bbd8c0e867e19521f860b3add13fc8a4a6557cead5",
+    "independentReview": "e22a875141ac6f1b16c3dfb1ba59bce43a2d6d8e48249881fb164c2c6396effc",
+    "independentReviewImplementation": "91d9bae90da328b0437c59b126157b1d229275509fcce6cd84814b37500f3d1f",
+    "candidateArchive": "827ad0a0dd2cee0017b9b8d432b49d6938c08c14be7d76be4b96171f432a0c35",
+    "engineeringSummary": "00a791c43ff1eda23c18c8b7db18ab5955863b30e25d3d889c50b84f12042233",
+    "finalCommittedSourceFreeze": "b5083b6d27b67a64d56c38fed28bfefaf30ae5640acbd67450e747bb4752e81e",
+    "formalStaticBaseline": "7970792c79f94a58144e4fec34e939e2349dec1f84bf4e9a2887121bb0ca5d09",
+    "oldGeneratedCandidateRetirement": "70584cb313101504c25ae122d27cfea38e8cc0d7efe1cb62f1a0a70e7f2a9366",
+    "preservedOldArchive": "66ce393a8dc9e4da4efebf11c00a4a3d5962fde99c4b703c479a192b20de59f8"
+  }
+}

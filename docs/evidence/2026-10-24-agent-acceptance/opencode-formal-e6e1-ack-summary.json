@@ -1,0 +1,101 @@
+{
+  "kind": "ScopedInstalledRealAgentExactReplySummary",
+  "schemaVersion": 1,
+  "agentId": "opencode",
+  "observedAgentVersion": "1.18.31",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "expected-reply-completion-and-current-idle-observed",
+  "observed": {
+    "ordinaryRequests": 1,
+    "attachments": 0,
+    "retryCancelOrModelChanges": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyMatched": true,
+    "sameOwnedConversation": true,
+    "sameCwd": true,
+    "confirmedSelectionPreserved": true,
+    "recognizedCompletionVisible": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "exactBackendCompletionTimeKnown": false,
+    "rawProtocolBodyBytesCaptured": false,
+    "rawStopReasonCaptured": false,
+    "exhaustiveNoIoProof": false,
+    "effectiveBackendModelIdentityVerified": false,
+    "accountOrEntitlementVerified": false,
+    "allOtherProcessesRequestFreeVerified": false,
+    "allBackgroundIdleVerified": false
+  },
+  "mechanicalValidation": {
+    "validatorCalls": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "errors": [],
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 2,
+      "privateEvidenceFiles": 2
+    },
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "semanticReview": {
+    "reviewedOriginalCount": 4,
+    "originalHashesUnchanged": true,
+    "planPreparedBeforeInputAndSend": true,
+    "originalReferencesMatch": true,
+    "executionRepeated": false,
+    "sourcePlanAuthoredByReviewer": true,
+    "actualUiObservationPerformedByReviewer": false,
+    "completionTimestampMeaning": "Attempt finishedAt records first observed completed-and-idle UI, not exact backend completion time.",
+    "inputFingerprintMeaning": "Receipt input maps retain the frozen manifest declarations; this review rehashed the four allowed originals and loaded receipt-tool source, not every external dependency or the installed App.",
+    "scope": "Only one actual exact-reply positive branch with formal-UI completion and current-conversation idle. Mechanical matching and UI labels do not establish raw response bytes, effective model or account identity, unseen tool or file activity, complete event coverage, or a whole requirement or standard."
+  },
+  "coveredSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "wholeConditionAccepted": false
+    }
+  ],
+  "preservedEarlierEvidence": {
+    "insideGitInitializationFailureNotOverwritten": true,
+    "changedCwdPreparationIsSeparateInput": true,
+    "earlierStageOriginalsRecheckedInThisReview": false,
+    "uniqueStartupCauseEstablished": false
+  },
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "sourcePlan": "72246cebafbe67e1959640666a2a38de788370b145b135c54db79584584b52cd",
+    "manifest": "c47e97cff8356198f8989283638790d5ef27d0a68a095412af8d8a3a834bc3b3",
+    "inputObservation": "e22c0be2f2ddfde8f5c9b26e628128405ae924ee40f2a35105a90e204454c4bc",
+    "resultObservation": "80ee44cad0dd85a84ca8508c94e44135c2de13a22f63708791a576cbc9bc7a8a",
+    "actualReceipt": "d4e64031c4eb9240b2f73500f15420c0afd2f4d835e49374d01bdbe93f466fa8",
+    "validationReport": "4792166ef66cf7ff50ff13cab549bf1aa0e0865fa6359615ea1b0d8c31aae205",
+    "receiptToolSource": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164"
+  }
+}

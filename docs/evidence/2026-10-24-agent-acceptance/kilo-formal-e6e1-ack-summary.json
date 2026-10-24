@@ -1,0 +1,111 @@
+{
+  "kind": "ScopedInstalledRealAgentExactReplySummary",
+  "schemaVersion": 1,
+  "agentId": "kilo",
+  "observedAgentVersion": "7.8.1",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "expected-reply-completion-and-current-idle-observed",
+  "observed": {
+    "ordinaryRequests": 1,
+    "attachments": 0,
+    "retryCancelOrModelChanges": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyMatched": true,
+    "sameOwnedConversation": true,
+    "sameCwd": true,
+    "confirmedVisibleLabelsAndSavedSelectionPreserved": true,
+    "recognizedCompletionVisible": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "exactBackendCompletionTimeKnown": false,
+    "rawProtocolBodyBytesCaptured": false,
+    "rawStopReasonCaptured": false,
+    "exhaustiveNoIoProof": false,
+    "effectiveBackendModelOrReasoningVerified": false,
+    "accountOrEntitlementVerified": false,
+    "allOtherProcessesRequestFreeVerified": false,
+    "allBackgroundIdleVerified": false
+  },
+  "mechanicalValidation": {
+    "validatorCalls": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "errors": [],
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 2,
+      "privateEvidenceFiles": 2
+    },
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "semanticReview": {
+    "reviewedOriginalCount": 4,
+    "originalHashesUnchanged": true,
+    "planPreparedBeforeInputAndSend": true,
+    "originalReferencesMatch": true,
+    "executionRepeated": false,
+    "sourcePlanAuthoredByReviewer": true,
+    "actualUiObservationPerformedByReviewer": false,
+    "modelCheckmarkEvidence": "Root observed the actual installed-UI image; no separately saved pixel artifact or independent pixel hash is claimed.",
+    "selectionProvenance": "The saved-config reference was supplied as a whitelist in the startup observation; its private source was not reopened. Current UI semantic labels, preserved choice and exact reply do not establish current raw option IDs or backend model/reasoning identity.",
+    "completionTimestampMeaning": "Attempt finishedAt records first observed completed-and-idle UI, not exact backend completion time.",
+    "inputFingerprintMeaning": "Receipt maps retain frozen manifest input declarations; this review rehashed the four allowed originals and loaded receipt-tool source, not every external dependency or the installed App.",
+    "scope": "Only one exact-reply positive branch with formal-UI completion and current-conversation idle. Mechanical matching is not whole-standard, whole-requirement or whole-Agent acceptance."
+  },
+  "evidenceRecordWriter": {
+    "source": "preserved-result-observation-operator-note",
+    "firstInvocationRejectedBeforeExecution": true,
+    "filesystemWritesFromRejectedInvocation": false,
+    "additionalAgentRequestFromRecordWriter": false,
+    "agentAttemptCountUnaffected": true
+  },
+  "coveredSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "wholeConditionAccepted": false
+    }
+  ],
+  "preservedEarlierEvidence": {
+    "originalStartupFailureNotOverwritten": true,
+    "changedCwdStartupIsSeparateInput": true,
+    "earlierStageOriginalsRecheckedInThisAckReview": false,
+    "unusedStartupDraftUsedAsExecutedCondition": false,
+    "uniqueStartupCauseEstablished": false
+  },
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "sourcePlan": "f84a32de4765e5176992acf5c4aace4162c9c3ff45fe40684a9ba00adf83c4c9",
+    "manifest": "f69854928ee3e38f14e2eb90d5162522eee6b0e98b63457c48d003c4bc0c7fe6",
+    "inputObservation": "3a6e170bdcd19956c02922e3b10fe4c09aaf4c2acd6baf19fe369d9b217f03ee",
+    "resultObservation": "d3b7bc52e99a4f9bdec3a3b92962c8ddefc54333026728641fc21e47c67f687c",
+    "actualReceipt": "628992de65a1d6d292343edf3d28ce52f311a3acdab37627e457d9acbeb51c61",
+    "validationReport": "00a724fb6e71276cdcfcc0d4b4435ac8c885be2495fee6169ff3822cdb2e05a5",
+    "receiptToolSource": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164"
+  }
+}

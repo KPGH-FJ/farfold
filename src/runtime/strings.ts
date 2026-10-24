@@ -475,6 +475,7 @@ export const STRINGS = {
     disabled: "关闭",
     modeName: "工作模式",
     modeDescription: "对话的工作方式。",
+    permissionModeDescription: "对话的权限模式。",
     menuTitle: "会话选项",
   },
   composer: {

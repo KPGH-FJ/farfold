@@ -1,7 +1,11 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SessionOptionsList } from "./SessionOptionsMenu";
-import { freshThreadState, type ConfigOptionView } from "../runtime/sessions";
+import {
+  freshThreadState,
+  threads,
+  type ConfigOptionView,
+} from "../runtime/sessions";
 import { synthesizeModeOption } from "../runtime/session_projection";
 
 const mode: ConfigOptionView = {
@@ -157,6 +161,81 @@ it.each([
   const html = render({ ...mode, description });
   expect(html).toContain(description);
   expect(html).not.toContain("对话的工作方式。");
+});
+
+it.each([
+  { name: "Mode", category: "mode" },
+  { name: "Session Mode", category: undefined },
+  { name: "Decision profile", category: "vendor_feature" },
+])(
+  "localizes the exact permission description without inferring semantics from $name",
+  ({ name, category }) => {
+    const option = {
+      ...mode,
+      name,
+      category,
+      currentValue: "auto",
+      options: [{ value: "auto", name: "Auto" }],
+      description: "Session permission mode",
+    };
+    const before = structuredClone(option);
+    const html = render(option);
+    expect(html).toContain("对话的权限模式。");
+    expect(html).not.toContain("Session permission mode");
+    expect(html).not.toContain("对话的工作方式。");
+    expect(html).toContain("Auto");
+    if (name === "Decision profile") expect(html).toContain(name);
+    expect(option).toEqual(before);
+  },
+);
+
+it.each([
+  " Session permission mode",
+  "Session permission mode ",
+  "session permission mode",
+])("localizes the equivalent permission description %j", (description) => {
+  const option = { ...mode, description };
+  const before = structuredClone(option);
+  const html = render(option);
+  expect(html).toContain("对话的权限模式。");
+  expect(html).not.toMatch(/session permission mode/i);
+  expect(option).toEqual(before);
+});
+
+it("preserves an unrelated permission description without inferring its meaning", () => {
+  const description = "Permission strategy: experimental";
+  const html = render({ ...mode, description });
+  expect(html).toContain(description);
+  expect(html).not.toContain("对话的权限模式。");
+});
+
+it("does not submit or mutate configuration while presenting the permission description", () => {
+  const options: ConfigOptionView[] = [
+    { ...mode, description: "Session permission mode" },
+    {
+      id: "custom-permission",
+      name: "Custom permission switch",
+      category: "mode",
+      type: "boolean",
+      currentValue: false,
+      description: "Approval remains required for sensitive actions",
+      options: [],
+    },
+  ];
+  const before = structuredClone(options);
+  const setConfig = vi.spyOn(threads, "setConfig");
+  try {
+    const html = render(options);
+    expect(html).toContain("对话的权限模式。");
+    expect(html).toContain(options[1].description!);
+    expect(html).toContain(
+      'aria-label="Custom permission switch" aria-checked="false"',
+    );
+    expect(options).toEqual(before);
+    expect(setConfig).not.toHaveBeenCalled();
+  } finally {
+    setConfig.mockRestore();
+  }
 });
 
 it.each(["Planning strategy", "Auto Approve", "YOLO", "Mode preview"])(

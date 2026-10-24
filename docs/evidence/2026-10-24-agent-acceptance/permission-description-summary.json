@@ -1,0 +1,131 @@
+{
+  "kind": "ScopedPermissionDescriptionPresentationFixSummary",
+  "schemaVersion": 1,
+  "baseHead": "19614e016257771d4ab05756769d2da888a5e5d8",
+  "sourceSnapshotState": "three-source-delta-on-base-head",
+  "claimScope": "shared-ui-known-permission-description-presentation",
+  "presentation": {
+    "knownInputDescription": "Session permission mode",
+    "displayDescription": "对话的权限模式。",
+    "comparison": "trim-outer-whitespace-and-ignore-case-for-known-complete-phrase",
+    "independentOfOptionTitleCategoryAndId": true,
+    "originalOptionObjectsPreserved": true,
+    "unknownDescriptionsPreserved": true,
+    "existingOperatingDescriptionMappingPreserved": true,
+    "agentBodiesOrEventsRewritten": false,
+    "configPayloadsRewritten": false,
+    "renderSetConfigCallsInControlledTests": 0,
+    "arbitraryExternalTextSanitizer": false
+  },
+  "formalObservation": {
+    "productCommitPrefix": "e6e1c3796",
+    "knownPermissionPhraseVisible": true,
+    "operatorRecorded": true,
+    "postFixUiRechecked": false
+  },
+  "sourceInputs": [
+    {
+      "path": "src/components/SessionOptionsMenu.tsx",
+      "sha256": "7bec588542189ab410a3b71077df909c8e895d918c601796c192407f8ed8ebe7"
+    },
+    {
+      "path": "src/components/SessionOptionsMenu.test.tsx",
+      "sha256": "47b9d3e4f570aa11749a5ae287ecc6581af66371905e1ea8d99967a8cd7f27a0"
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "aea05f6b58e156df8e454bcc26c071c4357264e9f40349d48bc5d20d1c95ab27"
+    }
+  ],
+  "regressionRuns": [
+    {
+      "phase": "initial-exact-match-red",
+      "files": 1,
+      "total": 32,
+      "passed": 28,
+      "failed": 4,
+      "exitCode": 1,
+      "currentSourceCovered": false
+    },
+    {
+      "phase": "initial-exact-match-green",
+      "files": 4,
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "exitCode": 0,
+      "currentSourceCovered": false
+    },
+    {
+      "phase": "outer-whitespace-and-case-equivalence-red",
+      "files": 1,
+      "total": 32,
+      "passed": 29,
+      "failed": 3,
+      "exitCode": 1,
+      "currentSourceCovered": false
+    },
+    {
+      "phase": "outer-whitespace-and-case-equivalence-green",
+      "files": 1,
+      "total": 32,
+      "passed": 32,
+      "failed": 0,
+      "exitCode": 0,
+      "currentSourceCovered": true
+    }
+  ],
+  "regressionCountsMayBeSummed": false,
+  "fullEngineering": {
+    "runnerInvocations": 1,
+    "naturalExitCode": 0,
+    "checksPassed": 7,
+    "checksTotal": 7,
+    "sourceInputCount": 2243,
+    "sourceAndHeadEndpointsEqual": true,
+    "eachCommandSourceMatched": true,
+    "checksRanBeforeCommit": true,
+    "frontend": {
+      "files": 664,
+      "passed": 8740,
+      "failed": 0
+    },
+    "rustLibrary": {
+      "passed": 2228,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "rustDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    }
+  },
+  "limits": {
+    "formalInstalled": false,
+    "affectedFormalUiVerified": false,
+    "old196CandidateCoversTheseChanges": false,
+    "dependencyBytesOrEnvironmentFrozen": false,
+    "endpointEqualityProvesNoIntermediateWriter": false,
+    "standardCellsAdded": 0,
+    "s8Closed": false,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0
+  },
+  "digests": {
+    "sourceAnalysis": "de3fe07b9f3726d40a0a399a76569f71821a5e0f2e49b4494d9bd8028dc9fa16",
+    "formalUiObservation": "0681e46d16e13835827ee866988dd1f62c9043eff8537e8cae73fb4c4538b1f0",
+    "initialImplementation": "8216082cf9959ba5f4ea5509bf593d28c72202b58747632395d9c6e757abcbb2",
+    "casefoldDeltaImplementation": "5e1fe8d4550f0b70602536787fb818fc526ea7fc0c41a9f4f7b76d50c9171a05",
+    "engineeringSummary": "7b908136813e29bc12d2231e45915e8ae011cf8f27ec9a2146922777e3544618",
+    "engineeringSourceBefore": "f96358f51a6cb6f46a4183367a44e3c6c319fa93190b9556e0bcffd7e1734727",
+    "engineeringSourceAfter": "df40a8ca973318bbd865a64492f9d7c1fbff202d3c75af9875bf65bd697222ca",
+    "engineeringExecutionRecord": "09902b1524cfa060fe4f2499524ca0658831f9737c2b60e3fde553fefa0bd81d"
+  }
+}

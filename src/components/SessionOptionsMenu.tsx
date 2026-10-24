@@ -64,10 +64,12 @@ function OptionRow({
   const on = proposed === true || proposed === "true";
   const label = optionLabel(option);
   const description =
-    hasStandardModeName(option) &&
-    option.description === "Session operating mode"
-      ? STRINGS.options.modeDescription
-      : option.description || R.descriptionUnknown;
+    option.description?.trim().toLowerCase() === "session permission mode"
+      ? STRINGS.options.permissionModeDescription
+      : hasStandardModeName(option) &&
+          option.description === "Session operating mode"
+        ? STRINGS.options.modeDescription
+        : option.description || R.descriptionUnknown;
   const choose = (value: unknown) => {
     if (configOptionChangeBlocked(thread, option.id)) return;
     setFailed(false);

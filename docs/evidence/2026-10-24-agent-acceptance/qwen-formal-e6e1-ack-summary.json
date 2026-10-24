@@ -1,0 +1,115 @@
+{
+  "kind": "ScopedInstalledRealAgentExactReplySummary",
+  "schemaVersion": 1,
+  "agentId": "qwen-code",
+  "observedAgentVersion": "0.24.7",
+  "formalProductCommit": "e6e1c3796",
+  "formalProductBinarySha256": "72675e9d275a59c8d09cef2e41ff17ca40752b5ba7a05fb97671c49a8d63ecf4",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "result": "expected-reply-completion-and-current-idle-observed",
+  "observed": {
+    "ordinaryRequests": 1,
+    "attachments": 0,
+    "retryCancelOrModelChanges": 0,
+    "exactPlannedInputMatched": true,
+    "expectedReplyMatched": true,
+    "sameOwnedConversation": true,
+    "sameCwd": true,
+    "confirmedVisibleLabelsAndSavedSelectionPreserved": true,
+    "recognizedCompletionVisible": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "exactBackendCompletionTimeKnown": false,
+    "rawProtocolBodyBytesCaptured": false,
+    "rawStopReasonCaptured": false,
+    "exhaustiveNoIoProof": false,
+    "effectiveBackendModelOrReasoningVerified": false,
+    "accountOrEntitlementVerified": false,
+    "allOtherProcessesRequestFreeVerified": false,
+    "allBackgroundIdleVerified": false
+  },
+  "additionalUi": {
+    "collapsedThinkingAndExtensionHeadersObserved": true,
+    "bodiesExpandedOrInspected": false,
+    "thinkingContentValidated": false,
+    "wholeThinkingOrEventCoverageClaimed": false
+  },
+  "mechanicalValidation": {
+    "validatorCalls": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "errors": [],
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 3,
+      "privateEvidenceFiles": 3
+    },
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true
+  },
+  "semanticReview": {
+    "reviewedOriginalCount": 4,
+    "additionalPreSendRecheckCount": 1,
+    "originalHashesUnchanged": true,
+    "originalReferencesMatch": true,
+    "preparedBeforeInputAndSend": true,
+    "executionRepeated": false,
+    "actualUiObservationPerformedByReviewer": false,
+    "appIdentityBasis": "root-static-baseline-no-replacement",
+    "appBundleRehashedByThisReview": false,
+    "completionTimestampMeaning": "Attempt finishedAt is first observed completed-and-idle UI, not exact backend completion time.",
+    "inputFingerprintMeaning": "Receipt maps retain frozen manifest declarations. Root reported an exact twelve-reference check before input; this review checks that record and the five allowed original byte hashes, not a new global post-send source freeze.",
+    "scope": "Only the exact-reply positive branch and formal-UI completion/current-conversation idle. Preserved settings and labels do not prove current backend model, reasoning effect, account identity or raw response bytes."
+  },
+  "preSendToolVersion": {
+    "factoryV1TemporarilyChanged": true,
+    "originalV1RestoredBeforeInput": true,
+    "rootReportedExactReferencesMatched": 12,
+    "precaseManifestOrSourcePlanRewritten": false,
+    "v2IsolatedFromThisPrecase": true,
+    "toolMaintenanceAddedAgentAttempts": 0,
+    "toolMaintenanceAddedAgentFailuresOrRetries": 0,
+    "scope": "The explicit pre-send byte recheck is tool-version provenance, not an Agent retry or another model request. The stronger rejection branches did not apply to this already explicit input."
+  },
+  "coveredSubconditions": [
+    {
+      "conditionId": "standard:S5",
+      "excerpt": "回答",
+      "wholeConditionAccepted": false
+    },
+    {
+      "conditionId": "requirement:ARCH-34",
+      "excerpt": "真实回复",
+      "wholeConditionAccepted": false
+    }
+  ],
+  "acceptance": {
+    "acceptedStandardIds": [],
+    "standardCellsAdded": 0,
+    "wholeStandardsAccepted": 0,
+    "wholeRequirementsAccepted": 0,
+    "wholeAgentsAccepted": 0,
+    "acceptanceVerified": false,
+    "automaticPromotionAllowed": false
+  },
+  "digests": {
+    "sourcePlan": "d5b6f3d021728cbf20f60bec380dff285ddb99dab4b3706518c0fc0912c9da61",
+    "manifest": "d6fbe3e684aabbdf7cf72d00394162b56ee30ed88c0d8963d77d29ee766e5684",
+    "preSendReferenceRecheck": "b6f9f5da07d7d21d3299e3e619d1e83b15b9ebedec8d16e17adc287864ac4ea9",
+    "inputObservation": "48f5651bef392bb7bba85ff3a5d0cda5089c4b1753fef1a33ec0bcb178997ba6",
+    "resultObservation": "72757fcf9ba10457295ca0e0521b10ada7e3a242ab8e67c492bfb7bca2c46241",
+    "actualReceipt": "bab5007a265258357d6650d7fb25719440818e8020b58e388eee6d0af4a272c5",
+    "validationReport": "750eb4a7165affe6b1691ccb1736e9c6bf57552b2825bf431d4a6817dfe7b4a5",
+    "receiptToolSource": "547d59aee3609bdeaba8d212454864b516b73ed13f2f6088ebbb690ea21be164",
+    "originalOfflineFactory": "d9c668867355f39704fd365fea85a0b3a4650e1aa37740c5f7320391198baeb9"
+  }
+}
