@@ -85,6 +85,7 @@ export function freshThreadState(
     configCheck: null,
     connectionLost: false,
     connectionOutcomeUnknown: false,
+    historicalOutcomeUnknown: false,
     resumed: false,
     openError: null,
     historyUnavailable: null,

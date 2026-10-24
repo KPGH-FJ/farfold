@@ -47,6 +47,7 @@ export function inheritOpeningWork(
     state.uncertainPrompt = existing.uncertainPrompt;
     state.stopUnconfirmed = existing.stopUnconfirmed;
     state.connectionOutcomeUnknown = existing.connectionOutcomeUnknown;
+    state.historicalOutcomeUnknown = existing.historicalOutcomeUnknown;
     state.workEnabled = existing.workEnabled;
     state.forkOperation = existing.forkOperation;
   } else restoreQueue?.(state);

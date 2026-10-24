@@ -1,0 +1,207 @@
+{
+  "kind": "FormalBd1fInstallationPublicSummary",
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-24T12:16:56.876Z",
+  "sourceCommit": "bd1f3caa6059c175df6e466e846eddc0f9991b5d",
+  "status": "formal-installed-independent-ten-passed-first-launch-observed",
+  "draftOnly": false,
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "formalIdentity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "28c47177a10737ef6e3ab12f43e2c932dbe9e1356ad2d9e1dab49a9bb768d7c7"
+  },
+  "candidateHistoricalRecord": {
+    "phaseAsOriginallyRecorded": "internalCandidatePreparedNotInstalled",
+    "buildExitCode": 0,
+    "sourceInputCountAsRecorded": 2255,
+    "architecture": "arm64",
+    "exactBundleFileCount": 5,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "originalInstalledFlag": false,
+    "originalFormalAppReplacedFlag": false,
+    "checksRanAtFinalCommit": false,
+    "evidence": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/candidate-output/candidate.json",
+      "sha256": "1492fd85eba82d984c6297c696358d60f3012f66fb528de673faf005d401c13a"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/independent/review.json",
+      "sha256": "bb65c81cfa18e4dd944b104274126046a85a70c5ef39b4029e2dd51bec85abd3"
+    },
+    "meaning": "Original prepared-not-installed receipt remains a historical build-stage record. Later actual installation is separate evidence; the original was not rewritten."
+  },
+  "normalQuit": {
+    "requestedAt": "2026-10-24T11:39:24.097Z",
+    "closedObservationRecordedAt": "2026-10-24T11:40:47.932854+00:00",
+    "userDecisionBoundByRootRecord": true,
+    "normalQuitRecordedByRoot": true,
+    "forcedQuit": false,
+    "oldRequestStopSuccessClaimed": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/root-normal-quit.json",
+      "sha256": "4afc853bb14fdc0eb0e6edffb658c49f806ae61ef516cc572f3c45f908f18c1d"
+    },
+    "meaning": "User-authorized normal exit for update. Closing activity does not retrospectively determine old unknown request results."
+  },
+  "retention": {
+    "captures": [
+      {
+        "phase": "before",
+        "recordedAt": "2026-10-24T11:41:34.635377+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "766630a0a2b7b269195400138b7a6a3fddf2d8e2e3740cb6c54ad2f292346a46",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/retention-before-receipt.json",
+          "sha256": "a00068daca35907b11b13fb3b332cf7b87aec7070007e86212b5a0b730f2f927"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/install-data-before-summary.json",
+          "sha256": "8222f991183e651a4f17128eb8c6b246f1f199ae983a9c3890545feb72a9da81"
+        }
+      },
+      {
+        "phase": "preinstall",
+        "recordedAt": "2026-10-24T11:44:20.028096+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "766630a0a2b7b269195400138b7a6a3fddf2d8e2e3740cb6c54ad2f292346a46",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/retention-preinstall-receipt.json",
+          "sha256": "16e2e6dffada1ef744aba6be3cb0f26327926804238fd34b8aeebee602525886"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/install-data-preinstall-summary.json",
+          "sha256": "8222f991183e651a4f17128eb8c6b246f1f199ae983a9c3890545feb72a9da81"
+        }
+      },
+      {
+        "phase": "after",
+        "recordedAt": "2026-10-24T11:48:29.022487+00:00",
+        "closedObserved": true,
+        "threeRootEntryCount": 232530,
+        "manifestSha256": "766630a0a2b7b269195400138b7a6a3fddf2d8e2e3740cb6c54ad2f292346a46",
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/retention-after-receipt.json",
+          "sha256": "6d2f8d1b3203fe954688c9c87609542882f962b6b9414db3355a0276fbc4a223"
+        },
+        "summary": {
+          "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/install-data-after-summary.json",
+          "sha256": "8222f991183e651a4f17128eb8c6b246f1f199ae983a9c3890545feb72a9da81"
+        }
+      }
+    ],
+    "captureCount": 3,
+    "entriesPerCapture": 232530,
+    "sameThreeRootSummaryAndDigest": true,
+    "commonManifestSha256": "766630a0a2b7b269195400138b7a6a3fddf2d8e2e3740cb6c54ad2f292346a46",
+    "independentFullManifestByteEqualityCheckPassed": true,
+    "firstCaptureAndMetadataBackupRetentionCheckPassed": true,
+    "normalQuitAuthorityStoredSeparately": true,
+    "meaning": "Root-reviewed source draft and independent verifier report equal manifests at before/preinstall/after endpoints. This publisher read only the approved sanitized draft, not those manifests or backups."
+  },
+  "atomicInstallation": {
+    "phaseAsRecorded": "installedVerifiedNotLaunched",
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileReplacementCount": 5,
+    "eachReplacementUsedNewInode": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "recordedAt": "2026-10-24T11:46:23.560213+00:00",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/install-result.json",
+      "sha256": "84d81ea76ee47789b0a275920bfbff8cb98244c3be4f019302facaef82cfe2d5"
+    }
+  },
+  "installedIndependentReview": {
+    "phase": "installed-10-independent-checks",
+    "passed": 10,
+    "total": 10,
+    "failureCount": 0,
+    "checks": {
+      "source-and-production-inputs": true,
+      "receipt-and-evidence-seals": true,
+      "formal-candidate-exact-five-files-and-modes": true,
+      "bundle-identity": true,
+      "arm64-mach-o": true,
+      "strict-codesign": true,
+      "archive-exact-five-crc-mode": true,
+      "closed-without-launch-observed": true,
+      "metadata-backup-and-first-capture-retained": true,
+      "fresh-three-full-manifests-byte-identical": true
+    },
+    "recordedAt": "2026-10-24T11:50:56.035273+00:00",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "f40d5b8df357b82bb0b62644af31cb9fa4506dac9f3bb1c8f957c30ae33c9cb2"
+    },
+    "meaning": "Actual independent installed-ten receipt, separate from the earlier candidate-nine and later first launch. Detailed private paths/signatures are not copied."
+  },
+  "duplicateCandidateCleanup": {
+    "phase": "exactDuplicateCandidateRemoved",
+    "recordedAt": "2026-10-24T11:53:37.075276+00:00",
+    "exactGeneratedFilesRemoved": 5,
+    "exactGeneratedDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "zipPreservedSha256": "9a53b1665fc4487c219ac79fc4482de2c310c57418e4e6e278d63824498ee092",
+    "archiveBytesAsRecorded": 16092145,
+    "noDataBuildLaunchQuitRestoreOrAutomaticRetry": true,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/install/candidate-cleanup.json",
+      "sha256": "8956913de10c47c3a2d2092bdb16343b58bd4f549f0b48d9c997f7451ddd837e"
+    },
+    "meaning": "Only the exact generated duplicate was removed after installed-ten; the formal app and archive were retained."
+  },
+  "firstLaunch": {
+    "recordedAt": "2026-10-24T11:58:17.804700+00:00",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "binarySha256": "28c47177a10737ef6e3ab12f43e2c932dbe9e1356ad2d9e1dab49a9bb768d7c7",
+    "initialUiIndexAndDraftIndicatorsObserved": true,
+    "newModelPromptsInInitialObservation": 0,
+    "ownDroidHistoryOpenAndLoadTimesRecorded": true,
+    "priorUnknownNoticeVisibleOnThatColdDroidView": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/common-fixes-bd1f3caa-install-preparation/root-first-launch.json",
+      "sha256": "acb839994c57875fa53ba76dc9ab4e3de8673b11e4581cb8c37c0a4514bef8d2"
+    },
+    "meaning": "A limited initial launch and own-history observation only. The missing prior-result notice is retained as a separate open product issue, not converted into an old successful result or a full history/Agent acceptance."
+  },
+  "limits": [
+    "The three captures prove the recorded endpoints, not uninterrupted absence of all intermediate writers or changes outside those roots.",
+    "The publisher read no data manifest, backup, database, user configuration/body, installation suffix or live process information; only the root-approved sanitized draft was projected.",
+    "The original install receipt correctly records not-launched at its own time; a later root first-launch record is separate, and original candidate/install/retention evidence is not overwritten.",
+    "Normal exit and update do not prove native stop/cancel terminal results for previously unknown requests. Initial current idle/config controls do not determine an older request outcome.",
+    "Installation/signature/archive/data checks are not affected-feature real-Agent proof, complete history restoration, model effectiveness, Windows proof, or29x8/151 closure."
+  ],
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "userBodiesIncluded": false,
+    "accountOrCredentialFieldsIncluded": false,
+    "processIdsOrHardwareSerialsIncluded": false,
+    "rawPrivateCheckDetailsIncluded": false,
+    "processInformationIncluded": false
+  },
+  "originalEvidenceRewritten": false,
+  "publication": {
+    "recordedAt": "2026-10-24T12:28:11.626794Z",
+    "rootReviewedAndApprovedSourceDraft": true,
+    "sourceDraft": {
+      "path": "output/2026-10-24-agent-acceptance/bd1f-install-public-draft.json",
+      "sha256": "95492948909b32ea3e981436b3c503f60ebd86af5b973c3451a828092f1465fb"
+    },
+    "method": "Docs-only projection from the root-reviewed sanitized draft; no referenced private installation, retention, manifest or backup original was opened by this publisher.",
+    "changes": "Publication kind and draft flag; explicit review/provenance; process-count fields removed; original draft and all historical receipts retained.",
+    "publisherPerformedNewInstallationChecks": false,
+    "notCurrentSourceWriterProof": "The source/engineering evidence applies to the bd1f installed batch only. A subsequent cold-outcome repair is separate and is not covered by this batch full-seven result."
+  }
+}

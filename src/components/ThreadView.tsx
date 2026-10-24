@@ -616,6 +616,18 @@ export function ThreadView({
         {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
+            {thread.historicalOutcomeUnknown && (
+              <div className="banner" role="status">
+                <span>{STRINGS.thread.historicalOutcomeUnknown}</span>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => threads.acknowledgeHistoricalOutcome(thread)}
+                >
+                  {STRINGS.thread.acknowledgeHistoricalOutcome}
+                </button>
+              </div>
+            )}
             {thread.openError && !recoveryNotice && (
               <ErrorNotice
                 className="banner error-notice"
@@ -1300,7 +1312,11 @@ export function ThreadView({
                           modelOption.id,
                         )}
                         onPick={(value) => {
-                          if (pendingPreparationRead(thread)) return;
+                          if (
+                            thread.identity === "draft" &&
+                            pendingPreparationRead(thread)
+                          )
+                            return;
                           if (configOptionChangeBlocked(thread, modelOption.id))
                             return;
                           setModelSelection(

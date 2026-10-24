@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "kind": "ColdRecoveryAndModelSelectionSourceEvidenceSummary",
+  "recordedAt": "2026-10-24T12:49:55.507Z",
+  "proofLevel": "source-and-controlled-tests",
+  "sourceStage": "not-installed",
+  "baseHead": "bd1f3caa6059c175df6e466e846eddc0f9991b5d",
+  "finalSourceCommit": null,
+  "changeScope": {
+    "productionFiles": 10,
+    "testFiles": 4,
+    "sourceFiles": [
+      {
+        "path": "src/runtime/drafts.ts",
+        "sha256": "4d7babe927ce47851bbc75c9af22e7d57506c248e986c22a56d67ffc16632248",
+        "lines": 872
+      },
+      {
+        "path": "src/runtime/session_types.ts",
+        "sha256": "9ea265c0d513cd830dd0462f7a2c94b5b9ea13856f722ac3d3906a6776a7f86f",
+        "lines": 399
+      },
+      {
+        "path": "src/runtime/session_projection.ts",
+        "sha256": "ad34c0bd7b946d16239db6c13d866aab8a24f0cc8d5b9378eb38ae8fb59eb3ca",
+        "lines": 986
+      },
+      {
+        "path": "src/runtime/session_open_state.ts",
+        "sha256": "7000457c96e6b04d688f57bb051e99ab8c89a7ccaa55646b458c568efc65bcde",
+        "lines": 108
+      },
+      {
+        "path": "src/runtime/thread_attention.ts",
+        "sha256": "75482a2c88ac4b415f01c6369e6764b488bc2785e02ebcfe1e04ede4c8246ad5",
+        "lines": 22
+      },
+      {
+        "path": "src/runtime/storage_restore.ts",
+        "sha256": "16c7d45f7dedca8710fb0d7bccb42e155303c95c33bab25fae55b6647285c9d5",
+        "lines": 286
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "sha256": "535eaa0a0e54c16b1ceb37b2ac7ec3329aaa0572d52d6f7758346d3234b9579d",
+        "lines": 1287
+      },
+      {
+        "path": "src/runtime/strings.ts",
+        "sha256": "88189ff5e060f03e4cf228dbda8e2a721d2d760511946a186cb23d0dc5412acc",
+        "lines": 750
+      },
+      {
+        "path": "src/runtime/draft_storage.ts",
+        "sha256": "a86d7f616f9d91dd06f9ec1e819cf3a524138fecb1efff0b0dc435eeec961e4c",
+        "lines": 197
+      },
+      {
+        "path": "src/components/ThreadView.tsx",
+        "sha256": "1785e98c9161c7550088a7cb3c3c1d8bc8701ff1c664e3b50c008752e28aff72",
+        "lines": 1418
+      },
+      {
+        "path": "src/runtime/sessions.cold-outcome.test.ts",
+        "sha256": "eba36a1b692819cd45fd047170bad3fe3348fa39ffda678b5d50f0ab9719e38d",
+        "lines": 410
+      },
+      {
+        "path": "src/runtime/drafts.outcome-marker.test.ts",
+        "sha256": "4c5b70d7fb1c80914d16f9257399bff278ddbbe8ec88398819e44e02461951ab",
+        "lines": 148
+      },
+      {
+        "path": "src/components/ThreadView.historical-outcome.test.tsx",
+        "sha256": "b1ec4f5d9aeff41b41859c3e7f88e99080bab330bee160cf88b095e0403a37ed",
+        "lines": 145
+      },
+      {
+        "path": "src/components/ThreadView.established-model-read-gate.test.tsx",
+        "sha256": "79f347e6bcb2c149d394f5745be89490cc2b68c5c00f51ea75ecbd4faf00b451",
+        "lines": 211
+      }
+    ]
+  },
+  "behavior": [
+    "沿用现有每对话草稿队列设置，仅增加有限历史未知提示；空队列也能保存提示，未添加消息或事件账本。",
+    "冷恢复只显示此前结果未确认，不恢复旧活动锁、不自动发送；新请求成功不会抹掉旧历史提示。",
+    "已知悉只同步清除当前显示对象的历史提示，保留当前结果未知、停止未确认、队列与原有保护。",
+    "准备读取标记仅阻止新草稿的模型选择；已保存对话仍由原有活动、未知和配置检查保护，并在明确确认后才修改。"
+  ],
+  "regressions": [
+    {
+      "scope": "cold-unknown-empty-queue-persistence",
+      "phase": "valid-red",
+      "testFiles": 1,
+      "passed": 4,
+      "failed": 1,
+      "command": {
+        "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/red-01-command.json",
+        "sha256": "d850adfc4d690a5d8903041b1a48071cc6b8898e2ab2f9f40b27c1d34f51168d",
+        "bytes": 1691
+      },
+      "logs": [
+        {
+          "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/red-01.stdout.log",
+          "sha256": "605049aad2e6acd5895af9dda0d05a526f15551bff6d47a20ceea15c1c2f7ff8",
+          "bytes": 985
+        },
+        {
+          "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/red-01.stderr.log",
+          "sha256": "8a92cb6a45f89fbbefa628c434576def514c8fe8f666bedd50598c8bb7bc3752",
+          "bytes": 790
+        }
+      ],
+      "originalOraclePrefixPreserved": true
+    },
+    {
+      "scope": "established-model-selection-vs-draft-read-gate",
+      "phase": "valid-red",
+      "testFiles": 1,
+      "passed": 3,
+      "failed": 1,
+      "command": {
+        "path": "output/2026-10-24-agent-acceptance/established-model-read-gate-fix/independent-red-command.json",
+        "sha256": "d2669ff6f62de3463f0a547a373e3df870c8a9f3b6cdfdc84ea99152d6aad8b4",
+        "bytes": 812
+      },
+      "log": {
+        "path": "output/2026-10-24-agent-acceptance/established-model-read-gate-fix/independent-red.log",
+        "sha256": "62c9f88ff2afc5222512453e4a9aa809299cd7797a33e2b489f495ce07b31442",
+        "bytes": 1167
+      }
+    }
+  ],
+  "targetedChecks": [
+    {
+      "scope": "cold-unknown-affected-before-model-scope-delta",
+      "testFiles": 19,
+      "passed": 182,
+      "failed": 0,
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/implementation-02-2.json",
+        "sha256": "9f680a1fc315c11dcff3cc0dcd1b98d5b4c2c93145a41c5aeaec54f693d18e40",
+        "bytes": 4213
+      },
+      "countBasis": "implementation result summary; separate overlapping targeted scopes"
+    },
+    {
+      "scope": "final-thread-model-scope-components",
+      "testFiles": 4,
+      "passed": 18,
+      "failed": 0,
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/model-gate-delta-1.json",
+        "sha256": "407e4b5342c0564fdeb73a0a835bdedd988f3eda187caf6fc0df5e5b600e9fe9",
+        "bytes": 3785
+      },
+      "countBasis": "implementation result summary; separate overlapping targeted scopes"
+    },
+    {
+      "scope": "final-existing-config-preparation",
+      "testFiles": 5,
+      "passed": 129,
+      "failed": 0,
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/model-gate-config-regression.json",
+        "sha256": "6f41439a25331bdb034a4732f08f1f918a1e4c8b29ad2ab4376c2cef2ce03272",
+        "bytes": 3796
+      },
+      "countBasis": "implementation result summary; separate overlapping targeted scopes"
+    }
+  ],
+  "targetedCountsAdditive": false,
+  "independentSourceReview": {
+    "ref": {
+      "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/independent-review-real-readiness.json",
+      "sha256": "de68d667878e3e32dac76d6cba92bdd9968b018dbe691775fe4427d8e3201170",
+      "bytes": 10854
+    },
+    "blockingFindings": 0,
+    "testsReexecutedDuringReview": 0,
+    "reviewerAuthoredModelGateTestExcludedFromIndependentProof": true
+  },
+  "fullEngineering": {
+    "summary": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/engineering-summary.json",
+      "sha256": "0af40e0b6bc76a1b692916094d6943c3bf0ba41179138680e9ff4bda6e885f45",
+      "bytes": 6574
+    },
+    "sourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/source-before.json",
+      "sha256": "c0470714cf98a8315175f356b2f0a469651ad4cc21138b97430326a462092273",
+      "bytes": 267089
+    },
+    "sourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/source-after.json",
+      "sha256": "f0903ebcd2f4d06872c000448b8c8e6f5cdd9e3be05cd9ec0ea53944b2202514",
+      "bytes": 267090
+    },
+    "inputCount": 2259,
+    "endpointMapsEqual": true,
+    "allSevenSucceeded": true,
+    "commandReceiptsAndLogsIndependentlyMatched": true,
+    "sourceMatchedAfterEachCommandReportedByRunner": true,
+    "checksRanBeforeCommit": true,
+    "checksRanAtFinalCommit": false,
+    "frontend": {
+      "files": 672,
+      "passed": 8861,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2256,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "commands": [
+      {
+        "check": "format",
+        "argv": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:39:45.127Z",
+        "finishedAt": "2026-10-24T12:40:20.496Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/format-command.json",
+          "sha256": "7ef41afcfc8f860ea7bde005df0fbcdc3ae37e1319ef41e79dd4c7ae415734c2",
+          "bytes": 619
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/format.stdout",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "bytes": 144
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/format.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      {
+        "check": "typecheck",
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:40:20.630Z",
+        "finishedAt": "2026-10-24T12:40:30.650Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/typecheck-command.json",
+          "sha256": "0fbe72a92bee64443801fdb65f37954ac8872e8f9b2c9cb998ec4505c6ee60fe",
+          "bytes": 625
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/typecheck.stdout",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "bytes": 78
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/typecheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      {
+        "check": "frontend-test-direct",
+        "argv": ["corepack", "pnpm", "exec", "vitest", "run", "--maxWorkers=4"],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:40:30.894Z",
+        "finishedAt": "2026-10-24T12:41:49.862Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/frontend-test-direct-command.json",
+          "sha256": "2cb5b2161f4e84115b79ffb4f1e0e8458dd9fdfe152446fbd158fd8454dcdffd",
+          "bytes": 700
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/frontend-test-direct.stdout",
+          "sha256": "4f8a87c070affaeb2bb9501605e495d471a3efc9c38a747bdaa1253ef428215c",
+          "bytes": 225
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/frontend-test-direct.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      {
+        "check": "build",
+        "argv": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:41:50.096Z",
+        "finishedAt": "2026-10-24T12:42:00.983Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/build-command.json",
+          "sha256": "38e3ee4aac6d4d195acac60d18223d0b17a34a047caaa6b2eda86e3faf675156",
+          "bytes": 609
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/build.stdout",
+          "sha256": "ccfdfdf93f8730c12f2ded7771fe3d34314f29a40960ff59f62bbc9314306bb7",
+          "bytes": 4624
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/build.stderr",
+          "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "bytes": 360
+        }
+      },
+      {
+        "check": "cargo-fmt",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:42:01.117Z",
+        "finishedAt": "2026-10-24T12:42:03.088Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-fmt-command.json",
+          "sha256": "c972342afeaa982f3df3c97667971041331a9ab1ff4e37e0161d4331d9f7af53",
+          "bytes": 670
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-fmt.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-fmt.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      {
+        "check": "cargo-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:42:03.215Z",
+        "finishedAt": "2026-10-24T12:42:03.915Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-clippy-command.json",
+          "sha256": "84168d376249113e0f82e90695658b4536466e2b2ff7224f1555223115807f0f",
+          "bytes": 719
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-clippy.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-clippy.stderr",
+          "sha256": "358434368432a659e6ef83039260ed98d88fb244724920ecb3c8d56d7d54a318",
+          "bytes": 72
+        }
+      },
+      {
+        "check": "cargo-test",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "startedAt": "2026-10-24T12:42:04.045Z",
+        "finishedAt": "2026-10-24T12:44:24.133Z",
+        "sourceInputsMatchBeforeReported": true,
+        "receipt": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-test-command.json",
+          "sha256": "df7faf3f0fe52da0498f0342bf0de6891d78cec7af0720a959057823be6230f6",
+          "bytes": 675
+        },
+        "stdout": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-test.stdout",
+          "sha256": "486a13582fd6ed8a175eb75e6bbdf0ce1b56e49e03d2027163f15bf514df7963",
+          "bytes": 258400
+        },
+        "stderr": {
+          "path": "output/2026-10-24-agent-acceptance/cold-recovery-and-model-selection-engineering/cargo-test.stderr",
+          "sha256": "b5be03ca56c340076a7c6afd53957720d8df02832b8378aa10fbc3e104667e00",
+          "bytes": 605
+        }
+      }
+    ],
+    "testCountsExtractedFromFinalLogs": true,
+    "reviewerReranCommands": false,
+    "completionToolProvenance": {
+      "source": "parent report of original command session",
+      "sessionId": 5154,
+      "finalToolChunk": "e5d685",
+      "exitCode": 0,
+      "independentReviewerObservedOriginalSession": false
+    }
+  },
+  "implementationRef": {
+    "path": "output/2026-10-24-agent-acceptance/cold-unknown-state-review-bd1f/implementation.json",
+    "sha256": "407b3fe042a00f08f5301485080abd0e50e7c03a1c2063dca47874f3a9e47986",
+    "bytes": 10262
+  },
+  "limits": [
+    "本批只证明源码与测试层面；正式应用仍为 bd1f，尚未包含本修复，也未复验受影响的正式界面。",
+    "准备读取标记可静态复现阻断已保存对话的模型改选，但实际 Goose 那次标记及 setter 派发未观测，唯一原因仍未知。",
+    "旧版本快照已经遗漏的空队列未知结果不会被推断或回填。历史提示仅保留已知有限状态，确认提示不代表旧请求已经完成。",
+    "完整工程在提交前执行，基线提交为 bd1f；未声称在未来最终提交上重新执行检查。源码端点相等不证明期间无短暂或恶意写入，也不冻结依赖安装字节或环境。",
+    "受影响检查 182、18、129 属于不同且重叠的范围，不相加，也不与完整工程计数相加。"
+  ],
+  "acceptance": {
+    "realAffectedPathVerified": false,
+    "wholeStandardsClosed": 0,
+    "wholeRequirementsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "newAgentModelRequests": 0
+  },
+  "privacy": {
+    "userAbsolutePathsCopied": false,
+    "userOrFixtureBodiesCopied": false,
+    "accountOrCredentialInformationCopied": false,
+    "rawLogsCopied": false
+  }
+}

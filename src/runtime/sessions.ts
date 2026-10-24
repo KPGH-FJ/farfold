@@ -264,6 +264,11 @@ class ThreadsStore {
         state.key,
         state.queued,
         uncertain ? state.queued.indexOf(uncertain) : null,
+        Boolean(
+          state.historicalOutcomeUnknown ||
+          state.connectionOutcomeUnknown ||
+          state.stopUnconfirmed,
+        ),
       );
     }
     this.notifications.flush(key);
@@ -326,17 +331,27 @@ class ThreadsStore {
   private restoreQueue(state: ThreadState): void {
     const saved = draftQueues.read(state.key);
     if (!saved) return;
+    state.historicalOutcomeUnknown = saved.outcomeUnknown === true;
     state.queued = saved.blocks;
     markRestoredQueueAttachments(state.queued);
     state.uncertainPrompt =
       saved.uncertainIndex === null
         ? null
         : (saved.blocks[saved.uncertainIndex] ?? null);
-    state.queuePaused = state.uncertainPrompt ? "uncertain" : "stopped";
+    if (saved.blocks.length)
+      state.queuePaused = state.uncertainPrompt ? "uncertain" : "stopped";
   }
 
   needsAttention(s: ThreadState): boolean {
     return threadNeedsAttention(s);
+  }
+
+  /** Dismiss only the historical notice on this exact currently shown view. */
+  acknowledgeHistoricalOutcome(state: ThreadState): void {
+    if (this.thread(state.key) !== state || !state.historicalOutcomeUnknown)
+      return;
+    state.historicalOutcomeUnknown = false;
+    this.emit(state.key);
   }
 
   setAutoArchiveDays(days: number): Promise<void> {

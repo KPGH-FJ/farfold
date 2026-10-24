@@ -405,6 +405,8 @@ export const STRINGS = {
     stopped: "已停止",
     failed: "出错了",
     unknown: "结果未知",
+    historicalOutcomeUnknown: "此前请求结果未确认，未自动重发",
+    acknowledgeHistoricalOutcome: "已知悉",
     roundArtifacts: (count: number) => `本轮产物 ${count} ▸`,
     rawUpdate: "未识别的更新",
     rawNotification: "未识别的消息",

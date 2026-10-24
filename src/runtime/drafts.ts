@@ -397,6 +397,8 @@ export function useFileFeedback(
 interface QueuedDraft {
   blocks: PromptBlock[][];
   uncertainIndex: number | null;
+  /** Historical outcome notice only; never an active request or retry. */
+  outcomeUnknown?: boolean;
 }
 const queueValues = new Map<string, QueuedDraft>();
 export const draftQueues = {
@@ -404,8 +406,20 @@ export const draftQueues = {
     const value = queueValues.get(key);
     return value ? structuredClone(value) : null;
   },
-  write(key: string, blocks: PromptBlock[][], uncertainIndex: number | null) {
-    const next = blocks.length ? { blocks, uncertainIndex } : undefined;
+  write(
+    key: string,
+    blocks: PromptBlock[][],
+    uncertainIndex: number | null,
+    outcomeUnknown = false,
+  ) {
+    const next =
+      blocks.length || outcomeUnknown
+        ? {
+            blocks,
+            uncertainIndex,
+            ...(outcomeUnknown ? { outcomeUnknown } : {}),
+          }
+        : undefined;
     if (JSON.stringify(queueValues.get(key)) === JSON.stringify(next)) return;
     if (next) queueValues.set(key, structuredClone(next));
     else queueValues.delete(key);
@@ -765,6 +779,8 @@ export function parseDraftSnapshot(value: unknown) {
   });
   const queues = Object.entries(record(raw.queues)).map(([key, item]) => {
     const q = record(item);
+    if (q.outcomeUnknown !== undefined && typeof q.outcomeUnknown !== "boolean")
+      throw new Error("invalid outcome notice");
     if (
       !Array.isArray(q.blocks) ||
       q.blocks.some((blocks) => !isPromptBlocks(blocks))
@@ -823,8 +839,20 @@ draftPersistence.configure(
     Object.assign(choice, parsed.selected);
     for (const [key, data] of parsed.feedback)
       if (!feedbackValues.has(key)) feedbackValues.set(key, data);
-    for (const [key, data] of parsed.queues)
-      if (!queueValues.has(key)) queueValues.set(key, data);
+    for (const [key, data] of parsed.queues) {
+      const current = queueValues.get(key);
+      if (!current) queueValues.set(key, data);
+      // A notice written before hydration must not hide the saved input. A
+      // newer input wins otherwise, while either historical notice survives.
+      else if (
+        !current.blocks.length &&
+        current.outcomeUnknown &&
+        data.blocks.length
+      )
+        queueValues.set(key, { ...data, outcomeUnknown: true });
+      else if (data.outcomeUnknown && !current.outcomeUnknown)
+        queueValues.set(key, { ...current, outcomeUnknown: true });
+    }
     draftRevision++;
     listeners.forEach((fn) => fn());
   },

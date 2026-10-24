@@ -66,7 +66,7 @@ function publish(change: Partial<Status>) {
   listeners.forEach((fn) => fn());
 }
 
-/** One serialized settings value containing only user-owned, unsent input.
+/** One serialized settings value for unsent input and finite outcome notices.
  * Loading must succeed before any write; failed/unknown versions stay intact.
  * Writes are coalesced while preserving the newest edit made during a save. */
 export const draftPersistence = {

@@ -290,6 +290,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   /** Unconfirmed execution/admission, independent of the user-owned retry copy.
    * An idle disconnect alone has no unknown result. */
   connectionOutcomeUnknown: boolean;
+  /** A saved older request had no confirmed outcome; not current live work. */
+  historicalOutcomeUnknown?: boolean;
   /** The Agent restored this existing session, rather than creating a draft. */
   resumed: boolean;
   openError: string | null;

@@ -1,0 +1,179 @@
+{
+  "kind": "ExistingConfigurationDeclarationReadPublicSummary",
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-24T12:28:11.629368Z",
+  "sourceCommit": "bd1f3caa6059c175df6e466e846eddc0f9991b5d",
+  "formalBinarySha256": "28c47177a10737ef6e3ab12f43e2c932dbe9e1356ad2d9e1dab49a9bb768d7c7",
+  "scope": "Five actual formal-app Existing declaration reads plus two preserved historical negatives; not canonical acceptance receipts or inference tests.",
+  "userSelectedMode": "reuse-existing-configuration",
+  "counts": {
+    "catalogItems": 7,
+    "newFormalConnectionActions": 5,
+    "newExistingDeclarationReads": 5,
+    "newAuthenticationRequirementsObserved": 3,
+    "declarationsReturnedWithBaselineUnconfirmed": 1,
+    "declarationReadFailures": 1,
+    "historicalNegativesReusedWithoutRetest": 2,
+    "loginActions": 0,
+    "newCredentialInputs": 0,
+    "newProviderModelReasoningSelections": 0,
+    "modelPromptActions": 0,
+    "retries": 0,
+    "manualConfigurationSaves": 0
+  },
+  "sourceDelta": {
+    "fromCommit": "e6e1c3796d6fe6a8cd99304c78bce89e8c42083a",
+    "toCommit": "bd1f3caa6059c175df6e466e846eddc0f9991b5d",
+    "enumeratedCorePaths": 28,
+    "enumeratedCorePathsChanged": 0,
+    "adjacentChangedProductionPaths": 13,
+    "evidence": {
+      "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/source-delta-and-read-boundaries.json",
+      "sha256": "c199c604f1785de40ac45ef2adfe4618a6b00e048412a0cd18fd17939461066e"
+    },
+    "meaning": "Unchanged core authentication/Existing-preparation sources support retaining old same-input negatives. This is not a claim that all connection code is unchanged, that the old negatives were retested on bd1f, or that credentials are currently usable."
+  },
+  "rows": [
+    {
+      "catalogId": "antigravity-acp",
+      "displayName": "Google Antigravity",
+      "evidenceOrigin": "formal-bd1f-ui-observation",
+      "outcome": "authentication-required",
+      "normalConnectionActions": 1,
+      "existingDeclarationReads": 1,
+      "loginActions": 0,
+      "modelPromptActions": 0,
+      "retries": 0,
+      "baselineConfirmed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/antigravity-observation.json",
+        "sha256": "38d388cf3da1f059cf727b82a93f1e5eb1f05aeb93397af274f28da352224e0a"
+      }
+    },
+    {
+      "catalogId": "claude-acp",
+      "displayName": "Claude Agent",
+      "evidenceOrigin": "formal-bd1f-ui-observation",
+      "outcome": "declarations-returned-baseline-unconfirmed",
+      "normalConnectionActions": 1,
+      "existingDeclarationReads": 1,
+      "loginActions": 0,
+      "modelPromptActions": 0,
+      "retries": 0,
+      "baselineConfirmed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/claude-acp-observation.json",
+        "sha256": "033b84442d37f10e1253bcb5f9e59348114e69dbdba4a1b1d31497a4c5236b72"
+      }
+    },
+    {
+      "catalogId": "dimcode",
+      "displayName": "DimCode",
+      "evidenceOrigin": "formal-bd1f-ui-observation",
+      "outcome": "declarations-unreadable",
+      "normalConnectionActions": 1,
+      "existingDeclarationReads": 1,
+      "loginActions": 0,
+      "modelPromptActions": 0,
+      "retries": 0,
+      "baselineConfirmed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/dimcode-observation.json",
+        "sha256": "d4edd709556a33636bd69a74470b4293d91e61f995448b43a11de9398860f1a6"
+      }
+    },
+    {
+      "catalogId": "gemini",
+      "displayName": "Gemini CLI",
+      "evidenceOrigin": "formal-bd1f-ui-observation",
+      "outcome": "authentication-required",
+      "normalConnectionActions": 1,
+      "existingDeclarationReads": 1,
+      "loginActions": 0,
+      "modelPromptActions": 0,
+      "retries": 0,
+      "baselineConfirmed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/gemini-observation.json",
+        "sha256": "b2d68caf1e05dcca8a737b6478d7e4051e2899d0b43e9596855c51e37a64b235"
+      }
+    },
+    {
+      "catalogId": "nova",
+      "displayName": "Nova",
+      "evidenceOrigin": "formal-bd1f-ui-observation",
+      "outcome": "authentication-required",
+      "normalConnectionActions": 1,
+      "existingDeclarationReads": 1,
+      "loginActions": 0,
+      "modelPromptActions": 0,
+      "retries": 0,
+      "baselineConfirmed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/nova-observation.json",
+        "sha256": "b89ba27de3ca0d96b72ef72f8ccc31c4afeb3e7c8d140d72c2039da2d96e6cca"
+      }
+    },
+    {
+      "catalogId": "autohand",
+      "displayName": "Autohand Code",
+      "evidenceOrigin": "historical-e6e1-negative-reused",
+      "outcome": "prior-authentication-required-retained",
+      "newBd1fConnectionOrReadActions": 0,
+      "newBd1fRetestClaimed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/autohand-existing-read-e6e1/observation.json",
+        "sha256": "2c458ceb802c02258bdf7a6a1ffecbbef0b0ed2784d47ace10963f0f9ad7b67f"
+      }
+    },
+    {
+      "catalogId": "grok-build",
+      "displayName": "Grok Build",
+      "evidenceOrigin": "historical-e6e1-negative-reused",
+      "outcome": "prior-authentication-required-retained",
+      "newBd1fConnectionOrReadActions": 0,
+      "newBd1fRetestClaimed": false,
+      "wholeRequirementOrStandardAccepted": false,
+      "evidence": {
+        "path": "output/2026-10-24-agent-acceptance/grok-new-draft-e6e1/observation.json",
+        "sha256": "a8d3a51e44fafb511289f94fe554a46c6d11df096ca1a699c8fceb882f7377e4"
+      }
+    }
+  ],
+  "operationBoundaries": [
+    "An Existing click or an eligible opened page can automatically start the declaration read; it consumes the same one-read budget.",
+    "Explicit API service selections must be preserved; switching to Existing can clear service/config, so it is not used to replace an already selected explicit source.",
+    "Failed/needs-auth/unknown/baseline-mismatched branches stop without login, changing choices, test prompts or retry.",
+    "A read can initialize an external program/create a native session and save Farfold preparation progress; it is not side-effect-free."
+  ],
+  "limits": [
+    "Claude returned declarations but the saved baseline remained unconfirmed; displayed defaults do not prove exact drift, effective model/reasoning or authentication.",
+    "DimCode read failed; no unique protocol/account/model cause is established.",
+    "Antigravity, Gemini and Nova require authentication; no login was attempted. Autohand and Grok are prior negatives retained without a new bd1f read.",
+    "No backend-effective configuration, account identity, inference success, complete requirement, complete standard or whole-Agent acceptance is established."
+  ],
+  "plan": {
+    "path": "output/2026-10-24-agent-acceptance/existing-config-bd1f3caa/plan.json",
+    "sha256": "996221b1641f5d850ec79a44b3c32a575b7a882e2c4922f488ce17c6c76daa94"
+  },
+  "originalEvidenceRewritten": false,
+  "claims": {
+    "newWholeRequirementsClosed": 0,
+    "newWholeStandardsClosed": 0,
+    "newWholeAgentsAccepted": 0,
+    "newInferencePasses": 0
+  },
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "userBodiesIncluded": false,
+    "credentialsOrAccountIdentifiersIncluded": false,
+    "installationSuffixesIncluded": false,
+    "processInformationIncluded": false
+  }
+}

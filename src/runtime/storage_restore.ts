@@ -137,7 +137,7 @@ function strictDraft(value: unknown) {
     }
   }
   for (const queue of Object.values(object(raw.queues))) {
-    const q = known(queue, ["blocks", "uncertainIndex"]);
+    const q = known(queue, ["blocks", "uncertainIndex", "outcomeUnknown"]);
     if (!Array.isArray(q.blocks)) throw new Error(S.unsupported);
     q.blocks.forEach(strictBlocks);
   }
