@@ -13,6 +13,9 @@
     "typecheck": "tsc -b --pretty false",
     "docs:check": "node scripts/check-project-docs.mjs",
     "docs:task": "node scripts/read-agent-task.mjs",
+    "acceptance:index": "node scripts/acceptance-index.mjs",
+    "acceptance:check": "node scripts/acceptance-receipts.mjs validate",
+    "acceptance:revalidate": "node scripts/acceptance-receipts.mjs revalidate",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run"

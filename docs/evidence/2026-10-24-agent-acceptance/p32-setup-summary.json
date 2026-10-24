@@ -1,0 +1,25 @@
+{
+  "kind": "BoundedInstalledAttachmentSetupFailureNotSearchAcceptance",
+  "appSource": "18470c63c915a4865b3d0a4ebd4724d5bd91e2a2",
+  "observedAt": "2026-10-24T01:47:42.567Z",
+  "selectedOwnedSyntheticFormats": ["pptx", "pdf", "xlsx", "docx"],
+  "selectedFileCount": 4,
+  "joinedDocumentText": false,
+  "sendButtonClicks": 1,
+  "uiResult": "附件已无法读取，请重新选择或移除后再发送。",
+  "draftRetained": true,
+  "searchCasesStarted": 0,
+  "newModelResult": "not-observed",
+  "retryClicks": 0,
+  "physicalRecheck": "All4 regular files readable and copied-byte digests match",
+  "sourceInvestigation": {
+    "controlledTests": {
+      "passed": 2,
+      "failed": 1
+    },
+    "knownFailure": "UnsupportedText classification is replaced by generic unreadable UI notice",
+    "dispatchBoundary": "Current Composer awaits prepareDraftAttachments before creating payload/onSend; controlled failing path dispatched zero times",
+    "actualNativeBranch": "Not captured; source and controlled repro do not uniquely establish the real click cause"
+  },
+  "acceptanceVerified": false
+}

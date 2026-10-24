@@ -1,0 +1,31 @@
+{
+  "kind": "IndependentSemanticReviewNotAcceptance",
+  "reviewedAt": "2026-10-24T01:41:45.907Z",
+  "mechanicalCasesPassed": 2,
+  "formalObservations": 2,
+  "coverageCasesRetained": 1,
+  "excludedCase": {
+    "caseId": "failed-diff-layout",
+    "reason": "Original excerpt also mentioned commands and logs, wider than observed failed fragment/split layout. Preserve frozen manifest/receipt. Exclude this case from indexed coverage pending a new narrow planned observation."
+  },
+  "retainedCase": {
+    "caseId": "current-file-read",
+    "scope": "UI current owned-file text and independent48B physical digest only; pending acceptance review"
+  },
+  "all232Cells": "unreviewed",
+  "acceptanceVerified": false,
+  "independentChecks": [
+    "manifest/receipt/evidence reference digests match",
+    "current PRODUCT and requirements digests match",
+    "preparation precedes operation intervals",
+    "private paths excluded from public receipt output"
+  ],
+  "observationProvenance": "Root operator summaries from CUA output; reviewer checked saved summaries and hashes, did not independently replay original UI tool calls.",
+  "notCovered": [
+    "commands/logs renewed validation",
+    "current account identity or model effect",
+    "new Agent file edit",
+    "whole P18 or S5/S8",
+    "all29x8"
+  ]
+}

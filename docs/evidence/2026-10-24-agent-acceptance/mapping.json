@@ -1,0 +1,13 @@
+{
+  "links": [
+    {
+      "standardId": "S5",
+      "requirementIds": ["P18"]
+    },
+    {
+      "standardId": "S8",
+      "requirementIds": ["P18"]
+    }
+  ],
+  "newPackages": {}
+}

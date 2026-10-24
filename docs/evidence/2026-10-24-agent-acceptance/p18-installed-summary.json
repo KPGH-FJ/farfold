@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "mechanicallyValid": true,
+  "complete": true,
+  "allExpectedOutcomesMatched": true,
+  "acceptanceVerified": false,
+  "requiresIndependentReview": true,
+  "counts": {
+    "expectedCases": 2,
+    "attempts": 2,
+    "passed": 2,
+    "expectedRejection": 0,
+    "failed": 0,
+    "incomplete": 0,
+    "unstable": 0,
+    "invalid": 0,
+    "evidenceFiles": 2,
+    "privateEvidenceFiles": 2
+  },
+  "errors": [],
+  "cases": [
+    {
+      "caseIndex": 0,
+      "level": "installed",
+      "result": "passed",
+      "attempts": [
+        {
+          "attemptIndex": 0,
+          "status": "completed",
+          "outcome": "success",
+          "level": "installed",
+          "issues": []
+        }
+      ]
+    },
+    {
+      "caseIndex": 1,
+      "level": "installed",
+      "result": "passed",
+      "attempts": [
+        {
+          "attemptIndex": 0,
+          "status": "completed",
+          "outcome": "success",
+          "level": "installed",
+          "issues": []
+        }
+      ]
+    }
+  ],
+  "scope": "Two installed readonly P18 observations only: failed historical fragment/split layout and current owned48B file readback. Operator summaries copied from CUA observations, not raw AX or independent automatic UI assertions. No new prompt, write or complete P18/S5/S8 acceptance.",
+  "identityBoundary": "Formal app binary observed now; selected Agent version/model/service metadata retained privately and does not establish live model effect or account identity.",
+  "sourceReceipt": {
+    "path": "output/2026-10-24-agent-acceptance/p18-installed/receipt.json",
+    "sha256": "651301181fa3bd42884df9a7e68f595db45516541f128ba348e42aebf69a7370",
+    "visibility": "private"
+  },
+  "semanticCoverageReview": {
+    "formalObservations": 2,
+    "indexedCoverageCases": 1,
+    "excludedCaseIndex": 0,
+    "reason": "Condition excerpt too wide; original frozen materials preserved.",
+    "acceptanceVerified": false
+  }
+}

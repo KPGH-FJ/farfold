@@ -1,0 +1,67 @@
+{
+  "kind": "EngineeringCheckpointNotProductAcceptance",
+  "recordedAt": "2026-10-24T01:49:50.441Z",
+  "focusedTools": {
+    "passed": 65,
+    "failed": 0,
+    "independentlyRepeated": true
+  },
+  "docs": {
+    "passed": true,
+    "originalConditions": 151,
+    "activePlans": 1
+  },
+  "typecheck": {
+    "passed": true
+  },
+  "build": {
+    "passed": true,
+    "existingChunkSizeWarning": true
+  },
+  "format": {
+    "passed": true
+  },
+  "frontendFull": {
+    "filesPassed": 660,
+    "filesFailed": 1,
+    "testsPassed": 8599,
+    "testsFailed": 1,
+    "durationSeconds": 104.63,
+    "failure": "WorkbookFilePreview.range.test.tsx invalid range A1,B2 cannot preserve an earlier confirmation:5000ms timeout",
+    "concurrentWork": "Cold Rust dependency build overlapped; causation not established"
+  },
+  "failureFocusedRecheck": {
+    "file": "src/components/WorkbookFilePreview.range.test.tsx",
+    "passed": 29,
+    "failed": 0,
+    "durationSeconds": 8.3,
+    "timeoutUnchanged": true
+  },
+  "rust": "No Rust engineering checks attributed to this tooling-only increment; current NEW29 product repair independently in progress.",
+  "allEngineeringGreen": false,
+  "all29Accepted": false,
+  "frontendFullRecheck": {
+    "command": "corepack pnpm exec vitest run --maxWorkers=4",
+    "filesPassed": 661,
+    "testsPassed": 8600,
+    "testsFailed": 0,
+    "durationSeconds": 89.54,
+    "testTimeoutUnchanged": true,
+    "scope": "Full suite before final two CLI-boundary counterexamples; final CLI increment independently focused-tested65/65. Product changes and later source inputs remain separate."
+  },
+  "invocationFailure": {
+    "command": "corepack pnpm test --maxWorkers=4",
+    "result": "pnpm rejected option before Vitest started",
+    "testsExecuted": 0
+  },
+  "frontendChecksGreen": true,
+  "finalCliBoundary": {
+    "initialRed": {
+      "failed": 2,
+      "skipped": 18
+    },
+    "finalGreen": 65,
+    "independentlyRepeated": 65,
+    "scope": "Fixed CLI rejection code; bounded ordinary JSON metadata inputs; no index schema or acceptance-status change."
+  }
+}
