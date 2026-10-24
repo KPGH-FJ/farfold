@@ -24,6 +24,7 @@ import {
 import {
   NewConversationAgentDialog,
   NewConversationModelDialog,
+  newConversationPreparationError,
   type NewConversationModelChoice,
 } from "./NewConversationPickers";
 import { Composer } from "./Composer";
@@ -957,6 +958,9 @@ export function EmptyState({
   const sendingPaused = Boolean(
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
+  const modelReadError = !archiveBlocked
+    ? newConversationPreparationError(draftError)
+    : null;
   const note =
     (selectionNeedsReview ? R.selectionReview : null) ??
     (explicitReadRequired ? C.readRequired : null) ??
@@ -974,12 +978,7 @@ export function EmptyState({
           : null
         : opening
           ? STRINGS.empty.opening
-          : draftError && !archiveBlocked
-            ? {
-                message: `${STRINGS.empty.openFailed}：${draftError.message}`,
-                detail: draftError.detail,
-              }
-            : null);
+          : modelReadError);
 
   // Sending policy never changes whether the selected program is prepared.
   const needsPreparation =
@@ -1455,6 +1454,7 @@ export function EmptyState({
             }}
             existingOption={service ? null : modelOption}
             readingModels={opening || !!draft?.configuring}
+            readError={modelReadError}
             onApply={async (choice) => {
               const request = requestedAgent.current;
               const epoch = selectionEpoch.current;

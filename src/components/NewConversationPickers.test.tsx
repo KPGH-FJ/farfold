@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import type { Credential } from "../runtime/credentials";
+import { ErrorNotice } from "./ErrorNotice";
+import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -180,6 +182,91 @@ beforeEach(() => {
   };
 });
 afterEach(cleanup);
+
+it.each([false, true])(
+  "shows the preparation failure instead of reading or accepting an unknown current model (reading: %s)",
+  async (readingModels) => {
+    props.existingOption = null;
+    props.readingModels = readingModels;
+    props.readError = {
+      message: "创建会话失败：连接检查超时",
+      detail: "AGENT_INITIALIZE_TIMEOUT",
+    };
+    const tree = await loaded();
+    const notice = tree.find((node) => node.type === ErrorNotice);
+    expect(notice?.props).toMatchObject(props.readError);
+    expect(
+      tree.some(
+        (node) =>
+          node.props.role === "status" &&
+          text(node.props.children as ReactNode) === S.readingModels,
+      ),
+    ).toBe(false);
+    expect(button(S.currentModel).props.disabled).toBe(true);
+    click(S.currentModel);
+    const search = render().find((node) => node.type === "input")!;
+    (search.props.onKeyDown as (event: unknown) => void)({
+      key: "Enter",
+      nativeEvent: { isComposing: false },
+      preventDefault: vi.fn(),
+    });
+    await Promise.resolve();
+    expect(props.onApply).not.toHaveBeenCalled();
+    click(S.prepare);
+    expect(props.onPrepare).toHaveBeenCalledTimes(1);
+    expect(props.onClose).not.toHaveBeenCalled();
+  },
+);
+
+it("blocks stale existing model choices after a preparation failure but keeps an explicit different saved service available", async () => {
+  props.readError = { message: "创建会话失败：连接检查超时" };
+  await loaded();
+  expect(button("Other").props.disabled).toBe(true);
+  click("Other");
+  const search = render().find((node) => node.type === "input")!;
+  (search.props.onKeyDown as (event: unknown) => void)({
+    key: "Enter",
+    nativeEvent: { isComposing: false },
+    preventDefault: vi.fn(),
+  });
+  await Promise.resolve();
+  expect(props.onApply).not.toHaveBeenCalled();
+  click("api-two");
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: { id: "service", revision: "r1", model: "api-two" },
+    modelValue: null,
+  });
+});
+
+it("clearing a preparation error exposes confirmed options without applying or retrying anything until a click", async () => {
+  props.existingOption = null;
+  props.readingModels = true;
+  props.readError = { message: "创建会话失败：连接检查超时" };
+  await loaded();
+  props.readError = null;
+  props.readingModels = false;
+  props.existingOption = {
+    id: "model",
+    category: "model",
+    type: "select",
+    name: "Model",
+    currentValue: "confirmed",
+    options: [{ value: "confirmed", name: "Confirmed" }],
+  };
+  const tree = render();
+  expect(tree.some((node) => node.type === ErrorNotice)).toBe(false);
+  expect(button("Confirmed").props.disabled).toBe(false);
+  expect(props.onApply).not.toHaveBeenCalled();
+  expect(props.onPrepare).not.toHaveBeenCalled();
+  click("Confirmed");
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: null,
+    modelValue: "confirmed",
+  });
+});
 
 it("applies an existing model pick on click and closes, while an unpicked close writes nothing", async () => {
   await loaded();

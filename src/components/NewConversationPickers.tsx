@@ -16,9 +16,11 @@ import {
   type Credential,
   type ServiceCapability,
 } from "../runtime/credentials";
-import { uiError } from "../runtime/ui_error";
+import { uiError, type UiNotice } from "../runtime/ui_error";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
+import { STRINGS } from "../runtime/strings";
 import { agentStatus } from "../runtime/agent_status";
+import { ErrorNotice } from "./ErrorNotice";
 import { useModalDialog } from "./useModalDialog";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
@@ -199,11 +201,24 @@ export interface NewConversationModelChoice {
   modelValue: string | null;
 }
 
+/** Keep the same safe failure notice on the composer and its open model picker. */
+export function newConversationPreparationError(
+  error: UiNotice | null,
+): UiNotice | null {
+  return error
+    ? {
+        message: `${STRINGS.empty.openFailed}：${error.message}`,
+        detail: error.detail,
+      }
+    : null;
+}
+
 export function NewConversationModelDialog({
   agent,
   value,
   existingOption,
   readingModels = false,
+  readError = null,
   onApply,
   onPrepare,
   onManageServices,
@@ -214,6 +229,7 @@ export function NewConversationModelDialog({
   value: NewConversationModelChoice;
   existingOption: ConfigOptionView | null;
   readingModels?: boolean;
+  readError?: UiNotice | null;
   onApply: (choice: NewConversationModelChoice) => Promise<void>;
   onPrepare: () => void;
   onManageServices?: () => void;
@@ -350,12 +366,14 @@ export function NewConversationModelDialog({
             )
           ? null
           : S.serviceChanged
-      : readingModels
-        ? S.readingModels
-        : choice.modelValue !== null &&
-            !options.some((item) => item.value === choice.modelValue)
-          ? S.modelChanged
-          : null;
+      : readError
+        ? readError.message || S.applyFailed
+        : readingModels
+          ? S.readingModels
+          : choice.modelValue !== null &&
+              !options.some((item) => item.value === choice.modelValue)
+            ? S.modelChanged
+            : null;
   const issue = issueFor(selection);
   const applyChoice = async (choice: NewConversationModelChoice) => {
     if (saving.current) return;
@@ -451,6 +469,9 @@ export function NewConversationModelDialog({
       <div className="new-model-groups" ref={groups}>
         <h3>{S.existingTitle(agent.name)}</h3>
         <p>{S.existingHint}</p>
+        {readError && (
+          <ErrorNotice message={readError.message} detail={readError.detail} />
+        )}
         {options.length ? (
           visibleOptions.map((model) => (
             <button
@@ -473,7 +494,7 @@ export function NewConversationModelDialog({
                   ? " hi"
                   : "")
               }
-              disabled={applying}
+              disabled={applying || readingModels || !!readError}
               onClick={() => commit({ service: null, modelValue: model.value })}
             >
               <span>{model.name}</span>
@@ -501,7 +522,7 @@ export function NewConversationModelDialog({
                     ? "selected"
                     : "") + (flatIndex.get("current") === hiIndex ? " hi" : "")
                 }
-                disabled={applying || readingModels}
+                disabled={applying || readingModels || !!readError}
                 onClick={() => commit({ service: null, modelValue: null })}
               >
                 <span>{S.currentModel}</span>
@@ -510,7 +531,9 @@ export function NewConversationModelDialog({
                 )}
               </button>
             )}
-            {readingModels && <p role="status">{S.readingModels}</p>}
+            {readingModels && !readError && (
+              <p role="status">{S.readingModels}</p>
+            )}
             {value.service && <p>{S.modelsAfterSource}</p>}
           </>
         )}
@@ -579,10 +602,14 @@ export function NewConversationModelDialog({
           !loading &&
           !loadError &&
           !readingModels &&
+          !readError &&
           !visibleOptions.length &&
           !visibleServices.length &&
           !showCurrent && <p role="status">{S.modelEmpty}</p>}
-        {issue && !loading && !readingModels && <p role="alert">{issue}</p>}
+        {issue &&
+          !loading &&
+          !readingModels &&
+          (selection.service || !readError) && <p role="alert">{issue}</p>}
         {error && <p role="alert">{error}</p>}
       </div>
       <p className="new-choice-help">{S.fixedAfterSend}</p>

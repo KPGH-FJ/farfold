@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "kind": "CommonModelDialogPreparationErrorSourceSummary",
+  "preparedAt": "2026-10-24T04:13:01.703Z",
+  "evidenceLevel": "shared",
+  "scope": "settled-new-draft-preparation-error-in-shared-model-dialog",
+  "change": {
+    "sameFailureNotice": "Composer and model dialog receive the same safe UiNotice; technical details remain collapsed.",
+    "knownErrorPriority": true,
+    "existingModelMouseAndEnterBlockedOnError": true,
+    "explicitSavedServiceAndPreparationEntryRetained": true,
+    "latePriorRequestCannotReplaceCurrentPairError": true,
+    "draftAndSelectionPreserved": true,
+    "requestPreparationAndExplicitRetryRules": "unchanged",
+    "unknownWorkProtection": "unchanged",
+    "newAgentSpecificBranches": 0,
+    "newDependencies": 0,
+    "newEnvironmentVariables": 0
+  },
+  "observationBoundary": {
+    "originalInstalledPopupAfterKnownTimeoutDynamicallyConfirmed": false,
+    "originalContinuousSpinnerOrOpeningLeakProven": false,
+    "controlledDefect": "The settled preparation failure was not passed into the open model dialog, and the old existing-model choices could still be admitted.",
+    "timeoutRootCause": "unknown",
+    "popupReopen": "Explicit opening still calls the existing requestPreparation path; this change does not redefine that action as read-only.",
+    "sourceHashMeaning": "Project source identity for review and evidence; not Agent binary compatibility checks or Agent version pins."
+  },
+  "verification": {
+    "validFixtureBaseline": {
+      "files": 2,
+      "tests": 18,
+      "passed": 14,
+      "failed": 4,
+      "proofLevel": "controlled-components"
+    },
+    "finalChangedFiles": {
+      "files": 2,
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "proofLevel": "controlled-components"
+    },
+    "independent": {
+      "files": 2,
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "proofLevel": "controlled-components",
+      "sourceHashesBeforeAfter": "matched"
+    },
+    "countsAreSeparateRunsNotAdditive": true,
+    "engineering": {
+      "checks": [
+        {
+          "check": "format",
+          "argv": ["corepack", "pnpm", "format:check"],
+          "exitCode": 0
+        },
+        {
+          "check": "typecheck",
+          "argv": ["corepack", "pnpm", "typecheck"],
+          "exitCode": 0
+        },
+        {
+          "check": "frontend-test-direct",
+          "argv": [
+            "corepack",
+            "pnpm",
+            "exec",
+            "vitest",
+            "run",
+            "--maxWorkers=4"
+          ],
+          "exitCode": 0
+        },
+        {
+          "check": "build",
+          "argv": ["corepack", "pnpm", "build"],
+          "exitCode": 0
+        },
+        {
+          "check": "cargo-fmt",
+          "argv": [
+            "cargo",
+            "fmt",
+            "--check",
+            "--manifest-path",
+            "src-tauri/Cargo.toml"
+          ],
+          "exitCode": 0
+        },
+        {
+          "check": "cargo-clippy",
+          "argv": [
+            "cargo",
+            "clippy",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exitCode": 0
+        },
+        {
+          "check": "cargo-test",
+          "argv": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked"
+          ],
+          "exitCode": 0
+        }
+      ],
+      "frontend": {
+        "files": 664,
+        "passed": 8723,
+        "failed": 0
+      },
+      "native": {
+        "passed": 2228,
+        "failed": 0,
+        "ignored": 6,
+        "mainTests": 0,
+        "docTests": 0
+      },
+      "inputCount": 2243,
+      "fullInputFreezeBeforeChecks": true,
+      "beforeAfterInputsExactMatch": true,
+      "reviewMethod": "Read original summary, verify referenced log hashes and necessary result tails, and compare the two input records; engineering commands were executed by root, not repeated by the public-summary author.",
+      "documentationSummaryAddedAfterChecks": true
+    },
+    "preservedCommandRejection": {
+      "argv": ["corepack", "pnpm", "test", "--maxWorkers=4"],
+      "exitCode": 1,
+      "stage": "pnpm-argument-parsing",
+      "testRunnerStarted": false,
+      "preserved": true,
+      "subsequentActualFullTest": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--maxWorkers=4"
+      ],
+      "sourceChangedBetweenAttempts": false
+    },
+    "fixtureTypeCorrection": "Earlier test-fixture schema/type corrections and original failures remain separate from the product semantic RED."
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "9cbd21344cefd94dba59c06b4b3eeccceb7e34f04185188740076e14050e70e1",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/NewConversationPickers.tsx",
+      "sha256": "c190d99c629dc3c9b0af2d5a4933828ee03a14386e46abd5c3bef0994d649561",
+      "lines": 618
+    },
+    {
+      "path": "src/components/NewConversationPickers.test.tsx",
+      "sha256": "fa9f4fca713b33b1ca0707dc2ec6d28e79f58a4462d2f252192ebc01bdcdede4",
+      "lines": 660
+    },
+    {
+      "path": "src/components/EmptyState.model-error.test.tsx",
+      "sha256": "80dbf5d9f01250241dbf207db71463b66e1b48c6240c482fe68aebeaa0607472",
+      "lines": 311
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "role": "implementation",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-preparation-error/implementation.json",
+      "sha256": "8fffaa024de9b2c5e88f7d87ff5ef978436a34bc462614a28e3fdf470c3e892a"
+    },
+    {
+      "role": "independent",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-preparation-error/independent-review.json",
+      "sha256": "d2462ebc48ca642cb54dd53f896ce0d6fd937edadd93d3fa518a47f3ebef5ff8"
+    },
+    {
+      "role": "engineering",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-engineering/engineering-summary.json",
+      "sha256": "a6dea8b570fe0095c80733dae3e59a4e6703a675d70d8fcd0cddc2f83529b29e"
+    },
+    {
+      "role": "sourceBefore",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-engineering/source-before.json",
+      "sha256": "8d39b26f063f7a5377170807e9851acf1ce0b4d4a5d75e9d124ba065dce17904"
+    },
+    {
+      "role": "sourceAfter",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-engineering/source-after.json",
+      "sha256": "9c6944251f85bb5b75e033d19434a2307f0e87d87c798aa932b083f0c77b7660"
+    },
+    {
+      "role": "valid-fixture-baseline-red",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-preparation-error/fixture-valid-baseline-red.json",
+      "sha256": "3e6c66994d4f172b36ff3c8460b070bd4cc7319bf9caf82909500900082860e5"
+    },
+    {
+      "role": "final-targeted-green",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-preparation-error/fixture-valid-green.json",
+      "sha256": "e111a616ddd9821bddfca8633e410c05d9f4a5884a0aeb450fce151c79c8bebc"
+    },
+    {
+      "role": "preserved-command-rejection",
+      "path": "output/2026-10-24-agent-acceptance/model-dialog-engineering/frontend-checks.json",
+      "sha256": "683d34f897126aabcd6c58cad5e2cd178b2ba9596760322181d1860d7c2879bf"
+    }
+  ],
+  "acceptanceBoundary": {
+    "formalUpdateOfThisChangeCompleted": false,
+    "installedAffectedUiVerified": false,
+    "realAgentRequestSuccessEstablished": false,
+    "accountOrEffectiveModelEstablished": false,
+    "requirementAccepted": false,
+    "standardCellsAdded": 0,
+    "all29Accepted": false,
+    "acceptanceVerified": false,
+    "originalStandardAndRequirementScopeChanged": false
+  },
+  "limitations": [
+    "Controlled component results and complete engineering checks do not establish formal installed UI behavior.",
+    "The original initialization timeout cause remains unknown; this change only improves failure presentation and old-choice admission protection.",
+    "Original dynamic continuous-spinner timing was not confirmed and is not claimed as the repaired defect.",
+    "Formal update and a bounded actual affected-UI observation remain necessary; existing failures and explicit retry rules are retained.",
+    "No private log bodies, user dialogue, user paths, credentials or configuration values are published."
+  ]
+}
