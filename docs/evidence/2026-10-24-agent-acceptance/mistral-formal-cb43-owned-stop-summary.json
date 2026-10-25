@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "kind": "MistralOwnedExternalWorkStopSummary",
+  "formalSource": "cb43b8b281489175ae976811029570abb3737142",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["ARCH-29"],
+  "standardIds": [],
+  "actual": {
+    "modelSubmissions": 1,
+    "ownedProbeCommandInvocations": 1,
+    "allowOnce": 1,
+    "appStopClicks": 1,
+    "operatorExtraSubmitRetrySignalChoiceLoginRecheckRepairQueueContinuation": 0,
+    "recognizedStoppedUi": true,
+    "matchingOwnedWorkRunningBeforeStop": true,
+    "matchingOwnedWorkAbsentBeforeNaturalDeadline": true,
+    "originalVisibleContentAndChoiceLabelsPreserved": true
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "cases": 1,
+    "attempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "matchingObservations": 12,
+    "privateEvidenceReferences": 13,
+    "immutableInputs": 8,
+    "mapsEqual": true,
+    "narrowActualStopPositive": 1
+  },
+  "timing": {
+    "operatorObservationUpperSeconds": 119.019,
+    "finiteProbeBudgetSeconds": 80,
+    "probeStartToLastHeartbeatSeconds": 52.236,
+    "postStopAbsenceSamplePrecedesNaturalDeadline": true,
+    "interpretation": "The tool card includes approval time; it does not show 90 seconds of actual probe work. These observations are not exact response/OS exit latency or a performance threshold."
+  },
+  "sealing": {
+    "actualSealCliCalls": 1,
+    "internalValidationCalls": 1,
+    "extraValidateCliCalls": 0,
+    "preactionEmptyAttemptApiCalls": 1,
+    "naturalExitCode": 0,
+    "actualStdoutAndStderrSealsChecked": true,
+    "reviewerValidatorRerun": false
+  },
+  "interpretation": [
+    "The exact owned work was running, the App subsequently recognized stopped/client interrupt, and that process was absent before its finite natural deadline. This supports one real external-work stop.",
+    "The first observer ran before approval and found no start; the second observation did not launch a second probe.",
+    "The same tool technical details supplied the exact command before one Allow once; the initial approval card did not display the input.",
+    "Intentional tool interruption is the expected stop result, not a failed normal-answer case."
+  ],
+  "limits": [
+    "No raw RPC/stopReason, exact OS signal/exit cause, hidden-background or global-idle proof.",
+    "Preserved visible content and source labels are UI observations, not database/file-byte retention or a nonempty queue test.",
+    "No post-stop restore or further continuation was tested; full S7, whole ARCH-29, Agent and all29 completion remain open.",
+    "Current Agent version/effective backend are unreported. Six waits, affected NEW-24 pause and all previous failed/unknown work remain unchanged."
+  ],
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/case-plan.json",
+      "sha256": "d29dd958229193860b76085ac629fe5e0d7ef29cb2e8fc64743ba1fe9371f217"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/manifest.json",
+      "sha256": "9d25537b61231f977f821fc296e5b287ec05519cca0cd988b14da7bf95b142c5"
+    },
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/fresh-preflight.json",
+      "sha256": "a87de13cb7a0e8c181aa212334a4b51375a7c37eecf9d789e9545b3ff445a937"
+    },
+    "probePreparation": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/owned-probe-preparation.json",
+      "sha256": "e3c07870e64e8f33d006c638ed416d37306d6c00262d9a6b222afe9872a0faaa"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/actuals.json",
+      "sha256": "61029660295329dbfb600048f472a10a58c971fef65deb0e641ab720406ad3ab"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/receipt.json",
+      "sha256": "52adaf8cbf6861ab0b40e8d155bc6162239b7f969f833c45c0a3e0bc47930597"
+    },
+    "classification": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/result-classification-private.json",
+      "sha256": "727c2d36b484389b3e720f8b1085a54e7705a4c9fcfbf5129581ebe65fdece1e"
+    },
+    "runningWork": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/pre-stop-running-observation.json",
+      "sha256": "555902da94d2b4a45dc636257581531e431193f1d9fb3062f9b4d4d69005b0ca"
+    },
+    "postStopProcess": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/post-stop-process-observation.json",
+      "sha256": "402801f407bb30f3cf4783feea02fb7594343d932cec4da6af61cf4f95b1ec0a"
+    },
+    "sealCommand": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/seal.command.json",
+      "sha256": "4824613c733d1f301bdaf0126756112bb8abff6123ec9499ce520b9062e2adc3"
+    },
+    "preactionApi": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/preaction-manifest-api-check.json",
+      "sha256": "13ab4ed33d12e02d68a7e7444ff82f55aa6cefb8dc5596b79bbbf532c5b56e86"
+    },
+    "sealStdout": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/seal.stdout.log",
+      "sha256": "9a503fb19adef688af7fa5d7bc0f6f2f55e728bb5d8a7007f99c05f2651a53db"
+    },
+    "sealStderr": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/seal.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-stop-owned-probe-formal-cb43/independent-semantic-review.json",
+      "sha256": "42a6bc325a57915c3f947715e5206869910d30badeb5de977e070091bd11c91b"
+    }
+  },
+  "originalChoiceUiLabels": {
+    "source": "沿用已有设置",
+    "model": "Mistral Medium 3.5",
+    "reasoning": "High",
+    "mode": "Accept Edits"
+  },
+  "utcObservations": {
+    "requestSentAt": "2026-10-25T15:54:13.292Z",
+    "allowOnceAt": "2026-10-25T15:54:55.994Z",
+    "probeStartedAt": "2026-10-25T15:54:56.151Z",
+    "matchingPidRunningObservedAt": "2026-10-25T15:55:22.389Z",
+    "stopClickedAt": "2026-10-25T15:55:48.586Z",
+    "uiCancelledObservedAt": "2026-10-25T15:55:49.138Z",
+    "matchingPidAbsentObservedAt": "2026-10-25T15:55:56.495Z",
+    "naturalDeadlineAt": "2026-10-25T15:56:16.151Z",
+    "finalOriginalChoiceObservedAt": "2026-10-25T15:56:12.311Z",
+    "boundary": "Recorded operation/observation timestamps; not exact response, signal or process-exit times."
+  }
+}
