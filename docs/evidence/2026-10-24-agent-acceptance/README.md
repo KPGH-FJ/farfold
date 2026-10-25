@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[同路径版本意见与另存选择器取消](p21-formal-c876-version-retention-cancel-summary.json)新增两项安装版窄正例，零模型发送、零意见加入。旧A意见带原摘要，B意见独立；选址前取消保留两份意见、原稿和空输入，实际原文件仍45B。一次seal CLI/内部校验，14观察及独审通过；事前清单四处对象预期改为字符串的拒绝/修正记录均保留。手工重开不算面板恢复，214.214秒全可见流程不算180秒内，未验在途写入取消或完整条目。六项登录等待现含Amp，其原未知不改判。
+
 c876原对话上下文分项：[Mistral](mistral-formal-c876-context-continuation-summary.json)与[Goose](goose-formal-c876-context-continuation-summary.json)各一次warm续问，问题不含旧答案，实际回复、完成及当前自有空闲分别留证，零新增可见工具及重试/Stop。每案八观察、机械1/1及语义窄正例1；封存CLI各一次、内部校验各一次，无另行validate CLI。Mistral旧冷恢复与此次暖问题分列；Goose UI打开不等于原始冷载，25是旧请求要求字节数，24B缺LF的旧文件失败不翻案。69.840/97.140秒是完成观察上界而非精确响应延迟；完整S3、ARCH-29、标准及整家关闭0，其他失败/未知保持。
 
 c876合并分项：[Dirac](dirac-formal-c876-ack-summary.json)精确回复/完成/当前空闲成立，但实际步骤1与预期0不符，机械7/8保留失败1；[Amp](amp-formal-c876-ack-summary.json)认证提示与结果未知/发送暂停并存，机械5/8保留未完成1，零登录、重试或Stop；[fast-agent](fast-agent-formal-c876-preparation-summary.json)仅零提示准备，当前后端及Codex权限路径关系未知，未发ACK，不推整家永久暂停。

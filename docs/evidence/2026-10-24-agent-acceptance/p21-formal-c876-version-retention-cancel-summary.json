@@ -1,0 +1,116 @@
+{
+  "kind": "P21InstalledVersionRetentionAndSavePickerCancelPublicSummary",
+  "agentId": "mistral-vibe",
+  "evidenceLevel": "installed",
+  "formalApplication": {
+    "sourceCommit": "c8761b09e5f03442ed50b4decb63df5576543300",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64"
+  },
+  "result": {
+    "cases": 2,
+    "narrowPositives": 2,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observationsMatched": 14,
+    "standardIds": [],
+    "wholeRequirementClosures": 0,
+    "wholeStandardClosures": 0,
+    "wholeAgentClosures": 0
+  },
+  "observed": [
+    "一份自有文字文件的A版46B意见跨一次导航保留。操作方将同一文件改为B版45B后，一次明确重新读取显示B版；旧意见仍关联原A版摘要并有版本提醒，B版意见独立保留。",
+    "面板返回时曾显示旧差异视图，操作方通过正常选择器再次打开原文件；这不证明面板自动恢复。全程两次正常文件打开、一次明确重新读取，零意见加入及模型提交。",
+    "一次完整文件另存选择器在选址和保存确认前取消；B版预览、两份意见和空输入保持。原文件保存入口仍为一项，未见新增副本成功或完成声明。",
+    "取消后原窗口物理读回仍为45B、3个LF及末尾LF。晚独立只读复核相同，仅作当前字节佐证。"
+  ],
+  "timing": {
+    "visibleVersionPhaseSeconds": 169.54,
+    "pickerToOriginalSourceEndpointSeconds": 19.298,
+    "recordedFirstAttemptSeconds": 257.906,
+    "firstVisibleFileToFinalSourceEndpointSeconds": 214.214,
+    "wholeFlowUnder180SecondsClaim": false,
+    "performanceAcceptanceClaim": false
+  },
+  "mechanicalSealing": {
+    "mechanicallyValid": true,
+    "passed": 2,
+    "invalid": 0,
+    "sealCliInvocations": 1,
+    "internalValidatorInvocations": 1,
+    "separateValidateCliInvocations": 0,
+    "naturalExitCode": 0,
+    "semanticIndependentBlockers": 0
+  },
+  "preservedPreparationHistory": {
+    "initialObjectExpectationRejectedBeforeActions": true,
+    "correction": "事前v2仅将四处对象预期编码为排序JSON字符串；其余清单逐项相同，原清单和方案保留，实际期望未改。",
+    "preActionApiCalls": 2,
+    "unsupportedHelpWasUsageOnly": true,
+    "productActionsNotRetried": true
+  },
+  "scopeLimits": [
+    "仅P21版本意见/导航及P14、P22选址前取消两个窄正例，不关闭完整条目、标准或Agent。",
+    "不证明一般完整面板恢复、重启恢复、其他格式、Agent事务式版本核验或模型返工。",
+    "选址前取消不代表在途写入取消；原文件端点相同和未见新成功声明不证明后台全部零IO。",
+    "原选择保持仅是界面与操作记录依据，不证明实际后端模型、身份、付费来源或本次握手版本。",
+    "八项输入记录端点一致，mutable文件独立记录；不证明中间持续不变。",
+    "原失败、未知、NEW-24暂停以及用户已明确的六项登录等待（含Amp）保持，零重新登录、重发或停止。"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/case-plan.json",
+      "sha256": "cab211b581fc508a1cd7407317f9236ee5209a70e8d5a1ad9629dcbbb9f672e1"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/manifest-v2.json",
+      "sha256": "6a04ab72d99e5c4655760ba3561381e787f659ce711a461c8602edf86b18eb77"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/preflight.json",
+      "sha256": "1abd5d3da5a7f5f564beaded3704bb689bc3710e76c4cf8dce73ffc83b0d03f8"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/owned-file-preparation.json",
+      "sha256": "7d2a04ac3dbc044e96a0517eaed527ff060f3539b535d94cf9815d67f3679d0d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/actual-ui-observation.json",
+      "sha256": "b8f7f82f031c1413eb3de7dea1fd9c97e0dd933a48aab8ae66cdf1bc427cc1e4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/source-b-endpoint.json",
+      "sha256": "9559569bda496bb02d26a2a2f52e99a2101f5c15d6658e13408089d63d6a50ae"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/source-after-cancel-endpoint.json",
+      "sha256": "163a252534c22b42c2df3234e12c283a639e27e385ec12c90fddf54e6d6ffd38"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/actuals.json",
+      "sha256": "4a675f5687454915e31ac46a3f66e2412049c56fc7e9739888558156f0dde0dd"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/actual-receipt.json",
+      "sha256": "860bc2f99d8708ae94647c24531d21d3377fc5f5d99ca3fd21a1053127e6a923"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/post-case-input-check.json",
+      "sha256": "d729d7f9f015b566792fc1e440275c1490ec751d059653104f494e794616a93d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/scalar-manifest-correction.json",
+      "sha256": "bb45145f7881194e8b6262277fd190762678ec82592fd1f2cd3bcfde5479f3a4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/seal-execution.json",
+      "sha256": "150ca25bffe9a28dcf1e341be2fd006582d6d39ece40701a74602441a1fadf27"
+    }
+  ],
+  "independentSemanticReview": {
+    "path": "output/2026-10-24-agent-acceptance/p21-owned-version-retention-formal-c876/independent-semantic-review.json",
+    "sha256": "80c96223ab99a936e998549e1a96cf37903d33fdeb61d8c02fa6344555123938"
+  }
+}
