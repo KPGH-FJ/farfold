@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "kind": "MistralOfficialOwnedHistoryListAndScopedS3Summary",
+  "formalSource": "cb43b8b281489175ae976811029570abb3737142",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["ARCH-31", "P33"],
+  "standardIds": [],
+  "actual": {
+    "officialListActions": 1,
+    "targetRowSelections": 1,
+    "openExistingActions": 1,
+    "originalTargetMarkedAlreadyAdded": true,
+    "originalOwnedHistoryAndChoiceLabelsRetained": true,
+    "twoUnsentOpinionsAndSourceLabelsRetained": true,
+    "newPreviewOrImport": 0,
+    "modelPrompts": 0,
+    "configurationLoginRetryStopQueueContinuation": 0
+  },
+  "scope": "One official-list workflow after an explicitly selected owned folder, followed by opening the already-added original conversation. The original content is retained; this is not a new import or preview.",
+  "timing": {
+    "startedAt": "2026-10-25T15:30:22.819Z",
+    "finalPostCaptureObservationAt": "2026-10-25T15:31:15.878Z",
+    "observationUpperSeconds": 53.059,
+    "performanceClaim": false
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "cases": 1,
+    "attempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "matchingObservations": 8,
+    "immutableInputs": 8,
+    "mapsEqual": true,
+    "narrowSemanticPositive": 1
+  },
+  "sealing": {
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "additionalValidateCliCalls": 0,
+    "naturalExitCode": 0,
+    "actualStdoutAndStderrSealsChecked": true,
+    "reviewerReranValidator": false
+  },
+  "limits": [
+    "The returned joined row shows an added label in place of its full folder. Requested folder, official target/title mapping and opened original content support this finding; exact raw returned-folder equality was not observed.",
+    "No exhaustive-history, all-row directory-filtering, same-connection, new cold-load, raw native-ID or zero internal-IO claim.",
+    "The inspected official release ignores cursors; no-next-page is not a failure or a new pagination requirement. Current executable equivalence is unverified.",
+    "Preview/new import and other ARCH-31/P33 branches remain open. A separate composed review assesses the original S3 elements; a mechanical list-case pass alone closes no standard.",
+    "Six waits, affected NEW-24 pause and all prior failed/unknown outcomes are unchanged; no whole Agent or all29 closure."
+  ],
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/case-plan.json",
+      "sha256": "00014cd5fb05a02cfe38bc5bebd36f7234e0facbd7400b1217db6ce62013c0c5"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/manifest.json",
+      "sha256": "943903da61a2e68c167ce11bd474abe634483796683181a407d60e9715b293a9"
+    },
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/preflight.json",
+      "sha256": "e6a7687a23129ff1cbaf15e29a3b147e8fba3b4ce4b3d063c76c5e77b383532e"
+    },
+    "sourceRoute": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/source-route-reference.json",
+      "sha256": "b78f119be69482022b295e72ecfcd49b323b4336a8c28a8229484c46d2a1925c"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/actuals.json",
+      "sha256": "c50dee5cc97b405e79be127b1f1eb18a23e4881887597d1295d6f555f1d856f6"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/receipt.json",
+      "sha256": "89f93ca66759db4de4a494c59aac8bea5f0695ec71f7d4aadb6e5a386877eeea"
+    },
+    "classification": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/result-classification-private.json",
+      "sha256": "64e8735c4a7883cb1aaad307fe5745d528e770c3157e491213366132c44cb5bf"
+    },
+    "sealCommand": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/seal.command.json",
+      "sha256": "3645f9789548c3e24d6f1db18ae861a33ddea64a337383d4dc342ea80f2cbce2"
+    },
+    "sealStdout": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/seal.stdout.log",
+      "sha256": "2e306bbdda48feea7ad4fcd7a2056639130e7de1137128d56065422000b208f7"
+    },
+    "sealStderr": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/seal.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/independent-semantic-review.json",
+      "sha256": "deb365c5b45afb1171fb201df58341815789131d3b066a25408558d75658c1eb"
+    },
+    "composedS3Review": {
+      "path": "output/2026-10-24-agent-acceptance/mistral-official-owned-history-list-preparation/s3-composed-coverage-review.json",
+      "sha256": "f8c51c6470501864d57436baef4ea0ae719ea9b7ad3858ab0be98009ee637fa8"
+    },
+    "sameObjectColdSetup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-installed-preparation/setup-plan.json",
+      "sha256": "1da6a3a161ad4fc5bd74c461a6428d9ded5668ced6d9f5e64339302832ef5f51"
+    },
+    "sameObjectColdPreflight": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-installed-preparation/fresh-preflight.json",
+      "sha256": "904ad0956aa3b8056767b1d19f3719401a2bb36cb03e41e886c12b417ebdac9c"
+    },
+    "sameObjectColdLoaded": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-installed-preparation/loaded-attachment-observation.json",
+      "sha256": "7c8928b9b0cb778ba3383d1ceca0b32515a66ad9a4ccf3799720f8d5daf4b3a9"
+    },
+    "sameObjectContextContinuation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-c876-context-continuation-summary.json",
+      "sha256": "dc7a258ae4e9f3d9df21bb98a5e873f586e28cea3a13fcb0f65db54ac27e2356"
+    }
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "verdict": "met-in-stated-scope",
+    "scope": {
+      "agent": "mistral-vibe",
+      "platform": "macOS arm64",
+      "service": "Existing",
+      "modelLabel": "Mistral Medium 3.5",
+      "reasoningLabel": "High",
+      "modeLabel": "Accept Edits",
+      "objectScope": "One original owned conversation"
+    },
+    "separateElements": [
+      "Current official history discovery and opening of the existing original object",
+      "Reusable c876 cold body evidence for that same original object",
+      "Reusable c876 context-dependent continuation whose question omitted the old answer"
+    ],
+    "basis": "Explicit independent three-element assessment plus current source ownership/replay/configuration/unknown protections. This does not retrofit original standardIds or sum mechanical case passes.",
+    "wholeAgentCompleted": false,
+    "all29Completed": false,
+    "broaderVersionsServicesPlatformsClaimed": false,
+    "ARCH31P33PreviewAndNewImportRemainOpen": true,
+    "ARCH29CrossAgentStopCoverageRemainsOpen": true
+  }
+}
