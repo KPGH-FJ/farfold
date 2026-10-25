@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "kind": "QwenInstalledOfficialHistoryAndRetainedDraftSummary",
+  "agentId": "qwen-code",
+  "requirementIds": ["ARCH-31", "P33"],
+  "relatedRetentionRequirementIds": ["P01"],
+  "standardIds": [],
+  "application": {
+    "productCommit": "625158abf72b89bfdc0e0704d000003022931f19",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "242b28f59692e59eb6458b5138dfd17c05296b3685afa3d092e4721476bf833c"
+  },
+  "currentAgentVersion": "unreported; historical version is not current or pinned",
+  "actualInstalledCase": {
+    "officialFind": 1,
+    "returnedRows": 1,
+    "originalAlreadyAddedRowSelection": 1,
+    "openExisting": 1,
+    "promptSendPreviewImportReviewDraftFileChoiceLoginRetryStop": 0,
+    "elapsedObservationSeconds": 25.215,
+    "metadataPresentation": "The official result and explicitly labelled saved title/location identify the unique original Qwen object; returned and saved metadata remain distinct.",
+    "originalBodyVisible": true,
+    "originalDraft": {
+      "fullTextRetained": true,
+      "utf8Bytes": 42,
+      "attachmentNameAndCountRetained": true,
+      "attachments": 1,
+      "reviewRequiredGuardRetained": true,
+      "sendDisabled": true
+    },
+    "meaning": "One correct existing-open shows the original first user/ACK and keeps the complete nonempty draft, one attachment name and review-required guard. This is no new reply or attachment read.",
+    "thinkingLabel": "Thinking on visibly retained; effective behavior not inferred",
+    "fullCurrentSourceModelMode": "not newly read",
+    "independentScreenshotsViewed": 5
+  },
+  "mechanical": {
+    "sealCLIInvocationsTotal": 2,
+    "extraValidateCLIInvocations": 0,
+    "firstSeal": {
+      "naturalExitCode": 1,
+      "reason": "invalid-attempt: observer used status complete instead of completed",
+      "expectedCases": 1,
+      "attempts": 1,
+      "invalid": 1,
+      "passed": 0,
+      "receiptCreated": false
+    },
+    "normalization": "Only attempts[0].status changes from complete to completed in actuals-v2. Manifest remains unchanged and was bound before Find; all other context, input, oracle, time, observation, evidence and action fields are deeply equal. Original actuals and failed command streams are retained.",
+    "productReruns": 0,
+    "secondSeal": {
+      "naturalExitCode": 0,
+      "mechanicallyValid": true,
+      "complete": true,
+      "passed": 1,
+      "failed": 0,
+      "incomplete": 0,
+      "invalid": 0,
+      "observations": 8,
+      "stableInputs": 7,
+      "privateEvidenceFiles": 10,
+      "acceptanceVerified": false
+    }
+  },
+  "semanticReview": {
+    "blockingFindings": 0,
+    "installedNarrowPositive": true,
+    "reviewerAuthoredUnboundTemplates": true,
+    "reviewerReadActualAxMetadataAndScreenshotsWithoutRepeatingProductOrValidator": true
+  },
+  "acceptance": {
+    "S3ContinuationTested": false,
+    "acceptedStandardIds": [],
+    "newWholeStandardClosures": 0,
+    "wholeRequirementClosures": 0,
+    "wholeAgentClosures": 0,
+    "existingFiveScopedS3AssessmentsUnchanged": true
+  },
+  "limits": [
+    "Only original official finding/existing-open/body and UI draft-text/attachment-name/guard retention are supported. No new model prompt or context continuation; old ACK plus this sample does not establish S3.",
+    "No attachment file bytes or Agent attachment consumption were read; preserving a name/count does not prove byte equality. Review attachments remained unpressed and Send stayed disabled.",
+    "Current Agent version and full source/model/mode were not newly read. Thinking on is an actual UI label, not effective reasoning, backend selection, fresh authentication or paid-plan proof.",
+    "No exhaustive history, pagination, complete directory filtering, new preview/import, raw native identifier, same live connection, new cold restoration, full ARCH-31/P33/P01 or whole-Agent/29-by8 acceptance.",
+    "The25.215 seconds is Find-to-end operator observation including later evidence capture, not exact load/backend latency. Zero prompt does not mean zero list/open/load RPCs.",
+    "Old Qwen warm-navigation, draft and5b31 samples keep their historical scopes. Other failures/unknowns, six waits, affected NEW-24 pause and Cline remain unchanged."
+  ],
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/case-plan.json",
+      "sha256": "350d6b20286606c1f02d2ef17d645d0e967ceea0e2d5edc0d3ce3d237d6180ee"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/manifest.json",
+      "sha256": "27776c432f881509dbb18364985dffec6765f51fde882f167c3f62b19b3f4ccb"
+    },
+    "originalActuals": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/actuals.json",
+      "sha256": "d6302157a29faf0e819a5ca92b3f1fa35625ede4b2aca3504dce0704415ea39e"
+    },
+    "actualsV2": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/actuals-v2.json",
+      "sha256": "d93781382eccd6df94bce9268c119b550308ad7a07c1a79041ab3c5fd7074bb0"
+    },
+    "statusOnlyNormalization": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/status-schema-normalization.json",
+      "sha256": "4ed455fe2e7c13e93f8da86ef6d8cf078d054b3a8ebe278edd373c7dc3442b8b"
+    },
+    "firstSealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/seal-cli-execution.json",
+      "sha256": "2eee91f4f203f5e52ce216bd7f0633fb11261dfcf1f82b7d13b59318ff4a792c"
+    },
+    "secondSealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/seal-v2-cli-execution.json",
+      "sha256": "40cf780cda00011039abcee908f5e24813b8e596e76425633823eaa23a25b448"
+    },
+    "receiptV2": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/receipt-v2.json",
+      "sha256": "5ff4bb798b47a7a3364304392b16ad87178b75ebf0425133693d16af997437e8"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/independent-semantic-review.json",
+      "sha256": "fa97d18c579431914835aeb89331e46fc5a5999680ca428d559d2dcaf3ace5e0"
+    },
+    "operatorActionRecord": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/operator-action-record-private.json",
+      "sha256": "ae0450a1f0533cd67713d6635b60821e3a60490c0f9f34f0553fc27aab233202"
+    },
+    "lookupUiMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/lookup-result-ui-private.json",
+      "sha256": "d75b1a88a05586cb0045d54644bc61fa7ab8330c63b39061107565be3985e2ae"
+    },
+    "selectedUiMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/selected-original-ui-private.json",
+      "sha256": "4b8590c2fe2d9a5495ac4750783cc73004180a607d75eee8b0149e89c5cd5256"
+    },
+    "openedUiMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-official-history-formal-625158ab-preparation/opened-original-ui-private.json",
+      "sha256": "2f76ab28dfd28cc82d826a62532cf98d97456fe0f98be8a0639e707a0bed352c"
+    },
+    "preflightUiMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-history-readiness-formal-625158ab/official-lookup-preflight-ui-private.json",
+      "sha256": "765acc39b0bde3f0985c6162ffd421add676d992f86e3663e6dfb4f32f798b9b"
+    },
+    "priorReadinessUiMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-history-readiness-formal-625158ab/original-loaded-ui-private.json",
+      "sha256": "bc5829474e486654b7a2fc2bc007f53b1becc97db09f51f54e52ff57294c07e2"
+    },
+    "priorAckSummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-e6e1-ack-summary.json",
+      "sha256": "14e3dec750f221987ef9e4d391e98e575654169e04d3d31af7f6a54b477d668a"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-625158ab-installation.json",
+      "sha256": "c4fc20b13801f2ba49283653d4c34f21f7258c4c914b3a2e6803d0ded057997f"
+    }
+  }
+}
