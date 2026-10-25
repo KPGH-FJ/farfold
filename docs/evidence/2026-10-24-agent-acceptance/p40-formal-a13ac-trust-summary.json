@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalA13acSingleExactOwnedCwdTrustDecisionPublicSummary",
+  "recordedAt": "2026-10-25T06:39:36.693779+00:00",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "sourceCommit": "a13ac210addf32eb0af2a03d351f9a154253adfd",
+  "installedApp": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "dfce74dbd5eca6fd1a54753600c992e4a498c70d4ee8a7a0f18ee1834e4130e6"
+  },
+  "context": {
+    "agent": "Mistral Vibe",
+    "source": "Existing Agent account/service settings; no alternate API source selected.",
+    "modelLabel": "Mistral Medium 3.5",
+    "declaredModelId": "mistral-vibe-cli-latest",
+    "modeLabel": "Accept Edits",
+    "thinkingLabel": "High",
+    "actualAgentVersion": "Unreported in this current UI; official source research2.25.8 remains a separate reference.",
+    "accountAndEffectiveApiModelIdentityProven": false
+  },
+  "preparation": {
+    "ordinaryOwnedPreparationWorkflows": 1,
+    "extraPrepareConnectClicks": 0,
+    "originalOwnedFixtureBytes": 542,
+    "freshExactScopeInspected": true,
+    "nativeIdentifiersAndRawCapabilityCapture": "unreported",
+    "preReadTimingClarification": "Before one initial read, visible prepared owner/cwd/unchanged choices/idle/status entry are observed. Actual finite trust_cwd offer is checked after that read and before confirmation; no extra query or raw-capture gate."
+  },
+  "actual": {
+    "explicitStatusReads": 1,
+    "initialReportedStatus": "untrusted",
+    "enclosingProjectScopeReportedButNotGranted": true,
+    "actualFiniteOptions": ["trust_repo", "trust_cwd", "decline"],
+    "choice": "trust_cwd",
+    "scope": "Original dedicated owned skill fixture folder and descendants only.",
+    "explicitPersistenceAndReloadReview": true,
+    "separateConfirmations": 1,
+    "reportedResult": "trusted (Agent-reported)",
+    "postResultScopeDetails": "not provided; not filled from earlier status",
+    "resultCloses": 1,
+    "sameVisibleOwnedContextAfterClose": true,
+    "actualConfigurationNeedsRecheckFeedbackVisible": true,
+    "noModelPromptsOrQueueContinuations": true,
+    "rechecksRetriesExtraQueriesOrStops": 0,
+    "alternateServiceModelModeThinkingSelections": 0
+  },
+  "timing": {
+    "manifestPreparedAt": "2026-10-25T06:29:17.664Z",
+    "oneReadAt": "2026-10-25T06:29:31.884Z",
+    "actualOfferObservedBy": "2026-10-25T06:29:42.361Z",
+    "confirmationAt": "2026-10-25T06:29:54.485Z",
+    "trustedObservedByAndCloseAt": "2026-10-25T06:30:06.233Z",
+    "ancillaryGuardClockBy": "2026-10-25T06:30:24.605Z",
+    "readUiUpperBoundSeconds": 10.477,
+    "reportedTrustedUiUpperBoundSeconds": 11.748,
+    "ancillaryGuardClockUpperBoundSecondsAfterConfirmation": 30.12,
+    "entireAttemptSeconds": 52.721,
+    "limit": "Only read and trusted-result observations are within their separate30s windows. Manual review and later guard/clock bookkeeping are separate; no entire-case30s or exact backend latency claim."
+  },
+  "mechanicalValidation": {
+    "naturalExitCode": 0,
+    "mechanicallyValid": true,
+    "complete": true,
+    "passed": 1,
+    "expectedCases": 1,
+    "acceptanceVerified": false
+  },
+  "independentSemanticReview": {
+    "qualifiedNarrowInstalledObservationsRetained": 1,
+    "blockingFindingsForThisNarrowCase": 0,
+    "fullP40Closure": 0,
+    "fullStandardsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/independent-semantic-review.json",
+      "sha256": "eac8bcff86474dbb5877764fd82cea3668cfda4a9864bcc8675c92e688ed286b",
+      "evidenceKind": "metadata"
+    }
+  },
+  "uiFollowup": {
+    "observedGuard": "模型：未提供 → 未提供。已暂停发送，请重新检查。原内容和待发消息已保留。",
+    "interpretation": "Actual protection/recheck feedback is visible; null endpoints rendered as a model change are misleading. This does not establish an actual model change.",
+    "repairStatus": "Separate shared formatter repair is in progress, not included in installed a13ac or this completed case.",
+    "sendAdmissionLimit": "Empty input and disabled button do not test rejection of an actual nonempty request; no such request was submitted."
+  },
+  "proofLimits": [
+    "Agent-reported trusted is not disk durability, complete reload/effective configuration, hook safety, filesystem isolation or skills enabled/discovered/adopted.",
+    "One visible current owner and separately reviewed source guards are not raw native identifiers, total RPC counts, all background inactivity or current Agent binary/version capture.",
+    "Primary evidence is nativeCUA AX/screenshots in the calling conversation; local metadata summaries do not claim a local screenshot file or raw protocol record.",
+    "Original skill declaration failure1 and adoption-unexecuted1, five login waits, affected NEW24 send pause and historical unknowns remain.",
+    "Installed source and case fingerprints are historical a13ac facts; subsequent documentation progress and separate uninstalled formatter work are not retroactive changes to this case."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false,
+    "original151ConditionsChanged": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/manifest.json",
+      "sha256": "4510d3a067a17d353458fcd6bcd7d2d63d275003f4c4b56148303fe6d5e9f719",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/case-plan.json",
+      "sha256": "bd84cc0c2d0f45d611a8cb73c295fc1d572e84b9ac00f317ad2e3231f78cba12",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/preflight.json",
+      "sha256": "cf163fc9f4db5266e81b98aa1c465604389845accba4bdd19f8459c077975dde",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/owned-fixture-inspection.json",
+      "sha256": "afe42c4a3e3ab8bcf653ce9ab2a3c6eec3470025a99a749e9d77777459631510",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/actual-ui-observation.json",
+      "sha256": "efad6880be7a33c0e81f7ceb97a8377eba316bc2903508b876db2bf65fdc5670",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/actual-receipt.json",
+      "sha256": "b0512b4252fe97dbe4b57b94e7d7db8811047974d85264a510559b99bb206ac5",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/validation.json",
+      "sha256": "06d233a7acf5d088c837785340a7b03de45e360535b819fc4ff0c0ce2b2a629e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-formal-a13ac/validation-execution.json",
+      "sha256": "584f6bb3e34fe59348a31952a509a42bb176758a2dff9970b8dce07df14fb196",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

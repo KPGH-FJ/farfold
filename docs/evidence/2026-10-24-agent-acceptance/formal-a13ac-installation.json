@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalA13acAtomicInstallationAndFirstLaunchPublicSummary",
+  "recordedAt": "2026-10-25T06:36:13.960416+00:00",
+  "sourceCommit": "a13ac210addf32eb0af2a03d351f9a154253adfd",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "dfce74dbd5eca6fd1a54753600c992e4a498c70d4ee8a7a0f18ee1834e4130e6",
+    "basis": "Actual installed-ten and first-launch observations; internal adhoc signature, no public signing or notarization."
+  },
+  "engineering": {
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-engineering/engineering-summary.json",
+      "sha256": "e8efa4192e661ac6052ce434ca3dd8d62fc71bb8f78772ab9b4d0a30d0738c83",
+      "evidenceKind": "metadata"
+    },
+    "inputCount": 2278,
+    "checksRanAtFinalCommit": false,
+    "checksRanBeforeCommitOnExactInputMap": true,
+    "candidateAndInstalledReviewVerifiedEngineeringEvidence": true
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "naturalExitCode": 0,
+    "independentNinePassed": 9,
+    "independentNineTotal": 9,
+    "archiveSha256": "91b592c9a2a60e9a4c911b6c3db044084415cec9738c60db6f627786950f9b50",
+    "archiveBytes": 16175725,
+    "archiveRetained": true,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/candidate-output/candidate.json",
+      "sha256": "a25cd1b57bbed5dc8713374ebeaa05c12cca82f5e744ab4b758d809bf21d746c",
+      "evidenceKind": "metadata"
+    },
+    "naturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/candidate-natural-completion.json",
+      "sha256": "6171c410d4407d9e4c5d86c04d1e66a3ed8c4e4a43365330cb4f1d53bddcc4af",
+      "evidenceKind": "metadata"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/independent/review-v2.json",
+      "sha256": "bd6d91e0cb5480bdb5fb7b6ee6e751400f9b83bdceae8bcac9a5f4dc840b3743",
+      "evidenceKind": "metadata"
+    }
+  },
+  "normalQuit": {
+    "normalSaveAndExit": true,
+    "requestedAt": "2026-10-25T06:16:59.396Z",
+    "confirmedAt": "2026-10-25T06:17:06.496Z",
+    "forcedQuit": false,
+    "extraStopOrRetry": 0,
+    "unknownWorkReclassifiedAsStopped": false,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/normal-quit-observation.json",
+      "sha256": "3d9d2f950ddc4d232c92e9076a9d824c0fcdfff2cb58b094e62267ffd56332ea",
+      "evidenceKind": "metadata"
+    }
+  },
+  "dataRetention": {
+    "freshManifestEndpoints": 3,
+    "entriesEach": 232530,
+    "allThreeByteIdentical": true,
+    "metadataBackupIntegrityOk": true,
+    "continuousUnchangedIntervalClaimed": false,
+    "rawManifestDatabaseAndBackupContentsOrDigestsPublished": false,
+    "references": [
+      {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/retention-before-receipt.json",
+        "sha256": "7e8fc3593a43850cab9a93ce8b9712f617072f986da5f0cafaf6b6bafea533c1",
+        "evidenceKind": "metadata"
+      },
+      {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/retention-preinstall-receipt.json",
+        "sha256": "c9b5c9ec84bf8c7e8e0e435b2520cb2c5ea4cbe803a1ff41528ecafcdc8e4186",
+        "evidenceKind": "metadata"
+      },
+      {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/retention-after-receipt.json",
+        "sha256": "f55e5691cd58d3daa7092436085ec044b8d9188b51d57a65360c04030c64ba6c",
+        "evidenceKind": "metadata"
+      }
+    ]
+  },
+  "atomicInstallation": {
+    "onlyFormalAppUpdated": true,
+    "exactFiles": 5,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetryOrRestore": false,
+    "naturalExitCode": 0,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/install-result.json",
+      "sha256": "b66226ce34b89e1be312edeb178b573c1764d3b660dae7c4e8259189b7013526",
+      "evidenceKind": "metadata"
+    }
+  },
+  "installedIndependentReview": {
+    "passed": 10,
+    "total": 10,
+    "naturalExitCode": 0,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "8fbef51c5ac496b43485ebcb47f5aa8eef250d3e28d9702f05f17ce2eeb97e3d",
+      "evidenceKind": "metadata"
+    },
+    "limit": "Actual source/bundle/signature/archive/data endpoints, not actual trust or skill acceptance."
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "formalAppAndArchiveRetained": true,
+    "naturalExitCode": 0,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/install/candidate-cleanup.json",
+      "sha256": "d0b3bfff987ba30ad5aaa390c6994afef2e728b935a5d475d69750536ef3275f",
+      "evidenceKind": "metadata"
+    }
+  },
+  "beforeFirstLaunch": {
+    "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/all-completed-before-first-launch.json",
+    "sha256": "a62ec312fad0d7de6ef6e7d95c4d87736218c935afbef0f66434e9d11d51fe29",
+    "evidenceKind": "metadata"
+  },
+  "firstLaunch": {
+    "requestedAt": "2026-10-25T06:26:35.652Z",
+    "visibleHistory": 146,
+    "visibleRetainedDrafts": 1,
+    "inputEmpty": true,
+    "ownedFolderVisible": true,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/first-launch-ui-observation.json",
+      "sha256": "b25993b28919637b1ecb027aeef202c6e28a9cfec67206d91e86bf585e090aa9",
+      "evidenceKind": "metadata"
+    },
+    "limit": "Visible shell/list/draft counts, not complete history/body/draft-byte verification or all Agents idle."
+  },
+  "generatedCacheRetirement": {
+    "exactIncrementalLeafDirectories": 4,
+    "filesRemoved": 1060,
+    "directoriesRemoved": 12,
+    "logicalPathBytes": 5069280087,
+    "availableBytesBefore": 2148122624,
+    "availableBytesAfter": 5112877056,
+    "observedAvailableIncreaseBytes": 2964754432,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-install-preparation/storage-pre-candidate-audit/retirement-actual.json",
+      "sha256": "d8e9fcbab6669feae7b5877d5fd556cba92b3742b6dce9b29854fe9b4c94c18f",
+      "evidenceKind": "metadata"
+    },
+    "limit": "Available-space endpoints during retirement, not current free space or exact attribution under APFS sharing/other processes. Only exact generated caches retired; all target siblings/data/backups/history retained."
+  },
+  "affectedVerification": "Subsequent one owned trust_cwd UI case is separately recorded and reviewed; installation does not establish that feature or skill discovery/adoption.",
+  "retainedBoundaries": [
+    "Old unknown requests remain unknown; five login waits and affected NEW24 Codex send pause unchanged.",
+    "Original skill declaration failure1/adoption-unexecuted1 and other historical failures remain.",
+    "All natural command completions preceded first launch.",
+    "No complete requirement/standard/wholeAgent closure or29x8 completion."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "acceptanceVerified": false
+  }
+}
