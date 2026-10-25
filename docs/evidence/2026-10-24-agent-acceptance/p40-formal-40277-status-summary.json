@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "QualifiedInstalledUiSingleWorkspaceAccessReadPublicSummary",
+  "productCommit": "40277c9ebda84ba95762be3b1816172103b24c64",
+  "formalBinarySha256": "d0d06122a6fed6f02c8b5ef0cc4c67e9823e467ebb0b6bf3fc26cca2fdde163a",
+  "platform": "darwin-arm64",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "level": "installed",
+  "result": "one-qualified-narrow-installed-ui-success",
+  "preparation": {
+    "ordinaryExistingAgentSelectionClicks": 1,
+    "secondPrepareButtonClicks": 0,
+    "newEmptyOwnedConversation": true,
+    "previousNativeConversationIdentityClaimed": false,
+    "modelModeAndReasoningSelectionChanges": 0,
+    "selectedLabels": ["Mistral Medium 3.5", "Accept Edits", "High"],
+    "actualServerModelOrReasoningCertified": false,
+    "agentVersion": "Prior UI declaration 2.25.8; current prepared connection version unreported."
+  },
+  "actualObservation": {
+    "explicitStatusReadClicks": 1,
+    "finiteReportedStatus": "untrusted",
+    "reportedQualifierVisible": true,
+    "ownedWorkingFolderVisible": true,
+    "agentReportedRepositoryScope": "enclosing Farfold checkout, broader than the owned fixture",
+    "scopeValidation": "Backend accepts an existing canonical ancestor. This is not an independent Git-root verification.",
+    "closeClicks": 1,
+    "sameOwnedUiContextAndEmptyInputAfterClose": true,
+    "focusReturnedToQueryEntry": true,
+    "laterReadbackLabelsUnchanged": true,
+    "modelPrompts": 0,
+    "skillSubmissions": 0,
+    "trustDecisions": 0,
+    "settingsConfirmations": 0,
+    "queryRetries": 0,
+    "stopRequests": 0
+  },
+  "timing": {
+    "clickedAt": "2026-10-25T04:41:25.446Z",
+    "closedAt": "2026-10-25T04:41:50.322Z",
+    "resultAndCloseObservedWithinSeconds": 24.876,
+    "readObservationBudgetSeconds": 30,
+    "ancillaryLabelReadbackFinishedAt": "2026-10-25T04:42:51.643Z",
+    "ancillaryLabelReadbackElapsedSeconds": 86.197,
+    "allAncillaryChecksWithinThirtySecondsClaimed": false,
+    "officialRpcLatencyMeasured": false
+  },
+  "evidence": {
+    "actualReceipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-formal-40277/actual-receipt.json",
+      "sha256": "bc1c0caefe99f855ab96c8568a69528161e5a83c38de68451361363d5f7a1ac5"
+    },
+    "actualUiObservation": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-formal-40277/actual-status-ui-observation.json",
+      "sha256": "8cecc54166d57fd0a627af5d9fe78b3b95392064385a837c1578cc5274851891"
+    },
+    "mechanicalValidation": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-formal-40277/validation.json",
+      "sha256": "06d233a7acf5d088c837785340a7b03de45e360535b819fc4ff0c0ce2b2a629e"
+    },
+    "validationExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-formal-40277/validation-execution.json",
+      "sha256": "da853e5d12d01f8c8bdce9d0ea211fb455469803169c9b495fbd7e8a6a3a813b"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-formal-40277/independent-semantic-review.json",
+      "sha256": "cfd8621f5b1ab70bcf7331a125e74616a5d4e0263b0116ceb2a56be24180cd2e"
+    }
+  },
+  "mechanicalValidation": {
+    "actualExitCode": 0,
+    "mechanicallyValid": true,
+    "allExpectedOutcomesMatched": true,
+    "narrowSuccesses": 1,
+    "acceptanceVerified": false
+  },
+  "semanticReview": {
+    "blockingFindings": [],
+    "qualifiedNarrowSuccessesRetained": 1,
+    "rawRpcCountOrNativeConnectionIdentifiersCaptured": false,
+    "sameOwnerRoutingBasis": "Current reviewed source guards, separate from visible UI observations.",
+    "localScreenshotFilesClaimed": false,
+    "primaryUiEvidence": "Native accessibility and screenshot observations in the active conversation, transcribed into the pinned observation metadata."
+  },
+  "preservedOpenResults": {
+    "originalSkillDeclarationFailures": 1,
+    "originalSkillAdoptionUnexecuted": 1,
+    "newSkillAdoptions": 0,
+    "uniqueCauseOfOriginalFailureEstablished": false,
+    "completeRequirementsNewlyAccepted": 0,
+    "completeStandardsNewlyAccepted": 0,
+    "completeAgentsNewlyAccepted": 0,
+    "all29Accepted": false,
+    "historicalUnknownRequestsReclassified": false,
+    "fiveLoginWaitsAndNew24PauseChanged": false
+  },
+  "limits": [
+    "One current owned UI read and close establish the displayed finite report and scope only. They do not prove skill discovery, adoption, durable trust, all-Agent idle state or complete P40.",
+    "The case manifest bound inputs before the click. Later progress-only documentation changes do not rewrite those original inputs or rerun the actual case.",
+    "Installation and retention are separately recorded in formal-40277-installation.json. Neither substitutes for this functional observation."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "privateNativeIdentifiersOrCredentialsIncluded": false,
+    "rawPromptReplyRpcOrDatabaseContentIncluded": false,
+    "rawManifestOrBackupDigestsIncluded": false
+  }
+}

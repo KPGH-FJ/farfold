@@ -1,0 +1,200 @@
+{
+  "kind": "Formal40277AtomicInstallationAndFirstLaunchPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "authorized-documentation-checkpoint",
+  "recordedAt": "2026-10-25T04:51:17.304Z",
+  "sourceCommit": "40277c9ebda84ba95762be3b1816172103b24c64",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "d0d06122a6fed6f02c8b5ef0cc4c67e9823e467ebb0b6bf3fc26cca2fdde163a",
+    "basis": "Actual installed ten and completed installation metadata; internal adhoc signature only, no public signing or notarization claim."
+  },
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "engineeringEvidenceFromCandidateNine": {
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/engineering-summary.json",
+      "sha256": "4b9242eecc4f3d43a989f90e88a47d0c4cd1067823a53b2ce0bfbd7e45c16f1b"
+    },
+    "actualSevenCommandsAndLogCountsVerifiedByNine": true,
+    "productionInputCount": 2271,
+    "summaryOrRawLogsOpenedByThisWriter": false,
+    "boundary": "The candidate and independent nine link actual engineering evidence. This installation summary does not reproduce uninspected engineering counts or claim checks ran at final commit."
+  },
+  "candidate": {
+    "sourceCommit": "40277c9ebda84ba95762be3b1816172103b24c64",
+    "binarySha256": "d0d06122a6fed6f02c8b5ef0cc4c67e9823e467ebb0b6bf3fc26cca2fdde163a",
+    "actualBuilds": 1,
+    "naturalExitCodeAsRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/candidate-output/candidate.json",
+      "sha256": "1bb8587568543e518a8073c83011fad3167878f60b50da51607aaec9ef2303ec"
+    },
+    "naturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/root-candidate-natural-completion.json",
+      "sha256": "40366361ed5ccbf1f832cc48d673cce4b917d0127ad98a682207266a1ea5d3c4"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/independent/review-v2.json",
+      "sha256": "e99bed7c00462ee2e7296db8607361efedc2ad2537243a5b9b29bb5f5c4f5101"
+    },
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "independentReviewNaturalExitCodeAsRootRecorded": 0,
+    "productionInputCount": 2271,
+    "evidencePins": 20,
+    "preparationTextPins": 8,
+    "architecture": "arm64",
+    "bundleFiles": 5,
+    "strictInternalSignatureVerifiedAsRecorded": true,
+    "archiveSha256": "3e37be0e5b2c98a132fd4a6a1c4b05101a8b35db76a9e326ea209842ac7735e2",
+    "archiveBytes": 16147843,
+    "scope": "Actual build and independent nine precede the separately recorded formal replacement below. Internal adhoc signature is not public signing or notarization."
+  },
+  "normalQuit": {
+    "normalUiSaveAndExitObserved": true,
+    "requestedAt": "2026-10-25T04:26:07.037Z",
+    "saveAndQuitClickedAt": "2026-10-25T04:26:14.062Z",
+    "forcedQuit": false,
+    "stopOrRetryRequests": 0,
+    "exactFormalExecutableAbsenceRecorded": true,
+    "unknownRequestsReclassifiedAsStopped": false,
+    "allAgentWorkProvenEnded": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/normal-quit-observation.json",
+      "sha256": "5da8f6277b5cbf8df77053862e54a4257224ded6a231af68c451d7db53523789"
+    },
+    "boundary": "Normal saved exit and discrete exact-executable absence observations; prior unknown requests remain unknown. No forced signal, second Stop or retry was performed."
+  },
+  "dataRetentionAsRecorded": {
+    "completeManifestEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "allThreeByteIdentical": true,
+    "metadataBackupIntegrityCheckPassed": true,
+    "continuousUnchangedIntervalClaimed": false,
+    "fullManifestsDatabaseOrBackupOpenedBySummaryWriter": false,
+    "receipts": {
+      "before": {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/retention-before-receipt.json",
+        "sha256": "fcff39b259a013a29fb82642509a6b015b416d1920395ca3e627e34fd9874832"
+      },
+      "preinstall": {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/retention-preinstall-receipt.json",
+        "sha256": "f5b2ea5d3f8eb6a461bda7e5afde473373e1f9166cfa613107814d95882b1614"
+      },
+      "after": {
+        "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/retention-after-receipt.json",
+        "sha256": "cd30a3c3abdbfa3f4857c81ed0392192e2e207992289409a18f1dd2a875f3a49"
+      }
+    },
+    "boundary": "Three fresh complete endpoint receipts plus actual installed-ten strict byte comparison; not continuous monitoring or complete application-level data-use verification."
+  },
+  "atomicInstallation": {
+    "installed": true,
+    "naturalExitCodeAsRootRecorded": 0,
+    "onlyFormalAppUpdated": true,
+    "exactFiles": 5,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/install-result.json",
+      "sha256": "2c5358151917d7e7dbcf16a585adbbda393264d748be4b518c969425104854fa"
+    }
+  },
+  "installedIndependentReview": {
+    "checksPassed": 10,
+    "checksTotal": 10,
+    "failures": [],
+    "naturalExitCodeAsRootRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "b110af19cb2aab0dc23204eefa7091118e02679d535282f38c737af12c5675a1"
+    },
+    "boundary": "Actual source, bundle, signature, archive and data-endpoint checks; no P40 feature acceptance follows from installation."
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "archiveRetained": true,
+    "naturalExitCodeAsRootRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/install/candidate-cleanup.json",
+      "sha256": "6ed28627d8725f55419752d1af1234903926d6f68b68b45f638323b5501eb6ea"
+    }
+  },
+  "firstLaunchAsRootObserved": {
+    "launchRequestedAt": "2026-10-25T04:37:27.290Z",
+    "observationRecordedAt": "2026-10-25T04:46:36.826Z",
+    "historyListCount": 146,
+    "retainedDraftCount": 1,
+    "inputEmpty": true,
+    "ownedP40FolderVisible": true,
+    "beforeOperatorPreparationOrQuery": true,
+    "newPromptsInThisFirstLaunchObservation": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/first-launch-ui-observation.json",
+      "sha256": "7704012d776d0f87a79c5599d7b0b74989324df05539b3582a889fde0d263ea5"
+    },
+    "boundary": "Application shell, visible list/draft counts and folder only; not full draft bytes, complete history restoration or all-Agent-idle proof. Later preparation/query is separate."
+  },
+  "affectedP40Verification": {
+    "status": "separate-functional-observation",
+    "semanticReviewStatusAtSummaryPreparation": "pending",
+    "installationRecordEstablishesQuerySuccess": false,
+    "skillDiscoveryOrAdoptionEstablished": false,
+    "boundary": "Root subsequently recorded one explicit same-connection read in a separate functional case. This installation record neither judges that case nor claims no query has ever occurred. Original failed declaration and unexecuted adoption remain unchanged."
+  },
+  "priorUnusedCandidateHistory": {
+    "sourcePrefix": "cf43e06f",
+    "installed": false,
+    "independentNinePerformed": false,
+    "exactGeneratedFilesRetiredAsPreviouslyRecorded": 5,
+    "exactGeneratedDirectoriesRetiredAsPreviouslyRecorded": 5,
+    "zipAndOriginalEvidencePreserved": true,
+    "completionMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-install-preparation/root-candidate-natural-completion.json",
+      "sha256": "17fca335b1054d6fe1ae8e62e9b0c7717bb357b478fe7ec48832f83bf0d3c0bb"
+    },
+    "retirementMetadata": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-install-preparation/unused-candidate-retirement.json",
+      "sha256": "8d9fa2fd878b31eb34e3d6cdfaa78aa03d837cda489c892bbfac9e839e523cfb"
+    },
+    "boundary": "Earlier verified historical metadata, not read again or reused as current candidate/install success."
+  },
+  "rootNaturalCompletions": {
+    "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-install-preparation/root-all-natural-completions-before-launch.json",
+    "sha256": "e37ed4e66d9ded54b6a27a25ee83db0d911bef01c704ba517cc2f8e3e21cde24"
+  },
+  "remainingBoundaries": {
+    "earlierUnknownRequestsSettledByUpdate": false,
+    "normalQuitIsStopAcknowledgement": false,
+    "fiveRetainedLoginWaitsChanged": false,
+    "new24AffectedSendingPauseUnchanged": true
+  },
+  "completeRequirementsNewlyAccepted": 0,
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "original151ConditionsChanged": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "One actual alias candidate build, independent nine, normal saved exit, fresh before/preinstall/after data endpoints, atomic replacement, installed ten, exact duplicate cleanup and first launch are distinct completed observations.",
+    "Source40277 and its binary are now the installed identity; the earlier c4e identity and cf43 unused candidate remain historical, not interchangeable evidence.",
+    "Installation/retention do not accept P40, a complete standard, any whole Agent or 151 requirements. Same-connection status and skill effect require their own scoped observations.",
+    "Unknown requests remain unknown through normal exit/update; no force quit, additional Stop or model retry is inferred.",
+    "Only named metadata and the prior public structure were read. No raw database, backup, manifest JSONL, ZIP, binary, App, Agent, validator, test or Git operation was performed for this summary."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "accountCredentialNativeSessionIdentifiersIncluded": false,
+    "rawPromptReplyDiagnosticOrRpcBodiesIncluded": false,
+    "rawDataManifestOrBackupDigestsIncluded": false,
+    "backupOriginalPathsIncluded": false,
+    "filesystemInodesAndProcessDetailsIncluded": false
+  }
+}
