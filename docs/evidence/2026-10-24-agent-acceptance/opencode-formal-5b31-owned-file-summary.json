@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "OpenCodeOwnedFileExactOutputPublicSummary",
+  "agentId": "opencode",
+  "productCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "appVersion": "0.1.7",
+  "claimScope": "single-real-agent-exact-file-positive",
+  "narrowCoverage": {
+    "S5": "工具、文件",
+    "P18": "能定位并核验对应磁盘文件",
+    "ARCH-34": "更新和终态不串会话"
+  },
+  "wholeClosures": {
+    "requirements": 0,
+    "standards": 0,
+    "agents": 0,
+    "all29By8": 0
+  },
+  "actual": {
+    "ordinaryModelSubmissions": 1,
+    "visibleToolSteps": 1,
+    "toolWriteResultAndTargetPathVisible": true,
+    "separateRecognizedCompletionAndCurrentConversationIdle": true,
+    "proposedContentAndCurrentFileViewsEachOpenedOnce": true,
+    "rootPhysicalReadback": {
+      "utf8Bytes": 23,
+      "oneFinalLf": true,
+      "noBomOrCrLf": true,
+      "exactOriginalExpectedBytesAndSha256Matched": true
+    },
+    "operatorRetryRepairStopChoicePermissionChangeOrQueueContinuationCount": 0
+  },
+  "mechanicalValidation": {
+    "mechanicallyValid": true,
+    "allExpectedOutcomesMatched": true,
+    "passedCases": 1,
+    "failedCases": 0,
+    "incompleteCases": 0,
+    "invalidCases": 0,
+    "readOnlyCheckerInvocations": 1,
+    "naturalExitCode": 0
+  },
+  "independentSemanticReview": {
+    "blockingFindings": 0,
+    "qualifiedNarrowPositives": 1,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/independent-semantic-review.json",
+      "sha256": "8dbeb950999c1db7a194ff6b078412638fe2eca6fb8e76482142bd2601b512ae"
+    }
+  },
+  "qualifications": [
+    "The original exact23-byte final-LF expectation was bound before the sole Send. Tool result/path, separate completion and current idle, and root physical-byte verification together support this sample; done text alone does not.",
+    "Two repeated success lines belonged to one visible tool card. Proposed-content presentation remained explicitly distinct from physical verification.",
+    "The180-second window was an operator observation budget, not a performance threshold. Recorded completion/readback observations were within it; exact backend latency is not claimed.",
+    "Original service/model/mode labels were retained. No reasoning control was exposed; inherited reasoning was not replaced with an invented choice. Labels do not prove current raw IDs, effective backend, account or process version.",
+    "Eight recorded inputs match before/after. No full dependency or environment freeze, exhaustive internal I/O census or filesystem isolation is claimed.",
+    "No raw protocol was captured. Prior OpenCode timeout and Kilo exact-file failure remain unchanged; this separate sample establishes no unique cause for either.",
+    "No complete S5/P18/ARCH-34/ARCH-44, cold restoration, failure/cancel, Agent or29-by8 acceptance is claimed."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/case-plan.json",
+      "sha256": "47cc362a444549de233824c597e070efed15a1cbbff5c259ef12ae613a22d886"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/manifest.json",
+      "sha256": "d26ce0d1451b3f692ad58f3477238ae6906fcc2ad537d9637216d43efc872d1d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/preflight.json",
+      "sha256": "5b510ec996830f04c97f7c3765b5a6d164eb473c3c32e3bfe7a8a46b50fb3c0a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/pre-submit-owned-cwd-inspection.json",
+      "sha256": "04d386bcc5dbbdc0a45a8526c07e6a018697d45101be48c79232041d95c03417"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/unique-input-observation.json",
+      "sha256": "c8a7f8c383276a5be7a31c6037ec3ee4e67bc3cceb50ad21f94eb2c40021b3a2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/preaction-manifest-check.json",
+      "sha256": "1ed396127b4c761e845d4663f6025d19331775f31f6e2ff8d20aa34e9ce1fe34"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/actual-ui-observation.json",
+      "sha256": "3fb4107e4b9b16c7f1fea52d0571f3cb0ccebb87061b7515d5297207d5b8d1f0"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/actual-file-readback.json",
+      "sha256": "5010dda1505e483d450e5715c4326f8f25ef811f552a3f6863ad90b98dbdeb5e"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/actual-receipt.json",
+      "sha256": "2d0f0d355d087d82baaf0d64d21229b1c1c2a113f416cdf572551c527333128a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/post-case-input-check.json",
+      "sha256": "d1fa36eedd3431b6477b0baa6455b977b8dd940905099bf663971edc0032957a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/validation.json",
+      "sha256": "d4a5c6ab858bfc0e8dfcf5f451fd255824412aa3a10f8aaa1d870c61c470d41a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/opencode-owned-file-formal-5b31/validation-execution.json",
+      "sha256": "caa233276dfa749bd479c21e7ec79ef65e3eef75f27b2cc423b65972a5a6d6a1"
+    }
+  ]
+}

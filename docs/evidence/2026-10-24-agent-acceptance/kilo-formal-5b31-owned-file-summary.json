@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "kind": "KiloOwnedFileExactOutputFailurePublicSummary",
+  "agentId": "kilo",
+  "productCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "appVersion": "0.1.7",
+  "claimScope": "single-real-agent-exact-file-case-failure",
+  "wholeClosures": {
+    "requirements": 0,
+    "standards": 0,
+    "agents": 0,
+    "all29By8": 0
+  },
+  "actual": {
+    "ordinaryModelSubmissions": 1,
+    "visibleToolSteps": 1,
+    "recognizedRequestCompletionAndCurrentConversationIdle": true,
+    "toolResultAndTargetPathVisible": true,
+    "reportedWriteSuccessDoesNotEstablishExactFileSuccess": true,
+    "expected": {
+      "utf8Bytes": 19,
+      "oneFinalLf": true
+    },
+    "rootReadOnlyPhysicalReadback": {
+      "utf8Bytes": 18,
+      "finalLfPresent": false
+    },
+    "exactOutputResult": "failed",
+    "passedCases": 0,
+    "failedCases": 1,
+    "incompleteCases": 0,
+    "operatorRetryRepairStopChoiceChangeOrSecondPromptCount": 0
+  },
+  "mechanicalValidation": {
+    "mechanicallyValid": true,
+    "allExpectedOutcomesMatched": false,
+    "invalidCases": 0,
+    "secondReadOnlyCheckerExitCode": 1,
+    "explanation": "Exit1 records the observed exact-output failure; it is not a checker crash.",
+    "readOnlyCheckerInvocations": 2,
+    "firstWrapperOutputParserFailurePreserved": true,
+    "firstStdoutUnavailable": true,
+    "checkerRepeatCausedNoAgentOrFileReexecution": true
+  },
+  "semanticReview": {
+    "blockingFindings": 0,
+    "result": "retain-one-completed-exact-output-failure",
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/independent-semantic-review.json",
+      "sha256": "85e71620bf65c80dbd8c7085ed51eff3463b8c9935bcc0105df0e02efe0332e5"
+    }
+  },
+  "qualifications": [
+    "The prospective canonical manifest kept the19-byte final-LF expectation before the sole Send. The failed output was not repaired or retried.",
+    "A visible file-writing result/path and separate request completion were observed. Repeated success text within the same card is not a second tool call. Natural language done or file existence alone is not a pass.",
+    "Displayed tool-input content and the root physical-byte report both lack the required final LF. Original RPC was not captured, so unique causation and Agent-versus-Farfold attribution remain unknown.",
+    "The180-second window is an operator observation budget, not a performance requirement. Completion and physical readback were recorded within it; exact backend latency is not claimed.",
+    "Eight recorded input fingerprints match before/after despite a reported documentation-only checkpoint. This does not freeze all dependencies or the environment.",
+    "Selection labels preserve the original service/model/reasoning/mode context; they do not prove effective backend, account entitlement or current Agent-process version.",
+    "Only the new owned folder and target were inspected. No global I/O census, sandbox, historical restore, failure/cancel coverage or complete S5/P18/ARCH-34/ARCH-44 acceptance is claimed.",
+    "已绑定计划末条仍继承模板的未绑定说明，与实际字段有值不一致；原件不改，以事前清单及输入摘要链为准。"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/case-plan.json",
+      "sha256": "1d0f2015a4d3ee4bede2f8f823fb1c0d5d6b85ba735f836cf643d5ad56df406a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/manifest.json",
+      "sha256": "d283a444e771e2fabc9cd7a80723d4d1c89729e275d78842febb5fd3de4b91a5"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/preflight.json",
+      "sha256": "cc98634a677a5ad632aad4552d2478f81538340c684e623751b60905ffa76ba7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/pre-submit-owned-cwd-inspection.json",
+      "sha256": "3ebbc2e7c9a2800c7d2e41eaa36a941ac640eb21d1b53322c943ef2e78c4dd77"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/unique-input-observation.json",
+      "sha256": "92e90e1c70492187f2eb269355a93d371b417306233dbf5da0ecec273d4ba1bf"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/preaction-manifest-check.json",
+      "sha256": "ffcddfe8ed70b2af047283566dcef8b10d67d24f8623000278a8cd6d56db1108"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/actual-ui-observation.json",
+      "sha256": "5c4742947d4b80e0b5eea24fbc7f86dfd90217bad72c98935b1790b4ed0cb06f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/actual-file-readback.json",
+      "sha256": "e1bceab94d620bc3ecbe59f52b3ddd51395f40d7f2ab490159e6bf3b3b81e077"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/actual-receipt.json",
+      "sha256": "53fba14ab4d1be20db27c4a9bb597651f3f8937110b24f6cf03014788f4ea65f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/post-case-input-check.json",
+      "sha256": "5905ee0fc397015e1ef6e0cde39b88166046a10b9507681e4ec4e077e313ebaf"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/initial-validation-output-parser-failure.json",
+      "sha256": "9c21bbfef1b92b5abe48cb1848512b2205740719c54b58d54221e49be7b532ca"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/validation.json",
+      "sha256": "a907450dc032e69f86080a7de9de31ebebdeb24e3a4ddd1d44eb5e6373d4c2b9"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/validation-execution.json",
+      "sha256": "e776988ab0e1d1a3766a523e99b1e14044de0c2299b74a98f2889fc2b98eaa4c"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/kilo-owned-file-formal-5b31/diagnostic-source-note.json",
+      "sha256": "fa314a9fc57af3401dede3f9e584c9d37d6603663cd0039f571c7318ccd77b96"
+    }
+  ],
+  "readOnlySourceDiagnosis": "未找到足以证明产品删去LF的源码路径；当次原始协议与具体官方写入路径未取得，唯一原因未知，不据此自动补LF、重试或修改源码。"
+}

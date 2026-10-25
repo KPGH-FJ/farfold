@@ -9,6 +9,7 @@
 - 共用回归、协议检查、正式应用观察和真实Agent结果分别标记。部分原文观测不自动关闭整项；缺条件、未知、失败和历史重试均保持。
 - NEW-24七个已知本地输入当前全部未变，受影响的新真实发送及工作命令继续暂停；不扩大成其他28家全部停工。只读盘点及原始哈希核对保存在本地output，不提交账号、配置、会话正文或秘密。
 - 当前正式为`5b31c20a1`的0.1.7 arm64，候选9/9、安装10/10，三份新数据清单端点一致；旧版本证据及ZIP保留，未创建应用备份。见[正式更新](formal-5b31-installation.json)、[P40自有技能分项](p40-formal-5b31-owned-skill-summary.json)、[Codebuddy混合提示](codebuddy-formal-5b31-config-guard-summary.json)和[Qwen新稿/导航分项](qwen-formal-5b31-same-settings-summary.json)。后文“未安装”等只属各历史检查点；完整要求及29×8仍开放。
+- 两家各一次自有文件样本：[Kilo](kilo-formal-5b31-owned-file-summary.json)因18B缺LF保留失败1；[OpenCode](opencode-formal-5b31-owned-file-summary.json)精确23B含LF保留窄正例1。可见工具路径与请求完成/当前空闲分别留证，零重试或修复；不关闭完整S5、P18、ARCH-34、ARCH-44或整家，旧失败和未知保持。
 
 ## 设施实现记录
 

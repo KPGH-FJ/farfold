@@ -6,6 +6,8 @@
 
 `5b31c20a1`已正常保存退出后更新唯一正式0.1.7 arm64应用：候选9/9、安装10/10，三份新232530条清单端点一致、备份完整性通过；重复候选五文件及五目录已清理，ZIP与旧版本证据保留，未创建应用备份。首次启动可见146份历史、1份保留草稿及空输入，仅为界面计数，不代表全部正文或配置已就绪。见[正式更新](evidence/2026-10-24-agent-acceptance/formal-5b31-installation.json)。
 
+5b31上两家各一次自有文件请求：Kilo期望19B含LF、实际18B缺LF，保留失败1；OpenCode实际23B含LF与原期望相符，保留窄正例1。两者均观察到工具路径、请求完成与当前对话空闲，零重试或修复；旧超时、旧失败及完整要求均不翻案，不关闭标准或整家。见[Kilo文件失败](evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json)及[OpenCode文件分项](evidence/2026-10-24-agent-acceptance/opencode-formal-5b31-owned-file-summary.json)。
+
 P40沿原保留草稿与既有选择普通准备一次，官方菜单声明和本次自有技能采用取得两个窄正例，共只有一次17B指令提交；实际加载、自有来源目录、标记回复及完成/当前空闲分别留证。完整来源路径依据当时截图，AX仅截断前缀，不补造原始位置字段。事前材料已定上下文、预期及预算，但严格规范化v2晚于动作；原invalid保留，未重跑产品。旧声明失败1及采用未执行1保留，未隔离唯一原因，完整P40开放。见[本次分项](evidence/2026-10-24-agent-acceptance/p40-formal-5b31-owned-skill-summary.json)。
 
 Codebuddy原历史冷读偶发同时显示两组报告值比较和“设置尚未确认”，原非空草稿及1附件仍可见，待发禁用。仅为安装版探索观察1，非事前canonical或校验通过；报告值差异未判等价、真实远端改变或唯一原因，附件字节未重核。24B文件用例未建目录、清单或发送，不计文件失败；保护及原选择保持，不重新检查或改选。Mistral本次中性提示未复现仍保留。见[混合提示观察](evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json)。
