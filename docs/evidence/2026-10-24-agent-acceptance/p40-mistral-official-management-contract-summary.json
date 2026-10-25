@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "kind": "P40MistralOfficialAppServerContractFinding",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "evidenceLevel": "fixed official source investigation only",
+  "reviewedReleaseLabel": "Mistral2.25.8",
+  "reviewedCommit": "7c19608af06f6c61d63f8f7a5c3430da73fba2ab",
+  "status": "official contract found; current launch and session mapping unproven",
+  "findings": [
+    "The reviewed official app-server has structured skill discovery and management routes shared by its legacy and Unified backends; the reviewed ACP surface does not forward them.",
+    "Skill mutations require a real app-server session and idle admission; read-only skill routes require the real session without this mutation-idle gate. Registry import supports project/global scope; this is not arbitrary local-path or URL installation.",
+    "Enable/disable targets a name without a scope parameter and rejects missing/locked skills. It cannot be shown as independent switches for project/global duplicate records.",
+    "Successful writes refresh the official state. Missing responses or cancellation do not prove rollback; effect-unknown protection must remain."
+  ],
+  "currentFarfold": "Shared skill management currently supports the reviewed Codex official surface. Mistral requires a separately reviewed official transport in acp_client while reusing the generic UI. No implementation or installed behavior is claimed here.",
+  "necessaryConditions": [
+    "Establish an official app-server launch entry belonging to the selected program/package; do not guess a sibling binary or infer current distribution from the historical cache.",
+    "Establish actual app-server session ownership and supported relation to the selected service/cwd; do not transplant an ACP nativeId or silently create another native conversation."
+  ],
+  "limits": [
+    "No current Agent version, binary identity/hash, protocol compatibility or account inference from the historical release. No Agent/app-server/model/UI invocation or configuration write.",
+    "This is a concrete interface/source gap, not a new approval, login or acceptance gate. P40 and existing unresolved management/cancellation branches remain open; earlier declaration/adoption outcomes are unchanged."
+  ],
+  "officialSources": [
+    "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/app_server/server.py",
+    "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/app_server/protocol.py",
+    "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/app_server/_skills_service.py",
+    "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/core/skills/registry/_service.py"
+  ],
+  "references": {
+    "privateInvestigation": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-official-app-server-contract-review.json",
+      "sha256": "01a17362ac1c038996a2a99d8fe2bb22d6822808e3030777cba74292055aaa72"
+    }
+  }
+}

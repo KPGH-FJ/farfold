@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32LoadedCrossConversationBodyInstalledSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "context": {
+    "agentId": "mistral-vibe",
+    "agentVersion": "not observed in this local-only workflow",
+    "configuration": "No model/source/reasoning/mode changes or confirmation gate; current remote backend identity not tested."
+  },
+  "originalFailedCase": {
+    "operatorQueries": 1,
+    "actualScope": "metadata",
+    "metadataTitleResults": 1,
+    "bodyQueryConfirmed": false,
+    "sourceNavigations": 0,
+    "mechanicallyValid": true,
+    "passed": 0,
+    "failed": 1,
+    "invalid": 0,
+    "sealCliExecutions": 1,
+    "sealNaturalExitCode": 1,
+    "observations": 8,
+    "privateEvidenceFiles": 6,
+    "unchangedInputs": 8,
+    "independentBlockingFindings": 0,
+    "observationUpperSeconds": 98.919,
+    "classification": "Planned body workflow not achieved; actual query was metadata. The underlying body-search algorithm was not exercised. Native menu remained in earlier body AX; unique cause remains unknown."
+  },
+  "emptyDiagnostic": {
+    "newQueryEntries": 0,
+    "plannedSeconds": 90,
+    "actualSeconds": 104.753,
+    "overrunPreserved": true,
+    "laterSeparateFocusAppendix": true,
+    "finding": "After explicit native-menu dismissal, body scope/empty query were visible with no menu; a later focus-only action left that body field focused without changing the tree. This supports a changed input condition, not a unique diagnosis or retroactive pass."
+  },
+  "focusedFollowupCase": {
+    "priorFailureUnchanged": true,
+    "freshCanonicalBeforeAction": true,
+    "newOperatorQueries": 1,
+    "query": "20261024",
+    "scope": "loaded body, Mistral filter",
+    "loadedConversations": 2,
+    "unloadedConversations": 4,
+    "unconfirmedReads": 0,
+    "reportedMatches": 5,
+    "extraLimitOrOmissionNoticeObserved": false,
+    "selectedReplySources": [
+      "First original FARFOLD_P40_OWNED_NOEXEC_20261024 reply in /p40-owned-marker",
+      "Original first MISTRAL_READY_20261024 reply in the first-answer conversation"
+    ],
+    "correctMessageSourceNavigations": 2,
+    "sameQueryAndScopeRetainedOnReturn": true,
+    "modelPromptsColdReloadsNewFileOpensOrChoiceChanges": 0,
+    "mechanicallyValid": true,
+    "passed": 1,
+    "failed": 0,
+    "invalid": 0,
+    "sealCliExecutions": 1,
+    "sealNaturalExitCode": 0,
+    "observations": 8,
+    "privateEvidenceFiles": 7,
+    "unchangedInputs": 8,
+    "independentBlockingFindings": 0,
+    "observationUpperSeconds": 42.205
+  },
+  "aggregate": {
+    "distinctCases": 2,
+    "operatorQueryEntries": 2,
+    "queryBreakdown": "old metadata1 + new loaded-body1",
+    "firstCaseStartToSecondCaseFinishObservedSpanSeconds": 703.953,
+    "noWholeSequence180SecondClaim": true,
+    "internalAutomaticScanCount": "not measured; returning may rescan the same query automatically",
+    "oldFailureAndDiagnosticOverrunRetained": true
+  },
+  "limits": [
+    "Loaded user/reply/already-received attachment text only. Unloaded history, attachment files, thoughts and tool details are excluded; no exhaustive history or file-text negative.",
+    "Only the two selected original reply sources and observed coverage are verified. Existing reported-fragment panel on the second source is not a new physical file read or preview.",
+    "No new model request, native session identity/backend proof, full P32, standard, Agent or all29 acceptance. Six waits, old unknowns and NEW-24 pause remain."
+  ],
+  "references": {
+    "old_manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/manifest.json",
+      "sha256": "850d0348392effbe94a50cae03620f27cb70d794efb7849ce2b777a1d75e55d1"
+    },
+    "old_actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/actuals.json",
+      "sha256": "593879e29423d55df0baf3c05711c0b12791ecf3bf3c0e26210ffa38a7f4c1d0"
+    },
+    "old_receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/receipt.json",
+      "sha256": "7523bde7a5ef5686293dcb74d32ed9976f849de2b9e94a4a095f986ab7b0f5c4"
+    },
+    "old_seal_cli_execution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/seal-cli-execution.json",
+      "sha256": "08328668365f0afda0f912e55985e87973f44826926f3db2f0ef07f7fbd1bc0c"
+    },
+    "old_semantic_review": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/semantic-review.json",
+      "sha256": "a243279e3e44ead407eaaf306f07bb866730eaa51026d1a9854a97ecc4653f45"
+    },
+    "old_empty_scope_focus_diagnostic_result": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/empty-scope-focus-diagnostic-result.json",
+      "sha256": "151a11b3cc9e0a630497e843668c9defed87b39aac350277f6afee476cae460e"
+    },
+    "old_diagnostic_focus_after_dismissal_ui_private": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/diagnostic-focus-after-dismissal-ui-private.json",
+      "sha256": "3d44098aa07e136998275b98c0ecbd720321f41aed6a5d4f613603079964ff04"
+    },
+    "focused_preflight": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/preflight.json",
+      "sha256": "46670c512e47064110979a1bb720e0a60a637d2e14de977ba6b2e0541c864b3b"
+    },
+    "focused_case_plan": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/case-plan.json",
+      "sha256": "87ba0d2ba3e2c0bbf72b8cf2aa94b91983df799401571e8d9b7ac35174d650c3"
+    },
+    "focused_manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/manifest.json",
+      "sha256": "2113cb66d0a7e385327585d1cb247e135603f43174d302d8d3a491e6969aca04"
+    },
+    "focused_actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/actuals.json",
+      "sha256": "34ccabbe50d51be37beab72709ffadcc8d2940d03b4c9b1f6ee7bb237c96ae82"
+    },
+    "focused_receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/receipt.json",
+      "sha256": "0dbd66293dbea081441cb8d33ed0b5550756b10eb64d51ef639d335b46e923f7"
+    },
+    "focused_seal_cli_execution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/seal-cli-execution.json",
+      "sha256": "45ebf83f97338fb1cb04ef68a7423f9aebe642c43564f3e5066c72d755c47a6e"
+    },
+    "focused_semantic_review": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/semantic-review.json",
+      "sha256": "31376f6b0fc146abc138130782b3275a4d1be56a821cb80cac5039ec8e7c1d6f"
+    },
+    "focused_root_classification": {
+      "path": "output/2026-10-24-agent-acceptance/p32-loaded-cross-conversation-body-preparation/focused-followup/root-classification.json",
+      "sha256": "9ec85e4cd2c1ed576f3c8ceac31e17127163ec3d87493d03ed81a57d1e8a4b8f"
+    }
+  }
+}
