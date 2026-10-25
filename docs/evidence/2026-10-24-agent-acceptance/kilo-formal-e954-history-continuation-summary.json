@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "KiloOriginalContextAndUnconfirmedOfficialHistorySummary",
+  "formalSourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+  "application": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "agentId": "kilo",
+  "currentAgentVersion": "unreported by installed UI; historical versions not asserted current or pinned",
+  "selectionScope": {
+    "sourceLabel": "沿用已有设置",
+    "modelLabel": "Kilo Gateway/NVIDIA: Nemotron 3 Ultra (free)",
+    "reasoningLabel": "None",
+    "modeLabel": "code",
+    "reasoningProvenance": "None is an actual current control/footer label, not an inferred default."
+  },
+  "originalBodyRestoration": {
+    "normalOriginalOpenActionsInPreparation": 1,
+    "loadingThenOriginalUserAndFirstReplyActuallyObserved": true,
+    "newColdOrRawNativeIdentityClaim": false
+  },
+  "contextContinuation": {
+    "level": "real-agent",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 8,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:48:47.154Z",
+    "finalObservationAt": "2026-10-25T18:49:23.785Z",
+    "observationUpperBoundSeconds": 36.631,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "questionContainsOriginalAnswer": false,
+    "ordinaryPromptActions": 1,
+    "replyExactlyMatchesOriginalFirstReply": true,
+    "recognizedCompletion": true,
+    "currentOwnIdleAndEmptyComposer": true,
+    "newVisibleToolSteps": 0,
+    "extraPromptsChoiceLoginRetryStopQueueActions": 0,
+    "postCompletionConfigurationPanels": 0,
+    "currentEffectiveBackendOrRawIdentityClaim": false
+  },
+  "officialDiscovery": {
+    "level": "installed",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 0,
+    "failed": 0,
+    "incomplete": 1,
+    "invalid": 0,
+    "necessaryObservations": 7,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:51:31.945Z",
+    "finalObservationAt": "2026-10-25T18:52:56.858Z",
+    "observationUpperBoundSeconds": 84.913,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 1,
+    "semanticBlockers": 0,
+    "explicitFindOperatorActions": 1,
+    "actualVisibleResults": 2,
+    "originalTargetMarkedAlreadyAdded": null,
+    "targetRowSelections": 0,
+    "openExistingActions": 0,
+    "originalUserFirstReplyAndNewContinuationVisibleAfterOpen": null,
+    "newPreviewImportCheckboxMorePageModelPromptChoiceLoginRetryStopActions": 0,
+    "scope": "One explicit official lookup at the original owned folder visibly returned two rows. Conditional selection/open branches were not performed; this is not an open failure or an unknown Agent prompt. No automatic-title-change cause, wrong-object cause, returned-folder/native-ID equality, exhaustive history or raw RPC claim.",
+    "expectedIncompleteExitCode": 1,
+    "originalTargetAssociation": "Unconfirmed. One returned row is already added, but its official title differs from the retained original title and its exact existing-title/folder mapping is not displayed. The other row is unjoined. Neither row was selected."
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "verdict": "incomplete",
+    "condition": "历史真正可用：找到已有对话，真实正文与上下文恢复后继续原对话；列表、正文和继续分别核验。",
+    "scope": "The original owned Kilo ACK conversation, macOS arm64, original existing settings / Gateway Nemotron free / None / code.",
+    "basis": [
+      "Normal original open restored the actual original first user and reply.",
+      "One exact context-dependent continuation completed successfully.",
+      "Official lookup returned a different joined title; the original target association remained unconfirmed. Selection/open were left unperformed under the original plan."
+    ],
+    "independentCompositionReview": true,
+    "canonicalStandardIdsRetroactivelyChanged": false,
+    "fullRequirementOrWholeAgentClosed": false
+  },
+  "preparationIssuesPreserved": [],
+  "coverageLimits": [
+    "No new cold load, same connection, raw native session identity or current Agent executable-version equivalence claim.",
+    "No preview/new import, additional pages, all histories, all model/service/platform configurations or complete ARCH-29/ARCH-31/P33/S7 claim.",
+    "Original unknown work and failures, six authentication waits, affected NEW-24 sending pause and protected Cline process are unchanged.",
+    "Source/full engineering/installation results retain their earlier scope; these two cases do not rerun or replace them.",
+    "No whole Agent or 29-by-8 completion."
+  ],
+  "references": {
+    "context:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/case-plan.json",
+      "sha256": "0d3382d28c440cecedcc79122bea11ab90f47c6089bdc15988e7ca0ddb7fa4ea"
+    },
+    "context:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/manifest.json",
+      "sha256": "bd5ec0360519562cb7785d23d44be974e20115b1562ad53b01b1097ffb486d8d"
+    },
+    "context:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/preflight.json",
+      "sha256": "e79d3f5cc8dc2f7b589c3efe929e5bbab8886bea43e743be12896a390834d5d9"
+    },
+    "context:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/actuals.json",
+      "sha256": "4590de2d8677a3705f11da933d7ade397f82453e75050456632882150604c69b"
+    },
+    "context:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/receipt.json",
+      "sha256": "c760015a36717daa51ca24f243b01b6b6494cc4b90f594acd20ec3f5bfaa3fae"
+    },
+    "context:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "4f2b96a867c123a9088ad83e8731ecd28f1e815a33706d9ab57bec2f9e76cd22"
+    },
+    "context:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "372a374fd573b584192c6f7930b5d4f91de717049254c441f884bd16bbd08040"
+    },
+    "context:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/seal.stdout",
+      "sha256": "c59f76e15930e4e47d5bc892c5ffbfdbcacc4212a2ab1b19d0f338434750b3d2"
+    },
+    "context:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "context:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "06eedc589cebe9f0f85b6e6b0013d871e86a1d7ba9a7a0e409bb1a198e6159c0"
+    },
+    "discovery:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/case-plan.json",
+      "sha256": "44f50d7e7a59311e2b97451e751748fec89584e0b834f50cb6c9f11cd1751cf7"
+    },
+    "discovery:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/manifest.json",
+      "sha256": "f07bfe63f485dc1351febd2eb5f0664f19fca2c5a459b2ae02b3a6b49126f10a"
+    },
+    "discovery:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/preflight.json",
+      "sha256": "6e2897fb1639928e5ec60760861ed7b5033415a5309dbe7adcf5c21fe39b73bc"
+    },
+    "discovery:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/actuals.json",
+      "sha256": "b49a1b80d326b862f8bc59304e4029754d4e5af9117a6ccd8fd45a81666d47e0"
+    },
+    "discovery:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/receipt.json",
+      "sha256": "e5e7154f74995cba38a8697b3e45845c5c3badae2ced57e1d2b4d5ae2790c022"
+    },
+    "discovery:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "964e71e4b87f2e5720a1d6b8cc30c629c55527fe854e87f621bd1f00984eb115"
+    },
+    "discovery:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "c613abd87672787db3581ba0d405c30fdf96acc9ff148c688d359fd2907c008d"
+    },
+    "discovery:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/seal.stdout",
+      "sha256": "3ef3f80a4b74d627424f61c5d90a9f5ff67e2ede38b0e90711accc9058e9c47f"
+    },
+    "discovery:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "discovery:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-official-history-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "d5aca0a23ebbc97a9d03d61f97d13e4d60d83c707cdf0d79c4df27f329548d6f"
+    },
+    "restoration:original-open-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/original-open-ui-private.json",
+      "sha256": "01df9b2981a392122ccda03e289ef72b0f5bd46372ae3d5f477a2bfda4402f56"
+    },
+    "restoration:original-loaded-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/kilo-context-continuation-formal-e954-preparation/original-loaded-ui-private.json",
+      "sha256": "c427d64825ede52a39d6e3ff371f48b6fcbdc270d8d4c8b8a9a4a6e11222989f"
+    }
+  },
+  "priorAdverseEvidence": "The different later file sample expected19B but produced18B without its LF; the earlier TR preparation timeout also remains. No repeat, correction or reversal by this context sample.",
+  "sourceFinding": "Current common list presentation only shows official title and an added badge for joined rows, withholding existing-title/folder context already available through its exact saved row. This is a presentation investigation, not proof of official automatic renaming or a mistaken association; no product fix or revalidation is claimed here."
+}

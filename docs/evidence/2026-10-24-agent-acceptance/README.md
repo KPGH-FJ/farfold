@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[Kilo原上下文与发现未完成](kilo-formal-e954-history-continuation-summary.json)分列1个精确继续窄正例和1个官方发现未完成：原ACK不同于旧文件对象，八观察/36.631秒/机械1项；官方Find一次返回两条，已加入标题不同且原对象关联未证，零选行/打开/重试，七观察/84.913秒/未完成1而无invalid。独审保持未完成与旧文件缺LF/旧TR超时，不把它写成Agent请求未知、打开失败、自动改名已证或S3满足。共用显示已有标题/位置的缺口尚待修复验证。
+
 [Copilot历史与S3范围认定](copilot-formal-e954-history-continuation-summary.json)分别留原对象正常恢复、一次精确上下文续问和一次官方查找/选中/打开，独审认定S3仅原Existing、Auto、Agent、Allow All Off及macOS arm64范围满足；思考未提供不补等级。两案八/七观察、各机械1/1，31.888/21.014秒分别记录，一条原官方目标已加入，零新预览/带入或额外模型。原准备错误与std[]保持，不外推同连接/原始标识/当前程序版本/全部历史或整家。
 
 [Poolside历史与S3范围认定](poolside-formal-e954-history-continuation-summary.json)分别留原对象正常恢复、一次精确上下文续问和一次官方查找/选中/打开，独审认定S3仅原Existing、laguna-s-2.1、Max、Always ask、Build及macOS arm64范围满足。两案八/七观察、各机械1/1，30.840/16.412秒各自记录；一条官方结果已加入，零新预览/带入/额外模型，折叠扩展字段保留。不回填std[]，不外推原始标识/同连接/当前程序版本/全部历史或整家。
