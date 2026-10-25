@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalInstallationEvidence",
+  "sourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+  "application": {
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "engineering": {
+    "inputCount": 2291,
+    "checks": "7 new sequential actual commands",
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 685,
+      "passed": 9114,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2307,
+      "failed": 0,
+      "ignored": 6
+    },
+    "checksRanAtFinalCommit": false,
+    "boundary": "Precommit checks and final commit have the same complete input map. Seven command endpoint-comparison records are true; intermediate full maps were not retained. No frozen dependency/environment or continuous writer-absence claim. Frontend used direct Vitest with four workers, not a literal pnpm test invocation."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "buildExitCode": 0,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "archiveBytes": 16189256,
+    "archiveSha256": "12ef08b7dfddac4aaaa5794624fa833727d3bf05d80d4200ab59b13237c22daf",
+    "archiveRetained": true,
+    "signature": "Strict internal ad-hoc verification passed; no public signing or notarization claim."
+  },
+  "installation": {
+    "normalSaveQuitCount": 1,
+    "forcedQuitOrExtraStop": 0,
+    "installedChecksPassed": 10,
+    "installedChecksTotal": 10,
+    "exactFiles": 5,
+    "replacement": "Five per-file atomic replacements; old file inodes were not written.",
+    "appBackupCreated": false,
+    "automaticRetryOrRestore": false
+  },
+  "dataRetention": {
+    "freshClosedEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "threeFullManifestsEqual": true,
+    "threeRawMetadataReceiptsEqual": true,
+    "retainedBackupIntegrityCheck": "Passed in sealed installation evidence; existing integrity and closed-handle results checked by the installed review.",
+    "reviewBoundary": "Only sealed stage metadata was reread for this draft. The earlier authorized ten-check execution verified the new closed captures and retained bytes without SQL or live-data access. Counts refer separately to each endpoint and are not added. Endpoint equality does not prove every data behavior or continuous retention."
+  },
+  "candidateCleanup": {
+    "removedExactFiles": 5,
+    "removedExactDirectories": 5,
+    "formalFilesAndModesUnchanged": true,
+    "archiveRetained": true
+  },
+  "firstLaunch": {
+    "observed": true,
+    "initialHistoryCountLabel": 156,
+    "retainedDraftCountLabel": 1,
+    "originalP40ConversationColdRead": true,
+    "twoOriginalP21UnsentOpinionsRestoredWithOriginalDigests": true,
+    "emptyComposer": true,
+    "oldOwnProbeHistory": "One unsuccessful execution step and unknown elapsed duration are shown after cold read. This is not a fresh stop acknowledgement or continuation test.",
+    "scope": "Installation appendix only; count labels do not prove all history. No additional P21 case, S7 recovery or model request."
+  },
+  "coverageLimits": [
+    "The installed PDF hit-page workflow is a separate actual case and semantic review; this installation receipt does not itself establish that behavior.",
+    "No new model request or real-Agent capability result is inferred by this installation draft.",
+    "Earlier failures and unknown work, six authentication waits and the affected NEW-24 pause are unchanged.",
+    "No full P32, standard, Agent, 151-condition or 29-by-8 closure; no unlimited-data or continuous-process-absence claim."
+  ],
+  "reviewRole": "Independent reviewer executed nine and ten checkers and reviewed sealed phase metadata. Root operated build, saved quit, data captures, atomic installation, cleanup and UI. Root appended actual first-launch/cold-read observations from saved CUA outputs; no new Agent request.",
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/candidate-output/candidate.json",
+      "sha256": "333fd5070fab3982f00fcaff991917b99929288d091e68e345414541b4458939"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/candidate-natural-completion.json",
+      "sha256": "63fc3d8078ba33df7fb32fdab01c02df8d360b9fbe871afe8c38462b905907c5"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/independent/review-v2.json",
+      "sha256": "a6db7fdc9fe4525a34ace175bdaea3546faaad5c625a7b98f7645da89048bbef"
+    },
+    "candidateNineExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/nine-cli-execution.json",
+      "sha256": "4da05c2168629d09d797c9216c0bf1a2bb9813275df381e90eaec6d9442921eb"
+    },
+    "normalQuit": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/normal-quit-receipt.json",
+      "sha256": "3d195e8b3757df58982c993cf69063ab2c1982c5cd19f7681dfeada6ac022e66"
+    },
+    "retentionBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/retention-before-receipt.json",
+      "sha256": "c98e355b134b0a602adb1a60e36858f7129e32ce288ea6cbbf7bf352aaf5d29b"
+    },
+    "retentionPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "653a983d3c032f9d8f3f8bca91ba9b726e360c93bd3b6ae1358cefe3761f61ca"
+    },
+    "retentionAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/retention-after-receipt.json",
+      "sha256": "d4f32250a1553f821a7014686d039ca2d6f8267bb64686d21ce39eb26950024e"
+    },
+    "installation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/install-result.json",
+      "sha256": "cce05d44130fdb1081fc95469d981ebc825dad660ad6d5a5c4be4ef2688cc684"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "f03ecd31d72411bdf8e84e3bd2684ef3a3b712f09a94389b5fc4dd95be933c2b"
+    },
+    "installedTenExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/ten-cli-execution.json",
+      "sha256": "c27029c8b7f153620f17100fdbebc8a2fe95b51f668e99c2729c0ac57df40c61"
+    },
+    "cleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/candidate-cleanup.json",
+      "sha256": "e6d11a46de3db39771ad46d027751b6dc15431c94b5518acf3f1fb3b7ab7f76a"
+    },
+    "cleanupExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/cleanup-cli-execution.json",
+      "sha256": "d71e10bdf9a92dc96ac054342658cfe558e4918c0a32e654f4d39c3f9ec72548"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/source-freeze-final.json",
+      "sha256": "e1fec279491600a0be0330876d9565bf9e4236f979ccf8e6eddbd21dfc963c68"
+    },
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/engineering-summary.json",
+      "sha256": "45ae93b132219c2053a962e7ab183687c3646d9647327f56b7bc3a37381af9cf"
+    },
+    "engineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/independent-engineering-review.json",
+      "sha256": "aea20e93981f0bd0b48bda217750e397775bf2b58a93dca28d676b70b0bdcf2e"
+    },
+    "first_launch": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/first-launch-ui-private.json",
+      "sha256": "c0a912cdd4a43cf85a1e3ab4b98ff9cfebbf2a970943d0c9df5223ceddfe9ed7"
+    },
+    "p40_cold_loaded": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/p40-cold-loaded-ui-private.json",
+      "sha256": "3640988aa3a23ee124c7d53c2b2852f76c2f465f56877561b038e43398fdf975"
+    },
+    "p40_cold_expanded": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-install-preparation/install/p40-cold-expanded-ui-private.json",
+      "sha256": "042605d99e2150b80214196ad12da6d0e5ff0539e73d0ba521e20022e28bd4a2"
+    }
+  }
+}

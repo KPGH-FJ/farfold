@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32OriginalOwnedPdfHitPageInstalledSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "bundleId": "ai.farfold.desktop",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "context": {
+    "agentId": "mistral-vibe",
+    "originalObject": "Original first-answer MISTRAL_READY_20261024 conversation and retained four-attachment user message",
+    "agentVersion": "not observed in this local-only case",
+    "choice": "No selection changed or configuration queried; final screenshot shows Mistral Medium 3.5. Source, mode and reasoning were not freshly confirmed and are not a gate for local zero-model file search."
+  },
+  "actual": {
+    "originalTargetOpenInPreflight": 1,
+    "selectedFiles": 1,
+    "query": "EXACT_NEEDLE",
+    "querySubmissions": 1,
+    "searchedFiles": 1,
+    "matches": 1,
+    "hitPage": 2,
+    "hitFragment": 2,
+    "verifiedSourceNavigations": 1,
+    "automaticPreviewOpens": 0,
+    "explicitPreviews": 1,
+    "completedRenderedPage": 2,
+    "pageCount": 2,
+    "screenshotText": ["PAGERIGHT", "EXACT_NEEDLE"],
+    "newModelPrompts": 0,
+    "newAttachments": 0,
+    "retriesOrStops": 0,
+    "configurationOrLoginChanges": 0,
+    "originalContentRetained": true,
+    "observationUpperSeconds": 87.216
+  },
+  "validation": {
+    "sealCliExecutions": 1,
+    "internalValidations": 1,
+    "additionalValidateCliExecutions": 0,
+    "mechanicallyValid": true,
+    "expectedCases": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observations": 8,
+    "privateEvidenceFiles": 8,
+    "unchangedInputFingerprints": 8,
+    "independentReview": "passed; zero blocking findings"
+  },
+  "preparationNotes": [
+    "Original target was opened once in preflight before binding the canonical case. It was not reopened merely to fit the case. Canonical inputs were bound before search/navigation/preview.",
+    "One stale AX element index was rejected before UI dispatch. An initial metadata assertion wrongly expected source commit inside the version-only release manifest; it stopped before writes. Both are preserved as preparation issues, not product failures.",
+    "An empty current-dialogue text-find panel was opened and cancelled without a query before using selected attachment content search; included in the observation window. No search was repeated."
+  ],
+  "limits": [
+    "Only the unchanged current owned two-page PDF and original message attachment pointer/search route are covered. No historical attachment-byte or complete-file-text assertion.",
+    "Actual completed page2 rendering is supported by the image label and screenshot, not just a requested-page value. No glyph highlight, fragment geometry or all-format navigation claim.",
+    "The previous page2-hit to page1-preview adverse observation remains unchanged. No real model request, backend identity, complete P32, standard or whole Agent/29-by-8 closure.",
+    "Original failed and unknown records, six authentication waits, Cline orphan protection and the affected NEW-24 send pause are unchanged."
+  ],
+  "references": {
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/preflight.json",
+      "sha256": "78656e62e49fb8374e0eab99e0497f576fe53525862eedf326c84ed9d1b4a510"
+    },
+    "case_plan": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/case-plan.json",
+      "sha256": "1cd0e615dd3494f3cf7cbb2942d0f1463d570dcd75ff6952627aadc16e2a59ab"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/manifest.json",
+      "sha256": "5be252101c34d93ff45dbdc4e0281c732e3dd447c3f501c27a4584731d31acbb"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/actuals.json",
+      "sha256": "4eb6ff9eb49eae9efd42fc47df5fdd8aa36411f02691b7301c369536aa475828"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/receipt.json",
+      "sha256": "9c3be300fa843b35e37b9736bff6284d1ca37bfb999558776900abf5050a1cec"
+    },
+    "seal_cli_execution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/seal-cli-execution.json",
+      "sha256": "d5c2e008543cdf40b8c7897240a752b96f260062760c16982f4aaf09d38b93a1"
+    },
+    "root_classification": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/root-classification.json",
+      "sha256": "17270daacf27a8c48846c3a6357cf80a48b3f94f973d0410ba5456b70a7c8bec"
+    },
+    "operator_actual_actions": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/operator-actual-actions.json",
+      "sha256": "739da3743719e4b97ed76afd67d97a268375e4957115e5750cb3ff3e331e8305"
+    },
+    "rendered_page_two_ui_private": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/rendered-page-two-ui-private.json",
+      "sha256": "8e8b584b9fb672e6059ed0988cecd0bb880da6896b4aa9fa100697cbef84bc55"
+    },
+    "rendered_page_two_private": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/rendered-page-two-private.png",
+      "sha256": "d2d64fb79876a488af3721a91ee6535b0ce207bc1f43acc35173382b738e1c27"
+    },
+    "originalAdverse": {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/pdf-cold-search-observation.json",
+      "sha256": "ac3a5e12eb0645779d9303f4d47e962f7b62bdf92845c17745f58a08598185ed"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-installed-preparation/semantic-review.json",
+      "sha256": "3bc74ae83068d2ff05881f4ed9f442e6aa22f1f3933bdcc14183d1b46cbdffdb"
+    }
+  }
+}
