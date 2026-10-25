@@ -5,7 +5,8 @@ vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {},
 }));
 import { threads, type ThreadState } from "./sessions";
-import { draftPersistence } from "./drafts";
+import { composerDrafts, draftPersistence } from "./drafts";
+import { configCheckMessage, type ConfigCheck } from "./config_check";
 import { archiveActivity } from "./archive_activity";
 import { WorkspaceAccessStatusController } from "./workspace_access_status";
 import { WorkspaceAccessDecisionController } from "./workspace_access_decision";
@@ -367,6 +368,86 @@ it("preserves real pending configuration and permission events when the trust re
   expect(s.permissionState).toBe("unknown");
   expect(s.queuePaused).not.toBeNull();
   expect(h.invoke).toHaveBeenCalledTimes(1);
+});
+
+it("keeps an exact null-endpoint grant guard blocked after a trusted reply without changing its retained choices or input", async () => {
+  const s = seed();
+  const pause = s.queuePaused;
+  s.configOptions = [
+    {
+      id: "model",
+      category: "model",
+      name: "Model",
+      type: "select",
+      currentValue: "kept-model",
+      options: [{ value: "kept-model", name: "Kept Model Label" }],
+    },
+  ];
+  const options = s.configOptions;
+  const queued = (s.queued = [[{ type: "text", text: "queued before trust" }]]);
+  const draftKey = `session:${s.key}`;
+  composerDrafts.update(draftKey, () => ({
+    text: "draft before trust",
+    attachments: [],
+  }));
+  try {
+    const pending = deferred();
+    h.invoke.mockReturnValue(pending.promise);
+    const request = threads.decideWorkspaceAccess(s.key, "trust_cwd", scope());
+    const check: ConfigCheck = {
+      status: "blocked",
+      issues: [
+        { category: "model", reason: "unknown", expected: null, current: null },
+      ],
+      current: {
+        choices: [
+          {
+            id: "model",
+            category: "model",
+            type: "select",
+            value: "kept-model",
+          },
+        ],
+      },
+    };
+    event(s, { kind: "configCheck", check });
+    event(s, {
+      kind: "permissionState",
+      permissionConfigId: "permission",
+      permissionState: "unknown",
+    });
+    pending.resolve(reply());
+    await expect(request).resolves.toMatchObject({ status: "trusted" });
+    expect(s.configCheck).toBe(check);
+    expect(s.configOptions).toBe(options);
+    expect(s.configOptions[0].currentValue).toBe("kept-model");
+    expect(s.permissionState).toBe("unknown");
+    expect(s.modelDrift).toBe(true);
+    expect(s.configuring).toBe(false);
+    expect(s.queuePaused).toBe(pause);
+    expect(s.queued).toBe(queued);
+    expect(composerDrafts.read(draftKey).text).toBe("draft before trust");
+    const nextInput = [{ type: "text" as const, text: "must not dispatch" }];
+    await expect(threads.send(s.key, nextInput)).resolves.toEqual({
+      status: "queued",
+    });
+    await threads.continueQueue(s.key);
+    expect(s.queued).toBe(queued);
+    expect(s.queued).toEqual([
+      [{ type: "text", text: "queued before trust" }],
+      nextInput,
+    ]);
+    expect(s.queuePaused).toBe(pause);
+    expect(h.invoke.mock.calls.map(([command]) => command)).toEqual([
+      "session_workspace_access_decide",
+    ]);
+    const message = configCheckMessage(s.configCheck, s.configOptions);
+    expect(message).toContain("设置尚未确认");
+    expect(message).not.toContain("→");
+    expect(message).not.toContain(STRINGS.repair.unknownModel);
+  } finally {
+    composerDrafts.clear(draftKey);
+  }
 });
 
 it.each([

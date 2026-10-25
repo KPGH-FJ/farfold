@@ -110,6 +110,10 @@ export function configCheckMessage(
       (issue.category === "model"
         ? STRINGS.repair.model
         : STRINGS.repair.thoughtLevel);
+    if (issue.reason === "unknown")
+      return issue.id
+        ? `${name}：${STRINGS.repair.configUnconfirmed}`
+        : STRINGS.repair.configUnconfirmed;
     if (issue.reason === "unrecorded")
       return `${STRINGS.repair.unrecordedConfig}${name}${issue.current === null ? "" : `（${STRINGS.repair.currentConfig}：${issue.current}）`}`;
     return `${name}：${issue.expected ?? STRINGS.repair.unknownModel} → ${issue.current ?? STRINGS.repair.unknownModel}`;

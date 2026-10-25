@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "kind": "SharedUnknownConfigurationFeedbackSourceAndEngineeringSummary",
+  "recordedAt": "2026-10-25T07:13:58.824193+00:00",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "engineeringBaseHead": "9c8ef7689b574b1caf79ded90e576fda7406731b",
+  "problem": "Installed a13ac trust follow-up rendered null/unknown configuration as a model-change arrow although no actual model change was established.",
+  "change": "Shared formatter describes unknown as 设置尚未确认, optionally with an available setting name. Known changed/missing/unrecorded/record-failed/ready messages retain their semantics.",
+  "productionDelta": "Four formatter lines and one shared string; no backend, configuration/permission protection, queue, recheck or dispatch changes.",
+  "targeted": {
+    "finalRed": {
+      "tests": 59,
+      "passed": 54,
+      "failed": 5,
+      "meaning": "Five behavior failures with the old formatter, on final meaningful assertions."
+    },
+    "finalGreen": {
+      "files": 8,
+      "passed": 149,
+      "failed": 0
+    },
+    "previousOracleCorrections": "Two earlier RED rounds each contained four actual text failures and one overstrong test expectation; preserved separately and not five product failures.",
+    "typeAndSelectedFormat": "passed",
+    "independentBlockingFindings": 0,
+    "countsNotAddedToFullEngineering": true
+  },
+  "engineering": {
+    "uniqueSession": 97715,
+    "naturalExitCode": 0,
+    "checks": 7,
+    "allIntegerExitCodes": 0,
+    "sourceInputCount": 2278,
+    "delta": {
+      "modified": 5,
+      "added": 0,
+      "removed": 0
+    },
+    "fullExpectedBeforeAfterInputsEqual": true,
+    "eachCommandEndpointInputEqualityComputed": true,
+    "separateFullMapPerCommandPersisted": false,
+    "frontendArgv": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "--maxWorkers=4"
+    ],
+    "literalPnpmTestInvocationClaimed": false,
+    "frontendFiles": 678,
+    "frontendPassed": 8985,
+    "nativePassed": 2292,
+    "nativeFailed": 0,
+    "nativeIgnored": 6,
+    "ignoredUnchanged": true,
+    "checksRanBeforeCheckpointCommit": true,
+    "independentBlockingFindings": 0,
+    "warningLimit": "Build chunk warning and four ZipWriter cancellation warnings retained; stderr lacks per-test identifiers, so individual attribution is unproven. Named cancellation negative controls pass."
+  },
+  "protectionVerifiedByControlledCases": [
+    "Exact null-endpoint grant guard followed by trusted reply preserves original choices/draft/input and unknown permission.",
+    "Synthetic next input may enqueue behind the guard; explicit queue continuation still dispatches no model request or setters/recheck.",
+    "Composer remains disabled with a real nonempty draft and shows the neutral notice."
+  ],
+  "limits": [
+    "Source and controlled tests are not installed a13ac behavior; formal update and actual affected-path observation remain separate.",
+    "A cold open/recheck may legitimately return ready. No new trust write or fabricated unknown is planned solely to reproduce wording.",
+    "Original P40 skill declaration failure and unexecuted adoption, P35 limits, five login waits, affected NEW24 pause and historical unknowns retained."
+  ],
+  "acceptance": {
+    "formalInstalled": false,
+    "realAffectedPathVerified": false,
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false,
+    "original151ConditionsChanged": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-source/implementation.json",
+      "sha256": "7e8a6fcbc25baf1e60358682ba3bbabbafcbed84c0e94510b9f745da0ff8aeb6",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-source/independent-source-review.json",
+      "sha256": "2afc87cd9c65988026530828d14002768bb3e781599d70a38be77b18cc2cd3e6",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-source/root-source-review.json",
+      "sha256": "1e8fdf4c1af1657aecc5fd13b8090552e41a88e802445a37428f978bf2c67f05",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/engineering-summary.json",
+      "sha256": "22133bc4073291ec72436cc5c2fb204b489023545a6254d6b69ee3912f301858",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/source-expected.json",
+      "sha256": "ae6ef043f4cda63fe1b52b797214559c97d8a882342e49d812ceca0cc2c339f9",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/source-before.json",
+      "sha256": "b770092b695ef1e8d8a8ed72b5d3d29e6acabbef192fe4232753f769be20064d",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/source-after.json",
+      "sha256": "0bad3d4a81ad566e8552dd1b4e10cb1e8974c52a2c4eb51aa123e06e7fe38c14",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/executor-natural-completion.json",
+      "sha256": "ec740203adb162d02ece42cb5a9834a68f0a977cb9aa988ea2757c0fbf6ad883",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/independent-engineering-review.json",
+      "sha256": "ef445c994bf663db7fab80e433c3918cd5971d5e923bff1f411583ba37c2048a",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

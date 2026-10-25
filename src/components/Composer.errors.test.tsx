@@ -86,6 +86,7 @@ import { threads } from "../runtime/sessions";
 import { invoke } from "@tauri-apps/api/core";
 import { STRINGS } from "../runtime/strings";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { applyConfigCheck } from "../runtime/config_check";
 
 let noticeSlots: typeof h.slots = [];
 function renderArchivedNotice(
@@ -170,6 +171,67 @@ it("omits only the failed-open reason already presented by the conversation", ()
   expect(
     elements.some((e) => e.type === "button" && e.props.children === "去设置"),
   ).toBe(false);
+});
+
+it("renders an unknown configuration neutrally while preserving its actual input guard", () => {
+  const thread = freshThreadState(
+    "a:/p:config-unknown",
+    "a",
+    "/p",
+    "config-unknown",
+  );
+  thread.identity = "established";
+  thread.configOptions = [
+    {
+      id: "model",
+      category: "model",
+      name: "Model",
+      type: "select",
+      currentValue: "kept-model",
+      options: [{ value: "kept-model", name: "Kept Model Label" }],
+    },
+  ];
+  const queued = (thread.queued = [
+    [{ type: "text", text: "kept queued input" }],
+  ]);
+  const options = thread.configOptions;
+  applyConfigCheck(thread, {
+    status: "blocked",
+    issues: [
+      { category: "model", reason: "unknown", expected: null, current: null },
+    ],
+    current: {
+      choices: [
+        { id: "model", category: "model", type: "select", value: "kept-model" },
+      ],
+    },
+  });
+  const send = vi.spyOn(threads, "send");
+  const elements = render({
+    thread,
+    draftKey: "new",
+    imageEnabled: false,
+    onGoSettings: () => {},
+  });
+  const notice = elements.find((e) => e.type === ErrorNotice)!;
+  expect(notice.props.message).toContain("设置尚未确认");
+  expect(notice.props.message).toContain(STRINGS.repair.configBlocked);
+  expect(notice.props.message).not.toContain("→");
+  expect(notice.props.message).not.toContain(STRINGS.repair.unknownModel);
+  expect(notice.props.message).not.toContain("Kept Model Label");
+  const submit = elements.find(
+    (e) =>
+      e.type === "button" && String(e.props.className).startsWith("c-send"),
+  )!;
+  expect(submit.props.disabled).toBe(true);
+  expect(thread.configOptions).toBe(options);
+  expect(thread.configOptions[0].currentValue).toBe("kept-model");
+  expect(thread.modelDrift).toBe(true);
+  expect(thread.queuePaused).toBe("unavailable");
+  expect(thread.queued).toBe(queued);
+  expect(composerDrafts.read("new").text).toBe("first message");
+  expect(send).not.toHaveBeenCalled();
+  expect(invoke).not.toHaveBeenCalled();
 });
 
 it.each([false, true])(

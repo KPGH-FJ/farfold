@@ -272,6 +272,7 @@ export const STRINGS = {
     unrecordedConfig: "无法确认原",
     currentConfig: "当前值",
     confirmConfigHint: "请核对当前选项。确认后不会自动发送。",
+    configUnconfirmed: "设置尚未确认",
     configBlocked: "已暂停发送，请重新检查。原内容和待发消息已保留。",
     configRecordFailed: "未能保存会话设置，已暂停发送。请重试保存。",
     confirmConfig: "确认当前选项",
