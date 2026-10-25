@@ -263,6 +263,7 @@ pub fn run() {
                 acp_client::session_commands::session_cancel,
                 acp_client::session_commands::session_stop_task,
                 acp_client::workspace_access::session_workspace_access_status,
+                acp_client::workspace_access::decision::session_workspace_access_decide,
                 acp_client::session_commands::session_set_config,
                 acp_client::session_commands::session_confirm_config,
                 acp_client::session_commands::session_set_mode,

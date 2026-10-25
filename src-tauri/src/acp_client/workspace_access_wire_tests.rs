@@ -2,6 +2,9 @@
 use super::*;
 use crate::acp_client::workspace_access::{ErrorKind, OfferedDecision};
 
+#[path = "workspace_access_decision_wire_tests.rs"]
+mod decision_tests;
+
 const PEER: &str = r#"
 import sys,json,os,time,threading,pathlib
 lock=threading.Lock()

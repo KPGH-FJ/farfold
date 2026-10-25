@@ -39,6 +39,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { WorkspaceAccessDecisionReview } from "./WorkspaceAccessDecisionReview";
 import {
   freshThreadState,
   threads,
@@ -186,4 +187,211 @@ it("drops a cross-connection result and never transfers focus permission to the 
   await flush();
   expect(draw(thread).some((n) => n.type === WorkspaceDialog)).toBe(false);
   expect((oldDialog.props.returnFocusWhen as () => boolean)()).toBe(false);
+});
+
+it("offers explicit trust actions only after a capable owner reports the actual choices", async () => {
+  const thread = state();
+  thread.workspaceAccess = {
+    ...thread.workspaceAccess!,
+    decisionManagement: true,
+  } as never;
+  h.invoke.mockResolvedValue({
+    ...answer,
+    status: "untrusted",
+    details: {
+      cwd: "/owned",
+      repoRoot: "/",
+      repoScopeVerified: true,
+      offeredDecisions: ["trust_cwd", "trust_repo", "decline"],
+    },
+  });
+  (
+    draw(thread).find((n) => n.props["aria-label"] === S.entry)!.props
+      .onClick as () => void
+  )();
+  await flush();
+  const dialog = draw(thread).find((n) => n.type === WorkspaceDialog)!;
+  const html = renderToStaticMarkup(<>{dialog.props.children as ReactNode}</>);
+  expect(html).toContain("信任此文件夹");
+  expect(html).toContain("信任此项目范围");
+  expect(html).toContain("设为不信任");
+  expect(h.invoke).toHaveBeenCalledTimes(1);
+  expect(h.invoke.mock.calls[0][0]).toBe("session_workspace_access_status");
+});
+
+it.each([null, []])(
+  "does not invent a trust action when reported choices are %j",
+  async (offeredDecisions) => {
+    const thread = state();
+    thread.workspaceAccess = {
+      ...thread.workspaceAccess!,
+      decisionManagement: true,
+    } as never;
+    h.invoke.mockResolvedValue({
+      ...answer,
+      details: {
+        cwd: "/owned",
+        repoRoot: null,
+        repoScopeVerified: false,
+        offeredDecisions,
+      },
+    });
+    (
+      draw(thread).find((n) => n.props["aria-label"] === S.entry)!.props
+        .onClick as () => void
+    )();
+    await flush();
+    const dialog = draw(thread).find((n) => n.type === WorkspaceDialog)!;
+    expect(
+      nodes(dialog.props.children as ReactNode).filter(
+        (n) => n.type === "button",
+      ),
+    ).toHaveLength(1);
+    expect(h.invoke).toHaveBeenCalledTimes(1);
+  },
+);
+
+it("stages a review without writing, then dispatches one confirmed store operation that survives dialog dismissal", async () => {
+  const thread = state();
+  thread.workspaceAccess = {
+    ...thread.workspaceAccess!,
+    decisionManagement: true,
+  };
+  const details = {
+    cwd: "/owned",
+    repoRoot: "/",
+    repoScopeVerified: true,
+    offeredDecisions: ["trust_cwd", "trust_repo", "decline"],
+  };
+  const result = { ...answer, status: "untrusted", details };
+  let resolve!: (value: unknown) => void;
+  h.invoke.mockImplementation((command) => {
+    if (command === "session_workspace_access_status")
+      return Promise.resolve(result);
+    if (command === "session_workspace_access_decide")
+      return new Promise((done) => {
+        resolve = done;
+      });
+    throw new Error("unexpected command");
+  });
+  (
+    draw(thread).find((n) => n.props["aria-label"] === S.entry)!.props
+      .onClick as () => void
+  )();
+  await flush();
+  let all = draw(thread);
+  const choose = all.find(
+    (node) =>
+      node.type === "button" && node.props.children === S.decisions.trust_cwd,
+  )!;
+  (choose.props.onClick as () => void)();
+  all = draw(thread);
+  const review = all.find(
+    (node) => node.type === WorkspaceAccessDecisionReview,
+  )!;
+  expect(review.props.snapshot).toMatchObject({
+    phase: "review",
+    decision: "trust_cwd",
+    scope: details,
+  });
+  expect(h.invoke).toHaveBeenCalledTimes(1);
+  (review.props.onConfirm as () => void)();
+  (review.props.onConfirm as () => void)();
+  expect(thread.configuring).toBe(true);
+  const dialog = draw(thread).find((node) => node.type === WorkspaceDialog)!;
+  expect(dialog.props.busy).toBe(true);
+  (dialog.props.onClose as () => void)();
+  expect(thread.configuring).toBe(true);
+  expect(draw(thread).some((node) => node.type === WorkspaceDialog)).toBe(
+    false,
+  );
+  resolve({ ...result, status: "trusted" });
+  await vi.waitFor(() => expect(thread.configuring).toBe(false));
+  expect(draw(thread).some((node) => node.type === WorkspaceDialog)).toBe(
+    false,
+  );
+  expect(h.invoke).toHaveBeenCalledTimes(2);
+  expect(h.invoke.mock.calls[1]).toEqual([
+    "session_workspace_access_decide",
+    {
+      agentId: "fixture",
+      cwd: "/owned",
+      sessionId: "native",
+      connectionId: "connection",
+      decision: "trust_cwd",
+      expectedScope: details,
+    },
+  ]);
+});
+
+it("keeps actual offers read-only when decision capability was not declared", async () => {
+  const thread = state();
+  h.invoke.mockResolvedValue({
+    ...answer,
+    details: {
+      cwd: "/owned",
+      repoRoot: "/",
+      repoScopeVerified: true,
+      offeredDecisions: ["trust_cwd", "trust_repo", "decline"],
+    },
+  });
+  (
+    draw(thread).find((n) => n.props["aria-label"] === S.entry)!.props
+      .onClick as () => void
+  )();
+  await flush();
+  const dialog = draw(thread).find((node) => node.type === WorkspaceDialog)!;
+  const html = renderToStaticMarkup(<>{dialog.props.children as ReactNode}</>);
+  expect(html).not.toContain(S.decisions.trust_cwd);
+  expect(html).not.toContain(S.decisions.trust_repo);
+  expect(html).not.toContain(S.decisions.decline);
+  expect(h.invoke).toHaveBeenCalledTimes(1);
+});
+
+it("shows a fixed unconfirmed write notice, never a raw error or a trusted result", async () => {
+  const thread = state();
+  thread.workspaceAccess = {
+    ...thread.workspaceAccess!,
+    decisionManagement: true,
+  };
+  h.invoke.mockResolvedValueOnce({
+    ...answer,
+    details: {
+      cwd: "/owned",
+      repoRoot: null,
+      repoScopeVerified: false,
+      offeredDecisions: ["trust_cwd"],
+    },
+  });
+  (
+    draw(thread).find((node) => node.props["aria-label"] === S.entry)!.props
+      .onClick as () => void
+  )();
+  await flush();
+  (
+    draw(thread).find(
+      (node) =>
+        node.type === "button" && node.props.children === S.decisions.trust_cwd,
+    )!.props.onClick as () => void
+  )();
+  h.invoke.mockRejectedValueOnce({
+    code: "timeout",
+    message: "PRIVATE_WRITE_ERROR",
+  });
+  const review = draw(thread).find(
+    (node) => node.type === WorkspaceAccessDecisionReview,
+  )!;
+  (review.props.onConfirm as () => void)();
+  await vi.waitFor(() =>
+    expect(thread.configError).toBe(S.decisionUnconfirmed),
+  );
+  await flush();
+  const dialog = draw(thread).find((node) => node.type === WorkspaceDialog)!;
+  const html = renderToStaticMarkup(<>{dialog.props.children as ReactNode}</>);
+  expect(html).toContain(S.decisionUnconfirmed);
+  expect(html).not.toContain("PRIVATE_WRITE_ERROR");
+  expect(html).not.toContain(S.statuses.trusted);
+  expect(html).not.toContain(S.readOnly);
+  expect(thread.connectionOutcomeUnknown).toBe(false);
+  expect(h.invoke).toHaveBeenCalledTimes(2);
 });

@@ -1,5 +1,5 @@
-//! A reviewed, read-only supplement on the current session actor. It never
-//! changes trust, opens a session, reconnects, or changes prompt admission.
+//! Reviewed workspace status on the current actor. The separate decision module
+//! owns explicit changes; status reads never open/reconnect or alter admission.
 use std::{
     future::Future,
     path::{Path, PathBuf},
@@ -12,7 +12,7 @@ use std::{
 };
 
 use agent_client_protocol::{Agent, ConnectionTo, ErrorCode, UntypedMessage};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tokio::sync::oneshot;
 
@@ -58,22 +58,26 @@ type Reply = Result<WorkspaceAccessStatus, AccessError>;
 #[serde(rename_all = "camelCase")]
 pub struct Capability {
     pub status_query: bool,
+    pub decision_management: bool,
     pub provenance: &'static str,
 }
 
 /// Shared by the actual connection and its actors. This is an official-entry
 /// supplement, not a capability invented inside the Agent's handshake.
-pub(crate) struct Availability(AtomicBool);
+pub(crate) struct Availability(AtomicBool, AtomicBool, decision::Witness);
 impl Availability {
     pub(crate) fn new(supplement: Option<super::account_query::AccountQuery>) -> Arc<Self> {
-        Arc::new(Self(AtomicBool::new(matches!(
-            supplement,
-            Some(super::account_query::AccountQuery::Vibe)
-        ))))
+        let reviewed = matches!(supplement, Some(super::account_query::AccountQuery::Vibe));
+        Arc::new(Self(
+            AtomicBool::new(reviewed),
+            AtomicBool::new(reviewed),
+            decision::Witness::default(),
+        ))
     }
     pub(crate) fn capability(&self) -> Option<Capability> {
         self.0.load(Ordering::SeqCst).then_some(Capability {
             status_query: true,
+            decision_management: self.1.load(Ordering::SeqCst),
             provenance: "reviewed-official-supplement",
         })
     }
@@ -86,7 +90,7 @@ pub enum TrustStatus {
     Session,
     Untrusted,
 }
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum OfferedDecision {
     TrustCwd,
@@ -216,6 +220,7 @@ fn parse(value: &Value, request: &Request) -> Reply {
     })
 }
 
+#[derive(Clone)]
 pub(crate) struct Request {
     pub(crate) connection_id: String,
     pub(crate) session_id: String,
@@ -418,3 +423,6 @@ pub async fn session_workspace_access_status(
 #[cfg(test)]
 #[path = "workspace_access_tests.rs"]
 mod tests;
+
+#[path = "workspace_access_decision.rs"]
+pub(crate) mod decision;

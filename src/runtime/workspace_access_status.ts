@@ -3,8 +3,9 @@ import { configChangeBusy } from "./protected_config";
 import type { ThreadState } from "./session_types";
 import {
   workspaceAccessCapability,
-  type WorkspaceAccessDecision,
+  workspaceAccessResultFor,
   type WorkspaceAccessResult,
+  type WorkspaceAccessTarget,
 } from "./workspace_access_types";
 import { WORKSPACE_ACCESS as S } from "./workspace_access_strings";
 
@@ -14,68 +15,11 @@ export type WorkspaceAccessSnapshot =
   | { phase: "loading" }
   | { phase: "ready"; result: WorkspaceAccessResult }
   | { phase: "error"; code: Failure };
-type Target = {
-  agentId: string;
-  cwd: string;
-  sessionId: string;
-  connectionId: string;
-};
+type Target = WorkspaceAccessTarget;
 const object = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === "object" && !Array.isArray(v);
 const nonempty = (v: unknown): v is string =>
   typeof v === "string" && v.length > 0 && !v.includes("\0");
-
-function resultFor(
-  value: unknown,
-  target: Target,
-): WorkspaceAccessResult | null {
-  if (
-    !object(value) ||
-    value.connectionId !== target.connectionId ||
-    value.nativeSessionId !== target.sessionId ||
-    value.cwd !== target.cwd ||
-    typeof value.status !== "string" ||
-    !["trusted", "session", "untrusted"].includes(value.status)
-  )
-    return null;
-  let details: WorkspaceAccessResult["details"] = null;
-  if (value.details !== null && value.details !== undefined) {
-    const d = value.details;
-    if (
-      !object(d) ||
-      d.cwd !== target.cwd ||
-      typeof d.repoScopeVerified !== "boolean" ||
-      !(
-        (d.repoRoot === null && !d.repoScopeVerified) ||
-        (nonempty(d.repoRoot) && d.repoScopeVerified)
-      ) ||
-      !(
-        d.offeredDecisions === null ||
-        d.offeredDecisions === undefined ||
-        (Array.isArray(d.offeredDecisions) &&
-          d.offeredDecisions.every((v) =>
-            ["trust_cwd", "trust_repo", "decline"].includes(v),
-          ))
-      )
-    )
-      return null;
-    details = {
-      cwd: target.cwd,
-      repoRoot: d.repoRoot as string | null,
-      repoScopeVerified: d.repoScopeVerified,
-      offeredDecisions:
-        (d.offeredDecisions as WorkspaceAccessDecision[] | null | undefined) ??
-        null,
-    };
-  }
-  return {
-    connectionId: target.connectionId,
-    nativeSessionId: target.sessionId,
-    cwd: target.cwd,
-    status: value.status as WorkspaceAccessResult["status"],
-    details,
-  };
-}
 
 /** One transient read on an already prepared owner; no connection or draft creation. */
 export class WorkspaceAccessStatusController {
@@ -167,7 +111,7 @@ export class WorkspaceAccessStatusController {
         this.publish({ phase: "error", code: "busy" });
         return false;
       }
-      const result = resultFor(value, this.target);
+      const result = workspaceAccessResultFor(value, this.target);
       this.publish(
         result
           ? { phase: "ready", result }

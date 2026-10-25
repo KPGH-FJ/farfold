@@ -28,6 +28,11 @@ import {
   hasConfigurationRecheckRecovery,
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
+import type {
+  WorkspaceAccessDecision,
+  WorkspaceAccessScope,
+  WorkspaceAccessResult,
+} from "./workspace_access_types";
 import { confirmSavedConfiguration } from "./saved_configuration_restore";
 import { configChangeBusy } from "./protected_config";
 import type { AsyncTask } from "./async_tasks";
@@ -1055,6 +1060,18 @@ class ThreadsStore {
     value: unknown,
   ): Promise<void> {
     return this.configurations.set(key, configId, value);
+  }
+
+  decideWorkspaceAccess(
+    key: string,
+    decision: WorkspaceAccessDecision,
+    expectedScope: WorkspaceAccessScope,
+  ): Promise<WorkspaceAccessResult> {
+    return this.configurations.decideWorkspaceAccess(
+      key,
+      decision,
+      expectedScope,
+    );
   }
 
   async confirmConfig(key: string): Promise<void> {

@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "kind": "ReviewedWorkspaceTrustDecisionSourceAndEngineeringSummary",
+  "recordedAt": "2026-10-25T06:00:59.083215+00:00",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "problem": "The same-connection status read could report an untrusted owned folder but the formal application had no shared, explicitly reviewed trust decision operation.",
+  "change": {
+    "entry": "One common review and separate confirmation, showing only finite actual offered choices and persistent scope, instruction/configuration/hook reload consequences. Cancelling review dispatches no decision.",
+    "command": "session_workspace_access_decide",
+    "availability": "Optional reviewed decisionManagement capability, separate from statusQuery and the official initialize declaration. Typed unavailable withdraws only this matching owner decision capability.",
+    "choices": ["trust_cwd", "trust_repo", "decline"],
+    "scope": "Same Agent, native conversation, connection, cwd and selected service; read-time scope comparison and original actor guard recheck precede the one actual dispatch. No atomic repository-root CAS or filesystem isolation is claimed.",
+    "lifetime": "AccountScope protects the dispatched operation until a witnessed actual response or original process reap. A transient single-operation response witness preserves the incoming envelope and is not an event ledger. SDK-local failure alone does not release an unconfirmed write.",
+    "prewriteRead": "Caller abandonment or expiry before any write drops shared effect protection while the original read remains observed; no later Commit is possible.",
+    "configuration": "Trust receipt does not confirm model/permissions or continue the queue. Grant emits existing configuration-needs-recheck protection before send. Actual reload notification completeness remains unverified.",
+    "implicitActions": "No new/load/reconnect/auth/model prompt/configuration setter/retry/rollback/queue continuation. Decline is a persistent decision, not review cancellation.",
+    "deliveryDeadlineSeconds": 20
+  },
+  "sourcePins": [
+    {
+      "path": "src-tauri/src/acp_client/workspace_access.rs",
+      "sha256": "b69fcc3d9f7c46c0faf3db9de88bc6fbc351bb154e974d7e55f4fddfa752f4f2",
+      "lines": 428
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_tests.rs",
+      "sha256": "b26648fb62463cae5bd59c8a8ab44f64bfd6b9cbc47b581c3db697108be49b68",
+      "lines": 313
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_wire_tests.rs",
+      "sha256": "79cbaeb5289d28a4141bac38776e9ffe88da7d4fd64cfee83be9da3f5593c516",
+      "lines": 255
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_decision.rs",
+      "sha256": "fb4ad3070d69e833a86f0a291c56d9e75ef969893bd289e1266217c514c87ad1",
+      "lines": 522
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_decision_tests.rs",
+      "sha256": "ebe0c94042eea16c89586b7bb97818a5da688879b6fa0b321d4521cfd87bad90",
+      "lines": 111
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_decision_wire_tests.rs",
+      "sha256": "767d52c06875d39fc2dcebb9b3979680e7ca5338153fb2db6a98a3962f520ef9",
+      "lines": 642
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "2a30adeb584f5456a35b3a1fc77ed0e4d54ccd544cfe0efbe71c14865a8be556",
+      "lines": 1391
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/control.rs",
+      "sha256": "c1fc3719b11c932c4f3747a372c6c2a24d85b3c9fe9dd10fad098dcca8707ee6",
+      "lines": 210
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "7ea9b6e6a6d45b0315a9ba4072a84599fe5cdfb1b4aeef2e0bbd246d71cc2a92",
+      "lines": 1261
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "7e4299746f2963774c727d8da99a9d8df55a039cd1fe7a64b7917dede56ce2cb",
+      "lines": 508
+    },
+    {
+      "path": "src/runtime/workspace_access_types.ts",
+      "sha256": "8b07cabf2c229c350210c60f844b505ff63077f31b8e1753c5075180de3773d9",
+      "bytes": 3242,
+      "lines": 107,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/workspace_access_status.ts",
+      "sha256": "7df346bcc995341396523e8a874cd0a1c4d4472a36c363003b02a22b767c6242",
+      "bytes": 4573,
+      "lines": 136,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/workspace_access_decision.ts",
+      "sha256": "107ab977f74a6e03f82aa364703857f130f9ee34f0e15c7854e32b650ae71aeb",
+      "bytes": 9083,
+      "lines": 280,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/workspace_access_strings.ts",
+      "sha256": "903c235aeeb0d62fb52c61e9943b37ccdd807960eba015e6afe28a76c8a1fd0e",
+      "bytes": 2757,
+      "lines": 56,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/session_configuration.ts",
+      "sha256": "e8ea25733599f13f1f1a17fdf829b26a78bff3adac7e259a337effbdb373f4d0",
+      "bytes": 9778,
+      "lines": 278,
+      "role": "production"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "a9fb3bfcbdee90db2b5c8ca106b5f1ad08b1b424c4caf419a27bcf66608d0355",
+      "bytes": 42500,
+      "lines": 1304,
+      "role": "production"
+    },
+    {
+      "path": "src/components/WorkspaceAccessControl.tsx",
+      "sha256": "7f093357bc63e1ffaa080fd0e860cd5f17e6746b969b1816e5106b175de269aa",
+      "bytes": 6907,
+      "lines": 205,
+      "role": "production"
+    },
+    {
+      "path": "src/components/WorkspaceAccessDecisionReview.tsx",
+      "sha256": "9d42bed673d6d10c3603e2e365d3468cfca2c7e2d79d53a43a3d98ffb164a16e",
+      "bytes": 1547,
+      "lines": 54,
+      "role": "production"
+    },
+    {
+      "path": "src/components/WorkspaceAccessControl.test.tsx",
+      "sha256": "195b057a61d398ab7c2dc23d1c8b4e28e150fa56c9512739b55c007264c52652",
+      "bytes": 13237,
+      "lines": 397,
+      "role": "test"
+    },
+    {
+      "path": "src/runtime/workspace_access_decision.test.ts",
+      "sha256": "6d80d78f2c564437ab0f561c899ec54c0b06292a437b46afc27c9f852573cef3",
+      "bytes": 14689,
+      "lines": 429,
+      "role": "test"
+    },
+    {
+      "path": "src/components/WorkspaceAccessDecisionReview.test.tsx",
+      "sha256": "b1218e424497b683498ab92340572dc7a96409070b575d80af060f63c3248372",
+      "bytes": 2538,
+      "lines": 75,
+      "role": "test"
+    }
+  ],
+  "controlledProof": {
+    "frontendFinalAffectedFiles": 14,
+    "frontendFinalAffectedPassed": 198,
+    "backendFinalAffectedPassed": 47,
+    "backendFinalBreakdown": {
+      "workspaceAccess": 36,
+      "accountScope": 11
+    },
+    "prewriteReadRegression": {
+      "validRedFailed": 2,
+      "validRedPassed": 0,
+      "repair": "Two prewrite-read exits only; post-dispatch unknown protection retained."
+    },
+    "overlappingCountsNotAdded": true,
+    "independentSourceBlockingFindings": 0,
+    "historicalCheckpoints": "Original backend54 and frontend195 remain historical overlapping checkpoints; they are not added to final47/198."
+  },
+  "engineering": {
+    "baseHead": "abbc53cba1c1ecb14fe4c83dd85838bb282c5429",
+    "checksRanBeforeCommit": true,
+    "checksPassed": 7,
+    "sourceInputs": 2278,
+    "sourceDelta": {
+      "modified": 14,
+      "added": 7
+    },
+    "sourceFullMapsExpectedBeforeAfterEqual": true,
+    "eachCommandEndpointEqualityComputedByRunner": true,
+    "separatePerCommandFullMapsPersisted": false,
+    "frontendArgv": "corepack pnpm exec vitest run --maxWorkers=4",
+    "literalPnpmTestInvocationClaimed": false,
+    "frontendFiles": 678,
+    "frontendPassed": 8979,
+    "nativePassed": 2292,
+    "nativeFailed": 0,
+    "nativeIgnored": 6,
+    "ignoredUnchangedFromPriorAlias": true,
+    "sameSession": 67004,
+    "naturalExitCode": 0,
+    "independentBlockingFindings": 0,
+    "stderrQualification": "Four ZipWriter drop warnings are consistent with existing actual ZIP cancellation controls, whose four named tests pass. Stderr lacks per-test identity, so individual attribution is unproven; capacity-only tests do not create ZipWriter."
+  },
+  "privacy": {
+    "reviewedSourceFiles": 21,
+    "limitedPatternScanHits": 0,
+    "limit": "Pattern scan and source/doc review are bounded checks, not exhaustive proof. No credentials, raw user manifests or backup contents are included in this summary."
+  },
+  "limits": [
+    "This source checkpoint is not installed; current formal source remains40277c9e. No real trust decision, skill discovery or adoption was executed for this increment.",
+    "Persistent Agent-reported status does not prove durable disk write. Official save can fail silently; grant reload can fail after an effect.",
+    "Configuration freshness after reload, additional source roots, global/ancestor configuration and full P40 remain unverified.",
+    "Source endpoint equality does not freeze dependencies/environment or prove absence of intermediate writers.",
+    "NEW24 seven known inputs are unchanged with zero intersection in this21-file delta; this is static impact review only. Affected Codex sends stay paused and six original model/reasoning choices stay unchanged.",
+    "Original skill declaration failure1 and adoption-unexecuted1, five login waits, Cline orphan and historical siGit/Droid/Kimchi unknown requests remain unchanged."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "acceptanceVerified": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/prewrite-read-scope-delta/implementation.json",
+      "sha256": "3235c22ea4a70fd0ca2e8f2fa4294c182d56e2d955f51a43256ef7dea7c5437d",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/prewrite-read-scope-delta/source-final.json",
+      "sha256": "40c823a12e93ab248b84ef3cc4165e3ee2466ad72ca519c3e54a53254372c063",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/backend-independent-finding-prewrite-read-scope.json",
+      "sha256": "c9d8163780e6ef9b2b4cb5eb442e3d9ed56de1267109ab6c00696ebe82ff4ac7",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/backend-independent-review.json",
+      "sha256": "b6678372d4654d333a3208edf494e385cb573a9efd95b2524f3cca8a837bb3dd",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/frontend/unavailable-capability-delta/implementation.json",
+      "sha256": "7ac38c9c9b3ebf6564cd9e0f473b5e5f3121c1097b401684ef244ca84709f94e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/frontend/independent-source-review.json",
+      "sha256": "cc188321f3486007a8754a829b97b9d53c65283637cb164c94dd9c5f3c84ae78",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/new24-source-impact-review.json",
+      "sha256": "2fc4df36b6fc12f4d6c06b73b9fe151ab1b9614d009bdba379257ba7e61c1d37",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-source/root-source-privacy-scan.json",
+      "sha256": "46ec7b21acf14c7ff804475d3b1b4934eabcb0ac2542ddd4b133ee7a5aa3e8ba",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-engineering/engineering-summary.json",
+      "sha256": "e8efa4192e661ac6052ce434ca3dd8d62fc71bb8f78772ab9b4d0a30d0738c83",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-engineering/root-natural-completion.json",
+      "sha256": "f7b0298284ad1f86a8b3198178e60b4cd9345720183dba5073166454a20fb9ca",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-trust-decision-engineering/independent-engineering-review.json",
+      "sha256": "7d407cff442462a6094b0769e95afa690db58df8aea4c17f98eb4d52cf36f5f9",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

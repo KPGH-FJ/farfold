@@ -1085,6 +1085,44 @@ async fn session_pump(
                     };
                     workspace_access_read = Some(super::workspace_access::Pending::start(*request, cx.clone(), result, deadline, lease));
                 }
+                SessionControl::WorkspaceAccessDecision { request, result, .. } => {
+                    use super::workspace_access::decision::{Admission,Code,DecisionError,Snapshot};
+                    if !request.matches(&ops.connection_id,&session_id) {
+                        let _=result.send(Err(DecisionError::rejected(Code::Changed)));continue;
+                    }
+                    let awaiting=pending.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true);
+                    if workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
+                        || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || ctx.tools.busy() || ctx.async_tasks.busy()
+                        || ctx.compactions.busy() || awaiting || !model_guard.admissible() || !permission_guard.admissible() {
+                        let _=result.send(Err(DecisionError::rejected(Code::Busy)));continue;
+                    }
+                    let _=result.send(Ok(Admission {cx:cx.clone(),snapshot:Snapshot {model:model_guard.check(),permission:permission_guard.event()}}));
+                }
+                SessionControl::WorkspaceAccessDecisionCommit { request, result, deadline } => {
+                    use super::workspace_access::decision::{Code,DecisionError,Snapshot};
+                    if !request.request.matches(&ops.connection_id,&session_id) || !request.interested.load(Ordering::SeqCst)
+                        || tokio::time::Instant::now()>=deadline {
+                        let _=result.send(Err(DecisionError::rejected(Code::Changed)));continue;
+                    }
+                    let awaiting=pending.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true);
+                    if workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
+                        || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || ctx.tools.busy() || ctx.async_tasks.busy()
+                        || ctx.compactions.busy() || awaiting || !model_guard.admissible() || !permission_guard.admissible()
+                        || request.snapshot!=(Snapshot {model:model_guard.check(),permission:permission_guard.event()}) {
+                        let _=result.send(Err(DecisionError::rejected(Code::Busy)));continue;
+                    }
+                    if !ops.workspace_access.capability().is_some_and(|cap|cap.decision_management) {
+                        let _=result.send(Err(DecisionError::rejected(Code::Unavailable)));continue;
+                    }
+                    let grant=request.decision!=super::workspace_access::OfferedDecision::Decline;
+                    let sent=request.dispatch(&cx,|| { if grant {
+                        model_guard.change_unknown();permission_guard.unknown();
+                        events(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));events(permission_guard.event());
+                    }});
+                    let _=result.send(sent);
+                }
                 SessionControl::SetConfig { config_id, value, result, deadline } => {
                     let permission = permission_guard.is_permission(&config_id);
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)

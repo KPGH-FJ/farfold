@@ -4,6 +4,10 @@ use super::*;
 impl Availability {
     pub(crate) fn enable_for_test(&self) {
         self.0.store(true, Ordering::SeqCst);
+        self.1.store(true, Ordering::SeqCst);
+    }
+    pub(crate) fn disable_decisions_for_test(&self) {
+        self.1.store(false, Ordering::SeqCst);
     }
 }
 
@@ -223,7 +227,7 @@ fn workspace_access_supplement_is_not_an_initialize_declaration_or_name_inferenc
         .unwrap();
     assert_eq!(
         serde_json::to_value(capability).unwrap(),
-        json!({"statusQuery":true,"provenance":"reviewed-official-supplement"})
+        json!({"statusQuery":true,"decisionManagement":true,"provenance":"reviewed-official-supplement"})
     );
 }
 

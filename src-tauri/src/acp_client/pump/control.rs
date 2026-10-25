@@ -4,6 +4,26 @@ use agent_client_protocol::schema::v1::ContentBlock;
 
 /// Commands delivered to the session pump task.
 pub(crate) enum SessionControl {
+    WorkspaceAccessDecision {
+        request: Box<super::super::workspace_access::Request>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<
+            Result<
+                super::super::workspace_access::decision::Admission,
+                super::super::workspace_access::decision::DecisionError,
+            >,
+        >,
+    },
+    WorkspaceAccessDecisionCommit {
+        request: Box<super::super::workspace_access::decision::Commit>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<
+            Result<
+                super::super::workspace_access::decision::Sent,
+                super::super::workspace_access::decision::DecisionError,
+            >,
+        >,
+    },
     WorkspaceAccessStatus {
         request: Box<super::super::workspace_access::Request>,
         deadline: tokio::time::Instant,
@@ -98,6 +118,20 @@ pub(crate) enum SessionControl {
 impl SessionControl {
     pub(super) fn reject(self, error: String) {
         match self {
+            Self::WorkspaceAccessDecision { result, .. } => {
+                let _ = result.send(Err(
+                    super::super::workspace_access::decision::DecisionError::rejected(
+                        super::super::workspace_access::decision::Code::Changed,
+                    ),
+                ));
+            }
+            Self::WorkspaceAccessDecisionCommit { result, .. } => {
+                let _ = result.send(Err(
+                    super::super::workspace_access::decision::DecisionError::rejected(
+                        super::super::workspace_access::decision::Code::Changed,
+                    ),
+                ));
+            }
             Self::WorkspaceAccessStatus { result, .. } => {
                 let _ = result.send(Err(
                     super::super::workspace_access::ErrorKind::Changed.into()
@@ -133,6 +167,12 @@ impl SessionControl {
     }
     pub(super) fn abandoned(&self) -> bool {
         let (deadline, closed) = match self {
+            Self::WorkspaceAccessDecision {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
+            Self::WorkspaceAccessDecisionCommit {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
             Self::WorkspaceAccessStatus {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),

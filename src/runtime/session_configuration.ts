@@ -12,6 +12,19 @@ import type { ThreadState } from "./session_types";
 import type { ServiceIdentity } from "./credentials";
 import { STRINGS } from "./strings";
 import { replacePermissionEffect } from "./permission_effect";
+import {
+  prepareWorkspaceDecision,
+  runWorkspaceDecision,
+  workspaceDecisionError,
+  workspaceDecisionOwns,
+} from "./workspace_access_decision";
+import type {
+  WorkspaceAccessDecision,
+  WorkspaceAccessResult,
+  WorkspaceAccessScope,
+} from "./workspace_access_types";
+import { workspaceAccessCapability } from "./workspace_access_types";
+import { WORKSPACE_ACCESS } from "./workspace_access_strings";
 
 interface Change {
   thread: ThreadState;
@@ -53,7 +66,7 @@ function snapshotsMatch(left: unknown, right: unknown): boolean {
 
 /** Publish a configuration only after its matching setter and saved baseline succeed. */
 export class SessionConfiguration {
-  readonly requests = new Map<string, Promise<void>>();
+  readonly requests = new Map<string, Promise<unknown>>();
   private changes = new Map<string, Change>();
 
   constructor(
@@ -87,6 +100,52 @@ export class SessionConfiguration {
     // configuring guard blocks sending without replacing any existing pause.
     // Unknown/save failure and later drift still block immediately.
     return check.status === "ready" || !change.interrupted;
+  }
+
+  async decideWorkspaceAccess(
+    key: string,
+    decision: WorkspaceAccessDecision,
+    expectedScope: WorkspaceAccessScope,
+  ): Promise<WorkspaceAccessResult> {
+    const s = this.hooks.thread(key);
+    if (!s) throw { code: "changed", effect: "notDispatched" };
+    const prepared = prepareWorkspaceDecision(s, decision, expectedScope);
+    s.configuring = true;
+    // Do not defer, manufacture or confirm guard events produced by instruction reload.
+    this.hooks.emit();
+    const request = runWorkspaceDecision(prepared, () =>
+      this.hooks.thread(key),
+    );
+    this.requests.set(key, request);
+    try {
+      return await request;
+    } catch (error) {
+      const failure = workspaceDecisionError(error);
+      if (
+        failure.code === "unavailable" &&
+        workspaceDecisionOwns(prepared, this.hooks.thread(key))
+      ) {
+        const capability = workspaceAccessCapability(s.workspaceAccess);
+        if (capability)
+          s.workspaceAccess = {
+            statusQuery: capability.statusQuery,
+            provenance: capability.provenance,
+          };
+      }
+      if (
+        failure.effect === "unconfirmed" &&
+        workspaceDecisionOwns(prepared, this.hooks.thread(key))
+      )
+        s.configError = WORKSPACE_ACCESS.decisionUnconfirmed;
+      throw failure;
+    } finally {
+      if (this.requests.get(key) === request) {
+        this.requests.delete(key);
+        s.configuring = false;
+      }
+      this.hooks.emit();
+      this.hooks.finish(s);
+    }
   }
 
   async set(key: string, configId: string, value: unknown): Promise<void> {
