@@ -356,7 +356,8 @@ it("keeps preview projection private between tasks and excludes post-marker foll
       configOptions: [],
       warnings: [],
       previewToken: wire.openToken,
-    } satisfies OpenResult & { previewToken: string };
+      purpose: "importPreview",
+    } satisfies OpenResult & { previewToken: string; purpose: "importPreview" };
     opening(wire, result);
     for (let index = 0; index < SIZE; index++)
       wire.channel.onmessage(message(`history-${index}`));

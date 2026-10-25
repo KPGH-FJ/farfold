@@ -223,6 +223,7 @@ it.each([false, true])(
       return {
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
+        purpose: "importPreview",
         previewToken: "owned-prefix",
       };
     });
@@ -253,6 +254,7 @@ it.each([false, true])(
       return {
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
+        purpose: "importPreview",
         previewToken: "owned-prefix",
       };
     });

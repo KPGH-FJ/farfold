@@ -39,6 +39,7 @@ impl Drop for OpeningRoute {
 pub(crate) async fn open_session_on_connection(
     cx: &ConnectionTo<Agent>,
     cwd: &Path,
+    purpose: super::super::open_purpose::OpenPurpose,
     native_session_id: Option<String>,
     preview_token: Option<String>,
     opening_token: Option<String>,
@@ -53,6 +54,13 @@ pub(crate) async fn open_session_on_connection(
     mut mcp: Option<super::super::transient_mcp::TransientMcpOpen>,
     browser_unavailable: Option<super::super::transient_mcp::McpUnavailable>,
 ) -> Result<OpenedSession, String> {
+    // Direct manager commands share the same immutable admission as wrappers.
+    purpose.validate(
+        native_session_id.as_deref(),
+        preview_token.as_deref(),
+        config_options.is_empty(),
+        mcp.is_some(),
+    )?;
     if let Some(id) = &native_session_id {
         let map = sessions.lock().map_err(|_| "session map lock poisoned")?;
         if map.contains_key(id) {
@@ -308,6 +316,7 @@ pub(crate) async fn open_session_on_connection(
     let mut initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
     initial_models.extend(deferred_models);
     let opening = restore_config::Opening {
+        purpose,
         reply: Some(ready_tx),
         operation,
         recorded: recorded_config,
@@ -334,6 +343,7 @@ pub(crate) async fn open_session_on_connection(
             session_id.clone(),
             SessionEntry {
                 connection_id: ops.connection_id.clone(),
+                purpose,
                 preview_token,
                 workspace: Some(Vec::new()),
                 browser_unavailable,
@@ -384,6 +394,7 @@ pub(crate) async fn open_session_on_connection(
     }
     Ok(OpenedSession {
         identity,
+        purpose,
         connection_id,
         session_id,
         response,

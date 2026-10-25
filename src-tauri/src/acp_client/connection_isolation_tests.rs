@@ -314,6 +314,7 @@ async fn failed_new_validation_keeps_known_identity_until_exact_process_reaping(
         .send_reserved(
             crate::acp_client::manager::ManagerCommand::OpenSession {
                 fork_owned: false,
+                purpose: crate::acp_client::open_purpose::OpenPurpose::Conversation,
                 native_session_id: None,
                 preview_token: None,
                 opening_token: None,

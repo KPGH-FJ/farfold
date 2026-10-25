@@ -22,6 +22,10 @@ use crate::acp_client::manager::{
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
+#[cfg(test)]
+#[path = "session/readonly_admission_tests.rs"]
+mod readonly;
+
 fn session_control(
     connection: &ManagedConnection,
     session_id: &str,
@@ -303,7 +307,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
     ) -> Result<OpenedSession, String> {
-        self.open_session_owned(
+        self.open_session_owned_for_purpose(
             agent,
             cwd,
             native_session_id,
@@ -312,6 +316,7 @@ impl AcpManager {
             store,
             selection,
             None,
+            super::open_purpose::OpenPurpose::Conversation,
             None,
             None,
         )
@@ -390,6 +395,7 @@ impl AcpManager {
             store,
             selection,
             None,
+            super::open_purpose::OpenPurpose::Conversation,
             mcp,
             browser_unavailable,
             None,
@@ -400,7 +406,7 @@ impl AcpManager {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub(super) async fn open_session_owned(
+    pub(super) async fn open_session_owned_for_purpose(
         &self,
         agent: &AgentRow,
         cwd: &Path,
@@ -410,6 +416,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
+        purpose: super::open_purpose::OpenPurpose,
         history: Option<super::history_admission::Permit>,
         opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
@@ -422,6 +429,7 @@ impl AcpManager {
             store,
             selection,
             preview_token,
+            purpose,
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             None,
@@ -453,6 +461,7 @@ impl AcpManager {
             store,
             None,
             None,
+            super::open_purpose::OpenPurpose::Conversation,
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             Some(reservation),
@@ -473,6 +482,7 @@ impl AcpManager {
         store: &MetaStore,
         selection: Option<crate::credentials::ServiceSelection>,
         preview_token: Option<String>,
+        purpose: super::open_purpose::OpenPurpose,
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         reserved: Option<super::lifecycle::OpenReservation>,
@@ -480,6 +490,12 @@ impl AcpManager {
         opening_token: Option<String>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
+        purpose.validate(
+            native_session_id.as_deref(),
+            preview_token.as_deref(),
+            config_options.is_empty(),
+            mcp.is_some(),
+        )?;
         let fork_owned = reserved.is_some();
         let opening = Some(match reserved {
             Some(reservation) => reservation,
@@ -587,6 +603,7 @@ impl AcpManager {
         command_tx.send_reserved_with_history(
             ManagerCommand::OpenSession {
                 fork_owned,
+                purpose,
                 native_session_id,
                 preview_token,
                 opening_token,

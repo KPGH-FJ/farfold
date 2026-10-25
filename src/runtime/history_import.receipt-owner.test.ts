@@ -36,6 +36,7 @@ function reply() {
     cwd: "/canonical-preview",
     nativeSessionId: "actual-acknowledged-native",
     connectionId: "actual-preview-connection",
+    purpose: "importPreview",
     previewToken: "actual-owned-token",
     configOptions: [],
   };
@@ -100,6 +101,7 @@ it("retains the acknowledged exact preview owner after local history conversion 
     agentId: "owner-agent",
     cwd: reply().cwd,
     nativeSessionId: reply().nativeSessionId,
+    purpose: "importPreview",
     previewToken: reply().previewToken,
     replayComplete: false,
   });

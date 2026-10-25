@@ -75,6 +75,7 @@ describe("existing conversation import", () => {
         return {
           cwd: "/notes",
           nativeSessionId: "native",
+          purpose: "importPreview",
           previewToken: "owned",
           connectionId: "exact-connection",
           configOptions: [
@@ -138,6 +139,7 @@ describe("existing conversation import", () => {
           return {
             cwd: "/canonical",
             nativeSessionId: row.nativeSessionId,
+            purpose: "importPreview",
             previewToken: "owned",
             configCheck: check,
             configOptions: [
@@ -192,6 +194,7 @@ describe("existing conversation import", () => {
       return {
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
+        purpose: "importPreview",
         previewToken: "owned",
         configOptions: [],
       };
@@ -222,6 +225,7 @@ describe("existing conversation import", () => {
           return {
             cwd: row.cwd,
             nativeSessionId: row.nativeSessionId,
+            purpose: "importPreview",
             previewToken: "owned",
           };
         }
@@ -282,6 +286,7 @@ describe("existing conversation import", () => {
         return {
           cwd: "/canonical/notes",
           nativeSessionId: "native",
+          purpose: "importPreview",
           previewToken: "owned",
         };
       }
@@ -320,6 +325,7 @@ describe("existing conversation import", () => {
         return {
           cwd: "/canonical/notes",
           nativeSessionId: "native",
+          purpose: "importPreview",
           previewToken: "owned",
         };
       }
@@ -384,6 +390,7 @@ describe("existing conversation import", () => {
       return {
         cwd: "/notes",
         nativeSessionId: "native",
+        purpose: "importPreview",
         previewToken: "owned",
       };
     });
@@ -440,6 +447,7 @@ describe("existing conversation import", () => {
       return {
         cwd: "/canonical/notes",
         nativeSessionId: "native",
+        purpose: "importPreview",
         previewToken: "owned",
       };
     });

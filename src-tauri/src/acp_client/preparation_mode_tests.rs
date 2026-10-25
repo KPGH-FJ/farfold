@@ -133,6 +133,7 @@ async fn read(
             let open = open_session_on_connection(
                 &cx,
                 &cwd,
+                crate::acp_client::open_purpose::OpenPurpose::Conversation,
                 resumed.then(|| "mode-proof".into()),
                 None,
                 None,

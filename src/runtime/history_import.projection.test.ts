@@ -32,6 +32,7 @@ const result = {
   nativeSessionId: row.nativeSessionId,
   cwd: row.cwd,
   connectionId: "preview-owner",
+  purpose: "importPreview",
   previewToken: "exact-preview",
   configOptions: [],
 };

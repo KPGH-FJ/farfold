@@ -33,6 +33,7 @@ it("keeps the acknowledged official replay prefix's media and text order", async
       cwd: "/owned",
       nativeSessionId: "original-id",
       connectionId: "original-connection",
+      purpose: "importPreview",
       previewToken: "owned-prefix",
       configOptions: [],
     };

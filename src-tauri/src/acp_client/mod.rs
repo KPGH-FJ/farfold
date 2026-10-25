@@ -44,6 +44,7 @@ mod lifecycle;
 pub mod manager;
 mod model_guard;
 mod mutation;
+mod open_purpose;
 mod operations;
 mod permission_effect;
 mod permission_guard;

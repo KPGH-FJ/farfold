@@ -51,9 +51,21 @@ vi.mock("react", async (original) => ({
   },
 }));
 vi.mock("../runtime/dialogs", () => ({ chooseDirectory: h.choose }));
+vi.mock("../runtime/credentials", async (original) => ({
+  ...(await original<typeof import("../runtime/credentials")>()),
+  subscribeCredentialChanges: () => () => {},
+}));
+vi.mock("../runtime/authentication", async (original) => ({
+  ...(await original<typeof import("../runtime/authentication")>()),
+  subscribeAuthenticationChanges: () => () => {},
+}));
 vi.mock("../runtime/history_import", () => ({
   discoverHistory: h.discover,
-  previewHistory: h.preview,
+  previewHistory: (agentId: string, row: unknown) => h.preview(agentId, row),
+  readHistoryPreview: async (agentId: string, row: unknown) => ({
+    ...(await h.preview(agentId, row)),
+    purpose: "searchReadOnly",
+  }),
   closeHistoryPreview: h.closePreview,
   commitHistoryPreview: h.commit,
   hasPreviewContent: () => true,
@@ -142,6 +154,7 @@ beforeEach(() => {
     agentId,
     cwd: record.cwd,
     nativeSessionId: record.nativeSessionId,
+    purpose: "importPreview",
     previewToken: `preview-${record.nativeSessionId}`,
     replayComplete: true,
     state: { items: [], configOptions: [] },
@@ -818,4 +831,51 @@ it("rechecks the selected original history without saving it or promoting read-o
   );
   expect(h.commit).not.toHaveBeenCalled();
   expect(props.onOpen).not.toHaveBeenCalled();
+});
+
+it("retains a late confirmed first commit for its original lookup without continuing the retired batch", async () => {
+  const next = { ...row, nativeSessionId: "next", title: "Next" };
+  h.discover.mockResolvedValueOnce({
+    status: "supported",
+    sessions: [row, next],
+    nextCursor: null,
+  });
+  const save = h.commit.getMockImplementation()!;
+  let finish!: () => void;
+  h.commit.mockImplementationOnce(
+    (preview, title) =>
+      new Promise((resolve) => {
+        finish = () => resolve(save(preview, title));
+      }),
+  );
+  click(S.search);
+  await idle();
+  const all = render().find(
+    (node) => node.type === "input" && node.props.type === "checkbox",
+  )!;
+  (all.props.onChange as () => void)();
+  click(S.add);
+  await vi.waitFor(() => expect(h.commit).toHaveBeenCalledTimes(1));
+  props = { ...props, initialAgentId: "b", requestRevision: 2 };
+  render();
+  finish();
+  await idle();
+  expect(render().some((node) => node.props.children === row.title)).toBe(
+    false,
+  );
+  expect(h.commit).toHaveBeenCalledTimes(1);
+  expect(h.preview).toHaveBeenCalledTimes(1);
+  props = { ...props, initialAgentId: "a", requestRevision: 3 };
+  render();
+  await idle();
+  expect(
+    render().find((node) => node.props["aria-label"] === row.title)?.props
+      .disabled,
+  ).toBe(true);
+  expect(
+    render().find((node) => node.props["aria-label"] === next.title)?.props
+      .checked,
+  ).toBe(true);
+  expect(h.commit).toHaveBeenCalledTimes(1);
+  expect(h.preview).toHaveBeenCalledTimes(1);
 });

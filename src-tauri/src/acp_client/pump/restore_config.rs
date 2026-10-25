@@ -15,6 +15,7 @@ pub(crate) struct OpenState {
 }
 
 pub(super) struct Opening {
+    pub purpose: super::super::open_purpose::OpenPurpose,
     pub reply: Option<oneshot::Sender<Result<OpenState, String>>>,
     pub operation: Operation,
     pub recorded: Option<Value>,

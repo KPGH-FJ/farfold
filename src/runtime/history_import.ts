@@ -19,6 +19,7 @@ import {
   forgetSessionIdentity,
   identityReadSupport,
 } from "./session_identity_types";
+import type { OpenInput } from "./session_open_input";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -35,7 +36,13 @@ export interface DiscoveryPage {
   sessions: DiscoveredConversation[];
   nextCursor: string | null;
 }
+export type HistoryPreviewPurpose = "importPreview" | "searchReadOnly";
+export type HistoryPreviewInterest = Pick<
+  OpenInput,
+  "inquiryCurrent" | "inquirySignal"
+>;
 export interface HistoryPreview {
+  readonly purpose: HistoryPreviewPurpose | null;
   agentId: string;
   cwd: string;
   nativeSessionId: string;
@@ -58,7 +65,36 @@ export async function discoverHistory(
 export async function previewHistory(
   agentId: string,
   row: DiscoveredConversation,
+  interest?: HistoryPreviewInterest,
 ): Promise<HistoryPreview> {
+  return loadHistoryPreview(agentId, row, "importPreview", interest);
+}
+export async function readHistoryPreview(
+  agentId: string,
+  row: DiscoveredConversation,
+  interest?: HistoryPreviewInterest,
+): Promise<HistoryPreview> {
+  return loadHistoryPreview(agentId, row, "searchReadOnly", interest);
+}
+async function loadHistoryPreview(
+  agentId: string,
+  row: DiscoveredConversation,
+  purpose: HistoryPreviewPurpose,
+  interest?: HistoryPreviewInterest,
+): Promise<HistoryPreview> {
+  let interested = true;
+  const current = () => {
+    if (!interested) return false;
+    try {
+      interested =
+        !interest?.inquirySignal?.aborted &&
+        (interest?.inquiryCurrent?.() ?? true);
+    } catch {
+      interested = false;
+    }
+    return interested;
+  };
+  if (!current()) throw new Error(S.loadFailed);
   const state = freshThreadState(
     "preview",
     agentId,
@@ -69,7 +105,13 @@ export async function previewHistory(
   const readKey = `preview:${openToken}`;
   const admission = historyReads.begin(
     readKey,
-    { agentId, cwd: row.cwd, nativeSessionId: row.nativeSessionId },
+    {
+      agentId,
+      cwd: row.cwd,
+      nativeSessionId: row.nativeSessionId,
+      inquiryCurrent: current,
+      inquirySignal: interest?.inquirySignal,
+    },
     openToken,
     "preview",
   );
@@ -81,6 +123,11 @@ export async function previewHistory(
   let completeReplay: ((complete: boolean) => void) | undefined;
   let receiving = true;
   let deliveryFailed = false;
+  const retire = () => {
+    interested = false;
+    completeReplay?.(false);
+  };
+  interest?.inquirySignal?.addEventListener("abort", retire, { once: true });
   const projected = new HistoryReplayProjection(
     state,
     openToken,
@@ -107,12 +154,13 @@ export async function previewHistory(
         else applyUpdate(target, event.update, event);
       }
     },
-    () => receiving,
+    () => receiving && current(),
   );
   const inquiry = openingInquiries.begin(readKey, {
     agentId,
     cwd: row.cwd,
-    inquiryCurrent: () => receiving,
+    inquiryCurrent: () => receiving && current(),
+    inquirySignal: interest?.inquirySignal,
     inquiryPermissions: "cancel",
   });
   channel.onmessage = (input) =>
@@ -121,6 +169,10 @@ export async function previewHistory(
       // Control-shaped fields inside a raw Agent update are not client control.
       const control = !Object.hasOwn(event, "update");
       if (control && inquiry.receive(event)) return "consumed";
+      if (!current()) {
+        completeReplay?.(false);
+        return "discarded";
+      }
       if (control && "kind" in event && event.kind === "sessionOpening") {
         // This request already knows its history ID. The native opening header
         // is local coordination only, never body/configuration or another owner.
@@ -174,8 +226,12 @@ export async function previewHistory(
     });
   try {
     admission?.dispatch();
-    const result = await invoke<OpenResult & { previewToken: string }>(
-      "session_import_preview",
+    const result = await invoke<
+      OpenResult & { previewToken: string; purpose: HistoryPreviewPurpose }
+    >(
+      purpose === "searchReadOnly"
+        ? "session_read_preview"
+        : "session_import_preview",
       {
         agentId,
         cwd: row.cwd,
@@ -189,6 +245,7 @@ export async function previewHistory(
     // even if either synchronous renderer conversion below fails locally.
     const owned: HistoryPreview = {
       ...result,
+      purpose: result.purpose === purpose ? result.purpose : null,
       agentId,
       state,
       replayComplete: false,
@@ -206,6 +263,7 @@ export async function previewHistory(
       return { ...owned, state: unavailable };
     };
     previewToken = result.previewToken;
+    if (owned.purpose !== purpose || !current()) return failed();
     try {
       forgetSessionIdentity(state);
       state.cwd = result.cwd;
@@ -242,7 +300,7 @@ export async function previewHistory(
     // A preview is a read-only snapshot of the acknowledged load prefix.
     // Traffic received after that boundary cannot make empty history readable.
     try {
-      if (!replayComplete || markedPreviewToken !== previewToken)
+      if (!current() || !replayComplete || markedPreviewToken !== previewToken)
         return failed();
       projected.requireComplete(agentId, result, deliveryFailed);
       projected.take();
@@ -257,6 +315,7 @@ export async function previewHistory(
     return { ...owned, replayComplete: replayComplete && !deliveryFailed };
   } finally {
     receiving = false;
+    interest?.inquirySignal?.removeEventListener("abort", retire);
     inquiry.retire();
     delivery.dispose();
     channel.onmessage = () => {};
@@ -303,6 +362,8 @@ export function commitHistoryPreview(
   preview: HistoryPreview,
   title: string | null,
 ): Promise<IndexRow> {
+  if (preview.purpose !== "importPreview")
+    return Promise.reject(new Error(S.loadFailed));
   if (!preview.replayComplete) return Promise.reject(new Error(S.loadFailed));
   if (!hasPreviewContent(preview))
     return Promise.reject(new Error(S.noContent));

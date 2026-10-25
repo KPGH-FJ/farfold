@@ -123,6 +123,7 @@ it("observes preview consumption when the private view is actually projected bef
         nativeSessionId: "original",
         connectionId: "preview-connection",
         previewToken: "preview",
+        purpose: "importPreview",
         configOptions: [],
       };
     }

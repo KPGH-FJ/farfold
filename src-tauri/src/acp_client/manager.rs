@@ -97,6 +97,7 @@ pub enum ManagerCommand {
     },
     OpenSession {
         fork_owned: bool,
+        purpose: super::open_purpose::OpenPurpose,
         native_session_id: Option<String>,
         preview_token: Option<String>,
         opening_token: Option<String>,

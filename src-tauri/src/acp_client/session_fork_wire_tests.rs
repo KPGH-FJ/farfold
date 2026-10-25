@@ -932,7 +932,7 @@ async fn fork_cross_directory_opening_first_excludes_known_pending_id_only_for_s
         );
         let preview = tokio::spawn(async move {
             manager
-                .open_session_owned(
+                .open_session_owned_for_purpose(
                     &row,
                     &cwd,
                     Some("child".into()),
@@ -941,6 +941,7 @@ async fn fork_cross_directory_opening_first_excludes_known_pending_id_only_for_s
                     &store,
                     None,
                     Some("preview".into()),
+                    crate::acp_client::open_purpose::OpenPurpose::ImportPreview,
                     None,
                     None,
                 )
@@ -979,7 +980,7 @@ async fn fork_cross_directory_opening_after_claim_cannot_bypass_same_child_holde
     std::fs::create_dir(&other).unwrap();
     let preview = f
         .manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.row,
             &other,
             Some("child".into()),
@@ -988,6 +989,7 @@ async fn fork_cross_directory_opening_after_claim_cannot_bypass_same_child_holde
             &f.store,
             None,
             Some("preview".into()),
+            crate::acp_client::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )

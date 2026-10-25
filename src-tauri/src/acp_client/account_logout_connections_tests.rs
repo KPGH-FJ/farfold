@@ -151,6 +151,7 @@ async fn review_regression_logout_reaps_idle_account_copies_and_preserves_api_an
     let (result, receive) = tokio::sync::oneshot::channel();
     api.send(ManagerCommand::OpenSession {
         fork_owned: false,
+        purpose: crate::acp_client::open_purpose::OpenPurpose::Conversation,
         native_session_id: None,
         preview_token: None,
         opening_token: None,

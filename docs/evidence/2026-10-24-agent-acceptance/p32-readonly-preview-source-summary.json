@@ -1,0 +1,477 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32ReadOnlyOfficialPreviewSourceAndEngineeringCheckpoint",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "scope": {
+    "sourceFiles": 40,
+    "fullDeclaredInputs": 2302,
+    "productionClosureInputs": 2299,
+    "firstCut": "Shared official-history explicit View/Recheck; complete P32 remains open."
+  },
+  "behavior": [
+    "The fixed native read entry returns its immutable purpose. Missing or incorrect purpose allows exact-token cleanup only, with no replay publication or import.",
+    "Reading skips saved-choice restoration and saving. A matching existing saved baseline can be compared without the read reconfirming configuration.",
+    "Add confirms closure of its exact read owner before a separate import preview/load/commit. Unknown close does not authorize another load or commit.",
+    "Relevant source/account/index/owner changes, ABA, unmount and late replies retire read authority. Unrelated index/title/clock changes preserve the view. Already-dispatched batch outcomes stay in the captured original lookup draft.",
+    "Effectful actor controls, including FIFO task stop, reject read-only ownership; ordinary conversation/import and exact cleanup paths remain distinct."
+  ],
+  "validation": {
+    "initialEffectiveRed": {
+      "backend": {
+        "passed": 4,
+        "failed": 4,
+        "exitCode": 101
+      },
+      "frontend": {
+        "files": 2,
+        "passed": 5,
+        "failed": 9,
+        "exitCode": 1
+      },
+      "compileOrHarnessFailuresCounted": false
+    },
+    "earlierAffectedGreen": {
+      "backendPassed": 12,
+      "frontendPassed": 121,
+      "frontendFailed": 1,
+      "meaning": "Original late partial-batch regression is preserved."
+    },
+    "frontendOutcomeRepair": {
+      "files": 13,
+      "passed": 123,
+      "failed": 0,
+      "typecheckExitCode": 0
+    },
+    "fifoEffectiveRed": {
+      "passed": 12,
+      "failed": 1,
+      "exitCode": 101,
+      "meaning": "Conversation positive reached first; read-only FIFO Stop was accepted and dispatched before the guard repair."
+    },
+    "finalAffectedBackend": {
+      "passed": 13,
+      "failed": 0,
+      "exitCode": 0,
+      "formatExitCode": 0
+    },
+    "firstPartialFullSeven": {
+      "executed": 3,
+      "passedCommands": 2,
+      "failedCommand": "frontend-test-direct",
+      "failedExitCode": 1,
+      "files": {
+        "passed": 686,
+        "failed": 2
+      },
+      "tests": {
+        "passed": 9161,
+        "failed": 2
+      },
+      "notStarted": 4,
+      "cause": "Two old successful import-preview mocks omitted the now-required purpose; strict production purpose checks stayed intact."
+    },
+    "secondPartialFullSeven": {
+      "executed": 6,
+      "passedCommands": 5,
+      "frontend": {
+        "files": 688,
+        "passedTests": 9163
+      },
+      "failedCommand": "cargo-clippy",
+      "failedExitCode": 101,
+      "notStarted": 1,
+      "cause": "Unused wrapper under deny-warnings; removal and equivalent explicit-purpose test calls were reviewed."
+    },
+    "thirdPartialNativeFirst": {
+      "executed": 3,
+      "passedCommands": 2,
+      "failedCommand": "cargo-test",
+      "failedExitCode": 101,
+      "rustTestsActuallyExecuted": 0,
+      "notStarted": 4,
+      "cause": "Four test enum qualifiers resolved through the wrong parent module. E0433 is a compile failure, not four behavior-test failures; the four-path correction is statically reviewed."
+    },
+    "overlappingRunsAreNotSummed": true,
+    "finalFullSeven": {
+      "actualCommands": 7,
+      "allSucceeded": true,
+      "earlierPassingChecksReused": 0,
+      "frontend": {
+        "files": 688,
+        "passed": 9163,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2324,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "inputCount": 2302,
+      "fullBeforeAndAfterMapsEqual": true,
+      "perCommandRecordedEndpointComparisonsAllTrue": true,
+      "checksRanBeforeCommitOnExactInputMap": true
+    },
+    "finalEngineeringIndependent": {
+      "blockingFindings": 0,
+      "reranTests": false
+    },
+    "sourcePrivacyAndCopyReviewBlockingFindings": 0
+  },
+  "windows": {
+    "runId": 40237402989,
+    "head": "8495ccbae9091e036910b1d96f40be5914f9aa51",
+    "conclusion": "failure",
+    "frontend": {
+      "passed": 9134,
+      "failed": 1,
+      "skipped": 3
+    },
+    "rust": {
+      "passed": 2274,
+      "failed": 73,
+      "ignored": 66
+    },
+    "frontendBuild": "notStarted",
+    "installer": "skipped",
+    "reruns": 0
+  },
+  "sourcePins": {
+    "src-tauri/src/acp_client/account_logout_connections_tests.rs": {
+      "sha256": "bab779a696c6acbc14d1ca0bd2c8144b624b6dc02638f4030b74c3dbd8390f42",
+      "bytes": 14253,
+      "lines": 394
+    },
+    "src-tauri/src/acp_client/account_scope_tests.rs": {
+      "sha256": "8e49de96dad9ed3dbbaf7ad116006f228c527059ed607a482a5cd57cd28bd9ef",
+      "bytes": 9684,
+      "lines": 284
+    },
+    "src-tauri/src/acp_client/connection_isolation_tests.rs": {
+      "sha256": "1c7bf310ca0c63be3f4501f57d1bd1c26e12484199ec31ee41af72bacf1098e5",
+      "bytes": 15533,
+      "lines": 477
+    },
+    "src-tauri/src/acp_client/discovery_readonly_tests.rs": {
+      "sha256": "8cb0706ef2a899ebd85da2c8b67692080cd75c7eed2955d68e03dde7365bf6ff",
+      "bytes": 6807,
+      "lines": 235
+    },
+    "src-tauri/src/acp_client/discovery_tests.rs": {
+      "sha256": "e842aebed1e1fe0482670f42ee5e6a3f80fc345e09245ab41b90977062b3a248",
+      "bytes": 26084,
+      "lines": 797
+    },
+    "src-tauri/src/acp_client/lifecycle_tests.rs": {
+      "sha256": "874c961e1cb6d8c1585c73ce12f9a733009eef762ca7a7690b083e8900559915",
+      "bytes": 44737,
+      "lines": 1304
+    },
+    "src-tauri/src/acp_client/manager.rs": {
+      "sha256": "71b25702c807252d2b3ad51740a43d5846609354b65e29e12c671fb30084c00b",
+      "bytes": 53433,
+      "lines": 1266
+    },
+    "src-tauri/src/acp_client/mod.rs": {
+      "sha256": "10e21b6b76cef24422ef6912e5811bedc7d31be84db1901a94645250a691510b",
+      "bytes": 3367,
+      "lines": 166
+    },
+    "src-tauri/src/acp_client/open_delivery_tests.rs": {
+      "sha256": "6653b3f3ec203f122fc8d4cab190d3288f5813f4bdbab8549691c1eba4174bf1",
+      "bytes": 15786,
+      "lines": 452
+    },
+    "src-tauri/src/acp_client/open_purpose.rs": {
+      "sha256": "1f6741020cdd2b0d80392152aff4625d6b600bc7e4009331f5b157d922633a2f",
+      "bytes": 1020,
+      "lines": 36
+    },
+    "src-tauri/src/acp_client/operations.rs": {
+      "sha256": "684843b2c4deeba7e6dc26046253cc653d31c4dcefb97c2ba6b2a900ca9fc486",
+      "bytes": 18260,
+      "lines": 555
+    },
+    "src-tauri/src/acp_client/preparation_mode_tests.rs": {
+      "sha256": "416be0bd30d482e0c91aa185a283eb371d4831be585e79fdae8c0881c0f6aead",
+      "bytes": 18077,
+      "lines": 450
+    },
+    "src-tauri/src/acp_client/pump.rs": {
+      "sha256": "4d0b3944b56c7ff1efa684d04776ad69e8579ea60d5025bf202fbfbaa97fc875",
+      "bytes": 79979,
+      "lines": 1421
+    },
+    "src-tauri/src/acp_client/pump/open.rs": {
+      "sha256": "9b99339953edf33fc36148d486c5a53d9bb5c9d1832eaff11dcee1a18227157f",
+      "bytes": 15732,
+      "lines": 409
+    },
+    "src-tauri/src/acp_client/pump/restore_config.rs": {
+      "sha256": "593ddc2770dc13f14aef1d9cb8c3998c97ef845477de75b2f2a86aa441b37ba6",
+      "bytes": 11496,
+      "lines": 330
+    },
+    "src-tauri/src/acp_client/pump/restore_readonly_tests.rs": {
+      "sha256": "f264adbea040f4054c8dc36971300f1e628eb0ffaeaae5dea144401acb7d7ed1",
+      "bytes": 17023,
+      "lines": 455
+    },
+    "src-tauri/src/acp_client/pump/restore_tests.rs": {
+      "sha256": "afb30a9d973de05e4da5e6b3f49c8e2e70a91d44f597dbd0360c3436b0c9d4a0",
+      "bytes": 18054,
+      "lines": 463
+    },
+    "src-tauri/src/acp_client/session.rs": {
+      "sha256": "516b2a40b3292ef0eeedc671c1386f7093aa90ac2cff4f92a0847dcab2cff702",
+      "bytes": 48367,
+      "lines": 1333
+    },
+    "src-tauri/src/acp_client/session/readonly_admission_tests.rs": {
+      "sha256": "ac92a0a69e06dc002bb26265eed1684faf655e08d8d6e65af634ad329f02a2dc",
+      "bytes": 2875,
+      "lines": 89
+    },
+    "src-tauri/src/acp_client/session_discovery.rs": {
+      "sha256": "0f38c4c9a2da3a845ef4a1cb8a7b8ae23868a61b9b9c77118b4ccab049739b81",
+      "bytes": 19122,
+      "lines": 598
+    },
+    "src-tauri/src/acp_client/session_fork/coordinator.rs": {
+      "sha256": "21c1530940e86879be75146f442eb0975159d08ff825483c29032c5aa5a5d39e",
+      "bytes": 12565,
+      "lines": 365
+    },
+    "src-tauri/src/acp_client/session_fork_wire_tests.rs": {
+      "sha256": "fb727ab0b30a3320344abdca2e89796e2fff482b3a5059d8b93e9822aa44c696",
+      "bytes": 39058,
+      "lines": 1046
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "c8b3986ca240c2999e01f95dff32f155354a165d0012e8edb899b29d22309f89",
+      "bytes": 24299,
+      "lines": 510
+    },
+    "src/components/ImportConversations.outcome.test.tsx": {
+      "sha256": "b1d83c61dc412b6933ecf4d87a236ac240a38d4cb5c1f9a9deb16aa6fded4079",
+      "bytes": 19970,
+      "lines": 661
+    },
+    "src/components/ImportConversations.saved-details.test.tsx": {
+      "sha256": "fbb7b75bb8acfc50c53ad730325c5f8b975104385bf0d6d8412987e69ac5d1d1",
+      "bytes": 23588,
+      "lines": 753
+    },
+    "src/components/ImportConversations.scope.test.tsx": {
+      "sha256": "cae9920365d9a1fb689e7f4f9207abab0c20361416700afd11bfaa385456495d",
+      "bytes": 28608,
+      "lines": 881
+    },
+    "src/components/ImportConversations.tsx": {
+      "sha256": "502c21261d41843322a5c87901c2c84a8cc7085e639bc7fd43e57200cfb25383",
+      "bytes": 46260,
+      "lines": 1337
+    },
+    "src/runtime/history_delivery_flows.test.ts": {
+      "sha256": "6ee66036933d0c21f1d8e4c41c3afa54382e44375a88947ee377f54e622ab5f5",
+      "bytes": 11127,
+      "lines": 344
+    },
+    "src/runtime/history_delivery_terminal.test.ts": {
+      "sha256": "6f7730dee5d977eca1242972769e51bf6f6c7c821302202264b779b34b13b7c8",
+      "bytes": 7351,
+      "lines": 226
+    },
+    "src/runtime/history_import.controls.test.ts": {
+      "sha256": "ace985f041def1a47b3f1c630e38c8a137296fb6d2f69ae7f54157785431be8b",
+      "bytes": 4642,
+      "lines": 149
+    },
+    "src/runtime/history_import.order.test.ts": {
+      "sha256": "1272b5a75fcd4586b9c856a7f90c1e978ad2ddccaad562625699dc6d5b858753",
+      "bytes": 2090,
+      "lines": 68
+    },
+    "src/runtime/history_import.projection.test.ts": {
+      "sha256": "6e42ad60537d7bb3169719c3cdd41b01bbf94b164097209d942cea57cd140ae0",
+      "bytes": 9575,
+      "lines": 274
+    },
+    "src/runtime/history_import.purpose.test.ts": {
+      "sha256": "c3f897d20b34ccf171b6936d32c018fb5cb2544b469fa113e3ad5788a419c74b",
+      "bytes": 9080,
+      "lines": 294
+    },
+    "src/runtime/history_import.receipt-owner.test.ts": {
+      "sha256": "b3df99fab92885de52f8cbf9dfda9ae13a43117d202ad17466bdfbf98390d250",
+      "bytes": 6863,
+      "lines": 219
+    },
+    "src/runtime/history_import.test.ts": {
+      "sha256": "f9147b05f7f66d500d5d0393e86809c058c07980ff53bafccc12ffa56343e55b",
+      "bytes": 16548,
+      "lines": 488
+    },
+    "src/runtime/history_import.ts": {
+      "sha256": "dbcda2cecbd9f0658200bef23c1aeadfd87b37e059bdd22792cd88aed84a1907",
+      "bytes": 13141,
+      "lines": 377
+    },
+    "src/runtime/history_preflight.cooperative.test.ts": {
+      "sha256": "ecc082d8c911cbab28fa29b623cb0d16f40e02300b59ad56553776f37110ec9a",
+      "bytes": 16421,
+      "lines": 539
+    },
+    "src/runtime/history_preview_scope.ts": {
+      "sha256": "e447ce07b372fd68d1a9638bd6928f40470b42f5df399bfa1a43bf0f566130c0",
+      "bytes": 1625,
+      "lines": 64
+    },
+    "src/runtime/history_replay_boundary.test.ts": {
+      "sha256": "ccd605544d84a86d4c1063b1def55faed34379c5db9dc69b1257fc9313a216bf",
+      "bytes": 8345,
+      "lines": 276
+    },
+    "src/runtime/session_delivery_integration.test.ts": {
+      "sha256": "a9b9854afd10a0da856de614c110f6f7c5b2d4dfcafef4c7a151b3c7c2315c43",
+      "bytes": 6466,
+      "lines": 217
+    }
+  },
+  "candidate": null,
+  "installation": null,
+  "realAffectedResult": null,
+  "closures": {
+    "completeP32": 0,
+    "standards": 0,
+    "wholeAgents": 0
+  },
+  "limits": [
+    "Controlled source/interface checks only. Formal625 has not received this source increment.",
+    "This first seam does not establish complete P32 official-history searching, pagination, import or29-by8 acceptance.",
+    "All three partial engineering attempts remain failures. The later native-fixed full seven actually passed on its own fixed input map; no prior command was reused. Checks ran before this source checkpoint commit; no candidate, installation or affected real-path result is claimed.",
+    "Six authentication waits, NEW-24 pause, Cline protection and earlier failures/incomplete/unknown outcomes are preserved.",
+    "Recorded endpoint equality does not prove continuous source stability or freeze dependency/environment bytes. No overlapping run counts are added.",
+    "Four ZipWriter archive-write-stopped diagnostics and a Vite large-chunk advisory remain in the successful full raw logs; command success does not assign an individual cause to each diagnostic."
+  ],
+  "references": {
+    "qualifiedBehaviorRed": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/root-red-qualification.json",
+      "sha256": "5d8a6a2c2df72b1ad6ff14cd3dece8f7cf48dd1b3f3595a5b8b093637137c936"
+    },
+    "frontendV2Review": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/fe-green-source-independent-review-v2.json",
+      "sha256": "604b71fcb7a56ccd8d2a8ddff519b0d4b5b11a10e529d51cc302fe68c53abee0"
+    },
+    "qualifiedFifoRed": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/followup-v2/root-followup-qualification.json",
+      "sha256": "17a0d3f6e9cea10422ca58f66003ba375c7b6f5b7155578c23dc2e9f5c4b19ed"
+    },
+    "finalAffectedBackend": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/fifo-final-green/actual-green-execution.json",
+      "sha256": "faf940b5aacc78ef8a3a7ebf481d06701617d6a41a21a2bf47a40ecefc3c0b3e"
+    },
+    "affectedPhaseIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/actual-phase-independent-review.json",
+      "sha256": "a8dde356adf639634e831971bfd681d3771cb86a67365fde6bdb4534a6aa97aa"
+    },
+    "firstPartialEngineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering/engineering-summary.json",
+      "sha256": "baea46bb7e628d14908cb3fb50cd47968ed97f6191bb1a9390a8468255b74f02"
+    },
+    "firstPartialIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering/engineering-initial-actual-independent-review.json",
+      "sha256": "d5345d3e6aceebd8f651df39af91e55e6a0c427eb29da6f4af663cc0641c4607"
+    },
+    "successfulMockSchemaCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/fe-fixture-schema-preparation.json",
+      "sha256": "7f0148b88e73bfdabc9fffcbebdf566ec617a882f41cb3c6ded90c9b9bdc9143"
+    },
+    "mockSchemaIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/fe-fixture-schema-independent-review.json",
+      "sha256": "ef5a76895c713e468637593ca836b94aea84d3088dd3b1e2989890720e5b31fa"
+    },
+    "secondPartialEngineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-followup/engineering-summary.json",
+      "sha256": "a78f9b450704c4166324dcf16517b66e893f23eabb42cb5f04ec600681a829ff"
+    },
+    "secondPartialIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-followup/second-engineering-actual-independent-review.json",
+      "sha256": "5b661161ff4105b2d338aec585ed0b53c0ba04b1e89d98bb0168daeb9050a378"
+    },
+    "unusedEntryCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/be-open-entry-cleanup-preparation.json",
+      "sha256": "187e010d07ee4196af11ba6a444db643055d1e314e541cec6fd91ecb27cfa514"
+    },
+    "unusedEntryIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/be-open-entry-cleanup-independent-review.json",
+      "sha256": "f9b55aca5a972675bb808e921460453fb9d86b43b469fafd8432b9bc8c11a76e"
+    },
+    "thirdPartialEngineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-first/engineering-summary.json",
+      "sha256": "7ab5359eea24a0acbedf61a2bf63e2e503f1744711241b2747d8e34c9f01ae31"
+    },
+    "fourQualifierCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/be-open-entry-path-preparation.json",
+      "sha256": "b60122da5429d3c476c2ebbe05b3ce3021c8f8617d48fa1b3792aa7834035076"
+    },
+    "fourQualifierIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/be-open-entry-path-independent-review.json",
+      "sha256": "740798736203972f4af9e00d206d168a0aec8f9b75c2f72f8b6fff15b26d05eb"
+    },
+    "windowsTerminal": {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-ci-readonly/terminal-receipt.json",
+      "sha256": "528ec24cfbc15b7b94ddcc6c47857cadf80caebb99e8aadfc1fab0abdc637ddd"
+    },
+    "finalEngineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-fixed/engineering-summary.json",
+      "sha256": "c565b6e471ded5cb363aae356d4d439134e74d47198f19a5235bd47482fac698"
+    },
+    "finalEngineeringIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-fixed/actual-independent-review.json",
+      "sha256": "cb661aacdbda06136e3769447be7be7776a85fe8fe0e55ed36d8dc8df3d37a20"
+    },
+    "thirdPartialIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-first/native-first-partial-independent-review.json",
+      "sha256": "1c8e88976b7ded8554146d05c2f2ed6543dbd49a71b76eab79ff52ad998cb80c"
+    },
+    "sourcePrivacyAndCopyReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/precommit-40source-privacy-copy-review.json",
+      "sha256": "39d32aca44f198b99b2b50cd54a77c9c2b45abf0b70c5e6ff5d516ed6bffe4a9"
+    },
+    "candidateArchiveCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-candidate-storage-preflight/root-exact-archive-cleanup-result.json",
+      "sha256": "71ee0b7c0c75f07ee386dc23e35b2509a6098cabacbcce44731575c9bf27b79a"
+    },
+    "earlierObjectCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-storage-preflight/exact-cleanup-result.json",
+      "sha256": "cba6dd48d742790f65fe7b0b04192468cabafc0fd17a804b55746271ae140763"
+    }
+  },
+  "engineeringBaseHead": "8495ccbae9091e036910b1d96f40be5914f9aa51",
+  "resourceRecovery": {
+    "earlierExactObjects": {
+      "removedCount": 157,
+      "allocatedBytes": 2799050752
+    },
+    "candidatePreparationArchives": {
+      "removedCount": 2,
+      "allocatedBytes": 1224921088,
+      "firstCommand": "Stopped after one removal due to querying the already removed path; preserved original journal. Follow-up removed only the remaining exact archive.",
+      "availableBytesAfterBoth": 2070138880
+    },
+    "scope": "Generated project Cargo leaves only; no directory, App, data, database, manifest, mount, user history or backup deletion. Free-space readings are endpoints, not lasting guarantees."
+  }
+}

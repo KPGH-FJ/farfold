@@ -54,9 +54,21 @@ vi.mock("react", async (original) => ({
   },
 }));
 vi.mock("../runtime/dialogs", () => ({ chooseDirectory: h.choose }));
+vi.mock("../runtime/credentials", async (original) => ({
+  ...(await original<typeof import("../runtime/credentials")>()),
+  subscribeCredentialChanges: () => () => {},
+}));
+vi.mock("../runtime/authentication", async (original) => ({
+  ...(await original<typeof import("../runtime/authentication")>()),
+  subscribeAuthenticationChanges: () => () => {},
+}));
 vi.mock("../runtime/history_import", () => ({
   discoverHistory: h.discover,
-  previewHistory: h.preview,
+  previewHistory: (agentId: string, row: unknown) => h.preview(agentId, row),
+  readHistoryPreview: async (agentId: string, row: unknown) => ({
+    ...(await h.preview(agentId, row)),
+    purpose: "searchReadOnly",
+  }),
   closeHistoryPreview: h.closePreview,
   commitHistoryPreview: h.commit,
   hasPreviewContent: () => true,
@@ -216,6 +228,7 @@ beforeEach(() => {
     agentId,
     cwd: row.cwd,
     nativeSessionId: row.nativeSessionId,
+    purpose: "importPreview",
     previewToken: `preview-${row.nativeSessionId}`,
     replayComplete: true,
     state: { items: [], configOptions: [] },

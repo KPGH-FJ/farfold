@@ -15,6 +15,7 @@ use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager, Window};
 
 use super::manager::{AcpManager, require_agent_row, validate_cwd_async};
+use super::open_purpose::OpenPurpose;
 use super::session_index::iso8601_millis;
 use crate::meta_store::{AgentRow, MetaStore, SessionRow};
 
@@ -26,6 +27,7 @@ pub struct ImportPreview {
     #[serde(flatten)]
     pub session: super::session::SessionOpenResult,
     pub preview_token: String,
+    pub purpose: &'static str,
 }
 
 #[tauri::command]
@@ -39,6 +41,58 @@ pub async fn session_import_preview(
     open_token: String,
     admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
     channel: Channel<Wake>,
+) -> Result<ImportPreview, String> {
+    preview_command(
+        app,
+        window,
+        agent_id,
+        cwd,
+        session_id,
+        open_token,
+        admission_channel,
+        channel,
+        OpenPurpose::ImportPreview,
+    )
+    .await
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub async fn session_read_preview(
+    app: AppHandle,
+    window: Window,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    open_token: String,
+    admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
+    channel: Channel<Wake>,
+) -> Result<ImportPreview, String> {
+    preview_command(
+        app,
+        window,
+        agent_id,
+        cwd,
+        session_id,
+        open_token,
+        admission_channel,
+        channel,
+        OpenPurpose::SearchReadOnly,
+    )
+    .await
+}
+
+#[allow(clippy::too_many_arguments)]
+async fn preview_command(
+    app: AppHandle,
+    window: Window,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    open_token: String,
+    admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
+    channel: Channel<Wake>,
+    purpose: OpenPurpose,
 ) -> Result<ImportPreview, String> {
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
@@ -64,18 +118,34 @@ pub async fn session_import_preview(
         .await?;
     preparation.ready();
     let channel = DeliveryChannel::new(&manager, &window, &agent_id, &open_token, channel)?;
-    open_import_preview(
-        &manager,
-        &store,
-        &row,
-        &cwd,
-        session_id,
-        token,
-        &open_token,
-        channel,
-        Some(history),
-    )
-    .await
+    if purpose == OpenPurpose::ImportPreview {
+        open_import_preview(
+            &manager,
+            &store,
+            &row,
+            &cwd,
+            session_id,
+            token,
+            &open_token,
+            channel,
+            Some(history),
+        )
+        .await
+    } else {
+        open_preview(
+            &manager,
+            &store,
+            &row,
+            &cwd,
+            session_id,
+            token,
+            &open_token,
+            channel,
+            Some(history),
+            purpose,
+        )
+        .await
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -90,6 +160,37 @@ pub(super) async fn open_import_preview(
     channel: impl Into<DeliveryChannel>,
     history: Option<super::history_admission::Permit>,
 ) -> Result<ImportPreview, String> {
+    open_preview(
+        manager,
+        store,
+        row,
+        cwd,
+        session_id,
+        token,
+        open_token,
+        channel,
+        history,
+        OpenPurpose::ImportPreview,
+    )
+    .await
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(super) async fn open_preview(
+    manager: &AcpManager,
+    store: &MetaStore,
+    row: &AgentRow,
+    cwd: &Path,
+    session_id: String,
+    token: String,
+    open_token: &str,
+    channel: impl Into<DeliveryChannel>,
+    history: Option<super::history_admission::Permit>,
+    purpose: OpenPurpose,
+) -> Result<ImportPreview, String> {
+    if purpose.preview_name().is_none() {
+        return Err("读取对话的用途无法确认，本次尚未开始".into());
+    }
     let channel = channel.into();
     let delivery_failed = Arc::new(AtomicBool::new(false));
     let failed = delivery_failed.clone();
@@ -100,7 +201,7 @@ pub(super) async fn open_import_preview(
         }
     });
     let opened = manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             row,
             cwd,
             Some(session_id),
@@ -109,19 +210,25 @@ pub(super) async fn open_import_preview(
             store,
             None,
             Some(token.clone()),
+            purpose,
             history,
             Some(open_token.to_owned()),
         )
         .await?;
     let connection = manager.session_connection(&row.id, cwd, &opened.session_id);
-    let session_operations = connection
-        .as_ref()
-        .map(|c| super::session_fork::capabilities(c, &opened.session_id))
-        .unwrap_or_default();
+    let session_operations = if opened.purpose == OpenPurpose::SearchReadOnly {
+        Default::default()
+    } else {
+        connection
+            .as_ref()
+            .map(|c| super::session_fork::capabilities(c, &opened.session_id))
+            .unwrap_or_default()
+    };
     let failed = delivery_failed.load(Ordering::SeqCst) || connection.is_err();
     let source = connection.ok().and_then(|connection| connection.service);
     let preview = ImportPreview {
         preview_token: token.clone(),
+        purpose: opened.purpose.preview_name().ok_or("无法确认读取状态")?,
         session: super::session::SessionOpenResult {
             identity_read: None,
             workspace_access: None, // A preview is not an executable session owner.
@@ -396,6 +503,27 @@ pub async fn session_import_commit(
 ) -> Result<SessionRow, String> {
     let cwd = validate_cwd_async(&cwd).await?;
     let manager = app.state::<AcpManager>();
+    commit_preview(
+        &manager,
+        &app.state::<MetaStore>(),
+        agent_id,
+        cwd,
+        session_id,
+        preview_token,
+        title,
+    )
+    .await
+}
+
+pub(super) async fn commit_preview(
+    manager: &AcpManager,
+    store: &MetaStore,
+    agent_id: String,
+    cwd: PathBuf,
+    session_id: String,
+    preview_token: String,
+    title: Option<String>,
+) -> Result<SessionRow, String> {
     let _opening = manager
         .opening_sessions
         .reserve(&agent_id, &cwd, &session_id)?;
@@ -405,11 +533,14 @@ pub async fn session_import_commit(
         .lock()
         .map_err(|_| "无法读取对话状态")?
         .get(&session_id)
-        .is_none_or(|entry| entry.preview_token.as_deref() != Some(preview_token.as_str()))
+        .is_none_or(|entry| {
+            entry.preview_token.as_deref() != Some(preview_token.as_str())
+                || entry.purpose != OpenPurpose::ImportPreview
+        })
     {
         return Err("此预览已结束，请重新打开后再加入".into());
     }
-    app.state::<MetaStore>()
+    store
         .run(move |store| {
             store.import_session(
                 &agent_id,

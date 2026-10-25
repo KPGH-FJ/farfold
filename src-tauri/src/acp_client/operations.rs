@@ -403,6 +403,7 @@ pub(crate) async fn run(
         }
         ManagerCommand::OpenSession {
             fork_owned,
+            purpose,
             native_session_id,
             preview_token,
             opening_token,
@@ -420,6 +421,7 @@ pub(crate) async fn run(
             let future = pump::open_session_on_connection(
                 &cx,
                 &cwd,
+                purpose,
                 native_session_id,
                 preview_token,
                 opening_token,

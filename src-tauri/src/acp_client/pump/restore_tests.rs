@@ -458,3 +458,6 @@ async fn flow_load_configuration_before_long_prefix_reaches_original_reply_witho
     assert_eq!(fixture.record(), baseline);
     fixture.assert_identity_and_no_prompt();
 }
+
+#[path = "restore_readonly_tests.rs"]
+mod readonly;

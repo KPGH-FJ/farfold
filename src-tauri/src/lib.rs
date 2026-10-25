@@ -278,6 +278,7 @@ pub fn run() {
                 acp_client::history_search::history_search_release,
                 acp_client::session_discovery::session_discover,
                 acp_client::session_discovery::session_import_preview,
+                acp_client::session_discovery::session_read_preview,
                 acp_client::session_discovery::session_import_commit,
                 acp_client::session_discovery::session_import_close,
                 acp_client::session_commands::session_close,

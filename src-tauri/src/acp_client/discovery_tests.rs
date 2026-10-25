@@ -4,6 +4,9 @@ use crate::meta_store::{AgentRow, MetaStore};
 use serde_json::{Value, json};
 use std::sync::{Arc, Mutex};
 
+#[path = "discovery_readonly_tests.rs"]
+mod readonly;
+
 const PEER: &str = r#"
 import sys,json,os,time
 base=os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +16,7 @@ options=[{'id':'model','name':'Model','category':'model','type':'select','curren
 for line in sys.stdin:
  m=json.loads(line); method=m.get('method'); p=m.get('params',{})
  if method=='initialize':
-  caps={'loadSession':True}
+  caps={'loadSession':'--no-load' not in sys.argv}
   if sys.argv[1]=='supported': caps['sessionCapabilities']={'list':{}}
   if '--remote-close' in sys.argv: caps.setdefault('sessionCapabilities',{})['close']={}
   reply(m,{'protocolVersion':1,'agentCapabilities':caps,'authMethods':[]})
@@ -23,6 +26,7 @@ for line in sys.stdin:
   elif p.get('cursor')=='next': reply(m,{'sessions':[{'sessionId':'second','cwd':'/missing/history-location'}]})
   else: reply(m,{'sessions':[{'sessionId':'first','cwd':base,'title':'Original history'}],'nextCursor':'next'})
  elif method in ('session/new','session/load'):
+  with open(os.path.join(base,'open-requests'),'a') as f: f.write(method+'\n')
   id=p.get('sessionId','live')
   if id=='failure': send({'id':m['id'],'error':{'code':-32603,'message':'load failed'}}); continue
   if method=='session/load' and id=='replay-batch':
@@ -473,7 +477,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         .unwrap();
     assert!(
         f.manager
-            .open_session_owned(
+            .open_session_owned_for_purpose(
                 &f.agent,
                 &f.cwd,
                 Some("live".into()),
@@ -482,6 +486,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 &f.store,
                 None,
                 Some("preview-live".into()),
+                super::open_purpose::OpenPurpose::ImportPreview,
                 None,
                 None,
             )
@@ -526,7 +531,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
             .any(|event| event.to_string().contains("still-open"))
     );
 
-    let first = f.manager.open_session_owned(
+    let first = f.manager.open_session_owned_for_purpose(
         &f.agent,
         &f.cwd,
         Some("history".into()),
@@ -535,10 +540,11 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         &f.store,
         None,
         Some("first".into()),
+        super::open_purpose::OpenPurpose::ImportPreview,
         None,
         None,
     );
-    let second = f.manager.open_session_owned(
+    let second = f.manager.open_session_owned_for_purpose(
         &f.agent,
         &f.cwd,
         Some("history".into()),
@@ -547,6 +553,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
         &f.store,
         None,
         Some("second".into()),
+        super::open_purpose::OpenPurpose::ImportPreview,
         None,
         None,
     );
@@ -605,7 +612,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
     );
     assert!(
         f.manager
-            .open_session_owned(
+            .open_session_owned_for_purpose(
                 &f.agent,
                 &f.cwd,
                 Some("failure".into()),
@@ -614,6 +621,7 @@ async fn preview_ownership_rejects_live_sessions_and_stale_cleanup() {
                 &f.store,
                 None,
                 Some("failed".into()),
+                super::open_purpose::OpenPurpose::ImportPreview,
                 None,
                 None,
             )
@@ -629,7 +637,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
     let f = Fixture::new(true);
     let events: SessionSink = Arc::new(|_| {});
     f.manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.agent,
             &f.cwd,
             Some("history".into()),
@@ -638,6 +646,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("first".into()),
+            super::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )
@@ -656,7 +665,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             .is_err()
     );
     f.manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.agent,
             &f.cwd,
             Some("history".into()),
@@ -665,6 +674,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
             &f.store,
             None,
             Some("second".into()),
+            super::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )
@@ -706,7 +716,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
     f.store.replace_agent_launch(&f.agent).unwrap();
     let events: SessionSink = Arc::new(|_| {});
     f.manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.agent,
             &f.cwd,
             Some("history".into()),
@@ -715,6 +725,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             &f.store,
             None,
             Some("late".into()),
+            super::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )
@@ -755,7 +766,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
         .await
         .unwrap();
     f.manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.agent,
             &f.cwd,
             Some("refuse-close".into()),
@@ -764,6 +775,7 @@ async fn preview_cleanup_after_late_close_keeps_real_close_failures() {
             &f.store,
             None,
             Some("refused".into()),
+            super::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )

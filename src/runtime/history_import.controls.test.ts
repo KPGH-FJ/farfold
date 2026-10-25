@@ -27,6 +27,7 @@ const result = {
   cwd: row.cwd,
   nativeSessionId: row.nativeSessionId,
   connectionId: "preview-connection",
+  purpose: "importPreview",
   previewToken: "exact-preview",
 };
 const owner = {

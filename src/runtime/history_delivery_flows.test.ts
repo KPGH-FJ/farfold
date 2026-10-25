@@ -57,7 +57,9 @@ const result = (nativeSessionId: string, connectionId: string): OpenResult => ({
 // the common primitive. Only the Tauri boundary/draft flush are controlled.
 it("projects three real entry flows into distinct private states without raw replay buffers", async () => {
   const index = deferred<IndexRow[]>(),
-    previewReply = deferred<OpenResult & { previewToken: string }>();
+    previewReply = deferred<
+      OpenResult & { previewToken: string; purpose: "importPreview" }
+    >();
   const received = deferred<void>();
   const tokens = new Map<Role, string>();
   const owners = new Map<Role, { state: ThreadState; event: OwnedEvent }>();
@@ -273,6 +275,7 @@ it("projects three real entry flows into distinct private states without raw rep
     index.resolve([]);
     previewReply.resolve({
       ...result("preview-history", "preview-connection"),
+      purpose: "importPreview",
       previewToken: "owned-preview-token",
     });
     const [openState, child, previewState] = await Promise.all([
@@ -317,6 +320,7 @@ it("projects three real entry flows into distinct private states without raw rep
     index.resolve([]);
     previewReply.resolve({
       ...result("preview-history", "preview-connection"),
+      purpose: "importPreview",
       previewToken: "owned-preview-token",
     });
     await settled;

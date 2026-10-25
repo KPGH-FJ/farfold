@@ -265,6 +265,7 @@ async fn run(
     let mut opened = pump::open_session_on_connection(
         cx,
         &request.cwd,
+        super::super::open_purpose::OpenPurpose::Conversation,
         Some(id.clone()),
         Some(request.operation_id.clone()),
         None,

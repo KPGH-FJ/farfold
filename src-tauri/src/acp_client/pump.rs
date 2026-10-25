@@ -162,6 +162,7 @@ type ProcessEndedSink = Arc<dyn Fn(ProcessEndedReceipt) + Send + Sync>;
 /// Everything needed to reach a live session from the command layer.
 pub(crate) struct SessionEntry {
     connection_id: String,
+    pub(crate) purpose: super::open_purpose::OpenPurpose,
     pub(crate) preview_token: Option<String>,
     /// Parameters accepted by this client's successful new/load, not Agent permissions.
     pub(crate) workspace: Option<Vec<std::path::PathBuf>>,
@@ -206,6 +207,7 @@ mod prompt;
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
     pub(crate) identity: super::lifecycle::OpenIdentity,
+    pub(crate) purpose: super::open_purpose::OpenPurpose,
     pub connection_id: String,
     pub session_id: String,
     /// Raw `session/new`/`session/load` response JSON. Raw passthrough keeps
@@ -549,6 +551,7 @@ async fn session_pump(
     mcp_requests: Option<super::transient_mcp::SessionMcpRequests>,
     received: load_notifications::State,
 ) {
+    let purpose = opening.purpose;
     let mut opening = Some(opening);
     let mut detached = None;
     let mut fork_state: Option<Arc<super::session_fork::SourceFork>> = None;
@@ -617,6 +620,10 @@ async fn session_pump(
             && let Some(command) = buffered_control.take()
         {
             if command.abandoned() {
+                continue;
+            }
+            if purpose == super::open_purpose::OpenPurpose::SearchReadOnly {
+                command.reject("此对话仅供查看，请先关闭查看结果再继续".into());
                 continue;
             }
             ops.life.touch();
@@ -716,6 +723,7 @@ async fn session_pump(
                     || initial.reply.as_ref().is_none_or(|reply| reply.is_closed()) {
                     Err("恢复结果尚未确认，请重新检查此对话".to_string())
                 } else if let Err(error) = source { Err(error) }
+                else if purpose == super::open_purpose::OpenPurpose::SearchReadOnly { Ok(None) }
                 else { restore_config::Plan::new(initial, &config_store) };
                 let plan = match plan {
                     Ok(plan) => plan,
@@ -975,6 +983,11 @@ async fn session_pump(
                 None => break,
                 Some(command) => {
                     if command.abandoned() { continue; }
+                    if purpose == super::open_purpose::OpenPurpose::SearchReadOnly
+                        && !matches!(command, SessionControl::Close { .. } | SessionControl::Detach { .. } | SessionControl::Shutdown) {
+                        command.reject("此对话仅供查看，请先关闭查看结果再继续".into());
+                        continue;
+                    }
                     ops.life.touch();
                     if opening.is_some() {
                         let error="对话正在恢复，请稍后重试".to_string();

@@ -15,6 +15,7 @@ import {
   hasPreviewContent,
   historyContinuation,
   previewHistory,
+  readHistoryPreview,
   type DiscoveredConversation,
   type HistoryPreview,
 } from "../runtime/history_import";
@@ -27,7 +28,16 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { AgentLogo } from "./AgentLogo";
 import { chooseDirectory } from "../runtime/dialogs";
-import { observeAuthentication } from "../runtime/authentication";
+import {
+  observeAuthentication,
+  subscribeAuthenticationChanges,
+} from "../runtime/authentication";
+import { subscribeCredentialChanges } from "../runtime/credentials";
+import {
+  historyPreviewAgentKey,
+  historyPreviewAssociationKey,
+  historyPreviewRowKey,
+} from "../runtime/history_preview_scope";
 import {
   configValueLabel,
   modelConfigOption,
@@ -36,6 +46,13 @@ import {
 interface AddedConversation {
   saved: IndexRow;
   index: readonly IndexRow[];
+}
+
+interface PreviewInterest {
+  agentId: string;
+  inquirySignal: AbortSignal;
+  inquiryCurrent: () => boolean;
+  retire: () => void;
 }
 
 interface LookupDraft {
@@ -160,8 +177,10 @@ export function ImportConversations({
   const [unsupported, setUnsupported] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [preview, setPreview] = useState<HistoryPreview | null>(null);
+  const [receivedPreview, setPreview] = useState<HistoryPreview | null>(null);
   const previewRef = useRef<HistoryPreview | null>(null);
+  const previewInterest = useRef<PreviewInterest | null>(null);
+  const pendingImports = useRef(new Set<PreviewInterest>());
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [listing, setListing] = useState(false);
@@ -231,6 +250,105 @@ export function ImportConversations({
     mounted.current &&
     lookupRevision.current === revision &&
     requestedContextRef.current === context;
+  const selectedAgent = agents.find((card) => card.id === agentId);
+  const viewKey = JSON.stringify([
+    requestedContext,
+    open,
+    agentId,
+    lookupCwd,
+    query,
+    historyPreviewAgentKey(selectedAgent),
+  ]);
+  const viewScope = useRef({ key: viewKey });
+  if (viewScope.current.key !== viewKey) viewScope.current = { key: viewKey };
+  const latestView = useRef({ rows, agentId, lookupCwd });
+  latestView.current = { rows, agentId, lookupCwd };
+  const createPreviewInterest = (
+    row: DiscoveredConversation,
+  ): PreviewInterest => {
+    const scope = viewScope.current;
+    const revision = lookupRevision.current;
+    const context = requestedContextRef.current;
+    const rowKey = historyPreviewRowKey(row);
+    const association = historyPreviewAssociationKey(
+      threads.getSnapshot().index,
+      agentId,
+      row.nativeSessionId,
+    );
+    const controller = new AbortController();
+    let active = true;
+    return {
+      agentId,
+      inquirySignal: controller.signal,
+      retire: () => {
+        active = false;
+        controller.abort();
+      },
+      inquiryCurrent: () => {
+        if (!active) return false;
+        try {
+          const currentRow = latestView.current.rows.find(
+            (item) => item.nativeSessionId === row.nativeSessionId,
+          );
+          active =
+            !controller.signal.aborted &&
+            openRef.current &&
+            currentLookup(revision, context) &&
+            viewScope.current === scope &&
+            latestView.current.agentId === agentId &&
+            !!currentRow &&
+            historyPreviewRowKey(currentRow) === rowKey &&
+            historyPreviewAssociationKey(
+              threads.getSnapshot().index,
+              agentId,
+              row.nativeSessionId,
+            ) === association;
+        } catch {
+          active = false;
+        }
+        return active;
+      },
+    };
+  };
+  const previewCurrent = previewInterest.current?.inquiryCurrent() ?? false;
+  for (const owner of pendingImports.current) owner.inquiryCurrent();
+  const preview = previewCurrent ? receivedPreview : null;
+  useEffect(() => {
+    const owner = previewInterest.current;
+    if (owner && !owner.inquiryCurrent()) owner.retire();
+    for (const pending of pendingImports.current)
+      if (!pending.inquiryCurrent()) pending.retire();
+  }, [viewKey, rows, index]);
+  useEffect(() => {
+    const retire = (agent?: string) => {
+      const owner = previewInterest.current;
+      if (owner && (!agent || owner.agentId === agent)) {
+        owner.retire();
+        if (mounted.current) setPreview(null);
+      }
+      for (const pending of pendingImports.current)
+        if (!agent || pending.agentId === agent) pending.retire();
+    };
+    const checkIndex = () => {
+      const owner = previewInterest.current;
+      if (owner && !owner.inquiryCurrent()) {
+        owner.retire();
+        if (mounted.current) setPreview(null);
+      }
+      for (const pending of pendingImports.current)
+        if (!pending.inquiryCurrent()) pending.retire();
+    };
+    const stopIndex = threads.subscribe?.(checkIndex);
+    const stopAuthentication = subscribeAuthenticationChanges(retire);
+    const stopCredentials = subscribeCredentialChanges(() => retire());
+    return () => {
+      stopIndex?.();
+      stopAuthentication();
+      stopCredentials();
+      previewInterest.current?.retire();
+      for (const pending of pendingImports.current) pending.retire();
+    };
+  }, []);
   useEffect(() => {
     if (!agentId && available.length) setAgentId(available[0].id);
   }, [agentId, available]);
@@ -268,6 +386,8 @@ export function ImportConversations({
     (row) => !visible.includes(row),
   ).length;
   const release = async () => {
+    const owner = previewInterest.current;
+    owner?.retire();
     const p = previewRef.current;
     if (!p) return;
     try {
@@ -277,12 +397,14 @@ export function ImportConversations({
     }
     if (previewRef.current !== p) return;
     previewRef.current = null;
+    if (previewInterest.current === owner) previewInterest.current = null;
     if (mounted.current) setPreview(null);
   };
   const work = async (fn: () => Promise<void>) => {
     if (inFlight.current) return;
     const revision = lookupRevision.current;
     const context = requestedContextRef.current;
+    const scope = viewScope.current;
     inFlight.current = true;
     setBusy(true);
     setError(null);
@@ -291,7 +413,7 @@ export function ImportConversations({
     try {
       await fn();
     } catch (reason) {
-      if (currentLookup(revision, context))
+      if (currentLookup(revision, context) && viewScope.current === scope)
         setError(reason instanceof Error ? reason.message : S.loadFailed);
     } finally {
       if (!openRef.current) {
@@ -321,7 +443,16 @@ export function ImportConversations({
     handledRequest.current = requestRevision;
     if (agentId === initialAgentId) return;
     void work(async () => {
+      const context = requestedContextRef.current;
+      const revision = lookupRevision.current;
+      const scope = viewScope.current;
       await release();
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       restoreDiscovery(
         initialAgentId,
         agentLocations.current.get(initialAgentId) ?? null,
@@ -340,7 +471,6 @@ export function ImportConversations({
     setPreparationCwd({ cwd });
     return true;
   };
-  const selectedAgent = agents.find((card) => card.id === agentId);
   const needsPreparation =
     !available.length ||
     (selectedAgent && selectedAgent.status !== "connected") ||
@@ -351,9 +481,15 @@ export function ImportConversations({
     const cwd = preparationCwd?.cwd ?? lookupCwd;
     const revision = lookupRevision.current;
     const context = requestedContextRef.current;
+    const scope = viewScope.current;
     void work(async () => {
       await release();
-      if (!openRef.current || !currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       openRef.current = false;
       onPrepare(target, cwd);
     });
@@ -362,8 +498,14 @@ export function ImportConversations({
     work(async () => {
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
+      const scope = viewScope.current;
       await release();
-      if (!currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       setPreviewId(null);
       setListing(true);
       const page = await discoverHistory(
@@ -372,7 +514,8 @@ export function ImportConversations({
         lookupCwd,
       )
         .catch((reason) => {
-          if (!currentLookup(revision, context)) return null;
+          if (!currentLookup(revision, context) || viewScope.current !== scope)
+            return null;
           throw new Error(
             preparationFailure(reason, lookupCwd)
               ? S.authRequired
@@ -380,7 +523,13 @@ export function ImportConversations({
           );
         })
         .finally(() => setListing(false));
-      if (!page || !currentLookup(revision, context)) return;
+      if (
+        !page ||
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       const merged = new Map<string, DiscoveredConversation>();
       for (const row of [...(more ? rows : []), ...page.sessions])
         merged.set(row.nativeSessionId, row);
@@ -407,30 +556,37 @@ export function ImportConversations({
     work(async () => {
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
+      const scope = viewScope.current;
       await release();
-      if (!currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       setPreviewId(row.nativeSessionId);
       if (row.alreadyAddedId || added[row.nativeSessionId]) return;
       if (!row.locationAvailable) throw new Error(S.locationHint);
       if (!row.canLoad) throw new Error(S.noLoad);
       if (row.isOpen) throw new Error(S.busy);
-      const loaded = await previewHistory(agentId, row).catch((reason) => {
-        if (!currentLookup(revision, context)) return null;
-        throw new Error(
-          preparationFailure(reason, row.cwd)
-            ? S.authRequired
-            : reason instanceof Error && reason.message === S.noContent
-              ? S.noContent
-              : S.loadFailed,
-        );
-      });
+      const owner = createPreviewInterest(row);
+      if (!owner.inquiryCurrent()) return;
+      previewInterest.current = owner;
+      const loaded = await readHistoryPreview(agentId, row, owner).catch(
+        (reason) => {
+          if (!owner.inquiryCurrent()) return null;
+          throw new Error(
+            preparationFailure(reason, row.cwd)
+              ? S.authRequired
+              : reason instanceof Error && reason.message === S.noContent
+                ? S.noContent
+                : S.loadFailed,
+          );
+        },
+      );
       if (!loaded) return;
-      if (!mounted.current) {
-        await closeHistoryPreview(loaded);
-        return;
-      }
       previewRef.current = loaded;
-      if (!currentLookup(revision, context)) {
+      if (!owner.inquiryCurrent()) {
         await release();
         return;
       }
@@ -440,64 +596,118 @@ export function ImportConversations({
     });
   const add = (targets = selectedRows) =>
     work(async () => {
+      const revision = lookupRevision.current;
+      const context = requestedContextRef.current;
+      const scope = viewScope.current;
       const eligible = targets.filter(canAdd);
-      const completed = new Set<string>();
-      const { count, failures, cleanupFailed } = await importConversationBatch(
-        eligible,
-        {
-          save: async (row) => {
-            let current = previewRef.current;
-            if (!current || current.nativeSessionId !== row.nativeSessionId) {
-              await release();
-              current = await previewHistory(agentId, row);
-              previewRef.current = current;
-            }
-            if (!mounted.current) {
-              await release();
-              return null;
-            }
-            return commitHistoryPreview(current, row.title);
-          },
-          release,
-          onAdded: (nativeSessionId, saved) => {
-            completed.add(nativeSessionId);
-            const index = threads.getSnapshot().index;
-            setAdded((old) => ({
-              ...old,
-              [nativeSessionId]: { saved, index },
-            }));
-          },
-        },
+      const resultKey = JSON.stringify([agentId, lookupCwd]);
+      const originalDraft: LookupDraft = {
+        rows,
+        cursor,
+        searched,
+        choosing,
+        unsupported,
+        query,
+        selected,
+        previewId,
+        added,
+        failed,
+      };
+      const owners = new Map(
+        eligible.map((row) => [row, createPreviewInterest(row)]),
       );
-      setSelected(
-        (previous) =>
-          new Set([
-            ...[...previous].filter((id) => !completed.has(id)),
-            ...failures,
-          ]),
-      );
-      setFailed(
-        (previous) =>
-          new Set([
-            ...[...previous].filter(
-              (id) => !eligible.some((row) => row.nativeSessionId === id),
-            ),
-            ...failures,
-          ]),
-      );
-      setMessage(count > 0 ? S.addedCount(count) : null);
-      if (cleanupFailed) setError(S.cleanupFailed);
-      else if (failures.length) setError(S.addFailed);
+      for (const owner of owners.values()) pendingImports.current.add(owner);
       try {
-        await threads.refreshIndex();
-      } catch {
-        throw new Error(S.refreshFailed);
+        // A read receipt is never promoted. Unknown exact cleanup ends this
+        // action before the batch can issue a fresh load or try another row.
+        await release();
+        const currentAction = () =>
+          openRef.current &&
+          currentLookup(revision, context) &&
+          viewScope.current === scope &&
+          eligible.every((row) => {
+            const current = latestView.current.rows.find(
+              (item) => item.nativeSessionId === row.nativeSessionId,
+            );
+            return (
+              !!current &&
+              historyPreviewRowKey(current) === historyPreviewRowKey(row)
+            );
+          });
+        if (!currentAction()) return;
+        const completed = new Set<string>();
+        const receipts: Record<string, AddedConversation> = {};
+        const { count, failures, cleanupFailed } =
+          await importConversationBatch(eligible, {
+            save: async (row) => {
+              const owner = owners.get(row);
+              if (!owner || !currentAction() || !owner.inquiryCurrent())
+                return null;
+              previewInterest.current = owner;
+              const current = await previewHistory(agentId, row, owner);
+              previewRef.current = current;
+              if (!owner.inquiryCurrent()) {
+                await release();
+                return null;
+              }
+              return commitHistoryPreview(current, row.title);
+            },
+            release,
+            onAdded: (nativeSessionId, saved) => {
+              completed.add(nativeSessionId);
+              receipts[nativeSessionId] = {
+                saved,
+                index: threads.getSnapshot().index,
+              };
+            },
+          });
+        // Interest controls further reads and writes, not the outcome of a
+        // commit already dispatched for this lookup. Retain its exact saved
+        // receipt and explicit failures without publishing to another lookup.
+        const previous = lookupDrafts.current.get(resultKey) ?? originalDraft;
+        const settled = new Set([...completed, ...failures]);
+        const result: LookupDraft = {
+          ...previous,
+          added: { ...previous.added, ...receipts },
+          selected: new Set([
+            ...[...previous.selected].filter((id) => !completed.has(id)),
+            ...failures,
+          ]),
+          failed: new Set([
+            ...[...previous.failed].filter((id) => !settled.has(id)),
+            ...failures,
+          ]),
+        };
+        lookupDrafts.current.set(resultKey, result);
+        if (
+          !mounted.current ||
+          lookupRevision.current !== revision ||
+          latestView.current.agentId !== agentId ||
+          latestView.current.lookupCwd !== lookupCwd
+        )
+          return;
+        setAdded(result.added);
+        setSelected(result.selected);
+        setFailed(result.failed);
+        setMessage(count > 0 ? S.addedCount(count) : null);
+        if (cleanupFailed) setError(S.cleanupFailed);
+        else if (failures.length) setError(S.addFailed);
+        if (!currentAction()) return;
+        try {
+          await threads.refreshIndex();
+        } catch {
+          throw new Error(S.refreshFailed);
+        }
+      } finally {
+        for (const owner of owners.values())
+          pendingImports.current.delete(owner);
       }
     });
   const openExisting = (row: DiscoveredConversation) =>
     work(async () => {
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
+      const scope = viewScope.current;
       const current = () => {
         const index = threads.getSnapshot().index;
         return resolveAddedConversation(
@@ -510,7 +720,12 @@ export function ImportConversations({
       };
       if (!current()) throw new Error(S.savedUnavailable);
       await release();
-      if (!openRef.current || !currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       const found = current();
       if (!found) throw new Error(S.savedUnavailable);
       close();
@@ -534,7 +749,16 @@ export function ImportConversations({
       return;
     }
     void work(async () => {
+      const revision = lookupRevision.current;
+      const context = requestedContextRef.current;
+      const scope = viewScope.current;
       await release();
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       restoreDiscovery(
         nextAgent,
         agentLocations.current.get(nextAgent) ?? null,
@@ -545,6 +769,7 @@ export function ImportConversations({
     work(async () => {
       const revision = lookupRevision.current;
       const context = requestedContextRef.current;
+      const scope = viewScope.current;
       const next = useDefault
         ? null
         : await chooseDirectory(lookupCwd ?? undefined);
@@ -552,20 +777,32 @@ export function ImportConversations({
         (!useDefault && !next) ||
         !openRef.current ||
         !currentLookup(revision, context) ||
+        viewScope.current !== scope ||
         next === lookupCwd
       )
         return;
       await release();
-      if (!openRef.current || !currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       restoreDiscovery(agentId, next);
     });
   const startNew = () => {
     if (!onNew || !agentId) return;
     const revision = lookupRevision.current;
     const context = requestedContextRef.current;
+    const scope = viewScope.current;
     void work(async () => {
       await release();
-      if (!openRef.current || !currentLookup(revision, context)) return;
+      if (
+        !openRef.current ||
+        !currentLookup(revision, context) ||
+        viewScope.current !== scope
+      )
+        return;
       close();
       onNew(agentId);
     });
@@ -687,8 +924,10 @@ export function ImportConversations({
                 disabled={busy}
                 onClick={() =>
                   void work(async () => {
+                    const scope = viewScope.current;
                     await release();
-                    setChoosing(true);
+                    if (openRef.current && viewScope.current === scope)
+                      setChoosing(true);
                   })
                 }
               >

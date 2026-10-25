@@ -179,6 +179,7 @@ it("local preview conversion failure retires only staging and preserves the inde
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
         connectionId: "preview-owner",
+        purpose: "importPreview",
         previewToken: "exact-preview-close",
         resumed: true,
         warnings: [],

@@ -76,6 +76,7 @@ fn send_open_history(
         .unwrap();
     let command = ManagerCommand::OpenSession {
         fork_owned: false,
+        purpose: crate::acp_client::open_purpose::OpenPurpose::ImportPreview,
         native_session_id: Some(native.into()),
         preview_token: Some("delivery-fixture".into()),
         opening_token: None,
@@ -297,7 +298,7 @@ async fn abandoned_open(timeout: bool) {
     // Retry through the public entry, not a fake channel-only implementation.
     let retry = f
         .manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.row,
             &f.cwd,
             Some("restored".into()),
@@ -306,6 +307,7 @@ async fn abandoned_open(timeout: bool) {
             &f.store,
             None,
             Some("retry".into()),
+            crate::acp_client::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )
@@ -317,7 +319,7 @@ async fn abandoned_open(timeout: bool) {
     finish(&f, &connection).await;
     let reopened = f
         .manager
-        .open_session_owned(
+        .open_session_owned_for_purpose(
             &f.row,
             &f.cwd,
             Some("restored".into()),
@@ -326,6 +328,7 @@ async fn abandoned_open(timeout: bool) {
             &f.store,
             None,
             Some("retry-after-reaping".into()),
+            crate::acp_client::open_purpose::OpenPurpose::ImportPreview,
             None,
             None,
         )
