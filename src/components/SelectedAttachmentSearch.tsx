@@ -463,7 +463,18 @@ export function SelectedAttachmentSearch({
                       );
                       return;
                     }
-                    onSelect?.(hit.source, owner);
+                    onSelect?.(
+                      hit.source,
+                      owner,
+                      hit.location &&
+                        "kind" in hit.location &&
+                        hit.location.kind === "pdf"
+                        ? {
+                            file: hit.file,
+                            pageNumber: hit.location.pageNumber,
+                          }
+                        : undefined,
+                    );
                   }}
                 >
                   {locating ? S.checking : S.navigate}

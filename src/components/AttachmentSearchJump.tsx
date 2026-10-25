@@ -3,6 +3,7 @@ import { threads } from "../runtime/sessions";
 import {
   attachmentSearchSourceCurrent,
   type AttachmentSearchLocation,
+  type AttachmentPdfPreview,
 } from "../runtime/attachment_search_source";
 import { revealSearchAncestors } from "../runtime/transcript_search";
 import { ATTACHMENT_SEARCH_STRINGS as S } from "../runtime/attachment_search_strings";
@@ -10,6 +11,7 @@ import "./LoadedSearchResults.css";
 export type AttachmentSearchRequest = {
   source: AttachmentSearchLocation;
   token: object;
+  pdfPreview?: AttachmentPdfPreview;
 };
 export function AttachmentSearchJump({
   host,

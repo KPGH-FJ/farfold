@@ -6,10 +6,13 @@ import {
 } from "../runtime/draft_images";
 import { renderPdfPage } from "../runtime/pdf_preview";
 import { validPdfPage } from "../runtime/file_feedback_anchor";
+import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
+import { sameFileRevision } from "../runtime/file_revision_monitor";
 import type { VisualPreviewReadiness } from "../runtime/visual_feedback";
 import {
   checkedVisualPreview,
   checkedVisualPreviewMetadata,
+  MAX_PDF_PAGES,
   VISUAL_PREVIEW_STRINGS as S,
 } from "../runtime/visual_preview";
 import {
@@ -29,6 +32,7 @@ export function VisualFilePreview({
   active,
   onReadiness,
   readingPosition,
+  initialPdfPage,
   interactionBlocked = false,
   onVisualTargetAvailability,
   onVisualTargetConfirm,
@@ -38,6 +42,7 @@ export function VisualFilePreview({
   active: boolean;
   interactionBlocked?: boolean;
   readingPosition?: PreviewReadingPositionRef;
+  initialPdfPage?: AttachmentPdfPreviewTarget;
   onReadiness?: (value: VisualPreviewReadiness) => void;
 }) {
   const canvas = useRef<HTMLCanvasElement | null>(null);
@@ -58,16 +63,32 @@ export function VisualFilePreview({
     source: VisualPreview;
     page: number;
   } | null>(null);
-  const initialPage = useRef({
-    source: preview,
-    page: restoredPdfPage(preview.file, readingPosition),
-  });
-  if (initialPage.current.source !== preview)
-    initialPage.current = {
+  const initialPosition = () => {
+    const target =
+      preview.mimeType === "application/pdf" ? initialPdfPage : undefined;
+    const valid =
+      !target ||
+      (sameFileRevision(target.file, preview.file) &&
+        validPdfPage(target.pageNumber, MAX_PDF_PAGES));
+    return {
       source: preview,
-      page: restoredPdfPage(preview.file, readingPosition),
+      page:
+        target && valid
+          ? target.pageNumber
+          : restoredPdfPage(preview.file, readingPosition),
+      target,
+      valid,
     };
-  const restorePage = requested?.source !== preview;
+  };
+  const initialPage = useRef(initialPosition());
+  if (initialPage.current.source !== preview)
+    initialPage.current = initialPosition();
+  const searchTarget = initialPage.current.target;
+  const searchCurrent =
+    requested?.source === preview ||
+    !searchTarget ||
+    (initialPage.current.valid && searchTarget.current());
+  const restorePage = requested?.source !== preview && !searchTarget;
   const page =
     requested?.source === preview ? requested.page : initialPage.current.page;
   const [displayedPage, setDisplayedPage] = useState(page);
@@ -88,6 +109,11 @@ export function VisualFilePreview({
     report.current?.({ source: preview, location: null });
     setImage(null);
     setPages(null);
+    if (!searchCurrent) {
+      setState("failed");
+      setMessage(S.changed);
+      return () => operation.abort();
+    }
     if (!active) {
       setState("paused");
       setMessage(S.paused);
@@ -99,7 +125,10 @@ export function VisualFilePreview({
       current.current === operation &&
       !operation.signal.aborted &&
       source.current.preview === preview &&
-      source.current.active;
+      source.current.active &&
+      (!searchTarget ||
+        requested?.source === preview ||
+        searchTarget.current());
     let renderedPages: number | null = null;
     let renderedPage = page;
     void (async () => {
@@ -166,6 +195,10 @@ export function VisualFilePreview({
             setDisplay(next);
           }
           setDisplayedPage(renderedPage);
+          // The strict intent ends only after a verified draw. Later ordinary
+          // reading is independent of closing or replacing the search result.
+          if (searchTarget && requested?.source !== preview)
+            setRequested({ source: preview, page: renderedPage });
           saveReadingPosition(readingPosition, preview.file, {
             kind: "pdf",
             page: renderedPage,
@@ -208,7 +241,7 @@ export function VisualFilePreview({
         report.current?.({ source: preview, location: null });
       }
     };
-  }, [preview, active, page, restorePage, readingPosition]);
+  }, [preview, active, page, restorePage, readingPosition, searchCurrent]);
   const pdf = preview.mimeType === "application/pdf";
   const actionOwner = current.current;
   const displayedOperation = image?.owner ?? null;

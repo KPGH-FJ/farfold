@@ -1,4 +1,6 @@
 import { fileBasename } from "../runtime/file_paths";
+import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
+import { ATTACHMENT_SEARCH_STRINGS } from "../runtime/attachment_search_strings";
 import {
   useEffect,
   useLayoutEffect,
@@ -16,6 +18,7 @@ import {
 } from "../runtime/file_delivery";
 import {
   visualFileKind,
+  MAX_PDF_PAGES,
   VISUAL_PREVIEW_STRINGS as V,
 } from "../runtime/visual_preview";
 import { TextBlockPreview } from "./TextBlockPreview";
@@ -90,6 +93,7 @@ export interface OpenedFileViewProps {
   selectionKey?: string;
   /** Caller-owned current-file location, never an opinion or selection. */
   readingPosition?: PreviewReadingPositionRef;
+  pdfSearchTarget?: AttachmentPdfPreviewTarget;
   onOpenHtml: (file: VerifiedFile) => void;
   headerActions?: ReactNode;
   onBack?: () => void;
@@ -103,6 +107,7 @@ type View = {
   textSource?: TextFeedbackSource | null;
   block?: TextBlock;
   visual?: VisualPreview;
+  pdfSearchTarget?: AttachmentPdfPreviewTarget;
   office?: PreparedOfficePreview;
   note?: string;
   pending?: boolean;
@@ -236,6 +241,7 @@ export function OpenedFileView({
   active,
   selectionKey,
   readingPosition: retainedReadingPosition,
+  pdfSearchTarget,
   onOpenHtml,
   headerActions,
   onBack,
@@ -268,6 +274,9 @@ export function OpenedFileView({
   latestView.current = view;
   const localReadingPosition = useRef<PreviewReadingPosition | null>(null);
   const readingPosition = retainedReadingPosition ?? localReadingPosition;
+  const pendingPdfTarget = useRef({ identity, target: pdfSearchTarget });
+  if (pendingPdfTarget.current.identity !== identity)
+    pendingPdfTarget.current = { identity, target: pdfSearchTarget };
   const readingOwner = useRef(identity);
   const textContent = useRef<HTMLDivElement>(null);
   const textScroll = useRef(0);
@@ -404,6 +413,20 @@ export function OpenedFileView({
       parser: preserve ? new AbortController() : undefined,
     };
     operation.current = owner;
+    const searchTarget = preserve ? undefined : pendingPdfTarget.current.target;
+    pendingPdfTarget.current.target = undefined;
+    const readCurrent = () => {
+      if (!current(owner)) return false;
+      if (searchTarget && !searchTarget.current()) {
+        setView({
+          identity,
+          phase: "paused",
+          note: ATTACHMENT_SEARCH_STRINGS.errors.changed,
+        });
+        return false;
+      }
+      return true;
+    };
     targets.clear();
     let applied = false;
     let blockAttempt = false;
@@ -424,7 +447,7 @@ export function OpenedFileView({
     try {
       const file =
         verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
-      if (!current(owner)) return false;
+      if (!readCurrent()) return false;
       inspected = file;
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
@@ -438,9 +461,28 @@ export function OpenedFileView({
         } else {
           try {
             const visual = await fileDelivery.readVisual(file);
-            if (!current(owner)) return false;
+            if (!readCurrent()) return false;
             if (!sameFile(visual.file, file)) throw new Error("File changed");
-            setView({ identity, phase: "ready", file, visual });
+            const exactSearch =
+              visual.mimeType === "application/pdf" &&
+              searchTarget &&
+              searchTarget.current() &&
+              sameFile(searchTarget.file, file) &&
+              Number.isSafeInteger(searchTarget.pageNumber) &&
+              searchTarget.pageNumber >= 1 &&
+              searchTarget.pageNumber <= MAX_PDF_PAGES;
+            if (searchTarget && !exactSearch) readingPosition.current = null;
+            setView({
+              identity,
+              phase: "ready",
+              file,
+              visual,
+              pdfSearchTarget: exactSearch ? searchTarget : undefined,
+              note:
+                searchTarget && !exactSearch
+                  ? ATTACHMENT_SEARCH_STRINGS.errors.changed
+                  : undefined,
+            });
           } catch (error) {
             if (preserve) throw error;
             if (current(owner))
@@ -1098,6 +1140,7 @@ export function OpenedFileView({
           onVisualTargetConfirm={targets.confirmVisual}
           onTargetEditing={targets.reportEditing}
           readingPosition={readingPosition}
+          initialPdfPage={shown.pdfSearchTarget}
         />
       )}
       {file && shown.phase === "ready" && isWorkbook(file) && (

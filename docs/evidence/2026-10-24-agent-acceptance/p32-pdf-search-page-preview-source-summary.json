@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32VerifiedPdfHitPageToExplicitPreviewSourceSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "scope": {
+    "productionFiles": 9,
+    "testFiles": 3,
+    "stablePins": 12,
+    "largestProductionFileLines": 1458
+  },
+  "behavior": [
+    "A verified PDF hit retains its exact file revision and page through source navigation. The existing explicit click on the original message attachment starts preview; navigation itself reads no preview.",
+    "Current content ownership and the same navigation request protect pending work before/after capture; a full revision match is required to use the temporary page. Changed files drop the old hit and reading page with an existing source-changed notice.",
+    "The first hit page is strict and cannot clamp an out-of-range page into success. A successful draw consumes the hint into ordinary reading state; closing the notice then retains the drawn page.",
+    "No protocol, backend, Agent request, other document-format behavior, persistent index, dependency or UI-string additions."
+  ],
+  "validation": {
+    "originalEffectiveRed": {
+      "tests": 3,
+      "passed": 2,
+      "failed": 1,
+      "meaning": "Page2 search hit reached the actual preview decoder boundary as page1. Ten related input hashes were captured, not a full source graph."
+    },
+    "originalOracleGreen": {
+      "tests": 3,
+      "passed": 3
+    },
+    "intermediateOwnerRed": {
+      "tests": 7,
+      "passed": 6,
+      "failed": 1,
+      "meaning": "Retired content ownership during pending inspection still admitted one visual read; captured as a separate overlapping round."
+    },
+    "hostPreparationFailuresPreserved": 3,
+    "authorAffected": {
+      "files": 17,
+      "passed": 283,
+      "failed": 0
+    },
+    "independentFocused": {
+      "files": 4,
+      "passed": 51,
+      "failed": 0
+    },
+    "sourceReviewBlockingFindings": 0,
+    "countsAreSeparateOverlappingRuns": true,
+    "fullSeven": {
+      "actualCommands": 7,
+      "allSucceeded": true,
+      "earlierPassingChecksReused": 0,
+      "frontend": {
+        "files": 685,
+        "passed": 9114,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2307,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "inputCount": 2291,
+      "fullBeforeAndAfterMapsEqual": true,
+      "perCommandRecordedEndpointComparisonsAllTrue": true,
+      "perCommandFullMapsPersisted": false,
+      "independentBlockingFindings": 0,
+      "checksRanBeforeCommitOnExactInputMap": true
+    }
+  },
+  "limits": [
+    "The new component chain controls React commit hosting and native file/decoder boundaries. It is not real browser layout or installed rendering proof.",
+    "Full engineering checks and source review passed; this source checkpoint has no candidate, installation or actual page2 rendering result. The formal application is still the prior cb43 source.",
+    "Endpoint comparisons do not prove absence of intermediate writers, and dependencies/environment were not frozen. Each command retains its comparison result rather than a separate full graph.",
+    "The Vite large-chunk advisory and four archive-cancellation messages remain in raw logs; the latter were not individually assigned a unique cause.",
+    "Full P32, standards, Agent and all29 remain open. Previous failed/unknown outcomes, six waits and NEW-24 pause are unchanged."
+  ],
+  "references": {
+    "implementation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/implementation.json",
+      "sha256": "ebe5f32cdc7a1263c7536c38d9c666f0f9fa1c90fc7c90c4636b8ed6e24420ab"
+    },
+    "independentSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/independent-source-review.json",
+      "sha256": "7c88f4d806e3a9d11964f8d5df3b731998347617b2612f5b98f695310a9ab615"
+    },
+    "effectiveOriginalRed": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/red-04-command.json",
+      "sha256": "02713598512a058f716e589a01a6951270929dd7cce86bee29136fb03e99f94d"
+    },
+    "originalRedOracle": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/red-valid-oracle.tsx.txt",
+      "sha256": "ef7ced971cb0e423c9e9b695d66b2e469b138655b8a89b0d36ba3a413ebb8b71"
+    },
+    "originalOracleGreen": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/green-initial-command.json",
+      "sha256": "b3ce50b9b0e10e76bb99e385d828e8edff5b642e625134bafeba89787d5a13f6"
+    },
+    "intermediateOwnerRed": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/owner-guard-red-command.json",
+      "sha256": "4c7d04292b24e081ce88d6268a013116683f3b5ec919cf34d1edd3ec32fe6a5c"
+    },
+    "authorAffectedFinal": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/affected-final-command.json",
+      "sha256": "d3f56e7e8fae2efd37d02348716ec2562b8d10600855a71ffe657a0996a1a88d"
+    },
+    "independentFocused": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-search-page-preview-source/independent-focused-command.json",
+      "sha256": "dc04c776747c1a02ed713ee650d175ea3847ae507676520d029b8308a4853ba7"
+    },
+    "engineeringSummary": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/engineering-summary.json",
+      "sha256": "45ae93b132219c2053a962e7ab183687c3646d9647327f56b7bc3a37381af9cf"
+    },
+    "engineeringIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/independent-engineering-review.json",
+      "sha256": "aea20e93981f0bd0b48bda217750e397775bf2b58a93dca28d676b70b0bdcf2e"
+    },
+    "engineeringSourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/source-before.json",
+      "sha256": "5611c4521db72069b423a624c736ab43c6abf4fa6a03454ede7820620d7257fd"
+    },
+    "engineeringSourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/source-after.json",
+      "sha256": "cebf5e515e60188bc1aa00777eb5a80f46946372a98ba6bd9836a1ac0406701b"
+    },
+    "engineeringExpected": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-target-page-engineering/source-expected.json",
+      "sha256": "1ba798b8f7dda9e5a71dcdb15615ab9ae1c9efc9af9b149df2c0a08060b96446"
+    }
+  },
+  "engineeringBaseHead": "edb5bbc5b0d910a589656abc4a19993c51f6e581"
+}

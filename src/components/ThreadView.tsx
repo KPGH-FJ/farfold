@@ -84,6 +84,8 @@ import {
 } from "../runtime/agent_preparation";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import { ArtifactPane, type OpenedFileRequest } from "./ArtifactPane";
+import type { AttachmentSearchRequest } from "./AttachmentSearchJump";
+import { attachmentSearchSourceCurrent } from "../runtime/attachment_search_source";
 import { useFileFeedbackDestination } from "./useFileFeedbackDestination";
 import { Composer } from "./Composer";
 import { WorkspacePopover } from "./WorkspacePopover";
@@ -227,7 +229,9 @@ export function ThreadView({
   draftComposerRef,
   preparedComposerIsCurrent,
   rememberedBrowserOwner,
+  attachmentSearchRequest,
 }: {
+  attachmentSearchRequest?: AttachmentSearchRequest | null;
   rememberedBrowserOwner?: RememberedBrowserOwner | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   preparedComposerIsCurrent?: (() => boolean) | null;
@@ -257,6 +261,8 @@ export function ThreadView({
     null,
   );
   const fileRequestId = useRef(0);
+  const searchRequest = useRef(attachmentSearchRequest);
+  searchRequest.current = attachmentSearchRequest;
   const [browserPage, setBrowserPage] = useState<BrowserWorkspaceState | null>(
     null,
   );
@@ -325,6 +331,23 @@ export function ThreadView({
   const openFile = (path: string, opener: HTMLElement) => {
     if (!ownsContent()) return;
     const taskKey = thread.key;
+    const request = attachmentSearchRequest;
+    const matchesSearch = () =>
+      !!request &&
+      searchRequest.current === request &&
+      request.source.threadKey === thread.key &&
+      request.source.path === path &&
+      opener.closest<HTMLElement>("[data-loaded-message]")?.dataset
+        .loadedMessage === request.source.itemId &&
+      opener.closest<HTMLElement>("[data-loaded-attachment]")?.dataset
+        .loadedAttachment === String(request.source.attachmentIndex) &&
+      attachmentSearchSourceCurrent(
+        request.source,
+        threads.getSnapshot().threads,
+        undefined,
+        threads.getSnapshot().index,
+      );
+    const pdfPreview = matchesSearch() ? request?.pdfPreview : undefined;
     browserSurfaceGuard.runLatest(() => {
       if (
         !ownsContent() ||
@@ -341,6 +364,22 @@ export function ThreadView({
         cwd: thread.cwd,
         path,
         selection: ++fileRequestId.current,
+        pdfSearchTarget:
+          pdfPreview && matchesSearch()
+            ? {
+                ...pdfPreview,
+                // Hand off to this explicit content owner, not the retired search UI.
+                current: () =>
+                  ownsContent() &&
+                  searchRequest.current === request &&
+                  attachmentSearchSourceCurrent(
+                    request!.source,
+                    threads.getSnapshot().threads,
+                    undefined,
+                    threads.getSnapshot().index,
+                  ),
+              }
+            : undefined,
       });
       threads.openArtifactPane(taskKey);
     });

@@ -55,6 +55,34 @@ it("opens only the already loaded source attachment without Agent recovery", () 
   expect(h.reconnect).not.toHaveBeenCalled();
   expect(h.draft.text).toBe("OWN-ORIGINAL-DRAFT");
 });
+it("hands the exact verified PDF page intent to the loaded owner without opening a preview", () => {
+  const { source } = fixture();
+  const pdfPreview = {
+    file: {
+      root: "/controlled",
+      path: "/controlled/current.txt",
+      resolvedPath: "/controlled/current.txt",
+      name: "current.txt",
+      size: 10,
+      sha256: "controlled",
+      version: "v1",
+    },
+    pageNumber: 2,
+  };
+  call(
+    "ConversationLibrary",
+    "onSelectAttachment",
+    source,
+    () => true,
+    pdfPreview,
+  );
+  expect(component("ThreadPage").attachmentSearchRequest).toMatchObject({
+    source,
+    pdfPreview,
+  });
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.reconnect).not.toHaveBeenCalled();
+});
 it.each(["owner", "message", "index", "thread"])(
   "rejects stale %s after browser hide before attachment navigation",
   async (change) => {

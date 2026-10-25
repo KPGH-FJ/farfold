@@ -409,3 +409,114 @@ it("does not let a failed or superseded revision overwrite the last successfully
     0,
   );
 });
+
+it("uses the exact searched PDF page without ordinary restore clamping", async () => {
+  const readingPosition = {
+    current: {
+      root: source.root,
+      resolvedPath: source.resolvedPath,
+      kind: "pdf",
+      page: 3,
+    },
+  };
+  Object.assign(props, {
+    readingPosition,
+    initialPdfPage: { file: source, pageNumber: 2, current: () => true },
+  });
+  const pending = deferred<void>();
+  h.render.mockReturnValue(pending.promise);
+  render();
+  expect(h.render.mock.calls[0][2]).toBe(2);
+  expect(h.render.mock.calls[0][6]).toBe(false);
+  h.render.mock.calls[0][5](3);
+  pending.resolve();
+  await drain();
+  render();
+  expect(readingPosition.current.page).toBe(2);
+});
+it("does not replace a rejected out-of-range hit with an ordinary clamped reading page", async () => {
+  const readingPosition = {
+    current: {
+      root: source.root,
+      resolvedPath: source.resolvedPath,
+      kind: "pdf",
+      page: 3,
+    },
+  };
+  const report = vi.fn();
+  Object.assign(props, {
+    readingPosition,
+    onReadiness: report,
+    initialPdfPage: { file: source, pageNumber: 8, current: () => true },
+  });
+  h.render.mockRejectedValue(new Error(S.failed));
+  render();
+  await drain();
+  expect(h.render.mock.calls[0][2]).toBe(8);
+  expect(h.render.mock.calls[0][6]).toBe(false);
+  expect(render().html).toContain(S.failed);
+  expect(readingPosition.current.page).toBe(3);
+  expect(report.mock.calls.every(([v]) => v.location === null)).toBe(true);
+});
+it("honors a new exact search intent when a new preview arrives in the same mounted reader", async () => {
+  Object.assign(props, {
+    initialPdfPage: { file: source, pageNumber: 2, current: () => true },
+  });
+  h.render.mockImplementation(
+    async (_bytes, _canvas, _page, _width, _signal, ready) => ready(3),
+  );
+  render();
+  await drain();
+  const next = {
+    ...props.preview,
+    file: { ...source, version: "next-version" },
+  };
+  props.preview = next;
+  Object.assign(props, {
+    initialPdfPage: { file: next.file, pageNumber: 3, current: () => true },
+  });
+  render();
+  await drain();
+  expect(h.render.mock.calls.map((call) => [call[2], call[6]])).toEqual([
+    [2, false],
+    [3, false],
+  ]);
+});
+it.each(["cancel", "hide", "owner"])(
+  "cannot publish a late search page after %s",
+  async (change) => {
+    let current = true;
+    const readingPosition = {
+      current: {
+        root: source.root,
+        resolvedPath: source.resolvedPath,
+        kind: "pdf",
+        page: 3,
+      },
+    };
+    const report = vi.fn();
+    Object.assign(props, {
+      readingPosition,
+      onReadiness: report,
+      initialPdfPage: { file: source, pageNumber: 2, current: () => current },
+    });
+    const pending = deferred<void>();
+    h.render.mockReturnValue(pending.promise);
+    render();
+    if (change === "cancel") click(S.cancel);
+    if (change === "hide") {
+      props.active = false;
+      render();
+    }
+    if (change === "owner") {
+      current = false;
+      render();
+    }
+    h.render.mock.calls[0][5](3);
+    pending.resolve();
+    await drain();
+    render();
+    expect(readingPosition.current.page).toBe(3);
+    expect(report.mock.calls.every(([v]) => v.location === null)).toBe(true);
+  },
+);

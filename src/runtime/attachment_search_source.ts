@@ -1,4 +1,4 @@
-import { localResourcePath } from "./file_delivery";
+import { localResourcePath, type VerifiedFile } from "./file_delivery";
 import { documentMediaFormat } from "./document_media_type";
 import type { Attachment, ThreadItem, ThreadState } from "./session_types";
 
@@ -166,9 +166,18 @@ export function attachmentSearchIsPptx(source: AttachmentSearchCandidate) {
 }
 /** A location request contains no file text and never pretends it is message text. */
 export type AttachmentSearchLocation = AttachmentSearchCandidate;
+/** A transient page request for this exact searched file, never reading history. */
+export type AttachmentPdfPreview = Readonly<{
+  file: Readonly<VerifiedFile>;
+  pageNumber: number;
+}>;
+export type AttachmentPdfPreviewTarget = AttachmentPdfPreview & {
+  current: () => boolean;
+};
 export type SelectAttachmentSearch = (
   source: AttachmentSearchLocation,
   current: () => boolean,
+  pdfPreview?: AttachmentPdfPreview,
 ) => void;
 
 export function knownAttachmentSearchCandidate(

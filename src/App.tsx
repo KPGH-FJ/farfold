@@ -1,6 +1,7 @@
 import {
   attachmentSearchSourceCurrent,
   type AttachmentSearchLocation,
+  type AttachmentPdfPreview,
 } from "./runtime/attachment_search_source";
 import type { AttachmentSearchRequest } from "./components/AttachmentSearchJump";
 import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
@@ -604,7 +605,11 @@ export default function App() {
     },
   );
   const openAttachmentSearch = afterBrowserClose(
-    (source: AttachmentSearchLocation, current: () => boolean) => {
+    (
+      source: AttachmentSearchLocation,
+      current: () => boolean,
+      pdfPreview?: AttachmentPdfPreview,
+    ) => {
       if (!current()) return;
       const snapshot = threads.getSnapshot(),
         row = snapshot.index.find((r) => r.id === source.threadKey),
@@ -625,7 +630,7 @@ export default function App() {
       setLoadedSearchRequest(null);
       setThreadKey(source.threadKey);
       setView({ kind: "thread", key: source.threadKey });
-      setAttachmentSearchRequest({ source, token: {} });
+      setAttachmentSearchRequest({ source, token: {}, pdfPreview });
     },
   );
   const notificationSelection = useRef<(key: string) => void>(() => {});

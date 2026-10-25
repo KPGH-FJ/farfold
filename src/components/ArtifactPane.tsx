@@ -9,6 +9,7 @@ import {
   type ReportedArtifactOrigin,
 } from "../runtime/reported_artifacts";
 import type { VerifiedFile } from "../runtime/file_delivery";
+import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
 import type { FileFeedbackDestination } from "../runtime/drafts";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { BrowserWorkspace } from "./BrowserWorkspace";
@@ -91,6 +92,7 @@ export interface OpenedFileRequest {
   cwd: string;
   path: string;
   selection: number;
+  pdfSearchTarget?: AttachmentPdfPreviewTarget;
 }
 
 export function ArtifactPane({
@@ -605,6 +607,7 @@ export function ArtifactPane({
             threadKey={thread.key}
             workingDirectory={thread.cwd}
             readingPosition={readingPosition}
+            pdfSearchTarget={currentFile.pdfSearchTarget}
             active={active && open && !showingBrowser}
             onOpenHtml={openHtml}
             headerActions={headerActions}

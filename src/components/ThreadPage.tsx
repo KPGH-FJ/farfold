@@ -342,6 +342,7 @@ export function ThreadPage({
       <main className="main workspace-thread" ref={host}>
         {thread ? (
           <ThreadView
+            attachmentSearchRequest={attachmentSearch}
             contentMode={contentMode}
             onContentModeChange={setContentMode}
             key={thread.key}
