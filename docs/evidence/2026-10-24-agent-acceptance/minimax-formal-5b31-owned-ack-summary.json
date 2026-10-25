@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "kind": "MiniMaxSingleAckUnknownPublicSummary",
+  "agentId": "minimax-code",
+  "productCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "appVersion": "0.1.7",
+  "claimScope": "one-real-agent-ack-attempt-remains-unknown",
+  "wholeClosures": {
+    "requirements": 0,
+    "standards": 0,
+    "agents": 0,
+    "all29By8": 0
+  },
+  "actual": {
+    "ordinaryModelSubmissions": 1,
+    "actualAgentReplyPresent": false,
+    "recognizedRequestCompletion": false,
+    "currentConversationIdleObserved": false,
+    "visibleToolSteps": 0,
+    "resultUnknownNotice": true,
+    "sendPaused": true,
+    "stopControlStillVisible": true,
+    "operatorRetryStopRecheckLoginChoiceFileOrQueueActions": 0
+  },
+  "timing": {
+    "plannedOperatorWindowSeconds": 180,
+    "firstUnknownObservationSecondsAfterSubmit": 82.547,
+    "lastObservationSecondsAfterSubmit": 191.783,
+    "lastObservationOverrunSeconds": 11.783,
+    "firstUnknownWithinWindow": true,
+    "lastObservationOutsideWindow": true,
+    "exactStateAt180SecondsKnown": false
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "complete": false,
+    "allExpectedOutcomesMatched": false,
+    "passed": 0,
+    "failed": 0,
+    "incomplete": 1,
+    "invalid": 0,
+    "actualObservationValuesMatchingOriginalEight": 5,
+    "attemptStatus": "started",
+    "attemptOutcome": "unknown",
+    "attemptFinishedAtPresent": false,
+    "readOnlyCheckerInvocations": 1,
+    "checkerExitCode": 1
+  },
+  "evidenceScope": {
+    "currentInstalledUiReferences": 3,
+    "currentFilesystemMetadataReferences": 1,
+    "originalPreparedReferenceIsInputDependencyOnly": true,
+    "eightRecordedInputsUnchanged": true,
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/semantic-independent-review.json",
+      "sha256": "289bd942ae17cd8450a43c02a76519132d596b48c99d816410dea402213735f7"
+    }
+  },
+  "qualifications": [
+    "This is one new unresolved MiniMax request, not a failed ACK or an ended request. The displayed error, unknown notice, paused send and retained Stop control are observations; they do not establish a terminal response, successful cancellation or ongoing inference.",
+    "The first unknown observation at82.547seconds was inside the planned180-second operator window. The last same-state observation at191.783seconds exceeded it by11.783seconds. This deviation is retained, with no reconstructed state at180seconds and no performance or exact backend latency claim.",
+    "The attempt has no finishedAt. The receipt-level finishedAt records the observation/sealing endpoint only and does not terminate the unknown request. An operator window never supplies timeout or cancellation proof.",
+    "No retry, Stop, recheck, login, alternate choice, file request or queue continuation was performed. Existing unknown work protection remains; Kimchi, Droid and siGit historical outcomes are not changed.",
+    "Original existing-source/model and permission Auto labels were preserved. Permission Auto is not an ordinary work mode, approval-effect proof or thought grade. Current raw IDs, process version, account and effective backend remain unverified.",
+    "Unrecognized updates and extension fields remained collapsed. Zero visible tools and one owned folder do not prove exhaustive no-I/O, global idle, event completeness or a unique cause.",
+    "The single direct read-only checker returned1 for mechanically valid incomplete coverage, not a validator crash or Agent retry. Eight recorded inputs stayed equal; the older prepared reference is only a hashed input/dependency, not current real-agent evidence.",
+    "No S5 answer or ARCH-34 success, complete requirement/standard/Agent or29-by8 closure is added. Other held branches, old failures and unknowns remain unchanged."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/case-plan.json",
+      "sha256": "025988fc08aef9b00384180d899f8ea6a804f10ab43a27c8f7e2356f80a44486"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/manifest.json",
+      "sha256": "b5c1a0c761d0e28b8b957feb0e4769251c0f9d07ac083c39e667f697b33ce482"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/preflight.json",
+      "sha256": "4bda87e6f6b95065fc25f0122f6b37c4020eadb536e9f22b734f41f040c48241"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/unique-input-observation.json",
+      "sha256": "78ba7ff5707b1469f6d3eefc4797f52141adbc2c81fd89a055c2fe882c73d202"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/pre-submit-owned-cwd-inspection.json",
+      "sha256": "72a5f531299bac8523f4d0ab13caa3bf2361109da8d9054667c075aeffa957a4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/intermediate-ui-observation.json",
+      "sha256": "f6bcaccb6ffb64a2654029e2984b5e4e998cd68707453952034212006ea88813"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/actual-ui-observation.json",
+      "sha256": "b84a484c948f49e8fec291c613ef644d8db3ba60052dce6ef852403fabfc54ce"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/actual-receipt.json",
+      "sha256": "e4d72a00ca866bdea1473327d461880d11d20a0176b8ed2fc6d1ca4bec8788b4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/post-case-input-check.json",
+      "sha256": "305120d7850d3167436cb857159114963d8fbb5721961225bf9fe9b67b0de53b"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/validation.json",
+      "sha256": "5c5381c913552d7738c8cf27a3b3f991a1743102a6c2d6243bf8434be1e21f1c"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/minimax-owned-ack-formal-5b31/validation-execution.json",
+      "sha256": "b37606ef7e2fdb0bc769fd40cfb66d64860b6d81b06e873a4d6010470552c821"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # 逐家验收设施与本批证据
 
+5b31短回答增量：[Copilot精确回复窄正例1](copilot-formal-5b31-owned-ack-summary.json)、[Kimi无可读回复失败1](kimi-formal-5b31-owned-ack-summary.json)、[MiniMax结果未知未完成1](minimax-formal-5b31-owned-ack-summary.json)。均单次请求、无重试或停止；MiniMax末次观察超原窗口，不补判终态，不关闭完整要求或标准。
+
 2026-10-24。用户批准分层复用、逐家真实取证和按变化复验，并要求持续开发至29家八项验收后集中提交审阅。执行顺序仍仅见[活动计划](../../../plans/agent-access.md)，本目录只记录实际工作，不另成队列。
 
 ## 边界与当前事实

@@ -4,6 +4,8 @@
 
 ## 当前工作与接续
 
+5b31上另外三家各一次短回答：Copilot精确回复、完成及当前空闲构成窄正例1；Kimi本地结束但无可读结果，保留失败1；MiniMax显示结果未知、发送暂停，保留未完成1，未重试或停止。MiniMax首次未知在82.547秒内，最后同态观察191.783秒已超原180秒窗口，不补判窗口内终态。三份回执结构有效并经语义复核；不证明完整标准、后端或全部事件。见[Copilot](evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json)、[Kimi](evidence/2026-10-24-agent-acceptance/kimi-formal-5b31-owned-ack-summary.json)及[MiniMax](evidence/2026-10-24-agent-acceptance/minimax-formal-5b31-owned-ack-summary.json)。
+
 `5b31c20a1`已正常保存退出后更新唯一正式0.1.7 arm64应用：候选9/9、安装10/10，三份新232530条清单端点一致、备份完整性通过；重复候选五文件及五目录已清理，ZIP与旧版本证据保留，未创建应用备份。首次启动可见146份历史、1份保留草稿及空输入，仅为界面计数，不代表全部正文或配置已就绪。见[正式更新](evidence/2026-10-24-agent-acceptance/formal-5b31-installation.json)。
 
 5b31上两家各一次自有文件请求：Kilo期望19B含LF、实际18B缺LF，保留失败1；OpenCode实际23B含LF与原期望相符，保留窄正例1。两者均观察到工具路径、请求完成与当前对话空闲，零重试或修复；旧超时、旧失败及完整要求均不翻案，不关闭标准或整家。见[Kilo文件失败](evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json)及[OpenCode文件分项](evidence/2026-10-24-agent-acceptance/opencode-formal-5b31-owned-file-summary.json)。

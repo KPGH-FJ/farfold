@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kind": "CopilotSingleAckPublicSummary",
+  "agentId": "github-copilot-cli",
+  "productCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "appVersion": "0.1.7",
+  "claimScope": "one-real-agent-exact-reply-positive",
+  "narrowCoverage": {
+    "S5": "回答",
+    "ARCH-34": "真实回复"
+  },
+  "wholeClosures": {
+    "requirements": 0,
+    "standards": 0,
+    "agents": 0,
+    "all29By8": 0
+  },
+  "actual": {
+    "ordinaryModelSubmissions": 1,
+    "exactExpectedReplyVisible": true,
+    "recognizedRequestCompletion": true,
+    "currentConversationIdleVisible": true,
+    "visibleToolSteps": 0,
+    "operatorRetryStopRecheckLoginChoiceFileOrQueueActions": 0,
+    "operatorObservationUpperSeconds": 59.701,
+    "operatorWindowSeconds": 180
+  },
+  "preservedUiChoice": {
+    "source": "existing-settings",
+    "modelLabel": "Auto",
+    "modeLabel": "Agent",
+    "allowAllLabel": "Off",
+    "separateThoughtGradeExposed": false,
+    "thoughtGradeInvented": false
+  },
+  "mechanicalResult": {
+    "mechanicallyValid": true,
+    "allExpectedOutcomesMatched": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "matchingOriginalObservations": 8,
+    "readOnlyCheckerInvocations": 1,
+    "naturalExitCode": 0
+  },
+  "evidenceScope": {
+    "currentInstalledUiReferences": 3,
+    "currentFilesystemMetadataReferences": 1,
+    "originalPreparedReferenceIsInputDependencyOnly": true,
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/semantic-independent-review.json",
+      "sha256": "5ba4391b08f64d0cc8d8ec8f18baa90a718a1ee9979d7b83597bd470f6e6a775"
+    }
+  },
+  "qualifications": [
+    "The exact reply, recognized completion, current conversation idle and zero visible tools were separately observed for one request. Zero visible tools is not proof of no hidden I/O, and current idle is not all-background-idle.",
+    "The59.701-second operator observation upper bound is within the planned180-second window; it is not exact backend latency or a performance threshold.",
+    "Existing Auto/Agent/Allow All Off labels were preserved. Auto delegates model choice to the official Agent and does not establish an effective backend, account, current raw identifier, process version or reasoning grade.",
+    "The current menu showed one checked Auto item for this sample only. Earlier model-list observations remain historical; a general model-list fix or exhaustive option validation is not claimed.",
+    "Retained unrecognized updates and extension fields stayed collapsed. No raw envelope, actual stopReason, thinking content or complete event interpretation was inspected.",
+    "Two pre-action metadata-writer rejections and the original invalid manifest are preserved. Before the sole Send, the final manifest changed only the explicit current-unreported/historical version statement and actual preparation/review times; oracles, inputs, selection and dependencies did not change. No product request was repeated.",
+    "The prospective manifest passed its strict planning check before Send. The static metadata review occurred after Send and is not presented as pre-action approval or independent actual-result review.",
+    "Eight recorded input fingerprints remained unchanged. The older prepared reference is only an input/dependency; current evidence comprises three installed-UI records plus one owned-folder inspection metadata record.",
+    "Only S5 answer and ARCH-34 real-reply excerpts are supported. No tools/files/permission effectiveness, complete requirement/standard/Agent or29-by8 acceptance is closed; Kimi failure and other old unknowns remain unchanged."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/case-plan.json",
+      "sha256": "e4a3c958019550d33b5d8b08cce2f2fd81e5dee2d7f4df58c8e5bfaf9d6bb307"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/manifest.json",
+      "sha256": "624438992e339a7bce716299371f5093d2bda72ee67d783aed320f5f40667dde"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/manifest-v1-invalid-preaction.json",
+      "sha256": "9c277eef86ccd29aef9dc9501a76e9cf38828a792499a00fde6d223973eb67a2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/preflight.json",
+      "sha256": "4a72ea570fe98126bf4cc7977611e89698d84e0f7603e47e983a0b4e7c53fd46"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/unique-input-observation.json",
+      "sha256": "0c172c5c938f03d630cf6b1074c647dd2f91405d435f008f7388f09bfcbecda6"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/pre-submit-owned-cwd-inspection.json",
+      "sha256": "11a6fef032085d896b778dc2cd73571e1090163864616fe527cb06786a993555"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/preaction-binding-correction.json",
+      "sha256": "90a1f6ca7024f0236c129fff9fc029ee95aa607527d50f75f2d785b28a11dca2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/preaction-manifest-check.json",
+      "sha256": "496b2a36fdbc1901271b3b447a8ae2f253a8294601f8be0667acb89c9384a5bd"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/static-independent-review.json",
+      "sha256": "fe953633443c6026084f210aaff9827505d9394fbdf32240e7054154876055e8"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/actual-ui-observation.json",
+      "sha256": "0d5d35998a188a6717967ed33f118fbe83c324886ebac17a217bd7743c9829ee"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/actual-receipt.json",
+      "sha256": "02f668ebfa08c294735bdfabd8e720e2a397d77c4fb25502624573b0baa9eb95"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/post-case-input-check.json",
+      "sha256": "7912948ca6c57c75e366a49377506378f80ee4f55309fab8ce1fd787ac4832c1"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/validation.json",
+      "sha256": "1476d5355df880d2b71afcfa045a576f1abee4a696f5845dad971ed5d89079c2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/copilot-owned-ack-formal-5b31/validation-execution.json",
+      "sha256": "7a5ccca419cae1086d27bb35ebed6b7b13c21554cc8c006990b1d53d6fa1b716"
+    }
+  ]
+}
