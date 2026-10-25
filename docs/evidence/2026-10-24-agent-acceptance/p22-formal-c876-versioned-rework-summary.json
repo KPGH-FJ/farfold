@@ -1,0 +1,132 @@
+{
+  "kind": "P22OwnedVersionOpinionReworkAndSaveAsPublicSummary",
+  "requirementIds": ["P22", "P21", "P14"],
+  "standardIds": [],
+  "formalSource": "c8761b09e5f03442ed50b4decb63df5576543300",
+  "scope": "一份自有三行文字文件的版本意见、一次返工及完整文件另存的正常链路窄样本。",
+  "actual": {
+    "opinionJoins": 1,
+    "automaticSubmissionsFromJoin": 0,
+    "generatedInputCharacters": 370,
+    "generatedInputUtf8Bytes": 586,
+    "uiGeneratedOriginalVersionSha": true,
+    "explicitSubmissions": 1,
+    "visibleModificationSteps": 1,
+    "expectedReplyCompletionOwnIdleObserved": true,
+    "currentPreviewAutoUpdated": true,
+    "newDigestExposedInUi": false,
+    "originalSourceBytes": 40,
+    "reworkedSourceBytes": 43,
+    "wholeFileSaveAsFlows": 1,
+    "systemSaveConfirmations": 1,
+    "savedCopyBytes": 43,
+    "sourceAndCopyAllBytesEqualExpected": true,
+    "lfCountEach": 3,
+    "terminalLfEach": true,
+    "laterIndependentReadConfirmsBoth": true,
+    "operatorRetryStopRepairChoiceChangeCounts": 0
+  },
+  "timing": {
+    "agentWindowSeconds": 52.461,
+    "sourceReadWindowSeconds": 38.396,
+    "saveAndCopyReadWindowSeconds": 82.682,
+    "eachDeclaredWindowLimitSeconds": 180,
+    "wholeCaseSeconds": 227.613,
+    "wholeCaseUnder180": false,
+    "performanceClaim": false
+  },
+  "receiptHandling": {
+    "cliInvocationsTotal": 2,
+    "firstExitCode": 1,
+    "firstMetadataRejectionCode": "unsafe-evidence-reference",
+    "originalReceiptAndFailureReportPreserved": true,
+    "newReceiptOnlyManifestReferenceNormalized": true,
+    "actualObservationsInputsTimesEvidenceUnchanged": true,
+    "secondExitCode": 0,
+    "finalMechanicallyValid": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observations": 14,
+    "semanticBlockingFindings": 0
+  },
+  "limits": [
+    "原文件查看和加入意见早于canonical绑定；既有事前材料保留，strict canonical在唯一发送及另存前完成。两项观察kind事前按真实UI可见范围明确，未改预期值。",
+    "当前文件预览自动更新，未捕新UI摘要；版本意见中的原SHA不证明Agent事务式版本检查。报告片段、当前文件和物理副本分别留证。",
+    "两个获准文件的晚独立读回不替代原窗口观测；全流程227.613秒，不能写成180秒内。",
+    "只证明正常文字文件样本；取消、失败、并发、其他格式及完整P22/P21/P14仍开放。当前Agent版本、有效后端、隐藏IO及原始协议状态未证，旧失败和Amp等未知不改判。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p22-mistral-owned-rework-formal-c876",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "a6135ad0e665ae4af4d06ed3c005635694f3545dae0c66a450f911fc7fa2a055"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "c7715ed25215b57d8315b210bcaaacd4bffcd50d1284e16bc362c9fe042dca45"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "e80e3c95bab6ad1d5aa699bf1141e747b7b2ae856b3319dd386b06e92b4f81b7"
+    },
+    {
+      "file": "fixture-before.json",
+      "sha256": "cbf1c5ab5ca7fafc45a1d47efc95b278b41de0a0d6e5c4dbbe5d23978fe1dce1"
+    },
+    {
+      "file": "unique-input-observation.json",
+      "sha256": "4123254e1ceb0b48ce9f3eec4e1df3b34932a6c780c252bd412cbbb9843832f6"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "63337f596481878f19bf1f683024746def27289100f97b4cfc66b41498706f11"
+    },
+    {
+      "file": "source-after.json",
+      "sha256": "2dc03cd0f673801bb39db0aa6635d65808471373af63bbf8158a97075c446aaa"
+    },
+    {
+      "file": "copy-after.json",
+      "sha256": "86124dc2188090688d2a4ca4f09b5394dcf04bf9f1f9bbd6c1cfcc57df27d4d3"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "11fe69f5cf364e155fc1d338ae50c81513736125a94513866ce3feb198feca9c"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "7d2455a38f4ef916ce71a952068237f88bf73d938f48fde55378e0581fd7a19c"
+    },
+    {
+      "file": "actual-receipt-v2-reference-normalized.json",
+      "sha256": "585b8ad3242b25bc942d62b3bb22cd0a352ed0f1e09ab445909f10a9af4ca708"
+    },
+    {
+      "file": "receipt-reference-normalization.json",
+      "sha256": "4ea5cbfaba5edc92e6b038aa449a84e62ddd21abc422f2402bf020ce8b2f67e7"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "2e67b123e06652652f2c0bfd3754d1265944cb9c80711c830b2e8f77d523c6f2"
+    },
+    {
+      "file": "validation-v2.json",
+      "sha256": "50c48c02ccbc68f3bcc5a04e6d4e80277194e92ad5137604fd91a87acee1da5c"
+    },
+    {
+      "file": "validation-v2-execution.json",
+      "sha256": "279ea0888dda561da42422133e0f77c9d1b12bd1eef49fc79517ad388ddb8482"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "3302fdd127bbb9759e4f7c258dbbe91a15a5b79ca5f750f4e3c230ac7bcd2b26"
+    }
+  ]
+}

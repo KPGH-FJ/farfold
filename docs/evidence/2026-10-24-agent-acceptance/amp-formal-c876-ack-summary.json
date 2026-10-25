@@ -1,0 +1,93 @@
+{
+  "kind": "AmpSingleAckUnknownPublicSummary",
+  "agentId": "amp-acp",
+  "scope": "沿原已有设置的一次短回答样本；认证提示与请求结果未知同时出现。",
+  "formalSource": "c8761b09e5f03442ed50b4decb63df5576543300",
+  "actual": {
+    "submissions": 1,
+    "replyVisible": false,
+    "recognizedCompletion": false,
+    "currentOwnIdle": false,
+    "visibleToolSteps": 0,
+    "authenticationUnfinishedFeedback": true,
+    "resultUnknown": true,
+    "sendingPaused": true,
+    "operatorLoginsChangesRetriesStopsQueueContinues": 0
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "passed": 0,
+    "failed": 0,
+    "incomplete": 1,
+    "invalid": 0,
+    "matchedObservations": 5,
+    "totalObservations": 8,
+    "attemptStatus": "started",
+    "attemptOutcome": "unknown",
+    "attemptHasFinishedAt": false,
+    "checkerInvocations": 1,
+    "naturalExitCode": 1,
+    "semanticBlockingFindings": 0
+  },
+  "timing": {
+    "actualObservationUpperSeconds": 62.684,
+    "operatorWindowSeconds": 180,
+    "laterWindowStateInferred": false,
+    "performanceOrTerminalClaim": false
+  },
+  "limits": [
+    "认证未完成提示不证明请求已停止、安全失败、未派发或后台空闲；保留未知及发送保护，未登录、改选、重试或停止。",
+    "无回复、无识别完成及非当前空闲分别记录；顶层封存结束时间不是请求终态，不把错误文案当Agent回复。",
+    "原已有设置、Medium与Default仅为实际标签；Medium不推具体模型或思考等级，当前连接版本未报告。",
+    "8个声明输入端点相同仅限显式范围；0可见步骤不等于0隐藏IO。前一Agent准备过渡不算新请求，也不说明0底层通信。",
+    "其他Agent的结果不解除本次未知；旧失败及全部原未知保留，完整标准、要求及整家均未关闭。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/amp-owned-ack-formal-c876",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "6c56dc9aa9c08c1f73ba5339c2a8e8f43582f589016a7977cd11e49a562fb876"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "47a0fcf0f497c3ad424c69f0e77c374646b9dc93a1e35ff66786a54ec08ce258"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "20479ae727ac80919fe40d90722ca004092d4c9561cd42d45d34e3adcea40d96"
+    },
+    {
+      "file": "unique-input-observation.json",
+      "sha256": "8dab53696c0f1c71c3eee53ee815b4b327df41aef29f545dc03772ec86a67b1d"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "82b41d5cc984d676e31e7c10080a3398257d87856659942d8feee2d10b0711eb"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "fb0f91924a112e889ff80f7d6f6dc1e90da2f54a4d2b952763b1cb6d6f0f1078"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "e80629e0c3866adb5000e5d945b3fab6f00c02197141c50ab42f3bd48f530652"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "5c5381c913552d7738c8cf27a3b3f991a1743102a6c2d6243bf8434be1e21f1c"
+    },
+    {
+      "file": "validation-execution.json",
+      "sha256": "d0c4d7b4e69cc7157c8caf1857787d5870dc663e69b1008c65a805f127b50531"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "876e8875996c104ecd5ade1788db1baca075de976b4913e96d5d2e07200b9099"
+    }
+  ]
+}

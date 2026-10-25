@@ -1,0 +1,92 @@
+{
+  "kind": "DiracSingleAckPublicSummary",
+  "agentId": "dirac",
+  "scope": "S5回答及ARCH-34真实回复的单次窄样本；预声明零可见步骤未满足。",
+  "formalSource": "c8761b09e5f03442ed50b4decb63df5576543300",
+  "actual": {
+    "submissions": 1,
+    "exactExpectedReplyObserved": true,
+    "recognizedCompletion": true,
+    "currentOwnIdleObserved": true,
+    "visibleSteps": 1,
+    "stepCategory": "其他操作",
+    "stepTitle": "Task Completed",
+    "stepBodyContainsSameExactMarker": true,
+    "expectedVisibleSteps": 0,
+    "operatorRetryStopChoiceChangeCounts": 0
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "passed": 0,
+    "failed": 1,
+    "incomplete": 0,
+    "invalid": 0,
+    "matchedObservations": 7,
+    "totalObservations": 8,
+    "soleMismatch": "visible-tools: expected0, actual1",
+    "checkerInvocations": 1,
+    "naturalExitCode": 1,
+    "semanticBlockingFindings": 0
+  },
+  "timing": {
+    "firstReplyCompletionOwnIdleUpperSeconds": 59.977,
+    "lastDetailObservationUpperSeconds": 78.793,
+    "operatorWindowSeconds": 180,
+    "performanceClaim": false
+  },
+  "preSendCorrection": "首发前键入损坏及一次设置导航原样保留；未改设置、未发送。一次粘贴替换后全文核对，随后仅一次Send，不算Agent重试。",
+  "limits": [
+    "失败来自实际可见步骤数不符，不是Agent无回复或结果未知；原预期与实际均不改写。",
+    "Task Completed按实际可见步骤保留为1，不据类别或标题推原始方法、协议状态或隐藏IO。",
+    "沿用原设置；当前连接版本未报告，历史标签及可见选择不证明有效后端、账号或思考效果。",
+    "8个声明输入前后相同仅限显式范围；当前对话空闲不等于全后台空闲。旧失败、冷恢复缺口及其他未知保留。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/dirac-owned-ack-formal-c876",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "4e305e09cdf2aa69e28a9d5f9b1c0d91e38be0e97b5cca9a7cd738479a7439e5"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "23698110c6ccb60bd9928423bd440cab059571b6a00f723d62aa9a044d56ae81"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "aa8b33dcdc55495643a19211e766db0acf3eed4e846dc34c7c16b1c3f67c52c3"
+    },
+    {
+      "file": "unique-input-observation.json",
+      "sha256": "1844e07e38676501e8488d3d80a3f6505537d2026dbc4a95432e2273d02501d0"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "ddb8a5b7fe82c0ca730ba11736cc8ef886ea90ebf840f8169b30a3b43ea02bd8"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "ce48a7f704f91f44bb43199ac57f7c5b85b940cdc7330a69cf1a2264bfe63350"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "ad0221d7d0fd32cb849cb3beb8c7202e18ac9302cb5a96c45bdf8c1ae2953124"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "c8b2aaca818c75a3cb91bf2d27a41b19b61433d61ee861f4d6c9b729790ef79c"
+    },
+    {
+      "file": "validation-execution.json",
+      "sha256": "2cc88f53eae35d1547669b09c9d1d9fa2472f6c758e1aeff687a6514ad042565"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "ee0f060b0cb5efee977af037018ce442daf213b401667b39f326c5130680b38a"
+    }
+  ]
+}
