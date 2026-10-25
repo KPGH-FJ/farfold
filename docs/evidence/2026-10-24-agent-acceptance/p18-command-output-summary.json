@@ -1,0 +1,252 @@
+{
+  "kind": "ScopedInstalledP18CommandOutputFailureAndControlledFixPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "authorized-documentation-checkpoint",
+  "recordedAt": "2026-10-25T00:49:21.817435+00:00",
+  "agentId": "mistral-vibe",
+  "observedUiVersionAsReported": "2.25.8",
+  "formalProductCommitAtObservation": "42d678a9f3f6d201e0110cbdddde0621d21764f5",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "summaryWriterValidatorCalls": 0,
+  "originalExpectation": {
+    "requirementId": "P18",
+    "excerpt": "命令和日志按真实工具结果展示",
+    "standardIds": [],
+    "caseExpectedOutcome": "success",
+    "intentionalCommandExitRequested": 7,
+    "expectationChangedAfterExecution": false,
+    "meaning": "The case expected faithful presentation of an intentional tool failure; it did not expect the Agent prompt to be rejected."
+  },
+  "boundedExecutionAsRecorded": {
+    "ordinaryPrompts": 1,
+    "visibleLogicalCommandToolCalls": 1,
+    "explicitAllowOnceActions": 1,
+    "persistentPermissionGrant": false,
+    "retries": 0,
+    "stopRequests": 0,
+    "choiceChanges": 0,
+    "fileOrNetworkOperationRequested": false,
+    "exhaustiveNoOtherIoProven": false
+  },
+  "originalObservedResult": {
+    "agentRequest": "completed",
+    "recognizedCompletionAndCurrentConversationIdleObserved": true,
+    "caseResult": "failure",
+    "failureBasis": "Both prepared markers were visible in the actual ToolDetail result, while the same new bash card in Command output and logs/all output showed its title but omitted the result body.",
+    "actualToolNameAsReported": "file_system.bash",
+    "actualEffectKindAsReported": "shell",
+    "twoMarkersVisibleInActualToolDetail": true,
+    "outputPaneCardBodyMissing": true,
+    "separateEmptyRawDetailFrameObserved": true,
+    "actualExitCode": "unverified",
+    "actualNonzeroOrToolErrorEvidence": "unconfirmed",
+    "sourceReportedStepEndedOrGreenCheckProvesShellExitZero": false,
+    "exactOutputBytesAndSeparateStreamsProven": false,
+    "actualIncomingRawShape": "not-exported",
+    "uniqueActualCause": "unknown",
+    "completionOrReplyMarkerConvertsCaseToPass": false
+  },
+  "timingDeviation": {
+    "sendObservedAt": "2026-10-25T00:27:23.455Z",
+    "allowOnceObservedAt": "2026-10-25T00:28:49.512Z",
+    "laterEvidenceCollectionBoundary": "2026-10-25T00:36:06.457Z",
+    "originalObservationWindowSeconds": 180,
+    "laterEvidenceBoundaryAfterSendSeconds": 523.002,
+    "laterReadOnlyInspectionExceededWindow": true,
+    "exactFirstTerminalObservationTimeKnown": false,
+    "withinOriginalWindowClaimed": false,
+    "originalBudgetRewritten": false,
+    "meaning": "The later receipt boundary records evidence collection, not exact backend completion or model duration. The more-than-three-minute observation overrun remains disclosed and is not a retry."
+  },
+  "originalMechanicalValidationAsRecorded": {
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": false,
+    "expectedCases": 1,
+    "attempts": 1,
+    "passed": 0,
+    "failed": 1,
+    "expectedRejection": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "errors": 0,
+    "naturalExitCode": 1,
+    "meaning": "Natural exit1 reports the checked presentation failure; it is not a validator crash or an invalid receipt.",
+    "acceptanceVerified": false
+  },
+  "independentInstalledSemanticReview": {
+    "blockingFindings": 0,
+    "disposition": "retain-one-failed-narrow-observation",
+    "newAppOrAgentActionsByReviewer": 0,
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/independent-semantic-review-real-readiness.json",
+      "sha256": "9d4238c5fb0a41a5bbe8bcd81ea62afa0137d24a8c6cd5067a736683a4ab13e0"
+    }
+  },
+  "controlledSourceFix": {
+    "productionFiles": 1,
+    "testFiles": 1,
+    "totalSourceFiles": 2,
+    "sourcePins": [
+      {
+        "path": "src/runtime/artifacts.ts",
+        "sha256": "e838a25986427eb1e5278c30222fa07a64d87a3094c8ef7b7ba86f4025a7e354"
+      },
+      {
+        "path": "src/runtime/sessions.test.ts",
+        "sha256": "5e7bc2138994fa947d70cf7909629388d564ea8413c0bc30d1a823ce0fb66892"
+      }
+    ],
+    "demonstratedRootCause": "In controlled cases, a zero-length high-priority terminal/raw placeholder masked already-reported nonempty text content.",
+    "change": "Only nonempty terminal/raw output wins; a zero-length placeholder falls back to existing actual text content. Whitespace, nonempty priority, existing output cap, original raw envelope/status and legitimate empty output are preserved.",
+    "inputOrOpaqueJsonPromotedToResult": false,
+    "exitOrFailureStatusInferred": false,
+    "agentSpecificBranchAdded": false,
+    "red": {
+      "files": 1,
+      "tests": 39,
+      "passed": 29,
+      "failed": 10,
+      "naturalExitCode": 1
+    },
+    "green": {
+      "affectedFiles": 6,
+      "tests": 146,
+      "passed": 146,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "typecheckExitCode": 0,
+    "scopedFormatExitCode": 0,
+    "scopedDiffCheckExitCode": 0,
+    "overlappingRunsAddedTogether": false,
+    "sameControlledOraclePreserved": true,
+    "independentSourceReviewBlockingFindings": 0,
+    "fullEngineeringCompletedForThisFix": true,
+    "fixInstalled": false,
+    "installedAffectedPathRechecked": false,
+    "separateEmptyToolDetailFrameFixed": false,
+    "originalInstalledCaseReclassified": false,
+    "actualRawShapeProvesControlledRootCauseWasThisCaseCause": false,
+    "implementationReference": {
+      "path": "output/2026-10-24-agent-acceptance/p18-command-output-empty-priority-fix/implementation.json",
+      "sha256": "92100c63c6ecb316a6bdb77f2906682475739af6591d25bbd31a27ba90fa55b8"
+    },
+    "independentReviewReference": {
+      "path": "output/2026-10-24-agent-acceptance/p18-command-output-empty-priority-fix/independent-source-review-real-readiness.json",
+      "sha256": "15becf1432f4355890f8c67e296cff78780c1eef9dfe16b43a13dda3aba505c2"
+    }
+  },
+  "officialSourceConditionalBoundary": {
+    "releaseTag": "v2.25.8",
+    "resolvedPublicSourceCommit": "7c19608af06f6c61d63f8f7a5c3430da73fba2ab",
+    "claim": "One official unified-shell projection route can retain output text while losing the nonzero signal before ACP conversion; this is a conditional source explanation, not the observed raw shape or unique cause of this request.",
+    "selectedConnectionExecutableEquivalentToPublicSourceProven": false,
+    "legacyBashRouteDifferent": true,
+    "acpHistoryReplayIsIndependentExitEvidence": false,
+    "sourceAnalysisReference": {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-official-source-2.25.8/source-analysis.json",
+      "sha256": "c2086562fca5dd0ded45f0e6b0708c40e1e0ad5a5c6cf72556a43adf0e28f1f2"
+    },
+    "primaryLinks": [
+      "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/app_server/_unified_tool_projection.py",
+      "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/acp/session_updates.py#L394-L404",
+      "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/acp/session_updates.py#L623-L685"
+    ],
+    "sourceReadingLimit": "Key unified functions were read as positive official page excerpts; incomplete or blob-mismatched full downloads were rejected, with no invented full-file digest."
+  },
+  "originalMetadataReferences": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/manifest.json",
+      "sha256": "6baa1e3efe6a8d23e48dc4bab9d8d3e467a643285416103d0ba5baf2758d1ab9"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/source-plan.json",
+      "sha256": "8a277107da9703738d30ecb86b18de7c5196dc5a394a06f193485eb957083596"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/preflight.json",
+      "sha256": "b0dc80587fb244e72118e0a3295a396e323288f74d5ad1a538118983c0dfa5f9"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/pre-input-readback.json",
+      "sha256": "377e5f425fa49fe0d7254b050590fee4f5d5feca074ed788314118a3983d58cb"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/actual-result-observation.json",
+      "sha256": "91413ae60c278934a80c906e2a6df0b8fdc119825621f2c67a303b0637c09997"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/actual-receipt.json",
+      "sha256": "9f85ba14b1f69f474fae846f39e856be91803e69aa8753f6d04439c7ae0d1918"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-42d/validation.json",
+      "sha256": "26a5f589393ad83d6e69ff4a71c4d087ac890c80465cee6953ef858d0a162583"
+    }
+  ],
+  "completeRequirementsNewlyAccepted": 0,
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "The Agent request completed, but the planned P18 presentation case failed. Missing actual exit/error evidence stays unconfirmed; neither requested exit7 nor the green step marker fills it.",
+    "The controlled empty-priority fix does not establish the exact original incoming payload. It does not repair the separate empty raw-detail frame or rewrite the installed failure.",
+    "The fix has controlled tests, source review and full engineering checks at this checkpoint. Independent engineering review found no blocker; formal installation and actual affected-path checks remain pending.",
+    "No full P18, file-write-failure result, effective backend model/reasoning/account identity, exhaustive IO, stop or whole-Agent acceptance is established.",
+    "The publisher read only named controlled-case and implementation/review metadata plus its existing source analysis; no App/Agent, database, configuration, native history, raw protocol log or test was run for this summary."
+  ],
+  "privacy": {
+    "privateAbsolutePathsIncluded": false,
+    "nativeIdsOrAccountCredentialsIncluded": false,
+    "configurationOrDatabaseHashesIncluded": false,
+    "rawPromptReplyCommandOrDiagnosticBodiesIncluded": false,
+    "dataManifestOrBackupContentHashesIncluded": false
+  },
+  "updatedAt": "2026-10-25T00:57:15.059Z",
+  "fullEngineering": {
+    "baseHead": "6ca4ed89582305fad87e79644b9365a0a0f064cf",
+    "checksRanBeforeCommit": true,
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 673,
+      "passed": 8882,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2256,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "inputCount": 2261,
+    "sourceEndpointMapsEqual": true,
+    "allCommandSourceEndpointMapsEqual": true,
+    "independentEngineeringReview": {
+      "blockingFindings": 0,
+      "reference": {
+        "path": "output/2026-10-24-agent-acceptance/p18-empty-output-engineering/independent-engineering-review.json",
+        "sha256": "d70f13f6dead230c7a3f1626a380ab7576cc20b372c637f7544fbba8df56058a"
+      }
+    },
+    "reference": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-engineering/engineering-summary.json",
+      "sha256": "05f41903ff40ec26c4080b0bdc1af60615999256e54de9773dd4eccce33412d1"
+    },
+    "limits": "Source endpoint equality does not prove continuous absence of intermediate writers or freeze installed dependencies/environment. Formal installation and actual affected-path recheck remain pending."
+  }
+}

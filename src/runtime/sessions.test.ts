@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { composerDrafts } from "./drafts";
+import { appendToolOutput, COMMAND_OUTPUT_CAP } from "./artifacts";
 import {
   applyConnectionLost,
   applyElicitation,
@@ -390,6 +391,105 @@ describe("artifacts / elicitation", () => {
     const card = paneCards(big)[0]!;
     if (card.kind !== "command") throw new Error("expected a command card");
     expect(card.output.length).toBeLessThanOrEqual(64 * 1024);
+  });
+});
+
+describe("actual command and log output priority", () => {
+  const result = "P18_STDOUT_20261025\nP18_STDERR_20261025\n\n";
+  function tool(
+    kind = "execute",
+    rawOutput: unknown = undefined,
+    terminalOutput: string | undefined = undefined,
+    content = result,
+  ) {
+    const s = state();
+    applyUpdate(s, {
+      sessionUpdate: "tool_call",
+      toolCallId: "output-priority",
+      title: "one command",
+      kind,
+      status: "failed",
+      rawInput: { command: "INPUT_ONLY_NOT_A_RESULT" },
+      rawOutput,
+      content: [
+        { type: "content", content: { type: "text", text: content } },
+        { type: "terminal", terminalId: "output-terminal" },
+      ],
+    });
+    if (terminalOutput !== undefined)
+      appendToolOutput(s, {
+        toolCallId: "output-priority",
+        terminalId: "output-terminal",
+        data: terminalOutput,
+      });
+    return s;
+  }
+
+  for (const kind of ["execute", "other"])
+    it.each([
+      ["raw string", "", undefined],
+      ["raw output field", { output: "" }, undefined],
+      ["terminal", undefined, ""],
+      ["terminal and raw", { output: "" }, ""],
+    ])(
+      `keeps ${kind} text when empty %s fields coexist`,
+      (_, raw, terminal) => {
+        const s = tool(kind, raw, terminal as string | undefined);
+        const before = JSON.stringify(s.items);
+        expect(paneCards(s)).toEqual([
+          expect.objectContaining({
+            kind: kind === "execute" ? "command" : "log",
+            output: result,
+            failed: true,
+          }),
+        ]);
+        expect(JSON.stringify(s.items)).toBe(before);
+      },
+    );
+
+  it.each([
+    ["raw", "raw", undefined, "raw"],
+    ["raw object", { output: "raw object" }, undefined, "raw object"],
+    ["terminal", "raw", "terminal", "terminal"],
+    ["raw after empty terminal", "raw", "", "raw"],
+    ["whitespace raw", "\n", undefined, "\n"],
+    ["whitespace terminal", "raw", "\n", "\n"],
+  ])(
+    "preserves nonempty %s priority without concatenation",
+    (_, raw, terminal, expected) => {
+      expect(
+        paneCards(tool("execute", raw, terminal as string | undefined))[0],
+      ).toMatchObject({ kind: "command", output: expected, failed: true });
+    },
+  );
+
+  it("keeps a legitimately empty result empty and never substitutes input or unknown JSON", () => {
+    const opaque = { future: { value: "OPAQUE_NOT_A_RESULT" } };
+    for (const raw of [undefined, "", { output: "" }, opaque]) {
+      const s = tool("execute", raw, "", "");
+      expect(paneCards(s)).toEqual([
+        expect.objectContaining({ kind: "command", output: "" }),
+      ]);
+      expect(paneCards(tool("other", raw, "", ""))).toEqual([]);
+      const item = s.items[0];
+      if (item.kind !== "tool") throw new Error("expected tool");
+      expect(item.call.rawOutput).toEqual(raw);
+      expect(item.call.status).toBe("failed");
+    }
+  });
+
+  it("caps fallback text and streamed terminal output to their actual tails", () => {
+    const output = "discarded-prefix" + "x".repeat(COMMAND_OUTPUT_CAP) + result;
+    for (const s of [
+      tool("execute", "", undefined, output),
+      tool("execute", { output: "" }, undefined, output),
+      tool("execute", "different raw", output),
+    ]) {
+      expect(paneCards(s)[0]).toMatchObject({
+        output: output.slice(-COMMAND_OUTPUT_CAP),
+        failed: true,
+      });
+    }
   });
 });
 

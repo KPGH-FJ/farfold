@@ -28,7 +28,11 @@ e6e1正式界面的siGit分项保留首次未加载反馈、一次官方加载�
 
 Mistral在自有空目录新稿中读回原确认的模型、模式和思考标签；一次短回答完成、一次真实创建自有文件完成，工具路径能打开当前文件，独立磁盘读回22字节及末尾LF相同。工具缺少修改前文字仍显示无法完整比较，不算完整差异；账号身份、实际模型与思考等级、其他IO及完整要求未证明。仅保留[真实回答与文件窄分项](evidence/2026-10-24-agent-acceptance/mistral-formal-e6e1-summary.json)，标准格和完整要求新增通过均为0。
 
-Mistral当前文件另作可逆移走与原位恢复：移走后界面失读符合预期，恢复后重开成功，独立核到原inode、22字节及末尾LF保持。两项机械结果为预期拒绝1、成功1，仅支持P18当前文件失读与恢复的窄观察，不证明Agent写入失败或完整P18，见[分项摘要](evidence/2026-10-24-agent-acceptance/mistral-current-file-recheck-summary.json)。下一真实命令失败分项仅已准备，尚未执行。
+Mistral当前文件另作可逆移走与原位恢复：移走后界面失读符合预期，恢复后重开成功，独立核到原inode、22字节及末尾LF保持。两项机械结果为预期拒绝1、成功1，仅支持P18当前文件失读与恢复的窄观察，不证明Agent写入失败或完整P18，见[分项摘要](evidence/2026-10-24-agent-acceptance/mistral-current-file-recheck-summary.json)。
+
+42d上的下一P18命令分项已执行：一次请求、一个实际工具步骤、核对完整命令后仅允许一次，零重试；请求完成，但工具详情中的两段结果在“命令输出与日志”卡片正文缺失，原回执有效且失败1、通过0。实际退出码、原始事件形状及唯一原因未证，不能从预定非零退出或绿勾补判；后续只读取证超过原180秒窗口，精确首终态时刻未知。共用源码已修复零长高优先输出遮住已有文字的受控缺口，非空及空白优先、状态、原字段和截断保护保持；原RED十项失败，最终受影响146项、类型及格式通过，源码独审无阻断。随后完整七项通过：前端673文件8882项、Rust2256通过及6既有忽略，2261项源码与逐命令端点一致，检查在6ca基线、提交前完成，尚未安装。官方一条统一命令路线可能丢失非零信号只是条件性源码边界，不归因为本次。见[原失败与源码修复摘要](evidence/2026-10-24-agent-acceptance/p18-command-output-summary.json)，完整P18及标准新增关闭仍为0。
+
+P32另以同一自有Mistral对话准备冷恢复输入：四份原合成附件共14752字节，一次短请求返回预期标记，25秒内观察到完成及当前空闲，零新增可见工具步骤、重试或设置变化。原消息四个附件来源可见，精确自有元数据的对话与原Agent身份前后相同；这[仅是输入准备](evidence/2026-10-24-agent-acceptance/p32-mistral-warm-input-summary.json)，不证明附件消费或P32。后续正常更新后再逐格式检查原附件恢复、查找和跳转；未重新附加冒充恢复，旧Dirac冷缺失保留。
 
 OpenCode与Kilo各有一次预先定义的精确回复正例：正式界面输入和预期回复匹配，完成及当前对话空闲可见；只支持“回答/真实回复”窄分项，未证明后端模型、账号或全部IO。此前各自更换工作目录后准备就绪属于不同输入，旧超时保留，未确证目录或Git唯一归因；两份启动对照均无标准IDs。标准格、完整要求和整家新增通过均为0，见[OpenCode回复](evidence/2026-10-24-agent-acceptance/opencode-formal-e6e1-ack-summary.json)、[启动对照](evidence/2026-10-24-agent-acceptance/opencode-startup-cwd-comparison-summary.json)及[Kilo回复](evidence/2026-10-24-agent-acceptance/kilo-formal-e6e1-ack-summary.json)、[启动对照](evidence/2026-10-24-agent-acceptance/kilo-startup-cwd-comparison-summary.json)。
 

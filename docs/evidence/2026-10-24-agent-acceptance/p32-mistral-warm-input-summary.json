@@ -1,0 +1,74 @@
+{
+  "kind": "P32WarmInputPreparationPublicSummaryNotAcceptance",
+  "recordedAt": "2026-10-25T00:53:08.185Z",
+  "formalProductCommit": "42d678a9f3f6d201e0110cbdddde0621d21764f5",
+  "agentId": "mistral-vibe",
+  "purpose": "Prepare original structured attachments in one own conversation for later independent cold restore/search observations.",
+  "request": {
+    "ordinaryPrompts": 1,
+    "ownedSyntheticAttachments": 4,
+    "totalAttachmentBytes": 14752,
+    "formats": ["docx", "xlsx", "pdf", "pptx"],
+    "expectedAckObserved": true,
+    "completedAndCurrentIdleObserved": true,
+    "firstCompletedIdleObservationAfterSendSeconds": 24.997,
+    "exactBackendTerminalTimeKnown": false,
+    "newVisibleToolSteps": 0,
+    "retries": 0,
+    "stopRequests": 0,
+    "choiceChanges": 0,
+    "joinedTextActions": 0
+  },
+  "originalMessage": {
+    "allFourNamesAndOwnLocationSourcesVisible": true,
+    "sameExactOwnedMetadataIdentityBeforeAndAfterWarm": true,
+    "identityFieldsCompared": [
+      "Farfold conversation id",
+      "Agent id",
+      "working location",
+      "original Agent conversation id"
+    ],
+    "comparisonChannel": "read-only Farfold-owned metadata, exact own location and own title prefix, one match; no body or native history/config read"
+  },
+  "coldObservation": {
+    "performed": false,
+    "searches": 0,
+    "requiredOriginalSourceHandling": "Cold restore the same original owner; check each format source independently before its query/source/jump. A missing format remains unexecuted and does not block present formats. No reattachment, body copying or fabricated history.",
+    "canonicalColdManifestCreated": false,
+    "futureContext": "Bind actual later formal App/current inputs rather than reusing this 42d reference across update."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-cold-attachment-preparation-42d/source-plan.json",
+      "sha256": "12adaf2b4369ec783c24be1f8131579ef0e12af2b06b069b8e55ddd1e3440bc6"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-cold-attachment-preparation-42d/preparation-manifest.json",
+      "sha256": "76f8b894006003b749f486e7f15e64ce657a289a9d860614a7bbcd2b4cceaf77"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-cold-attachment-preparation-42d/pre-send-input-readback.json",
+      "sha256": "a83b4f2c639246ecab730ead7b73637dcd7527a78f50a2761eb64f1cd3de9568"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-cold-attachment-preparation-42d/warm-input-actual-observation.json",
+      "sha256": "4a26ea23a6ec9d506f8d04656c961c0eed4fb063b5d5ac411882fd3d71721789"
+    }
+  ],
+  "standardIds": [],
+  "fullRequirementsNewlyAccepted": 0,
+  "fullStandardsNewlyAccepted": 0,
+  "fullAgentsNewlyAccepted": 0,
+  "oldDiracEvidenceRewritten": false,
+  "limits": [
+    "ACK is input preparation only, not attachment consumption, exact backend model/reasoning/account identity or P32 acceptance.",
+    "Original four attachments are visible in the current own message; cold recovery/search has not yet been executed.",
+    "Old Dirac current-file positives and cold missing-source observations remain historical, unchanged."
+  ],
+  "privacy": {
+    "rawPromptOrReplyIncluded": false,
+    "privateAbsolutePathsOrIdentityFingerprintsIncluded": false,
+    "databaseOrBackupContentHashesIncluded": false,
+    "credentialOrAccountDataIncluded": false
+  }
+}

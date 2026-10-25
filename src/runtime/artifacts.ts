@@ -42,12 +42,12 @@ export type PaneCard =
       time: number;
     };
 
-/** Printable output for an `execute` tool call: `rawOutput` (a string or
- *  an object with a string `output` field), else the concatenated text of
- *  the call's `text` content entries. Capped to the last
+/** Prefer nonempty terminal/raw output (a string or an object's `output` field),
+ *  then the concatenated `text` content. Empty placeholders must not hide an
+ *  actual text result. Capped to the last
  *  [`COMMAND_OUTPUT_CAP`] bytes-ish (chars). */
 function commandOutput(call: ToolCallView): string {
-  if (call.terminalOutput !== undefined) return call.terminalOutput;
+  if (call.terminalOutput) return call.terminalOutput;
   const raw = call.rawOutput;
   let text: string | null = null;
   if (typeof raw === "string") {
@@ -56,7 +56,7 @@ function commandOutput(call: ToolCallView): string {
     const output = (raw as { output?: unknown }).output;
     if (typeof output === "string") text = output;
   }
-  if (text === null) {
+  if (text === null || text.length === 0) {
     text = call.content
       .filter(
         (c): c is Extract<ToolContent, { type: "text" }> => c.type === "text",
