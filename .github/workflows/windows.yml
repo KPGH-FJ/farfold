@@ -16,6 +16,10 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: Enable long Git paths before checkout
+        run: |
+          git config --global core.longpaths true
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
@@ -47,6 +51,10 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: Enable long Git paths before checkout
+        run: |
+          git config --global core.longpaths true
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
@@ -83,6 +91,10 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: Enable long Git paths before checkout
+        run: |
+          git config --global core.longpaths true
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
