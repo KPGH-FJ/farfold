@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "kind": "QoderSingleReplyPublicSummary",
+  "publisher": "root",
+  "agentId": "qoder",
+  "formal": {
+    "sourceCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+    "binarySha256": "826b1d965c6b97d61d823bca1a19d28ae74a17f373f54750f77648fb5531d28a"
+  },
+  "result": {
+    "singleSubmit": 1,
+    "narrowPassed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observationsMatched": 8,
+    "requiredObservations": 8,
+    "wholeRequirementsStandardsAgentsClosed": 0
+  },
+  "observed": {
+    "submittedAt": "2026-10-25T09:48:43.432Z",
+    "observedAt": "2026-10-25T09:49:50.265Z",
+    "operatorUpperSeconds": 66.833,
+    "exactPlannedReplyVisible": true,
+    "recognizedCompletion": true,
+    "ownHeaderNotRunning": true,
+    "stopWithdrawn": true,
+    "visibleToolSteps": 0,
+    "extraOperatorActions": 0
+  },
+  "selection": {
+    "source": "Existing settings label",
+    "model": "Qwen3.8-Flash (default), selected UI label",
+    "mode": "Default, UI label",
+    "reasoningGrade": null,
+    "currentProcessVersion": "unreported"
+  },
+  "coverage": [
+    "S5回答 and ARCH-34真实回复 excerpts for this one sample only.",
+    "Existing choice labels were read before the one Send; no manual choice change, retry, Stop, recheck, login or queue continuation."
+  ],
+  "limits": [
+    "The66.833s bound is operator observation time, not backend latency or a performance gate.",
+    "Historical qfmodel alias/current raw identity is unproven; no effective backend/account/current version claim.",
+    "Thinking summary stayed collapsed: no thought-content or reasoning-effect verification.",
+    "Zero visible tools is not hidden-IO isolation or global idle proof. No whole requirement, standard, Agent or29x8 closure.",
+    "The canonical validation summary can share a digest with another one-pass case. This case is linked by its own receipt, checker argv, evidence and eight input declarations."
+  ],
+  "roles": {
+    "templateAndDraftAuthorAndActualMetadataReviewer": "real_readiness",
+    "actualOperatorAndFinalPublisher": "root",
+    "independentRepeatedActual": false,
+    "staticReviewOccurredAfterSend": true
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/manifest.json",
+      "sha256": "afa05f0edee550814425f810f09cb3f9d56e5a1985d857ea884bd465ad93a273"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/case-plan.json",
+      "sha256": "457f1097847b68cc4a2dad42e1cfb6e77fc55a4f10563fd11eb4b1143eb1fc1f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/preflight.json",
+      "sha256": "a3618105935b4deb9a358a31f5f3a875aa5c1739b5e8b58269bdf9831898e744"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/actual-ui-observation.json",
+      "sha256": "41000b0a5b41b37f42c9a11de6edfdce5f0ca1d5c526f025f7699176545d6629"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/actual-receipt.json",
+      "sha256": "57078d00529c23310438ab02ecd27ddc2a8a21b38b122dc4079fb3fdc74010a3"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/validation.json",
+      "sha256": "1476d5355df880d2b71afcfa045a576f1abee4a696f5845dad971ed5d89079c2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/validation-execution.json",
+      "sha256": "95c9c7db734ab958582b6eb544a0cffae0065948e97181ec2c14ac4c7e42c084"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/post-case-input-check.json",
+      "sha256": "067b611edaf96cf4bfd9e98c7031ce911dd624decb695d043456f54b3f75abd2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qoder-owned-ack-formal-5b31/semantic-independent-review.json",
+      "sha256": "448fbf2662468566fedfb4d0bc59ae62c08808f3f30f03651ac9d31cc4bc4cfd"
+    }
+  ]
+}

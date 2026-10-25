@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "kind": "PoolsideSingleAckPublicSummary",
+  "agentId": "poolside",
+  "productCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "scope": ["S5 回答", "ARCH-34 真实回复"],
+  "wholeClosures": 0,
+  "actual": {
+    "submissions": 1,
+    "exactReply": true,
+    "recognizedCompletion": true,
+    "currentConversationIdle": true,
+    "visibleTools": 0,
+    "extraOperatorActions": 0,
+    "MaxLabelStillVisible": true,
+    "operatorObservationUpperSeconds": 28.307,
+    "plannedWindowSeconds": 180
+  },
+  "mechanical": {
+    "valid": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "originalObservationsMatched": 8,
+    "checkerInvocations": 1,
+    "exitCode": 0
+  },
+  "independentSemanticReview": {
+    "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/semantic-independent-review.json",
+    "sha256": "764e81144012a06508a0b47041223e80f6c1e2d65c1de6071a64df3963bcafaf"
+  },
+  "limits": [
+    "原已有来源、模型字面值及Max/Always ask/Build标签保持；标签不证明真实推理、有效后端、账号或当前程序版本。",
+    "28.307秒只是180秒观察窗内的操作观察上界，不是后端精确耗时或性能门槛。折叠扩展未展开；零可见工具不证明隐藏IO缺失、完整事件或全后台空闲。",
+    "8项记录输入前后一致，已含此前三家短答的要求进度；随后文档提交未改变这些输入。静态复核在Send后，复核方是未绑定模板作者，不冒称事前独立实测。",
+    "仅保留本次精确回答窄正例；旧失败及MiniMax等未知保护不变，不关闭完整要求、标准或整家。"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/case-plan.json",
+      "sha256": "d91e2d2ffc3a6ac67949e610cc8718de7522469f386b90e2283064f029d209d3"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/manifest.json",
+      "sha256": "40b5332d321baec9152d0b5dfd5a33e600488c036f61110251136263124ae5ea"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/preflight.json",
+      "sha256": "a4bd11d24d483e5c369f6097265b2b91c4582042223cca3ee329787bd665a006"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/unique-input-observation.json",
+      "sha256": "be14810e6860ec1402e37d77e2855a92f582661c27f2a66f15a16eb267b29928"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/actual-ui-observation.json",
+      "sha256": "8a08ea52da63fb836938d190bf2aaab01f54911f5761effa0c6e15e82b170e49"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/actual-receipt.json",
+      "sha256": "d2f4da0475aa52f28971cdc84584ec21bfb5ff994a583d7a14eec1bdf813a9f8"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/post-case-input-check.json",
+      "sha256": "1f279b7e1e6dfae3270340641e9cf9b9e69badbc42a4e1f4c3ebb470ecbcef10"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/validation.json",
+      "sha256": "1476d5355df880d2b71afcfa045a576f1abee4a696f5845dad971ed5d89079c2"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/poolside-owned-ack-formal-5b31/static-independent-review.json",
+      "sha256": "7fd90ed687ecf609094ad71b66bc3666beda3a88f86f6a2ff405e4d94c568407"
+    }
+  ]
+}

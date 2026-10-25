@@ -4,6 +4,8 @@
 
 ## 当前工作与接续
 
+Poolside与Qoder在5b31上各一次精确回复，分别观察到完成与当前空闲，零可见工具、改选或重试；机械及语义复核均保留回答窄正例1。Poolside保留Max但未证明推理效果，Qoder思考区未展开且模型别名映射仍未证；不关闭完整标准。见[Poolside](evidence/2026-10-24-agent-acceptance/poolside-formal-5b31-owned-ack-summary.json)和[Qoder](evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json)。
+
 5b31上另外三家各一次短回答：Copilot精确回复、完成及当前空闲构成窄正例1；Kimi本地结束但无可读结果，保留失败1；MiniMax显示结果未知、发送暂停，保留未完成1，未重试或停止。MiniMax首次未知在82.547秒内，最后同态观察191.783秒已超原180秒窗口，不补判窗口内终态。三份回执结构有效并经语义复核；不证明完整标准、后端或全部事件。见[Copilot](evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json)、[Kimi](evidence/2026-10-24-agent-acceptance/kimi-formal-5b31-owned-ack-summary.json)及[MiniMax](evidence/2026-10-24-agent-acceptance/minimax-formal-5b31-owned-ack-summary.json)。
 
 `5b31c20a1`已正常保存退出后更新唯一正式0.1.7 arm64应用：候选9/9、安装10/10，三份新232530条清单端点一致、备份完整性通过；重复候选五文件及五目录已清理，ZIP与旧版本证据保留，未创建应用备份。首次启动可见146份历史、1份保留草稿及空输入，仅为界面计数，不代表全部正文或配置已就绪。见[正式更新](evidence/2026-10-24-agent-acceptance/formal-5b31-installation.json)。
