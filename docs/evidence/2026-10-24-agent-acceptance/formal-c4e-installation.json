@@ -1,0 +1,194 @@
+{
+  "kind": "FormalC4eAtomicInstallationAndFirstLaunchPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "authorized-documentation-checkpoint",
+  "recordedAt": "2026-10-25T02:58:37.862463+00:00",
+  "sourceCommit": "c4e532921042641d5dd82e122c386a19dc5a1cc0",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "15be841676db8ede168744a0336cf1a942cb78419699b25776a9c38620dfbcdf",
+    "basis": "Frozen candidate provenance and actual installed ten; internal signature only, no public signing or notarization claim."
+  },
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-engineering/engineering-summary.json",
+      "sha256": "e43957166b9694b73db8f3304d69ac299ed2ab7e2d444a3c60c02ea1aebb4e07"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-engineering/independent-engineering-review.json",
+      "sha256": "b039a916ceacbaf10e745b0828afb7dd07655b5403f7cbf1d339d6e3bbc3ff0f"
+    },
+    "checksPassed": 7,
+    "inputCount": 2261,
+    "frontendFiles": 673,
+    "frontendPassed": 8892,
+    "nativePassed": 2256,
+    "nativeIgnored": 6,
+    "checksBaseHead": "1123fdbe2ddbee852a1a5ce6e563bf21d46e6dc8",
+    "checksRanBeforeCommit": true,
+    "checksRanAtFinalCommit": false,
+    "boundary": "Complete engineering checks used the precommit input map. Equal endpoint maps and final committed-source checks are distinct evidence; dependency environment bytes and continuous absence of writers are not established."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "naturalExitCodeAsRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/candidate-output/candidate.json",
+      "sha256": "fc261a2f0a7730e43eaa790b5c7ba81f5f39d7bc87d3a5cce2c2a2e32e71caec"
+    },
+    "naturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/root-candidate-natural-completion.json",
+      "sha256": "ea9bed5bcefcb968f5d21bac44139e63c6bdc570a50823215df7cc8a1cd05825"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/independent/review-v2.json",
+      "sha256": "70752872fb45d4355db3258e9e06ab9cc041c0694e88c45e48c6d922bfe56a16"
+    },
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "evidencePins": 20,
+    "preparationTextPins": 8,
+    "archiveSha256": "a5be581a88852eb0a431603c0ee865fe08d68e77248e401eb6f59fd0034ff366",
+    "archiveBytes": 16092303,
+    "archiveRetained": true
+  },
+  "normalQuit": {
+    "normalUiSaveAndExitObserved": true,
+    "forcedQuit": false,
+    "unknownRequestsReclassifiedAsStopped": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/normal-quit-observation.json",
+      "sha256": "5d3b741c215493208231033b78f391fcdad5570d72e134922c05a5071b76b162"
+    }
+  },
+  "dataRetentionAsRecorded": {
+    "completeManifestEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "allThreeByteIdentical": true,
+    "metadataBackupIntegrityCheckPassed": true,
+    "continuousUnchangedIntervalClaimed": false,
+    "fullManifestsDatabaseOrBackupOpenedBySummaryWriter": false,
+    "receipts": {
+      "before": {
+        "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/retention-before-receipt.json",
+        "sha256": "11a1728fb61dac4e90d590d85d3a1a7e5af538fd0ef908d24da1c6a0ce039a6d"
+      },
+      "preinstall": {
+        "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/retention-preinstall-receipt.json",
+        "sha256": "57c905d0b424cc88da479c115205eb00a9be09180ff08884a6db1ddf0d765312"
+      },
+      "after": {
+        "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/retention-after-receipt.json",
+        "sha256": "c938d0a9ef66b6cfc20436c4fbcd277cae5c802f9fa1e4ad1d8ad3d374cd6c07"
+      }
+    },
+    "boundary": "Three complete endpoint receipts and the actual installed ten; not continuous monitoring or complete application-level data-use verification."
+  },
+  "atomicInstallation": {
+    "installed": true,
+    "naturalExitCodeAsRootRecorded": 0,
+    "onlyFormalAppUpdated": true,
+    "exactFiles": 5,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/install-result.json",
+      "sha256": "fb140f12a4dbadcdf5d10b79e559beb9c5caf53b213ff9aae06c05411f2a63a5"
+    }
+  },
+  "installedIndependentReview": {
+    "checksPassed": 10,
+    "checksTotal": 10,
+    "failures": [],
+    "naturalExitCodeAsRootRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "51a2bf05a11a1a01150418e0b4d9855f8f5d53b24275ccab070bc1fdbaadd40f"
+    },
+    "boundary": "Actual source, bundle, signature, archive and endpoint-retention checks; no affected P18 feature acceptance follows."
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "archiveRetained": true,
+    "naturalExitCodeAsRootRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/install/candidate-cleanup.json",
+      "sha256": "97ecf43bff09a4f4ce434aada8b05b054f2f0e91bfa88af25c9ef3f666bcfa85"
+    }
+  },
+  "firstLaunchAsRootObserved": {
+    "at": "2026-10-25T02:56:18.703Z",
+    "historyListCount": 146,
+    "retainedDraftCount": 1,
+    "inputEmpty": true,
+    "priorOwnedFolderVisible": true,
+    "newPrompts": 0,
+    "historyLoadAttempted": false,
+    "appStateAtRootObservation": "open",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/root-install-natural-completions.json",
+      "sha256": "f887beb4547018916ae3779c65f64fedaf13546e044a29afc793d66f9d23640e"
+    },
+    "boundary": "Initial application shell and list/draft counts only. No individual history load or affected P18 output-detail observation has been performed in this installation window."
+  },
+  "independentPreparationReviews": {
+    "sourceAndFiveHelperBinding": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/independent-bound-preparation-review.json",
+      "sha256": "463407a8bb962612fc5ad6eca7f155f55b98f292d76c531d18898d1ffba96925"
+    },
+    "dynamicNineAndTenLiteralBinding": {
+      "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/independent-dynamic-review-binding-review.json",
+      "sha256": "15ebdebfc8aa76aa76f190e56cecd79d669c1be093d5ec00cc1ae50e311e388f"
+    },
+    "boundary": "Read-only static binding reviews; neither review executes the nine/ten checker or substitutes for actual installation results."
+  },
+  "affectedP18InstalledVerification": {
+    "status": "not-yet-executed",
+    "originalFailedCaseReclassified": false,
+    "actualExitCodeOfOriginalCase": "unknown",
+    "actualRawEventShapeOfOriginalCase": "unknown",
+    "uniqueCauseOfOriginalCase": "unknown"
+  },
+  "remainingBoundaries": {
+    "userExplicitlyRetainedAuthenticationWaits": [
+      "Google Antigravity",
+      "Autohand Code",
+      "Gemini CLI",
+      "Nova",
+      "Grok Build"
+    ],
+    "loginOrSubstituteServiceActions": false,
+    "earlierUnknownRequestsSettledByUpdate": false,
+    "new24AffectedSendingPauseUnchanged": true
+  },
+  "rootNaturalCompletions": {
+    "path": "output/2026-10-24-agent-acceptance/p18-raw-detail-install-preparation/root-install-natural-completions.json",
+    "sha256": "f887beb4547018916ae3779c65f64fedaf13546e044a29afc793d66f9d23640e"
+  },
+  "completeRequirementsNewlyAccepted": 0,
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "Installation and first launch do not close any of the 151 requirements or 29-by-8 acceptance cells.",
+    "The earlier P18 failure and its collection-window deviation remain. Installation does not establish actual tool exit status, raw event shape, a unique cause, or repaired output rendering in the installed UI.",
+    "Five authentication waits, earlier unknown requests and the NEW-24 affected sending pause remain unchanged. Normal exit and update are not cancellation or idle proof for those earlier requests.",
+    "Only named metadata and existing engineering/review records were read. No helper, checker, test, App, Agent, raw log, native history, configuration, full data manifest, database or backup was executed or opened for this summary."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "accountCredentialSessionIdentifiersIncluded": false,
+    "rawPromptReplyDiagnosticOrRpcBodiesIncluded": false,
+    "rawDataManifestOrBackupDigestsIncluded": false,
+    "filesystemInodesAndProcessDetailsIncluded": false
+  }
+}

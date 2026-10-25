@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "kind": "InstalledOriginalP18ColdDisplayNarrowObservation",
+  "recordedAt": "2026-10-25T03:07:34.463Z",
+  "productCommit": "c4e532921042641d5dd82e122c386a19dc5a1cc0",
+  "formalApp": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "15be841676db8ede168744a0336cf1a942cb78419699b25776a9c38620dfbcdf"
+  },
+  "agentId": "mistral-vibe",
+  "agentVersionContext": "Prior UI declaration 2.25.8 only; current cold handshake unreported.",
+  "scope": {
+    "level": "installed",
+    "requirementIds": ["P18"],
+    "standardIds": [],
+    "narrowDisplayPositive": 1,
+    "wholeRequirements": 0,
+    "wholeStandards": 0,
+    "wholeAgents": 0
+  },
+  "actual": {
+    "startedAt": "2026-10-25T03:00:23.555Z",
+    "finishedAt": "2026-10-25T03:02:38.975Z",
+    "ownedConversationLoads": 1,
+    "originalToolResultMarkersVisible": 2,
+    "stepOutputCardMarkersVisible": 2,
+    "resultDistinguishedFromInput": true,
+    "additionalFrame": "none-visible",
+    "basis": "Native screenshot after partial scroll covers the tool end through the next section; AX separately confirms result and output-card text.",
+    "prompts": 0,
+    "tools": 0,
+    "settingsChanges": 0,
+    "retries": 0,
+    "stopRequests": 0,
+    "P32QueriesOrReattachments": 0
+  },
+  "mechanical": {
+    "valid": true,
+    "cases": 1,
+    "passed": 1,
+    "errors": 0,
+    "acceptanceVerified": false
+  },
+  "corrections": {
+    "timestamps": "First validation rejected Python +00:00/microsecond finishedAt formatting. Only two receipt-envelope times were normalized to UTC millisecond Z. The second checker exited0; before-* originals remain. No UI repeat or fact/outcome change.",
+    "owner": "Initial owner hash comparison used unequal serialization shapes. The explicit corrected comparison and same-schema after comparison confirm index/native-owner continuity; the initial mismatch is not evidence of native drift."
+  },
+  "boundaries": [
+    "This restored result has no extra visibly empty frame in the observed scope; incoming raw shape and unique original cause remain unknown. Controlled raw-shape tests are separate evidence.",
+    "Actual shell exit and stdout/stderr channel separation remain unverified. Neither step completion nor requested exit establishes them.",
+    "The original live P18 failure and prior65a cold observation are unchanged. No fresh tool execution or full history-recovery guarantee is claimed.",
+    "Index/native-owner continuity does not establish backend account/model identity."
+  ],
+  "actualSemanticReview": {
+    "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/independent-semantic-review.json",
+    "sha256": "f5fac3e4dbd491cdc30f6325d5e51962a4e0cf32cbdfaf8d2bcff3990ad92a05",
+    "blockingFindings": 0
+  },
+  "metadataReferences": {
+    "plan": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/source-plan.json",
+      "sha256": "d29bd7ac79337d2176b671bf68dc2d5e826a99ccbb586fed670388ed4fb2ec09"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/manifest.json",
+      "sha256": "7de261e570c499ddf51b8a944218b0bba64d610134678a95249736df49cc0e10"
+    },
+    "observation": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/actual-cold-detail-observation.json",
+      "sha256": "b4976c75357f2a55fae1a366136b5371724dd32bc140b8dbe8ec7a2d17c806a5"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/actual-receipt.json",
+      "sha256": "44ccfa9d5f885ca2e7d8dba0940f53ed2c5fc7cb731c1b64327618e2b8d28b60"
+    },
+    "validation": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/validation.json",
+      "sha256": "06d233a7acf5d088c837785340a7b03de45e360535b819fc4ff0c0ce2b2a629e"
+    },
+    "timeCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/timestamp-format-correction.json",
+      "sha256": "df4c062a47ad3817ea30f3d253fd8c8279bd22ad06370cd89ae24af69c16cbf2"
+    },
+    "ownerCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/native-owner-before-cold-serialization-comparison.json",
+      "sha256": "b17649ca4370a6ebafc11a95538ee391d8d9503c1becefcb84e8fe060c992ae7"
+    },
+    "ownerAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p18-original-raw-detail-cold-c4e/native-owner-after-cold-private.json",
+      "sha256": "b2323b8cdc45082d037a3e42ec956aca83257eeac7a9340537ab9895eee13b58"
+    },
+    "prior65a": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/65a-cold-original-results-summary.json",
+      "sha256": "030702fe90be068097421c3973ef4670468ddee4a73b3122a188920ea9faa25f"
+    },
+    "formal": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-c4e-installation.json",
+      "sha256": "a5a6eb26d5984918eb20d318d3c77f88a0730641c0b616088930adca4f7d7172"
+    }
+  }
+}

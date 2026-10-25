@@ -1,0 +1,70 @@
+{
+  "kind": "IndependentTrustStatusDiagnosticPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "agentId": "mistral-vibe",
+  "observation": {
+    "scope": "one-separate-official-process-and-one-owned-directory",
+    "initializeRequests": 1,
+    "trustStatusRequests": 1,
+    "method": "_trust/status",
+    "matchedResponses": 2,
+    "trustStatus": "untrusted",
+    "requestedCwdMatched": true,
+    "declaredNameAndVersionLabelsMatched": true,
+    "versionOrDistributionEquivalenceProved": false,
+    "eofDirectChildExitCode": 0,
+    "parentProbeNaturalExitCodeAsRootReported": 0,
+    "sessionRequests": 0,
+    "authenticationRequests": 0,
+    "promptRequests": 0,
+    "trustDecisionRequests": 0,
+    "retries": 0,
+    "signals": 0
+  },
+  "originalSkillCases": {
+    "declarationFailed": 1,
+    "adoptionUnexecuted": 1,
+    "positiveAdoption": 0,
+    "reclassified": false
+  },
+  "completeP40RequirementsNewlyAccepted": 0,
+  "completeStandardsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "limits": [
+    "This separate process does not establish trust of the current App connection, App environment parity, the unique cause of the missing skill, or skill discovery/adoption.",
+    "Zero detected-file/decision counts can come from absent optional fields defaulted empty. They prove no file absence, unsupported capability, prior decline or unavailable App decision.",
+    "Only initialize and status were explicitly sent. No explicit write RPC is not zero startup IO, network, cache, configuration or authentication effects.",
+    "Natural EOF exit0 concerns the direct child only; it is not App idle, descendant termination, a prompt/cancel terminal or settlement of any earlier unknown.",
+    "The summary writer ran no helper, test, App or Agent and read no database, configuration, raw protocol stream or user history. Original P40 failure and unexecuted adoption remain unchanged."
+  ],
+  "references": {
+    "actual": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/readonly-trust-status-result.json",
+      "sha256": "112093b34faf416d89755e4de20b7b5c27c4718fb26d5f635a098b25b19104d3"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/probe-readonly-trust-status-semantic-review.json",
+      "sha256": "c5fe0ae0535277e9ad3794da8b60c13b0885ce76600744fa7cba18d8ec98e795"
+    },
+    "helperText": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/probe-readonly-trust-status.py",
+      "sha256": "d3d5ef615d7ef4c7808d3e46be7c1e1f98b7a42287e501e00829359aceb65e94"
+    },
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/probe-readonly-trust-status-preparation.json",
+      "sha256": "cc2f244a6720ca6a060249c4797d912caa7c0fca79a331dfb3f78a4d28aabf71"
+    },
+    "design": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/proposed-readonly-probe-review.json",
+      "sha256": "0b4389801c106275dddf536c6e5a302e61d43f8e2c1b68a9bfa592b68f99a1b4"
+    },
+    "independentTextReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/probe-readonly-trust-status-independent-review.json",
+      "sha256": "5037c6e2c0b884eb9706645352a41549decee9526041650db07e42ed7a2f9a4c"
+    }
+  },
+  "privacy": {
+    "privatePathsIdentifiersCredentialsOrRawBodiesIncluded": false
+  }
+}
