@@ -1186,6 +1186,7 @@ export default function App() {
       {importMounted && (
         <ImportConversations
           agents={agents.cards}
+          index={index}
           returnFocusRef={importReturnFocus}
           open={importOpen}
           initialAgentId={importAgent}

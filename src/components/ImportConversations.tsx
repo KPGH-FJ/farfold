@@ -33,6 +33,11 @@ import {
   modelConfigOption,
 } from "../runtime/session_projection";
 
+interface AddedConversation {
+  saved: IndexRow;
+  index: readonly IndexRow[];
+}
+
 interface LookupDraft {
   rows: DiscoveredConversation[];
   cursor: string | null;
@@ -42,8 +47,31 @@ interface LookupDraft {
   query: string;
   selected: Set<string>;
   previewId: string | null;
-  added: Record<string, IndexRow>;
+  added: Record<string, AddedConversation>;
   failed: Set<string>;
+}
+
+function resolveAddedConversation(
+  row: DiscoveredConversation,
+  agentId: string,
+  index: readonly IndexRow[],
+  byId: ReadonlyMap<string, IndexRow>,
+  added: Readonly<Record<string, AddedConversation>>,
+) {
+  const committed = added[row.nativeSessionId];
+  const id = row.alreadyAddedId ?? committed?.saved.id;
+  if (!id) return null;
+  // A save receipt bridges only the snapshot before its first index refresh.
+  // Later snapshots must never resurrect a row removed from the current index.
+  const saved =
+    byId.get(id) ??
+    (committed?.saved.id === id && committed.index === index
+      ? committed.saved
+      : null);
+  return saved?.agentId === agentId &&
+    saved.nativeSessionId === row.nativeSessionId
+    ? saved
+    : null;
 }
 
 export async function importConversationBatch(
@@ -85,6 +113,7 @@ export async function importConversationBatch(
 
 export function ImportConversations({
   agents,
+  index = threads.getSnapshot().index,
   open,
   initialAgentId = null,
   requestRevision = 0,
@@ -96,6 +125,7 @@ export function ImportConversations({
   returnFocusRef,
 }: {
   agents: AgentCardModel[];
+  index?: readonly IndexRow[];
   open: boolean;
   initialAgentId?: string | null;
   requestRevision?: number;
@@ -144,7 +174,7 @@ export function ImportConversations({
     { cwd: string | null } | undefined
   >();
   const [message, setMessage] = useState<string | null>(null);
-  const [added, setAdded] = useState<Record<string, IndexRow>>({});
+  const [added, setAdded] = useState<Record<string, AddedConversation>>({});
   const [failed, setFailed] = useState<Set<string>>(new Set());
   const lookupDrafts = useRef(new Map<string, LookupDraft>());
   const agentLocations = useRef(new Map<string, string | null>());
@@ -212,11 +242,15 @@ export function ImportConversations({
       if (p) void closeHistoryPreview(p).catch(() => undefined);
     };
   }, []);
-  const visible = rows.filter((r) =>
-    `${r.title ?? ""} ${r.cwd}`
+  const savedById = new Map(index.map((row) => [row.id, row]));
+  const joinedRow = (row: DiscoveredConversation) =>
+    resolveAddedConversation(row, agentId, index, savedById, added);
+  const visible = rows.filter((row) => {
+    const saved = joinedRow(row);
+    return `${row.title ?? ""} ${row.cwd} ${saved?.title ?? ""} ${saved?.cwd ?? ""}`
       .toLocaleLowerCase()
-      .includes(query.trim().toLocaleLowerCase()),
-  );
+      .includes(query.trim().toLocaleLowerCase());
+  });
   const canAdd = (r: DiscoveredConversation) =>
     r.canLoad &&
     r.locationAvailable &&
@@ -427,7 +461,11 @@ export function ImportConversations({
           release,
           onAdded: (nativeSessionId, saved) => {
             completed.add(nativeSessionId);
-            setAdded((old) => ({ ...old, [nativeSessionId]: saved }));
+            const index = threads.getSnapshot().index;
+            setAdded((old) => ({
+              ...old,
+              [nativeSessionId]: { saved, index },
+            }));
           },
         },
       );
@@ -458,11 +496,23 @@ export function ImportConversations({
     });
   const openExisting = (row: DiscoveredConversation) =>
     work(async () => {
-      const found =
-        added[row.nativeSessionId] ??
-        threads.getSnapshot().index.find((r) => r.id === row.alreadyAddedId);
-      if (!found) throw new Error(S.busy);
+      const revision = lookupRevision.current;
+      const context = requestedContextRef.current;
+      const current = () => {
+        const index = threads.getSnapshot().index;
+        return resolveAddedConversation(
+          row,
+          agentId,
+          index,
+          new Map(index.map((entry) => [entry.id, entry])),
+          added,
+        );
+      };
+      if (!current()) throw new Error(S.savedUnavailable);
       await release();
+      if (!openRef.current || !currentLookup(revision, context)) return;
+      const found = current();
+      if (!found) throw new Error(S.savedUnavailable);
       close();
       onOpen(found);
     });
@@ -795,61 +845,90 @@ export function ImportConversations({
                     {S.all}
                   </label>
                 )}
-                {visible.map((row) => (
-                  <div
-                    className={`history-row ${previewId === row.nativeSessionId ? "active" : ""}`}
-                    key={row.nativeSessionId}
-                  >
-                    <input
-                      type="checkbox"
-                      aria-label={row.title ?? S.unknownTitle}
-                      disabled={busy || !canAdd(row)}
-                      checked={selected.has(row.nativeSessionId)}
-                      onChange={() =>
-                        setSelected((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(row.nativeSessionId))
-                            next.delete(row.nativeSessionId);
-                          else next.add(row.nativeSessionId);
-                          return next;
-                        })
-                      }
-                    />
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => void view(row)}
+                {visible.map((row) => {
+                  const joined = !!(
+                    row.alreadyAddedId || added[row.nativeSessionId]
+                  );
+                  const saved = joinedRow(row);
+                  return (
+                    <div
+                      className={`history-row ${previewId === row.nativeSessionId ? "active" : ""}`}
+                      key={row.nativeSessionId}
                     >
-                      <strong>{row.title ?? S.unknownTitle}</strong>
-                      <small>
-                        {row.alreadyAddedId || added[row.nativeSessionId]
-                          ? S.added
-                          : !row.locationAvailable
-                            ? S.locationMissing
-                            : !row.canLoad
-                              ? S.noLoad
-                              : row.isOpen
-                                ? S.busy
-                                : row.cwd === defaultCwd
-                                  ? LIBRARY.ordinary
-                                  : row.cwd}
-                      </small>
-                    </button>
-                    {failed.has(row.nativeSessionId) && canAdd(row) && (
-                      <div className="history-row-failure">
-                        <small>{S.rowFailed}</small>
-                        <button
-                          type="button"
-                          className="btn btn-text"
-                          disabled={busy}
-                          onClick={() => void add([row])}
-                        >
-                          {S.retryRow}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      <input
+                        type="checkbox"
+                        aria-label={row.title ?? S.unknownTitle}
+                        disabled={busy || !canAdd(row)}
+                        checked={selected.has(row.nativeSessionId)}
+                        onChange={() =>
+                          setSelected((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(row.nativeSessionId))
+                              next.delete(row.nativeSessionId);
+                            else next.add(row.nativeSessionId);
+                            return next;
+                          })
+                        }
+                      />
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => void view(row)}
+                      >
+                        <strong>{row.title ?? S.unknownTitle}</strong>
+                        <small>
+                          {joined
+                            ? S.added
+                            : !row.locationAvailable
+                              ? S.locationMissing
+                              : !row.canLoad
+                                ? S.noLoad
+                                : row.isOpen
+                                  ? S.busy
+                                  : row.cwd === defaultCwd
+                                    ? LIBRARY.ordinary
+                                    : row.cwd}
+                        </small>
+                        {joined && (
+                          <>
+                            <small>
+                              {S.returnedLocation}：{row.cwd || S.notProvided}
+                            </small>
+                            {saved ? (
+                              <>
+                                <small>
+                                  {S.savedTitle}：
+                                  {saved.title?.trim()
+                                    ? saved.title
+                                    : S.unknownTitle}
+                                </small>
+                                <small>
+                                  {S.savedLocation}：
+                                  {saved.cwd || S.notProvided}
+                                </small>
+                              </>
+                            ) : (
+                              <small>{S.savedUnavailable}</small>
+                            )}
+                          </>
+                        )}
+                      </button>
+                      {failed.has(row.nativeSessionId) && canAdd(row) && (
+                        <div className="history-row-failure">
+                          <small>{S.rowFailed}</small>
+                          <button
+                            type="button"
+                            className="btn btn-text"
+                            disabled={busy}
+                            onClick={() => void add([row])}
+                          >
+                            {S.retryRow}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               <div className="history-preview">
                 <h3>{S.preview}</h3>
@@ -889,7 +968,7 @@ export function ImportConversations({
                       <button
                         type="button"
                         className="btn btn-ghost"
-                        disabled={busy}
+                        disabled={busy || !joinedRow(previewRow)}
                         onClick={() => openExisting(previewRow)}
                       >
                         {S.open}

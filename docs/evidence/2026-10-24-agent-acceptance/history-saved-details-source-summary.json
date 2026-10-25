@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "kind": "HistorySavedDetailsSourceAndEngineeringSummary",
+  "requirementIds": ["ARCH-31", "P33"],
+  "standardIds": [],
+  "scope": {
+    "productionFiles": 3,
+    "testFiles": 1,
+    "stableSourcePins": 4,
+    "largestProductionFileLines": 1348
+  },
+  "behavior": [
+    "Official history results keep the official title and returned folder separately labeled from the precisely associated saved title and folder. The local result filter also searches that saved metadata, without another list, preview or model request.",
+    "Saved metadata is resolved by an exact existing/confirmed-save ID, Agent and native conversation. The current index wins; neither matching title nor matching folder creates an association, and foreign-owner metadata is not displayed or opened.",
+    "A confirmed new save may bridge only its unchanged current index snapshot. Any later immutable index snapshot expires that fallback when the row is absent, including deleted rows and closed/other-Agent cached lookup drafts.",
+    "Opening takes fresh index snapshots before and after preview release, checks the active dialog/lookup request and uses the latest exact saved row. A stale captured action cannot revive an expired receipt.",
+    "The existing App index subscription drives the shared dialog. Four generic labels were added; there is no new Agent-specific panel, dependency, environment switch, persistence, background metadata read, setting change or automatic preview/model action."
+  ],
+  "validation": {
+    "initialEffectiveRed": {
+      "tests": 10,
+      "passed": 5,
+      "failed": 5,
+      "naturalExitCode": 1
+    },
+    "expandedEffectiveRed": {
+      "tests": 15,
+      "passed": 6,
+      "failed": 9,
+      "naturalExitCode": 1,
+      "original10OraclePrefixPreserved": true
+    },
+    "oldAffectedGreen": {
+      "files": 4,
+      "passed": 45,
+      "failed": 0,
+      "naturalExitCode": 0,
+      "meaning": "Used the sealed pre-format15-test oracle; its later two line wraps were formatting only. This is an earlier checkpoint, not the final48."
+    },
+    "initialIndependentP2": {
+      "blockingFindings": 1,
+      "preserved": true,
+      "meaning": "Confirmed-save fallback could survive an index-observed row removal and authorize stale metadata/opening."
+    },
+    "p2EffectiveRed": {
+      "tests": 17,
+      "passed": 15,
+      "failed": 2,
+      "naturalExitCode": 1,
+      "stableInputPins": 9,
+      "meaning": "Captured old Open action and closed/other-Agent draft both revived the deleted committed association on the preceding implementation."
+    },
+    "finalAffectedGreen": {
+      "files": 4,
+      "newRegressionCases": 18,
+      "passed": 48,
+      "failed": 0,
+      "naturalExitCode": 0,
+      "stableInputPins": 9,
+      "meaning": "Includes the final release-microtask/index-change countercontrol, plus existing affected components. That18th control has no separately claimed pre-fix RED."
+    },
+    "typecheck": {
+      "naturalExitCode": 0
+    },
+    "selectedFourFileFormatCheck": {
+      "naturalExitCode": 0
+    },
+    "diffCheck": {
+      "naturalExitCode": 0
+    },
+    "finalFourCheckInputMapsEqual": true,
+    "independentSourceReviewBlockingFindings": 0,
+    "countsAreSeparateOverlappingRuns": true,
+    "reviewerReranTests": false
+  },
+  "sourcePins": {
+    "src/App.tsx": {
+      "sha256": "feab3f0c1ff7704db41e6f4f37b2fc71970194ce6b9aec87a651a206db09c3c5",
+      "bytes": 48694,
+      "lines": 1348
+    },
+    "src/components/ImportConversations.tsx": {
+      "sha256": "bbf69a0f09baeaf7fee52835f2a8e91e4d4aae2f4ced0ca975c4aedff1cac091",
+      "bytes": 38176,
+      "lines": 1098
+    },
+    "src/runtime/import_strings.ts": {
+      "sha256": "3d2da9dc916bfd1363130c0131e2d8f395dd9b7fb4b689f6d9de55c2afb4bf50",
+      "bytes": 5116,
+      "lines": 98
+    },
+    "src/components/ImportConversations.saved-details.test.tsx": {
+      "sha256": "df8df6d7738a4e9dcf0ae41295dfe8196d3750984dd66e566f84bb90d7f80d28",
+      "bytes": 23008,
+      "lines": 740
+    }
+  },
+  "fullSeven": {
+    "actualCommands": 7,
+    "allSucceeded": true,
+    "earlierPassingChecksReused": 0,
+    "frontend": {
+      "files": 686,
+      "passed": 9132,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2307,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "inputCount": 2292,
+    "fullBeforeAndAfterMapsEqual": true,
+    "perCommandRecordedEndpointComparisonsAllTrue": true,
+    "perCommandFullMapsPersisted": false,
+    "independentBlockingFindings": 0,
+    "checksRanBeforeCommitOnExactInputMap": true
+  },
+  "installed": false,
+  "limits": [
+    "Source, controlled-component checks, complete seven actual commands and independent reviews passed. This source checkpoint has no candidate, installation or affected installed-UI result; the formal application remains the prior e954 source.",
+    "The component tests control React hook hosting and invoke boundaries. They are not browser layout or installed-product rendering evidence.",
+    "The previous real Kilo list association remains incomplete. This source change does not establish automatic official title change, correct that old outcome, close S3/fullP33/ARCH-31, or claim29-by-8/whole-Agent completion.",
+    "The fallback relies on the verified existing immutable index updates. Successful authoritative refresh/rename changes the array; a failed refresh retains the prior array. No persistent ledger or extra scope mechanism was introduced.",
+    "The original P2 review, earlier RED/GREEN rounds, file/LF and preparation failures, unresolved requests, authentication waits, NEW-24 sending pause and Cline protection remain unchanged. No results from separate runs are summed.",
+    "The Vite large-chunk advisory and four ZipWriter archive-write-stopped diagnostics remain in the complete raw logs. Successful commands do not assign each diagnostic a unique cause.",
+    "Source equality is checked at recorded endpoints, not continuously; dependency installation bytes and environment are not frozen."
+  ],
+  "references": {
+    "initialRed": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/red-cli-execution.json",
+      "sha256": "1170e6b0cc664ac141a9a6de36517539cf14d0c4d63820f719a0cdd566ccef45"
+    },
+    "expandedRed": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/red-expanded-cli-execution.json",
+      "sha256": "a64d7ae52395d3d34a4b41e5e5af488e30256d07dfe7ab97e3d6bda4250f9959"
+    },
+    "expandedOriginalOracle": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/red-expanded-oracle.tsx",
+      "sha256": "2e8850149018d5f9992e06556b8ec2118a3eacc2ce86f77219babc5f08716003"
+    },
+    "oldAffectedGreen": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/green-cli-execution.json",
+      "sha256": "b39362c07049ee35c80074b3968ea18deeee99e2450bed8dd3d7e58ae4e6086b"
+    },
+    "initialIndependentP2Review": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/independent-source-review-private.json",
+      "sha256": "3230e19b2bb78206e5fea63c1a2df085a43a1590eebb9dfcb2c93f6d860a5163"
+    },
+    "p2LifecycleRed": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/red-lifecycle-cli-execution.json",
+      "sha256": "04d10796be3bd46ec0a376b27b664f1ac8d1e61aa2584129f1b561999b886fc5"
+    },
+    "finalAffectedGreen": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/green-lifecycle-cli-execution.json",
+      "sha256": "b26ee7efa24d21f92a7b5daf4926ad8b4dc19fe5707ad500054f2858859c59c2"
+    },
+    "finalTypecheck": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/typecheck-final-cli-execution.json",
+      "sha256": "4edcc6bfbafed082bc295fe9a5aaf2b7ebf75cea3c2b43f0bce3b83286a3494d"
+    },
+    "finalSelectedFormat": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/format-final-cli-execution.json",
+      "sha256": "013d6b323a2a65a83cf261368a1a1dba4ead6dcacf6525af8000c8092e79de80"
+    },
+    "finalDiffCheck": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/diff-final-cli-execution.json",
+      "sha256": "b626a77bc0bf59479e5eeb7d412af2f9d804906e8e29c64abd186b9dc340c3a5"
+    },
+    "independentSourceReviewV2": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-source-preparation/independent-source-review-v2-private.json",
+      "sha256": "860850dbdb528debeb140672e5e815fce1db2312adc9b20073a1d9879045fc64"
+    },
+    "engineeringSummary": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/engineering-summary.json",
+      "sha256": "705632f94cd5c247101e518b6e062d57dd217f5e90f4ef2a0c82c0da6d18a8b7"
+    },
+    "engineeringIndependent": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/independent-engineering-review.json",
+      "sha256": "958921af57b402be6bb98b6a9463b5a9e2e115c9a2ee7f9b8c9627e37551fbed"
+    },
+    "engineeringSourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/source-before.json",
+      "sha256": "6328db0bed0c417935edd34b331af30edd45eb0279408011ed567e6cd5a484a4"
+    },
+    "engineeringSourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/source-after.json",
+      "sha256": "ad71975c3d6aad317615484766a89a374a93e8c81f446a6b7d2173ebe22b276f"
+    },
+    "engineeringExpected": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/source-expected.json",
+      "sha256": "b67df2b89cf4a951f0aa61eb726fbc6d259d9d5025e4f8a7b511a20d04e6f16f"
+    }
+  },
+  "engineeringBaseHead": "499d0dbbfae169d6646fae90b6d30aada7a6b7c1"
+}
