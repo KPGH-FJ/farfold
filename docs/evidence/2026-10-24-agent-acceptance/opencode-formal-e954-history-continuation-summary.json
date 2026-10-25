@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "OpenCodeOriginalHistoryAndScopedS3Summary",
+  "formalSourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+  "application": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "agentId": "opencode",
+  "currentAgentVersion": "unreported by installed UI; historical versions not asserted current or pinned",
+  "selectionScope": {
+    "sourceLabel": "沿用已有设置",
+    "modelLabel": "OpenCode/Big Pickle",
+    "modeLabel": "build",
+    "reasoning": "Not exposed; inherited/unreported, not a substituted None or grade."
+  },
+  "originalBodyRestoration": {
+    "normalOriginalOpenActionsInPreparation": 1,
+    "loadingThenOriginalUserAndFirstReplyActuallyObserved": true,
+    "newColdOrRawNativeIdentityClaim": false
+  },
+  "contextContinuation": {
+    "level": "real-agent",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 8,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:17:49.076Z",
+    "finalObservationAt": "2026-10-25T18:18:20.523Z",
+    "observationUpperBoundSeconds": 31.447,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "questionContainsOriginalAnswer": false,
+    "ordinaryPromptActions": 1,
+    "replyExactlyMatchesOriginalFirstReply": true,
+    "recognizedCompletion": true,
+    "currentOwnIdleAndEmptyComposer": true,
+    "newVisibleToolSteps": 0,
+    "extraPromptsChoiceLoginRetryStopQueueActions": 0,
+    "postCompletionConfigurationPanels": 0,
+    "currentEffectiveBackendOrRawIdentityClaim": false
+  },
+  "officialDiscovery": {
+    "level": "installed",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 7,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:21:42.243Z",
+    "finalObservationAt": "2026-10-25T18:21:58.439Z",
+    "observationUpperBoundSeconds": 16.196,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "explicitFindOperatorActions": 1,
+    "actualVisibleResults": 2,
+    "originalTargetMarkedAlreadyAdded": true,
+    "targetRowSelections": 1,
+    "openExistingActions": 1,
+    "originalUserFirstReplyAndNewContinuationVisibleAfterOpen": true,
+    "otherResultSelectedOrImported": false,
+    "newPreviewImportCheckboxMorePageModelPromptChoiceLoginRetryStopActions": 0,
+    "scope": "One explicitly selected owned original folder; the joined result shows an added label instead of returned folder. Request folder and original target/body mapping were observed separately. No exhaustive filtering, raw returned-folder/native-ID or raw list RPC dispatch capture claim."
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "verdict": "met-in-stated-scope",
+    "condition": "历史真正可用：找到已有对话，真实正文与上下文恢复后继续原对话；列表、正文和继续分别核验。",
+    "scope": "The one original owned OpenCode conversation, macOS arm64, existing settings / OpenCode Big Pickle / build; reasoning not exposed.",
+    "basis": [
+      "Original normal-open loading then full original user and first reply became visible.",
+      "One new question without the prior answer elicited exactly that first reply and visibly completed in the same conversation.",
+      "One explicit official discovery returned the already-added original target; one selection/open returned its matching original body and new continuation."
+    ],
+    "independentCompositionReview": true,
+    "canonicalStandardIdsRetroactivelyChanged": false,
+    "fullRequirementOrWholeAgentClosed": false
+  },
+  "preparationIssuesPreserved": [
+    "The first binding script stopped after writing only preflight on an unnecessary ASCII decode attempt; condition was already correct Unicode. Canonical plan/manifest were written later before input/send.",
+    "The real-agent template lacked selection; canonical manifest and attempt received actual UI-label selection and null reasoning, before the send.",
+    "Native folder Go-to paste twice showed no path change. No wrong folder/query was confirmed; setValue plus exact readback preceded the single original-folder confirmation. No unique paste cause inferred."
+  ],
+  "coverageLimits": [
+    "No new cold load, same connection, raw native session identity or current Agent executable-version equivalence claim.",
+    "No preview/new import, additional pages, all histories, all model/service/platform configurations or complete ARCH-29/ARCH-31/P33/S7 claim.",
+    "Original unknown work and failures, six authentication waits, affected NEW-24 sending pause and protected Cline process are unchanged.",
+    "Source/full engineering/installation results retain their earlier scope; these two cases do not rerun or replace them.",
+    "No whole Agent or 29-by-8 completion."
+  ],
+  "references": {
+    "context:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/case-plan.json",
+      "sha256": "dc99f40954d8b7fd7fb7b5f859e88f60c0999ff19fccef8c99af90a561c233da"
+    },
+    "context:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/manifest.json",
+      "sha256": "c21a0099a6568d9ca1291fe44e049398c81c7e246f5e8883ec3cf1270f983a2e"
+    },
+    "context:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/preflight.json",
+      "sha256": "3d339084b9a462462f240df4257778ffa5e5ff587d816c4c2619a276684340df"
+    },
+    "context:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/actuals.json",
+      "sha256": "6668a58d764f5fc0f8437529fee872cceaeb744cf2d8928fb70b8a399e93e3f4"
+    },
+    "context:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/receipt.json",
+      "sha256": "483b64e998de3907e973a844d93b14432af142aac9bd0aecdf796e0e4a77b75b"
+    },
+    "context:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "dfc55f6ba0cecf41e8ab65d50ce18da94efe9e76a3369b305b7c8bffc6444a87"
+    },
+    "context:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "09740309cc9518059b9d750d0caead28c6f758ab18480447b36b97421d1bfa16"
+    },
+    "context:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/seal.stdout",
+      "sha256": "c59f76e15930e4e47d5bc892c5ffbfdbcacc4212a2ab1b19d0f338434750b3d2"
+    },
+    "context:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "context:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "f96fc7ca5299dad1d7486c3a2036bb5264411965e7930060945d853262963db1"
+    },
+    "discovery:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/case-plan.json",
+      "sha256": "023367e80f1c7d93034f7f385138302c4e5146eb7e41e14cb48e1bddb53bd780"
+    },
+    "discovery:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/manifest.json",
+      "sha256": "76432c29a9e67b383dafc6589151638c113a69127dbd413abb5bd779bb07c07c"
+    },
+    "discovery:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/preflight.json",
+      "sha256": "39f292c89fc2af3324e1851efa8a93d3839a5882e732a9d0c32364fb259cfa1a"
+    },
+    "discovery:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/actuals.json",
+      "sha256": "77fce7ff6b279431afbb379f3938473214142e17a0d691915bd84f659cb3f352"
+    },
+    "discovery:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/receipt.json",
+      "sha256": "c5fe5ee5d5b787eb34705af1de45f04e580f8f72be4e9eafea898b9d99baca48"
+    },
+    "discovery:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "cf985ce2e90b6f576585757a8b03cb054d3554e44f035ad348b8ddd1417012c3"
+    },
+    "discovery:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "99675bc76887ed6b2d02196eb26b91504b56b2302e4265359237543b38993756"
+    },
+    "discovery:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/seal.stdout",
+      "sha256": "2e306bbdda48feea7ad4fcd7a2056639130e7de1137128d56065422000b208f7"
+    },
+    "discovery:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "discovery:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-official-history-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "c69f47e2f662143ead953fa3054b444266be499cbffcf38e265b6ab19fe27a77"
+    },
+    "restoration:original-open-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/original-open-ui-private.json",
+      "sha256": "d5b8a0d932a064e806e9bdcdb1d6e4cc0d872bd5fa04c367e54f6412bef50d6b"
+    },
+    "restoration:original-loaded-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/opencode-context-continuation-formal-e954-preparation/original-loaded-ui-private.json",
+      "sha256": "7049e9586c7394ae9266922198f3cd613aaa8fdcbdcafd443db8fc13be6ad314"
+    }
+  }
+}
