@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "kind": "PoolsideOriginalHistoryAndScopedS3Summary",
+  "formalSourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+  "application": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "agentId": "poolside",
+  "currentAgentVersion": "unreported by installed UI; historical versions not asserted current or pinned",
+  "selectionScope": {
+    "sourceLabel": "沿用已有设置",
+    "modelLabel": "poolside/laguna-s-2.1",
+    "reasoningLabel": "Max",
+    "permissionModeLabel": "Always ask",
+    "agentModeLabel": "Build"
+  },
+  "originalBodyRestoration": {
+    "normalOriginalOpenActionsInPreparation": 1,
+    "loadingThenOriginalUserAndFirstReplyActuallyObserved": true,
+    "newColdOrRawNativeIdentityClaim": false
+  },
+  "contextContinuation": {
+    "level": "real-agent",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 8,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:31:54.089Z",
+    "finalObservationAt": "2026-10-25T18:32:24.929Z",
+    "observationUpperBoundSeconds": 30.84,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "questionContainsOriginalAnswer": false,
+    "ordinaryPromptActions": 1,
+    "replyExactlyMatchesOriginalFirstReply": true,
+    "recognizedCompletion": true,
+    "currentOwnIdleAndEmptyComposer": true,
+    "newVisibleToolSteps": 0,
+    "extraPromptsChoiceLoginRetryStopQueueActions": 0,
+    "postCompletionConfigurationPanels": 0,
+    "currentEffectiveBackendOrRawIdentityClaim": false,
+    "extensionFields": "Preserved collapsed extension fields are not visible tool steps; no full protocol inspection or zero internal-IO claim."
+  },
+  "officialDiscovery": {
+    "level": "installed",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 7,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:34:43.439Z",
+    "finalObservationAt": "2026-10-25T18:34:59.851Z",
+    "observationUpperBoundSeconds": 16.412,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "explicitFindOperatorActions": 1,
+    "actualVisibleResults": 1,
+    "originalTargetMarkedAlreadyAdded": true,
+    "targetRowSelections": 1,
+    "openExistingActions": 1,
+    "originalUserFirstReplyAndNewContinuationVisibleAfterOpen": true,
+    "newPreviewImportCheckboxMorePageModelPromptChoiceLoginRetryStopActions": 0,
+    "scope": "One explicitly selected owned original folder; the joined result shows an added label instead of returned folder. Request folder and original target/body mapping were observed separately. No exhaustive filtering, raw returned-folder/native-ID or raw list RPC dispatch capture claim."
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "verdict": "met-in-stated-scope",
+    "condition": "历史真正可用：找到已有对话，真实正文与上下文恢复后继续原对话；列表、正文和继续分别核验。",
+    "scope": "The one original owned Poolside conversation, macOS arm64, existing settings / poolside/laguna-s-2.1 / Max / Always ask / Build.",
+    "basis": [
+      "Original normal-open loading then full original user and first reply became visible.",
+      "One new question without the prior answer elicited exactly that first reply and visibly completed in the same conversation.",
+      "One explicit official discovery returned the already-added original target; one selection/open returned its matching original body and new continuation."
+    ],
+    "independentCompositionReview": true,
+    "canonicalStandardIdsRetroactivelyChanged": false,
+    "fullRequirementOrWholeAgentClosed": false
+  },
+  "preparationIssuesPreserved": [],
+  "coverageLimits": [
+    "No new cold load, same connection, raw native session identity or current Agent executable-version equivalence claim.",
+    "No preview/new import, additional pages, all histories, all model/service/platform configurations or complete ARCH-29/ARCH-31/P33/S7 claim.",
+    "Original unknown work and failures, six authentication waits, affected NEW-24 sending pause and protected Cline process are unchanged.",
+    "Source/full engineering/installation results retain their earlier scope; these two cases do not rerun or replace them.",
+    "No whole Agent or 29-by-8 completion."
+  ],
+  "references": {
+    "context:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/case-plan.json",
+      "sha256": "79f7518305b48185c0097cd4c0e165963c663f4f2c49075c518761d626d0e19d"
+    },
+    "context:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/manifest.json",
+      "sha256": "2d7b8d5efb88226c62b56e2c82ec1148d81764bd09ae5b570cfb05e9aac5027f"
+    },
+    "context:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/preflight.json",
+      "sha256": "479c6bfd2a5d1e5fdb65b13a371bbfe4071b467786cc07dbc2bd800612ace850"
+    },
+    "context:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/actuals.json",
+      "sha256": "0c82d6d37d49d6826f79bd0d8a56ff55ed3b35c8b51ac50d18e17f638aa2d050"
+    },
+    "context:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/receipt.json",
+      "sha256": "578588371f72dcc6473af116682cbe848f51dce42e9afda6483c6814f1b484f0"
+    },
+    "context:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "c2497e7fbb93d1e53ab3a006b0f748b59a25bb3324c2dc37c6e576673c60b2b1"
+    },
+    "context:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "74967af82d8234380be3dc77d0bbe778be787ab2b80361bfc487db2651a4f71b"
+    },
+    "context:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/seal.stdout",
+      "sha256": "c59f76e15930e4e47d5bc892c5ffbfdbcacc4212a2ab1b19d0f338434750b3d2"
+    },
+    "context:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "context:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "15f524e224b980f178376708a3c60882eae4a35b5e0c82ec75daa7f03181ef0b"
+    },
+    "discovery:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/case-plan.json",
+      "sha256": "cd483790ce08430179279e8e172bd57161d2d648045d6572b9d6c8219e555383"
+    },
+    "discovery:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/manifest.json",
+      "sha256": "947acc9d0a5e6a1e1f6356492f1020e94f3002619583be09573ec1c800ae5da3"
+    },
+    "discovery:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/preflight.json",
+      "sha256": "01b28a8ac7edec417426f197302abd17c2aff858145c3b05437abfdf229c7c99"
+    },
+    "discovery:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/actuals.json",
+      "sha256": "ba355fcc861984f77b621d1e18f9e03910223b94a5e4541d9116a13416e50dfa"
+    },
+    "discovery:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/receipt.json",
+      "sha256": "3b3adacccc37c305347493002e6e6b4a3b4794cd588cd9d60a0e948435e70062"
+    },
+    "discovery:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "c063c9db97dd8b3a677660b3bc8ec691a20b287dd974d4ace938218cd597d639"
+    },
+    "discovery:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "315f7b279434db85276ccdf091bbd63db2edae7ea49f962c5ed53125f54134a6"
+    },
+    "discovery:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/seal.stdout",
+      "sha256": "2e306bbdda48feea7ad4fcd7a2056639130e7de1137128d56065422000b208f7"
+    },
+    "discovery:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "discovery:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-official-history-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "7cccaef5c6f644f0baad19eacfd975e109f6f044afa0762bfafe6279a120c8eb"
+    },
+    "restoration:original-open-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/original-open-ui-private.json",
+      "sha256": "103bdd989830f8955f4a07b317dfd3d929287b2ab2db434eb9be0c40bda0d5c0"
+    },
+    "restoration:original-loaded-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/poolside-context-continuation-formal-e954-preparation/original-loaded-ui-private.json",
+      "sha256": "5ec857832bbcb27139b3425330bf19cd6f8f04d80c5ffb89983670cfa917fabc"
+    }
+  }
+}
