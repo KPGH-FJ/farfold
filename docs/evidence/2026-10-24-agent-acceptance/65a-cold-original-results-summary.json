@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "kind": "InstalledColdOriginalResultsPartialSummary",
+  "recordedAt": "2026-10-25T01:35:21.291Z",
+  "productCommit": "65a25cc4f25d99c80f5459c7c430768ff11d1597",
+  "formalApp": {
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "b7e5ff1614956bb39bae6de52c84ca8e5f7119f6ea29114a43958cbd1864d9aa",
+    "state": "installed"
+  },
+  "agentId": "mistral-vibe",
+  "agentVersionContext": {
+    "priorUiDeclaration": "2.25.8",
+    "currentColdConnectionVersion": "unreported",
+    "treatment": "descriptive-only-no-version-admission-or-distribution-equivalence"
+  },
+  "claimScope": {
+    "requirementIds": ["P18", "P32"],
+    "standardIds": [],
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "acceptanceVerified": false
+  },
+  "mechanicalValidation": {
+    "expectedCases": 5,
+    "matchedCases": 5,
+    "errors": 0,
+    "acceptanceVerified": false,
+    "scope": "evidence-structure-and-declared-observations"
+  },
+  "semanticReview": {
+    "retainedNarrowInstalledObservations": 5,
+    "independentUiOrAgentExecution": false,
+    "countsNotAddedToMechanicalValidation": true
+  },
+  "actualActions": {
+    "normalColdLaunches": 1,
+    "explicitOriginalOwnConversationLoads": 1,
+    "newPrompts": 0,
+    "newToolExecutions": 0,
+    "reattachments": 0,
+    "settingsChanges": 0,
+    "singleFileAttachmentQueries": 4
+  },
+  "P18": {
+    "scope": "original-result-cold-output-card-display-only",
+    "originalResultMarkersVisible": 2,
+    "stepScopedAndWholeConversationOutputCardsShowOriginalResult": true,
+    "resultDistinguishedFromCommandInputAndFinalReply": true,
+    "originalFailedCase": "preserved-not-reclassified",
+    "exitStatus": "unverified",
+    "separateEmptyRawDetailFrame": "still-visible",
+    "freshLiveResponseRendering": "not-tested",
+    "uniqueIncomingRawShapeOrOldFailureCause": "unproven"
+  },
+  "P32": {
+    "scope": "cold-original-source-pointer-and-current-file-query-source-navigation",
+    "fixtureCount": 4,
+    "fixtureTotalBytes": 14752,
+    "selectedCurrentFileBytes": "unchanged-against-owned-fixtures",
+    "historicalAttachmentBytesRestored": "not-proven",
+    "agentConsumption": "not-proven",
+    "eachFormat": {
+      "selectedFiles": 1,
+      "searchedFiles": 1,
+      "matches": 1,
+      "sourceLocationVisible": true,
+      "navigation": "original-user-message-attachment-range"
+    },
+    "formats": [
+      {
+        "format": "DOCX",
+        "fileName": "p32-current.docx",
+        "sourceLocation": "body-paragraph-1",
+        "limit": "Matched token only; full snippet whitespace or paragraph byte equality not established."
+      },
+      {
+        "format": "XLSX",
+        "fileName": "p32-current.xlsx",
+        "sourceLocation": "Data-A1-saved-value",
+        "limit": "Explicit original-file preview confirmed the saved cell; source jump did not auto-open an exact-cell preview."
+      },
+      {
+        "format": "PDF",
+        "fileName": "p32-current.pdf",
+        "sourceLocation": "page-2-extracted-fragment-2",
+        "limit": "Explicit preview opened page1 of2; no automatic exact-page2 jump or new independent page-render oracle."
+      },
+      {
+        "format": "PPTX",
+        "fileName": "p32-current.pptx",
+        "sourceLocation": "preview-1-of-2-object-6-paragraph-1-fragment-1",
+        "limit": "Preview order is not source page numbering. Optional preview open was guarded after App change, remained unconfirmed, and was not retried."
+      }
+    ],
+    "coverage": "Only disclosed extracted content of explicitly selected current local files; omitted content and full-document absence remain outside this sample."
+  },
+  "boundaries": [
+    "Recovered original resource pointers and unchanged current local files do not establish native historical file-byte restoration.",
+    "Source navigation does not establish automatic exact page, cell, object or character selection.",
+    "Saved metadata continuity is not backend account/model identity, current handshake version or complete history coverage.",
+    "Loaded-body scopes were inspected without queries and explicitly exclude file contents; no negative attachment-search result was inferred.",
+    "Earlier manifest, diagnostic-reference and local-writer precheck errors remain separate preserved records; they added no Agent request or repeated actual case.",
+    "Original P18 failure and other untested P18/P32 conditions, standards and Agents remain open."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/source-plan.json",
+      "sha256": "07a99bdc6fd1ad9c87e42937f184ab20a4750b510b10b3223a384f90a5986052",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/actual-receipt.json",
+      "sha256": "22c9a436067bd6b0aa0a72714351fb19193abc2dff3d26c727f56dbe4f935e10",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/validation.json",
+      "sha256": "b192c53baaee5ba14335e2f43779a18441d7a207465a8a8fd44bdf18a73385d8",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/independent-semantic-review.json",
+      "sha256": "0b1e069675bf9b5d633788549f6a0391a1f793b26d2e30abdfd994b0d76b9b19",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/first-launch-and-original-source-observation.json",
+      "sha256": "2342ed19391033cd3303e567bacb37c18671a994c42369c224a2f02feaedda8e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/p18-original-command-cold-output-observation.json",
+      "sha256": "4de4297b7c02c02aa992be3fa33d46d79d2472c327bf6ae3d2236c6438033d47",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/docx-cold-search-observation.json",
+      "sha256": "cda9a3eff23bafce3cf48187ba6f10d0b624a6867ba676758a8ede07f246da73",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/xlsx-cold-search-observation.json",
+      "sha256": "cbb96c5308365356be571589056e16210e06b81dbc94e97bd8085d1314b8ea02",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/pdf-cold-search-observation.json",
+      "sha256": "ac3a5e12eb0645779d9303f4d47e962f7b62bdf92845c17745f58a08598185ed",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/pptx-cold-search-observation.json",
+      "sha256": "f8a3fec7655fc8936c970eaa8c6b993b08bc9b803fa2cda7ab79c74cc11ea6f6",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "kind": "Formal65aAtomicInstallationAndBoundedColdObservationPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "authorized-documentation-checkpoint",
+  "recordedAt": "2026-10-25T01:41:07.192596Z",
+  "sourceCommit": "65a25cc4f25d99c80f5459c7c430768ff11d1597",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "b7e5ff1614956bb39bae6de52c84ca8e5f7119f6ea29114a43958cbd1864d9aa",
+    "basis": "Frozen candidate provenance, exact installed five files and actual independent ten; not a sourceCommit field read from a release manifest by this writer."
+  },
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-engineering/engineering-summary.json",
+      "sha256": "05f41903ff40ec26c4080b0bdc1af60615999256e54de9773dd4eccce33412d1"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-engineering/independent-engineering-review.json",
+      "sha256": "d70f13f6dead230c7a3f1626a380ab7576cc20b372c637f7544fbba8df56058a"
+    },
+    "checksPassed": 7,
+    "inputCount": 2261,
+    "frontendFiles": 673,
+    "frontendPassed": 8882,
+    "nativePassed": 2256,
+    "nativeIgnored": 6,
+    "checksBaseHead": "6ca4ed89582305fad87e79644b9365a0a0f064cf",
+    "checksRanBeforeCommit": true,
+    "checksRanAtFinalCommit": false,
+    "boundary": "Original checks and independent review at the precommit input map; final committed candidate/source checks are separate. No engineering rerun for this summary."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "naturalExitCodeAsRecorded": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/candidate-output/candidate.json",
+      "sha256": "6d76080133a47d24fa60a88facd1e5fd52e7e708db86140e26a48c97c4ae2908"
+    },
+    "naturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/candidate-output/root-natural-completion.json",
+      "sha256": "27b8734575235067fc4fb10d73fefe4ec8e4749f30edbd1ed25a358b6a93d502"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/independent/review-v2.json",
+      "sha256": "7acd0349d5bb4bd48db86ac0de5338748a852c9a9bf8d17810710f6312233abc"
+    },
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "evidencePins": 20,
+    "preparationTextPins": 8,
+    "archiveSha256": "1908350581f405040e9319fbcc5d0686cf97af5397d4e5169557dc3ec41596a9",
+    "archiveBytes": 16092463,
+    "archiveRetained": true,
+    "preservedCliPrecheckRejection": {
+      "naturalExitCode": 1,
+      "failureCode": "explicit-completed-candidate-pin-required",
+      "checksStarted": false,
+      "nineReportCreated": false,
+      "candidateRebuilt": false,
+      "candidateOrCriteriaChanged": false,
+      "correction": "Same immutable checker invoked with the required actual candidate receipt argument; successful actual nine is separate.",
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/independent/nine-cli-precheck-rejection.json",
+        "sha256": "1e9183cd3937bea70af1e52e50ab814ce0dc45abdb3875571008ba1955546a50"
+      }
+    }
+  },
+  "normalQuit": {
+    "normalUiSaveAndExitObserved": true,
+    "forcedQuit": false,
+    "unknownRequestsReclassifiedAsStopped": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/normal-quit-observation.json",
+      "sha256": "cce95823b8a7630f4b0820e8dc0a58c08f4f5584d347b12b20348aa6dbf7b741"
+    }
+  },
+  "dataRetentionAsRecorded": {
+    "completeManifestEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "allThreeByteIdentical": true,
+    "receiptMetadataReadBySummaryWriter": true,
+    "fullManifestsDatabaseOrBackupOpenedBySummaryWriter": false,
+    "continuousUnchangedIntervalClaimed": false,
+    "receipts": {
+      "before": {
+        "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/retention-before-receipt.json",
+        "sha256": "82ac0fd04b8a26124fcc8b37d851a3d3d4c403b28ff661053042cfe2fc8d7375"
+      },
+      "preinstall": {
+        "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/retention-preinstall-receipt.json",
+        "sha256": "17d477455cf43374b51bf1230ee5f5bd57301cfd2056861c2d2424c97a68a2ad"
+      },
+      "after": {
+        "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/retention-after-receipt.json",
+        "sha256": "97a55936e432f82e1b5a1ebc7775497ec845fa8c00b359246bcc1ccf1c0d85aa"
+      }
+    },
+    "boundary": "Three complete endpoint receipts and the independent ten; not continuous monitoring or complete application-level use verification."
+  },
+  "atomicInstallation": {
+    "installed": true,
+    "naturalExitCodeAsRootReported": 0,
+    "onlyFormalAppUpdated": true,
+    "exactFiles": 5,
+    "newInodesPerReplacement": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "journalEntriesAsRootReported": 17,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/install-result.json",
+      "sha256": "ba93d77a144746e0255bd18a78ac9af026fa6d5aa476eccb89adf39444dcb5bf"
+    }
+  },
+  "installedIndependentReview": {
+    "checksPassed": 10,
+    "checksTotal": 10,
+    "failures": [],
+    "naturalExitCodeAsRootReported": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "ff218d3d9db748634cafe80191b87d334c7d89b7a6c7a0fe63ad0d24aa696b8e"
+    },
+    "boundary": "Actual source, installation, signature, archive and retention checks; no first launch or real-Agent feature result follows."
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "archiveRetained": true,
+    "originalEvidenceRetained": true,
+    "naturalExitCodeAsRootReported": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/install/candidate-cleanup.json",
+      "sha256": "43fa3ea35afacdafd19490eb34f6869699fc088ee6750b8abaad018f7d819e2d"
+    }
+  },
+  "firstLaunch": {
+    "observedInThisSummary": true,
+    "coldLaunchRequestedAt": "2026-10-25T01:19:07.419Z",
+    "originalOwnLoadRequestedAt": "2026-10-25T01:19:28.414Z",
+    "historyLoadedIdleObservedAt": "2026-10-25T01:19:41.028Z",
+    "initialHistoryListCount": 146,
+    "initialPreservedDraftCount": 1,
+    "initialInputEmpty": true,
+    "sameOwnTitleAndWorkspaceVisible": true,
+    "originalOwnUserInputsAndRepliesVisible": true,
+    "originalStructuredLocationAttachmentsVisible": 4,
+    "noReattachmentOrJoinedText": true,
+    "newOrdinaryPrompts": 0,
+    "toolExecutions": 0,
+    "settingsChanges": 0,
+    "allHistoryCompletenessProven": false,
+    "earlierKimchiUnknownUiReopenedInThisObservation": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/first-launch-and-original-source-observation.json",
+      "sha256": "2342ed19391033cd3303e567bacb37c18671a994c42369c224a2f02feaedda8e"
+    },
+    "boundary": "One first launch and one owned Mistral original-history load. Visible list counts and sources do not prove all history contents, attachment consumption or exact backend identity."
+  },
+  "affectedUiAndRealAgentVerification": {
+    "p18NewInstalledVerification": {
+      "status": "retained-narrow-installed-cold-original-output-observation",
+      "bothOriginalResultMarkersInOriginalToolDetail": true,
+      "bothOriginalResultMarkersInCommandOutputCardBody": true,
+      "stepScopeAndWholeConversationOutputChecked": true,
+      "resultDistinguishedFromInputAndFinalReply": true,
+      "separateEmptyRawDetailFrameStillVisible": true,
+      "newOrdinaryPrompts": 0,
+      "newToolExecutions": 0,
+      "actualExitCode": "unknown",
+      "actualRawEventShape": "unknown",
+      "uniqueCauseOfOldFailure": "unknown",
+      "originalFailedCaseReclassified": false,
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/p18-original-command-cold-output-observation.json",
+        "sha256": "4de4297b7c02c02aa992be3fa33d46d79d2472c327bf6ae3d2236c6438033d47"
+      }
+    },
+    "p32ColdRestoreAndSearch": {
+      "status": "retained-four-narrow-installed-original-source-current-file-observations",
+      "restoredOriginalLocationSources": 4,
+      "formats": ["docx", "xlsx", "pdf", "pptx"],
+      "reattachmentUsed": false,
+      "singleFileAttachmentQueries": 4,
+      "eachQuerySearchedFiles": 1,
+      "eachQueryMatches": 1,
+      "sourceNavigation": "original-user-message-attachment-range",
+      "boundary": "Only disclosed extracted content of explicitly selected unchanged current local files. Recovered pointers and current bytes are not native historical attachment-byte restoration, Agent consumption, automatic exact page/cell/object selection or whole P32 acceptance."
+    },
+    "originalP18Case": {
+      "failed": 1,
+      "passed": 0,
+      "actualExitCode": "unknown",
+      "actualRawEventShape": "unknown",
+      "uniqueCause": "unknown",
+      "reclassifiedAfterInstallation": false
+    },
+    "separateColdCaseSemanticReview": {
+      "status": "completed-retain-five-narrow-installed-observations",
+      "retainedNarrowInstalledObservations": 5,
+      "scopeCounts": {
+        "p18OriginalColdOutputDisplay": 1,
+        "p32OriginalPointerCurrentFileQuerySourceNavigation": 4
+      },
+      "independentUiOrAgentExecution": false,
+      "countsNotAddedToMechanicalValidation": true,
+      "productAcceptanceVerified": false,
+      "automaticPromotionOrReuse": false,
+      "receipt": {
+        "path": "output/2026-10-24-agent-acceptance/65a-original-results-cold-check/independent-semantic-review.json",
+        "sha256": "0b1e069675bf9b5d633788549f6a0391a1f793b26d2e30abdfd994b0d76b9b19"
+      },
+      "publicScopeSummary": {
+        "path": "docs/evidence/2026-10-24-agent-acceptance/65a-cold-original-results-summary.json",
+        "sha256": "030702fe90be068097421c3973ef4670468ddee4a73b3122a188920ea9faa25f"
+      }
+    },
+    "agentVersionContext": {
+      "priorUiDeclaration": "2.25.8",
+      "currentColdConnectionVersion": "unreported",
+      "boundary": "Prior visible version is descriptive context, not this connection handshake evidence, a version admission rule or distribution/source equivalence proof."
+    }
+  },
+  "remainingBoundaries": {
+    "userExplicitlyRetainedAuthenticationWaits": [
+      "Google Antigravity",
+      "Autohand Code",
+      "Gemini CLI",
+      "Nova",
+      "Grok Build"
+    ],
+    "loginOrSubstituteServiceActions": false,
+    "earlierUnknownRequestsSettledByUpdate": false
+  },
+  "completeStandardsNewlyAccepted": 0,
+  "completeRequirementsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "The original P18 failed case and collection-window overrun remain; controlled fallback repair and successful installation do not reverse that result or establish the actual tool exit code.",
+    "Independent semantic review retains five separate narrow installed observations: original P18 cold output display and four P32 original-source/current-file query/navigation samples. It does not close complete P18/P32, a standard or an Agent.",
+    "Prior Agent UI version 2.25.8 is not this cold connection handshake evidence. Current-file partial bytes are not historical attachment bytes, and source navigation is not automatic exact page/cell/object selection; per-format extraction and preview limits remain in the linked cold-results summary.",
+    "Source checks, bundle identity, endpoint retention and installation do not establish all 29 Agents or any whole requirement/standard.",
+    "Only named metadata and existing engineering records were read. No helper, App, Agent, raw log, native history, configuration, full data manifest, database or backup was executed or opened for this summary."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "accountCredentialSessionIdentifiersIncluded": false,
+    "rawPromptReplyDiagnosticOrRpcBodiesIncluded": false,
+    "rawDataManifestOrBackupDigestsIncluded": false,
+    "filesystemInodesAndProcessDetailsIncluded": false
+  },
+  "independentInstallationMetadataReview": {
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-output-install-preparation/independent-install-metadata-review-real-readiness.json",
+      "sha256": "1ed8b6c96baf404e043420e154e3f306eca5732ee293ec725d1da59b279dc39c"
+    },
+    "blockingFindings": [],
+    "boundary": "Read-only cross-check of named installation metadata; not a second execution of candidate nine or installed ten, and not UI acceptance."
+  }
+}
