@@ -4,6 +4,8 @@
 
 ## 当前工作与接续
 
+c876上Mistral和Goose各在原自有对话提交一次依赖旧上下文的短问题，分别在69.840、97.140秒观察上界内得到原事实对应回复、完成及当前自有空闲，零新增可见工具、改选、重试或Stop。每案封存CLI一次、内部校验一次，无另行validate CLI，机械八观察1/1及语义独审只保留各1个warm续用窄正例。Mistral既存冷恢复记录与本次暖问题分列；Goose首次UI打开不等于原始冷载或标识连续，回答25仅指旧用户请求的总字节数，原实际24B缺LF失败仍保留。不证明完整官方列表、全部历史或完整S3/ARCH-29，标准及整家新增关闭均0，其他失败/未知不改判。见[Mistral上下文续用](evidence/2026-10-24-agent-acceptance/mistral-formal-c876-context-continuation-summary.json)及[Goose上下文续用](evidence/2026-10-24-agent-acceptance/goose-formal-c876-context-continuation-summary.json)。
+
 验收设施新增离线 `seal` 命令：从原清单字节生成私有引用，只接收调用方明确提供的实际值，写出前校验；失败或未知保留原状态，拒绝覆盖和不安全路径。两文件定向134/134、格式检查及独立源码审阅通过。此增量仅处理证据材料，未更改正式应用或重跑真实用例；P22原引用错误及两次CLI记录保留。用法见[证据设施说明](evidence/2026-10-24-agent-acceptance/README.md#设施实现记录)。
 
 c876上两家各一次短回答：Dirac在59.977秒内观察到精确回复、完成及当前自有空闲，但出现1条Task Completed步骤而原预期0，机械7/8，保留失败1；首发前输入纠正不算重试。Amp在62.684秒内同时显示认证未完成、结果未知及发送暂停，无回复/完成/当前空闲，机械5/8，保留未完成1，不把认证错误当停止或未派发；均零重试、Stop或改选。fast-agent仅完成沿用已有设置/当前模型及Agent模式的零提示准备，真实后端及与暂停Codex权限路径关系未明，候选未发；不豁免或扩大为整家永久暂停。见[Dirac](evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json)、[Amp](evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json)及[fast-agent准备](evidence/2026-10-24-agent-acceptance/fast-agent-formal-c876-preparation-summary.json)。

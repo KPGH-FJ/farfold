@@ -1,0 +1,111 @@
+{
+  "kind": "MistralOriginalContextContinuationPublicSummary",
+  "agentId": "mistral-vibe",
+  "standardIds": ["S3"],
+  "requirementIds": ["ARCH-29"],
+  "formalSource": "c8761b09e5f03442ed50b4decb63df5576543300",
+  "scope": "在有既存冷恢复记录的原自有对话内，本次一次暖续接问题核对一个旧上下文事实。",
+  "actual": {
+    "questionUtf8Bytes": 180,
+    "oldAnswerIncludedInQuestion": false,
+    "submissions": 1,
+    "exactPriorReplyReturned": true,
+    "recognizedCompletion": true,
+    "currentOwnIdle": true,
+    "newRequestVisibleToolSteps": 0,
+    "operatorRetryStopChoiceLoginQueueContinueCounts": 0,
+    "newConversationCloneSeedOrReplay": 0
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observationsMatched": 8,
+    "immutableInputs": 8,
+    "postMapEqual": true,
+    "narrowSemanticPositives": 1,
+    "semanticBlockingFindings": 0
+  },
+  "timing": {
+    "completionObservationUpperSeconds": 69.84,
+    "operatorWindowSeconds": 180,
+    "performanceClaim": false
+  },
+  "sealing": {
+    "offlineSealCli": 1,
+    "internalValidatorCalls": 1,
+    "separateValidateCli": 0,
+    "naturalExitCode": 0,
+    "manifestReferenceComputedFromOriginalBytes": true,
+    "explicitActualsPreserved": true,
+    "reviewerIsSealAuthorNotS3OperatorOrTemplateAuthor": true
+  },
+  "limits": [
+    "旧答案只作为事前核对值，未加入新问题；当前历史界面可见旧正文不等于本次再次冷恢复。早前冷开与本次暖续接分别留证。",
+    "已有源码路径调查说明未自动重播旧正文；它不是实际请求线缆抓取，不能扩大为全部上下文或原始标识证明。",
+    "本次只证明一个依赖旧上下文的回复，不证明完整官方列表、全部历史字节或每条消息恢复；当前版本及有效后端、推理效果、账号与隐藏IO未证。",
+    "零新增可见工具及当前对话空闲不等于全后台无活动；Amp等全部原未知/失败保持，完整S3、ARCH-29和整家均未关闭。"
+  ],
+  "closures": {
+    "wholeStandard": 0,
+    "wholeRequirement": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/mistral-s3-owned-context-formal-c876",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "8d68031d9a483c21ccfda0ccf348e0b086aeb34d94f3ae49a412f4532feb9c90"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "3c0f24012fd3491711f2804fb1b49aefe272eddf0de0e5f7cfb246a6cf3920d7"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "8643957e1b549b70fee773a64f398f3a09fc7dfa19de6f0b98670e06b4c096a9"
+    },
+    {
+      "file": "owner-before-input-observation.json",
+      "sha256": "b1efb96d13639e562afd0176f01b4df1322f2df15bb7430a6ec943892c59e478"
+    },
+    {
+      "file": "cold-history-source-boundary-support.json",
+      "sha256": "6701a61abc8523c522fc8213b5f6be3de6edf2d99201e55755b97bedf330d7c3"
+    },
+    {
+      "file": "unique-input-observation.json",
+      "sha256": "4024ad7ee10d6ea25924166cdb1032871ab1f52429688778aa2e95dddc97af3d"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "7f662d21082982ccd0f6e7f5337ec3ab3cac9dca254d54115e4413430a9d288f"
+    },
+    {
+      "file": "actuals.json",
+      "sha256": "fb929c7aa5d8632fcaaba35edaf969d1d182499f84939cda89cb1fbe63ebd491"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "c8e57853ac4ed70db50cb328c0eddd618119d3dedd7caad6077f7ab244be9ccf"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "13e4243ae7cb6e8bdae7848445268ae3f8133b29a2dedb52a7bdcd366fb84561"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "a46bec1089b8f2b47fbe8398dfe0052a3f272b0fecc6f0a026c8f6c6328a49bb"
+    },
+    {
+      "file": "seal-execution.json",
+      "sha256": "6f3dbf0e3f5e5008b31ce1ab5902ee267852bc15eeb669b3f5fd48c7ffe280e6"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "d41712773e74e0c1ac3fe3845378cbe5135e0449ef46af058876b171993935bf"
+    }
+  ]
+}

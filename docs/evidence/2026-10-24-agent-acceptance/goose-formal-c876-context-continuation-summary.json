@@ -1,0 +1,130 @@
+{
+  "kind": "GooseS3OwnedContextPublicSummary",
+  "publicationState": "published",
+  "agentId": "goose",
+  "result": "one-narrow-context-continuation-positive",
+  "formal": {
+    "sourceCommit": "c8761b09e5f03442ed50b4decb63df5576543300",
+    "binarySha256": "71e4bb77ae288b572b27cf8542825e3b5d0ef90621dc21e3ef318ba5f09abf6f",
+    "agentVersion": "current-unreported"
+  },
+  "scope": {
+    "standardIds": ["S3"],
+    "requirementIds": ["ARCH-29"],
+    "excerpt": "上下文恢复后继续原对话；原会话恢复及继续",
+    "narrowPositiveCases": 1,
+    "wholeStandardClosures": 0,
+    "wholeRequirementClosures": 0,
+    "wholeAgentClosures": 0
+  },
+  "selectionReadback": {
+    "source": "Existing",
+    "model": "Nemotron 3 Ultra (free)",
+    "provider": "OpenRouter",
+    "mode": "auto",
+    "thinking": "off",
+    "manualChoiceChanges": 0,
+    "meaning": "本次发送前实际可见标签；不声称有效后端身份、费用或推理效果。"
+  },
+  "observed": {
+    "history": "当前正式版中按唯一自有工作位置结果打开原对话，实际可见旧请求和回答。随后返回同一对话续问；该返回不另计冷恢复。",
+    "question": "新问题只问此前文件任务要求的UTF-8总字节数，不包含旧答案、旧正文或文件内容；221B，发送前完整读回。",
+    "submittedAt": "2026-10-25T12:57:37.345Z",
+    "completedAndOwnIdleObservedAt": "2026-10-25T12:59:14.485Z",
+    "completionObservationUpperSeconds": 97.14,
+    "operatorObservationBudgetSeconds": 180,
+    "actualReply": "25",
+    "recognizedCompletion": true,
+    "currentOwnIdle": true,
+    "ordinarySubmissions": 1,
+    "visibleNewRequestToolSteps": 0,
+    "extraOperatorActions": 0,
+    "noNewSeedCloneOrReplayReported": true
+  },
+  "recordValidation": {
+    "mechanicallyValid": true,
+    "complete": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "errors": 0,
+    "observationsMatched": 8,
+    "privateUiEvidenceFiles": 3,
+    "recordedInputEndpointsEqual": 8,
+    "sealCliInvocations": 1,
+    "internalValidationInvocationsReported": 1,
+    "exitCode": 0,
+    "acceptanceVerified": false
+  },
+  "preservedBoundaries": [
+    "25是旧用户请求的字节数，不是文件当前实际字节数；旧预期25B、实际24B且缺LF的失败保留，无读取、修补或重试。",
+    "旧模型错误、旧free ACK及其他未明结果不被本次正例覆盖。",
+    "只支持这个历史事实在原UI对话中的续用；不闭合完整S3、ARCH-29、整家或29×8。",
+    "未捕获原始协议、对话标识或完整官方列表；当前Agent版本、有效模型、隐藏IO和全局空闲未证。",
+    "97.140秒是发送至完成观察的上界，不是精确响应延迟。"
+  ],
+  "evidenceRefs": {
+    "owner": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/owner-before-input-observation.json",
+      "sha256": "1aa1509c4c9be1d0659f96a1309c797fe9da947ec8e62a0f3c0abd215bcad009"
+    },
+    "plan": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/case-plan.json",
+      "sha256": "fb7a7e52010f96cf8391b73abc6806666ab953e00aded503f736f6150c696031"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/manifest.json",
+      "sha256": "3b5a714bedd61db909331c80d4263068e61a2cbdbecd94db6887f653de0d5587"
+    },
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/preflight.json",
+      "sha256": "7a783b1453a55c119e205c653fbbe0d6c7827da028f21ef733a50ff132e4aaec"
+    },
+    "input": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/unique-input-observation.json",
+      "sha256": "1e080bcbd9549e6a29ddf06eb70cc9829da885adb638bb034bd6316226cf4932"
+    },
+    "result": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/actual-ui-observation.json",
+      "sha256": "64f0ad050fdd1f4b155583cdb78ec9fabc7bea466b80af1f7e4d17f6df45c299"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/actuals.json",
+      "sha256": "bea88a04863e3951efac5a8383a5826a5e06a917d55bb69bf6fd2dba4ed2ba78"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/actual-receipt.json",
+      "sha256": "95686b8966a9b0ed1f34929ed7aeef7861c0f97dc06bb58919e41b97069f5c07"
+    },
+    "validation": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/validation.json",
+      "sha256": "a46bec1089b8f2b47fbe8398dfe0052a3f272b0fecc6f0a026c8f6c6328a49bb"
+    },
+    "sealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/seal-execution.json",
+      "sha256": "0b09bb0e9c99d3ce67db59d827cac66b68ef24a5934d50d74626f973e18bdd72"
+    },
+    "postInputs": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/post-case-input-check.json",
+      "sha256": "468e104f574b6e696bae494bd68d713c4f02708590f3543f96e43fe20a235061"
+    }
+  },
+  "priorRequestedCountOracle": {
+    "path": "output/2026-10-24-agent-acceptance/goose-free-own-file-15c58/input-observation.json",
+    "sha256": "672453422e25fdd541b00bb5c95a25fc7fc0fe314aeebc3ce59df01bda57808c"
+  },
+  "independentSemanticReview": {
+    "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/independent-semantic-review.json",
+    "sha256": "4c59c4d13a14005013871fd1fe4ebfb5895780c26a1a6761032dc9caf9602a15",
+    "blockerCount": 0
+  },
+  "roles": {
+    "actualUiOperator": "Root",
+    "caseTemplateAuthor": "acceptance_index",
+    "actualSemanticReviewerAndThisDraftAuthor": "real_readiness",
+    "publisher": "Root",
+    "independentRepeatUiRun": false
+  },
+  "privacy": "仅输出脱敏布尔、计数、标签、时间及证据路径/摘要；不复制用户绝对路径、标题、标识、文件正文、凭据或账号信息。"
+}

@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+c876原对话上下文分项：[Mistral](mistral-formal-c876-context-continuation-summary.json)与[Goose](goose-formal-c876-context-continuation-summary.json)各一次warm续问，问题不含旧答案，实际回复、完成及当前自有空闲分别留证，零新增可见工具及重试/Stop。每案八观察、机械1/1及语义窄正例1；封存CLI各一次、内部校验各一次，无另行validate CLI。Mistral旧冷恢复与此次暖问题分列；Goose UI打开不等于原始冷载，25是旧请求要求字节数，24B缺LF的旧文件失败不翻案。69.840/97.140秒是完成观察上界而非精确响应延迟；完整S3、ARCH-29、标准及整家关闭0，其他失败/未知保持。
+
 c876合并分项：[Dirac](dirac-formal-c876-ack-summary.json)精确回复/完成/当前空闲成立，但实际步骤1与预期0不符，机械7/8保留失败1；[Amp](amp-formal-c876-ack-summary.json)认证提示与结果未知/发送暂停并存，机械5/8保留未完成1，零登录、重试或Stop；[fast-agent](fast-agent-formal-c876-preparation-summary.json)仅零提示准备，当前后端及Codex权限路径关系未知，未发ACK，不推整家永久暂停。
 
 [版本意见、返工与实际另存](p22-formal-c876-versioned-rework-summary.json)保留一条Mistral正常文字链路：意见加入不自动发送，明确提交一次，源/另存副本43B逐字节相符。预览自动更新而未捕新UI摘要；三个独立观察窗口各在180秒内，全程227.613秒，晚独立读回仅补充字节。首manifest引用形状invalid及原件保留，第二CLI只规范引用后通过，不能写成仅一次CLI；未重跑产品。完整P21/P22/P14、标准及整家关闭仍0，旧失败/未知保持。
