@@ -39,10 +39,15 @@ c876合并分项：[Dirac](dirac-formal-c876-ack-summary.json)精确回复/完�
 
 回执核预先列明的检查项、全部尝试与终态、证据原件摘要、实际层级和身份输入；先失败后成功仍为不稳定，未知副作用不允许自动重试。公开输出只含固定枚举、计数和错误码；原文、选择与路径留在私有原件。证据文件读取拒绝静态符号链接、非常规文件、可观察变更及摘要不符；这不是防御恶意并发目录替换的文件系统沙箱。时间及观察来源仍需独立核实。
 
+离线 `seal` 根据原清单的实际字节生成私有路径/SHA引用，避免手写回执时把清单对象放入引用字段。实际材料严格由 `attempts`、`inputsAfter`、`finishedAt` 三个字段组成，不从预期补填输出、状态、时间或输入指纹。写前校验一次；格式无效不写目标，机械有效的失败或未知仍保存并返回1，匹配返回0，读取/写入拒绝返回2。目标必须新建且位于证据目录允许范围，使用独占0600写入，不建目录、不覆盖、不自动重试；写入故障可能留下新建的部分文件，保留待查。
+
+本增量两文件定向134/134、目标格式检查和独立源码审阅通过，旧校验/复验核心保持。仅为证据设施，不证明真实效果或减少了耗时；未用新命令重封旧真实用例，P22原错误和两次CLI均保留。私有实现与独审材料位于 `output/2026-10-24-agent-acceptance/acceptance-receipts-seal-source/`。
+
 ```sh
 corepack pnpm acceptance:index --mapping docs/evidence/2026-10-24-agent-acceptance/mapping.json --agent dirac --requirement P18
 corepack pnpm acceptance:check output/<本次运行>/receipt.json
 corepack pnpm acceptance:revalidate output/<本次运行>/receipt.json output/<本次运行>/changes.json
+node scripts/acceptance-receipts.mjs seal output/<本次运行>/manifest.json output/<本次运行>/actuals.json output/<本次运行>/new-receipt.json
 ```
 
 复验器使用本次实际输入、变化、疑点和证据缺失确定受影响项；未提供当前输入或复核期限则保守失效。它不侦测全部外部变化，不固定或升级Agent版本，也不调度执行测试。语义覆盖必须经人工复核，不能由字符串和摘要代替。

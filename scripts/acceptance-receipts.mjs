@@ -1018,7 +1018,7 @@ export function publicReceiptSummary(report) {
   };
 }
 
-async function readJsonInput(file) {
+async function readJsonInput(file, withDigest = false) {
   let handle;
   try {
     if (!(await lstat(file)).isFile()) throw new Error("not-regular");
@@ -1055,26 +1055,135 @@ async function readJsonInput(file) {
     ) {
       throw new Error("changed-json");
     }
-    return JSON.parse(bytes.toString("utf8"));
+    const value = JSON.parse(bytes.toString("utf8"));
+    return withDigest
+      ? { value, sha256: createHash("sha256").update(bytes).digest("hex") }
+      : value;
   } finally {
     await handle?.close();
   }
 }
 
-async function main() {
-  const [command, receiptFile, changeFile] = process.argv.slice(2);
+async function sealPath(file, root, output = false) {
   if (
-    !["validate", "revalidate"].includes(command) ||
+    !text(file) ||
+    /[\\\x00-\x1f]/.test(file) ||
+    file.includes("//") ||
+    file.split("/").some((part) => [".", ".."].includes(part))
+  ) {
+    throw new Error("unsafe-seal-path");
+  }
+  const relative = path
+    .relative(root, path.resolve(root, file))
+    .split(path.sep)
+    .join("/");
+  if (
+    !safeRef({ path: relative, sha256: "0".repeat(64), visibility: "private" })
+  ) {
+    throw new Error("unsafe-seal-path");
+  }
+  const parts = relative.split("/");
+  let cursor = root;
+  for (const [index, part] of parts.entries()) {
+    cursor = path.join(cursor, part);
+    const leaf = index === parts.length - 1;
+    let entry;
+    try {
+      entry = await lstat(cursor);
+    } catch (error) {
+      if (output && leaf && error.code === "ENOENT") {
+        return { file: cursor, relative };
+      }
+      throw error;
+    }
+    if (entry.isSymbolicLink() || (!leaf && !entry.isDirectory())) {
+      throw new Error("unsafe-seal-path");
+    }
+    if (leaf && (output || !entry.isFile())) {
+      throw new Error("seal-target-unavailable");
+    }
+  }
+  if ((await realpath(cursor)) !== cursor) throw new Error("unsafe-seal-path");
+  return { file: cursor, relative };
+}
+
+// Offline metadata only. Explicit actuals are never inferred from the manifest.
+// Like inspectRef, this rejects static/observed links, not hostile concurrent
+// ancestor swaps. Use owned, quiescent evidence directories; never auto-retry.
+export async function sealReceipt(
+  manifestFile,
+  actualsFile,
+  outputFile,
+  { rootDir = process.cwd() } = {},
+) {
+  const root = await realpath(rootDir);
+  // Existing outputs fail before any input read or validation.
+  const target = await sealPath(outputFile, root, true);
+  const manifestPath = await sealPath(manifestFile, root);
+  const actualsPath = await sealPath(actualsFile, root);
+  const loaded = await readJsonInput(manifestPath.file, true);
+  const actuals = await readJsonInput(actualsPath.file);
+  if (
+    !subsetKeys(actuals, ["attempts", "inputsAfter", "finishedAt"]) ||
+    Object.keys(actuals).length !== 3
+  ) {
+    return validateReceipt(null, { rootDir: root });
+  }
+  const receipt = {
+    schemaVersion: RECEIPT_SCHEMA_VERSION,
+    runId: loaded.value?.runId,
+    manifest: {
+      path: manifestPath.relative,
+      sha256: loaded.sha256,
+      visibility: "private",
+    },
+    attempts: actuals.attempts,
+    inputsAfter: actuals.inputsAfter,
+    finishedAt: actuals.finishedAt,
+  };
+  const report = await validateReceipt(receipt, { rootDir: root });
+  if (!report.mechanicallyValid) return report;
+  await sealPath(outputFile, root, true);
+  const handle = await open(
+    target.file,
+    constants.O_WRONLY |
+      constants.O_CREAT |
+      constants.O_EXCL |
+      constants.O_NOFOLLOW,
+    0o600,
+  );
+  try {
+    await handle.writeFile(`${JSON.stringify(receipt, null, 2)}\n`);
+  } finally {
+    await handle.close();
+  }
+  return report;
+}
+
+async function main() {
+  const [command, receiptFile, changeFile, outputFile, ...extra] =
+    process.argv.slice(2);
+  if (
+    !["validate", "revalidate", "seal"].includes(command) ||
     !receiptFile ||
-    (command === "revalidate" && !changeFile)
+    (command === "revalidate" && !changeFile) ||
+    (command === "seal" && (!changeFile || !outputFile || extra.length > 0))
   ) {
     process.stderr.write(
-      "Usage: node scripts/acceptance-receipts.mjs validate <receipt.json> | revalidate <receipt.json> <changes.json>\n",
+      "Usage: node scripts/acceptance-receipts.mjs validate <receipt.json> | revalidate <receipt.json> <changes.json> | seal <manifest.json> <actuals.json> <new-receipt.json>\n",
     );
     process.exitCode = 2;
     return;
   }
   try {
+    if (command === "seal") {
+      const report = await sealReceipt(receiptFile, changeFile, outputFile);
+      process.stdout.write(
+        `${JSON.stringify(publicReceiptSummary(report), null, 2)}\n`,
+      );
+      process.exitCode = report.allExpectedOutcomesMatched ? 0 : 1;
+      return;
+    }
     const receipt = await readJsonInput(receiptFile);
     const report = await validateReceipt(receipt);
     if (command === "validate") {
@@ -1117,7 +1226,9 @@ async function main() {
     process.exitCode = planned.error ? 1 : 0;
   } catch {
     process.stderr.write(
-      "Receipt input could not be safely read or validated.\n",
+      command === "seal"
+        ? "Receipt sealing could not safely complete.\n"
+        : "Receipt input could not be safely read or validated.\n",
     );
     process.exitCode = 2;
   }
