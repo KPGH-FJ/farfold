@@ -1,6 +1,6 @@
 //! Controlled stdio peers exercise the real manager/session pump; no real Agent.
 use super::*;
-use crate::acp_client::workspace_access::ErrorKind;
+use crate::acp_client::workspace_access::{ErrorKind, OfferedDecision};
 
 const PEER: &str = r#"
 import sys,json,os,time,threading,pathlib
@@ -14,6 +14,11 @@ def status(m):
  if pathlib.Path('unsupported').exists():send({'id':m['id'],'error':{'code':-32601,'message':'PRIVATE_SENTINEL'}});return
  if pathlib.Path('invalid').exists():reply(m,{'trust_status':'PRIVATE_SENTINEL'});return
  if pathlib.Path('rpc-error').exists():send({'id':m['id'],'error':{'code':-32603,'message':'PRIVATE_SENTINEL','data':{'key':'PRIVATE_SENTINEL'}}});return
+ if pathlib.Path('camel-details').exists():reply(m,{'trust_status':'untrusted','details':{'cwd':os.getcwd(),'repoRoot':os.getcwd(),'availableDecisions':['trust_cwd','decline'],'detectedFiles':['PRIVATE_SENTINEL'],'settingsPath':'PRIVATE_SENTINEL'}});return
+ if pathlib.Path('camel-invalid').exists():reply(m,{'trust_status':'trusted','details':{'cwd':os.getcwd(),'availableDecisions':True}});return
+ if pathlib.Path('camel-conflict').exists():reply(m,{'trust_status':'trusted','details':{'cwd':os.getcwd(),'availableDecisions':['trust_cwd'],'available_decisions':['decline']}});return
+ if pathlib.Path('camel-foreign').exists():reply(m,{'trust_status':'trusted','details':{'cwd':os.getcwd(),'repoRoot':pathlib.Path('camel-foreign').read_text()}});return
+ # This default is retained controlled snake_case compatibility, not official serialization.
  reply(m,{'trust_status':'untrusted','details':{'cwd':os.getcwd(),'available_decisions':[]},'extra':'PRIVATE_SENTINEL'})
 for line in sys.stdin:
  m=json.loads(line);method=m.get('method')
@@ -81,6 +86,60 @@ async fn workspace_access_uses_exact_current_connection_session_cwd_and_no_other
         json!({"sessionId":"owned-trust","cwd":f.cwd})
     );
     assert_eq!(status.details.unwrap().offered_decisions, Some(vec![]));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn workspace_access_official_camel_wire_keeps_scope_and_finite_offers_without_extra_rpc() {
+    let f = Fixture::new();
+    let (id, _) = owned(&f, true).await;
+    std::fs::write(f.cwd.join("camel-details"), "").unwrap();
+    let reply = f
+        .manager
+        .workspace_access_status(&f.row.id, &f.cwd, "owned-trust", &id)
+        .await
+        .unwrap();
+    let details = reply.details.as_ref().unwrap();
+    assert!(details.repo_scope_verified);
+    assert_eq!(details.repo_root.as_deref(), f.cwd.to_str());
+    assert_eq!(
+        details.offered_decisions,
+        Some(vec![OfferedDecision::TrustCwd, OfferedDecision::Decline])
+    );
+    assert!(
+        !serde_json::to_string(&reply)
+            .unwrap()
+            .contains("PRIVATE_SENTINEL")
+    );
+    assert_eq!(
+        trace(&f)
+            .iter()
+            .map(|v| v["method"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        ["initialize", "session/new", "_trust/status"]
+    );
+    assert_eq!(queries(&f), 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn workspace_access_official_camel_wire_invalid_conflicting_or_foreign_scope_is_not_trusted()
+{
+    for flag in ["camel-invalid", "camel-conflict", "camel-foreign"] {
+        let f = Fixture::new();
+        let foreign = tempfile::tempdir().unwrap();
+        let (id, _) = owned(&f, true).await;
+        std::fs::write(
+            f.cwd.join(flag),
+            foreign.path().to_string_lossy().as_bytes(),
+        )
+        .unwrap();
+        let error = f
+            .manager
+            .workspace_access_status(&f.row.id, &f.cwd, "owned-trust", &id)
+            .await
+            .unwrap_err();
+        assert_eq!(error.code, ErrorKind::InvalidResponse);
+        assert_eq!(queries(&f), 1);
+    }
 }
 
 #[tokio::test(flavor = "multi_thread")]

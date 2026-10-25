@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "kind": "WorkspaceAccessOfficialCamelDetailsSourceSummary",
+  "publicationState": "source-checkpoint-not-installed",
+  "recordedAt": "2026-10-25T04:13:08.108Z",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "change": {
+    "production": "Read official repoRoot and availableDecisions optional detail keys.",
+    "compatibility": "Retain controlled snake_case aliases; unequal raw values, including null conflicts, reject the projection. Equal aliases still pass existing validation.",
+    "limitsPreserved": "Missing/null remains unknown; explicit [] remains empty. Canonical folder/ancestor scope and finite unique decisions, current-owner guards, safe fixed errors and unprojected-field privacy remain. No frontend/DTO/capability/decision or sending-gate change."
+  },
+  "officialBasis": {
+    "release": "v2.25.8",
+    "commit": "7c19608af06f6c61d63f8f7a5c3430da73fba2ab",
+    "chain": "ProtocolModel.to_camel and serialize_by_alias; WorkspaceTrustDetails fields; ACP details.model_dump(by_alias=True).",
+    "scope": "Release-source contract and controlled transport compatibility; actual selected distribution/current App response not observed.",
+    "references": [
+      {
+        "path": "output/2026-10-24-agent-acceptance/p40-mistral-trust-source-research/vibe__app_server___model.py",
+        "sha256": "9e0f99b33f9988334117ecabb0d979f7b07f1947193ccb5cc8db9ede036901ae",
+        "lines": [9, 15]
+      },
+      {
+        "path": "output/2026-10-24-agent-acceptance/p40-mistral-trust-source-research/vibe__app_server___workspace.py",
+        "sha256": "ad7023ddbac59d2098b54bb6614ab36278d867435d4b2cb4cc38110876bd2f47",
+        "lines": [136, 149]
+      },
+      {
+        "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-official-source-2.25.8/vibe__app_server__models.py",
+        "sha256": "6c77ed86d2899cbc487723efe2879aa6af0f37142517adf6586c59c826f14629",
+        "lines": [171, 182]
+      },
+      {
+        "path": "output/2026-10-24-agent-acceptance/p18-mistral-command-official-source-2.25.8/vibe__acp__agent.py",
+        "sha256": "77457bf5ccb28adaa35ac96f1c8afd07e6ffc98c4d5451db720772ce2ddba0a0",
+        "lines": [1509, 1515]
+      }
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/workspace_access.rs",
+      "sha256": "bfb881ff1dea93b211694f1357bc73f88a63763150c9f884e3396a11f25b0265",
+      "bytes": 14646,
+      "lines": 420
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_tests.rs",
+      "sha256": "d1f261a7ddeedba6df97941c0c2f61e9bd1d536f2456537ad86062a48d1e2fb1",
+      "bytes": 11331,
+      "lines": 309
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_wire_tests.rs",
+      "sha256": "0edbc8ec0b78b22c3fa20020de558b4ed55e4f7267791dc03a6de3181b2cb116",
+      "bytes": 9613,
+      "lines": 252
+    }
+  ],
+  "targetedVerification": {
+    "evidenceLevel": "controlled-source-and-stdio-peer",
+    "red": {
+      "total": 18,
+      "passed": 12,
+      "failed": 6,
+      "integerExitCode": 101,
+      "unitFailures": 4,
+      "wireFailures": 2,
+      "compilerOrHarnessFailures": 0
+    },
+    "green": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "integerExitCode": 0
+    },
+    "countsMeaning": "18 includes the original12 controls and six new tests; separate RED/GREEN executions are not added.",
+    "formatCheckExitCode": 0,
+    "clippyExitCode": 0,
+    "scopedDiffCheckExitCode": 0,
+    "independentSourceReview": "no-blocking-findings",
+    "reviewerRanNewTests": false
+  },
+  "fullEngineering": {
+    "state": "completed-natural0-and-independent-no-blockers",
+    "expectedCommands": 7,
+    "completedCommands": 7,
+    "summaryRef": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/engineering-summary.json",
+      "sha256": "4b9242eecc4f3d43a989f90e88a47d0c4cd1067823a53b2ce0bfbd7e45c16f1b"
+    },
+    "executionRef": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/root-natural-completion.json",
+      "sha256": "b97cd21463fcbe68dcd9fe9db819422c82a47202b5d887b646b8c09f3136c94c"
+    },
+    "naturalIntegerExitCode": 0,
+    "frontendArgv": "corepack pnpm exec vitest run --maxWorkers=4",
+    "literalPnpmTestInvocationClaimed": false,
+    "frontendFiles": 676,
+    "frontendPassed": 8938,
+    "nativePassed": 2274,
+    "nativeFailed": 0,
+    "nativeIgnored": 6,
+    "inputCount": 2271,
+    "sourceBeforeRef": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/source-before.json",
+      "sha256": "d9d45241a4bc81eeb840e81dffbd329a2568c35123ef882904466ee9a202b89b"
+    },
+    "sourceAfterRef": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/source-after.json",
+      "sha256": "2a44d1d3574c4cd956f1161fbaf87748ac415db7af77cbf93a1123f3262ac368"
+    },
+    "sourceUnchanged": true,
+    "eachCommandSourceEndpointMatches": true,
+    "checksRanAtFinalCommit": false,
+    "checksRanBeforeCommitOnExactInputMap": true,
+    "independentReviewRef": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-alias-engineering/independent-engineering-review.json",
+      "sha256": "dc979cb395a852bb0f6118c8080f7b9aaf321b3fd254831cd6752afdf4ca8acc"
+    },
+    "limits": "Endpoint equality only; no dependency/environment freeze, absence-of-intermediate-writer proof, installation or real Agent acceptance."
+  },
+  "priorCandidateHistory": {
+    "sourcePrefix": "cf43e06f",
+    "naturalBuildIntegerExitCode": 0,
+    "independentNinePerformed": false,
+    "installed": false,
+    "retiredGeneratedFiles": 5,
+    "retiredGeneratedDirectories": 5,
+    "zipAndOriginalEvidencePreserved": true,
+    "meaning": "Historical unused candidate prepared before this alias correction; no new-source validation or installation derives from it."
+  },
+  "installedAndAcceptanceScope": {
+    "currentFormalSourcePrefix": "c4e532921",
+    "aliasInstalled": false,
+    "actualSameConnectionQuery": false,
+    "newModelOrSkillPrompts": 0,
+    "newTrustDecisions": 0,
+    "newWholeRequirements": 0,
+    "newWholeStandards": 0,
+    "newWholeAgents": 0,
+    "acceptanceVerified": false,
+    "historicalResults": "Original P40 declaration failure and unexecuted adoption, plus prior independent state records, remain unchanged. No unique original cause or actual status is inferred."
+  },
+  "evidenceRefs": {
+    "implementation": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/camel-case-details-delta/implementation.json",
+      "sha256": "5320e69ea281d6dd7e88abb3095f945f87ff4a19a533214f929fdff19d2d82cf"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/camel-case-details-delta/independent-source-review.json",
+      "sha256": "fd7fae121ca3bbc9e7bf16e5f19f2e5936d184de3bb7d813c61a415f78f15d88"
+    },
+    "officialResearch": {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-trust-source-research/research.json",
+      "sha256": "8616ba56fe284a569c940af61137ed2d9aeb2f714cc5f55d124637aeec697d41"
+    },
+    "validRed": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/camel-case-details-delta/red-command.json",
+      "sha256": "95c65f14953c59a4ac1ed46aa76082ecd701ddc2a393966f3472ceb23d4dfff2"
+    },
+    "targetedGreen": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/camel-case-details-delta/green-command.json",
+      "sha256": "b89617a2fcb3536df1cb7b1f4d03abea708227fe08abd6d08cfb31650f418fc5"
+    },
+    "historicalCandidateCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-install-preparation/root-candidate-natural-completion.json",
+      "sha256": "17fca335b1054d6fe1ae8e62e9b0c7717bb357b478fe7ec48832f83bf0d3c0bb"
+    },
+    "historicalUnusedRetirement": {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-install-preparation/unused-candidate-retirement.json",
+      "sha256": "8d9fa2fd878b31eb34e3d6cdfaa78aa03d837cda489c892bbfac9e839e523cfb"
+    }
+  },
+  "engineeringBaseHead": "cf43e06f1e43cb8c2da8ab64de482195237882e6"
+}

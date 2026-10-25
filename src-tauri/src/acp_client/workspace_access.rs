@@ -129,6 +129,20 @@ fn absolute_directory(value: &Value) -> Result<PathBuf, AccessError> {
     Ok(path)
 }
 
+fn optional_detail<'a>(
+    object: &'a serde_json::Map<String, Value>,
+    camel: &str,
+    snake: &str,
+) -> Result<Option<&'a Value>, AccessError> {
+    // Official details serialize camelCase. Retain the controlled snake_case
+    // compatibility, but never choose one side of contradictory aliases.
+    let (camel, snake) = (object.get(camel), object.get(snake));
+    if camel.zip(snake).is_some_and(|(a, b)| a != b) {
+        return Err(ErrorKind::InvalidResponse.into());
+    }
+    Ok(camel.or(snake).filter(|value| !value.is_null()))
+}
+
 fn parse(value: &Value, request: &Request) -> Reply {
     // The SDK has already parsed the response. This is a projection budget,
     // not a claim of a pre-allocation transport/RSS bound.
@@ -154,9 +168,7 @@ fn parse(value: &Value, request: &Request) -> Reply {
             {
                 return Err(ErrorKind::InvalidResponse.into());
             }
-            let repo = object
-                .get("repo_root")
-                .filter(|v| !v.is_null())
+            let repo = optional_detail(object, "repoRoot", "repo_root")?
                 .map(absolute_directory)
                 .transpose()?;
             if repo
@@ -165,9 +177,7 @@ fn parse(value: &Value, request: &Request) -> Reply {
             {
                 return Err(ErrorKind::InvalidResponse.into());
             }
-            let decisions = object
-                .get("available_decisions")
-                .filter(|v| !v.is_null())
+            let decisions = optional_detail(object, "availableDecisions", "available_decisions")?
                 .map(|v| {
                     let list = v
                         .as_array()

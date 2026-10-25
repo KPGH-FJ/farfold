@@ -70,6 +70,119 @@ fn workspace_access_projection_is_scoped_and_never_returns_extra_sensitive_field
 }
 
 #[test]
+fn workspace_access_official_camel_details_preserve_scope_and_offered_decisions() {
+    let root = tempfile::tempdir().unwrap();
+    let cwd = root.path().join("owned");
+    std::fs::create_dir(&cwd).unwrap();
+    let cwd = cwd.canonicalize().unwrap();
+    let reply = parse(
+        &json!({"trust_status":"untrusted","details":{"cwd":cwd,"repoRoot":root.path(),"availableDecisions":["trust_repo","trust_cwd","decline"],"detectedFiles":["PRIVATE_SENTINEL"],"repoDetectedFiles":["PRIVATE_SENTINEL"],"repoExplicitlyUntrusted":false,"settingsPath":"PRIVATE_SENTINEL"}}),
+        &request(&cwd),
+    )
+    .unwrap();
+    let details = reply.details.as_ref().unwrap();
+    assert!(details.repo_scope_verified);
+    assert_eq!(
+        details.repo_root.as_deref(),
+        root.path().canonicalize().unwrap().to_str()
+    );
+    assert_eq!(
+        details.offered_decisions,
+        Some(vec![
+            OfferedDecision::TrustRepo,
+            OfferedDecision::TrustCwd,
+            OfferedDecision::Decline
+        ])
+    );
+    assert!(
+        !serde_json::to_string(&reply)
+            .unwrap()
+            .contains("PRIVATE_SENTINEL")
+    );
+}
+
+#[test]
+fn workspace_access_official_camel_optional_fields_keep_unknown_and_empty_distinct() {
+    let root = tempfile::tempdir().unwrap();
+    let cwd = root.path().canonicalize().unwrap();
+    for details in [
+        json!({"cwd":cwd}),
+        json!({"cwd":cwd,"repoRoot":null,"availableDecisions":null}),
+    ] {
+        let reply = parse(
+            &json!({"trust_status":"untrusted","details":details}),
+            &request(&cwd),
+        )
+        .unwrap();
+        let details = reply.details.unwrap();
+        assert_eq!(details.repo_root, None);
+        assert!(!details.repo_scope_verified);
+        assert_eq!(details.offered_decisions, None);
+    }
+    let reply = parse(
+        &json!({"trust_status":"untrusted","details":{"cwd":cwd,"availableDecisions":[]}}),
+        &request(&cwd),
+    )
+    .unwrap();
+    assert_eq!(reply.details.unwrap().offered_decisions, Some(vec![]));
+}
+
+#[test]
+fn workspace_access_controlled_snake_aliases_require_equal_values_when_both_present() {
+    let root = tempfile::tempdir().unwrap();
+    let foreign = tempfile::tempdir().unwrap();
+    let cwd = root.path().canonicalize().unwrap();
+    let same = json!({"trust_status":"untrusted","details":{"cwd":cwd,"repoRoot":cwd,"repo_root":cwd,"availableDecisions":["decline"],"available_decisions":["decline"]}});
+    let reply = parse(&same, &request(&cwd)).unwrap();
+    assert_eq!(
+        reply.details.unwrap().offered_decisions,
+        Some(vec![OfferedDecision::Decline])
+    );
+    for details in [
+        json!({"cwd":cwd,"repoRoot":foreign.path(),"repo_root":cwd}),
+        json!({"cwd":cwd,"repoRoot":null,"repo_root":cwd}),
+        json!({"cwd":cwd,"availableDecisions":["trust_cwd"],"available_decisions":["decline"]}),
+        json!({"cwd":cwd,"availableDecisions":null,"available_decisions":[]}),
+    ] {
+        assert_eq!(
+            parse(
+                &json!({"trust_status":"trusted","details":details}),
+                &request(&cwd)
+            )
+            .unwrap_err()
+            .code,
+            ErrorKind::InvalidResponse
+        );
+    }
+}
+
+#[test]
+fn workspace_access_official_camel_malformed_or_foreign_details_are_rejected() {
+    let root = tempfile::tempdir().unwrap();
+    let foreign = tempfile::tempdir().unwrap();
+    let cwd = root.path().canonicalize().unwrap();
+    for details in [
+        json!({"cwd":cwd,"repoRoot":true}),
+        json!({"cwd":cwd,"repoRoot":"relative"}),
+        json!({"cwd":cwd,"repoRoot":foreign.path()}),
+        json!({"cwd":cwd,"availableDecisions":true}),
+        json!({"cwd":cwd,"availableDecisions":["future-secret"]}),
+        json!({"cwd":cwd,"availableDecisions":["decline","decline"]}),
+        json!({"cwd":cwd,"availableDecisions":["trust_cwd","trust_repo","decline","decline"]}),
+    ] {
+        assert_eq!(
+            parse(
+                &json!({"trust_status":"trusted","details":details}),
+                &request(&cwd)
+            )
+            .unwrap_err()
+            .code,
+            ErrorKind::InvalidResponse
+        );
+    }
+}
+
+#[test]
 fn workspace_access_malformed_unknown_and_foreign_scope_never_become_trusted() {
     let dir = tempfile::tempdir().unwrap();
     let foreign = tempfile::tempdir().unwrap();
