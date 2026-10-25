@@ -4,6 +4,7 @@ import {
   PdfInputError,
   type PdfInputRequest,
   type PdfInputResult,
+  type PdfInputGeometry,
   type PdfInputScope,
   type PdfInputWarning,
 } from "./pdf_input_types";
@@ -43,6 +44,43 @@ function dense(value: unknown, max: number): unknown[] {
   for (let at = 0; at < value.length; at++)
     if (!Object.hasOwn(value, at)) invalid();
   return value;
+}
+/** Geometry is optional evidence for search, never authority to change text. */
+export function pdfInputGeometry(value: unknown): PdfInputGeometry | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const item = value as Record<string, unknown>;
+  if (
+    !Array.isArray(item.transform) ||
+    item.transform.length !== 6 ||
+    Object.keys(item.transform).length !== 6 ||
+    !Array.from(
+      { length: 6 },
+      (_, i) =>
+        Object.hasOwn(item.transform!, i) &&
+        typeof (item.transform as unknown[])[i] === "number" &&
+        Number.isFinite((item.transform as number[])[i]),
+    ).every(Boolean) ||
+    typeof item.width !== "number" ||
+    !Number.isFinite(item.width) ||
+    item.width < 0 ||
+    typeof item.height !== "number" ||
+    !Number.isFinite(item.height) ||
+    item.height < 0
+  )
+    return undefined;
+  return {
+    transform: [...item.transform] as PdfInputGeometry["transform"],
+    width: item.width,
+    height: item.height,
+  };
+}
+/** The Agent's representation and original budget exclude temporary geometry. */
+export function pdfInputTextPages(pages: PdfInputResult["pages"]) {
+  return pages.map(({ number, decodedRotation, items }) => ({
+    number,
+    decodedRotation,
+    items: items.map(({ text, dir, hasEOL }) => ({ text, dir, hasEOL })),
+  }));
 }
 /** Whole UTF-8 only. Reject ill-formed JS strings instead of replacing bytes. */
 export function pdfInputUtf8(value: unknown, max = L.textBytes): Uint8Array {
@@ -146,7 +184,16 @@ export function checkedPdfInputResult(value: unknown): PdfInputResult {
     if (count > L.items) throw new PdfInputError("limit");
     let authored = false;
     const items = dense(page.items, L.items).map((value) => {
-      const entry = object(value, ["text", "dir", "hasEOL"]);
+      const hasGeometry =
+        !!value &&
+        typeof value === "object" &&
+        Object.hasOwn(value, "geometry");
+      const entry = object(value, [
+        "text",
+        "dir",
+        "hasEOL",
+        ...(hasGeometry ? ["geometry"] : []),
+      ]);
       bytes += pdfInputUtf8(entry.text).byteLength;
       if (bytes > L.textBytes) throw new PdfInputError("textLimit");
       if (
@@ -155,10 +202,17 @@ export function checkedPdfInputResult(value: unknown): PdfInputResult {
       )
         invalid();
       if (/\S/u.test(entry.text as string)) authored = true;
+      let geometry: PdfInputGeometry | undefined;
+      if (hasGeometry) {
+        object(entry.geometry, ["transform", "width", "height"]);
+        geometry = pdfInputGeometry(entry.geometry);
+        if (!geometry) invalid();
+      }
       return {
         text: entry.text as string,
         dir: entry.dir as "ltr" | "rtl" | "ttb",
         hasEOL: entry.hasEOL,
+        ...(geometry ? { geometry } : {}),
       };
     });
     if (!authored) emptyPages++;
@@ -174,6 +228,6 @@ export function checkedPdfInputResult(value: unknown): PdfInputResult {
   const result: PdfInputResult = { scope, pages, partial: true, warnings };
   // Structural expansion is bounded before it can become a review. The final
   // representation, including all user-visible scope text, is checked again.
-  pdfInputUtf8(JSON.stringify(result));
+  pdfInputUtf8(JSON.stringify({ ...result, pages: pdfInputTextPages(pages) }));
   return result;
 }

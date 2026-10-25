@@ -11,6 +11,46 @@ it("searches PDF decoded page text through the bounded capture, never raw file t
     location: { kind: "pdf", pageNumber: 1, itemIndex: 0, decodedRotation: 0 },
   });
 });
+it("reports only matched original item ranges for a safely joined PDF word", async () => {
+  const h = pdfSetup();
+  h.pdf.pages[0].items = [
+    {
+      text: "x😀e",
+      dir: "ltr",
+      hasEOL: false,
+      geometry: { transform: [12, 0, 0, 12, 10, 100], width: 20, height: 12 },
+    },
+    {
+      text: "́tail",
+      dir: "ltr",
+      hasEOL: false,
+      geometry: { transform: [12, 0, 0, 12, 30, 100], width: 20, height: 12 },
+    },
+  ];
+  await h.search.start("😀é", h.candidates, h.current);
+  expect(h.search.snapshot()).toMatchObject({ matches: 1, bytes: 12 });
+  const hit = h.search.snapshot().hits[0];
+  expect(hit.match).toBe("😀é");
+  expect(hit.location).toEqual({
+    kind: "pdf",
+    pageNumber: 1,
+    decodedRotation: 0,
+    itemIndex: 0,
+    itemRanges: [
+      { itemIndex: 0, start: 1, end: 4 },
+      { itemIndex: 1, start: 0, end: 1 },
+    ],
+  });
+  expect(await h.search.verifyHit(hit, h.current)).toBe(true);
+  await h.search.start("tail", h.candidates, h.current);
+  expect(h.search.snapshot().matches).toBe(1);
+  expect(h.search.snapshot().hits[0].location).toEqual({
+    kind: "pdf",
+    pageNumber: 1,
+    decodedRotation: 0,
+    itemIndex: 1,
+  });
+});
 
 import { vi } from "vitest";
 import { deferred, tick } from "./attachment_search.test-support";

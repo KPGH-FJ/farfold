@@ -4,6 +4,10 @@
 
 ## 当前工作与接续
 
+PDF搜索已补安全连续片段：仅连接同页、原顺序相邻、水平LTR且基线/尺寸一致、端点只差浮点误差的片段；未知几何、跨栏行、重叠或旋转仍逐片段搜索。UTF16命中映回原片段范围，几何不进入Agent输入，原三字段与256KiB文字预算保持。真实小PDF解析反例2项中1通过/1失败，修复后作者123项、另一组178项及独立123项分别通过，不相加；原RED未捕同时刻完整源码摘要，不补造。该13份搜索源码/测试及3份Rust测试夹具修复已独审，完整P32、标准和整家关闭仍为0。
+
+首轮完整七项中六项通过，Rust为2291通过/1失败/6既有忽略，通知等待超时原件保留。受控模拟确认测试文件半写可令读取线程退出，但首次失败唯一原因仍未知；仅测试改为同目录写完关闭后原子发布，原PEER、断言、超时和多线程不变，受影响25项通过。后续全新七项及独审通过：前端680文件9016项、Rust2292通过/0失败/6既有忽略，2281项输入前后及逐命令端点一致，在9bd76基线、提交前完成。两轮结果分列，原失败不翻案；本增量尚未安装，位置标签及原附件导航不等于字形高亮、精确页跳转、完整阅读顺序或可见性证明。见[PDF连续片段源码与工程摘要](evidence/2026-10-24-agent-acceptance/p32-pdf-fragment-search-source-summary.json)。
+
 Poolside与Qoder在5b31上各一次精确回复，分别观察到完成与当前空闲，零可见工具、改选或重试；机械及语义复核均保留回答窄正例1。Poolside保留Max但未证明推理效果，Qoder思考区未展开且模型别名映射仍未证；不关闭完整标准。见[Poolside](evidence/2026-10-24-agent-acceptance/poolside-formal-5b31-owned-ack-summary.json)和[Qoder](evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json)。
 
 5b31上另外三家各一次短回答：Copilot精确回复、完成及当前空闲构成窄正例1；Kimi本地结束但无可读结果，保留失败1；MiniMax显示结果未知、发送暂停，保留未完成1，未重试或停止。MiniMax首次未知在82.547秒内，最后同态观察191.783秒已超原180秒窗口，不补判窗口内终态。三份回执结构有效并经语义复核；不证明完整标准、后端或全部事件。见[Copilot](evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json)、[Kimi](evidence/2026-10-24-agent-acceptance/kimi-formal-5b31-owned-ack-summary.json)及[MiniMax](evidence/2026-10-24-agent-acceptance/minimax-formal-5b31-owned-ack-summary.json)。

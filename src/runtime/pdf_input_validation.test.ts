@@ -172,3 +172,46 @@ it.each(["scope", "warnings", "pages", "items"])(
     }
   },
 );
+it("copies finite fragment geometry without charging it to the old representation budget", () => {
+  const plain = pdfResult("x");
+  const overhead = Buffer.byteLength(JSON.stringify(plain)) - 1;
+  plain.pages[0].items[0].text = "x".repeat(262144 - overhead);
+  expect(Buffer.byteLength(JSON.stringify(plain))).toBe(262144);
+  const geometry = {
+    transform: [12, 0, 0, 12, 10, 100] as [
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+    ],
+    width: 20,
+    height: 12,
+  };
+  plain.pages[0].items[0].geometry = geometry;
+  const checked = checkedPdfInputResult(plain);
+  geometry.transform[4] = 999;
+  expect(checked.pages[0].items[0].geometry?.transform[4]).toBe(10);
+  plain.pages[0].items[0].text += "x";
+  expect(() => checkedPdfInputResult(plain)).toThrow("textLimit");
+});
+it("rejects malformed claimed geometry instead of accepting sparse or non-finite coordinates", () => {
+  const good = { transform: [12, 0, 0, 12, 10, 100], width: 20, height: 12 };
+  const sparse = Object.assign(Array(6), { extra: 1 });
+  sparse[0] = 12;
+  for (const geometry of [
+    { ...good, transform: Array(6) },
+    { ...good, transform: sparse },
+    { ...good, transform: [12, 0, 0, 12, 10, Infinity] },
+    { ...good, transform: [12, 0, 0, 12, 10, NaN] },
+    { ...good, transform: [12, 0, 0, 12, 10, "100"] },
+    { ...good, width: -1 },
+    { ...good, height: Infinity },
+    { ...good, visible: true },
+  ]) {
+    const value = pdfResult();
+    value.pages[0].items[0].geometry = geometry as never;
+    expect(() => checkedPdfInputResult(value)).toThrow("invalid");
+  }
+});

@@ -23,9 +23,11 @@ import {
 } from "./pdf_input_types";
 import {
   pdfSearchText,
+  pdfSearchMatchLocation,
   type PdfSearchLocation,
   type PdfSearchScope,
 } from "./pdf_search_text";
+import type { PdfSearchSpan } from "./pdf_search_geometry";
 import { XLSX_LIMITS, XlsxError, type WorkbookCapture } from "./xlsx_types";
 import type { XlsxInputResult } from "./xlsx_input_types";
 import {
@@ -407,6 +409,7 @@ export class AttachmentSearch {
       type Content = {
         segments: readonly {
           text: string;
+          pdfSpans?: readonly PdfSearchSpan[];
           location?:
             | DocxSearchLocation
             | XlsxSearchLocation
@@ -644,7 +647,19 @@ export class AttachmentSearch {
                       ),
                       match: match[0],
                       ...(segment.location
-                        ? { location: segment.location }
+                        ? {
+                            location:
+                              "kind" in segment.location &&
+                              segment.location.kind === "pdf" &&
+                              segment.pdfSpans
+                                ? pdfSearchMatchLocation(
+                                    segment.location,
+                                    segment.pdfSpans,
+                                    match.index,
+                                    match.index + match[0].length,
+                                  )
+                                : segment.location,
+                          }
                         : {}),
                     }),
                   );

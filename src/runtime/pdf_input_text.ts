@@ -1,5 +1,9 @@
 import type { PdfInputResult } from "./pdf_input_types";
-import { checkedPdfInputResult, pdfInputUtf8 } from "./pdf_input_validation";
+import {
+  checkedPdfInputResult,
+  pdfInputTextPages,
+  pdfInputUtf8,
+} from "./pdf_input_validation";
 
 export const PDF_INPUT_SCOPE_TEXT = {
   decodedTextOnly:
@@ -30,7 +34,7 @@ export function pdfInputText(value: PdfInputResult): {
         ? `有 ${w.count} 页未提取到文字，未自动识别图片。`
         : PDF_INPUT_SCOPE_TEXT[w.code],
     ),
-    JSON.stringify({ pages: result.pages }),
+    JSON.stringify({ pages: pdfInputTextPages(result.pages) }),
   ].join("\n\n");
   pdfInputUtf8(text);
   return { text, actualTextChars };

@@ -34,3 +34,25 @@ it("budgets the entire representation, including JSON escaping and range explana
     262144,
   );
 });
+it("keeps exact three-field Agent input and the original whole-text boundary with geometry", () => {
+  const overhead = Buffer.byteLength(pdfInputText(pdfResult("x")).text) - 1;
+  const text = "x".repeat(262144 - overhead),
+    plain = pdfResult(text);
+  const expected = pdfInputText(plain);
+  expect(Buffer.byteLength(expected.text)).toBe(262144);
+  const enriched = pdfResult(text);
+  enriched.pages[0].items[0].geometry = {
+    transform: [12, 0, 0, 12, 10, 100],
+    width: 200,
+    height: 12,
+  };
+  expect(pdfInputText(enriched)).toEqual(expected);
+  const body = JSON.parse(expected.text.split("\n\n").at(-1)!);
+  expect(Object.keys(body.pages[0].items[0])).toEqual([
+    "text",
+    "dir",
+    "hasEOL",
+  ]);
+  enriched.pages[0].items[0].text += "x";
+  expect(() => pdfInputText(enriched)).toThrow("textLimit");
+});

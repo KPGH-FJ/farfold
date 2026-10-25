@@ -40,10 +40,17 @@ export interface PdfInputScope extends PdfInputRequest {
   readPageNumbers: number[];
   extraction: "pdfjs-text-content-v1";
 }
+/** Temporary PDF.js fragment geometry, not character boxes or visibility. */
+export interface PdfInputGeometry {
+  transform: [number, number, number, number, number, number];
+  width: number;
+  height: number;
+}
 export interface PdfInputTextItem {
   text: string;
   dir: "ltr" | "rtl" | "ttb";
   hasEOL: boolean;
+  geometry?: PdfInputGeometry;
 }
 export interface PdfInputPage {
   number: number;

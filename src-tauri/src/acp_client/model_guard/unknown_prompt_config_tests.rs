@@ -105,12 +105,7 @@ async fn unknown_prompt_config_none_cannot_save_new_thought_while_request_is_unr
     unknown_ending(&mut f).await;
     let mut options = f.state()["options"].clone();
     options.as_array_mut().unwrap().push(json!({"id":"extra-thought","category":"thought_level","name":"Extra","type":"select","currentValue":"low","options":[{"value":"low","name":"Low"}]}));
-    let path = f.cwd.join("inject-update.json");
-    std::fs::write(
-        &path,
-        json!({"sessionId":SESSION,"options":options,"values":{}}).to_string(),
-    )
-    .unwrap();
+    let _ = f.publish_update(json!({"sessionId":SESSION,"options":options,"values":{}}));
     let check = f.check("confirmation_required").await;
     let result = f
         .manager

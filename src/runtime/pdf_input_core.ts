@@ -12,6 +12,7 @@ import {
 import {
   checkedPdfInputRequest,
   checkedPdfInputResult,
+  pdfInputGeometry,
   pdfInputUtf8,
 } from "./pdf_input_validation";
 import { pdfInputText } from "./pdf_input_text";
@@ -222,7 +223,13 @@ export async function extractPdfInput(
             if (totalTextBytes > L.textBytes)
               throw new PdfInputError("textLimit");
             if (/\S/u.test(item.str)) authored = true;
-            items.push({ text: item.str, dir: item.dir, hasEOL: item.hasEOL });
+            const geometry = pdfInputGeometry(item);
+            items.push({
+              text: item.str,
+              dir: item.dir,
+              hasEOL: item.hasEOL,
+              ...(geometry ? { geometry } : {}),
+            });
           }
         }
       } finally {

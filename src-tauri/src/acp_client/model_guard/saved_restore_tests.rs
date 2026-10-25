@@ -24,13 +24,12 @@ async fn confirm(f: &Fixture, displayed: Value, selection: Value) -> Result<Valu
 }
 
 async fn inject(f: &Fixture, session: &str, values: Value) {
-    let path = f.cwd.join("inject-update.json");
     let update = if values.is_array() {
         json!({"sessionId":session,"options":values,"values":{}})
     } else {
         json!({"sessionId":session,"values":values})
     };
-    std::fs::write(&path, update.to_string()).unwrap();
+    let path = f.publish_update(update);
     tokio::time::timeout(Duration::from_secs(5), async {
         while path.exists() {
             tokio::time::sleep(Duration::from_millis(5)).await;

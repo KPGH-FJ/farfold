@@ -1,0 +1,168 @@
+{
+  "kind": "source-and-engineering-evidence",
+  "requirementIds": ["P32"],
+  "scope": "补充已披露的PDF跨片段搜索能力边界，不称新回归。13份搜索源码/测试及3份Rust测试夹具经后续工程覆盖；正式5b31尚未覆盖此增量。",
+  "sourceRoot": "src/runtime/",
+  "sourcePins": {
+    "pdf_input_types.ts": "a2f3bc9dc678585b53c5d9da4c690087f6888faabad9ae124d591665ea7a5692",
+    "pdf_input_core.ts": "dcc2adda25b4db31a0177820c7c713a691579f0557b3aa0e8abb36ac6afdf345",
+    "pdf_input_validation.ts": "8d3060f55f20b525ddf83202fdd70a88dd0f89347d4d8587c01054f1a212479e",
+    "pdf_input_text.ts": "12e5a8b865fb022a65a04ab79404a9128bbe8b6eac38c42cee53c09db9bb6199",
+    "pdf_search_geometry.ts": "5f4746399844f421244fc2c1695d88de39de289ac7be4ae1a147a040bc1cb8c7",
+    "pdf_search_text.ts": "b7f43288940c7401bb2c5bbf98369055c9d43ae44f49c4eace32d8f0e347e9dd",
+    "attachment_search.ts": "85964fa7e056372cffe349acdb7ca0b1fa52f17dc66207e3b4ff42ebc67cab51",
+    "attachment_search_strings.ts": "e07934b6e2cd5061aaf5ffb50a3b3cfeffce6ed28bedcb6133c2c5014bc66b6a",
+    "pdf_search_geometry.parser.test.ts": "f77849de6a26ec4a66e543f3fa5cba8475b43e874d8ad2cd6f412e40031d1afd",
+    "pdf_search_geometry.test.ts": "31f1a5c77fba7639f64d4c61fea4a340638c80b315d3cee05fad0d780fee34af",
+    "pdf_input_validation.test.ts": "222e56a8a8b8f7a378bc85d5104721071399a87ced5b740555c7792f64dca8d8",
+    "pdf_input_text.test.ts": "a4dbcd1ea35f916e69eb190ca25bde43729d0e8f4ba5cb7b1fe8c79c9ad3e86f",
+    "attachment_search.pdf.test.ts": "661f1e40e94bfbf2d83de27f18365e754da79e9967d9a68040928c26c4058112"
+  },
+  "sourceCounts": {
+    "production": 8,
+    "tests": 5,
+    "maximumLines": 755
+  },
+  "behavior": "仅连接同页、原顺序相邻、水平未旋转LTR、无前项换行、基线/尺寸相同且端点仅浮点误差的片段；缺几何或关系不明时逐片段搜索。不排序、不补字或空格。",
+  "preserved": "最大连接段替代成员，文字字节及片段内命中不重复；命中以UTF16范围映回原item，单项位置形状保持。几何不进入Agent输入；原三字段及256KiB文字预算保持。",
+  "controlledChecks": {
+    "realParserRed": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "exitCode": 1
+    },
+    "redSourceDigest": "未捕获同时刻完整源码摘要；保留原日志、失败位置及作者操作顺序，不补造。",
+    "authorFocused": {
+      "files": 6,
+      "passed": 123,
+      "exitCode": 0
+    },
+    "authorAdditional": {
+      "files": 14,
+      "passed": 178,
+      "exitCode": 0
+    },
+    "independent": {
+      "files": 6,
+      "passed": 123,
+      "exitCode": 0,
+      "blockers": 0
+    },
+    "counts": "各次运行分列，不相加为新增例数。",
+    "typecheckExitCode": 0,
+    "targetFormatExitCode": 0,
+    "scopedDiffExitCode": 0
+  },
+  "fixture": {
+    "name": "split-word.pdf",
+    "bytes": 703,
+    "sha256": "fb9e920a5712e7f412a8a73f887426d74cf7afbc06ae2ba60ff8ab4cdfdf47e4",
+    "pngSha256": "5fb16874e472c50dbaa67201e064174ef5c973f3b980473117d2f570dfed6506",
+    "observations": "字体切换产生真实分片，PNG连续词由作者、独审及root看图核对；真实解析器跨栏、跨行负控通过。"
+  },
+  "engineering": {
+    "firstRun": {
+      "allSevenSucceeded": false,
+      "sixOtherChecksExitCode": 0,
+      "cargoTestExitCode": 101,
+      "native": {
+        "passed": 2291,
+        "failed": 1,
+        "ignored": 6
+      },
+      "failure": "保存选择测试等待通知文件删除超时；原失败及独审保留。"
+    },
+    "followup": {
+      "checks": 7,
+      "allExitCode": 0,
+      "naturalExitCode": 0,
+      "frontend": {
+        "files": 680,
+        "passed": 9016,
+        "failed": 0
+      },
+      "nativeLibrary": {
+        "passed": 2292,
+        "failed": 0,
+        "ignored": 6
+      },
+      "inputCount": 2281,
+      "baseHead": "9bd76b3ed36627c98c69503fb64be7385606b875",
+      "beforeAndAfterMapsEqual": true,
+      "sevenCommandSourceEndpointsEqual": true,
+      "checksRanBeforeCommit": true,
+      "independentBlockers": 0
+    },
+    "sourceDelta": "仅3份已审Rust测试变化，原13份搜索源码/测试不变；首轮仍为失败，不因后续通过翻案。",
+    "warnings": "体积提示及4条ZIP写入结束警告原件保留，不逐条归因具体测试。",
+    "limits": "端点相同不冻结依赖、环境或调度，不证明持续无写入者；尚未打包、安装或正式搜索。"
+  },
+  "limits": [
+    "仅源码、受控文件和工程，未安装此增量或在正式应用验证搜索，不证明模型消费。",
+    "几何不证明可见性、阅读顺序或完整文本；不确定关系仍可漏匹配。",
+    "位置标签与原附件导航不是字形高亮或自动精确页跳转。"
+  ],
+  "closures": {
+    "wholeRequirements": 0,
+    "standards": 0,
+    "agents": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-source",
+  "metadataSha256": {
+    "implementation.json": "a030755c9a60efbd0007c463fe8593134b88a41ede1e5d21aa4bad39beda2bd3",
+    "source-final.json": "0b98e1fb89f06e157a2fcc0f9d575acd59b47e99db2806e7d1d1c337960aa11c",
+    "red-command.json": "f5378d0be673d1d2238e4a6915e902a448bf4d79cd7fda0f5e181103eb21d7f9",
+    "checks-attempt-1.json": "2ac3e4d2cf15ed42284b18d9a686b538b1160c7893814a03de5977936affc7bd",
+    "additional-checks.json": "0a815377c9e826522713676f48f839e8a72df61fceab17082854df22613615c4",
+    "independent-source-review.json": "ce8631d9ecd04bdda430809a444456c387e1975956a83aa0a4618c9786d1a96b"
+  },
+  "testFixtureRepair": {
+    "sourcePins": {
+      "src-tauri/src/acp_client/model_guard/switch_transport_tests.rs": "4c9ce9a88d6ea90eb8ff07fd9467295256ab7cd0e776eb1034465a942a3c28b6",
+      "src-tauri/src/acp_client/model_guard/saved_restore_tests.rs": "1f8b6df9760a611d27ab2426b4a860bf2807de9a7e93eca5c29002d48422133b",
+      "src-tauri/src/acp_client/model_guard/unknown_prompt_config_tests.rs": "45c687b8f504e378a3971ab8358a40aa19634ca746a09105c946a8627b0ff1b9"
+    },
+    "files": 3,
+    "change": "仅测试：同目录临时文件完整写入并关闭后rename发布，两处既有生产者共用。PEER、断言、多线程、5秒等待及500/700毫秒反控不变。",
+    "diagnosis": "受控模拟确认文件半写可令读取线程解析失败；不能证明首轮失败的唯一原因。",
+    "focused": {
+      "passed": 25,
+      "failed": 0,
+      "exitCode": 0,
+      "cargoFmtExitCode": 0
+    },
+    "independentBlockers": 0,
+    "counts": "不与PDF定向或完整工程计数相加。"
+  },
+  "metadataRefs": {
+    "followupSummary": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering-followup/engineering-summary.json",
+      "sha256": "99b9c510426fa4c58978e658797ac43d92661ab8ca4aa14e8e97f7965dfa9c15"
+    },
+    "followupIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering-followup/independent-engineering-review.json",
+      "sha256": "d1dc07dc77be26c7dbf24ef5fecf78c03314afaed41acca5c2ebd0f56b4710f8"
+    },
+    "firstFailedSummary": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering/engineering-summary.json",
+      "sha256": "66e981c2ad00dd88e34061157783bef131d4d7d025950d6e732aa26ae99c5515"
+    },
+    "firstFailedIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering/independent-engineering-review.json",
+      "sha256": "64c260328f3a51b6cc49de7166f83399829286b913a0b1b86b99fa1fcbf4109c"
+    },
+    "controlledDiagnostic": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering/notification-race-diagnostic/result.json",
+      "sha256": "a4db70cc10930c16c63e06f65e38c62664da3dd80bf67005765f74e95b305438"
+    },
+    "testOnlyImplementation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering/notification-publication-test-fix/implementation.json",
+      "sha256": "fa94ec54503127c0319bf40b76e369f6f6a04df0df9d8b14b4e1d7fea8e07187"
+    },
+    "testOnlyIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering/notification-publication-test-fix/independent-test-fixture-review.json",
+      "sha256": "1d0c8c47cb0c3385b3695557431416483b5af70ba732921f199ea73cdb79b504"
+    }
+  }
+}

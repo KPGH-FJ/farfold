@@ -51,12 +51,13 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     "全部页面中可提取的文字，可能包含页面上看不见的文字；不识别图片文字，不保证视觉可见性、阅读顺序或文字还原准确性。",
   pdfPartial:
     "PDF 仅查找各页提取到的文字片段，始终只是部分内容；没有匹配不代表完整文件没有匹配。",
-  pdfBarriers: "文字片段分别查找，不跨片段拼接；被分开的词可能无法匹配。",
+  pdfBarriers:
+    "只连接符合位置条件的相邻水平文字片段；其余分别查找，被分开的词仍可能无法匹配。",
   pdfLimits:
     "每份 PDF 最多处理 1,000 页，完整文字表示最多 256 KiB；超限时整份不参与查找。",
   pdfPages: (n: number) => `本次处理 ${n} 页的可提取文字。`,
-  pdfLocation: (page: number, item: number) =>
-    `第 ${page} 页 · 提取片段 ${item}`,
+  pdfLocation: (page: number, item: number, last?: number) =>
+    `第 ${page} 页 · 提取片段 ${item}${last !== undefined && last !== item ? `至${last}` : ""}`,
   pdfWarnings: {
     decodedTextOnly: "图片、图表的完整内容，以及批注和表单内容未读取。",
     visibilityUnverified:
@@ -197,7 +198,13 @@ export function attachmentSearchLocationLabel(
       location.segment,
     );
   if (location.kind === "pdf")
-    return s.pdfLocation(location.pageNumber, location.itemIndex + 1);
+    return s.pdfLocation(
+      location.pageNumber,
+      location.itemIndex + 1,
+      location.itemRanges
+        ? location.itemRanges.at(-1)!.itemIndex + 1
+        : undefined,
+    );
   return [
     location.sheetName,
     location.reference,

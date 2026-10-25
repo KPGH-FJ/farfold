@@ -214,6 +214,14 @@ impl Fixture {
     fn state(&self) -> Value {
         serde_json::from_slice(&std::fs::read(self.cwd.join("peer-state.json")).unwrap()).unwrap()
     }
+    fn publish_update(&self, update: Value) -> PathBuf {
+        let path = self.cwd.join("inject-update.json");
+        let staging = self.cwd.join("inject-update.staged.json");
+        // The peer must never observe the final name with partial JSON.
+        std::fs::write(&staging, update.to_string()).unwrap();
+        std::fs::rename(staging, &path).unwrap();
+        path
+    }
     fn assert_calls(&self, new: u64, load: u64, set: u64, prompt: u64) {
         let counts = &self.state()["counts"];
         for (method, expected) in [
