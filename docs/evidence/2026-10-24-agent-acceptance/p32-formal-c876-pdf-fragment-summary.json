@@ -1,0 +1,131 @@
+{
+  "kind": "InstalledP32NarrowPublicSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "formalIdentity": {
+    "sourceCommit": "c8761b09e5f03442ed50b4decb63df5576543300",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "darwin-arm64",
+    "binarySha256": "71e4bb77ae288b572b27cf8542825e3b5d0ef90621dc21e3ef318ba5f09abf6f"
+  },
+  "scope": "一次自有PDF当前附件搜索及一次来源导航，两个正式界面窄分项。",
+  "setup": {
+    "ordinaryRequests": 1,
+    "attachmentFiles": 1,
+    "completedAndCurrentIdleObserved": true,
+    "visibleTools": 0,
+    "choiceChangesRetriesStops": 0,
+    "meaning": "仅准备已加载附件；不证明Agent读取PDF或后端模型、推理效果。"
+  },
+  "observations": {
+    "search": {
+      "operatorExecutions": 1,
+      "filesRead": 1,
+      "filesSelected": 1,
+      "matches": 1,
+      "displayedMatches": 1,
+      "actualPage": 1,
+      "actualFragmentRange": [1, 2],
+      "literalSnippetAgreement": true,
+      "coverageUi": {
+        "unloadedConversations": 152,
+        "unconfirmedConversationReads": 0
+      },
+      "scope": "只查所选当前本地文件的可提取文字，缺失范围保留。"
+    },
+    "sourceNavigation": {
+      "operatorActions": 1,
+      "correctOriginalUserMessageAndPdf": true,
+      "successBanner": true,
+      "currentOwnIdleObserved": true,
+      "guardQualification": "仅保留既有当前文件核对路径后的成功结果及正确附件；未捕瞬时核对标签或界面摘要，不认定历史字节、精确页跳转或字形高亮。"
+    },
+    "newModelRequestsAfterSetup": 0
+  },
+  "mechanical": {
+    "cases": 2,
+    "attempts": 2,
+    "passed": 2,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "directCheckerInvocations": 1,
+    "naturalExitCode": 0
+  },
+  "semantic": {
+    "narrowInstalledPositives": 2,
+    "qualifiedUiObservations": 1,
+    "blockingFindings": 0,
+    "sealedInputs": 8,
+    "postInputMapEqual": true
+  },
+  "preAction": {
+    "canonicalPreparedBeforeBothCases": true,
+    "countObjectNormalizedToScalarBeforeSearch": true,
+    "originalTemplatesPreserved": true,
+    "expectationsUnchanged": "仍为一文件、一命中；实际标签来自界面，不将夹具期望冒实际。"
+  },
+  "limits": [
+    "分别在180秒操作观察窗内，不作为性能标准；准备请求与两项界面观察分开。",
+    "当前文件与提取片段范围不证明历史附件字节、全部正文、可见性、阅读顺序或所有文件覆盖。",
+    "0新增模型请求不等于0底层通信；版本未由当前连接报告，原选择标签不证明有效后端或推理效果。",
+    "旧Qoder冷开失败及其他原失败、未知不改判；完整P32、标准、整家和29×8仍开放。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-installed-preparation",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "5d6e0a4294344be0e2c93e8fafccb3ca86b729b22940da9d2e42ebbe2c651796"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "cb3ba38ad1ff2add311f032fcb8960726d7bb04c927e9f8ca41527f99fb73116"
+    },
+    {
+      "file": "fresh-preflight.json",
+      "sha256": "904ad0956aa3b8056767b1d19f3719401a2bb36cb03e41e886c12b417ebdac9c"
+    },
+    {
+      "file": "loaded-attachment-observation.json",
+      "sha256": "7c8928b9b0cb778ba3383d1ceca0b32515a66ad9a4ccf3799720f8d5daf4b3a9"
+    },
+    {
+      "file": "search-ui-observation.json",
+      "sha256": "fa99b3bbe3e72e206c9ba0b3f7f3052390c978c974e951e94c42b5c635039734"
+    },
+    {
+      "file": "navigation-ui-observation.json",
+      "sha256": "126f7d8ace778e133d6df727c5e199608857a07e091833558dac87c6e8b7dc37"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "b761a2866ea6946b1f5109aea0da7747807fff9b4874b9ff44c07f2c501fd710"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "d6a4380955c14ce448cbf3229522a8cfbd4938928cdaed62cb98d145ef01d637"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "ea375d579dd7c3b4808d53dfd2a1c3c403558bf9d8be04fe87e2e91d9c86f484"
+    },
+    {
+      "file": "manifest-preaction-schema-check.json",
+      "sha256": "451187f67a388e162fcad05accabb0adab5d998855af87699239d47e206b79c9"
+    },
+    {
+      "file": "receipt-sealing-shape-note.json",
+      "sha256": "2add446a7e260339f0df07933d9ed37c9a8273cb7ce9922cedba924b6913115f"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "dc31a5db7d0805e4eab2f158161843afa040737b648f99b50863581894fe82b1"
+    }
+  ]
+}

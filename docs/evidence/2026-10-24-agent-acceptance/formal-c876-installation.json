@@ -1,0 +1,150 @@
+{
+  "kind": "FormalInstallationPublicSummary",
+  "installedIdentity": {
+    "sourceCommit": "c8761b09e5f03442ed50b4decb63df5576543300",
+    "binarySha256": "71e4bb77ae288b572b27cf8542825e3b5d0ef90621dc21e3ef318ba5f09abf6f",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "darwin-arm64",
+    "sourceProvenance": "候选与安装后五文件核对链；发行清单只提供版本，不含提交字段。"
+  },
+  "engineering": {
+    "baseHead": "9bd76b3ed36627c98c69503fb64be7385606b875",
+    "inputs": 2281,
+    "checksPassed": 7,
+    "frontendFiles": 680,
+    "frontendPassed": 9016,
+    "nativePassed": 2292,
+    "nativeIgnored": 6,
+    "checksRanBeforeFinalCommitOnSameInputMap": true,
+    "checksRanAtFinalCommit": false,
+    "firstFailedRunPreserved": true
+  },
+  "completedUpdate": {
+    "candidateBuilds": 1,
+    "candidateNaturalExitCode": 0,
+    "candidateReview": {
+      "passed": 9,
+      "total": 9
+    },
+    "archiveBytes": 16177860,
+    "archiveSha256": "b7019d1d6ae565c7905c1bae90d8be52f59f485db9de07115f02c193d4346abc",
+    "normalSaveAndExitOnce": true,
+    "freshDataEndpoints": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 232530,
+      "strictEquality": true,
+      "backupIntegrity": "ok",
+      "scope": "本次新清单与实际安装后检查的端点结果；不是持续无变化证明。"
+    },
+    "atomicReplacement": {
+      "files": 5,
+      "newInodes": 5,
+      "existingInodesWritten": false,
+      "applicationBackupCreated": false,
+      "forcedQuit": false,
+      "automaticRetry": false,
+      "restorePerformed": false
+    },
+    "installedReview": {
+      "passed": 10,
+      "total": 10
+    },
+    "duplicateCleanup": {
+      "files": 5,
+      "directories": 5,
+      "archiveAndFormalApplicationRetained": true
+    }
+  },
+  "firstLaunch": {
+    "observedBy": "2026-10-25T11:05:35.537Z",
+    "historyLabelCount": 154,
+    "retainedDraftLabelCount": 1,
+    "scope": "仅可见计数与标签，不证明所有历史或草稿字节；数据清单端点在启动前采集。"
+  },
+  "exploratoryColdRead": {
+    "agent": "Qoder",
+    "observedAt": "2026-10-25T11:05:59.499Z",
+    "historyOpenCount": 1,
+    "result": "打开失败、重新连接失败；原内容保留，发送禁用。",
+    "reconnectPromptRetryStopChoiceChangeCounts": 0,
+    "scope": "安装后探索负例，不是事前P32样本；原因未知，旧Qoder精确回复不改判。"
+  },
+  "boundaries": [
+    "正常退出和正式进程缺席不证明所有外部工作已停止；旧未知不补成功、停止或自动重发。",
+    "安装、首次启动与受影响搜索效果分开；P32实际搜索尚未由本摘要验证，不声明完整标准、Agent或29×8通过。",
+    "首轮工程失败及受控诊断保留；后续通过不唯一倒推首次原因。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-install-preparation",
+  "metadataReferences": [
+    {
+      "file": "candidate-output/candidate.json",
+      "sha256": "2b494ccb88e16f55366dada55af79d1e31a4977435bf35b786d5f30b97e19de4"
+    },
+    {
+      "file": "candidate-natural-completion.json",
+      "sha256": "127657d9c6a24bb05784466b69ca528eb8eae5a03e61101160ea861b21e7bcd0"
+    },
+    {
+      "file": "independent/review-v2.json",
+      "sha256": "4a7fa67b65945e28c5cb5c6544f77da351a9ff6de866fe1263a1f00aa6d77c49"
+    },
+    {
+      "file": "normal-quit.json",
+      "sha256": "052a3a1eee81874d830aa15a236a50ec749006e78c74b88bc98d78dd79767d77"
+    },
+    {
+      "file": "install/retention-before-receipt.json",
+      "sha256": "d9df8bfc167092975e8634f6fa0eac0ebb37b3c2744898a90021b9f9925cb568"
+    },
+    {
+      "file": "install/retention-preinstall-receipt.json",
+      "sha256": "1838bbd5620d8c6c37ed6d76fe5af0ed47283f316f2848a40eee20e98e8497b0"
+    },
+    {
+      "file": "install/retention-after-receipt.json",
+      "sha256": "8690b0bf37882f121ce56beb67703988209f2dba13cef03de5660d3f43778974"
+    },
+    {
+      "file": "install/install-result.json",
+      "sha256": "3054b2adf18ee7834d6d8aae9c70fbba527726b7282001f67b719e95fa25ff3d"
+    },
+    {
+      "file": "install/installed-independent-review-private.json",
+      "sha256": "77061cf0f671750b8a4cd7df61f1406d3f5d907cab8ca7e64063ba95225e8283"
+    },
+    {
+      "file": "install/candidate-cleanup.json",
+      "sha256": "54c9ae7eaa874b5d047b221e794db08cecbd7a7e22f3372feeb3917c561ea658"
+    },
+    {
+      "file": "first-launch-ui-observation.json",
+      "sha256": "af7788b9a2ea37d4745aedcc1fcc10f5d886d98718f5cfddcec820c9b636aab6"
+    }
+  ],
+  "additionalMetadataReferences": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-installed-preparation/qoder-cold-setup-candidate-failure.json",
+      "sha256": "64a76c79be7a177a1c7b356df8cb7d66c429c3ab019ddece16372fe4bd1aa253"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-install-preparation/independent-install-metadata-review.json",
+      "sha256": "5407ee58407c73e66cf9be03c043ca0097ff0978e0efeca2e847c9a4e61629b1"
+    }
+  ],
+  "engineeringReferences": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering-followup/engineering-summary.json",
+      "sha256": "99b9c510426fa4c58978e658797ac43d92661ab8ca4aa14e8e97f7965dfa9c15"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p32-pdf-fragment-search-engineering-followup/independent-engineering-review.json",
+      "sha256": "d1dc07dc77be26c7dbf24ef5fecf78c03314afaed41acca5c2ebd0f56b4710f8"
+    }
+  ]
+}
