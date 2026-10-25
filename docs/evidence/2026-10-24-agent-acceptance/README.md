@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[cb43正式更新](formal-cb43-installation.json)完成一次打包、9/9、10/10、三份新232530条清单相同及备份完整性核验，正常保存退出、五文件逐项原子替换与重复候选精确清理完成；ZIP保留。[当前对话身份显示](mistral-formal-cb43-identity-summary.json)为原Mistral一次显式查询、零模型发送的安装版窄正例，八观察及语义独审通过。四个实际身份值不公开，全局认证/方案不覆盖；可能缓存的报告不证明新鲜认证或付费。两份版本意见冷恢复仅作安装附证，不增加P21用例；完整S2、标准及整家未关闭，旧失败/未知、六项等待和NEW-24保护保持。
+
 [当前对话身份查询源码与工程摘要](s2-current-session-identity-source-summary.json)记录34份共用源码/测试、独审及完整七项通过；前端684/9096、Rust2307/0/6，2290项输入端点一致。首轮pnpm参数拒绝保留，两项已有成功复用一次、五项另行实际执行，不相加定向计数。当前身份只读补充与全局认证/付费分开，真实读取、正式更新及完整S2尚未验证；旧失败、未知、六项等待及NEW-24暂停保持。49个旧Rust对象的约2.764GB清理是资源恢复，不是用户数据清理或持续空间保证。
 
 [同路径版本意见与另存选择器取消](p21-formal-c876-version-retention-cancel-summary.json)新增两项安装版窄正例，零模型发送、零意见加入。旧A意见带原摘要，B意见独立；选址前取消保留两份意见、原稿和空输入，实际原文件仍45B。一次seal CLI/内部校验，14观察及独审通过；事前清单四处对象预期改为字符串的拒绝/修正记录均保留。手工重开不算面板恢复，214.214秒全可见流程不算180秒内，未验在途写入取消或完整条目。六项登录等待现含Amp，其原未知不改判。
@@ -24,7 +26,7 @@ c876合并分项：[Dirac](dirac-formal-c876-ack-summary.json)精确回复/完�
 - 单次运行清单、回执和校验器属于测试/证据设施，不进入产品存储，不建立第二套Agent执行循环。机械校验通过只说明材料满足校验条件，不证明真实效果或整项验收。
 - 共用回归、协议检查、正式应用观察和真实Agent结果分别标记。部分原文观测不自动关闭整项；缺条件、未知、失败和历史重试均保持。
 - NEW-24七个已知本地输入当前全部未变，受影响的新真实发送及工作命令继续暂停；不扩大成其他28家全部停工。只读盘点及原始哈希核对保存在本地output，不提交账号、配置、会话正文或秘密。
-- 当前正式为`c8761b09e`的0.1.7 arm64，候选9/9、安装10/10、三份新清单各232530条一致，正常保存退出及精确重复产物清理完成。见[本次更新](formal-c876-installation.json)与[PDF连续片段正式分项](p32-formal-c876-pdf-fragment-summary.json)。此前记录见[5b31更新](formal-5b31-installation.json)、[P40自有技能分项](p40-formal-5b31-owned-skill-summary.json)、[Codebuddy混合提示](codebuddy-formal-5b31-config-guard-summary.json)和[Qwen新稿/导航分项](qwen-formal-5b31-same-settings-summary.json)。后文“未安装”等只属各历史检查点；完整要求及29×8仍开放。
+- 此前`c8761b09e`的0.1.7 arm64更新，候选9/9、安装10/10、三份新清单各232530条一致，正常保存退出及精确重复产物清理完成。见[本次更新](formal-c876-installation.json)与[PDF连续片段正式分项](p32-formal-c876-pdf-fragment-summary.json)。此前记录见[5b31更新](formal-5b31-installation.json)、[P40自有技能分项](p40-formal-5b31-owned-skill-summary.json)、[Codebuddy混合提示](codebuddy-formal-5b31-config-guard-summary.json)和[Qwen新稿/导航分项](qwen-formal-5b31-same-settings-summary.json)。后文“未安装”等只属各历史检查点；完整要求及29×8仍开放。
 - 两家各一次自有文件样本：[Kilo](kilo-formal-5b31-owned-file-summary.json)因18B缺LF保留失败1；[OpenCode](opencode-formal-5b31-owned-file-summary.json)精确23B含LF保留窄正例1。可见工具路径与请求完成/当前空闲分别留证，零重试或修复；不关闭完整S5、P18、ARCH-34、ARCH-44或整家，旧失败和未知保持。
 
 ## P32安全连续PDF片段源码

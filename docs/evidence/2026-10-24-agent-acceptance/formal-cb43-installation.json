@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalInstallationEvidence",
+  "sourceCommit": "cb43b8b281489175ae976811029570abb3737142",
+  "application": {
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "79eb364a874751244ebc76a8e7bd2cf9772252aeceb08c950bbebcb951de4905"
+  },
+  "engineering": {
+    "inputCount": 2290,
+    "checks": "2 successful commands reused once plus 5 actual continuation commands",
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 684,
+      "passed": 9096,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2307,
+      "failed": 0,
+      "ignored": 6
+    },
+    "checksRanAtFinalCommit": false,
+    "boundary": "Precommit checks and final commit have the same complete input map; dependency/environment continuity is not established by that equality. Original wrapper option failure remains preserved; Vitest did not start in that failed command."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "buildExitCode": 0,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "archiveBytes": 16189021,
+    "archiveSha256": "5d5b24997aa8041b6427f6af797d4f5af10a9c6101f50b6d03a50031e68d5876",
+    "archiveRetained": true,
+    "signature": "Strict internal ad-hoc verification passed; public signing and notarization are not claimed."
+  },
+  "installation": {
+    "normalSaveQuitCount": 1,
+    "forcedQuitOrExtraStop": 0,
+    "installedChecksPassed": 10,
+    "installedChecksTotal": 10,
+    "exactFiles": 5,
+    "replacement": "Five per-file atomic replacements; old file inodes were not written.",
+    "appBackupCreated": false,
+    "automaticRetryOrRestore": false
+  },
+  "dataRetention": {
+    "freshClosedEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "threeFullManifestsEqual": true,
+    "retainedBackupIntegrityCheck": "passed in sealed installation evidence",
+    "reviewBoundary": "Receipt links and actual ten-check metadata were reviewed; no live database or raw user-data manifest was opened by this reviewer. Equality is at observed endpoints."
+  },
+  "candidateCleanup": {
+    "removedExactFiles": 5,
+    "removedExactDirectories": 5,
+    "formalFilesAndModesUnchanged": true,
+    "archiveRetained": true
+  },
+  "firstLaunch": {
+    "source": "Root native accessibility observation",
+    "observedAt": "2026-10-25T15:03:27.990Z",
+    "historyLabelCount": 156,
+    "retainedDraftLabelCount": 1,
+    "composerEmpty": true,
+    "boundary": "Label counts do not prove full history, draft bytes or retained opinion contents."
+  },
+  "coverageLimits": [
+    "The current-conversation identity UI sample is documented separately; installation alone is not full S2 acceptance.",
+    "Six authentication waits, affected NEW-24 pause and earlier failed/unknown requests remain unchanged.",
+    "No complete S2, standard, Agent, 151-condition or 29-by-8 closure."
+  ],
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/candidate-output/candidate.json",
+      "sha256": "141d8d3c2386c15b8dfbba92df5ae38a8a9bc54fdce820e1383a3714df810924"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/candidate-natural-completion.json",
+      "sha256": "63082d290c955ae3686898b4ab2a614fe9ab5211b71203f6c011a4c2c921075d"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/independent/review-v2.json",
+      "sha256": "d05b5d2928e05b897009c056ec0d57ff7dd76992850ac39c8b6bf63084bb7bda"
+    },
+    "normalQuit": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/normal-quit-receipt.json",
+      "sha256": "f54c6bc0c7e6913f9c140b7f1465d79e64281a86a897bef0718a513a92f06547"
+    },
+    "retentionBefore": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/retention-before-receipt.json",
+      "sha256": "32f3004a3f08f503f155663ec3a6725b4b0824d2d7a4fa710c95942af62745f6"
+    },
+    "retentionPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "621b4c79b15a06c05a7d13d65b3eb4a4855058b489eb420d79b5ed5aa738c6f7"
+    },
+    "retentionAfter": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/retention-after-receipt.json",
+      "sha256": "2bdf153297cc59e9e97ffc0089d6155b9516069ab9d6e3afe0a27f025c5ffbd9"
+    },
+    "installation": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/install-result.json",
+      "sha256": "90f81d829de3c97cb38180223a706808c49fa42cf9297d4bb5315d7a99f1c764"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "3185dbabc9541cb0190903930a3af399382b7c0d353976724a8ce065dff857cd"
+    },
+    "cleanup": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/install/candidate-cleanup.json",
+      "sha256": "e04ce674b0c3fe15f0e55c92786cdc84f7c60f0ec3adfaa2f86d15ee35a2df4b"
+    },
+    "firstLaunch": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/first-launch-ui.json",
+      "sha256": "2d7df2bb3e5eb46485d047f1852a0c7d3a9501eddd2cf0b6b8d632d40bfc18e9"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/source-freeze-final.json",
+      "sha256": "63ad2886b21ed48cfa5102f62e698431118dd011e193318fe73e3f3844cd6d55"
+    },
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering-followup/engineering-summary.json",
+      "sha256": "ada124ed175d01e27803292127023b49bd8a908dbe6083044ee2810f33877637"
+    },
+    "engineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering-followup/independent-engineering-review.json",
+      "sha256": "6f04747fa61d09c3a490ae959162220ececc637e42de50ee6e1695a4b0c3f69f"
+    },
+    "metadataReview": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-install-preparation/independent-installation-metadata-review.json",
+      "sha256": "3b1bf400fdd39be087590f1c61696c06bf074d425f4c8cbf17428fa7eea92495"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "kind": "S2InstalledCurrentIdentityUISummary",
+  "sourceCommit": "cb43b8b281489175ae976811029570abb3737142",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["ARCH-09", "ARCH-11"],
+  "standardIds": [],
+  "result": {
+    "narrowInstalledUiPositive": 1,
+    "explicitQueries": 1,
+    "display": "Four permitted identity display fields were reported for the current conversation; all values are withheld.",
+    "modelSubmits": 0,
+    "configurationLoginTrustRetryStopOrQueueContinuationActions": 0,
+    "originalChoiceLabelsPreserved": true,
+    "originalUnsentOpinionAndSourceLabelsPreserved": true
+  },
+  "timing": {
+    "actionAt": "2026-10-25T15:07:26.342Z",
+    "finalPostCaptureObservedAt": "2026-10-25T15:07:54.256Z",
+    "observationUpperBoundSeconds": 27.914,
+    "boundary": "Observation bound, not precise response latency or a performance threshold. The earlier pre-capture AX timestamp is not used as a response time."
+  },
+  "mechanicalSeal": {
+    "sealCliCalls": 1,
+    "internalValidationCalls": 1,
+    "additionalValidateCliCalls": 0,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "matchingObservations": 8,
+    "provenance": "Root directly observed natural exit 0; the later provenance file is not captured stdout/stderr. No independent validation rerun."
+  },
+  "interpretation": [
+    "The visible report is scoped to the current conversation and may be cached.",
+    "Global identity and plan remain not provided; detected login data and an email are not fresh authentication or payment proof.",
+    "Owner and choice preservation are UI-label observations; raw native owner IDs and full canonical cwd were not freshly captured.",
+    "Restored unsent opinions are installation/UI supporting evidence, not additional P21 formal cases or file-byte proof."
+  ],
+  "preservedPreparationHistory": [
+    "Original invalid manifest retained. Only strict UTC timestamp formatting and explicit unobserved-version provenance changed before the single query.",
+    "Unbound actuals placeholders were replaced with the existing value/evidenceIndexes shape before the first seal; no failed seal or query retry."
+  ],
+  "limits": [
+    "No raw HTTP/RPC, exact response time, effective backend/version, fresh-authentication or paid-entitlement proof.",
+    "No claim of zero internal Agent credential maintenance or hidden IO.",
+    "Six waits, affected NEW-24 pause and previous failed/unknown results are unchanged.",
+    "No complete S2, requirement, standard, Agent, 151-condition or 29-by-8 closure."
+  ],
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/case-plan.json",
+      "sha256": "b6eb3931ca8381201b6a0fbfc4fa202378581a911b94c7d6faf3f7e07efa3cc1"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/manifest-v2.json",
+      "sha256": "3b20a1705f58d147a781b949dc63b1607114ae0580b3e63d7219209eab092f6e"
+    },
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/preflight.json",
+      "sha256": "febd8340e46e431b1a7ad46b4785e02dce8169940b511db283928342acd24ced"
+    },
+    "ownerChoiceReadback": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/current-owner-choice-readback.json",
+      "sha256": "5862f380c8b158ef65be0ae64c55ff6dd22c80b8d358646fef27cd254a502284"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/actuals.json",
+      "sha256": "3a39568f061cdde19f62f270dbd0683ada390efd7f4feaeb7712d317e9d2ec1d"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/receipt.json",
+      "sha256": "c27bb814aad81c90623a7b3f61e910f027c40b1e8573f51b2ee8fea5371cc96a"
+    },
+    "finalUi": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/final-read-ui.json",
+      "sha256": "a3228b8891012a91a417ed7d248e9ef68e6d410ab379681bfbbecb227b214976"
+    },
+    "resultClassification": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/result-classification-private.json",
+      "sha256": "1fee0618c9468df1304c0c6bd8ab83e0c643f5fa6418b0fff9bcf4ce3aaa8b50"
+    },
+    "schemaCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/manifest-schema-correction.json",
+      "sha256": "7e76e367f87c94abbf561f1af795c8199caf3094ccad6e76baeeeaa9c33306a7"
+    },
+    "sealProvenance": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/root-seal-observation.json",
+      "sha256": "8a7092efe21c24740bb018f7bd8e966ea5a4a67647d29eb707288e641f3e593c"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-installed-preparation/independent-semantic-review.json",
+      "sha256": "f60620fbb78d540b9f57836c8a4340dfce3ff53a535cb7ea610c2406d0e86188"
+    }
+  }
+}
