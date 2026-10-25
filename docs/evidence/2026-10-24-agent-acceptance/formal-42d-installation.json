@@ -1,0 +1,226 @@
+{
+  "kind": "Formal42dAtomicInstallationAndBoundedUiObservationPublicSummary",
+  "schemaVersion": 1,
+  "draftOnly": false,
+  "publicationStatus": "authorized-documentation-checkpoint",
+  "recordedAt": "2026-10-25T00:15:20.157966+00:00",
+  "sourceCommit": "42d678a9f3f6d201e0110cbdddde0621d21764f5",
+  "formalIdentityAsRecorded": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "3d894be867c1e09275096cfaae8cca62a21bde0db4ce9d5d514a14aab678da5a",
+    "basis": "Candidate frozen source and archive provenance plus installed exact-five and independent ten; not a sourceCommit field in the release manifest."
+  },
+  "summaryWriterPerformedNewInstallationChecks": false,
+  "engineering": {
+    "sourceSummary": "docs/evidence/2026-10-24-agent-acceptance/popover-initial-focus-source-summary.json",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-engineering/engineering-summary.json",
+      "sha256": "89f13fa0c2864d69d3bcae11caad1b8dbadd15e960c5350cc541d6762fe68e5f"
+    },
+    "checksPassed": 7,
+    "inputCount": 2261,
+    "frontendFiles": 673,
+    "frontendPassed": 8866,
+    "nativePassed": 2256,
+    "nativeIgnored": 6,
+    "checksBaseHead": "a1271c9adf4bb31a820366cc55a23d9519749180",
+    "checksRanBeforeCommit": true,
+    "checksRanAtFinalCommit": false,
+    "proof": "Existing full-engineering record; not rerun by this summary writer and not a whole-acceptance result."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "naturalExitCodeAsReported": 0,
+    "buildLogSha256": "151671cb034c2a118a210632cafdb3f0c401893b6748e56ce7a2b4f6fdad06e4",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/candidate-output/candidate.json",
+      "sha256": "e7334150e2b717f40ef9cc6d6d07a5da68492236b99d88689dbcc6666430186f"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/independent/review-v2.json",
+      "sha256": "4f6115d59e2c285c29b03fba3fbabbbf485ef4df3726d654e8849f1325d7d2b1"
+    },
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "archiveSha256": "e162da1ef9daffb102872d054b91ad2bc36040587292f854cd2cc3cb0f13007e",
+    "archiveBytes": 16092924,
+    "archiveRetained": true
+  },
+  "normalQuit": {
+    "userExplicitlyAuthorizedAdditionalUnknownRetentionAndUpdate": true,
+    "normalUiSaveAndExitObserved": true,
+    "forcedQuit": false,
+    "unknownRequestsReclassifiedAsStopped": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/normal-quit-observation.json",
+      "sha256": "dd6edd82a1eb046aade0ee9f2a9df8451b7cbf47312dc0ef432b38cae39a4b4d"
+    }
+  },
+  "dataRetentionAsRecorded": {
+    "completeManifestEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "allThreeByteIdentical": true,
+    "receiptMetadataReadBySummaryWriter": true,
+    "fullManifestsOrDatabaseOrBackupOpenedBySummaryWriter": false,
+    "continuousUnchangedIntervalClaimed": false,
+    "receipts": {
+      "before": {
+        "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/retention-before-receipt.json",
+        "sha256": "bc67c94c8fea37bcc421496554f3651c5c194860ad2191c844c87387609b9a24"
+      },
+      "preinstall": {
+        "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/retention-preinstall-receipt.json",
+        "sha256": "2428025442f230d684979da06e15e688d30252364e4821d6f513eb7c186d9879"
+      },
+      "after": {
+        "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/retention-after-receipt.json",
+        "sha256": "57f453f6b8870ed3edf68ee6fbdf473fccc313c108cabee816562843444773ef"
+      }
+    },
+    "proof": "Three complete before/preinstall/after endpoint receipts and the installed independent ten; not continuous monitoring or every-data-usage verification."
+  },
+  "atomicInstallation": {
+    "installed": true,
+    "naturalExitCodeAsReported": 0,
+    "onlyFormalAppUpdated": true,
+    "exactFiles": 5,
+    "newInodesPerReplacement": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/install-result.json",
+      "sha256": "f6dfbcda5122344254f20ee8dba00658424f9d1c26e4783eeea7118dc8b015e9"
+    }
+  },
+  "installedIndependentReview": {
+    "checksPassed": 10,
+    "checksTotal": 10,
+    "failures": [],
+    "naturalExitCodeAsReported": 0,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "d70b0bd61e0d328d89b7d88b2aba4b78102f35fb0412059587b60a612e7369f6"
+    },
+    "boundary": "Actual installation/source/signature/archive/data checks. Affected UI observations are separate below."
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "formalFiveFilesAndModesUnchanged": true,
+    "archiveRetained": true,
+    "originalEvidenceRetained": true,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/popover-initial-focus-install-preparation/install/candidate-cleanup.json",
+      "sha256": "779a9791df9e6167ca69babbe1ee9857c49a7b3f01dc7d5b148bb279474d1e1f"
+    }
+  },
+  "firstLaunch": {
+    "observed": true,
+    "historyListCount": 146,
+    "preservedDraftCount": 1,
+    "ownKimchiOriginalInputVisible": true,
+    "ownKimchiUnknownNoticeRetained": true,
+    "unknownAcknowledgedOrCleared": false,
+    "automaticResend": false,
+    "newPromptSent": false,
+    "secondStop": false,
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/42d-first-launch-retention-observation.json",
+      "sha256": "5594d02452bdc401fc2aef92abecdf11e357f7a46de2c52594b2f376c277afe6"
+    },
+    "boundary": "One formal launch and one owned unknown-history restore. Counts and visible input do not prove every history item, full draft bytes or every attachment."
+  },
+  "installedPopoverObservation": {
+    "route": "One existing owned Goose conversation with confirmed free selection; separate from a new empty draft.",
+    "visibleConfirmedLabels": {
+      "model": "Nemotron 3 Ultra (free)",
+      "provider": "OpenRouter",
+      "mode": "auto",
+      "reasoning": "off"
+    },
+    "parentTopAndConfirmedSummaryVisible": true,
+    "lowerModelControlReachedByUserScroll": true,
+    "nestedSearchAndOptionsVisible": true,
+    "onePointerSelectionReachedPendingReview": true,
+    "pendingSelectionLabel": "Nova Lite 1.0",
+    "cancelRestoredOriginalConfirmedLabel": true,
+    "escapeReturnedFocusToTrigger": true,
+    "modelConfirmations": 0,
+    "ordinaryPrompts": 0,
+    "stopRequests": 0,
+    "retryRequests": 0,
+    "innerClippingReproducedInThisScenario": false,
+    "universalClippingFixClaimed": false,
+    "installedFocusRaceTimingProved": false,
+    "newEmptyDraftBoundary": "A separate empty-draft flow showed a different Agent default. It was closed without selection or send; this is neither a global-free-default claim nor a regression attribution.",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/42d-goose-popover-installed-observation.json",
+      "sha256": "74eb6e34bc183291fec9393c4f485e0b437972c80d4097de136c8b2ba5c24b2e"
+    }
+  },
+  "kimchiBoundedDiagnosticInference": {
+    "source": "Already-created fixed-field projection for one owned test; no native journal or raw error opened by this summary writer.",
+    "matchingHeaderChecks": 3,
+    "diagnosticEntries": 2,
+    "diagnosticStatusFieldAsRecorded": 200,
+    "errorCharacterCount": 97,
+    "fixedVocabularyMatchesOnly": ["credits", "exhausted", "model"],
+    "fixedPhraseMatches": 0,
+    "interpretation": "Quota-related inference from these fixed words only; no unique cause, account entitlement, current model quota or availability is confirmed.",
+    "association": "Owned header and time only; no provider request identifier. The diagnostic status is not an ACP request terminal.",
+    "originalAckCounts": {
+      "incomplete": 1,
+      "failed": 0,
+      "passed": 0,
+      "stopActionsInOriginalWindow": 0
+    },
+    "laterSeparateStop": {
+      "actions": 1,
+      "confirmed": false,
+      "secondStop": false
+    },
+    "requestCompletion": "unknown",
+    "actualCause": "unknown",
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/kimchi-ba574-ack/own-diagnostic-credit-classification-v4.json",
+      "sha256": "b01ba8f8f79938689fc5ea4b085bf626c128bf6716fd4118586e25b026cb95dc"
+    }
+  },
+  "remainingBoundaries": {
+    "userExplicitlyRetainedAuthenticationWaits": [
+      "Google Antigravity",
+      "Autohand Code",
+      "Gemini CLI",
+      "Nova",
+      "Grok Build"
+    ],
+    "loginOrSubstituteServiceAction": false,
+    "claudeBaselineMismatchRetained": true,
+    "dimCodeDeclarationReadFailureRetained": true,
+    "p18NextCommandCaseExecuted": false,
+    "previousGooseExactFileFailureReclassified": false
+  },
+  "completeStandardsNewlyAccepted": 0,
+  "completeRequirementsNewlyAccepted": 0,
+  "completeAgentsNewlyAccepted": 0,
+  "all29Accepted": false,
+  "originalEvidenceRewritten": false,
+  "limits": [
+    "The installed menu observation covers one existing conversation and one configuration. Earlier clipping and failed samples remain; no global layout guarantee follows.",
+    "Displayed model/provider/mode/reasoning labels are not effective-backend, account or next-request proof. No model request or model confirmation was performed in these installed UI checks.",
+    "Normal exit, retention, cold unknown notice and current idle do not establish completion or cancellation of the earlier Kimchi, Droid or siGit requests.",
+    "The original Goose exact-file case remains failed. P18 command failure, full requirements, eight standards and all 29 Agents remain unclosed.",
+    "The summary writer read named metadata and a fixed-field diagnostic projection only; no helper, App, Agent, raw log, database, configuration, complete manifest or backup was executed or opened for this summary."
+  ],
+  "privacy": {
+    "absoluteUserPathsIncluded": false,
+    "accountCredentialSessionIdentifiersIncluded": false,
+    "rawPromptReplyDiagnosticOrRpcBodiesIncluded": false,
+    "rawDataManifestOrBackupDigestsIncluded": false,
+    "filesystemInodesAndProcessDetailsIncluded": false
+  }
+}
