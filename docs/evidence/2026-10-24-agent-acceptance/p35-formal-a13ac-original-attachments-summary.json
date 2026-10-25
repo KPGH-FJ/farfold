@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalA13acOriginalFourCurrentAttachmentsNormalArchivePublicSummary",
+  "recordedAt": "2026-10-25T07:09:21.712071+00:00",
+  "sourceCommit": "a13ac210addf32eb0af2a03d351f9a154253adfd",
+  "requirementIds": ["P35"],
+  "standardIds": [],
+  "installedApp": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "dfce74dbd5eca6fd1a54753600c992e4a498c70d4ee8a7a0f18ee1834e4130e6"
+  },
+  "context": {
+    "agent": "Mistral Vibe",
+    "history": "Existing original owned conversation, identified by original message/tool/reply sequence plus four file pointers, not title only.",
+    "agentExecutionVersionAndRawNativeIdentifiers": "unreported",
+    "newAgentRequestOrSettingsChange": false
+  },
+  "actual": {
+    "archiveFormat": "Markdown and selected attachments ZIP",
+    "saveWorkflows": 1,
+    "filePickerConfirmations": 1,
+    "selectedOriginalUserCurrentFiles": 4,
+    "selectedBytes": 14752,
+    "zipBytes": 21349,
+    "zipMembers": 6,
+    "allMemberCrcValid": true,
+    "allFourMembersByteEqualExactCurrentSources": true,
+    "origin": "messageAttachment/localCurrentFile",
+    "archiveZeroBasedItemOrdinal": 13,
+    "uiOneBasedItemNumber": 14,
+    "unselectedToolFileCandidates": 2,
+    "loadedToolTextItemsOfferedButUnchecked": 4,
+    "completedUiObserved": true,
+    "resultAndDialogClosed": true,
+    "newPromptsToolsReattachmentsRetriesOrStops": 0
+  },
+  "scopeDisclosure": {
+    "range": "Already loaded readable conversation content and four explicitly selected current local files.",
+    "sourceAddresses": "Not exported automatically; four declarations and relative selected-member links retained.",
+    "private": "ZIP and raw contents remain private; only metadata published.",
+    "resumableAgentSession": false,
+    "formatSemanticValidation": "notChecked"
+  },
+  "verification": {
+    "mechanicalValidatorFinalIntegerExitCode": 0,
+    "mechanicallyValid": true,
+    "passed": 1,
+    "acceptanceVerified": false,
+    "independentFileReadbackBlockingFindings": 0,
+    "independentSemanticReviewBlockingFindings": 0,
+    "retainedQualifiedNormalArchiveCases": 1,
+    "initialMetadataValidationExit1Retained": true,
+    "correction": "One mismatched installed-ui evidence index was removed from the filesystem observation. Original receipt and failed validator preserved; no product reexecution or second ZIP."
+  },
+  "timing": {
+    "saveConfirmedAt": "2026-10-25T06:54:31.622Z",
+    "completionSnapshotRequestedAt": "2026-10-25T06:54:45.946Z",
+    "laterClockAfterCompletedUiAndChecksum": "2026-10-25T06:56:03.506Z",
+    "exactSaveLatencyEstablished": false,
+    "limit": "Snapshot request time is not completion time or its upper bound; no14.324s save-latency claim."
+  },
+  "limits": [
+    "Current source URI, fresh current bytes and produced archive bytes are separate evidence layers; no historical attachment-byte recovery or Agent consumption.",
+    "No complete loaded text/tool-body equality, full native history, semantic Office/PDF validation, cancellation/failure/unknown or Windows coverage.",
+    "Prior P32 DOCX whitespace, PDF page1 and PPTX additional-preview limitations unchanged; previous tool-file archives and unexplained8fa Save-disabled result retained.",
+    "One normal archive is not completeP35, standard or wholeAgent acceptance."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false,
+    "original151ConditionsChanged": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/manifest.json",
+      "sha256": "6ba19c8c5c2bda06e1800a8746c8a3abd2b1bce1b71683e7805e58a47cee6e3a",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/case-plan.json",
+      "sha256": "ed30083828d25f3aae140d4d63c84ebb6af4058f9344a6329ba08388acfc69f0",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/preflight.json",
+      "sha256": "55c00d39fcc1d66a3ac627815a5012dc0ef2052367d65a601762438999aaa30e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/current-source-inventory.json",
+      "sha256": "b937211688bb5c058867bf4cd7aa8ab24807c59d4f8d2da84d3990ae47853796",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/actual-ui-observation.json",
+      "sha256": "764eb21786584cca89667da47e52bd36a3f4de2e94441b35d0bc7c6bd4bbc683",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/independent-file-readback.json",
+      "sha256": "0ee367c635b3129aef0a661c0764fd67e54ca6821e46f28f36d044d7954f494f",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/independent-file-readback-timing-clarification.json",
+      "sha256": "bf864618fb8d361c8bc9b1385d783d21ecd4b365f63ed407200c31ca03c686ba",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/actual-receipt-v2.json",
+      "sha256": "1319a1c1f4ef182e56fe7d624558eacc619080cd3e48f862b818c357f57329df",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/receipt-v2-correction.json",
+      "sha256": "d30569f36779c548fbde77cc353a982fe42d0b4b5fd53527d8bc7f82714efd41",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/validation-v2.json",
+      "sha256": "d3a09b3bbada76afa08a73b6ffd7c0144084b1fc165694f50e348c79c7d6b07c",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/validation-v2-execution.json",
+      "sha256": "b7264e6ff5eba7da904cc92d3b5cfd3ad717aca6fcf5e7084c6afaf3c906e4f8",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/post-case-input-check.json",
+      "sha256": "9c37a820436d1b9ce669b2eeaf0bd74bf833c45eae9dc9aac77f3c74c3342fa7",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p35-original-four-attachments-formal-a13ac/independent-semantic-review.json",
+      "sha256": "73e2954abd7a915735f2496cdc4cb2baf393391f88cf23ff5e2e6c2e9b5a799a",
+      "evidenceKind": "metadata"
+    }
+  ]
+}
