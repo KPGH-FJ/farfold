@@ -37,6 +37,7 @@ pub(crate) mod handshake;
 mod history_admission;
 pub mod history_admission_commands;
 pub mod history_search;
+pub mod identity_read;
 mod initialization;
 pub(crate) mod installation_parameters;
 mod lifecycle;

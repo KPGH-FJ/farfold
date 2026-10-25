@@ -8,6 +8,7 @@ export interface OpenResult {
   sessionOperations?: import("./session_fork_types").SessionOperations;
   workspaceAccess?:
     import("./workspace_access_types").WorkspaceAccessCapability | null;
+  identityRead?: import("./session_identity_types").IdentityReadSupport | null;
   /** Canonicalized cwd — session keys must be built from this. */
   cwd: string;
   configOptions: unknown;

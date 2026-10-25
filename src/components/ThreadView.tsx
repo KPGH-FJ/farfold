@@ -1290,6 +1290,7 @@ export function ThreadView({
                     </dl>
                     {thread.connectionId && (
                       <ConnectionAccount
+                        thread={thread}
                         agentId={thread.agentId}
                         cwd={thread.cwd}
                         connectionId={thread.connectionId}

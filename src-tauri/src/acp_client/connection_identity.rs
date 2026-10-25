@@ -109,6 +109,7 @@ pub(crate) struct ManagedConnection {
     pub(crate) account: Arc<Mutex<Option<crate::acp_client::account_status::AccountIdentity>>>,
     pub(crate) account_query: Option<crate::acp_client::account_query::AccountQuery>,
     pub(crate) workspace_access: Arc<super::super::workspace_access::Availability>,
+    pub(crate) identity_read: Arc<super::super::identity_read::Availability>,
     pub(crate) command_tx: mpsc::UnboundedSender<crate::acp_client::operations::QueuedCommand>,
     pub(crate) state: Arc<AtomicU8>,
     /// Filled once `initialize` succeeds — a CONNECTING entry inserted before

@@ -234,6 +234,7 @@ fn api_connection(
             account: Default::default(),
             account_query: None,
             workspace_access: super::super::workspace_access::Availability::new(None),
+            identity_read: crate::acp_client::identity_read::Availability::new(None),
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(OnceLock::new()),

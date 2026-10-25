@@ -542,7 +542,9 @@ impl AcpManager {
         );
         let account_query = super::account_launch::reviewed(agent);
         let workspace_access = super::workspace_access::Availability::new(account_query);
+        let identity_read = super::identity_read::Availability::new(account_query);
         let receive_workspace_access = workspace_access.clone();
+        let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
             workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
@@ -578,6 +580,7 @@ impl AcpManager {
                     account: account.clone(),
                     account_query,
                     workspace_access,
+                    identity_read,
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),
@@ -631,6 +634,7 @@ impl AcpManager {
                 .on_receive_dispatch(
                     async move |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
                         receive_workspace_access.observe_decision(&dispatch);
+                        receive_identity_read.observe(&dispatch);
                         if receive_observer.observe(&dispatch) {
                             return Ok(Handled::Yes);
                         }

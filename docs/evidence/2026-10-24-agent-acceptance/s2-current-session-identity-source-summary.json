@@ -1,0 +1,101 @@
+{
+  "kind": "S2CurrentConversationIdentitySourceEngineeringSummary",
+  "scope": "Source and controlled engineering proof only; not installed or real identity-read acceptance.",
+  "sourceIncrement": {
+    "identityFeatureFiles": 34,
+    "earlierOfflineReceiptSealUtilityFiles": 2,
+    "boundedIdentitySupplement": "One explicit read on the same existing conversation connection; four nullable display fields remain separate from global authentication and paid-plan claims.",
+    "protection": "The independent worker retains existing shared-account admission to an actual response boundary or original process end. Configuration/owner changes discard late results; configuration confirmation and context-copy preflight cannot bypass pending-read invalidation.",
+    "presentation": "A common capability-driven transient identity display, safe fixed errors, and duplicate email/name removal. Cached reports do not establish current authentication or payment."
+  },
+  "engineering": {
+    "allSevenSucceeded": true,
+    "assembly": "Two already-passed same-input checks reused once; five remaining commands actually ran.",
+    "sourceInputs": 2290,
+    "checksRanBeforeCommit": true,
+    "baseSourceCheckpoint": "3d26d8c3f1c5482964da538f3bd15cacc9f1e59e",
+    "fourFullEndpointMapsEqual": true,
+    "integerZeroExitCodes": 7,
+    "frontend": {
+      "files": 684,
+      "passed": 9096,
+      "failed": 0
+    },
+    "native": {
+      "passed": 2307,
+      "failed": 0,
+      "ignored": 6,
+      "mainTests": 0,
+      "docTests": 0
+    },
+    "frontendCommand": "corepack pnpm exec vitest run --maxWorkers=4",
+    "literalCommandLimit": "The package test script is vitest run; the successful command was the direct invocation with a worker cap, not pnpm test with the rejected option."
+  },
+  "preservedFailuresAndCorrections": [
+    "The first engineering invocation passed format and type checking, then pnpm rejected its unknown maxWorkers option before Vitest started; later stages were not run in that invocation. The original failure remains.",
+    "Original BE compiled-contract RED0/2, FE behavior RED3=2pass/1fail and stale-render RED9=7pass/2fail are separate evidence. Expired-receiver/raw-projection/service-fixture oracle corrections remain in their original records.",
+    "Fork admission had one valid controlled RED and a later15/15 same-oracle run. The ABA consequence was a source-based risk, not a dynamically observed identity leak.",
+    "An intermediate post-guard build stopped at ENOSPC with zero tests. Root resource recovery preceded the actual successful followup; focused and full-suite counts are not added together."
+  ],
+  "resourceRecovery": {
+    "basis": "Root-reported bounded cleanup, not independently performed by this reviewer",
+    "generatedRustObjects": 49,
+    "allocatedApproxGB": 2.764,
+    "observedAvailableApproxGB": {
+      "before": 1.219,
+      "after": 3.984
+    },
+    "limit": "Observed endpoints only; no continuing free-space guarantee or user-data/backup claim."
+  },
+  "nonBlockingOutput": "The build retained its large-chunk advisory. Native stderr retained archive writer cancellation/size-rejection drop messages; the complete native result was2307pass/0fail/6ignored. Individual parallel warning sources were not traced.",
+  "acceptanceLimits": {
+    "installed": false,
+    "realIdentityReadVerified": false,
+    "freshAuthenticationOrPaidPlanVerified": false,
+    "wholeS2Closed": false,
+    "wholeStandardsClosed": 0,
+    "wholeAgentRowsClosed": 0,
+    "historicalFailuresOrUnknownsReclassified": false,
+    "sixAuthenticationWaitsPreserved": true,
+    "affectedNew24PausePreserved": true
+  },
+  "proofLimits": [
+    "The same2290source graph matched four recorded endpoints, with the final34S2 and earlier2utility files matched on disk. This is not continuous no-writer monitoring.",
+    "Dependency-install bytes and environment are not frozen.",
+    "No current official distribution equivalence, cached-identity freshness or zero Agent-owned credential-maintenance guarantee follows from controlled peers."
+  ],
+  "references": {
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering-followup/engineering-summary.json",
+      "sha256": "ada124ed175d01e27803292127023b49bd8a908dbe6083044ee2810f33877637"
+    },
+    "independentEngineering": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering-followup/independent-engineering-review.json",
+      "sha256": "6f04747fa61d09c3a490ae959162220ececc637e42de50ee6e1695a4b0c3f69f"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-source/independent-source-review.json",
+      "sha256": "6c6eb4ed101fbfb0dd13d01a1f0995b5b630472b16b70a0895ff68a4f77ef08d"
+    },
+    "originalFailedInvocation": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering/engineering-summary.json",
+      "sha256": "e0921b1cede36fade79acb317a0cc9677cd730559ab028a69a7aac899b55b738"
+    },
+    "backendCheckpoint": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-source/backend/implementation.json",
+      "sha256": "f9d702a0affb2173ec4c9229392849f305d9973485c742295bb123ef9f1c6cca"
+    },
+    "backendForkCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-source/backend/fork-drain-delta/implementation.json",
+      "sha256": "60a25d451cdcd63bda083705671365a997614485ab4923ae975f0d2682c76e5c"
+    },
+    "frontendImplementation": {
+      "path": "output/2026-10-24-agent-acceptance/s2-session-identity-source/frontend/implementation.json",
+      "sha256": "5dca03447d8f9042fac6820d559c479733f7c61e47cc1f2637db5a211dacd703"
+    },
+    "frontendDisplayCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/s2-session-identity-source/frontend/root-display-dedup.json",
+      "sha256": "03d74d60bbc060d1680c14208f277cb7c4b101b0b0e90d57eb327a933fcb519a"
+    }
+  }
+}

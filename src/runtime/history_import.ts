@@ -15,6 +15,10 @@ import { hasReadableMessages } from "./message_attachments";
 import { HistoryReplayProjection } from "./history_replay_projection";
 import { historyReads } from "./session_history_admission";
 import { openingInquiries } from "./opening_inquiries";
+import {
+  forgetSessionIdentity,
+  identityReadSupport,
+} from "./session_identity_types";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -203,6 +207,7 @@ export async function previewHistory(
     };
     previewToken = result.previewToken;
     try {
+      forgetSessionIdentity(state);
       state.cwd = result.cwd;
       state.connectionId = result.connectionId;
       state.nativeSessionId = result.nativeSessionId;
@@ -210,6 +215,7 @@ export async function previewHistory(
       state.identity = "established";
       state.service = result.service ?? undefined;
       state.serviceContext = result.serviceContext ?? undefined;
+      state.identityRead = identityReadSupport(result.identityRead);
       const baseline = normalizeConfigOptions(result.configOptions);
       if (!configOptionsSeen) state.configOptions = baseline;
       state.permissionConfigId = result.permissionConfigId;

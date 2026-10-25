@@ -3,6 +3,10 @@ import { replacePermissionEffect } from "./permission_effect";
 import { pauseQueue } from "./queue";
 import { sessionOperations } from "./session_fork_types";
 import { workspaceAccessCapability } from "./workspace_access_types";
+import {
+  forgetSessionIdentity,
+  identityReadSupport,
+} from "./session_identity_types";
 import type { OpenInput } from "./session_open_input";
 import { draftGroup } from "./session_open_input";
 import type { OpenResult } from "./session_open_types";
@@ -63,6 +67,7 @@ export function applyOpeningResult(
   savedTitle: string | null | undefined,
   previousTitle?: string | null,
 ): void {
+  forgetSessionIdentity(state);
   state.key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
   state.agentId = input.agentId;
   state.cwd = result.cwd;
@@ -72,6 +77,7 @@ export function applyOpeningResult(
   state.connectionId = result.connectionId;
   state.sessionOperations = sessionOperations(result.sessionOperations);
   state.workspaceAccess = workspaceAccessCapability(result.workspaceAccess);
+  state.identityRead = identityReadSupport(result.identityRead);
   state.draftGroup = draftGroup(input);
   state.resumed = result.resumed;
   state.identity = result.resumed ? "established" : "draft";

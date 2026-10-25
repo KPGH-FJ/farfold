@@ -17,6 +17,7 @@ fn register(manager: &AcpManager, key: ConnectionKey, state: u8) -> ManagedConne
         account: Default::default(),
         account_query: None,
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
+        identity_read: crate::acp_client::identity_read::Availability::new(None),
         command_tx,
         state: life.state.clone(),
         handshake: Arc::new(OnceLock::new()),

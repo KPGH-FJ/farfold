@@ -22,6 +22,7 @@ import { pauseQueue } from "./queue";
 import { forgetConfigurationPause } from "./configuration_pause";
 import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
+import { forgetSessionIdentity } from "./session_identity_types";
 import { reportedTokens, reportedUsage } from "./session_usage";
 import {
   normalizeMessageAttachment,
@@ -727,6 +728,7 @@ function applyUpdateContent(
       return;
     case "current_mode_update":
       if (!s.modesSeparate) return;
+      forgetSessionIdentity(s);
       s.currentModeId = String(u?.currentModeId ?? "");
       for (const option of s.configOptions) {
         if (option.category === "mode") option.currentValue = s.currentModeId;
@@ -756,6 +758,7 @@ export function replaceConfigOptions(
   options: ConfigOptionView[],
   modern = true,
 ) {
+  forgetSessionIdentity(s);
   const separateMode =
     s.modesSeparate && !modern
       ? s.configOptions.find((option) => option.id === "mode")
@@ -831,6 +834,7 @@ export function applyTurnEnd(
 
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
+  forgetSessionIdentity(s);
   loseCompactionObservation(s.items);
   forgetConfigurationPause(s);
   s.connectionOutcomeUnknown = Boolean(

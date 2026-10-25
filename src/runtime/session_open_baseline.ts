@@ -18,6 +18,7 @@ import {
 } from "./session_projection";
 import type { ConfigOptionView, ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
+import { forgetSessionIdentity } from "./session_identity_types";
 
 export interface OpeningIdentity {
   cwd: string;
@@ -214,6 +215,7 @@ export class OpeningBaseline {
     if (initialLegacy && this.legacyModeError !== undefined)
       throw this.legacyModeError;
     if (initialLegacy && this.legacyMode !== undefined) {
+      forgetSessionIdentity(state);
       state.currentModeId = this.legacyMode;
       for (const option of state.configOptions)
         if (option.category === "mode") option.currentValue = this.legacyMode;

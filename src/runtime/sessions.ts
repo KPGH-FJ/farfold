@@ -28,6 +28,8 @@ import {
   hasConfigurationRecheckRecovery,
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
+import { readSessionIdentity } from "./session_identity";
+import { forgetSessionIdentity } from "./session_identity_types";
 import type {
   WorkspaceAccessDecision,
   WorkspaceAccessScope,
@@ -1060,6 +1062,25 @@ class ThreadsStore {
     value: unknown,
   ): Promise<void> {
     return this.configurations.set(key, configId, value);
+  }
+
+  readIdentity(
+    key: string,
+    current: () => ThreadState | undefined,
+  ): Promise<boolean> {
+    const owner = this.thread(key);
+    if (!owner) return Promise.resolve(false);
+    return readSessionIdentity(
+      owner,
+      () => (this.thread(key) === owner ? current() : undefined),
+      () => this.emit(key, true),
+    );
+  }
+
+  clearIdentity(key: string, owner: ThreadState): void {
+    if (this.thread(key) !== owner || !owner.sessionIdentityRead) return;
+    forgetSessionIdentity(owner);
+    this.emit(key, true);
   }
 
   decideWorkspaceAccess(

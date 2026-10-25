@@ -555,6 +555,7 @@ async fn session_pump(
     let mut stopping = ops.life.stop_receiver();
     let mut mutation: Option<Mutation> = None;
     let mut workspace_access_read = None;
+    let mut identity_read: Option<super::identity_read::Pending> = None;
     let mut pending_config_store = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<prompt::Outcome>();
     let load_notifications::State {
@@ -680,6 +681,7 @@ async fn session_pump(
             dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
                     load_notifications::observe_failure(&dispatch, &mut failures, prompt_in_flight);
+                    if let Some(read) = &mut identity_read { read.observe(&dispatch); }
                     let options = configuration.observe(&dispatch);
                     if let Some(options) = &options {
                         models.extend(model_ids(options));
@@ -696,6 +698,9 @@ async fn session_pump(
                     if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                 }
                 None => break,
+            },
+            outcome = super::identity_read::next(&mut identity_read) => {
+                if let Some(outcome) = outcome { identity_read.take().expect("identity read exists").complete(outcome); }
             },
             // Publish open completion only after the already received replay
             // prefix has reached the sink. Do not use a timing delay here.
@@ -988,7 +993,7 @@ async fn session_pump(
                         else if mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {Some("browser_shared")}
                         else if !permission_guard.admissible() {Some("permission")}
                         else if !model_guard.admissible() {Some("configuration")}
-                        else if !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) {Some("busy")} else {None};
+                        else if identity_read.is_some() || !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) {Some("busy")} else {None};
                     if let Some(reason)=blocked {
                         let _=result.send(Err(super::session_fork::AdmissionFailure::rejected(reason)));continue;
                     }
@@ -1063,6 +1068,17 @@ async fn session_pump(
                 }
                 SessionControl::StopTask { connection_id, task_id, result, .. } => {
                     events(ctx.async_tasks.start(&cx, &connection_id, &task_id, result, task_tx.clone()));
+                }
+                SessionControl::IdentityRead { request, scope, result, deadline } => {
+                    use super::identity_read::Code;
+                    if !request.matches(&ops.connection_id, &session_id) { let _=result.send(Err(Code::Changed.into()));continue; }
+                    let awaiting=pending.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true)
+                        || ops.elicitations.lock().map(|entries|entries.values().any(|e|e.session_id==session_id)).unwrap_or(true);
+                    if identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
+                        || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy() || awaiting {
+                        let _=result.send(Err(Code::Busy.into()));continue;
+                    }
+                    identity_read=Some(super::identity_read::Pending::start(*request,cx.clone(),result,deadline,scope,ops.life.clone()));
                 }
                 SessionControl::WorkspaceAccessStatus { request, result, deadline } => {
                     if !request.matches(&ops.connection_id, &session_id) {
@@ -1190,6 +1206,7 @@ async fn session_pump(
                         future));
                 }
                 SessionControl::ConfirmConfig { displayed, restore_selection, deadline, result } => {
+                    if identity_read.is_some() { let _=result.send(Err(super::identity_read::ReadError::from(super::identity_read::Code::Busy).message.into()));continue; }
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
                     if let Some(selection) = restore_selection {

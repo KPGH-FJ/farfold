@@ -25,6 +25,7 @@ import type {
 } from "./workspace_access_types";
 import { workspaceAccessCapability } from "./workspace_access_types";
 import { WORKSPACE_ACCESS } from "./workspace_access_strings";
+import { forgetSessionIdentity } from "./session_identity_types";
 
 interface Change {
   thread: ThreadState;
@@ -110,6 +111,7 @@ export class SessionConfiguration {
     const s = this.hooks.thread(key);
     if (!s) throw { code: "changed", effect: "notDispatched" };
     const prepared = prepareWorkspaceDecision(s, decision, expectedScope);
+    forgetSessionIdentity(s);
     s.configuring = true;
     // Do not defer, manufacture or confirm guard events produced by instruction reload.
     this.hooks.emit();
@@ -174,6 +176,7 @@ export class SessionConfiguration {
       interrupted: false,
     };
     this.changes.set(key, change);
+    forgetSessionIdentity(s);
     if (permission) {
       s.permissionState = "changing";
       s.queuePaused = s.uncertainPrompt ? "uncertain" : "stopped";
@@ -194,6 +197,7 @@ export class SessionConfiguration {
             throw new Error(STRINGS.repair.configFailed);
           if (s.connectionLost || s.reconnecting)
             throw new Error(STRINGS.repair.configFailed);
+          forgetSessionIdentity(s);
           s.currentModeId = String(value);
           for (const option of s.configOptions)
             if (option.id === "mode") option.currentValue = s.currentModeId;

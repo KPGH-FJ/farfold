@@ -12,6 +12,7 @@ import { hasOwnUpdate, isHistoryMarkerShape } from "./session_open_replay";
 import { conversationReadState } from "./conversation_read_state";
 import { pauseQueue, removeQueued } from "./queue";
 import { STRINGS } from "./strings";
+import { forgetSessionIdentity } from "./session_identity_types";
 import type { ThreadState } from "./session_types";
 import type { PromptRequestOwner } from "./prompt_admission";
 import {
@@ -81,6 +82,8 @@ export function applySessionEvent(
         e.modern !== false,
       );
   } else if (kind === "configCheck") {
+    if ((e.check as ConfigCheck | undefined)?.status !== "ready")
+      forgetSessionIdentity(s);
     if (!effects?.receiveConfigCheck(e.check as ConfigCheck))
       applyConfigCheck(s, e.check as ConfigCheck);
   } else if (kind === "asyncTasks") {
@@ -169,6 +172,7 @@ export function applySessionEvent(
     effects?.refresh();
     return;
   } else if (kind === "serviceUnavailable" || kind === "deliveryUnavailable") {
+    forgetSessionIdentity(s);
     s.sourceError = true;
     s.openError =
       typeof e.message === "string"
