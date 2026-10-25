@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "kind": "GooseInstalledOfficialHistoryAndScopedS3Summary",
+  "agentId": "goose",
+  "requirementIds": ["ARCH-31", "P33"],
+  "standardIds": [],
+  "application": {
+    "productCommit": "625158abf72b89bfdc0e0704d000003022931f19",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "242b28f59692e59eb6458b5138dfd17c05296b3685afa3d092e4721476bf833c"
+  },
+  "currentAgentVersion": "unreported; historical labels are not current or pinned",
+  "actualInstalledCase": {
+    "officialFind": 1,
+    "returnedRows": 1,
+    "originalAlreadyAddedRowSelection": 1,
+    "openExisting": 1,
+    "promptSendPreviewImportNewChoiceLoginRetryStopDraftChange": 0,
+    "elapsedObservationSeconds": 22.9,
+    "metadataPresentation": "Returned primary title and location remain separate from explicitly labelled original saved-list title/location. The unique exact saved association and Agent ownership identify the original object.",
+    "body": "Full AX retains the original user, later successful free ACK, old file task and historical context question/reply. Directly viewed body screenshots mainly show the later history segment; they are not claimed to display every earlier message.",
+    "currentUi": "Empty composer, disabled Send, header not running, free-model footer and off thinking label. No fresh complete source/provider/mode panel or version readback.",
+    "independentActualScreenshotsViewed": 5
+  },
+  "mechanical": {
+    "sealCLIInvocations": 1,
+    "extraValidateCLIInvocations": 0,
+    "naturalExitCode": 0,
+    "mechanicallyValid": true,
+    "complete": true,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "observations": 8,
+    "stableInputs": 7,
+    "privateEvidenceFiles": 10,
+    "acceptanceVerified": false
+  },
+  "semanticReview": {
+    "blockingFindings": 0,
+    "installedNarrowPositive": true,
+    "reviewerDidNotRepeatProductOrValidator": true
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "status": "met-in-stated-scope",
+    "scope": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers.",
+    "components": [
+      {
+        "component": "official finding and correct original existing-open",
+        "productSource": "625158ab",
+        "evidence": "This installed case: one official result, unique original saved title/location association, one row/Open and matching original body."
+      },
+      {
+        "component": "real original body and context restoration",
+        "productSource": "c876 plus625158ab",
+        "evidence": "Actual pre-input original-body observations before the prior question; current normal open and official existing-open AX retain the original requests/free ACK/task and later context pair."
+      },
+      {
+        "component": "actual context-dependent continuation",
+        "productSource": "c876",
+        "evidence": "One221-byte question omits the old answer/task text, recalls the prior requested-byte-count fact, and receives the expected reply with recognized completion/current own idle and0 new visible tools.97.140 seconds is the separate observation upper bound."
+      }
+    ],
+    "independentCompositionSeparateFromCanonicalStdEmpty": true,
+    "priorScopedAgentsPreserved": [
+      "Mistral",
+      "OpenCode",
+      "Poolside",
+      "Copilot",
+      "Kilo"
+    ],
+    "newlySupportedAgentInScope": "goose",
+    "scopedS3AgentCount": 6
+  },
+  "limits": [
+    "This625 case sends no new prompt and does not revalidate continuation or effective configuration after the update. The prior full Existing/provider/model/mode observations retain their c876 scope; current version/full configuration were not newly read.",
+    "Current full AX and visible screenshot viewport are distinct evidence. No raw native ID, same live connection, forced new cold load, historical byte equality, exhaustive histories/pagination/directory filtering, new preview or import is claimed.",
+    "The context reply recalls the user-requested25-byte count; it is not actual file bytes or a successful file retest. The original Sonnet ACK failure, expected25B/actual24B missing-final-LF failure and old TR timeout remain unchanged.",
+    "The22.900 seconds and old97.140 seconds are separate operator observation windows, not exact backend latency. Zero prompt is not zero list/open/load RPCs; billing/authentication/backend/thinking effects are not established.",
+    "Canonical standardIds and old public evidence remain unchanged. Full ARCH-29/ARCH-31/P33, stopping, other settings/platforms and whole-Agent/29-by8 completion remain open; six WAIT, affected NEW-24 pause, Cline and unrelated unknowns/failures are protected."
+  ],
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/case-plan.json",
+      "sha256": "bbcba8dcb834f9babb836ec59109c684b79aaa68cab48d723511b30285b55301"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/manifest.json",
+      "sha256": "790db77ba2b2e5615852fd81b5b9607970ad9d1106a13acab619a8380ae4a70c"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/actuals.json",
+      "sha256": "7058821f47e7e56d47f35f59e6e6e3de37696d809ebdded86a51acb460b253e3"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/receipt.json",
+      "sha256": "0ea43d458fe323b2d92b9fc327190e52f8ac26e8c5ef00d1f1311a0baebbf56f"
+    },
+    "sealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/seal-cli-execution.json",
+      "sha256": "785399f0263a4f5d88eb5ef93881970a567842b59b4c1cc59004c6e46bc705b0"
+    },
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/independent-semantic-review.json",
+      "sha256": "36084cd929f0ba3eb3f0e9f5bc69b70d00369caf1250d20ef577d8c1bf41dad4"
+    },
+    "currentNormalBody": {
+      "path": "output/2026-10-24-agent-acceptance/goose-history-readiness-formal-625158ab/original-open-ui-private.json",
+      "sha256": "5ffd667aa3d0f6af6a52db40188f5e8682926d1f5be6e106c78879c89cc2db26"
+    },
+    "actualLookupUi": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/lookup-result-ui-private.json",
+      "sha256": "bd3a3737d0010c502eabe3aee9d75ccfcd67b127fb250bd2d584afcc94a4be7b"
+    },
+    "actualOpenedUi": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/opened-original-ui-private.json",
+      "sha256": "0c8b87e65dfada4046975f8f9479c914b31d65e45e2369d0ed5afb9946360da4"
+    },
+    "operatorActions": {
+      "path": "output/2026-10-24-agent-acceptance/goose-official-history-formal-625158ab-preparation/operator-action-record-private.json",
+      "sha256": "27629f356d694e1b154d70cae2cbe7a6590cf0680d9848d6e249535c6902a35e"
+    },
+    "priorBodyBeforeInput": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/owner-before-input-observation.json",
+      "sha256": "1aa1509c4c9be1d0659f96a1309c797fe9da947ec8e62a0f3c0abd215bcad009"
+    },
+    "priorExactInput": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/unique-input-observation.json",
+      "sha256": "1e080bcbd9549e6a29ddf06eb70cc9829da885adb638bb034bd6316226cf4932"
+    },
+    "priorActualResult": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/actual-ui-observation.json",
+      "sha256": "64f0ad050fdd1f4b155583cdb78ec9fabc7bea466b80af1f7e4d17f6df45c299"
+    },
+    "priorActualReceipt": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/actual-receipt.json",
+      "sha256": "95686b8966a9b0ed1f34929ed7aeef7861c0f97dc06bb58919e41b97069f5c07"
+    },
+    "priorIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/goose-s3-owned-context-formal-c876/independent-semantic-review.json",
+      "sha256": "4c59c4d13a14005013871fd1fe4ebfb5895780c26a1a6761032dc9caf9602a15"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-625158ab-installation.json",
+      "sha256": "c4fc20b13801f2ba49283653d4c34f21f7258c4c914b3a2e6803d0ded057997f"
+    }
+  }
+}
