@@ -1,6 +1,14 @@
 use super::{input, types::*};
 use serde_json::json;
 
+fn synthetic(path: &str) -> String {
+    #[cfg(windows)]
+    let root = std::path::Path::new(r"C:\synthetic");
+    #[cfg(not(windows))]
+    let root = std::path::Path::new("/synthetic");
+    root.join(path).to_str().unwrap().into()
+}
+
 pub(crate) fn id(n: u64) -> String {
     format!("00000000-0000-4000-8000-{n:012x}")
 }
@@ -46,7 +54,7 @@ pub(crate) fn resign(p: &mut Prepare) {
 }
 #[test]
 fn canonical_serialization_actual_wire() {
-    let first = sample("/synthetic/未创建 archive.zip".into());
+    let first = sample(synthetic("未创建 archive.zip"));
     let mut empty = first.clone();
     empty.operation_id = id(5);
     empty.selected.clear();
@@ -68,9 +76,9 @@ fn canonical_serialization_actual_wire() {
     local.candidates[0].representation = Representation::LocalCurrentFile;
     local.selected[0].source = Source::Local {
         file: LocalFile {
-            root: "/synthetic".into(),
-            path: "/synthetic/source".into(),
-            resolved_path: "/synthetic/source".into(),
+            root: synthetic(""),
+            path: synthetic("source"),
+            resolved_path: synthetic("source"),
             name: "source".into(),
             size: 0,
             sha256: "0".repeat(64),
@@ -92,7 +100,7 @@ fn canonical_serialization_actual_wire() {
 }
 #[test]
 fn strict_input_rejects_unknown_missing_null_negative_and_surrogate_fields() {
-    let value = serde_json::to_value(sample("/synthetic/archive.zip".into())).unwrap();
+    let value = serde_json::to_value(sample(synthetic("archive.zip"))).unwrap();
     let mut missing = value.clone();
     missing["candidates"][0]["origin"]
         .as_object_mut()
@@ -119,7 +127,7 @@ fn strict_input_rejects_unknown_missing_null_negative_and_surrogate_fields() {
 }
 #[test]
 fn validation_recomputes_bytes_hash_and_complete_selection_without_opening_files() {
-    let p = sample("/synthetic/no-such-parent/archive.zip".into());
+    let p = sample(synthetic("no-such-parent/archive.zip"));
     input::validate(&p).unwrap();
     let mut bad = p.clone();
     bad.markdown.push('x');
@@ -146,7 +154,7 @@ fn validation_recomputes_bytes_hash_and_complete_selection_without_opening_files
 }
 #[test]
 fn canonical_safe_integer_empty_text_and_array_order_actual_wire() {
-    let mut p = sample("/synthetic/boundary.zip".into());
+    let mut p = sample(synthetic("boundary.zip"));
     p.candidates[0].origin.item_ordinal = 9_007_199_254_740_991;
     p.selected[0].source = Source::InlineText {
         text: String::new(),
@@ -184,7 +192,7 @@ fn ordinary_extension_hints_are_usable_without_reusing_untrusted_basenames() {
     ))
     .unwrap();
     for c in cases {
-        let mut p = sample("/synthetic/archive.zip".into());
+        let mut p = sample(synthetic("archive.zip"));
         p.candidates[0].display_name = c["displayName"].as_str().unwrap().into();
         if c["inlineText"] == false {
             p.candidates[0].representation = Representation::ReceivedBytes;

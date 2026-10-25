@@ -715,7 +715,17 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let mut agent = row("registry:amp-acp");
         agent.source = "registry".into();
-        agent.command = "/managed/amp-acp".into();
+        agent.command = root
+            .path()
+            .join("managed")
+            .join(if cfg!(windows) {
+                "amp-acp.exe"
+            } else {
+                "amp-acp"
+            })
+            .to_str()
+            .unwrap()
+            .into();
         agent.env.push((
             "AMP_CLI_PATH".into(),
             root.path().join("missing-selected").display().to_string(),

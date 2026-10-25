@@ -127,7 +127,7 @@ mod tests {
         json!({"version":1,"items":[{"id":"a","label":"模板","text":text}]})
     }
     fn store() -> MetaStore {
-        MetaStore::open(Path::new(":memory:")).unwrap()
+        MetaStore::test_memory()
     }
 
     #[test]

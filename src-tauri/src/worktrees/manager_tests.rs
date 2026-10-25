@@ -83,9 +83,10 @@ fn cold_unknown_can_be_reviewed_without_claiming_outcome_and_keeps_material_afte
     let acknowledged = op(cold.acknowledge(&s, OP).unwrap());
     assert_eq!(acknowledged.state, "unknown");
     assert!(acknowledged.reviewed);
+    let expected_target = std::path::Path::new(&args.parent_path).join(&args.directory_name);
     assert_eq!(
         acknowledged.target_path.as_deref(),
-        Some(format!("{}/{}", args.parent_path, args.directory_name).as_str())
+        expected_target.to_str()
     );
     assert!(acknowledged.location.is_none());
     let next = input(

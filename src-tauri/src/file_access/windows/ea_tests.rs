@@ -60,7 +60,7 @@ fn set_owned_ea(path: &Path, value: &[u8]) {
 }
 #[test]
 fn real_owned_ntfs_ea_is_read_on_the_same_handle_and_changes_with_opaque_value() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let path = temp.path().join("owned.txt");
     std::fs::write(&path, b"same-default-data").unwrap();
     set_owned_ea(&path, b"first\0\xff");
@@ -83,7 +83,7 @@ fn real_owned_ntfs_ea_is_read_on_the_same_handle_and_changes_with_opaque_value()
 }
 #[test]
 fn same_owner_busy_cancel_and_poison_are_failures_not_empty_records() {
-    let temp = tempfile::tempdir().unwrap();
+    let temp = crate::test_support::tempdir().unwrap();
     let pin = PinnedPath::directory(temp.path()).unwrap();
     require_ntfs(&pin);
     let cancel = AtomicBool::new(false);

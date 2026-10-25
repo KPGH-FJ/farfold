@@ -126,6 +126,14 @@ pub(crate) fn installation_parameter_declaration(
     })
 }
 
+fn installation_parameter_program_matches(name: &str, package: &str, windows: bool) -> bool {
+    if windows {
+        name.eq_ignore_ascii_case(package) || name.eq_ignore_ascii_case(&format!("{package}.exe"))
+    } else {
+        name == package
+    }
+}
+
 pub(crate) fn previous_installation_parameter_declaration(
     row: &AgentRow,
 ) -> Option<&'static InstallationParameterDeclaration> {
@@ -137,7 +145,9 @@ pub(crate) fn previous_installation_parameter_declaration(
             && Path::new(&row.command)
                 .file_name()
                 .and_then(|value| value.to_str())
-                == Some(declaration.package)
+                .is_some_and(|name| {
+                    installation_parameter_program_matches(name, declaration.package, cfg!(windows))
+                })
     })
 }
 
@@ -511,6 +521,61 @@ mod companion_recipe_tests;
 #[cfg(test)]
 pub(crate) mod tests {
     use super::*;
+
+    #[test]
+    fn installation_parameter_program_accepts_windows_console_exe() {
+        assert!(installation_parameter_program_matches(
+            "fast-agent-acp.exe",
+            "fast-agent-acp",
+            true,
+        ));
+    }
+
+    #[test]
+    fn installation_parameter_program_accepts_windows_name_case() {
+        for name in ["FAST-AGENT-ACP", "Fast-Agent-Acp.EXE"] {
+            assert!(installation_parameter_program_matches(
+                name,
+                "fast-agent-acp",
+                true,
+            ));
+        }
+    }
+
+    #[test]
+    fn installation_parameter_program_rejects_unreviewed_suffixes_and_names() {
+        for name in [
+            "fast-agent-acp.cmd",
+            "fast-agent-acp.bat",
+            "fast-agent-acp.com",
+            "fast-agent-acp.exe.exe",
+            "other-fast-agent-acp.exe",
+            "fast-agent-acp-other.exe",
+            "fast-agent-acp.exe ",
+        ] {
+            assert!(!installation_parameter_program_matches(
+                name,
+                "fast-agent-acp",
+                true,
+            ));
+        }
+    }
+
+    #[test]
+    fn installation_parameter_program_keeps_unix_exact_name() {
+        assert!(installation_parameter_program_matches(
+            "fast-agent-acp",
+            "fast-agent-acp",
+            false,
+        ));
+        for name in ["FAST-AGENT-ACP", "fast-agent-acp.exe"] {
+            assert!(!installation_parameter_program_matches(
+                name,
+                "fast-agent-acp",
+                false,
+            ));
+        }
+    }
 
     pub(crate) fn official_row(root: &Path, id: &str, package: &str, version: &str) -> AgentRow {
         let directory = root.join("node_modules").join(package);

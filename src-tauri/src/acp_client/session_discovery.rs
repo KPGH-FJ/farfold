@@ -428,13 +428,22 @@ mod tests {
 
     #[test]
     fn discovery_keeps_missing_locations_and_original_identity() {
-        let page = decode_page(json!({"sessions":[
-            {"sessionId":"one","cwd":"/missing/location","title":"Original","updatedAt":"2026-09-24T12:00:00Z"},
-            {"sessionId":"one","cwd":"/another/location","title":"Duplicate"}
-        ],"nextCursor":"opaque-next"}), true, None).unwrap();
+        let root = tempfile::tempdir().unwrap();
+        let missing = root.path().join("missing-location");
+        let another = root.path().join("another-location");
+        assert!(!missing.exists() && !another.exists());
+        let page = decode_page(
+            json!({"sessions":[
+            {"sessionId":"one","cwd":missing,"title":"Original","updatedAt":"2026-09-24T12:00:00Z"},
+            {"sessionId":"one","cwd":another,"title":"Duplicate"}
+        ],"nextCursor":"opaque-next"}),
+            true,
+            None,
+        )
+        .unwrap();
         assert_eq!(page.status, "supported");
         assert_eq!(page.sessions.len(), 1);
-        assert_eq!(page.sessions[0].cwd, "/missing/location");
+        assert_eq!(page.sessions[0].cwd, missing.to_str().unwrap());
         assert_eq!(page.sessions[0].title.as_deref(), Some("Original"));
         assert!(!page.sessions[0].location_available);
         assert_eq!(page.next_cursor.as_deref(), Some("opaque-next"));

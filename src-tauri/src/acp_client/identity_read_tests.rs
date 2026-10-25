@@ -551,7 +551,11 @@ async fn identity_read_unwitnessed_transport_error_survives_actor_end_until_actu
     let (f, c) = Fixture::open().await;
     std::fs::write(f.cwd.join("transport-error"), "").unwrap();
     let error = f.read(&c).await.unwrap_err();
-    assert!(matches!(error.code, Code::QueryFailed | Code::Changed));
+    assert!(
+        matches!(error.code, Code::QueryFailed | Code::Changed),
+        "unwitnessed transport error code={:?}",
+        error.code
+    );
     assert!(!c.life.finished());
     assert!(f.manager.reserve_account_change(&f.row.id).is_err());
     c.life.close(true, None).unwrap();

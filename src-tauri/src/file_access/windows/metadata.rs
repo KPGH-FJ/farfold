@@ -279,7 +279,7 @@ mod tests {
 
     #[test]
     fn metadata_handle_cannot_read_body_and_observation_retains_full_identity() {
-        let root = tempfile::tempdir().unwrap();
+        let root = crate::test_support::tempdir().unwrap();
         let path = root.path().join("package.json");
         std::fs::write(&path, "PRIVATE_CONTROLLED_CONTENT").unwrap();
         let parent = PinnedPath::directory(root.path()).unwrap();
@@ -307,7 +307,7 @@ mod tests {
 
     #[test]
     fn only_a_proven_missing_child_is_none_and_non_leaf_names_are_errors() {
-        let root = tempfile::tempdir().unwrap();
+        let root = crate::test_support::tempdir().unwrap();
         let parent = PinnedPath::directory(root.path()).unwrap();
         assert!(
             metadata_child(parent.file(), OsStr::new("package.json"))

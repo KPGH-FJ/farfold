@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsRustPortabilityAndExactFailureObservationSourceCheckpoint",
+  "sourceBaseHead": "48e5692dc33a37a3cb9c1a17171b73f89c747bf1",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/history_search/admission_tests.rs",
+      "beforeSha256": "689d03d7d0899aa2547834d7d7a4cdd3486e0c1d89a5f7e0ea15681b88e56f02",
+      "afterSha256": "76607801e3fd3771b600806d646cc49d48a53a636d5794ddc1901fc6c4561f1f",
+      "lines": 187
+    },
+    {
+      "path": "src-tauri/src/acp_client/identity_read_tests.rs",
+      "beforeSha256": "58c20976206a0d297aedc7a6723ce385254cb6ab0e3028902c41383516d43a77",
+      "afterSha256": "dafae7793b4ad3028b1439d023626cc9ed99ffc6209a5ac52a68b269423ae871",
+      "lines": 575
+    },
+    {
+      "path": "src-tauri/src/acp_client/installation_parameters/tests.rs",
+      "beforeSha256": "d2cc4ad3051bd38895a5b8c4ac2ba169fc3ee07ae15a0ce397a3cf0f0eb2fb78",
+      "afterSha256": "2b72c885270452d5df533c3cf10d28c0fe739453e037dac3f4a084108fdba8ef",
+      "lines": 436
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation.rs",
+      "beforeSha256": "5d540cda3f3b80f182a2cc97533d8cb9a451a55918ec4f68204c200700e9d3b8",
+      "afterSha256": "de6fd5b0724cd5c4060c78457bf8bbc6397889259128a18b3910761e3b35877a",
+      "lines": 976
+    },
+    {
+      "path": "src-tauri/src/acp_client/recipes.rs",
+      "beforeSha256": "903fe0959d1b4a314c712008e1d6b5b41b62d23810916605336a2eac19d37c1b",
+      "afterSha256": "15824aab3832d9d3aea69486a39c187295f9228f22d1d69ebfbb30d268c49078",
+      "lines": 650
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "beforeSha256": "eb72aa9b969e93eab189736dd6f3028ffa8918550713e196be82de1fe6c40122",
+      "afterSha256": "3ec84fcbf080dbe6137c5b02831ab2fdc8ba2e4d810b788d99f24e02b8d3938f",
+      "lines": 467
+    },
+    {
+      "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+      "beforeSha256": "59ba104a643d1c51a8426d198a7f48f179560bb4a8640870bf6309703afb869f",
+      "afterSha256": "b48bfcd321516f1d08ef6a456c60ab612e9c3a3eda1e52518850e706e5db8bce",
+      "lines": 776
+    },
+    {
+      "path": "src-tauri/src/agent_catalog.rs",
+      "beforeSha256": "64c333c0f8d4d3c3cfa8101051a7a7c998879d2651bd077b30404d4a46ed5759",
+      "afterSha256": "eae4533f7eec1a3514f668c2a7421a6f025cbc50088b9d7bc508adcc11ad25ec",
+      "lines": 1251
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "beforeSha256": "caa267f0a142e1825c1cf8d35a03c93213adfed36becbbcc682ba5566eb32ee3",
+      "afterSha256": "f2539c5470f2d200d82c4cc141817111d90d7836efaafdaa8d1edeadd4b49684",
+      "lines": 938
+    },
+    {
+      "path": "src-tauri/src/dependency_install.rs",
+      "beforeSha256": "8a150fb8132f518201cdef86b0c49a595801f848ba4832f01e5f1389f74acf15",
+      "afterSha256": "e7b90556d14e17887c66950c94c9b7fef1385381cde27e0d3ebdde477cfbf57e",
+      "lines": 650
+    },
+    {
+      "path": "src-tauri/src/file_access/windows.rs",
+      "beforeSha256": "812cd6cb040132ec44d5d862d6c1c6671aa40263cfea009ad6dff1a06c35af4c",
+      "afterSha256": "74260a2353435dae0b2e4cadd017442ea5b9a0a2a93d276cc079f5bfafb9e22b",
+      "lines": 692
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/directory.rs",
+      "beforeSha256": "1f862b7b74e0f04f364f7204df283ac0c7ad78967760c81deb03a9cfa67a0676",
+      "afterSha256": "7bd4e82ac05ce34ac4443f3e44b41b28d8458b997f9e29ead8dcd5376c8697b0",
+      "lines": 333
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/ea_tests.rs",
+      "beforeSha256": "e30e8acb99d9c025362702ca02550d776ea3f63269701c824d8010921de4b095",
+      "afterSha256": "22a270d3f2022cdc60cdaa0c6964453445b1f986fd6af26241c409524e646ec5",
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/metadata.rs",
+      "beforeSha256": "5882ecb9af12ec4ae51dcbc3cc3ff13c018617c0589a3c62c1aa50dff5b4ffe4",
+      "afterSha256": "43ed3845fe619125d6f8d08250de928585239b1cb43f93956d945450486a6946",
+      "lines": 338
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/pinned_tests.rs",
+      "beforeSha256": "8c5fd30232077bbfd59d4a1a7449e64abac43091e534b3354959d06134a960d0",
+      "afterSha256": "915d47dd35d80f02cbe35bdc2bff72d86e2e834ba921b8667c88e1662322c92a",
+      "lines": 33
+    },
+    {
+      "path": "src-tauri/src/file_archive/tests.rs",
+      "beforeSha256": "bb3794616a6c380e6f28f632d5f21cccb005642847511e688d663be6f24cad8f",
+      "afterSha256": "295c6964e763f52cc373fce96bff8255431c04fb345d3415e8078138c0eee2a6",
+      "lines": 219
+    },
+    {
+      "path": "src-tauri/src/file_archive/writer_tests.rs",
+      "beforeSha256": "d5844e64b4b815735a2dffadf90613669cd79cb24f71da7e1b76e69d1925fea6",
+      "afterSha256": "f2d145d0171827e97170b2a166493c5c550b669f1c037764430c7a04168908ee",
+      "lines": 292
+    },
+    {
+      "path": "src-tauri/src/meta_store/prompt_templates.rs",
+      "beforeSha256": "a89d0766252575e7cda23a84e0fa21fb063126fd1c0c0d07233ed49e7b2dd266",
+      "afterSha256": "90d86f9a41e5233c65b64886aa5145e456a9f52a38bec8f1c27a39158d882dd5",
+      "lines": 313
+    },
+    {
+      "path": "src-tauri/src/meta_store/remembered_pages_tests.rs",
+      "beforeSha256": "f3426a4d1bd70712af7e62304064889901fdbe2aad905eadae085191c5bd712f",
+      "afterSha256": "48ab140b27a282f3b859e8ff04e243bfbe62b746a3bacbbd38d248ac48390859",
+      "lines": 319
+    },
+    {
+      "path": "src-tauri/src/platform_tests/windows_conpty.rs",
+      "beforeSha256": "ae2dddc1a2a0121ec9cb7acdcd316ff76f775851135e29b516ee7d6974aabb64",
+      "afterSha256": "38ce1205d31acbb7290bf275287c0cdeeaae5ffafd0c3d70ea474a570d6321ab",
+      "lines": 784
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout_boundary_tests.rs",
+      "beforeSha256": "9ae3c16e2ee2bd1c1edaf0f6bf858fb23063d28999e57c7bd192abd54bf41b6b",
+      "afterSha256": "c56cc7f1bb93517029a05ee584ac94896063c3de2c254da26b5e2e143121b0fd",
+      "lines": 318
+    },
+    {
+      "path": "src-tauri/src/worktrees/create_observation_tests.rs",
+      "beforeSha256": "ebb5fa8f86c8b19074374ff0f37ab4b321dab76d9b570aa81eef8a3e1f74356a",
+      "afterSha256": "a23df2fe5a9353f360b99ed55a8232bd9dbf298c330c9eb494a97ef48a8f1da0",
+      "lines": 45
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_selected_checkout_windows.rs",
+      "beforeSha256": "f38a02275ba9c6bc3b9776e014c5aac779bfab683459c2ea93804aaa70b06652",
+      "afterSha256": "32593ec90b38a16bd2c29445b6f38c5c164d9e4fa1d8ab11810efe1f247fc440",
+      "lines": 286
+    },
+    {
+      "path": "src-tauri/src/worktrees/git_source_checkout_windows.rs",
+      "beforeSha256": "ea3d68cae7801d205924482bd11cee819951891c36f2ca8486a4b12f973a92ad",
+      "afterSha256": "d8aedc0a221691147fe06a0670b83c542ad4bbfba5e97cb680edfa4467da5ace",
+      "lines": 181
+    },
+    {
+      "path": "src-tauri/src/worktrees/identity_tests.rs",
+      "beforeSha256": "e7d6c1a481d19c22541b2b314ca82e3724e4f579ffab8f6d22021428ed8d5619",
+      "afterSha256": "b6c2b2d80a36bc633fcbea0665ec243e8310678d6aef20f00292277119d5309a",
+      "lines": 49
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager_tests.rs",
+      "beforeSha256": "1566c5bb239ff3af4cf486e86f4c203a7c95b24137bb3126bad76462b23d297b",
+      "afterSha256": "293583e84b9c9074ec01627653fba4ef2c052ddc2bc6608059f27677781556fb",
+      "lines": 352
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_windows.rs",
+      "beforeSha256": "18c5f83fcf5a9daf6b261335d4c2c8ab78ca0f9ecfb6f2ef11f1555c7822008d",
+      "afterSha256": "0d3da33ce84fbf9310675c075389b74eded29fcfe99e60a26fd34b3d5e97a6d7",
+      "lines": 358
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_windows_tests.rs",
+      "beforeSha256": "760db64a81f1fc87dc1e3bbb829a6cc5f152d7841f181d91ddd0cc779aa26f2f",
+      "afterSha256": "4dd8aa06b7cb87f833e9b3179f9a35593ab9ccf43b96dbc4d9d641a20afe3e29",
+      "lines": 333
+    },
+    {
+      "path": "src-tauri/src/worktrees/recovery_public_windows_tests.rs",
+      "beforeSha256": "58ba414ddfbec102df4c0d9039cd739cd479997611b6db74dcff04518ad93971",
+      "afterSha256": "6147558ebabb020a231cea4a57c8e47e76da091f5953fdaca41a5bdf408f7cd0",
+      "lines": 389
+    }
+  ],
+  "originalWindowsRun": {
+    "runId": 40230600747,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/40230600747",
+    "headSha": "f3b68e2a7484ce6d7fb9f705f10ae29574d408da",
+    "attempt": 1,
+    "conclusion": "failure",
+    "watchNaturalExitCode": 1,
+    "checkout": "frontend and Rust actually passed",
+    "frontend": {
+      "typecheckPassedByGuardFollowThrough": true,
+      "filesPassed": 683,
+      "filesFailed": 3,
+      "suiteLoadAbortsIncluded": 1,
+      "testsPassed": 9106,
+      "testsFailed": 2,
+      "buildExecuted": false
+    },
+    "rust": {
+      "fmtClippyAndProcessFixtureBuildSucceededByGuardFollowThrough": true,
+      "standaloneNumericExitReceiptsAvailableForThoseThree": false,
+      "libraryPassed": 2223,
+      "libraryFailed": 120,
+      "libraryIgnored": 66,
+      "mainOrDocStartObserved": false
+    },
+    "installerStarted": false,
+    "oldRunRetries": 0
+  },
+  "triage": {
+    "finalFailureFqnsExactlyOnce": 120,
+    "groups": [39, 79, 2],
+    "immutableRunInputUniqueSourcePaths": 88,
+    "reportSourcePinsMatchedToRunInput": 91,
+    "sourceReadbackBasis": "ImmutableGitblob content atCIhead, not a physicalWindows checkout-byte digest.",
+    "allReportPinsMatch": true,
+    "sharedCreatePrerequisiteUnsettledFailures": 45,
+    "classificationBoundary": "Fixture platform assumptions, actual capability gaps, source-supported product candidates and unresolved causes remain distinct.45 unmet create prerequisites do not prove45 downstream recovery/remove failures."
+  },
+  "sourceCorrection": {
+    "production": "Only reviewed previous installation program-name recognition: onWindows exactpackage orpackage.exe withASCII case-insensitive spelling; onUnix original exactname. Existingid/source/version/absolute/baseargs/model and refusal-to-drop-saved-overrides unchanged.",
+    "fixtures": [
+      "Use existing long-name/same-object ownedTEMP and in-memory schema test helpers.",
+      "Native absolute synthetic paths, native pathjoin, foreign/current platform registry controls, existing test executable and platform-specific officialURL expectations.",
+      "KeepUnix literal-star and late-config mutation controls; Windows legal bracket-name counterexample and exactheld-config mutation-denied/source-unchanged control.",
+      "MalformedCodex-package-as-Claude negative now asserts actualEntryUnverified rather than obsolete platformUnsupported."
+    ],
+    "diagnostics": [
+      "Test-only existing failureCode/ArchiveOutcome and archive-preparation code observations.",
+      "Windows test-only create/profile/materialization stages with elapsed/process-local correlation; no productledger.",
+      "ExistingConPTY READY observations and distinctprobe owner schema; no newcursor response, budget, terminationpredicate orcleanup relaxation."
+    ],
+    "notRepaired": [
+      "stdiohelper retained-writer candidate, MCPWindowsTERM fixture semantics and missingprogram asynchronous startup controls.",
+      "45 create prerequisites, actual Windows content-scan gap, otherunresolved transport/path/namespace/cleanup cases."
+    ],
+    "noUpstreamAgentOrConfigChanges": true
+  },
+  "actualMacValidation": {
+    "red": {
+      "tests": 4,
+      "passed": 2,
+      "failed": 2,
+      "exitCode": 101,
+      "sourceInputCount": 2296,
+      "sourceUnchanged": true,
+      "contemporaneousSourcePreserved": true
+    },
+    "green": {
+      "commands": 2,
+      "passed": [4, 18],
+      "exitCodes": [0, 0],
+      "sourceInputCount": 2296,
+      "sourceUnchanged": true,
+      "onlyChangeFromRed": "recipes program-name helper"
+    },
+    "completeSeven": {
+      "allSucceeded": true,
+      "individualIntegerExitCodes": [0, 0, 0, 0, 0, 0, 0],
+      "frontend": {
+        "files": 687,
+        "passed": 9138,
+        "failed": 0
+      },
+      "rust": [
+        {
+          "passed": 2311,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "inputCount": 2296,
+      "sourceUnchangedAtEveryCommandEndpoint": true,
+      "beforeCommit": true,
+      "independentReview": "no blocking findings; exactraw/argv/counts/source maps reviewed separately"
+    },
+    "sourceIndependentReviews": "9 installation fixtures/program name files and20 diagnostic/file fixture files separately reviewed;0blocking findings"
+  },
+  "formalApplication": {
+    "lastVerifiedProductCommit": "625158abf72b89bfdc0e0704d000003022931f19",
+    "lastVerifiedBinarySha256": "242b28f59692e59eb6458b5138dfd17c05296b3685afa3d092e4721476bf833c",
+    "updatedByThisBatch": false
+  },
+  "newWindowsInputAtThisCheckpoint": {
+    "dispatched": false,
+    "actualWindowsCompilationOrTestsOfThisBatch": false
+  },
+  "boundaries": [
+    "Maccontrolled tests andengineering success are separate fromWindows execution,installer orinstalled-product acceptance.",
+    "OriginalWindows120failures andalloldfailed/unknown receipts retained; no rerun or result rewrite.",
+    "SixWAIT,NEW24affected-send pause,Clineorphan andallprotected drafts/history/config/data unchanged.",
+    "All29x8 remainsincomplete;151originalconditions unchanged, scopedcompleted items retainexistingstatus; no newGate/rawID/sameconnection/coldjourney requirement.",
+    "Endpoint equality does not prove continuous writer absence or freeze dependencies/environment."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/new-input-ci-receipt.json",
+      "sha256": "f71f1ff8664d1d14f89136274b9bc6a79abbda17c0e0fea2ee47dc712eeab0f1"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/new-input-rust-failure-index.json",
+      "sha256": "4a9e901323e119b3cc74f30ea60cc29d42a32d1cf2e777f209d6b1a2492eefdf"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/rust-acp-install-triage.json",
+      "sha256": "5a9b0cefa94123141e897389f4a51cee50ebf0dffafd8519b19019ff38907423"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/rust-files-worktrees-triage.json",
+      "sha256": "50889429c3ab4d7e52e09897247de984fc736ca9b726806917a23cc7629ef6dd"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/rust-conpty-triage.json",
+      "sha256": "b8d0dcef24b29e7e574b91027df8da4e99085ffc70c40ac84bbe3192e0257d3a"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/rust-triage-coverage.json",
+      "sha256": "5216668fb56f3c4a204736482ebc402f87709d2acaf2b9c25da6e53173d6ed92"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/rust-triage-run-input-readback.json",
+      "sha256": "ee2ea8af823e4038d176448638b0a17a6365cde9611ea7449c9c0b07dd591ab7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/files-worktrees-fixture-portability-implementation.json",
+      "sha256": "18b5117e3ab59b8a7eda32a4d50d67e35ba13be0da0bb922d9dce886fbcbf106"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/independent-review.json",
+      "sha256": "bb2a63c70e2efb09070d9c4a7d199868f89a97efe70a12bfe6d35b086f1ed0e7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/recipes-install-fixtures-implementation.json",
+      "sha256": "e2cc3e68eef0734f3de03caf50b945c01a59acadaa0d3b0d9f300d261bdb13b1"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/recipes-install-fixtures-independent-review.json",
+      "sha256": "8e1240eaf982b6c911801d17a4529b1d7cc73d9badc07366e527bc0538020c49"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/root-diagnostic-implementation.json",
+      "sha256": "e54a4e4d1889e2d0fa6cc512cfcc94f00cbd8d6c2a103a52cc124a4c9646a831"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/red-execution.json",
+      "sha256": "66022956daabcd898e23f4a23eae499fe1f55b9e5ca2806655f3f6207708bcfc"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/red-source-before.json",
+      "sha256": "ad804eaf56007212cc15ac9de4e0d7bb8d53b4cbc317142c2d6811921da06170"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/red-source-after.json",
+      "sha256": "bb6da98fc08860e5201239aff7213002689fc9599c1b1c31d67d3bea78c40ad7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/green-execution.json",
+      "sha256": "cf559bd5bcb64d1ec6d0a6efd8acda53d9cf196e38eda7c2c14595a5c4cd04c4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/green-source-before.json",
+      "sha256": "42dbf90466552e457f7ea830740edcefadc9f2458d13a4dd77e7d56258381421"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch/green-source-after.json",
+      "sha256": "588bb49632c90693e833ea351e032ae745e473df31fee3653b41aeb82baab7b0"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/engineering-summary.json",
+      "sha256": "1d856fa38e5337f2e298092809d2a4a4b21b684575ac20a850508e99ee79019d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/source-before.json",
+      "sha256": "ba0c2e1452622aae03e8131666ed6adb00b8aaae7378cf20adefae78aab4f1e0"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/source-after.json",
+      "sha256": "b610ae3b40063ec9cf3d628ee4c551aa6d6dcde1bbb127d4ab9b7b7b7d2b0eb4"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/outer-execution.json",
+      "sha256": "f2d795fcf5f16da30c446768ba1383bf522f3abe4332114875f0e4c58163bc16"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/engineering-preparation-independent-review.json",
+      "sha256": "2aebfeb276d6ca6307f20669c604b13e999627727373817cfb5674377e8adc39"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/windows-rust-portability-first-batch-engineering/engineering-actual-independent-review.json",
+      "sha256": "2dcc09eb7fe1184f0a7e16825308fadeba43c58fcf21ea4762525aa6c682d495"
+    }
+  ]
+}

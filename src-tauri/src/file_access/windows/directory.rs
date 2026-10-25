@@ -221,7 +221,7 @@ mod tests {
     }
     #[test]
     fn owned_ntfs_multipage_same_owner_scans_restart_and_keep_full_ids_and_raw_names() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let mut expected = Vec::new();
         for n in 0..512 {
             let name = format!("Étage-{n:04}-{}-🙂.txt", "x".repeat(112));
@@ -278,7 +278,7 @@ mod tests {
     }
     #[test]
     fn original_scope_pins_keep_ancestors_and_cancel_before_cursor_open() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let parent = temp.path().join("parent");
         let root = parent.join("child");
         std::fs::create_dir_all(&root).unwrap();
@@ -304,7 +304,7 @@ mod tests {
 
     #[test]
     fn poisoned_scan_owner_is_failure_and_pre_cancelled_scan_never_queries() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let pin = PinnedPath::directory(temp.path()).unwrap();
         ntfs(&pin);
         assert!(std::thread::scope(|scope| {

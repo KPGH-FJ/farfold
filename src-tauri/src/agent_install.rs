@@ -772,9 +772,10 @@ mod tests {
     fn cancelled_install_preserves_previous_program_and_credentials() {
         let dir = tempfile::tempdir().unwrap();
         let store = MetaStore::open(&dir.path().join("store.sqlite3")).unwrap();
+        let program = existing_program();
         let old = register_custom(
             "old",
-            "/bin/sh",
+            &program,
             &[],
             &[("KEY".into(), "__keychain__".into())],
             &store,
@@ -809,20 +810,31 @@ mod tests {
         MetaStore::open(&directory.path().join("farfold.sqlite3")).expect("open store")
     }
 
+    fn existing_program() -> String {
+        std::env::current_exe()
+            .unwrap()
+            .canonicalize()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .into()
+    }
+
     #[test]
     fn access_regression_custom_add_never_replaces_an_existing_identity() {
         let directory = tempfile::tempdir().unwrap();
         let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let program = existing_program();
         let first = register_custom(
             "助手甲",
-            "/bin/echo",
+            &program,
             &["first-agent".into()],
             &[("TOKEN".into(), "__keychain__".into())],
             &store,
         )
         .unwrap();
         let second =
-            register_custom("助手乙", "/bin/echo", &["second-agent".into()], &[], &store).unwrap();
+            register_custom("助手乙", &program, &["second-agent".into()], &[], &store).unwrap();
         assert_ne!(first.id, second.id);
         assert_eq!(store.get_agent(&first.id).unwrap().unwrap(), first);
         assert_eq!(store.list_agents().unwrap().len(), 2);
@@ -832,11 +844,12 @@ mod tests {
     fn concurrent_custom_adds_preserve_legacy_session_and_credential_ids() {
         let directory = tempfile::tempdir().unwrap();
         let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let program = existing_program();
         let legacy = AgentRow {
             id: "custom-existing".into(),
             name: "助手".into(),
             source: "custom".into(),
-            command: "/bin/echo".into(),
+            command: program.clone(),
             args: vec!["existing".into()],
             env: vec![("TOKEN".into(), "__keychain__".into())],
             version: None,
@@ -864,7 +877,7 @@ mod tests {
             let handles = (0..4)
                 .map(|_| {
                     scope.spawn(|| {
-                        register_custom("助手", "/bin/echo", &["new".into()], &[], &store)
+                        register_custom("助手", &program, &["new".into()], &[], &store)
                             .unwrap()
                             .id
                     })
@@ -885,12 +898,13 @@ mod tests {
     #[test]
     fn register_custom_writes_row_and_validates() {
         let store = store();
+        let program = existing_program();
         assert!(register_custom("bad", "/no/such/bin", &[], &[], &store).is_err());
-        assert!(register_custom("", "/bin/ls", &[], &[], &store).is_err());
+        assert!(register_custom("", &program, &[], &[], &store).is_err());
 
         let row = register_custom(
             "My Agent",
-            "/bin/ls",
+            &program,
             &["--acp".to_string()],
             &[("FOO".to_string(), "1".to_string())],
             &store,
@@ -906,17 +920,19 @@ mod tests {
     #[test]
     fn register_discovered_requires_binary_capable_def() {
         let store = store();
-        assert!(register_discovered("codex", "/bin/ls", &store).is_err());
-        assert!(register_discovered("nope", "/bin/ls", &store).is_err());
+        let program = existing_program();
+        assert!(register_discovered("codex", &program, &store).is_err());
+        assert!(register_discovered("nope", &program, &store).is_err());
         assert!(register_discovered("opencode", "/definitely/missing", &store).is_err());
     }
 
     #[test]
     fn register_discovered_opencode_writes_row() {
         let store = store();
-        let row = register_discovered("opencode", "/bin/ls", &store).unwrap();
+        let program = existing_program();
+        let row = register_discovered("opencode", &program, &store).unwrap();
         assert_eq!(row.source, "discovered");
         assert_eq!(row.args, vec!["acp".to_string()]);
-        assert_eq!(row.command, "/bin/ls");
+        assert_eq!(row.command, program);
     }
 }

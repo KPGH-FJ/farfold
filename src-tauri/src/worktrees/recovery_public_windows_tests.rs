@@ -136,14 +136,15 @@ pub(super) fn backup(delete: bool) -> Fixture {
         expected_draft_baseline: inspected.draft_baseline,
     };
     eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-prepare-start");
+    let prepared = tests::op(
+        manager
+            .prepare_recycle(&store, ARCHIVE, input, |_| Ok(()))
+            .unwrap(),
+    );
     assert_eq!(
-        tests::op(
-            manager
-                .prepare_recycle(&store, ARCHIVE, input, |_| Ok(()))
-                .unwrap()
-        )
-        .state,
-        "prepared"
+        prepared.state, "prepared",
+        "archive preparation code={:?}",
+        prepared.code
     );
     eprintln!("FARFOLD_PUBLIC_FIXTURE_REACHED phase=archive-start");
     manager.start(&store, ARCHIVE).unwrap();

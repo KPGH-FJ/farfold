@@ -183,11 +183,20 @@ fn unsupported_directory_value_is_preserved_without_being_a_displayed_model() {
 }
 
 fn row(args: &[&str]) -> AgentRow {
+    let command = std::env::temp_dir()
+        .join("farfold-installation-parameters-fixture")
+        .join(if cfg!(windows) { "Scripts" } else { "bin" })
+        .join(if cfg!(windows) {
+            "fast-agent-acp.exe"
+        } else {
+            "fast-agent-acp"
+        });
+    assert!(command.is_absolute());
     AgentRow {
         id: "registry:fast-agent".into(),
         name: "fast-agent".into(),
         source: "registry".into(),
-        command: "/managed/venv/bin/fast-agent-acp".into(),
+        command: command.to_str().unwrap().into(),
         args: args.iter().map(|value| (*value).into()).collect(),
         env: vec![("KEPT_USER_VALUE".into(), "not-a-credential".into())],
         version: Some("0.10.1".into()),

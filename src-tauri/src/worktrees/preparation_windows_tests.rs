@@ -48,7 +48,7 @@ struct Fixture {
 }
 impl Fixture {
     fn new(linked: bool) -> Self {
-        let root = tempfile::tempdir().unwrap();
+        let root = crate::test_support::tempdir().unwrap();
         let main = root.path().join("main repository");
         fs::create_dir(&main).unwrap();
         fixture_git(&main, &["init", "-q"]);

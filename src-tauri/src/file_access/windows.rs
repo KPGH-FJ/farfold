@@ -505,7 +505,7 @@ mod tests {
     #[test]
     fn held_handles_accept_unicode_case_variants() {
         use std::io::Read;
-        let fixture = tempfile::tempdir().unwrap();
+        let fixture = crate::test_support::tempdir().unwrap();
         std::fs::create_dir(fixture.path().join("Étage")).unwrap();
         std::fs::write(fixture.path().join("Étage/Évidence.txt"), b"document").unwrap();
         let directory = open_directory(&fixture.path().join("étage")).unwrap();

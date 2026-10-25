@@ -93,12 +93,19 @@ impl SelectedCheckout {
         cancel: &AtomicBool,
         created: &mut WorktreeCheckout<'_>,
     ) -> Result<()> {
+        #[cfg(test)]
+        let observation =
+            crate::worktrees::create_observation_tests::Observation::new("materialize");
         if intent.input.branch.oid() != self.owner.oid
             || !intent.source.matches(&self.owner.snapshot)
         {
             return Err(error("changed"));
         }
+        #[cfg(test)]
+        observation.at("verify-created");
         let current = crate::worktrees::create::verify(intent)?;
+        #[cfg(test)]
+        observation.at("pin-target-and-git");
         let target =
             PinnedPath::directory(Path::new(&intent.target)).map_err(|_| error("changed"))?;
         let git_dir =
@@ -114,11 +121,19 @@ impl SelectedCheckout {
         {
             return Err(error("changed"));
         }
+        #[cfg(test)]
+        observation.at("with-profile-enter");
         with_profile(&self.owner, cancel, |evaluator, configs, attributes| {
+            #[cfg(test)]
+            observation.at("with-profile-consume");
             if configs != self.configs || attributes != self.attributes {
                 return Err(error("changed"));
             }
+            #[cfg(test)]
+            observation.at("selected-entries");
             let selected = entries(evaluator, configs, cancel)?;
+            #[cfg(test)]
+            observation.at("attribute-lookup-owner");
             let mut lookup = WorktreeCheckout::create_under(evaluator.root(), "attribute-lookups")
                 .map_err(|_| error("changed"))?;
             lookup
@@ -131,7 +146,11 @@ impl SelectedCheckout {
                 .iter()
                 .flat_map(|entry| entry.path.as_bytes().iter().copied().chain(Some(0)))
                 .collect::<Vec<_>>();
+            #[cfg(test)]
+            observation.at("mirror-attributes");
             let effective = evaluator.attributes(evaluator::Role::Mirror, &paths, None, cancel)?;
+            #[cfg(test)]
+            observation.at("destination-owner");
             let mut destination = WorktreeCheckout::new(&target).map_err(|_| error("changed"))?;
             destination
                 .retain_registration()
@@ -156,12 +175,18 @@ impl SelectedCheckout {
                 .cloned()
                 .collect::<Vec<_>>();
             if !batch.is_empty() {
+                #[cfg(test)]
+                observation.at("batch-content");
                 lookup.verify().map_err(|_| error("changed"))?;
                 let output = evaluator.contents(lookup.root(), &batch, cancel)?;
                 consume(&output, &batch, &mut destination, cancel)?;
+                #[cfg(test)]
+                observation.at("batch-consumed");
                 lookup.verify().map_err(|_| error("changed"))?;
             }
             for entry in selected.iter().filter(|entry| converted(entry)) {
+                #[cfg(test)]
+                observation.at("filtered-content");
                 lookup.verify().map_err(|_| error("changed"))?;
                 let output = evaluator.filtered(lookup.root(), entry, cancel)?;
                 let length = stamp(&output).map_err(|_| error("changed"))?.size;
@@ -170,6 +195,8 @@ impl SelectedCheckout {
                     .map_err(|_| error("changed"))?;
                 lookup.verify().map_err(|_| error("changed"))?;
             }
+            #[cfg(test)]
+            observation.at("retain-index");
             destination.verify().map_err(|_| error("changed"))?;
             destination
                 .retain_index(evaluator.index()?, git_dir, cancel)
@@ -179,12 +206,16 @@ impl SelectedCheckout {
             if after.git_dir != current.git_dir || after.git_stamp != current.git_stamp {
                 return Err(error("changed"));
             }
+            #[cfg(test)]
+            observation.at("verify-destination-namespace");
             destination
                 .verify_namespace(cancel)
                 .map_err(|_| error("changed"))?;
             created
                 .retain_completed(destination)
                 .map_err(|_| error("changed"))?;
+            #[cfg(test)]
+            observation.at("consume-complete");
             Ok(())
         })
     }

@@ -22,9 +22,16 @@ fn args(r: &Repo, oid: String) -> Create {
 #[test]
 fn captured_global_info_and_tree_attributes_preserve_precedence_and_path_escaping() {
     let r = Repo::new();
-    for name in ["a space.txt", "方括[号].txt", "literal*.txt"] {
+    for name in [
+        "a space.txt",
+        "方括[号].txt",
+        "literal[star].txt",
+        "literals.txt",
+    ] {
         fs::write(r.root.join(name), "one\ntwo\n").unwrap();
     }
+    #[cfg(unix)]
+    fs::write(r.root.join("literal*.txt"), "one\ntwo\n").unwrap();
     fs::write(r.root.join(".gitattributes"), "*.txt text eol=lf\n").unwrap();
     git(&r.root, &["add", "."]);
     git(&r.root, &["commit", "-qm", "paths"]);
@@ -36,7 +43,7 @@ fn captured_global_info_and_tree_attributes_preserve_precedence_and_path_escapin
     );
     fs::write(
         r.root.join(".git/info/attributes"),
-        "\"a space.txt\" text eol=crlf\n",
+        "\"a space.txt\" text eol=crlf\nliteral\\[star\\].txt text eol=crlf\n",
     )
     .unwrap();
     let s = inspect::snapshot(&r.root).unwrap();
@@ -58,11 +65,21 @@ fn captured_global_info_and_tree_attributes_preserve_precedence_and_path_escapin
         b"one\ntwo\n"
     );
     assert_eq!(
+        fs::read(Path::new(&intent.target).join("literal[star].txt")).unwrap(),
+        b"one\r\ntwo\r\n"
+    );
+    assert_eq!(
+        fs::read(Path::new(&intent.target).join("literals.txt")).unwrap(),
+        b"one\ntwo\n"
+    );
+    #[cfg(unix)]
+    assert_eq!(
         fs::read(Path::new(&intent.target).join("literal*.txt")).unwrap(),
         b"one\ntwo\n"
     );
 }
 #[test]
+#[cfg(unix)]
 fn checkout_after_info_filter_mutation_uses_captured_attributes_without_executing_helper() {
     let r = Repo::new();
     let s = inspect::snapshot(&r.root).unwrap();
@@ -90,6 +107,47 @@ fn checkout_after_info_filter_mutation_uses_captured_attributes_without_executin
         fs::read(Path::new(&intent.target).join("a.txt")).unwrap(),
         b"fixture"
     );
+}
+#[test]
+#[cfg(windows)]
+fn held_checkout_denies_late_source_config_mutation_and_keeps_source_and_target_safe() {
+    let r = Repo::new();
+    let config = r.root.join(".git/config");
+    let before_config = fs::read(&config).unwrap();
+    let before_source = fs::read(r.root.join("a.txt")).unwrap();
+    let s = inspect::snapshot(&r.root).unwrap();
+    let args = args(&r, s.head.clone().unwrap());
+    let checkout = checkout::Checkout::prepare(&s, args.branch.oid()).unwrap();
+    let mut intent = create::validate(&s, &args).unwrap();
+    let canary = r._dir.path().join("helper-ran");
+    let mut replacement = before_config.clone();
+    replacement.extend_from_slice(
+        format!(
+            "\n[filter \"late\"]\n smudge = sh -c 'printf ran > {}; cat'\n",
+            canary.display()
+        )
+        .as_bytes(),
+    );
+    let denied = fs::write(&config, replacement).unwrap_err();
+    assert_eq!(denied.kind(), std::io::ErrorKind::PermissionDenied);
+    assert_eq!(denied.raw_os_error(), Some(32)); // ERROR_SHARING_VIOLATION
+    assert_eq!(fs::read(&config).unwrap(), before_config);
+    assert_eq!(fs::read(r.root.join("a.txt")).unwrap(), before_source);
+    assert!(!Path::new(&intent.target).exists());
+    assert!(!canary.exists());
+    fs::create_dir(&intent.target).unwrap();
+    intent.target_stamp = Some(inspect::stamp(Path::new(&intent.target)).unwrap());
+    create::add(&intent, &AtomicBool::new(false)).unwrap();
+    checkout
+        .materialize(&intent, &AtomicBool::new(false))
+        .unwrap();
+    assert_eq!(fs::read(&config).unwrap(), before_config);
+    assert_eq!(fs::read(r.root.join("a.txt")).unwrap(), before_source);
+    assert_eq!(
+        fs::read(Path::new(&intent.target).join("a.txt")).unwrap(),
+        before_source
+    );
+    assert!(!canary.exists());
 }
 #[test]
 fn private_object_read_cannot_lazy_fetch_a_missing_target_from_new_source_promisor_config() {

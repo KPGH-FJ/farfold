@@ -36,7 +36,7 @@ fn foreign_windows_stamp_cannot_verify_a_unix_directory_or_rewrite_it() {
 #[cfg(windows)]
 #[test]
 fn foreign_unix_stamp_is_not_verified_or_rewritten_on_windows() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let raw = r#"{"dev":1,"ino":2}"#;
     let id: Stamp = serde_json::from_str(raw).unwrap();
     assert_eq!(

@@ -266,6 +266,13 @@ fn exact_temporary_replaced_before_cleanup_is_unknown_and_preserves_both_objects
             }
         },
     );
+    let (outcome, code) = match &result {
+        ArchiveOutcome::Completed(_) => ("completed", None),
+        ArchiveOutcome::Cancelled => ("cancelled", None),
+        ArchiveOutcome::Failed(code, _) => ("failed", Some(*code)),
+        ArchiveOutcome::Unknown(code, _) => ("unknown", Some(*code)),
+    };
+    eprintln!("FARFOLD_ARCHIVE_REPLACED_TEMP outcome={outcome} code={code:?}");
     assert!(matches!(
         result,
         ArchiveOutcome::Unknown("cleanupUnknown", None)

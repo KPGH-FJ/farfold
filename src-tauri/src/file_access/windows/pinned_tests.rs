@@ -1,7 +1,7 @@
 use super::*;
 #[test]
 fn pinned_local_ancestors_and_pointer_contents_stay_held_until_drop() {
-    let directory = tempfile::tempdir().unwrap();
+    let directory = crate::test_support::tempdir().unwrap();
     let parent = directory.path().join("parent");
     let child = parent.join("child");
     std::fs::create_dir_all(&child).unwrap();

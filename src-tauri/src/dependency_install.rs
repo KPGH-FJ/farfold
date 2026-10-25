@@ -458,7 +458,15 @@ mod tests {
             id: "registry:amp-acp".into(),
             name: "Amp".into(),
             source: "registry".into(),
-            command: "/fixture/amp-acp".into(),
+            command: data
+                .join(if cfg!(windows) {
+                    "amp-acp.exe"
+                } else {
+                    "amp-acp"
+                })
+                .to_str()
+                .unwrap()
+                .into(),
             args: vec![],
             env: vec![("AMP_CLI_PATH".into(), "/external/kept-program".into())],
             version: None,
@@ -547,7 +555,11 @@ mod tests {
         assert_eq!(version, "0.0.1790380893-geeadb1");
         assert_eq!(
             url,
-            "https://static.ampcode.com/cli/0.0.1790380893-geeadb1/amp-darwin-arm64.gz"
+            if cfg!(windows) {
+                "https://static.ampcode.com/cli/0.0.1790380893-geeadb1/amp-windows-x64.exe"
+            } else {
+                "https://static.ampcode.com/cli/0.0.1790380893-geeadb1/amp-darwin-arm64.gz"
+            }
         );
         assert!(distribution_url(declaration, b"2099.100.1-future").is_ok());
         for bad in [

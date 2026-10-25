@@ -89,7 +89,12 @@ impl Fixture {
 fn reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets() {
     let fixture = Fixture::new("normal");
     let result = fixture.run();
-    assert_eq!(result.state, State::Completed);
+    assert_eq!(
+        result.state,
+        State::Completed,
+        "history search result code: {:?}",
+        result.code
+    );
     assert_eq!(result.rows[0].state, RowState::Complete);
     assert_eq!(result.rows[0].pages_read, 2);
     assert_eq!(result.hits.len(), 2);
@@ -169,13 +174,14 @@ fn windows_selected_history_capability_reaches_reviewed_official_route() {
 
 #[cfg(windows)]
 #[test]
-fn windows_claude_sdk_history_remains_platform_unsupported() {
+fn windows_claude_sdk_history_rejects_a_codex_package_as_entry_unverified() {
     let fixture = Fixture::new("normal");
     let mut row = fixture.saved.agent.clone();
     row.id = "registry:claude-acp".into();
-    // Admission must reject this route before any SDK import or child starts.
+    // The selected package is still Codex, not a reviewed Claude entry. Reject
+    // that mismatch before any SDK import or child starts on supported Windows.
     assert_eq!(
         launch::admission(&row).err().unwrap().code,
-        Code::PlatformUnsupported
+        Code::EntryUnverified
     );
 }

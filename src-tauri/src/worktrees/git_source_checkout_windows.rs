@@ -68,24 +68,46 @@ fn with_profile<T>(
     cancel: &AtomicBool,
     consume: impl FnOnce(&evaluator::Evaluator<'_>, &[String], &[u8]) -> Result<T>,
 ) -> Result<T> {
+    #[cfg(test)]
+    let observation = crate::worktrees::create_observation_tests::Observation::new("profile");
+    #[cfg(test)]
+    observation.at("source-recheck");
     owner.recheck(cancel)?;
+    #[cfg(test)]
+    observation.at("capture-inputs");
     let inputs = inputs::Inputs::capture(owner, cancel)?;
+    #[cfg(test)]
+    observation.at("evaluator-new");
     let mut evaluator = evaluator::Evaluator::new(owner, &inputs.configs, cancel)?;
+    #[cfg(test)]
+    observation.at("evaluator-paths");
     let paths = evaluator.paths(cancel)?;
+    #[cfg(test)]
+    observation.at("install-original-local");
     evaluator.install(evaluator::Role::Original, &inputs.info(cancel)?, cancel)?;
     evaluator.install(evaluator::Role::Local, &[], cancel)?;
+    #[cfg(test)]
+    observation.at("original-attributes");
     let original = evaluator.attributes(
         evaluator::Role::Original,
         &paths,
         Some(inputs.attr_source()?),
         cancel,
     )?;
+    #[cfg(test)]
+    observation.at("check-filter");
     inputs.check_filter(owner, &original, cancel)?;
+    #[cfg(test)]
+    observation.at("local-attributes");
     let local = evaluator.attributes(evaluator::Role::Local, &paths, None, cancel)?;
     // This is the original Checkout mirror algorithm, using its original
     // parser and path quoting. No raw working-tree .gitattributes is consulted.
     let effective = mirror(&original, &local, cancel)?;
+    #[cfg(test)]
+    observation.at("install-mirror");
     evaluator.install(evaluator::Role::Mirror, &effective, cancel)?;
+    #[cfg(test)]
+    observation.at("mirrored-attributes");
     let mirrored = evaluator.attributes(evaluator::Role::Mirror, &paths, None, cancel)?;
     // Original global/system default attribute files are interpreted by the
     // selected official Git. Evaluate them again rather than calling a mere
@@ -96,14 +118,22 @@ fn with_profile<T>(
         Some(inputs.attr_source()?),
         cancel,
     )?;
+    #[cfg(test)]
+    observation.at("verify-inputs-before-consume");
     if original != mirrored || original != repeated {
         return Err(error("unsupportedGit"));
     }
     inputs.verify(owner, cancel)?;
     owner.recheck(cancel)?;
+    #[cfg(test)]
+    observation.at("consume-enter");
     let result = consume(&evaluator, &inputs.configs, &effective)?;
+    #[cfg(test)]
+    observation.at("verify-inputs-after-consume");
     inputs.verify(owner, cancel)?;
     owner.recheck(cancel)?;
+    #[cfg(test)]
+    observation.at("complete");
     Ok(result)
 }
 fn mirror(original: &Attributes, local: &Attributes, cancel: &AtomicBool) -> Result<Vec<u8>> {

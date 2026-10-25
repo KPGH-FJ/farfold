@@ -543,7 +543,17 @@ async fn transient_mcp_stale_reviewed_row_cannot_endorse_current_unreviewed_spaw
     let owner = Arc::new(OwnerWitness::default());
     let mut stale = f.row.clone();
     stale.source = "registry".into();
-    stale.command = "/controlled/stale/codex-acp".into();
+    stale.command = f
+        .cwd
+        .join("stale")
+        .join(if cfg!(windows) {
+            "codex-acp.exe"
+        } else {
+            "codex-acp"
+        })
+        .to_str()
+        .unwrap()
+        .into();
     stale.args = vec![];
     let mut current = f.row.clone();
     current.source = "custom".into();

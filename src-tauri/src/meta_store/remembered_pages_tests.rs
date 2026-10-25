@@ -24,7 +24,7 @@ fn insert(store: &MetaStore, owner: &PageOwner) {
         .unwrap();
 }
 fn store() -> MetaStore {
-    MetaStore::open(Path::new(":memory:")).unwrap()
+    MetaStore::test_memory()
 }
 fn raw(store: &MetaStore, owner: &PageOwner) -> Option<String> {
     store

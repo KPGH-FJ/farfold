@@ -187,7 +187,9 @@ pub(crate) fn run(case: Case) {
         let mut terminated = false;
         let diagnostic_case = matches!(
             case,
-            Case::TerminalCursorNoReply
+            Case::Manager
+                | Case::Drain
+                | Case::TerminalCursorNoReply
                 | Case::TerminalCursorReply
                 | Case::TerminalMasterBoundedUnknown
         );
@@ -279,6 +281,14 @@ pub(crate) fn run(case: Case) {
                         child_alive_before_deadline_kill.into(),
                     );
                 }
+                if matches!(case, Case::Manager | Case::Drain) {
+                    let receipt = receipt.as_mut().unwrap().as_object_mut().unwrap();
+                    receipt.insert(
+                        "elapsedMs".into(),
+                        serde_json::json!(started.elapsed().as_millis()),
+                    );
+                    receipt.insert("childExitCode".into(), status.code().into());
+                }
                 let _ = send.send((status.success(), input == Some(true), terminated, receipt));
                 return;
             }
@@ -305,7 +315,14 @@ pub(crate) fn run(case: Case) {
             );
         }
     };
-    if matches!(
+    if matches!(case, Case::Manager | Case::Drain) {
+        // Separate schema from the original cursor and bounded-unknown receipts.
+        // Reached only after the same child/Job/streams/input have settled.
+        eprintln!(
+            "FARFOLD_CONPTY_PROBE_OWNER {}",
+            diagnostic_receipt.expect("probe owner receipt")
+        );
+    } else if matches!(
         case,
         Case::TerminalCursorNoReply | Case::TerminalCursorReply
     ) {
@@ -493,6 +510,8 @@ fn manager_probe() {
     let tail = Mutex::new(Vec::<u8>::new());
     let bytes = Arc::new(AtomicUsize::new(0));
     let count = bytes.clone();
+    let queries = Arc::new(AtomicUsize::new(0));
+    let query_read = queries.clone();
     eprintln!("FARFOLD_CONPTY_PHASE manager.spawn.enter");
     let id = manager
         .spawn(
@@ -508,7 +527,15 @@ fn manager_probe() {
                         .unwrap();
                     count.fetch_add(decoded.len(), Ordering::SeqCst);
                     let mut tail = tail.lock().unwrap();
+                    let previous = tail.len();
                     tail.extend_from_slice(&decoded);
+                    query_read.fetch_add(
+                        tail.windows(4)
+                            .enumerate()
+                            .filter(|(i, s)| i + 4 > previous && *s == b"\x1b[6n")
+                            .count(),
+                        Ordering::SeqCst,
+                    );
                     if tail.windows(READY.len()).any(|s| s == READY) {
                         seen.store(true, Ordering::SeqCst);
                     }
@@ -520,10 +547,16 @@ fn manager_probe() {
         .unwrap();
     eprintln!("FARFOLD_CONPTY_PHASE manager.spawn.return");
     environment();
-    assert!(
-        await_flag(&ready, Duration::from_secs(3)),
-        "valid Python peer must actually start"
+    let readiness_started = Instant::now();
+    let ready_observed = await_flag(&ready, Duration::from_secs(3));
+    eprintln!(
+        "FARFOLD_CONPTY_PROBE_READINESS {}",
+        serde_json::json!({"case":"Manager","readyObserved":ready_observed,
+            "waitElapsedMs":readiness_started.elapsed().as_millis(),
+            "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
+            "cursorReplies":0,"rootCause":"unknown"})
     );
+    assert!(ready_observed, "valid Python peer must actually start");
     manager.write(&id, b"finish\r").unwrap();
     eprintln!("FARFOLD_CONPTY_PHASE manager.close.enter");
     let exit = manager
@@ -558,6 +591,8 @@ fn raw_probe(case: Case) {
     let query_read = queries.clone();
     let replies = Arc::new(AtomicUsize::new(0));
     let reply_read = replies.clone();
+    let bytes = Arc::new(AtomicUsize::new(0));
+    let byte_read = bytes.clone();
     let (eof, closed) = mpsc::channel();
     let reader_thread = std::thread::spawn(move || {
         let mut buffer = [0u8; 8192];
@@ -584,6 +619,7 @@ fn raw_probe(case: Case) {
                 }
                 Ok(n) => {
                     total += n;
+                    byte_read.store(total, Ordering::SeqCst);
                     if total > 1024 * 1024 {
                         let _ = eof.send((false, total, "outputLimit"));
                         return;
@@ -637,10 +673,16 @@ fn raw_probe(case: Case) {
         .unwrap();
     drop(pair.slave);
     eprintln!("FARFOLD_CONPTY_PHASE raw.spawn.return");
-    assert!(
-        await_flag(&ready, Duration::from_secs(3)),
-        "valid Python peer must actually start"
+    let readiness_started = Instant::now();
+    let ready_observed = await_flag(&ready, Duration::from_secs(3));
+    eprintln!(
+        "FARFOLD_CONPTY_PROBE_READINESS {}",
+        serde_json::json!({"case":format!("{case:?}"),"readyObserved":ready_observed,
+            "waitElapsedMs":readiness_started.elapsed().as_millis(),
+            "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
+            "cursorReplies":replies.load(Ordering::SeqCst),"rootCause":"unknown"})
     );
+    assert!(ready_observed, "valid Python peer must actually start");
     if case == Case::CloseDrain {
         pause.store(true, Ordering::SeqCst);
     }

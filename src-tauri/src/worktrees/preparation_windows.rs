@@ -321,7 +321,7 @@ mod namespace_tests {
 
     #[test]
     fn real_leaf_pairing_rejects_high_identity_bits_ea_and_replacement() {
-        let temp = tempfile::tempdir().unwrap();
+        let temp = crate::test_support::tempdir().unwrap();
         let path = temp.path().join("package.json");
         fs::write(&path, b"owned-public-same-body").unwrap();
         let pin = PinnedPath::directory(temp.path()).unwrap();

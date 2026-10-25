@@ -974,8 +974,13 @@ mod tests {
     #[test]
     fn unsupported_platform_and_unknown_catalog_have_different_install_reasons() {
         let root = tempfile::tempdir().unwrap();
+        let foreign_platform = if cfg!(windows) {
+            "darwin-aarch64"
+        } else {
+            "windows-x86_64"
+        };
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"poolside","distribution":{"binary":{"windows-x86_64":{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"poolside","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
             {"id":"fast-agent","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
             {"id":"unknown","distribution":{}}
         ])).unwrap();
@@ -1003,14 +1008,21 @@ mod tests {
 
     #[test]
     fn full_registry_keeps_builtins_and_distinguishes_platform_support() {
+        let foreign_platform = if cfg!(windows) {
+            "darwin-aarch64"
+        } else {
+            "windows-x86_64"
+        };
+        let current_command = if cfg!(windows) { "agent.exe" } else { "agent" };
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
             {"id":"codex-acp","name":"Codex","distribution":{"npx":{"package":"codex-example@1.0.0"}}},
             {"id":"example","name":"Example","website":"https://example.test","distribution":{"npx":{"package":"example-agent@1.0.0","env":{"AGENT_MODE":"acp"}}}},
-            {"id":"windows-only","name":"Windows only","distribution":{"binary":{"windows-x86_64":{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"foreign-only","name":"Foreign only","distribution":{"binary":{(foreign_platform):{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"current-platform","name":"Current platform","distribution":{"binary":{(registry_platform()):{"archive":"https://example.test/agent.zip","cmd":current_command}}}},
             {"id":"../escape","name":"Invalid path","distribution":{"npx":{"package":"example@1"}}}
         ])).unwrap();
         let entries = catalog_entries(&[], &[], &registry);
-        assert_eq!(entries.len(), 5);
+        assert_eq!(entries.len(), 6);
         assert_eq!(
             entries
                 .iter()
@@ -1025,13 +1037,26 @@ mod tests {
         assert!(generic.installable);
         assert_eq!(generic.platform_available, Some(true));
         assert_eq!(generic.source_url.as_deref(), Some("https://example.test"));
-        let windows = entries
+        let foreign = entries
             .iter()
-            .find(|entry| entry.agent_id == "registry:windows-only")
+            .find(|entry| entry.agent_id == "registry:foreign-only")
             .unwrap();
-        assert!(!windows.installable);
-        assert_eq!(windows.platform_available, Some(false));
-        assert!(windows.install_launch.is_none());
+        assert!(!foreign.installable);
+        assert_eq!(foreign.platform_available, Some(false));
+        assert!(foreign.install_launch.is_none());
+        let current = entries
+            .iter()
+            .find(|entry| entry.agent_id == "registry:current-platform")
+            .unwrap();
+        assert!(current.installable);
+        assert_eq!(current.platform_available, Some(true));
+        assert_eq!(
+            current.install_launch,
+            Some(AgentLaunch::Binary {
+                binary: current_command.into(),
+                args: vec![],
+            })
+        );
         assert_eq!(
             registry[1].distribution.npx.as_ref().unwrap().env["AGENT_MODE"],
             "acp"
