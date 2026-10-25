@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "kind": "CopilotOriginalHistoryAndScopedS3Summary",
+  "formalSourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+  "application": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "agentId": "copilot",
+  "currentAgentVersion": "unreported by installed UI; historical versions not asserted current or pinned",
+  "selectionScope": {
+    "sourceLabel": "沿用已有设置",
+    "modelLabel": "Auto",
+    "modeLabel": "Agent",
+    "allowAllLabel": "Off",
+    "reasoning": "Not exposed; inherited/unreported, not a substituted None or grade."
+  },
+  "originalBodyRestoration": {
+    "normalOriginalOpenActionsInPreparation": 1,
+    "loadingThenOriginalUserAndFirstReplyActuallyObserved": true,
+    "newColdOrRawNativeIdentityClaim": false
+  },
+  "contextContinuation": {
+    "level": "real-agent",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 8,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:40:54.714Z",
+    "finalObservationAt": "2026-10-25T18:41:26.602Z",
+    "observationUpperBoundSeconds": 31.888,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "questionContainsOriginalAnswer": false,
+    "ordinaryPromptActions": 1,
+    "replyExactlyMatchesOriginalFirstReply": true,
+    "recognizedCompletion": true,
+    "currentOwnIdleAndEmptyComposer": true,
+    "newVisibleToolSteps": 0,
+    "extraPromptsChoiceLoginRetryStopQueueActions": 0,
+    "postCompletionConfigurationPanels": 0,
+    "currentEffectiveBackendOrRawIdentityClaim": false
+  },
+  "officialDiscovery": {
+    "level": "installed",
+    "canonicalStandardIds": [],
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "necessaryObservations": 7,
+    "immutableInputs": 8,
+    "inputMapsEqual": true,
+    "startedAt": "2026-10-25T18:43:36.452Z",
+    "finalObservationAt": "2026-10-25T18:43:57.466Z",
+    "observationUpperBoundSeconds": 21.014,
+    "sealCliCalls": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockers": 0,
+    "explicitFindOperatorActions": 1,
+    "actualVisibleResults": 1,
+    "originalTargetMarkedAlreadyAdded": true,
+    "targetRowSelections": 1,
+    "openExistingActions": 1,
+    "originalUserFirstReplyAndNewContinuationVisibleAfterOpen": true,
+    "newPreviewImportCheckboxMorePageModelPromptChoiceLoginRetryStopActions": 0,
+    "scope": "One explicitly selected owned original folder; the joined result shows an added label instead of returned folder. Request folder and original target/body mapping were observed separately. No exhaustive filtering, raw returned-folder/native-ID or raw list RPC dispatch capture claim."
+  },
+  "composedStandardAssessment": {
+    "standardId": "S3",
+    "verdict": "met-in-stated-scope",
+    "condition": "历史真正可用：找到已有对话，真实正文与上下文恢复后继续原对话；列表、正文和继续分别核验。",
+    "scope": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
+    "basis": [
+      "Original normal-open loading then full original user and first reply became visible.",
+      "One new question without the prior answer elicited exactly that first reply and visibly completed in the same conversation.",
+      "One explicit official discovery returned the already-added original target; one selection/open returned its matching original body and new continuation."
+    ],
+    "independentCompositionReview": true,
+    "canonicalStandardIdsRetroactivelyChanged": false,
+    "fullRequirementOrWholeAgentClosed": false
+  },
+  "preparationIssuesPreserved": [
+    "First binding script assumed a key from another template and stopped before canonical writes or any new UI/input/send. The actual template shape was read; canonical plan/manifest preceded the single question. No product retry."
+  ],
+  "coverageLimits": [
+    "No new cold load, same connection, raw native session identity or current Agent executable-version equivalence claim.",
+    "No preview/new import, additional pages, all histories, all model/service/platform configurations or complete ARCH-29/ARCH-31/P33/S7 claim.",
+    "Original unknown work and failures, six authentication waits, affected NEW-24 sending pause and protected Cline process are unchanged.",
+    "Source/full engineering/installation results retain their earlier scope; these two cases do not rerun or replace them.",
+    "No whole Agent or 29-by-8 completion."
+  ],
+  "references": {
+    "context:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/case-plan.json",
+      "sha256": "289629928cf0aff0191b54f5a691a1085d63736f7d47f878793c68a8b2a0f2cd"
+    },
+    "context:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/manifest.json",
+      "sha256": "cbaf8d7010644bc8cdbe76a7e75d365d24139915fb211ef393e5ca591c7ae978"
+    },
+    "context:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/preflight.json",
+      "sha256": "dea49c0fd1682228e3191105abf2d8d26919ea5dede326d759f261f15757c172"
+    },
+    "context:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/actuals.json",
+      "sha256": "97f6c166942df7badec858fbd077fce772759a3250561ac3c86c7f88f0f024e9"
+    },
+    "context:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/receipt.json",
+      "sha256": "9a55a8847eca9596a609f09f08c26c9ce8bb986bcaaadfbac40389ffffe3efb2"
+    },
+    "context:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "48d1a2d73e64a49a56ab3d3782e02ee6f207700f906ceeab9d5f753216e8bccf"
+    },
+    "context:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "7ac3cc76f649983ce75ddf5be5f13fc725f2ebf02482c4c2003f664071fdcb51"
+    },
+    "context:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/seal.stdout",
+      "sha256": "c59f76e15930e4e47d5bc892c5ffbfdbcacc4212a2ab1b19d0f338434750b3d2"
+    },
+    "context:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "context:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "50b4673399403fc3ccea967d736a43e1c89b50ee876fae2218cd1697eba4a64a"
+    },
+    "discovery:case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/case-plan.json",
+      "sha256": "6e8e241de9df0f5f46d21645d916c0dd8c20b8e611660a29b2eff35d4fa0752d"
+    },
+    "discovery:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/manifest.json",
+      "sha256": "b6638633f09c143211332101dc7c3bf016f0f673e699fd7d501d901df6b6d91b"
+    },
+    "discovery:preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/preflight.json",
+      "sha256": "7aa888b8fe36eb1d73ec159e71fc2954f534511aded895149617905a2e5f7139"
+    },
+    "discovery:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/actuals.json",
+      "sha256": "bd2905fa6863c6dbe40a005da7d3221f8886da49dd3438067bc4444f7261fb6a"
+    },
+    "discovery:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/receipt.json",
+      "sha256": "71f5384d2a3b78f7c38f9f982c23292cb2a0a9b966d9c5bf92ab678dfe75a957"
+    },
+    "discovery:operator-actions-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/operator-actions-private.json",
+      "sha256": "36a309e12b7a7a0e865bb5448c82dc149899c11554ba4fc298d80cd3b6f4eccf"
+    },
+    "discovery:seal-cli-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/seal-cli-execution.json",
+      "sha256": "6c9205c75b838bce90e3c1adc99d92b0f044cccd6c6f6e5e71bc9868957e7b15"
+    },
+    "discovery:seal.stdout": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/seal.stdout",
+      "sha256": "2e306bbdda48feea7ad4fcd7a2056639130e7de1137128d56065422000b208f7"
+    },
+    "discovery:seal.stderr": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/seal.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "discovery:semantic-review-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-official-history-formal-e954-preparation/semantic-review-private.json",
+      "sha256": "604c291a12dd7f9cb7bb8a741577181f70dbd1599baae9a1428a09e9560495e8"
+    },
+    "restoration:original-open-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/original-open-ui-private.json",
+      "sha256": "c3c655723649dc07f3d95766dfa0f1c4a725c6c86d70cefcce4b398be21a4a31"
+    },
+    "restoration:original-loaded-ui-private.json": {
+      "path": "output/2026-10-24-agent-acceptance/copilot-context-continuation-formal-e954-preparation/original-loaded-ui-private.json",
+      "sha256": "8e7d9f60a1cdf0d439d3e1d85a3f487872a97a219fdbf6b033b771a4df3abe3e"
+    }
+  }
+}

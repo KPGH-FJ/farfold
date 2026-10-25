@@ -4,6 +4,8 @@
 
 ## 当前工作与接续
 
+Copilot原自有对话的S3三要素经独立组合审在macOS arm64、原“沿用已有设置 / Auto / Agent / Allow All Off”范围认定满足，未提供思考控件不补等级。正常打开从加载到原完整用户/首答；一次不含旧答案的续问精确回复并完成/当前空闲；一次官方查找只返回原已加入目标，选中/打开各一次后原正文与新续问对应。两案八/七观察、机械各1/1及语义独审通过，31.888/21.014秒各为观察上界；事前模板键假定错误保留，修正发生在canonical及输入前。原std[]不回填，不称新冷载、原始标识、返回目录、当前程序版本、全部历史或预览/新带入，完整ARCH-29/31及整家开放。见[Copilot历史与上下文组合](evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json)。
+
 Poolside原自有对话的S3三要素经独立组合审在macOS arm64、原“沿用已有设置 / poolside/laguna-s-2.1 / Max / Always ask / Build”范围认定满足。正常打开实际从加载到原完整用户/首答；一次不含旧答案的续问精确回复并完成/当前空闲；一次官方查找仅返回原已加入目标，选中/打开各一次后原正文与新续问一致。两案分别八/七观察、机械各1/1及语义独审通过，30.840/16.412秒分别为观察上界；折叠扩展字段不当工具或完整协议证据。原std[]不回填，不补新冷载、原始标识、返回目录、当前程序版本、全部历史或预览/新带入，完整ARCH-29/31及整家开放。见[Poolside历史与上下文组合](evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json)。
 
 OpenCode原自有对话的S3三要素经独立组合审在macOS arm64、原“沿用已有设置 / OpenCode Big Pickle / build”范围认定满足，未提供思考选项不补等级。正常打开实际从加载到原用户/首答；一次不含旧答案的续问精确回复、完成及当前空闲；一次官方查找返回原已加入目标，选中/打开各一次后原正文与新续问对应。两案分别八/七观察、机械1/1及语义审通过，31.447/16.196秒各为观察上界。原canonical标准IDs不回填；不称原始标识、同连接、新冷载、返回目录或当前程序版本已核，不补预览/新带入/全部历史，完整ARCH-29/31、其他配置与整家保持开放。见[OpenCode历史与上下文组合](evidence/2026-10-24-agent-acceptance/opencode-formal-e954-history-continuation-summary.json)。

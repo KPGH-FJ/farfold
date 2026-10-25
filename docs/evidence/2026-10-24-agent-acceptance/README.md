@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[Copilot历史与S3范围认定](copilot-formal-e954-history-continuation-summary.json)分别留原对象正常恢复、一次精确上下文续问和一次官方查找/选中/打开，独审认定S3仅原Existing、Auto、Agent、Allow All Off及macOS arm64范围满足；思考未提供不补等级。两案八/七观察、各机械1/1，31.888/21.014秒分别记录，一条原官方目标已加入，零新预览/带入或额外模型。原准备错误与std[]保持，不外推同连接/原始标识/当前程序版本/全部历史或整家。
+
 [Poolside历史与S3范围认定](poolside-formal-e954-history-continuation-summary.json)分别留原对象正常恢复、一次精确上下文续问和一次官方查找/选中/打开，独审认定S3仅原Existing、laguna-s-2.1、Max、Always ask、Build及macOS arm64范围满足。两案八/七观察、各机械1/1，30.840/16.412秒各自记录；一条官方结果已加入，零新预览/带入/额外模型，折叠扩展字段保留。不回填std[]，不外推原始标识/同连接/当前程序版本/全部历史或整家。
 
 [OpenCode历史与S3范围认定](opencode-formal-e954-history-continuation-summary.json)组合原对象正常打开的加载→原正文、一次精确上下文续问及一次官方查找/选中/打开，独审认定S3仅原配置、原对象、macOS arm64范围满足。两案八/七观察、各机械1/1与独审通过，31.447/16.196秒分别记录；不回填原std[]，不外推新冷载、原始标识、返回目录、全部历史、预览/新带入、当前程序版本或整家。准备错误及原失败/未知保留。
