@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalInstallationEvidence",
+  "sourceCommit": "625158abf72b89bfdc0e0704d000003022931f19",
+  "application": {
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "242b28f59692e59eb6458b5138dfd17c05296b3685afa3d092e4721476bf833c"
+  },
+  "engineering": {
+    "inputCount": 2292,
+    "checks": "7 new sequential actual commands",
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 686,
+      "passed": 9132,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2307,
+      "failed": 0,
+      "ignored": 6
+    },
+    "nativeMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "nativeDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "engineeringBaseHead": "499d0dbbfae169d6646fae90b6d30aada7a6b7c1",
+    "checksRanAtFinalCommit": false,
+    "checksRanBeforeCommitOnExactInputMap": true,
+    "boundary": "Precommit checks and final committed source share the declared complete input map. Recorded per-command endpoint comparisons are true; intermediate complete maps were not retained. No continuous writer-absence or frozen dependency/environment claim. Frontend used direct Vitest with four workers, not a literal pnpm test invocation."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "buildExitCode": 0,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "independentReviewExitCode": 0,
+    "archiveBytes": 16189461,
+    "archiveSha256": "7a6fa997ff6dbd3b1160ec6fb0b32dc8826bf9a0faab73ef5efdd9c4618bb699",
+    "archiveVerifiedByCandidateReview": true,
+    "archiveRetained": true,
+    "signature": "Strict internal ad-hoc verification passed in the candidate review; no public signing or notarization claim."
+  },
+  "installation": {
+    "normalSaveQuitCount": 1,
+    "forcedQuitOrExtraStop": 0,
+    "atomicInstallExitCode": 0,
+    "atomicStage": "installedVerifiedNotLaunched",
+    "exactFiles": 5,
+    "replacement": "Five per-file atomic replacements; old file inodes were not written.",
+    "onlyFormalAppUpdated": true,
+    "appBackupCreated": false,
+    "automaticRetryOrRestore": false,
+    "installedChecksPassed": 10,
+    "installedChecksTotal": 10,
+    "installedIndependentReview": "Actual independent ten checker completed once with natural exit0; its empty normal-quit field is not used as saved-quit proof. Root normal-quit receipt is cited separately."
+  },
+  "dataRetention": {
+    "freshClosedEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "threeFullManifestsEqual": true,
+    "threeRawMetadataReceiptsEqual": true,
+    "retainedBackupIntegrityCheck": "Fresh before capture verified private backup integrity and closed handles; actual ten verified its sealed bytes and recorded integrity without rerunning SQL or opening the original database.",
+    "reviewBoundary": "Actual independent ten checked all three complete manifests and retained byte evidence. Root public assembly reads sealed metadata; counts refer separately to endpoints, not a continuous retention or all-data-behavior guarantee."
+  },
+  "candidateCleanup": {
+    "removedExactFiles": 5,
+    "removedExactDirectories": 5,
+    "formalFilesAndModesUnchanged": true,
+    "archiveRetained": true
+  },
+  "firstLaunch": {
+    "observed": true,
+    "initialHistoryCountLabel": 156,
+    "retainedDraftCountLabel": 1,
+    "emptyNewComposer": true,
+    "retainedNewDraftPreparingLabelVisible": true,
+    "modelPrompts": 0,
+    "scope": "First-launch UI labels only. Retained new-draft preparation is not a model request or complete readiness proof; history/draft counts do not prove all restored content. Actual Kilo saved-details lookup/open is a separate case."
+  },
+  "coverageLimits": [
+    "The referenced source summary describes its earlier pre-install checkpoint. Its old not-installed statement is historical; the newer atomic install stage is recorded separately here and does not rewrite that source evidence.",
+    "The original e954 Kilo list case remains incomplete. This installation evidence does not itself establish the separate new saved-details lookup/open, automatic title change or new model continuation.",
+    "No new model request or real-Agent capability result is inferred by installation. Candidate, nine, atomic install, ten, exact cleanup and first-launch UI are separate proof levels.",
+    "Earlier failures and unknown work, six waits and the affected NEW-24 pause remain unchanged. No full P33/ARCH-31/S3, standard, Agent, 151-condition or29-by-8 closure.",
+    "User-data, database, backup and manifest digests, account details, native conversation identifiers, owner paths and draft contents remain private; only their scoped aggregate retention facts are included."
+  ],
+  "reviewRole": "Independent reviewer executed the actual nine and ten checkers. Root operated candidate build, normal saved quit, fresh closed captures, atomic installation, exact duplicate cleanup and first-launch UI; a separate contributor prepared the earlier private metadata draft.",
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/candidate-output/candidate.json",
+      "sha256": "2fecb835aea8789c8a21abe5cd95045d79d26bfe54684c4a1f6e0e4ad6facbc5"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/candidate-natural-completion.json",
+      "sha256": "c4477e6331a65d8524a9de3321d9441fab991644470ad9569563d062a8ba91d9"
+    },
+    "candidateExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/candidate-cli-execution.json",
+      "sha256": "7742e859cccd9d6ee0ecba017ca9b5872464fb98746cd1541d1e3e740d65b91b"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/independent/review-v2.json",
+      "sha256": "d0f99c35316164723d3f09eb6b8195b9ccc169137987eff9be5164c3c17e40d4"
+    },
+    "candidateNineExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/nine-cli-execution.json",
+      "sha256": "2a53059b973049d6834779885740df21036648e95d015488fd64680f4c9516e4"
+    },
+    "normalQuit": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/normal-quit-receipt.json",
+      "sha256": "f195a6a34dea5e42b0943415c315d93d58efadd6cb5ed0e09d2cb536121ad7cc"
+    },
+    "retentionBefore": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/retention-before-receipt.json",
+      "sha256": "6c6fc0e57e9d8f060cda470f6cc3c75374d20af47a0cb82f7c2816a66cc5110c"
+    },
+    "retentionBeforeExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/before-cli-execution.json",
+      "sha256": "870a8d8c871f5e6ed548a443417f872b1708139321c57fc6f4987d9a83cba020"
+    },
+    "retentionPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "1b5682d554e8667721db436f3ebad7b3ed5f97f85164c0739bf506578498ec02"
+    },
+    "retentionPreinstallExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/preinstall-cli-execution.json",
+      "sha256": "bba74e7d2df2b26079d54f6be248e79bf8600c12c5a3405930957e5c17172c0e"
+    },
+    "retentionAfter": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/retention-after-receipt.json",
+      "sha256": "0e9ebb5efa10b04c747c2006b71848b4aa3ca1cc5c2d2d894ed72644874aa0b5"
+    },
+    "retentionAfterExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/after-cli-execution.json",
+      "sha256": "11d50c445c1520d4d46d7c4df800b158d60b15220906dad544471489bc8c9e65"
+    },
+    "installation": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/install-result.json",
+      "sha256": "2d99f374df126cc6f778d6c1d840e68eab246c42fc6e24405264ed7618f6479a"
+    },
+    "installationExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install-cli-execution.json",
+      "sha256": "d68de5081a2945bc8287c91a93876a203480d094985cf8a36d38a345f5f15b31"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/source-freeze-final.json",
+      "sha256": "b67cae6517cad9a27c2e5fb9e48f8b07cc466df28cb1df03243929a33264f18b"
+    },
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/engineering-summary.json",
+      "sha256": "705632f94cd5c247101e518b6e062d57dd217f5e90f4ef2a0c82c0da6d18a8b7"
+    },
+    "engineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-engineering/independent-engineering-review.json",
+      "sha256": "958921af57b402be6bb98b6a9463b5a9e2e115c9a2ee7f9b8c9627e37551fbed"
+    },
+    "sourceSummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/history-saved-details-source-summary.json",
+      "sha256": "77dbabb4705127c6c32d7bfed078cb150ca18b7c3e0982e44719e82fcb6a913e"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "7f67fb023943bdfb6bb578d204b10e97785b12308a1c6792c7cad05d7b41caad"
+    },
+    "installedTenExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/ten-cli-execution.json",
+      "sha256": "0dfd017bbaceba6f4ebf2e638a3b0adeb938bf55aa2f0e91ffe6729cb96c2bc6"
+    },
+    "cleanup": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/candidate-cleanup.json",
+      "sha256": "0854ca845f6c275a21a595148dc63b64c4a6bbded631fe070e2c7d010dc1daf6"
+    },
+    "cleanupExecution": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/cleanup-cli-execution.json",
+      "sha256": "0a6140eecf6991715db9ad45c6ae432c55930ca38790538c2134cb0d9bf42ac9"
+    },
+    "firstLaunch": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-install-preparation/install/first-launch-ui-private.json",
+      "sha256": "c3d044343f0864896861a70c822116c952b7d5a45107b1f9b507a7beeff7d1ce"
+    }
+  }
+}
