@@ -336,6 +336,8 @@ function ToolDetail({
   activity?: "active" | "finished" | "unknown";
   onOpenFile?: OpenMessageFile;
 }) {
+  const rawOutput =
+    call.rawOutput === undefined ? "" : rawOutputText(call.rawOutput);
   return (
     <div className="step-detail">
       <div className="step-locs">
@@ -409,9 +411,9 @@ function ToolDetail({
           </pre>
         );
       })}
-      {call.rawOutput !== undefined && (
+      {rawOutput.length > 0 && (
         <pre className="step-text" data-find-block>
-          {rawOutputText(call.rawOutput)}
+          {rawOutput}
         </pre>
       )}
       <ReportedDetails details={call.reportedDetails} />

@@ -31,7 +31,7 @@ const entrypoints = [
 ];
 
 // Progress is deliberately not part of an original completion condition.
-// NEW issue descriptions use three columns; the original audit uses four.
+// Original titles/completions stay fixed; an optional middle progress column may change.
 export function verifyPlan(text, baseline) {
   const rows = new Map();
   for (const line of text.split(/\r?\n/)) {

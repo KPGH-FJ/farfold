@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "kind": "ScopedRealAgentManualCompactionUiObservationSummary",
+  "recordedAt": "2026-10-25T01:59:53.780Z",
+  "productCommit": "65a25cc4f25d99c80f5459c7c430768ff11d1597",
+  "formalApp": {
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "b7e5ff1614956bb39bae6de52c84ca8e5f7119f6ea29114a43958cbd1864d9aa",
+    "state": "installed"
+  },
+  "agentId": "mistral-vibe",
+  "officialCommandName": "compact",
+  "evidenceLevel": "real-agent",
+  "directObservationChannel": "installed-ui",
+  "executionCounts": {
+    "officialCommandSubmissions": 1,
+    "observationCases": 3,
+    "ordinarySeedPrompts": 0,
+    "additionalPrompts": 0,
+    "retries": 0,
+    "stopRequests": 0,
+    "settingsOrAccountChanges": 0,
+    "unsentOwnedProbeDraftsTypedAndRemoved": 1,
+    "newQueueItems": 0,
+    "caseCountsDoNotAddRequests": true
+  },
+  "mechanicalValidation": {
+    "mechanicallyValid": true,
+    "complete": false,
+    "expectedCases": 3,
+    "passed": 2,
+    "incomplete": 1,
+    "failed": 0,
+    "invalid": 0,
+    "errors": 0,
+    "naturalExitCode": 1,
+    "acceptanceVerified": false,
+    "meaning": "One observation case lacks busy-configuration coverage; this does not mean the Agent request remained unknown."
+  },
+  "semanticReview": {
+    "blockingFindings": 0,
+    "retainedNarrowUiPositives": 2,
+    "busyConfiguration": "not-tested",
+    "reviewerNewUiAgentOrValidatorActions": 0,
+    "countsNotAddedToMechanicalValidation": true
+  },
+  "observations": {
+    "currentActivity": {
+      "disposition": "retain-narrow-ui-positive",
+      "association": "One current tool card under the one newly submitted official command.",
+      "inProgressThenReportedEndedWithResultVisible": true,
+      "ordinaryRequestSeparatelyDisplayedEndedAndIdle": true,
+      "stopControlRemoved": true,
+      "rawToolCallIdAndRawStatus": "not-exposed",
+      "capturedOfficialTerminalEventOrSdkResponse": false,
+      "uiDisplayedToolElapsedSeconds": 15,
+      "exactFirstTerminalTime": "not-captured",
+      "exactRequestDuration": "not-established"
+    },
+    "busyInput": {
+      "disposition": "retain-narrow-ui-affordance-positive",
+      "nonemptyUnsentProbeDisplayedAddToQueue": true,
+      "probeSubmitted": false,
+      "originalEmptyComposerRestored": true,
+      "actualQueueCreationOrDrain": "not-tested",
+      "serverAdmissionOrSecondRequestRejection": "not-tested"
+    },
+    "busyConfiguration": {
+      "disposition": "not-tested-incomplete",
+      "reason": "Request ended before protected configuration controls were inspected while busy.",
+      "postCompletionChoiceLabelsReadBackUnchanged": true,
+      "configurationSelectionsOrConfirmations": 0,
+      "receiptUnknownMeans": "Missing observation coverage, not unresolved Agent work."
+    }
+  },
+  "timing": {
+    "submittedAt": "2026-10-25T01:46:49.508Z",
+    "firstUiObservationAt": "2026-10-25T01:46:50.045Z",
+    "terminalObservedNoLaterThan": "2026-10-25T01:47:13.253Z",
+    "declaredMaximumObservationSeconds": 180,
+    "uiObservationWindowSecondsAsReviewed": 68.43,
+    "exactBackendDurationProven": false
+  },
+  "officialSourceBoundary": {
+    "releaseTag": "v2.25.8",
+    "sourceCommit": "7c19608af06f6c61d63f8f7a5c3430da73fba2ab",
+    "scope": "Conditional official manual-command start/end/error route through existing request and tool handling.",
+    "selectedExecutableSourceEquivalence": "unproven",
+    "agentVersionContext": "Prior UI declaration 2.25.8; current connection version unreported.",
+    "officialCompactionIdOrTypedExtensionRequiredByOriginalCondition": false,
+    "links": [
+      "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/acp/commands/registry.py#L51-L63",
+      "https://github.com/mistralai/mistral-vibe/blob/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/vibe/acp/commands/controller.py#L178-L198"
+    ]
+  },
+  "preservedReceiptCorrection": {
+    "initialRunEnvelopeErrors": [
+      "final-inputs-missing-or-changed",
+      "invalid-run-finish-time"
+    ],
+    "initialExecutionMeaningWasPremature": true,
+    "correctedOnly": ["run-level inputsAfter", "run-level finishedAt"],
+    "attemptsObservationsOutcomesAndManifestChanged": false,
+    "originalErrorRecordsPreserved": true,
+    "additionalAgentRequestsOrUiActions": 0,
+    "correctedReportExitOne": "Valid but incomplete observation coverage, not a validator crash or unknown Agent outcome."
+  },
+  "uncovered": [
+    "Compaction summary quality, context effectiveness or token savings",
+    "Busy configuration controls and actual setter admission",
+    "Actual second-request dispatch, backend admission or queue drain",
+    "Preexisting nonempty draft or queued-message retention",
+    "Shared maintenance and connection lifecycle operations",
+    "Background/automatic or independently continuing post-request activity",
+    "History/ended replay, malformed/missing-ID, late/disconnect or cancellation paths",
+    "Protocol-level terminal status and raw official tool identity",
+    "Effective backend account/model identity or current executable/source equivalence"
+  ],
+  "claimScope": {
+    "requirementIds": ["NEW-29"],
+    "standardIds": [],
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "new29Closed": false,
+    "acceptanceVerified": false,
+    "automaticPromotionOrReuse": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/source-plan.json",
+      "sha256": "6d5db6f0f11f7b1c7d24ca9f81af5e99b0a68aebde43c88c898d5695b8f40d99",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/manifest.json",
+      "sha256": "931752d6b299505261a159c78f7044645824ef19c610ea67db7736ae61981f31",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/actual-ui-observation.json",
+      "sha256": "18f9c4d44d14f7485baf40f00a6c7ee3ec7eef919e0372c39b8164928a61ab2e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/actual-receipt.json",
+      "sha256": "0b185fa8e35c9f3d7b79aad90a687218bf1d2004e5473100e1ee7202d698947d",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/validation.json",
+      "sha256": "de4799a262534600c9eac2d1c09118748e88179f5bc48a40f20b7487ec18d42c",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/run-envelope-correction.json",
+      "sha256": "d1e8a6527d4c83b45c5a41f94a2746e90decac8556191e9d5d4bbcbacb5f1264",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-compact-65a/independent-semantic-review.json",
+      "sha256": "f0053681eee2ef534bfa279872a4c61b649739048d3328fcf4ff492077124871",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-manual-readiness.json",
+      "sha256": "7804070061a42d411e91313edcee8c78bbc4c2ebbc242db24727be1ef70eeab1",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

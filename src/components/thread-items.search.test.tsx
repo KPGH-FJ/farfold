@@ -124,3 +124,75 @@ it("registers raw and reported extension payloads without indexing generated exp
   expect(html).not.toMatch(/<summary[^>]*data-find-block/);
   expect(html).not.toMatch(/<p\b[^>]*data-find-block/);
 });
+
+function stepTextBlocks(html: string) {
+  return [
+    ...html.matchAll(
+      /<pre class="step-text" data-find-block="true">([\s\S]*?)<\/pre>/g,
+    ),
+  ].map((match) => match[1]);
+}
+
+it.each([undefined, "", { output: "" }])(
+  "omits a zero-length raw result frame while retaining actual result content (%j)",
+  (rawOutput) => {
+    const source: ToolCallView = {
+      ...call,
+      locations: [],
+      rawInput: undefined,
+      rawOutput,
+      content: [{ type: "text", text: "actual-result-text" }],
+    };
+    const original = structuredClone(source);
+    const html = render(<ToolStep call={source} />);
+    expect(stepTextBlocks(html)).toEqual(["actual-result-text"]);
+    expect(html).toContain("步骤已结束");
+    expect(source).toEqual(original);
+    expect(source.rawOutput).toBe(rawOutput);
+  },
+);
+
+it.each([
+  ["reported-result", "reported-result"],
+  [{ output: "reported-result" }, "reported-result"],
+  [" \n ", " \n "],
+  [{ output: " \n " }, " \n "],
+  [
+    { reported: "opaque-result" },
+    "{\n  &quot;reported&quot;: &quot;opaque-result&quot;\n}",
+  ],
+  [null, "null"],
+] as const)(
+  "retains nonempty raw render text without trimming or replacing it (%j)",
+  (rawOutput, expected) => {
+    const source: ToolCallView = {
+      ...call,
+      locations: [],
+      rawInput: undefined,
+      rawOutput,
+      content: [{ type: "text", text: "actual-result-text" }],
+    };
+    const original = structuredClone(source);
+    expect(stepTextBlocks(render(<ToolStep call={source} />))).toEqual([
+      "actual-result-text",
+      expected,
+    ]);
+    expect(source).toEqual(original);
+    expect(source.rawOutput).toBe(rawOutput);
+  },
+);
+
+it("keeps a legitimately empty result empty and does not promote command input to output", () => {
+  const source: ToolCallView = {
+    ...call,
+    locations: [],
+    rawInput: { command: "input-only-text" },
+    rawOutput: { output: "" },
+    content: [],
+  };
+  const original = structuredClone(source);
+  const html = render(<ToolStep call={source} />);
+  expect(stepTextBlocks(html)).toEqual(["input-only-text"]);
+  expect(html).toContain("步骤已结束");
+  expect(source).toEqual(original);
+});

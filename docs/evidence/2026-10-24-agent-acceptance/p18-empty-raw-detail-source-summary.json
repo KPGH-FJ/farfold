@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "kind": "ControlledEmptyRawDetailSourceSummary",
+  "recordedAt": "2026-10-25T02:16:45.427Z",
+  "requirementIds": ["P18"],
+  "standardIds": [],
+  "sourcePins": [
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "51b3b976c8cd35e4bf5254e85b64671676eb2bf83fc122b8a9e4b718e2dd034d",
+      "lines": 686
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "21893a7de66cc39c2fc708986a379b26193e552b92dfd75aba6f7329c1d9dd30",
+      "lines": 198
+    }
+  ],
+  "change": "Render the existing raw-result pre only when its rendered text has nonzero length.",
+  "controlledProof": {
+    "red": {
+      "files": 1,
+      "tests": 17,
+      "passed": 14,
+      "failed": 3,
+      "naturalExitCode": 1
+    },
+    "green": {
+      "affectedFiles": 6,
+      "tests": 53,
+      "passed": 53,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "sameRedOracle": true,
+    "overlappingCountsNotAdded": true,
+    "typecheckExitCode": 0,
+    "targetFormatExitCode": 0,
+    "scopedDiffCheckExitCode": 0,
+    "independentSourceReviewBlockingFindings": 0,
+    "independentReviewReranChecks": false
+  },
+  "preserved": [
+    "Nonempty string/output-field priority and pure whitespace without trimming",
+    "Opaque structured serialization, null text and original raw/content/status objects",
+    "Command input remains input; no input-to-result fallback",
+    "Detail disclosure, search materialization and unrelated content rendering",
+    "Artifact output cap and command/log strategy"
+  ],
+  "scope": {
+    "productionFiles": 1,
+    "testFiles": 1,
+    "newUiStrings": 0,
+    "agentSpecificBranches": 0,
+    "fullEngineeringRun": true,
+    "sourceFixInstalled": false,
+    "installedAffectedPathRetested": false
+  },
+  "limits": [
+    "The original installed empty raw frame was observed; its actual incoming raw shape and unique cause were not captured.",
+    "These controlled renderer cases do not establish that the original installed frame is repaired.",
+    "Original P18 failures and independent cold-output observations remain separate.",
+    "Complete engineering checks passed at the precommit source map; formal installation and the real affected path remain pending."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "acceptanceVerified": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-render-fix/implementation.json",
+      "sha256": "a5f83a9e5c66e4dee8709a186afe40d5b947f882178cc489f1e1dd2837a4d0f9",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-render-fix/independent-source-review.json",
+      "sha256": "88cc2bfeaac7f3fcead696dda2207fcfe8f288cec6d01c7d1e28f30783b8dd12",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-render-fix/red-command.json",
+      "sha256": "0e7b62505230d1ef6e0b870dcd884e992eaeea6c36e7f2140716723bf92307fe",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-render-fix/green-command.json",
+      "sha256": "b1f7c93226e8fb9ff7a49b79fd8be941060c125e1156a3922bbbc8e7310a6d63",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-engineering/engineering-summary.json",
+      "sha256": "e43957166b9694b73db8f3304d69ac299ed2ab7e2d444a3c60c02ea1aebb4e07",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-engineering/independent-engineering-review.json",
+      "sha256": "b039a916ceacbaf10e745b0828afb7dd07655b5403f7cbf1d339d6e3bbc3ff0f",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p18-empty-raw-detail-engineering/root-natural-completion.json",
+      "sha256": "1e5f549b8700eb33ec2b1e05ddd61d493766544686427f656aace8db2e9bcb05",
+      "evidenceKind": "metadata"
+    }
+  ],
+  "engineering": {
+    "checksPassed": 7,
+    "baseHead": "1123fdbe2ddbee852a1a5ce6e563bf21d46e6dc8",
+    "checksRanBeforeCommit": true,
+    "sourceInputs": 2261,
+    "sourceEndpointsAndEachCommandMatch": true,
+    "frontendFiles": 673,
+    "frontendPassed": 8892,
+    "frontendFailed": 0,
+    "nativePassed": 2256,
+    "nativeFailed": 0,
+    "nativeIgnored": 6,
+    "naturalExitCode": 0,
+    "independentBlockingFindings": 0,
+    "frontendArgv": "corepack pnpm exec vitest run --maxWorkers=4",
+    "packageTestScript": "vitest run",
+    "literalPnpmTestInvocationClaimed": false,
+    "limits": "Source endpoints only; dependency install bytes/environment and continuous absence of writers are not established. Installation and real affected-path checks remain separate."
+  }
+}

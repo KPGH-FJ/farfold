@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "kind": "OwnedProjectSkillPreparationFailureWithoutInvocationSummary",
+  "recordedAt": "2026-10-25T02:16:45.427Z",
+  "installedProductCommit": "65a25cc4f25d99c80f5459c7c430768ff11d1597",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "observedEvidenceLevel": "installed",
+  "mechanicalValidation": {
+    "expectedCases": 2,
+    "passed": 0,
+    "failed": 1,
+    "incomplete": 1,
+    "errors": 0,
+    "mechanicallyValid": true,
+    "complete": false,
+    "naturalExitCode": 1,
+    "acceptanceVerified": false
+  },
+  "semanticReview": {
+    "blockingFindings": 0,
+    "retainedPositiveCases": 0,
+    "declaration": "Expected owned command absent in this prepared context.",
+    "adoption": "Not executed because the required declaration was absent.",
+    "incompleteMeaning": "Missing adoption coverage; no submitted Agent request remained unknown.",
+    "reviewerNewUiAgentOrValidatorActions": 0
+  },
+  "observedPreparation": {
+    "visibleNewDraftWorkflows": 1,
+    "currentOfficialCommandNameCount": 15,
+    "earlierInformalCount14Corrected": true,
+    "expectedOwnedSkillDeclared": false,
+    "workflowUseAgentConfirmations": 1,
+    "alternativeSettingValuesChosen": 0,
+    "operatorModeReasoningPermissionSetters": 0,
+    "ordinaryModelPrompts": 0,
+    "skillCommandSubmissions": 0,
+    "optionalSeeds": 0,
+    "retries": 0,
+    "stopRequests": 0,
+    "attachmentsAdded": 0,
+    "oldConversationReloads": 0,
+    "currentDraftLeftEmpty": true,
+    "zeroBackendRpcOrConfigurationWritesProven": false
+  },
+  "ownedArtifact": {
+    "bytes": 542,
+    "containsExecutableScriptsHooksDependenciesOrPrivateData": false,
+    "creationProvesDiscoveryOrAdoption": false,
+    "operatorAgentHomeNativeConfigOrTrustFileWrites": 0,
+    "doesNotEstablishAgentConfigurationWrite": true
+  },
+  "timing": {
+    "preparationObservationSeconds": 248.538,
+    "postSubmitObservationBudgetSeconds": 180,
+    "postSubmitWindowStarted": false,
+    "agentRequestTimeoutInferred": false
+  },
+  "limits": [
+    "The visible new working-folder path and preserved UI labels do not establish actual backend cwd, resolved project root, trust, account/model identity or preparation target.",
+    "The missing declaration has no established unique cause and does not prove absent official support or whole P40 failure.",
+    "One visible preparation workflow may perform multiple protocol/configuration operations; Use this Agent was confirmed once, not zero.",
+    "The owned artifact is a candidate input, not evidence that the Agent discovered or adopted it.",
+    "An asynchronously stale control index opened Add files, then was dismissed without file selection or mutation; no model request was retried.",
+    "The explicit 15-name observation governs the count correction; earlier original wording remains preserved."
+  ],
+  "acceptance": {
+    "realAgentAdoptionPositive": false,
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "p40Closed": false,
+    "acceptanceVerified": false,
+    "automaticPromotionOrReuse": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/source-plan.json",
+      "sha256": "2cb7802c50c02f9983c8b8366502698cc0f828c40b6196d00f03eb6a1d978beb",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/manifest.json",
+      "sha256": "3046217f9c2f54a61730c51f09fa8162d3608a6daf51e83ce3969b51067b9d36",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/actual-preparation-observation.json",
+      "sha256": "51a457b891d58505b368554c6e2316a6f320922ae5d197ce1e811c5342b3bc90",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/actual-receipt.json",
+      "sha256": "55ec958ee0ce52fafd7ce3cfe226e4e38b1a30286c5a0def24f937695c2e6c70",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/validation.json",
+      "sha256": "a7dffe9bd9d509951b05cb6889865369f4e4a8defb4aed641cd292874d76878b",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/independent-semantic-review.json",
+      "sha256": "4b2a32901358502d028ff41aecca201a0bbe28f9e460260e2058a8db6163f29b",
+      "evidenceKind": "metadata"
+    }
+  ]
+}
