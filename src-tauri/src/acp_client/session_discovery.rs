@@ -123,6 +123,7 @@ pub(super) async fn open_import_preview(
     let preview = ImportPreview {
         preview_token: token.clone(),
         session: super::session::SessionOpenResult {
+            workspace_access: None, // A preview is not an executable session owner.
             session_operations,
             connection_id: opened.connection_id,
             service: source.as_ref().map(|source| source.identity.clone()),

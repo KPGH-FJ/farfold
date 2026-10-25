@@ -526,7 +526,10 @@ impl AcpManager {
             life.clone(),
             connection_id.clone(),
         );
+        let account_query = super::account_launch::reviewed(agent);
+        let workspace_access = super::workspace_access::Availability::new(account_query);
         let ops = SessionOps {
+            workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
             opening: None,
             connection_id: connection_id.clone(),
@@ -541,7 +544,6 @@ impl AcpManager {
         let agent_label_for_task = agent_label.clone();
         let handshake = Arc::new(std::sync::OnceLock::<Handshake>::new());
         let account = Arc::new(Mutex::new(None));
-        let account_query = super::account_launch::reviewed(agent);
 
         // Reserve the key before spawning: a concurrent connect() waits on
         // this CONNECTING entry instead of starting a duplicate process.
@@ -560,6 +562,7 @@ impl AcpManager {
                     connection_id,
                     account: account.clone(),
                     account_query,
+                    workspace_access,
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),

@@ -69,6 +69,7 @@ fn register_connection(
             connection_id: "fixture-connection".into(),
             account: Default::default(),
             account_query: None,
+            workspace_access: crate::acp_client::workspace_access::Availability::new(None),
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(handshake),

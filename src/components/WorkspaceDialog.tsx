@@ -8,12 +8,14 @@ export function WorkspaceDialog({
   children,
   onClose,
   returnFocusRef,
+  returnFocusWhen,
   busy = false,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  returnFocusWhen?: () => boolean;
   /** In-flight work locks Escape, backdrop and the close control. */
   busy?: boolean;
 }) {
@@ -25,6 +27,7 @@ export function WorkspaceDialog({
     busy,
     onDismiss: onClose,
     returnFocusRef,
+    returnFocusWhen,
     autoFocus: true,
     backdropDismiss: true,
   });

@@ -2,6 +2,7 @@ import { applyConfigCheck } from "./config_check";
 import { replacePermissionEffect } from "./permission_effect";
 import { pauseQueue } from "./queue";
 import { sessionOperations } from "./session_fork_types";
+import { workspaceAccessCapability } from "./workspace_access_types";
 import type { OpenInput } from "./session_open_input";
 import { draftGroup } from "./session_open_input";
 import type { OpenResult } from "./session_open_types";
@@ -70,6 +71,7 @@ export function applyOpeningResult(
   state.serviceContext = result.serviceContext ?? undefined;
   state.connectionId = result.connectionId;
   state.sessionOperations = sessionOperations(result.sessionOperations);
+  state.workspaceAccess = workspaceAccessCapability(result.workspaceAccess);
   state.draftGroup = draftGroup(input);
   state.resumed = result.resumed;
   state.identity = result.resumed ? "established" : "draft";

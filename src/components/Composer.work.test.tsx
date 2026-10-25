@@ -25,8 +25,9 @@ vi.mock("../runtime/work_policy", () => ({
 }));
 import { Composer } from "./Composer";
 import { ComposerWorkNotice } from "./ComposerWorkNotice";
+import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
-import { threads } from "../runtime/sessions";
+import { freshThreadState, threads } from "../runtime/sessions";
 import { queueEditorKey, startQueueEditor } from "../runtime/queue_edit";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 
@@ -66,6 +67,24 @@ beforeEach(() => {
   policy.locationEnabled = undefined;
   policy.set.mockClear();
   policy.setLocation.mockClear();
+});
+
+it("places the same read-only folder-status control in prepared and existing composers", () => {
+  const thread = freshThreadState("owned", "fixture", "/owned", "native");
+  thread.connectionId = "connection";
+  for (const identity of ["draft", "established"] as const) {
+    thread.identity = identity;
+    const elements = captureComposer({
+      thread,
+      imageEnabled: false,
+      onGoSettings() {},
+    });
+    const control = elements.find(
+      (node) => node.type === WorkspaceAccessControl,
+    );
+    expect(control?.props.thread).toBe(thread);
+    expect(control?.props.active).toBe(true);
+  }
 });
 
 it("restores an explicitly paused location without changing a single Agent or sending its queue", () => {

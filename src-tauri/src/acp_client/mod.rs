@@ -75,6 +75,7 @@ pub(crate) mod versions;
 mod regression_tests;
 
 mod wait;
+pub mod workspace_access;
 
 #[cfg(test)]
 mod config_guard_tests;

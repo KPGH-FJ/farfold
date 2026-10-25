@@ -33,6 +33,7 @@ import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { FILE_OPEN_STRINGS } from "./file_open_strings";
 import { SOURCE_TEXT_SELECTION_STRINGS } from "./source_text_selection_strings";
 import { WORKSPACE_STRINGS } from "./workspace_strings";
+import { WORKSPACE_ACCESS } from "./workspace_access_strings";
 import { PREPARATION_STRINGS } from "./preparation_strings";
 import { PREPARATION_ACTION_STRINGS } from "./preparation_action_strings";
 import { INSTALLATION_INPUT_STRINGS } from "./installation_strings";
@@ -97,6 +98,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      WORKSPACE_ACCESS,
       PROMPT_ADMISSION,
       COMPACTION,
       REMEMBERED_BROWSER_STRINGS,

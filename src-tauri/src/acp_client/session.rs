@@ -1272,6 +1272,7 @@ impl InteractionReply {
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
+    pub workspace_access: Option<super::workspace_access::Capability>,
     pub session_operations: super::session_fork::SessionOperations,
     pub connection_id: String,
     pub native_session_id: String,

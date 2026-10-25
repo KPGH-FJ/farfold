@@ -4,6 +4,16 @@ use agent_client_protocol::schema::v1::ContentBlock;
 
 /// Commands delivered to the session pump task.
 pub(crate) enum SessionControl {
+    WorkspaceAccessStatus {
+        request: Box<super::super::workspace_access::Request>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<
+            Result<
+                super::super::workspace_access::WorkspaceAccessStatus,
+                super::super::workspace_access::AccessError,
+            >,
+        >,
+    },
     Fork {
         request: Box<super::super::session_fork::ForkRequest>,
         deadline: tokio::time::Instant,
@@ -88,6 +98,11 @@ pub(crate) enum SessionControl {
 impl SessionControl {
     pub(super) fn reject(self, error: String) {
         match self {
+            Self::WorkspaceAccessStatus { result, .. } => {
+                let _ = result.send(Err(
+                    super::super::workspace_access::ErrorKind::Changed.into()
+                ));
+            }
             Self::Prompt { result, .. } => {
                 let _ = result.send(super::super::active_prompt::DispatchResult::Rejected(error));
             }
@@ -118,6 +133,9 @@ impl SessionControl {
     }
     pub(super) fn abandoned(&self) -> bool {
         let (deadline, closed) = match self {
+            Self::WorkspaceAccessStatus {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
             Self::ForkClose { result } => return result.is_closed(),
             Self::Fork {
                 deadline, result, ..

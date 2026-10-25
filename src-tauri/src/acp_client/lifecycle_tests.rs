@@ -65,6 +65,9 @@ mod account_status_tests;
 #[path = "account_query_wire_tests.rs"]
 mod account_query_wire_tests;
 
+#[path = "workspace_access_wire_tests.rs"]
+mod workspace_access_wire_tests;
+
 #[path = "account_logout_tests.rs"]
 mod account_logout_tests;
 

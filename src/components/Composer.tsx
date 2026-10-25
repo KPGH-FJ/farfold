@@ -19,6 +19,7 @@ import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
 import { DangerConfirmDialog } from "./DangerConfirm";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import {
@@ -1338,6 +1339,9 @@ export function Composer({
               <PlusIcon size={20} />
             </button>
             {controls}
+            {!queueEditing && (
+              <WorkspaceAccessControl thread={thread} active={active} />
+            )}
             {thread && !queueEditing && (
               <button
                 ref={shortcutAnchor}

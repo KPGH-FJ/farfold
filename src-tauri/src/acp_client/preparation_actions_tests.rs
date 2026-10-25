@@ -233,6 +233,7 @@ fn api_connection(
             connection_id: "fixture-connection".into(),
             account: Default::default(),
             account_query: None,
+            workspace_access: super::super::workspace_access::Availability::new(None),
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(OnceLock::new()),

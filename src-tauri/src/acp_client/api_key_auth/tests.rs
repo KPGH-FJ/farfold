@@ -120,6 +120,7 @@ fn register(
             connection_id: "fixture-connection".into(),
             account: Default::default(),
             account_query: None,
+            workspace_access: crate::acp_client::workspace_access::Availability::new(None),
             command_tx,
             state: Arc::new(AtomicU8::new(STATE_READY)),
             handshake: Arc::new(handshake),

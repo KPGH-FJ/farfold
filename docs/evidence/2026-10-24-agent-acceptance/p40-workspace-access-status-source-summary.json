@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "kind": "CurrentConnectionReadonlyWorkspaceAccessStatusSourceSummary",
+  "recordedAt": "2026-10-25T03:42:18.878Z",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "problem": "The formal application could not query workspace trust on its existing official connection; the independent diagnostic could not establish that owner scope.",
+  "change": {
+    "entry": "One shared Composer entry for an already prepared draft or existing conversation.",
+    "command": "session_workspace_access_status",
+    "wireMethod": "_trust/status",
+    "owner": ["agentId", "cwd", "sessionId", "connectionId"],
+    "availability": "Reviewed official-entry supplement, separate from the unchanged initialize declaration; method-not-found withdraws this connection capability.",
+    "result": "Finite Agent-reported trusted/session/untrusted status with verified current directory and optional repository scope; absent details remain unknown.",
+    "noImplicitActions": [
+      "new/load/reconnect",
+      "auth or model prompt",
+      "trust decision",
+      "configuration write",
+      "retry",
+      "extra global sending gate"
+    ],
+    "lateDelivery": "Owner and service identity must still match. Caller timeout ends delivery; the original read lease remains until response or owning actor termination.",
+    "projectionLimit": "64KiB after SDK parsing; not a transport/RSS or filesystem-isolation guarantee."
+  },
+  "sourcePins": [
+    {
+      "path": "src-tauri/src/acp_client/workspace_access.rs",
+      "sha256": "6caae38a34e933be894a9be27b2e677f57da00c97f1bf814253d5dd76c68f538",
+      "lines": 410
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_tests.rs",
+      "sha256": "6fb8f030a9f41eaca2bd3002b5ae524dd6c84b60e408e0e6700b1e3251bed41d",
+      "lines": 196
+    },
+    {
+      "path": "src-tauri/src/acp_client/workspace_access_wire_tests.rs",
+      "sha256": "7747ab06d9def5f38f47298470c481c1d28d63f514071378d7f9818b028bc95c",
+      "lines": 193
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "60178557fc83e71583c62a72855545257fd0f8f66cd7cf8b6ceb237fb35c67b1",
+      "lines": 164
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_identity.rs",
+      "sha256": "d1d24bb011a96472617f7aa4ea544fed0f89208cf3ca6b75a8b4beda8cec98bb",
+      "lines": 127
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "6897e2d691750e42b761d3435d980e2fb598a7501876493644528eddbfa0f7e3",
+      "lines": 1245
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "49add3d1c04eee11667e2f707223dc20a922da72fd2cf12846582eccf6c9c84f",
+      "lines": 1353
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/control.rs",
+      "sha256": "4672d3be96ac1155f3aa7951c7f455061911ebd2174cde19310fc0fede242b9b",
+      "lines": 170
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "4241e9f748de82bc90da069d39fbb89cbea04b4e02d6b32f91d522e72fff9965",
+      "lines": 1315
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "b46a29c6bfadbe56c688d63adcf1bc5ba340437f6b45a0b2bbc8d21b0fec3bbb",
+      "lines": 834
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "4381fd99bed7c9290fbe85ef645c6a9ad4899a442d3482c44892324612e798a5",
+      "lines": 507
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_fork.rs",
+      "sha256": "72f36523dce9160b576a331bea87b7ca00705ffe6aaef9df09efe0b9a2992694",
+      "lines": 539
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "sha256": "f06f68cd9d9bcfccb82c52f55d253bae0678faa3bc712e1c096f83f0c8e4263a",
+      "lines": 457
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "sha256": "a94882f0697e3280d86f779359b5e51931c7bcb34eb42eb2f0c5e14a40789230",
+      "lines": 702
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+      "sha256": "c04f8bdb59bb41656eab1992442c536b9663dc9ff12aea471708ea76df8718ab",
+      "lines": 449
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/close_tests.rs",
+      "sha256": "b4661a6ce0748600ddffab95ea6fceebaac924354c1f47ebe37c6bc5f725737b",
+      "lines": 380
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager/authentication_tests.rs",
+      "sha256": "aea0c2e624ac9030bdbabaaf0b26924e58051707b19dd2c43a5e0fb74a477769",
+      "lines": 386
+    },
+    {
+      "path": "src-tauri/src/acp_client/api_key_auth/tests.rs",
+      "sha256": "4d7b0716d3df62781ec6619fe7273e71087a09ff7a13270a64a4a10403b6b15f",
+      "lines": 314
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/media_forwarding_tests.rs",
+      "sha256": "cfcc13f6673bd390203169de6aa47c897127dc16bd42fd9f2da4c7392308a862",
+      "lines": 195
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/model_id_retention_tests.rs",
+      "sha256": "546a7417eb0559b66131b342fb8fc537108099fc426b2d7bcd3bf57fee8fdde2",
+      "lines": 188
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "13a8f0bb6715bb9f6c66bc3e3e1b36983824e661eff62943941321c47124a62b",
+      "lines": 1302
+    },
+    {
+      "path": "src/runtime/workspace_access_types.ts",
+      "sha256": "ca0ea9d79315349baba2e3fe436535f62e24752db05892ec2ddd7dea5273db79",
+      "bytes": 1090,
+      "lines": 35
+    },
+    {
+      "path": "src/runtime/workspace_access_strings.ts",
+      "sha256": "04949b0bbb5a6d7af15ec0aff03ec518afeb51a88d11448c3742698a47de4428",
+      "bytes": 1191,
+      "lines": 26
+    },
+    {
+      "path": "src/runtime/workspace_access_status.ts",
+      "sha256": "e953033095650377e50223e2957ccebc10e51c36b19b1c5ada6f508c9d13eecf",
+      "bytes": 6098,
+      "lines": 192
+    },
+    {
+      "path": "src/components/WorkspaceAccessControl.tsx",
+      "sha256": "7ba0e68ac6de0ed0e0514fb765b293e9f4108369344be9972dd4c3588c45119f",
+      "bytes": 4132,
+      "lines": 129
+    },
+    {
+      "path": "src/runtime/session_open_types.ts",
+      "sha256": "0e4d72c8b2e40e792930507705c628d884250732d745ca9efd780386efb8ee6d",
+      "bytes": 861,
+      "lines": 26
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "38cab66c3fa518bb7e1bdfb39fd847e6ebb917e6d6183a179483730fb1d4ab5c",
+      "bytes": 13024,
+      "lines": 401
+    },
+    {
+      "path": "src/runtime/session_open_state.ts",
+      "sha256": "3634092b455886d3230d82ef052877c133c4b65fe0d0407bef806617516bae1f",
+      "bytes": 4454,
+      "lines": 110
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "dcaca1c2f539cff771ae7e67b5505b233c64364cad7a837c980f9fe76273604b",
+      "bytes": 51080,
+      "lines": 1493
+    },
+    {
+      "path": "src/components/WorkspaceDialog.tsx",
+      "sha256": "ff92dd9a0f11a0243199e84f8a3cd66bd4bf2f56e7670a3d2f6a806633fa698e",
+      "bytes": 1450,
+      "lines": 58
+    },
+    {
+      "path": "src/components/useModalDialog.ts",
+      "sha256": "76f3d13b23ef56b936590a3bd28919953ce001419011af3167d8675f4c510999",
+      "bytes": 5400,
+      "lines": 164
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "c9e38b4065d4b057e2b677862ca3f5d0c57135a64452811a68f7bf28584c1747",
+      "bytes": 7715,
+      "lines": 190
+    },
+    {
+      "path": "src/runtime/session_open_state.workspace-access.test.ts",
+      "sha256": "a57a262b97dbe65618d6f0fd8a56477e70fcbd911b75f93a1a602be27a9449d7",
+      "bytes": 1145,
+      "lines": 41
+    },
+    {
+      "path": "src/runtime/workspace_access_status.test.ts",
+      "sha256": "24e7f6ab91a7e5bc71dba7eabbdb11bfa49d11e9f69833448308f948346b5606",
+      "bytes": 8321,
+      "lines": 256
+    },
+    {
+      "path": "src/components/WorkspaceAccessControl.test.tsx",
+      "sha256": "72cad0802c151e7da10cb3b98c653027a8de4025d8606a693f28b93de950e0a5",
+      "bytes": 6571,
+      "lines": 189
+    },
+    {
+      "path": "src/components/useModalDialog.test.tsx",
+      "sha256": "657f51208fd4258ecf14129940a3ed860bffff2230cb53d4761843549cfb0627",
+      "bytes": 10527,
+      "lines": 334
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "bd19946fbe3b0c5497354ba0c8143cffbfbc573d308aa6b46c3b7a418d6a903e",
+      "bytes": 7851,
+      "lines": 232
+    }
+  ],
+  "controlledProof": {
+    "backendNewTests": 12,
+    "backendLaunchRegression": 4,
+    "backendForkRegression": 23,
+    "frontendFinalAffectedFiles": 18,
+    "frontendFinalAffectedPassed": 224,
+    "frontendProjectionRed": {
+      "tests": 2,
+      "passed": 1,
+      "failed": 1
+    },
+    "frontendInitialHarnessError": "60 pass/6 fail was a beforeEach cleanup-return error, preserved separately and not product RED.",
+    "hookLocationCorrection": "Test-only enable helper moved into the test file; final 12-case rerun and comment-only delta retained.",
+    "overlappingCountsNotAdded": true,
+    "independentSourceBlockingFindings": 0
+  },
+  "engineering": {
+    "baseHead": "b8805830962dd5ff06d63c2d870425066632c09b",
+    "checksRanBeforeCommit": true,
+    "sourceInputs": 2271,
+    "sourceEndpointsAndEachCommandMatch": true,
+    "checksPassed": 7,
+    "frontendArgv": "corepack pnpm exec vitest run --maxWorkers=4",
+    "literalPnpmTestInvocationClaimed": false,
+    "frontendFiles": 676,
+    "frontendPassed": 8938,
+    "nativePassed": 2268,
+    "nativeFailed": 0,
+    "nativeIgnored": 6,
+    "sameSession": 37538,
+    "naturalExitCode": 0,
+    "independentBlockingFindings": 0
+  },
+  "limits": [
+    "Not installed and no real App/Agent same-connection query has been executed for this feature at this source checkpoint.",
+    "Trust status is one read-time Agent report, not persistent trust, permission mode, skill discovery/adoption or ongoing monitoring.",
+    "Temporary status scope and duration remain unverified. Optional absence is not skill/file absence.",
+    "Canonical path checks are not filesystem isolation; read-only RPC does not establish zero Agent-internal IO.",
+    "Source endpoint equality does not freeze dependencies/environment or prove absence of intermediate writers.",
+    "Original P40 declaration failure and adoption-unexecuted result, five login waits and historical unknown requests remain unchanged."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "acceptanceVerified": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/implementation.json",
+      "sha256": "1b0d960b40b500ef3e101989b36ba306cceaa88267b0e452131a9839977dd7e3",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/source-snapshot-after-hook-location.json",
+      "sha256": "00aa47895e755f28a9dab462e76ad7822e63b37298250180dada96f447a29a15",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/hook-location-delta.json",
+      "sha256": "f7752d858f07607c1800e5216ed22f8aab87dc5d8a3e45e0e30e6feb6f936a91",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/frontend/implementation.json",
+      "sha256": "408a221e81d4325fc821419bfeec5f5efd0e59f4b514a9cb4d07fd822deb85f9",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/frontend/checks-final.json",
+      "sha256": "c9943a78d760c76624d53efa754c322db3497b1053369a28c1f6c6a0d1da91b3",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/backend-independent-source-review.json",
+      "sha256": "0e5578f3ca6a499bef9bd5e20b732b7437cc7aa883be95a51afa5988f7a2e6b1",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-source/frontend-independent-source-review.json",
+      "sha256": "382dad1a0ea9137cb5f9b4154658318f0599b4b1259a11905c87709ceeb8e683",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-engineering/engineering-summary.json",
+      "sha256": "db8451aa8d9f6e9d59bae66e2796f88ab630d7191dceb2f117cf85f2749d1b29",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-engineering/root-natural-completion.json",
+      "sha256": "d1493e28e28061c9a49f3345fc24311dabe0ec541694cbfebbce0daeb8a836a4",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-workspace-access-status-engineering/independent-engineering-review.json",
+      "sha256": "b8871ccd94462c1fa07459608c2f99bc1417bf992c5a89f910658e5efd1d44d0",
+      "evidenceKind": "metadata"
+    }
+  ]
+}

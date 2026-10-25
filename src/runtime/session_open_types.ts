@@ -6,6 +6,8 @@ export interface OpenResult {
   nativeSessionId: string;
   connectionId?: string;
   sessionOperations?: import("./session_fork_types").SessionOperations;
+  workspaceAccess?:
+    import("./workspace_access_types").WorkspaceAccessCapability | null;
   /** Canonicalized cwd — session keys must be built from this. */
   cwd: string;
   configOptions: unknown;

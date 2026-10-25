@@ -171,6 +171,7 @@ pub async fn session_open(
         )?;
     }
     let session_operations = super::session_fork::capabilities(&connection, &opened.session_id);
+    let workspace_access = super::workspace_access::capability(&connection);
     let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
     if resumed {
@@ -182,6 +183,7 @@ pub async fn session_open(
             .map_err(|_| "未能完整读取对话内容，请重试")?;
     }
     Ok(SessionOpenResult {
+        workspace_access,
         session_operations,
         connection_id: opened.connection_id,
         service: source.as_ref().map(|s| s.identity.clone()),

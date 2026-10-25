@@ -1,0 +1,26 @@
+export const WORKSPACE_ACCESS = {
+  entry: "查看文件夹信任状态",
+  title: "文件夹信任状态",
+  reading: "正在读取文件夹信任状态…",
+  readOnly: "只读取当前文件夹的信任状态，不更改设置。",
+  folder: "当前工作文件夹",
+  repository: "已核对的项目范围",
+  noRepository: "未提供可核实的项目范围。",
+  noDetails: "未提供更多范围信息。",
+  reported: "以下是 Agent 本次读取时报告的状态，不代表技能已启用。",
+  temporaryScope: "实际有效范围和期限尚未核实。",
+  close: "关闭",
+  statuses: {
+    trusted: "已信任（Agent 报告）",
+    session: "临时信任（Agent 报告）",
+    untrusted: "未信任（Agent 报告）",
+  },
+  errors: {
+    unavailable: "当前 Agent 未提供这项查询。",
+    changed: "当前对话或工作文件夹已变化，请重新打开查看。",
+    busy: "当前仍有工作或结果尚未确认，暂时无法读取。",
+    timeout: "读取超时，状态尚未确认。未自动重试。",
+    invalidResponse: "返回的文件夹信任状态未能核实。",
+    queryFailed: "未能读取文件夹信任状态。",
+  },
+} as const;

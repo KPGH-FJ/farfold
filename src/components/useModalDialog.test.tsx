@@ -279,6 +279,27 @@ describe("useModalDialog busy locking", () => {
 });
 
 describe("useModalDialog nested focus return", () => {
+  it.each([false, true])(
+    "does not return focus for a retired owner (deferred=%s)",
+    async (deferFocusReturn) => {
+      const dialog = new FakeDialog();
+      const opener = new FocusTarget("old-owner");
+      page.activeElement = opener;
+      let current = true;
+      render({
+        dialogRef: { current: dialog as unknown as HTMLDialogElement },
+        returnFocusWhen: () => current,
+        deferFocusReturn,
+      });
+      const cleanup = h.effects[0]() as () => void;
+      if (!deferFocusReturn) current = false;
+      cleanup();
+      current = false;
+      await Promise.resolve();
+      expect(events).not.toContain("old-owner");
+    },
+  );
+
   it("yields the focus return to a still-open dialog when deferFocusReturn", async () => {
     const dialog = new FakeDialog();
     const opener = new FocusTarget("opener");

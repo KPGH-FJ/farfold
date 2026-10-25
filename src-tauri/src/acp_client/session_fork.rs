@@ -138,8 +138,10 @@ fn opened_result(
     cwd: &Path,
 ) -> SessionOpenResult {
     let session_operations = capabilities(&connection, &opened.session_id);
+    let workspace_access = super::workspace_access::capability(&connection);
     let source = connection.service;
     SessionOpenResult {
+        workspace_access,
         session_operations,
         connection_id: opened.connection_id,
         native_session_id: opened.session_id,

@@ -235,6 +235,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   /** Separate local process-end channel only; never copied to a new route. */
   processEndedConnectionId?: string;
   sessionOperations?: import("./session_fork_types").SessionOperations;
+  workspaceAccess?:
+    import("./workspace_access_types").WorkspaceAccessCapability | null;
   forkOperation?: import("./session_fork_types").ForkOperation;
   sourceError?: boolean;
   draftGroup?: string;

@@ -52,6 +52,7 @@ export function useModalDialog({
   busy = false,
   onDismiss,
   returnFocusRef,
+  returnFocusWhen,
   fallbackFocusRef,
   initialFocusRef,
   focusSelector,
@@ -66,6 +67,8 @@ export function useModalDialog({
   busy?: boolean;
   onDismiss?: () => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  /** An obsolete owner must not return focus into a replacement surface. */
+  returnFocusWhen?: () => boolean;
   /** Focus target when the recorded opener is gone (e.g. unmounted button). */
   fallbackFocusRef?: RefObject<HTMLElement | null>;
   /** Focused after showModal; takes precedence over any selector scan. */
@@ -86,6 +89,8 @@ export function useModalDialog({
   busyRef.current = busy;
   const dismissRef = useRef(onDismiss);
   dismissRef.current = onDismiss;
+  const returnFocusWhenRef = useRef(returnFocusWhen);
+  returnFocusWhenRef.current = returnFocusWhen;
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!open) {
@@ -109,6 +114,7 @@ export function useModalDialog({
     return () => {
       dialog?.close();
       const apply = () => {
+        if (returnFocusWhenRef.current?.() === false) return;
         const target =
           previous instanceof HTMLElement && previous.isConnected
             ? previous

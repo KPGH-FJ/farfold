@@ -120,6 +120,7 @@ pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicit
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
+    pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
     pub(crate) opening: Option<super::lifecycle::OpenReservation>,
     pub(crate) connection_id: String,
@@ -553,6 +554,7 @@ async fn session_pump(
     let mut fork_state: Option<Arc<super::session_fork::SourceFork>> = None;
     let mut stopping = ops.life.stop_receiver();
     let mut mutation: Option<Mutation> = None;
+    let mut workspace_access_read = None;
     let mut pending_config_store = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<prompt::Outcome>();
     let load_notifications::State {
@@ -662,6 +664,11 @@ async fn session_pump(
             // update the agent sent before the prompt response.
             biased;
             _ = stopping.changed() => break,
+            outcome = super::workspace_access::next(&mut workspace_access_read) => {
+                if let Some(outcome) = outcome {
+                    workspace_access_read.take().expect("completed workspace read exists").complete(outcome);
+                }
+            },
             completion = task_rx.recv() => {
                 if let Some(completion) = completion
                     && let Some(event) = ctx.async_tasks.complete(completion) { events(event); }
@@ -1056,6 +1063,27 @@ async fn session_pump(
                 }
                 SessionControl::StopTask { connection_id, task_id, result, .. } => {
                     events(ctx.async_tasks.start(&cx, &connection_id, &task_id, result, task_tx.clone()));
+                }
+                SessionControl::WorkspaceAccessStatus { request, result, deadline } => {
+                    if !request.matches(&ops.connection_id, &session_id) {
+                        let _ = result.send(Err(super::workspace_access::ErrorKind::Changed.into()));
+                        continue;
+                    }
+                    if ops.workspace_access.capability().is_none() {
+                        let _ = result.send(Err(super::workspace_access::ErrorKind::Unavailable.into()));
+                        continue;
+                    }
+                    if workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight
+                        || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
+                        || ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy() {
+                        let _ = result.send(Err(super::workspace_access::ErrorKind::Busy.into()));
+                        continue;
+                    }
+                    let lease = match ops.life.operation(format!("open:{session_id}")) {
+                        Ok(lease) => lease,
+                        Err(_) => { let _ = result.send(Err(super::workspace_access::ErrorKind::Busy.into())); continue; }
+                    };
+                    workspace_access_read = Some(super::workspace_access::Pending::start(*request, cx.clone(), result, deadline, lease));
                 }
                 SessionControl::SetConfig { config_id, value, result, deadline } => {
                     let permission = permission_guard.is_permission(&config_id);
