@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "kind": "QwenSameSettingsAndOriginalDraftRetentionPublicSummary",
+  "recordedAt": "2026-10-25T08:27:53.087712+00:00",
+  "installedSourceCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "agentDisplayName": "Qwen",
+  "requirementIds": ["P36", "P01"],
+  "standardIds": [],
+  "actualObservations": {
+    "sameSettingsWorkflow": 1,
+    "normalEnterNewDialogWithinThatWorkflow": 1,
+    "distinctNewEmptyUiDraft": true,
+    "newDraftCopiesOldVisibleBodyOrUnsentAttachments": false,
+    "originalAgentServiceModelThinkingModeLabelsMatch": true,
+    "modelAndSettingsMenusReadOnly": true,
+    "returnToOriginal": 1,
+    "originalNonemptyDraftAndOneAttachmentNameReviewStatePreserved": true,
+    "originalOwnVisibleHistoryRetained": true,
+    "visibleHistoryIndexCount": 147,
+    "ordinaryPrompts": 0,
+    "choiceChangesRechecksRetriesStopsQueueContinuesOrInputEdits": 0
+  },
+  "prospectiveMaterials": {
+    "originalInvalidTimestampManifestPreserved": true,
+    "changedOnlyFreshPreparedAtAndReviewBy": true,
+    "v2UtcPreparedAt": "2026-10-25T08:20:47.110Z",
+    "firstWorkflowAt": "2026-10-25T08:21:02.540Z",
+    "v2ExistedBeforeFirstWorkflow": true,
+    "expectationsInputsContextAndBudgetsUnchanged": true,
+    "notPostActionNormalizationOrAgentRetry": true
+  },
+  "mechanicalValidation": {
+    "naturalExitCode": 0,
+    "expectedCases": 2,
+    "passed": 2,
+    "acceptanceVerified": false,
+    "reviewerValidatorInvocations": 0
+  },
+  "independentSemantic": {
+    "qualifiedInstalledSamples": 2,
+    "blockingFindings": 0,
+    "sameWorkflowNotTwoAgentRequests": true
+  },
+  "limits": [
+    "Only installed warm preparation and original-draft navigation UI samples. No new native ID/durable row, native-context copying, cold restart or next-request proof.",
+    "Labels and source-route match are not fresh raw IDs, current account identity or effective model/reasoning. Zero ordinary prompt does not mean zero initialize/load/restore/configuration RPC.",
+    "The retained attachment remains review-required; its physical bytes were not read. Visible history count is not whole-history restoration or a new-row proof.",
+    "Other unknown work remains protected. No full P36/P01/S4, standard, Agent or29x8 acceptance."
+  ],
+  "acceptance": {
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/preflight.json",
+      "sha256": "a0e51c1ce8a148e44509c01bb3f77e153bf2be1c20b1e64ed0616f982997cf1b",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/case-plan.json",
+      "sha256": "d6659e5b171e87d12818858d4de702de6c270b7a5384c9221b7cc924c4b9e017",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/manifest.json",
+      "sha256": "8b4b16df0fa58466294981b499f6c714aee812f78729a0415018b97c94e1de0e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/manifest-v2-preaction-time.json",
+      "sha256": "cad0b7b89ae770e9a212b793d52461664122402e84b6dc6e6706038c8bbacfce",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/preaction-manifest-check.json",
+      "sha256": "c18a3d6c2fe0b81db763fba9ef84069ba8784244cade2e5c3e65285a43372e43",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/preaction-independent-review.json",
+      "sha256": "55bb43a39ab25a448849aa7430f2542ac31fbc932fb411b401b1cadea103bf90",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/actual-ui-observation.json",
+      "sha256": "e24cb6d5741fdef460344de61923336fdd13f510e40ad3d856e20cd228e5c58e",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/actual-receipt.json",
+      "sha256": "7e3d16cf937f97c14e875863c7a33212fb66ce62067ef137ae19822cdb79285d",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/post-case-input-check.json",
+      "sha256": "3e3ff9e5a860f453c9e444f3f41a662b7a3ecc27ac2fc4e9b9c9a3495a09cc46",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/validation.json",
+      "sha256": "ea375d579dd7c3b4808d53dfd2a1c3c403558bf9d8be04fe87e2e91d9c86f484",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/validation-execution.json",
+      "sha256": "9cd6854a059f50872d41d93a7a04c5eea53f99946de4ce42fbe8338ec429d598",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/qwen-same-settings-formal-5b31/independent-semantic-review.json",
+      "sha256": "96514fd961b9fcbaf67c8d7eaf13ea41f8da108bebb3fc1e1b0607e3ab4d91fe",
+      "evidenceKind": "independent-semantic-review"
+    }
+  ]
+}

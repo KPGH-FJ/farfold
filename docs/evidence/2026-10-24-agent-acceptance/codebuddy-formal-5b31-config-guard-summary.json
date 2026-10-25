@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "kind": "ExploratoryInstalledCodebuddyMixedConfigurationFeedbackPublicSummary",
+  "recordedAt": "2026-10-25T08:10:21.949045+00:00",
+  "installedSourceCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "agentDisplayName": "Codebuddy",
+  "observation": {
+    "normalOriginalOwnedHistoryColdLoad": 1,
+    "reportedSettingValueComparisonsVisible": 2,
+    "neutralUnknownMessageVisible": "设置尚未确认",
+    "unknownHasNoFabricatedEndpointArrow": true,
+    "originalNonemptyDraftVisible": true,
+    "attachmentCountVisible": 1,
+    "attachmentNeedsReview": true,
+    "pendingControlDisabled": true
+  },
+  "operatorActivity": {
+    "explicitConfigRechecks": 0,
+    "clonesOrNewSessions": 0,
+    "settingsChoices": 0,
+    "modelPromptsQueueContinuesRetriesStops": 0,
+    "draftOrAttachmentEdits": 0
+  },
+  "fileSample": {
+    "status": "not-started",
+    "newOwnedDirectoryCreated": false,
+    "canonicalManifestCreated": false,
+    "filePromptOrToolRequests": 0,
+    "countedAsFileFailure": false
+  },
+  "claimScope": "One incidental real installed-UI presentation observation. It was not a predeclared canonical case, controlled experiment or validator pass.",
+  "limits": [
+    "Displayed value differences are not classified as semantic aliases, real remote model/thinking changes, or a unique cause. Effective configuration remains unconfirmed.",
+    "Visible retained draft/attachment and disabled controls are not physical attachment-byte verification or an actual send-admission challenge. Earlier retention endpoints are not reused as warm-file proof.",
+    "Prior Mistral neutral wording remained unobserved; the Codebuddy occurrence is separate. Existing unknowns, guards and unrelated failed/unexecuted cases stay unchanged.",
+    "This review uses sealed metadata of parent AX/viewport observations; no App/pixel recapture, raw protocol, user configuration or account data was read. No elapsed-time or backend-latency claim."
+  ],
+  "acceptance": {
+    "exploratoryInstalledUiObservations": 1,
+    "canonicalCasesOrValidatorPassesAdded": 0,
+    "completeRequirements": 0,
+    "completeStandards": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/codebuddy-cold-guard-formal-5b31/actual-ui-observation.json",
+      "sha256": "b8c2222203f2d3bbc436f9bf4b4028cb478448f1fea0d211758af3351692a1ad",
+      "evidenceKind": "metadata"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/codebuddy-cold-guard-formal-5b31/independent-observation-review.json",
+      "sha256": "063bd626c8c41f1a18739d38ef19b0665902f410547d3382d1d4e94db89b6846",
+      "evidenceKind": "independent-observation-review"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-source/independent-source-review.json",
+      "sha256": "2afc87cd9c65988026530828d14002768bb3e781599d70a38be77b18cc2cd3e6",
+      "evidenceKind": "prior-source-review-not-actual-ui"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/codebuddy-cold-guard-formal-5b31/diagnostic-source-note.json",
+      "sha256": "f17ad56e19e37b75e6aa17e79741db06df71095c52cb55ba7466ac572901466b",
+      "evidenceKind": "read-only-source-diagnosis-not-root-cause-proof"
+    }
+  ],
+  "readOnlyDiagnosis": "旧保存选择有原自有证据；当前保护符合严格比较逻辑，但未取得确切声明或恢复分支，未证实Farfold缺陷、别名等价或唯一原因。保留保护与原选择，不重新检查或改选。"
+}

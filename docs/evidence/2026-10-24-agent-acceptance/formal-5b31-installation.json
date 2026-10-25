@@ -1,0 +1,143 @@
+{
+  "kind": "FormalInstallationPublicSummary",
+  "preparedAt": "2026-10-25T07:48:36.107Z",
+  "installedIdentity": {
+    "sourceCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+    "binarySha256": "826b1d965c6b97d61d823bca1a19d28ae74a17f373f54750f77648fb5531d28a",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "darwin-arm64",
+    "onlyFormalApplicationUpdated": true,
+    "sourceProvenance": "候选回执与安装后同一二进制/五文件核对链；发行清单仅提供版本，不含提交字段。"
+  },
+  "engineering": {
+    "baseHead": "9c8ef7689b574b1caf79ded90e576fda7406731b",
+    "inputs": 2278,
+    "checksPassed": 7,
+    "frontendFiles": 678,
+    "frontendPassed": 8985,
+    "nativePassed": 2292,
+    "nativeIgnored": 6,
+    "ranBeforeFinalCommitOnSameRecordedInputMap": true,
+    "ranAtFinalCommit": false
+  },
+  "completedUpdate": {
+    "candidateBuilds": 1,
+    "candidateNaturalExitCode": 0,
+    "candidateReview": {
+      "passed": 9,
+      "total": 9
+    },
+    "archiveBytes": 16175861,
+    "archiveSha256": "fe69ff17c12f4d65fceaed29e6b4262f9f242ee44b7ab77bd29cdcdb32faff58",
+    "normalQuitRequestedAt": "2026-10-25T07:33:36.074Z",
+    "saveAndExitConfirmedAt": "2026-10-25T07:33:44.187Z",
+    "freshDataChecks": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 232530,
+      "strictEquality": true,
+      "backupIntegrity": "ok"
+    },
+    "atomicReplacement": {
+      "files": 5,
+      "newInodes": 5,
+      "existingInodesWritten": false,
+      "applicationBackupCreated": false,
+      "forcedQuit": false,
+      "automaticRetry": false,
+      "restorePerformed": false
+    },
+    "installedReview": {
+      "passed": 10,
+      "total": 10
+    },
+    "duplicateCleanup": {
+      "files": 5,
+      "directories": 5,
+      "archiveAndFormalApplicationPreserved": true
+    }
+  },
+  "firstLaunch": {
+    "requestedAt": "2026-10-25T07:43:30.688Z",
+    "screenshotClockAfter": "2026-10-25T07:43:43.945Z",
+    "historyIndexCount": 146,
+    "retainedDraftCount": 1,
+    "currentDraftInputEmpty": true,
+    "retainedAgentSelectionAndOwnedFolderVisible": true,
+    "modelOrReasoningReadyVerified": false,
+    "limit": "后置截图时钟不等于启动完成耗时；计数与可见选择不证明全部历史/草稿正文或当前真实配置。"
+  },
+  "boundaries": [
+    "关闭端点与正常保存退出不证明所有外部工作已停止；未核读各历史未知记录，不改其成功/停止分类。",
+    "首次启动未复现中性未知配置提示，未进行重新检查、模型发送、配置修改或续发队列；后续独立功能分项另记。",
+    "安装检查不替代受影响界面、真实Agent或用户价值验证；提交前工程、候选检查、安装检查与首次启动分开计数。",
+    "旧正式版本的证据、当时未安装源码检查点及既有失败/未知原件保持。"
+  ],
+  "closures": {
+    "fullRequirement": 0,
+    "fullStandard": 0,
+    "wholeAgent": 0,
+    "all29Accepted": false
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-install-preparation",
+  "metadataReferences": [
+    {
+      "file": "all-completed-before-first-launch.json",
+      "sha256": "d7b430b3e06216329a1e51ae899420ed95097177059180568d345b8aedf29f24"
+    },
+    {
+      "file": "candidate-output/candidate.json",
+      "sha256": "3f9ec048ca3d6cfd5245c81873548a99e6214424284283cef0c7a22f244732cd"
+    },
+    {
+      "file": "candidate-output/executor-natural-completion.json",
+      "sha256": "82f05afd6b79fe20ddce281f90ada8ae796ee8fd74d080c425abf3545c087df5"
+    },
+    {
+      "file": "independent/review-v2.json",
+      "sha256": "38848c4820bfa0e41f2d8f6f163365517834b10085cbed1b5696a518d5e20d52"
+    },
+    {
+      "file": "normal-quit-v2.json",
+      "sha256": "e2fac6ad4e68cc09eff59ef3f997060f74e520773f422a087688af8625664a28"
+    },
+    {
+      "file": "install/retention-before-receipt.json",
+      "sha256": "1fa17198268bf29ce11ebb3a08c51dd1ecbf1df1754dc5ea1ac0c65dce1163b6"
+    },
+    {
+      "file": "install/retention-preinstall-receipt.json",
+      "sha256": "4700c82e2ec541b41307501435485faf74ae1df414163eb3d93fbf327b46e667"
+    },
+    {
+      "file": "install/retention-after-receipt.json",
+      "sha256": "f2ca5c5ccc741c013c64f25ef7be353c63ef2be45de52f137413950499b59de9"
+    },
+    {
+      "file": "install/install-result.json",
+      "sha256": "8262263f46c7e3bee7f890d45e05ecaa5a9c0787aa5ffc4ae72b3ef760c63580"
+    },
+    {
+      "file": "install/installed-independent-review-private.json",
+      "sha256": "c58e92d3fa9b68d483b00c9951a4f35312324f87ca07c6d704f4ecc851256be9"
+    },
+    {
+      "file": "install/candidate-cleanup.json",
+      "sha256": "8e31ae98aace76761b8f11df0d729efefdda5c397bde038ed7709d9f4106fddd"
+    },
+    {
+      "file": "first-launch-ui-observation.json",
+      "sha256": "006e6309b3a492d2477639cf6f20e23b6f9a1d7e1b28e6607863294edf8acf9b"
+    }
+  ],
+  "engineeringReferences": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/engineering-summary.json",
+      "sha256": "22133bc4073291ec72436cc5c2fb204b489023545a6254d6b69ee3912f301858"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-unknown-config-feedback-engineering/independent-engineering-review.json",
+      "sha256": "ef445c994bf663db7fab80e433c3918cd5971d5e923bff1f411583ba37c2048a"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "kind": "PostGrantOwnedSkillPublicSummary",
+  "preparedAt": "2026-10-25T08:11:04.121Z",
+  "installedProductCommit": "5b31c20a1ac75528c064b251cd4b60f058c02177",
+  "requirementIds": ["P40"],
+  "standardIds": [],
+  "semanticResults": {
+    "installedDeclarationSamples": 1,
+    "realAgentAdoptionSamples": 1,
+    "ordinaryAgentCommandSubmissions": 1,
+    "completeRequirements": 0,
+    "completeStandardCells": 0,
+    "wholeAgents": 0,
+    "all29Accepted": false
+  },
+  "mechanicalValidation": {
+    "passed": 2,
+    "expectedCases": 2,
+    "acceptanceVerified": false,
+    "scope": "两个观察分项，不是两次模型请求或整项验收。"
+  },
+  "actualCoverage": {
+    "retainedDraftPreparation": {
+      "ordinarySameSettingsPreparations": 1,
+      "sameNativeConversationRecoveryProven": false,
+      "limit": "沿用原保留草稿与既有选择准备；不声称零协议调用。"
+    },
+    "declaration": {
+      "officialMenuOpens": 1,
+      "reportedCommands": 16,
+      "ownSkillNameAndDescriptionVisible": true,
+      "modelSubmissionsInDiscovery": 0
+    },
+    "adoption": {
+      "exactCommandInputBytes": 17,
+      "operatorSubmissions": 1,
+      "loadingAndLoadedSkillVisible": true,
+      "expectedMarkerReplyVisible": true,
+      "recognizedCompletionAndCurrentIdleSeparatelyVisible": true,
+      "ownSourceDirectory": {
+        "fullPathObservedByRootScreenshot": true,
+        "axShowsFullPath": false,
+        "rawStructuredFilePositions": 0,
+        "limit": "完整来源主要依据root当时截图；AX仅截断前缀，不伪造raw位置字段或本地截图文件。"
+      }
+    },
+    "fixture": {
+      "originalBytes": 542,
+      "freshInspectionAndPostInputsUnchanged": true,
+      "fixtureContentsRepublished": false
+    },
+    "choiceChanges": 0,
+    "retriesStopsSeedsOrQueueContinuations": 0
+  },
+  "observationTiming": {
+    "postSubmitBudgetSeconds": 180,
+    "completionReplyAndIdleObservedBySeconds": 11.434,
+    "fullSourceScreenshotObservedBySeconds": 50.707,
+    "exactBackendOrModelLatencyProven": false,
+    "limit": "两值均为操作方观察上界；人工菜单/输入审阅、后续标签与证据封存分列，不计入后端精确时延。"
+  },
+  "inputHandling": "菜单插入的末尾空格仅在发送前纠正；精确17B读回后仅提交一次，不是重试。",
+  "metadataNormalization": {
+    "originalPreActionPreparedAt": "2026-10-25T07:50:02.833Z",
+    "firstMenuAt": "2026-10-25T07:50:28.155Z",
+    "preparedBeforeMenuSeconds": 25.322,
+    "strictCanonicalValidBeforeActions": false,
+    "initialValidation": "保留原manifest三说明键导致的invalid-run-manifest及原回执；不是Agent失败。",
+    "removedOnly": ["kind", "canonical", "bindingNote"],
+    "remainingSchemaFieldsDeepIdentical": true,
+    "v2CreatedAfterUiActions": true,
+    "receiptChangedOnly": ["manifest.path", "manifest.sha256"],
+    "secondCheckerNaturalExitCode": 0,
+    "productOrAgentReexecution": false,
+    "limit": "事前原件已冻结相同上下文、预期及预算；不能称事后规范化的v2文件在动作前已存在或已通过strict schema。"
+  },
+  "boundaries": [
+    "旧65a声明失败1与采用未执行1保持。授信、应用更新、冷进程和普通准备均已变化，未隔离唯一原因。",
+    "显示标签/声明值不证明有效后端模型、推理、账号或当前进程版本；未证明耐久授信、全部配置/钩子隔离或所有内部IO不存在。",
+    "本次未出现未知配置提示，中性提示修复未由这次UI复现。两个窄分项不覆盖完整技能管理、所有范围、失败/取消恢复、其它Agent或完整P40。"
+  ],
+  "metadataBase": "output/2026-10-24-agent-acceptance/p40-post-grant-declaration-formal-5b31",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "d1845ec5dec34408a7218786a57d6eab89811baaf6c668dc1b7d113b5617c032"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "354bcd7961b9d62ce8bfaddb7b7f53261a41083c3cfa373b73b1edbbe8b0e850"
+    },
+    {
+      "file": "manifest-v2-normalized.json",
+      "sha256": "90c20dfcbd020a1e225f33778e04aa169c9820c85aaa5a837fe9b021853eb5d4"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "2c0147483baa12233ad8f745ae7c6cf0897ece616ad26916c8e05a1f2e38e3f2"
+    },
+    {
+      "file": "fresh-fixture-inspection.json",
+      "sha256": "c10cc9318be761513b5501e7c3a5a299254620ce38f4a63b2894910c56237f8f"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "79e7964a3161a718f5ba952af5bf94713e47abed60b408e1a6b3fd336e87aaa2"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "a1c57e633ffb9199ef249b4a7021708e478e26b0fbf1700d3569938933fa0f78"
+    },
+    {
+      "file": "actual-receipt-v2.json",
+      "sha256": "3aa297aebe0dcdd59c3cbb1897a427a63c3e83c60a0d44a73b7fc0bfced659f0"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "59155486e9ffe50c12423030c04858d9dae323c94fecc8e758f845a519c112e9"
+    },
+    {
+      "file": "manifest-receipt-v2-normalization.json",
+      "sha256": "b9a36ec997fd607244d4607fa0b1f805f80df3a0e477a27611f2f9ca638f8bfc"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "65356b9d31827caad76693608cdf741b22aff43f6044cc4f9cf6083f98fab7a5"
+    },
+    {
+      "file": "validation-v2.json",
+      "sha256": "a79e45f35c74469b04dce6030e189761b6394c016e0c3bf989467d2462f1d71a"
+    },
+    {
+      "file": "validation-v2-execution.json",
+      "sha256": "57d0b42e8fc27d27822b3954c30d5cbec59f805838ce37b3535078e25df13abf"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "a9b60c41032f7afb95cdaef67e2277a0827167ad6121c77aa0b9e377110938c2"
+    }
+  ]
+}
