@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "kind": "New29CurrentCompactConfigurationUiAssociationSummary",
+  "requirementIds": ["NEW-29"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e95436282ca2ae4d54af3930659d083cec2c9707",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "7a4163d1e6025a26679a598739971eb4786856630f30ac53bb6dc88de1ca0519"
+  },
+  "context": {
+    "agentId": "mistral-vibe",
+    "ownedObject": "Original /p40-owned-marker conversation, distinct from the old65a first-answer compact sample",
+    "source": "Existing settings",
+    "modelLabel": "Mistral Medium 3.5",
+    "reasoningLabel": "High",
+    "modeLabel": "Accept Edits",
+    "currentAgentVersion": "not reported in this case; historical cache version is not copied as current"
+  },
+  "actual": {
+    "currentOfficialCompactDeclared": true,
+    "officialCompactSubmissions": 1,
+    "ordinarySeedPrompts": 0,
+    "extraConfigurationValueChoicesConfirmationsIdentityQueriesQueueProbeRetriesOrStops": 0,
+    "preSubmitCorrection": "Removed only the command picker trailing space before the first send; exact /compact read back.",
+    "uiAssociation": "New /compact -> one unique current processing group explicitly in progress -> Model/Accept Edits/High selectors disabled -> same group later ended and technical details reported compacted.",
+    "toolResult": "Compacted conversation history / Conversation context compacted",
+    "ordinaryRequestResult": "Ended; this is not an unknown Agent request.",
+    "reportedToolSeconds": 12.8,
+    "exactToolStartAndEndKnown": false,
+    "configurationDisabledEvidence": "All three disabled controls are in AX. The screenshot supports current busy/popup context and does not visually expose all three controls.",
+    "liveToolBodyOrRawTypedActivityCaptured": false,
+    "newAgentInternalModelInvocationCount": "not measured; compaction may invoke its model"
+  },
+  "originalCase": {
+    "observationUpperSeconds": 111.025,
+    "mechanicallyValid": true,
+    "complete": false,
+    "passed": 0,
+    "failed": 0,
+    "incomplete": 1,
+    "invalid": 0,
+    "observations": 8,
+    "privateEvidenceFiles": 10,
+    "unchangedInputs": 8,
+    "sealCliExecutions": 1,
+    "internalValidations": 1,
+    "additionalValidateCliExecutions": 0,
+    "sealNaturalExitCode": 1,
+    "independentBlockingFindings": 0,
+    "reason": "Original expected post source/mode/reasoning label retention was not re-observed inside that case; actual observation stays an unconfirmed string, not true."
+  },
+  "separateLateRetentionAppendix": {
+    "labelsReadAfterOriginalCaseFinishSeconds": 394.865,
+    "appendixObservationSeconds": 27.411,
+    "additionalOuterPanelOpens": 1,
+    "newCompactOrPromptSubmissions": 0,
+    "settingsChoicesConfirmationsOrIdentityQueries": 0,
+    "originalLabelsReadBack": true,
+    "configurationControlsEnabledAtLaterEndpoint": true,
+    "bothOriginalP21UnsentOpinionsAndDigestsRetained": true,
+    "emptyComposerAndNoVisibleQueue": true,
+    "panelClosedAfterRead": true,
+    "notBackfilledIntoOriginalCaseOrWindow": true,
+    "combinedIndependentBlockingFindings": 0
+  },
+  "totalOuterPanelOpenActions": {
+    "preflight": 1,
+    "originalCaseAfterSubmit": 1,
+    "lateAppendix": 1,
+    "stageTotal": 3,
+    "afterSubmitTotal": 2,
+    "originalOnePanelCaseBudgetUnchanged": true
+  },
+  "limits": [
+    "A limited current-command/tool-group UI association and a later retention endpoint only; not a new mechanically passed case. Original incomplete1 stays unchanged.",
+    "No raw/typed compaction activity, direct live expanded tool detail, true setter rejection, cross-request background maintenance, shared-account/lifecycle protection or full NEW-29/S7/Agent acceptance.",
+    "No exact runtime duration or whole flow111.025s claim; the394.865s-later labels and27.411s appendix are separate.",
+    "Old failures/unknowns, six waits, affected NEW-24 send pause and Cline orphan protection remain."
+  ],
+  "references": {
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/preflight.json",
+      "sha256": "7b4d4f3fe4f414547ff434921b3a48424d448a7ca8024edff5d9fe1e523860e0"
+    },
+    "case_plan": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/case-plan.json",
+      "sha256": "06e14c7bd8e5a834d1b47208208fbc07467eddd026cb6da918becd6e9448173e"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/manifest.json",
+      "sha256": "3e65ff3a9238db190971afa893a3e5ef9c8a1f2cf6741a1033b9f5b8d0a8e60a"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/actuals.json",
+      "sha256": "c18ce8c53f2f616aa2f7139322db6ae4c650b31840bcbb7ec07550b977dec68a"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/receipt.json",
+      "sha256": "586d15a04ec4e23dccde96449c0b8e0acfb0426bf89392bd816ddf2dc162acfd"
+    },
+    "seal_cli_execution": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/seal-cli-execution.json",
+      "sha256": "5bd21d2d35190c6f2ae8362aa6c962a8336f7a26dc8d31360eadcc03cd83ab7a"
+    },
+    "evidence_assessment": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/evidence-assessment.json",
+      "sha256": "02b5d6e36da40ff619bd7ad3905b66f8efa7d744079ddc4c5593dc2824ab652d"
+    },
+    "semantic_review": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/semantic-review.json",
+      "sha256": "6693bde60f97fe22b64a41f47ca7be2922e1d237a8a8bbb87a0baca134145c8c"
+    },
+    "operator_actual_actions": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/operator-actual-actions.json",
+      "sha256": "013f93c0cca825eed06282eb180e01b820fc03474d9ca619016310320bc69a8e"
+    },
+    "late_retention_appendix": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/late-retention-appendix.json",
+      "sha256": "e2d46b1886775528a90ea994b5edfb00f58c8f3230f35c7f674f94066d44fa94"
+    },
+    "late_post_labels_ui_private": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/late-post-labels-ui-private.json",
+      "sha256": "f50d11e1a3745b925d7d5024d1b977eda362f42a725de19a803b2579f3790350"
+    },
+    "late_post_labels_private": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/late-post-labels-private.png",
+      "sha256": "d72aed3dbacd519d9d1c31ffaaba634c0b7b1cf7561922c4ec26fb6d53f61e46"
+    },
+    "late_post_read_closed_ui_private": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/late-post-read-closed-ui-private.json",
+      "sha256": "c55fa7293d45de787f058cf9699bd1ab3c8b1b36aa90f151c65ba416cc28e619"
+    },
+    "composed_ui_retention_review": {
+      "path": "output/2026-10-24-agent-acceptance/new29-mistral-busy-config-e954-preparation/composed-ui-retention-review.json",
+      "sha256": "c819229e32060fe651486d417d270cc943df879304958d86b9f89da1fea1197b"
+    }
+  }
+}
