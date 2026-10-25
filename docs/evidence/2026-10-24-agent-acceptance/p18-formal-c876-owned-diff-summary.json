@@ -1,0 +1,119 @@
+{
+  "kind": "OwnedP18ReportedDiffAndCurrentFilePublicSummary",
+  "requirementIds": ["P18"],
+  "standardIds": [],
+  "formalIdentity": {
+    "sourceCommit": "c8761b09e5f03442ed50b4decb63df5576543300",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "darwin-arm64",
+    "binarySha256": "71e4bb77ae288b572b27cf8542825e3b5d0ef90621dc21e3ef318ba5f09abf6f"
+  },
+  "scope": "一次自有三行小文件修改：报告差异、当前文件打开及物理字节分开核验。",
+  "actual": {
+    "operatorSubmissions": 1,
+    "visibleModificationSteps": 1,
+    "reportedEditOperations": 1,
+    "separatelyVisibleTargetReadSteps": 0,
+    "displayedAddedLines": 1,
+    "displayedRemovedLines": 1,
+    "reportedBeforeAndAfterThreeLinesAgree": true,
+    "diffUiExplicitlyRemainsFragment": true,
+    "currentFileOpenActions": 1,
+    "correctReportedTargetOpened": true,
+    "beforeSnapshotBytes": 41,
+    "afterPhysicalBytes": 40,
+    "afterLfCount": 3,
+    "afterTerminalLf": true,
+    "allAfterBytesMatchProspectiveExpectation": true,
+    "laterIndependentReadConfirmsSameBytes": true,
+    "expectedLiteralReplyObserved": true,
+    "recognizedUiCompletion": true,
+    "currentOwnIdleObserved": true,
+    "operatorRetriesStopsRepairsChoiceChanges": 0
+  },
+  "timing": {
+    "completionObservationUpperSeconds": 45.983,
+    "originalPhysicalReadUpperSeconds": 140.179,
+    "operatorObservationWindowSeconds": 180,
+    "performanceClaim": false
+  },
+  "result": {
+    "mechanicallyValid": true,
+    "cases": 1,
+    "attempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "requiredObservations": 9,
+    "checkerInvocations": 1,
+    "naturalExitCode": 0,
+    "narrowSemanticPositives": 1,
+    "blockingFindings": 0,
+    "immutableInputs": 8,
+    "postInputMapEqual": true
+  },
+  "limits": [
+    "三行完整替换加前后物理字节只支持此样本；界面始终标示报告片段及非当前文件状态，不推广为一般完整文件差异能力。",
+    "可见步骤结束不等于原始协议状态；未展开完整工具输入，未确认当前连接版本、有效后端、推理效果、全部内部IO或全后台空闲。",
+    "原选择标签保持；官方2.25.8源码仅静态参考，不能当当前分发等价或版本固定要求。",
+    "原命令失败、退出码与原始形状未知及其他历史失败/未知保留；完整P18、标准、整家及29×8仍开放。"
+  ],
+  "closures": {
+    "wholeRequirement": 0,
+    "wholeStandard": 0,
+    "wholeAgent": 0
+  },
+  "metadataBase": "output/2026-10-24-agent-acceptance/p18-owned-diff-formal-c876",
+  "metadataReferences": [
+    {
+      "file": "case-plan.json",
+      "sha256": "e03cc62b8f64f00f1d13453077c7ed4ae188d42038c248f8e079141974c6f6cd"
+    },
+    {
+      "file": "manifest.json",
+      "sha256": "699629868e282c1500076b5f733204df5ac5a5ced24b14193d17b2aa8b654d3d"
+    },
+    {
+      "file": "preflight.json",
+      "sha256": "e625c996ad81f18e0b4b0a2473224856c87e50689221d8396199de26158188e3"
+    },
+    {
+      "file": "fixture-before.json",
+      "sha256": "bc0c3e95ad5a9eeb59459ef24bded8dd77c475d73893c4e062a79b71bb6f834e"
+    },
+    {
+      "file": "manifest-preaction-schema-check.json",
+      "sha256": "44863157426137cdf32c1c4d395f91ad135e3fda2b42f20b206418952ea131cc"
+    },
+    {
+      "file": "actual-ui-observation.json",
+      "sha256": "533671d32a7a8fc382c7f60c353a8034026b6bd29cea88f2ebc8d1433ad501ea"
+    },
+    {
+      "file": "fixture-after.json",
+      "sha256": "ece9df685fa8f93889ad62e1e6ac797132caac2a2355741ba79a1cdb7405a786"
+    },
+    {
+      "file": "post-case-input-check.json",
+      "sha256": "a7a6dc8968977e47c3c34272a47d1b900f1e821fd577436dd7f5e27cf91873dc"
+    },
+    {
+      "file": "actual-receipt.json",
+      "sha256": "c1b10b6bbdca26acce4f3218c64123fb2d3a82be976c2ce5a0ddc59b6078490b"
+    },
+    {
+      "file": "validation.json",
+      "sha256": "e2afd5a8ff37b5385c7a1693480a2a612ca1c647d23846d0d1b8d1ff1b0ae672"
+    },
+    {
+      "file": "validation-execution.json",
+      "sha256": "56a1d4f2b2902abffa16487cf8f4f998f6fc7b9b64c97a8281161005b47460cf"
+    },
+    {
+      "file": "independent-semantic-review.json",
+      "sha256": "3bcc8bf654bc53d17b59993564059c649d798d4559192b6aeaff541af2640089"
+    }
+  ]
+}
