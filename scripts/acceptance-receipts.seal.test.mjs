@@ -190,7 +190,9 @@ describe("offline receipt seal", () => {
       },
       ...f.actuals,
     });
-    expect((await stat(f.output)).mode & 0o777).toBe(0o600);
+    // Win32 mode bits do not encode owner/group isolation; ACLs are separate.
+    const supportedModeBits = process.platform === "win32" ? 0o600 : 0o777;
+    expect((await stat(f.output)).mode & supportedModeBits).toBe(0o600);
     expect(
       await readFile(path.join(f.root, `${relative}manifest.json`)),
     ).toEqual(f.manifestBytes);

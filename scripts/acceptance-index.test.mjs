@@ -108,9 +108,9 @@ describe("derived acceptance authority and complete scope", () => {
       "utf8",
     );
     const ids = parseAgentIds(source);
-    expect(() =>
-      parseAgentIds(source.replace(`    "${ids[0]}",\n`, "")),
-    ).toThrow(/29/);
+    expect(() => parseAgentIds(source.replace(`    "${ids[0]}",`, ""))).toThrow(
+      /29/,
+    );
     expect(() =>
       parseAgentIds(source.replace(`    "${ids[1]}",`, `    "${ids[0]}",`)),
     ).toThrow(/duplicate/);
@@ -125,7 +125,7 @@ describe("derived acceptance authority and complete scope", () => {
     expect(original[0].condition).toContain(
       "程序、账号、服务、模型以及取消返回可继续",
     );
-    expect(() => parseStandards(product.replace(/^4\. .+\n/m, ""))).toThrow(
+    expect(() => parseStandards(product.replace(/^4\. .+\r?\n/m, ""))).toThrow(
       /eight/,
     );
     expect(() =>
@@ -139,7 +139,7 @@ describe("derived acceptance authority and complete scope", () => {
     const requirementsText = readFileSync(
       resolve(root, "docs/agent-access-requirements.md"),
       "utf8",
-    ).replace(/^\| P18\s+\|.+\n/m, "");
+    ).replace(/^\| P18\s+\|.+\r?\n/m, "");
     expect(() =>
       parseAcceptanceAuthorities({
         productText: readFileSync(resolve(root, "PRODUCT.md"), "utf8"),
@@ -148,6 +148,30 @@ describe("derived acceptance authority and complete scope", () => {
           "utf8",
         ),
         requirementsText,
+      }),
+    ).toThrow(/151/);
+  });
+
+  it("keeps missing-identity, standard and requirement rejection controls active with CRLF", () => {
+    const asCrLf = (file) =>
+      readFileSync(resolve(root, file), "utf8").replace(/\r?\n/g, "\r\n");
+    const firstReleaseText = asCrLf(
+      "src-tauri/src/acp_client/first_release.rs",
+    );
+    const productText = asCrLf("PRODUCT.md");
+    const requirementsText = asCrLf("docs/agent-access-requirements.md");
+    const ids = parseAgentIds(firstReleaseText);
+    expect(() =>
+      parseAgentIds(firstReleaseText.replace(`    "${ids[0]}",`, "")),
+    ).toThrow(/29/);
+    expect(() =>
+      parseStandards(productText.replace(/^4\. .+\r?\n/m, "")),
+    ).toThrow(/eight/);
+    expect(() =>
+      parseAcceptanceAuthorities({
+        productText,
+        firstReleaseText,
+        requirementsText: requirementsText.replace(/^\| P18\s+\|.+\r?\n/m, ""),
       }),
     ).toThrow(/151/);
   });

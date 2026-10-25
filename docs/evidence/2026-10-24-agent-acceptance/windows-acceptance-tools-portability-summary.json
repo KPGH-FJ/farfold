@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsCheckoutAndAcceptanceToolPortabilitySourceCheckpoint",
+  "sourceBaseHead": "1a0728df24ce6b10a216d502f3398f352238f260",
+  "sourceFiles": [
+    {
+      "path": "scripts/agent-task-reference.mjs",
+      "beforeSha256": "5066b1d6c57911f9d5a7ff414779e363aa2cfa1a6a8a58a1f6d77afb8fc336d3",
+      "afterSha256": "b946b53c518ca08379bf3a1251886b97aba41904e755da8f30b75f17b1332f6a",
+      "lines": 131
+    },
+    {
+      "path": "scripts/agent-task-reference.test.mjs",
+      "beforeSha256": null,
+      "afterSha256": "5500f5dc215d2f0081e9940dde377053700334dd1c6bd9e5874a47a8fb588f44",
+      "lines": 35
+    },
+    {
+      "path": "scripts/acceptance-index.test.mjs",
+      "beforeSha256": "f73e46c9e67120a16d692120427206e7e8c740195f9ce8d26bc9b72d15f51ee4",
+      "afterSha256": "c3284347bf3993255e6038873a6ecf3a8a803ca0b31ecc86402919dcd7346931",
+      "lines": 943
+    },
+    {
+      "path": "scripts/acceptance-receipts.test.mjs",
+      "beforeSha256": "3c8054b06c62f341b81d3a2b720a9096b51b2779f9becc8416d8f3800818728e",
+      "afterSha256": "a0d77b1192ae20c60dbaca6f5067403e28c490042e491db0802c99b21fd3f4e5",
+      "lines": 1304
+    },
+    {
+      "path": "scripts/acceptance-receipts.seal.test.mjs",
+      "beforeSha256": "ccfb43999c7f018df3ce2de7ba8e64e2c0f23412a5c9c215ce45063c22d3f90f",
+      "afterSha256": "814a7559f2f653217e62d281984551e64cdb1ca061af8178f533aedc63894098",
+      "lines": 465
+    }
+  ],
+  "formalApplication": {
+    "productCommit": "625158abf72b89bfdc0e0704d000003022931f19",
+    "binarySha256": "242b28f59692e59eb6458b5138dfd17c05296b3685afa3d092e4721476bf833c",
+    "updatedByThisToolChange": false
+  },
+  "windowsEvidenceLayers": {
+    "originalRun": {
+      "runId": 40229293003,
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/40229293003",
+      "headSha": "625158abf72b89bfdc0e0704d000003022931f19",
+      "result": "checkout failed in frontend and rust; each full log contains160 Filename too long file errors; product tests never started",
+      "retries": 0
+    },
+    "checkoutFix": {
+      "commit": "f3b68e2a7484ce6d7fb9f705f10ae29574d408da",
+      "workflowChanges": "Enable Git long paths before each of three checkouts, check the immediate command exit. Existing pins, checks, dependencies, unsigned-artifact and verify rules retained. Only disposable CI-runner Git configuration is changed.",
+      "newRunId": 40230600747,
+      "newRunUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/40230600747",
+      "headSha": "f3b68e2a7484ce6d7fb9f705f10ae29574d408da",
+      "event": "workflow_dispatch",
+      "attempt": 1,
+      "observed": "Frontend and Rust checkout passed and both entered their actual checks. This is separate from test success."
+    },
+    "frontendOnOldToolInputs": {
+      "jobId": 121281284649,
+      "result": "failure",
+      "typecheckExecutedAndSucceeded": true,
+      "testFiles": {
+        "passed": 683,
+        "failed": 3,
+        "total": 686,
+        "suiteLoadFailuresIncludedInFailedFiles": 1
+      },
+      "tests": {
+        "passed": 9106,
+        "failed": 2,
+        "total": 9108
+      },
+      "failures": [
+        "Task-reference authority suite aborts on the official-scope assertion.",
+        "Receipt sealing test expects POSIX0600 but receives Win32 mode0666.",
+        "MSYS-created FIFO evidence fixture is rejected as evidence-unreadable rather than the expected non-regular-file code."
+      ],
+      "frontendBuildExecuted": false,
+      "rustStatusAtReferencedFrontendFailureSnapshot": "in_progress",
+      "wholeRunTerminalResultClaimed": false
+    }
+  },
+  "sourceCorrection": {
+    "productionChanges": [
+      "Normalize CRLF before deriving task-reference semantic facts. Original file digests and authority conditions are not rewritten."
+    ],
+    "testChanges": [
+      "Keep missing Agent/standard/requirement rejection controls effective with CRLF; add CRLF/mixed scope regression and negative controls.",
+      "Retain strict POSIX0600; assert only supported owner read/write bits on Win32. ACL isolation is not proved by this test.",
+      "Keep two POSIX FIFO rejection cases with actual FIFO type positive controls and skip these POSIX fixtures on Windows. Keep oversized JSON rejection as a separate portable case with the original exit code, stderr and finite timeout."
+    ],
+    "receiptValidatorOrSealerProductionChanged": false,
+    "desktopProductionChanged": false,
+    "dependenciesOrEnvironmentFlagsAdded": false,
+    "originalWindowsFailuresOverwritten": false
+  },
+  "validation": {
+    "controlledRed": {
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 2,
+      "sourcePinsStable": 6
+    },
+    "oracleProvenance": "The original RED test bytes were reconstructed after the run from the exact initial patch and match its endpoint digest. A formatter-only conversion matches the final test bytes; this is not a separately saved contemporaneous source copy or another test execution.",
+    "affectedChecks": {
+      "exitCode": 0,
+      "files": 4,
+      "testsPassed": 164,
+      "inputPinsStablePerCommand": 10,
+      "docsCheck": "151 originals/151 current rows/one plan5119 bytes",
+      "selectedFormatAndDiff": "passed"
+    },
+    "completeEngineering": {
+      "platform": "macOS arm64",
+      "checks": 7,
+      "integerExitCodes": [0, 0, 0, 0, 0, 0, 0],
+      "inputCount": 2296,
+      "sourceAndHeadEndpointsEqualForEveryCheck": true,
+      "addedExplicitInputs": "Three authority Markdown files consumed by evidence-tool tests plus the new test; the prior2292 graph remains included.",
+      "frontend": {
+        "files": 687,
+        "passed": 9138,
+        "failed": 0
+      },
+      "rust": {
+        "passed": 2307,
+        "failed": 0,
+        "existingIgnored": 6,
+        "mainAndDocTests": 0
+      },
+      "independentReviewBlockingFindings": 0,
+      "sourceIndependentReviewBlockingFindings": 0
+    }
+  },
+  "primaryPlatformReference": "https://nodejs.org/download/release/v22.22.3/docs/api/fs.html#fschmodpath-mode-callback",
+  "limits": [
+    "No Windows execution of the new five-script correction yet; the old frontend failure is retained. The referenced Rust status is a historical job snapshot, not a terminal result.",
+    "The exact low-level Win32/MSYS FIFO read failure syscall is unknown. Win32 owner mode bits do not establish private ACL isolation, and skipped POSIX FIFO cases do not test all Windows special files.",
+    "Full engineering inputs are the declared2296 source/authority files at checked endpoints, not all docs, dependencies or environment bytes or continuous writer absence.",
+    "No new installed-product, real-Agent, standard, requirement, whole Windows platform or29-by8 acceptance follows from this evidence-tool-only checkpoint. Six waits, affected NEW-24 pause and prior failures/unknowns remain."
+  ],
+  "references": {
+    "originalCheckoutCause": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/root-cause-note.json",
+      "sha256": "a5b21b989b9281d193bf46e503aa7359cfbcf81b29bfdacb423f58db7fdb20ce"
+    },
+    "longPathImplementation": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/long-path-implementation.json",
+      "sha256": "8791912afaf7e58f5e85307a332eed5531542324abe900ad009c9416f8a2b3d2"
+    },
+    "longPathIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/long-path-independent-review.json",
+      "sha256": "082324fa9e63e2ae5f42334d61a95288c29a2fac2f28e47e4e9e769a26937a72"
+    },
+    "newInputFrontendLog": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/new-input-frontend-job-121281284649.raw.log",
+      "sha256": "3e78d031914107667cc10a37e80e5950ff25ccd979ae2c66ad019299e5e5e29a"
+    },
+    "newInputJobsAtFrontendFailure": {
+      "path": "output/2026-10-24-agent-acceptance/history-joined-context-ci-readonly/new-input-jobs-at-frontend-failure.json",
+      "sha256": "85a47d2f5945917359c2474f4b6aeffd28056483a68a942165214bc541ec3f05"
+    },
+    "portabilityImplementation": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability/implementation.json",
+      "sha256": "c620c3e09cadb9ce3e815af7f857117bf4c422846a2fefa8409f25d91c3b17eb"
+    },
+    "controlledRed": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability/red-task-reference-execution.json",
+      "sha256": "56b16ba6319ecff7e55360e8e3e9090a71a389dd24d002a5f1ae6b6cd2839511"
+    },
+    "redOracleFormatProof": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability/red-oracle-format-proof.json",
+      "sha256": "27cfaad4b0026d99f59163a02b7ca40e7284fcfe96685e51642df0506a2295bc"
+    },
+    "affectedGreen": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability/green-execution.json",
+      "sha256": "d12bd583bc263a2825e5d41ac558a4bac840cb5c1c98c9198113d945018280b7"
+    },
+    "independentSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability/independent-source-review.json",
+      "sha256": "616dd69565f927fc2ebed6a83a2a292115544aa2061f5dfc7ab1965f6cafbccc"
+    },
+    "engineeringSummary": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability-engineering/engineering-summary.json",
+      "sha256": "66f6d43afaee47a3279f1da524a2d1cda71fe361f08be7f476e24f7dcdf15ac5"
+    },
+    "engineeringNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability-engineering/outer-execution.json",
+      "sha256": "b8d9b4aaa72b4ab89ac7f1d01ddd547742d23aff58f2735c63b6a976eaf865ea"
+    },
+    "independentEngineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-acceptance-tools-portability-engineering/independent-engineering-review.json",
+      "sha256": "025f7e7e474e913705f47d4a40210e81e7d9b1906391a582a3f8b9922d6578b6"
+    }
+  }
+}

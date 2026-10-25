@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import {
   mkdtemp,
   mkdir,
+  lstat,
   readFile,
   rm,
   symlink,
@@ -807,14 +808,47 @@ describe("acceptance receipt integrity", () => {
     );
   });
 
-  it("rejects a FIFO evidence path without blocking on open", async () => {
+  // Git/MSYS mkfifo is not a POSIX FIFO fixture for the Win32 Node process.
+  it.skipIf(process.platform === "win32")(
+    "rejects a POSIX FIFO evidence path without blocking on open",
+    async () => {
+      const f = await fixture();
+      const fifo = "output/run/pipe";
+      await exec("mkfifo", [path.join(f.root, fifo)]);
+      expect((await lstat(path.join(f.root, fifo))).isFIFO()).toBe(true);
+      f.receipt.attempts[0].evidence[0].path = fifo;
+      await writeFile(
+        path.join(f.root, "receipt.json"),
+        JSON.stringify(f.receipt),
+      );
+      let cli;
+      try {
+        cli = await exec(
+          process.execPath,
+          [
+            path.resolve("scripts/acceptance-receipts.mjs"),
+            "validate",
+            "receipt.json",
+          ],
+          { cwd: f.root, timeout: 1000 },
+        );
+      } catch (error) {
+        cli = error;
+      }
+      expect(cli.killed).not.toBe(true);
+      expect(JSON.parse(cli.stdout).errors).toContainEqual({
+        code: "not-regular-evidence-file",
+        attemptIndex: 0,
+        evidenceIndex: 0,
+      });
+    },
+  );
+
+  it("bounds explicit CLI JSON inputs", async () => {
     const f = await fixture();
-    const fifo = "output/run/pipe";
-    await exec("mkfifo", [path.join(f.root, fifo)]);
-    f.receipt.attempts[0].evidence[0].path = fifo;
     await writeFile(
-      path.join(f.root, "receipt.json"),
-      JSON.stringify(f.receipt),
+      path.join(f.root, "oversize.json"),
+      `${" ".repeat(4 * 1024 * 1024)}${JSON.stringify(f.receipt)}`,
     );
     let cli;
     try {
@@ -823,7 +857,7 @@ describe("acceptance receipt integrity", () => {
         [
           path.resolve("scripts/acceptance-receipts.mjs"),
           "validate",
-          "receipt.json",
+          "oversize.json",
         ],
         { cwd: f.root, timeout: 1000 },
       );
@@ -831,26 +865,28 @@ describe("acceptance receipt integrity", () => {
       cli = error;
     }
     expect(cli.killed).not.toBe(true);
-    expect(JSON.parse(cli.stdout).errors).toContainEqual({
-      code: "not-regular-evidence-file",
-      attemptIndex: 0,
-      evidenceIndex: 0,
-    });
+    expect(cli.code).toBe(2);
+    expect(cli.stderr).toBe(
+      "Receipt input could not be safely read or validated.\n",
+    );
   });
 
-  it("bounds explicit CLI JSON inputs and refuses FIFO input without waiting for a writer", async () => {
-    const f = await fixture();
-    await writeFile(
-      path.join(f.root, "oversize.json"),
-      `${" ".repeat(4 * 1024 * 1024)}${JSON.stringify(f.receipt)}`,
-    );
-    await exec("mkfifo", [path.join(f.root, "fifo.json")]);
-    for (const file of ["oversize.json", "fifo.json"]) {
+  it.skipIf(process.platform === "win32")(
+    "refuses POSIX FIFO input without waiting for a writer",
+    async () => {
+      const f = await fixture();
+      const fifo = path.join(f.root, "fifo.json");
+      await exec("mkfifo", [fifo]);
+      expect((await lstat(fifo)).isFIFO()).toBe(true);
       let cli;
       try {
         cli = await exec(
           process.execPath,
-          [path.resolve("scripts/acceptance-receipts.mjs"), "validate", file],
+          [
+            path.resolve("scripts/acceptance-receipts.mjs"),
+            "validate",
+            "fifo.json",
+          ],
           { cwd: f.root, timeout: 1000 },
         );
       } catch (error) {
@@ -861,8 +897,8 @@ describe("acceptance receipt integrity", () => {
       expect(cli.stderr).toBe(
         "Receipt input could not be safely read or validated.\n",
       );
-    }
-  });
+    },
+  );
 });
 
 describe("incremental revalidation", () => {

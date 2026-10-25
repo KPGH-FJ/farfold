@@ -9,6 +9,7 @@ const packageIds = "ABCDEFGHIJKLMNXZ";
 const commonPrefixes = ["每个条目的完成依据 =", "每次更新条目必须记录："];
 
 export function parseTaskReference(text) {
+  text = text.replace(/\r\n/g, "\n");
   assert.ok(
     text.includes(referenceRole),
     "requirements reference role missing",
