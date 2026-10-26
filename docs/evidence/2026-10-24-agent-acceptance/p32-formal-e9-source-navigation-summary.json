@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32ExistingHistoryReadSnapshotSourceNavigationInstalledSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "binarySha256": "d98829611da671b9aad31388335d53c089e6ae52e9ba3b89d77ad0365687f161"
+  },
+  "agentId": "poolside",
+  "scope": "A separate source-navigation case reusing the already ended, three-hit result for the original indexed test-owned conversation. The earlier two read cases and their zero-normal-open observations remain unchanged.",
+  "actualCase": {
+    "level": "installed",
+    "attempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "freshSameAgentQueryOriginalCheckedFolderAndEndedResultObserved": true,
+    "existingReplySnapshotActions": 1,
+    "openOriginalActions": 1,
+    "ordinaryLoadingThenOriginalBodyObserved": true,
+    "originalUserFirstReplyAndPriorContextQuestionReplyCorrespond": true,
+    "agentSenderAndOriginalFolderBasenameObserved": true,
+    "fullOriginalFolderObservedInPreflight": true,
+    "fullReturnedFolderOrRawNativeIdentifierClaim": false,
+    "composer": "Empty visible placeholder and disabled Send; header reported not running. This observation imposes no new idle/ready gate.",
+    "modelOrServiceOrReasoningOrPermissionChoiceActions": 0,
+    "newQueryReadModelPromptLoginRetryStopCancelImportOrFileActions": 0,
+    "observations": 7,
+    "privateEvidenceFiles": 10,
+    "unchangedInputs": 8,
+    "sealCliExecutions": 1,
+    "naturalSealExitCode": 0,
+    "independentSemanticBlockingFindings": 0,
+    "startedAt": "2026-10-26T04:05:48.873Z",
+    "finalObservationAt": "2026-10-26T04:06:32.086Z",
+    "operatorObservationUpperSeconds": 43.213,
+    "timestampBasis": "Root recorded the saved body observation CUA return observedAt. This time is not embedded in the AX text and is not backend latency."
+  },
+  "coverageLimits": [
+    "Source ownership is supported by the selected full original folder before opening, matching folder basename after opening, Poolside senders and the corresponding original user/reply/context body. No raw native identity or returned full-folder claim.",
+    "Opening an original conversation may use ordinary official loading/restoration RPC. Zero operator model prompts does not mean zero RPC, I/O or background transport.",
+    "Historical service information remains unconfirmed. Visible labels or body recovery do not establish the effective backend, historical provider restoration, complete configuration or current Agent program version.",
+    "Navigation opens the corresponding original conversation; it does not automatically position the exact message. Returned text-fragment offsets are not live native message identifiers.",
+    "This is one installed P32 source-navigation positive, not a new model/context test, S3 closure, full P32 or 29-by-8/151-condition completion. Canonical standardIds remain empty.",
+    "Six waits, NEW-24 pause, protected orphan and all old failures/unknown work remain. The old read cases were not edited or rerun."
+  ],
+  "reviewRole": "Root bound and operated the actual UI case, recorded actuals and ran one seal. The prospective-template author independently reviewed actual evidence and all four relevant screenshots without repeating UI, Agent or validator actions.",
+  "references": {
+    "manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/manifest.json",
+      "sha256": "e5e2e6ed024fcb61a1cdee96f958fb638ac93b9368ac6cc867df1c5000fbdfdb"
+    },
+    "preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/preflight.json",
+      "sha256": "d1bb6d553e40ebc7bba67639dcc6016452046de8fd2bb19681fa4c191d7f0db8"
+    },
+    "actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/actuals.json",
+      "sha256": "25eec5815bc7487ed6cf858f46edeb30792704084e95cac5b54b419f8e58610b"
+    },
+    "receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/receipt.json",
+      "sha256": "aee7658d732a4172b2c63c3455cf97929e9f1bec42177d7d55e9ae5ccd785c52"
+    },
+    "open-action.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/open-action.json",
+      "sha256": "30c51bc439a7aae1444425ccede4d7da432c256210512b3c222ce1b4476539e5"
+    },
+    "operator-completion.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/operator-completion.json",
+      "sha256": "6a52ff9ec72b8c12cbd659bc3da8f4b5ad071b0f9cee256775fa37ae9321045c"
+    },
+    "seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/seal-execution.json",
+      "sha256": "df3633105d151559eecb39b8c881d15ccb052d38bdae6b2ce93dc3fefec3cc7f"
+    },
+    "semantic-review.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-source-open-formal-e9/semantic-review.json",
+      "sha256": "d44a7759c4712c571e5557b67d030c84b2e8ef789718de03d67b83d7b7b8182f"
+    },
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-source-navigation-formal-e9-preparation/preparation-unbound.json",
+      "sha256": "75f7a3f0a84459848e4bc6defaf9dabfd52d3a5b715a0406a81902531597d303"
+    },
+    "priorReadCasesSummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/p32-formal-e9-selected-owned-history-summary.json",
+      "sha256": "9643cc3aaa890a23c843d0574f9259309f548b4d8c09c24e11a719adc7cfe8b8"
+    }
+  }
+}
