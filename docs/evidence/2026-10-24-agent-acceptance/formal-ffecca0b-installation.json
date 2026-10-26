@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalInstallationEvidence",
+  "sourceCommit": "ffecca0b8dbd8be85a6a712146504f4db2df4090",
+  "application": {
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "4d0555bc52e912c74e20b207b2df2c72c66bd1d747244f3d8f9e9af7edb38ff0"
+  },
+  "engineering": {
+    "inputCount": 2302,
+    "productionInputCount": 2299,
+    "authorityInputCount": 3,
+    "checks": "7 new sequential actual commands",
+    "allSevenSucceeded": true,
+    "frontend": {
+      "files": 688,
+      "passed": 9163,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2324,
+      "failed": 0,
+      "ignored": 6
+    },
+    "nativeMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "nativeDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "engineeringBaseHead": "8495ccbae9091e036910b1d96f40be5914f9aa51",
+    "checksRanAtFinalCommit": false,
+    "checksRanBeforeCommitOnExactInputMap": true,
+    "boundary": "Checks ran before commit. The complete 2302-input engineering map, including three authority documents, equals the final committed freeze; the candidate production closure contains 2299 inputs. Before/after and per-command endpoint checks do not prove continuous writer absence or freeze dependencies/environment. Frontend used direct Vitest with four workers, not a literal pnpm test invocation. Three earlier failed engineering attempts remain failed."
+  },
+  "candidate": {
+    "actualBuilds": 1,
+    "buildExitCode": 0,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "independentReviewExitCode": 0,
+    "archiveBytes": 16234207,
+    "archiveSha256": "675639e4cfef9fd643b1e98d3a14bbb1428ebee3ad27d839e605dfc1f3789d06",
+    "archiveVerifiedByCandidateReview": true,
+    "archiveRetained": true,
+    "signature": "Internal ad-hoc signature passed strict verification. Developer signing, notarization and public distribution remain unaccepted."
+  },
+  "installation": {
+    "normalSaveQuitCount": 1,
+    "forcedQuitOrExtraStop": 0,
+    "atomicInstallExitCode": 0,
+    "atomicStage": "installedVerifiedNotLaunched",
+    "exactFiles": 5,
+    "replacement": "Five per-file atomic replacements; existing file inodes were not written.",
+    "onlyFormalAppUpdated": true,
+    "appBackupCreated": false,
+    "automaticRetryOrRestore": false,
+    "installedChecksPassed": 10,
+    "installedChecksTotal": 10,
+    "installedIndependentReview": "Root executed the actual ten checker once with natural exit0 before first launch. Normal saved quit is evidenced separately by its own process-confirmation receipt; checker success is not UI or real-Agent acceptance."
+  },
+  "dataRetention": {
+    "freshClosedEndpoints": 3,
+    "entriesAtEachEndpoint": 232530,
+    "threeFullManifestsEqual": true,
+    "threeRawMetadataReceiptsEqual": true,
+    "retainedBackupIntegrityCheck": "Fresh before capture recorded integrity ok and closed handles for the new private metadata backup. Actual ten verified sealed backup bytes and captured integrity without rerunning SQL or opening the original database.",
+    "reviewBoundary": "The actual ten checker compared all three complete manifests and retained metadata bytes. This publication summarizes sealed phase metadata. Counts describe each endpoint separately, not an aggregate, continuous retention interval or guarantee about every data behavior."
+  },
+  "candidateCleanup": {
+    "removedExactFiles": 5,
+    "removedExactDirectories": 5,
+    "formalFilesAndModesUnchanged": true,
+    "archiveRetained": true
+  },
+  "firstLaunch": {
+    "observed": true,
+    "initialHistoryCountLabel": 156,
+    "retainedDraftCountLabel": 1,
+    "libraryUnsentCountLabel": 19,
+    "libraryAwaitingResponseCountLabel": 0,
+    "libraryRunningCountLabel": 0,
+    "libraryNewRepliesCountLabel": 10,
+    "archivedCountLabel": 1,
+    "formalProcessCount": 1,
+    "duplicateCandidateAbsent": true,
+    "loginActions": 0,
+    "configurationChoiceActions": 0,
+    "StopActions": 0,
+    "nativeHistoryPreviewOrImportActions": 0,
+    "scope": "Root observed the first home/library views and count labels after one launch and one library navigation. The retained draft container label and 19 unsent label do not verify every draft, attachment or history body; no affected read-preview, model or real-Agent result is claimed. Action counts describe Root UI actions, not instrumented proof of all background transport activity.",
+    "modelPromptsSentByRoot": 0
+  },
+  "coverageLimits": [
+    "The earlier P32 source summary is an immutable pre-install checkpoint; its installed-false statement describes that earlier time and is not rewritten by this installation evidence.",
+    "Installation and first-view labels establish no new real-Agent request, official read-preview behavior, temporary cross-conversation search consumer, full P32, any complete Agent standard or 29-Agent/151-condition closure.",
+    "Six waits, the affected NEW-24 pause, Cline orphan and previously unknown or failed cases remain unresolved; Dirac missing original user body is not filled by this update.",
+    "The three earlier engineering failures and prior Kilo/other narrow failures retain their original outcomes; no successful stage relabels them.",
+    "No private database, backup, data-manifest or raw-metadata digest, native owner identifier, account value, user body or private path is published here."
+  ],
+  "reviewRole": "Root operated the one candidate build, actual nine, normal saved quit, fresh closed captures, per-file atomic installation, actual ten, exact duplicate cleanup and first-launch UI. A contributor authored backend/helper portions and assembled the metadata draft; separate reviewers checked the recorded engineering, installation and first-launch metadata. The first-launch reviewer checked metadata and accessibility labels without visually inspecting the screenshots or repeating live operations. The publication does not expose the private payloads.",
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/candidate-output/candidate.json",
+      "sha256": "13214b814107fa7caae4453843075fa53f6e08eec1b266781ee4280be7b83b89"
+    },
+    "candidateExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-candidate-execution.json",
+      "sha256": "fcc32dc7cee111c4a3e5da278242a20279557e63a7f085ce656a610e0e6f4e3b"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/independent/review-v2.json",
+      "sha256": "b646814e0bf39cfe81d1423e7920f6c89110a961c60ead6441f946068f88c9c2"
+    },
+    "candidateNineExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-nine-execution.json",
+      "sha256": "4c80f34799b38f9cfc186032bcc6951cb11aa2ce604b6c6c4d83f057e175eb96"
+    },
+    "normalQuit": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/ui/normal-exit-process-confirmation.json",
+      "sha256": "af4d9c4a9199756eb555072abf98fa927e5e5e1a718a668433fffa5957c8053a"
+    },
+    "retentionBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/retention-before-receipt.json",
+      "sha256": "c95dbf50bd7d4b501e3ce180fc4a4a73596aaeafa38474c91bdd79ef2f6d012f"
+    },
+    "retentionBeforeExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-retention-before-execution.json",
+      "sha256": "f3c6d83854da1a2408262b6e03bc1b6097a5c0ed22db6eabe6fc938b155306c0"
+    },
+    "retentionPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "6b4a688a86ff6e0e31217462329f83df97c1a575c4e48f5377f426e7df18008a"
+    },
+    "retentionPreinstallExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-retention-preinstall-execution.json",
+      "sha256": "bbad6eff807134f7f7045b715a6980271642832e9cfc711ad235c8bc2cd9fdf0"
+    },
+    "retentionAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/retention-after-receipt.json",
+      "sha256": "c7fe549bee86fece10a91a471974ac43b1a4af2f7072b73d5bc761d2c8b8b76a"
+    },
+    "retentionAfterExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-retention-after-execution.json",
+      "sha256": "f49994042c372f35c5222a577828f21b7ab7bf2af85d48263ab4eaf0a8994188"
+    },
+    "installation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/install-result.json",
+      "sha256": "f651e7d7d271d0ba5059cebb74d25520b9b4a8ec38c22aaa639f63ffa3f4e057"
+    },
+    "installationExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-atomic-install-execution.json",
+      "sha256": "3a24d59476abd556b7ba526646f21521a42033db1abc72e9f4d9015377799c23"
+    },
+    "sourceFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/source-freeze-final.json",
+      "sha256": "db75647be1707c7d5671433015130fbdf6a83b57d84d6d85c17ec23500436b2c"
+    },
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-fixed/engineering-summary.json",
+      "sha256": "c565b6e471ded5cb363aae356d4d439134e74d47198f19a5235bd47482fac698"
+    },
+    "engineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-engineering-native-fixed/actual-independent-review.json",
+      "sha256": "cb661aacdbda06136e3769447be7be7776a85fe8fe0e55ed36d8dc8df3d37a20"
+    },
+    "sourceSummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/p32-readonly-preview-source-summary.json",
+      "sha256": "9e139be79ebd4153495f278c34f67454ba33c54ca09dab3c2f0b44a676ff4032"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "b86c7dbfc7d03a52b160e9398e6ff36bd45eb563c4832530ac4bb329f139dae5"
+    },
+    "installedTenExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-ten-execution.json",
+      "sha256": "42caa89b7c6a4fb5e870901bbf78f55ee109bcbed45a3f8d58bb82cc175a32ae"
+    },
+    "cleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/install/candidate-cleanup.json",
+      "sha256": "7247c987cbfad43b15fbef74038332b62846d44a135a5c1c392f469cd7c105c8"
+    },
+    "cleanupExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/root-duplicate-cleanup-execution.json",
+      "sha256": "7d8a514f0ecc9bd29c520f648d65f3adb37348bbc405824502b729f089cc204c"
+    },
+    "firstLaunch": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/ui/first-launch-observation.json",
+      "sha256": "4d8437effb7f5d1c3b7b08b7a14b7f041fc01db6fc08802572ba27e0fbd1fbd9"
+    },
+    "installedTenIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/ten-actual-independent-review.json",
+      "sha256": "bc9ec313e830102c4deb95d13893bbf9dee7050617d181bcbbc891453629ca97"
+    },
+    "firstLaunchIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-install-preparation/first-launch-independent-review.json",
+      "sha256": "8b5219d12cd1e771cbca1a3586672cc4b255d0a3eeeb2fef7bf8acdd580640f2"
+    }
+  }
+}
