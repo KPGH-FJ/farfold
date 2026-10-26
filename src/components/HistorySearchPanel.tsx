@@ -668,30 +668,34 @@ export function HistorySearchPanel({
       )}
       {active && previewCurrent && (
         <WorkspaceDialog title={S.preview} onClose={() => setPreview(null)}>
-          <p>
-            {visibleOperation?.source === "officialSessionLoad"
-              ? S.readPreviewScope
-              : S.previewScope}
-          </p>
-          <h3>{title(previewCurrent.rowId)}</h3>
-          <HistorySearchText hit={previewCurrent} />
-          {previewCurrent.textTruncated && <p>{S.truncated}</p>}
-          {previewCurrent.matchesTruncated && <p>{S.matchesTruncated}</p>}
-          <p>
-            {visibleOperation?.source === "officialSdk"
-              ? S.registeredOpen
-              : visibleOperation?.source === "officialSessionLoad"
-                ? S.readOpenScope
-                : S.openScope}
-          </p>
-          <button
-            className="btn btn-primary"
-            type="button"
-            disabled={!canOpenOriginal}
-            onClick={openOriginal}
-          >
-            {S.openConversation}
-          </button>
+          <div className="workspace-dialog-body">
+            <p>
+              {visibleOperation?.source === "officialSessionLoad"
+                ? S.readPreviewScope
+                : S.previewScope}
+            </p>
+            <h3>{title(previewCurrent.rowId)}</h3>
+            <HistorySearchText hit={previewCurrent} />
+            {previewCurrent.textTruncated && <p>{S.truncated}</p>}
+            {previewCurrent.matchesTruncated && <p>{S.matchesTruncated}</p>}
+            <p>
+              {visibleOperation?.source === "officialSdk"
+                ? S.registeredOpen
+                : visibleOperation?.source === "officialSessionLoad"
+                  ? S.readOpenScope
+                  : S.openScope}
+            </p>
+          </div>
+          <footer>
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={!canOpenOriginal}
+              onClick={openOriginal}
+            >
+              {S.openConversation}
+            </button>
+          </footer>
         </WorkspaceDialog>
       )}
     </section>
