@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32SelectedUnloadedOwnedHistoryInstalledSummary",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "d98829611da671b9aad31388335d53c089e6ae52e9ba3b89d77ad0365687f161"
+  },
+  "scope": "Two separate cases, each one existing indexed test-owned original conversation under its own Agent. These are explicit selected-history visible-text reads, not a two-row or cross-Agent batch.",
+  "cases": [
+    {
+      "agentId": "copilot",
+      "level": "installed",
+      "standardIds": [],
+      "actualAttempts": 1,
+      "passed": 1,
+      "failed": 0,
+      "incomplete": 0,
+      "invalid": 0,
+      "selectedOriginalRows": 1,
+      "queryInputs": 1,
+      "explicitReadActions": 1,
+      "returnedVisibleFields": 4,
+      "reportedMatchFragments": 3,
+      "unsearchedFieldsWithinReturnedScope": 0,
+      "sourceInformation": "unconfirmed",
+      "replySnapshotSelections": 1,
+      "coverageExpansions": 1,
+      "snapshotCloses": 1,
+      "uiReadEnded": true,
+      "rawCloseResponseObserved": false,
+      "normalOpenOrModelPromptsOrLoginOrChoiceOrImportOrRetryOrStopOrFileActions": 0,
+      "necessaryObservations": 7,
+      "privateEvidenceFiles": 14,
+      "unchangedInputs": 8,
+      "sealCliExecutions": 1,
+      "naturalSealExitCode": 0,
+      "independentSemanticBlockingFindings": 0,
+      "startedAt": "2026-10-26T03:47:42.006Z",
+      "finalObservationAt": "2026-10-26T03:49:48.538Z",
+      "operatorObservationUpperSeconds": 126.532,
+      "currentAgentVersion": "unreported by this UI path; no historical version asserted current",
+      "scope": "Original indexed object selected by Agent, original title and full owned working folder in fresh UI. Search and one reply snapshot verified; no raw owner ID or exhaustive history claim."
+    },
+    {
+      "agentId": "poolside",
+      "level": "installed",
+      "standardIds": [],
+      "actualAttempts": 1,
+      "passed": 1,
+      "failed": 0,
+      "incomplete": 0,
+      "invalid": 0,
+      "selectedOriginalRows": 1,
+      "queryInputs": 1,
+      "explicitReadActions": 1,
+      "returnedVisibleFields": 4,
+      "reportedMatchFragments": 3,
+      "unsearchedFieldsWithinReturnedScope": 0,
+      "sourceInformation": "unconfirmed",
+      "replySnapshotSelections": 1,
+      "coverageExpansions": 1,
+      "snapshotCloses": 1,
+      "uiReadEnded": true,
+      "rawCloseResponseObserved": false,
+      "normalOpenOrModelPromptsOrLoginOrChoiceOrImportOrRetryOrStopOrFileActions": 0,
+      "necessaryObservations": 7,
+      "privateEvidenceFiles": 14,
+      "unchangedInputs": 8,
+      "sealCliExecutions": 1,
+      "naturalSealExitCode": 0,
+      "independentSemanticBlockingFindings": 0,
+      "startedAt": "2026-10-26T03:53:39.644Z",
+      "finalObservationAt": "2026-10-26T03:55:04.076Z",
+      "operatorObservationUpperSeconds": 84.432,
+      "currentAgentVersion": "unreported by this UI path; no historical version asserted current",
+      "scope": "Original indexed object selected by Agent, original title and full owned working folder in fresh UI. Search and one reply snapshot verified; no raw owner ID or exhaustive history claim."
+    }
+  ],
+  "coverageLimits": [
+    "Search covered only the acknowledged returned user/reply visible fields. Unreturned history, separate attachment files, thoughts and tool results are excluded. Zero omitted fields refers to this returned scope, not exhaustive native history.",
+    "Both rows reported source information unconfirmed. Returned text does not establish original provider/service restoration; current Agent program version and effective backend were not observed.",
+    "The ended label proves UI settlement only. No raw close response, transport-count, process-lifetime or continuous writer-absence proof is claimed.",
+    "Root sent no model prompt or normal-open request, imported no new history, changed no model/service/reasoning/permission settings, and performed no login, file action, retry, Stop or cancel in either case. Official startup/load may still maintain its own caches or state.",
+    "The snapshots showed a title and matching reply fragment. The original conversation was not opened, and neither source navigation nor an exact original-message location was tested by these two cases.",
+    "No whole P32, Agent standard, whole Agent or 29-by-8/151-condition completion. Canonical standardIds remain empty. Six waits, NEW-24 pause, Cline orphan, old failures/unknown work and Dirac missing original user text remain unchanged."
+  ],
+  "reviewRole": "Root prepared actual bindings, operated both UI cases and executed one seal per case. A separate contributor authored prospective templates, then independently checked actual evidence and semantics, including both reply-snapshot screenshots; that reviewer did not operate the cases, write actuals or repeat the validator.",
+  "references": {
+    "copilot:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/manifest.json",
+      "sha256": "4843823638bdcbbc5d940486c0661d2871335ee907d29b69c962a1b0ade4b5cf"
+    },
+    "copilot:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/actuals.json",
+      "sha256": "8361d7842f1298ec85dba8b8779fa0b28dc2d73f1d1fda7e43d36ff40b0fe796"
+    },
+    "copilot:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/receipt.json",
+      "sha256": "3d4f5216107e8360797c9b8bab11be7b074c63bb32656e51f4f6ad21b0293dd8"
+    },
+    "copilot:seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/seal-execution.json",
+      "sha256": "d410da4624a0786d8373eb94eb6cd7566d447418120df177caf26084006c955e"
+    },
+    "copilot:operator-completion.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/operator-completion.json",
+      "sha256": "421d703f80e1d4117202a6c572400a4825a3acde129a6315607454dc9b19fb75"
+    },
+    "copilot:semantic-review.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-copilot-selected-unloaded-formal-e9/semantic-review.json",
+      "sha256": "13ace5982717f3df07c9431611f87c0073a08ee4b7064b244fe7444b0dfde339"
+    },
+    "poolside:manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/manifest.json",
+      "sha256": "c6895452b7e37f9b016ed0b9425148bf3231796120d1882cd745aee8002d4448"
+    },
+    "poolside:actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/actuals.json",
+      "sha256": "1bdc0f4f9c71040f0ec254f7dc9bf0d1014f80353cccd7fd5e85b326708a15a3"
+    },
+    "poolside:receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/receipt.json",
+      "sha256": "0393bd6b249b5ce4cf4dca93ba5e9c7e7ec6dc7120e1b22bbfc9abc48b4b3fcc"
+    },
+    "poolside:seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/seal-execution.json",
+      "sha256": "0897a7923dbf1541692635cd19782ba47119784b62ab870f2dbde96c749a7958"
+    },
+    "poolside:operator-completion.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/operator-completion.json",
+      "sha256": "92a43501e6bd74458b619bb89bc9942d1e5c94db7d7bf3002cf24eb16b8204cb"
+    },
+    "poolside:semantic-review.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/semantic-review.json",
+      "sha256": "59ec66230b64b379ba16c68e0ea1883518ed8701deb8c9d69204ae00da875eb8"
+    },
+    "poolside:actuals-preparation-correction.json": {
+      "path": "output/2026-10-24-agent-acceptance/p32-poolside-selected-unloaded-formal-e9/actuals-preparation-correction.json",
+      "sha256": "54cedf111159bd1658667382c737bede98333baa9c01835857bb2ae29ca9551d"
+    },
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-unloaded-owned-history-preparation/preparation.json",
+      "sha256": "bb9e6e2a94752845f9ca8f843c8c91059ac2725594ead4fda894d25354798b27"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-e9ac19f5-installation.json",
+      "sha256": "00616ec78a14c4b430766837d267ff4fd6359893a2418583f2d99ea31ce97da6"
+    }
+  },
+  "preparationIssuesPreserved": [
+    "Poolside post-observation actuals construction first failed Python parsing due to non-UTF-8 stdin before any statement or actuals file write. An ASCII-only script with Unicode escapes then constructed the actuals. The original observation window, expected values and product actions were not changed; there was one seal and no product retry."
+  ],
+  "aggregate": {
+    "distinctCases": 2,
+    "explicitReadActions": 2,
+    "modelPromptsByRoot": 0,
+    "eachCaseObservedSeparately": true,
+    "noWholeSequence180SecondClaim": true,
+    "canonicalStandardIdsChanged": false,
+    "fullP32Closed": false
+  }
+}
