@@ -453,3 +453,69 @@ async fn search_read_preview_fifo_task_stop_never_dispatches() {
         }
     }
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn search_read_preview_keeps_missing_and_existing_source_distinct_without_injection() {
+    for recorded in ["missing", "existing"] {
+        let fixture = Fixture::established().await;
+        // An unrelated configured service is available, but read payloads carry
+        // no current UI service selection. It must not fill either saved state.
+        let pool = json!([{"id":"available-b","label":"B","provider":"custom",
+            "endpoint":"https://available-b.invalid/v1","apiType":"responses",
+            "models":["other-model"],"secretRef":"unread-b-reference",
+            "retired":[],"grants":[],"deleting":false}]);
+        fixture.store.set_setting("credentials.v1", &pool).unwrap();
+        let id = session_row_id(&fixture.row.id, &fixture.cwd.to_string_lossy(), SESSION);
+        let mut saved = fixture.store.get_session(&id).unwrap().unwrap();
+        let config = saved
+            .config_options
+            .as_mut()
+            .unwrap()
+            .as_object_mut()
+            .unwrap();
+        if recorded == "missing" {
+            config.remove("_farfoldService");
+        } else {
+            config.insert("_farfoldService".into(), json!({"kind":"existing"}));
+        }
+        fixture.store.upsert_session(&saved).unwrap();
+        let baseline = fixture.record();
+        let pool_before = fixture.store.get_setting("credentials.v1").unwrap();
+        audit_config_writes(&fixture);
+        let read = preview(&fixture, OpenPurpose::SearchReadOnly).await;
+        assert_eq!(read.purpose, "searchReadOnly");
+        assert!(read.session.service.is_none());
+        assert!(read.session.service_context.is_none());
+        assert_ne!(read.session.config_check.status, "ready");
+        assert_eq!(read.session.config_options[0]["currentValue"], "m1");
+        fixture
+            .manager
+            .close_session_owned(
+                &fixture.row.id,
+                &fixture.cwd,
+                SESSION,
+                Some("readonly-fixture-token"),
+            )
+            .await
+            .unwrap();
+        assert_eq!(
+            (fixture.restore_sets(), config_writes(&fixture)),
+            (vec![], 0),
+            "{recorded}: reading and exact cleanup must not restore or save a source"
+        );
+        assert_eq!(fixture.record(), baseline);
+        assert_eq!(
+            fixture.store.get_setting("credentials.v1").unwrap(),
+            pool_before
+        );
+        if recorded == "missing" {
+            assert!(fixture.record().get("_farfoldService").is_none());
+        } else {
+            assert_eq!(
+                fixture.record()["_farfoldService"],
+                json!({"kind":"existing"})
+            );
+        }
+        fixture.assert_identity_and_no_prompt();
+    }
+}

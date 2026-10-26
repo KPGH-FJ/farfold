@@ -892,3 +892,136 @@ async fn queued_service_identity_endpoint_and_model_changes_reject_before_prepar
         assert_eq!(f.manager.history_admission.counts(), (0, 0, 0));
     }
 }
+
+#[tokio::test]
+async fn read_admission_rechecks_saved_configured_source_without_current_selection() {
+    use crate::{
+        acp_client::{history_admission_commands::HistoryRequest, session_index::session_row_id},
+        meta_store::SessionRow,
+    };
+    use sha2::{Digest, Sha256};
+
+    for change in [
+        "unchanged",
+        "unrelated-b",
+        "label",
+        "removed",
+        "deleting",
+        "endpoint",
+        "api-type",
+        "models",
+        "saved-to-b",
+        "malformed-record",
+    ] {
+        let f = configured(1);
+        let endpoint = "https://controlled-a.invalid/v1";
+        let fingerprint: String =
+            Sha256::digest(serde_json::to_vec(&(endpoint, "responses")).unwrap())
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect();
+        // These are test-owned public source records. Neither fake secret
+        // reference may be resolved during admission or this preparation probe.
+        let mut pool = json!([
+            {"id":"controlled-a","label":"A","provider":"custom","endpoint":endpoint,"apiType":"responses","models":["saved-model"],"secretRef":"unread-a-reference","retired":[],"grants":[],"deleting":false},
+            {"id":"controlled-b","label":"B","provider":"custom","endpoint":"https://controlled-b.invalid/v1","apiType":"responses","models":["other-model"],"secretRef":"unread-b-reference","retired":[],"grants":[],"deleting":false}
+        ]);
+        f.store.set_setting("credentials.v1", &pool).unwrap();
+        let saved = SessionRow {
+            id: session_row_id(&f.row.id, &f.cwd.to_string_lossy(), "saved-a"),
+            agent_id: f.row.id.clone(),
+            cwd: f.cwd.to_string_lossy().into(),
+            native_session_id: Some("saved-a".into()),
+            title: None,
+            config_options: Some(json!({"_farfoldService":{"kind":"configured","identity":{
+                "id":"controlled-a","fingerprint":fingerprint,"model":"saved-model"
+            }}})),
+            pinned: false,
+            archived: false,
+            created_at: 0,
+            updated_at: 0,
+        };
+        f.store.upsert_session(&saved).unwrap();
+        let hold = f
+            .manager
+            .history_admission
+            .enqueue(
+                f.manager
+                    .history_admission
+                    .fixture_owner("hold-read", "active", "b"),
+                1,
+            )
+            .unwrap()
+            .acquire()
+            .await
+            .unwrap();
+        let request = HistoryRequest {
+            owner: f
+                .manager
+                .history_admission
+                .fixture_owner("saved-read", "saved-a", &f.row.id),
+            preparation_bytes: 0,
+            progress: Arc::new(|_| Ok(())),
+        };
+        let preparations = AtomicUsize::new(0);
+        let mut read = Box::pin(f.manager.prepare_history_open(
+            &f.row,
+            &f.cwd,
+            Some("saved-a"),
+            &[],
+            &f.store,
+            None, // The fixed read wrapper never passes the UI's current service.
+            Some(request),
+            || {
+                preparations.fetch_add(1, Ordering::SeqCst);
+            },
+        ));
+        tokio::select! {
+            result = &mut read => panic!("unexpected early read result: {}", result.is_ok()),
+            _ = until(|| f.manager.history_admission.counts().1 == 1) => {}
+        }
+        match change {
+            "unrelated-b" => pool[1]["deleting"] = json!(true),
+            "label" => pool[0]["label"] = json!("Renamed A"),
+            "removed" => {
+                pool.as_array_mut().unwrap().remove(0);
+            }
+            "deleting" => pool[0]["deleting"] = json!(true),
+            "endpoint" => pool[0]["endpoint"] = json!("https://changed-a.invalid/v1"),
+            "api-type" => pool[0]["apiType"] = json!("messages"),
+            "models" => pool[0]["models"] = json!(["different-model"]),
+            "saved-to-b" | "malformed-record" => {
+                let mut changed = saved.clone();
+                changed.config_options.as_mut().unwrap()["_farfoldService"] = if change
+                    == "saved-to-b"
+                {
+                    let b_fingerprint: String = Sha256::digest(
+                        serde_json::to_vec(&("https://controlled-b.invalid/v1", "responses"))
+                            .unwrap(),
+                    )
+                    .iter()
+                    .map(|byte| format!("{byte:02x}"))
+                    .collect();
+                    json!({"kind":"configured","identity":{"id":"controlled-b","fingerprint":b_fingerprint,"model":"other-model"}})
+                } else {
+                    json!({"kind":"configured"})
+                };
+                f.store.upsert_session(&changed).unwrap();
+            }
+            _ => {}
+        }
+        f.store.set_setting("credentials.v1", &pool).unwrap();
+        drop(hold);
+        let outcome = read.await;
+        let admitted = matches!(change, "unchanged" | "unrelated-b" | "label");
+        assert_eq!(
+            (outcome.is_ok(), preparations.load(Ordering::SeqCst)),
+            (admitted, usize::from(admitted)),
+            "{change}: only the saved source may authorize read preparation"
+        );
+        drop(outcome);
+        assert_eq!(count_prefix(&f, "listed_init_"), 0);
+        assert_eq!(count_prefix(&f, "listed_load_"), 0);
+        assert_eq!(f.manager.history_admission.counts(), (0, 0, 0));
+    }
+}

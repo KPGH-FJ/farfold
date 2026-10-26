@@ -19,8 +19,13 @@ import {
 } from "../runtime/history_search_controller";
 import {
   validHistoryQuery,
-  type HistorySearchHit,
+  type HistorySearchDisplayHit,
+  type HistoryReadTarget,
 } from "../runtime/history_search_types";
+import {
+  historyPreviewAgentKey,
+  historyPreviewAssociationKey,
+} from "../runtime/history_preview_scope";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -28,7 +33,27 @@ import {
   HistorySearchText,
 } from "./HistorySearchResults";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { subscribeAuthenticationChanges } from "../runtime/authentication";
+import { subscribeCredentialChanges } from "../runtime/credentials";
 import "./HistorySearchPanel.css";
+
+function selectedFacts(index: readonly IndexRow[], ids: readonly string[]) {
+  return JSON.stringify(
+    ids.map((id) => {
+      const row = index.find((candidate) => candidate.id === id);
+      return row
+        ? [
+            historyPreviewAssociationKey(
+              [row],
+              row.agentId,
+              row.nativeSessionId ?? "",
+            ),
+            row.archived,
+          ]
+        : null;
+    }),
+  );
+}
 
 export function HistorySearchPanel({
   active,
@@ -52,10 +77,11 @@ export function HistorySearchPanel({
   const snapshot = useThreadsSnapshot();
   const [agentId, setAgentId] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [preview, setPreview] = useState<HistorySearchHit | null>(null);
+  const [preview, setPreview] = useState<HistorySearchDisplayHit | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const live = useRef({ active, rows, agentOwners, query, scopeKey });
-  live.current = { active, rows, agentOwners, query, scopeKey };
+  const [sourceOwner, setSourceOwner] = useState<object>(() => ({}));
+  const live = useRef({ active, rows, agents, agentOwners, query, scopeKey });
+  live.current = { active, rows, agents, agentOwners, query, scopeKey };
   const mounted = useRef(false);
   const selectionFieldset = useRef<HTMLFieldSetElement>(null);
   const activeOwner = useRef<HistorySearchOwner | null>(null);
@@ -64,20 +90,33 @@ export function HistorySearchPanel({
   const selectedRows = chosenIds.map((id) =>
     snapshot.index.find((row) => row.id === id),
   );
-  const capturedRows = useRef({ key: selectionKey, rows: selectedRows });
+  const factsKey = selectedFacts(snapshot.index, chosenIds);
+  const capturedRows = useRef({
+    key: selectionKey,
+    facts: factsKey,
+    rows: selectedRows,
+  });
   if (
     capturedRows.current.key !== selectionKey ||
-    selectedRows.some((row, i) => row !== capturedRows.current.rows[i])
+    capturedRows.current.facts !== factsKey
   )
-    capturedRows.current = { key: selectionKey, rows: selectedRows };
+    capturedRows.current = {
+      key: selectionKey,
+      facts: factsKey,
+      rows: selectedRows,
+    };
   const captured = capturedRows.current.rows;
   const selectionAvailable = captured.every(
     (row) =>
       row?.nativeSessionId &&
+      row.agentId === agentId &&
       !snapshot.threads.has(row.id) &&
       rows.some((candidate) => candidate.key === row.id),
   );
   const agentOwner = agentOwners?.get(agentId);
+  const agentSource = historyPreviewAgentKey(
+    agents.find((agent) => agent.id === agentId),
+  );
   const owner = useMemo((): HistorySearchOwner => {
     let retired = false;
     const authority: HistorySearchOwner = {
@@ -93,10 +132,14 @@ export function HistorySearchPanel({
           current.query === query &&
           current.scopeKey === scopeKey &&
           current.agentOwners?.get(agentId) === agentOwner &&
+          historyPreviewAgentKey(
+            current.agents.find((agent) => agent.id === agentId),
+          ) === agentSource &&
+          selectedFacts(state.index, chosenIds) === factsKey &&
           captured.every(
             (row) =>
               row?.nativeSessionId &&
-              state.index.find((r) => r.id === row.id) === row &&
+              row.agentId === agentId &&
               !state.threads.has(row.id) &&
               current.rows.some((r) => r.key === row.id),
           );
@@ -109,6 +152,9 @@ export function HistorySearchPanel({
   }, [
     agentId,
     agentOwner,
+    agentSource,
+    factsKey,
+    sourceOwner,
     selectionKey,
     scopeKey,
     query,
@@ -117,6 +163,29 @@ export function HistorySearchPanel({
     selectionAvailable,
   ]);
   activeOwner.current = owner;
+  useEffect(() => {
+    const retire = (agent?: string) => {
+      const current = activeOwner.current;
+      if (!current || (agent && current.agentId !== agent)) return;
+      controller.retire(current);
+      if (mounted.current) {
+        setPreview(null);
+        // Only a new view authority; this never restarts the retired read.
+        setSourceOwner({});
+      }
+    };
+    const stopIndex = threads.subscribe?.(() => {
+      const current = activeOwner.current;
+      if (current && !current.current()) retire();
+    });
+    const stopAuthentication = subscribeAuthenticationChanges(retire);
+    const stopCredentials = subscribeCredentialChanges(() => retire());
+    return () => {
+      stopIndex?.();
+      stopAuthentication();
+      stopCredentials();
+    };
+  }, [controller]);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -142,10 +211,27 @@ export function HistorySearchPanel({
   const flight = view.flight;
   const visibleOperation =
     flight?.owner === owner && owner.current() ? flight.operation : null;
+  const displayOperation =
+    visibleOperation?.source === "officialSessionLoad" &&
+    visibleOperation.pendingCleanup
+      ? { ...visibleOperation, hits: [] }
+      : visibleOperation;
+  const canOpenOriginal =
+    !flight ||
+    flight.source !== "officialSessionLoad" ||
+    (flight.operation.settled && !flight.operation.pendingCleanup);
+  useEffect(() => {
+    if (
+      visibleOperation?.source === "officialSessionLoad" &&
+      visibleOperation.pendingCleanup
+    )
+      setPreview(null);
+  }, [visibleOperation]);
   useEffect(() => {
     if (
       !active ||
       !flight ||
+      flight.source === "officialSessionLoad" ||
       flight.unconfirmed ||
       flight.admissionClosed ||
       flight.operation?.settled
@@ -217,11 +303,16 @@ export function HistorySearchPanel({
     setSelected(new Set(remaining));
     setError(null);
   };
-  const choosePreview = (hit: HistorySearchHit) => {
+  const choosePreview = (hit: HistorySearchDisplayHit) => {
     if (
       active &&
       owner.current() &&
+      controller.get(agentId).flight === flight &&
       flight?.owner === owner &&
+      !(
+        flight.source === "officialSessionLoad" &&
+        flight.operation.pendingCleanup
+      ) &&
       flight.operation?.hits.some((currentHit) => currentHit === hit)
     )
       setPreview(hit);
@@ -231,7 +322,9 @@ export function HistorySearchPanel({
       !preview ||
       !active ||
       !owner.current() ||
+      controller.get(agentId).flight !== flight ||
       flight?.owner !== owner ||
+      !canOpenOriginal ||
       !flight.operation?.hits.some((currentHit) => currentHit === preview)
     ) {
       setError(S.stale);
@@ -249,25 +342,36 @@ export function HistorySearchPanel({
     controller.retire(owner);
     onOpen(row);
   };
-  const stateLabel = !flight
-    ? null
-    : flight.admissionClosed
-      ? S.closed
-      : flight.unconfirmed
-        ? S.unconfirmed
-        : flight.operation?.settled
-          ? flight.operation.state === "completed"
+  const stateLabel =
+    flight?.source === "officialSessionLoad"
+      ? flight.operation.pendingCleanup
+        ? S.readClosePending
+        : flight.unconfirmed
+          ? S.readUnconfirmed
+          : flight.operation.settled
             ? S.complete
-            : flight.operation.state === "cancelled"
-              ? S.cancelled
-              : S.failed
-          : flight.operation?.state === "pendingCleanup"
-            ? S.cleanup
             : flight.cancelRequested
-              ? S.cancelling
-              : S.reading;
+              ? S.readSettling
+              : S.reading
+      : !flight
+        ? null
+        : flight.admissionClosed
+          ? S.closed
+          : flight.unconfirmed
+            ? S.unconfirmed
+            : flight.operation?.settled
+              ? flight.operation.state === "completed"
+                ? S.complete
+                : flight.operation.state === "cancelled"
+                  ? S.cancelled
+                  : S.failed
+              : flight.operation?.state === "pendingCleanup"
+                ? S.cleanup
+                : flight.cancelRequested
+                  ? S.cancelling
+                  : S.reading;
   const previewCurrent =
-    preview && visibleOperation?.hits.some((hit) => hit === preview)
+    preview && displayOperation?.hits.some((hit) => hit === preview)
       ? preview
       : null;
   return (
@@ -349,6 +453,48 @@ export function HistorySearchPanel({
           <button
             className="btn btn-ghost"
             type="button"
+            disabled={
+              !active ||
+              !agentId ||
+              !selected.size ||
+              view.preparing ||
+              !validHistoryQuery(query)
+            }
+            onClick={() => {
+              if (
+                !mounted.current ||
+                activeOwner.current !== owner ||
+                !owner.current()
+              ) {
+                setError(S.stale);
+                return;
+              }
+              const current = threads.getSnapshot();
+              const targets: HistoryReadTarget[] = chosenIds.map((id) => {
+                const row = current.index.find(
+                  (candidate) => candidate.id === id,
+                )!;
+                return {
+                  rowId: row.id,
+                  agentId: row.agentId,
+                  cwd: row.cwd,
+                  nativeSessionId: row.nativeSessionId,
+                  unavailable: current.threads.has(id)
+                    ? "alreadyOpen"
+                    : row.nativeSessionId
+                      ? null
+                      : "noNativeHistory",
+                };
+              });
+              setError(null);
+              controller.startRead(owner, query, targets);
+            }}
+          >
+            {S.readSelected}
+          </button>
+          <button
+            className="btn btn-ghost"
+            type="button"
             disabled={!active || !agentId || !selected.size || view.preparing}
             onClick={() => {
               if (
@@ -410,35 +556,82 @@ export function HistorySearchPanel({
       {flight && (
         <>
           <p role="status">{stateLabel}</p>
-          {flight.owner !== owner &&
+          {flight.source !== "officialSessionLoad" &&
+            flight.owner !== owner &&
             !flight.admissionClosed &&
             !flight.operation?.settled && <p>{S.retained}</p>}
           {flight.error && <p>{S.errors[flight.error]}</p>}
           <div className="history-search-actions">
-            {!flight.admissionClosed && !flight.operation?.settled && (
-              <>
-                <button
-                  className="btn btn-ghost"
-                  type="button"
-                  disabled={flight.checking}
-                  onClick={() =>
-                    controller.check(agentId, flight.expected.requestId)
-                  }
-                >
-                  {flight.checking ? S.checking : S.check}
-                </button>
-                <button
-                  className="btn btn-ghost"
-                  type="button"
-                  disabled={flight.cancelling}
-                  onClick={() =>
-                    controller.cancel(agentId, flight.expected.requestId)
-                  }
-                >
-                  {S.cancel}
-                </button>
-              </>
-            )}
+            {flight.source === "officialSessionLoad" &&
+              !flight.operation.settled && (
+                <>
+                  <p>
+                    {flight.operation.pendingCleanup
+                      ? S.readClosePending
+                      : S.readWaitOriginal}
+                  </p>
+                  {flight.operation.pendingCleanup ? (
+                    <button
+                      className="btn btn-ghost"
+                      type="button"
+                      disabled={flight.releasing || !flight.returned}
+                      onClick={() => {
+                        void controller
+                          .retryReadClose(agentId, flight.expected.requestId)
+                          .then((ok) => {
+                            if (
+                              !ok &&
+                              live.current.active &&
+                              controller.get(agentId).flight === flight
+                            )
+                              setError(S.releaseFailed);
+                          });
+                      }}
+                    >
+                      {S.readRetryClose}
+                    </button>
+                  ) : (
+                    !flight.cancelRequested &&
+                    flight.operation.state !== "unconfirmed" && (
+                      <button
+                        className="btn btn-ghost"
+                        type="button"
+                        onClick={() =>
+                          controller.cancel(agentId, flight.expected.requestId)
+                        }
+                      >
+                        {S.cancel}
+                      </button>
+                    )
+                  )}
+                </>
+              )}
+            {flight.source !== "officialSessionLoad" &&
+              !flight.admissionClosed &&
+              !flight.operation?.settled && (
+                <>
+                  <button
+                    className="btn btn-ghost"
+                    type="button"
+                    disabled={flight.checking}
+                    onClick={() =>
+                      controller.check(agentId, flight.expected.requestId)
+                    }
+                  >
+                    {flight.checking ? S.checking : S.check}
+                  </button>
+                  <button
+                    className="btn btn-ghost"
+                    type="button"
+                    disabled={flight.cancelling}
+                    onClick={() =>
+                      controller.cancel(agentId, flight.expected.requestId)
+                    }
+                  >
+                    {S.cancel}
+                  </button>
+                </>
+              )}
             {(flight.admissionClosed || flight.operation?.settled) && (
               <button
                 className="btn btn-ghost"
@@ -461,9 +654,9 @@ export function HistorySearchPanel({
               </button>
             )}
           </div>
-          {visibleOperation && (
+          {displayOperation && (
             <HistorySearchResults
-              operation={visibleOperation}
+              operation={displayOperation}
               title={title}
               onPreview={choosePreview}
             />
@@ -475,7 +668,11 @@ export function HistorySearchPanel({
       )}
       {active && previewCurrent && (
         <WorkspaceDialog title={S.preview} onClose={() => setPreview(null)}>
-          <p>{S.previewScope}</p>
+          <p>
+            {visibleOperation?.source === "officialSessionLoad"
+              ? S.readPreviewScope
+              : S.previewScope}
+          </p>
           <h3>{title(previewCurrent.rowId)}</h3>
           <HistorySearchText hit={previewCurrent} />
           {previewCurrent.textTruncated && <p>{S.truncated}</p>}
@@ -483,11 +680,14 @@ export function HistorySearchPanel({
           <p>
             {visibleOperation?.source === "officialSdk"
               ? S.registeredOpen
-              : S.openScope}
+              : visibleOperation?.source === "officialSessionLoad"
+                ? S.readOpenScope
+                : S.openScope}
           </p>
           <button
             className="btn btn-primary"
             type="button"
+            disabled={!canOpenOriginal}
             onClick={openOriginal}
           >
             {S.openConversation}

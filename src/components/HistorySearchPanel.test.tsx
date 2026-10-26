@@ -17,6 +17,9 @@ const hooks = vi.hoisted(() => ({
   e: 0,
   index: [] as unknown[],
   threads: new Map(),
+  indexListeners: new Set<() => void>(),
+  authentication: new Set<(agentId: string) => void>(),
+  credentials: new Set<() => void>(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -63,18 +66,42 @@ vi.mock("react", async (original) => ({
 vi.mock("../runtime/sessions", () => ({
   threads: {
     getSnapshot: () => ({ index: hooks.index, threads: hooks.threads }),
+    subscribe: (listener: () => void) => {
+      hooks.indexListeners.add(listener);
+      return () => hooks.indexListeners.delete(listener);
+    },
   },
   useThreadsSnapshot: () => ({ index: hooks.index, threads: hooks.threads }),
+}));
+vi.mock("../runtime/authentication", async (original) => ({
+  ...(await original<typeof import("../runtime/authentication")>()),
+  subscribeAuthenticationChanges: (listener: (agentId: string) => void) => {
+    hooks.authentication.add(listener);
+    return () => hooks.authentication.delete(listener);
+  },
+}));
+vi.mock("../runtime/credentials", async (original) => ({
+  ...(await original<typeof import("../runtime/credentials")>()),
+  subscribeCredentialChanges: (listener: () => void) => {
+    hooks.credentials.add(listener);
+    return () => hooks.credentials.delete(listener);
+  },
 }));
 import { HistorySearchPanel } from "./HistorySearchPanel";
 import { HistorySearchResults } from "./HistorySearchResults";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
+import { HistorySearchController } from "../runtime/history_search_controller";
+import type {
+  HistoryReadInput,
+  HistoryReadOperation,
+} from "../runtime/history_search_types";
 import {
   setup,
   selection,
   operation,
   flush,
+  deferred,
 } from "../runtime/history_search.test-support";
 import {
   sdkSelection,
@@ -86,6 +113,47 @@ let h: ReturnType<typeof setup>,
   owners = new Map<string, object>(),
   rows: SidebarRow[] = [];
 const onOpen = vi.fn();
+
+function returnedRead(): HistoryReadOperation {
+  return {
+    agentId: "fixture",
+    requestId: "00000000-0000-4000-8000-000000000003",
+    source: "officialSessionLoad",
+    query: "hello",
+    rowIds: ["saved-1"],
+    scope: "userAndAssistantText",
+    coverageScope: "acknowledgedLoadPrefix",
+    textScope: "returnedVisibleFields",
+    matchMode: "ecmascriptUnicodeLiteral",
+    exclusions: ["attachments", "toolOutput", "reasoning", "otherMessageKinds"],
+    state: "finished",
+    settled: true,
+    code: null,
+    rows: [
+      {
+        rowId: "saved-1",
+        coverage: "completeReturnedPrefix",
+        textBlocksRead: 1,
+        matchedTextBlocks: 1,
+        skippedFields: 0,
+        sourceStatus: "sourceUnconfirmed",
+        code: null,
+      },
+    ],
+    hits: [
+      {
+        rowId: "saved-1",
+        role: "user",
+        text: "hello from the returned prefix",
+        textTruncated: false,
+        matches: [{ start: 0, end: 5 }],
+        matchesTruncated: false,
+        locator: { kind: "returnedText", blockIndex: 0, fieldIndex: 0 },
+      },
+    ],
+    pendingCleanup: null,
+  };
+}
 function render() {
   hooks.s = hooks.r = hooks.m = hooks.e = 0;
   const tree = HistorySearchPanel({
@@ -152,6 +220,9 @@ beforeEach(() => {
   hooks.effects = [];
   hooks.pending = [];
   hooks.threads = new Map();
+  hooks.indexListeners.clear();
+  hooks.authentication.clear();
+  hooks.credentials.clear();
   hooks.index = [
     {
       id: "saved-1",
@@ -190,6 +261,403 @@ beforeEach(() => {
 afterEach(() => {
   hooks.effects.forEach((e) => e.cleanup?.());
   vi.useRealTimers();
+});
+it("explicitly reads only the selected indexed body without borrowing native search admission", async () => {
+  const result = returnedRead();
+  const read = vi.fn(async (_input: HistoryReadInput) => result);
+  // Constructor injection is the consumer boundary. The existing constructor
+  // safely ignores the extra argument before this feature is implemented.
+  h.controller = Reflect.construct(HistorySearchController, [
+    h.port,
+    () => result.requestId,
+    () => 0,
+    100,
+    read,
+  ]) as HistorySearchController;
+  choose();
+  click("读取所选正文");
+  await flush();
+  expect(read).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({
+      agentId: "fixture",
+      query: "hello",
+      targets: [
+        {
+          rowId: "saved-1",
+          agentId: "fixture",
+          cwd: "/owned",
+          nativeSessionId: "native-1",
+          unavailable: null,
+        },
+      ],
+    }),
+  );
+  expect(h.port.capabilities).not.toHaveBeenCalled();
+  expect(h.port.start).not.toHaveBeenCalled();
+  expect(h.port.status).not.toHaveBeenCalled();
+  expect(h.port.cancel).not.toHaveBeenCalled();
+  expect(h.port.release).not.toHaveBeenCalled();
+  expect(
+    nodes().find((node) => node.type === HistorySearchResults)?.props.operation,
+  ).toEqual(result);
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it("keeps exact selected facts usable across title and clock-only index refresh", async () => {
+  await start();
+  hooks.index = [
+    {
+      ...(hooks.index[0] as IndexRow),
+      title: "Renamed without changing the target",
+      updatedAt: 2,
+    },
+  ];
+  rows = [
+    { ...rows[0], title: "Renamed without changing the target", updatedAt: 2 },
+  ];
+  render();
+  const result = operation("completed", 3);
+  h.start.resolve(result);
+  await flush();
+  expect(h.port.cancel).not.toHaveBeenCalled();
+  expect(
+    nodes().find((node) => node.type === HistorySearchResults)?.props.operation,
+  ).toEqual(result.operation);
+  expect(h.port.start).toHaveBeenCalledTimes(1);
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it("shows a returned match but cannot open its original while another selected read is unsettled", async () => {
+  hooks.index.push({
+    ...(hooks.index[0] as IndexRow),
+    id: "saved-2",
+    nativeSessionId: "native-2",
+  });
+  rows.push({ ...rows[0], key: "saved-2", nativeSessionId: "native-2" });
+  const pending = deferred<HistoryReadOperation>();
+  let input!: HistoryReadInput;
+  const read = vi.fn((next: HistoryReadInput) => {
+    input = next;
+    return pending.promise;
+  });
+  h.controller = new HistorySearchController(
+    h.port,
+    () => returnedRead().requestId,
+    () => 0,
+    100,
+    read,
+  );
+  choose();
+  const second = nodes().filter(
+    (node) => node.type === "input" && node.props.type === "checkbox",
+  )[1];
+  (second.props.onChange as Function)({ target: { checked: true } });
+  render();
+  click(S.readSelected);
+  await flush();
+  const progress: HistoryReadOperation = {
+    ...returnedRead(),
+    rowIds: ["saved-1", "saved-2"],
+    state: "reading",
+    settled: false,
+    rows: [
+      returnedRead().rows[0],
+      {
+        ...returnedRead().rows[0],
+        rowId: "saved-2",
+        coverage: "reading",
+        textBlocksRead: 0,
+        matchedTextBlocks: 0,
+        sourceStatus: "notRead",
+      },
+    ],
+  };
+  input.onProgress(progress);
+  const results = nodes().find((node) => node.type === HistorySearchResults)!;
+  (results.props.onPreview as Function)(progress.hits[0]);
+  const early = nodes().find(
+    (node) =>
+      node.type === "button" && node.props.children === S.openConversation,
+  )!;
+  expect(early.props.disabled).toBe(true);
+  (early.props.onClick as Function)();
+  expect(onOpen).not.toHaveBeenCalled();
+  hooks.index = hooks.index.map((row) => ({
+    ...(row as IndexRow),
+    title: "Title refreshed",
+    updatedAt: 9,
+  }));
+  rows = rows.map((row) => ({
+    ...row,
+    title: "Title refreshed",
+    updatedAt: 9,
+  }));
+  render();
+  expect(input.current()).toBe(true);
+  pending.resolve({
+    ...progress,
+    state: "finished",
+    settled: true,
+    rows: [
+      progress.rows[0],
+      {
+        ...progress.rows[1],
+        coverage: "completeEmpty",
+        sourceStatus: "sourceUnconfirmed",
+      },
+    ],
+  });
+  await flush();
+  render();
+  click(S.openConversation);
+  expect(onOpen).toHaveBeenCalledExactlyOnceWith(rows[0]);
+  expect(read).toHaveBeenCalledTimes(1);
+  for (const method of Object.values(h.port))
+    expect(method).not.toHaveBeenCalled();
+});
+it("hides retained hits during pending exact close and rejects a previously captured open action", async () => {
+  const pending = deferred<HistoryReadOperation>();
+  let input!: HistoryReadInput;
+  h.controller = new HistorySearchController(
+    h.port,
+    () => returnedRead().requestId,
+    () => 0,
+    100,
+    (next) => {
+      input = next;
+      return pending.promise;
+    },
+  );
+  choose();
+  click(S.readSelected);
+  await flush();
+  const progress = {
+    ...returnedRead(),
+    state: "reading" as const,
+    settled: false,
+  };
+  input.onProgress(progress);
+  (
+    nodes().find((node) => node.type === HistorySearchResults)!.props
+      .onPreview as Function
+  )(progress.hits[0]);
+  const captured = nodes().find(
+    (node) =>
+      node.type === "button" && node.props.children === S.openConversation,
+  )!.props.onClick as Function;
+  const blocked: HistoryReadOperation = {
+    ...progress,
+    state: "pendingCleanup",
+    code: "pendingCleanup",
+    pendingCleanup: {
+      rowId: "saved-1",
+      receipt: {
+        agentId: "fixture",
+        cwd: "/owned",
+        nativeSessionId: "native-1",
+        previewToken: "owned-token",
+      },
+    },
+  };
+  pending.resolve(blocked);
+  await flush();
+  render();
+  captured();
+  expect(onOpen).not.toHaveBeenCalled();
+  expect(nodes().some((node) => node.type === WorkspaceDialog)).toBe(false);
+  expect(
+    nodes().find((node) => node.type === HistorySearchResults)?.props.operation,
+  ).toMatchObject({ hits: [] });
+  expect(
+    nodes().some(
+      (node) =>
+        node.type === "button" && node.props.children === S.readRetryClose,
+    ),
+  ).toBe(true);
+  expect(
+    nodes().some(
+      (node) => node.type === "button" && node.props.children === S.check,
+    ),
+  ).toBe(false);
+  for (const method of Object.values(h.port))
+    expect(method).not.toHaveBeenCalled();
+});
+it("related saved-source A-B-A changes retire a selected read and cannot revive late body", async () => {
+  const original = hooks.index[0] as IndexRow;
+  const a = {
+    _farfoldService: {
+      kind: "configured",
+      identity: {
+        id: "controlled-a",
+        fingerprint: "controlled-source",
+        model: "controlled-model",
+      },
+    },
+  };
+  hooks.index = [{ ...original, configOptions: a }];
+  const pending = deferred<HistoryReadOperation>();
+  let input!: HistoryReadInput;
+  h.controller = new HistorySearchController(
+    h.port,
+    () => returnedRead().requestId,
+    () => 0,
+    100,
+    (next) => {
+      input = next;
+      return pending.promise;
+    },
+  );
+  choose();
+  click(S.readSelected);
+  await flush();
+  hooks.index = [
+    { ...original, configOptions: { _farfoldService: { kind: "existing" } } },
+  ];
+  render();
+  hooks.index = [{ ...original, configOptions: a }];
+  render();
+  expect(input.current()).toBe(false);
+  expect(input.signal.aborted).toBe(true);
+  pending.resolve(returnedRead());
+  await flush();
+  expect(nodes().some((node) => node.type === HistorySearchResults)).toBe(
+    false,
+  );
+  expect(h.controller.get("fixture").flight?.operation?.hits).toEqual([]);
+  expect(onOpen).not.toHaveBeenCalled();
+  expect(h.port.cancel).not.toHaveBeenCalled();
+});
+it("a captured returned-text source action cannot open a replaced indexed owner", async () => {
+  const result = returnedRead();
+  h.controller = new HistorySearchController(
+    h.port,
+    () => result.requestId,
+    () => 0,
+    100,
+    async () => result,
+  );
+  choose();
+  click(S.readSelected);
+  await flush();
+  (
+    nodes().find((node) => node.type === HistorySearchResults)!.props
+      .onPreview as Function
+  )(result.hits[0]);
+  const captured = nodes().find(
+    (node) =>
+      node.type === "button" && node.props.children === S.openConversation,
+  )!.props.onClick as Function;
+  hooks.index = [
+    { ...(hooks.index[0] as IndexRow), cwd: "/different-controlled-owner" },
+  ];
+  captured();
+  expect(onOpen).not.toHaveBeenCalled();
+  expect(h.port.cancel).not.toHaveBeenCalled();
+});
+it("hiding the selected-read view keeps its exact original observation and drops late body", async () => {
+  const pending = deferred<HistoryReadOperation>();
+  let input!: HistoryReadInput;
+  const read = vi.fn((next: HistoryReadInput) => {
+    input = next;
+    return pending.promise;
+  });
+  h.controller = new HistorySearchController(
+    h.port,
+    () => returnedRead().requestId,
+    () => 0,
+    100,
+    read,
+  );
+  choose();
+  click(S.readSelected);
+  await flush();
+  active = false;
+  render();
+  expect(input.signal.aborted).toBe(true);
+  pending.resolve(returnedRead());
+  await flush();
+  active = true;
+  render();
+  expect(nodes().some((node) => node.type === HistorySearchResults)).toBe(
+    false,
+  );
+  expect(nodes().some((node) => node.type === WorkspaceDialog)).toBe(false);
+  expect(read).toHaveBeenCalledTimes(1);
+  expect(h.port.cancel).not.toHaveBeenCalled();
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it.each(["authentication", "credentials", "related-index"] as const)(
+  "%s changes retire a read immediately, including same-value return before another render",
+  async (kind) => {
+    const pending = deferred<HistoryReadOperation>();
+    let input!: HistoryReadInput;
+    const read = vi.fn((next: HistoryReadInput) => {
+      input = next;
+      return pending.promise;
+    });
+    h.controller = new HistorySearchController(
+      h.port,
+      () => returnedRead().requestId,
+      () => 0,
+      100,
+      read,
+    );
+    choose();
+    click(S.readSelected);
+    await flush();
+    if (kind === "authentication")
+      hooks.authentication.forEach((listener) => listener("fixture"));
+    else if (kind === "credentials")
+      hooks.credentials.forEach((listener) => listener());
+    else {
+      const original = hooks.index;
+      hooks.index = [
+        { ...(hooks.index[0] as IndexRow), cwd: "/changed-controlled-owner" },
+      ];
+      hooks.indexListeners.forEach((listener) => listener());
+      hooks.index = original;
+      hooks.indexListeners.forEach((listener) => listener());
+    }
+    expect(input.current()).toBe(false);
+    expect(input.signal.aborted).toBe(true);
+    render();
+    pending.resolve(returnedRead());
+    await flush();
+    expect(nodes().some((node) => node.type === HistorySearchResults)).toBe(
+      false,
+    );
+    expect(read).toHaveBeenCalledTimes(1);
+    expect(onOpen).not.toHaveBeenCalled();
+    expect(h.port.cancel).not.toHaveBeenCalled();
+  },
+);
+it("an unrelated Agent authentication change keeps the selected read current", async () => {
+  const pending = deferred<HistoryReadOperation>();
+  let input!: HistoryReadInput;
+  h.controller = new HistorySearchController(
+    h.port,
+    () => returnedRead().requestId,
+    () => 0,
+    100,
+    (next) => {
+      input = next;
+      return pending.promise;
+    },
+  );
+  choose();
+  click(S.readSelected);
+  await flush();
+  hooks.authentication.forEach((listener) =>
+    listener("another-controlled-agent"),
+  );
+  render();
+  expect(input.current()).toBe(true);
+  expect(input.signal.aborted).toBe(false);
+  const result = returnedRead();
+  pending.resolve(result);
+  await flush();
+  expect(
+    nodes().find((node) => node.type === HistorySearchResults)?.props.operation,
+  ).toEqual(result);
+  expect(onOpen).not.toHaveBeenCalled();
 });
 it("mount, choose and capability checks never restore history or start a read", async () => {
   choose();

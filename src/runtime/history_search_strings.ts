@@ -21,6 +21,35 @@ export const HISTORY_SEARCH_STRINGS = {
   clearInvalidSelection: "移除失效的选择",
   unsupported: "当前 Agent 尚未提供可用的历史读取方式。",
   start: "开始查找",
+  readSelected: "读取所选正文",
+  readPrefixScope:
+    "仅查找本次返回的用户消息和回复可见文字，不包含未返回的历史、附件文件、工具结果或思考。",
+  readPreviewScope:
+    "这是本次返回消息中保留的可见文字片段，匹配位置只对应这段文字。",
+  readOpenScope:
+    "全部读取确认结束后可打开原对话；不会自动定位这段文字或发送消息。",
+  readSourceUnconfirmed:
+    "本次来源信息未确认；返回文字不证明历史服务设置已恢复。",
+  readConfiguredSource: "已报告本次读取使用的 API 来源。",
+  readClosePending:
+    "读取内容已返回，但尚未确认关闭；暂不能打开原对话或重新开始。",
+  readWaitOriginal: "正在等待本次读取及关闭结果，不会重复读取。",
+  readSettling: "已停止继续查找，正在等待原读取结束。",
+  readUnconfirmed:
+    "尚未确认原读取是否结束；保留本次状态，暂不能重新开始或打开原对话。",
+  readRetryClose: "重试关闭本次读取",
+  readBlocks: (blocks: number, matched: number, skipped: number) =>
+    `${blocks} 段文字 · ${matched} 段匹配 · ${skipped} 处未检索`,
+  readRowStates: {
+    unread: "尚未读取",
+    reading: "正在读取",
+    completeReturnedPrefix: "本次返回范围已检索",
+    completeEmpty: "本次返回范围没有可检索文字",
+    incomplete: "返回内容未确认完整",
+    unsupported: "暂不支持读取",
+    sourceChanged: "来源已变化",
+    limited: "只检索了部分返回文字",
+  },
   reading: "正在读取所选历史…",
   cancel: "取消本次读取",
   cancelling: "已请求取消，正在确认读取是否结束…",

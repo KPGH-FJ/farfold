@@ -1,4 +1,6 @@
 import { historySearchPort, type HistorySearchPort } from "./history_search";
+import { readSelectedHistory } from "./history_search_read";
+import { closeHistoryPreview } from "./history_import";
 import {
   historySearchError,
   parseHistoryReply,
@@ -9,6 +11,9 @@ import {
   type HistorySearchOperation,
   type HistorySearchSelection,
   type HistorySearchSource,
+  type HistoryReadOperation,
+  type HistoryReadRunner,
+  type HistoryReadTarget,
 } from "./history_search_types";
 
 export interface HistorySearchOwner {
@@ -16,11 +21,8 @@ export interface HistorySearchOwner {
   /** A view-local authority; returning to equal values never revives it. */
   current(): boolean;
 }
-export interface HistorySearchFlight {
-  expected: HistorySearchExpected;
-  source: HistorySearchSource;
+interface FlightFields {
   owner: HistorySearchOwner | null;
-  operation: HistorySearchOperation | null;
   admissionClosed: boolean;
   unconfirmed: boolean;
   cancelRequested: boolean;
@@ -29,6 +31,23 @@ export interface HistorySearchFlight {
   releasing: boolean;
   error: HistorySearchCode | null;
 }
+interface NativeFlight extends FlightFields {
+  expected: HistorySearchExpected;
+  source: HistorySearchSource;
+  operation: HistorySearchOperation | null;
+}
+interface ReadFlight extends FlightFields {
+  expected: Pick<
+    HistoryReadOperation,
+    "agentId" | "requestId" | "query" | "rowIds"
+  >;
+  source: "officialSessionLoad";
+  operation: HistoryReadOperation;
+  abort: AbortController;
+  dispatched: boolean;
+  returned: boolean;
+}
+export type HistorySearchFlight = NativeFlight | ReadFlight;
 export interface HistorySearchView {
   preparing: boolean;
   selection: HistorySearchSelection | null;
@@ -58,6 +77,7 @@ export class HistorySearchController {
     private uuid: () => string = () => crypto.randomUUID(),
     private now = () => Date.now(),
     private timeoutMs = 16000,
+    private read: HistoryReadRunner = readSelectedHistory,
   ) {}
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -171,7 +191,7 @@ export class HistorySearchController {
       this.emit();
       return false;
     }
-    const flight: HistorySearchFlight = {
+    const flight: NativeFlight = {
       source: selection.source,
       expected: {
         agentId: owner.agentId,
@@ -203,6 +223,155 @@ export class HistorySearchController {
     void this.observe(slot, flight, "start", () => this.port.start(request));
     return true;
   }
+  startRead(
+    owner: HistorySearchOwner,
+    query: string,
+    targets: readonly HistoryReadTarget[],
+  ) {
+    if (
+      this.retiredOwners.has(owner) ||
+      !owner.current() ||
+      !validHistoryQuery(query) ||
+      !targets.length ||
+      targets.length > 20 ||
+      new Set(targets.map((target) => target.rowId)).size !== targets.length ||
+      targets.some(
+        (target) => target.agentId !== owner.agentId || !target.rowId,
+      )
+    )
+      return false;
+    const slot = this.slot(owner.agentId);
+    if (!slot || slot.flight) return false;
+    const captured = targets.map((target) => ({ ...target }));
+    const expected = {
+      agentId: owner.agentId,
+      requestId: this.uuid(),
+      query,
+      rowIds: captured.map((target) => target.rowId),
+    };
+    const flight: ReadFlight = {
+      expected,
+      source: "officialSessionLoad",
+      owner,
+      operation: {
+        ...expected,
+        source: "officialSessionLoad",
+        scope: "userAndAssistantText",
+        coverageScope: "acknowledgedLoadPrefix",
+        textScope: "returnedVisibleFields",
+        matchMode: "ecmascriptUnicodeLiteral",
+        exclusions: [
+          "attachments",
+          "toolOutput",
+          "reasoning",
+          "otherMessageKinds",
+        ],
+        state: "reading",
+        settled: false,
+        code: null,
+        rows: captured.map((target) => ({
+          rowId: target.rowId,
+          coverage: "unread",
+          textBlocksRead: 0,
+          matchedTextBlocks: 0,
+          skippedFields: 0,
+          sourceStatus: "notRead",
+          code: target.unavailable,
+        })),
+        hits: [],
+        pendingCleanup: null,
+      },
+      abort: new AbortController(),
+      dispatched: false,
+      returned: false,
+      admissionClosed: false,
+      unconfirmed: false,
+      cancelRequested: false,
+      checking: false,
+      cancelling: false,
+      releasing: false,
+      error: null,
+    };
+    slot.owner = owner;
+    slot.preparation = null;
+    slot.preparing = false;
+    slot.selection = null;
+    slot.error = null;
+    slot.flight = flight;
+    this.emit();
+    if (!owner.current() || flight.owner !== owner) {
+      this.retire(owner);
+      return false;
+    }
+    flight.dispatched = true;
+    void this.observeRead(slot, flight, captured);
+    return true;
+  }
+  private async observeRead(
+    slot: Slot,
+    flight: ReadFlight,
+    targets: readonly HistoryReadTarget[],
+  ) {
+    const current = () => {
+      if (
+        !this.owns(slot, flight) ||
+        !flight.owner ||
+        flight.abort.signal.aborted
+      )
+        return false;
+      if (!flight.owner.current()) {
+        this.retire(flight.owner);
+        return false;
+      }
+      return true;
+    };
+    const accept = (operation: HistoryReadOperation) => {
+      if (!this.owns(slot, flight)) return;
+      if (
+        operation.source !== "officialSessionLoad" ||
+        operation.agentId !== flight.expected.agentId ||
+        operation.requestId !== flight.expected.requestId ||
+        operation.query !== flight.expected.query ||
+        JSON.stringify(operation.rowIds) !==
+          JSON.stringify(flight.expected.rowIds)
+      )
+        throw { code: "invalidOutput" };
+      const interested = current();
+      flight.operation = interested ? operation : { ...operation, hits: [] };
+      flight.unconfirmed = operation.state === "unconfirmed";
+      flight.error = operation.code;
+      this.emit();
+    };
+    try {
+      const operation = await this.read({
+        agentId: flight.expected.agentId,
+        requestId: flight.expected.requestId,
+        query: flight.expected.query,
+        targets,
+        signal: flight.abort.signal,
+        current,
+        onProgress: (operation) => {
+          if (!flight.returned) accept(operation);
+        },
+      });
+      flight.returned = true;
+      accept(operation);
+    } catch (error) {
+      flight.returned = true;
+      if (this.owns(slot, flight)) {
+        flight.unconfirmed = true;
+        flight.error = historySearchError(error);
+        flight.operation = {
+          ...flight.operation,
+          state: "unconfirmed",
+          settled: false,
+          code: flight.error,
+          hits: [],
+        };
+        this.emit();
+      }
+    }
+  }
   private owns(slot: Slot, flight: HistorySearchFlight) {
     return (
       this.slots.get(flight.expected.agentId) === slot && slot.flight === flight
@@ -210,7 +379,7 @@ export class HistorySearchController {
   }
   private async observe(
     slot: Slot,
-    flight: HistorySearchFlight,
+    flight: NativeFlight,
     action: "start" | "status" | "cancel",
     run: () => Promise<unknown>,
   ) {
@@ -287,6 +456,7 @@ export class HistorySearchController {
     if (
       slot &&
       flight &&
+      flight.source !== "officialSessionLoad" &&
       flight.expected.requestId === requestId &&
       !flight.admissionClosed
     )
@@ -312,6 +482,12 @@ export class HistorySearchController {
     )
       return;
     flight.cancelRequested = true;
+    if (flight.source === "officialSessionLoad") {
+      flight.abort.abort();
+      flight.operation = { ...flight.operation, hits: [] };
+      this.emit();
+      return;
+    }
     this.emit();
     void this.observe(slot, flight, "cancel", () =>
       this.port.cancel(this.identity(flight)),
@@ -336,7 +512,17 @@ export class HistorySearchController {
       flight.owner = null;
       if (flight.operation)
         flight.operation = { ...flight.operation, hits: [] };
-      this.cancel(owner.agentId, flight.expected.requestId);
+      if (flight.source === "officialSessionLoad") {
+        flight.abort.abort();
+        flight.cancelRequested = true;
+        if (!flight.dispatched)
+          flight.operation = {
+            ...flight.operation,
+            state: "finished",
+            settled: true,
+            code: "cancelled",
+          };
+      } else this.cancel(owner.agentId, flight.expected.requestId);
     }
     if (changed) this.emit();
   }
@@ -351,6 +537,13 @@ export class HistorySearchController {
       (!flight.admissionClosed && !flight.operation?.settled)
     )
       return false;
+    if (flight.source === "officialSessionLoad") {
+      if (!flight.operation.settled || flight.operation.pendingCleanup)
+        return false;
+      this.slots.delete(agentId);
+      this.emit();
+      return true;
+    }
     if (flight.admissionClosed) {
       this.slots.delete(agentId);
       this.emit();
@@ -365,6 +558,63 @@ export class HistorySearchController {
       )
         return false;
       this.slots.delete(agentId);
+      this.emit();
+      return true;
+    } catch {
+      return false;
+    } finally {
+      if (this.owns(slot, flight)) {
+        flight.releasing = false;
+        this.emit();
+      }
+    }
+  }
+  async retryReadClose(agentId: string, requestId: string) {
+    const slot = this.slots.get(agentId),
+      flight = slot?.flight;
+    if (
+      !slot ||
+      !flight ||
+      flight.source !== "officialSessionLoad" ||
+      flight.expected.requestId !== requestId ||
+      flight.releasing ||
+      !flight.returned ||
+      !flight.operation.pendingCleanup
+    )
+      return false;
+    const pending = flight.operation.pendingCleanup;
+    flight.releasing = true;
+    this.emit();
+    try {
+      await closeHistoryPreview(pending.receipt);
+      const current = flight.operation.pendingCleanup;
+      if (
+        !this.owns(slot, flight) ||
+        !current ||
+        current.rowId !== pending.rowId ||
+        current.receipt.agentId !== pending.receipt.agentId ||
+        current.receipt.cwd !== pending.receipt.cwd ||
+        current.receipt.nativeSessionId !== pending.receipt.nativeSessionId ||
+        current.receipt.previewToken !== pending.receipt.previewToken
+      )
+        return false;
+      flight.operation = {
+        ...flight.operation,
+        state: "finished",
+        settled: true,
+        pendingCleanup: null,
+        code:
+          flight.operation.code === "pendingCleanup"
+            ? null
+            : flight.operation.code,
+        rows: flight.operation.rows.map((row) =>
+          row.rowId === pending.rowId && row.code === "pendingCleanup"
+            ? { ...row, code: null }
+            : row,
+        ),
+      };
+      flight.error = flight.operation.code;
+      flight.unconfirmed = false;
       this.emit();
       return true;
     } catch {

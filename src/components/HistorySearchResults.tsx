@@ -1,11 +1,11 @@
 import {
   historySearchHitKey,
-  type HistorySearchHit,
-  type HistorySearchOperation,
+  type HistorySearchDisplayHit,
+  type HistorySearchDisplayOperation,
 } from "../runtime/history_search_types";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
 
-export function HistorySearchText({ hit }: { hit: HistorySearchHit }) {
+export function HistorySearchText({ hit }: { hit: HistorySearchDisplayHit }) {
   const parts = [];
   let from = 0;
   for (const [i, range] of hit.matches.entries()) {
@@ -21,12 +21,19 @@ export function HistorySearchResults({
   title,
   onPreview,
 }: {
-  operation: HistorySearchOperation;
+  operation: HistorySearchDisplayOperation;
   title(rowId: string): string;
-  onPreview(hit: HistorySearchHit): void;
+  onPreview(hit: HistorySearchDisplayHit): void;
 }) {
   const matched = operation.rows.some((row) => row.matchedTextBlocks > 0);
-  const partial = operation.rows.some((r) => r.state !== "complete");
+  const partial =
+    operation.source === "officialSessionLoad"
+      ? operation.rows.some(
+          (row) =>
+            row.coverage !== "completeReturnedPrefix" &&
+            row.coverage !== "completeEmpty",
+        )
+      : operation.rows.some((r) => r.state !== "complete");
   return (
     <>
       <details
@@ -35,21 +42,46 @@ export function HistorySearchResults({
       >
         <summary>{S.details}</summary>
         {operation.source === "officialSdk" && <p>{S.registeredScope}</p>}
+        {operation.source === "officialSessionLoad" && (
+          <p>{S.readPrefixScope}</p>
+        )}
         <ul>
-          {operation.rows.map((row) => (
-            <li key={row.rowId}>
-              <strong>{title(row.rowId)}</strong>
-              <span>{S.rowStates[row.state]}</span>
-              <small>
-                {S.blocks(
-                  row.pagesRead,
-                  row.textBlocksRead,
-                  row.matchedTextBlocks,
-                )}
-                {row.code && ` · ${S.errors[row.code]}`}
-              </small>
-            </li>
-          ))}
+          {operation.source === "officialSessionLoad"
+            ? operation.rows.map((row) => (
+                <li key={row.rowId}>
+                  <strong>{title(row.rowId)}</strong>
+                  <span>{S.readRowStates[row.coverage]}</span>
+                  <small>
+                    {S.readBlocks(
+                      row.textBlocksRead,
+                      row.matchedTextBlocks,
+                      row.skippedFields,
+                    )}
+                    {row.code && ` · ${S.errors[row.code]}`}
+                  </small>
+                  {row.sourceStatus !== "notRead" && (
+                    <small>
+                      {row.sourceStatus === "configuredConnectionReported"
+                        ? S.readConfiguredSource
+                        : S.readSourceUnconfirmed}
+                    </small>
+                  )}
+                </li>
+              ))
+            : operation.rows.map((row) => (
+                <li key={row.rowId}>
+                  <strong>{title(row.rowId)}</strong>
+                  <span>{S.rowStates[row.state]}</span>
+                  <small>
+                    {S.blocks(
+                      row.pagesRead,
+                      row.textBlocksRead,
+                      row.matchedTextBlocks,
+                    )}
+                    {row.code && ` · ${S.errors[row.code]}`}
+                  </small>
+                </li>
+              ))}
         </ul>
       </details>
       {operation.settled && partial && <p>{S.partial}</p>}

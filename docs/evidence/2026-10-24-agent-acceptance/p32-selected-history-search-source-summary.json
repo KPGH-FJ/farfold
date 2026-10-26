@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "kind": "SelectedHistoryReadSearchSourceCheckpoint",
+  "recordedAt": "2026-10-26T01:26:45.595596+00:00",
+  "sourceBaseHead": "8f0ce6f311972681a5ea429408feb874ec45ded0",
+  "condition": "P32",
+  "packages": ["I", "B", "K"],
+  "sourceChangedFiles": 14,
+  "addedFiles": 4,
+  "modifiedFiles": 10,
+  "implementation": [
+    "One explicit selected indexed/unloaded body-read action uses fixed session_read_preview, consumes actual acknowledged prefixes serially and never falls back to new/import/prompt or another search route.",
+    "The existing search controller owns the local officialSessionLoad flight. Exact four-field cleanup is observed before a later row; unknown no-receipt invokes remain unsettled. Explicit retry only closes the same known receipt without continuing unread rows.",
+    "Sticky semantic Agent/query/selected-target authority observes program, index, account and credential changes. Equivalent title/clock/index refresh and unrelated Agent authentication changes preserve valid work.",
+    "Source actions show bounded retained visible-field text first. Only a settled serial read without pending cleanup can separately open the original indexed conversation; returned ordinals are not Agent message IDs or live navigation locators.",
+    "Only returned user/assistant visible fields are matched using escaped ECMAScript Unicode literal matching and original-field UTF-16 offsets. Media boundaries remain separate. Body, total-character, field, item and hit budgets explicitly report omissions. No persistent body or event store is added.",
+    "Saved Configured origin admission is reused; missing and explicit Existing remain distinct and do not prove the historical provider. No Agent-specific UI, new service-selection mechanism, dependency or environment flag is introduced."
+  ],
+  "engineering": {
+    "allSevenSucceeded": true,
+    "checksRanBeforeCommit": true,
+    "inputCount": 2306,
+    "productionInputCount": 2303,
+    "authorityInputCount": 3,
+    "frontend": {
+      "files": 691,
+      "passed": 9195,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "nativeMain": {
+      "passed": 0,
+      "failed": 0
+    },
+    "nativeDoc": {
+      "passed": 0,
+      "failed": 0
+    },
+    "sourceUnchangedAtRecordedEndpoints": true,
+    "boundary": "Seven fresh commands; frontend used direct Vitest with four workers, not a literal pnpm test invocation. Per-command and before/after equality does not prove continuous writer absence or freeze dependency/environment bytes.",
+    "retainedDiagnostics": "Four ZIP writer drop diagnostics and a Vite chunk-size advisory remain in the raw outputs. They are not silently discarded or assigned a unique cause by this checkpoint."
+  },
+  "focused": {
+    "initialRed": {
+      "passed": 45,
+      "failed": 2,
+      "meaning": "Missing explicit read action and title/clock-only refresh cancelling a valid search. Existing parser and other normal controls passed."
+    },
+    "firstImplementationRun": {
+      "files": 17,
+      "passed": 202,
+      "failed": 1,
+      "meaning": "A test expected one omitted Markdown field; the actual parser also emits the interstitial newline field. This outcome remains failed."
+    },
+    "followup": {
+      "files": 17,
+      "passed": 203,
+      "failed": 0,
+      "typecheckExitCode": 0,
+      "change": "Only the test oracle changed, with explicit 201 content+200 newline=401 field controls before expecting two omissions. Hit cap, coverage, later-row non-dispatch and exact-close assertions remain."
+    },
+    "backendSourceControls": {
+      "actualTestsPassed": 2,
+      "boundary": "One10-case saved-source admission table and one two-case test-owned missing/Existing peer load. Separate from a complete Configured A/current UI B transport through Keychain."
+    },
+    "workerBoundary": "Consumer wire tests substitute the worker transport while using the actual Markdown parser. They do not establish real Worker cancellation or installed/real-Agent effects."
+  },
+  "installation": {
+    "installedForThisCheckpoint": false,
+    "currentFormalSourceCommit": "ffecca0b8dbd8be85a6a712146504f4db2df4090",
+    "boundary": "Existing FFE installation remains the formal app. A future candidate, normal quit, fresh retention captures, installation and affected real checks need their own actual evidence."
+  },
+  "coverageLimits": [
+    "No complete P32, Agent standard, whole-Agent,29-Agent or151-condition closure is claimed. Attachment search remains a separate existing path; this slice excludes attachment files, tool output, reasoning and uninterpreted messages.",
+    "Returned-prefix completion and empty text do not establish complete historical coverage, original provider identity, branch identity or all-history no-match. Logical consumer budgets are not replay or RSS bounds.",
+    "Full Configured A/current UI B Keychain transport, actual Worker lifecycle and the installed new consumer remain unverified.",
+    "Six WAIT cases, affected NEW-24 sends, Cline orphan and previously unknown or failed requests retain their restrictions and outcomes. No request was retried or account/model choice changed.",
+    "Windows run40237402989 remains failed at its8495 source: frontend9134passed/1failed/3skipped and Rust2274passed/73failed/66ignored; installer skipped. This macOS engineering checkpoint is not new Windows validation."
+  ],
+  "reviewRoles": "Root authored the serial reader, narrow preview types and wire tests and operated checks. A contributor authored the controller/UI/types and a second contributor added backend controls. A separate reviewer checked the joint source and actual records; source review is separate from the full engineering evidence.",
+  "sourcePins": [
+    {
+      "path": "src-tauri/src/acp_client/cold_history_open_tests.rs",
+      "sha256": "3e0ab046f0f13227cf130002565f48b56b5d99ff73bb725070bd45387edf3e22",
+      "lines": 1027,
+      "change": "modified"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_readonly_tests.rs",
+      "sha256": "cfd944eeb90d24ee802ac380f604b577c3115578efe00b7a3e7c7f22c3350617",
+      "lines": 521,
+      "change": "modified"
+    },
+    {
+      "path": "src/components/HistorySearchPanel.test.tsx",
+      "sha256": "287e8e8b519484ab333abf59e51954d52e05d3376f54e87dab0ed394711fa747",
+      "lines": 1088,
+      "change": "modified"
+    },
+    {
+      "path": "src/components/HistorySearchPanel.tsx",
+      "sha256": "bd96037d76906ab0ac5130b3e0fe3312da4f5f9fc7648edb0fdcb32c3e7bdedf",
+      "lines": 699,
+      "change": "modified"
+    },
+    {
+      "path": "src/components/HistorySearchResults.read.test.tsx",
+      "sha256": "fe5177d8279211d4f9c58d53210ca5d688164cf0951fb9966612dc84ddd6a7e9",
+      "lines": 126,
+      "change": "added"
+    },
+    {
+      "path": "src/components/HistorySearchResults.tsx",
+      "sha256": "04bf7c2525e667e6d257b36c54a85c23aca29b29546f02522c63f75343f4e2bc",
+      "lines": 127,
+      "change": "modified"
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "sha256": "c43ff1c985c680c040c710c0b7401a5c29f902284eefaecb1bd1b8ac01ab5f1c",
+      "lines": 387,
+      "change": "modified"
+    },
+    {
+      "path": "src/runtime/history_search.sdk.test.tsx",
+      "sha256": "555796cfb482819bbdcb8bcc3739195443386d6bbfdf84df721538c1498a79ea",
+      "lines": 255,
+      "change": "modified"
+    },
+    {
+      "path": "src/runtime/history_search_controller.read.test.ts",
+      "sha256": "21d60aa27617b6f20544d0aa0035c7a91bb1142c6ba053a278facaad0d4f2aa6",
+      "lines": 255,
+      "change": "added"
+    },
+    {
+      "path": "src/runtime/history_search_controller.ts",
+      "sha256": "2de5d55faa949c6041db91e9be806072efb508d64085e03e65f6149716b49873",
+      "lines": 630,
+      "change": "modified"
+    },
+    {
+      "path": "src/runtime/history_search_read.ts",
+      "sha256": "b95f3c0ad1fad3873ef9bb43ae781eb364054039a8aa0c57c1773e93f13dd2cc",
+      "lines": 370,
+      "change": "added"
+    },
+    {
+      "path": "src/runtime/history_search_read.wire.test.ts",
+      "sha256": "6620688edab3dba75d784f5e7160c67676b228c1f4a4dd98accce2001383b0de",
+      "lines": 385,
+      "change": "added"
+    },
+    {
+      "path": "src/runtime/history_search_strings.ts",
+      "sha256": "0e57a37bbe00e87b144a8dd316580aa895e98a6ecf43aa593ec029cc8ac2e048",
+      "lines": 138,
+      "change": "modified"
+    },
+    {
+      "path": "src/runtime/history_search_types.ts",
+      "sha256": "a252c8461ab896bad041c7424d3d84d9b663ee8cb213a05ff1c8633f26006ecc",
+      "lines": 623,
+      "change": "modified"
+    }
+  ],
+  "references": {
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-engineering/engineering-summary.json",
+      "sha256": "0760d25507e4873a8964f6b07ce90851bd9c7eeb4df752fc18968d5f5ee0f6cd"
+    },
+    "engineeringExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-engineering/root-engineering-execution.json",
+      "sha256": "71eb6a6105ab1d014f42e79ebf13f73e9619f7eca40e5d897cf38ab731036454"
+    },
+    "sourceBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-engineering/source-before.json",
+      "sha256": "07e76cf01974b6f94af1d69b2802708e4eddb6e9bf14a35cad954c2f57f6a180"
+    },
+    "sourceAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-engineering/source-after.json",
+      "sha256": "14cdae6d13c39533f006d63968b589c0ad0b5767c6fc64603628331b2b5d1dc0"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/consumer-source-independent-review.json",
+      "sha256": "4224638774159bdd7788bead614d899a45da7500786485c774a92415646ab821"
+    },
+    "red": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-red/actual-focused-result.json",
+      "sha256": "acb0c2ac325558f94fc8bcbf859e89b9b8c0d7e21e8ade7963e515277a5c958e"
+    },
+    "redReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/consumer-red-qualification-independent-review.json",
+      "sha256": "78fb1e81dfb46687b3162b74c73902811ac17e69c563900acb4c997cc1b2e9a9"
+    },
+    "firstFocusedFailure": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-focused/actual-focused-result.json",
+      "sha256": "e95bc949511dc3144b19e78bb011373e2bdb99c3ec8624f7da781613ae28ca97"
+    },
+    "fieldOracleCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-focused/field-oracle-correction-preparation.json",
+      "sha256": "a3ba1666781a4a0697fad7786c2af8dd82a45b7ec14262c8b2a58c2dddf519eb"
+    },
+    "focusedFollowup": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-focused-followup/actual-focused-result.json",
+      "sha256": "f3a1b0686dba749cb5db7ac0ec4ade6ccb5c9dcc86cf0373cc07f5641ebb2db4"
+    },
+    "rustSourceControls": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-rust-controls/actual-rust-controls.json",
+      "sha256": "3f6daf64cf27124fd93303b622e95178235e7e8837c15fbabb43aa69e0a71c5b"
+    },
+    "admissionDesign": {
+      "path": "output/2026-10-24-agent-acceptance/p32-readonly-preview-source/indexed-source-admission-readonly-supplement.json",
+      "sha256": "79c34d8ea3ec0817cb8c041a9e764c7f8e6e096186c01325793cf1c551c7f4ae"
+    },
+    "engineeringReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-selected-history-search-engineering/actual-independent-review.json",
+      "sha256": "aa82c80a9e680cff74a0458a42dda38e1a388b2dd6109f5e14b6cde79764c55b"
+    }
+  }
+}

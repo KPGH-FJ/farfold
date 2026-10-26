@@ -31,6 +31,14 @@ export interface DiscoveredConversation {
   alreadyAddedId: string | null;
   isOpen: boolean;
 }
+export type HistoryPreviewTarget = Pick<
+  DiscoveredConversation,
+  "nativeSessionId" | "cwd"
+>;
+export type HistoryPreviewCleanup = Pick<
+  HistoryPreview,
+  "agentId" | "cwd" | "nativeSessionId" | "previewToken"
+>;
 export interface DiscoveryPage {
   status: "supported" | "unsupported";
   sessions: DiscoveredConversation[];
@@ -71,14 +79,14 @@ export async function previewHistory(
 }
 export async function readHistoryPreview(
   agentId: string,
-  row: DiscoveredConversation,
+  row: HistoryPreviewTarget,
   interest?: HistoryPreviewInterest,
 ): Promise<HistoryPreview> {
   return loadHistoryPreview(agentId, row, "searchReadOnly", interest);
 }
 async function loadHistoryPreview(
   agentId: string,
-  row: DiscoveredConversation,
+  row: HistoryPreviewTarget,
   purpose: HistoryPreviewPurpose,
   interest?: HistoryPreviewInterest,
 ): Promise<HistoryPreview> {
@@ -350,7 +358,9 @@ export function historyContinuation(preview: HistoryPreview): {
     return { title: S.permissionRequired, detail: S.permissionHint };
   return { title: S.originalVerified, detail: S.recheckOnOpen };
 }
-export function closeHistoryPreview(preview: HistoryPreview): Promise<void> {
+export function closeHistoryPreview(
+  preview: HistoryPreviewCleanup,
+): Promise<void> {
   return invoke("session_import_close", {
     agentId: preview.agentId,
     cwd: preview.cwd,

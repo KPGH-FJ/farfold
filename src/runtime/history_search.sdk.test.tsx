@@ -222,10 +222,11 @@ it("keeps status and cancel on the captured source, refusing a cross-source late
   h.controller.check("fixture", expected.requestId);
   h.status.resolve(operation("completed", 99));
   await flush();
-  expect(h.controller.get("fixture").flight?.operation?.source).toBe(
-    "officialSdk",
-  );
-  expect(h.controller.get("fixture").flight?.operation?.revision).toBe(1);
+  const captured = h.controller.get("fixture").flight?.operation;
+  expect(captured?.source).toBe("officialSdk");
+  if (captured?.source !== "officialSdk")
+    throw new Error("SDK operation required");
+  expect(captured.revision).toBe(1);
   expect(h.controller.get("fixture").flight?.unconfirmed).toBe(true);
   h.controller.cancel("fixture", expected.requestId);
   h.cancel.resolve(sdkOperation("cancelled", 3));

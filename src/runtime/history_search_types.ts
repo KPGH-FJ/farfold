@@ -87,21 +87,28 @@ export interface HistorySearchSdkHit extends HistorySearchHitFields {
   messageLocator: { kind: "message"; messageId: string; partIndex: number };
 }
 export type HistorySearchHit = HistorySearchAppServerHit | HistorySearchSdkHit;
-export function historySearchHitKey(hit: HistorySearchHit): string {
-  return "messageLocator" in hit
+export function historySearchHitKey(hit: HistorySearchDisplayHit): string {
+  return "locator" in hit
     ? JSON.stringify([
         hit.rowId,
-        "message",
-        hit.messageLocator.messageId,
-        hit.messageLocator.partIndex,
+        "returnedText",
+        hit.locator.blockIndex,
+        hit.locator.fieldIndex,
       ])
-    : JSON.stringify([
-        hit.rowId,
-        "turnItem",
-        hit.turnId,
-        hit.itemId,
-        hit.partIndex,
-      ]);
+    : "messageLocator" in hit
+      ? JSON.stringify([
+          hit.rowId,
+          "message",
+          hit.messageLocator.messageId,
+          hit.messageLocator.partIndex,
+        ])
+      : JSON.stringify([
+          hit.rowId,
+          "turnItem",
+          hit.turnId,
+          hit.itemId,
+          hit.partIndex,
+        ]);
 }
 export interface HistorySearchRow {
   rowId: string;
@@ -145,6 +152,88 @@ export type HistorySearchReply =
       scope: "currentProcess";
       admissionClosed: boolean;
     };
+
+/** Local consumer results; never accepted by the existing native reply parser. */
+export interface HistoryReadTarget {
+  rowId: string;
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string | null;
+  /** Actual local admission facts, not an inferred Agent load capability. */
+  unavailable: HistorySearchCode | null;
+}
+export interface HistoryReadCleanupReceipt {
+  agentId: string;
+  cwd: string;
+  nativeSessionId: string;
+  previewToken: string;
+}
+export interface HistoryReadPendingCleanup {
+  rowId: string;
+  receipt: HistoryReadCleanupReceipt;
+}
+export interface HistoryReadHit extends HistorySearchHitFields {
+  /** Ordinals within this returned private snapshot, never Agent message IDs. */
+  locator: {
+    kind: "returnedText";
+    blockIndex: number;
+    fieldIndex: number;
+  };
+}
+export interface HistoryReadRow {
+  rowId: string;
+  coverage:
+    | "unread"
+    | "reading"
+    | "completeReturnedPrefix"
+    | "completeEmpty"
+    | "incomplete"
+    | "unsupported"
+    | "sourceChanged"
+    | "limited";
+  textBlocksRead: number;
+  matchedTextBlocks: number;
+  skippedFields: number;
+  /** Existing settings and a missing marker do not verify a historical provider. */
+  sourceStatus:
+    "notRead" | "configuredConnectionReported" | "sourceUnconfirmed";
+  code: HistorySearchCode | null;
+}
+export interface HistoryReadOperation extends HistorySearchIdentity {
+  source: "officialSessionLoad";
+  query: string;
+  rowIds: readonly string[];
+  scope: "userAndAssistantText";
+  coverageScope: "acknowledgedLoadPrefix";
+  textScope: "returnedVisibleFields";
+  matchMode: "ecmascriptUnicodeLiteral";
+  exclusions: readonly [
+    "attachments",
+    "toolOutput",
+    "reasoning",
+    "otherMessageKinds",
+  ];
+  state: "reading" | "settling" | "pendingCleanup" | "unconfirmed" | "finished";
+  /** Cleanup is known ended; does not assert complete content coverage. */
+  settled: boolean;
+  code: HistorySearchCode | null;
+  rows: readonly HistoryReadRow[];
+  hits: readonly HistoryReadHit[];
+  pendingCleanup: HistoryReadPendingCleanup | null;
+}
+export interface HistoryReadInput extends HistorySearchIdentity {
+  targets: readonly HistoryReadTarget[];
+  query: string;
+  current(): boolean;
+  signal: AbortSignal;
+  onProgress(operation: HistoryReadOperation): void;
+}
+export type HistoryReadRunner = (
+  input: HistoryReadInput,
+) => Promise<HistoryReadOperation>;
+export type HistorySearchDisplayHit = HistorySearchHit | HistoryReadHit;
+export type HistorySearchDisplayOperation =
+  HistorySearchOperation | HistoryReadOperation;
 const encoder = new TextEncoder();
 const idPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
