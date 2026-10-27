@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32PiSelectedUnloadedUserBodyInstalledSummary",
+  "agentId": "pi",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "d98829611da671b9aad31388335d53c089e6ae52e9ba3b89d77ad0365687f161"
+  },
+  "scope": "One original indexed test-owned Pi object. Before the unique read, the case explicitly required a match in returned USER text and one USER snapshot. An old assistant answer was not assumed; this was not an assistant-ACK case whose oracle was weakened after reading.",
+  "actual": {
+    "level": "installed",
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "selectedOriginalRows": 1,
+    "queryInputs": 1,
+    "explicitReadActions": 1,
+    "returnedVisibleTextBlocks": 23,
+    "reportedMatchFragments": 10,
+    "unsearchedFieldsWithinReturnedScope": 0,
+    "originalUserTextMatchObserved": true,
+    "userSnapshotSelections": 1,
+    "coverageExpansions": 1,
+    "snapshotCloses": 1,
+    "sourceInformation": "unconfirmed",
+    "sourceStatus": "sourceUnconfirmed",
+    "uiReadEnded": true,
+    "rawCloseResponseObserved": false,
+    "normalOpenOrModelPromptsOrPreparationOrLoginOrChoiceOrImportOrRetryOrStopOrFileActionsByRoot": 0,
+    "necessaryObservations": 7,
+    "privateEvidenceFiles": 14,
+    "declaredInputsUnchangedAtCaseEnd": 8,
+    "sealCliExecutions": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockingFindings": 0,
+    "preparedAt": "2026-10-27T10:15:52.902Z",
+    "startedAt": "2026-10-27T10:16:07.417Z",
+    "finalObservationAt": "2026-10-27T10:17:47.041Z",
+    "operatorObservationUpperSeconds": 99.624,
+    "currentAgentVersion": "unreported by this UI path; no historical version asserted current"
+  },
+  "sourceBoundary": {
+    "installedConsumerSourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "uninstalledStyleSourceCommit": "aaf7c9d0fda472fdc6a83003d616fe0a42ffcef9",
+    "styleSourceInstalled": false,
+    "styleVisualFixVerified": false,
+    "scope": "Installed behavior was interpreted using immutable E9 source. Later snapshot layout source is separate and does not establish post-fix appearance."
+  },
+  "coverageLimits": [
+    "23 visible text blocks,10 matches and zero omissions describe only the acknowledged returned visible-field prefix. They do not prove exhaustive history, historical bytes, attachment files, tools, thoughts or raw message identity.",
+    "The selected USER snapshot displayed the predeclared target and matching retained title. Historical reply-labelled hits do not establish the old assistant outcome or a new model response.",
+    "Source remained unconfirmed. Neither returned text nor read success confirms model/service/reasoning restoration, effective backend, fresh authentication, payment or normal preparation.",
+    "The ended label establishes UI settlement only. No raw close response, exact connection/process termination or total-transport/hidden-IO observation is claimed. Root zero prompt actions is an operator count.",
+    "99.624 seconds is the full operator observation upper bound,not exact read/close latency or a performance threshold. No normal-open/source-navigation or new cold-restoration action occurred.",
+    "Old Pi preparation failures and old assistant-result uncertainty remain unchanged. The new read-only purpose did not retry,repair or terminate that work.",
+    "Canonical standardIds remain empty. No whole P32,new standard,whole Pi or29-by-8/151 completion. Six waits,NEW24 pause,Cline orphan and old failed/unknown work remain unchanged."
+  ],
+  "roles": {
+    "prospectivePreparationCanonicalActualsAuthorActualOperatorAndSealExecutor": "Root",
+    "independentSemanticReviewer": "acceptance_receipts; did not author or operate this Pi-specific case",
+    "publicSummaryWriter": "acceptance_receipts",
+    "publicRootReview": "Root reviewed the public metadata, nine references and three entrypoint diffs after the independent semantic review. Root is also the original actual operator; this is not a second independent product execution.",
+    "reviewScope": "Independent sealed metadata/AX/source readback and actual USER-snapshot image inspection. Earlier common receipt-tool authorship is disclosed in the semantic review; no validator or product rerun."
+  },
+  "references": {
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/preparation.json",
+      "sha256": "db985ca21e8a88445af67cc6e83407764782f5ea8547d88df4c4305a33f60802"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/manifest.json",
+      "sha256": "c1570161412af3ce559598cc677b972cc2b0eab938754ef3dfa45cdd463ae178"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/actuals.json",
+      "sha256": "08c665314d0f260c860d470c66a6483ce47a8f09ac9afc4fb64df794afdfe81a"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/receipt.json",
+      "sha256": "979f836adaec3f367eca31a48f532e35b0f137b6554df120b921958d858c5e20"
+    },
+    "sealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/seal-execution.json",
+      "sha256": "e4d166d8b44956d09d7ba2b7fa21bb8e08513e0426e489d08b029a03e39215b6"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-pi-selected-user-body-formal-e9/semantic-review.json",
+      "sha256": "6a3dd12117cdda320bc7eeb89114e6fc360de5635629960fe3182c343a1b776a"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-e9ac19f5-installation.json",
+      "sha256": "00616ec78a14c4b430766837d267ff4fd6359893a2418583f2d99ea31ce97da6"
+    },
+    "installedSourceCheckpoint": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/p32-selected-history-search-source-summary.json",
+      "sha256": "a03ee13562951afe71799ed020772edf6cac4b29bb40cf2885bef830e0c735ed"
+    },
+    "priorPreparationFailures": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
+      "sha256": "c1763038c5214d497d0283004cbd7d7c111925f738ce0d480f3702b22c35c965"
+    }
+  }
+}
