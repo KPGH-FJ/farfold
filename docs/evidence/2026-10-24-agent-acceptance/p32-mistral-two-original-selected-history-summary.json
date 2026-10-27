@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32MistralTwoOriginalSelectedHistoryInstalledSummary",
+  "agentId": "mistral-vibe",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "d98829611da671b9aad31388335d53c089e6ae52e9ba3b89d77ad0365687f161"
+  },
+  "scope": "One installed selected-history batch over two separately identified original owned Mistral conversations. Before the read,both reply oracles and per-object attribution were declared; current result counts were not prefilled.",
+  "actual": {
+    "level": "installed",
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "selectedOriginalRows": 2,
+    "queryInputs": 1,
+    "explicitReadActions": 1,
+    "replySnapshotSelections": 2,
+    "localSnapshotDismissals": 2,
+    "coverageExpansions": 1,
+    "rows": [
+      {
+        "target": "first declared original object",
+        "returnedVisibleTextBlocks": 11,
+        "reportedMatchFragments": 2,
+        "unsearchedFieldsWithinReturnedScope": 0,
+        "matchingUserFieldsObserved": 0,
+        "matchingReplyFieldsObserved": 2,
+        "sourceStatus": "sourceUnconfirmed"
+      },
+      {
+        "target": "second declared original object",
+        "returnedVisibleTextBlocks": 8,
+        "reportedMatchFragments": 3,
+        "unsearchedFieldsWithinReturnedScope": 0,
+        "matchingUserFieldsObserved": 2,
+        "matchingReplyFieldsObserved": 1,
+        "sourceStatus": "sourceUnconfirmed"
+      }
+    ],
+    "totalReturnedVisibleTextBlocks": 19,
+    "totalReportedMatchFragments": 5,
+    "sourceInformation": "unconfirmed for both rows",
+    "bothPredeclaredReplySnapshotsMatched": true,
+    "uiReadEnded": true,
+    "rawCloseResponseObserved": false,
+    "sourceNavigationActions": 0,
+    "normalOpenOrModelPromptsOrPreparationOrLoginOrChoiceOrImportOrRetryOrStopOrCancelOrFileActionsByRoot": 0,
+    "necessaryObservations": 10,
+    "privateEvidenceFiles": 16,
+    "declaredInputsUnchangedAtCaseEnd": 11,
+    "sealCliExecutions": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockingFindings": 0,
+    "preparedAt": "2026-10-27T10:39:13.624Z",
+    "startedAt": "2026-10-27T10:40:47.408Z",
+    "finalObservationAt": "2026-10-27T10:42:14.568Z",
+    "operatorObservationUpperSeconds": 87.16,
+    "currentAgentVersion": "unreported by this UI path; no historical version asserted current"
+  },
+  "metadataCorrection": {
+    "firstMaterialAssertionNaturalExitCode": 1,
+    "actualsWrittenBeforeCorrection": false,
+    "reason": "A substring checkbox count included the AX focus footer twice. Counting only indexed checkbox records gives the two actual selected rows.",
+    "expectedTwoRowOracleChanged": false,
+    "rawProductEvidenceChanged": false,
+    "productOrAgentReruns": 0,
+    "validatorRetries": 0,
+    "oldAssertionFailurePreserved": true
+  },
+  "sourceBoundary": {
+    "installedConsumerSourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "uninstalledStyleSourceCommit": "aaf7c9d0fda472fdc6a83003d616fe0a42ffcef9",
+    "styleSourceInstalled": false,
+    "styleVisualFixVerified": false,
+    "interpretation": "Semantic review matched the read modules to immutable E9 source pins. Later body/footer spacing source is separate and does not establish post-fix appearance."
+  },
+  "coverageLimits": [
+    "19 visible fields,5 matching fields and zero omissions apply only to the acknowledged returned prefix. They do not prove exhaustive history,all USER fields,historical bytes,attachment files,tools or thoughts.",
+    "The first object had zero matching USER fields; this does not establish that all its original USER text returned. Two identical reply hits are not two independent requests or a unique raw original-message ordinal.",
+    "The second object had two matching USER fields and one matching reply field. Both required snapshots were attributed to their own declared objects; title or query occurrence alone was insufficient.",
+    "Source information remained unconfirmed. Current provider/model/reasoning/mode,authentication/payment,program version,raw native ownership and same-connection identity are not established.",
+    "UI ended and local snapshot dismissal are not a raw exact-close response,process termination,global idle or zero hiddenIO/transport. Root zero model prompts is an operator-action count.",
+    "87.16 seconds is the full operator observation upper bound,not exact read/close latency,wire ordering or a performance threshold. No normal-open/source-navigation/file action occurred.",
+    "The old e954 loaded-body5-match result is independent historical evidence. Current19/5 counts were derived from this batch; its agreement in match count is not copied proof. Old metadata-scope failure,diagnostic overrun and other failures/unknowns remain unchanged.",
+    "Canonical standardIds stay empty and acceptanceVerified remains false. No wholeP32,new standard,wholeMistral or29-by-8/151 closure. Six waits,NEW24 pause,Cline orphan and all protected old work remain unchanged."
+  ],
+  "roles": {
+    "prospectivePreparationAuthor": "acceptance_index",
+    "actualOperatorCanonicalActualsWriterAndSealExecutor": "Root",
+    "independentSemanticReviewer": "acceptance_receipts; not this case preparation/canonical/actuals author or operator",
+    "publicSummaryWriter": "acceptance_receipts",
+    "publicRootReview": "Root reviewed the public metadata, twelve references and three entrypoint changes after the independent semantic review. Root is also the actual operator; no second product execution is claimed.",
+    "imageReview": "Root and semantic reviewer each viewed the actual two reply-snapshot screenshots; other images were hashed but not independently viewed by the semantic reviewer."
+  },
+  "references": {
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/preparation.json",
+      "sha256": "35c20d2e98b0583f07be808dea391fbf1d6bb1009a895b11bc1dd972b64ab532"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/manifest.json",
+      "sha256": "61efd63892150c54eb4183dcc4eb360e93235589916ba8b45850ce3d617e5638"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/actuals.json",
+      "sha256": "f1bdaef51c788eb2af055bb22cb926024db6167347804f797bb0263dd60ca0c9"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/receipt.json",
+      "sha256": "a7f17115edd71a826d747bc7c332178f3c939d1136a4bc233dc60252b5b01765"
+    },
+    "sealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/seal-execution.json",
+      "sha256": "f142828f72e2856760630fd6c22d2fe8fc90915c614c41222f374b96afcc7f21"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/semantic-review.json",
+      "sha256": "5ea180a814b2409c1f9398101aceef763f9bcda2b007d54163b58982433c5058"
+    },
+    "operatorCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/operator-completion.json",
+      "sha256": "078001653c9ea1744abae2b925bd885a0c30d4ac50e4d9bfbd0f23a6e8c9aa64"
+    },
+    "metadataAssertionCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/derivation-first-assert-failure.json",
+      "sha256": "275a699cfa8bad9c5c695235d46126bf301f7ee592e5ea6a4535c77faeae5ca2"
+    },
+    "actualDerivation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-mistral-two-selected-formal-e9/root-actuals-derivation.json",
+      "sha256": "622393257526422169d8741ef079f380e181a1b25cb4c26abf1981a93463f0aa"
+    },
+    "priorLoadedBodySummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/p32-formal-e954-loaded-body-summary.json",
+      "sha256": "f95c6eef49934f45cfe7388b1baa853efbe7655dee456022f33a6da0ff31f57d"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-e9ac19f5-installation.json",
+      "sha256": "00616ec78a14c4b430766837d267ff4fd6359893a2418583f2d99ea31ce97da6"
+    },
+    "installedSourceCheckpoint": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/p32-selected-history-search-source-summary.json",
+      "sha256": "a03ee13562951afe71799ed020772edf6cac4b29bb40cf2885bef830e0c735ed"
+    }
+  }
+}
