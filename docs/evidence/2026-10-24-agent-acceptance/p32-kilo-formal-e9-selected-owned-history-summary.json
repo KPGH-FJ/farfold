@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "kind": "P32KiloSelectedUnloadedOwnedHistoryInstalledSummary",
+  "agentId": "kilo",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "application": {
+    "sourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "d98829611da671b9aad31388335d53c089e6ae52e9ba3b89d77ad0365687f161"
+  },
+  "scope": "One original indexed test-owned Kilo ACK object, explicitly selected while unloaded. This is a separate Agent case, not a cross-Agent batch or the later owned-file task.",
+  "actual": {
+    "level": "installed",
+    "actualAttempts": 1,
+    "passed": 1,
+    "failed": 0,
+    "incomplete": 0,
+    "invalid": 0,
+    "selectedOriginalRows": 1,
+    "queryInputs": 1,
+    "explicitReadActions": 1,
+    "returnedVisibleTextBlocks": 4,
+    "reportedMatchFragments": 3,
+    "unsearchedFieldsWithinReturnedScope": 0,
+    "sourceInformation": "unconfirmed",
+    "replySnapshotSelections": 1,
+    "coverageExpansions": 1,
+    "snapshotCloses": 1,
+    "uiReadEnded": true,
+    "rawCloseResponseObserved": false,
+    "normalOpenOrModelPromptsOrLoginOrChoiceOrImportOrRetryOrStopOrFileActionsByRoot": 0,
+    "necessaryObservations": 7,
+    "privateEvidenceFiles": 14,
+    "unchangedInputs": 8,
+    "sealCliExecutions": 1,
+    "internalValidateCalls": 1,
+    "extraValidateCliCalls": 0,
+    "naturalSealExitCode": 0,
+    "semanticBlockingFindings": 0,
+    "startedAt": "2026-10-26T04:22:05.892Z",
+    "finalObservationAt": "2026-10-26T04:23:43.665Z",
+    "operatorObservationUpperSeconds": 97.773,
+    "currentAgentVersion": "unreported by this UI path; no historical version asserted current"
+  },
+  "sourceBoundary": {
+    "installedConsumerSourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+    "uninstalledStyleSourceCommit": "aaf7c9d0fda472fdc6a83003d616fe0a42ffcef9",
+    "styleSourceInstalled": false,
+    "styleVisualFixVerified": false,
+    "scope": "The semantic review used immutable E9 source for installed-state interpretation. Later snapshot body/footer style wrappers are a separate source checkpoint; they do not change this actual or establish post-fix appearance."
+  },
+  "coverageLimits": [
+    "Only the acknowledged returned user/reply visible fields were searched. Unreturned history, separate attachment files, tool results and thoughts are excluded. Zero omitted fields means this returned scope, not complete native history.",
+    "Source information remained unconfirmed. Returned text does not prove original service/provider restoration, effective backend, authentication/payment or current Agent program version.",
+    "The selected reply snapshot showed the correct retained title and matching literal. Identical reply values do not identify a raw original-message ordinal. No raw native owner ID was captured.",
+    "The ended label establishes UI settlement only; no raw close response, process-lifetime or total-transport proof is claimed. Official startup/load may maintain its own caches/state; Root operator0model-prompt is not hiddenIO0.",
+    "No normal-open or source-navigation action occurred. Agent plus retained title and saved location identified the original ACK; a shared working folder alone did not authorize a different Agent/object.",
+    "The old missing-final-LF file failure, earlier TR timeout and old incomplete official-list case remain. This read is not their retry or repair.",
+    "No whole P32, new standard, whole Kilo or29-by-8/151 completion. Canonical standardIds stay empty; six waits, NEW24 pause, Cline orphan and old failed/unknown work remain unchanged."
+  ],
+  "roles": {
+    "actualOperatorCanonicalActualsWriterAndSealExecutor": "Root",
+    "prospectivePreparationAndSemanticReviewAuthor": "acceptance_receipts",
+    "publicSummaryAuthor": "acceptance_receipts",
+    "independentPublicRootReview": "Root reviewed this contributor-authored summary against the sealed actual artifacts; Root was also the actual operator. This is not a second independent product execution.",
+    "semanticScope": "Separate actual evidence readback, not a second product execution or independent prospective-oracle authorship. Root used AX; semantic reviewer independently viewed the actual reply-snapshot screenshot."
+  },
+  "references": {
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/manifest.json",
+      "sha256": "c65e6b446306522b79e13cf81a3a6a8aea46f58e4852ceac654c5689b7739574"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/actuals.json",
+      "sha256": "b03a6288d4ba25da175446e6e92cb7c6183b37df25d27fdcb22834a4827bed4f"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/receipt.json",
+      "sha256": "bfc5892193980b13fd4f9ed677c7e48585cf7ab1952c2b3027c561ab642615e6"
+    },
+    "sealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/seal-execution.json",
+      "sha256": "00fac8f01fcc160d48fce5cb71b8b879e7ba301a7742bdee462099772a482b9b"
+    },
+    "operatorCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/operator-completion.json",
+      "sha256": "e7473a5cc81bb56b332b4888dbdf1a27d8a1532426e07fc3cbefd0708fb82b82"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-formal-e9/semantic-review.json",
+      "sha256": "c7d88c1f1b864e3006841ca348b503062b1c7be79e9e9490d9dce5a27e20ae79"
+    },
+    "preparation": {
+      "path": "output/2026-10-24-agent-acceptance/p32-kilo-selected-unloaded-preparation/preparation.json",
+      "sha256": "bd48d87d5e39d9580c631b626cb9729f2b3c0c1108a3a7bf43545dfe1d532e9f"
+    },
+    "originalHistorySummary": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-625158ab-saved-details-summary.json",
+      "sha256": "c30b2df20b617082c6ab8b130a34999da70eb4c5a08d3668f88cfca8bd7c2a2e"
+    },
+    "formalInstallation": {
+      "path": "docs/evidence/2026-10-24-agent-acceptance/formal-e9ac19f5-installation.json",
+      "sha256": "00616ec78a14c4b430766837d267ff4fd6359893a2418583f2d99ea31ce97da6"
+    },
+    "uninstalledStyleCheckpoint": {
+      "path": "output/2026-10-24-agent-acceptance/p32-history-snapshot-layout/root-checkpoint.json",
+      "sha256": "58bafe2003e90c52da1857b65f6c96430eb6111fa30236cf6a950296a137b5bd"
+    }
+  }
+}
