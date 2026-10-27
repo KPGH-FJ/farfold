@@ -11,7 +11,6 @@ on:
         required: true
         default: StdioEof
         options: [StdioEof, Legacy]
-
 permissions: { contents: read }
 jobs:
   selected:
@@ -1467,7 +1466,6 @@ jobs:
           path: windows-diagnostics-raw/
           if-no-files-found: error
           retention-days: 7
-
   stdio_eof:
     if: ${{ inputs.cohort == 'StdioEof' }}
     runs-on: windows-2022
@@ -1480,10 +1478,8 @@ jobs:
         with: { persist-credentials: false, ref: "${{ github.sha }}" }
       - timeout-minutes: 7
         run: |
-          rustup toolchain install 1.96.0 --profile minimal
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          rustup default 1.96.0
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustup toolchain install 1.96.0 --profile minimal; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustup default 1.96.0; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - id: selected_build
         timeout-minutes: 30
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope StdioEof
@@ -1491,6 +1487,10 @@ jobs:
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: 2
         run: ./.github/scripts/windows-stdio-eof.ps1 -ExpectedHead '${{ github.sha }}'
+      - name: Check stdout handle guards and preserve literal launch and failure behavior
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 2
+        run: ./.github/scripts/windows-stdout-controls.ps1 -ExpectedHead '${{ github.sha }}'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
         with:

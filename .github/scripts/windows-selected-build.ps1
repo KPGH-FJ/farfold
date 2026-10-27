@@ -34,7 +34,7 @@ function Same-Inputs($Left, $Right) {
 }
 # The legacy scope text is retained verbatim from the original inline build.
 $legacyScope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact/legacyFullSecurity27SeparateConditioned positives plus strict master-retirement bounded-unknown negative only'
-$identityScope = if ($Scope -ceq 'Legacy') { $legacyScope } else { 'one exact synthetic stdout EOF test with held-open and closed-stdout internal controls; not product or whole-Windows acceptance' }
+$identityScope = if ($Scope -ceq 'Legacy') { $legacyScope } else { 'one exact synthetic stdout EOF test with held-open and closed-stdout internal controls plus five exact preservation tests; not product or whole-Windows acceptance' }
 $started = [DateTime]::UtcNow.ToString('o')
 $before = $null
 $after = $null
@@ -52,7 +52,7 @@ try {
   $before | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $raw 'inputs-before.json') -Encoding utf8
   [ordered]@{ head = $ExpectedHead; sourceHead = $ExpectedHead; runId = $env:GITHUB_RUN_ID; runAttempt = $env:GITHUB_RUN_ATTEMPT; cohort = $Scope; scope = $identityScope } |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
-  foreach ($path in @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1')) {
+  foreach ($path in @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1', '.github/scripts/windows-stdout-controls.ps1')) {
     $tokens = $null
     $parseErrors = $null
     $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$parseErrors)

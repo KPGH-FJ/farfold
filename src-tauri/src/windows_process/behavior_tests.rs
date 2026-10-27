@@ -443,6 +443,122 @@ fn helper_stdout_eof_is_independent_of_selected_exit_with_open_pipe_countercontr
     );
 }
 
+#[test]
+fn helper_stdout_handoff_native_guards_preserve_standard_handles() {
+    // Only this independent fixture changes its own standard slots. Neither
+    // prepare nor SetStdHandle runs in the parallel libtest process.
+    let directory = tempfile::tempdir().unwrap();
+    let mut child = Parent(
+        Command::new(fixture())
+            .arg("stdout-handoff-guards")
+            .arg(directory.path())
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap(),
+    );
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let mut status = None;
+    while Instant::now() < deadline {
+        status = child.0.try_wait().unwrap();
+        if status.is_some() {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    let mut observed: serde_json::Value =
+        std::fs::read(directory.path().join("stdout-handoff-guards.json"))
+            .ok()
+            .and_then(|bytes| serde_json::from_slice(&bytes).ok())
+            .unwrap_or_else(|| serde_json::json!({"cases":[],"reportAvailable":false}));
+    observed["fixtureExited"] = serde_json::json!(status.is_some());
+    observed["fixtureExitCode"] = serde_json::json!(status.and_then(|value| value.code()));
+    if status.is_some() {
+        let mut stderr = Vec::new();
+        child
+            .0
+            .stderr
+            .take()
+            .unwrap()
+            .take(4096)
+            .read_to_end(&mut stderr)
+            .unwrap();
+        observed["fixtureStderr"] = serde_json::json!(String::from_utf8_lossy(&stderr));
+    }
+    // Emit every available native subcase even if its prerequisite or guard
+    // fails. A missing denied-query prerequisite is a failure, never a pass.
+    eprintln!("FARFOLD_STDOUT_HANDOFF_GUARDS {observed}");
+    assert!(
+        status.is_some_and(|value| value.success()),
+        "fixture did not finish successfully"
+    );
+    assert_eq!(observed["schemaVersion"], 1);
+    assert_eq!(observed["caseCount"], 10);
+    assert_eq!(observed["requiredCaseCount"], 10);
+    assert_eq!(observed["originalSlotsRestored"], true);
+    let cases = observed["cases"]
+        .as_array()
+        .expect("native case observations");
+    let names = [
+        "exclusive-inheritable",
+        "exclusive-noninheritable",
+        "stdout-equals-stderr",
+        "stdout-equals-stdin",
+        "nul",
+        "ordinary-file",
+        "null",
+        "invalid",
+        "protect-from-close",
+        "write-only-query-denied",
+    ];
+    assert_eq!(cases.len(), names.len());
+    for (case, name) in cases.iter().zip(names) {
+        assert_eq!(case["case"], name);
+        assert_eq!(case["passed"], true, "native guard case: {name}");
+        assert_eq!(case["slotsUnchangedDuring"], true);
+        assert_eq!(case["slotsUnchangedAfterDrop"], true);
+        assert_eq!(case["flagsRestored"], true);
+        assert_eq!(case["handlesRetained"], true);
+    }
+    for case in &cases[..2] {
+        assert_eq!(case["pipeQuerySucceeded"], true);
+        assert_eq!(case["nativeEligible"], true);
+        assert_eq!(case["prepared"], true);
+        assert_eq!(case["writeSucceeded"], true);
+        assert_eq!(case["pipeBytesReadBack"], true);
+    }
+    for case in &cases[2..] {
+        assert_eq!(case["prepared"], false);
+    }
+    let inherit = windows_sys::Win32::Foundation::HANDLE_FLAG_INHERIT as u64;
+    assert_ne!(cases[0]["flagsBefore"][1].as_u64().unwrap() & inherit, 0);
+    assert_eq!(cases[1]["flagsBefore"][1].as_u64().unwrap() & inherit, 0);
+    assert_eq!(cases[2]["stdoutEqualsStderr"], true);
+    assert_eq!(cases[3]["stdoutEqualsStdin"], true);
+    assert_eq!(
+        cases[4]["fileType"],
+        windows_sys::Win32::Storage::FileSystem::FILE_TYPE_CHAR
+    );
+    assert_eq!(
+        cases[5]["fileType"],
+        windows_sys::Win32::Storage::FileSystem::FILE_TYPE_DISK
+    );
+    assert_eq!(cases[5]["fileBytesReadBack"], true);
+    let protect = windows_sys::Win32::Foundation::HANDLE_FLAG_PROTECT_FROM_CLOSE as u64;
+    assert_ne!(cases[8]["flagsBefore"][1].as_u64().unwrap() & protect, 0);
+    assert_eq!(cases[8]["writeSucceeded"], true);
+    assert_eq!(cases[8]["pipeBytesReadBack"], true);
+    assert_eq!(cases[9]["negativePrerequisiteAvailable"], true);
+    assert_eq!(cases[9]["pipeQuerySucceeded"], false);
+    assert_eq!(
+        cases[9]["pipeQueryError"],
+        windows_sys::Win32::Foundation::ERROR_ACCESS_DENIED
+    );
+    assert_eq!(cases[9]["writeSucceeded"], true);
+    assert_eq!(cases[9]["pipeBytesReadBack"], true);
+}
+
 fn noninteractive_git_output(mut command: Command, input: &[u8]) -> std::process::Output {
     let pending = prepare_noninteractive_git_command(&mut command).unwrap();
     assert_eq!(command.get_args().nth(2), Some(OsStr::new("git-stdio")));

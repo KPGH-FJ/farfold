@@ -32,6 +32,8 @@ use windows_sys::Win32::System::Threading::{
 
 #[path = "windows_process/current_members.rs"]
 mod current_members;
+#[path = "windows_process/stdout_handoff.rs"]
+pub(crate) mod stdout_handoff;
 
 const HELPER: &str = "--farfold-owned-process";
 const PREFIX: &str = "Local\\Farfold-process-";
@@ -543,12 +545,21 @@ pub(crate) fn run_if_requested() -> Option<i32> {
             command.creation_flags(flags);
         }
         failure_phase = "执行或等待程序";
-        let status = command
+        command
             .args(args)
             .stdin(Stdio::inherit())
             .stdout(Stdio::inherit())
-            .stderr(Stdio::inherit())
-            .status()?;
+            .stderr(Stdio::inherit());
+        let status = if matches!(mode, LaunchMode::Stdio) {
+            let output = stdout_handoff::prepare();
+            let mut selected = command.spawn()?;
+            if let Some(output) = output {
+                output.retire_after_spawn();
+            }
+            selected.wait()?
+        } else {
+            command.status()?
+        };
         Ok::<_, io::Error>(status.code().unwrap_or(1))
     })();
     Some(match result {
