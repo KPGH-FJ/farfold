@@ -257,6 +257,192 @@ fn helper_preserves_literal_arguments_stdio_cwd_environment_and_exit_code() {
     );
 }
 
+fn pipe_state(pipe: &impl std::os::windows::io::AsRawHandle) -> io::Result<(u32, bool)> {
+    use windows_sys::Win32::{Foundation::ERROR_BROKEN_PIPE, System::Pipes::PeekNamedPipe};
+    let mut available = 0;
+    if unsafe {
+        PeekNamedPipe(
+            pipe.as_raw_handle().cast(),
+            std::ptr::null_mut(),
+            0,
+            std::ptr::null_mut(),
+            &mut available,
+            std::ptr::null_mut(),
+        )
+    } != 0
+    {
+        return Ok((available, false));
+    }
+    let error = io::Error::last_os_error();
+    if error.raw_os_error() == Some(ERROR_BROKEN_PIPE as i32) {
+        Ok((0, true))
+    } else {
+        Err(error)
+    }
+}
+
+struct EofOwner {
+    child: Parent,
+    group: OwnedGroup,
+}
+impl Drop for EofOwner {
+    fn drop(&mut self) {
+        // Also runs on any fixture/assertion failure: stop the exact owned Job
+        // before Parent reaps its original helper. Never infer reap from EOF.
+        self.group.terminate();
+        let _ = self.child.0.kill();
+        let _ = self.child.0.wait();
+    }
+}
+
+fn observe_stdout_eof(case: &str) -> bool {
+    let directory = tempfile::tempdir().unwrap();
+    let pending = pending().unwrap();
+    let fixture = fixture();
+    let mut child = Parent(
+        Command::new(&fixture)
+            .args(pending.helper_argv(
+                fixture.as_os_str(),
+                [
+                    OsString::from("stdout-eof"),
+                    directory.path().into(),
+                    OsString::from(case),
+                ],
+                false,
+            ))
+            .stdin(Stdio::null())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap(),
+    );
+    let group = pending
+        .attach_or_reap(Some(child.0.id()), || {
+            let _ = child.0.kill();
+            matches!(child.0.try_wait(), Ok(Some(_)))
+        })
+        .unwrap();
+    let mut owner = EofOwner { child, group };
+    let stdout = owner.child.0.stdout.take().unwrap();
+    let mut stderr = owner.child.0.stderr.take().unwrap();
+    let selected = child_handle(&directory.path().join("selected-pid"));
+    let marker_deadline = Instant::now() + Duration::from_secs(5);
+    let mut bytes = Vec::new();
+    while !bytes.contains(&b'\n') && bytes.len() < 1024 && Instant::now() < marker_deadline {
+        match pipe_state(&stderr) {
+            Ok((available, false)) if available > 0 => {
+                // This is the only reader. Read no more than the bytes Peek
+                // just observed; neither this phase nor EOF uses blocking IO.
+                let length = (available as usize).min(1024 - bytes.len());
+                let start = bytes.len();
+                bytes.resize(start + length, 0);
+                if stderr.read_exact(&mut bytes[start..]).is_err() {
+                    break;
+                }
+            }
+            Ok((_, true)) | Err(_) => break,
+            _ => std::thread::sleep(Duration::from_millis(20)),
+        }
+    }
+    let closed = case == "closed";
+    let marker = std::str::from_utf8(&bytes)
+        .ok()
+        .filter(|line| line.ends_with('\n'))
+        .and_then(|line| line.strip_prefix("FARFOLD_STDIO_SELECTED "))
+        .and_then(|value| serde_json::from_str::<serde_json::Value>(value).ok());
+    let marker_complete = marker.as_ref().is_some_and(|value| {
+        value["case"] == case
+            && value["pipeConfirmed"] == true
+            && value["closeAttempted"] == closed
+            && value["closeSucceeded"] == closed
+    });
+    if marker_complete {
+        // Preserve the actual fixed ASCII marker bytes from the independent
+        // selected stderr stream, not a reconstructed close-success receipt.
+        std::io::stderr().write_all(&bytes).unwrap();
+    }
+    let deadline = Instant::now() + Duration::from_secs(3);
+    let mut eof = false;
+    let mut probe_failed = false;
+    let mut probe_error = None;
+    while marker_complete && Instant::now() < deadline {
+        match pipe_state(&stdout) {
+            Ok((0, true)) => {
+                eof = true;
+                break;
+            }
+            Ok(_) => std::thread::sleep(Duration::from_millis(20)),
+            Err(error) => {
+                probe_failed = true;
+                probe_error = error.raw_os_error();
+                break;
+            }
+        }
+    }
+    let selected_alive = unsafe {
+        WaitForSingleObject(selected.0, 0) == windows_sys::Win32::Foundation::WAIT_TIMEOUT
+    };
+    let helper_alive = matches!(owner.child.0.try_wait(), Ok(None));
+    let job_query = owner.group.job.activity_query();
+    let job_active = job_query.ok != 0 && job_query.info.ActiveProcesses > 0;
+    let stderr_alive = matches!(pipe_state(&stderr), Ok((0, false)));
+    eprintln!(
+        "FARFOLD_STDIO_EOF_OBSERVATION {}",
+        serde_json::json!({"case":case,"markerComplete":marker_complete,
+            "selectedStdoutClosed":closed && marker_complete,"eofBeforeRelease":eof,
+            "selectedAliveBeforeRelease":selected_alive,"helperAliveBeforeRelease":helper_alive,
+            "jobActiveBeforeRelease":job_active,"stderrAliveBeforeRelease":stderr_alive,
+            "jobQuerySucceededBeforeRelease":job_query.ok != 0,
+            "stdoutProbeFailed":probe_failed,"stdoutProbeError":probe_error})
+    );
+    std::fs::write(directory.path().join("stdout-release"), "release").unwrap();
+    let cleanup_deadline = Instant::now() + Duration::from_secs(5);
+    let mut status = None;
+    while Instant::now() < cleanup_deadline {
+        status = owner.child.0.try_wait().unwrap();
+        if status.is_some() && exited(&selected) && !owner.group.active() {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    let selected_exited = exited(&selected);
+    let helper_reaped = status.is_some();
+    let job_inactive = !owner.group.active();
+    let stdout_eof = matches!(pipe_state(&stdout), Ok((0, true)));
+    let stderr_eof = matches!(pipe_state(&stderr), Ok((0, true)));
+    eprintln!(
+        "FARFOLD_STDIO_EOF_CLEANUP {}",
+        serde_json::json!({"case":case,"selectedExited":selected_exited,
+            "helperExitCode":status.and_then(|s|s.code()),"helperReaped":helper_reaped,
+            "jobInactive":job_inactive,"stdoutEofAfterReap":stdout_eof,"stderrEofAfterReap":stderr_eof})
+    );
+    marker_complete
+        && !probe_failed
+        && eof == closed
+        && selected_alive
+        && helper_alive
+        && job_active
+        && stderr_alive
+        && selected_exited
+        && helper_reaped
+        && status.is_some_and(|s| s.code() == Some(23))
+        && job_inactive
+        && stdout_eof
+        && stderr_eof
+}
+
+#[test]
+fn helper_stdout_eof_is_independent_of_selected_exit_with_open_pipe_countercontrol() {
+    // Complete and record both actual exit/reap sequences before asserting the
+    // EOF invariant, so a meaningful baseline failure does not leak the child.
+    let held_open = observe_stdout_eof("held-open");
+    let closed = observe_stdout_eof("closed");
+    assert!(
+        held_open && closed,
+        "owned stdout EOF/countercontrol failed"
+    );
+}
+
 fn noninteractive_git_output(mut command: Command, input: &[u8]) -> std::process::Output {
     let pending = prepare_noninteractive_git_command(&mut command).unwrap();
     assert_eq!(command.get_args().nth(2), Some(OsStr::new("git-stdio")));

@@ -129,6 +129,11 @@ fn held_checkout_denies_late_source_config_mutation_and_keeps_source_and_target_
         .as_bytes(),
     );
     let denied = fs::write(&config, replacement).unwrap_err();
+    eprintln!(
+        "FARFOLD_HELD_CHECKOUT_MUTATION_DENIED kind={:?} rawOsError={:?}",
+        denied.kind(),
+        denied.raw_os_error()
+    );
     assert_eq!(denied.kind(), std::io::ErrorKind::PermissionDenied);
     assert_eq!(denied.raw_os_error(), Some(32)); // ERROR_SHARING_VIOLATION
     assert_eq!(fs::read(&config).unwrap(), before_config);

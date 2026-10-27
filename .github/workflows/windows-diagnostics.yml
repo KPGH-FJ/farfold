@@ -4,12 +4,20 @@ name: Windows selected diagnostics
 # verification, run all Rust tests, build an installer, or prove Agent readiness.
 on:
   workflow_dispatch:
+    inputs:
+      cohort:
+        description: Selected synthetic diagnostic cohort
+        type: choice
+        required: true
+        default: StdioEof
+        options: [StdioEof, Legacy]
 
 permissions:
   contents: read
 
 jobs:
   selected:
+    if: ${{ inputs.cohort == 'Legacy' }}
     runs-on: windows-2022
     timeout-minutes: 50
     defaults:
@@ -40,40 +48,8 @@ jobs:
         id: selected_build
         timeout-minutes: 30
         run: |
-          $ErrorActionPreference = 'Stop'
-          $raw = Join-Path $PWD 'windows-diagnostics-raw'
-          New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
-          $head = (& git rev-parse HEAD).Trim()
-          if ($LASTEXITCODE -ne 0 -or $head -ne '${{ github.sha }}') { throw 'Checked out head does not match the single dispatched head' }
-          [ordered]@{ head = $head; runId = '${{ github.run_id }}'; runAttempt = '${{ github.run_attempt }}'; scope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact/legacyFullSecurity27SeparateConditioned positives plus strict master-retirement bounded-unknown negative only' } |
-            ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
-          & cargo test --manifest-path src-tauri/Cargo.toml --locked --lib --no-run --message-format=json 1> (Join-Path $raw 'test-build.stdout.jsonl') 2> (Join-Path $raw 'test-build.stderr.log')
-          $testBuildExit = $LASTEXITCODE
-          Get-Content -LiteralPath (Join-Path $raw 'test-build.stderr.log')
-          if ($testBuildExit -ne 0) { exit $testBuildExit }
-          $executables = @(Get-Content -LiteralPath (Join-Path $raw 'test-build.stdout.jsonl') | ForEach-Object {
-            $message = $_ | ConvertFrom-Json -AsHashtable -ErrorAction Stop
-            if ($message.reason -eq 'compiler-artifact' -and $message.target.name -eq 'farfold_lib' -and $message.profile.test -eq $true -and $message.executable) { $message.executable }
-          } | Select-Object -Unique)
-          if ($executables.Count -ne 1) { throw 'Expected exactly one built farfold_lib test executable' }
-          $binary = (Resolve-Path -LiteralPath $executables[0] -ErrorAction Stop).Path
-          $deps = [IO.Path]::GetFullPath((Join-Path $PWD 'src-tauri/target/debug/deps')) + [IO.Path]::DirectorySeparatorChar
-          if (-not $binary.StartsWith($deps, [StringComparison]::OrdinalIgnoreCase) -or [IO.Path]::GetExtension($binary) -ne '.exe') { throw 'Unexpected test executable location' }
-          & cargo build --manifest-path src-tauri/Cargo.toml --locked --example windows_process_fixture 1> (Join-Path $raw 'fixture-build.stdout.log') 2> (Join-Path $raw 'fixture-build.stderr.log')
-          $fixtureBuildExit = $LASTEXITCODE
-          Get-Content -LiteralPath (Join-Path $raw 'fixture-build.stdout.log')
-          Get-Content -LiteralPath (Join-Path $raw 'fixture-build.stderr.log')
-          if ($fixtureBuildExit -ne 0) { exit $fixtureBuildExit }
-          $fixture = (Resolve-Path -LiteralPath 'src-tauri/target/debug/examples/windows_process_fixture.exe' -ErrorAction Stop).Path
-          [ordered]@{
-            sourceHead = $head
-            testBinary = $binary
-            testBinarySha256 = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash
-            fixture = $fixture
-            fixtureSha256 = (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash
-            testBuildExit = $testBuildExit
-            fixtureBuildExit = $fixtureBuildExit
-          } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Encoding utf8
+          & ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope Legacy
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Cursor parser controls, exactly three tests
         id: cursor_parser
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
@@ -1490,6 +1466,35 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: farfold-windows-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: windows-diagnostics-raw/
+          if-no-files-found: error
+          retention-days: 7
+
+  stdio_eof:
+    if: ${{ inputs.cohort == 'StdioEof' }}
+    runs-on: windows-2022
+    timeout-minutes: 40
+    defaults: { run: { shell: pwsh } }
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { persist-credentials: false, ref: "${{ github.sha }}" }
+      - timeout-minutes: 7
+        run: |
+          rustup toolchain install 1.96.0 --profile minimal
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustup default 1.96.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - id: selected_build
+        timeout-minutes: 30
+        run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope StdioEof
+      - name: Observe one exact stdout EOF test and both internal controls
+        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        timeout-minutes: 2
+        run: ./.github/scripts/windows-stdio-eof.ps1 -ExpectedHead '${{ github.sha }}'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ always() }}
+        with:
+          name: farfold-windows-stdio-eof-${{ github.run_id }}-${{ github.run_attempt }}
           path: windows-diagnostics-raw/
           if-no-files-found: error
           retention-days: 7

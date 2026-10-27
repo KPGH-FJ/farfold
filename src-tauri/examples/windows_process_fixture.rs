@@ -31,6 +31,63 @@ fn settlement_gate(directory: &std::path::Path, name: &str) {
 }
 
 #[cfg(windows)]
+fn stdout_eof(args: &[std::ffi::OsString]) {
+    use std::io::Write;
+    use windows_sys::Win32::{
+        Foundation::{CloseHandle, INVALID_HANDLE_VALUE},
+        Storage::FileSystem::{FILE_TYPE_PIPE, GetFileType},
+        System::{
+            Console::{GetStdHandle, STD_OUTPUT_HANDLE, SetStdHandle},
+            Pipes::GetNamedPipeInfo,
+        },
+    };
+    let directory = std::path::Path::new(&args[1]);
+    let case = args[2].to_str().unwrap();
+    assert!(matches!(case, "held-open" | "closed"));
+    std::fs::write(
+        directory.join("selected-pid"),
+        std::process::id().to_string(),
+    )
+    .unwrap();
+    // Only this synthetic selected process's own inherited pipe is eligible.
+    // No stdout cache, duplicate writer, helper or foreign handle is touched.
+    let output = unsafe { GetStdHandle(STD_OUTPUT_HANDLE) };
+    assert!(!output.is_null() && output != INVALID_HANDLE_VALUE);
+    assert_eq!(unsafe { GetFileType(output) }, FILE_TYPE_PIPE);
+    assert_ne!(
+        unsafe {
+            GetNamedPipeInfo(
+                output,
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+            )
+        },
+        0
+    );
+    let closed = case == "closed";
+    if closed {
+        assert_ne!(
+            unsafe { SetStdHandle(STD_OUTPUT_HANDLE, std::ptr::null_mut()) },
+            0
+        );
+        assert_ne!(unsafe { CloseHandle(output) }, 0);
+    }
+    let mut stderr = std::io::stderr().lock();
+    writeln!(
+        stderr,
+        "FARFOLD_STDIO_SELECTED {}",
+        serde_json::json!({"case":case,"pipeConfirmed":true,"closeAttempted":closed,"closeSucceeded":closed})
+    )
+    .unwrap();
+    stderr.flush().unwrap();
+    drop(stderr);
+    settlement_gate(directory, "stdout-release");
+    std::process::exit(23);
+}
+
+#[cfg(windows)]
 #[allow(clippy::zombie_processes)]
 fn settlement_parent(args: &[std::ffi::OsString]) {
     let directory = std::path::Path::new(&args[1]);
@@ -140,6 +197,7 @@ fn main() {
         }
         Some("settlement-parent") => settlement_parent(&args),
         Some("settlement-descendant") => settlement_descendant(&args),
+        Some("stdout-eof") => stdout_eof(&args),
         Some("parent") => {
             let mut command = std::process::Command::new(std::env::current_exe().unwrap());
             command.arg("wait").arg(&args[1]);
