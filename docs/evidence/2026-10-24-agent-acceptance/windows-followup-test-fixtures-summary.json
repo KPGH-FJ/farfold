@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsFollowupTestFixtureSourceSummary",
+  "sourceBaseCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "scope": "Two test-only files after the separately installed CFC source; no production PTY/Agent/configuration change or new installation.",
+  "changes": {
+    "methodTrace": {
+      "file": "src-tauri/src/acp_client/discovery_tests.rs",
+      "change": "Write the owned fixture method trace as binary UTF-8 plus one LF, preserving its exact readonly reader and assertion.",
+      "observedOriginalFailure": "Original Windows full-run assertion differed only by CRLF vs LF in this fixture-owned trace. Later assertions were not reached; fixing this trace is not proof that they pass on Windows."
+    },
+    "managerCursorControls": {
+      "file": "src-tauri/src/platform_tests/windows_conpty.rs",
+      "newExactFqns": [
+        "platform_tests::windows_conpty::manager_cursor_reply_control_reaches_ready_and_confirms_cleanup",
+        "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+      ],
+      "mechanism": "Keep original Manager PEER/arguments/defaultsize/readiness3s/outer12s; add separate reply and no-reply observers using the existing bounded CursorConsumer and public manager.write only after spawn.",
+      "positiveRequirement": "Actual query, actual successful replies and READY, plus confirmed existing close/repeated absence, worker finish and original outer child/Job/dual-EOF/count checks.",
+      "noReplyRequirement": "Actual query and zero replies with the same cleanup checks; record READY true or false without requiring the old failure. No original Manager/Drain success is inferred.",
+      "cleanupBoundary": "Public close result and exact outer owner settlement do not prove natural fixture exit or internal PTY EOF; observed fixture exit remains a separate recorded value."
+    }
+  },
+  "reviewCorrection": {
+    "initialDraftPreserved": true,
+    "finding": "Initial new no-reply oracle required READY=false while the unchanged original Manager oracle requires READY=true for the same inputs.",
+    "finalDisposition": "Removed the fixed-false assertion; require READY only in reply positive control, report no-reply readiness, and rename its FQN to records_readiness. Original Manager/Drain bodies, failure assertions and budgets remain byte-identical."
+  },
+  "verification": {
+    "macDiscoveryExistingGroup": {
+      "actualPassed": 13,
+      "failed": 0,
+      "ignored": 0,
+      "naturalExitCode": 0,
+      "scope": "Includes the exact readonly promotion test. Original complete stdout/stderr and execution are retained.",
+      "reuse": "Not repeated for the v2 Windows-only oracle/FQN correction because LF source and five associated inputs were unchanged."
+    },
+    "targetedRustfmt": "natural0 on final two files",
+    "diffCheck": "natural0",
+    "declaredInputScope": "Six named affected inputs checked; this is not a new full engineering freeze.",
+    "sourceReviewBlockingFindings": 0,
+    "windowsTypecheckPerformed": false,
+    "windowsActualTestsPerformed": false,
+    "fullEngineeringRepeated": false,
+    "newCiRuns": 0
+  },
+  "limits": [
+    "New Windows controls are source only; their positive behavior, readiness comparison, compilation and real cleanup still require actual Windows execution.",
+    "GitHub payment/spending-limit condition blocked the previous verify job; no workflow was rerun and no billing setting was changed.",
+    "Prior72 full-run failures, commonCreate prerequisite uncertainty and original Manager/Drain failures remain; no production ConPTY cause or fix is claimed.",
+    "Formal App remains CFC and protected data/unknown work are unchanged; this source checkpoint closes no Agent standard or29x8 requirement."
+  ],
+  "roles": {
+    "sourceAuthor": "history_snapshot_layout",
+    "firstAndFinalSourceReviewer": "Root",
+    "additionalIndependentSourceReviewer": "acceptance_index"
+  },
+  "sourcePins": [
+    {
+      "path": "src-tauri/src/acp_client/discovery_tests.rs",
+      "sha256": "02f020e0381643ed06bcf4e8fd54903b2bfcd2f29a5e36b8041fc0ad3e04c5e3",
+      "bytes": 26103,
+      "lines": 797
+    },
+    {
+      "path": "src-tauri/src/platform_tests/windows_conpty.rs",
+      "sha256": "7c02a07cc6d32cc54bea2f17817676912474a91bd22b251158319610f7201208",
+      "bytes": 37214,
+      "lines": 922
+    }
+  ],
+  "references": {
+    "originalFullFailureAnalysis": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/failure-analysis.json",
+      "sha256": "5da5e6909f7ce813713557b8a6d4ff7185a4f6a934e29cb28318d98aed3b7322"
+    },
+    "preservedDraftVerification": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/verification-summary.json",
+      "sha256": "22520be598c8116025f02d5f96a7fbd2dd3d411d2176bc27cb30d218ca6d2f2b"
+    },
+    "rootInitialFinding": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/root-source-review-v1.json",
+      "sha256": "4bdeb7334e8fb4fa38747af2d86408ad7975ad79d7596cd6ea2bd1f41f467324"
+    },
+    "finalVerification": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/verification-summary-v2.json",
+      "sha256": "57f098be17bbc6b073cc0e7de1e936e301e6a88ca022326fedac579f858cfe70"
+    },
+    "rootFinalSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/root-final-v2-source-review.json",
+      "sha256": "f23b404ad5e85a808575b59b1eabc07d21e262ec9ffc184d840e475a13c1cf6c"
+    },
+    "independentFinalSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/final-source-independent-review.json",
+      "sha256": "cad218d38b4b234cae9294b4586f92855bb7a961a957cf48252ea4c886043a60"
+    },
+    "macExecution": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-followup-fixtures/mac-discovery-existing-group.execution.json",
+      "sha256": "7445d684ab48b16bb1abbe04cd745bace1f2a3cd764b69413cdab791b4fb8dba"
+    }
+  }
+}

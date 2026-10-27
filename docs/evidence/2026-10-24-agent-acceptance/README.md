@@ -14,6 +14,8 @@
 
 [Windows stdout窄修与完整运行](windows-stdout-handoff-and-full-run-summary.json)保留有效RED，CFC窄运行原EOF与五控制FQN各实际通过，内部十句柄场景未跳过。完整运行前端9192/3跳过且打包通过，Rust2292/72/66忽略，六窄路径再次通过；汇总因GitHub付款/额度未启动，安装包依赖跳过。原72名完整索引，不等于72独立缺陷；不借窄运行源码映射冒充完整运行检出摘要，也不推断未捕获的Cargo子进程整数码，完整Windows/29×8仍开放。
 
+[后续测试源码](windows-followup-test-fixtures-summary.json)仅两文件：方法日志明确UTF-8加LF且精确reader不变，Mac原发现组13项通过；Manager新增应答/无应答独立诊断，公共输入与原预算/收尾归属保持。初稿固定无应答未就绪的矛盾预期已纠正并保留原件，旧Manager/Drain不改。格式、差异及源码独审通过，不冒称Windows编译/执行、生产ConPTY修复或新完整工程，旧72失败及条件阻断保持。
+
 [精确缓存清理](generated-cache-cleanup-summary.json)记录三批固定清单1154文件/9空目录，外部硬链接、用户数据、数据库、清单、挂载、嵌套Git及正式应用保留。各端点可用空间和分配统计分列，不保证或相加为物理回收量；本次候选重复应用的5/5清理另计。
 
 [Kilo所选原历史读取](p32-kilo-formal-e9-selected-owned-history-summary.json)为E9正式版一个原ACK对象的新P32窄案：一次关键词/读取，4返回文字/3匹配/当前范围0遗漏，原题/回复快照一致；来源未确认，UI结束非底层关闭证明。7观察/14私有证据/8稳定输入、一次封存自然0和独立图文审阅，97.773秒为operator观察上界。零正常打开/新消息/改选/重试，不混OpenCode共享目录对象或旧文件缺LF/超时，旧结果及完整P32/29×8保持；该案时aaf样式尚未安装，本次更新另见上。

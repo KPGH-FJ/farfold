@@ -8,7 +8,9 @@
 
 Qwen补齐本次正常保存退出、必要更新和首次启动后原稿保留的窄正例：首次启动未自动恢复该对象，经一次本地标题查询、一次普通打开，完整42B可编辑文字、一个附件名称和核对提示保持，发送禁用；零发送、编辑、核对附件、改选或重试。新启动前已冻结条件，8观察/14私有证据/16输入端点稳定、一次封存自然0及独立图文审阅，115.063秒为观察上界。退出和安装是具名已完成前置证据；附件字节、消费及完整P01/S7仍开放。另将E9一次89.79秒的当前保留分项独立存证，不回补其旧重启未知。见[本次更新区间保留](evidence/2026-10-24-agent-acceptance/qwen-formal-cfc-required-update-retention-summary.json)、[E9当前保留](evidence/2026-10-24-agent-acceptance/qwen-formal-e9-current-protected-draft-summary.json)。
 
-Windows stdout窄修已随`cfcfce63`交付：原EOF断言与预算不变，先保留有效RED，再在Windows运行`40494886235`取得原EOF及五条控制FQN各一次真实通过，十个内部句柄场景实际执行。完整运行`40498060809`另列：前端691文件9192通过/3跳过且打包通过；Rust2292通过/72失败/66忽略，六条窄路径再次通过，main/doc未启动。72个原名已完整索引，不当作72独立缺陷；汇总任务因GitHub付款或支出限额未启动，安装包依赖跳过，不能补造Cargo子进程退出码。当前继续LF夹具和ConPTY对照分析，未重跑CI、未把窄通过写成完整Windows或29×8通过。见[窄修与完整运行](evidence/2026-10-24-agent-acceptance/windows-stdout-handoff-and-full-run-summary.json)。
+Windows stdout窄修已随`cfcfce63`交付：原EOF断言与预算不变，先保留有效RED，再在Windows运行`40494886235`取得原EOF及五条控制FQN各一次真实通过，十个内部句柄场景实际执行。完整运行`40498060809`另列：前端691文件9192通过/3跳过且打包通过；Rust2292通过/72失败/66忽略，六条窄路径再次通过，main/doc未启动。72个原名已完整索引，不当作72独立缺陷；汇总任务因GitHub付款或支出限额未启动，安装包依赖跳过，不能补造Cargo子进程退出码。后续测试补强另列，未重跑CI、未把窄通过写成完整Windows或29×8通过。见[窄修与完整运行](evidence/2026-10-24-agent-acceptance/windows-stdout-handoff-and-full-run-summary.json)。
+
+后续两份测试源码已补强并独审无阻断：自有方法日志明确写UTF-8加LF，精确读取断言不变；Mac原发现组13项实际通过。另加Manager游标应答/无应答独立对照，沿用公共输入、原预算及Child/Job/双流收尾；初稿将“未就绪”固化的矛盾预期经审阅移除，无应答组只记录实际就绪值，原Manager/Drain仍保留。最终格式/差异检查通过，未重复完整工程或安装；Windows新增对照尚未编译或执行，旧72失败与共用Create前提未知不改。见[测试源码与限制](evidence/2026-10-24-agent-acceptance/windows-followup-test-fixtures-summary.json)。
 
 本阶段三批可再生成缓存已按固定清单清理1154文件、9个空目录：三个旧增量目录、两个调试归档及100个旧单链接对象；正式应用、ZIP、证据、数据库、数据清单、挂载及有改动的嵌套Git保留。空间读数只记录端点，不把分配统计或变化相加为实际释放量；原观察器字段纠正及记录保留。见[精确缓存清理](evidence/2026-10-24-agent-acceptance/generated-cache-cleanup-summary.json)。
 

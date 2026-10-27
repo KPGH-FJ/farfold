@@ -26,7 +26,7 @@ for line in sys.stdin:
   elif p.get('cursor')=='next': reply(m,{'sessions':[{'sessionId':'second','cwd':'/missing/history-location'}]})
   else: reply(m,{'sessions':[{'sessionId':'first','cwd':base,'title':'Original history'}],'nextCursor':'next'})
  elif method in ('session/new','session/load'):
-  with open(os.path.join(base,'open-requests'),'a') as f: f.write(method+'\n')
+  with open(os.path.join(base,'open-requests'),'ab') as f: f.write((method+'\n').encode('utf-8'))
   id=p.get('sessionId','live')
   if id=='failure': send({'id':m['id'],'error':{'code':-32603,'message':'load failed'}}); continue
   if method=='session/load' and id=='replay-batch':

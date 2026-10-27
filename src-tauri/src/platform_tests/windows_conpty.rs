@@ -10,6 +10,8 @@ pub(crate) enum Case {
     Reservation,
     Cancellation,
     Manager,
+    ManagerCursorReply,
+    ManagerCursorNoReply,
     Drain,
     CursorReply,
     CloseDrain,
@@ -49,6 +51,7 @@ impl Case {
             | Self::TerminalCursorNoReply
             | Self::TerminalCursorReply
             | Self::TerminalMasterBoundedUnknown => 20,
+            Self::ManagerCursorReply | Self::ManagerCursorNoReply => 12,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
             _ => 10,             //3s startup+3s readiness+2s exit+1s EOF; not a production cap
         })
@@ -125,7 +128,7 @@ impl Drop for Owner {
 }
 
 pub(crate) fn run(case: Case) {
-    // Only these seven owned cases share this lock; unrelated tests keep running.
+    // Only these owned cases share this lock; unrelated tests keep running.
     static SERIAL: Mutex<()> = Mutex::new(());
     static CLEANUP_PENDING: AtomicBool = AtomicBool::new(false);
     let _serial = SERIAL.lock().unwrap_or_else(|poison| poison.into_inner());
@@ -188,6 +191,8 @@ pub(crate) fn run(case: Case) {
         let diagnostic_case = matches!(
             case,
             Case::Manager
+                | Case::ManagerCursorReply
+                | Case::ManagerCursorNoReply
                 | Case::Drain
                 | Case::TerminalCursorNoReply
                 | Case::TerminalCursorReply
@@ -281,7 +286,13 @@ pub(crate) fn run(case: Case) {
                         child_alive_before_deadline_kill.into(),
                     );
                 }
-                if matches!(case, Case::Manager | Case::Drain) {
+                if matches!(
+                    case,
+                    Case::Manager
+                        | Case::Drain
+                        | Case::ManagerCursorReply
+                        | Case::ManagerCursorNoReply
+                ) {
                     let receipt = receipt.as_mut().unwrap().as_object_mut().unwrap();
                     receipt.insert(
                         "elapsedMs".into(),
@@ -321,6 +332,11 @@ pub(crate) fn run(case: Case) {
         eprintln!(
             "FARFOLD_CONPTY_PROBE_OWNER {}",
             diagnostic_receipt.expect("probe owner receipt")
+        );
+    } else if matches!(case, Case::ManagerCursorReply | Case::ManagerCursorNoReply) {
+        eprintln!(
+            "FARFOLD_CONPTY_MANAGER_CURSOR_OWNER {}",
+            diagnostic_receipt.expect("independent Manager cursor owner receipt")
         );
     } else if matches!(
         case,
@@ -571,6 +587,113 @@ fn manager_probe() {
     );
 }
 
+fn manager_cursor_probe(case: Case, reply: bool) {
+    use super::windows_cursor::CursorConsumer;
+    use base64::Engine;
+
+    let directory = tempfile::tempdir().unwrap();
+    let manager = Arc::new(crate::pty::PtyManager::new());
+    let (cursor_sink, mut cursor) = CursorConsumer::new(reply);
+    let ready = Arc::new(AtomicBool::new(false));
+    let seen = ready.clone();
+    let tail = Mutex::new(Vec::<u8>::new());
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.spawn.enter");
+    let id = manager
+        .spawn(
+            &super::python(),
+            &["-u".into(), "-c".into(), PEER.into(), "wait".into()],
+            &[],
+            directory.path(),
+            portable_pty::PtySize::default(),
+            Arc::new(move |frame| {
+                if let Some(data) = frame.get("data").and_then(serde_json::Value::as_str) {
+                    let decoded = base64::engine::general_purpose::STANDARD
+                        .decode(data)
+                        .unwrap();
+                    let mut tail = tail.lock().unwrap();
+                    tail.extend_from_slice(&decoded);
+                    if tail.windows(READY.len()).any(|s| s == READY) {
+                        seen.store(true, Ordering::SeqCst);
+                    }
+                    let discard = tail.len().saturating_sub(READY.len());
+                    tail.drain(..discard);
+                }
+                cursor_sink(frame);
+            }),
+        )
+        .unwrap();
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.spawn.return");
+    // Queue actual queries during spawn; use only public input after it returns.
+    cursor.start(Arc::downgrade(&manager), id.clone(), reply);
+    environment();
+    let readiness_started = Instant::now();
+    let ready_observed = await_flag(&ready, Duration::from_secs(3));
+    let (bytes, queries, replies, pending, failed) = {
+        let state = cursor.capture.lock().unwrap();
+        (
+            state.bytes,
+            state.queries,
+            state.replies,
+            state.pending,
+            state.failed,
+        )
+    };
+    eprintln!(
+        "FARFOLD_CONPTY_MANAGER_CURSOR_READINESS {}",
+        serde_json::json!({"case":format!("{case:?}"),"replyEnabled":reply,
+            "readyObserved":ready_observed,"waitElapsedMs":readiness_started.elapsed().as_millis(),
+            "bytes":bytes,"cursorQueries":queries,"cursorReplies":replies,
+            "pendingReplies":pending,"consumerFailed":failed,
+            "scope":"independent cursor-response hypothesis; original Manager oracle unchanged"})
+    );
+    // Preserve the original finish input when READY exists. Either arm must
+    // actually close its owned terminal before any hypothesis assertion.
+    let finish_sent = ready_observed && manager.write(&id, b"finish\r").is_ok();
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.close.enter");
+    let closed = manager.close(&id);
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.close.return");
+    let confirmed_existing = matches!(closed, Ok(Some(_)));
+    let fixture_exit = closed.as_ref().ok().and_then(|value| *value);
+    let second_close_absent = confirmed_existing && matches!(manager.close(&id), Ok(None));
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.worker.finish.enter");
+    cursor.finish();
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.worker.finish.return");
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.manager.drop.enter");
+    drop(manager);
+    eprintln!("FARFOLD_CONPTY_PHASE manager_cursor.manager.drop.return");
+    let state = cursor.capture.lock().unwrap();
+    eprintln!(
+        "FARFOLD_CONPTY_MANAGER_CURSOR_RESULT {}",
+        serde_json::json!({"case":format!("{case:?}"),"replyEnabled":reply,
+            "readyObserved":ready_observed,"finishSent":finish_sent,
+            "confirmedExistingClose":confirmed_existing,"secondCloseAbsent":second_close_absent,
+            "closeError":closed.is_err(),"fixtureExit":fixture_exit,
+            "cursorQueries":state.queries,"cursorReplies":state.replies,
+            "pendingReplies":state.pending,"consumerFailed":state.failed,
+            "internalPtyEOF":"notObservableViaPublicSink",
+            "scope":"independent diagnostic; no original Manager/Drain pass inferred"})
+    );
+    assert!(confirmed_existing && second_close_absent);
+    assert!(!state.failed && state.pending == 0);
+    assert!(
+        queries > 0,
+        "cursor-response hypothesis requires an actual query"
+    );
+    if reply {
+        assert!(
+            ready_observed,
+            "cursor reply positive control must reach READY"
+        );
+        assert!(finish_sent && state.replies > 0);
+        assert_eq!(state.replies, state.queries);
+    } else {
+        // READY is observed, not prescribed: the original no-reply oracle still
+        // requires startup. A future successful startup must not fail this probe.
+        assert_eq!(replies, 0);
+        assert_eq!(state.replies, 0);
+    }
+}
+
 fn raw_probe(case: Case) {
     use portable_pty::{CommandBuilder, PtySize, native_pty_system};
     let directory = tempfile::tempdir().unwrap();
@@ -755,12 +878,19 @@ fn diagnostic_child() {
     let case = read_case();
     assert!(matches!(
         case,
-        Case::Manager | Case::Drain | Case::CursorReply | Case::CloseDrain
+        Case::Manager
+            | Case::ManagerCursorReply
+            | Case::ManagerCursorNoReply
+            | Case::Drain
+            | Case::CursorReply
+            | Case::CloseDrain
     ));
     eprintln!("FARFOLD_CONPTY_BEGIN {case:?}");
     environment();
     if case == Case::Manager {
         manager_probe();
+    } else if matches!(case, Case::ManagerCursorReply | Case::ManagerCursorNoReply) {
+        manager_cursor_probe(case, case == Case::ManagerCursorReply);
     } else {
         raw_probe(case);
     }
@@ -769,6 +899,14 @@ fn diagnostic_child() {
 #[test]
 fn actual_manager_with_valid_windows_python_is_bounded() {
     run(Case::Manager);
+}
+#[test]
+fn manager_cursor_reply_control_reaches_ready_and_confirms_cleanup() {
+    run(Case::ManagerCursorReply);
+}
+#[test]
+fn manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup() {
+    run(Case::ManagerCursorNoReply);
 }
 #[test]
 fn raw_conpty_draining_without_cursor_reply_is_bounded() {
