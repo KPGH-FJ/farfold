@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "kind": "ExactGeneratedCacheRetirementSummary",
+  "publicationReview": "Root reviewed actual metadata and privacy; no blocking finding",
+  "scope": "Three explicitly inventoried Farfold generated-cache retirements before this CFC installation; no whole-target or prefix sweep.",
+  "actualTotals": {
+    "filesUnlinked": 1154,
+    "emptyDirectoriesRemoved": 9,
+    "generatedDuplicateAppCleanupIncluded": false
+  },
+  "batches": [
+    {
+      "kind": "three exact old incremental roots",
+      "files": 1052,
+      "directories": 9,
+      "availableBytesBefore": 1236262912,
+      "availableBytesAfter": 2631139328,
+      "allocatedStatisticBytes": 2387079168,
+      "physicalReclamationGuaranteed": false,
+      "automaticRetry": false,
+      "result": {
+        "path": "output/2026-10-24-agent-acceptance/post-e9-generated-cache-storage-readonly/retirement-execution/result.json",
+        "sha256": "43298e2f76187d6516b4fdc3c3889be81f5c7e87e85203dfa0df381c0ec8ec6b"
+      },
+      "journal": {
+        "path": "output/2026-10-24-agent-acceptance/post-e9-generated-cache-storage-readonly/retirement-execution/journal.jsonl",
+        "sha256": "5debc056627a27dac6865f6e9d30c0b980dc7c452fe8bef5536b1f1a6a96a1b9"
+      }
+    },
+    {
+      "kind": "two regenerable debug static/library archives",
+      "files": 2,
+      "directories": 0,
+      "availableBytesBefore": 275275776,
+      "availableBytesAfter": 284938240,
+      "allocatedStatisticBytes": 1224908800,
+      "physicalReclamationGuaranteed": false,
+      "automaticRetry": false,
+      "result": {
+        "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-archives-preflight/retirement-execution/result.json",
+        "sha256": "f533d9664838ee53116fc4a02ad309a931a04f8e0e2dd2f639e8ce3ad3ef9628"
+      },
+      "journal": {
+        "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-archives-preflight/retirement-execution/journal.jsonl",
+        "sha256": "bba6efcdbf4761215f1060c90de5096cb8b481a3d36a9f1e838fed0239f9f45a"
+      }
+    },
+    {
+      "kind": "one hundred fixed-whitelist old debug object files",
+      "files": 100,
+      "directories": 0,
+      "availableBytesBefore": 1497886720,
+      "availableBytesAfter": 1589956608,
+      "allocatedStatisticBytes": 1710444544,
+      "physicalReclamationGuaranteed": false,
+      "automaticRetry": false,
+      "result": {
+        "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-objects-preflight/retirement-execution/result.json",
+        "sha256": "02d01cc18767daa52308c1445d9882ef454cc9d79fb3ada3b0e7abe43cc11936"
+      },
+      "journal": {
+        "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-objects-preflight/retirement-execution/journal.jsonl",
+        "sha256": "6618d85aa2c15471df094343ad418616de1c79153a48da8cc073da52c49ff22c"
+      }
+    }
+  ],
+  "protection": [
+    "Formal App, seven candidate source inputs and existing test evidence were checked at each recorded before/after endpoint.",
+    "User data inventories, databases, metadata backups, mount directories, Agent credentials/configuration/history and dirty nested Git were retained.",
+    "Single-link evidence was required for the two archives and one hundred fixed-whitelist old arm64 Mach-O objects. External hardlink aliases were not removed; uninspected remaining objects were not swept.",
+    "Current test binary/dependency metadata, release candidate ZIP and current formal application were retained."
+  ],
+  "spaceBoundary": "Available-space readings are recorded endpoints in a changing APFS system. Allocation statistics and endpoint changes are not a guaranteed unique physical reclaim amount; do not add them as GB freed. Full engineering work generated intervening cache bytes.",
+  "errorsPreserved": [
+    "The first incremental-cache observer compared different stat field sets; v2 corrected only that observer assumption and preserved v1, with no cleanup repeat."
+  ],
+  "references": {
+    "firstIndependentReadback": {
+      "path": "output/2026-10-24-agent-acceptance/post-e9-generated-cache-storage-readonly/actual-readback-and-next-caches-v2.json",
+      "sha256": "9ad4befa10f185a01d92b80dd57260bb9a068481db069b6d93e5baecfa83c1b3"
+    },
+    "archiveExecutorIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-archives-preflight/retire-two-independent-review.json",
+      "sha256": "8e9b80b8f543dacc707ce68a2232d6d65c1d998f01ec712bc56665dedc8a20bf"
+    },
+    "objectRootActualReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-debug-objects-preflight/root-actual-readback.json",
+      "sha256": "e3ad15c3fc6d703017193a7bac61c794a1119c50defb6d06203cf75c184d5c87"
+    },
+    "rootPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/stage-cfc-public-drafts/root-publication-review.json",
+      "sha256": "febec15ea736a13b4f6d4615f2b3bab0fc1b28e4fc160b7839cd6b911ba36e33"
+    }
+  },
+  "limits": [
+    "Counts describe actual named paths removed, not all project caches or all storage.",
+    "No data, backup, database, manifest or direct user-draft fingerprint is published. This adds no product/Agent acceptance."
+  ]
+}

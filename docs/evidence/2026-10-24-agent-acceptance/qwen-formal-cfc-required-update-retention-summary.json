@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "kind": "QwenFormalCfcSpecificRequiredUpdateRetentionSummary",
+  "agent": "Qwen Code",
+  "requirementIds": ["P01"],
+  "standardIds": [],
+  "level": "installed",
+  "formalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "scope": "One named necessary normal-save-quit/update/first-launch interval, followed by one ordinary open of the original protected Qwen draft. The prior current-only E9 case remains a separate historical observation.",
+  "chronology": {
+    "antecedentEvidence": "The normal saved quit and CFC installation, three retention captures, ten-check report and exact duplicate cleanup were already completed and bound before this prospective canonical case.",
+    "canonicalFrozenAt": "2026-10-27T12:41:10.842Z",
+    "singleSharedFirstLaunchAt": "2026-10-27T12:41:32.534Z",
+    "ordinaryOriginalOpenAt": "2026-10-27T12:42:26.997Z",
+    "restoredDraftObservedAt": "2026-10-27T12:42:37.117Z",
+    "operatorFinishedAt": "2026-10-27T12:43:27.597Z"
+  },
+  "observed": {
+    "sharedFirstLaunches": 1,
+    "ordinaryOriginalConversationOpens": 1,
+    "localMetadataTitleQueries": 1,
+    "automaticOriginalRestorationObserved": false,
+    "wholeExposedEditableDraftTextMatchedPriorOracleAndBeforeQuit": true,
+    "draftUtf8Bytes": 42,
+    "attachmentNamesRetained": 1,
+    "reviewRequired": true,
+    "sendDisabled": true,
+    "noVisibleAutomaticSubmit": true,
+    "modelPromptsSentByRoot": 0,
+    "draftEditsAttachmentReviewFileChoiceLoginRetryStopOrExtraExitActions": 0,
+    "operatorObservationUpperBoundSeconds": 115.063,
+    "observations": 8,
+    "privateEvidenceFiles": 14,
+    "inputsStableAtCapturedEndpoints": 16,
+    "singleSealNaturalExitCode": 0,
+    "mechanicallyPassedCases": 1,
+    "invalid": 0,
+    "independentBlockingFindings": 0
+  },
+  "preservedPreparationErrors": [
+    "First materialization attempt failed on a Python metadata API before canonical writes or product actions. The original failure remains; the two-call v2 correction was reviewed and completed before first launch.",
+    "After the single getter successfully launched the application, an auxiliary capture closure raised ReferenceError. Subsequent capture used the same returned binding; no second launch, getter or ordinary open, and no reset of the observation window."
+  ],
+  "limits": [
+    "This supports the observed named exit/update interval, not general cold/restart recovery or all-history retention. The old E9 missing-interval unknown is not rewritten.",
+    "The full editable UI child text was checked and the prequit/restored screenshots were independently viewed. This is not a persistent-storage draft byte read. Attachment name and guard retention do not prove attachment bytes or Agent consumption.",
+    "Original-object association uses Agent/title/body/draft/name anchors and current location basename with prior owned metadata. Full cwd, native identity, complete current configuration and current Agent version were not freshly read.",
+    "115.063 seconds is the full operator observation upper bound, including locator and capture-code correction time, not exact restore latency or a performance threshold.",
+    "No visible submission and zero operator model prompts describe UI actions; they do not prove zeroRPC, global hidden IO, raw transport closure, backend terminal state or the unique disabled-Send cause.",
+    "No full P01/S7/S3, Agent or 29-by-8 closure. Old failures, unknowns, six WAIT, NEW24 and protected orphan work remain unchanged."
+  ],
+  "roles": {
+    "actualUiOperatorPlanMaterializerActualsAndSealAuthor": "Root",
+    "semanticReviewerAndDraftAuthor": "/root/acceptance_receipts",
+    "relatedWorkDisclosure": "Reviewer authored the offline seal facility, prior E9 review/readiness and CFC candidate/retention helpers, and operated the three retention captures. Reviewer did not operate this Qwen UI case; this is not a replay of the capture/install algorithms.",
+    "materializerV2Reviewer": "acceptance_index",
+    "rootPublicationReview": "completed: actual metadata, stated proof boundaries and privacy checked; no blocking finding"
+  },
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/case-plan.json",
+      "sha256": "ea9b7dde49457036ea42ce5eb3511573ac5943e6f368e7f9c8d47a27061e54cc"
+    },
+    "preflight": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/preflight.json",
+      "sha256": "8902455df7b433f5c410b5b4202a140ba4ca30203be30f815f255089e033a622"
+    },
+    "manifest": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/manifest.json",
+      "sha256": "f665d1a9d454ca7e44f0c3ba55ab1d4494ea046e7084944c34b0f38dd9973307"
+    },
+    "prospectiveCanonicalFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/canonical-freeze.json",
+      "sha256": "bbe28b6a9932bda1cf38aed5eac823e1e262ef5f35b618d64a946ad357682bdc"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/actuals.json",
+      "sha256": "2c64c43f73ae3031f30164cfca7bda7a2ae21aee6167ba334c333e1210b2fcd0"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/receipt.json",
+      "sha256": "281d6a1b4daf60cef53c54a62cfab6ca8e5c09298b22a6238f1f991444e5fb19"
+    },
+    "singleSealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/receipt-seal-execution.json",
+      "sha256": "c0372bd4ce196206b8aba99598e2e167f90eefdb7865398a3e9eca98ecb3aa34"
+    },
+    "actualDerivation": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/root-actual-derivation.json",
+      "sha256": "95bd50e411e23dd885d55c80bec4a5fdf25aa102487fec41734aae4a1c769b56"
+    },
+    "operatorActionsAndFinish": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/operator-finish.json",
+      "sha256": "59ea4925bde76a80655c190eeba00631212ebb15db0366c279441e5b8acadc9b"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/independent-semantic-review.json",
+      "sha256": "1a848361be45382cc9dd0bd1d5c602fcf5d15df4b36b4dda773206a8d7c15bce"
+    },
+    "normalSavedQuit": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/ui/normal-saved-quit-observation.json",
+      "sha256": "61111ad116e3ad6be2fbcded5687d3b605e420160239e3184310939b4fcd7844"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/installed-independent-review-private.json",
+      "sha256": "6a50079a1b2da853a3c7b0cf2b3c3e6cb982413421bb71c6402cde5a5318fadb"
+    },
+    "exactCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/candidate-cleanup.json",
+      "sha256": "9d0d27bc5acefeeb970786166bf45ecdbe8fc806af281fe1a689b8a6924e7a11"
+    },
+    "materializationFirstFailure": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/materialization-first-failure-readback.json",
+      "sha256": "700de79b1b6d3b11843cec66565a2b078b9c8eefa3a1fb503fd8952029ecdca7"
+    },
+    "materializerV2Review": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/materialize-canonical-v2-independent-review.json",
+      "sha256": "d9cc24c6340e7631342db87c070da6bc883c84fc7fd8854bb8386a73d2971e8b"
+    },
+    "priorE9CurrentOnlyReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/independent-semantic-review.json",
+      "sha256": "4d7b2b2e7e875499449d4fa5b490bf329f6b4ba075c169f4813733a9c6bcb575"
+    },
+    "rootPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/stage-cfc-public-drafts/root-publication-review.json",
+      "sha256": "febec15ea736a13b4f6d4615f2b3bab0fc1b28e4fc160b7839cd6b911ba36e33"
+    }
+  }
+}

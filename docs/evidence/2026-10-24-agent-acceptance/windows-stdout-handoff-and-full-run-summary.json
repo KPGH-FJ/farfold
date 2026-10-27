@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsStdoutHandoffAndSeparateFullRunSummary",
+  "sourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "publicationReview": "Root reviewed actual metadata and privacy; no blocking finding",
+  "change": {
+    "production": "Before spawning the selected stdio process, borrow and validate the inherited stdout pipe, clear its inherit bit, then after successful spawn retire only the original writer with ordered slot clearing and one CloseHandle attempt. Failed spawn restores the original inherit state. Existing Child/Job/wait ownership remains.",
+    "unchanged": "No Agent version/binary pin, alternate Agent loop, stdin/stderr, PTY production path or Git-status behavior change. Original EOF assertion, budgets and selected-work script remain.",
+    "negativeBoundary": "Null/invalid, raw stdin/stderr alias, non-pipe/query failure and protected handles are rejected. Distinct handles to the same underlying pipe and all native restoration-error variants are not universally proven."
+  },
+  "baselineRed": {
+    "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/40488907266",
+    "sourceCommit": "d32b908",
+    "exactEofTestInvocations": 1,
+    "passed": 0,
+    "failed": 1,
+    "ignored": 0,
+    "naturalTestExitCode": 101,
+    "heldOpenEofObserved": false,
+    "selectedOriginalWriterCloseSucceeded": true,
+    "closedSelectedCaseEofBeforeGate": false,
+    "allActorsAliveAtEofObservation": true,
+    "afterGateCleanup": "Both scenarios recorded helper23, reap, inactive Job and both stream EOF. Writer-retention RED does not uniquely identify every writer.",
+    "previousCheckoutFailure": "40488285898 failed checkout with long-path exit160 and started zero tests; it is not this behavioral RED."
+  },
+  "narrowGreen": {
+    "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/40494886235",
+    "actualFqns": 6,
+    "eachTestPassed": 1,
+    "eachTestFailed": 0,
+    "eachTestIgnored": 0,
+    "allNaturalTestExitCodes": 0,
+    "eof": "One original EOF test: held-open remains non-EOF; closing the selected original writer yields EOF while actors are still alive. Existing cleanup checks remain.",
+    "nativeGuardInternalCases": {
+      "actual": 10,
+      "positivePrepare": 2,
+      "negativePrepare": 8,
+      "ignored": 0,
+      "deniedHandleObservedOsCode": 5,
+      "writeReadbackAndRestoredSlotsFlags": true
+    },
+    "controlBoundary": "Ten native guard scenarios belong to one actual Rust test; prepare=false is an exercised rejection, not a skipped test. Five control FQNs plus the original EOF FQN are six actual test invocations.",
+    "sourceMaps": "Six original per-phase maps each cover835 paths:1 exact raw Git match and834 explicit CRLF-normalized matches, with0 unexplained. These maps belong only to this narrow diagnostic run.",
+    "originalArtifactZip": {
+      "bytes": 275833,
+      "sha256": "b4b0400045432875df8575c8c34106abe824d383fbd9c8f5b576fbc2d04e1184",
+      "members": 27,
+      "providerDigestMatched": true
+    }
+  },
+  "separateFullRun": {
+    "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/40498060809",
+    "conclusion": "failure",
+    "watchNaturalExitCode": 1,
+    "frontend": {
+      "files": 691,
+      "passed": 9192,
+      "skipped": 3,
+      "typecheck": "passed",
+      "build": "passed"
+    },
+    "rust": {
+      "fmt": "passed",
+      "clippyAllTargetsDenyWarnings": "passed",
+      "fixtureBuild": "passed",
+      "library": {
+        "rawLine": 22085,
+        "text": "test result: FAILED. 2292 passed; 72 failed; 66 ignored; 0 measured; 0 filtered out; finished in 1279.30s",
+        "passed": 2292,
+        "failed": 72,
+        "ignored": 66,
+        "total": 2430,
+        "measured": 0,
+        "filteredOut": 0,
+        "seconds": 1279.3
+      },
+      "mainAndDoc": "not observed started",
+      "stepIntegerExitCode": 1,
+      "cargoChildIntegerExitCode": null,
+      "stdoutFocusedSixPaths": "All six exact named tests passed again in this full run; EOF markers and native ten internal cases were checked independently."
+    },
+    "verify": {
+      "started": false,
+      "shellIntegerExitCode": null,
+      "reason": "GitHub original annotation reports failed account payments or a spending limit requiring increase. No runner or steps started.",
+      "ownerAction": "Owner must resolve the stated GitHub Billing/plan condition before a new affected CI run can supply missing results. No account or billing setting was changed."
+    },
+    "installer": "dependency-skipped; no installer artifact",
+    "sourceBoundary": "Run metadata and both original checkout logs identify CFC. Unlike the prior selected diagnostic workflow, windows.yml does not publish per-phase source/binary before/after maps; do not borrow the prior six-map proof for these separate full-run runners.",
+    "failureAccounting": "72 unique exact failing FQNs indexed. The official top-level2292/72/66 summary is authoritative; later isolated-child ok lines for four ignored names must not be recounted as2296/72/62. Failure count is not a count of distinct defects.",
+    "nextAnalysis": "Original72 indexed in14 groups. One method-trace CRLF fixture assumption is confirmed; common create prerequisites and ConPTY production cause remain separately limited. No full-run rerun or original failure relabelling."
+  },
+  "limits": [
+    "Local macOS checks, narrow Windows tests, full Windows tests, installer and real-Agent acceptance are separate proof levels.",
+    "Full Windows, selected assigned1/listed0, all29x8 and151 requirements remain open. Six waits and NEW24 sending pause remain.",
+    "This publication contains no user body, credentials, native owner identifiers, database/data-manifest/backup or direct draft digest."
+  ],
+  "references": {
+    "sourceAndFqns": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/final-fqn-review.json",
+      "sha256": "9a1b6b3452ec719467bfd8d2094c55713ed1bdd8d881f92dff49ed9c1a2228af"
+    },
+    "redRawReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdio-eof-test-preparation/run-40488907266/raw-readback.json",
+      "sha256": "e4b13aaffbe73793e3a1aa79509d9ac5efa105df632d34fd339524752519eb7c"
+    },
+    "greenTerminal": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/run-40494886235/terminal-result.json",
+      "sha256": "a02a019e9044551372ef8baf386e2e6f7cf62e081f29241740a029f63710bc01"
+    },
+    "greenIndependentOriginalReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/run-40494886235/root-original-raw-readback.json",
+      "sha256": "89320b15e53531cb208faba714845058c9d9f001a0329200cfe7c56191a6dc65"
+    },
+    "fullTerminal": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/terminal-receipt.json",
+      "sha256": "a0b5322865cdf14239c4241ba77e369415a35bbbe47dfe9c12a6208352e08b0b"
+    },
+    "fullFailureIndex": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/rust-final-failure-index.json",
+      "sha256": "16df03b3fd052d5bba0a6478e717169697e9e838c324459253e6ff267aea3332"
+    },
+    "fullSixReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/stdout-focused-paths-full-suite-readback.json",
+      "sha256": "c67c8053ce0aacff377ec9ae7f7fbcc5f102abc39a27b4dd697f8a15436f3fd4"
+    },
+    "failureAnalysis": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/failure-analysis.json",
+      "sha256": "5da5e6909f7ce813713557b8a6d4ff7185a4f6a934e29cb28318d98aed3b7322"
+    },
+    "rootPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/stage-cfc-public-drafts/root-publication-review.json",
+      "sha256": "febec15ea736a13b4f6d4615f2b3bab0fc1b28e4fc160b7839cd6b911ba36e33"
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "kind": "FormalCfcInstallationMetadataSummary",
+  "formalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "application": {
+    "name": "Farfold",
+    "version": "0.1.7",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "platform": "macOS arm64",
+    "binarySha256": "47bc15999e0ded2ac88e9d8bc178c240a7f4f4306d3925f7980f8b5e586a4345",
+    "previousFormalSourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488"
+  },
+  "engineering": {
+    "freshCommands": 7,
+    "allSevenSucceeded": true,
+    "checksRanBeforeCommit": false,
+    "checksRanAtFinalCommit": true,
+    "oldPassingChecksReused": 0,
+    "fullSourceAndAuthorityInputs": 2333,
+    "nonAuthorityBuildInputs": 2330,
+    "committedBytesAndModesMatched": true,
+    "allCapturedSourceEndpointsMatched": true,
+    "frontend": {
+      "files": 691,
+      "passed": 9195,
+      "failed": 0
+    },
+    "rustLib": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMainAndDoc": {
+      "passed": 0,
+      "failed": 0
+    },
+    "testScriptEntry": ["corepack", "pnpm", "run", "test", "--maxWorkers=4"]
+  },
+  "candidateAndInstallation": {
+    "singleCandidateNaturalExitCode": 0,
+    "candidateIndependentChecks": {
+      "passed": 9,
+      "total": 9,
+      "failures": 0
+    },
+    "installedIndependentChecks": {
+      "passed": 10,
+      "total": 10,
+      "failures": 0
+    },
+    "bundleIdentityArm64AndStrictSignatureVerified": true,
+    "signatureScope": "Internal ad-hoc signature; no developer signing, notarization, public release or update-channel claim.",
+    "formalFilesAtomicallyReplaced": 5,
+    "distinctNewFileInodes": 5,
+    "existingInodesWritten": false,
+    "applicationBackupCreated": false,
+    "onlySoleFormalApplicationUpdated": true,
+    "archive": {
+      "bytes": 16235461,
+      "sha256": "333e6b106a5811423b1e27f0f97a0c84e398a492a9c936788ab361420692181d",
+      "retained": true
+    }
+  },
+  "retention": {
+    "normalSavedQuitObserved": true,
+    "freshCaptureEndpoints": ["before", "preinstall", "after"],
+    "actualEntriesPerEndpoint": 232530,
+    "threeCompleteCapturedManifestsByteEqual": true,
+    "threeOpaqueMetadataDescriptorsEqual": true,
+    "firstCaptureRetained": true,
+    "newBackupIntegrityAndSealedBytesVerified": true,
+    "sqlScope": "Only new second-working/consolidated copies during the before capture; no SQL open of the source database.",
+    "limits": "Captured endpoint equality and saved-quit observations do not establish continuous absence of every writer or complete UI recovery of all data."
+  },
+  "duplicateCleanup": {
+    "naturalExitCode": 0,
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "candidateZipPreserved": true,
+    "formalFiveFilesAndModesUnchanged": true
+  },
+  "firstLaunch": {
+    "sharedFirstLaunches": 1,
+    "homeLabels": {
+      "histories": 156,
+      "retainedDraftContainers": 1,
+      "newReplies": 10
+    },
+    "scope": "Homepage label observations only; these are not complete history/body/draft byte acceptance. The one Qwen ordinary-open retention case is summarized separately.",
+    "modelPromptsSentByRoot": 0,
+    "modelPromptCountMeaning": "Root UI actions only, not a global transport observation."
+  },
+  "preservedPreparationErrors": [
+    {
+      "stage": "Qwen prospective canonical materialization",
+      "firstPythonApiAttempt": "Failed before canonical writes or product actions because the Python API did not accept the supplied keyword. The original record remains; v2 changes only the two metadata-stat calls and passed its separate static review.",
+      "productActionsRepeated": 0
+    },
+    {
+      "stage": "First-launch auxiliary UI capture",
+      "firstCaptureClosure": "A ReferenceError followed the successful single application getter. Direct capture used the same returned binding; no second getter, launch or ordinary open was performed.",
+      "productActionsRepeated": 0
+    }
+  ],
+  "limits": [
+    "This records macOS engineering, installation, retention endpoints and initial homepage labels. It does not establish full Windows or real-Agent acceptance. Existing Windows failures and separate new Windows evidence retain their own scope.",
+    "No complete P01/P32/S7, Agent or 29-by-8 closure is claimed. Old failures, unknowns, six WAIT, NEW24 and protected orphan work remain unchanged.",
+    "The previously uninstalled spacing source is included in this installed source batch; corrected snapshot-layout behavior has no new dedicated visual acceptance in this summary."
+  ],
+  "standardIds": [],
+  "roles": {
+    "candidateInstallQuitAndLaunchOperator": "Root",
+    "retentionHelperAuthorCaptureOperatorAndReadbackAuthor": "/root/acceptance_receipts",
+    "independentNineReviewer": "acceptance_index",
+    "draftAuthor": "/root/acceptance_receipts",
+    "rootPublicationReview": "completed: actual metadata, stated proof boundaries and privacy checked; no blocking finding",
+    "scope": "This draft is a metadata synthesis, not an independent replay of the author-operated retention captures or actual application actions.",
+    "independentInstalledTenReviewer": "acceptance_index"
+  },
+  "references": {
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/local-engineering-tool-runtime-clarified/engineering-summary.json",
+      "sha256": "96a057a1cbd2a19f09262291c0d669c0149c9b3babde0c1892c6fc436c4fec33"
+    },
+    "engineeringRootReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/local-engineering-tool-runtime-clarified/root-independent-readback.json",
+      "sha256": "da20b023c1e76c48f5539373c74d42af84f1d557caa385a78bfcb31db98700b9"
+    },
+    "finalCommittedFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/source-freeze-final.json",
+      "sha256": "eba7c913655a2d3a9a618499c910b173679f43e94d8103af6a6df99826fb820b"
+    },
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "013827506d0664739f504d85388595ebdbde1d50e69c1cfc4a6da8acdc6f03d3"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/candidate-natural-completion.json",
+      "sha256": "335619555dca36ba450dbd2f145d66d592252dabf1f1fab6299cac8650ee6acd"
+    },
+    "candidateIndependentNine": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/independent/review-v2.json",
+      "sha256": "2bfa7e758d43b581b83a6dd90aaf041eeb6e8fdf9b216f7f1f8c82fc5009db5c"
+    },
+    "normalSavedQuit": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/ui/normal-saved-quit-observation.json",
+      "sha256": "61111ad116e3ad6be2fbcded5687d3b605e420160239e3184310939b4fcd7844"
+    },
+    "before": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/retention-before-receipt.json",
+      "sha256": "5e9c057d4515173850dc7c5c42adb9094ad4906ead731a93a45c0c7593b9dd4d"
+    },
+    "preinstall": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "6da23befd683cbf83ba28babca2acce57347fce9d0df939a99784750dfcad453"
+    },
+    "after": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/retention-after-receipt.json",
+      "sha256": "09857cc31160ae43c0d3c8316d080c844f73f533d2a8a71b9bf58d2c9ae5b506"
+    },
+    "threeEndpointReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/retention-three-endpoint-readback.json",
+      "sha256": "68a8ed8ca273005ef032ad76000c052121df7dc2ae0564082b8e0302bf1a0ec1"
+    },
+    "atomicInstall": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/install-result.json",
+      "sha256": "3ec033a598f288f73ba07aafa0100fd05bc87335c97c4e9eb265afa785f2ea46"
+    },
+    "actualTen": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/installed-independent-review-private.json",
+      "sha256": "6a50079a1b2da853a3c7b0cf2b3c3e6cb982413421bb71c6402cde5a5318fadb"
+    },
+    "exactDuplicateCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/install/candidate-cleanup.json",
+      "sha256": "9d0d27bc5acefeeb970786166bf45ecdbe8fc806af281fe1a689b8a6924e7a11"
+    },
+    "cleanupExecution": {
+      "path": "output/2026-10-24-agent-acceptance/windows-stdout-handoff-fix/candidate-preparation/root-cleanup-execution.json",
+      "sha256": "9f1e161ad07b86745daee04da23bbc947e33344dae137095a90ca3930cfeed90"
+    },
+    "firstLaunchAndOpenActions": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/operator-finish.json",
+      "sha256": "59ea4925bde76a80655c190eeba00631212ebb15db0366c279441e5b8acadc9b"
+    },
+    "firstLaunchAndRetentionSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/independent-semantic-review.json",
+      "sha256": "1a848361be45382cc9dd0bd1d5c602fcf5d15df4b36b4dda773206a8d7c15bce"
+    },
+    "materializationFirstFailure": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/materialization-first-failure-readback.json",
+      "sha256": "700de79b1b6d3b11843cec66565a2b078b9c8eefa3a1fb503fd8952029ecdca7"
+    },
+    "materializerV2Review": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-required-update-retention-formal-cfc-preparation/materialize-canonical-v2-independent-review.json",
+      "sha256": "d9cc24c6340e7631342db87c070da6bc883c84fc7fd8854bb8386a73d2971e8b"
+    },
+    "rootPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/stage-cfc-public-drafts/root-publication-review.json",
+      "sha256": "febec15ea736a13b4f6d4615f2b3bab0fc1b28e4fc160b7839cd6b911ba36e33"
+    }
+  }
+}

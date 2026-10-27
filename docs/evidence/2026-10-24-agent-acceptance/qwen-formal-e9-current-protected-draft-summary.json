@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "kind": "QwenFormalE9CurrentProtectedDraftRetentionSummary",
+  "agent": "Qwen Code",
+  "requirementIds": ["P01"],
+  "standardIds": [],
+  "level": "installed",
+  "formalSourceCommit": "e9ac19f53e9bf34e3d470b58540a7c7368c3f488",
+  "observed": {
+    "ordinaryOriginalConversationOpens": 1,
+    "wholeExposedDraftTextMatchedPriorOracle": true,
+    "draftUtf8Bytes": 42,
+    "attachmentNamesRetained": 1,
+    "reviewRequired": true,
+    "sendDisabled": true,
+    "noVisibleAutomaticSubmit": true,
+    "newModelPromptsSentByOperator": 0,
+    "attachmentReviewOrFileActions": 0,
+    "choiceLoginRetryStopOrExtraExitActions": 0,
+    "operatorObservationUpperBoundSeconds": 89.79,
+    "observations": 8,
+    "privateEvidenceFiles": 14,
+    "inputsStableAtCapturedEndpoints": 16,
+    "singleSealNaturalExitCode": 0,
+    "mechanicallyPassedCases": 1,
+    "invalid": 0,
+    "independentBlockingFindings": 0
+  },
+  "scope": "At the E9 observation time, current original-object protected draft/name retention after one ordinary open. Matching editable composer text is UI evidence; attachment names are not file bytes. The original object is associated by Agent/title/body anchors and current basename with prior owned-target metadata; full cwd and native identity were not freshly read.",
+  "limits": [
+    "This E9 case did not establish cold/restart recovery: its prior object and separate exit/install/relaunch records lack a continuous per-object interval. That historical unknown is retained; the new named CFC interval is summarized separately.",
+    "Normal-open loading, header labels and disabled Send do not prove raw transport closure, zeroRPC, effective model/authentication or the unique disabled cause.",
+    "Zero operator message sends is an action observation, not global transport monitoring. No attachment bytes/revalidation, failed-save/capacity recovery or fullP01/S7/29 closure.",
+    "Initial metadata-schema lookup error occurred before writes/validator; its correction repeated no product action. Old failures, unknowns, six WAIT and NEW24 remain."
+  ],
+  "roles": {
+    "actualOperatorAndActualsAuthor": "Root",
+    "semanticReviewer": "/root/acceptance_receipts",
+    "draftAuthor": "/root/acceptance_receipts",
+    "rootPublicationReview": "completed: actual metadata, stated proof boundaries and privacy checked; no blocking finding"
+  },
+  "references": {
+    "case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/case-plan.json",
+      "sha256": "33048f3c28e71eef43fceedda474ed463b7bff967b2dde0dc30f3d335f4e3280"
+    },
+    "manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/manifest.json",
+      "sha256": "735eab2f487aa6c3e580540aad12e59eb4022a55acd9f3d4fb0c8908f8a232b9"
+    },
+    "actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/actuals.json",
+      "sha256": "7942dcb88d135a64f964e6bc7e00a697feed6a3018e626546f9b4781da94b305"
+    },
+    "receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/receipt.json",
+      "sha256": "2805b4031ceebace088dba77e401236efa7b03f0e97c907d3ba6b2cd5cfffd65"
+    },
+    "seal-command.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/seal-command.json",
+      "sha256": "2409ec9b7fe1a381583b8c721a7f2048cbaadb026e3b927fb0858c395e5e7882"
+    },
+    "root-actual-derivation.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/root-actual-derivation.json",
+      "sha256": "29092b507ad6c94d86d241a12338935d1aba6cc154dc906ff1c3d1a59a42470f"
+    },
+    "semanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/independent-semantic-review.json",
+      "sha256": "4d7b2b2e7e875499449d4fa5b490bf329f6b4ba075c169f4813733a9c6bcb575"
+    },
+    "originalDraft": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-retained-draft-formal-e9-preparation/public-summary-draft.json",
+      "sha256": "99fee32e33bea2909a1acef0e5c86bd8b5fce2385e6e91f5724cc72ac372d076"
+    },
+    "rootPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/stage-cfc-public-drafts/root-publication-review.json",
+      "sha256": "febec15ea736a13b4f6d4615f2b3bab0fc1b28e4fc160b7839cd6b911ba36e33"
+    }
+  },
+  "temporalScope": "Historical E9 observation only. The later CFC required-update interval is a separate case and does not fill the missing interval in this original E9 observation."
+}
