@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12Formal52aaFoldedFindVisibleNavigationSummary",
+  "context": {
+    "productCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "platform": "darwin-arm64",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "formalExecutableSha256": "e7afbdcee3b62a006454eb2f9ff9ac9f2165a0e6da322b9ab9446a128442bbbf",
+    "agentId": "mistral-vibe",
+    "scope": "One owned original conversation current loaded presentation. No model request or effective model/service/version claim."
+  },
+  "prospectiveOracle": {
+    "freshIndependentCount": 2,
+    "beforeFind": true,
+    "fromFindCount": false,
+    "scope": "Two distinct eligible loaded presentation fields, one tool title and one plain result; count was derived and independently reviewed before Find. Current other eligible fields and attachment declarations were checked within the declared loaded corpus."
+  },
+  "actual": {
+    "status": "completed",
+    "outcome": "success",
+    "observationRecorder": "Root",
+    "observationsMatchedByRecordedValues": 13,
+    "independentImageReviewStatus": "complete-no-blocking-findings",
+    "counts": {
+      "initial": "1 / 2",
+      "nextResult": "2 / 2",
+      "foldThenNextWrap": "1 / 2",
+      "previousResult": "2 / 2",
+      "matchesProspectiveCount": true
+    },
+    "reveal": {
+      "foldedFirstTitleOwnedDisclosuresRevealed": true,
+      "manualTargetFoldThenNextRevealedFirstHit": true,
+      "countCorrectnessAloneUsedAsVisibilityProof": false
+    },
+    "readableRegion": {
+      "firstTitleReadableUnoccluded": true,
+      "nextResultReadableUnoccluded": true,
+      "wrapTitleReadableUnoccluded": true,
+      "laterReadOnlyWrapTitleStillReadable": true,
+      "previousResultReadableUnoccluded": true,
+      "compensatingScrollOrExtraNavigationBeyondDeclaredRoute": 0,
+      "provenance": "Root actual image observations independently supported by acceptance_receipts reading all9 original images and9 complete AX records."
+    },
+    "selectionTreatment": {
+      "title": "Root observed a grey title with selection outline.",
+      "plainResult": "Root observed result match highlighting.",
+      "limits": "Selection outline, match count, disclosure state and actual readable position are separate observations."
+    },
+    "glyphPaint": {
+      "arbitraryGlyphPaintCertified": false,
+      "jsonOpeningBrace": "unobserved: full input remained closed. No brace repair, absence or non-reproduction claim."
+    },
+    "closedAndOriginalFoldEmptyComposerPreserved": true,
+    "mainOperatorSeconds": 63.565,
+    "predeclaredSeconds": 600,
+    "stableInputCount": 27,
+    "privateEvidenceFiles": 20,
+    "imageAndAxPairs": 9,
+    "operatorRecordFiles": 2,
+    "actualUiActions": 7,
+    "operatorActionCounts": {
+      "findOpens": 1,
+      "queryInputs": 1,
+      "nextActions": 2,
+      "targetFoldActions": 1,
+      "previousActions": 1,
+      "findCloses": 1,
+      "otherActions": 0
+    },
+    "modelPromptsFilePreviewChoiceHistoryRetryStopExtraOpenExitLaunch": 0,
+    "imageContainer": "Actual JPEG/JFIF bytes retained under .png labels; no transcoding or replay."
+  },
+  "mechanical": {
+    "schemaVersion": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true,
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 20,
+      "privateEvidenceFiles": 20
+    },
+    "errors": [],
+    "cases": [
+      {
+        "caseIndex": 0,
+        "claimScope": "requirement-only",
+        "level": "installed",
+        "result": "passed",
+        "attempts": [
+          {
+            "attemptIndex": 0,
+            "status": "completed",
+            "outcome": "success",
+            "level": "installed",
+            "issues": []
+          }
+        ]
+      }
+    ]
+  },
+  "sealExecution": {
+    "uniqueCliExecutions": 1,
+    "naturalExitCode": 0,
+    "repeatedValidatorRuns": 0
+  },
+  "limits": [
+    "One installed visibility regression with13 actual observations independently supported; original mechanical acceptanceVerified:false is retained. This does not close completeP12 or any Agent standard.",
+    "Counts, reveal, actual unoccluded readability, selection outline and glyph painting remain distinct. This route does not verify arbitrary glyph paint; full input stayed closed and the old opening-brace anomaly remains unknown.",
+    "Original CFC and 79e actual failures and earlier unbound preparations remain preserved. This sample does not establish a unique cause for those historical failures.",
+    "Complete P12, installed query-change/streaming/switch coverage, full standards and 29-by-8 remain open. Six WAIT items, NEW-24 protections and old failed/unknown work are unchanged.",
+    "Operator action counts are not raw noRPC/noIO or continuous/global process evidence. No model effect or Agent completion claim is made."
+  ],
+  "independentSemanticReview": {
+    "status": "complete-no-blocking-findings",
+    "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/independent-installed-ui-review.json",
+    "sha256": "ba49b75623d1bebf8e7bb9f57fcaf60095513ae122f130952bb523fd2d9deacb",
+    "blockingFindings": [],
+    "actuallyViewedImages": 9
+  },
+  "roles": {
+    "actualUiOperatorObservationRecorderAndSealExecutor": "Root",
+    "draftAuthor": "/root/history_snapshot_layout",
+    "independentImageReviewer": "/root/acceptance_receipts",
+    "draftAuthorImageReviewPerformed": false
+  },
+  "privacy": {
+    "metadataOnly": true,
+    "conversationTitleBodyQueryAttachmentNamesUserDataPathsOrDirectDataFingerprintsIncluded": false,
+    "referenceScope": "Closed project-owned metadata records and file hashes only; raw AX/images are retained privately rather than reproduced."
+  },
+  "references": {
+    "manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/manifest.json",
+      "sha256": "684e426dc8e45955d3000e3a42d34d28cb2bbb50d888c0c85434a74d095ac452"
+    },
+    "case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/case-plan.json",
+      "sha256": "6c436e9679efbe60b5cd21415211d75cd2839b3bde138a4faef31775330d00fa"
+    },
+    "preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/preflight.json",
+      "sha256": "c7cba3da9683f76a73d0346d11f7eb5a9a094a3396a9ce97cf3f8f6c301456c1"
+    },
+    "actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/actuals.json",
+      "sha256": "757b29d3c58411d3cc3b82a2dd1e104e8fb64e590a86ba9ae00a9e02e6138c6d"
+    },
+    "operator-run.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/operator-run.json",
+      "sha256": "ee309a8d690e00b6bb52e1ed8890b866179cf9a8fe356c3dd468c74d0c04bc04"
+    },
+    "operator-events.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/operator-events.json",
+      "sha256": "9208542034ea530036894f73b0a0c1b501734bd389c9f6691a28758837050a72"
+    },
+    "root-observation-notes.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/root-observation-notes.json",
+      "sha256": "0457e5dca1083785c8bf059d9c14f6313cee8caa25b58c4686a99e05c1ef325f"
+    },
+    "receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/receipt.json",
+      "sha256": "016b4dcc8b706fda97c0283ef99eefb5fa91e5edb900b373bc5c1f62ec1f6601"
+    },
+    "seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/seal-execution.json",
+      "sha256": "e1f7a93cc2ef4a4e8b227b550c3efc9bd8d2efc0103b165e10e68821af89b400"
+    },
+    "sealedMechanicalReport": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/seal.stdout",
+      "sha256": "2b1c164bb575f8e368b2ece56e60ce126d5426984986d236a236e4527b10e83b"
+    },
+    "freshProspectiveOracle": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/fresh-derived-count-oracle.json",
+      "sha256": "cd952d1663d9e1d0ea21232a24691269552194f449d6fc5453946acf62d3e496"
+    },
+    "freshProspectiveOracleIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent-fresh-oracle-review.json",
+      "sha256": "4e5d9624e685837d9d3ff4ab6f4b9e83c11e89caaee50895beb9a9b45a0b9555"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-dom-ancestor-formal-52aa/independent-installed-ui-review.json",
+      "sha256": "ba49b75623d1bebf8e7bb9f57fcaf60095513ae122f130952bb523fd2d9deacb"
+    }
+  },
+  "recordedAt": "2026-10-28T06:35:41.254Z"
+}

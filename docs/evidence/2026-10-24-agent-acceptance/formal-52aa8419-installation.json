@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "kind": "Formal52aa8419InstallationAndExactCandidateCleanupSummary",
+  "formal": {
+    "sourceCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "previousFormalSourceCommit": "79e4219b28288d47ada603265580183cdbc694bb",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "e7afbdcee3b62a006454eb2f9ff9ac9f2165a0e6da322b9ab9446a128442bbbf",
+    "installed": true,
+    "scope": "One formal application updated; internal ad-hoc signature verified. Developer signing, notarization and public distribution are not established."
+  },
+  "engineering": {
+    "checksPassed": 7,
+    "allNaturalIntegerExitsZero": true,
+    "checksReused": 0,
+    "executionBaseHead": "b2fecb6e9b42689adf0f7956448911516eff8b7e",
+    "checksRanBeforeFinalSourceCommit": true,
+    "checksRanAtFinalSourceCommit": false,
+    "exactFullInputMapCount": 2333,
+    "productionInputs": 2330,
+    "authorityInputs": 3,
+    "actualBeforeAfterMapEqualsFinalCommittedMap": true,
+    "frontend": {
+      "files": 691,
+      "passed": 9205,
+      "failed": 0
+    },
+    "rustLib": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "rustDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "limits": "Endpoint equality does not prove continuous absence of writers or freeze dependency-install bytes/environment. macOS checks do not compile or execute Windows-only branches. Nonfatal build/test diagnostics, including the Vite chunk-size advisory, remain in the original raw logs. Four ZipWriter drop failed archive-write-stopped diagnostics in controlled fixtures are retained and are not blank stderr.",
+    "actualFrontendArgv": ["corepack", "pnpm", "test"]
+  },
+  "candidate": {
+    "naturalExitCode": 0,
+    "builds": 1,
+    "durationSecondsFromCandidateReceipt": 80.114,
+    "independentNine": {
+      "passed": 9,
+      "total": 9,
+      "failures": [],
+      "correctedV3Executions": 1,
+      "naturalExitCode": 0,
+      "originalV2": {
+        "passed": 8,
+        "total": 9,
+        "failures": ["formalBaselineUnchanged"],
+        "executions": 1,
+        "naturalExitCode": 1,
+        "preserved": true
+      }
+    },
+    "archiveBytes": 16235695,
+    "archivePreserved": true,
+    "limits": "Candidate9 is static source/bundle/signature/archive evidence, not installed UI or real-Agent acceptance. Original failed and explicitly corrected reviews are separate executions; the candidate was built once. Duration is an observation, not a performance threshold."
+  },
+  "normalExitAndRetention": {
+    "normalQuitRequests": 1,
+    "saveAndExitActions": 1,
+    "forceQuitOrSignals": 0,
+    "processAbsenceObservedAtCheckedEndpoints": true,
+    "freshCaptures": ["before", "preinstall", "after"],
+    "captureNaturalExits": [0, 0, 0],
+    "completeManifestEntriesEach": 232530,
+    "threeCompleteManifestsByteIdentical": true,
+    "threeRawMetadataMapsEqual": true,
+    "freshSealedBackupIntegrity": "ok in sealed before-capture and three-endpoint readback records",
+    "originalAndFirstCaptureRetained": true,
+    "sqlScope": "Backup normalization/integrity used only a second working copy and new private consolidated backup. Independent10 reused that sealed result and hashed retained bytes; it did not run SQL or open the live source database.",
+    "limits": "Normal Save-and-Exit is a Root UI observation, not by itself a save-byte receipt or all-Agent reap proof. Capture process-zero observations are endpoints, not continuous/global IO or process absence. Retention receipt normalQuitEvidence:null remains distinct from the external normal-quit observation. Pending/unknown work was not promoted or re-sent.",
+    "firstSaveGuardRejectedBeforeInput": true,
+    "normalQuitProcessObservationEndpoints": 2
+  },
+  "atomicInstallation": {
+    "naturalExitCode": 0,
+    "replacedFiles": 5,
+    "newInodes": 5,
+    "oldInodesWritten": false,
+    "wholeApplicationBackupCreated": false,
+    "automaticRetryOrRestore": false,
+    "replacementScope": "Five per-file atomic replacements, not a claim of one simultaneous whole-bundle transaction.",
+    "independentTen": {
+      "passed": 10,
+      "total": 10,
+      "failures": [],
+      "executions": 1,
+      "naturalExitCode": 0
+    }
+  },
+  "exactCandidateStorageCleanup": {
+    "phase": "exactDuplicateCandidateRemoved",
+    "removedFiles": 5,
+    "removedDirectories": 5,
+    "archivePreserved": true,
+    "formalFiveFilesAndModesUnchanged": true,
+    "userDataOrSealedEvidenceOrBackupCleanup": false,
+    "measuredAllocatedBytesRecovered": null,
+    "limits": "Only the verified generated candidate duplicate was removed. No disk-space recovery amount is inferred from file counts or logical payload size.",
+    "rootReportedNaturalExitCode": 0,
+    "rootReportedNaturalCompletionChunk": "44a598",
+    "naturalExitProvenance": "Root tool-completion report; the separately referenced cleanup receipt records completed removals. Draft author did not execute cleanup."
+  },
+  "acceptanceBoundaries": {
+    "newStandardIds": [],
+    "completeP12Accepted": false,
+    "all29By8Accepted": false,
+    "installedP12RepairAcceptanceIncluded": false,
+    "firstLaunchOrRecoveryAcceptanceIncluded": false,
+    "oldResults": "The original CFC and 79e P12 actual failures are retained. The unrelated opening-brace highlight cause remains unknown. Full P12 and 29-by-8 remain open; old unknowns, six WAIT items and NEW-24 protections remain.",
+    "evidenceEndpoint": "Installation, post-install retention, independent ten and exact duplicate cleanup before launch or actual Find verification.",
+    "laterObservations": "Any later first-launch or P12 actual case is separate and is not prefilled here."
+  },
+  "roles": {
+    "buildNormalQuitRetentionInstallationAndCleanupOperator": "Root",
+    "nineAndTenTemplateAuthorAndReviewExecutor": "/root/acceptance_receipts",
+    "downstreamV3AuthorAndDraftAuthor": "/root/history_snapshot_layout",
+    "relatedRole": "Draft author prepared the five-operation helper family and downstream v3 path migration. Nine/ten were computed by acceptance_receipts; Root alone operated build/UI/quit/capture/installation/cleanup. This metadata draft is not a new independent execution of those checks.",
+    "rootPublicationReview": "Root read the complete metadata draft and independent review, checked the original26 closed references plus the added independent-summary review; publication delta is metadata-only and does not alter recorded checks or expand acceptance."
+  },
+  "references": {
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/engineering-summary.json",
+      "sha256": "227d83f2555ddf21fa561a27d0bca424301da07e5fc7cf2084f320a57da21d83"
+    },
+    "engineeringIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/engineering-independent-review.json",
+      "sha256": "9996370b29ad60e1554bbb31b88aa5a232e06c390ae7818639d72302960a0530"
+    },
+    "finalCommittedFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/source-freeze-final.json",
+      "sha256": "3aeca5740dd670238db3d3dbf8cc9a12165fffaf0fbfbb90f7c5af992aa287d8"
+    },
+    "previousFormalBaseline": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/formal-baseline.json",
+      "sha256": "f0db371937827216a2af9fa59649c1335fb2e7f9d8824a11e2acbf624e18d713"
+    },
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/candidate-output/candidate.json",
+      "sha256": "3e23cb539b97b324194f86c35a41cdaa87cd7f28e1711a2c97e5d74fd0b659f8"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/candidate-natural-completion.json",
+      "sha256": "e7b9c9c9c1e5898c5f52e78efcbfa799cce8baffb97b04f70a428bf9901fe65a"
+    },
+    "candidateNineOriginalFailure": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/review-v2.json",
+      "sha256": "29f65c4b6711c33b062d50894ce14b19773bc0d0e57f759e14786b05616ab9fd"
+    },
+    "candidateNineOriginalExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/nine-cli-execution.json",
+      "sha256": "74308f017a4fe06eb161d94dd57bfb6282b1ca0e335a2eb840e865dba8596ee4"
+    },
+    "candidateNineFailureReadback": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/nine-first-failure-readback.json",
+      "sha256": "4358d472b9aca8f20a9fe4421590325d1d1e976fb004b84ecd46b79045f80c10"
+    },
+    "candidateNineCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/nine-v3-bindings.json",
+      "sha256": "896425e858685f88d7c7c3ad44ca091d2161d05aa5b8b33612e65237e4f1d6c4"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/review-v3.json",
+      "sha256": "d3d87e215d49d78ef2a18b46d5432613188714dffe1393f5bb37580b86395a1f"
+    },
+    "candidateNineExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/nine-v3-cli-execution.json",
+      "sha256": "3931cf4c656f74e8b5e5f9821797e3c4c91127e769b29e009a2a28f1198a5d25"
+    },
+    "downstreamV3PathMigration": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/downstream-v3-migration-proof.json",
+      "sha256": "0cb1a8088cbd48b89ef2f035deb816c0712f49dadd35b78a4c1e9bdc76c39035"
+    },
+    "normalSavedQuit": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/normal-exit.json",
+      "sha256": "dcb7bbbea92666a5304797703e0eb8dca2a75966ca5af9d461763db4b706eed1"
+    },
+    "freshBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/retention-before-receipt.json",
+      "sha256": "c7d002d45132740ff37be9acfca9913825ab56353d885a57436a15e76a0fa950"
+    },
+    "freshPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "46e23291e0f0da468b2e60ddc2e51babe24e1baaca21826de061bbf357479326"
+    },
+    "freshAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/retention-after-receipt.json",
+      "sha256": "7fc40d65618d8ea1d92b98994fdfa70739acfb108a7eec1769eb1a18c11ba7f6"
+    },
+    "freshBeforeExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/retention-before-execution.json",
+      "sha256": "c62006fcbf49fee98394066fd123b2d2d2c476c04878128553622edd6c4ae643"
+    },
+    "freshPreinstallExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/retention-preinstall-execution.json",
+      "sha256": "996a8d431641a78942dbbc98ac411a4ce4121339ce85a67796258d4230ed5204"
+    },
+    "freshAfterExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/retention-after-execution.json",
+      "sha256": "dbf4c7f34efffc4f8b7589c76d829e8a6d78821496153210ee045ce81428bb9c"
+    },
+    "threeEndpointRetentionReadback": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/retention-three-endpoint-readback.json",
+      "sha256": "67cd561516be85027f68fc344480918c27eaac0a498c446258b735ff39bb4476"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/install-result.json",
+      "sha256": "3a8a7d7986ff5b10bc98a374cc75828786f5104113ced3a21af20f15fa09c9a7"
+    },
+    "atomicNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install-natural-completion.json",
+      "sha256": "90743f49a0c5884e27b68bddbe5aea1eec3d662c70be7aa484fe6a68ed805c15"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "76f6c3dbc037d227b2cc56e7ec9c3b381a6200625c06d19138b1a55847e53335"
+    },
+    "installedTenExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/independent/ten-cli-execution.json",
+      "sha256": "bb1f76f67254ff1f88c1200cfcce18b0251cf76e29a3b6bc286da0647e33362c"
+    },
+    "exactDuplicateCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/install/candidate-cleanup.json",
+      "sha256": "2976cfa297eeaba0f33c8a015d9b0f11bd5a5f377409935c7765542d56ae1b7d"
+    },
+    "independentSummaryReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-install-preparation/installation-summary-independent-review.json",
+      "sha256": "1781cbad9790b1bd6bfe3230fa9f9673f90717c162d306f689132a19ec9a05fb"
+    }
+  },
+  "candidateReviewMigrationCorrection": {
+    "priorExpectedFormalSource": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+    "correctExpectedFormalSource": "79e4219b28288d47ada603265580183cdbc694bb",
+    "scope": "Only the prior-formal source expectation and append-only review-v3 output path changed in the nine helper. Its other checks and candidate inputs are unchanged. The original 8/9 failure is retained; it did not prove actual App drift.",
+    "downstreamScope": "Three new downstream v3 helpers align the result path and their own name/usage guards; original bound helpers remain.",
+    "candidateBuildRepeated": false
+  },
+  "privacy": {
+    "metadataOnly": true,
+    "userDataFingerprintsOrDirectManifestHashesIncluded": false,
+    "screenshotsConversationTitlesBodiesQueriesAttachmentNamesOrUserDataPathsIncluded": false,
+    "referenceScope": "Project-owned closed metadata records and their file hashes only; no raw user-data fingerprint reproduced."
+  },
+  "recordedAt": "2026-10-28T06:30:38.252Z"
+}
