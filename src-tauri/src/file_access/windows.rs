@@ -1,7 +1,7 @@
 //! Handle-relative Windows filesystem operations. No pathname-only safety fallback.
 use super::{Identity, Stamp};
 use std::{
-    ffi::OsStr,
+    ffi::{OsStr, OsString},
     fs::File,
     io,
     mem::{offset_of, size_of},
@@ -403,6 +403,7 @@ static SEQUENCE: AtomicU64 = AtomicU64::new(1);
 pub(crate) struct TemporaryExport {
     pub directory: File,
     pub file: File,
+    name: OsString,
     published: bool,
 }
 impl TemporaryExport {
@@ -418,6 +419,7 @@ impl TemporaryExport {
                     return Ok(Self {
                         directory,
                         file,
+                        name: filename.into(),
                         published: false,
                     });
                 }
@@ -471,6 +473,15 @@ impl TemporaryExport {
             return Err(invalid());
         }
         self.published = true;
+        // A renamed owner is retained evidence, not a successful cancellation.
+        // Reopen only its original leaf through the held directory; never delete
+        // a replacement or retry cleanup from Drop after an uncertain check.
+        let current = open_at(&self.directory, &self.name, false, false)?;
+        let owned = stamp(&self.file)?;
+        let listed = stamp(&current)?;
+        if owned.identity != listed.identity || owned.links != 1 || listed.links != 1 {
+            return Err(invalid());
+        }
         let disposition = FILE_DISPOSITION_INFO { DeleteFile: true };
         if unsafe {
             SetFileInformationByHandle(
@@ -595,6 +606,72 @@ mod tests {
             assert_eq!(stamp(&parent).unwrap().identity, parent_identity);
             collision.discard().unwrap();
             drop((collision, parent));
+            fixture.close().unwrap();
+        }
+    }
+
+    #[test]
+    fn temporary_discard_removes_only_the_unchanged_owned_leaf() {
+        use std::io::Write;
+        let fixture = tempfile::tempdir().unwrap();
+        let root = fixture.path().canonicalize().unwrap();
+        let parent = open_directory(&root).unwrap();
+        let mut temporary = TemporaryExport::create(parent).unwrap();
+        temporary.file.write_all(b"owned export").unwrap();
+        temporary.file.sync_all().unwrap();
+        let leaf = root.join(&temporary.name);
+        let other = root.join("unrelated.txt");
+        std::fs::write(&other, b"must survive").unwrap();
+
+        temporary.discard().unwrap();
+        drop(temporary);
+
+        assert!(!leaf.exists());
+        assert_eq!(std::fs::read(&other).unwrap(), b"must survive");
+        assert_eq!(std::fs::read_dir(&root).unwrap().count(), 1);
+        fixture.close().unwrap();
+    }
+
+    #[test]
+    fn temporary_discard_retains_renamed_owner_and_replaced_or_relinked_leaf() {
+        use std::io::Write;
+        const PAYLOAD: &[u8] = b"retained owned export";
+        for mode in ["missing", "replacement", "hardlink"] {
+            let fixture = tempfile::tempdir().unwrap();
+            let root = fixture.path().canonicalize().unwrap();
+            let parent = open_directory(&root).unwrap();
+            let mut temporary = TemporaryExport::create(parent).unwrap();
+            temporary.file.write_all(PAYLOAD).unwrap();
+            temporary.file.sync_all().unwrap();
+            let leaf = root.join(&temporary.name);
+            let retained = root.join("retained-owned-material");
+            std::fs::rename(&leaf, &retained).unwrap();
+            match mode {
+                "replacement" => std::fs::write(&leaf, b"replacement must survive").unwrap(),
+                "hardlink" => std::fs::hard_link(&retained, &leaf).unwrap(),
+                "missing" => {}
+                _ => unreachable!(),
+            }
+
+            assert!(temporary.discard().is_err(), "{mode}");
+            drop(temporary);
+
+            assert_eq!(std::fs::read(&retained).unwrap(), PAYLOAD, "{mode}");
+            match mode {
+                "replacement" => assert_eq!(
+                    std::fs::read(&leaf).unwrap(),
+                    b"replacement must survive",
+                    "{mode}"
+                ),
+                "hardlink" => assert_eq!(std::fs::read(&leaf).unwrap(), PAYLOAD, "{mode}"),
+                "missing" => assert!(!leaf.exists()),
+                _ => unreachable!(),
+            }
+            assert_eq!(
+                std::fs::read_dir(&root).unwrap().count(),
+                if mode == "missing" { 1 } else { 2 },
+                "{mode}"
+            );
             fixture.close().unwrap();
         }
     }

@@ -532,6 +532,7 @@ impl<'a> WorktreeCheckout<'a> {
             return Err(invalid());
         }
         let mut producer = TemporaryExport::create(parent.file().try_clone()?)?;
+        let temporary_name = producer.name.clone();
         let path = local_guid(&producer.file)?;
         let mut reader = source.try_clone()?;
         reader.seek(SeekFrom::Start(0))?;
@@ -583,6 +584,7 @@ impl<'a> WorktreeCheckout<'a> {
             || post.size != before.size
             || local_guid(&readonly)? != path
             || path.parent() != Some(parent.guid_path.as_path())
+            || path.file_name() != Some(temporary_name.as_os_str())
         {
             return Err(denied());
         }
@@ -614,6 +616,7 @@ impl<'a> WorktreeCheckout<'a> {
         let mut publication = TemporaryExport {
             directory: parent.file().try_clone()?,
             file: readonly,
+            name: temporary_name,
             published: false,
         };
         publication.publish(OsStr::new("index"))?;

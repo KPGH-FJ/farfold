@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[Windows临时清理源码](windows-temporary-cleanup-source-summary.json)保留原归档改名/替换后误报取消的RED，补原名、身份/单链接复核及不确定清理禁止重试，固定索引交接保持。源码独审无阻断；Mac归档7项与复制22项分别通过，新增Windows控制未执行。严格交叉检查因ring缺MinGW编译器返回101，未到本次Windows源码编译；正式CFC、旧72失败及比较至删除间竞态限制保持，零CI重跑或安装。
+
 [P12未绑定准备](p12-formal-cfc-unbound-preparation-summary.json)保留一次超窗及误开预览：300.603秒/原300秒，附件已加载文字未穷尽，计数未冻结；0查找、查询、正式案例或封存。已收起面板与列表，不计通过或未完成验收，也不把操作错误当产品缺陷。
 
 [CFC Markdown取消未完成分项](p35-formal-cfc-markdown-cancel-incomplete-summary.json)原180秒窗口未完成，跨夜39324.598秒；迟到的取消、控件恢复与关闭只作附证，0通过/1未完成。唯一封存机械有效且独审无阻断，无重试；实际保存已取消。原错误时点推断已撤回，计数标签变化原因未知，旧ZIP正例、8fa未知及完整P35开放保持。

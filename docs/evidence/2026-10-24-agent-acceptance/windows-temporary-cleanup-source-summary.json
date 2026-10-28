@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsTemporaryCleanupSourceSummary",
+  "sourceBaseCommit": "0f1b9301871948d4403ef33613bea3d24c1581ff",
+  "level": "source increment with Mac affected checks; Windows compilation and execution unverified",
+  "requirementIds": ["P35"],
+  "standardIds": [],
+  "problem": {
+    "originalWindowsRun": 40498060809,
+    "originalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+    "exactFailedFqn": "file_archive::writer_tests::exact_temporary_replaced_before_cleanup_is_unknown_and_preserves_both_objects",
+    "observed": "Original temporary file was renamed and original leaf replaced before cancellation. The original test observed cancelled/code=None where cleanupUnknown was required.",
+    "notObserved": "The strict outcome assertion failed before final destination/two-object/byte assertions. This is not evidence that a user file or foreign replacement was deleted."
+  },
+  "change": {
+    "originalLeaf": "Windows TemporaryExport now retains its generated original leaf and reopens it relative to the held directory before discard.",
+    "identityAndLinks": "Missing or different object, or link count other than one, rejects cleanup; delete disposition remains on the held owned file, never on a replacement pathname.",
+    "noDropRetry": "The terminal cleanup guard is set before any fallible reopen/identity operation so Drop cannot repeat an uncertain delete.",
+    "indexHandoff": "The fixed-index publisher carries the generated producer leaf through its existing readonly handoff and checks it alongside the existing exact path/parent/identity/bytes/share fence.",
+    "tests": "Two Windows-only filesystem tests add one ordinary-cleanup control and three preservation variants: renamed owner with missing original name, foreign replacement, and same-object hardlink. They check payload and namespace after Drop. Original failing archive assertions remain unchanged."
+  },
+  "verification": {
+    "sourceReviewBlockingFindings": 0,
+    "cargoFmtNaturalExitCode": 0,
+    "macArchiveWriter": {
+      "naturalExitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "scope": "Original archive group; executes Unix implementation on Mac, not the Windows fix."
+    },
+    "macCopyJobs": {
+      "naturalExitCode": 0,
+      "passed": 22,
+      "failed": 0,
+      "ignored": 0,
+      "scope": "Distinct shared-copy caller regression; executes Unix implementation on Mac."
+    },
+    "windowsCrossClippy": {
+      "target": "x86_64-pc-windows-gnu",
+      "allTargets": true,
+      "warningsDenied": true,
+      "naturalExitCode": 101,
+      "failure": "ring 0.17.14 build script could not find x86_64-w64-mingw32-gcc.",
+      "newWindowsProjectSourceCompiled": false
+    },
+    "sourceInputEndpointsStable": true,
+    "newWindowsTestsExecuted": false,
+    "realWindowsRerun": false,
+    "formalApplicationUpdated": false,
+    "completeEngineeringRerun": false
+  },
+  "limits": [
+    "The identity/link check and delete disposition are not one atomic namespace transaction; interference between them and other untested layouts remain open.",
+    "The existing 72 Windows failures remain the original actual result; this source increment does not change that count or close the common Create prerequisite.",
+    "GitHub billing/spending condition remains without new availability evidence; no workflow dispatch, billing change, compiler installation or CI retry was performed.",
+    "Formal CFC remains installed. No Agent prompt, model/service choice, user data, history, credential or database action was involved.",
+    "Full P35, Windows, standards and all29 acceptance remain open."
+  ],
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/file_access/windows.rs",
+      "sha256": "fbbf6be14f363276367d26f960d7b6f4292fa8e8e5a0ebd7ebb73b09fcdf2d52"
+    },
+    {
+      "path": "src-tauri/src/file_access/windows/worktree_checkout.rs",
+      "sha256": "0fa29468902e06f01d70a001c8fc960d81e51d9d067d225ca8fe57697796de05"
+    }
+  ],
+  "references": {
+    "originalFullRunReceipt": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/terminal-receipt.json",
+      "sha256": "a0b5322865cdf14239c4241ba77e369415a35bbbe47dfe9c12a6208352e08b0b"
+    },
+    "immutableFailureSourceTriage": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/archive-temporary-cleanup-source-triage.json",
+      "sha256": "7bf52fbc648e0f3949fdbe3ddf1555c1da4eedc74a2464182fca009f2e0f6cd3"
+    },
+    "independentSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/temporary-cleanup-source-independent-review.json",
+      "sha256": "6645763a79e5d59ac838cd44462e69fa1e6f00baf3faaaf10477a067cc4dcaee"
+    },
+    "focusedChecks": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/temporary-cleanup-checks/summary.json",
+      "sha256": "57a357e8bc8d4c16eab4f995bf8b40b7dd5138f3a3818c2d7214c1f654ce0ae4"
+    },
+    "affectedCopyCallerExecution": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/temporary-cleanup-checks/mac-copy-jobs-execution.json",
+      "sha256": "39590492922223656be075823ebe62dc50706a92a4d36c4961ac58c252e219f7"
+    },
+    "independentPublicSummaryReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/public-source-summary-independent-review.json",
+      "sha256": "4217ac3376c4cfc83075b85164dcb5787e93f8bca60b8ac59d5ae2e72b1e3224"
+    },
+    "independentExecutionReadback": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/temporary-cleanup-checks/independent-execution-readback.json",
+      "sha256": "5199091fe53859822422d95f109e34d05871ed8b60290350e3fe15fdd461416f"
+    }
+  }
+}
