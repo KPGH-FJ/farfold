@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "kind": "P35FormalCfcMarkdownPickerCancelIncompleteSummary",
+  "formalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "agent": "Mistral Vibe",
+  "level": "installed",
+  "requirementIds": ["P35"],
+  "standardIds": [],
+  "result": {
+    "case": "incomplete",
+    "expectedCases": 1,
+    "attempts": 1,
+    "passed": 0,
+    "failed": 0,
+    "incomplete": 1,
+    "invalid": 0,
+    "mechanicallyValid": true,
+    "singleSealNaturalExitCode": 1,
+    "acceptanceVerified": false,
+    "privateEvidenceFiles": 20,
+    "stableInputsAtCapturedEndpoints": 18,
+    "declaredObservations": 8,
+    "confirmedWithinWindowObservations": 3
+  },
+  "timingSeconds": {
+    "declaredOperatorWindow": 180,
+    "nativeCancelFromStart": 39241.212,
+    "ordinaryDialogCloseFromStart": 39324.051,
+    "fullOperatorWindow": 39324.598
+  },
+  "observedScope": "One original owned conversation. Default Markdown, tool-details off and the loaded-only/privacy disclosure were observed before the picker; this narrow scope and no extra operator action were retained as three required observations. Cancel/close confirmations were not backfilled into the original window.",
+  "lateSupplementOnly": "The save UI actually reported cancelled, enabled its controls, and later closed to the original body and empty composer with Send disabled. These are window-exceeding observations, not a passing cancellation case or proof of backend-global absence of IO.",
+  "statusMeaning": "timed-out/unknown describes the acceptance observation window not being completed. It does not mean a product/Agent timeout or that the cancelled save remains an unknown running task.",
+  "actions": {
+    "exportDialogOpens": 1,
+    "scopeDisclosureExpansions": 1,
+    "pickerRequests": 1,
+    "pickerCancels": 1,
+    "ordinaryDialogCloses": 1,
+    "saveConfirmations": 0,
+    "modelPromptsSentByOperator": 0,
+    "retriesOrStopActions": 0,
+    "scope": "Recorded operator actions, not global transport monitoring."
+  },
+  "correction": "The first continuation readback wrongly described cancellation as within-window. Its original is retained; v2 explicitly withdraws that inference and uses the actual action timestamps. Neither the product sequence nor the original180s budget was restarted.",
+  "unexplainedLabels": {
+    "allConversations": [156, 153],
+    "OpenCode": [32, 29],
+    "ownedGroup": [4, 1],
+    "cause": "Unconfirmed; no attribution to cancellation or user action, and no database/history restore or diagnosis."
+  },
+  "limits": [
+    "Cancel/close reused earlier UI indices across the long gap; returned states support those actions, not continuous unchanged UI.",
+    "No saved output/file bytes, attachment consumption, full archive or in-flight write cancellation was tested. Initial disabled Save has no unique cause diagnosis and does not repair the old disabled-save failure.",
+    "Old normal ZIP success, failures and unknowns remain. Complete P35, standards and29-by8 remain open; no new queue or acceptance condition."
+  ],
+  "roles": {
+    "actualOperatorCanonicalActualsAndSealAuthor": "Root",
+    "semanticReviewerAndDraftAuthor": "/root/acceptance_receipts",
+    "relatedRole": "Reviewer authored the offline seal facility but did not operate this UI case or repeat its checker.",
+    "rootPublicationReview": "Completed: actual values, raw timing, incomplete classification, unchanged old results and metadata-only privacy checked."
+  },
+  "references": {
+    "casePlan": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/case-plan.json",
+      "sha256": "95d700c2bd8c42467bdc62d0406dea6b2f432acce138bc2c44d616ff1840410c"
+    },
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/actuals.json",
+      "sha256": "f73fe6890dd97a5c75e4bc67e36f2cfa3acffb6df3cd84c2615a8f22106c652f"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/receipt.json",
+      "sha256": "95f486bf93e2540e0eb3aaca672a7f798697ffa455a3d3b85ef9901004a7f1e1"
+    },
+    "singleSealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/receipt-seal-execution.json",
+      "sha256": "9076d011de3b700b6a2cc9c96a264f6a4767d5da27fbb074ab8b27b2e8ee987c"
+    },
+    "rawMechanicalReport": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/receipt-seal.stdout",
+      "sha256": "7a7f77c1d025a9b56024d431dcd2874f78a47412ec89e0b875cfc6df8c6387d6"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/independent-semantic-review.json",
+      "sha256": "0019810b8d72d1dcaea93d2592ab02647db8a104880be98091e5b8b731f02843"
+    },
+    "operatorFinish": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/operator-finish.json",
+      "sha256": "03c0bbf034ba643ec554eb18f46e31b9744d018bed8340c5e6a0cbb54bd2fbee"
+    },
+    "originalMistakenReadback": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/cross-night-continuation-readback.json",
+      "sha256": "2f3e6d5d3f711666c3f5957e850dda1303a59b21d2f0550487fec0c352dd5176"
+    },
+    "timingCorrectionV2": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/cross-night-continuation-readback-v2.json",
+      "sha256": "d25e94e04bc0b2821e549dddc028a11ce397e0c2bb638945475f6a6928abfcf1"
+    },
+    "independentPublicSummaryReview": {
+      "path": "output/2026-10-24-agent-acceptance/p35-markdown-picker-cancel-formal-cfc-preparation/public-summary-independent-review.json",
+      "sha256": "39cb3761bcd10d945806c0b5443efee9e490af9218d040ee4655f40b37d69abb"
+    }
+  }
+}
