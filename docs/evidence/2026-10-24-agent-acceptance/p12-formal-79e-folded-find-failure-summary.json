@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12Formal79eFoldedFindVisibleNavigationFailureSummary",
+  "context": {
+    "productCommit": "79e4219b28288d47ada603265580183cdbc694bb",
+    "platform": "darwin-arm64",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "formalExecutableSha256": "cdf905689ddb5938e0be2c7ff4dcad810690b75266da16e703804b09bfb134a3",
+    "agentId": "mistral-vibe",
+    "scope": "One owned original conversation current loaded presentation; no model request or effective model/service/version claim."
+  },
+  "prospectiveOracle": {
+    "freshIndependentCount": 2,
+    "beforeFind": true,
+    "fromFindCount": false,
+    "scope": "Two distinct loaded presentation fields; current other eligible fields independently checked, including AX cutoff tails and four attachment declarations."
+  },
+  "actual": {
+    "status": "failed",
+    "outcome": "failure",
+    "firstTitleVisible": true,
+    "nextResultVisible": true,
+    "wrapCountCorrect": true,
+    "wrapOwnedGroupAndDetailExpanded": true,
+    "wrapTitleVisible": false,
+    "readOnlyLaterWrapStillObscured": true,
+    "previousResultVisible": true,
+    "closedAndOriginalFoldEmptyComposerPreserved": true,
+    "braceControl": "unobserved: full input stayed folded. No brace paint repair/absence claim.",
+    "mainOperatorSeconds": 141.094,
+    "conservativeSecondsIncludingEarlierPreactionBlockedRequest": 180.952,
+    "predeclaredSeconds": 600,
+    "stableInputCount": 27,
+    "privateEvidenceFiles": 20,
+    "actualUiActions": 7,
+    "modelPromptsFilePreviewChoiceRetryStop": 0
+  },
+  "mechanical": {
+    "schemaVersion": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": false,
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true,
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 0,
+      "expectedRejection": 0,
+      "failed": 1,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 20,
+      "privateEvidenceFiles": 20
+    },
+    "errors": [],
+    "cases": [
+      {
+        "caseIndex": 0,
+        "claimScope": "requirement-only",
+        "level": "installed",
+        "result": "failed",
+        "attempts": [
+          {
+            "attemptIndex": 0,
+            "status": "failed",
+            "outcome": "failure",
+            "level": "installed",
+            "issues": []
+          }
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "A controlled source timing/query-retirement fix and fullengineering/candidate/install checks did not repair the actual wrap visibility failure. Do not assign a unique cause from these screenshots.",
+    "One preaction changed-App guard refusal and an earlier record-helper parameter error caused zero Find actions; fresh-state continuation, separate timestamps and original records retained.",
+    "Visible positioning failed even though count and expanded AX state matched. No unchanged case replay or compensating scroll occurred.",
+    "OriginalCFC failure and unbound preparations retained separately. CompleteP12, query-change installed proof, streaming/switch, fullstandard and29x8 remain open.",
+    "Operator action counts are not raw noRPC/noIO or global process evidence."
+  ],
+  "independentSemanticReview": {
+    "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/independent-semantic-review.json",
+    "sha256": "0070e8737433f324edaa825f6083ca9fd193c0dbd3dda3d5c42ef95d4bec2971",
+    "blockingFindings": [],
+    "actuallyViewedPng": 10
+  },
+  "references": {
+    "manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/manifest.json",
+      "sha256": "b1f760fa8c55476570c1f330cf5aef5b2e3849d1c57eea57d6c8235cf7809c8c"
+    },
+    "case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/case-plan.json",
+      "sha256": "af6bfa009ec51a6d8f65ff45fb1d86bc52091f18a11c4855739f3fabd9e20514"
+    },
+    "preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/preflight.json",
+      "sha256": "59eb634231a5f43d07e742132e790ffbef519c19183715d2c2f043f7a568c166"
+    },
+    "actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/actuals.json",
+      "sha256": "5346c3bd3f785baddec92700e7790bfa8a8e754c3a20df8acb71c618bd8082be"
+    },
+    "receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/receipt.json",
+      "sha256": "eb41c641392644752576a34927a5962e70f70621334c296cf235147e5bbbafc3"
+    },
+    "seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/seal-execution.json",
+      "sha256": "d9391f6eec49ff0f8e2d160b928530c330a6288e4b98910a8009cf6f3898cccc"
+    },
+    "operator-finished.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/operator-finished.json",
+      "sha256": "d0741cd9ba8be854e83b6da2ae7f0ff9ec2bd5964f76badce0dae760b1264ed4"
+    },
+    "root-semantic-readback.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/root-semantic-readback.json",
+      "sha256": "7fd90f8469ed6017eac2f4433562a25beda5d07224e755984eda4b1bb0e836f9"
+    },
+    "preexecution-recording-helper-correction.json": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-post-navigation-formal-79e/preexecution-recording-helper-correction.json",
+      "sha256": "4c62ab2c3a6dfb1d6f56c82895e6902f34cec12d553e75270806f4d33c8a209e"
+    }
+  }
+}

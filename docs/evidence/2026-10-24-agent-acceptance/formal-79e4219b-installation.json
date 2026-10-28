@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "kind": "Formal79e4219bInstallationAndExactCandidateCleanupSummary",
+  "formal": {
+    "sourceCommit": "79e4219b28288d47ada603265580183cdbc694bb",
+    "previousFormalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "cdf905689ddb5938e0be2c7ff4dcad810690b75266da16e703804b09bfb134a3",
+    "installed": true,
+    "scope": "One formal application updated; internal ad-hoc signature verified. Developer signing, notarization and public distribution are not established."
+  },
+  "engineering": {
+    "checksPassed": 7,
+    "allNaturalIntegerExitsZero": true,
+    "checksReused": 0,
+    "executionBaseHead": "1b25be156b2257cc2851340647cb64f99c0b37f2",
+    "checksRanBeforeFinalSourceCommit": true,
+    "checksRanAtFinalSourceCommit": false,
+    "exactFullInputMapCount": 2333,
+    "productionInputs": 2330,
+    "authorityInputs": 3,
+    "actualBeforeAfterMapEqualsFinalCommittedMap": true,
+    "frontend": {
+      "files": 691,
+      "passed": 9199,
+      "failed": 0
+    },
+    "rustLib": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "rustDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "limits": "Endpoint equality does not prove continuous absence of writers or freeze dependency-install bytes/environment. macOS checks do not compile or execute the changed Windows-only branches. Vite chunk-size advisory and four controlled archive-write-stop diagnostics remain in the raw logs."
+  },
+  "candidate": {
+    "naturalExitCode": 0,
+    "builds": 1,
+    "durationSecondsFromCandidateReceipt": 78.449,
+    "independentNine": {
+      "passed": 9,
+      "total": 9,
+      "failures": [],
+      "executions": 1,
+      "naturalExitCode": 0
+    },
+    "archiveBytes": 16235521,
+    "archivePreserved": true,
+    "limits": "Candidate9 is static source/bundle/signature/archive evidence, not installed UI or real-Agent acceptance. Duration is an observation, not a performance threshold."
+  },
+  "normalExitAndRetention": {
+    "normalQuitRequests": 1,
+    "saveAndExitActions": 1,
+    "forceQuitOrSignals": 0,
+    "processAbsenceObservedAtCheckedEndpoints": true,
+    "freshCaptures": ["before", "preinstall", "after"],
+    "captureNaturalExits": [0, 0, 0],
+    "completeManifestEntriesEach": 232530,
+    "threeCompleteManifestsByteIdentical": true,
+    "threeRawMetadataMapsEqual": true,
+    "freshSealedBackupIntegrity": "ok in the before-capture integrity receipt",
+    "originalAndFirstCaptureRetained": true,
+    "sqlScope": "Backup normalization/integrity used only a second working copy and new private consolidated backup. Independent10 reused that sealed result and hashed retained bytes; it did not run SQL or open the live source database.",
+    "limits": "Normal Save-and-Exit is a Root UI observation, not by itself a save-byte receipt or all-Agent reap proof. Capture process-zero observations are endpoints, not continuous/global IO or process absence. Retention receipt normalQuitEvidence:null remains distinct from the external normal-quit observation. Pending/unknown work was not promoted or re-sent."
+  },
+  "atomicInstallation": {
+    "naturalExitCode": 0,
+    "replacedFiles": 5,
+    "newInodes": 5,
+    "oldInodesWritten": false,
+    "wholeApplicationBackupCreated": false,
+    "automaticRetryOrRestore": false,
+    "replacementScope": "Five per-file atomic replacements, not a claim of one simultaneous whole-bundle transaction.",
+    "independentTen": {
+      "passed": 10,
+      "total": 10,
+      "failures": [],
+      "executions": 1,
+      "naturalExitCode": 0
+    }
+  },
+  "exactCandidateStorageCleanup": {
+    "phase": "exactDuplicateCandidateRemoved",
+    "removedFiles": 5,
+    "removedDirectories": 5,
+    "archivePreserved": true,
+    "formalFiveFilesAndModesUnchanged": true,
+    "userDataOrSealedEvidenceOrBackupCleanup": false,
+    "measuredAllocatedBytesRecovered": null,
+    "limits": "Only the verified generated candidate duplicate was removed. No disk-space recovery amount is inferred from file counts or logical payload size."
+  },
+  "lateStartLabelCorrection": "The startup record was written retrospectively from the tool last-reported state after the candidate receipt had already completed. Its Running label is not a verified live-process observation or exact start timestamp. Original and correction records are retained; the separate natural-completion observation and receipt times support one completed build.",
+  "acceptanceBoundaries": {
+    "newStandardIds": [],
+    "completeP12Accepted": false,
+    "all29By8Accepted": false,
+    "installedP12RepairAcceptanceIncluded": false,
+    "firstLaunchOrRecoveryAcceptanceIncluded": false,
+    "oldResults": "The original CFC P12 actual failure is retained. Correct scalar counts did not establish visible positioning; the unrelated wrong-glyph/opening-brace highlight cause remains unknown. Old failures/unknowns, six WAIT items and NEW-24 protections remain.",
+    "operatorActions": "No model prompt was sent by the operator for this update sequence; this is an action record, not global transport monitoring. Any later first-launch/P12 actual case is separate and is not prefilled here."
+  },
+  "roles": {
+    "buildNormalQuitRetentionInstallationAndCleanupOperator": "Root",
+    "nineAndTenTemplateAuthorAndReviewExecutor": "/root/acceptance_receipts",
+    "draftAuthor": "/root/acceptance_receipts",
+    "relatedRole": "Draft author also authored the offline receipt facility and prior P12 semantic review; did not operate Root UI/build/quit/capture/installer/cleanup.9/10 independently computed their checks; publication review is separate.",
+    "rootPublicationReview": "Root read the draft against actual completed phase receipts; public content contains metadata and explicit limits only."
+  },
+  "references": {
+    "engineering": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-engineering/engineering-summary.json",
+      "sha256": "1d2d38e376a729e1688dfbb8cfefec45802f47ffd9a1684b7f32fd22337cc2b2"
+    },
+    "engineeringIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-engineering/engineering-independent-review.json",
+      "sha256": "f3d44d741927f53adcbe3e63d9296ed02f9e3757f8e4230c195779817bc147cf"
+    },
+    "finalCommittedFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/source-freeze-final.json",
+      "sha256": "71501ff6db42ec7c96e1106859fd4b8fcd1d3c5ee7be3300a0a0536e0ae21679"
+    },
+    "candidate": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/candidate-output/candidate.json",
+      "sha256": "db2311ab866385ecf6aa8458a8a802fc268568dbb727ddc47ef071ef57e8ee9c"
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/candidate-natural-completion.json",
+      "sha256": "92c2bc5cd3538e01b69c6e8b9268f79aec09a8115c3918106d72fc04eafe8008"
+    },
+    "candidateStartCorrection": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/candidate-start-observation-correction.json",
+      "sha256": "82fa7a94eba492e1a5af6c2e8b6761e18512b585ec1549daa27bdd0d491b3669"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/independent/review-v2.json",
+      "sha256": "459a29bef66a7a8ac98f230dd9f2176630c2d3cde24aaa46c94a92622d62c4c4"
+    },
+    "candidateNineExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/independent/nine-cli-execution.json",
+      "sha256": "ec698e83eb8cf86e64ffd0bf9979b0814c90707906e229281c95b29c629b5cab"
+    },
+    "normalSavedQuit": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/ui/normal-saved-quit-observation.json",
+      "sha256": "24aa499041528413f721029b8a96674c5f1a35957c9b67e287e243f1a223d21f"
+    },
+    "freshBefore": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/retention-before-receipt.json",
+      "sha256": "c25cc448c7fcb6671ff0be50269dfe38adc31b506726adad87a065137ba010cb"
+    },
+    "freshPreinstall": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/retention-preinstall-receipt.json",
+      "sha256": "eef41fdec7bb9109cbcc43fed4b4fef90a8508f1ca28f864c14e979b869a2a3c"
+    },
+    "freshAfter": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/retention-after-receipt.json",
+      "sha256": "9a9fc7d74b78968af25f4628f7a7e6034e6f1ade69da61b84990bab6248a076b"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/install-result.json",
+      "sha256": "652a7ae9fff5a5a2eedf37e6496d411d5ea8379aa439a4b05740067a5e948b25"
+    },
+    "atomicNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install-natural-completion.json",
+      "sha256": "d736adad922962393241ca7b8fadb897664294f5c97417e974d53bd0352d79d3"
+    },
+    "installedTen": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/installed-independent-review-private.json",
+      "sha256": "99f7544333cdab3bd66a049207cb3ccf95306c44587c7a1a489e21a5f9a4bfa7"
+    },
+    "installedTenExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/independent/ten-cli-execution.json",
+      "sha256": "23ffb1d0b5d53935da1ff41ab6245ea7ceb3b90a35d6071bd89eb6c29421060d"
+    },
+    "exactDuplicateCleanup": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-install-preparation/install/candidate-cleanup.json",
+      "sha256": "81d2205613b42209dfc58147ff3e5509d2def3e7badc757458793873179a04e1"
+    }
+  },
+  "relatedPostInstallActual": "A distinct first Find regression failed after installation; it cannot be replaced by engineering9/10 success. See separate P12 actual summary."
+}
