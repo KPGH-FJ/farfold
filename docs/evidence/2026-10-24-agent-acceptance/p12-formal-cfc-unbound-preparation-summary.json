@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12OraclePreparationUnboundSummary",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "status": "UNBOUND",
+  "scope": "一次仅为当前已加载折叠文字查找建立事前计数依据的准备尝试；未进入验收执行。",
+  "actual": {
+    "preparationAttempts": 1,
+    "initialThoughtAndToolDisclosureActions": 32,
+    "initialExpansions": 22,
+    "initialRestorations": 10,
+    "continuationAttachmentListExpansions": 1,
+    "continuationSummaryTargetedClicks": 4,
+    "unintendedLocalFilePreviewObserved": true,
+    "ordinaryContentPanelHides": 1,
+    "continuationAttachmentListCollapses": 1,
+    "findOpens": 0,
+    "queryInputs": 0,
+    "boundCanonicalCases": 0,
+    "acceptanceSealExecutions": 0,
+    "passedCases": 0
+  },
+  "timing": {
+    "preparationBudgetSeconds": 300,
+    "recordedPreparationElapsedSeconds": 300.603,
+    "overBudgetSeconds": 0.603,
+    "limit": "同一原准备窗口未重置；超窗保留，不称在预算内完成，也不作性能结论。"
+  },
+  "oracle": {
+    "sourceAwareGlobalExactCountKnown": false,
+    "exactExpectedCount": null,
+    "initialAxLimit": "初始部分文字节点在512字符处截断，不能据该文本声称完整检索范围。",
+    "laterVisualSupport": "已有截图补读了这些非附件文字的截断尾部；附件中已加载文字仍未独立穷尽。",
+    "result": "未冻结计数或查询条件，不用查找自身数字、历史计数或至少一次命中替代事前依据。"
+  },
+  "incident": {
+    "operatorError": "准备中原拟展开附件文字详情的摘要目标点击实际触发其内部文件打开按钮；首次界面变化后未及时停止，循环共点击四次。",
+    "scopeViolation": "出现了原准备范围禁止的本地文件预览，因此停止本次准备；不包装为成功。",
+    "sourceSupport": "摘要内部有独立文件按钮；文件按钮会阻止默认展开并打开文件，旁边的展开图标并非独立可访问按钮。",
+    "causalBoundary": "现有记录支持操作定位错误与源码机制相符；未核实低层事件分派，不自动认定产品缺陷。",
+    "ioBoundary": "四次点击及预览可见状态不等于四次磁盘读取、四次后端请求或文件字节证明。"
+  },
+  "finalObservedUi": {
+    "contentPanelHidden": true,
+    "attachmentListFolded": true,
+    "composerEmpty": true,
+    "limit": "仅记录末次界面状态，不补造仍活动、停止未知或全后台空闲。"
+  },
+  "classification": {
+    "acceptanceRunStarted": false,
+    "notAnIncompleteRunCase": "案例未绑定；不能计为run incomplete1。",
+    "fullP12Closed": false,
+    "fullStandardsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "all29Accepted": false
+  },
+  "preserved": [
+    "六项等待、受影响权限发送暂停、受保护草稿、孤立工作及旧失败和未知状态保持。",
+    "原服务、模型、推理选择及原验收条件保持；不新增验收门槛。",
+    "本次不自动重试，不重做界面操作，不生成验收回执；完整P12继续开放。"
+  ],
+  "references": [
+    {
+      "file": "p12-source-and-oracle-preparation-review.json",
+      "sha256": "be56899a90b9f849e8990d82c3fd3c7cfb7698bfea4a53eccd957a37fd673a35",
+      "evidenceKind": "metadata"
+    },
+    {
+      "file": "oracle-preparation-incident.json",
+      "sha256": "23ec4b568ddaf02de7a8a43b68649a065e4c87b47ea094b011db1b14ce1598e6",
+      "evidenceKind": "metadata"
+    },
+    {
+      "file": "oracle-preparation-finish.json",
+      "sha256": "c020b82748f5d6dbcd47a119b3dd830b28fff4504964e8995b022d9a235383ae",
+      "evidenceKind": "metadata"
+    },
+    {
+      "file": "public-preparation-summary-independent-review.json",
+      "sha256": "0a80d31934b1aa61488c0b512825fa6490b72f84e1de8c82026c08b6cc56eb96",
+      "evidenceKind": "metadata"
+    }
+  ],
+  "privacy": "仅公布准备计数、范围、状态及具名元数据记录摘要；无正文、附件名称、位置、对话标识或原始查询文字。",
+  "privateRecordDirectory": "output/2026-10-24-agent-acceptance/p12-current-folded-find-formal-cfc-preparation"
+}
