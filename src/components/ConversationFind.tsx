@@ -3,7 +3,10 @@ import {
   transcriptRanges,
   sameTextRange,
 } from "../runtime/transcript_find_dom";
-import { revealSearchAncestors } from "../runtime/transcript_search";
+import {
+  hasOpenSearchAncestors,
+  revealSearchAncestors,
+} from "../runtime/transcript_search";
 import { LIBRARY } from "../runtime/library_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 
@@ -141,6 +144,7 @@ export function ConversationFind({
           root.isConnected &&
           parent.isConnected &&
           root.contains(parent) &&
+          hasOpenSearchAncestors(parent, root) &&
           parent.getClientRects().length
         ) {
           parent.scrollIntoView({ block: "center" });

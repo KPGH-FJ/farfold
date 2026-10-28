@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12DomAncestorReadinessSourceAndEngineeringSummary",
+  "preparedAtUtc": "2026-10-28T05:31:01.070923+00:00",
+  "scope": "Shared current-conversation find navigation only; product standard/wholeP12/29x8 not accepted. Formal79e remains unchanged while this source checkpoint is prepared.",
+  "change": "A nonempty cached text rectangle no longer completes navigation until its actual DOM ancestor path reaches the owning transcript without hidden content or a closed details body. The first direct summary remains navigable. Existing mutation refresh resumes one unfinished navigation; query retirement/cleanup and no later scroll stealing remain.",
+  "controlledMechanism": {
+    "oldSourceCorrectedSyntheticRuns": 2,
+    "oldSourceWrapVisible": false,
+    "diagnosticEvents": 111,
+    "droppedEvents": 0,
+    "observed": "Title-span scrollIntoView ran while its group was still closed and had a nonempty cached rect; no scroll movement. Later open increased scroll extent without another target position. First-open title and previous result could scroll.",
+    "engine": "Chrome155/Vite dev/StrictMode at1280x720,dpr2; selected markup/source-static CSS",
+    "formalUniqueCauseProven": false,
+    "oldHarnessLimits": "Original CSS type-only order/terminal-reply mismatches were corrected in a distinct control; old baseline retained.",
+    "recordingIncident": "First DOM evaluate export read was truncated; same inertDOM node read completely with locator.textContent, no repeated UI or export."
+  },
+  "focusedChecks": {
+    "red": {
+      "tests": 16,
+      "passed": 14,
+      "failed": 2,
+      "naturalExitCode": 1,
+      "oldProductionBytesUnchanged": true
+    },
+    "green": {
+      "files": 2,
+      "passed": 26,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "related": {
+      "files": 3,
+      "passed": 18,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "typecheckAndFourFileFormatting": "Root observed natural0; subsequent fullseven independently check these again",
+    "sourceIndependentBlockingFindings": []
+  },
+  "patchedSyntheticBrowser": {
+    "loads": 1,
+    "actualUiActions": 7,
+    "diagnosticInstrumentation": false,
+    "firstNextWrapAndPreviousReadable": true,
+    "settledWrapReadable": true,
+    "closedOriginalFoldsAndEmptyComposer": true,
+    "currentInputCount": 61,
+    "inputEndpointsEqual": true,
+    "independentBlockingFindings": [],
+    "imageContainerNote": "Saved browser images have .png names but are JPEG/JFIF; original bytes/labels preserved, no conversion or UI replay.",
+    "limits": "One same-control synthetic comparison; not installed WebKit or actualAgent acceptance."
+  },
+  "engineering": {
+    "checks": 7,
+    "naturalExitCode": 0,
+    "allCommandsNaturalIntegerExitZero": true,
+    "actualFrontendArgv": ["corepack", "pnpm", "test"],
+    "historicalFrontendRecordName": "frontend-test-direct is a filename/check label only, not this argv",
+    "frontend": {
+      "files": 691,
+      "passed": 9205,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "baseHead": "b2fecb6e9b42689adf0f7956448911516eff8b7e",
+    "inputCount": 2333,
+    "inputEndpointsEqual": true,
+    "checksRanBeforeSourceCommit": true,
+    "checksRanAtFinalSourceCommit": false,
+    "independentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/engineering-independent-review.json",
+      "sha256": "9996370b29ad60e1554bbb31b88aa5a232e06c390ae7818639d72302960a0530",
+      "blockingFindings": [],
+      "actualCommandsAndFourteenRawStreamsReviewed": true
+    },
+    "limits": "Endpoint byte equality, not continuous absence of writers or dependency/environment freeze; macOS checks do not establish changed Windows branches, formal update or realAgent acceptance.",
+    "stderrRetained": {
+      "build": "Vite chunk size advisory above500kB; natural exit0.",
+      "cargoTest": "Four ZipWriter drop failed messages with archive write stopped; actual test summaries show0failed.",
+      "stderrEmptyClaim": false
+    }
+  },
+  "boundaries": {
+    "formalUpdatedForThisFix": false,
+    "completeP12Accepted": false,
+    "newStandardsOrWholeAgentsAccepted": 0,
+    "oldFormalFailures": "CFC and79e actual failures remain; brace paint anomaly remains unknown. FullP12 and29x8 open.",
+    "protected": "SixWAIT,NEW24new-send pause,old failures/unknowns,userdrafts/history/accounts unchanged; no Agent request/settings or user data operation for source/synthetic checks."
+  },
+  "roles": {
+    "implementationAndTestsAndSyntheticOperator": "Root",
+    "sourceAndEngineeringReviewer": "acceptance_receipts",
+    "controlAuthorAndMechanismReviewer": "history_snapshot_layout",
+    "syntheticObservationReviewer": "acceptance_index"
+  },
+  "references": [
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/source-before.json",
+      "sha256": "5dd15e549d1ecb89db16ccda20754bc1a37b4404d76061454c0b9a63a76de2b0"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/red-execution.json",
+      "sha256": "4b58c8f01733df0bae02cb654c3cb60a294648b51f92454648728257efc5c801"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/green-execution.json",
+      "sha256": "af8491a77be13a38671ee07abb2fe4de3e7342b72c6ae8538464443cfa6ea8ed"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/related-execution.json",
+      "sha256": "599ddb4ed49e140390e751765d0ccbc9d51ce0375900ea358bc8cb7d088b8a9f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/source-independent-review.json",
+      "sha256": "15cd8e318bfc6e65c8d03775052835eb1920ee17c1e58a56215e80afade249c7"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/browser-regression-plan.json",
+      "sha256": "dfaa63bd82a73858a2123dbd7e27d3ddd18528391125a7a94a4c585f53e6695f"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/browser-regression-result.json",
+      "sha256": "b0262baba0c47f30b59b13e1b5b4a803ae9e3ed65556da43c102792741351198"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/browser-regression-independent-review.json",
+      "sha256": "486804ac58e63700ffdf8164e41be0fdae7ee23ae5a3fcad57a5ca7a5fee9517"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-wrap-layout-control-79e-v2/root-observations.json",
+      "sha256": "bd33e59ba952a320a8eca9ab9543595471131378d0cddcd55574a1ca1964c74d"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-wrap-layout-control-79e-v2/mechanism-independent-review.json",
+      "sha256": "411b152b7d8367bb8ef4ff25b453646b0cfb8b3a99703c6993984c79459f2259"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/engineering-summary.json",
+      "sha256": "227d83f2555ddf21fa561a27d0bca424301da07e5fc7cf2084f320a57da21d83"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/root-natural-completion.json",
+      "sha256": "91597975cbb4eba6f74e90dee2c7693267259adbb9455df4859d0c7475c8c2b8"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/engineering-independent-review.json",
+      "sha256": "9996370b29ad60e1554bbb31b88aa5a232e06c390ae7818639d72302960a0530"
+    }
+  ],
+  "privacy": "Metadata only; no user conversation title/body/query, captured user UI, credential values or user-data content fingerprints.",
+  "publishedAtUtc": "2026-10-28T05:36:22.932322+00:00"
+}

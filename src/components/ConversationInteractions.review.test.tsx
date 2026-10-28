@@ -116,6 +116,7 @@ function transcript() {
       listeners.set(type, callback),
     removeEventListener: (type: string) => listeners.delete(type),
   };
+  Object.assign(parent, { parentElement: root });
   vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
     callback();
     return 1;
@@ -441,6 +442,67 @@ it("finishes pending navigation when the same folded hit gains layout after its 
   nextFrame();
   expect(fixture.parent.scrollIntoView).toHaveBeenCalledOnce(); // no scroll stealing on later scans
 });
+
+it.each(["details", "hidden"] as const)(
+  "waits for the %s ancestor's DOM commit despite a cached nonempty text rect",
+  (kind) => {
+    const fixture = transcript();
+    const ancestor = {
+      tagName: kind === "details" ? "DETAILS" : "DIV",
+      open: false,
+      hidden: kind === "hidden",
+      children: [],
+      parentElement: fixture.host.current.querySelector(".transcript"),
+    };
+    Object.assign(fixture.parent, {
+      parentElement: ancestor,
+      getClientRects: () => [{}],
+    });
+    const frames = new Map<number, () => void>();
+    let id = 0;
+    vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+      frames.set(++id, callback);
+      return id;
+    });
+    vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+      frames.delete(frame),
+    );
+    const nextFrame = () => {
+      const pending = [...frames.values()];
+      frames.clear();
+      pending.forEach((callback) => callback());
+    };
+    const read = () =>
+      ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
+    const input = render(read).find((node) => node.type === "input")!;
+    (input.props.onChange as (event: unknown) => void)({
+      target: { value: "正文" },
+    });
+    render(read);
+    nextFrame();
+    render(read);
+    nextFrame();
+    expect(
+      render(read).find((node) => node.props.role === "status")!.props.children,
+    ).toBe(R.findPosition(1, 1));
+    expect(fixture.parent.scrollIntoView).not.toHaveBeenCalled();
+
+    ancestor.open = true;
+    ancestor.hidden = false;
+    fixture.mutate(true);
+    nextFrame();
+    render(read);
+    nextFrame();
+    expect(fixture.parent.scrollIntoView).toHaveBeenCalledExactlyOnceWith({
+      block: "center",
+    });
+    fixture.mutate(true);
+    nextFrame();
+    render(read);
+    nextFrame();
+    expect(fixture.parent.scrollIntoView).toHaveBeenCalledOnce();
+  },
+);
 
 it("discards a hidden pending location on unmount instead of scrolling a later reveal", () => {
   const fixture = transcript();
