@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12FormalCfcFirstFoldedFindFailureSummary",
+  "formalSourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+  "agent": "Mistral Vibe",
+  "level": "installed",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "result": {
+    "case": "failed",
+    "expectedCases": 1,
+    "attempts": 1,
+    "passed": 0,
+    "failed": 1,
+    "incomplete": 0,
+    "invalid": 0,
+    "mechanicallyValid": true,
+    "complete": true,
+    "singleSealNaturalExitCode": 1,
+    "acceptanceVerified": false,
+    "privateEvidenceFiles": 20,
+    "stableInputsAtCapturedEndpoints": 26,
+    "declaredScalarObservations": 9,
+    "recordedOperatorActions": 7
+  },
+  "timingSeconds": {
+    "declaredOperatorWindow": 600,
+    "fullOperatorObservationUpperBound": 525.454,
+    "withinDeclaredWindow": true,
+    "performanceThresholdClaim": false
+  },
+  "observedScope": "The first main case in this prepared sequence searched only the current conversation loaded fields, including folded content. The loaded-only and attachment boundaries were exposed by the UI help/accessibility text; this is not a claim of complete history or attachment-body search.",
+  "actualFailure": {
+    "countSequence": ["1 / 2", "2 / 2", "1 / 2", "2 / 2"],
+    "finding": "After the operator manually folded the target process group, Next wrapped to the first hit and expanded the group, but the selected title remained below the visible transcript area, behind the composer. The subsequent settled read-only screenshot showed the same obstruction.",
+    "meaning": "The recorded scalar counts match the predeclared two-hit oracle. Correct count and expansion do not establish successful visible positioning; this completed main case failed.",
+    "otherObservedBehavior": "The previous action reached the visible second result. Closing Find restored the original fold declarations and left the composer empty with Send disabled.",
+    "secondaryAnomaly": "A JSON opening brace was highlighted despite differing from the query text. Its cause is unestablished; it is not counted as another verified text match or attributed to a unique source defect."
+  },
+  "actions": {
+    "findOpens": 1,
+    "queries": 1,
+    "nextActions": 2,
+    "manualFolds": 1,
+    "previousActions": 1,
+    "findCloses": 1,
+    "modelPromptsSentByOperator": 0,
+    "filePreviews": 0,
+    "choiceChanges": 0,
+    "retryOrStopActions": 0,
+    "scope": "Recorded operator actions, not global transport or IO monitoring. The settled screenshot was not a second query or retry."
+  },
+  "priorPreparationLimits": [
+    {
+      "phase": "Original unbound preparation",
+      "declaredSeconds": 300,
+      "observedSeconds": 300.603,
+      "result": "Scope incident and overrun retained; zero Find/query/seal acceptance case. Not retrospectively passed."
+    },
+    {
+      "phase": "Revised unbound attachment-disclosure admission",
+      "declaredSeconds": 120,
+      "observedSeconds": 209.467,
+      "result": "Overrun retained; zero Find/query/seal acceptance case. Its independently established prospective oracle was reused without calling that preparation within-budget."
+    }
+  ],
+  "limits": [
+    "The 600-second main-case window was declared before its first Find action; it does not reset either earlier preparation window.",
+    "This is an installed local UI failure, not an Agent response failure. No model request, physical attachment consumption, new history load or source repair was performed by the operator for this case.",
+    "No complete P12, standard or29-by8 closure is claimed. Old failures and unknowns, six WAIT items and NEW-24 protections remain unchanged."
+  ],
+  "roles": {
+    "canonicalActualsSealAuthorAndActualOperator": "Root",
+    "prospectiveOracleReviewer": "/root/history_snapshot_layout",
+    "canonicalStaticReviewer": "/root/acceptance_index",
+    "semanticReviewerAndDraftAuthor": "/root/acceptance_receipts",
+    "relatedRole": "Semantic reviewer authored the offline seal facility, independently inspected the actual screenshots and records, and did not operate or repeat this UI case or checker.",
+    "rootPublicationReview": "Completed: failed outcome, raw timing, matched scalar limits, original overrun preparations and metadata-only privacy checked."
+  },
+  "references": {
+    "actuals": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/actuals.json",
+      "sha256": "5930496277963f454c7624de7606c05329c038220d421a9819f351b44bfa14a9"
+    },
+    "receipt": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/receipt.json",
+      "sha256": "4a4576edbd98ec09b92777ed23129e451fe4f59057b4694f98cd3d54735a77fd"
+    },
+    "singleSealExecution": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/seal-execution.json",
+      "sha256": "42c352ced9e83f4dc19407878f10e55c4daf6305cecf61ea5f1b40f5f829c863"
+    },
+    "rawMechanicalReport": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/seal.stdout.txt",
+      "sha256": "9a2e10923665579f79fca3bb40cc122724347c9300660060ca1c1e69b177f12b"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/independent-semantic-review.json",
+      "sha256": "7707a84adb346a4d75bc130e03c119afc19265588d506f0a29b4a51fb4b1c0c7"
+    },
+    "operatorFinish": {
+      "path": "output/2026-10-24-agent-acceptance/p12-folded-find-first-query-formal-cfc/operator-finish.json",
+      "sha256": "edac35881bcc284b46928c68e1837109ec757c377f0391cc78f0ef09e74b84b9"
+    },
+    "priorUnboundPreparationReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-current-folded-find-formal-cfc-preparation/p12-source-and-oracle-preparation-review.json",
+      "sha256": "be56899a90b9f849e8990d82c3fd3c7cfb7698bfea4a53eccd957a37fd673a35"
+    },
+    "priorRevisedAdmissionReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-attachment-disclosure-admission-cfc-v2/independent-admission-and-oracle-review.json",
+      "sha256": "807360ed2e8abdd85ea8ce4ef76cc1ef16884d6294301a7c25b4e067d7a5928d"
+    }
+  }
+}

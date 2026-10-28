@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[P12首次折叠查找主案](p12-formal-cfc-folded-find-failure-summary.json)保留失败1：计数及展开正确，但折叠后回绕的目标标题仍不可见，补充只读画面相同。525.454/600秒、26输入稳定、20私有证据、一次机械有效封存及独审；反向定位和关闭后折叠/空输入保持，异常高亮成因未证。旧两次未绑定准备超窗不回填，不关闭完整P12或29×8。
+
 [Windows共享错误分类测试源码](windows-checkout-error-kind-source-summary.json)只纠正原OS32拒绝的ErrorKind期待，保留精确数字和全部后续安全断言；逆替换全文一致、源码独审及格式通过，未跑Windows，不改原72失败计数或正式应用。
 
 [Windows临时清理源码](windows-temporary-cleanup-source-summary.json)保留原归档改名/替换后误报取消的RED，补原名、身份/单链接复核及不确定清理禁止重试，固定索引交接保持。源码独审无阻断；Mac归档7项与复制22项分别通过，新增Windows控制未执行。严格交叉检查因ring缺MinGW编译器返回101，未到本次Windows源码编译；正式CFC、旧72失败及比较至删除间竞态限制保持，零CI重跑或安装。
