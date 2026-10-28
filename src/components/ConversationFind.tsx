@@ -7,6 +7,8 @@ import { revealSearchAncestors } from "../runtime/transcript_search";
 import { LIBRARY } from "../runtime/library_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 
+const NO_RANGES: Range[] = [];
+
 /** Ranges leave the React transcript untouched; unsupported highlight engines
  * still navigate exact ranges and outline the containing visible text block. */
 export function ConversationFind({
@@ -20,12 +22,17 @@ export function ConversationFind({
 }) {
   const [query, setQuery] = useState("");
   const [position, setPosition] = useState(0);
-  const [ranges, setRanges] = useState<Range[]>([]);
+  const [matches, setMatches] = useState<{ query: string; ranges: Range[] }>({
+    query: "",
+    ranges: [],
+  });
+  const ranges = matches.query === query ? matches.ranges : NO_RANGES;
   const input = useRef<HTMLInputElement>(null);
   const selected = useRef<Range | undefined>(undefined);
   selected.current = ranges[position];
   const [navigation, setNavigation] = useState(0);
   const scheduleRefresh = useRef<(() => void) | undefined>(undefined);
+  const schedulePosition = useRef<(() => void) | undefined>(undefined);
   useEffect(() => {
     let root = host.current?.querySelector(".transcript");
     let pending = false;
@@ -52,12 +59,13 @@ export function ConversationFind({
       const retained = found.findIndex((range) =>
         sameTextRange(range, selected.current),
       );
-      setRanges(found);
+      setMatches({ query, ranges: found });
       setPosition((current) =>
         retained >= 0
           ? retained
           : Math.min(current, Math.max(0, found.length - 1)),
       );
+      schedulePosition.current?.();
     };
     const observe = () => {
       if (!root) return;
@@ -121,16 +129,32 @@ export function ConversationFind({
     const parent = current?.startContainer.parentElement;
     if (!root || !parent || !root.contains(parent)) return;
     const release = revealSearchAncestors(parent, root);
-    const frame = requestAnimationFrame(() => {
-      if (
-        root.isConnected &&
-        parent.isConnected &&
-        root.contains(parent) &&
-        parent.getClientRects().length
-      )
-        parent.scrollIntoView({ block: "center" });
-    });
+    let pending = false;
+    let positioned = false;
+    let frame = 0;
+    const schedule = () => {
+      if (pending || positioned) return;
+      pending = true;
+      frame = requestAnimationFrame(() => {
+        pending = false;
+        if (
+          root.isConnected &&
+          parent.isConnected &&
+          root.contains(parent) &&
+          parent.getClientRects().length
+        ) {
+          parent.scrollIntoView({ block: "center" });
+          positioned = true;
+        }
+      });
+    };
+    // A disclosure can commit after the first frame. Its DOM refresh resumes
+    // only this unfinished navigation; later scans must not steal scrolling.
+    schedulePosition.current = schedule;
+    schedule();
     return () => {
+      if (schedulePosition.current === schedule)
+        schedulePosition.current = undefined;
       cancelAnimationFrame(frame);
       release();
     };

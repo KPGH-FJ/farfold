@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12PendingNavigationSourceSummary",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "sourceBaseHead": "1b25be156b2257cc2851340647cb64f99c0b37f2",
+  "sourceChecksBeforeCommit": true,
+  "change": "A current local-text search keeps its unfinished navigation until an observed disclosure DOM change supplies layout, then positions once. Later scans do not keep taking scroll control. Replacing or clearing the query immediately retires old match results and their queued navigation; close and selection cleanup cancel pending work.",
+  "preservedBehavior": "Same loaded-text fields, match algorithm, current conversation ownership and search-only disclosure release; no file decoding, Agent request, config or history-store change.",
+  "controlledChecks": {
+    "deferredLayoutRed": {
+      "passed": 11,
+      "failed": 1,
+      "naturalExitCode": 1
+    },
+    "reviewQueryOwnershipRed": {
+      "passed": 12,
+      "failed": 2,
+      "naturalExitCode": 1
+    },
+    "intermediateCorrection": {
+      "passed": 9,
+      "failed": 5,
+      "naturalExitCode": 1,
+      "meaning": "Unstable empty-result array retriggered mocked effects; failed original logs retained."
+    },
+    "finalInteractionFile": {
+      "passed": 14,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "otherAffectedRuntimeAndFoldFiles": {
+      "files": 5,
+      "passed": 27,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "typecheckNaturalExitCode": 0,
+    "formatNaturalExitCode": 0,
+    "overlappingRunsNotAddedTogether": true
+  },
+  "review": {
+    "firstPassBlocker": "Queued old-query position could run after query clear/change; retained as v1 and covered by two failing controls before correction.",
+    "finalRemainingBlockers": 0
+  },
+  "engineering": {
+    "allSevenFreshCommandsNaturalExitZero": true,
+    "sourceInputCount": 2333,
+    "sourceEndpointsMatch": true,
+    "baseHead": "1b25be156b2257cc2851340647cb64f99c0b37f2",
+    "checksRanBeforeCommit": true,
+    "frontend": {
+      "files": 691,
+      "passed": 9199,
+      "failed": 0
+    },
+    "rustLib": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMainAndDoc": {
+      "eachPassed": 0,
+      "eachFailed": 0
+    },
+    "scope": "macOS arm64; Windows-only branches remain uncompiled and unexecuted in this run. No old passing check reused.",
+    "preservedStderr": "Vite chunk warning and expected archive-write-stopped ZipWriter diagnostics retained with actual exit0."
+  },
+  "formalInstalledCase": "Original CFC case remains failed. This source increment does not change its outcome.",
+  "limits": [
+    "The original installed case has no frame or geometry trace; the source timing gap is controlled-reproduced but not established as its unique cause.",
+    "The original JSON brace highlight anomaly remains unexplained and unfixed. A Chromium synthetic component control retained exact ranges and did not reproduce the native painting/positioning failure.",
+    "No current-source installed validation, Windows execution, complete P12, standard or29-by8 closure is claimed.",
+    "Intermediate failed tests and over-window unbound preparations remain."
+  ],
+  "sourceInputs": {
+    "src/components/ConversationFind.tsx": "e8a97e8194f7a7308303184a6464c4cd780190da574d0fcc73f4a787313a983b",
+    "src/components/ConversationInteractions.review.test.tsx": "d573fcebfe68ac0a4a453066e691eddab3f195e0eb4828f6f45efaf9eb70addf"
+  },
+  "references": {
+    "controlledSourceGap": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/root-source-gap-record.json",
+      "sha256": "2cdc32937b50806ff988b52baf223e2976bdbf70f8d2fcfca9a9d4fb55810a8b"
+    },
+    "queryOwnershipFollowup": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/query-ownership-followup.json",
+      "sha256": "f6923f75e60ed270532903e860e30b501cfe8f4c7a79ba7639a11a083bb042fb"
+    },
+    "affectedChecks": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/affected-summary.json",
+      "sha256": "8a55ce5903cae1fc77eb4e7163c1706c7dafe439c33af3bbd8978dcd79b8cf77"
+    },
+    "sourceIndependentReviewV1": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/source-independent-review.json",
+      "sha256": "5c1624e6e4a28cef573de53a0aae29041d42351f5ee119ce8c60f5ef84585144"
+    },
+    "sourceIndependentReviewV2": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/source-independent-review-v2.json",
+      "sha256": "7746e4639401f6e259910146ca33cee1293f126804829c0eb8bf5172e362ec11"
+    },
+    "engineeringSummary": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-engineering/engineering-summary.json",
+      "sha256": "1d2d38e376a729e1688dfbb8cfefec45802f47ffd9a1684b7f32fd22337cc2b2"
+    },
+    "engineeringNaturalCompletion": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-engineering/engineering-natural-completion.json",
+      "sha256": "9b4af1f1999ab2a0cd13c3bfcd4aad7a060d8d03632f73005b6ad8547ba01c7d"
+    },
+    "engineeringIndependentReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-pending-navigation-engineering/engineering-independent-review.json",
+      "sha256": "f3d44d741927f53adcbe3e63d9296ed02f9e3757f8e4230c195779817bc147cf"
+    },
+    "sourceSummaryPublicationReview": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/source-summary-publication-review.json",
+      "sha256": "8d9fb0213033140cca1003a87ed5ca26e78ad0eced10e48c67f282b8591a8aa9"
+    },
+    "sourceSummaryPublicationReviewV2": {
+      "path": "output/2026-10-24-agent-acceptance/p12-find-source-investigation/source-summary-publication-review-v2.json",
+      "sha256": "25024ba0dd832ac16e5be20ad0e21b2839a5dde312f78afc6d4074fb1d222b0f"
+    }
+  },
+  "roles": {
+    "sourceAndControlledTestAuthor": "Root",
+    "sourceIndependentReviewer": "/root/acceptance_index",
+    "engineeringExecutor": "Root",
+    "engineeringIndependentReviewer": "/root/acceptance_receipts",
+    "rootPublicationReview": "Completed: exact source hashes, controlled results, seven actual integer exits and matched endpoint maps; original installed failure and unresolved anomaly preserved."
+  },
+  "formalSourceCommitRemains": "cfcfce6386aaca99c7a56d9a810bb59244733671"
+}

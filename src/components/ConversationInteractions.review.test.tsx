@@ -84,6 +84,7 @@ function transcript() {
   let changed: (() => void) | undefined;
   const listeners = new Map<string, () => void>();
   const parent = {
+    isConnected: true,
     closest: () => null,
     getClientRects: () => (visible ? [{}] : []),
     classList: { add: vi.fn(), remove: vi.fn() },
@@ -123,8 +124,17 @@ function transcript() {
   vi.stubGlobal("NodeFilter", { SHOW_TEXT: 4 });
   const rangeCreated = vi.fn(() => ({
     startContainer: text,
-    setStart: vi.fn(),
-    setEnd: vi.fn(),
+    startOffset: 0,
+    endContainer: text,
+    endOffset: 0,
+    setStart(node: typeof text, offset: number) {
+      this.startContainer = node;
+      this.startOffset = offset;
+    },
+    setEnd(node: typeof text, offset: number) {
+      this.endContainer = node;
+      this.endOffset = offset;
+    },
   }));
   vi.stubGlobal("document", {
     createTreeWalker: () => {
@@ -165,6 +175,7 @@ function transcript() {
     observe,
     disconnect,
     rangeCreated,
+    parent,
   };
 }
 
@@ -388,3 +399,118 @@ it("adds highlights incrementally instead of passing every match as an argument"
   h.slots.forEach((slot) => slot.cleanup?.());
   expect(highlights.size).toBe(0);
 });
+
+it("finishes pending navigation when the same folded hit gains layout after its first frame", () => {
+  const fixture = transcript();
+  const frames = new Map<number, () => void>();
+  let id = 0;
+  vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+    frames.set(++id, callback);
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+    frames.delete(frame),
+  );
+  const nextFrame = () => {
+    const pending = [...frames.values()];
+    frames.clear();
+    pending.forEach((callback) => callback());
+  };
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  render(read);
+  nextFrame(); // scan folded, materialized text
+  render(read);
+  nextFrame(); // reveal has not committed a visible layout yet
+  expect(fixture.parent.scrollIntoView).not.toHaveBeenCalled();
+  fixture.mutate(true); // the reveal's open/hidden commit; same text and offsets
+  nextFrame();
+  render(read);
+  nextFrame();
+  render(read);
+  expect(fixture.parent.scrollIntoView).toHaveBeenCalledExactlyOnceWith({
+    block: "center",
+  });
+  fixture.mutate(true);
+  nextFrame();
+  render(read);
+  nextFrame();
+  expect(fixture.parent.scrollIntoView).toHaveBeenCalledOnce(); // no scroll stealing on later scans
+});
+
+it("discards a hidden pending location on unmount instead of scrolling a later reveal", () => {
+  const fixture = transcript();
+  const frames = new Map<number, () => void>();
+  let id = 0;
+  vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+    frames.set(++id, callback);
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+    frames.delete(frame),
+  );
+  const nextFrame = () => {
+    const pending = [...frames.values()];
+    frames.clear();
+    pending.forEach((callback) => callback());
+  };
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  render(read);
+  nextFrame();
+  render(read);
+  nextFrame();
+  h.slots.forEach((slot) => slot.cleanup?.());
+  fixture.mutate(true);
+  nextFrame();
+  expect(fixture.parent.scrollIntoView).not.toHaveBeenCalled();
+  expect(frames.size).toBe(0);
+});
+
+it.each(["", "展开"])(
+  "retires queued old-hit navigation before scanning a changed query %j",
+  (query) => {
+    const fixture = transcript();
+    const frames = new Map<number, () => void>();
+    let id = 0;
+    vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+      frames.set(++id, callback);
+      return id;
+    });
+    vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+      frames.delete(frame),
+    );
+    const nextFrame = () => {
+      const pending = [...frames.values()];
+      frames.clear();
+      pending.forEach((callback) => callback());
+    };
+    const read = () =>
+      ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
+    const input = render(read).find((node) => node.type === "input")!;
+    const change = input.props.onChange as (event: unknown) => void;
+    change({ target: { value: "正文" } });
+    render(read);
+    nextFrame();
+    render(read);
+    nextFrame();
+    fixture.mutate(true);
+    nextFrame(); // old-hit position is queued, but has not run
+    change({ target: { value: query } });
+    render(read);
+    nextFrame();
+    expect(fixture.parent.scrollIntoView).not.toHaveBeenCalled();
+    render(read);
+    nextFrame();
+    render(read);
+    expect(fixture.parent.scrollIntoView).toHaveBeenCalledTimes(query ? 1 : 0);
+  },
+);
