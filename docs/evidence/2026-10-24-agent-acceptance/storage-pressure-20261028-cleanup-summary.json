@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "kind": "StoragePressureExactRustObjectCleanupSummary",
+  "preparedAtUtc": "2026-10-28T04:45:17.821Z",
+  "scope": "One explicit batch of project-generated Rust code-generation object leaves; no product or Agent acceptance claim.",
+  "roles": {
+    "selectionAuthor": "history_snapshot_layout",
+    "helperAuthorAndSummaryDrafter": "acceptance_receipts",
+    "actualOperatorAndPostVerifier": "Root",
+    "independentPostReviewer": "acceptance_index",
+    "rootPublicationReview": "Root read full helper, qualified all selected objects and reviewed actual completion/post-verification; metadata-only publication with explicit limits."
+  },
+  "actual": {
+    "status": "completed",
+    "naturalExitCode": 0,
+    "startedAtUtc": "2026-10-28T04:43:00.149+00:00",
+    "finishedAtUtc": "2026-10-28T04:43:03.171+00:00",
+    "selectedInodeGroups": 7917,
+    "selectedExactNames": 11406,
+    "removedExactNames": 11406,
+    "remainingSelectedNames": 0,
+    "directoriesDeleted": 0,
+    "otherLeavesDeleted": 0,
+    "automaticRetry": false
+  },
+  "capacity": {
+    "selectedAllocatedBytesUnique": 13142052864,
+    "availableBytesBefore": 1097502720,
+    "availableBytesAfter": 14249586688,
+    "endpointAvailableDeltaBytes": 13152083968,
+    "interpretation": "Selection allocation and endpoint available-space change are separate observations. The delta is not a uniquely attributable physical-reclaim measurement or an additive guarantee; later compilation can regenerate these objects."
+  },
+  "guards": [
+    "Fixed hashed manifest and eight hashed fragments; exact names only, no prefix/glob deletion.",
+    "No-follow exact directory/leaf access, regular object/header/owner/metadata checks and closed hardlink groups validated before deletion.",
+    "Fresh compiler/linker/test process checks and one exact-directory open-file inventory; selected open references refuse.",
+    "Per-name identity and expected decreasing link-count rechecks, followed by held-object link-count verification and final selected-name absence.",
+    "Single-use private output, natural exit and partial-failure preservation; no automatic retry."
+  ],
+  "retained": {
+    "nonselectedDirectEntriesComparedByRoot": 10549,
+    "metadataMismatches": 0,
+    "fourOldIncrementalBinLeaves": true,
+    "currentIncrementalSessionsPresent": true,
+    "formalApplicationAndCurrentTestExecutableHashesUnchanged": true,
+    "rmetaRlibBuildFingerprintAndOtherNonselectedLeaves": "All nonselected direct dependency entries, including rmeta/rlib, matched the recorded metadata. build/.fingerprint and all other directories were outside deletion targets, not full-content-fingerprinted.",
+    "userDataBackupsConfigurationEvidenceMountsAndNestedGit": "No deletion targeted these categories."
+  },
+  "limits": [
+    "Sequential stat/open/unlink is not globally atomic and does not lock out future namespace writers. Process/open-file observations are point-in-time guards.",
+    "The helper journal is not a power-loss transaction or resumable cleanup mechanism.",
+    "No test, build, App/Agent operation or installed acceptance was performed by this cleanup.",
+    "The summary drafter also authored the helper; Root operated and verified deletion, acceptance_index independently read the actual journal and current retained/absent filesystem state."
+  ],
+  "references": [
+    {
+      "role": "qualificationManifest",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/inventory-summary.json",
+      "sha256": "956e1138173abc452125cdce00bf0797d523a81e858bc08c51eba27f1f187648"
+    },
+    {
+      "role": "selectedScope",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/candidate-selection-proof.json",
+      "sha256": "34c256deb495bb0c3312936c3e5c396ad540cf4a4010701a28f789b897d03a30"
+    },
+    {
+      "role": "exactCleanupHelper",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/cleanup-rcgu.py",
+      "sha256": "20b760a34fc5677dde6e961e9ab14af33b205cb219a18e2b0c329be8c906afe5"
+    },
+    {
+      "role": "helperPreparation",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/cleanup-helper-preparation.json",
+      "sha256": "0e20fe556ba5122763b79de21c8fdabd5d860f880f2052f675599dc17cb4e3aa"
+    },
+    {
+      "role": "actualCleanupResult",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/rcgu-cleanup-execution/result.json",
+      "sha256": "f3e56b48878a242afb4b149211fce79c7f65e3f23c6432d97391f5db51825ff3"
+    },
+    {
+      "role": "rootPostVerification",
+      "path": "output/2026-10-24-agent-acceptance/storage-pressure-2026-10-28/root-post-cleanup-verification.json",
+      "sha256": "f9a507e8c500606ae3eabe157869644d9cf583b27abf53bdc4315c3544865ef4"
+    },
+    {
+      "role": "independentPostVerification",
+      "path": "output/2026-10-28-storage-cleanup-rust-target-audit/post-cleanup-independent-review.json",
+      "sha256": "548df6a14784a85814821bca8c1129031a4fb979174707eb6ae86a94881deeff"
+    }
+  ],
+  "independentPostReview": {
+    "path": "output/2026-10-28-storage-cleanup-rust-target-audit/post-cleanup-independent-review.json",
+    "sha256": "548df6a14784a85814821bca8c1129031a4fb979174707eb6ae86a94881deeff",
+    "blockingFindings": []
+  },
+  "privacy": "Only qualification/helper/result/post-verification metadata references and hashes are included. Raw per-object JSONL, process/open-file output, retained-entry maps, private payloads and user-data fingerprints are excluded.",
+  "finalizedAtUtc": "2026-10-28T05:10:48.397558+00:00"
+}
