@@ -134,7 +134,7 @@ fn held_checkout_denies_late_source_config_mutation_and_keeps_source_and_target_
         denied.kind(),
         denied.raw_os_error()
     );
-    assert_eq!(denied.kind(), std::io::ErrorKind::PermissionDenied);
+    assert_eq!(denied.kind(), std::io::Error::from_raw_os_error(32).kind());
     assert_eq!(denied.raw_os_error(), Some(32)); // ERROR_SHARING_VIOLATION
     assert_eq!(fs::read(&config).unwrap(), before_config);
     assert_eq!(fs::read(r.root.join("a.txt")).unwrap(), before_source);

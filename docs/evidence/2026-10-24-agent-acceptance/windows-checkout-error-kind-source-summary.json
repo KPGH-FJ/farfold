@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "WindowsCheckoutSharingErrorKindSourceSummary",
+  "sourceBaseCommit": "ebc8a9962f0cf575bf45fdeba9ba84c85a4db5ca",
+  "level": "test-source only",
+  "requirementIds": ["P49", "H18"],
+  "standardIds": [],
+  "originalFailure": {
+    "runId": 40498060809,
+    "sourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+    "fqn": "worktrees::checkout_boundary_tests::held_checkout_denies_late_source_config_mutation_and_keeps_source_and_target_safe",
+    "actual": "The source configuration write was rejected with raw OS32. The fixed PermissionDenied expectation failed because the observed kind was Uncategorized.",
+    "laterAssertionsReached": false
+  },
+  "change": "Only the expected ErrorKind now uses the current Windows standard-library mapping of fixed raw OS32. The separate exact Some(32) assertion, rejected-write requirement and all later source/target/materialization/canary checks remain byte-identical. No production sharing or permission policy changed.",
+  "source": {
+    "path": "src-tauri/src/worktrees/checkout_boundary_tests.rs",
+    "sha256": "b5c59f38c9b29f0ae25460bd10b3bd8cb81915c91a9725cb5bee0e504c144b08"
+  },
+  "verification": {
+    "inverseWholeTextEqualsOriginal": true,
+    "independentSourceBlockingFindings": 0,
+    "cargoFmtNaturalExitCode": 0,
+    "newWindowsExecution": false,
+    "crossCompileRepeated": false,
+    "macZeroTestRunUsedAsProof": false,
+    "reason": "The selected FQN is Windows-only; the already observed missing-MinGW prerequisite and GitHub billing condition have no new availability evidence.",
+    "prior72FailureCountChanged": false,
+    "formalApplicationUpdated": false
+  },
+  "limits": [
+    "Correcting the kind oracle does not prove the exact raw32 or later safety assertions pass on Windows; the original run did not reach them.",
+    "No full Windows, Agent standard or29 acceptance is closed. Formal CFC and protected drafts/history/configuration/unknown work remain."
+  ],
+  "references": {
+    "immutableFailureTriage": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/next-independent-gap-triage.json",
+      "sha256": "ce2eb2906dbb1ea5242d0bb11f9354c16628a7d7917e13464b400eeec83f3ca5"
+    },
+    "independentOneLineSourceReview": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/checkout-sharing-error-kind-independent-review.json",
+      "sha256": "b4f7f05f0d4b6a616e1add9a24b148dedeef53f2436f35d3b0a228dadd74ee0c"
+    },
+    "rootChangeAndFormatProvenance": {
+      "path": "output/2026-10-24-agent-acceptance/windows-cfcf-full-verification/run-40498060809/next-source-triage/checkout-sharing-error-kind-change.json",
+      "sha256": "66cd87d1b65e274440eabf4a14bf47eb2849a0c9c5d33d31facfd37a62911e16"
+    }
+  }
+}

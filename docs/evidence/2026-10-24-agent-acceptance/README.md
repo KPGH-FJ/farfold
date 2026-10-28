@@ -8,6 +8,8 @@
 
 ## 边界与当前事实
 
+[Windows共享错误分类测试源码](windows-checkout-error-kind-source-summary.json)只纠正原OS32拒绝的ErrorKind期待，保留精确数字和全部后续安全断言；逆替换全文一致、源码独审及格式通过，未跑Windows，不改原72失败计数或正式应用。
+
 [Windows临时清理源码](windows-temporary-cleanup-source-summary.json)保留原归档改名/替换后误报取消的RED，补原名、身份/单链接复核及不确定清理禁止重试，固定索引交接保持。源码独审无阻断；Mac归档7项与复制22项分别通过，新增Windows控制未执行。严格交叉检查因ring缺MinGW编译器返回101，未到本次Windows源码编译；正式CFC、旧72失败及比较至删除间竞态限制保持，零CI重跑或安装。
 
 [P12未绑定准备](p12-formal-cfc-unbound-preparation-summary.json)保留一次超窗及误开预览：300.603秒/原300秒，附件已加载文字未穷尽，计数未冻结；0查找、查询、正式案例或封存。已收起面板与列表，不计通过或未完成验收，也不把操作错误当产品缺陷。
