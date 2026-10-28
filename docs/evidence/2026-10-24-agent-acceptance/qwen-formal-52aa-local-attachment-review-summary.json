@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "kind": "QwenFormal52aaAllRetainedLocalAttachmentReviewSummary",
+  "requirementIds": ["P01"],
+  "standardIds": [],
+  "level": "installed",
+  "context": {
+    "productCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "platform": "darwin-arm64",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "formalExecutableSha256": "e7afbdcee3b62a006454eb2f9ff9ac9f2165a0e6da322b9ab9446a128442bbbf",
+    "agentId": "qwen-code",
+    "scope": "One existing original Qwen current draft and its one recovered attachment, local review only; no model request, configuration change or effective backend/model/version claim."
+  },
+  "actual": {
+    "status": "completed",
+    "outcome": "success",
+    "observationRecorder": "Root",
+    "observationsMatchedByRecordedValues": 9,
+    "independentImageAndAxReviewStatus": "complete-no-blocking-findings",
+    "originalBefore": {
+      "sameOwnedOriginalDraft": true,
+      "wholeExposedDraftUtf8Bytes": 42,
+      "originalAttachmentNames": 1,
+      "reviewNoticePresent": true,
+      "idleHeaderObserved": true,
+      "sendDisabled": true
+    },
+    "modal": {
+      "reviewOpens": 1,
+      "originalCurrentInputItems": 1,
+      "originalItemChecked": true,
+      "originalItemEditable": true,
+      "confirmationEnabled": true,
+      "additionalQueueOrLockedRows": 0,
+      "checkboxInputs": 0,
+      "allSelectedKeptWithoutSeparateSelectAllAction": true
+    },
+    "confirmation": {
+      "clicks": 1,
+      "explicitLocalDoneStatusObserved": true,
+      "modalClosed": true,
+      "requiredReviewNoticeRetired": true,
+      "transientBusyCaptured": false,
+      "busyObservationRequiredOrRepeated": false
+    },
+    "preservation": {
+      "fullOriginalExposedEditableDraftMatched": true,
+      "exposedDraftUtf8Bytes": 42,
+      "originalAttachmentNameCount": 1,
+      "sameHistoricalRequestAndAckVisible": true,
+      "idleHeaderRetained": true,
+      "sameDisplayedAgentPartialModelAndThinking": true,
+      "thinkingOnDisplayRetained": true,
+      "choiceInputs": 0,
+      "effectiveConfigurationVerified": false
+    },
+    "sendState": {
+      "before": "disabled",
+      "after": "enabled",
+      "observedOnly": true,
+      "sendInputs": 0,
+      "noVisibleNewMessageOrAutomaticSubmission": true,
+      "limits": "The guard change is an actual UI observation, not a Send test, unique disabled-cause proof or raw noRPC evidence."
+    },
+    "mainOperatorSeconds": 18.351,
+    "predeclaredSeconds": 180,
+    "stableInputCount": 21,
+    "privateEvidenceFiles": 8,
+    "imageAndAxPairs": 3,
+    "operatorRecordFiles": 2,
+    "actualUiActions": 2,
+    "operatorActionCounts": {
+      "reviewOpen": 1,
+      "confirmation": 1,
+      "checkbox": 0,
+      "send": 0,
+      "other": 0
+    },
+    "modelPromptSendEditFileChoicePreviewRetryStopExitLaunchActions": 0,
+    "imageContainer": "Actual JPEG/JFIF bytes retained under .png labels; no transcoding or replay."
+  },
+  "mechanical": {
+    "schemaVersion": 1,
+    "mechanicallyValid": true,
+    "complete": true,
+    "allExpectedOutcomesMatched": true,
+    "acceptanceVerified": false,
+    "requiresIndependentReview": true,
+    "counts": {
+      "expectedCases": 1,
+      "attempts": 1,
+      "passed": 1,
+      "expectedRejection": 0,
+      "failed": 0,
+      "incomplete": 0,
+      "unstable": 0,
+      "invalid": 0,
+      "evidenceFiles": 8,
+      "privateEvidenceFiles": 8
+    },
+    "errors": [],
+    "cases": [
+      {
+        "caseIndex": 0,
+        "claimScope": "requirement-only",
+        "level": "installed",
+        "result": "passed",
+        "attempts": [
+          {
+            "attemptIndex": 0,
+            "status": "completed",
+            "outcome": "success",
+            "level": "installed",
+            "issues": []
+          }
+        ]
+      }
+    ]
+  },
+  "sealExecution": {
+    "uniqueCliExecutions": 1,
+    "naturalExitCode": 0,
+    "validatorRepeats": 0
+  },
+  "limits": [
+    "One installed local attachment-review success, independently supported by all three saved original images and three full AX records. Original mechanical acceptanceVerified:false remains; completeP01/S7 and29by8 are not closed.",
+    "Whole exposed editable draft equality is a UI observation, not a live database or persistent-storage byte read. One retained attachment name and a local done status do not prove original-vs-current physical file byte identity, payload completeness or Agent consumption.",
+    "The original conversation was already ordinarily opened in separate preparation. This case includes no new cold restore, restart, exit/update interval or general recovery proof.",
+    "Review intentionally clears a recovered-attachment guard and may read the selected local content through existing checks. Do not infer whole database immutability or zero backend IO from zero file-choice/preview actions.",
+    "Service/model display remains partial and Thinking-on display is unchanged; no actual effective service, model, reasoning or Agent version is freshly established.",
+    "Transient checking/busy presentation was not captured and is neither invented nor required by this case. No repeat action was added to capture it.",
+    "Existing save failures/capacity/snapshot unknowns, P01 and S7 remaining conditions, 29-by-8, old failures/unknown work, six WAIT items and NEW-24 protections remain unchanged.",
+    "Zero operator Send and no visible new message are action/UI evidence, not global transport, process-terminal or Agent-completion proof."
+  ],
+  "independentSemanticReview": {
+    "status": "complete-no-blocking-findings",
+    "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/independent-installed-ui-review.json",
+    "sha256": "b85b8ebd52657641b643f918d8a2821e43bd08c530e373083cb78a37f6ef46cf",
+    "blockingFindings": [],
+    "actuallyViewedImages": 3,
+    "actuallyReadAxRecords": 3
+  },
+  "roles": {
+    "actualUiOperatorObservationRecorderAndSealExecutor": "Root",
+    "draftAuthor": "/root/history_snapshot_layout",
+    "relatedRole": "Draft author prepared this scene readiness and reviewed source guards; did not operate the Qwen case or run its seal.",
+    "independentImageAndAxReviewer": "/root/acceptance_receipts",
+    "draftAuthorImageReviewPerformed": false
+  },
+  "privacy": {
+    "metadataOnly": true,
+    "bodyTitleQueryAttachmentNameAccountCwdOrRawDatabaseFingerprintsIncluded": false,
+    "referenceScope": "Closed project-owned metadata and their file hashes only; raw AX/images and user values remain private."
+  },
+  "references": {
+    "manifest.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/manifest.json",
+      "sha256": "0352aad61e9653ddee75ef3436d4842bd40484304c15bb081729c1454b37cca9"
+    },
+    "case-plan.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/case-plan.json",
+      "sha256": "d91b492707065d85dc2d4f0741d695125066bfd9fb0745e701c5c3cc6104e15a"
+    },
+    "preflight.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/preflight.json",
+      "sha256": "c5fa59901082b226b4f6d42d5ca65e04ff1769465256cd07b96bed52abb0f908"
+    },
+    "actuals.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/actuals.json",
+      "sha256": "183346414af154181b98e775f50e79467e89e480c13f9c3384660efe59f045e8"
+    },
+    "operator-run.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/operator-run.json",
+      "sha256": "18f825477fdaad3096d847bfd88ef89fe69f729bfab00fa34297dcb99fa83fc1"
+    },
+    "operator-events.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/operator-events.json",
+      "sha256": "6919be1714d46f1445d5750e854eff438069f5a6cff24b11284fb3c9be2c2960"
+    },
+    "root-observation-notes.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/root-observation-notes.json",
+      "sha256": "7f7c9498e8bc3d9576dab16e8566c5f0ca46243b7f4b5d98c0d87a5995fe0532"
+    },
+    "receipt.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/receipt.json",
+      "sha256": "0fe1977b9810b144ce9e8883aa37dd3c260309a3e6ace86205f0febc6235579d"
+    },
+    "seal-execution.json": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/seal-execution.json",
+      "sha256": "8d7699b75982f596e88d8e3749f90a76a87be6cb940006c9091410db5838f796"
+    },
+    "sealedMechanicalReport": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/seal.stdout",
+      "sha256": "1bccaec4249ccff68779013444b003f02d089c719e7360ca8793789bcd9e2e68"
+    },
+    "independentSemanticReview": {
+      "path": "output/2026-10-24-agent-acceptance/qwen-attachment-review-formal-52aa/independent-installed-ui-review.json",
+      "sha256": "b85b8ebd52657641b643f918d8a2821e43bd08c530e373083cb78a37f6ef46cf"
+    }
+  },
+  "recordedAt": "2026-10-28T06:53:00.633Z"
+}
