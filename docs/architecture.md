@@ -53,7 +53,7 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 前端以 [session_types.ts](../src/runtime/session_types.ts) 与 [sessions.ts](../src/runtime/sessions.ts) 保存当前连接、消息投影、队列和请求状态。后端管理进程、会话与命令归属。模型和推理仅在实际提供、安全空闲、回执匹配且保存成功后成为新请求与恢复基线；普通配置通知不是用户切换请求的成功回执。配置未知、停止未确认、保存失败或待审批时，不静默继续。
 
-[AsyncTasks.tsx](../src/components/AsyncTasks.tsx) 对官方后台任务仅显示已有能力所提供的状态与控制。[async_task_location.ts](../src/runtime/async_task_location.ts) 按相同连接/对话中唯一已加载的toolCallId查来源；缺失或重复不猜测。[showToolLocation.ts](../src/components/showToolLocation.ts) 在当前正文内按字面数据属性匹配唯一节点，明确展开其祖先、滚动并聚焦；点击前后复核归属，显式展开不被后来退出搜索撤回。此源码检查点尚未正式安装，不补造父子层级，也不把来源步骤状态当后台任务终态。
+[AsyncTasks.tsx](../src/components/AsyncTasks.tsx) 对官方后台任务仅显示已有能力所提供的状态与控制。[async_task_location.ts](../src/runtime/async_task_location.ts) 按相同连接/对话中唯一已加载的toolCallId查来源；缺失或重复不猜测。[showToolLocation.ts](../src/components/showToolLocation.ts) 在当前正文内按字面数据属性匹配唯一节点，明确展开其祖先、滚动并聚焦；点击前后复核归属，显式展开不被后来退出搜索撤回。上述源码已包含在[当前正式应用](status.md#正式应用与最近功能基线)中；来源导航的正式界面实际操作仍未验证。不补造父子层级，也不把来源步骤状态当后台任务终态。
 
 恢复标记保存实际已确认的配置和服务身份，不只保存显示文字。服务变化、旧配置缺字段或恢复失败会保留历史、草稿、附件和暂停队列，要求核对；默认配置不冒充原设置。配置与恢复入口见 [session_configuration.ts](../src/runtime/session_configuration.ts)、[session_config_recheck.ts](../src/runtime/session_config_recheck.ts) 与 [model_guard.rs](../src-tauri/src/acp_client/model_guard.rs)。
 

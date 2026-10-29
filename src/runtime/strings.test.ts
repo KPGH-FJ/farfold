@@ -5,6 +5,10 @@ import { REMEMBERED_BROWSER_STRINGS } from "./browser_remembered_strings";
 import { HISTORY_SEARCH_STRINGS } from "./history_search_strings";
 import { EXTENSION_INVENTORY_STRINGS } from "./extension_inventory_strings";
 import { PLUGIN_MANAGEMENT_STRINGS } from "./plugin_management_strings";
+import { SKILL_MANAGEMENT_STRINGS } from "./skill_management_strings";
+import { MCP_MANAGEMENT_STRINGS } from "./mcp_management_strings";
+import { MCP_ADD_STRINGS, MCP_HTTP_ADD_STRINGS } from "./mcp_add_strings";
+import { MCP_REMOVE_STRINGS } from "./mcp_remove_strings";
 import { WORKTREE_PREPARATION_STRINGS } from "./worktree_preparation_strings";
 import { ASYNC_TASKS } from "./async_task_strings";
 import { VISUAL_AREA_STRINGS } from "./visual_area_strings";
@@ -109,6 +113,11 @@ describe("strings", () => {
       WORKTREE_PREPARATION_STRINGS,
       EXTENSION_INVENTORY_STRINGS,
       PLUGIN_MANAGEMENT_STRINGS,
+      SKILL_MANAGEMENT_STRINGS,
+      MCP_MANAGEMENT_STRINGS,
+      MCP_ADD_STRINGS,
+      MCP_HTTP_ADD_STRINGS,
+      MCP_REMOVE_STRINGS,
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,
       PPTX_STRINGS,

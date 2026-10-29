@@ -9,6 +9,28 @@ import {
 } from "./mcp_add.test-support";
 import { setup as mcpSetup } from "./mcp_management.test-support";
 afterEach(() => vi.useRealTimers());
+it("sends a syntactically valid name for connection-layer admission and retains a bare refusal without confirming", async () => {
+  const h = await setup(true);
+  const value = { ...input, name: "codex_apps" };
+  expect(h.controller.inspect({ ...h.target, input: value })).toBe(true);
+  await flush();
+  expect(h.port.inspect).toHaveBeenCalledExactlyOnceWith({
+    agentId: h.owner.agentId,
+    requestId: h.controller.get(h.owner.agentId).request!.requestId,
+    inventoryRequestId: h.result.request.requestId,
+    inputId: h.target.inputId,
+    input: value,
+  });
+  h.pending.inspect.reject({ code: "invalidName" });
+  await flush();
+  expect(h.controller.get(h.owner.agentId)).toMatchObject({
+    error: "invalidName",
+    unresolved: true,
+    review: null,
+  });
+  expect(h.port.confirm).not.toHaveBeenCalled();
+  expect(h.port.inspect).toHaveBeenCalledTimes(1);
+});
 it("admits complete empty catalogue and sends exact input only at inspect, separate confirm only reviewId", async () => {
   const h = await setup(true),
     review = await reviewed(h);

@@ -26,7 +26,6 @@ it("retains ordered whitespace/empty/quoted arguments and copies/freezes the inp
 });
 it.each([
   [{ ...input, name: "a..b" }, "invalidName"],
-  [{ ...input, name: "codex_apps" }, "invalidName"],
   [{ ...input, name: "a:b" }, "invalidName"],
   [{ ...input, executablePath: "~/bin/tool" }, "invalidExecutablePath"],
   [{ ...input, executablePath: "/a/../tool" }, "invalidExecutablePath"],
@@ -43,6 +42,38 @@ it.each([
 ])("refuses bounded or unsafe form input %#", (value, code) =>
   expect(mcpAddInputError(value)).toBe(code),
 );
+it.each([
+  { ...input, name: "codex_apps" },
+  {
+    transport: "streamableHttp" as const,
+    name: "codex_apps",
+    url: "https://endpoint.test/mcp",
+  },
+])("leaves Agent-specific name admission to the connection layer", (value) => {
+  expect(mcpAddInputError(value)).toBeNull();
+  expect(freezeMcpAddInput(value)).toEqual(value);
+});
+it("parses a matching negative result without repeating Agent name policy", () => {
+  const expected = {
+    ...request,
+    target: { ...request.target, name: "codex_apps" },
+  };
+  const rejected = {
+    ...operation(expected),
+    state: "failed",
+    phase: "complete",
+    settled: true,
+    outcome: "notDispatched",
+    code: "invalidName",
+  };
+  expect(parseMcpAddOperation(rejected, expected)).toEqual(rejected);
+  expect(() =>
+    parseMcpAddOperation(
+      { ...rejected, target: { ...rejected.target, name: "other" } },
+      expected,
+    ),
+  ).toThrow();
+});
 it("accepts no trimming, shell splitting or executable probing", () => {
   expect(
     mcpAddInputError({

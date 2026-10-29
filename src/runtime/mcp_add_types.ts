@@ -163,6 +163,7 @@ function hidden(value: string): boolean {
   }
   return false;
 }
+// Shared input shape only; the connection layer owns Agent-specific name policy.
 export function mcpAddInputError(value: unknown): McpAddCode | null {
   if (!value || typeof value !== "object" || Array.isArray(value))
     return "invalidRequest";
@@ -179,8 +180,7 @@ export function mcpAddInputError(value: unknown): McpAddCode | null {
     typeof v.name !== "string" ||
     !/^[A-Za-z0-9._-]+$/.test(v.name) ||
     v.name.includes("..") ||
-    bytes(v.name) > 256 ||
-    v.name === "codex_apps"
+    bytes(v.name) > 256
   )
     return "invalidName";
   if (http)
@@ -271,12 +271,7 @@ function target(raw: unknown, expected: McpAddRequest): McpAddTarget {
   )
     invalid();
   const name = text(v.name, 256);
-  if (
-    name.includes("..") ||
-    name === "codex_apps" ||
-    !/^[A-Za-z0-9._-]+$/.test(name)
-  )
-    invalid();
+  if (name.includes("..") || !/^[A-Za-z0-9._-]+$/.test(name)) invalid();
   return {
     kind: "mcpAddition",
     inventoryRequestId: v.inventoryRequestId as string,
