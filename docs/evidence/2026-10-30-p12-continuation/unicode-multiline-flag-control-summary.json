@@ -1,0 +1,1788 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentPrivateMultilineUnicodeRegexpControlReview",
+  "case": "9484 / frozen private production build r14",
+  "status": "candidate11fixed-offset-and-segmentation-cases-passed; direct-match-text-one-AX-encoding-limit; not-installed-or-P12-acceptance",
+  "reviewMethod": "Independent view of2pictures/2AX files, continued-row reassembly, fixed candidate/probe/source diff and actual Node result-object comparison, build/pin/asset/readiness review. No UI/server/HTTP/build/test or matching-function rerun by reviewer.",
+  "scope": {
+    "fixedPayloads": 4,
+    "additionalSemanticCases": 7,
+    "nativeSurface": "Existing formal Farfold embedded WebKit panel loading private pure-string production preview.",
+    "conversationDomRangeOrHighlightInspection": false,
+    "physicalFilesRealAgentOrUnreadHistory": false,
+    "preciseEngineCommit": null,
+    "formalCurrentSourceInstall": false,
+    "P12Closed": false
+  },
+  "binding": {
+    "headAtBuildEndpoints": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "wholeInputMapCount": 1492,
+    "beforeAfterMapsEqualShaBytesModes": true,
+    "preparedPrivatePins": 12,
+    "runtimeAndConfigPins": 5,
+    "allDeclaredPinsMatchRecordedBuildEndpoints": true,
+    "private12StillMatchDisk": true,
+    "originalProductionMatcherSha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+    "privateCandidateSha256": "aa671486df397d2ceb1dfebf29bdf587b55f35b5fbbf865e596a4f018b50224c",
+    "singleChangeVerified": "Private1783-byte module contains exactly one gimu flag string; mechanically changing it back to giu yields the original1782-byte SHA93e5. Every other source byte is identical. No sticky/per-position/substring scanner or changed mapping algorithm.",
+    "preservedFlags": ["g", "i", "u"],
+    "onlyAddedFlag": "m",
+    "buildNaturalIntegerExitCode": 0,
+    "buildRawStderrBytes": 0,
+    "emittedHtmlAndScriptShaBytesModesVerified": 2,
+    "scriptSha256": "562fb0610d0c1e1954a3b8e269dda86f4eb56c106f4a49018589f2c5f26c2b1b",
+    "historicalReadinessGet200AndBuiltFileMatches": 2,
+    "previewSessionSupplement": {
+      "execSessionId": 31330,
+      "source": "Root current tool-record handoff for this task; preview-readiness.json itself contains no session field.",
+      "pid": null,
+      "independentProcessQuery": false
+    },
+    "laterSourceEvolution": {
+      "path": "src/runtime/transcript_find.ts",
+      "observedLaterSha256": "819af5154f1548243b8b3d4f6c8c605b724aa61390194bde851c2f75edd80d9c",
+      "observedLaterBytes": 1936,
+      "meaning": "Production matcher changed in concurrent authorized work after r14 freeze. Do not describe current disk as old93e5 or all5 current pins matching. Frozen emitted assets/readiness preserve this private comparison independent of later source changes."
+    },
+    "limits": "Captured input endpoints establish SHA/bytes/modes equality at those times, not continuous environment/writer exclusion. Preparation/build/readiness no-UI statements are historical stages before native pictures."
+  },
+  "capture": {
+    "initial": "00 enabled once button/empty output;01 button disabled and fixed-results present.",
+    "logicalRowsAfterReassembly": 67,
+    "publishedParagraphChunks": 91,
+    "maximumActualChunkUtf16": 400,
+    "method": "Remove only each following ten-character continued prefix and concatenate into its prior logical JSON value; parse all67. Do not assume a truncated tree or hidden full record.",
+    "pictures": "01 shows only initial visible output. All later control results use complete AX rows; reviewer did not scroll or recapture.",
+    "result": "Both original emoji-prefix payload and trailing-space variant still fail old production/giu. Candidate gimu and direct native gimu return UTF16 offset19/end28 for both. Remaining9 cases preserve expected offsets and segments, including seven semantic samples.",
+    "lastIndex": "All independent exec/matchAll objects start0. Failed giu exec returns null/end0; successful gimu exec advances to first matched end. matchAll source objects remain0 before/after. Actual per-case values appear below."
+  },
+  "cases": [
+    {
+      "id": "body",
+      "query": "A+B?[x].*",
+      "text": "字面符号 A+B?[x].* 结束。",
+      "textUtf16Width": 18,
+      "expectedOffsets": [5],
+      "constructorPattern": "A\\+B\\?\\[x\\]\\.\\*",
+      "production": {
+        "indexOf": 5,
+        "offsets": {
+          "ok": true,
+          "value": [5]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 5,
+              "endIndex": 0,
+              "endOffset": 14
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [5]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 5,
+              "endIndex": 0,
+              "endOffset": 14
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 5,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 14
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 5,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 14
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-original",
+      "query": "A+B?[x].*",
+      "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*",
+      "textUtf16Width": 28,
+      "expectedOffsets": [19],
+      "constructorPattern": "A\\+B\\?\\[x\\]\\.\\*",
+      "production": {
+        "indexOf": 19,
+        "offsets": {
+          "ok": true,
+          "value": []
+        },
+        "segments": {
+          "ok": true,
+          "value": []
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [19]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 19,
+              "endIndex": 0,
+              "endOffset": 28
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": null
+            },
+            "afterLastIndex": 0
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": []
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 19,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 28
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-without-smile",
+      "query": "A+B?[x].*",
+      "text": "附件已加载专用词：星河；字面符号 A+B?[x].*",
+      "textUtf16Width": 26,
+      "expectedOffsets": [17],
+      "constructorPattern": "A\\+B\\?\\[x\\]\\.\\*",
+      "production": {
+        "indexOf": 17,
+        "offsets": {
+          "ok": true,
+          "value": [17]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 17,
+              "endIndex": 0,
+              "endOffset": 26
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [17]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 17,
+              "endIndex": 0,
+              "endOffset": 26
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 17,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 26
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 17,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 26
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-trailing-space",
+      "query": "A+B?[x].*",
+      "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].* ",
+      "textUtf16Width": 29,
+      "expectedOffsets": [19],
+      "constructorPattern": "A\\+B\\?\\[x\\]\\.\\*",
+      "production": {
+        "indexOf": 19,
+        "offsets": {
+          "ok": true,
+          "value": []
+        },
+        "segments": {
+          "ok": true,
+          "value": []
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [19]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 19,
+              "endIndex": 0,
+              "endOffset": 28
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": null
+            },
+            "afterLastIndex": 0
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": []
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "A\\+B\\?\\[x\\]\\.\\*",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 19,
+                "text": "A+B?[x].*",
+                "utf16Length": 9
+              }
+            },
+            "afterLastIndex": 28
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "multiline-literal-anchors",
+      "query": "^/$",
+      "text": "第一行 ^/$\n第二行 ^/$",
+      "textUtf16Width": 15,
+      "expectedOffsets": [4, 12],
+      "constructorPattern": "\\^/\\$",
+      "production": {
+        "indexOf": 4,
+        "offsets": {
+          "ok": true,
+          "value": [4, 12]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 7
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 12,
+              "endIndex": 0,
+              "endOffset": 15
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [4, 12]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 7
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 12,
+              "endIndex": 0,
+              "endOffset": 15
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "\\^\\/\\$",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "\\^\\/\\$",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 4,
+                "text": "^/$",
+                "utf16Length": 3
+              }
+            },
+            "afterLastIndex": 7
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 4,
+                  "text": "^/$",
+                  "utf16Length": 3
+                },
+                {
+                  "index": 12,
+                  "text": "^/$",
+                  "utf16Length": 3
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "\\^\\/\\$",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "\\^\\/\\$",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 4,
+                "text": "^/$",
+                "utf16Length": 3
+              }
+            },
+            "afterLastIndex": 7
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 4,
+                  "text": "^/$",
+                  "utf16Length": 3
+                },
+                {
+                  "index": 12,
+                  "text": "^/$",
+                  "utf16Length": 3
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "ascii-case",
+      "query": "farfold",
+      "text": "Farfold farfold FARFOLD",
+      "textUtf16Width": 23,
+      "expectedOffsets": [0, 8, 16],
+      "constructorPattern": "farfold",
+      "production": {
+        "indexOf": 8,
+        "offsets": {
+          "ok": true,
+          "value": [0, 8, 16]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 7
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 8,
+              "endIndex": 0,
+              "endOffset": 15
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 16,
+              "endIndex": 0,
+              "endOffset": 23
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [0, 8, 16]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 7
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 8,
+              "endIndex": 0,
+              "endOffset": 15
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 16,
+              "endIndex": 0,
+              "endOffset": 23
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "farfold",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "farfold",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "Farfold",
+                "utf16Length": 7
+              }
+            },
+            "afterLastIndex": 7
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "Farfold",
+                  "utf16Length": 7
+                },
+                {
+                  "index": 8,
+                  "text": "farfold",
+                  "utf16Length": 7
+                },
+                {
+                  "index": 16,
+                  "text": "FARFOLD",
+                  "utf16Length": 7
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "farfold",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "farfold",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "Farfold",
+                "utf16Length": 7
+              }
+            },
+            "afterLastIndex": 7
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "Farfold",
+                  "utf16Length": 7
+                },
+                {
+                  "index": 8,
+                  "text": "farfold",
+                  "utf16Length": 7
+                },
+                {
+                  "index": 16,
+                  "text": "FARFOLD",
+                  "utf16Length": 7
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "long-s-fold",
+      "query": "s",
+      "text": "ſ s S",
+      "textUtf16Width": 5,
+      "expectedOffsets": [0, 2, 4],
+      "constructorPattern": "s",
+      "production": {
+        "indexOf": 2,
+        "offsets": {
+          "ok": true,
+          "value": [0, 2, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 1
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 5
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [0, 2, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 1
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 5
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "s",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "s",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "ſ",
+                "utf16Length": 1
+              }
+            },
+            "afterLastIndex": 1
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "ſ",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 2,
+                  "text": "s",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 4,
+                  "text": "S",
+                  "utf16Length": 1
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "s",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "s",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "ſ",
+                "utf16Length": 1
+              }
+            },
+            "afterLastIndex": 1
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "ſ",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 2,
+                  "text": "s",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 4,
+                  "text": "S",
+                  "utf16Length": 1
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "kelvin-fold",
+      "query": "k",
+      "text": "K k K",
+      "textUtf16Width": 5,
+      "expectedOffsets": [0, 2, 4],
+      "constructorPattern": "k",
+      "production": {
+        "indexOf": 2,
+        "offsets": {
+          "ok": true,
+          "value": [0, 2, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 1
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 5
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [0, 2, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 1
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 5
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "k",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "k",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "K",
+                "utf16Length": 1
+              }
+            },
+            "afterLastIndex": 1
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "K",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 2,
+                  "text": "k",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 4,
+                  "text": "K",
+                  "utf16Length": 1
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "k",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "k",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "K",
+                "utf16Length": 1
+              }
+            },
+            "afterLastIndex": 1
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "K",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 2,
+                  "text": "k",
+                  "utf16Length": 1
+                },
+                {
+                  "index": 4,
+                  "text": "K",
+                  "utf16Length": 1
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "deseret-fold",
+      "query": "𐐨",
+      "text": "𐐀 𐐨 𐐀",
+      "textUtf16Width": 8,
+      "expectedOffsets": [0, 3, 6],
+      "constructorPattern": "𐐨",
+      "production": {
+        "indexOf": 3,
+        "offsets": {
+          "ok": true,
+          "value": [0, 3, 6]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 2
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 3,
+              "endIndex": 0,
+              "endOffset": 5
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 6,
+              "endIndex": 0,
+              "endOffset": 8
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [0, 3, 6]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 2
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 3,
+              "endIndex": 0,
+              "endOffset": 5
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 6,
+              "endIndex": 0,
+              "endOffset": 8
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "𐐨",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "𐐨",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "𐐀",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 2
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "𐐀",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 3,
+                  "text": "𐐨",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 6,
+                  "text": "𐐀",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "𐐨",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "𐐨",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "𐐀",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 2
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "𐐀",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 3,
+                  "text": "��",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 6,
+                  "text": "𐐀",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "emoji-query",
+      "query": "🙂",
+      "text": "前🙂中🙂后",
+      "textUtf16Width": 7,
+      "expectedOffsets": [1, 4],
+      "constructorPattern": "🙂",
+      "production": {
+        "indexOf": 1,
+        "offsets": {
+          "ok": true,
+          "value": [1, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 1,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 6
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [1, 4]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 1,
+              "endIndex": 0,
+              "endOffset": 3
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 4,
+              "endIndex": 0,
+              "endOffset": 6
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "🙂",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "🙂",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 1,
+                "text": "🙂",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 3
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 1,
+                  "text": "🙂",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 4,
+                  "text": "🙂",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "🙂",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "🙂",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 1,
+                "text": "🙂",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 3
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 1,
+                  "text": "🙂",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 4,
+                  "text": "🙂",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "nonoverlap",
+      "query": "aa",
+      "text": "aaaaa",
+      "textUtf16Width": 5,
+      "expectedOffsets": [0, 2],
+      "constructorPattern": "aa",
+      "production": {
+        "indexOf": 0,
+        "offsets": {
+          "ok": true,
+          "value": [0, 2]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 2
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 4
+            }
+          ]
+        }
+      },
+      "candidate": {
+        "offsets": {
+          "ok": true,
+          "value": [0, 2]
+        },
+        "segments": {
+          "ok": true,
+          "value": [
+            {
+              "startIndex": 0,
+              "startOffset": 0,
+              "endIndex": 0,
+              "endOffset": 2
+            },
+            {
+              "startIndex": 0,
+              "startOffset": 2,
+              "endIndex": 0,
+              "endOffset": 4
+            }
+          ]
+        }
+      },
+      "giu": {
+        "ok": true,
+        "value": {
+          "source": "aa",
+          "flags": "giu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": false,
+          "matchAllSource": "aa",
+          "matchAllFlags": "giu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "aa",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 2
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "aa",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 2,
+                  "text": "aa",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      },
+      "gimu": {
+        "ok": true,
+        "value": {
+          "source": "aa",
+          "flags": "gimu",
+          "unicode": true,
+          "ignoreCase": true,
+          "multiline": true,
+          "matchAllSource": "aa",
+          "matchAllFlags": "gimu",
+          "exec": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": {
+                "index": 0,
+                "text": "aa",
+                "utf16Length": 2
+              }
+            },
+            "afterLastIndex": 2
+          },
+          "matchAll": {
+            "beforeLastIndex": 0,
+            "result": {
+              "ok": true,
+              "value": [
+                {
+                  "index": 0,
+                  "text": "aa",
+                  "utf16Length": 2
+                },
+                {
+                  "index": 2,
+                  "text": "aa",
+                  "utf16Length": 2
+                }
+              ]
+            },
+            "afterLastIndex": 0
+          }
+        }
+      }
+    }
+  ],
+  "readLimit": {
+    "case": "deseret-fold gimu",
+    "field": "matchAll.result.value[1].text",
+    "rawObservation": "AX lines118/119 split the non-BMP middle matched character across two published UTF16 chunks; each side is U+FFFD, producing two replacement characters after concatenation. Raw files are preserved, not repaired from expected input.",
+    "supported": "This case query/payload codepoints and UTF16 units are intact; production and candidate offsets[0,3,6] and candidate segmented spans[0,2]/[3,5]/[6,8] are intact; direct gimu match indices and declared widths2 remain readable, as do first/third text.",
+    "unknown": "Exact middle direct gimu matchAll returned text is not losslessly observed through this AX publication. Do not count it as a proved text-semantic failure or claim every native returned match string was byte-perfect.",
+    "interpretation": "Source splits serialized output at400UTF16 units, so a surrogate-boundary publication loss is consistent with the evidence. This is an observation-channel limit, not evidence of a product text mutation."
+  },
+  "nodeBaseline": {
+    "source": "node-pure-baseline.json",
+    "engine": {
+      "node": "v22.22.3",
+      "v8": "12.4.254.21-node.56"
+    },
+    "typescriptVersion": "5.9.3",
+    "actual11CasesReviewed": true,
+    "check": "For each actual Node result object, original/candidate offsets and native matchAll indices equal the declared expected array. Candidate native offsets/segmented objects were compared with native captured outputs, not merely all11ExpectedCasesSucceeded.",
+    "initialVerifierFailurePreserved": {
+      "record": "preparation-checks/node-baseline-initial-verifier-failure.json",
+      "reportedNaturalIntegerExitCode": 1,
+      "meaning": "Initial Node verifier expected constructor pattern bytes equal canonical RegExp.source; slash escaping invalidated that assertion. The record says only verifier comparison was normalized, with probe/candidate/inputs unchanged. It is not production matching failure or Native failure.",
+      "rawLimit": "Original raw output is referenced as Root tool transcript chunk81239e by the preserved record; reviewer read the file record, not that earlier raw tool transcript. Corrected baseline is separate and pinned."
+    },
+    "notNativeAcceptance": true
+  },
+  "primarySourceLead": {
+    "title": "WebKit8c10428 /310677@main",
+    "url": "https://github.com/WebKit/WebKit/commit/8c10428db1b842eaf9531fc53e619f56e3062c79",
+    "localNote": "primary-source-note.md",
+    "independentlyOpenedOfficialCommit": true,
+    "supported": "The upstream change addresses stale non-BMP position state across alternative reentry; its regression comments condition an optimization on multiline being disabled and include a multiline sanity sample.",
+    "inference": "This motivates testing a multiline bypass while retaining Unicode flags. Our literal has no explicit alternation and does not reproduce the full upstream regression. The lead does not identify the installed engine commit or prove its unique internal cause."
+  },
+  "limits": [
+    "Private gimu success is a fixed pure-function/native-control result. It does not establish adopted production source engineering, ThreadPage glyph placement, formal installed failure repair or complete P12 acceptance.",
+    "Only11 fixed cases are covered. Literal anchors, ASCII case, long-s/Kelvin/Deseret folding, emoji query and non-overlap have measured offsets/segments; arbitrary Unicode, hidden states, stream changes and whole conversation routes are not covered by this arm.",
+    "Production escaping keeps query anchors literal in the inspected code; g/i/u are preserved. No broad semantic/performance guarantee is inferred from adding m or from these small examples.",
+    "Node positive and Native candidate result remain separate; first Node validator failure and all earlier original giu failures stay preserved.",
+    "No unique JavaScriptCore defect/revision, installed fix version or sole historical root cause is assigned."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/preparation.json",
+      "sha256": "b3eb52e2771ac27d0831a58df6ebe66af49b58a3dc29dc9b058365a0dc8a8328",
+      "bytes": 11725,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/README.md",
+      "sha256": "b507337ad8a071ddd2838b738a0996b413990bd0a9b9e86c9672bd064d407242",
+      "bytes": 2471,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/transcript_find.gimu.ts",
+      "sha256": "aa671486df397d2ceb1dfebf29bdf587b55f35b5fbbf865e596a4f018b50224c",
+      "bytes": 1783,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/matcher-gimu.unbound.patch",
+      "sha256": "5a42cdc50368f8cd422ab89c17a16b2c1ba8601911d6fbd7060c9202332d62df",
+      "bytes": 476,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/fixed-inputs.ts",
+      "sha256": "49177eaf3ecdabf3c95e13977460931b3c415efc70e5f3490662597049b77783",
+      "bytes": 1095,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/pure-probe.ts",
+      "sha256": "f3b1af9a965143ecc5bc9e03e2d0311c03f8eaf08dccf58b8553bd856c89bec6",
+      "bytes": 3277,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/diagnostic.ts",
+      "sha256": "0e5d5e73d3656f3656564d044ca7cff4c430fa175c182b3c52d258cb6db2160d",
+      "bytes": 1611,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/vite.config.mjs",
+      "sha256": "bb8d16cbc41260b69af1ecd94adba1e9e7cdeadfadf01adeb3c666ccdeb2446e",
+      "bytes": 1142,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/node-pure-baseline.json",
+      "sha256": "b4b14d719e933ced0aeaee719c8f9836ab6c89a8826387ee1c46165455975c35",
+      "bytes": 59671,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/static-checks.json",
+      "sha256": "822b2458e4cb0c846c15e5aa9c0d3b644eadf1193b4f157fea9067599a3a0611",
+      "bytes": 4534,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/primary-source-note.md",
+      "sha256": "156a37a5309114fdf9000106c64b975ba0d216061d85adf05a926771fae970d5",
+      "bytes": 1165,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/preparation-checks/node-baseline-initial-verifier-failure.json",
+      "sha256": "f37d58d07136aad4a3433c610d29796255bca7cc90052bd231a2ba73f2ad9346",
+      "bytes": 855,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/operator-preflight.json",
+      "sha256": "628ed3800591ca49596000fbb5c4206166ab3c815701cceb867225d3d01b3872",
+      "bytes": 1072,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/build-started.json",
+      "sha256": "9dd71f773d4945c83022dde125d8ac3d4acb356cb856e3df982fecdea686aa9b",
+      "bytes": 540,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/build-result.json",
+      "sha256": "63c8e166baac6fbe5f16d63dd2871077d2481fbfe5ffa25f052bc3f7bc1b918f",
+      "bytes": 2289,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/build-delivery.json",
+      "sha256": "07ab522791dce7ba139c298395d1e79939b3c4c043643149c0063932e176eedb",
+      "bytes": 2119,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/source-before.json",
+      "sha256": "46d66aa9a5e99463e2f1db7c2ab97c6ebeee8f26c7dc03cf4638ee905bc08a6e",
+      "bytes": 268049,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/source-after.json",
+      "sha256": "f7fb45be2fbf6723b0ef31592ca9e1395281d98c21ad46217d5da272c68f9b26",
+      "bytes": 268050,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/build.stdout",
+      "sha256": "9a6a8b5442761f6e58a5fa0919d935da2bdba6247a5d2e8bedc7823382b7a3b1",
+      "bytes": 453,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/execution-r14/preview-readiness.json",
+      "sha256": "90da03985e3d3e375ed5ad488ce7c84010a87309f0b656f6437858d4f28cd70c",
+      "bytes": 540,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/production-output/assets/index-BpsmHYGn.js",
+      "sha256": "562fb0610d0c1e1954a3b8e269dda86f4eb56c106f4a49018589f2c5f26c2b1b",
+      "bytes": 4956,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/production-output/index.html",
+      "sha256": "18bdbb9fa3707d321b4a3ee062eff323936bd576568d3ee1159a70a67ada041f",
+      "bytes": 610,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-multiline-flag-control/00-initial.jpg",
+      "sha256": "3ecdaec4834229043fa9f6877868ea9412cfbc6431638d3534d11dade9aeebd0",
+      "bytes": 204639,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-multiline-flag-control/01-captured.jpg",
+      "sha256": "a871ae64fd4b3d3da3f26df49466a16df911e35466d5c42340415831d484adb3",
+      "bytes": 806449,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-multiline-flag-control/00-initial.ax.txt",
+      "sha256": "9c9ce917807cb3a7455ce78036b62a87242b14693bb3e29226e403c499719aa1",
+      "bytes": 2593,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-multiline-flag-control/01-captured.ax.txt",
+      "sha256": "47d8cb7a5919b3f8c38b409d039f164492e6c6f14f629567f58e66a9682d1f8d",
+      "bytes": 25723,
+      "observedMode": 384
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/unicode-regexp-pure-control-summary.json",
+      "sha256": "36f22ebf2c24c67a59b8170c8f30bfa5e7c3c34f21737cdf31a5aac429feb0a1",
+      "bytes": 38311,
+      "observedMode": 384
+    }
+  ]
+}

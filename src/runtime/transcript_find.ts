@@ -5,7 +5,9 @@ export function textMatchOffsets(text: string, query: string): number[] {
   // RegExp indices belong to the original UTF-16 string. Lowercasing the
   // complete text first can change its length (for example Turkish capital İ).
   const literal = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return [...text.matchAll(new RegExp(literal, "giu"))].map(
+  // Multiline is inert for escaped literals and avoids the observed WebKit
+  // Unicode search miss after an emoji, retaining case folding and offsets.
+  return [...text.matchAll(new RegExp(literal, "gimu"))].map(
     (match) => match.index,
   );
 }

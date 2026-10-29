@@ -239,6 +239,11 @@
     display: none;
   }
 }
+/* WebKit custom highlights need selectable transcript text. */
+.transcript [data-find-block] {
+  -webkit-user-select: text;
+  user-select: text;
+}
 ::highlight(conversation-find) {
   background: #f4dda5;
   color: #392d14;

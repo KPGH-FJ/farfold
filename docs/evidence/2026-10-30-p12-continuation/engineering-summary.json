@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12SevenEngineeringChecksIndependentReviewForSourceAndCandidateBasis",
+  "recordedAt": "2026-10-29T19:38:29.998753+00:00",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "scope": "Independent readback of one completed seven-check engineering run and its declared source binding. This is source/candidate preparation evidence, not a packaged candidate, formal installation, real affected-path result or29x8 acceptance.",
+  "review": {
+    "reviewer": "/root/progress_evidence",
+    "sourceAndArtifactSecondReader": "/root/progress_evidence/geometry_preparation_review",
+    "checksRerun": false,
+    "productionSourceChangedByReviewer": false,
+    "originalStdoutStderrReadAndHashed": 14,
+    "blockingFindings": []
+  },
+  "run": {
+    "operatorReportedSession": 28137,
+    "runnerStartedAt": "2026-10-29T19:28:01.688930+00:00",
+    "runnerFinishedAt": "2026-10-29T19:32:46.143456+00:00",
+    "runnerNaturalIntegerExitCode": 0,
+    "sevenSequentialCommandsCompleted": true,
+    "checks": [
+      {
+        "check": "format",
+        "argv": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0
+      },
+      {
+        "check": "typecheck",
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0
+      },
+      {
+        "check": "frontend-test-direct",
+        "argv": ["corepack", "pnpm", "test"],
+        "exitCode": 0
+      },
+      {
+        "check": "build",
+        "argv": ["corepack", "pnpm", "build"],
+        "exitCode": 0
+      },
+      {
+        "check": "cargo-fmt",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0
+      },
+      {
+        "check": "cargo-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0
+      },
+      {
+        "check": "cargo-test",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0
+      }
+    ]
+  },
+  "sourceBinding": {
+    "baseHead": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "inputCount": 2333,
+    "inputMappingType": "relative path -> SHA256 string",
+    "beforeAfterExpectedMapsExactlyEqual": true,
+    "current2333FileByteHashesMatch": true,
+    "currentDeclaredScopeClosureHasNoAddedOrRemovedPath": true,
+    "modeBinding": "Separate2333entry octal-mode map in binding-preflight.inputModes; current modes all match. Modes are not fields in the source hash snapshots.",
+    "perCommandSourceHashEndpointChecksMatched": 7,
+    "supplementalFormattingAndAuthorityPinsMatched": 5,
+    "scope": "Declared product/resource/script roots and root/Tauri build configs, as enumerated by source-before.scopeDetails. Includes PRODUCT and requirement/reference inputs; excludes generated output, node_modules bytes, private captures and user data.",
+    "supplementalScope": "AGENTS, status, sole plan, .prettierignore and the selectable-text source-control summary are separately pinned by binding-preflight, outside the2333map.",
+    "endpointLimit": "Before/after/per-command hash equality and current readback do not certify uninterrupted absence of an intermediate writer or freeze installed dependency bytes/environment."
+  },
+  "changeBaselines": {
+    "relativeToPriorFullEngineeringFreeze": [
+      "docs/agent-access-requirements.md",
+      "src/conversation-redesign.css",
+      "src/runtime/mcp_add_controller.test.ts",
+      "src/runtime/mcp_add_types.test.ts",
+      "src/runtime/mcp_add_types.ts",
+      "src/runtime/mcp_management_strings.ts",
+      "src/runtime/strings.test.ts"
+    ],
+    "priorFreeze": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-engineering/source-after.json",
+      "sha256": "c8657e114a6c9354ce8b372eea917cc396666c96646cc42f24582313a2465dd1"
+    },
+    "priorDeltaCount": 7,
+    "addedOrRemovedInputs": 0,
+    "relativeToCurrentHeadWithinInputs": [
+      "docs/agent-access-requirements.md",
+      "src/conversation-redesign.css"
+    ],
+    "css": "Five added lines: one comment and scoped -webkit-user-select:text/user-select:text rule. ConversationFind JavaScript is unchanged.",
+    "mcpFiveFiles": "Already present in1d791 HEAD with no working-tree difference; included because they differ from the prior full engineering freeze. They are not five new edits in this CSS batch or installed acceptance.",
+    "requirements": "All151 IDs, titles and completion conditions retained. Relative to the prior freeze only P01/P12 progress content and table padding differ; relative to HEAD only the P12 progress cell changes.",
+    "trackedSupplementalDocsAtBinding": [
+      "docs/status.md",
+      "plans/agent-access.md"
+    ]
+  },
+  "actualResults": {
+    "format": "Prettier reports all matched files formatted; exit0.",
+    "typecheck": "tsc -b --pretty false; exit0.",
+    "frontend": {
+      "testFilesPassed": 691,
+      "testFilesTotal": 691,
+      "testsPassed": 9208,
+      "testsTotal": 9208,
+      "failed": 0
+    },
+    "frontendBuild": "tsc -b && vite build completed;5427 modules transformed. This is frontend output, not a Tauri release app.",
+    "cargoFmt": "Empty stdout/stderr and natural exit0.",
+    "cargoClippy": "-D warnings completed with natural exit0; Finished dev profile present.",
+    "rustLibrary": {
+      "total": 2332,
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    },
+    "rustMain": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "rustDoc": {
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0
+    },
+    "rustIndividualOutcomeLinesRecounted": {
+      "ok": 2326,
+      "ignored": 6,
+      "FAILED": 0
+    },
+    "ignoredOriginalLines": [
+      "test acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport ... ignored, manual real installed Agent initialize-only probe; requires explicit authorization",
+      "test acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session ... ignored, requires a real agent binary; run manually",
+      "test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ignored, requires a real agent binary; run manually",
+      "test auth::tests::keychain_round_trip_stores_and_reads_back ... ignored, writes and removes one non-account test key in the local Keychain",
+      "test credentials::keychain_test::real_keychain_roundtrip ... ignored, writes and removes one non-account test key in the local Keychain",
+      "test file_delivery::stream_tests::ordinary_256_mib_streaming_benchmark ... ignored, explicit 256 MiB performance and memory measurement, not a routine fixture"
+    ]
+  },
+  "preservedDiagnostics": {
+    "cargoTestStderr": {
+      "zipWriterDropFailedOccurrences": 4,
+      "message": "ZipWriter drop failed: Io(Custom { kind: Other, error: \"archive write stopped\" })",
+      "countedDespiteNaturalExitZero": true,
+      "causeNotClassifiedByThisReview": true
+    },
+    "frontendBuildStderr": {
+      "warning": "Some chunks are larger than500kB after minification.",
+      "rawWarningAndItsSuggestionsRetained": true
+    },
+    "limits": "These messages remain in the original hashed streams; all-zero process exits and test failure counts do not mean no diagnostic output occurred."
+  },
+  "priorControlArtifactPreservation": {
+    "authoritativeOwnVerification": "post-run-binding-verification-v2.json, independently recalculated here.",
+    "arms": 8,
+    "outputFilesPerArm": 3,
+    "totalArtifacts": 24,
+    "shaBytesAndModesMatched": 24,
+    "v1Correction": "The original post-run-binding-verification.json checked zero artifact entries and its artifactHashesMatched=true is vacuous for artifacts. V2 explicitly checks outputFiles with3entries/arm. V1 is preserved and is not used as artifact preservation proof.",
+    "previewProcessStateNotInspectedOrTerminated": true
+  },
+  "acceptanceBoundary": {
+    "engineeringPassForBoundSource": true,
+    "maySupportSourceCommitAndCandidatePreparation": true,
+    "candidateReleaseAppBuiltByTheseChecks": false,
+    "formalInstalledRepairVerified": false,
+    "realAffectedPathVerified": false,
+    "fullP12Closed": false,
+    "all29x8Accepted": false,
+    "publicSummaryCreatedAfterChecks": "This new review JSON was created after the run, is outside the2333source input map and is formatted separately. No additional full test run is claimed."
+  },
+  "referencesSha256": {
+    "output/2026-10-30-p12-continuation/engineering/engineering-summary.json": "8990393448d186f4433c6570158fa60ba5b96c095faa1f087343c6ae346d79c1",
+    "output/2026-10-30-p12-continuation/engineering/source-before.json": "1903d66b4333e56cd087f238eaeab292f29954e9420a3a703e3c790e1d6e51d8",
+    "output/2026-10-30-p12-continuation/engineering/source-after.json": "f6ea3f973c7d368459af1d92d8992f4822618582bb9357926fabdea321d35a40",
+    "output/2026-10-30-p12-continuation/engineering/source-expected.json": "5fa4cb440c7b5b1c55c55c62a5097e8391d68a790164f38f4c042b87fe68ca26",
+    "output/2026-10-30-p12-continuation/engineering/binding-preflight.json": "8cb2275fe9718eb542c01051d73068d4e29f1a11c169bfc9decd8bb29993c262",
+    "output/2026-10-30-p12-continuation/engineering/preflight.json": "22649676ce0b568417a68739b7fbb65fba7f4142fd627c7d7e5cacb90cf67ab9",
+    "output/2026-10-30-p12-continuation/engineering/post-run-binding-verification.json": "9ed5a1a825cbcd45a0b6ecc6c82dd4ac4310ba2b0d448ed501d205ed243e45d5",
+    "output/2026-10-30-p12-continuation/engineering/post-run-binding-verification-v2.json": "10024805c382165a30518ef495ce2d54c341c3240db932b4327b6061bc30cecc",
+    "output/2026-10-30-p12-continuation/engineering/runner-started.json": "200559f76b2f160ee67847b8a3c4f6fb37d05c1dd47218a39804c1f4e4a8c3ff",
+    "output/2026-10-30-p12-continuation/engineering/runner-command.json": "55169ffa2d200411ddd5d44f7580141964f7fad960735671535eb84121a6398a",
+    "output/2026-10-30-p12-continuation/engineering/runner.stdout": "aa4281b3be7a79a4b2e71883b7810ac3d1a795f7570db2e02bf67e35d881f508",
+    "output/2026-10-30-p12-continuation/engineering/runner.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/run-seven.py": "97cde2b3d9b7583aab8be8667ed9b93c06e2d79ab5d675bd327b1ecf6f999f51",
+    "output/2026-10-30-p12-continuation/engineering/format-command.json": "3ce44d513fb89d559434ae75d4d14a6c1fc7e2e1bc0fef44a9c57840f1be2e74",
+    "output/2026-10-30-p12-continuation/engineering/format-started.json": "20159db03c596de033fe02d8b3c38fc996ba56bff29c6a0335ba8380b96b7e79",
+    "output/2026-10-30-p12-continuation/engineering/format.stdout": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "output/2026-10-30-p12-continuation/engineering/format.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/typecheck-command.json": "5904d7605658f01a9a88360b5534a6d3cefeb6a1d4b8f62f91933e9257bda2c9",
+    "output/2026-10-30-p12-continuation/engineering/typecheck-started.json": "451175932bd9dab69b209dbfdbe0cb4dc699654a81187294f39f2c4fb4333ea7",
+    "output/2026-10-30-p12-continuation/engineering/typecheck.stdout": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "output/2026-10-30-p12-continuation/engineering/typecheck.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/frontend-test-direct-command.json": "464cbeeee37e5602352fc46d4e875ac40ed088b17ef279194c820e52111585c8",
+    "output/2026-10-30-p12-continuation/engineering/frontend-test-direct-started.json": "e42942751d2fc8873f92058edc309e5aeb1aef9aa671a8a8ed7b11b0f8458891",
+    "output/2026-10-30-p12-continuation/engineering/frontend-test-direct.stdout": "261917dd13b0a0d82d81ffcdbf6cfe1ccb97abf8c404105869be6b258748c83f",
+    "output/2026-10-30-p12-continuation/engineering/frontend-test-direct.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/build-command.json": "820d7caf810b5a60b7565edc7b210cd6cfed6a88ef2199cb4b3584ccab292e50",
+    "output/2026-10-30-p12-continuation/engineering/build-started.json": "a123849b7ccfde09146bfdb4cd0209082e628e5c4775cdf075a9a32158a38e6d",
+    "output/2026-10-30-p12-continuation/engineering/build.stdout": "00ccfa4fc3669a676370c224b72ca82485c712fb30c2549dae8ea9b1523769f2",
+    "output/2026-10-30-p12-continuation/engineering/build.stderr": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+    "output/2026-10-30-p12-continuation/engineering/cargo-fmt-command.json": "94f2567c78ef109a8c7fec7e80201ec255a64f889e00f96391959155285519c6",
+    "output/2026-10-30-p12-continuation/engineering/cargo-fmt-started.json": "b1910022b2b4011e61001e5da8091fc338004646b6845ca57e8c38c6c6b8dd9a",
+    "output/2026-10-30-p12-continuation/engineering/cargo-fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/cargo-fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/cargo-clippy-command.json": "34fdbbb32acd5027fd82c433aaaa80a534cedaccfd6445489cd9cadee354ff41",
+    "output/2026-10-30-p12-continuation/engineering/cargo-clippy-started.json": "3aad5bbabdb69e5ac8538712d3d293381b3ffa79028e6efa5746da610f083912",
+    "output/2026-10-30-p12-continuation/engineering/cargo-clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "output/2026-10-30-p12-continuation/engineering/cargo-clippy.stderr": "dccad65a474a0e64d7c677fc96c87f30265067841005a793f4d82605fea6fe77",
+    "output/2026-10-30-p12-continuation/engineering/cargo-test-command.json": "6dd361999b9e92d0e667fbfe39241aaea5ea265a0d9cd0d3b17ec3ed02d5f820",
+    "output/2026-10-30-p12-continuation/engineering/cargo-test-started.json": "54dc399f882a0a5b48c6d143a88adbd665a6ccb1b3a1186ae5bcf492b5704889",
+    "output/2026-10-30-p12-continuation/engineering/cargo-test.stdout": "d71918e744f3ee050012d2a57c63b64b76188dd2185932eff2fa41d587b3c698",
+    "output/2026-10-30-p12-continuation/engineering/cargo-test.stderr": "96c5e3f5dd0a03bc0632c4dff43e7c1123f39b4351e8c6c17363cab23670c3c3",
+    "output/2026-10-30-p12-continuation/formal-stage-preparation-draft/run-seven.template.py": "06ffcada1a4c21e18a97c8c4e5910423d9adb68cdf213d90a17841ab2f907aaf",
+    "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering/run-checks-v2.py": "04274a39ada6c71563b01d141831435cdc8314cc6f674ed284e479d5860617b5",
+    "output/2026-10-30-p12-continuation/prod-control-design/execution-r1/build-result.json": "ee5458d3d5312d564d6f670e53402c25249beced100077b9f21f3f08b785d16e",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic/execution-r2/build-result.json": "889225034fcae8cd3ac4d26183e2abfd727ea6368a2946bda18a26ebdbf38af4",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/execution-r3/build-result.json": "09ae17c66b8da24cc3b298cd9029989609e24543e9342863c75ed1f220400c32",
+    "output/2026-10-30-p12-continuation/controls/production-highlight-timing-control/execution-r4/build-result.json": "de1b2bfb55f4e4ce1e03ade1ecf59e3a6ab74120be25079b8859d3e2fd6dbe04",
+    "output/2026-10-30-p12-continuation/controls/production-highlight-clone-control/execution-r5/build-result.json": "b1a39c06203a411c309a5ca8ccacf1075b22b56b6ff9bdadd722e8870dc2d689",
+    "output/2026-10-30-p12-continuation/controls/production-highlight-nonoverlap-control/execution-r6/build-result.json": "68868331003b8d2ec4fdd6d53730479eabeeeb97879345e70fb21d7078717eef",
+    "output/2026-10-30-p12-continuation/controls/production-range-geometry-diagnostic/execution-r7/build-result.json": "6f4c6e3f0828c2e4cfa6699cf7f8aef79978dbee330d4e293c38d5b9a7d68a4f",
+    "output/2026-10-30-p12-continuation/controls/production-text-selection-control/execution-r8/build-result.json": "c19f1d08309a48af2c46611602d7a8b1e3b915bf50a95e062bac3ecd2202a1f5"
+  }
+}

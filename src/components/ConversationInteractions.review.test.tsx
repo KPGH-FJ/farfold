@@ -177,8 +177,218 @@ function transcript() {
     disconnect,
     rangeCreated,
     parent,
+    root,
+    block,
+    text,
   };
 }
+
+function mockHighlights() {
+  const highlights = new Map<string, { ranges: Range[] }>();
+  vi.stubGlobal("CSS", { highlights });
+  vi.stubGlobal(
+    "Highlight",
+    class {
+      ranges: Range[] = [];
+      constructor(...args: unknown[]) {
+        expect(args).toHaveLength(0);
+      }
+      add(range: Range) {
+        this.ranges.push(range);
+      }
+    },
+  );
+  return highlights;
+}
+
+function queuedFrames() {
+  const frames = new Map<number, () => void>();
+  let id = 0;
+  vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+    frames.set(++id, callback);
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+    frames.delete(frame),
+  );
+  return () => {
+    const pending = [...frames.values()];
+    frames.clear();
+    pending.forEach((callback) => callback());
+  };
+}
+
+function guardedTranscript(kind: "details" | "hidden", endOnly = false) {
+  const fixture = transcript();
+  const paragraph = Object.assign(fixture.parent, fixture.block, {
+    parentElement: fixture.root,
+    getClientRects: () => [{}], // a cached rect must not admit hidden text
+    contains: (node: unknown) =>
+      node === fixture.parent || node === fixture.text,
+  });
+  const element = (tagName: string, parentElement: unknown) => ({
+    nodeType: 1,
+    tagName,
+    parentElement,
+    matches: () => false,
+    hasAttribute: () => false,
+    childNodes: [] as unknown[],
+    children: [] as unknown[],
+  });
+  const ancestor = {
+    ...element(kind === "details" ? "DETAILS" : "SPAN", fixture.root),
+    open: false,
+    hidden: kind === "hidden",
+  };
+  Object.assign(fixture.text, { parentElement: paragraph });
+  let endText = fixture.text;
+  if (endOnly) {
+    Object.assign(fixture.text, {
+      data: "展开后的正",
+      textContent: "展开后的正",
+    });
+    endText = { ...fixture.text, data: "文", textContent: "文" };
+    const tail = element("SPAN", ancestor);
+    tail.childNodes = [endText];
+    Object.assign(endText, { parentElement: tail });
+    const summary = {
+      ...element("SUMMARY", ancestor),
+      contains: (node: unknown): boolean => node === summary,
+    };
+    ancestor.childNodes = kind === "details" ? [summary, tail] : [tail];
+    ancestor.children = ancestor.childNodes;
+    Object.assign(ancestor, { parentElement: paragraph });
+    Object.assign(paragraph, {
+      tagName: "DIV",
+      childNodes: [fixture.text, ancestor],
+    });
+    Object.assign(fixture.root, { childNodes: [paragraph] });
+  } else {
+    ancestor.childNodes = [paragraph];
+    ancestor.children = [paragraph];
+    Object.assign(paragraph, { parentElement: ancestor });
+    Object.assign(fixture.root, { childNodes: [ancestor] });
+  }
+  return {
+    ...fixture,
+    ancestor,
+    endText,
+    commit: (open: boolean) => {
+      ancestor.open = open;
+      ancestor.hidden = kind === "hidden" && !open;
+      fixture.mutate(open);
+    },
+  };
+}
+
+function checkHighlightVisibility(
+  kind: "details" | "hidden",
+  endOnly: boolean,
+) {
+  const fixture = guardedTranscript(kind, endOnly);
+  const nextFrame = queuedFrames();
+  const highlights = mockHighlights();
+  const close = vi.fn(() => h.slots.forEach((slot) => slot.cleanup?.()));
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision: 1, onClose: close });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  const flush = () => {
+    render(read);
+    nextFrame();
+    render(read);
+    nextFrame();
+    return render(read);
+  };
+  const count = () =>
+    render(read).find((node) => node.props.role === "status")!.props.children;
+  flush();
+  expect(count()).toBe(R.findPosition(1, 1));
+  const created = fixture.rangeCreated.mock.results.at(-1)!.value!;
+  expect(created.startContainer).toBe(fixture.text);
+  expect(created.startOffset).toBe(4);
+  expect(created.endContainer).toBe(fixture.endText);
+  expect(created.endOffset).toBe(endOnly ? 1 : 6);
+  for (const key of ["conversation-find", "conversation-find-current"]) {
+    expect.soft(highlights.get(key)!.ranges).toHaveLength(0);
+  }
+
+  fixture.commit(true); // actual ancestor state changes before observer delivery
+  flush();
+  expect(count()).toBe(R.findPosition(1, 1));
+  const [registered] = highlights.get("conversation-find")!.ranges;
+  expect(highlights.get("conversation-find")!.ranges).toHaveLength(1);
+  expect(highlights.get("conversation-find-current")!.ranges).toEqual([
+    registered,
+  ]);
+  expect(registered.startContainer).toBe(fixture.text);
+  expect(registered.startOffset).toBe(4);
+  expect(registered.endContainer).toBe(fixture.endText);
+  expect(registered.endOffset).toBe(endOnly ? 1 : 6);
+
+  fixture.commit(false);
+  const view = flush();
+  expect(count()).toBe(R.findPosition(1, 1));
+  for (const key of ["conversation-find", "conversation-find-current"]) {
+    expect.soft(highlights.get(key)!.ranges).toHaveLength(0);
+  }
+  expect(highlights.size).toBe(2);
+  (
+    view.find((node) => node.props["aria-label"] === LIBRARY.cancel)!.props
+      .onClick as () => void
+  )();
+  expect(close).toHaveBeenCalledOnce();
+  expect(highlights.size).toBe(0);
+  expect(fixture.disconnect).toHaveBeenCalled();
+}
+
+it.each(["details", "hidden"] as const)(
+  "counts loaded text under a closed %s ancestor while registering only committed visible ranges",
+  (kind) => checkHighlightVisibility(kind, false),
+);
+
+it.each(["details", "hidden"] as const)(
+  "withholds a cross-node range with a visible start and a %s end until both endpoints commit",
+  (kind) => checkHighlightVisibility(kind, true),
+);
+
+it("highlights a direct summary while its details remains closed", () => {
+  const fixture = guardedTranscript("details");
+  Object.assign(fixture.parent, { tagName: "SUMMARY" });
+  const nextFrame = queuedFrames();
+  const highlights = mockHighlights();
+  const close = vi.fn(() => h.slots.forEach((slot) => slot.cleanup?.()));
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision: 1, onClose: close });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  render(read);
+  nextFrame();
+  const view = render(read);
+  expect(fixture.ancestor.open).toBe(false);
+  expect(
+    view.find((node) => node.props.role === "status")!.props.children,
+  ).toBe(R.findPosition(1, 1));
+  const [registered] = highlights.get("conversation-find")!.ranges;
+  expect(highlights.get("conversation-find")!.ranges).toHaveLength(1);
+  expect(highlights.get("conversation-find-current")!.ranges).toEqual([
+    registered,
+  ]);
+  expect(registered.startContainer).toBe(fixture.text);
+  expect(registered.startOffset).toBe(4);
+  expect(registered.endContainer).toBe(fixture.text);
+  expect(registered.endOffset).toBe(6);
+  (
+    view.find((node) => node.props["aria-label"] === LIBRARY.cancel)!.props
+      .onClick as () => void
+  )();
+  expect(close).toHaveBeenCalledOnce();
+  expect(highlights.size).toBe(0);
+});
 
 it.each(["toggle", "mutate"] as const)(
   "keeps loaded text searchable through %s without changing the query or thread revision",
@@ -375,20 +585,7 @@ it("coalesces streamed revisions and DOM mutations into one pending frame", () =
 
 it("adds highlights incrementally instead of passing every match as an argument", () => {
   const fixture = transcript();
-  const highlights = new Map<string, { ranges: Range[] }>();
-  vi.stubGlobal("CSS", { highlights });
-  vi.stubGlobal(
-    "Highlight",
-    class {
-      ranges: Range[] = [];
-      constructor(...args: unknown[]) {
-        expect(args).toHaveLength(0);
-      }
-      add(range: Range) {
-        this.ranges.push(range);
-      }
-    },
-  );
+  const highlights = mockHighlights();
   const read = () =>
     ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
   const input = render(read).find((node) => node.type === "input")!;

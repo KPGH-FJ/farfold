@@ -113,10 +113,24 @@ export function ConversationFind({
     if (registry && HighlightClass) {
       // A one-character query can have hundreds of thousands of occurrences.
       // Incremental add avoids the JavaScript function-argument count limit.
+      const root = host.current?.querySelector<HTMLElement>(".transcript");
+      // WebKit can paint a hidden range on unrelated visible text. Keep folded
+      // matches countable, but register their glyphs only after the DOM opens.
+      const canHighlight = (range: Range) => {
+        const start = range.startContainer.parentElement;
+        const end = range.endContainer.parentElement;
+        return !!(
+          root &&
+          start &&
+          end &&
+          hasOpenSearchAncestors(start, root) &&
+          hasOpenSearchAncestors(end, root)
+        );
+      };
       const all = new HighlightClass();
-      for (const range of ranges) all.add(range);
+      for (const range of ranges) if (canHighlight(range)) all.add(range);
       const active = new HighlightClass();
-      if (current) active.add(current);
+      if (current && canHighlight(current)) active.add(current);
       registry.set("conversation-find", all);
       registry.set("conversation-find-current", active);
     }
@@ -125,7 +139,7 @@ export function ConversationFind({
       registry?.delete("conversation-find");
       registry?.delete("conversation-find-current");
     };
-  }, [ranges, position]);
+  }, [host, ranges, position]);
   const current = ranges[position];
   useEffect(() => {
     const root = host.current?.querySelector<HTMLElement>(".transcript");

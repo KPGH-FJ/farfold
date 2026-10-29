@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentVisibleRangeSourceAndRedGreenReview",
+  "status": "source-guard-reviewed-focused-green; not-installed-or-complete-P12-acceptance",
+  "reviewMethod": "Read-only independent review of production diff/source, literal raw stdout/stderr, runner/start/result receipts, before/after input maps and previously reviewed private native control. No tests, build, UI or source mutation performed by reviewer.",
+  "source": {
+    "headContext": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "productionFindSha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+    "cssSha256": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344",
+    "focusedTestsSha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+    "productionDiffStillMatchesFrozenGreenPatch": true,
+    "findChange": "Only native Highlight admission: both endpoint parents must exist inside current transcript and pass existing structural open/hidden ancestor helper. Add host to this effect dependency list. Range matching/count/navigation/reveal/observer/position/identity/overlap/cleanup unchanged.",
+    "cssChange": "Earlier five-line selectable-text rule at actual production source position; no additional CSS changes in JS guard increment.",
+    "sourceLines": {
+      "src/components/ConversationFind.tsx": "116..142: owning root, two-endpoint predicate, guarded all/current registration and host dependency",
+      "src/conversation-redesign.css": "242..246: selectable text rule",
+      "src/components/ConversationInteractions.review.test.tsx": "186..391: shared Highlight recorder/queued frames, structural fixtures and five cases"
+    }
+  },
+  "privateControlCorrespondence": {
+    "summary": "docs/evidence/2026-10-30-p12-continuation/private-visible-range-control-summary.json",
+    "privateCase": "9481 / frozen production build r11",
+    "originalFindSha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+    "comparison": "TypeScript scanner token sequences match1519/1519 after restoring only four runtime import paths and adding host dependency; comments/whitespace skipped. No execution of source modules. Current source and frozen GREEN source bytes also match.",
+    "equivalenceLimit": "Native control used the private alias and did not exercise the newly added host-dependency response. This is guard-code correspondence plus source review, not a native run or install of the current source.",
+    "nativeObserved": "Previously independently reviewed39pictures/AX: known footer and placeholder paint failures absent on candidate, tool/dynamic route sampled positives; literal query still1/1 versus expected2. Alleged stale-emoji rectangle was corrected to unproven. Registry was not inspected."
+  },
+  "red": {
+    "originalFindExactFrozenCopyVerified": true,
+    "oldFindSha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+    "sameFocusedTestBytesAsGreen": true,
+    "filesFailed": 1,
+    "testsFailed": 4,
+    "testsPassed": 17,
+    "testsTotal": 21,
+    "softAssertionFailuresReadFromRaw": 16,
+    "exitCode": 1,
+    "stableRecordedInputs": 13,
+    "beforeAfterShaAndByteMapsEqual": true,
+    "failureMeaning": "Four cases cover fully hidden and visible-start/hidden-end ranges for details/hidden ancestors. For each, both all/current native Highlight mocks wrongly contain1 while closed before opening and after re-hide:4 cases ×2 states ×2 entries=16 failed soft assertions. Count1/1 and exact Range endpoints remain valid. No harness/type/runtime exception caused RED.",
+    "positiveAndExisting": "Direct closed-summary positive and16 existing cases passed. The newly added summary positive guards against blanket rejection of all closed-details descendants."
+  },
+  "green": {
+    "recordedTestsCommands": 1,
+    "filesPassed": 8,
+    "testsPassed": 69,
+    "includedFocusedFileTestsPassed": 21,
+    "newCasesPassed": 5,
+    "existingFocusedTestsPassed": 16,
+    "focusedTestsNotAddedAgainToTotal": true,
+    "testsExitCode": 0,
+    "fullTypecheckExitCode": 0,
+    "targetedThreeSourceFormatCheckExitCode": 0,
+    "threeChecksConcurrent": "Started within the same recorded interval; each runner preserves its own started/result/raw files and hashes the three changed source files before/after.",
+    "wholeRecordedSourceEndpointMapCount": 1434,
+    "wholeEndpointMapsEqualShaAndBytes": true,
+    "all1434CurrentDiskShaAndBytesMatchedAtReview": true,
+    "threeCurrentSourceFilesExactFrozenGreenCopies": true,
+    "sourceMapModesWereRecorded": false,
+    "mapLimit": "RED13 and GREEN1434 maps record hash/bytes, not modes. They establish endpoint equality, not continuous writer exclusion or whole dependency/environment freezing. Raw current modes are explicitly recorded in references.",
+    "allGreenStderrBytes": 0
+  },
+  "testBehaviorReview": {
+    "realCodeUsed": "Actual ConversationFind, transcriptRanges and existing structural helper are imported; new tests drive changed query, queued RAF, actual fixture ancestor commit and MutationObserver callback. Highlight is a recorder; document/Range factory and React hooks are controlled mocks.",
+    "necessaryBehaviors": [
+      "Loaded hidden text remains counted with exact matcher start/end offsets while omitted from both Highlight sets. Cached nonempty rect cannot bypass actual closed state.",
+      "Opening commits and observer refresh admit the same registered current/all Range object at that state; re-hiding removes glyph registration while count remains1/1.",
+      "Visible start with hidden end remains omitted; direct summary of closed details stays eligible; Close retires registry entries and disconnects observer within the fixture."
+    ],
+    "proofLimit": "Tests prove controlled structural admission/lifecycle behavior, not WebKit pixel correctness, native Range internals or real ThreadPage/Agent end-to-end results. Mock root.contains is permissive in the new fixture; owner-path helper tests provide separate controlled ownership checks."
+  },
+  "independentSourceReview": {
+    "blockingFindings": [],
+    "resources": "Guard adds only existing DOM ancestry/ownership predicate calls; no IO, decoder/media admission, geometry read, new timer/observer, clone or reveal-all.",
+    "host": "Production host dependency is appropriate for the newly read host; ThreadPage uses stable useRef, Find keyed by viewKey and mounted only active&&finding. Helper rejects absent root/parents or out-of-root endpoints.",
+    "scope": "Inspected production hidden wrappers are whole-field/disclosure wrappers and explicit searchable blocks; matcher splits block boundaries. Two-endpoint guard does not prove all interior nodes of arbitrary future hidden inline markup visible, nor arbitrary CSS display/visibility.",
+    "performance": "No latency/performance measurement; extra ancestor checks are not reported as a measured improvement."
+  },
+  "receipts": [
+    {
+      "receipt": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/run-result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "--reporter=verbose"
+      ],
+      "exitCode": 1,
+      "finishedAt": "2026-10-29T20:17:34.502214+00:00",
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/tests.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "src/runtime/transcript_find.test.ts",
+        "src/runtime/transcript_find_dom.test.ts",
+        "src/runtime/transcript_search.test.ts",
+        "src/components/TranscriptSearch.presentation.test.tsx",
+        "src/components/thread-items.search.test.tsx",
+        "src/components/thread-items.search-expansion.test.tsx",
+        "src/components/MessageContent.media-visibility.test.tsx",
+        "--reporter=verbose"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:22:54.570286+00:00",
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/typecheck.result.json",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:23:03.817161+00:00",
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/format.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/components/ConversationFind.tsx",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "src/conversation-redesign.css"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:22:52.315075+00:00",
+      "rawShaAndBytesRecomputed": true
+    }
+  ],
+  "acceptanceLimits": [
+    "Earlier full7 engineering-summary binds CSS-only source with old Find b9; it does not transfer full-engineering success to new JS/tests. This increment records8-file affected tests, full typecheck and targeted format only.",
+    "Current-source production build/full engineering and formal current-source installation are separate gates. No formal installed failure recheck or P12 closure follows from source/control code correspondence.",
+    "Original formal52aa failure and all original private observations remain; literal1/1 versus2 is still a recorded current P12 failure under investigation, not waived or reclassified.",
+    "No real Agent stream, unread historical body or physical attachment decoding was exercised by this batch."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/summary.json",
+      "sha256": "46a7fcff5c5ea0b6e16394365b0d05692f477fb03532f9473c797d47f383b4c7",
+      "bytes": 1909,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/run-started.json",
+      "sha256": "649e67fd47df894f17ed66c409943770f11c3f2475c7fffc2ce2d5716efe82db",
+      "bytes": 348,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/run-result.json",
+      "sha256": "65452af1137864b2f9aebe2693e7b040385b153f7ac38c533671e8df9d4e7408",
+      "bytes": 692,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/run-red.py",
+      "sha256": "1c28717d65eaf2c09ee5a0fde2221d7df5b477522ab3ef8d313839453b3996d1",
+      "bytes": 2562,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/source-before.json",
+      "sha256": "462b1292b99a09b9ab958c08b82e7abb88871b4965f0a541ed82d93410e69d61",
+      "bytes": 2040,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/source-after.json",
+      "sha256": "1abb9777b6d810c39983686c1b70715ac82e17f6f9b78b15d5f0786b3b347ca9",
+      "bytes": 2040,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/vitest.stdout.raw",
+      "sha256": "811a651fa6f743c871d9b55e1a5db7d89f606a8e073bed9f4f608746187460c8",
+      "bytes": 4729,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/vitest.stderr.raw",
+      "sha256": "58173c0d7068e6256cda65411c5b7808b47ed9a8aac0d4ecd9c9d25962ecd125",
+      "bytes": 5385,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/static-checks.json",
+      "sha256": "92a8156a6510ffdcc91c66c4c8ccd0f23ac29d0b544d1691ebc02e05e824bc4d",
+      "bytes": 283,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/tests-only.diff",
+      "sha256": "79be7000bda072fb1add8188c3ce5ded0121824f2f34870e15bd596e41288fe0",
+      "bytes": 8619,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/ConversationFind.unchanged.tsx.raw",
+      "sha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+      "bytes": 7799,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/ConversationInteractions.before.test.tsx.raw",
+      "sha256": "bd2ca998fc39ed5060459f5b664d79f1608d5da73d02ca22dadebcd8615f625b",
+      "bytes": 17843,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-red/ConversationInteractions.after.test.tsx.raw",
+      "sha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+      "bytes": 24620,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/summary.json",
+      "sha256": "b58514d18f7e5ed193f8b89c1086fb3500e5615706732c8315922f6e02c5f7c1",
+      "bytes": 1511,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/source-review.json",
+      "sha256": "df40c89d416aa8d71c0c958377ce81908d6c738fb50246fa49ac4ef95ee18d6a",
+      "bytes": 1433,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/source-before.json",
+      "sha256": "b702a6e2e8cae80c14b0d1ac5e9eb0d906c5f17a15a8f9211d687b1c1ccc3af0",
+      "bytes": 229194,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/source-after.json",
+      "sha256": "73f0258fa1ac9620ff9b17bf7f5eebdf659fce3bc8b012a368c9c8ef465aef7e",
+      "bytes": 229194,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/run-check.py",
+      "sha256": "d2886f51b0d36c7c06269c0141e077649b2f76ac2e17fb53a1905648eec719c5",
+      "bytes": 2298,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/production-diff.patch",
+      "sha256": "c5f1165aa373477fd83b149ceff5536c14eb255a931d76ab9a28a304af7c8ff5",
+      "bytes": 10920,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/ConversationFind.tsx.raw",
+      "sha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+      "bytes": 8436,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/ConversationInteractions.review.test.tsx.raw",
+      "sha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+      "bytes": 24620,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/conversation-redesign.css.raw",
+      "sha256": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344",
+      "bytes": 5947,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/tests.started.json",
+      "sha256": "a812fbd78d99857c65020f8e46f2a6ddb713e850646a85693524bb58fd652b65",
+      "bytes": 1004,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/tests.result.json",
+      "sha256": "065158daa115b67d7ca849e52a01349b6e49089a9957698e30f0703b1244b244",
+      "bytes": 1351,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/tests.stdout.raw",
+      "sha256": "edd689f31319fc5f7cd268103f286bb093e9b193438b67d8a0e75182e7e4dfb2",
+      "bytes": 9623,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/tests.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/typecheck.started.json",
+      "sha256": "c67805cde6c80e10b46e8d22877b96581b04177895831236656fbc764d80e796",
+      "bytes": 524,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/typecheck.result.json",
+      "sha256": "7a47b3287253ac60f11e4589e4f4b0d3fd154b52f8e0044976dfc43f259223ae",
+      "bytes": 877,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/typecheck.stdout.raw",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/typecheck.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/format.started.json",
+      "sha256": "782afd6e6c521937b713fb02a88ff1fb75c7f4885489a4e2bcf43a82386b3107",
+      "bytes": 693,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/format.result.json",
+      "sha256": "efe1b4bf30efe1564bb3746132499880d248c6900d07cbd210d8e220253820f9",
+      "bytes": 1033,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/format.stdout.raw",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/visible-range-source-tests-green/format.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/private-visible-range-control-summary.json",
+      "sha256": "ad1879825e89bd300a24dc5d0eb36d7c56155718b9980365e6a0cc77374e6cd8",
+      "bytes": 40428,
+      "observedMode": 384
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/engineering-summary.json",
+      "sha256": "753ecfbcd413a5ddbae59f5c9c4aebf7ac9bb2637612b2da6f43e973f3a080cf",
+      "bytes": 16279,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/preparation.json",
+      "sha256": "17f89c548fd4bd64a4b895d80685d8daf7cc09ba24123c2abe0d356b22e42e20",
+      "bytes": 30805,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/ConversationFind.original.tsx.raw",
+      "sha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+      "bytes": 7799,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/ConversationFind.visible.tsx",
+      "sha256": "7e32b09ad91b9ae37826baa46a56719b06a8105fab904a700d3e717e6f58ceb8",
+      "bytes": 8286,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/visibility-only.diff",
+      "sha256": "d5cec220e9d5e12807d2befa325ab75ebc728ae42a06efb23ba574a35d516931",
+      "bytes": 1143,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "sha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+      "bytes": 8436,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/ConversationInteractions.review.test.tsx",
+      "sha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+      "bytes": 24620,
+      "observedMode": 420
+    },
+    {
+      "path": "src/conversation-redesign.css",
+      "sha256": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344",
+      "bytes": 5947,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_search.ts",
+      "sha256": "f666e038a325846e95427b2471e7453061743e6c3fc99b9b9d9abc35965af859",
+      "bytes": 3230,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_find_dom.ts",
+      "sha256": "cd5d235ef1864465e929e7c495baa74fced85727e88416a05eaf44970e34812b",
+      "bytes": 2722,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "56f264fa8c49c6fe3e209502d5728bfc2348eca09966fde3b44a291546dbf783",
+      "bytes": 25966,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/transcript-search.tsx",
+      "sha256": "55bd26fd84156e45a58b4eff215118ffcb931ecfb2d3dba79ce121deb913af61",
+      "bytes": 2237,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "6b21e0de01eb539df4f99d6bbc1e4b9903074c7b67cee6092ef14a3e2c0b0fec",
+      "bytes": 14650,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "51b3b976c8cd35e4bf5254e85b64671676eb2bf83fc122b8a9e4b718e2dd034d",
+      "bytes": 19650,
+      "observedMode": 420
+    }
+  ]
+}

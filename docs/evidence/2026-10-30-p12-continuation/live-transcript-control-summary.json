@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12SyntheticReactLoadedTextChangesAndDisclosureStateControlSummary",
+  "recordedAt": "2026-10-29T18:31:40.404Z",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "level": "controlled-browser",
+  "sourceContext": {
+    "preparationSourceCommitContext": "1d791c2cf",
+    "preparationRef": {
+      "path": "output/2026-10-30-p12-continuation/controls/live-transcript-control/preparation.json",
+      "sha256": "5cf8a76a3b6d8bd5970459cfa6395805c825c3137dc00d3134e71b03b2214152"
+    },
+    "reviewReadbackControlFilesMatch": 4,
+    "reviewReadbackRuntimeInputsMatch": 55,
+    "actualProductionImports": [
+      "ConversationFind",
+      "SearchDisclosure",
+      "TranscriptSearchContext",
+      "source stylesheet cascade"
+    ],
+    "fixtureUsesActualReactStateAndTextCommit": true,
+    "nodeIdentityIndicatorMechanism": "A fixture useEffect compares the current paragraph.firstChild object with the saved original child after the React text update, then renders its result outside the transcript. It does not inspect a product locator, CSS Highlight registry, geometry or Range endpoints.",
+    "boundaries": "The two fixture Page components model active/hidden views and conditional Find mounting. No real ThreadPage route, Agent event stream, installed application or complete product update lifecycle was exercised. Static current hashes do not prove continuous stability or loaded-module identity."
+  },
+  "environment": {
+    "surface": "ChatGPT in-app browser controlled synthetic page, as identified by the operator context and saved browser AX",
+    "imagePixelDimensions": {
+      "width": 1280,
+      "height": 720
+    },
+    "browserEngineVersion": null,
+    "browserEngineVersionStatus": "not captured for this sequence; no engine inferred from AXWebArea",
+    "exactCssViewportOrDprIndependentlyQueried": false
+  },
+  "prospectiveOracle": {
+    "initialAOccurrences": 2,
+    "afterSameNodeAppendAOccurrences": 3,
+    "afterNewFieldAppendAOccurrences": 4,
+    "BOccurrences": 1,
+    "basis": "Fixed owned synthetic source has one A-head needle and one nested needle initially; one explicit earlier-head occurrence and one later added field are conditionally appended. B has its own one literal. The fixture does not calculate expected Find counters.",
+    "relevantAOrderAfterAppends": [
+      "head first occurrence",
+      "head second occurrence",
+      "nested third-layer field",
+      "new final field"
+    ]
+  },
+  "actualUiOperator": "Root",
+  "independentSavedEvidenceReview": {
+    "reviewer": "/root/progress_evidence",
+    "reviewerOperatedUiOrReexecutedSequence": false,
+    "originalImagesActuallyViewed": 14,
+    "completeAxFilesRead": 14,
+    "axReadMethod": "All complete originals were read; exact source prose repeated3 in fourteen unchanged paragraph nodes per A capture was deterministically deduplicated only in tool display. Every other AX node, value, state and focus line was retained; no AX evidence file was rewritten.",
+    "blockingFindingsWithinStatedVisibleBehavior": [],
+    "unmeasuredProspectiveAssertions": [
+      "Exact Highlight registry entries/range endpoints before and after switches/Close",
+      "Direct selected Range identity while the nested target is offscreen",
+      "Continuous scroll position or the cause of every scroll/reflow between snapshots"
+    ]
+  },
+  "observations": [
+    {
+      "stage": "00-initial",
+      "finding": "Page A has no Find, one visible head literal and an AX-collapsed outer disclosure; fixture reports neither addition made; composer is empty."
+    },
+    {
+      "stage": "01-A-first",
+      "counter": "1 / 2",
+      "finding": "First head literal is yellow and its paragraph outlined. Outer disclosure is still AX-collapsed; query is the declared literal."
+    },
+    {
+      "stage": "02-A-nested-target",
+      "counter": "2 / 2",
+      "finding": "Outer, middle and inner disclosures are all AX-expanded. The nested literal is yellow, outlined and fully readable above the empty composer."
+    },
+    {
+      "stage": "03-A-manually-away",
+      "counter": "2 / 2",
+      "finding": "After the one recorded manual scroll, the image shows the upper head/prose region and not the selected nested field; the counter and AX-expanded nested text persist. The head includes a different noncurrent visible needle, so this is not an all-nonmatching viewport."
+    },
+    {
+      "stage": "04-A-same-node-appended",
+      "counter": "3 / 3",
+      "sameTextNodeReportedByFixture": true,
+      "finding": "Fixture reports same Text node; the head now contains two visible yellow literal occurrences. The saved view stays in the upper head/prose area instead of recentering the offscreen nested field. Counter3/3 and the fixed source order are consistent with the original nested ordinal; its current Range identity was not directly read."
+    },
+    {
+      "stage": "05-A-new-node-appended",
+      "counter": "3 / 4",
+      "finding": "Fixture reports the new field added, and complete AX exposes that new final matching field. The saved viewport still shows upper head/prose; counter3/4 is consistent with the nested ordinal but does not independently identify a Range."
+    },
+    {
+      "stage": "06-B-switched",
+      "finding": "Only page B is exposed in AX; Find is absent and the B literal is visible without yellow paint. Exact cleanup of global Highlight registry keys was not observed."
+    },
+    {
+      "stage": "07-B-one-match",
+      "counter": "1 / 1",
+      "finding": "B independently queries the same literal, paints its one visible target yellow and outlines its paragraph. Its count excludes the four A occurrences within this fixture behavior; no whole-product cross-conversation proof follows."
+    },
+    {
+      "stage": "08-A-return-empty",
+      "finding": "A returns with Find visible but query empty and navigation disabled. Its two head occurrences are plain, additions remain in AX, the outer disclosure is collapsed and former nested content is no longer exposed. Hidden middle/inner DOM open flags and registry cleanup were not directly inspected."
+    },
+    {
+      "stage": "09-A-user-opened",
+      "finding": "Following one recorded explicit open of each outer/middle/inner summary, all three are AX-expanded while query is still empty. The nested literal is readable without yellow paint."
+    },
+    {
+      "stage": "10-A-requery",
+      "counter": "1 / 4",
+      "finding": "Requery selects the first head occurrence; both head literal occurrences are visible and yellow, with the head paragraph outlined; AX retains all three user-open disclosures."
+    },
+    {
+      "stage": "11-A-second",
+      "counter": "2 / 4",
+      "finding": "Next changes the ordinal to the second head occurrence; the shared head paragraph is still readable and outlined, and both literal occurrences are painted. This is an image/counter observation, not direct Range endpoint verification."
+    },
+    {
+      "stage": "12-A-third",
+      "counter": "3 / 4",
+      "finding": "Next reaches the nested literal, visibly yellow/outlined and readable. All three disclosures remain AX-expanded; the newly added fourth field is also visible with yellow literal paint, but direct navigation to4/4 was not performed."
+    },
+    {
+      "stage": "13-A-closed-user-opened",
+      "finding": "Find is absent; outer/middle/inner remain AX-expanded after their explicit user opens. Visible nested and added literals have no yellow search fill/selected outline, both additions remain in AX and composer remains empty. Offscreen glyph paint and registry absence are not certified."
+    }
+  ],
+  "behaviorAssessment": {
+    "fixedSyntheticCountersObservedInOrder": [
+      "1 / 2",
+      "2 / 2",
+      "2 / 2",
+      "3 / 3",
+      "3 / 4",
+      "1 / 1",
+      "1 / 4",
+      "2 / 4",
+      "3 / 4"
+    ],
+    "sameTextNodeIdentityReport": "Source-backed fixture indicator displayed same Text node after the actual React commit; no external direct node/Range identity dump was taken.",
+    "appendViewportAssessment": "The three sampled03/04/05 images retain the upper head/prose view while selected nested ordinal remains offscreen. This supports no observed recentering in those samples, not a continuous zero-scroll or numerical scrollTop proof; normal browser anchoring/reflow is not excluded.",
+    "switchAssessment": "Visible page/query/paint separation and removal of search-only exposed nested content are supported. Global Highlight registry/range cleanup and real ThreadPage ownership are unmeasured.",
+    "userDisclosureAssessment": "Three explicit user opens are followed by three expanded AX states; those expanded states and readable nested text persist after Close.",
+    "unexpectedBehaviorObservedWithinNarrowSequence": false
+  },
+  "operatorActions": {
+    "loggedActions": 17,
+    "findOpens": 2,
+    "queryInputs": 3,
+    "nextInputs": 3,
+    "manualScrollAway": 1,
+    "sameNodeAppend": 1,
+    "newFieldAppend": 1,
+    "pageSwitches": 2,
+    "explicitDisclosureOpens": 3,
+    "findCloses": 1,
+    "firstRecordedActionAt": "2026-10-29T18:24:30.937Z",
+    "lastRecordedActionAt": "2026-10-29T18:26:12.944Z",
+    "recordedFirstToLastActionSeconds": 102.007,
+    "totalCaseIncludingCaptureAndReviewSeconds": null,
+    "timeBudgetAcceptanceClaimed": false,
+    "boundary": "Only first-to-last recorded action timing is derived; final saved-capture completion time is not supplied. This is not backend latency, a continuous process observation or a no-internal-IO assertion."
+  },
+  "result": {
+    "controlledVisibleSequence": "supported-narrow-positive",
+    "registryAssertionsVerified": false,
+    "directRangeEndpointsVerified": false,
+    "realAgentStreamingVerified": false,
+    "realThreadPageRouteOrCompleteLifecycleVerified": false,
+    "installedAppCaseAdded": false,
+    "formalReceiptOrSealCreated": false,
+    "fullP12Closed": false,
+    "standardCellsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "all29Accepted": false
+  },
+  "limits": [
+    "This is one owned synthetic actual-React sequence with direct production Find/disclosure imports. A controlled text commit and fixture A/B visibility changes are not a real Agent stream, installed ThreadPage route, persisted history, model/configuration change or complete product lifecycle.",
+    "Counter totals agree with the fixed source oracle. Selected Range identity while offscreen, all registry contents, cleanup timing, arbitrary paint correctness and a continuous no-scroll result were not directly observed.",
+    "The prospective preparation mentioned registry ranges and absence assertions. Saved images/AX support only the narrower visible query/paint/expanded-state behavior reported here; those additional registry assertions remain unverified rather than silently marked passed.",
+    "On return to A, a collapsed outer disclosure and absent exposed nested body are directly observed. Hidden descendants are not each separately inspected until the later three explicit user opens and their all-expanded observation.",
+    "Only three of the final four matches were directly selected; the fourth added field was present in AX and later visibly painted. Its direct4/4 navigation and additional query replacement/clear/edge cases were not executed.",
+    "The separate52aa installed wrong-brace failure and old CFC/79e failures remain unchanged. This sequence neither explains nor fixes them; fullP12,151 original requirements,29by8 and NEW-24 protections remain open."
+  ],
+  "privacy": {
+    "syntheticTextOnly": true,
+    "actualUserHistoryAccountPathsOrAttachmentBytesCopiedIntoControl": false,
+    "sourceOrProductStateChangedByReviewer": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-transcript-control/preparation.json",
+      "sha256": "5cf8a76a3b6d8bd5970459cfa6395805c825c3137dc00d3134e71b03b2214152",
+      "bytes": 16267,
+      "role": "prospective-synthetic-control-preparation-not-runtime-result"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/operator-events.json",
+      "sha256": "4d302615ef2009593f835f1dbd7c36e241d7de1d2c1326d3396b3d80938066d2",
+      "bytes": 1663,
+      "role": "actual-operator-action-log"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/00-initial.jpg",
+      "sha256": "a909f445a3e8ded5ea81f651a308278a414b0f141ac9c3bcfece483fee0016cc",
+      "bytes": 170146,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/00-initial.ax.txt",
+      "sha256": "1a987786a1e640d7c22338cd53867fc4581d0d99b4bb3ef5b06826f4968837bf",
+      "bytes": 6789,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/01-A-first.jpg",
+      "sha256": "2805c65b8cf0bab952c8ea33ac6f5bdfd64dc566e39bbfde165a43b1a3ccf913",
+      "bytes": 158220,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/01-A-first.ax.txt",
+      "sha256": "433c2e0e482a0c454c103f644e8132e79c8b3d8aa913bca9e59ed6403d333924",
+      "bytes": 7106,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/02-A-nested-target.jpg",
+      "sha256": "81816bfbaeb16687e070413fcb294236951a49dd124be568bef4633d61a0a059",
+      "bytes": 142082,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/02-A-nested-target.ax.txt",
+      "sha256": "e06bda45471b029c0e2b2173445ea4baf05d99493445c5df9e52e602d2f7cb30",
+      "bytes": 7339,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/03-A-manually-away.jpg",
+      "sha256": "967b915e06c261baeef6e79dfe4692321a4babd584fde207d2e98e7dbb13c764",
+      "bytes": 153125,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/03-A-manually-away.ax.txt",
+      "sha256": "e06bda45471b029c0e2b2173445ea4baf05d99493445c5df9e52e602d2f7cb30",
+      "bytes": 7339,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/04-A-same-node-appended.jpg",
+      "sha256": "7e0ffaeed69645ca4eeab51f16ad404c75d0dc712582bf5d85178c8abe968672",
+      "bytes": 154447,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/04-A-same-node-appended.ax.txt",
+      "sha256": "a4b3363bf93c7219a9030288ecf0bcb2a22d1c4fe729b7fbe7f168c8a1b05a96",
+      "bytes": 7432,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/05-A-new-node-appended.jpg",
+      "sha256": "a0c2deaeccf8002f4973b437efacc02870c3468ce89ed801b2c5e89ed19c2509",
+      "bytes": 153698,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/05-A-new-node-appended.ax.txt",
+      "sha256": "f2f9180c06db598ce3dbb22633c58ee5a13826862a52e09f555d73d9b17a8b5a",
+      "bytes": 7509,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/06-B-switched.jpg",
+      "sha256": "74b4f2d36c8f7c0b12c7875eeddd3dac000f5114a22ea7ceb67945888358ae58",
+      "bytes": 22169,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/06-B-switched.ax.txt",
+      "sha256": "b6847db0bf819241088bbf845c9e1d8e277b3f4d370cac69a1dcd947405d3f40",
+      "bytes": 725,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/07-B-one-match.jpg",
+      "sha256": "badafc6174e0c76562cc907d7c7222950b576b062e0429424679f8150a5e0711",
+      "bytes": 27783,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/07-B-one-match.ax.txt",
+      "sha256": "3646c0a666efc2746f1e50f500517536e06ecff06ddce220cbc3d157200bc38a",
+      "bytes": 1042,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/08-A-return-empty.jpg",
+      "sha256": "f58fc9ec9124a6cbfcbfba653e30f8f0a796120c3f88481b8032b25fec74cac7",
+      "bytes": 157745,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/08-A-return-empty.ax.txt",
+      "sha256": "76c067050d3f114411a5901253cfb03635d57433a95e90255263506ab3645da9",
+      "bytes": 7147,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/09-A-user-opened.jpg",
+      "sha256": "34da6feb8365f16f3a6231ff17f67de5ac8e47a03347ae38ec2a7094f153218c",
+      "bytes": 146820,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/09-A-user-opened.ax.txt",
+      "sha256": "3c96fe4b2ee284d72257a33fbd6e59ef677f9eaf61802770e015c2257082a6cc",
+      "bytes": 7466,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/10-A-requery.jpg",
+      "sha256": "e65abc9e7f6d41504f41ed35912a5e3fc056da3dcafafc96ca887e016df9e0b0",
+      "bytes": 160225,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/10-A-requery.ax.txt",
+      "sha256": "1d076c48f13bf07fdd4c8bb7e7da4298c92850eb954c31a27a2a7ca7ba2937e3",
+      "bytes": 7509,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/11-A-second.jpg",
+      "sha256": "1517da4101cedbd84f85ab4c2f1a06eba846e3edc0659060f24200766e05799a",
+      "bytes": 156489,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/11-A-second.ax.txt",
+      "sha256": "207d573978eb2d872d9e270f0d3f4aaa3b5aa22c7811e322b5638d5a29d60015",
+      "bytes": 7448,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/12-A-third.jpg",
+      "sha256": "da3bad9be7857d67db75b0328a084a7f5bfd9591357f7326b043db0db2d40b0c",
+      "bytes": 137918,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/12-A-third.ax.txt",
+      "sha256": "e49e422830844e1c4499fae2edd052baf98c46d82c4219e3e82f38fcc4be3897",
+      "bytes": 7448,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/13-A-closed-user-opened.jpg",
+      "sha256": "d855a78ca3673fa59730f72d3a909ebca6b5bf9d67275824a282720e036344ca",
+      "bytes": 144833,
+      "role": "original-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/live-transcript-baseline/13-A-closed-user-opened.ax.txt",
+      "sha256": "39797f412d171dc8f9aa69d825f9d1579cd2aa193f7183cc2b6aacbb2c88e233",
+      "bytes": 7192,
+      "role": "complete-AX-read-with-only-exact-repeated-source-prose-deduplicated-in-display"
+    }
+  ]
+}

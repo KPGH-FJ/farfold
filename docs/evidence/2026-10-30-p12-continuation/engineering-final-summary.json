@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentFinalSevenEngineeringPublicReview",
+  "recordedAt": "2026-10-29T21:17:17.691562+00:00",
+  "result": "passed-with-recorded-warnings",
+  "blockers": [],
+  "engineering": {
+    "path": "output/2026-10-30-p12-continuation/engineering-final/engineering-summary.json",
+    "sha256": "59640c37b9ded6e8a25fde88a2022ff29b908cf6b2e96b1882f31e7fe0b4b8f3"
+  },
+  "reportedRootSessionId": 87157,
+  "sessionCompletion": {
+    "rootRecordedNaturalExitCode": 0,
+    "receipt": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/root-supplemental-after.json",
+      "sha256": "14a95f123f8ef57c8b86fc55f972fb3c27704e88ac17a1e321be42262c6aad0d"
+    },
+    "auditorDidNotRerunOrResumeSession": true
+  },
+  "actualCommands": [
+    {
+      "check": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:03:00.539Z",
+      "finishedAt": "2026-10-29T21:03:38.006Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/format-command.json",
+        "sha256": "adf2aa7d3bef8cf73f5bd62b12a0569cb968fac61ed049a95f909cea7bf72cfc"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/format.stdout",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "bytes": 144
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/format.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "check": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:03:38.255Z",
+      "finishedAt": "2026-10-29T21:03:49.073Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/typecheck-command.json",
+        "sha256": "f09f8a44cd9e0905c9dc7337035304039f498ba5607fec54196b95224883300f"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/typecheck.stdout",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "bytes": 78
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/typecheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "check": "frontend-test-direct",
+      "argv": ["corepack", "pnpm", "test"],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:03:49.407Z",
+      "finishedAt": "2026-10-29T21:05:00.807Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/frontend-test-direct-command.json",
+        "sha256": "d79b4bf8ae789e959bb9bbed6e35a1d426ce50dbb485c5a267f141efbeb78e3b"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/frontend-test-direct.stdout",
+          "sha256": "3532483ca766b85ee882c89c8b3e1832a068c2a3425bf94fe26062cc7b307a70",
+          "bytes": 289
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/frontend-test-direct.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "check": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:05:01.210Z",
+      "finishedAt": "2026-10-29T21:05:12.851Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/build-command.json",
+        "sha256": "1017195c7b90b73aaaa2b8d91b2ad1d484fdf2445e2933c62fdc8b13ac92a0c1"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/build.stdout",
+          "sha256": "1d185cb2cc3817c8039f037fc3a853b2c2aa15c75bd493a7e4aa4b2345f0713f",
+          "bytes": 4624
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/build.stderr",
+          "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "bytes": 360
+        }
+      }
+    },
+    {
+      "check": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:05:13.129Z",
+      "finishedAt": "2026-10-29T21:05:15.331Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-fmt-command.json",
+        "sha256": "252991c25536041e26acc11ff0fa4b35535c44a88e11a5ad661ce4b5224f934f"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-fmt.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-fmt.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "check": "cargo-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:05:15.509Z",
+      "finishedAt": "2026-10-29T21:05:16.208Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-clippy-command.json",
+        "sha256": "78d70e3a6c8aa5c5bd14b559bf132f3c1257935624b0f3d541ac9f73af89c721"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-clippy.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-clippy.stderr",
+          "sha256": "358434368432a659e6ef83039260ed98d88fb244724920ecb3c8d56d7d54a318",
+          "bytes": 72
+        }
+      }
+    },
+    {
+      "check": "cargo-test",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "naturalSubprocessExitCode": 0,
+      "startedAt": "2026-10-29T21:05:16.373Z",
+      "finishedAt": "2026-10-29T21:07:38.486Z",
+      "recordedHashMapEndpointEquals2333Before": true,
+      "serializedPerCommandSourceMapPresent": false,
+      "commandReceipt": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-test-command.json",
+        "sha256": "b89cf3bb44cbee8e6024e1af10396ebd34e3da81341727a524dbdf6c332fa736"
+      },
+      "raw": {
+        "stdout": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-test.stdout",
+          "sha256": "fdc406353d7799aa823ae8f9d695030fde4159122af75d5a5dc6c41e406c7caf",
+          "bytes": 267793
+        },
+        "stderr": {
+          "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-test.stderr",
+          "sha256": "b5be03ca56c340076a7c6afd53957720d8df02832b8378aa10fbc3e104667e00",
+          "bytes": 605
+        }
+      }
+    }
+  ],
+  "countsRecomputedFromRaw": {
+    "frontend": {
+      "files": 691,
+      "passed": 9230,
+      "failed": 0
+    },
+    "nativeSections": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "ignoredCases": [
+      {
+        "test": "acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport",
+        "reason": "manual real installed Agent initialize-only probe; requires explicit authorization"
+      },
+      {
+        "test": "acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session",
+        "reason": "requires a real agent binary; run manually"
+      },
+      {
+        "test": "acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay",
+        "reason": "requires a real agent binary; run manually"
+      },
+      {
+        "test": "auth::tests::keychain_round_trip_stores_and_reads_back",
+        "reason": "writes and removes one non-account test key in the local Keychain"
+      },
+      {
+        "test": "credentials::keychain_test::real_keychain_roundtrip",
+        "reason": "writes and removes one non-account test key in the local Keychain"
+      },
+      {
+        "test": "file_delivery::stream_tests::ordinary_256_mib_streaming_benchmark",
+        "reason": "explicit 256 MiB performance and memory measurement, not a routine fixture"
+      }
+    ]
+  },
+  "sourceEvidence": {
+    "baseHead": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "inputCount": 2333,
+    "before": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/source-before.json",
+      "sha256": "280d043fa9663d04fc4c95eac0ba8062db2ac5b2af62dfd0c10c2901a5e0211f"
+    },
+    "after": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/source-after.json",
+      "sha256": "9cc8a5ffffb34b8cb6020ab86119fda1f7d53f7f5eb8dc371472abe895f9825a"
+    },
+    "expected": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/source-expected.json",
+      "sha256": "dc189234bb4774e7e8c056f66526125a41444084c488f697645f3458de9a7597"
+    },
+    "currentIndependentRehashCount": 2333,
+    "currentSourceHashDiscrepancies": [],
+    "relativeToPriorFullSeven": {
+      "prior": {
+        "path": "output/2026-10-30-p12-continuation/engineering/source-after.json",
+        "sha256": "f6ea3f973c7d368459af1d92d8992f4822618582bb9357926fabdea321d35a40"
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        "docs/agent-access-requirements.md",
+        "src/components/ConversationFind.tsx",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "src/runtime/transcript_find.test.ts",
+        "src/runtime/transcript_find.ts"
+      ]
+    },
+    "perCommandEvidence": "Seven stored booleans generated by the pinned core comparing its intermediate complete hash map and HEAD with before; intermediate maps themselves are not serialized. Audit validates producer/raw/receipts and current before/after maps, not seven independently retained intermediate maps.",
+    "sourceHashMapEntriesEqual": true
+  },
+  "modeEvidence": {
+    "coreBeforeAfterMapValues": "SHA256 strings only; no mode/inode fields",
+    "bindingPreflightModeCount": 2333,
+    "rootInvocationReportedModesMatching": 2333,
+    "currentAuditorModeComparisons": 2333,
+    "currentModeDiscrepancies": [],
+    "perCommandModeMapsOrChecksPresent": false,
+    "noContinuousModeOrWriterClaim": true
+  },
+  "supplementalPins": {
+    "count": 5,
+    "sameInBindingInvocationRootAfterAndCurrentDisk": true,
+    "items": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "d2db958483bc29a52b68e978533b1e0e1dd0df9895179de1e1b4f15eff3fba06"
+      },
+      {
+        "path": ".prettierignore",
+        "sha256": "d9df647a2718ff0b63f8b65a6792c4f04222411c5ac1b94846bdaa525014d51d"
+      },
+      {
+        "path": "docs/status.md",
+        "sha256": "fdc3081ca2778bdb4657b8a27c72d98a23d3c495c917e09197277414306986f2"
+      },
+      {
+        "path": "docs/agent-access-requirements.md",
+        "sha256": "0a8e2bfa6e91a6d9095ae261d8fe624f36c3feb2363033b0248101278ede42c3"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "23abb2f4ab1390f28cf28a5b01e861ad9cdec6a10a836892e0dc101a5c63ddc3"
+      }
+    ],
+    "scope": "Hash pins only; docs/agent-access-requirements.md also belongs to core map, other supplemental files extend its scope.",
+    "beforeInvocation": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/root-invocation-preflight.json",
+      "sha256": "d7a4e4eff659a731a4a7ddcdfc1c223e0dbfa4c415133154e40fc3f50a25d408"
+    },
+    "after": {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/root-supplemental-after.json",
+      "sha256": "14a95f123f8ef57c8b86fc55f972fb3c27704e88ac17a1e321be42262c6aad0d"
+    }
+  },
+  "warnings": [
+    {
+      "check": "build",
+      "kind": "vite-large-chunk-advisory",
+      "observed": "One advisory that some minified chunks exceed500kB. Build exit0.",
+      "raw": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/build.stderr",
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+        "bytes": 360
+      },
+      "notAClaim": "No startup/resource/performance acceptance from bundling success."
+    },
+    {
+      "check": "cargo-test",
+      "kind": "zipwriter-drop-diagnostic",
+      "occurrences": 4,
+      "observed": "archive write stopped diagnostics retained in stderr; suite exit0. Source HashWriter emits this error on cancellation or ZIP-byte cap.",
+      "source": "src-tauri/src/file_delivery/archive_stream.rs:24-27",
+      "exactTestAttribution": "Not serialized in concurrent test stderr; this audit does not assign each diagnostic to a specific test or claim it is compiler-warning-free output.",
+      "raw": {
+        "path": "output/2026-10-30-p12-continuation/engineering-final/cargo-test.stderr",
+        "sha256": "b5be03ca56c340076a7c6afd53957720d8df02832b8378aa10fbc3e104667e00",
+        "bytes": 605
+      }
+    }
+  ],
+  "implementationPinsVerified": [
+    {
+      "path": "output/2026-10-30-p12-continuation/engineering/run-seven.py",
+      "sha256": "97cde2b3d9b7583aab8be8667ed9b93c06e2d79ab5d675bd327b1ecf6f999f51"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/s2-current-session-identity-engineering/run-checks-v2.py",
+      "sha256": "04274a39ada6c71563b01d141831435cdc8314cc6f674ed284e479d5860617b5"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/engineering/source-after.json",
+      "sha256": "f6ea3f973c7d368459af1d92d8992f4822618582bb9357926fabdea321d35a40"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/engineering/engineering-summary.json",
+      "sha256": "8990393448d186f4433c6570158fa60ba5b96c095faa1f087343c6ae346d79c1"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/source-expected.json",
+      "sha256": "dc189234bb4774e7e8c056f66526125a41444084c488f697645f3458de9a7597"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/engineering-final/run-seven.py",
+      "sha256": "3a87cde4ecb0979d88f3c1d07fed847eb752ca0bebc3d6fddf641ee7b7e4bc44"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/preparation.json",
+      "sha256": "d5423c0966d3d8c31b7e71097c95a4d34bb2bf2fc3ec101d07f5bc9fe00d74db"
+    }
+  ],
+  "scopeLimits": [
+    "These are exact declared source hash endpoints and current mode readback, not continuous absence of intermediate/hostile writers, dependency-install bytes or environment freeze.",
+    "Checks ran before a final committed-source freeze; do not claim the final future commit was itself rerun.",
+    "Six ignored cases are not executed real-Agent, Keychain or256MiB performance evidence.",
+    "Full7 does not establish formal installation, current native application behavior, completeP12/P01 or29x8 acceptance.",
+    "Independent review is read-only; no test/candidate/build/install/UI/source/authority operation was performed."
+  ]
+}

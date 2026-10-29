@@ -1,0 +1,1133 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentFinalCurrentSourceThreeRouteNativeWebKitMatrixReview",
+  "recordedAtUtc": "2026-10-29T21:45:34.347604+00:00",
+  "conclusion": "All39 route screenshot/AX pairs support the listed bounded count, paint, navigation, fold, append, switch and supplied-text observations. No new discrepancy found in those observed samples. This is a current-source production-build synthetic control, not formal installed-source acceptance or completeP12.",
+  "reviewMethod": {
+    "independentReader": "progress_evidence",
+    "imagesViewedIndividually": 39,
+    "accessibilityFilesRead": 39,
+    "additionalRootPairRead": true,
+    "rawArtifactsRewritten": false,
+    "uiOrServerOrHttpOrBuildOrTestRerun": false,
+    "counterAndGlyphPaintKeptSeparate": true,
+    "fullAxFilesParsedWithCriticalQueryCountDisclosureTextRowsReadForEveryFrame": true,
+    "axLimits": "Fixed long ordinary-prose leaves can be coalesced or clipped by AX. Critical query/count/disclosure/supplied attachment text was available. AX does not expose glyph paint, Range endpoints, Highlight registry or continuous scroll geometry."
+  },
+  "environment": {
+    "surface": "Existing formal Farfold application embedded manual WKWebView showing Root-owned localhost production preview9485",
+    "formalMainInstalledSourceRevalidated": false,
+    "currentSourceInstalled": false,
+    "port": 9485,
+    "ownedPreviewSessionAsRecorded": 24034,
+    "screenshotPixels": [2560, 1640],
+    "viewportCssPixelsPreviouslyReported": [1279, 576],
+    "viewportFreshlyReread": false,
+    "sameWindowNoResize": "Root prospective-context declaration; no new viewport measurement in this final route",
+    "enginePreciseVersionFreshlyRead": false,
+    "preciseWKBuild": null,
+    "equalMainTauriWebViewConfigurationProven": false,
+    "oracleHistorical1280x720Applied": false,
+    "previewShutdown": "Existing Root record reports one Ctrl-C per exact owned completed preview; session24034 exited1/^C deliberately. This is teardown, not product-test failure. No HTTP request performed by this reviewer."
+  },
+  "sourceAndBuildBinding": {
+    "headContext": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "headBlobEqualityOfWorkingEditsClaimed": false,
+    "currentProductionCode": [
+      {
+        "path": "src/components/ConversationFind.tsx",
+        "sha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+        "bytes": 8436,
+        "mode": 420
+      },
+      {
+        "path": "src/components/ConversationInteractions.review.test.tsx",
+        "sha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+        "bytes": 24620,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/transcript_find.ts",
+        "sha256": "819af5154f1548243b8b3d4f6c8c605b724aa61390194bde851c2f75edd80d9c",
+        "bytes": 1936,
+        "mode": 420
+      },
+      {
+        "path": "src/runtime/transcript_find.test.ts",
+        "sha256": "4502f7c5a2785dbceba029abffc6520b5abfce2a81fb3dc2ce2feef1452310d4",
+        "bytes": 4606,
+        "mode": 420
+      },
+      {
+        "path": "src/conversation-redesign.css",
+        "sha256": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344",
+        "bytes": 5947,
+        "mode": 420
+      }
+    ],
+    "preparation": {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/preparation.json",
+      "sha256": "d5423c0966d3d8c31b7e71097c95a4d34bb2bf2fc3ec101d07f5bc9fe00d74db",
+      "bytes": 32940,
+      "mode": 384
+    },
+    "declaredControlPins": 13,
+    "declaredSourceAndConfigPins": 106,
+    "declaredUniquePinsTotal": 119,
+    "pinBoundary": "Preparation declares SHA/bytes; those119 were independently compared against both build endpoint maps and current regular files. Endpoint maps additionally carry actual modes.106 consists104 reused runtime/config pins plus2 regression-test pins, not106 runtime modules.",
+    "all119ShaBytesMatchBothEndpointsAndCurrentDisk": true,
+    "frontendInputCount": 1493,
+    "frontendBeforeAfterShaBytesModeMapsEqual": true,
+    "all1493CurrentDiskShaBytesModeMatchAtReview": true,
+    "inputMapLimits": "Frontend-source superset, not every listed file enters bundle. node_modules bytes/process environment not frozen; endpoints do not prove continuous absence of intermediate writers. Working status/plan entries are not additionally inferred to be1493pins.",
+    "runtimeFixtureFilesComparedByteForByte": 9,
+    "runtimeAllEqualOriginal9479": true,
+    "configInspection": "Only @production alias resolves repository src; no private Find/matcher alias, diagnostic reader or trailing private CSS. Three route fixtures import actual production ConversationFind/ToolStep/MessageContent and original45 repository CSS imports plus existing xterm CSS.",
+    "actualCss": {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/transcript-search-DSTML7Lk.css",
+      "sha256": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+      "bytes": 207048,
+      "mode": 420
+    },
+    "cssByteEqualOriginal9479Build": true,
+    "freshBuildArgv": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vite",
+      "build",
+      "--config",
+      "/Users/tw/Desktop/farfold/output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/vite.config.mjs"
+    ],
+    "buildStartedAtUtc": "2026-10-29T21:00:34.138775+00:00",
+    "buildFinishedAtUtc": "2026-10-29T21:00:34.830157+00:00",
+    "naturalIntegerExitCode": 0,
+    "stdoutRead": true,
+    "stderrBytes": 0,
+    "automaticRetry": false,
+    "artifactCount": 10,
+    "all10CurrentArtifactsShaBytesModeMatchBuildRecord": true,
+    "frozenGetRequestCount": 11,
+    "frozenGetDistinctBuiltFiles": 10,
+    "allRecordedStatuses200AndShaBytesModeMatch": true,
+    "rootAndIndexSameFileCountedOnceAsArtifact": true,
+    "recordedGETIsHistoricalReadinessNotNewFetch": true,
+    "artifacts": [
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/MessageContent-Xt5T_6_w.js",
+        "sha256": "7b84367adbc6705b3918716ce31515deae07d899d094bd1360877ad02a329dba",
+        "bytes": 215385,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/live-DSYThL-_.js",
+        "sha256": "5f8f6f9ff4324cf8d683be5209cf01a436a148539c9a129b120a14479eaa68ef",
+        "bytes": 4026,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/tool-BqhpPMVV.js",
+        "sha256": "9c96bb9b4db5520d128c89e168c9a6e1f812bf900027941fa529ce1b6ff42558",
+        "bytes": 49980,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/transcript-search-DSTML7Lk.css",
+        "sha256": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+        "bytes": 207048,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/transcript-search-NdlUBCZN.js",
+        "sha256": "b8b8643da3be13707495c7673938923d790d31b6e8fd14a80de409bec3c6e3dd",
+        "bytes": 205538,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/assets/unicode-BeNFzVTa.js",
+        "sha256": "b9433da3b102e3250f0f58c5b83d2e953d03d9affa012852147bcb598ee46104",
+        "bytes": 2666,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/index.html",
+        "sha256": "4cd31aff7997a30e03cf7a976279583b6ec61f679aa317b14a6f16b6e1f092c3",
+        "bytes": 646,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/live.html",
+        "sha256": "32a8ad005d9b02fd84b2818fa9b16cc7f6b0ca34da21f0f65535ccc9a21f2e4e",
+        "bytes": 520,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/tool.html",
+        "sha256": "41b3e36c6397eda553497e748d8af20df13b89c0f8e96705d5431ae717dc1ac5",
+        "bytes": 620,
+        "mode": 420
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-output/unicode.html",
+        "sha256": "809581b53b0c33bb76f2522ec147f58afb61a6e0c70b9063cac86caef3375096",
+        "bytes": 623,
+        "mode": 420
+      }
+    ]
+  },
+  "prospectiveOracle": {
+    "reference": {
+      "path": "output/2026-10-30-p12-continuation/controls/production-regression-matrix/oracle.json",
+      "sha256": "210f8ae91f6134d46bc15616ab2376744170e77dcaed8ce5a8d03c4cc1386a88",
+      "bytes": 14335,
+      "mode": 420
+    },
+    "sameOriginalRoutesAndInputScope": true,
+    "statusNotRewritten": "Original oracle remains prospective/history. This review records actual observations separately. Registry removal/contents requested by parts of that oracle were not inspected and are not counted as passed."
+  },
+  "routes": {
+    "tool": {
+      "framePairsReviewed": 8,
+      "observedResult": "passed-for-listed-visible-and-AX-observations",
+      "frames": [
+        {
+          "frame": "00-initial",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Find absent; all three outer tool groups closed.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/00-initial.jpg",
+            "sha256": "efd79972fe75708cc4e611111119c7b169535459b6c5f06c90a3b806cfdaa1e6",
+            "bytes": 296238,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/00-initial.ax.txt",
+            "sha256": "a25e46e76245f27c8c4dedff6df54178a1f88ff3d31aeb45d357de505b7cacb7",
+            "bytes": 7292,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "01-json-before",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Target group, technical details and Complete Input open before query; opening JSON brace visible and plain; lower JSON extends below composer edge.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/01-json-before.jpg",
+            "sha256": "ed6024e6e4c4b51b1d90551add7f1da77630f8a20cdb73303802074f6065d0af",
+            "bytes": 244631,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/01-json-before.ax.txt",
+            "sha256": "c54d0e6668d470ef3510bc399935fedfc81334309095070ef5ff25fac57035e5",
+            "bytes": 7830,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "02-first",
+          "observedQuery": "SYNTHETIC_WRAP_TARGET_79E",
+          "observedCounter": "1 / 2",
+          "observation": "Title exact glyphs yellow with selected outline; JSON opening brace and visible JSON text plain; entire JSON body readable.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/02-first.jpg",
+            "sha256": "029efc5475660f459da1033cdd09463d1b3007e63c1aa9fca5793a5a2eb964ad",
+            "bytes": 276021,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/02-first.ax.txt",
+            "sha256": "bec0ba5cfdf34728a51a8509f937e13c70f50afa2c66e89847e4c56091287fbe",
+            "bytes": 8626,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "03-next",
+          "observedQuery": "SYNTHETIC_WRAP_TARGET_79E",
+          "observedCounter": "2 / 2",
+          "observation": "Title and result glyphs yellow; result has selected outline and target text readable; JSON brace plain. Result container lower edge meets composer, so full-container visibility is not asserted.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/03-next.jpg",
+            "sha256": "04a392f1d8191e1d50e0dc23741eb5cb86fd96688439c4bcd4404ba443179eec",
+            "bytes": 271357,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/03-next.ax.txt",
+            "sha256": "76dc4c08e74738ac52c67c3e1a750f5dc2ceeafd6c493b830e5e34e1b552cd84",
+            "bytes": 8447,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "04-manual-fold",
+          "observedQuery": "SYNTHETIC_WRAP_TARGET_79E",
+          "observedCounter": "2 / 2",
+          "observation": "Target outer group closed while query/counter retained; target hidden.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/04-manual-fold.jpg",
+            "sha256": "23af9c72e8fe2b8fccf636d859f23ff3c80be28a17bbef3e94def380a68dca39",
+            "bytes": 309117,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/04-manual-fold.ax.txt",
+            "sha256": "3119b03d2f68cd489c50ca2dd76075c1a1e7dc1b8b7426172165fd3333fb2cef",
+            "bytes": 7776,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "05-wrap-title",
+          "observedQuery": "SYNTHETIC_WRAP_TARGET_79E",
+          "observedCounter": "1 / 2",
+          "observation": "Target revealed again; title yellow with selected outline; Complete Input remains open and brace plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/05-wrap-title.jpg",
+            "sha256": "77c89c465cfa15c2b5597b7bebd3979fe18dd739cca1f9673695083e08b9a95e",
+            "bytes": 261223,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/05-wrap-title.ax.txt",
+            "sha256": "1562756fcd2aee7ac477343db8c86cd68516963eeb5cff5fa07c51d3b9a08773",
+            "bytes": 8447,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "06-reverse-result",
+          "observedQuery": "SYNTHETIC_WRAP_TARGET_79E",
+          "observedCounter": "2 / 2",
+          "observation": "Result yellow with selected outline and readable target; title yellow; JSON brace plain. Lower result-container edge is not fully established.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/06-reverse-result.jpg",
+            "sha256": "d1137f5dea760bf30860898a350218b2632e2dcc1aac17827983e705818da24e",
+            "bytes": 271320,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/06-reverse-result.ax.txt",
+            "sha256": "76dc4c08e74738ac52c67c3e1a750f5dc2ceeafd6c493b830e5e34e1b552cd84",
+            "bytes": 8447,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "07-closed",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Find absent and target outer group closed; empty synthetic composer retained. Hidden child preferences and registry contents not independently inspected here.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/07-closed.jpg",
+            "sha256": "dcfbc26622de3f074ac30bd863a99d2081866b071093468bbcbcc5cc7c77fae6",
+            "bytes": 296894,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/07-closed.ax.txt",
+            "sha256": "a25e46e76245f27c8c4dedff6df54178a1f88ff3d31aeb45d357de505b7cacb7",
+            "bytes": 7292,
+            "mode": 384
+          }
+        }
+      ],
+      "operatorRecord": {
+        "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/tool/operator-result.json",
+        "sha256": "9c961fcf3ddee55e705560f4c560ea70e11addd83913831936af00e37ddc9300",
+        "bytes": 333,
+        "mode": 384
+      }
+    },
+    "live": {
+      "framePairsReviewed": 14,
+      "observedResult": "passed-for-listed-visible-and-AX-observations",
+      "frames": [
+        {
+          "frame": "00-initial",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Page A initial text, no append, Find absent, outer disclosure closed.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/00-initial.jpg",
+            "sha256": "f69123c2d5b0c3e428317399de2d55c5981e824250b9fbc3b0928dcaae8b453b",
+            "bytes": 694440,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/00-initial.ax.txt",
+            "sha256": "2c8c7508dd0c95a2e11f17df8693d7cd5a25dd1a21e02029abff9614c8e33594",
+            "bytes": 8926,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "01-first",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "1 / 2",
+          "observation": "Head exact keyword yellow with selected outline; outer disclosure closed.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/01-first.jpg",
+            "sha256": "85d39866ed70bb9de2debe51e9da5cd016d8aad742bf3e13b573f64251416379",
+            "bytes": 672132,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/01-first.ax.txt",
+            "sha256": "b8f2ee5d566f2c6eca7d2a4406384ad8f1044e721d09644c4d84d258c658a80a",
+            "bytes": 9638,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "02-next",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "2 / 2",
+          "observation": "All three disclosures on; nested keyword yellow and outlined/readable; unrelated footer 合成页面A结束。 visibly black.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/02-next.jpg",
+            "sha256": "d912a016352ae78ace597655e92382deaeaf404d0a797253a9ddc9b8ab6ad5c8",
+            "bytes": 583623,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/02-next.ax.txt",
+            "sha256": "003f0833469a218024a9ded37bae406ea82e6e1c113be4c1e584162203df75d7",
+            "bytes": 9804,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "03-user-scroll-away",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "2 / 2",
+          "observation": "Viewport shows head and upper prose, away from selected nested field; head all-match yellow, query selection count unchanged.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/03-user-scroll-away.jpg",
+            "sha256": "afeade5bf8bafda15fbfdcff0caa684d248a6077e7630765ef6654ec51e99196",
+            "bytes": 654102,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/03-user-scroll-away.ax.txt",
+            "sha256": "003f0833469a218024a9ded37bae406ea82e6e1c113be4c1e584162203df75d7",
+            "bytes": 9804,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "04-same-text-append",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "3 / 3",
+          "observation": "UI reports 同一文字节点; two head keywords yellow; sampled viewport still upper prose, no recenter to nested hit.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/04-same-text-append.jpg",
+            "sha256": "b1cf1a966c4787a2cc5bea6e892f1b5a6752baa9801973fa0cbb57ab9d611de8",
+            "bytes": 659619,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/04-same-text-append.ax.txt",
+            "sha256": "c4e120a2ba5a774c970d10efc79e46b55f24fb2e826d2500ad4c8fdea14ba6de",
+            "bytes": 9842,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "05-new-node",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "3 / 4",
+          "observation": "UI reports 已追加 new node; sampled upper-prose viewport retained; same two head keywords yellow.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/05-new-node.jpg",
+            "sha256": "1ebd9abf6deff027e435644f1aa1fb7ea48e762542418b6a7e37d41ef732ed0a",
+            "bytes": 659137,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/05-new-node.ax.txt",
+            "sha256": "0f3e0bc29579e76f18c4e61d9eaa15edb89e5f4e84fb06ca1c9d42dfa95b073d",
+            "bytes": 9891,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "06-B-before-find",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Page B shown, Find absent, B keyword plain with no carried visible yellow.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/06-B-before-find.jpg",
+            "sha256": "a710a3f4ebe94af0e0390d28c2ebd7b6d4c5acfde1500fc5e99a5225e8d73e99",
+            "bytes": 221101,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/06-B-before-find.ax.txt",
+            "sha256": "2c9da147342b785086371373a1d3089b098088bef1682146376d28dda16a352f",
+            "bytes": 2940,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "07-B-one-match",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "1 / 1",
+          "observation": "Only B target counted; keyword yellow and selected outline readable.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/07-B-one-match.jpg",
+            "sha256": "2a2d68708dc78eeeeb263e5e80abe306d78f7828cf0ee8c1747421dcb632bdff",
+            "bytes": 259367,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/07-B-one-match.ax.txt",
+            "sha256": "050ed28e6f352c138e56dfd1d6d363aee5ef75638142615ba3813429d8eeea53",
+            "bytes": 3652,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "08-A-remounted",
+          "observedQuery": "",
+          "observedCounter": null,
+          "observation": "Page A returns with empty new Find input, disabled directions, retained append state; visible head keywords plain and outer disclosure off.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/08-A-remounted.jpg",
+            "sha256": "e9dd521d7ad4f50b88c0b3585b66cc7dee2cea1d6b9f9375079091663de40a64",
+            "bytes": 665974,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/08-A-remounted.ax.txt",
+            "sha256": "80e3394dadec11229dedfb2828b1f43149ea540741b288b148c795e0561c2ca8",
+            "bytes": 9679,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "09-user-open",
+          "observedQuery": "",
+          "observedCounter": null,
+          "observation": "Three disclosure summaries on with empty query; nested keyword plain and readable.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/09-user-open.jpg",
+            "sha256": "7fadc63432014981c47c4def7bc08f772716d7f105ada319151451fbfbac2863",
+            "bytes": 599650,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/09-user-open.ax.txt",
+            "sha256": "41df353ad68ef0c998a3e6ef8e5d980518534bd805ab0bc1210286f57aac8550",
+            "bytes": 9817,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "10-A-first",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "1 / 4",
+          "observation": "Both head keywords yellow; first count selected, head field outlined; all three user-open summaries remain on.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/10-A-first.jpg",
+            "sha256": "56e31c1075dc934f05fda94ad1613cad0220d4eb68b498bac5706772dab58fce",
+            "bytes": 678034,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/10-A-first.ax.txt",
+            "sha256": "efd480c3711265577e8c752b1f0d0377ee50785195dd61fcabe8c12bdb52479e",
+            "bytes": 10075,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "11-A-second",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "2 / 4",
+          "observation": "Second count selected in same head field, both exact head keywords yellow; disclosure states retained.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/11-A-second.jpg",
+            "sha256": "9f64e5fe823636b52a6f4e8e166e17f9b258623c24c1b304a672399292015ffd",
+            "bytes": 668508,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/11-A-second.ax.txt",
+            "sha256": "0690380b52d4dfe1d1e052ba3628c4372c56e4f34013ab360d0b5dcefd75101a",
+            "bytes": 9891,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "12-A-nested",
+          "observedQuery": "P12_LIVE_NEEDLE",
+          "observedCounter": "3 / 4",
+          "observation": "Nested keyword yellow with outline; added-node keyword yellow; unrelated footer black; all three summaries on.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/12-A-nested.jpg",
+            "sha256": "205962454170b14948010e842a38acf95b1ccfc3bc5fc6c32a73bae4c11611da",
+            "bytes": 565900,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/12-A-nested.ax.txt",
+            "sha256": "0f3e0bc29579e76f18c4e61d9eaa15edb89e5f4e84fb06ca1c9d42dfa95b073d",
+            "bytes": 9891,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "13-closed-user-open",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Find absent; three summaries remain on; visible nested/added keywords and footer plain; both appended additions retained; empty composer.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/13-closed-user-open.jpg",
+            "sha256": "4e10d92d719d76890a0421900ff21e357ea8c51113d1d4a25801984f54ddd199",
+            "bytes": 598280,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/13-closed-user-open.ax.txt",
+            "sha256": "6f4c216224f1b2333188703a7902eea5d080ae58900b67f6ee9233ccc39e2ed3",
+            "bytes": 9363,
+            "mode": 384
+          }
+        }
+      ],
+      "operatorRecord": {
+        "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/live/operator-result.json",
+        "sha256": "d2e8a128318ffdd1c5e5e3884c69b47d158c4cc2fffb462f6d5e3ceb03c40b3b",
+        "bytes": 420,
+        "mode": 384
+      }
+    },
+    "unicode": {
+      "framePairsReviewed": 17,
+      "observedResult": "passed-for-listed-visible-and-AX-observations",
+      "frames": [
+        {
+          "frame": "00-initial",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Find absent, two attachments closed; fixed body fields plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/00-initial.jpg",
+            "sha256": "f3e65ead1aaf60c03cd2d2c250d79b8037cf4fdbfe876a5ecd214df0ae380c62",
+            "bytes": 235203,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/00-initial.ax.txt",
+            "sha256": "4d9fd77cff18c0efc5b8002d83c3b6ad12e81857ddd8ddf2a87b035f1ffd273b",
+            "bytes": 3287,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "01-unicode-first",
+          "observedQuery": "星河🙂",
+          "observedCounter": "1 / 2",
+          "observation": "Body phrase yellow including complete emoji and selected field outline; placeholder filename plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/01-unicode-first.jpg",
+            "sha256": "e4d2f8c992b329fafc31d0f57147db01ed746cceb3f82da4990bf4f56b885f84",
+            "bytes": 264664,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/01-unicode-first.ax.txt",
+            "sha256": "5b1ffd47edc3ffbe184258b687e99d66c471eac36d6ee34d7bbe4304960954fe",
+            "bytes": 3971,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "02-unicode-attachment",
+          "observedQuery": "星河🙂",
+          "observedCounter": "2 / 2",
+          "observation": "Supplied-text attachment opens and phrase yellow with selected outline; body phrase yellow; placeholder filename plain and closed.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/02-unicode-attachment.jpg",
+            "sha256": "28d37f625098b76074d0a871e75c03cca0aeb446cd4756a7d262d35ff8464e1c",
+            "bytes": 261648,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/02-unicode-attachment.ax.txt",
+            "sha256": "a74953f9bd31d593da9a4d85e59a3e4d87fa3d1d1f479ad0616ea4436d2a1be3",
+            "bytes": 4026,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "03-unicode-wrap",
+          "observedQuery": "星河🙂",
+          "observedCounter": "1 / 2",
+          "observation": "Wrap selects body again; loaded attachment closes; body phrase yellow, placeholder plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/03-unicode-wrap.jpg",
+            "sha256": "8b292da7fe8b9f40a695164ad9a9344957701c17e701dd60a783c7cb181b20fc",
+            "bytes": 254245,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/03-unicode-wrap.ax.txt",
+            "sha256": "6049c8c85191ef84d30fb7751e7e5c6d6419b919ee119b8fefa0e13174f8cb18",
+            "bytes": 3810,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "04-emoji-first",
+          "observedQuery": "🙂",
+          "observedCounter": "1 / 3",
+          "observation": "Whole body emoji selected/yellow with body-field outline; inline whole emoji also has yellow rectangular backing.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/04-emoji-first.jpg",
+            "sha256": "b1063f68ff06d72a5dba079fd3c2ebd95df6233bb5eb0850b202af42fb713bc0",
+            "bytes": 263958,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/04-emoji-first.ax.txt",
+            "sha256": "63b787722f38d28d8f6b325fabe553d8295ed46609de9b6e3580fdd21236245f",
+            "bytes": 3959,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "05-emoji-inline",
+          "observedQuery": "🙂",
+          "observedCounter": "2 / 3",
+          "observation": "Inline whole emoji selected/yellow with inline-field outline; body whole emoji yellow.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/05-emoji-inline.jpg",
+            "sha256": "8ee5fbe35f780635d36d13558ff7c04c60c88102a9fe77b4190164bbf9ccc165",
+            "bytes": 250306,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/05-emoji-inline.ax.txt",
+            "sha256": "559ab1779c11d5266b6b7f1c127653eaae3c83d65dafb40ba397a4ef4e7c3b4c",
+            "bytes": 3804,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "06-emoji-attachment",
+          "observedQuery": "🙂",
+          "observedCounter": "3 / 3",
+          "observation": "Supplied attachment opens; whole attachment emoji yellow with selected outline; other visible complete emoji matches yellow.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/06-emoji-attachment.jpg",
+            "sha256": "e162c8cc830c5b630e69545efeed15af704cae022da8ba1f65dadca190202811",
+            "bytes": 260294,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/06-emoji-attachment.ax.txt",
+            "sha256": "b6c393cefebe80621100a06e3f6791354efa18668b2360a1f85f3ceb33d1dac4",
+            "bytes": 4020,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "07-cross-inline",
+          "observedQuery": "跨内联[a+b]?🙂",
+          "observedCounter": "1 / 1",
+          "observation": "Full literal across plain/strong/code/emoji visibly yellow with selected outline. Top body emoji intrinsic yellow is not claimed as extra search paint or fixed defect.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/07-cross-inline.jpg",
+            "sha256": "2117ee15b097289564e62d38f9da24a503f7b8c4031ce7ab452c6ca07269097e",
+            "bytes": 263365,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/07-cross-inline.ax.txt",
+            "sha256": "3535d0e36dd0f0de84866fdaf3a0939117d719d471868afb6e078f2dc0f4dc71",
+            "bytes": 3989,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "08-literal-first",
+          "observedQuery": "A+B?[x].*",
+          "observedCounter": "1 / 2",
+          "observation": "Literal metacharacters in body yellow with selected outline; loaded attachment closed, placeholder filename plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/08-literal-first.jpg",
+            "sha256": "0c100dec4d36ba86a8ae6c8f24bf729c3034819920082747d4006d87122738e3",
+            "bytes": 262608,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/08-literal-first.ax.txt",
+            "sha256": "0b8bea08ab4ca5adb7cf23ea566d8b6f5d067680a9564c727074933cc65568d7",
+            "bytes": 3969,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "09-literal-attachment",
+          "observedQuery": "A+B?[x].*",
+          "observedCounter": "2 / 2",
+          "observation": "Real supplied-text attachment opens; exact literal yellow with outline, body literal also yellow; placeholder plain and closed.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/09-literal-attachment.jpg",
+            "sha256": "0ce13b9cf374cf1134b4cb1f664bee2b518632356f17a906df86807c1d44ce5d",
+            "bytes": 262556,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/09-literal-attachment.ax.txt",
+            "sha256": "1be9005b64f64b18bbb7cef52a44c1e26da79f3c1de2119090943d4889b4cb49",
+            "bytes": 4025,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "10-host-scope",
+          "observedQuery": "域内标记",
+          "observedCounter": "1 / 1",
+          "observation": "Inside-host occurrence yellow and outlined; identical outside-host occurrence at top plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/10-host-scope.jpg",
+            "sha256": "f404d780a88652870eee4e8e03da581f6989776106cb6bca610041152f18b932",
+            "bytes": 264726,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/10-host-scope.ax.txt",
+            "sha256": "448bcf342f54d3fda063d94b82277a1389b68858185cfae722314e4ec16efa41",
+            "bytes": 3975,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "11-supplied-attachment",
+          "observedQuery": "附件已加载专用词",
+          "observedCounter": "1 / 1",
+          "observation": "Loaded attachment opens and exact supplied prefix yellow/outlined; remaining phrase and placeholder filename plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/11-supplied-attachment.jpg",
+            "sha256": "f78398815a8391d105da3a51dc14d0bf0b8dfe8e4042f1e2694a7979d581bb60",
+            "bytes": 273696,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/11-supplied-attachment.ax.txt",
+            "sha256": "decab7e4f275870121cb153db0ede1d8895520df8a3b8c20ac2bc42ac9f76485",
+            "bytes": 4215,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "12-separate-fields",
+          "observedQuery": "ENDSTART",
+          "observedCounter": "没有匹配内容",
+          "observation": "No match across separate paragraph fields; directions disabled; attachment closes and visible body has no search rectangles.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/12-separate-fields.jpg",
+            "sha256": "14fc1669c6d9e73b1170d2edb67f0d8687d861bb243908c720b2597dcac1a13e",
+            "bytes": 254085,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/12-separate-fields.ax.txt",
+            "sha256": "25d42c080f89d2c07b5383cce183abade29377b1a464a62c6160d0812222ea28",
+            "bytes": 4002,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "13-placeholder-absent",
+          "observedQuery": "PLACEHOLDER_BODY_ABSENT",
+          "observedCounter": "没有匹配内容",
+          "observation": "Name-only placeholder does not supply a searchable body; directions disabled; no visible stale paint.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/13-placeholder-absent.jpg",
+            "sha256": "75ebcc4fc89f59824b0b4776191dd6848d52c77b15ccdddc27add5890581ec93",
+            "bytes": 257581,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/13-placeholder-absent.ax.txt",
+            "sha256": "c53b3fc31b4735386daf2156186c80a3a04de55d55b5c049786e8c03154b327c",
+            "bytes": 4032,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "14-no-match",
+          "observedQuery": "NOT_PRESENT_P12",
+          "observedCounter": "没有匹配内容",
+          "observation": "No match, both directions disabled and visible content plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/14-no-match.jpg",
+            "sha256": "f5aeb1dfbb49e9e6bbbe0ae95c10866a5a8748133ad8a6a23c52e2424390eba0",
+            "bytes": 255491,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/14-no-match.ax.txt",
+            "sha256": "acad5073a6f0638ca0e178c300b3cb0bbf68f0e4822c043d0a562bb49958e3f6",
+            "bytes": 4016,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "15-cleared",
+          "observedQuery": "",
+          "observedCounter": null,
+          "observation": "Input empty, counter blank, directions disabled and visible content plain.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/15-cleared.jpg",
+            "sha256": "821ea32d03eae68d97257d7e9a0bab8879f7ee4026997de363248d84b4756d78",
+            "bytes": 254436,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/15-cleared.ax.txt",
+            "sha256": "5f3986e4d9b27c5e2b16edd083b32273cdc41700c38888e967775afd2af69056",
+            "bytes": 3935,
+            "mode": 384
+          }
+        },
+        {
+          "frame": "16-closed",
+          "observedQuery": null,
+          "observedCounter": null,
+          "observation": "Find absent; both attachment summaries off; visible content plain and composer empty.",
+          "image": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/16-closed.jpg",
+            "sha256": "bc5dce2501a34a9527b1e1d7eb69ce5c8f3031181873d0cc85c8bd73f08dcff1",
+            "bytes": 235133,
+            "mode": 384
+          },
+          "accessibility": {
+            "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/16-closed.ax.txt",
+            "sha256": "4d9fd77cff18c0efc5b8002d83c3b6ad12e81857ddd8ddf2a87b035f1ffd273b",
+            "bytes": 3287,
+            "mode": 384
+          }
+        }
+      ],
+      "operatorRecord": {
+        "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/unicode/operator-result.json",
+        "sha256": "b59d9cdd9873926c0b85db64e1387a4cfa2ecddf67077e9fde0c597d7c1ecf27",
+        "bytes": 527,
+        "mode": 384
+      }
+    }
+  },
+  "comparisonToEarlierEvidence": {
+    "earlierFormal52aaFailure": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/formal-52aa-visible-json-failure-summary.json",
+      "sha256": "7b1477b99379728a1e97e8cb84df72946ddd1ef9eb07ff8ff6ffaf181488cec7",
+      "bytes": 12598,
+      "mode": 420
+    },
+    "earlierProductionMatrix": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/matrix-summary.json",
+      "sha256": "047910282c6756fc0840f54f55d702eef52ac70af2e2114b062a7939859d05ee",
+      "bytes": 24481,
+      "mode": 384
+    },
+    "priorPrivateGuardControl": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/private-visible-range-control-summary.json",
+      "sha256": "ad1879825e89bd300a24dc5d0eb36d7c56155718b9980365e6a0cc77374e6cd8",
+      "bytes": 40428,
+      "mode": 384
+    },
+    "matcherNativeSingleFactorControl": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/unicode-multiline-flag-control-summary.json",
+      "sha256": "06ceefbf7793447677666612324d4c5a9ffb51c0265f4def96b42989988fa4ee",
+      "bytes": 51950,
+      "mode": 384
+    },
+    "sourceReview": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/matcher-source-summary.json",
+      "sha256": "a4ddf114c57fa067bf94310be95f3b9ab938e0485688a12ade5d5d215fa297ce",
+      "bytes": 23522,
+      "mode": 384
+    },
+    "observedDifferences": [
+      "Tool exact target title/result paint correctly while unrelated JSON opening brace is plain in this final production-source run. Earlier formal52aa and r1 failures remain unchanged evidence for their own source/configuration.",
+      "Compared with r9 live02, current-source live02 nested hit is yellow and unrelated footer is black.",
+      "Compared with r9 Unicode01/02, current-source matching phrase is yellow and placeholder filename remains plain.",
+      "Compared with r9/r11 literal08/09 counter1/1, final literal08/09 is1/2 then2/2 and the supplied attachment body actually opens with the literal yellow.",
+      "An earlier alleged extra-yellow top emoji during cross-inline query was unproven due to intrinsic emoji color; do not count that allegation as an additional defect or a proven fix."
+    ],
+    "causeLimits": "Final combination of CSS selection, visible-owned endpoint guard and Unicode-preserving gimu matcher has passed these samples. This combined result does not isolate one unique WebKit internal historical cause."
+  },
+  "actionEvidence": {
+    "source": "prospective-context plus three operator-result records, separately cross-checked against screenshot/AX states",
+    "operatorReports": {
+      "toolQueryInsertions": 1,
+      "toolPostQueryCompensatingScroll": 0,
+      "liveIntentionalScrollAway": 1,
+      "livePostQueryCompensatingScroll": 0,
+      "unicodeQueryChangesIncludingClear": 10,
+      "unicodePostQueryCompensatingScroll": 0,
+      "noRealAgentPrompts": true,
+      "physicalAttachmentReadsOrNativeFileActions": 0
+    },
+    "limits": "There is no complete event-by-event action log in this final package; exact insertion/action counts above remain operator declarations, not independently reconstructed from still images. No diagnostic Capture/Range/geometry/registry interface is mounted in the inspected final fixtures."
+  },
+  "unknownOrOutsideScope": [
+    "Actual Highlight registry deletion/key sizes, Range identities/endpoints and cleanup internals were not inspected in this final matrix. Visible lack of stale paint is an observed rendering state.",
+    "Same-node append identity is the fixture post-commit UI report of paragraph.firstChild equality, not a real Agent stream or observation of every intermediate mutation.",
+    "Append03/04/05 screenshots retain the sampled upper-prose viewport without recenter to the nested target; no continuous scroll-position/performance guarantee.",
+    "tool07 outer folded state is observed; pre-opened hidden technical/full-input preference afterClose cannot be reread through the closed outer from this final frame alone.",
+    "Supplied loaded attachment text and name-only placeholder only; no physical file decoding, unloaded-history retrieval, image/audio/webpage body search or native file-open behavior tested.",
+    "No actual ThreadPage end-to-end state, live Agent output stream, account/model journey or29x8 acceptance is established by these fixtures.",
+    "Formal application still uses52aa according to Root handoff; no replacement/current-source formal regression was performed by this reviewer. Root reported Quit guard remained blocked and selected stay; that separate blocker was not reenacted here.",
+    "This matrix does not close completeP12 or establish Windows behavior, exact WebKit revision, cross-device coverage or public distribution readiness.",
+    "Full7 engineering is a separate receipt; this matrix does not inherit or replace its command evidence."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/preparation.json",
+      "sha256": "d5423c0966d3d8c31b7e71097c95a4d34bb2bf2fc3ec101d07f5bc9fe00d74db",
+      "bytes": 32940,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/static-checks.json",
+      "sha256": "2be1b5ae2284054042f01cee8a102470acc1b274bcab3feeb22d6877b300e2ce",
+      "bytes": 4273,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/vite.config.mjs",
+      "sha256": "90ac58bf431bb615d5ddf668d307b445eb3e4f61cb227347b51c46b31c4624a2",
+      "bytes": 1575,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/production-style-order.ts",
+      "sha256": "f967e6b2f208c08610dbd61cb05eba667e4b264c712e679dd5c3112bc1ea8824",
+      "bytes": 2257,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/tool-entry.tsx",
+      "sha256": "37a0b192f11532adf87000b71b58713c723018011e53b8a19f1e8a27c688a05f",
+      "bytes": 181,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/tool-control.tsx",
+      "sha256": "bac981eadb71842d88ae70145e4f2010d83a689056c770ebd84371b9e8962882",
+      "bytes": 6217,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/live-control.tsx",
+      "sha256": "6a32fb186a0260cfc2637b9ef689014bc3f4222da8d6bbec40fec475ad1ee63d",
+      "bytes": 5444,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/unicode-control.tsx",
+      "sha256": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+      "bytes": 3184,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/operator-preflight.json",
+      "sha256": "386f2255a9f11172509126e6ec5e6b2daacef6c92d38e3d65b5d3ee8f3d23e1a",
+      "bytes": 854,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/run-build.py",
+      "sha256": "46ceda1ab5b8439dac238f5df2215111f13d39def05b551bab9360ff4816c1d9",
+      "bytes": 6226,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/build-started.json",
+      "sha256": "cbb5dd42a841d3231cc5d3188b14b2d4362e5be2624caba1ce91d8bcad40ad92",
+      "bytes": 540,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/build-result.json",
+      "sha256": "714afb144b24daf3f8966f37b976dfb226c052eec6616cb9601dbaa9f277db9b",
+      "bytes": 4356,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/build-delivery.json",
+      "sha256": "301950e405dafd73c9758b596916c88146bac6c88d03a15fd48a6449aaa5a5e1",
+      "bytes": 4565,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/source-before.json",
+      "sha256": "c07d8bc87e82df8121be90d036f4fce25165bb574ece5ac7dbf14c1d37b7627b",
+      "bytes": 268259,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/source-after.json",
+      "sha256": "ab4937caeb308bbe67b02deb6d34ed3029ffc67c523a69025343ff3750722cf5",
+      "bytes": 268260,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/preview-readiness.json",
+      "sha256": "eea72d7a9bf0c27e1f613a93646f861ec6c3c536d5d1ed9eadf754f9239979a1",
+      "bytes": 2559,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/build.stdout",
+      "sha256": "51546cd2c6d9dcf43a62acd21f1d937f41450c7381d4eac7755a1a5b5fcf0210",
+      "bytes": 1777,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/final-source-regression-matrix/execution-r15/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-regression-matrix/oracle.json",
+      "sha256": "210f8ae91f6134d46bc15616ab2376744170e77dcaed8ce5a8d03c4cc1386a88",
+      "bytes": 14335,
+      "mode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/prospective-context.json",
+      "sha256": "982a0c1d9968dab617889d0b3c6d8b98ad0fe3ec4146d48a85495fc3b5ae084d",
+      "bytes": 826,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/00-root.jpg",
+      "sha256": "fa1109414f72e79debea302c1bb31846175c3e701025b62fdabc19282b81866b",
+      "bytes": 239299,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-final-source-matrix/00-root.ax.txt",
+      "sha256": "f40558b42346631712a4f8d8e1f40247de1eaeb800b927904b84a9ed7ac6603e",
+      "bytes": 2913,
+      "mode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/root-final-preview-shutdown.json",
+      "sha256": "93faed868dd3fa23e3aa3e78aafcd8da59c96da30de83c4ea36ec99d42aa2a5e",
+      "bytes": 1638,
+      "mode": 384
+    }
+  ]
+}

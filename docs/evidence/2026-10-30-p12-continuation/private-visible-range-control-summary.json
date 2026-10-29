@@ -1,0 +1,784 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentPrivateVisibleEndpointAdmissionControlReview",
+  "case": "9481 / frozen private production build r11",
+  "status": "known-footer-and-placeholder-paint-counterexamples-not-reproduced; literal-count-failure-remains",
+  "reviewMethod": "Independent reading of all39 original pictures and their AX files, frozen candidate/diff/source maps/build logs and emitted hashes. No UI, server, HTTP, build, test or source mutation by reviewer.",
+  "scope": {
+    "toolPictures": 8,
+    "livePictures": 14,
+    "unicodePictures": 17,
+    "surface": "Existing formal application embedded WebKit panel displaying private synthetic production preview; actual production components with private Find alias.",
+    "realAgentStream": false,
+    "physicalAttachmentOrHistoryReads": false,
+    "mainThreadPageWholeCoverage": false,
+    "preciseEngineBuild": null,
+    "actualViewportReestablishedHere": false,
+    "formalInstalledCandidateAcceptance": false,
+    "fullMatrixGreen": false,
+    "P12Closed": false,
+    "registryInspected": false
+  },
+  "frozenBinding": {
+    "sourceHeadAtBuildEndpoints": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "allInputEndpointMapCount": 1498,
+    "beforeAfterMapsEqualIncludingShaBytesModes": true,
+    "privatePreparedFilePins": 18,
+    "privatePinsStillMatchDisk": true,
+    "productionSourcePins": 104,
+    "sourcePinsMatchBothRecordedBuildEndpoints": true,
+    "sourcePinsIdenticalTo9479Preparation": true,
+    "runtimeFixtureCopiesByteIdenticalTo9479": 9,
+    "functionalDiffMechanicallyRecomputedExactly": true,
+    "singleFunctionalDelta": "For admission to both native Highlight sets, require current transcript ownership plus structurally open/not-hidden ancestors at both Range endpoint parents, using existing hasOpenSearchAncestors. Matches/count/navigation/reveal/refresh/construction/registration/cleanup and actual Range identity/overlap logic unchanged. Four imports are mechanical path rewrites only.",
+    "guardLimit": "Checks details/hidden ancestry and ownership, not viewport membership, arbitrary CSS display/visibility or every interior node of a cross-node Range.",
+    "frozenOriginalFindSha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+    "naturalIntegerBuildExitCode": 0,
+    "rawStderrBytes": 0,
+    "emittedFilesShaBytesModesVerified": 10,
+    "cssSameAs9479": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+    "historicalRootReadinessGet200Matches": 10,
+    "currentSourceDriftAfterFrozenBuild": [
+      {
+        "path": "src/components/ConversationFind.tsx",
+        "preparedSha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+        "observedLaterDiskSha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+        "observedLaterBytes": 8436
+      }
+    ],
+    "driftLimit": "The later production Find file has changed during parallel authorized work. This case proves the frozen private alias, not equivalence or validation of that later production file. Preparation/build/readiness not-yet-executed wording records earlier stages, superseded only for this private route by raw observations below."
+  },
+  "tool": {
+    "frames": "00..07",
+    "result": "narrow fixed route passed",
+    "observed": [
+      "00 Find absent/outer closed;01 full input manually prepared before query.",
+      "02 first1/2 exact title yellow and selected outline; JSON opening brace and visible JSON plain. Result is offscreen, so no02 result-paint assertion.",
+      "03 Next2/2 both title/result exact text yellow; result selected-field outline and readable target; JSON plain. Bottom container boundary is clipped, so no entire-container-edge claim.",
+      "04 explicit manual outer fold while counter2/2;05 Next wraps1/2 and reveals title yellow;06 Previous gives2/2 visible yellow result;07 Close Find absent/outer closed/empty composer.",
+      "One query insertion and no post-query compensating scroll are operator counts, compatible with sampled sequence; samples are not a complete action recorder."
+    ]
+  },
+  "live": {
+    "frames": "00..13",
+    "result": "known footer error absent in candidate; fixed dynamic route preserved at sampled states",
+    "observed": [
+      "00 original A/no additions/outer closed;01 head1/2 yellow+selected outline.",
+      "02 Next2/2 automatically opens all three disclosure summaries (AX on); exact nested keyword yellow+outline; separate footer 合成页面A结束。 plain black, unlike9479 live02 and9480 pre-capture02. No preopen/diagnostic capture intervention in this case.",
+      "03 one intentional manual scroll away shows upper region;04 same-Text append fixture reports same node and3/3;05 added node gives3/4. Shown upper viewport remains away from selected nested target at04/05; no continuous scroll trace or inspected Range identity.",
+      "06 B Find absent/visible text plain;07 independent B1/1 correct yellow+outline.08 A remount query empty/disabled navigation/outer closed/visible head plain; hidden descendants and global registry keys uninspected.",
+      "09 user opens3 layers with additions retained;10/11/12 query navigates1/4,2/4,3/4 with visible exact targets yellow and selected field outlined.12 visible added target also yellow and footer plain. This later preopen route is not the separate strict original-two-match control.",
+      "13 Close Find absent, all3 user-open summaries remain AX on, visible nested/added target and footer plain/no outline; composer empty. Registry cleanup and all offscreen pixels remain uninspected."
+    ]
+  },
+  "unicode": {
+    "frames": "00..16",
+    "result": "two definite placeholder paint counterexamples absent; literal-count discrepancy still fails original oracle",
+    "cases": [
+      {
+        "frames": [
+          "01-unicode-first",
+          "02-unicode-attachment",
+          "03-unicode-wrap"
+        ],
+        "query": "星河🙂",
+        "expectedTotal": 2,
+        "observedCounters": ["1 / 2", "2 / 2", "1 / 2"],
+        "result": "count/order and these visible glyphs passed",
+        "paint": "First exact body text yellow+outline, name-only placeholder remains plain. Next opens supplied attachment and its exact query yellow+outline; placeholder name remains plain. Wrap returns first and attachment closes. This removes the two definite9479 placeholder rectangular paint failures in the sampled candidate."
+      },
+      {
+        "frames": ["04-emoji-first", "05-emoji-inline", "06-emoji-attachment"],
+        "query": "🙂",
+        "expectedTotal": 3,
+        "observedCounters": ["1 / 3", "2 / 3", "3 / 3"],
+        "result": "fixed emoji sample passed",
+        "paint": "Body, inline and supplied attachment whole emoji have visible highlight rectangle and appropriate selected field outline. Intrinsic face color alone is not counted as highlight evidence."
+      },
+      {
+        "frames": ["07-cross-inline"],
+        "query": "跨内联[a+b]?🙂",
+        "expectedTotal": 1,
+        "observedCounters": ["1 / 1"],
+        "result": "fixed cross-inline target passed; alleged prior stale-emoji failure unproven",
+        "paint": "Full phrase across fixed Text/strong/code/emoji visibly yellow+selected outline. See explicit correction below: no claim that this candidate repaired first-paragraph emoji paint."
+      },
+      {
+        "frames": ["08-literal-first", "09-literal-attachment"],
+        "query": "A+B?[x].*",
+        "expectedTotal": 2,
+        "observedCounters": ["1 / 1", "1 / 1"],
+        "result": "FAIL / unresolved",
+        "paint": "Only body literal selected yellow. Next remains1/1/body; loaded attachment AX off. The filename09-literal-attachment does not prove attachment navigation. Both fixed body and supplied attachment text contain the exact literal per frozen source/oracle; timing/persistence/cause not established. Same sampled failure already exists in9479, so this candidate does not close it."
+      },
+      {
+        "frames": ["10-host-scope"],
+        "query": "域内标记",
+        "expectedTotal": 1,
+        "observedCounters": ["1 / 1"],
+        "result": "fixed host-boundary sample passed",
+        "paint": "Inside text yellow+outline; identical header text outside host plain."
+      },
+      {
+        "frames": ["11-supplied-attachment"],
+        "query": "附件已加载专用词",
+        "expectedTotal": 1,
+        "observedCounters": ["1 / 1"],
+        "result": "fixed supplied text sample passed",
+        "paint": "Loaded attachment opens and supplied text prefix yellow+outline. No physical file parsing/access demonstrated."
+      },
+      {
+        "frames": [
+          "12-separate-fields",
+          "13-placeholder-absent",
+          "14-no-match"
+        ],
+        "queries": ["ENDSTART", "PLACEHOLDER_BODY_ABSENT", "NOT_PRESENT_P12"],
+        "expectedTotal": [0, 0, 0],
+        "observed": "Each no match / navigation disabled, visible fields plain without selected outline. Demonstrates only these field/absent text boundaries."
+      },
+      {
+        "frames": ["15-cleared", "16-closed"],
+        "observed": "Clear query empty/counter blank/nav disabled; Close Find absent; both attachment summaries AX off; visible fields plain. No registry inspection."
+      }
+    ],
+    "attachmentBoundary": "First fixture attachment has only supplied text; second has name only. No URI/path/file/MIME/read handler or actual image/audio is involved; outside unread histories/files remain untested."
+  },
+  "corrections": [
+    {
+      "supersedes": "docs/evidence/2026-10-30-p12-continuation/matrix-summary.json#/unicodeAndLoadedAttachment/cases/2/paint",
+      "alsoQualifies": "native-webkit-visible-range-control/unicode/operator-result.json#/paintCounterexamplesNoLongerSeen/staleEmojiCrossInline",
+      "earlierClaim": "The first-paragraph emoji retained a yellow rectangular background after changing to full cross-inline query.",
+      "correctedAssessment": "Unproven; do not count as a separate established r9 failure or a candidate-fixed failure. Direct comparison of r9 unicode07 with r9 no-query16 and r11 unicode07/no-query16 does not establish a distinct rectangular background beyond the yellow emoji face itself. The earlier summary overstates the image evidence.",
+      "preservation": "Original screenshots/AX/operator-result and earlier summary remain byte-preserved for traceability. Definite r9 placeholder01/02 and live footer02 failures remain established and unchanged."
+    }
+  ],
+  "limits": [
+    "No native Highlight registry or current Range identities were inspected in9481; prospective counts of admitted ranges in oracle are not actual measurements.",
+    "The control suggests structural admission avoids these hidden-range paint counterexamples under this frozen synthetic production configuration. It does not establish a unique WebKit internal cause or resolve all rendering configurations.",
+    "No formal app replacement, current-source installed failure recheck, source-engineering rerun, real Agent stream or complete P12/29x8 acceptance follows. Prior full7 engineering proof belongs to the earlier CSS-only source batch.",
+    "Literal1/1 versus2 remains an observed oracle failure, not waived by correct glyph paint elsewhere. Necessary follow-up belongs to existing P12, with original requirement scope unchanged."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/preparation.json",
+      "sha256": "17f89c548fd4bd64a4b895d80685d8daf7cc09ba24123c2abe0d356b22e42e20",
+      "bytes": 30805
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/README.md",
+      "sha256": "9bb44d2f1e4ab1980fa46abae8a8a6b4ea0f159762a83692fdaa61451a6fe6e2",
+      "bytes": 3497
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/ConversationFind.original.tsx.raw",
+      "sha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+      "bytes": 7799
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/ConversationFind.visible.tsx",
+      "sha256": "7e32b09ad91b9ae37826baa46a56719b06a8105fab904a700d3e717e6f58ceb8",
+      "bytes": 8286
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/visibility-only.diff",
+      "sha256": "d5cec220e9d5e12807d2befa325ab75ebc728ae42a06efb23ba574a35d516931",
+      "bytes": 1143
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/imports-and-visibility.diff",
+      "sha256": "bf695b022da0966b53d0d6738952f65a23707b1fc6c98fce027c7ff6c59eb0ce",
+      "bytes": 1813
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/oracle.json",
+      "sha256": "49ecac1ea392e5d084c66dd9ecd7b04edaad55baee3a54f8e202bd7600d19ad4",
+      "bytes": 3953
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/static-checks.json",
+      "sha256": "b35fea06a71b6defd713e662a24f2c45a4e53d76c7fa4aa77eb290ecfd8a0e37",
+      "bytes": 2656
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/vite.config.mjs",
+      "sha256": "c52e0c691baddbeefa4f1a805c47e77140e0d8a7f9e9e50ff2f9f3060575522f",
+      "bytes": 1724
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-style-order.ts",
+      "sha256": "f967e6b2f208c08610dbd61cb05eba667e4b264c712e679dd5c3112bc1ea8824",
+      "bytes": 2257
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/live-control.tsx",
+      "sha256": "6a32fb186a0260cfc2637b9ef689014bc3f4222da8d6bbec40fec475ad1ee63d",
+      "bytes": 5444
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/unicode-control.tsx",
+      "sha256": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+      "bytes": 3184
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/tool-control.tsx",
+      "sha256": "bac981eadb71842d88ae70145e4f2010d83a689056c770ebd84371b9e8962882",
+      "bytes": 6217
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/operator-preflight.json",
+      "sha256": "d81727ae8c07bf361cbcedd7f45cabb2aacebd8045507d3f0104f4007e8c59fb",
+      "bytes": 877
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/build-result.json",
+      "sha256": "39bb2397485ace247890fd807113cb086c6a4f86a267e241458cff2d5589f2f0",
+      "bytes": 4380
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/build-delivery.json",
+      "sha256": "9b9dc2487cb16c0b7dff04b09889b266d983fdf0742534a29cc97b89859bccad",
+      "bytes": 3986
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/source-before.json",
+      "sha256": "3e390d3ddb4ec593932ba4cc58f5f26ec51ea241d5fbdbd787d5f5c4e5edf8f8",
+      "bytes": 269479
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/source-after.json",
+      "sha256": "48fcd655e967fa7e74de876d1e65dfd8f15d6e9d28af0ae6bffbfeebf3a006a6",
+      "bytes": 269480
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/build.stdout",
+      "sha256": "7519b7d6b976ae6df7e49f697f3915d5ddfdf1970656ab57835046aa118f9dca",
+      "bytes": 1797
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/execution-r11/preview-readiness.json",
+      "sha256": "064a86b0858739338a73336b2c4a75a0306f40029b400c35fe34bd42635a840a",
+      "bytes": 2296
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/MessageContent-Do1RjlVz.js",
+      "sha256": "3988ef6790537ef838294c2ef84dcd72fa3754c3de2d21b7973cc91e0bc53e8e",
+      "bytes": 215385
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/live-BK_9DG-q.js",
+      "sha256": "9a76f9d70b3353d4740c341c71555dc18fc12b7080ea5a0ffdf69e66f1f5d87f",
+      "bytes": 4026
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/tool-JKE11MJM.js",
+      "sha256": "ac60b54ca1007d72b7fa15f9eaead95ccee9879e7694c9414b93dc0dfaa32d61",
+      "bytes": 49980
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/transcript-search-B4x5BEgl.js",
+      "sha256": "e2c58dcc6c1f915acbfaf14fccdb26f3efa0add2c0732e2df1900294c1f6d360",
+      "bytes": 205535
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/transcript-search-DSTML7Lk.css",
+      "sha256": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+      "bytes": 207048
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/assets/unicode-BBRDYZVS.js",
+      "sha256": "353fb40cabf7611702896c191b7be600a9a858f8089bbdea7a179862c614760d",
+      "bytes": 2666
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/index.html",
+      "sha256": "4cd31aff7997a30e03cf7a976279583b6ec61f679aa317b14a6f16b6e1f092c3",
+      "bytes": 646
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/live.html",
+      "sha256": "d53beec68f364134700a95fcd88caf6a7647f1fa282f513d6e473a50b21158e6",
+      "bytes": 520
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/tool.html",
+      "sha256": "925c00db16be0205df295664481ad2663e4488e1f0c03d2a8af5a6412c2010ff",
+      "bytes": 620
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/production-output/unicode.html",
+      "sha256": "e0eef44aa87a654bc30119731c618d5ee021eaf12123fffadd35ad79b8fa9e0c",
+      "bytes": 623
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/00-initial.jpg",
+      "sha256": "6f4bb6d2d370b9bb608b5fef3797a9cd62ade342f561f3334a8405cc796d5938",
+      "bytes": 296084
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/01-json-before.jpg",
+      "sha256": "43eab2e8cd2324adbb3f6ee60896150e9d495ba5ca6dcaa1344bc45452c2c6a5",
+      "bytes": 244514
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/02-first.jpg",
+      "sha256": "0a908cab75f5273f5b84b10623963119acee717abacd675c6e55bc45b9885753",
+      "bytes": 275866
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/03-next.jpg",
+      "sha256": "95d2a83ae3789d1735d13de96b6b7aaa8df373daae8c7804029eca401ad6cac6",
+      "bytes": 271197
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/04-manual-fold.jpg",
+      "sha256": "edbc1052c4a8f73d579d72ecbede384e010aac5a0e58df33c1e23c54e1784f1b",
+      "bytes": 308957
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/05-wrap-title.jpg",
+      "sha256": "9f70b48d46f0899593cd4b0ea3e4f95785859b0ccaf512067c503d2cfb389f85",
+      "bytes": 261068
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/06-reverse-result.jpg",
+      "sha256": "c38df0349f83cfa17e8c451bd7b2f97083c7b643057e92909753d3943d71c6ad",
+      "bytes": 271187
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/07-closed.jpg",
+      "sha256": "6b0c13ec72d0f5df013737b9d179a61cb5f0e87099aabbbc4fde83bd3f7c1f14",
+      "bytes": 296740
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/00-initial.ax.txt",
+      "sha256": "487deff4f6bfcc07cc42452f5e20743a80944a1ccf200797f5891b72a735f7f5",
+      "bytes": 7292
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/01-json-before.ax.txt",
+      "sha256": "925777b50bf313be1047d67ff80ba80cecab9301a590b914f5cabb76c58935ef",
+      "bytes": 7830
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/02-first.ax.txt",
+      "sha256": "130600f928e07191fa21ed8b79fbdfad76d6d24e5e244c09d79bb034265c7bf7",
+      "bytes": 8626
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/03-next.ax.txt",
+      "sha256": "b02d4b2366c9a1c8d533138267849ffa5c0935ec78e69a040f83fc9940e04601",
+      "bytes": 8447
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/04-manual-fold.ax.txt",
+      "sha256": "09eab0e6680e20dbd0b7256c46d825132a473dfb6c671665b2434fb9a7300d2f",
+      "bytes": 7776
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/05-wrap-title.ax.txt",
+      "sha256": "83ac9571e99996af0cfd4cc7b6b6f8db1ab21b5d0a1bf2951baf0b9bd23c3734",
+      "bytes": 8447
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/06-reverse-result.ax.txt",
+      "sha256": "b02d4b2366c9a1c8d533138267849ffa5c0935ec78e69a040f83fc9940e04601",
+      "bytes": 8447
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/07-closed.ax.txt",
+      "sha256": "487deff4f6bfcc07cc42452f5e20743a80944a1ccf200797f5891b72a735f7f5",
+      "bytes": 7292
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/tool/operator-result.json",
+      "sha256": "c99a08be8893f5b55a8fef92e923c240e80a870e0b78d9f83e16de462fffc5a4",
+      "bytes": 414
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/00-initial.jpg",
+      "sha256": "cca913737419633e6a4fdbb46101ec4f7874ea582134909364d487b9ce122984",
+      "bytes": 694500
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/01-first.jpg",
+      "sha256": "baa2b5eded8ae64f5d8aab8967917a02f89b10c2f7f22ae6cfcf6adaa63a8667",
+      "bytes": 672211
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/02-next.jpg",
+      "sha256": "8950e00feff4e01dba2ccbc93014893278618c38913b38b2b401a39ef6382c4d",
+      "bytes": 583696
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/03-user-scroll-away.jpg",
+      "sha256": "73e2d922f2337a95941175c177b900fe8d8720d338bc7bd6c0c4867550f756cc",
+      "bytes": 654170
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/04-same-text-append.jpg",
+      "sha256": "a3eacdf367218731a9e11d7ecb516ff06e9b51d46a8fbd5673f81c5b011d6932",
+      "bytes": 659699
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/05-new-node.jpg",
+      "sha256": "e005e684f6f5bb9220d8eab24270b77b91929fc3817130ea2065d83f2ea9e1a3",
+      "bytes": 659217
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/06-B-before-find.jpg",
+      "sha256": "a4c7b967cee9324cf0e21c0dfe0e729d6d25175fdc641c37724c9e14f58d3d83",
+      "bytes": 221174
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/07-B-one-match.jpg",
+      "sha256": "9ab675b9532589ee09b0a78ef22313bc0bfcdcc9b1b8d7e7b40cd75617235c6d",
+      "bytes": 259440
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/08-A-remounted.jpg",
+      "sha256": "4ea896102d94614ab2e64c1b4c4f616a2cc22e3f19747ad0aedde72a5196d98f",
+      "bytes": 666044
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/09-user-open.jpg",
+      "sha256": "d7f9721f416e8e496ce7294ac7fe78739e71618953c0aa0fb5a76fc20eb5c0a6",
+      "bytes": 599726
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/10-A-first.jpg",
+      "sha256": "ac75b7eeac7ec804383ab5257f7de8e7a794c0b251a790f91a1bf2cec4faa89c",
+      "bytes": 678110
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/11-A-second.jpg",
+      "sha256": "74c3bbec12f7a059e4e5fddea3ca58837f1525f5dc26c925c05cddf8edd4d28d",
+      "bytes": 668583
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/12-A-nested.jpg",
+      "sha256": "882e4824ca0092168bf0ef8b7c0f2ea18ea0f9b9b7819eed5a3b15004e89604d",
+      "bytes": 565974
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/13-closed-user-open.jpg",
+      "sha256": "0148c5f54d35ee051466afb801cbada4fdb71f252452da9037ccbfd13aedc755",
+      "bytes": 598356
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/00-initial.ax.txt",
+      "sha256": "0a36189332bdfc733cefa21681a4753233c5e0c1963774f6f4a6989418cbec6e",
+      "bytes": 8926
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/01-first.ax.txt",
+      "sha256": "7a2fe2b32a3f0ddac4eafe18fde0fb6bf01f81219f9aad9fe5a424e686c36160",
+      "bytes": 9638
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/02-next.ax.txt",
+      "sha256": "6f0ce2264a9d86f5996a91db0e81c5fa106d096e050652ff7cbb153c649fadf0",
+      "bytes": 9804
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/03-user-scroll-away.ax.txt",
+      "sha256": "6f0ce2264a9d86f5996a91db0e81c5fa106d096e050652ff7cbb153c649fadf0",
+      "bytes": 9804
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/04-same-text-append.ax.txt",
+      "sha256": "58a4e2e1981fb103b7fa45c636fb456248552744ad2abea1ae5f8f439e7755b1",
+      "bytes": 9842
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/05-new-node.ax.txt",
+      "sha256": "85db4c18c0ff1ca6d19422e1b4740e5ad43a1840ce10088d7b2ce1c5dccbf0f1",
+      "bytes": 9891
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/06-B-before-find.ax.txt",
+      "sha256": "11e88a4aa48ef90e885be3412b065baae7ba464c4487bcc836597b1fdc8850d9",
+      "bytes": 2940
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/07-B-one-match.ax.txt",
+      "sha256": "d4c8fa245ee8f525e524c7455cf733aa026e6b43d711b7483c82d7272ded44c9",
+      "bytes": 3652
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/08-A-remounted.ax.txt",
+      "sha256": "eefa6749720cbf88116a03aa06c1a8559b4b96372938b3b7ee43232a46c4468d",
+      "bytes": 9679
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/09-user-open.ax.txt",
+      "sha256": "b06fa1925dd8a556c050de781c96d675ef6ae2bff349797667c7e76fa5e171f0",
+      "bytes": 9817
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/10-A-first.ax.txt",
+      "sha256": "f0ee32dde56da89bccc287aba46c641db426010cff880e5b30740030afd7ec53",
+      "bytes": 10075
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/11-A-second.ax.txt",
+      "sha256": "0c5d1dcf5afe8748a6d889682e3e5bcf711ab71fe346ba68c569e27d8b7bcc03",
+      "bytes": 9891
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/12-A-nested.ax.txt",
+      "sha256": "85db4c18c0ff1ca6d19422e1b4740e5ad43a1840ce10088d7b2ce1c5dccbf0f1",
+      "bytes": 9891
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/13-closed-user-open.ax.txt",
+      "sha256": "a41e8cc90809047f9d95f35f6634a37eebfe86edcc20065473c846abafde2fd1",
+      "bytes": 9363
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/live/operator-result.json",
+      "sha256": "017c4252383aeb8319880ef71bd9c29c0d3a6603f807f32279b10a84c0e26568",
+      "bytes": 474
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/00-initial.jpg",
+      "sha256": "cfd602f94b977ee496e9192ddbc487d7c50456365d3d59bd95d14a462f7fc58c",
+      "bytes": 234857
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/01-unicode-first.jpg",
+      "sha256": "9bd48fb861664652007a982aa62ce6227abef8e268077fee3d780c7a5536724e",
+      "bytes": 264315
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/02-unicode-attachment.jpg",
+      "sha256": "441f6de3ee3b978c59327f27f1df4d42af08bde8a66c0c526adee8863c065793",
+      "bytes": 261305
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/03-unicode-wrap.jpg",
+      "sha256": "1b1692dbcd2046130946407284a4e776b71eea7555ff06733cc949289270d383",
+      "bytes": 253901
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/04-emoji-first.jpg",
+      "sha256": "b719cd1dfeb491804116fa645f1964f92a5addd0a37b060d670e397d608c412d",
+      "bytes": 263623
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/05-emoji-inline.jpg",
+      "sha256": "cd384f5df46e6954533681d87f66a5cba234386318fefe22e42f88d69f557b74",
+      "bytes": 249962
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/06-emoji-attachment.jpg",
+      "sha256": "af023fe71569ee87a5662f08f67db45c42a4ce23ed7ba8de24619343c667a141",
+      "bytes": 259949
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/07-cross-inline.jpg",
+      "sha256": "63802987800bd0cd1f4c55a04dab257335384e5476a336281be13ff509add599",
+      "bytes": 263017
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/08-literal-first.jpg",
+      "sha256": "8ee4d9e9930f4d9c6499467240b78c96efb61b12e340c3bcce45bc9782df1c53",
+      "bytes": 261879
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/09-literal-attachment.jpg",
+      "sha256": "3af68721ad4f94ac53a2f50da321df16cb69305828e53dfd03b1e24d1974a695",
+      "bytes": 251551
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/10-host-scope.jpg",
+      "sha256": "d4d6b3f6f93eab45c768ad769b577c4901424388919263ac672b2988310d1c80",
+      "bytes": 264161
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/11-supplied-attachment.jpg",
+      "sha256": "537d04edd83a441c77c36db214525bb0f939fe1952f48b49dd1f95330d383c9f",
+      "bytes": 273352
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/12-separate-fields.jpg",
+      "sha256": "f5545e7f307e38a27d74a157826bcf85b969dc56cf137c9e39e4771558bb293d",
+      "bytes": 253728
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/13-placeholder-absent.jpg",
+      "sha256": "0d9f7a134b2a024cbf965ae3ef47ec6ae35db288b10bef2f81759856a5b4cc63",
+      "bytes": 257244
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/14-no-match.jpg",
+      "sha256": "ebead322bdc2775be297d9b772bb00a8d3e1edec811728f7d91327f31a724cb7",
+      "bytes": 255146
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/15-cleared.jpg",
+      "sha256": "7de6d6c6591487ce83534bbdc322dad245f3c50cb0fe120b534bdb6b39217280",
+      "bytes": 254098
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/16-closed.jpg",
+      "sha256": "2899d9b6f91285a8511c0b788b9506af1756b915e4f65803820a97285e7aa45f",
+      "bytes": 234788
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/00-initial.ax.txt",
+      "sha256": "c2eeb74c5dec9bc39935887124791f2fa8a049214318d41967ff33ca12a1a62b",
+      "bytes": 3287
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/01-unicode-first.ax.txt",
+      "sha256": "bb3c8c962d67d00252d1176c8a928eb4af668c2d225aa0c05387713b6ebd73e8",
+      "bytes": 3971
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/02-unicode-attachment.ax.txt",
+      "sha256": "8f97b5b4c19e5634e68f5ea6bdce1b7d9d8ff562493945bea2eddc874df1fc52",
+      "bytes": 4026
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/03-unicode-wrap.ax.txt",
+      "sha256": "5634f04de3a1ea96ac33ad250433c9e37eca12ab39f5e369e03cdff577428eb8",
+      "bytes": 3810
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/04-emoji-first.ax.txt",
+      "sha256": "cbaaaa05838df54589fa7e842fbc4d5a1effd7d2787089cd98fb0d8c6339b134",
+      "bytes": 3959
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/05-emoji-inline.ax.txt",
+      "sha256": "57ce9aa4c7e6ea040abf8d96251fe193377835f1d92ad5299f738b9b6b510867",
+      "bytes": 3804
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/06-emoji-attachment.ax.txt",
+      "sha256": "284e1854a0ab20e2956b636acc003703ad1916a57f99b58a3a492665301b7ec9",
+      "bytes": 4020
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/07-cross-inline.ax.txt",
+      "sha256": "f401115a65f0d549845a88608a910d74663584912cbde946cb89518a68f57674",
+      "bytes": 3989
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/08-literal-first.ax.txt",
+      "sha256": "6aa272ea85f874cc39b9cbf83e42cbcc05d5e666ee033d0faadffea99b005716",
+      "bytes": 3969
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/09-literal-attachment.ax.txt",
+      "sha256": "c061176ae50c56b211be615ac01936b8ba03551beb328135f3cfa643572d336b",
+      "bytes": 3809
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/10-host-scope.ax.txt",
+      "sha256": "96bfefb391f522ed8e9035ebb35094242f157df7b6e563c6c3a7369c3f59e495",
+      "bytes": 3975
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/11-supplied-attachment.ax.txt",
+      "sha256": "ab580cdb85b2190c6c387d5e724f6a769c9cb54e98f3d3ff40efcce6c770c59d",
+      "bytes": 4215
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/12-separate-fields.ax.txt",
+      "sha256": "2a7a61c5d4161c287c5471f9d928f5905e829966e56292f957c5ab0e14b03dc4",
+      "bytes": 4002
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/13-placeholder-absent.ax.txt",
+      "sha256": "b929d315ecc9e66b49b6fc0f1f540a766267cc99628a2d5c249536f1f9a849b8",
+      "bytes": 4032
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/14-no-match.ax.txt",
+      "sha256": "ef4893dbe4deff147c5b96f698b733872546f70a5823ac532710ae27939319f2",
+      "bytes": 4016
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/15-cleared.ax.txt",
+      "sha256": "3ea5000123c413e93dfe1f6d39a4cfa6c9a448610f257f626ba60fe13922ab00",
+      "bytes": 3935
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/16-closed.ax.txt",
+      "sha256": "c2eeb74c5dec9bc39935887124791f2fa8a049214318d41967ff33ca12a1a62b",
+      "bytes": 3287
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-visible-range-control/unicode/operator-result.json",
+      "sha256": "ac317f80285ade02ec598189a3174255a412bf43db6b78c4c56d5fb0d090d286",
+      "bytes": 504
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/live/02-nested.jpg",
+      "sha256": "4a7e2eb2801429b579d9e8ddca1b2bc798739cd164e073c3c2e18a492b3cd59c",
+      "bytes": 584771
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/live/02-nested.ax.txt",
+      "sha256": "4ddf0c5727c2b8b8abcf41a101e404c61f7abcd4686e5544b25a4d506be2b697",
+      "bytes": 9804
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/01-unicode-first.jpg",
+      "sha256": "aa7aa138c70b6ed94dc5a902e8d70c5d74dbc7002167921e08ca64039cc27174",
+      "bytes": 265200
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/01-unicode-first.ax.txt",
+      "sha256": "b9344f4cda61fe1d6d4e411da08c05b0a583c09e2a2256ef4743715ca2791fb4",
+      "bytes": 3971
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/02-unicode-attachment.jpg",
+      "sha256": "3cf99cf69bf76f08855cfab47a3f8a7bfbd53709bd364bbc17e40f1fa850b49d",
+      "bytes": 264504
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/02-unicode-attachment.ax.txt",
+      "sha256": "a4c75d3c37efbd66905f0c08ed09298e243b99926edfac239ca5ff6833bd8b23",
+      "bytes": 4026
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/07-cross-inline.jpg",
+      "sha256": "0de35741a03b88858419f3d125eddbf0815dc9f7471cfc8f599710b9774240bc",
+      "bytes": 263271
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/07-cross-inline.ax.txt",
+      "sha256": "2de36b50b876c01e742fdd4e3182ce1000eb4e4296505aa4b85a4b33bf9b8fda",
+      "bytes": 3989
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/16-closed.jpg",
+      "sha256": "c84ed9fbc2b23f050b47b5b80ebb7daa126fd24a862dd706a994db87a5f35e03",
+      "bytes": 235035
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/16-closed.ax.txt",
+      "sha256": "688582f2d7690a925b5702f16760aa9344fedc9198a9345ddb453c2e233a22d1",
+      "bytes": 3287
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/matrix-summary.json",
+      "sha256": "047910282c6756fc0840f54f55d702eef52ac70af2e2114b062a7939859d05ee",
+      "bytes": 24481
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/live-range-diagnostic-summary.json",
+      "sha256": "faeb99726b403011cabe2e4d5b5d817152568670dc80adb5c2c7b9313a38a4a0",
+      "bytes": 17820
+    }
+  ]
+}

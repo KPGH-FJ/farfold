@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentBoundedUnicodeLiteralFieldAndRangeDiagnosticReview",
+  "case": "9482 / frozen original-Find production build r12",
+  "status": "literal-attachment-match-missing-in-both-native-routes; cause-unresolved",
+  "reviewMethod": "Independent view of8original pictures, complete short AX rows from both captures, added reader/source and frozen build/input/asset/readiness records; no UI, HTTP, build, function rerun, test or source write by reviewer.",
+  "scope": {
+    "fixture": "Fixed supplied Unicode/attachment text, real production field scanner/matcher/Find with an added read-only overlay.",
+    "surface": "Existing formal application embedded WebKit panel, private production preview; not a new formal current-source install or main ThreadPage coverage.",
+    "nativeViewport": "Preparation declares same-window1279x576; not independently remeasured by this arm. Historical IAB oracle1280x720 not transferred.",
+    "preciseEngineBuild": null,
+    "physicalAttachmentOrUnreadHistoryAccess": false,
+    "P12Closed": false,
+    "entireMatrixGreen": false
+  },
+  "binding": {
+    "sourceHeadAtBuildEndpoints": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "frozenFindSha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+    "productionMatcherSha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+    "wholeRecordedInputCount": 1489,
+    "beforeAfterMapsEqualShaBytesModes": true,
+    "privateDeclaredFilePins": 9,
+    "productionDeclaredPins": 104,
+    "allPinsMatchRecordedEndpoints": true,
+    "private9StillMatchDisk": true,
+    "sameUnicodeFixtureAnd45SourceCssPlusXtermOrderAs9479": true,
+    "noPrivateFindOverride": true,
+    "naturalIntegerBuildExitCode": 0,
+    "rawStderrBytes": 0,
+    "emittedAssetShaBytesModesVerified": 3,
+    "historicalRootPreview": {
+      "port": 9482,
+      "ownedExecSession": 94369,
+      "recordedGet200AndBuiltFileMatches": 3
+    },
+    "compiledSourceBoundary": "r12 was built with old Find b9. Later source admission guard a30 does not mutate these already compiled assets; current-source guard is a separate source increment. Matched preview response hashes bind this case to r12, not the then-current checkout.",
+    "endpointLimit": "Recorded maps prove captured endpoints, not continuous writer or environment freeze. Preparation/build/readiness not-yet-UI statements are historical stages before raw observations."
+  },
+  "routes": [
+    {
+      "name": "original-sequence",
+      "intendedLifecycle": "Original multi-query Unicode route through literal first/Next, then one capture.",
+      "observed": "00 Find absent;01 pre-capture actual A+B?[x].* gives1/1 and body literal yellow+selected outline, both attachment summaries AX off;02 same actual counter and40 complete short rows;03 Close Find absent, visible body plain and both summaries AX off."
+    },
+    {
+      "name": "fresh-literal-only",
+      "intendedLifecycle": "Separate fresh root with only direct literal input, then one capture.",
+      "observed": "00 Find absent;01 pre-capture same exact query1/1 and body yellow+selected outline, both attachment summaries off;02 same40 complete scalar rows;03 Close Find absent/body plain/attachments off."
+    }
+  ],
+  "rawCoverage": "Both named route directories contain00/01/02/03 picture+AX samples. Their pre-query and captured states are independently observed; they do not contain a full intervening action/event trace. Route chronology is declared by preparation/operator context, not inferred from filenames alone.",
+  "captureAgreement": {
+    "separateDocumentsIdentityLimit": "The two complete40-row scalar objects compare equal, including local reader IDs, but IDs restart per fresh page; this is not cross-document object identity.",
+    "shortRowsCompletePerRoute": 40,
+    "maximumActualParagraphUtf16": 362,
+    "allPublishedRowsBelow450": true,
+    "actualInput": "One admitted input, literal A+B?[x].*, UTF16 width9; exact ASCII code points41/2B/42/3F/5B/78/5D/2E/2A. This rules out an observed mistyped/non-ASCII query at capture.",
+    "guard": "Unique main and transcript, exact fixed heading/six named fields,36 element descendants, rootValid=true.",
+    "scannedFields": 10,
+    "allFieldNodeDataConcatenatesToText": true,
+    "bodyField2": "字面符号 A+B?[x].* 结束。, UTF16 width18, one connected/owned Text identity6, offsets[5], segment Text[5,14].",
+    "attachmentField8": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*, UTF16 width28, one connected/owned Text identity12, nodeDataEqualsText=true, exact literal at its end by direct character comparison; production offsets[] and segments[] in both native captures.",
+    "independentAttachmentRead": "attachment0 has one closed details and one loaded PRE identity15 whose sole child is the same Text identity12/full28-unit string. attachment1 has closed details and no loaded PRE. The supplied body was present and scanned; it was not an absent-file placeholder.",
+    "actualAndRecomputedCounts": "actual counter1/1; production recomputation across10 fields yields offsets1/segments1, not2.",
+    "registry": "Both named Highlight entries present with one actual live Range identity14 covering body Text identity6[5,14], exact query, connected/owned; current is same Range as all0. No attachment range in these two entries at capture.",
+    "closeSnapshotLimit": "03 panel still displays sequence1 from02; its registry/open rows are historical captured values. No post-close recapture or global registry cleanup assertion."
+  },
+  "actualCapture02SelectedRows": {
+    "capture": {
+      "sequence": 1,
+      "guard": {
+        "mainCount": 1,
+        "transcriptCount": 1,
+        "heading": {
+          "text": "合成文字边界",
+          "utf16Length": 6,
+          "truncated": false
+        },
+        "namedFields": [
+          {
+            "name": "unicode",
+            "count": 1
+          },
+          {
+            "name": "inline",
+            "count": 1
+          },
+          {
+            "name": "literal",
+            "count": 1
+          },
+          {
+            "name": "host",
+            "count": 1
+          },
+          {
+            "name": "boundary-left",
+            "count": 1
+          },
+          {
+            "name": "boundary-right",
+            "count": 1
+          }
+        ],
+        "elementCount": 36,
+        "rootValid": true
+      }
+    },
+    "query": {
+      "inputCount": 1,
+      "admitted": true,
+      "value": {
+        "text": "A+B?[x].*",
+        "utf16Length": 9,
+        "truncated": false
+      },
+      "codePoints": [
+        "U+41",
+        "U+2B",
+        "U+42",
+        "U+3F",
+        "U+5B",
+        "U+78",
+        "U+5D",
+        "U+2E",
+        "U+2A"
+      ]
+    },
+    "actual counter": {
+      "count": 1,
+      "value": {
+        "text": "1 / 1",
+        "utf16Length": 5,
+        "truncated": false
+      }
+    },
+    "production scan": {
+      "fields": 10,
+      "admitted": true,
+      "offsets": 1,
+      "segments": 1
+    },
+    "field2": {
+      "text": {
+        "text": "字面符号 A+B?[x].* 结束。",
+        "utf16Length": 18,
+        "truncated": false
+      },
+      "nodeCount": 1,
+      "nodeDataEqualsText": true,
+      "offsets": [5],
+      "segments": [
+        {
+          "startIndex": 0,
+          "startOffset": 5,
+          "endIndex": 0,
+          "endOffset": 14
+        }
+      ]
+    },
+    "field2 node0": {
+      "id": 6,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "owned/field:literal/#text[0]",
+      "data": {
+        "text": "字面符号 A+B?[x].* 结束。",
+        "utf16Length": 18,
+        "truncated": false
+      },
+      "closestDetailsOpen": null
+    },
+    "field8": {
+      "text": {
+        "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*",
+        "utf16Length": 28,
+        "truncated": false
+      },
+      "nodeCount": 1,
+      "nodeDataEqualsText": true,
+      "offsets": [],
+      "segments": []
+    },
+    "field8 node0": {
+      "id": 12,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "owned/attachment:0/details[0]/figure[1]/pre[1]/#text[0]",
+      "data": {
+        "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*",
+        "utf16Length": 28,
+        "truncated": false
+      },
+      "closestDetailsOpen": false
+    },
+    "registry available": true,
+    "all": {
+      "present": true,
+      "count": 1
+    },
+    "all0 range": {
+      "id": 14,
+      "liveRange": true,
+      "text": {
+        "text": "A+B?[x].*",
+        "utf16Length": 9,
+        "truncated": false
+      },
+      "equalsQuery": true,
+      "collapsed": false,
+      "sameNode": true
+    },
+    "all0 start": {
+      "offset": 5,
+      "id": 6,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "owned/field:literal/#text[0]",
+      "data": {
+        "text": "字面符号 A+B?[x].* 结束。",
+        "utf16Length": 18,
+        "truncated": false
+      },
+      "closestDetailsOpen": null
+    },
+    "all0 end": {
+      "id": 6,
+      "offset": 14,
+      "sameAsStart": true,
+      "connected": true,
+      "owned": true
+    },
+    "current": {
+      "present": true,
+      "count": 1
+    },
+    "current0 range": {
+      "id": 14,
+      "liveRange": true,
+      "text": {
+        "text": "A+B?[x].*",
+        "utf16Length": 9,
+        "truncated": false
+      },
+      "equalsQuery": true,
+      "collapsed": false,
+      "sameNode": true
+    },
+    "current0 start": {
+      "offset": 5,
+      "id": 6,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "owned/field:literal/#text[0]",
+      "data": {
+        "text": "字面符号 A+B?[x].* 结束。",
+        "utf16Length": 18,
+        "truncated": false
+      },
+      "closestDetailsOpen": null
+    },
+    "current0 end": {
+      "id": 6,
+      "offset": 14,
+      "sameAsStart": true,
+      "connected": true,
+      "owned": true
+    },
+    "attachment0": {
+      "detailsCount": 1,
+      "open": false,
+      "loadedPreCount": 1
+    },
+    "attachment0 pre0": {
+      "id": 15,
+      "type": 1,
+      "name": "PRE",
+      "connected": true,
+      "owned": true,
+      "path": "owned/attachment:0/details[0]/figure[1]/pre[1]",
+      "data": null,
+      "closestDetailsOpen": false
+    },
+    "attachment0 pre0 child0": {
+      "id": 12,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "owned/attachment:0/details[0]/figure[1]/pre[1]/#text[0]",
+      "data": {
+        "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*",
+        "utf16Length": 28,
+        "truncated": false
+      },
+      "closestDetailsOpen": false
+    },
+    "attachment1": {
+      "detailsCount": 1,
+      "open": false,
+      "loadedPreCount": 0
+    }
+  },
+  "pureFunctionContrast": {
+    "result": "output/2026-10-30-p12-continuation/unicode-literal-production-function-inspection/result.json",
+    "productionModuleHashAndFixtureHashMatchR12Inputs": true,
+    "recordedImplementation": "Result records TypeScript5.9.3 transpileModule with no diagnostics and unchanged production textMatchOffsets/segmentedMatches invoked in Node; no algorithm copy.",
+    "body": {
+      "utf16Width": 18,
+      "offsets": [5],
+      "segment": [5, 14]
+    },
+    "attachment": {
+      "utf16Width": 28,
+      "offsets": [19],
+      "segment": [19, 28]
+    },
+    "recordedTotals": {
+      "offsets": 2,
+      "segments": 2
+    },
+    "limit": "This is the separate Node function-inspection record, with no actual browser DOM/React/registry/Range/renderer read. Source/query/text pins were verified; it must not be reported as WebKit passing or as a substitute for the native result."
+  },
+  "interpretation": [
+    "At these captures, the missing attachment match is also reproduced by the production matcher recomputation on a present exact scanned Text field. It is not merely a stale displayed counter while the captured recomputation is2, nor explained by a field absent from this captured scan.",
+    "Old Find b9 is used in frozen r12; the later visible-endpoint Highlight admission guard cannot explain the pre-existing native function mismatch in these compiled samples.",
+    "The two final captured states narrow dependence on earlier query sequence under the declared routes, but do not isolate a unique JavaScriptCore defect, end-of-string condition, minification cause or environment cause. Further controlled experiments remain separate evidence.",
+    "Overlay presence, capture focus and publication may repaint. Reader adds no geometry/computed-style read, new Range/Highlight mutation, selection, observer/timer, forced focus/scroll, native/network/storage operation. It recomputes fields/matches before serializing; all serialization finishes before publication. Correct capture scalars do not prove simultaneous pre-capture internal renderer state.",
+    "Original literal1/1 failures, paint counterexamples and unknowns remain preserved. This diagnostic is neither a fix nor P12/full-matrix/formal-install acceptance."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/preparation.json",
+      "sha256": "2c163155c5798303909b7b5a833cace2b379b896f85111eeb946b0674f212520",
+      "bytes": 26466,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/README.md",
+      "sha256": "c9976b3a7975c4aefbe3269f79e255cfdde8e87136d64c8245eb667ccd9849ef",
+      "bytes": 4711,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/unicode-inspection.ts",
+      "sha256": "15236b5b2463af188370f173ecb18ee6bc0030d0523c4ac38311324e2fbbe76c",
+      "bytes": 10995,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/unicode-control.tsx",
+      "sha256": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+      "bytes": 3184,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/production-style-order.ts",
+      "sha256": "f967e6b2f208c08610dbd61cb05eba667e4b264c712e679dd5c3112bc1ea8824",
+      "bytes": 2257,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/diagnostic.ts",
+      "sha256": "699c8f157521e1fa040348f784075ca346dbd99a121f2a70749052ccaac35423",
+      "bytes": 122,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/vite.config.mjs",
+      "sha256": "62e69eb49b9cbbdab3e9367c673a7df820daac0a34559e10792b099930ed693c",
+      "bytes": 1399,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/static-checks.json",
+      "sha256": "ab3e36df8aaca3c5e14ca0ff52ff9da2397629fc4a99a4d3d0e488f6013f1ad8",
+      "bytes": 3995,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/operator-preflight.json",
+      "sha256": "4cab19bdd2e9a289e11c4f5ba35f5e84fd38e30cfba7a5369913c3b0cf5c59c9",
+      "bytes": 1442,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/build-started.json",
+      "sha256": "c3127929bb923aad0b177596585c436e707d21a0edbff2462b8475a5c3ce61fc",
+      "bytes": 528,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/build-result.json",
+      "sha256": "219a24097e6afa5db109aa15573b622c0414aea0b49c70c15d429d8ebd8a27d8",
+      "bytes": 2510,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/build-delivery.json",
+      "sha256": "73660449de105bab85c1bff022d7fc200402c61e7db8bb8e7690ad58ce7306a8",
+      "bytes": 2566,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/source-before.json",
+      "sha256": "0f4e2a51016027c06f7d61ebc4480f0fbecb09d9b240d8c2c168060124266bbc",
+      "bytes": 267281,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/source-after.json",
+      "sha256": "961c390940c240b6ae8237f8410e66a98ddca8718a9a7cc601d354fdad5edee2",
+      "bytes": 267282,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/build.stdout",
+      "sha256": "78714f6a7ab7997414966d450a29eec5ac5ee19c2bbd8e24a2f130f6c1a5f0ea",
+      "bytes": 599,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/execution-r12/preview-readiness.json",
+      "sha256": "beabd696ce16c3373dfad9a39c728c479f0eb105dcb58cf2ef074da3de7ce07d",
+      "bytes": 905,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/production-output/assets/index-DSTML7Lk.css",
+      "sha256": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+      "bytes": 207048,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/production-output/assets/index-bK__hBCC.js",
+      "sha256": "a5994642932abe25e071870074527419718f9da624bbb31a2c80b12ab9789148",
+      "bytes": 429054,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-range-diagnostic/production-output/index.html",
+      "sha256": "6fd858194614a91f47c529cb8ba216f5a195e70f013fb441f311dde9bb450bcb",
+      "bytes": 428,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/unicode-literal-production-function-inspection/result.json",
+      "sha256": "fc59f1a8eaab8bc9f554737ab9e89e8c3b2289c69ecea89bd8d4b60e4bd16d34",
+      "bytes": 2968,
+      "observedMode": 384
+    },
+    {
+      "path": "src/runtime/transcript_find.ts",
+      "sha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+      "bytes": 1782,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-regression-matrix/unicode-control.tsx",
+      "sha256": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+      "bytes": 3184,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/08-literal-first.ax.txt",
+      "sha256": "757f4d55c89dd9e719c1fa2286bbcfb473042cfc35b3bf1b9dc787fb6c025a6f",
+      "bytes": 3969,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-production-matrix/unicode/09-literal-attachment.ax.txt",
+      "sha256": "e4f9eef06c2b6817ae72a631eb7abd7b8f1a4c6e04f477edf941433f9bedf15b",
+      "bytes": 3809,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-visible-range-control/ConversationFind.original.tsx.raw",
+      "sha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+      "bytes": 7799,
+      "observedMode": 420
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/private-visible-range-control-summary.json",
+      "sha256": "ad1879825e89bd300a24dc5d0eb36d7c56155718b9980365e6a0cc77374e6cd8",
+      "bytes": 40428,
+      "observedMode": 384
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/visible-range-source-summary.json",
+      "sha256": "3c9443c3940987281cf9eafe61aaba4866cb0074fe486d999236da2e30c5e27a",
+      "bytes": 21619,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/00-initial.jpg",
+      "sha256": "fcbbd8a9af4c62d754ac50b964104db6cf4424e9f6b8500cfea3213822b8c188",
+      "bytes": 254249,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/01-literal-before-capture.jpg",
+      "sha256": "8c67eb7145986d2be3621ab773169569dd94f8e8022ffb954279432ac8d81960",
+      "bytes": 281792,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/02-captured.jpg",
+      "sha256": "1142fdf09244f06708cf21fa69eb2c35a0e4a3fcd1a1b3201213fc414a95e4ae",
+      "bytes": 445679,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/03-closed.jpg",
+      "sha256": "bb85c8ae6582f771c62c8ffedb66f8dbccdb4c65d72305a59cdee3770e2f4054",
+      "bytes": 436294,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/00-initial.ax.txt",
+      "sha256": "e365c1fd2a0a424ded5c8161a16414b41d5bbd253f8bfa8909edd8cfe90b9656",
+      "bytes": 3424,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/01-literal-before-capture.ax.txt",
+      "sha256": "227600468ec2b3621e8451b83de88f8cf314f904a86317e13d67c448bd1641ee",
+      "bytes": 4158,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/02-captured.ax.txt",
+      "sha256": "27d3a7485c56369b0315e9a7b96d15bc2b8214801a90b1d7796d53ac1da7e952",
+      "bytes": 11432,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/original-sequence/03-closed.ax.txt",
+      "sha256": "ad7123d6b65d611a129d00d2ad37fadb4a54ef8c9a1fe5b620b5efa3661eba61",
+      "bytes": 10904,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/00-initial.jpg",
+      "sha256": "2a32a6192c6167912d6cca0f4b0af6aac075129397dba577f0fffa4fd20f5803",
+      "bytes": 254247,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/01-literal-before-capture.jpg",
+      "sha256": "dca5ef08b90b940aa37cc4626eebde557a02bba555795973ca3af30c376c74da",
+      "bytes": 281775,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/02-captured.jpg",
+      "sha256": "7b4b3e95a5e98e353962db779ebc3c5656a4909562e2bda4ad43b0cd1bbe81b0",
+      "bytes": 445679,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/03-closed.jpg",
+      "sha256": "8cbe788006f499adb962df49a65f19b25f57a981f32c13ef397e53ad2e2bd15b",
+      "bytes": 436293,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/00-initial.ax.txt",
+      "sha256": "e365c1fd2a0a424ded5c8161a16414b41d5bbd253f8bfa8909edd8cfe90b9656",
+      "bytes": 3424,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/01-literal-before-capture.ax.txt",
+      "sha256": "227600468ec2b3621e8451b83de88f8cf314f904a86317e13d67c448bd1641ee",
+      "bytes": 4158,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/02-captured.ax.txt",
+      "sha256": "27d3a7485c56369b0315e9a7b96d15bc2b8214801a90b1d7796d53ac1da7e952",
+      "bytes": 11432,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-unicode-range-diagnostic/fresh-literal-only/03-closed.ax.txt",
+      "sha256": "ad7123d6b65d611a129d00d2ad37fadb4a54ef8c9a1fe5b620b5efa3661eba61",
+      "bytes": 10904,
+      "observedMode": 384
+    }
+  ]
+}

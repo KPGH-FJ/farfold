@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12SyntheticVisibleJsonBracePaintBaselineSummary",
+  "recordedAt": "2026-10-29T18:19:47.789Z",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "level": "controlled-browser",
+  "scope": "One public synthetic baseline page importing the unchanged selected production Find/SearchDisclosure/MessageMediaVisibility and source stylesheet cascade. Synthetic tool/composer markup and Vite StrictMode are not the installed application or a real Agent journey.",
+  "sourceContext": {
+    "executionStartingHead": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "preparationRef": {
+      "path": "output/2026-10-30-p12-continuation/controls/brace-visible-control/preparation.json",
+      "sha256": "d710303dcc5a80d86e72af3efccdeff2cf3de237cf91e543e29839e889225411"
+    },
+    "originalPreparationRef": {
+      "path": "output/2026-10-24-agent-acceptance/p12-dom-ancestor-navigation/brace-visible-control/preparation.json",
+      "sha256": "471cb2fda2c5f0e92937f6d2c22bab39235f925e75abbb951e0bed9897a3e90c",
+      "originalStatus": "prepared-only; no server/browser/check/import/compile/helper/test execution",
+      "originalActualResults": null,
+      "originalWasUnexecutedPreparation": true,
+      "originalBytesUnmodified": true
+    },
+    "originalPreparationActualResultsWereNull": true,
+    "reviewReadbackHarnessPinsMatched": 8,
+    "reviewReadbackRuntimeSourcePinsMatched": 61,
+    "readbackMeaning": "Static file hashes at reviewer readback match the new preparation; this is not continuous stability, browser-loaded-module identity or an installed-bundle assertion."
+  },
+  "environment": {
+    "browserProvider": "ChatGPT in-app browser",
+    "engineVersion": null,
+    "engineVersionStatus": "unavailable",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "basis": "Saved environment metadata plus all seven viewed1280x720 screenshots; no engine inferred from AXWebArea names.",
+    "metadataReadAfterClose": {
+      "requestedField": "navigator.userAgent",
+      "outcome": "navigator not exposed by the supported readonly evaluator",
+      "recordedAfterFindCloseAndSavedExperimentObservations": true,
+      "productFailure": false,
+      "experimentRepeatedForMetadata": false
+    }
+  },
+  "prospectiveOracle": {
+    "needle": "SYNTHETIC_WRAP_TARGET_79E",
+    "matches": 2,
+    "orderedFields": [
+      "target tool3 title span",
+      "tool3 separate plain result pre"
+    ],
+    "jsonHasNeedle": false,
+    "jsonStartsWithBrace": true,
+    "derivation": "Two explicit fixture TARGET placements. The TARGET constant/usage and JSON literals remain byte-identical to the existing control. Not derived from a runtime Find count."
+  },
+  "actualUiOperator": "Root",
+  "independentSavedEvidenceReview": {
+    "reviewer": "/root/progress_evidence",
+    "actuallyViewedOriginalImages": 7,
+    "actuallyReadCompleteAxFiles": 7,
+    "reviewerOperatedUi": false,
+    "reviewerAlsoPreparedDerivedFixtureAndAuthoredThisSummary": true,
+    "independentFromActualUiOperator": true,
+    "blockingFindings": [],
+    "result": "The stated narrow controlled observation is supported by all seven saved image/AX pairs; pixel observations and AX semantics are kept separate."
+  },
+  "observations": [
+    {
+      "stage": "00-initial",
+      "finding": "No Find; target outer process group collapsed; empty synthetic composer and Send disabled."
+    },
+    {
+      "stage": "01-json-visible",
+      "finding": "Target group, technical details and full input are expanded in AX. Image exposes JSON opening brace and beginning only; lower JSON is occluded by composer, so this image is not the complete visible-input precondition."
+    },
+    {
+      "stage": "02-json-complete-visible",
+      "finding": "After the one pre-Find preparation scroll, the complete nonmatching JSON including both braces is readable. Separate title and result needles are visible; Find is not open."
+    },
+    {
+      "stage": "03-find-open",
+      "finding": "Find input is empty, previous/next disabled, target outer group collapsed; this follows the deliberately declared pre-Find outer fold."
+    },
+    {
+      "stage": "04-first-match",
+      "counter": "1 / 2",
+      "selectedTarget": "title",
+      "titleNeedleYellowAndReadable": true,
+      "resultNeedleYellowAndReadable": true,
+      "selectedTitleOutlineVisible": true,
+      "completeJsonReadable": true,
+      "nonmatchingOpeningBraceYellow": false,
+      "finding": "Both distinct exact needle lines and the full nonmatching JSON are visible. Selected title has a separate outline; pixel fill and outline are not equated."
+    },
+    {
+      "stage": "05-next-match",
+      "counter": "2 / 2",
+      "selectedTarget": "plain-result",
+      "titleNeedleYellowAndReadable": true,
+      "resultNeedleYellowAndReadable": true,
+      "selectedResultOutlineVisible": true,
+      "completeJsonReadable": true,
+      "nonmatchingOpeningBraceYellow": false,
+      "finding": "Next selects the separate result and preserves title/result yellow matches. The opening brace is plain. Result text is fully readable above the composer, while the result container lower edge approaches the composer; no whole-container visibility claim."
+    },
+    {
+      "stage": "06-closed",
+      "finding": "Find is absent and target outer process group is collapsed again. Empty synthetic composer and disabled Send remain. Hidden nested input state is not independently re-observed after close."
+    }
+  ],
+  "operatorActions": {
+    "recordedEntries": 9,
+    "prepare": {
+      "openTargetOuterGroup": 1,
+      "openTargetTechnicalDetails": 1,
+      "openTargetFullInput": 1,
+      "preFindScrollToExposeCompleteJson": 1,
+      "foldOuterGroupRetainingChosenInnerStates": 1
+    },
+    "find": {
+      "open": 1,
+      "declaredQueryInput": 1,
+      "next": 1,
+      "close": 1
+    },
+    "firstOuterGroupOpen": {
+      "completedBeforeActionRecorderStarted": true,
+      "recordedTimestamp": null,
+      "basis": "Operator log explicitly labels the completed tool action before its recorder. This summary does not fabricate a missing timestamp or a complete from-first-action recording."
+    },
+    "compensatingScrollAfterFind": 0,
+    "replacementQueriesAutomaticRepeatsOrDiagnosticHotkeysRecorded": 0,
+    "actionBoundary": "Counts follow the explicit operator record. The extra scroll is a disclosed pre-Find visibility preparation and is not a post-Find correction. Action counts do not establish zero hidden transport or all internal IO."
+  },
+  "result": {
+    "controlledBaselineCompleted": true,
+    "twoExpectedLiteralFieldsShownAndNavigated": true,
+    "wrongBracePaintObservedInThisBaseline": false,
+    "classification": "One narrow synthetic visible-input baseline did not reproduce the old wrong-brace pixel observation.",
+    "registeredRangeEndpointsDirectlyObserved": false,
+    "diagnosticArmExecuted": false,
+    "mechanicalAcceptanceReceiptOrValidatorExecuted": false,
+    "originalCfcBraceCauseEstablished": false,
+    "productFixClaimed": false,
+    "formalInstalledCaseAdded": false,
+    "fullRequirementsClosed": 0,
+    "standardCellsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "all29Accepted": false
+  },
+  "limits": [
+    "The saved baseline provides a visible nonmatching opening-brace control, two exact yellow needle fields and one Next selection. It does not establish live CSS Highlight range endpoints, arbitrary glyph correctness or every timing/layout/engine condition.",
+    "No installed Farfold action, real Agent request, account/model effect, DB/history/attachment evidence, Windows journey or performance measurement is added. Source-static CSS order and synthetic tool/composer markup do not certify final installed-bundle behavior.",
+    "IAB engine version remains unavailable. This one baseline cannot rule out the original CFC installed anomaly or establish a WebKit/Chromium issue, unique cause or repair. The old CFC/79e failed cases and old unknowns remain unchanged.",
+    "The first preparation expansion predates the action recorder; one extra pre-Find scroll is disclosed. No Find-after compensation is recorded. Closing restores the observed outer fold, not independently certified hidden nested disclosure state.",
+    "The readonly navigator metadata error happened after Find close and saved experiment observations; it is retained as unavailable environment metadata rather than a product failure or a reason to rerun the case.",
+    "P12 query-change/new-content/switch/streaming and full installed coverage, all original requirements, NEW-24 sending protections and29by8 remain open. No new acceptance gate or execution queue is introduced."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/brace-visible-control/preparation.json",
+      "sha256": "d710303dcc5a80d86e72af3efccdeff2cf3de237cf91e543e29839e889225411",
+      "bytes": 24418,
+      "role": "derived-preparation"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/environment.json",
+      "sha256": "5313760a3608431ab4ca26ba61b3cf69e6472b8160cd0adc1f68201013b0b95d",
+      "bytes": 452,
+      "role": "operator-environment-metadata"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/operator-events.json",
+      "sha256": "dcfa1b0f3823e27daf7678b2edd87253742331e47808531ab748962611225fee",
+      "bytes": 1064,
+      "role": "operator-actions-with-first-action-timing-limit"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/00-initial.jpg",
+      "sha256": "510c19a778c6a7f98fcd3504cd1c4f17dcb463aaea8d6669f2ce105f34c59c70",
+      "bytes": 52899,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/00-initial.ax.txt",
+      "sha256": "2ea57a853700780ea24bf1f7dbcd2f0647bcc45e2a4eefbb52a636836067748a",
+      "bytes": 5612,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/01-json-visible.jpg",
+      "sha256": "3b130de5cfddbc3b4e5a2378f66025d7bd0eb959c859d21f66cfa3cde81ffc8b",
+      "bytes": 38946,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/01-json-visible.ax.txt",
+      "sha256": "543b3d5662e1c08f6880f3956d51dc88bce4df40d17b69f1fd53eb52246d86d1",
+      "bytes": 6035,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/02-json-complete-visible.jpg",
+      "sha256": "fc78653a8fa43e20ba13f4a28beea82e7b3196afb05b814e69fd90b0f55382ff",
+      "bytes": 27889,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/02-json-complete-visible.ax.txt",
+      "sha256": "543b3d5662e1c08f6880f3956d51dc88bce4df40d17b69f1fd53eb52246d86d1",
+      "bytes": 6035,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/03-find-open.jpg",
+      "sha256": "732439eece918e16e0b00ff62e62132ec4cd0c1c7ceba72dbc4877174e99458b",
+      "bytes": 55640,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/03-find-open.ax.txt",
+      "sha256": "3abbdc4e604cbd7d510bea3a54c6e192cac30ec396ff6cd2576dfd285be2b565",
+      "bytes": 5861,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/04-first-match.jpg",
+      "sha256": "e65cc74c0b0061e99260170542cd611365202d1664375c77815f8285ae660e68",
+      "bytes": 31234,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/04-first-match.ax.txt",
+      "sha256": "107b0d1e3e5a5a5d74eaed9a3d208422b4c767a6835b01497edc48f13972fcdc",
+      "bytes": 6390,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/05-next-match.jpg",
+      "sha256": "9325a67816ad73e89b868b6d70128eaad7b5ce5807d56065366f0f0dfa6d8538",
+      "bytes": 31551,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/05-next-match.ax.txt",
+      "sha256": "c00f5677d65881546a3df463954e336f91b5cdb278c626969430e8ef700d4c4e",
+      "bytes": 6319,
+      "role": "complete-original-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/06-closed.jpg",
+      "sha256": "e057446e08d53f3257a959419f7eba38aebb3fae2b500e0338bd47bdf11ba057",
+      "bytes": 52451,
+      "role": "original-saved-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/brace-baseline/06-closed.ax.txt",
+      "sha256": "d4efe82a8a41e36b484c947fd2d18bf6d5efe84ce338a21e9bf5dccf10b749a3",
+      "bytes": 5612,
+      "role": "complete-original-AX-actually-read"
+    }
+  ]
+}

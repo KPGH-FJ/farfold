@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12SyntheticProductionRangeScalarAndPaintDiagnosticSummary",
+  "recordedAt": "2026-10-29T19:01:04.725131+00:00",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "level": "controlled-production-code-rendering-and-sampled-range-scalars",
+  "scope": "Owned synthetic production ToolStep/Find/disclosure fixture in the existing app embedded WebKit. Diagnostic observation only; not a formal main-app installation, real Agent journey, canonical acceptance receipt or P12 closure.",
+  "independentReview": {
+    "operator": "Root",
+    "reviewer": "/root/progress_evidence",
+    "reviewerOperatedUiOrReranBuildPreview": false,
+    "primaryImagesActuallyViewed": 5,
+    "primaryAxOriginalsRead": 5,
+    "supplementalImagesPreviouslyIndependentlyViewed": {
+      "chromeProduction": 4,
+      "webkit9472": 6
+    },
+    "axMethod": "Read dynamic/control/scalar lines; repeated known synthetic prose was elided only in tool display. Saved native AX truncates some ordinary prose. No original was rewritten.",
+    "scalarAssertionsRecheckedFromAx": true
+  },
+  "binding": {
+    "sourceHead": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "route": "http://127.0.0.1:9473/",
+    "preparationStateIsHistorical": "prepared-not-built-not-executed; later execution-r3 records establish the executed build without rewriting preparation.",
+    "buildNaturalIntegerExitCode": 0,
+    "buildInputMapsEqualAtEndpoints": 1485,
+    "reviewReadbackPreparedFilePinsMatched": 6,
+    "reviewReadbackRuntimeInputByteHashPinsMatched": 70,
+    "builtOutputByteHashesMatched": 3,
+    "recordedReadinessResponsesMatchingBuild": 3,
+    "readinessReviewDidNotRepeatHttp": true,
+    "r1ToR3ControlAndStyleOrderBytesEqual": true,
+    "r2ToR3UnchangedFiles": [
+      "index.html",
+      "control.tsx",
+      "production-style-order.ts",
+      "diagnostic.tsx"
+    ],
+    "r2ToR3SnapshotFunctionPrefixAndCaptureThroughSerializationBytesEqual": true,
+    "r3Delta": "Post-serialization scalar/line publication plus its build/preview entry configuration; the snapshot reader does not mutate Range or the highlight registry or read geometry."
+  },
+  "observations": {
+    "02FirstBeforeCapture": {
+      "counter": "1 / 2",
+      "title": "grey selection background/outline without yellow fill",
+      "jsonOpeningBrace": "yellow despite no query text",
+      "resultPixels": "outside visible viewport; not certified"
+    },
+    "03FirstRangeSample": {
+      "counter": "1 / 2",
+      "allCount": 2,
+      "all0": {
+        "rangeIdentity": 1,
+        "startAndEndNode": {
+          "id": 2,
+          "type": 3,
+          "name": "#text",
+          "isConnected": true,
+          "owned": true
+        },
+        "parent": {
+          "tag": "SPAN",
+          "classes": "search-match",
+          "findBlock": true,
+          "toolItem": null,
+          "controlId": null
+        },
+        "offsets": [0, 25],
+        "rangeText": {
+          "text": "SYNTHETIC_WRAP_TARGET_79E",
+          "utf16Length": 25,
+          "truncated": false
+        },
+        "collapsed": false
+      },
+      "all1": {
+        "rangeIdentity": 3,
+        "startAndEndNode": {
+          "id": 4,
+          "type": 3,
+          "name": "#text",
+          "isConnected": true,
+          "owned": true
+        },
+        "parent": {
+          "tag": "PRE",
+          "classes": "step-text",
+          "findBlock": true,
+          "toolItem": null,
+          "controlId": null
+        },
+        "offsets": [0, 25],
+        "rangeText": {
+          "text": "SYNTHETIC_WRAP_TARGET_79E",
+          "utf16Length": 25,
+          "truncated": false
+        },
+        "collapsed": false
+      },
+      "currentCount": 1,
+      "currentRangeIdentity": 1
+    },
+    "04NextBeforeCapture": {
+      "counter": "2 / 2",
+      "title": "no yellow fill",
+      "jsonOpeningBrace": "still yellow",
+      "result": "yellow text and selection outline; target text readable, whole container edge not certified"
+    },
+    "05NextRangeSample": {
+      "counter": "2 / 2",
+      "allRangeIdentities": [1, 3],
+      "allStartAndEndNodeIds": [2, 4],
+      "allOffsets": [
+        [0, 25],
+        [0, 25]
+      ],
+      "allRangeTextEqualsLiteralQueryByReadback": true,
+      "currentCount": 1,
+      "currentRangeIdentity": 3,
+      "currentStartAndEndNodeId": 4,
+      "currentParent": "PRE.step-text.search-match"
+    },
+    "06Closed": {
+      "findAbsent": true,
+      "outerGroupCollapsed": true,
+      "syntheticComposerEmptyAndSendDisabled": true,
+      "hiddenChildOpenFlagsIndividuallyInspected": false
+    },
+    "literalComparison": {
+      "needle": "SYNTHETIC_WRAP_TARGET_79E",
+      "utf16Length": 25,
+      "rangeTextNotTruncatedInEitherSample": true,
+      "rangeTextEqualsNeedle": "Derived by exact comparison of the actually exposed rangeText and literalQuery fields. The equalsNeedle boolean itself is not exposed in saved AX."
+    },
+    "jsonNegativeControl": "The raw JSON text exposed in 02/04 AX has synthetic/operation/reason/itemCount fields and no needle. The jsonContainsNeedle boolean itself is not exposed in saved AX.",
+    "identityScope": "Same page-local WeakMap Range identities 1 and 3 and node identities 2 and 4 in the two samples; current identity changes 1 to 3. This is endpoint evidence, not continuous observation or persistent/cross-page identity."
+  },
+  "captureLimits": [
+    "02/04 pixels precede their scalar capture. Clicking capture changes focus; displaying/collapsing reports can repaint and cover content. These are not same-frame certificates of Range and pixels.",
+    "03/05 AX exposes complete labelled Range/node/offset/path scalar rows. It does not expose the complete serialized JSON line view, equalsNeedle or jsonContainsNeedle booleans.",
+    "No claim about intermediate mutations, extra registry entries not exposed by these rows, or why WebKit paints a nonmatching brace."
+  ],
+  "separate9472Record": {
+    "route": "http://127.0.0.1:9472/",
+    "result": "Original 1/2 and 2/2 screenshots reproduce missing title yellow and yellow JSON brace.",
+    "rangeBoundary": "03 AX stops inside the first ranges array entry; endpoint nodes, offsets, range text and identity were not read. Do not backfill 9472 with 9473 scalar evidence."
+  },
+  "chromeProductionSupplement": {
+    "declaredRouteAndEnvironment": "r1 unchanged production9471; IAB Chrome156 reported1280x720 in prospective-plan.",
+    "result": "01 first1/2 and02 next2/2: title and result yellow, selected target outlined, full visible JSON brace plain.03 Close removes Find and folds outer group.",
+    "preQueryPixels": "00 shows only the upper part of JSON; complete pre-query JSON visibility is not asserted.",
+    "operationCountBoundary": "Plan specifies query once, Next once, Close; no separate operator-events file in this directory. Exact action count relies on Root tool chronology beyond the screenshots.",
+    "comparison": "Same r1 production control passes in sampled Chrome conditions while the separately recorded r1 embedded-WebKit control fails. R3 instrumented WebKit also fails with the sampled ranges above. Browser container, viewport, entry/instrumentation and timing are not uniquely isolated; no sole-engine-cause conclusion."
+  },
+  "result": {
+    "sampledRangeData": "Both all-match ranges address the two exact connected, owned target Text nodes at[0,25]; current range follows the selected item at the two sampled endpoints.",
+    "pixels": "Wrong yellow remains in production embedded WebKit despite those sampled Range data.",
+    "uniqueCauseEstablished": false,
+    "formal52aaPriorFailurePreserved": true,
+    "fullP12RemainsOpen": true,
+    "formalAcceptanceOrReceiptClaimed": false
+  },
+  "referencesSha256": {
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/02-first-before-capture.jpg": "f4b78a0a6f66414851e39cf38490b42a18cf6c270b44b99c9117cb650d9ff907",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/02-first-before-capture.ax.txt": "3aaf2c09e7d74a38d631e9ea103fd59e09bde82e075b825bb45e463b5456f61d",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/03-first-range.jpg": "680ab78f03d0fdebd18a5156f4e3908a51fbd7f1c92509b432b3efde4d43713f",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/03-first-range.ax.txt": "e5d692369ef00d5ef28abc6400f0279813c5b384c3e754e90044755188914d9a",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/04-next-before-capture.jpg": "301ebb6e5212aea13080a7447a9a4b23311356fd2b6310a926ff007e90d5719d",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/04-next-before-capture.ax.txt": "5aa1715d7462899eba5df47c1a63336b74a3b0fd2599fd00af693a9ca5aff5a0",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/05-next-range.jpg": "d151f694db8cfae67dd502fbb024852a163a854433a08e0ce672aad9b52181ad",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/05-next-range.ax.txt": "e2b9bad05afc6fa45a33c820d9c035943a6043743d75575ba7f4dcf2941ff14e",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/06-closed.jpg": "8432e4daf70232fcb65ac548b7f9f04ef60859d7452618e308e543725bbbd65c",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/06-closed.ax.txt": "1063d866b6df0b5fdb2510c71bbe0cb78050b000c4cba97733deb78595d38cd3",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range-lines/prospective-plan.json": "3c64d8712630681fee8ae2458f0508ac9925010c10c34524bd90f3b6071c6d70",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/preparation.json": "5f987123ec9c58862c5c1d25cbd38122d0a7be20a4e13f3caac6b040ef1346dd",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/range-inspection.ts": "d9c8e53a77b524834da2383407a6e90e552c843a6460784e6c418e20fc0daa72",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/execution-r3/build-result.json": "09ae17c66b8da24cc3b298cd9029989609e24543e9342863c75ed1f220400c32",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/execution-r3/source-before.json": "d8b2cbac32e3f6e3eea31210cd551e4a3cccab07d7f61303921994c0be13a159",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/execution-r3/source-after.json": "a9dc83ab3ae36d82072262c4f7443f8e421f9f7146fee95ce572163e818deb5d",
+    "output/2026-10-30-p12-continuation/controls/production-range-diagnostic-lines/execution-r3/preview-readiness.json": "08a506368720cf1b93ed6dbd51f16e2ac09e62eca33deda4a49e9794b6bd65a9",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range/prospective-plan.json": "451e3ea5a26b68a242d41cb17160aa0cd0e34c3bb945d3c0ab9ec93f5c92c61d",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range/02-first-before-capture.jpg": "7d6f3fb8bfb516165ad5b68b6df37a6c125c7e03cca57b17c94100221ac970eb",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range/03-first-range.ax.txt": "d5d118b74e783fb0cdd43115cd6481e64d92df65036fd627ec4f96135ff354ce",
+    "output/2026-10-30-p12-continuation/native-webkit-production-range/04-next-before-capture.jpg": "d2297b99267dc7de069d099f464c2cfd5a74fd201fda0519411705d2c37ba3c6",
+    "output/2026-10-30-p12-continuation/chrome-production/prospective-plan.json": "548004ef4cb2586f288932e5da08d49b70a168440d58c05320d81437b84dc4ed",
+    "output/2026-10-30-p12-continuation/chrome-production/00-json-before.jpg": "d6087749f89ae27e3fca26245534ca5da0117985693936f961a3e43e053fc5b5",
+    "output/2026-10-30-p12-continuation/chrome-production/00-json-before.ax.txt": "abf670852a9d1a6e82d61da49cc4746c56d0058f9b814eb004a884f99fba2b78",
+    "output/2026-10-30-p12-continuation/chrome-production/01-first.jpg": "3dc744e4fa6c19c33928670d7570ae7c1a0a5eaf18681be48d8695efab03ac33",
+    "output/2026-10-30-p12-continuation/chrome-production/01-first.ax.txt": "9ac420cdac1cc35ca312a63600e2c4a3a6370d4a0a11c537bb9f17d114530be3",
+    "output/2026-10-30-p12-continuation/chrome-production/02-next.jpg": "99e6de3e4a628dd00a98c758e9484d9e017ca04df1d82d7d64c4fcc742f4419a",
+    "output/2026-10-30-p12-continuation/chrome-production/02-next.ax.txt": "6d19283ffa3422b8fb60eb3a5284bd17c6d98a6000ecfd22cc272dd6ac3ac9ed",
+    "output/2026-10-30-p12-continuation/chrome-production/03-closed.jpg": "5afcdee8f8335534bb87801d58268c07b3f68aea17397272ee5245bc2d912e69",
+    "output/2026-10-30-p12-continuation/chrome-production/03-closed.ax.txt": "53db5023f995c12a8bb58aa65d996a48cf84c7061399a31b383bddbc59cfb32a",
+    "output/2026-10-30-p12-continuation/prod-control-design/execution-r1/build-result.json": "ee5458d3d5312d564d6f670e53402c25249beced100077b9f21f3f08b785d16e",
+    "output/2026-10-30-p12-continuation/prod-control-design/execution-r1/preview-readiness.json": "c4d6c7beb7856205e7002d5eab2476cfff4c83cd0e1e8f95e69d4e91b4622d7b",
+    "docs/evidence/2026-10-30-p12-continuation/production-mode-control-failure-summary.json": "bb2137ad8218dd9311c07ea525b2163b6e7e39cff5a822741692f13381205391",
+    "docs/evidence/2026-10-30-p12-continuation/formal-52aa-visible-json-failure-summary.json": "7b1477b99379728a1e97e8cb84df72946ddd1ef9eb07ff8ff6ffaf181488cec7"
+  }
+}

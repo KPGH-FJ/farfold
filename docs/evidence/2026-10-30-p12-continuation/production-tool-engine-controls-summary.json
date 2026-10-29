@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12ProductionToolComponentSyntheticIabAndEmbeddedWebKitBoundedControlsSummary",
+  "recordedAt": "2026-10-29T18:44:53.234Z",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "level": "controlled-browser-and-embedded-webview",
+  "scope": "Two bounded synthetic baseline arms now use the exported production ToolStep, its ToolDetail/ToolInput path, production ConversationFind/disclosures and source stylesheet imports. Neither is the main workbench conversation rendering or a real Agent event journey.",
+  "sourceBinding": {
+    "sourceContext": "1d791c2cf; pins describe exact current selected bytes",
+    "productionComponentControlFilePinsMatchedAtReview": 6,
+    "productionRuntimeInputPinsMatchedAtReview": 70,
+    "nativePlanFileReferencesMatchedAtReview": 7,
+    "actualToolStepImported": true,
+    "syntheticToolCallViewOnly": true,
+    "syntheticMessagesGroupsAndComposerStillFixtureCode": true,
+    "developmentModuleAndStrictModeTiming": true,
+    "exactInstalledBundleCssOrderOrMainViewEquivalenceProven": false,
+    "boundary": "Hash checks establish current selected source/harness bytes only; browser-loaded-module byte identity, continuous stability, final installed-bundle layout and main-window configuration equality were not independently established."
+  },
+  "oracle": {
+    "fixedSyntheticOccurrences": 2,
+    "orderedFields": [
+      "target production ToolStep title",
+      "separate production plain-result pre"
+    ],
+    "syntheticRawJsonContainsKeyword": false,
+    "basis": "Predeclared synthetic ToolCallView title and plain result contain the same literal; the independent rawInput JSON contains only the fixed synthetic fields. Count expectation is source-defined, not derived from Find output."
+  },
+  "independentSavedEvidenceReview": {
+    "reviewer": "/root/progress_evidence",
+    "actualUiOperator": "Root",
+    "reviewerOperatedUiOrReranEitherArm": false,
+    "IABBaselineImagesViewed": 5,
+    "IABBaselineCompleteAxFilesRead": 5,
+    "additionalIABEnvironmentImageAndAxRead": 1,
+    "embeddedWebviewImagesViewed": 8,
+    "embeddedWebviewCompleteAxFilesRead": 8,
+    "completeOriginalAxMethod": "All originals were read. Repeated exact fixture prose and an identical512character source prefix already truncated in native AX were deduplicated only for display; original AX files were not changed and all dynamic nodes/values/states were retained.",
+    "blockingFindingsWithinNarrowObservations": []
+  },
+  "separateEnvironmentObservations": {
+    "IAB": {
+      "actualDisplayedFields": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "devicePixelRatio": 2,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "cssHighlightsPresent": true,
+        "highlightPresent": true
+      },
+      "scope": "A separate environment.html load recorded these own-page values after the IAB baseline arm; this is new attached evidence, not a correction of any older null environment record.",
+      "uaReportedBrowserVersionToken": "Chrome/156.0.0.0",
+      "preciseEngineRevision": null,
+      "preciseOperatingSystemOrCpuInferredFromCompatibilityUa": false,
+      "sameProcessOrExactPriorBaselineEnvironmentIdentityProven": false
+    },
+    "embeddedWebview": {
+      "initialNarrowPanelDisplayedFields": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "devicePixelRatio": 2,
+        "innerWidth": 509,
+        "innerHeight": 545,
+        "cssHighlightsPresent": true,
+        "highlightPresent": true
+      },
+      "expandedPanelDisplayedFields": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+        "devicePixelRatio": 2,
+        "innerWidth": 1279,
+        "innerHeight": 576,
+        "cssHighlightsPresent": true,
+        "highlightPresent": true
+      },
+      "uaReportedEngineToken": "AppleWebKit/605.1.15",
+      "preciseWebKitBuild": null,
+      "scope": "Values were displayed inside the formal application content webview on environment.html, first at509x545 and then at1279x576 after panel expansion. DPR2 is reported. A compatibility UA token is not an exact engine build or current OS/hardware identity.",
+      "containerApplicationAsRecordedInPlan": "52aa 0.1.7 arm64",
+      "containerApplicationBinaryRehashedByThisReviewer": false,
+      "sameWkConfigurationOrDocumentContextAsMainTauriWorkbenchProven": false
+    },
+    "capabilityPresenceMeaning": "Both environment pages report CSS.highlights and Highlight present. Presence alone does not validate registered endpoints, paint correctness or a main-window capability."
+  },
+  "IABProductionToolArm": {
+    "reportedImageViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "observations": [
+      {
+        "stage": "00-initial",
+        "finding": "Synthetic target outer group is folded, Find absent and synthetic composer empty with disabled Send."
+      },
+      {
+        "stage": "01-json-visible",
+        "finding": "Real production technical-details and Complete Input controls are expanded. Entire synthetic JSON and both title/result fields are readable before Find; opening brace is plain."
+      },
+      {
+        "stage": "02-first-match",
+        "counter": "1 / 2",
+        "titleYellowAndOutlined": true,
+        "resultLiteralYellowAndReadable": true,
+        "completeJsonReadable": true,
+        "openingBraceYellow": false,
+        "finding": "Both exact literals are yellow, selected title separately outlined; nonmatching JSON brace has no yellow fill."
+      },
+      {
+        "stage": "03-next-match",
+        "counter": "2 / 2",
+        "titleLiteralYellowAndReadable": true,
+        "selectedResultYellowAndOutlined": true,
+        "completeJsonReadable": true,
+        "openingBraceYellow": false,
+        "finding": "Next selects the separate result; title stays yellow and brace plain. Result line is fully readable while the lower container edge is near the composer; no entire-container unoccluded claim."
+      },
+      {
+        "stage": "04-closed",
+        "finding": "Find is gone and target outer group returns folded; empty synthetic composer and disabled Send remain. Hidden child preference and registry cleanup are not directly inspected."
+      }
+    ],
+    "loggedActions": 9,
+    "preFindPreparationScroll": 1,
+    "findOpenQueryNextCloseEach": 1,
+    "postQueryCompensatingScrollRecorded": 0,
+    "firstToLastRecordedActionSeconds": 40.921,
+    "findOpenToCloseRecordedActionSeconds": 5.633,
+    "totalIncludingFinalCaptureOrLatencyClaimed": false,
+    "result": "one bounded production-component synthetic IAB arm did not reproduce wrong-brace paint"
+  },
+  "embeddedWebKitProductionToolArm": {
+    "environmentPageExpandedViewport": {
+      "width": 1279,
+      "height": 576
+    },
+    "actualBaselineViewportSeparatelyRequeried": false,
+    "observations": [
+      {
+        "stage": "00-environment",
+        "finding": "Formal application content webview displays the own-page environment report in a narrow panel; native AX supplies the full UA where screenshot width clips it."
+      },
+      {
+        "stage": "01-environment-expanded",
+        "finding": "Expanded environment page displays UA AppleWebKit605.1.15,DPR2 and1279x576 window dimensions. No precise WebKit build is obtained."
+      },
+      {
+        "stage": "02-baseline-initial",
+        "finding": "Synthetic baseline is loaded in the expanded embedded content webview; Find absent, target outer group folded and synthetic composer empty."
+      },
+      {
+        "stage": "03-json-before",
+        "finding": "Target title and opening brace are visible after actual expansion controls, but the lower JSON is initially clipped by the synthetic composer. This is not the complete visible-JSON precondition."
+      },
+      {
+        "stage": "04-json-complete-before",
+        "finding": "One disclosed pre-Find scroll exposes complete synthetic JSON, both braces and the separate result before search; no wrong yellow fill."
+      },
+      {
+        "stage": "05-first-match",
+        "counter": "1 / 2",
+        "selectedTitleYellowAndOutlined": true,
+        "openingBraceVisibleAndPlain": true,
+        "resultVisibility": "unobserved/offscreen",
+        "wholeJsonContainerVisibilityCertified": false,
+        "finding": "Selected title and opening brace are readable. Title is yellow/outlined and brace plain. The separate result is below this visible capture; AX presence is not a pixel visibility proof, so its paint is not certified at this stage."
+      },
+      {
+        "stage": "06-next-match",
+        "counter": "2 / 2",
+        "titleLiteralYellowAndReadable": true,
+        "selectedResultYellowAndOutlined": true,
+        "completeJsonReadable": true,
+        "openingBraceYellow": false,
+        "finding": "After Next, title and result literal lines are yellow/readable and full JSON is readable with plain opening brace. The result container lower boundary is near/partly at the composer boundary; only the needle text and separately observed outline/JSON are certified."
+      },
+      {
+        "stage": "07-closed",
+        "finding": "Synthetic Find disappears and target outer group returns folded, with empty synthetic composer. This does not prove whole main-workbench state, data or closed-window cleanup."
+      }
+    ],
+    "loggedActions": 9,
+    "preFindPreparationScroll": 1,
+    "findOpenQueryNextCloseEach": 1,
+    "postQueryCompensatingScrollRecorded": 0,
+    "firstToLastRecordedActionSeconds": 107.735,
+    "findOpenToCloseRecordedActionSeconds": 54.425,
+    "declaredWindowSecondsAfterFindStart": 600,
+    "wholeFinalCaptureWindowOrBackendLatencyClaimed": false,
+    "result": "one bounded production-component synthetic embedded-webview arm did not reproduce wrong-brace paint"
+  },
+  "comparison": {
+    "bothSyntheticArmsWrongBracePaintObserved": false,
+    "registeredRangesOrEndpointsInspected": false,
+    "matchedSingleVariableEngineExperiment": false,
+    "mainWorkbenchSameConfigurationAssumed": false,
+    "interpretation": "Using the real ToolStep strengthens markup fidelity relative to the earlier manually represented tool fixture. Non-reproduction in IAB and the application embedded webview does not exclude the52aa main workbench failure: installed main rendering, real current message context, development modules, viewport and webview configuration are not held identical.",
+    "preciseRootCauseOrEngineBugEstablished": false,
+    "productFixProposedOrClaimed": false
+  },
+  "separateMainWorkbenchFailure": {
+    "reference": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/formal-52aa-visible-json-failure-summary.json",
+      "sha256": "7b1477b99379728a1e97e8cb84df72946ddd1ef9eb07ff8ff6ffaf181488cec7"
+    },
+    "status": "The new52aa actual main-workbench wrong-brace/missing-title-yellow failure remains preserved and unresolved.",
+    "reclassifiedOrOverwrittenBySyntheticNonReproduction": false
+  },
+  "acceptanceBoundary": {
+    "canonicalReceiptOrResealPerformed": false,
+    "realAgentRequestOrModelEffectProven": false,
+    "wholeThreadPageOrToolEventCoverageProven": false,
+    "fullP12Closed": false,
+    "standardCellsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "all29Accepted": false,
+    "oldNullEnvironmentOriginalsOrEarlierSummaryModified": false
+  },
+  "limits": [
+    "These are two synthetic development-module controls in different browser surfaces; running inside the formal app content panel does not turn the fixture into the main installed workbench or establish identical WKWebView configuration.",
+    "The new environment pages display current own-page UA/capability/window values only. Chrome156 and AppleWebKit605.1.15 compatibility tokens do not identify a precise engine revision/build, current OS/CPU, same process or every earlier capture environment. Older null metadata and summaries remain untouched.",
+    "Native05 has a correct visible selected title and plain brace, while the result is offscreen. Native06 supports the separate result/title/whole-JSON text observations; neither container-edge proximity nor AX presence is promoted to an entirely unoccluded container.",
+    "Saved image/AX observations distinguish literal fill, selected-field outline, counter, expansion and readability. Registry/range correctness, precise paint provenance, timing-sensitive paths and all cleanup behavior were not instrumented.",
+    "The one pre-Find scroll per arm is disclosed; no post-query compensating scroll is recorded. Recorded action spans are not total capture durations, backend performance or continuous process evidence.",
+    "Original CFC/79e failures and current main52aa failure stay unchanged; unique cause and a verified fix remain open. FullP12,151 original requirements,29by8 and NEW-24 protections remain open. No new gate or queue is introduced."
+  ],
+  "privacy": {
+    "rawUserTitleBodyAttachmentNamesOrUserDataPathsRepublished": false,
+    "controlContentSyntheticOnly": true,
+    "native00MainBackdropKeptOnlyInPrivateOriginals": true
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-tool-control/preparation.json",
+      "sha256": "a96ef4b01924d6492d1dbb0312d4c3f09ad156a6bb65bf706223d89050487191",
+      "bytes": 17376,
+      "role": "production-component-control-preparation"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-tool-control/environment-preparation.json",
+      "sha256": "27d95dcb50e37d415991cc8881d42d4ad019dbee1135df8dcdc7a3a71a10cb20",
+      "bytes": 1434,
+      "role": "separate-environment-page-preparation"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/prospective-plan.json",
+      "sha256": "b90c1249d1472b218999f2cda64cf4049cf6cd392d43108d3d0c127765d661eb",
+      "bytes": 2546,
+      "role": "embedded-webview-bounded-plan"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/operator-events.json",
+      "sha256": "dd75a16b05896f10eda58884d26337eb34cd353818469f464bbe0edf8ea2e5dc",
+      "bytes": 877,
+      "role": "IAB-actual-actions"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/operator-events.json",
+      "sha256": "1bac7058d02936e2539ef1d883a593b8c79422b4e8e5959980a34f59ccebe4d2",
+      "bytes": 935,
+      "role": "embedded-webview-actual-actions"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/00-initial.jpg",
+      "sha256": "5fcaa00c3607646f5c0b96ed2d662a0e3994936210de9ddde9ade144f2c3a0f2",
+      "bytes": 63492,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/00-initial.ax.txt",
+      "sha256": "4ebebb6005b8cc442092bd182806195d7a0d18af75c1d31d416788d9288a05f7",
+      "bytes": 5635,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/01-json-visible.jpg",
+      "sha256": "0548a3d6ee3e7371a26bb1d8f7009f7a7e809f9b72f1193f468a1d2ab67909bb",
+      "bytes": 33342,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/01-json-visible.ax.txt",
+      "sha256": "7a67190e2c2d7a9036a788bcacb87924799a7855e8688d4d519e7b2d8d5a8a22",
+      "bytes": 6069,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/02-first-match.jpg",
+      "sha256": "83ba354ba797217306acf509130a5476b13eb931b0b199a1343c3a8d0e666043",
+      "bytes": 37169,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/02-first-match.ax.txt",
+      "sha256": "515e3993aa1252869712d34ebb69e3faca15ffafe8f0c53a98823b3748284a71",
+      "bytes": 6424,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/03-next-match.jpg",
+      "sha256": "99e6de3e4a628dd00a98c758e9484d9e017ca04df1d82d7d64c4fcc742f4419a",
+      "bytes": 36873,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/03-next-match.ax.txt",
+      "sha256": "8f0fcaf1bf4ce36db6478b762cd39e10b4e4bb11e190c12690ebd63e6e6829a1",
+      "bytes": 6353,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/04-closed.jpg",
+      "sha256": "237bcebbd48dc47c6604b47414d3e01c845c3fc84e1726e11569576bce1a6a41",
+      "bytes": 63724,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/04-closed.ax.txt",
+      "sha256": "c5236941468ad04b08f211a305257bb13b0d1b91a54c669f7f31ad38e71b4d38",
+      "bytes": 5635,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/environment-observation.jpg",
+      "sha256": "f799477d1c9f3d477e11a5b6ff63133d7b6ca43a90f476595e9b379382dcef49",
+      "bytes": 34152,
+      "role": "original-IAB-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/production-tool-baseline/environment-observation.ax.txt",
+      "sha256": "f69bdf8ee46e49967d08d130e60db9e493b720caf4a87d9d62c784661d499a34",
+      "bytes": 804,
+      "role": "complete-IAB-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/00-environment.jpg",
+      "sha256": "e4551d04e640c74978c901301874f13d8da80edb2101d7f23f4c16e301bcfed4",
+      "bytes": 423716,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/00-environment.ax.txt",
+      "sha256": "a6b4ed8bf059995947e6856bcd8a5aa4987aab69e3f39c7ac17bb0a33414f1c2",
+      "bytes": 9417,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/01-environment-expanded.jpg",
+      "sha256": "779acf28dfbfaa16c703d56a4d9c74e506e87b9546f6698c725c1dc6781e4b32",
+      "bytes": 257886,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/01-environment-expanded.ax.txt",
+      "sha256": "4e02be64880a50424ede4dfd58df7d8e2123ee07cde65eed8126904fd4c6b74f",
+      "bytes": 2853,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/02-baseline-initial.jpg",
+      "sha256": "4f25016d4dd2727e375471be249acd173a771076b29efadb70f84a70d853e1a6",
+      "bytes": 296847,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/02-baseline-initial.ax.txt",
+      "sha256": "ef3e04355db1cf243b930894047379006602154c243791fbadc2e37e4bfd6e7c",
+      "bytes": 7302,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/03-json-before.jpg",
+      "sha256": "4a639dfad9b1e0ee1c75361d2798faf53fec5ba5e58bfeef446d7b6dea65f0f5",
+      "bytes": 245266,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/03-json-before.ax.txt",
+      "sha256": "c59525a666c9031825e34d731437428be79acc47636bcadba6a7e4612cdd92e2",
+      "bytes": 7843,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/04-json-complete-before.jpg",
+      "sha256": "eeffb069d5dd07b671614c9756bd37aff16eeecafe6cb17199ed1a01ae673b8f",
+      "bytes": 249467,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/04-json-complete-before.ax.txt",
+      "sha256": "c59525a666c9031825e34d731437428be79acc47636bcadba6a7e4612cdd92e2",
+      "bytes": 7843,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/05-first-match.jpg",
+      "sha256": "355b8efc96f813b992afc361bd664d21e3003f66af37901083855db344501f40",
+      "bytes": 276614,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/05-first-match.ax.txt",
+      "sha256": "67cbccfa134fe5bc125fd94a3c1ac391bdaf432c253e01743c0e191824bcdad0",
+      "bytes": 8639,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/06-next-match.jpg",
+      "sha256": "8f94d8d9e5d89c033d5c423dcb63d4c93345af949a2c2b988d3d2aa059fd6897",
+      "bytes": 271952,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/06-next-match.ax.txt",
+      "sha256": "64dc3c74d65de9c6a13857ec2c3da00f268932e20892ae63568ee0936f02e0da",
+      "bytes": 8457,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/07-closed.jpg",
+      "sha256": "0be8f0ea9fb4d22be9e4a7d7eaa09276af060c12be02c06f04fc59818a470523",
+      "bytes": 297486,
+      "role": "original-embedded-webview-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-control/07-closed.ax.txt",
+      "sha256": "ef3e04355db1cf243b930894047379006602154c243791fbadc2e37e4bfd6e7c",
+      "bytes": 7302,
+      "role": "complete-embedded-webview-AX-actually-read"
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/formal-52aa-visible-json-failure-summary.json",
+      "sha256": "7b1477b99379728a1e97e8cb84df72946ddd1ef9eb07ff8ff6ffaf181488cec7",
+      "bytes": 12598,
+      "role": "separate-current-main-workbench-failure-unchanged"
+    }
+  ]
+}

@@ -1,0 +1,1195 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentFourFixedPayloadPureRegexpCrossSurfaceReview",
+  "case": "9483 / frozen production build r13",
+  "status": "native-giu-counterexamples-reproduced; Chrome-and-Node-fixed-controls-pass; no-production-matcher-change",
+  "reviewMethod": "Independent disk view of4 original pictures and4 AX files, exact continued-row reassembly and JSON parsing, source/probe/fixed-input review and frozen build/pin/asset/readiness verification. No UI, HTTP, server, build, test or matching-function rerun by reviewer.",
+  "scope": {
+    "inputPayloads": 4,
+    "arbitraryInput": false,
+    "realAgentOrHistoryOrPhysicalAttachment": false,
+    "conversationDomOrRangeOrHighlightInspection": false,
+    "formalCurrentSourceInstall": false,
+    "P12Closed": false,
+    "nativeSurface": "Existing formal Farfold embedded WebKit panel loading private pure-control page.",
+    "comparisonSurface": "Chrome tab6 at same9483 URL. No browser version/precise engine commit captured here.",
+    "preciseJavaScriptCoreCommit": null,
+    "ChromeVersion": null,
+    "viewport": "No viewport override was added per Root tool-context handoff. Screenshot dimensions differ between surfaces; this arm does not establish equal CSS viewports. Pure strings do not read geometry."
+  },
+  "frozenBinding": {
+    "headAtBuildEndpoints": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "wholeInputMapCount": 1489,
+    "beforeAfterMapsEqualShaBytesModes": true,
+    "preparedPrivatePins": 9,
+    "preparedRuntimeAndConfigPins": 5,
+    "allDeclaredPinsMatchBothEndpointsAndReviewDisk": true,
+    "matcherSha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+    "actualImportedProductionFunctions": [
+      "textMatchOffsets",
+      "segmentedMatches"
+    ],
+    "sourceMatchingAlgorithmCopiedOrModified": false,
+    "singleBuildNaturalIntegerExitCode": 0,
+    "buildRawStderrBytes": 0,
+    "emittedHtmlAndScriptShaBytesModesVerified": 2,
+    "sharedScript": {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/production-output/assets/index-D_n6_P7L.js",
+      "sha256": "da03092c810292e41658fecf53f3a5bb08f7843309809e60717ac233a5d5226b",
+      "bytes": 3584
+    },
+    "historicalReadinessGet200AndBuiltFileMatches": 2,
+    "previewSessionSupplement": {
+      "execSessionId": 2712,
+      "source": "Root current tool-record handoff supplied with this independent-review task; not a field of preview-readiness.json.",
+      "pid": null,
+      "independentProcessQueryPerformed": false
+    },
+    "lifecycleSupplement": {
+      "ChromeTabIdObservedInAx": 6,
+      "tabClosedAfterCapture": "Reported by Root current tool-record handoff; no browser query by reviewer."
+    },
+    "limits": "Readiness lacks an ownedExecSession field; it is preserved unchanged. Both AX records identify the same frozen9483 URL, bound by historical asset-readiness hashes. This is not an independent per-browser response dump or current-service liveness check. Input maps are captured endpoints, not continuous environment/writer exclusion."
+  },
+  "probeReview": {
+    "oneShot": "One button with once:true; all pure checks complete and serialize before any result publication, then button disabled. Initial samples show enabled/empty output; captured samples show disabled/result output.",
+    "fourDerivations": "Exact original body; exact original attachment; original attachment with only🙂 removed; original attachment plus exactly one U+0020. Fixed source and captured code points/UTF16 units compared literally, not inferred from displayed glyph shape.",
+    "regexpIsolation": "Each giu/gi control constructs a fresh RegExp for exec and a separate fresh RegExp for matchAll. Source/flags/global/ignoreCase/unicode and before/after lastIndex are directly captured. No inherited exec lastIndex is supplied to matchAll.",
+    "fixedOrder": "Four payloads in declared order; each production offsets, segmented results, giu then gi. Different evaluation/order/context is not tested.",
+    "publication": "19 logical JSON values fully reconstructed by concatenating following continued chunks after stripping only the ten-unit continued prefix. All published result rows are bounded; no hidden full JSON was assumed.",
+    "actualRows": {
+      "nativeChunks": 27,
+      "ChromeChunks": 29,
+      "nativeLogicalRows": 19,
+      "ChromeLogicalRows": 19,
+      "nativeMaximumChunkUtf16": 400,
+      "ChromeMaximumChunkUtf16": 400
+    },
+    "imageBoundary": "Captured images show only the initial visible portion of the long output; all later result claims rely on complete AX rows. No scrolling or new capture performed by reviewer."
+  },
+  "actualQuery": {
+    "text": "A+B?[x].*",
+    "utf16Length": 9,
+    "codePoints": [
+      "U+41",
+      "U+2B",
+      "U+42",
+      "U+3F",
+      "U+5B",
+      "U+78",
+      "U+5D",
+      "U+2E",
+      "U+2A"
+    ],
+    "utf16Units": [
+      "0x0041",
+      "0x002B",
+      "0x0042",
+      "0x003F",
+      "0x005B",
+      "0x0078",
+      "0x005D",
+      "0x002E",
+      "0x002A"
+    ]
+  },
+  "actualEscapedPattern": {
+    "text": "A\\+B\\?\\[x\\]\\.\\*",
+    "utf16Length": 15,
+    "codePoints": [
+      "U+41",
+      "U+5C",
+      "U+2B",
+      "U+42",
+      "U+5C",
+      "U+3F",
+      "U+5C",
+      "U+5B",
+      "U+78",
+      "U+5C",
+      "U+5D",
+      "U+5C",
+      "U+2E",
+      "U+5C",
+      "U+2A"
+    ],
+    "utf16Units": [
+      "0x0041",
+      "0x005C",
+      "0x002B",
+      "0x0042",
+      "0x005C",
+      "0x003F",
+      "0x005C",
+      "0x005B",
+      "0x0078",
+      "0x005C",
+      "0x005D",
+      "0x005C",
+      "0x002E",
+      "0x005C",
+      "0x002A"
+    ]
+  },
+  "cases": [
+    {
+      "id": "body",
+      "payload": {
+        "text": "字面符号 A+B?[x].* 结束。",
+        "utf16Length": 18,
+        "codePoints": [
+          "U+5B57",
+          "U+9762",
+          "U+7B26",
+          "U+53F7",
+          "U+20",
+          "U+41",
+          "U+2B",
+          "U+42",
+          "U+3F",
+          "U+5B",
+          "U+78",
+          "U+5D",
+          "U+2E",
+          "U+2A",
+          "U+20",
+          "U+7ED3",
+          "U+675F",
+          "U+3002"
+        ],
+        "utf16Units": [
+          "0x5B57",
+          "0x9762",
+          "0x7B26",
+          "0x53F7",
+          "0x0020",
+          "0x0041",
+          "0x002B",
+          "0x0042",
+          "0x003F",
+          "0x005B",
+          "0x0078",
+          "0x005D",
+          "0x002E",
+          "0x002A",
+          "0x0020",
+          "0x7ED3",
+          "0x675F",
+          "0x3002"
+        ]
+      },
+      "knownExpectedUtf16Offset": 5,
+      "observed": {
+        "nativeEmbeddedWebKit": {
+          "production": {
+            "indexOf": 5,
+            "offsets": {
+              "ok": true,
+              "value": [5]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 5,
+                  "endIndex": 0,
+                  "endOffset": 14
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 14
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 5,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 14
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 5,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        },
+        "Chrome": {
+          "production": {
+            "indexOf": 5,
+            "offsets": {
+              "ok": true,
+              "value": [5]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 5,
+                  "endIndex": 0,
+                  "endOffset": 14
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 14
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 5,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 5,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 14
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 5,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-original",
+      "payload": {
+        "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].*",
+        "utf16Length": 28,
+        "codePoints": [
+          "U+9644",
+          "U+4EF6",
+          "U+5DF2",
+          "U+52A0",
+          "U+8F7D",
+          "U+4E13",
+          "U+7528",
+          "U+8BCD",
+          "U+FF1A",
+          "U+661F",
+          "U+6CB3",
+          "U+1F642",
+          "U+FF1B",
+          "U+5B57",
+          "U+9762",
+          "U+7B26",
+          "U+53F7",
+          "U+20",
+          "U+41",
+          "U+2B",
+          "U+42",
+          "U+3F",
+          "U+5B",
+          "U+78",
+          "U+5D",
+          "U+2E",
+          "U+2A"
+        ],
+        "utf16Units": [
+          "0x9644",
+          "0x4EF6",
+          "0x5DF2",
+          "0x52A0",
+          "0x8F7D",
+          "0x4E13",
+          "0x7528",
+          "0x8BCD",
+          "0xFF1A",
+          "0x661F",
+          "0x6CB3",
+          "0xD83D",
+          "0xDE42",
+          "0xFF1B",
+          "0x5B57",
+          "0x9762",
+          "0x7B26",
+          "0x53F7",
+          "0x0020",
+          "0x0041",
+          "0x002B",
+          "0x0042",
+          "0x003F",
+          "0x005B",
+          "0x0078",
+          "0x005D",
+          "0x002E",
+          "0x002A"
+        ]
+      },
+      "knownExpectedUtf16Offset": 19,
+      "observed": {
+        "nativeEmbeddedWebKit": {
+          "production": {
+            "indexOf": 19,
+            "offsets": {
+              "ok": true,
+              "value": []
+            },
+            "segments": {
+              "ok": true,
+              "value": []
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": null,
+                "afterLastIndex": 0
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        },
+        "Chrome": {
+          "production": {
+            "indexOf": 19,
+            "offsets": {
+              "ok": true,
+              "value": [19]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 19,
+                  "endIndex": 0,
+                  "endOffset": 28
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-without-smile",
+      "payload": {
+        "text": "附件已加载专用词：星河；字面符号 A+B?[x].*",
+        "utf16Length": 26,
+        "codePoints": [
+          "U+9644",
+          "U+4EF6",
+          "U+5DF2",
+          "U+52A0",
+          "U+8F7D",
+          "U+4E13",
+          "U+7528",
+          "U+8BCD",
+          "U+FF1A",
+          "U+661F",
+          "U+6CB3",
+          "U+FF1B",
+          "U+5B57",
+          "U+9762",
+          "U+7B26",
+          "U+53F7",
+          "U+20",
+          "U+41",
+          "U+2B",
+          "U+42",
+          "U+3F",
+          "U+5B",
+          "U+78",
+          "U+5D",
+          "U+2E",
+          "U+2A"
+        ],
+        "utf16Units": [
+          "0x9644",
+          "0x4EF6",
+          "0x5DF2",
+          "0x52A0",
+          "0x8F7D",
+          "0x4E13",
+          "0x7528",
+          "0x8BCD",
+          "0xFF1A",
+          "0x661F",
+          "0x6CB3",
+          "0xFF1B",
+          "0x5B57",
+          "0x9762",
+          "0x7B26",
+          "0x53F7",
+          "0x0020",
+          "0x0041",
+          "0x002B",
+          "0x0042",
+          "0x003F",
+          "0x005B",
+          "0x0078",
+          "0x005D",
+          "0x002E",
+          "0x002A"
+        ]
+      },
+      "knownExpectedUtf16Offset": 17,
+      "observed": {
+        "nativeEmbeddedWebKit": {
+          "production": {
+            "indexOf": 17,
+            "offsets": {
+              "ok": true,
+              "value": [17]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 17,
+                  "endIndex": 0,
+                  "endOffset": 26
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 26
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 17,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 26
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 17,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        },
+        "Chrome": {
+          "production": {
+            "indexOf": 17,
+            "offsets": {
+              "ok": true,
+              "value": [17]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 17,
+                  "endIndex": 0,
+                  "endOffset": 26
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 26
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 17,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 17,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 26
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 17,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "attachment-trailing-space",
+      "payload": {
+        "text": "附件已加载专用词：星河🙂；字面符号 A+B?[x].* ",
+        "utf16Length": 29,
+        "codePoints": [
+          "U+9644",
+          "U+4EF6",
+          "U+5DF2",
+          "U+52A0",
+          "U+8F7D",
+          "U+4E13",
+          "U+7528",
+          "U+8BCD",
+          "U+FF1A",
+          "U+661F",
+          "U+6CB3",
+          "U+1F642",
+          "U+FF1B",
+          "U+5B57",
+          "U+9762",
+          "U+7B26",
+          "U+53F7",
+          "U+20",
+          "U+41",
+          "U+2B",
+          "U+42",
+          "U+3F",
+          "U+5B",
+          "U+78",
+          "U+5D",
+          "U+2E",
+          "U+2A",
+          "U+20"
+        ],
+        "utf16Units": [
+          "0x9644",
+          "0x4EF6",
+          "0x5DF2",
+          "0x52A0",
+          "0x8F7D",
+          "0x4E13",
+          "0x7528",
+          "0x8BCD",
+          "0xFF1A",
+          "0x661F",
+          "0x6CB3",
+          "0xD83D",
+          "0xDE42",
+          "0xFF1B",
+          "0x5B57",
+          "0x9762",
+          "0x7B26",
+          "0x53F7",
+          "0x0020",
+          "0x0041",
+          "0x002B",
+          "0x0042",
+          "0x003F",
+          "0x005B",
+          "0x0078",
+          "0x005D",
+          "0x002E",
+          "0x002A",
+          "0x0020"
+        ]
+      },
+      "knownExpectedUtf16Offset": 19,
+      "observed": {
+        "nativeEmbeddedWebKit": {
+          "production": {
+            "indexOf": 19,
+            "offsets": {
+              "ok": true,
+              "value": []
+            },
+            "segments": {
+              "ok": true,
+              "value": []
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": null,
+                "afterLastIndex": 0
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        },
+        "Chrome": {
+          "production": {
+            "indexOf": 19,
+            "offsets": {
+              "ok": true,
+              "value": [19]
+            },
+            "segments": {
+              "ok": true,
+              "value": [
+                {
+                  "startIndex": 0,
+                  "startOffset": 19,
+                  "endIndex": 0,
+                  "endOffset": 28
+                }
+              ]
+            }
+          },
+          "independentNativeRegExp": {
+            "giu": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "giu",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": true,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "giu",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            },
+            "gi": {
+              "source": "A\\+B\\?\\[x\\]\\.\\*",
+              "flags": "gi",
+              "global": true,
+              "ignoreCase": true,
+              "unicode": false,
+              "matchAllSource": "A\\+B\\?\\[x\\]\\.\\*",
+              "matchAllFlags": "gi",
+              "exec": {
+                "beforeLastIndex": 0,
+                "first": {
+                  "index": 19,
+                  "text": "A+B?[x].*",
+                  "utf16Length": 9
+                },
+                "afterLastIndex": 28
+              },
+              "matchAll": {
+                "beforeLastIndex": 0,
+                "matches": [
+                  {
+                    "index": 19,
+                    "text": "A+B?[x].*",
+                    "utf16Length": 9
+                  }
+                ],
+                "afterLastIndex": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "resultInterpretation": [
+    "Native embedded WebKit: body succeeds at UTF16 offset5 and emoji-removed attachment at17 for production/giu/gi. Original attachment and trailing-space attachment both have direct indexOf19, but production offsets/segments and giu exec/matchAll return empty. Their gi controls return exact query at19.",
+    "For the two native failing giu controls, exec begins0, returns null and ends0; separate matchAll begins0, yields[] and leaves source RegExp lastIndex0. In successful controls exec advances to matched end14/26/28; matchAll source object remains0 before/after. These are actual captured values, not assumed RegExp behavior.",
+    "Adding one trailing ASCII space preserves the native failure even though the literal ends one UTF16 unit before string end. This fixed counterexample is therefore not explained solely by the query ending at EOF. Removing🙂 changes the offset/length and makes this one payload pass; it does not prove a universal emoji rule.",
+    "Chrome executes the same served script and the four captured payloads with correct production offsets/segments and both giu/gi first/all matches. Captured pattern/source/flags and exact input shapes match native. This establishes a bounded cross-surface discrepancy without identifying a precise JavaScriptCore revision or unique internal cause.",
+    "The Node baseline records v22.22.3/V8 12.4.254.21-node.56 and TypeScript5.9.3 exact probe execution. Its actual four result objects were compared against Chrome and match; Node success remains a separate environment result, not native acceptance.",
+    "This pure-string failure occurs without a conversation DOM/Range/Highlight in the probe and extends the earlier9482 missing-offset observation. It does not retroactively determine the cause of every pixel failure or establish current-source installed behavior.",
+    "gi is a diagnostic comparison only; dropping Unicode mode is not adopted or shown semantically equivalent for all supported queries. Production matcher remains the pinned original module in this evidence arm; no source repair, formal installation or complete P12 acceptance is claimed."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/preparation.json",
+      "sha256": "2b811257afbe85a3a3fa05281b0dfe3e1cabe254629fdbe2bbec2f0026c14f23",
+      "bytes": 10256,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/README.md",
+      "sha256": "3de13d061da64d5eac8319c728f47b703ddce9c9ba51cdc47b5c2405a92fd345",
+      "bytes": 2695,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/fixed-inputs.ts",
+      "sha256": "f2cdd33f5b434b781fb2f0a9cb4c69f680fe7b1c5bee297209aeac97378f3c71",
+      "bytes": 453,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/pure-probe.ts",
+      "sha256": "d9554cbfda6825d6b5b21780f3c24a4504aec170b5fdac9c4c11a9746c43d616",
+      "bytes": 2831,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/diagnostic.ts",
+      "sha256": "9ac8a1f0bb74b941166a3f2d344d9eee3ac040a63c96cf90b9fdd72f0123861a",
+      "bytes": 1511,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/index.html",
+      "sha256": "5c7325fa7cc99a89b71b239a1caaf7ffb33b2778174cf85327ccfcaf3e5e962f",
+      "bytes": 578,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/vite.config.mjs",
+      "sha256": "50255023d03617c6f0c60dc64bb1aa017399400c58261f7ea7147f3e54aef09f",
+      "bytes": 1142,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/node-pure-baseline.json",
+      "sha256": "1b0ff0f0cf363b24870920787b27fa5967f278ea08cbc8361842a4b0e307ac70",
+      "bytes": 18165,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/static-checks.json",
+      "sha256": "0a15c31b8c5f06ec11f982203ff906d532cc004102eab06d69911cb9307d873e",
+      "bytes": 3978,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/operator-preflight.json",
+      "sha256": "d766d4de268493c3c278d6093cf3c9afaad44ba99e2c53100a69fe0fbb7bea56",
+      "bytes": 831,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/build-started.json",
+      "sha256": "cbaee3df3ae99201d68fb3c74459f5bf78f301fd3c964de98c86b99b6684e8ef",
+      "bytes": 534,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/build-result.json",
+      "sha256": "b3ba73415af081ede2759f8569c3cb56121df24546cd54cb174add4d18063a02",
+      "bytes": 2274,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/build-delivery.json",
+      "sha256": "617119f9991f5f074114d899b3eba93ee83b70070668119430fc788614d4c915",
+      "bytes": 2017,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/source-before.json",
+      "sha256": "1ad93cdd4ceed5c7d37a13ab26b22f8baf51af498b0c20dd920908e8e727df9f",
+      "bytes": 267300,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/source-after.json",
+      "sha256": "bb60f26ec579fe7a6317ced6cac384871fc9fc19c750c9199040dcbb809a1a06",
+      "bytes": 267301,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/build.stdout",
+      "sha256": "abd290c7213fd61cab496a4cfe6378a69406088027a9556aa5580918e1044770",
+      "bytes": 447,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/execution-r13/preview-readiness.json",
+      "sha256": "4adf782bc7666adee3efa2927154ac0f89884e4c343c4d7b2dd7c925adf8d26c",
+      "bytes": 540,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/production-output/assets/index-D_n6_P7L.js",
+      "sha256": "da03092c810292e41658fecf53f3a5bb08f7843309809e60717ac233a5d5226b",
+      "bytes": 3584,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-regexp-pure-control/production-output/index.html",
+      "sha256": "2ef411d108ac4b337f21c6a469793681a615d67d15afd9ce643eadf306bf8356",
+      "bytes": 600,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_find.ts",
+      "sha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+      "bytes": 1782,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/production-regression-matrix/unicode-control.tsx",
+      "sha256": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+      "bytes": 3184,
+      "observedMode": 420
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/unicode-literal-range-diagnostic-summary.json",
+      "sha256": "6cdae8b20f1e37a8b57b3d345e816f7cbe9d4a19a4419e64b3b8ee8e3db19422",
+      "bytes": 24816,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-regexp-pure-control/00-initial.jpg",
+      "sha256": "386b5ad4fe95910cb8bed07093ae01d85763fe580691c75b24b607be5163353f",
+      "bytes": 203224,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-regexp-pure-control/01-captured.jpg",
+      "sha256": "ab081ebdeed97ab57c6eedbaae655a7044d4ec1e63fd882452f4e470b7e0af3d",
+      "bytes": 783138,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-regexp-pure-control/00-initial.ax.txt",
+      "sha256": "05078bde8693c72a951fef42d0453b1956c201e25dada7c6390cef421f1d9043",
+      "bytes": 2583,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-regexp-pure-control/01-captured.ax.txt",
+      "sha256": "29d4f15e3e3fe902082be19799e1aea672c51afd445adbc598cb7643a54b6e1c",
+      "bytes": 9697,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/chrome-regexp-pure-control/00-initial.jpg",
+      "sha256": "1cd1925330450752a2554b64713838557cf67f53f2bd5fd3e13f078a231c3853",
+      "bytes": 18321,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/chrome-regexp-pure-control/01-captured.jpg",
+      "sha256": "75cefdf63fcaf25647d4fe0ead7a4478099095e1ffa9772955fd4f63b2db4c54",
+      "bytes": 209669,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/chrome-regexp-pure-control/00-initial.ax.txt",
+      "sha256": "35799a021c0f09994fe6ad9b2f5d3e45f93193b583cb159752edb0780bc6aeee",
+      "bytes": 555,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/chrome-regexp-pure-control/01-captured.ax.txt",
+      "sha256": "203b0963a9950db069fb195f04bd772685e19fee7fbe26f285b73cc942a3e87f",
+      "bytes": 7841,
+      "observedMode": 384
+    }
+  ]
+}

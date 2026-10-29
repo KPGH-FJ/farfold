@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12Formal52aaVisibleJsonWrongGlyphPaintFailureSummary",
+  "recordedAt": "2026-10-29T18:25:10.409Z",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "level": "installed",
+  "contextAsRecordedInProspectivePlan": {
+    "productCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "sourceHeadAtPreparation": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "formalExecutableSha256": "e7afbdcee3b62a006454eb2f9ff9ac9f2165a0e6da322b9ab9446a128442bbbf",
+    "platform": "darwin-arm64",
+    "agentId": "mistral-vibe",
+    "scope": "One already opened original owned conversation and its current loaded presentation. No new Agent request or effective model/account/version assertion.",
+    "formalExecutableRehashedByThisReviewer": false,
+    "nativeSessionIdVerified": false,
+    "installedEngineVersion": null,
+    "imagePixelDimensions": {
+      "width": 2560,
+      "height": 1640
+    },
+    "cssViewportOrDevicePixelRatioInferredFromImage": false
+  },
+  "prospectiveScope": {
+    "planRef": {
+      "path": "output/2026-10-30-p12-continuation/formal-preparation/prospective-case-plan.json",
+      "sha256": "6dc022e080c2191b859a320a289ab2ce3bce6c75a21b39e66b9042bd9edf99de"
+    },
+    "planKind": "bounded prospective installed observation; not canonical acceptance receipt",
+    "planPrecededFindBasis": "Root actual tool chronology and task handoff report the plan was frozen before Find. This reviewer read the saved plan after execution; the plan has no separate preparedAt field and its current hash alone is not temporal proof.",
+    "preparationReferenceHashesMatched": 8,
+    "knownCurrentTargetOccurrences": 2,
+    "currentWholeCorpusOracleReestablished": false,
+    "oldCompleteCorpusOracleReusedAsCurrentOracle": false,
+    "basis": "The current target title and separate plain-result literal were reread before Find. The visible current JSON contains zero occurrences of the literal; no exhaustive current corpus count is claimed.",
+    "negativeControlOpeningBraceVisibleBeforeFind": true,
+    "windowSeconds": 600
+  },
+  "actualOperator": "Root",
+  "independentSavedEvidenceReview": {
+    "reviewer": "/root/progress_evidence",
+    "reviewerOperatedUiOrReexecutedCase": false,
+    "actualCaseImagesViewed": 4,
+    "actualCaseCompleteAxFilesRead": 4,
+    "additionalPreFindImagesViewed": 1,
+    "additionalPreFindCompleteAxFilesRead": 1,
+    "allReferencedPreparationHashesMatched": true,
+    "result": "The new bounded installed observation independently reproduces nonmatching-brace yellow paint and missing yellow title paint. This supports a narrow installed presentation failure, not a unique cause.",
+    "blockingFindingsAgainstThisNarrowFailureRecord": []
+  },
+  "observations": [
+    {
+      "stage": "pre-Find-current-JSON",
+      "finding": "Current title and separate result are distinct fields in the reread AX. The complete current JSON and its opening brace are visible in the preparation image, and the brace has no yellow fill before Find."
+    },
+    {
+      "stage": "00-find-open",
+      "finding": "Find input is empty, previous/next disabled, target outer group collapsed, composer empty and Send disabled."
+    },
+    {
+      "stage": "01-first-target",
+      "reportedCounter": "1 / 2",
+      "selectedTarget": "title",
+      "titleTextReadable": true,
+      "selectedTitleGreyBackgroundAndOutlineVisible": true,
+      "titleYellowFillObserved": false,
+      "separateResultYellowFillObserved": true,
+      "completeJsonReadable": true,
+      "nonmatchingOpeningBraceYellowFillObserved": true,
+      "finding": "The title is visibly selected with grey background/outline but lacks the yellow text-match fill. The unrelated JSON opening brace is yellow; the separate result literal is also yellow. All three fields are visibly separate and readable above the composer."
+    },
+    {
+      "stage": "02-next-target",
+      "reportedCounter": "2 / 2",
+      "selectedTarget": "plain-result",
+      "titleTextReadable": true,
+      "titleYellowFillObserved": false,
+      "selectedResultYellowFillAndOutlineVisible": true,
+      "completeJsonReadable": true,
+      "nonmatchingOpeningBraceYellowFillObserved": true,
+      "finding": "Next selects the separate result with yellow literal fill and its own outline. The title still has no yellow fill and the nonmatching opening brace remains yellow. Target text and complete JSON are readable without compensating scrolling."
+    },
+    {
+      "stage": "03-closed",
+      "finding": "Find disappears; target outer process group is folded again, empty composer and disabled Send remain. Hidden nested disclosure state, persistent-store bytes and unrelated draft content are not re-proven by this image."
+    }
+  ],
+  "timingAndActions": {
+    "startedAt": "2026-10-29T18:22:00.377Z",
+    "finishedAt": "2026-10-29T18:22:40.564Z",
+    "elapsedObservationSeconds": 40.187,
+    "predeclaredWindowSeconds": 600,
+    "withinDeclaredWindow": true,
+    "actualActions": 5,
+    "outerFold": 1,
+    "findOpen": 1,
+    "queryInput": 1,
+    "next": 1,
+    "findClose": 1,
+    "modelPrompts": 0,
+    "postQueryCompensatingScroll": 0,
+    "retryStopConfigurationChangeOrFilePreviewRecorded": 0,
+    "limits": "Counts describe the recorded operator route and saved observations. They do not establish zero internal IO, every process state, exact backend latency or a durable data-retention result."
+  },
+  "result": {
+    "status": "completed",
+    "outcome": "failure",
+    "formalObservationCases": 1,
+    "narrowPresentationFailures": 1,
+    "knownFieldsAndJsonReadabilityObserved": true,
+    "reportedCountsAgreeWithTwoKnownTargets": true,
+    "reportedCountsProveWholeCurrentCorpusCorrect": false,
+    "unexpectedBracePaintIsExtraTextOccurrence": false,
+    "registeredHighlightRangesDirectlyObserved": false,
+    "uniqueCauseEstablished": false,
+    "productFixClaimed": false,
+    "fullP12Closed": false,
+    "standardCellsClosed": 0,
+    "wholeAgentsClosed": 0,
+    "all29Accepted": false
+  },
+  "receiptBoundary": {
+    "thisFileIsCanonicalReceipt": false,
+    "canonicalReceiptCreatedForThisCase": false,
+    "sealOrValidatorInvocationsForThisCase": 0,
+    "oldReceiptOrFailureRecordRewritten": false,
+    "newCaseIsOldCaseRetryOrReseal": false,
+    "meaning": "This is a new bounded installed failure observation with primary image/AX references. It does not retrofit or reseal the old CFC/79e/52aa cases or claim mechanical acceptance validation."
+  },
+  "separateSyntheticControl": {
+    "summaryRef": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/brace-visible-control-summary.json",
+      "sha256": "74e8d020732e05cca133facf894892cc3fe359f0081fd36095b8080f8b7e360f"
+    },
+    "observedResult": "Its one1280x720 IAB synthetic baseline showed two yellow target fields and no yellow opening brace.",
+    "relationship": "Synthetic non-reproduction and current installed reproduction are distinct results with different actual markup/content/environment. They are not a matched engine experiment and neither supersedes the other.",
+    "engineVersionForSyntheticControl": null,
+    "particularBrowserEngineCauseInferred": false
+  },
+  "limits": [
+    "The current pre-read establishes two known target fields and a visibly nonmatching JSON opening brace, not an exhaustive current loaded-corpus oracle. A UI count of2 is not proof of complete search coverage or all count correctness.",
+    "The missing title yellow fill and unrelated yellow brace are observed pixels; AX corroborates text, query/counter and disclosure state, not CSS Highlight endpoints or paint origin. No registry instrumentation, DOM text mutation, Range identity or engine-cause proof is added.",
+    "This is a new52aa installed failure observation within40.187/600 seconds, not a rerun or reseal of the old CFC/79e receipts. Earlier visible-navigation success does not prove arbitrary glyph paint; prior failures remain unchanged.",
+    "No model send, Stop, retry, configuration change or post-query compensating scroll is recorded. No effective account/model, Agent work, native session identity, data-store immutability or unrelated draft byte-preservation claim follows.",
+    "The original CFC wrong-brace observation and unique historical cause remain unresolved. Current reproduction establishes this presentation class still occurs in the selected52aa path; it does not identify a unique current or historical source defect or fix.",
+    "FullP12, query changes/new content/switch/streaming, complete installed coverage,151 original requirements,29by8 and NEW-24 protections remain open. No new execution queue or acceptance gate is introduced."
+  ],
+  "privacy": {
+    "metadataOnly": true,
+    "rawConversationTitleUserBodyAttachmentNamesOrUserDataPathsRepublished": false,
+    "rawImagesAndAxRemainPrivate": true
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-preparation/prospective-case-plan.json",
+      "sha256": "6dc022e080c2191b859a320a289ab2ce3bce6c75a21b39e66b9042bd9edf99de",
+      "bytes": 3419,
+      "role": "bounded-prospective-plan-not-receipt"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/operator-events.json",
+      "sha256": "f291d897d5bcd9797dffea0a826af2cb319d35343bd7ff82c6ff1c14b1f63570",
+      "bytes": 554,
+      "role": "actual-operator-actions"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/operator-finish.json",
+      "sha256": "af43d04b4dda86ae64c6d49e6e243882daf68b1b5a8ff7c7133b5e00f8f53b6b",
+      "bytes": 249,
+      "role": "actual-finished-observation-window"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/00-find-open.jpg",
+      "sha256": "bc9cbc4ef9a0ac21e98867d7b27da3bd822d5ea84ab24ab39894fb1986f4587d",
+      "bytes": 311727,
+      "role": "original-installed-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/00-find-open.ax.txt",
+      "sha256": "edca0a06f359920ca63ee53917de6c463360ea1faa8fa7e8f4437360cef279bc",
+      "bytes": 7575,
+      "role": "complete-installed-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/01-first-target.jpg",
+      "sha256": "bcdbec38e3fbb02a75cc2b2ba84e0637d1369aa9eccbdce337f872da71082545",
+      "bytes": 298719,
+      "role": "original-installed-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/01-first-target.ax.txt",
+      "sha256": "4fb476f2cf0ec9f6ff57a5a51fee20c47f32a6c9c53daa18718139186656a5e2",
+      "bytes": 8351,
+      "role": "complete-installed-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/02-next-target.jpg",
+      "sha256": "5883d03cf95ddb30212b3bf674e755b82c7ef463c0f6df7c793974c68cfbf4fe",
+      "bytes": 285695,
+      "role": "original-installed-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/02-next-target.ax.txt",
+      "sha256": "631294e7cf8b6477e7c1d037140abbb1de2b7505775a9c39acd9d95105f8ee15",
+      "bytes": 8131,
+      "role": "complete-installed-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/03-closed.jpg",
+      "sha256": "d53bc439191ac623163b7d86815d0350a2c61098b1742f8587e60024e1d50cba",
+      "bytes": 293191,
+      "role": "original-installed-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-visible-json/03-closed.ax.txt",
+      "sha256": "c3a4906526378ee49626268a033638debe5ce9048cff3bbb31566adb6698e349",
+      "bytes": 6836,
+      "role": "complete-installed-AX-actually-read"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-preparation/03-target-json-before-find.jpg",
+      "sha256": "37ee0dd2a21084557f457ab4bfd4d3bcceebdcab7e80070220323a80990fad66",
+      "bytes": 293484,
+      "role": "pre-Find-visible-JSON-image-actually-viewed"
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-preparation/03-target-json-before-find.ax.txt",
+      "sha256": "3db70c0ac08fc64a6a79d24e24a89422093be1d9e9be3614cdc2ec9b7f4b4179",
+      "bytes": 7566,
+      "role": "pre-Find-complete-AX-actually-read"
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/brace-visible-control-summary.json",
+      "sha256": "74e8d020732e05cca133facf894892cc3fe359f0081fd36095b8080f8b7e360f",
+      "bytes": 13080,
+      "role": "separate-synthetic-control-summary-not-formal-case-evidence"
+    }
+  ]
+}

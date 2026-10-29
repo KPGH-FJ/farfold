@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "kind": "P12CurrentSourceProductionMatrixIndependentObservedPartialFailureSummary",
+  "recordedAt": "2026-10-29T20:11:12.683615+00:00",
+  "requirementIds": ["P12"],
+  "standardIds": [],
+  "scope": "Frozen r9 owned synthetic tool/live/unicode production pages served on9479 in the existing app embedded WebKit. This records actual screenshot/AX coverage and counterexamples, not formal main-app replacement, real Agent streaming, physical attachment parsing, a receipt/seal or fullP12 acceptance.",
+  "independentReview": {
+    "operator": "Root",
+    "primaryReader": "/root/progress_evidence",
+    "toolLiveAndRecoverySecondReader": "/root/progress_evidence/geometry_preparation_review",
+    "primaryImagesActuallyViewed": {
+      "strictFreshPreopen": 5,
+      "unicode": 17
+    },
+    "secondReaderImagesActuallyViewed": {
+      "tool": 8,
+      "live": 14
+    },
+    "totalListedImagesViewed": 44,
+    "axCoverage": "Relevant query/count, disclosure/input and fixture-identity values read for all44 paired AX records. Repeated ordinary synthetic prose/native text aggregation is not a whole-corpus or registry inspection.",
+    "reviewersOperatedUiOrRebuiltOrChangedSource": false,
+    "originalRecordsRewritten": false
+  },
+  "frozenBuildAndRecovery": {
+    "sourceCommitContext": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "preparedProductionInputs": 104,
+    "buildNaturalIntegerExitCode": 0,
+    "buildInputMapsEqualAtEndpoints": 1495,
+    "sourceRulePosition": "Compiled selection rule appears once at its actual source cascade position immediately before original Highlight rules; removing its72bytes restores r1 CSS bytes. No trailing private override; r9 multi-entry JS is not byte-identical to r1/r8.",
+    "uniqueEmittedFilesCurrentShaBytesAndModeMatched": 10,
+    "recoveryRecordedGetResponsesMatched": 11,
+    "recoveryIncludesRootAndIndexSameFile": true,
+    "rebuildPerformedForRecovery": false,
+    "oldPreviewTerminationCause": null,
+    "oldPreviewLimit": "No natural/signal termination receipt. Recovery serves the same frozen artifacts; disappearance is not assigned a product or engine cause.",
+    "reviewerDidNotSendHttpOrInspectOrStopPreviewProcess": true,
+    "environment": "Native embedded browser in the same window/panel setup. Exact CSS viewport was not reread; previous1279x576 is context only. The oracle1280x720 text is prospective and is not this run measurement. No precise engine build or equivalence to the main Tauri view is established.",
+    "historicalPreparationFlags": "Original preparation/oracle not-executed flags remain the pre-execution declaration; actual build, readiness and observations are recorded separately."
+  },
+  "tool": {
+    "result": "scoped-visible-paint-and-navigation-pass",
+    "frames": "tool/00..07",
+    "counts": ["1/2", "2/2", "1/2", "2/2"],
+    "observed": "Complete input JSON plain before Find. First actual ToolStep title, Next result, manual-fold/Next-wrap title and Previous result are readable/yellow with the current outline; JSON opening brace remains plain.",
+    "close": "Find disappears, outer group folded, synthetic input empty. Hidden technical/full-input preferences are not independently exposed after folding.",
+    "actionProvenance": "Operator record reports one query and zero post-query compensating scroll; screenshots/AX certify sampled states, not continuous scrolling.",
+    "registryCleanup": "unobserved"
+  },
+  "live": {
+    "result": "failed-with-positive-dynamic-subchecks",
+    "frames": "live/00..13",
+    "initial": "01 head1/2 has yellow keyword.02 nested2/2 opens three levels and has yellow/outlined keyword, but nonmatching footer 合成页面A结束。 is also entirely yellow: explicit wrong-paint failure.",
+    "append": "03 selected nested hit is manually scrolled offscreen.04 same-Text append reports same original node and3/3;05 new-node append reports3/4. The sampled upper viewport remains rather than recentering to nested; no continuous zero-scroll or registered Range identity claim.",
+    "pageSwitch": "06 B initially has no Find;07 B search gives1/1 and visible yellow B target.08 A returns with empty Find and outer folded; hidden child flags and exact registry retirement are not observed.",
+    "laterManualOpen": "09 manually opens three levels after both additions.10..12 show1/4,2/4,3/4 with readable yellow targets;12 added target also yellow and footer plain. This retained-additions route is not the strict original-two-match preopen control.",
+    "close": "13 Find gone, all three explicit user-open disclosures on; visible nested/added text and outline退色, input empty. Offscreen text and registry cleanup unobserved.",
+    "realAgentStreamOrFullThreadPageClaimed": false
+  },
+  "strictFreshPreopenControl": {
+    "result": "scoped-preopen-positive-control",
+    "frames": "live-preopen-control-recovery1/00..04",
+    "setup": "00 A reports no same-node/new-node additions, Find closed.01 actually opens outer/middle/inner before Find; all three AX flags on. This is the original two-match input, independent of the earlier four-match later route.",
+    "observed": "02 head1/2 correctly yellow/outlined;03 nested2/2 correctly yellow/outlined and nonmatching footer plain.04 closes Find while preserving all three user-open flags and empty composer.",
+    "visibilityBoundary": "Footer plain is directly visible in03; no claim about footer pixels while it is offscreen in02 or all hidden/offscreen text after Close.",
+    "operatorReportedQueryInsertions": 1,
+    "operatorReportedPostQueryCompensatingScroll": 0,
+    "priorReloadAttempt": "The earlier live-preopen-control reload retained additions/user-open state, so it did not establish a fresh case and no query followed that attempt. Its original preparation observation is retained; recovery1 supplies the actual strict case.",
+    "interpretation": "Different folded/preopened routes now have different observed paint outcomes on frozen input. This is a bounded comparison, not proof of a unique lifecycle/cache cause.",
+    "registryCleanup": "unobserved"
+  },
+  "unicodeAndLoadedAttachment": {
+    "result": "failed-with-positive-count-scope-and-cleanup-subchecks",
+    "frames": "unicode/00..16",
+    "fixedInput": "Production MessageContent receives one name+supplied-text attachment and one name-only placeholder. No URI/path/data/MIME/file-open callback or admitted media is supplied. Counts concern these loaded strings only.",
+    "cases": [
+      {
+        "query": "星河🙂",
+        "oracleCount": 2,
+        "frames": [
+          "01-unicode-first",
+          "02-unicode-attachment",
+          "03-unicode-wrap"
+        ],
+        "observedCounts": ["1/2", "2/2", "1/2"],
+        "countMatchesOracle": true,
+        "paint": "Target word is yellow/readable at body and supplied attachment.01 also colors a nonmatching placeholder filename prefix;02 colors its entire nonmatching filename.03 wrap shows filename plain. Therefore this query route fails exact-only paint."
+      },
+      {
+        "query": "🙂",
+        "oracleCount": 3,
+        "frames": ["04-emoji-first", "05-emoji-inline", "06-emoji-attachment"],
+        "observedCounts": ["1/3", "2/3", "3/3"],
+        "countMatchesOracle": true,
+        "paint": "Whole visible emoji glyphs yellow at body, inline field and supplied attachment, with selected field outlined. This covers one emoji sample, not arbitrary grapheme or surrogate layouts."
+      },
+      {
+        "query": "跨内联[a+b]?🙂",
+        "oracleCount": 1,
+        "frames": ["07-cross-inline"],
+        "observedCounts": ["1/1"],
+        "countMatchesOracle": true,
+        "paint": "The full inline phrase across fixed Text/strong/code/emoji is yellow and outlined, but the first-paragraph emoji also retains a yellow rectangular background despite lacking the full query. Query-change paint is not completely clean; no Range endpoint inspection occurred."
+      },
+      {
+        "query": "A+B?[x].*",
+        "oracleCount": 2,
+        "frames": ["08-literal-first", "09-literal-attachment"],
+        "observedCounts": ["1/1", "1/1"],
+        "countMatchesOracle": false,
+        "paintAndNavigation": "The literal body string is yellow/outlined. Next remains at that body field; supplied attachment stays closed and is not reached. The09 filename is a label, not proof of attachment navigation. Both AX values exactly equal the intended literal query. Whether transient or persistent, and its cause, are unestablished."
+      },
+      {
+        "query": "域内标记",
+        "oracleCount": 1,
+        "frames": ["10-host-scope"],
+        "observedCounts": ["1/1"],
+        "countMatchesOracle": true,
+        "paint": "Inside-host copy yellow/outlined; the identical outside-host header copy remains plain in the screenshot. Scoped exclusion positive only."
+      },
+      {
+        "query": "附件已加载专用词",
+        "oracleCount": 1,
+        "frames": ["11-supplied-attachment"],
+        "observedCounts": ["1/1"],
+        "countMatchesOracle": true,
+        "paint": "Supplied attachment opens and exact body phrase is yellow/readable. Does not establish physical file access/decoding or arbitrary attachment formats."
+      },
+      {
+        "query": "ENDSTART",
+        "oracleCount": 0,
+        "frames": ["12-separate-fields"],
+        "observed": "No match, both directions disabled; fixed separate paragraph fields are not joined for this sample."
+      },
+      {
+        "query": "PLACEHOLDER_BODY_ABSENT",
+        "oracleCount": 0,
+        "frames": ["13-placeholder-absent"],
+        "observed": "No match and disabled directions; the name-only placeholder was not supplemented with a body."
+      },
+      {
+        "query": "NOT_PRESENT_P12",
+        "oracleCount": 0,
+        "frames": ["14-no-match"],
+        "observed": "No match and disabled directions; no stale yellow rectangles/selected outline visible in the shown fields."
+      },
+      {
+        "query": "",
+        "oracleCount": 0,
+        "frames": ["15-cleared"],
+        "observed": "Actual input empty, counter blank, directions disabled, two attachment disclosures closed and shown text/filenames plain. No registry read."
+      }
+    ],
+    "close16": "Find gone, both attachment disclosures off/closed, visible text plain without selected outline, composer empty. This is visible cleanup/reveal release, not proof that registry keys/ranges are absent.",
+    "oracleWidthsAreProspective": "星河🙂 has4UTF16 units; cross-inline literal has11. Pixels/AX do not themselves prove Range offsets or all Unicode behavior."
+  },
+  "unverifiedAndPreserved": [
+    "No registry keys or Range contents were inspected in this uninstrumented9479 matrix. Do not mark oracle registry cleanup assertions passed from visual/AX absence.",
+    "No whole formal-app, real Agent stream, unloaded-history corpus, physical attachment parser, Windows or29x8 acceptance follows.",
+    "Original r1/formal wrong-paint failures, r8 narrow positive,9479 live failure, setup observations and successful engineering records remain unchanged. Engineering success does not convert this failed UI matrix to GREEN.",
+    "The scoped selectable-text rule fixes the tested ToolStep sample but is insufficient to claim completeP12 rendering correctness; exact causes of the new live/Unicode anomalies remain unknown."
+  ],
+  "result": {
+    "overall": "partial/failure-not-complete-matrix-GREEN",
+    "fullP12Closed": false,
+    "formalInstalledRepairVerified": false,
+    "all29x8Accepted": false,
+    "originalRecordsPreserved": true
+  },
+  "rawArtifactsSha256": {
+    "baseDirectory": "output/2026-10-30-p12-continuation/native-webkit-production-matrix",
+    "groups": {
+      "tool": {
+        "00-initial.ax.txt": "a3f87526698d7be94ab4182ab80df80c0d199e5c57567351c950ec7362c298c0",
+        "00-initial.jpg": "41a2ebacfc165c85b278ca98ba2ea87d53b9297e70cb9ef2339f50f4710006eb",
+        "01-json-before.ax.txt": "b3d0037f01ca8ad852d45f8368b433afa67f7b3bc3f76962850c8648c4eda7ee",
+        "01-json-before.jpg": "20f39ec46d819a79e8fce8b01c75bf30b2f14753b49763f14ccbf17bb10799a0",
+        "02-first.ax.txt": "1277d6b68f53b68f21fa00d3f0ef41e131c5df911b8d01e51922748fad4523f2",
+        "02-first.jpg": "6ca2b4f33bc31c86808c551decb3470a2a41e38be7f175747f18ae4e5f93647d",
+        "03-next.ax.txt": "e46ce7aa4adb438e3bb1b397bb46ed2672a22986529e8dc76eb499d4b6811b6d",
+        "03-next.jpg": "dcbb0cccfa1bdf0ef8c60eebf055ad938bbafce18246c7ae7eed82c34559a159",
+        "04-manually-folded.ax.txt": "b3e30085cdbd671ae9a2edb5d746fa65a2b3f6396fc0c3bc085c7a47f683f20a",
+        "04-manually-folded.jpg": "7613921492645612a311bf435e2e55e38c117ad004ee9f60ef19fef63304cee0",
+        "05-wrap-title.ax.txt": "d3effd97e921a4f5f01ec5d909c3a96b48e17b984fce41cb581f4332789c9ee0",
+        "05-wrap-title.jpg": "061a8a5e096cf67a318d426d83e08d89232a503f6bf68f7371877238da72b9b0",
+        "06-reverse-result.ax.txt": "e46ce7aa4adb438e3bb1b397bb46ed2672a22986529e8dc76eb499d4b6811b6d",
+        "06-reverse-result.jpg": "1321067afed5bef33d05b8209558c83ea3bdd1d9da189762349d870be8b41a1d",
+        "07-closed.ax.txt": "a3f87526698d7be94ab4182ab80df80c0d199e5c57567351c950ec7362c298c0",
+        "07-closed.jpg": "35e5cb7fbb06ffdf917b8687383ad6a47772c72d878b9e849be58a6289536b03",
+        "operator-result.json": "2a1fc52f809193689e62c8b58734a24522536716147335b0f24fbaaaacf5d999"
+      },
+      "live": {
+        "00-initial.ax.txt": "b610d436ca973fc7906940a09982515e1c94dc5e5ac2e604949baba4e56b1f55",
+        "00-initial.jpg": "64e4732c5d457d69ef145d4634f92d40677aad155bd3699010b1032089818817",
+        "01-first.ax.txt": "50c973727e8d44bc01d585136a3f943f0c6cbea1d1ffb87b259e2056952e2486",
+        "01-first.jpg": "d3801bc29a29f77c2a2e550743401eefebb45a38f67f59dab9004c2a8c079cb1",
+        "02-nested.ax.txt": "4ddf0c5727c2b8b8abcf41a101e404c61f7abcd4686e5544b25a4d506be2b697",
+        "02-nested.jpg": "4a7e2eb2801429b579d9e8ddca1b2bc798739cd164e073c3c2e18a492b3cd59c",
+        "03-manual-scroll-away.ax.txt": "4ddf0c5727c2b8b8abcf41a101e404c61f7abcd4686e5544b25a4d506be2b697",
+        "03-manual-scroll-away.jpg": "3eb344b0327b1eac65696279182ea8f7875d0aee04ad058a8664d8e49d87e973",
+        "04-same-node-appended.ax.txt": "50cbdf3fd1c0f434f819dd7dd07e00baad67b4f3ed4792ac843e497a0c9f4978",
+        "04-same-node-appended.jpg": "989d8a4469e8b5aa40291076ac7f39f575be2deb898ffbbe2299185c740b5174",
+        "05-new-node-appended.ax.txt": "0f7d1b245da1bc3cf0a309c0814322016c892f6f9c464144510d612949daa356",
+        "05-new-node-appended.jpg": "9867712477e8e0f97503c72aa6cad525978e149273d9c124f13b7d8392652638",
+        "06-b-initial.ax.txt": "f8f60319f16efe806f19ef2945afc61093809d89355ae320d107eb9dc87e9c61",
+        "06-b-initial.jpg": "9d9ec551a39253de66d249019796290f19a3013b59320a2f9c793e51e36b21dd",
+        "07-b-match.ax.txt": "65159413531d73b4ee3f14e8fdee17cd6ad39678b7c113d0abbfa6eca0c71988",
+        "07-b-match.jpg": "6987f5182c0ae0ef7bf9cdee9fa25f580c66f9a4864a1a143cb450bec6e5f019",
+        "08-a-return-empty.ax.txt": "613c9978dcae183d99224512d760c2f2bef31ca7f2a40473fc7f9b44134d1e10",
+        "08-a-return-empty.jpg": "f373698e143a721f28ed671404959e3dd0fb5d110739d0d885dd10fb419c541f",
+        "09-manual-open.ax.txt": "2b7bde87d91fec0c4beec1e0de93ac603bc3e41d86ac09414026b94a1e7d6d44",
+        "09-manual-open.jpg": "f857f3f2a9097f19730d43080930728b14378e89b84ee8f3f93aaf6e12d21e9d",
+        "10-a-first-after-manual.ax.txt": "87d1b387d86d2ce558f032b6fb9ab2699f6056394156ab960564ac2fed08f701",
+        "10-a-first-after-manual.jpg": "2e6c1ace1454502377d45f523d03602faa2f03f902d849d9d13ca5de0ee002ff",
+        "11-a-second-after-manual.ax.txt": "7d29fca3143223ce32889070c620824d02464cf455e411c4b73ccdac951c38fa",
+        "11-a-second-after-manual.jpg": "c02feec20f33b57658a83976bdb8ef4b1fccda237fce8611e5749089dec916c7",
+        "12-a-nested-after-manual.ax.txt": "0f7d1b245da1bc3cf0a309c0814322016c892f6f9c464144510d612949daa356",
+        "12-a-nested-after-manual.jpg": "b7b101fc45f8a881e0a8fecd602981d1883ba9e71d509cd15c3089103f82e7db",
+        "13-closed-user-open.ax.txt": "f88dd01b126269591855c585e66fb8662a93e9c944c49aba70ea928691fc0b26",
+        "13-closed-user-open.jpg": "d3cb45fbc3edae872bb61a7f73c8b7467e12ff0caad3ffb394d6a0733210a34d",
+        "operator-result.json": "637da65ecfc4477898147640f3b5e33c56d5a431903d72fd3bc5c5e3224aee3b"
+      },
+      "live-preopen-control-recovery1": {
+        "00-fresh-initial.ax.txt": "b610d436ca973fc7906940a09982515e1c94dc5e5ac2e604949baba4e56b1f55",
+        "00-fresh-initial.jpg": "5238133479bb9bf58f154a323eceb3aa93e5ecc1752950b67872e6303f02b1c6",
+        "01-user-opened.ax.txt": "5c5bc95634c2ca9614856b292a007092e85c347856fcd2a9170db4ff679054ae",
+        "01-user-opened.jpg": "edf90459e701f574570f2977c8333f902f1d64ce23536f1b496951bde10d42dc",
+        "02-first.ax.txt": "5b0729dcbec72858a7013c3f1960e1b347e9b9aa65c1b58a0d6f4c469954dab5",
+        "02-first.jpg": "a1a0b357c1451c1d6a0462571f3ef26086830c8f1eaf43c627c9cfaac6927d11",
+        "03-next.ax.txt": "4ddf0c5727c2b8b8abcf41a101e404c61f7abcd4686e5544b25a4d506be2b697",
+        "03-next.jpg": "c9cb438f8737ba231f6bfd5c87ba70fb578de870b33bf0098b70a836ac90fcc3",
+        "04-closed.ax.txt": "da7c214d58ee375e0d10b88b21db7c179df9012cdb75b7df3125696e89acdf2c",
+        "04-closed.jpg": "37e41e7be398dcbc930802668a12aa0b31130ca6861875a07dcbe6d55bfde394",
+        "operator-result.json": "f8f1473a4e497dfc1247bf20c26ac86321adb34a15467c2bdad48f4613034acd"
+      },
+      "unicode": {
+        "00-initial.ax.txt": "688582f2d7690a925b5702f16760aa9344fedc9198a9345ddb453c2e233a22d1",
+        "00-initial.jpg": "f86751d742efa58cf4abc75564e9dcee86d2aa1dbbf8fa4754e68efff14c1bb3",
+        "01-unicode-first.ax.txt": "b9344f4cda61fe1d6d4e411da08c05b0a583c09e2a2256ef4743715ca2791fb4",
+        "01-unicode-first.jpg": "aa7aa138c70b6ed94dc5a902e8d70c5d74dbc7002167921e08ca64039cc27174",
+        "02-unicode-attachment.ax.txt": "a4c75d3c37efbd66905f0c08ed09298e243b99926edfac239ca5ff6833bd8b23",
+        "02-unicode-attachment.jpg": "3cf99cf69bf76f08855cfab47a3f8a7bfbd53709bd364bbc17e40f1fa850b49d",
+        "03-unicode-wrap.ax.txt": "f331305a12cb60add2e0c9b3d0e5b069872e91f2065c7d2de24c3f7f161f313e",
+        "03-unicode-wrap.jpg": "584a10eee3723441911aa65801733995a20686e76fd8038290e47f827cfddb27",
+        "04-emoji-first.ax.txt": "cbe0fb6d65021c0734a0e369f6e73706ae19b6125587255d5f772f1bd30d608a",
+        "04-emoji-first.jpg": "93942d6e483d24fc933718f3b2d32f917f7648a2199780942712fd9713a83a87",
+        "05-emoji-inline.ax.txt": "11672830dd0e52556e002b96e8f4106f1d2513dd9f5ba9b37e5fce1d0061d081",
+        "05-emoji-inline.jpg": "a08d13ba1efd9676c2d6c475df66588acdd0ee97b06bac0bfcb6adc8a5032608",
+        "06-emoji-attachment.ax.txt": "a6526bae6ab08d69eb93ed37101f4f44cba4c6713fd10fa9b2fab355a26da9fb",
+        "06-emoji-attachment.jpg": "3c57d5e403d51743d3887ae3a3a44cc7f432598b2cf185f285b7ba7f39c69e27",
+        "07-cross-inline.ax.txt": "2de36b50b876c01e742fdd4e3182ce1000eb4e4296505aa4b85a4b33bf9b8fda",
+        "07-cross-inline.jpg": "0de35741a03b88858419f3d125eddbf0815dc9f7471cfc8f599710b9774240bc",
+        "08-literal-first.ax.txt": "757f4d55c89dd9e719c1fa2286bbcfb473042cfc35b3bf1b9dc787fb6c025a6f",
+        "08-literal-first.jpg": "a75ab8ab58bf7dbdfcc1f443eb20438ba77c35acb703f34443774fee1d34ae1d",
+        "09-literal-attachment.ax.txt": "e4f9eef06c2b6817ae72a631eb7abd7b8f1a4c6e04f477edf941433f9bedf15b",
+        "09-literal-attachment.jpg": "46dad88f36cf5fa414ad5ef7ff50c9ba8ff591017815afd40a4a234e8abc9a85",
+        "10-host-scope.ax.txt": "085c7414f94193236f4a039753ecc0700bd78ea5ff2332ab32f0aef70d049f6b",
+        "10-host-scope.jpg": "adf285485df9a1136ee43a39dd54627e2ccf0bfdd7a2bcfc36d25e23f55636d4",
+        "11-supplied-attachment.ax.txt": "baf1a4adb9fcdcb786f8e7e1b7d33fd070274b6cff5264f1b186d5cf18183e0a",
+        "11-supplied-attachment.jpg": "83418feecfb859a6311bec36a7e89c238595b4b6f4440218ee46d04ddd55d4a6",
+        "12-separate-fields.ax.txt": "9fd94b9384ec772048c829ef6abeed792ef312cb04d5e585c79eaec8b456089a",
+        "12-separate-fields.jpg": "60fd5777abb6b5a9c04d1de7ff0d24bb6c3bb27b1aa2a1667b573b16efb51693",
+        "13-placeholder-absent.ax.txt": "0e93026d654d7542e7d21d17b5c979614ae347bb25c0e1008ba3b3cbe489532c",
+        "13-placeholder-absent.jpg": "a609300700809ccfb6e5f243e11c2ee2c1fc61ec59bb3ce0d59b43ff2aeecb14",
+        "14-no-match.ax.txt": "5bab6d3a3cfefc393964f72163084ef7c8dab7f98cff1a8cb48b021a34e4a6bd",
+        "14-no-match.jpg": "543d335629a89ba833390d398ce598d7c58fad8984cbbdc61f445ff4e72bc5cd",
+        "15-cleared.ax.txt": "23d7b52b57b894b9b843ec5d3d470559fbc35c7351c07f30c0c7dc44b31cd307",
+        "15-cleared.jpg": "1b0201d8ab162d815be0476fafa29781df42170cb04f1a3ccd0315e223b74e55",
+        "16-closed.ax.txt": "688582f2d7690a925b5702f16760aa9344fedc9198a9345ddb453c2e233a22d1",
+        "16-closed.jpg": "c84ed9fbc2b23f050b47b5b80ebb7daa126fd24a862dd706a994db87a5f35e03"
+      }
+    }
+  },
+  "referencesSha256": {
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/preparation.json": "1c2c3c32dad311f86e90466190fe16d89e643399f306f0e465f01d957b7785e3",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/README.md": "8e31eef1efcefe6d33b56f113ad9c2e87e0484b080c9df255403f7fd6ddf4809",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/oracle.json": "210f8ae91f6134d46bc15616ab2376744170e77dcaed8ce5a8d03c4cc1386a88",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/tool-control.tsx": "bac981eadb71842d88ae70145e4f2010d83a689056c770ebd84371b9e8962882",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/live-control.tsx": "6a32fb186a0260cfc2637b9ef689014bc3f4222da8d6bbec40fec475ad1ee63d",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/unicode-control.tsx": "67f66a50d2dc1f2b119481a3483bc49dab6e4331759ed12c98f546d4d325d825",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/production-style-order.ts": "f967e6b2f208c08610dbd61cb05eba667e4b264c712e679dd5c3112bc1ea8824",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/runtime-inputs.json": "df6793bae31e195dec56a7a0ffc8a36a84a0619b96d2f25b0c802e78f53a2e25",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9/build-result.json": "0b3722bcb0a9a126df6b645702e139cf3cfc44fd7ebb57c09ec5e4a3530f8233",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9/source-before.json": "05cd0f4a752469a68f9732d5e35cea31e7be9f8086f9166da10927ffb3d26c0f",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9/source-after.json": "209c2080afc1882d763dd43a968c1890a194bbc04066be63706857c152886882",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9/css-source-position-comparison.json": "9f3f3c4f81789015fac4eb518828f793b5a552c3a2cddf1bad7d89cb42012be1",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9/preview-readiness.json": "bfad8988898ae7253fa80fcb1cecc4034fb60fb10455eacd83d9dbc6b5f4cac0",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9-recovery1/preflight.json": "b853f14ca91de1881eb7f3e914b68cc6e969182e966066c5c3cb397a40558c0d",
+    "output/2026-10-30-p12-continuation/controls/production-regression-matrix/execution-r9-recovery1/readiness.json": "41badc1122fbacaba90ce54490fa3d6a07367e3cd3de7f0f3043d02264145ac3",
+    "output/2026-10-30-p12-continuation/native-webkit-production-matrix/prospective-context.json": "ab3ef3f249e5c0da1d54fd4620285a8df671105bcb4c3d12db24b885b8120f81",
+    "output/2026-10-30-p12-continuation/native-webkit-production-matrix/live-preopen-control/prospective-plan.json": "9e9de3c47c99b31b7d9a7d83b6b1bb58c17ff4669daf0d38affba5883e94c1b3",
+    "output/2026-10-30-p12-continuation/native-webkit-production-matrix/live-preopen-control/reload-preparation-observation.json": "6021a9d4f5f594ffcb628746330d02ea79adf69bcefc66c0c1f47805ba086dfd",
+    "docs/evidence/2026-10-30-p12-continuation/selectable-text-source-control-summary.json": "0c4801444e5addc46c66319a212676b6ef7c5725292f7257477a95ba79e4d064",
+    "docs/evidence/2026-10-30-p12-continuation/engineering-summary.json": "753ecfbcd413a5ddbae59f5c9c4aebf7ac9bb2637612b2da6f43e973f3a080cf"
+  }
+}

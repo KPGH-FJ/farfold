@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentBoundedLiveRegisteredRangeDiagnosticReview",
+  "case": "9480 / production build r10",
+  "status": "wrong-paint-reproduced-with-exact-registered-range-scalars",
+  "reviewMethod": "Independent disk image/complete AX short-row/source and hash review; no UI, HTTP, build, server, test or real Agent operation performed by reviewer.",
+  "scope": {
+    "fixture": "Synthetic live A/B React transcript using production ConversationFind and disclosure code; initial A with original two matches, no additions and no real Agent stream.",
+    "surface": "Existing formal application embedded WebKit web panel loading private production preview; not a formal current-source install or main ThreadPage acceptance.",
+    "preciseEngineBuild": null,
+    "actualViewportReestablishedInThisCase": false,
+    "formalP12Acceptance": false,
+    "wholeMatrixGreen": false
+  },
+  "binding": {
+    "sourceHeadAtBuildEndpoints": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "inputCount": 1489,
+    "beforeAfterInputMapsEqualIncludingHashesBytesModes": true,
+    "declaredProductionPins": 104,
+    "declaredControlFiles": 9,
+    "declaredPinsMatchedBeforeAfterAndDisk": true,
+    "productionInputsIdenticalTo9479Prepared104": true,
+    "originalLiveFixtureByteIdentical": true,
+    "sourceChangeInThisFrozenCase": "Five selectable-text CSS lines at their actual production source position; ConversationFind JS unchanged from bound HEAD. No clone, deferred-registration or non-overlap candidate.",
+    "naturalIntegerBuildExitCode": 0,
+    "buildRawStdoutComplete": true,
+    "buildRawStderrBytes": 0,
+    "outputAssetsVerifiedAgainstRecordedShaBytesModes": 3,
+    "cssIdenticalTo9479BuiltCss": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+    "historicalRootPreview": {
+      "ownedExecSession": 69903,
+      "port": 9480,
+      "recordedGet200AndArtifactMatches": 3,
+      "currentServiceLivenessNotQueried": true
+    },
+    "limits": "Input maps establish captured before/after endpoints, not continuous writer exclusion or environment identity. Preparation/build/readiness statements that UI had not yet run are historical stages; actual later pictures/AX below establish observation."
+  },
+  "observations": [
+    {
+      "sample": "00-initial",
+      "result": "Find absent; A original no-addition state and outer disclosure AX off; empty composer placeholder. No prior diagnostic capture rows."
+    },
+    {
+      "sample": "01-first",
+      "result": "One entered query P12_LIVE_NEEDLE, counter1/2, visible head exact query yellow with selected-field outline; outer AX off. No capture inserted before Next. Footer not visible in picture, so no footer paint claim here."
+    },
+    {
+      "sample": "02-nested-before-capture",
+      "result": "Counter2/2, all three disclosure summaries AX on, nested exact keyword yellow and selected-field outline. Separate nonmatching footer 合成页面A结束。 visibly yellow. Diagnostic panel still has no rows; this is the preserved wrong-paint picture before capture/publication."
+    },
+    {
+      "sample": "03-nested-captured",
+      "result": "After the one capture, nested keyword and separate nonmatching footer are still visibly yellow. All24 independent short AX rows are complete (maximum191 UTF16 units, each<500); the panel is scroll clipped in the picture, so complete scalar claims use AX, not screenshot visibility."
+    },
+    {
+      "sample": "04-closed",
+      "result": "Find absent; outer disclosure AX off; visible footer plain and no selected-field outline; composer remains empty. Hidden middle/inner current flags and current registry contents were not recaptured. The panel still displays sequence1/query2/2/open=true from the earlier immutable capture, not post-close live values."
+    }
+  ],
+  "actualCapture03": {
+    "capture": {
+      "sequence": 1,
+      "pages": 2,
+      "totalTranscripts": 2,
+      "visible": 1,
+      "page": "A",
+      "activeRoots": 1,
+      "valid": true
+    },
+    "query": {
+      "text": "P12_LIVE_NEEDLE",
+      "utf16Length": 15,
+      "truncated": false
+    },
+    "counter": {
+      "text": "2 / 2",
+      "utf16Length": 5,
+      "truncated": false
+    },
+    "registryAvailable": true,
+    "all": {
+      "present": true,
+      "count": 2
+    },
+    "all0 range": {
+      "id": 1,
+      "liveRange": true,
+      "text": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      },
+      "equalsQuery": true,
+      "collapsed": false,
+      "sameNode": true
+    },
+    "all0 start": {
+      "offset": 5,
+      "id": 2,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-head/#text[0]",
+      "data": {
+        "text": "合成开头 P12_LIVE_NEEDLE。",
+        "utf16Length": 21,
+        "truncated": false
+      }
+    },
+    "all0 end": {
+      "id": 2,
+      "offset": 20,
+      "sameAsStart": true,
+      "connected": true,
+      "owned": true
+    },
+    "all1 range": {
+      "id": 3,
+      "liveRange": true,
+      "text": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      },
+      "equalsQuery": true,
+      "collapsed": false,
+      "sameNode": true
+    },
+    "all1 start": {
+      "offset": 0,
+      "id": 4,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-nested/#text[1]",
+      "data": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      }
+    },
+    "all1 end": {
+      "id": 4,
+      "offset": 15,
+      "sameAsStart": true,
+      "connected": true,
+      "owned": true
+    },
+    "current": {
+      "present": true,
+      "count": 1
+    },
+    "current0 range": {
+      "id": 3,
+      "liveRange": true,
+      "text": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      },
+      "equalsQuery": true,
+      "collapsed": false,
+      "sameNode": true
+    },
+    "current0 start": {
+      "offset": 0,
+      "id": 4,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-nested/#text[1]",
+      "data": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      }
+    },
+    "current0 end": {
+      "id": 4,
+      "offset": 15,
+      "sameAsStart": true,
+      "connected": true,
+      "owned": true
+    },
+    "nested": {
+      "present": true,
+      "childCount": 3
+    },
+    "nested child0": {
+      "index": 0,
+      "id": 5,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-nested/#text[0]",
+      "data": {
+        "text": "合成嵌套目标 ",
+        "utf16Length": 7,
+        "truncated": false
+      }
+    },
+    "nested child1": {
+      "index": 1,
+      "id": 4,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-nested/#text[1]",
+      "data": {
+        "text": "P12_LIVE_NEEDLE",
+        "utf16Length": 15,
+        "truncated": false
+      }
+    },
+    "nested child2": {
+      "index": 2,
+      "id": 6,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/a-nested/#text[2]",
+      "data": {
+        "text": "。",
+        "utf16Length": 1,
+        "truncated": false
+      }
+    },
+    "footer": {
+      "count": 1,
+      "childCount": 1,
+      "containsNeedle": false
+    },
+    "footer child0": {
+      "index": 0,
+      "id": 7,
+      "type": 3,
+      "name": "#text",
+      "connected": true,
+      "owned": true,
+      "path": "A/transcript/div[0]/p[16]/#text[0]",
+      "data": {
+        "text": "合成页面A结束。",
+        "utf16Length": 8,
+        "truncated": false
+      }
+    },
+    "details outer": {
+      "controlId": "outer",
+      "count": 1,
+      "open": true
+    },
+    "details middle": {
+      "controlId": "middle",
+      "count": 1,
+      "open": true
+    },
+    "details inner": {
+      "controlId": "inner",
+      "count": 1,
+      "open": true
+    }
+  },
+  "derivedChecks": {
+    "rangeTextComparedLiterallyToActualQuery": true,
+    "allRangeTextUtf16Widths": [15, 15],
+    "currentRangeTextUtf16Width": 15,
+    "all0": "Range identity1, connected owned head Text identity2 offsets5..20; exact query only.",
+    "all1": "Range identity3, connected owned nested keyword Text identity4 offsets0..15; exact query only.",
+    "current0": "Same actual Range identity3 and same Text identity4/offsets as all1 at this capture.",
+    "nestedTextChildren": "Three separate Text nodes: prefix identity5 width7, keyword identity4 width15, suffix identity6 width1.",
+    "footer": "One independent Text identity7, exact 合成页面A结束。 width8; containsNeedle=false and no start/end node among the three inspected entries.",
+    "disclosures": "Unique outer, middle, inner actual details.open=true in this capture.",
+    "scope": "Two total transcript roots / two pages; unique visible page A with one active transcript, rootValid=true. Only the two named Find Highlight entries are inspected, not all global registry keys."
+  },
+  "captureAndCausalityLimits": [
+    "Reader synchronously completes DOM/Range scalar reads and serialization before publishing rows; no added geometry/computed-style read, Range mutation/clone or Highlight registry mutation. Existing production Find retains its own original layout reads.",
+    "Capture click changes focus and overlay publication may repaint. The overlay already exists before the route. Post-capture scalar state is not a simultaneous WebKit internal paint/cache trace of picture02.",
+    "Correct JS Range text/endpoints and unrelated visible footer paint coexist in the sampled route, narrowing the application-mapping hypothesis at that capture. They do not identify a unique engine defect, layout cache cause, renderer revision, or historical cause of every formal failure.",
+    "Range object identity is established only within the one captured snapshot. No continuous identity or pre-capture endpoint claim, no geometry measurement, and no post-close registry cleanup proof.",
+    "Original9479 tool/live/Unicode successes and failures, formal52aa failure, and prior unknowns remain unchanged; this diagnostic neither repairs the Unicode literal1/1 discrepancy nor closes P12."
+  ],
+  "operatorReportedActionCounts": {
+    "queryInsertions": 1,
+    "capturesBeforeNext": 0,
+    "rangeCaptureAfterWrongPaint": 1,
+    "basis": "operator-result.json; sampled files alone are not a complete action/event recorder."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/preparation.json",
+      "sha256": "be4050fb79430d2b2fa6788c0498c12c1fef8f1787c65147f7a20445a584dec3",
+      "bytes": 26048
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/README.md",
+      "sha256": "8d9a88c8722748748744dc0080af1884d9c92a4d77110fc85519663cd5671244",
+      "bytes": 2802
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/range-inspection.ts",
+      "sha256": "629559b19ba28c48277962e17bbff5f85b7c8c41bda9c3240d18444db0040e6e",
+      "bytes": 8663
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/control.tsx",
+      "sha256": "6a32fb186a0260cfc2637b9ef689014bc3f4222da8d6bbec40fec475ad1ee63d",
+      "bytes": 5444
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/diagnostic.ts",
+      "sha256": "cb6bf6d70a54df200c4fded561f3676740f96aaabcb7d66f92e19a4a70227e36",
+      "bytes": 151
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/production-style-order.ts",
+      "sha256": "f967e6b2f208c08610dbd61cb05eba667e4b264c712e679dd5c3112bc1ea8824",
+      "bytes": 2257
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/vite.config.mjs",
+      "sha256": "8201c6e1f2366480d9c1c9c769c2d391092d186f9e2b9d53c2a0708d12107c89",
+      "bytes": 1399
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/static-checks.json",
+      "sha256": "e376f9a2fad48092f8f44e85dbc32b43c38398f6d351796b542d263cc4577c5a",
+      "bytes": 4044
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/operator-preflight.json",
+      "sha256": "8fc60c84bc9bc80f1196dfe887cae7a68210f7f87035452ec0deb4eccdd8cdc9",
+      "bytes": 1181
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/build-result.json",
+      "sha256": "20c015e9ed04d5aecfd80ac8aae87b9ef5d85ffc7d54ac590ab5a2d14dc155cc",
+      "bytes": 2478
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/build-delivery.json",
+      "sha256": "aae2547a61ef6614664d2c43d78b9ab45d9659834454844f0ab83e3b8a66919a",
+      "bytes": 2348
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/source-before.json",
+      "sha256": "bc702914da68a2cca4e52dfd3c5e0fe3c449e5c931358351da1fbd74cad5c558",
+      "bytes": 267237
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/source-after.json",
+      "sha256": "1384f0e6c7f3ac0bc91b04d53eedc436da2927d5fc3a5beb945b50029e1fd673",
+      "bytes": 267238
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/build.stdout",
+      "sha256": "9d0855cf3058a08aef613a5882bba617c33d2269a96b87f4b830905d3fe3961a",
+      "bytes": 584
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/execution-r10/preview-readiness.json",
+      "sha256": "185db89b171075e242ceae64f708ff072ee861fef2a89aebc6930f617002d1c2",
+      "bytes": 794
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/operator-result.json",
+      "sha256": "6351c09ca23de5d374a3fc4ffaa5c35ab6880f03ac879ca8c04928112f14ea5f",
+      "bytes": 844
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/matrix-summary.json",
+      "sha256": "047910282c6756fc0840f54f55d702eef52ac70af2e2114b062a7939859d05ee",
+      "bytes": 24481
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "sha256": "b9bac9e891cc96fdb5538a3c23c0f6e9ab472fa37bf3b15d9e13c19647ef62cb",
+      "bytes": 7799
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/production-output/assets/index-DSTML7Lk.css",
+      "sha256": "e810b02aba7cdc62b5a71c6ebe1c3114dfd0abe0ed4773c96881b3e439bc3c56",
+      "bytes": 207048
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/production-output/assets/index-V4SUZa9f.js",
+      "sha256": "a85f3466de33cc03b59645e77316053e015f82faed7f99a983b3d14892d584bd",
+      "bytes": 213282
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/live-range-diagnostic/production-output/index.html",
+      "sha256": "d8f27ee268def0dced95240f22edc44a3f8cdef014a9916eefedb50f0a7fd8b8",
+      "bytes": 423
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/00-initial.jpg",
+      "sha256": "73c853803ad85f2779bf7de96dea1cbc9b0e04185fca89728dc0bd66f3b5f9a4",
+      "bytes": 706600
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/01-first.jpg",
+      "sha256": "1d6c15d290d212127f60898dae54ee439967562ba1d8895b457d8a27712926cc",
+      "bytes": 684575
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/02-nested-before-capture.jpg",
+      "sha256": "c36781023741927e9e3e861de82c5c9841c2b501eabdb97889dd6ab1f8de11d8",
+      "bytes": 597573
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/03-nested-captured.jpg",
+      "sha256": "3ff2680ed3fd14d9e7152ff38f2265152428df85a6dc475f23d6e22fa0368ff2",
+      "bytes": 657491
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/04-closed.jpg",
+      "sha256": "2c99d64ce38976ccc51e16d47cf1cd4ea6270d8a3e9652227aa64ce58325b23b",
+      "bytes": 728918
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/00-initial.ax.txt",
+      "sha256": "e79768fb7caf89b9a2121ffbd3507b3c71c232837703ebaa3856edf38372a37e",
+      "bytes": 9100
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/01-first.ax.txt",
+      "sha256": "2fe0cdb3a73aef600382e11652d0027bdd052126db99cb52afcd6ddee2325ea1",
+      "bytes": 9846
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/02-nested-before-capture.ax.txt",
+      "sha256": "81788718075160d8b0f4434f6b60d683813082ecc39a6d3922dea299856b7a96",
+      "bytes": 10005
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/03-nested-captured.ax.txt",
+      "sha256": "6300bbc5607ca39d1d20ef73a45dab252105e2921e5d03530ceb0810f73febdc",
+      "bytes": 13008
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/native-webkit-live-range-diagnostic/04-closed.ax.txt",
+      "sha256": "d081e3451c5c948605af2b17e9a8cb5be8f87add88e1aeb0d10ca9f7920393b9",
+      "bytes": 12121
+    }
+  ]
+}

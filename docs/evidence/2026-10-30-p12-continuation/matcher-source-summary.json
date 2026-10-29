@@ -1,0 +1,500 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentMatcherSourceSemanticsAndAffectedChecksReview",
+  "status": "current-source-reviewed-and-affected-checks-passed; full-engineering-and-formal-revalidation-pending",
+  "reviewMethod": "Independent read of actual current diff/source/tests, raw stdout/stderr, runner/start/result receipts, source graph endpoints and previously independently reviewed Native r14. No tests/build/UI or source/doc-entry edits by reviewer.",
+  "source": {
+    "headContext": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "matcherSha256": "819af5154f1548243b8b3d4f6c8c605b724aa61390194bde851c2f75edd80d9c",
+    "matcherBytes": 1936,
+    "oldMatcherSha256": "93e5cd0411357dee7de4558f0ac40b761a2127842081a4ab8adb86ec25fb52ba",
+    "newMatcherChange": "Only giu→gimu plus two explanatory comments; literal escaping, matchAll/global order, i/u semantics, original UTF16 offsets and cursor-based segmented mapping unchanged.",
+    "privateR14Correspondence": "Current matcher314 TypeScript scanner tokens equal frozen r14 private gimu module when comments/whitespace skipped; every production source byte also matches old HEAD with exactly the one flag/comment replacement.",
+    "lines": {
+      "src/runtime/transcript_find.ts": "8..12: escaped literal, two comments and gimu registration",
+      "src/runtime/transcript_find.test.ts": "1..31: all4 prior tests retained verbatim;33..152:17 new expected-output cases"
+    },
+    "permanentTestsSha256": "4502f7c5a2785dbceba029abffc6520b5abfce2a81fb3dc2ce2feef1452310d4",
+    "tests": "13 new literal/Unicode/UTF16 offset cases plus4 exact cross-node mapping cases, retaining old4 for21 matcher cases. They call actual two functions and assert explicit expected arrays, with no RegExp mock, flags/source assertion or manufactured failure.",
+    "otherBatchSourcePins": {
+      "src/components/ConversationFind.tsx": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+      "src/components/ConversationInteractions.review.test.tsx": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+      "src/runtime/transcript_find.ts": "819af5154f1548243b8b3d4f6c8c605b724aa61390194bde851c2f75edd80d9c",
+      "src/runtime/transcript_find.test.ts": "4502f7c5a2785dbceba029abffc6520b5abfce2a81fb3dc2ce2feef1452310d4",
+      "src/conversation-redesign.css": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344"
+    },
+    "previousGuardUnchanged": "Find a30, interaction test4bc and CSS3a5 byte hashes equal the previously reviewed visible-range GREEN source. This matcher change adds no guard/DOM/layout/media/IO/observer behavior."
+  },
+  "oldNodeBaseline": {
+    "directory": "output/2026-10-30-p12-continuation/matcher-semantics-old-node",
+    "matcherUsed": "old93e5, unchanged at its recorded nine-input endpoints",
+    "filesPassed": 2,
+    "testsPassed": 24,
+    "includedMatcherCases": 21,
+    "includedScannerCases": 3,
+    "newMatcherCases": 17,
+    "priorMatcherCasesRetained": 4,
+    "testsExitCode": 0,
+    "narrowNoEmitTypecheckExitCode": 0,
+    "targetedOneTestFormatExitCode": 0,
+    "meaning": "Compatibility/semantics baseline on Node. Old matcher already passes these tests; this is explicitly not RED and does not contradict the original Native giu failures. Test file bytes match the later affected run.",
+    "noDuplicateCounting": "Old24 is a separate baseline run, not added to97 affected tests."
+  },
+  "affectedChecks": {
+    "directory": "output/2026-10-30-p12-continuation/matcher-source-affected-checks",
+    "testCommands": 1,
+    "filesPassed": 9,
+    "testsPassed": 97,
+    "matcherCasesPassed": 21,
+    "interactionCasesPassed": 21,
+    "scalingCasesPassed": 11,
+    "testFileCounts": {
+      "src/runtime/transcript_find.test.ts": 21,
+      "src/runtime/transcript_search.test.ts": 10,
+      "src/runtime/transcript_find_dom.test.ts": 3,
+      "src/runtime/transcript_find.scaling.test.ts": 11,
+      "src/components/ConversationInteractions.review.test.tsx": 21,
+      "src/components/thread-items.search-expansion.test.tsx": 3,
+      "src/components/MessageContent.media-visibility.test.tsx": 7,
+      "src/components/thread-items.search.test.tsx": 17,
+      "src/components/TranscriptSearch.presentation.test.tsx": 4
+    },
+    "testsNaturalIntegerExitCode": 0,
+    "fullTypecheckNaturalIntegerExitCode": 0,
+    "targetedFiveSourceFormatNaturalIntegerExitCode": 0,
+    "allRawStderrBytes": 0,
+    "fiveChangedSourcesMatchPerCommandBeforeAfterAndCurrentDisk": true,
+    "scope": "One affected9-file run includes matcher21 once. Typecheck is full pnpm typecheck; format is targeted five changed source files, not full repository format. No full7, production build or installation was performed in these records."
+  },
+  "semanticsReviewed": [
+    "Exact literal punctuation and ^/$ across lines, plus literal anchors surrounding an actual embedded line break, preserve original offsets.",
+    "Unicode long-s/Kelvin/Deseret folding retains i/u; complete emoji matches and high/low surrogate-only nonmatches preserve code-point behavior in these fixed samples.",
+    "BMP and emoji-pair matches remain non-overlapping; original4 tests retain empty/no-match/trim/case and length-changing-prefix cases.",
+    "Cross-inline mapping retains exact original start/end node offsets for emoji-prefix punctuation, line-boundary literal anchors, emoji phrase and Deseret folding.",
+    "Scaling tests use actual mapper input-access counts and fixed exhaustive UTF16 partitions, not a wall-clock benchmark. They do not prove native engine performance. Incremental zero-argument Highlight construction/add remains unchanged."
+  ],
+  "nativeCounterexampleBinding": {
+    "summary": "docs/evidence/2026-10-30-p12-continuation/unicode-multiline-flag-control-summary.json",
+    "actualR14": "Original production giu and independent giu still fail both emoji-prefix payloads. Private single-flag gimu and independent gimu return19..28; all11 candidate offsets/segments match expected.",
+    "readLimitRetained": "One middle Deseret direct gimu matchAll text was published as two U+FFFD across AX chunk boundary; exact text remains unknown through that capture, while numeric offsets/widths and candidate segmented values are intact.",
+    "meaning": "This is the actual engine/context distinction supporting the source candidate. Node unit passes are semantic coverage, not the Native failure/fix proof. R14 was a private pure-string production page, not current-source ThreadPage/install acceptance.",
+    "primaryLead": "Upstream8c10428 is already linked/reviewed in r14 summary as strategy context only; no exact installed JavaScriptCore revision or sole historical cause is assigned."
+  },
+  "frozenEndpoints": {
+    "inputCount": 2333,
+    "beforeAfterSamePathsShaBytesMode": true,
+    "beforeAfterSameHead": true,
+    "head": "1d791c2cf75932f00c6609b595f8e5f70d38dd1d",
+    "absentTrackedPaths": [],
+    "actualThreeAuthorityPathsInside2333": [
+      "PRODUCT.md",
+      "docs/agent-access-requirements.md",
+      "docs/agent-first-release.md"
+    ],
+    "theseAreNot2333PlusThreeExtraInputs": true,
+    "statusAndPlanWereNotInThoseMaps": [
+      "docs/status.md",
+      "plans/agent-access.md"
+    ],
+    "laterDiskDifference": [
+      {
+        "path": "docs/agent-access-requirements.md",
+        "frozenSha256": "fb6e7974ff1b388542aa04218954c827b9368c8bf15f87966d3d757d3723a74b",
+        "observedLaterSha256": "0a8e2bfa6e91a6d9095ae261d8fe624f36c3feb2363033b0248101278ede42c3",
+        "observedLaterBytes": 138539,
+        "observedLaterMode": 420
+      }
+    ],
+    "laterWorkEntryUpdates": "Root subsequently updated status/plan/requirements toward final-page, full-engineering and formal revalidation. Only requirements overlaps this old graph. These later working-entry edits are not retroactively part of the affected-check endpoints; no missing old status/plan receipts are invented.",
+    "currentFiveSourceStableDespiteLaterDocsUpdate": true,
+    "limits": "Hash/bytes/mode equality at captured endpoints is not continuous-writer, dependency-install-byte or complete environment freezing. No current2333 equality is claimed after the acknowledged requirements progress edit."
+  },
+  "independentReview": {
+    "blockingFindings": [],
+    "resources": "Only a RegExp flag and explanatory comments change the matcher implementation; no new external dependency, runtime switch, IO or second matching loop.",
+    "lineLimit": "Five affected source files remain below1500 lines (largest interaction test775); no file-size exception.",
+    "semanticsLimit": "Fixed unit cases and literal escaping support this bounded change; they do not guarantee arbitrary Unicode/engine behavior or performance."
+  },
+  "receipts": [
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tests.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/transcript_find.test.ts",
+        "src/runtime/transcript_find_dom.test.ts",
+        "--reporter=verbose"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:49:13.474929+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/typecheck.result.json",
+      "argv": [
+        "./node_modules/.bin/tsc",
+        "--project",
+        "/Users/tw/Desktop/farfold/output/2026-10-30-p12-continuation/matcher-semantics-old-node/tsconfig.check.json",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:49:13.433497+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/format.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/runtime/transcript_find.test.ts"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:49:13.217335+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/tests.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "src/runtime/transcript_find.test.ts",
+        "src/runtime/transcript_find_dom.test.ts",
+        "src/runtime/transcript_search.test.ts",
+        "src/components/TranscriptSearch.presentation.test.tsx",
+        "src/components/thread-items.search.test.tsx",
+        "src/components/thread-items.search-expansion.test.tsx",
+        "src/components/MessageContent.media-visibility.test.tsx",
+        "src/runtime/transcript_find.scaling.test.ts",
+        "--reporter=verbose"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:52:10.565854+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/typecheck.result.json",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:52:19.661720+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    },
+    {
+      "receipt": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/format.result.json",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/components/ConversationFind.tsx",
+        "src/components/ConversationInteractions.review.test.tsx",
+        "src/runtime/transcript_find.ts",
+        "src/runtime/transcript_find.test.ts",
+        "src/conversation-redesign.css"
+      ],
+      "exitCode": 0,
+      "finishedAt": "2026-10-29T20:52:08.474765+00:00",
+      "sourceEndpointStable": true,
+      "rawShaAndBytesRecomputed": true
+    }
+  ],
+  "acceptanceLimits": [
+    "New-source affected checks do not inherit the earlier CSS-only full7 result. A new complete engineering batch and formal current-source known-counterexample recheck remain separate.",
+    "No candidate package, formal replacement, real Agent stream/history/file journey or complete P12/29x8 acceptance is established here.",
+    "Original failures, r14 reading limit and distinct evidence levels remain preserved. Current task/requirements scope and stage exit are not reduced."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/summary.json",
+      "sha256": "1488ba00fc28e6cec0785210577e678ab58e03558bf6877900c9784f5439597c",
+      "bytes": 2281,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/README.md",
+      "sha256": "de26538b589882ed37a4a549ade4ecc2dd8222af00ebfd3f5b6eb69e8bfd1dd7",
+      "bytes": 925,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/run.py",
+      "sha256": "743bd57ffecd7cdceaf093ef567251735681f34a0d9cb71f1f91de2e7054710a",
+      "bytes": 2466,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tsconfig.check.json",
+      "sha256": "405f2d2fe42f88b17fde27bca458d333be6777b1ed6664d8d8abd710a265221b",
+      "bytes": 190,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/summary.json",
+      "sha256": "14172c3cdf0a75cad5d36b316468eb649c86aff4e9e8f2044c957001e12338c9",
+      "bytes": 1514,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/README.md",
+      "sha256": "e7b830a1196e2e8c14f971a2236307fcee2530263cc159e40fb0048911afdbdd",
+      "bytes": 1342,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/run.py",
+      "sha256": "30d1f9242d8a6e450c5848b8d48f653b1603089acf8ac1edc0e977960b9d3bd6",
+      "bytes": 2382,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/capture-source.py",
+      "sha256": "3e4ae598a4e2decc1fc15eaa4aff58939293e4d8a993e22de0fbc9d00fb2d011",
+      "bytes": 2747,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/source-review.json",
+      "sha256": "d9faf540802cdc07108fc2b626b86dc848dd5af687fe05d3195192eb3201ce11",
+      "bytes": 1926,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/source-before.json",
+      "sha256": "93cbf3987dae2876b3f854173906c757ada4020944b0581db6ac525cc636b2bc",
+      "bytes": 425065,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/source-after.json",
+      "sha256": "e15c3b6890d3ad3e58199755189caefec2e699691dbaae99a218fec9b2474b97",
+      "bytes": 425065,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tests.started.json",
+      "sha256": "34f470457636f91c3aab35c886aaacac63dd13f297efbb1de2c91ceafafc556b",
+      "bytes": 1612,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tests.result.json",
+      "sha256": "0aaba71f09f8c41dafeaff02480d80a0b2d5918433c4df08eed498bbecd2416e",
+      "bytes": 2041,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tests.stdout.raw",
+      "sha256": "2f37e6de1d25f0674e10a375c866051012d5b265c9dd546d62feca77d19aa60b",
+      "bytes": 3097,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/tests.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/typecheck.started.json",
+      "sha256": "04e7dfaa8c5ba568d2b1c45d2bfef79e034f8eac0e6ce0c8b55919d1d2317517",
+      "bytes": 1623,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/typecheck.result.json",
+      "sha256": "888d50e8b67cff2285d61da4070a25e2cedc1491dfbc28b7b8228a0bb191d34e",
+      "bytes": 2057,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/typecheck.stdout.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/typecheck.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/format.started.json",
+      "sha256": "380b67572999bc30a7be5ba54944de416c389366b25329ce5f1c338ff4c95c0b",
+      "bytes": 1545,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/format.result.json",
+      "sha256": "98f0f8a23ca12c03862340f824067927edb1a455f3ae2263e4c0e4ca0551178f",
+      "bytes": 1974,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/format.stdout.raw",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-semantics-old-node/format.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/tests.started.json",
+      "sha256": "13f5269a3c312e8846894d2a737a0d401654df7bff549f11e3c08fb421d03620",
+      "bytes": 1276,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/tests.result.json",
+      "sha256": "99503feee3881b6ffbcd520840ba1add12be7a10d652da65ce727870139cd342",
+      "bytes": 1603,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/tests.stdout.raw",
+      "sha256": "18bc89f01af3d06ab4d3d8a3c57ca139c316d78f533bad5d094c441c42353a07",
+      "bytes": 12972,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/tests.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/typecheck.started.json",
+      "sha256": "ed7e3b85ed4600a0b3c8f14c4ce3958e2a25e935e8765144ebed454f85cc8bd1",
+      "bytes": 745,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/typecheck.result.json",
+      "sha256": "c80b9d8c6d0980e0f43cf2ebf8fe6351f6ca6157adc910bfcabe04b1108aab4f",
+      "bytes": 1078,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/typecheck.stdout.raw",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/typecheck.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/format.started.json",
+      "sha256": "88ff711c23f5ee0ad0bd9b8e3062a68c4b2c15cc032c764222cd8ed43311abbc",
+      "bytes": 995,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/format.result.json",
+      "sha256": "c19baf1836c22e448e7c1a919d977b37e7b634d9128406090a258060cc699d88",
+      "bytes": 1321,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/format.stdout.raw",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66,
+      "observedMode": 420
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/matcher-source-affected-checks/format.stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "sha256": "a30ef7944b63aa7eb0b7c270791f1dfe8ba29f00db4e9f7be692c2c048139723",
+      "bytes": 8436,
+      "observedMode": 420
+    },
+    {
+      "path": "src/components/ConversationInteractions.review.test.tsx",
+      "sha256": "4bc93e69b5fd98616f8e43181e7fd46a07c95f1d9c866694bd3cdc4229221d39",
+      "bytes": 24620,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_find.ts",
+      "sha256": "819af5154f1548243b8b3d4f6c8c605b724aa61390194bde851c2f75edd80d9c",
+      "bytes": 1936,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_find.test.ts",
+      "sha256": "4502f7c5a2785dbceba029abffc6520b5abfce2a81fb3dc2ce2feef1452310d4",
+      "bytes": 4606,
+      "observedMode": 420
+    },
+    {
+      "path": "src/conversation-redesign.css",
+      "sha256": "3a5a1568f449f3e430aee62b063210c6e6b1aa60473fa6fe602e51f350f90344",
+      "bytes": 5947,
+      "observedMode": 420
+    },
+    {
+      "path": "src/runtime/transcript_find.scaling.test.ts",
+      "sha256": "644e5d45dbb88430baf0bf7731bddc23165d788d13fbe2509048c788dc30a845",
+      "bytes": 5113,
+      "observedMode": 420
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/unicode-multiline-flag-control-summary.json",
+      "sha256": "06ceefbf7793447677666612324d4c5a9ffb51c0265f4def96b42989988fa4ee",
+      "bytes": 51950,
+      "observedMode": 384
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/visible-range-source-summary.json",
+      "sha256": "3c9443c3940987281cf9eafe61aaba4866cb0074fe486d999236da2e30c5e27a",
+      "bytes": 21619,
+      "observedMode": 384
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p12-continuation/engineering-summary.json",
+      "sha256": "753ecfbcd413a5ddbae59f5c9c4aebf7ac9bb2637612b2da6f43e973f3a080cf",
+      "bytes": 16279,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/transcript_find.gimu.ts",
+      "sha256": "aa671486df397d2ceb1dfebf29bdf587b55f35b5fbbf865e596a4f018b50224c",
+      "bytes": 1783,
+      "observedMode": 384
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/controls/unicode-multiline-flag-control/matcher-gimu.unbound.patch",
+      "sha256": "5a42cdc50368f8cd422ab89c17a16b2c1ba8601911d6fbd7060c9202332d62df",
+      "bytes": 476,
+      "observedMode": 384
+    }
+  ]
+}

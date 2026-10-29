@@ -1,0 +1,92 @@
+{
+  "kind": "P12FormalUpdateExitReviewStillUnresolved",
+  "recordedAt": "2026-10-29T21:39:50.317231+00:00",
+  "formalApplication": {
+    "path": "/Applications/Farfold.app",
+    "sourceCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "binarySha256": "e7afbdcee3b62a006454eb2f9ff9ac9f2165a0e6da322b9ab9446a128442bbbf"
+  },
+  "observedActions": [
+    "One ordinary native Quit request displayed the active-or-unconfirmed-work warning.",
+    "Root selected Leave in App. No Save and Exit, forced termination, acknowledgment of activity, retry or new Agent prompt.",
+    "Read-only conversation overview showed inProgress=0 and waitingForResponse=0; this does not establish no uncertainty, authentication activity or file-copy blocker.",
+    "Read-only Agent directory showed no visible in-progress-login label; six incomplete setup conditions were retained.",
+    "Returned to the original B3 conversation. Four complete nonempty rendered draft strings equal the original pre-quit strings."
+  ],
+  "exitSemantics": "The existing Quit cancellation releases the interaction lock; queues paused by the exit request are not automatically resumed. Unknown work remains unknown.",
+  "verification": {
+    "normalSavedExitObserved": false,
+    "processZeroEstablished": false,
+    "rootNormalExitPrerequisiteSatisfied": false,
+    "closedDataRetentionPhasesExecuted": false,
+    "formalApplicationReplaced": false,
+    "postUpdateDraftRestorationVerified": false,
+    "newAgentPrompts": 0
+  },
+  "limits": [
+    "The warning combines active and uncertain work. Its owner and actual activity state remain unresolved; no claim that all Agents are idle.",
+    "A sleeping or surviving process is not proof of ongoing work or of safe termination.",
+    "Rendered-string equality does not prove exact newline serialization, underlying data-store bytes or post-update restoration.",
+    "This receipt is a blocked preparation observation, not formal P12 acceptance. Full P12,29x8 and NEW-24 send pause remain open."
+  ],
+  "evidence": [
+    {
+      "role": "freshFormalStaticBaseline",
+      "path": "output/2026-10-30-p12-continuation/formal-final/formal-baseline.json",
+      "sha256": "80a7726929e7e8837dbb9bbcafc25e5a01bacc2b7bb3f1b5cac79372fce9ca95",
+      "bytes": 10157,
+      "mode": "0o600"
+    },
+    {
+      "role": "quitWarningAx",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/05-normal-quit-blocked-by-work.ax.txt",
+      "sha256": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf",
+      "bytes": 937,
+      "mode": "0o600"
+    },
+    {
+      "role": "quitWarningImage",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/05-normal-quit-blocked-by-work.jpg",
+      "sha256": "25e9b7c1a8f7464eee441c4fdea61b8bf9604504ccdd99624b93a6df19649bec",
+      "bytes": 220468,
+      "mode": "0o600"
+    },
+    {
+      "role": "leaveInAppAx",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/06-stayed-in-app.ax.txt",
+      "sha256": "02deead5e872f71aecf5497f366dcaff9635ad51a4ae3497777b10bb3b341484",
+      "bytes": 5479,
+      "mode": "0o600"
+    },
+    {
+      "role": "allConversationsAx",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/09-all-conversations-settled.ax.txt",
+      "sha256": "381a20ca763d18958575a64bd8d473589a6338f0400c7f6e92d223dae7f43b4a",
+      "bytes": 2853,
+      "mode": "0o600"
+    },
+    {
+      "role": "agentDirectoryAx",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/10-agent-directory-account-status.ax.txt",
+      "sha256": "cd152531994219fa7b5f90e878cd8bdbbd64e8d2f89c39e5ef4739c2de018b77",
+      "bytes": 9940,
+      "mode": "0o600"
+    },
+    {
+      "role": "returnedB3Ax",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/11-returned-to-b3-after-readonly-review.ax.txt",
+      "sha256": "02deead5e872f71aecf5497f366dcaff9635ad51a4ae3497777b10bb3b341484",
+      "bytes": 5479,
+      "mode": "0o600"
+    },
+    {
+      "role": "renderedDraftComparison",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/b3-rendered-strings-after-readonly-review.json",
+      "sha256": "d4b63dc010ea41abb85a3029f7e2e47cd9905200693c0df8373fe8476f9fa47d",
+      "bytes": 1461,
+      "mode": "0o600"
+    }
+  ]
+}
