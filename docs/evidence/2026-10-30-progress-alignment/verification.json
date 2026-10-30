@@ -1,0 +1,161 @@
+{
+  "kind": "FarfoldProgressAlignmentReadback",
+  "recordedAt": "2026-10-30T15:31:11.931647+08:00",
+  "repositoryHeadAtReadback": "c655720a52fe87de61a6f1605a10a25fc2e32c8e",
+  "liveRemoteMainAtReadback": "c655720a52fe87de61a6f1605a10a25fc2e32c8e",
+  "originals": [
+    {
+      "originalPath": "docs/status.md",
+      "archivePath": "docs/archive/2026-10-30-progress-alignment/status-before.md",
+      "sha256": "729757cca2a0d66a0905eb5160093d455eadf97b38ce894aee74994bc7ff115c",
+      "bytes": 155510
+    },
+    {
+      "originalPath": "plans/agent-access.md",
+      "archivePath": "docs/archive/2026-10-30-progress-alignment/plan-before.md",
+      "sha256": "c069babdcbeb40d7f8664c264ef06a806fa92beff7834076dfef3e1de114c221",
+      "bytes": 5082
+    }
+  ],
+  "protectedPreexistingChanges": {
+    "docs/agent-access-requirements.md": "ed3f2a0efdc13c14e6471721d4e5c0f971f9fd884e638ffef9a73c9387f56aaa",
+    "src/components/HistorySearchResults.test.tsx": "bdc6a7ae5070a776c8d48b07082c7bd98f8d532485de4ca72ffe951cf3d3d303",
+    "src/components/HistorySearchResults.tsx": "babe66acac890ec1b15afd2f3665235eccf367496512610405521af47ee3fb84",
+    "src/components/SelectedAttachmentSearch.tsx": "55bbe23204c75f3c6575a20d897c928bf44c01d4b44b2a57469bcc191b747967",
+    "src/runtime/search_snippet.ts": "76784a47af0afa6b778ceab91a5bc0d411d51886a69310fad8e31e2421a1081e",
+    "src/components/SelectedAttachmentSearch.selection-visibility.test.tsx": "3bdf77315384468a19b79853760099b47dca613c404e44ffd80c6354ed35d3b0"
+  },
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "sourceFromInstallationReceipt": "7a04c6f1bf13a90a764b27c2194baaf0d7294a9e",
+    "executableSha256": "5925de99da745da12ce5bbe0eaeb46e5d9407c54f87110b44610bb847a8163b3",
+    "strictCodesignExitCode": 0
+  },
+  "latestP32": {
+    "inputCountRehashed": 2335,
+    "inputMismatches": [],
+    "engineeringChecksReexecuted": false,
+    "recordedCheckCount": 7,
+    "recordedExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "recordedCounts": {
+      "frontend": {
+        "files": 693,
+        "passed": 9321,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2326,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    "rawLogsRehashed": [
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/format.stdout",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/format.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/typecheck.stdout",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/typecheck.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/frontend-test-direct.stdout",
+        "sha256": "2bf42ecacc7e581d4aa678caf7656bdfc741aa5132bc9b5541d5643f3eb0c463"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/frontend-test-direct.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/build.stdout",
+        "sha256": "4594df9cb5cd6671524327f619fd19c57fa22d6fb7d0c56bd0dccfaed2c21d89"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/build.stderr",
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-fmt.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-fmt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-clippy.stderr",
+        "sha256": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-test.stdout",
+        "sha256": "693317b0febeb0cef960382571828382362e6876420b90640f5bbc73e762dac2"
+      },
+      {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-test.stderr",
+        "sha256": "fc54fea887e68aba69d4db4bfbbd66f06f53bb8ad52587a7e5778d8bdf0429fe"
+      }
+    ],
+    "committed": false,
+    "packaged": false,
+    "installed": false,
+    "formalAffectedPathVerified": false
+  },
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-30-p32-continuation/engineering/engineering-summary.json",
+      "sha256": "3a231fe847680ae49f5f2237cb24165d6a42a3f651b72905191fa14ceb83a7f0"
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/engineering/independent-review/summary.json",
+      "sha256": "fa440377563da286f77bb1392c7f09141112e07ca3bc7501df12419ccf01172b"
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/native-current/root-observations.json",
+      "sha256": "521fe955e56ec41867e2038a59cd81f50f01c0bbe1bd329c7a5c1050d7f92b14"
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/static-template-review.json",
+      "sha256": "0a59e77c60046df1c081b16ba66de10e70fd7e4cac550bde992a233e1e1dcae8"
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p18-continuation/formal-installation-summary.json",
+      "sha256": "83c63391d1be28ea5d1aa571a1d7b21fda2e7e521fc47cea71ee99b3a28a1e92"
+    },
+    {
+      "path": "docs/evidence/2026-10-30-p18-continuation/readonly-summary.json",
+      "sha256": "1e63e34d2349ba723630c3c5ecd467f3fcf72458767fb8b91eb12799711287de"
+    }
+  ],
+  "limits": [
+    "Only current readback and documentation alignment in this turn; no new product tests, UI actions, Agent requests, account changes or app updates.",
+    "Prior success/failure/incomplete observations retain their original scope; no whole requirement or 29x8 acceptance added.",
+    "P32 original source graph excludes status/plan; preexisting requirements and production/test bytes are preserved.",
+    "Running processes do not establish idle state or completion of old unknown requests."
+  ]
+}
