@@ -126,6 +126,7 @@ describe("real file reports", () => {
         kind: "command",
         title: "check",
         output: "actual output",
+        outputTruncated: false,
         status: "completed",
         failed: false,
         time: 2,

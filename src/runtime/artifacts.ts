@@ -12,7 +12,7 @@ import {
   type ToolContent,
 } from "./session_types";
 
-/** 命令卡输出上限：保留尾部 ~64KB。 */
+/** 命令卡输出上限：尾部最多65536个UTF-16单元。 */
 export const COMMAND_OUTPUT_CAP = 64 * 1024;
 
 /**
@@ -36,6 +36,7 @@ export type PaneCard =
       kind: "command";
       title: string;
       output: string;
+      outputTruncated: boolean;
       status: string;
       failed: boolean;
       time: number;
@@ -44,17 +45,39 @@ export type PaneCard =
       kind: "log";
       title: string;
       output: string;
+      outputTruncated: boolean;
       status: string;
       failed: boolean;
       time: number;
     };
 
+/** Shrink a clipped suffix only when its boundary would split a source pair.
+ * Do not normalize isolated code units already present in the source. */
+function outputTail(text: string) {
+  let start = Math.max(0, text.length - COMMAND_OUTPUT_CAP);
+  if (
+    start > 0 &&
+    text.charCodeAt(start - 1) >= 0xd800 &&
+    text.charCodeAt(start - 1) <= 0xdbff &&
+    text.charCodeAt(start) >= 0xdc00 &&
+    text.charCodeAt(start) <= 0xdfff
+  )
+    start++;
+  return { output: text.slice(start), outputTruncated: start > 0 };
+}
+
 /** Prefer nonempty terminal/raw output (a string or an object's `output` field),
  *  then the concatenated `text` content. Empty placeholders must not hide an
- *  actual text result. Capped to the last
- *  [`COMMAND_OUTPUT_CAP`] bytes-ish (chars). */
-function commandOutput(call: ToolCallView): string {
-  if (call.terminalOutput) return call.terminalOutput;
+ *  actual text result. The chosen source alone owns its clipping indication. */
+function commandOutput(call: ToolCallView) {
+  if (call.terminalOutput) {
+    const tail = outputTail(call.terminalOutput);
+    return {
+      ...tail,
+      outputTruncated:
+        call.terminalOutputTruncated === true || tail.outputTruncated,
+    };
+  }
   const raw = call.rawOutput;
   let text: string | null = null;
   if (typeof raw === "string") {
@@ -71,9 +94,7 @@ function commandOutput(call: ToolCallView): string {
       .map((c) => c.text)
       .join("");
   }
-  return text.length > COMMAND_OUTPUT_CAP
-    ? text.slice(-COMMAND_OUTPUT_CAP)
-    : text;
+  return outputTail(text);
 }
 
 /** Normalized passive output; verify tool/terminal ownership before appending. */
@@ -91,9 +112,10 @@ export function appendToolOutput(
     )
   )
     return;
-  item.call.terminalOutput = (
-    (item.call.terminalOutput ?? "") + event.data
-  ).slice(-COMMAND_OUTPUT_CAP);
+  const tail = outputTail((item.call.terminalOutput ?? "") + event.data);
+  item.call.terminalOutput = tail.output;
+  item.call.terminalOutputTruncated =
+    item.call.terminalOutputTruncated === true || tail.outputTruncated;
 }
 
 /** Some agents report an edit/write call without a `type:"diff"` content
@@ -143,23 +165,23 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
       toolActivityState(s, item.call) === "unknown"
         ? "unknown"
         : item.call.status;
+    const output = commandOutput(item.call);
     if (item.call.kind === "execute") {
       cards.push({
         kind: "command",
         title: item.call.title || item.call.name || "",
-        output: commandOutput(item.call),
+        ...output,
         status,
         failed: item.call.status === "failed",
         time,
       });
     }
     if (item.call.kind !== "execute") {
-      const output = commandOutput(item.call);
-      if (output)
+      if (output.output)
         cards.push({
           kind: "log",
           title: item.call.title || item.call.name || "",
-          output,
+          ...output,
           status,
           failed: item.call.status === "failed",
           time,

@@ -1,0 +1,92 @@
+{
+  "kind": "P18BoundedCommandOutputTailSourcePublicSummary",
+  "recordedAt": "2026-10-30T08:55:16.911713+00:00",
+  "requirementIds": ["P18"],
+  "problem": [
+    "A valid pair at the65536-UTF16-unit suffix boundary could become an isolated low surrogate.",
+    "An exact-cap uncut result was falsely shown as truncated because UI inferred clipping from length.",
+    "A manually supplied oversized terminal view bypassed the card cap."
+  ],
+  "change": [
+    "Clip only when the original boundary splits a high/low pair, shrinking the suffix by one unit; leave existing isolated source code units unchanged.",
+    "Carry actual source-specific clipping evidence into cards; streamed terminal clipping stays true across later small/empty chunks.",
+    "Keep existing terminal/raw/content priority, ownership guards, official raw payloads/status and200-line display limit. No extra persistent store or per-Agent branch."
+  ],
+  "sourceInputs": [
+    {
+      "path": "src/runtime/artifacts.ts",
+      "sha256": "4727d6d63262e6c58f0059f759885293e080a2ef77b043e9cf15623a2f5bea5d"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "5cabdd7eded70befccc98f7dde30e0e6f53ef0d1555ad518cc981823da634de5"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "ac6e1d23d09255005be63c8cdf2a0e5d30c8d06256893e2b99483cc78fd084e6"
+    }
+  ],
+  "tests": {
+    "runtimeRed": {
+      "files": 1,
+      "failed": 33,
+      "passed": 0,
+      "naturalExitCode": 1,
+      "limit": "Many controls fail only because the new clipping field is absent;33 are not33 independent product defects.",
+      "reference": {
+        "path": "output/2026-10-30-p18-live-command/p18-output-tail/runtime-red/result.json",
+        "sha256": "a6e199e8373a3dd2745cedd58075d2893ba5557c7c15b8de9b7deb02c839790e"
+      }
+    },
+    "componentRed": {
+      "files": 1,
+      "failed": 8,
+      "passed": 1,
+      "naturalExitCode": 1,
+      "reference": {
+        "path": "output/2026-10-30-p18-output-tail/component-red-exit.json",
+        "sha256": "e153f5bd2ee7416d77570b30ba1de5bb9196c55f8d145e34df9dab12190ffe43"
+      }
+    },
+    "affectedGreen": {
+      "passed": 240,
+      "failed": 0,
+      "naturalExitCode": 0,
+      "reference": {
+        "path": "output/2026-10-30-p18-output-tail/affected-result.json",
+        "sha256": "e40145a078828f45eb89fb5ca2a5786b16ab75d7f6037965777be6ff95693d15"
+      }
+    },
+    "coverage": [
+      "raw string/output-field/content/terminal × command/log",
+      "CAP+1 split, exactCAP full pair, pair at retained start",
+      "terminal small/empty updates and direct split chunks",
+      "mismatched tool/terminal no append",
+      "source isolated units not sanitized",
+      "real ArtifactPane rendering clipping notice and200-line limit"
+    ],
+    "kinds": "Synthetic actual projection/component checks; no Agent/installed boundary acceptance."
+  },
+  "independentSourceReview": {
+    "path": "output/2026-10-30-p18-output-tail/independent-source-review.json",
+    "sha256": "3f63bedcc55875ceb72f16d637eed81c3652db768146f9025307b45b8b0c7312"
+  },
+  "engineering": {
+    "path": "output/2026-10-30-p18-output-tail/engineering/engineering-summary.json",
+    "sha256": "a5456c2ab024ac68a5fc26b8b412c58d04bd66466d87d6d15880deec38b1ddbf"
+  },
+  "bounds": {
+    "maxRetainedUtf16Units": 65536,
+    "displayedLineLimit": 200,
+    "rawSourceUnchanged": true,
+    "approvalChanges": false,
+    "formalInstalled": false,
+    "fullP18Accepted": false,
+    "all29Accepted": false,
+    "resourceLimit": "Large incoming chunk concatenation transient memory not measured; no RSS claim."
+  },
+  "remaining": [
+    "Formal candidate/install and actual regression of this source increment.",
+    "Real live command pane/unknown tools/full P18 remain open; earlier180-second incomplete observation is separately retained."
+  ]
+}

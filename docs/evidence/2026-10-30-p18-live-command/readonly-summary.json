@@ -1,0 +1,87 @@
+{
+  "kind": "P18SingleLiveCommandFormalPublicSummary",
+  "recordedAt": "2026-10-30T08:45:46.708640+00:00",
+  "requirementIds": ["P18"],
+  "formalSource": "d503a3900b1b81021c8f6c865ea4aa61f36133f6",
+  "formalExecutableSha256": "67f117607f1b52feeff8a1ef0986420d0cd5cebc414161389c11b37bcab1769a",
+  "environment": {
+    "application": "Farfold 0.1.7, ai.farfold.desktop, macOS arm64",
+    "agent": "Original selected Mistral conversation",
+    "displayedModel": "Mistral Medium3.5, unchanged",
+    "agentVersionAndServiceIdentity": "Not newly verified by this observation; no account, service, model or reasoning choice changed."
+  },
+  "result": "Not completed inside the declared180-second observation window; full P18 remains open.",
+  "actions": {
+    "recordedUiPromptSubmissions": 1,
+    "resubmissions": 0,
+    "stopRequests": 0,
+    "onceApproval": 1,
+    "rememberedApprovals": 0,
+    "modelOrPermissionSettingsChanges": 0,
+    "underlyingCommandInvocationCount": "Not independently established from UI."
+  },
+  "observations": [
+    "Prepared one bounded Python print/sleep20/print command; exact prompt confirmed before sending. New reported tool technical details matched the prepared command before one Allow once.",
+    "The approval card reported missing input. Full missing-input and command text were in AX; preapproval screenshots did not show all offscreen text. No raw request/tool/owner identity was captured.",
+    "The newly reported tool step was observed in progress. The correct command pane was not observed while running: operator initially selected a file-view control. No retry filled the miss.",
+    "After completion, technical details showed both expected output lines, exact P18_LIVE_DONE_20261030, completed and idle labels. Correct command pane later displayed the same two lines. No raw OS exit code or external process stop proof was captured.",
+    "Temporary technical details, tool step and pane were closed; original B3 permission-reconfirmation notice stayed and four full AX draft strings matched before/after. Pixel crops do not independently prove every draft character."
+  ],
+  "timing": {
+    "declaredBudgetSeconds": 180,
+    "approvalSecondsFromSend": 205.702,
+    "terminalObservationSecondsFromSend": 251.495,
+    "correctCommandPaneSecondsFromSend": 408.289,
+    "origin": "Root original CUA observations; approval delay independently recomputed from recorded ISO points. Later two delays are Root-reported, not independently timed by saved AX or filesystem mtime."
+  },
+  "approvalInvestigation": {
+    "decision": "No production change; retain only frozen per-request input and honest missing-input notice.",
+    "reason": "Current-owner and same-tool-ID context cannot exclude a delayed old tool event on the same connection. Ordinary update/permission fields do not prove the input belongs to this approval.",
+    "uniqueLiveRootCause": "Unknown; no attribution to Farfold or official Agent and no request repeated solely to recover IDs."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p18-live-command/preparation.json",
+      "bytes": 2413,
+      "sha256": "67d89648d7c348b9adc903f3cceaaebdf19f7e7aa84e185dbf89ef64fea34c6c"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/send-attempt.json",
+      "bytes": 215,
+      "sha256": "16bea343e8f42dfcb2d5eabbdec3e779093d8c0cb39df0fa96f5aad871bcba58"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/root-observations.json",
+      "bytes": 11538,
+      "sha256": "a67aef08bc8e2e54365dc4f0d96fa003957a4fe21e38180351896b7e03e5bb52"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/b3-restoration.json",
+      "bytes": 1744,
+      "sha256": "3e9de68eddb0299ff22400da0373dea57a29f961de700d0906d86bdc16ca9a89"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/independent-saved-evidence-review-r2.json",
+      "bytes": 13097,
+      "sha256": "d9b7027ea1adc4837d2a5bf6d30973d6ed23e424e797b72017cd93742204d1d4"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/approval-investigation/current-source-trace.json",
+      "bytes": 13165,
+      "sha256": "37226bcf6c637f806a7e07f1c10e1c6023a6ffc88ba8dca0270257b853fb13b2"
+    },
+    {
+      "path": "output/2026-10-30-p18-live-command/approval-investigation/minimum-safe-design.json",
+      "bytes": 5297,
+      "sha256": "0325e0da169b20546dcc47f3cc8ff39930d6aefe97ed2a308a9c70a5aa158c82"
+    }
+  ],
+  "notAccepted": [
+    "Live command-pane updates",
+    "Unknown-tool state",
+    "Full P18",
+    "OS process exit/stop",
+    "Other Agents/configurations/platforms",
+    "29 Agents eight standards"
+  ]
+}

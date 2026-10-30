@@ -81,6 +81,8 @@ export interface ToolCallView extends ReportedDetailsOwner {
   rawOutput?: unknown;
   /** Read-only output streamed by the Agent's own terminal. */
   terminalOutput?: string;
+  /** Earlier terminal output was omitted by the in-memory tail bound. */
+  terminalOutputTruncated?: boolean;
 }
 
 export type ThreadItem = (

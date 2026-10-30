@@ -42,7 +42,6 @@ import {
   TerminalWindowIcon,
   SidebarSimpleIcon,
 } from "@phosphor-icons/react";
-import { COMMAND_OUTPUT_CAP } from "../runtime/artifacts";
 import {
   artifactFiles,
   artifactPaneCards,
@@ -68,7 +67,7 @@ function CommandCard({
   const all = card.output ? card.output.split("\n") : [];
   const clipped = all.length > TERMINAL_LINE_CAP;
   const shown = clipped ? all.slice(-TERMINAL_LINE_CAP) : all;
-  const truncated = clipped || card.output.length >= COMMAND_OUTPUT_CAP;
+  const truncated = clipped || card.outputTruncated;
   const statusLabel =
     card.status === "failed"
       ? STRINGS.artifacts.failedLog
