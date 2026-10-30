@@ -1,0 +1,133 @@
+{
+  "kind": "P32SelectionAndExcerptFormalInstallationSummary",
+  "recordedAt": "2026-10-30T07:58:43.797620+00:00",
+  "sourceCommit": "d503a3900b1b81021c8f6c865ea4aa61f36133f6",
+  "requirementIds": ["P32"],
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "67f117607f1b52feeff8a1ef0986420d0cd5cebc414161389c11b37bcab1769a",
+    "strictAdHocCodesignVerified": true
+  },
+  "candidate": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "rootObservedSessionId": 20788,
+    "independentPassed": 9,
+    "independentTotal": 9,
+    "archive": "src-tauri/target/internal-candidate/p32-search-d503a390/Farfold-0.1.7-d503a390.zip",
+    "archiveSha256": "77b128193e6c27527a976e5635a85fd449bac3ca3f9eb95e603e465a2b368be0"
+  },
+  "normalExit": {
+    "rootObserved": true,
+    "forcedQuit": false,
+    "draftRecordedBeforeQuit": true,
+    "unknownWorkRemainsUnknown": true
+  },
+  "installation": {
+    "naturalExitCode": 0,
+    "rootObservedSessionId": 7119,
+    "installed": true,
+    "fileCount": 5,
+    "newInodePerFile": true,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "independentPassed": 6,
+    "independentTotal": 6
+  },
+  "retention": {
+    "phaseCounts": {
+      "before": 232530,
+      "preinstall": 232530,
+      "after": 232530
+    },
+    "allThreeFullManifestsByteEqual": true,
+    "manifestSha256": "61f6ee5cdd0b331eceef65bfd4396c587a97e0f4c0253b7e82b15e8fb18097f7",
+    "metadataBackupSha256": "2af82272078b060bcac4cedd0e9b853a17b2757e4536274a26a55166ecbe0750",
+    "backupIntegrity": "ok",
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly",
+    "integrityRequeriedByIndependentReader": false,
+    "originalAndFirstCaptureUnchanged": true
+  },
+  "cleanup": {
+    "naturalExitCode": 0,
+    "exactGeneratedFileCount": 5,
+    "exactGeneratedDirectoryCount": 5,
+    "archiveRetained": true,
+    "formalAppRetained": true
+  },
+  "engineeringBoundary": {
+    "fullSevenRanBeforeCommit": true,
+    "fullInputsExactlyMatchSeven": true,
+    "fullInputCount": 2335,
+    "checksRerunAtFinalCommit": false,
+    "sourceHashEndpointEqualityNotContinuousWriterProof": true
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/candidate-output/candidate.json",
+      "sha256": "30b69015508dd6112275fa851c949ae7e45625cf7aa76115247b01bd3e472739",
+      "bytes": 554471
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/root-candidate-natural-completion.json",
+      "sha256": "da50b95d58d31f16377fd61d3ea425f07a68a7db537b5b4e9ad983e3d61c98aa",
+      "bytes": 710
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/independent/review-v2.json",
+      "sha256": "dc071f29bc142271ca0b6ead428febc7bb99b1acf9b3b37189df23d6cf8f92a9",
+      "bytes": 4889
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/root-normal-exit-b3-ui.json",
+      "sha256": "5361f2a0e3d2f62fb2775512df31d801c0152a6f32af2330fc6a54b6541d89d3",
+      "bytes": 1982
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/root-install-completion.json",
+      "sha256": "cbf365da7c59c572396bd8756925dfd981530538d17d4fe7cd6fda0a0c55c27a",
+      "bytes": 1293
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/install-result.json",
+      "sha256": "c9e8f24e24bf9c8f5b812988b961672912e2a33346718025b27536658bbbe988",
+      "bytes": 12874
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/retention-before-receipt.json",
+      "sha256": "0118f5685217586c76dc0741e077477b5057c13eaa07b9de86b9d683272e3fb3",
+      "bytes": 5949
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/retention-preinstall-receipt.json",
+      "sha256": "8829e9b9f929ca8d0b893cd293c298834094c1d9ab5c813f526fc8c187bdc7a0",
+      "bytes": 3054
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/retention-after-receipt.json",
+      "sha256": "e2419d16246dc94a5b593a9cad8fc18349e38a3b08298d961a2e86aa4092fda4",
+      "bytes": 3049
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/installed-independent-review-private.json",
+      "sha256": "5ad92ef119a7054e0c835ca194fb0f03bc6b25c3fcff7bca68b510a82dad53a9",
+      "bytes": 7037
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/install/candidate-cleanup.json",
+      "sha256": "816c8be11b01a0e3ac2a9dd54fbb37d10aa913a7b20e4a7f334d78e0da28f5a5",
+      "bytes": 7174
+    }
+  ],
+  "limits": [
+    "Installation and closed byte-retention proof only; actual post-launch UI behavior and P32 regressions are recorded separately.",
+    "Five per-file atomic replacements, not one atomic transaction for the complete bundle.",
+    "Starting the App legitimately changes user storage; closed-state equality is not claimed after launch.",
+    "No model send, Stop, login, permission/model change, data restore or unknown-result retry performed by this installation.",
+    "No full P32, complete standard, whole Agent, Windows or29x8 acceptance added.",
+    "Pre-quit saved AX reference contained a no-change notice; initial full text was observed in the getApp tool response. Strict four-string artifact equality across this update is not claimed; post-launch/final text comparison is recorded separately."
+  ]
+}

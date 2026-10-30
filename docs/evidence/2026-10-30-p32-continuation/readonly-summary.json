@@ -1,0 +1,128 @@
+{
+  "kind": "P32FormalSelectedHistoryAndAttachmentReadonlySummary",
+  "recordedAt": "2026-10-30T08:09:37.857201+00:00",
+  "sourceCommit": "d503a3900b1b81021c8f6c865ea4aa61f36133f6",
+  "requirementIds": ["P32"],
+  "standardIds": [],
+  "evidenceLevel": "installed actual selected original object; no new model send",
+  "history": {
+    "agent": "Mistral Vibe",
+    "originalTitlePrefix": "Reply only MISTRAL_READY_20261024. Do no",
+    "cwd": "output/2026-10-24-agent-acceptance/mistral-formal-e6e1/workspace",
+    "selectedOriginalObjects": 1,
+    "query": "settings",
+    "readInvocations": 1,
+    "returnedVisibleTextBlocks": 8,
+    "matchedTextBlocks": 4,
+    "omissionsWithinReturnedRange": 0,
+    "sourceConfirmed": false,
+    "uiReadEndedObserved": true,
+    "lowLevelProcessClosureClaimed": false,
+    "firstResultObservationSeconds": 46.09,
+    "twoDetailObservationUpperSeconds": 102.612,
+    "predefinedTwoAsciiListExcerptOraclesMatch": true,
+    "detailReadableContextsMatch": true,
+    "detailByteEqualityClaimed": false,
+    "axMarkSeparatorsPreservedInRawEvidence": true,
+    "pairCutBoundaryPresentInTheseInputs": false,
+    "normalOriginalOpenFromSameResult": 1,
+    "sourceRangeExpiredAfterNormalOpenNotSearchAlgorithmFailure": true,
+    "newModelSends": 0
+  },
+  "attachment": {
+    "query": "EXACT_NEEDLE",
+    "selectedFile": "p32-current.pdf",
+    "allCandidateCountObserved": 4,
+    "selectedCountSequence": [1, 0, 1],
+    "keyboardDeselectAndReselect": true,
+    "startDisabledWhenNoSelection": true,
+    "focusStayedOnStillListedPdfCheckbox": true,
+    "fileSearchInvocations": 1,
+    "filesReadOfSelected": [1, 1],
+    "matches": 1,
+    "page": 2,
+    "fragment": 2,
+    "readObservationSeconds": 15.418,
+    "readAndSourceNavigationSeconds": 48.057,
+    "originalSourceNavigationInvocations": 1,
+    "correctOriginalAttachmentGroupVisible": true,
+    "previewOpened": false,
+    "locationClosed": true,
+    "originalAttachmentFoldRestoredAfterLocationClose": true,
+    "finalTemporaryFileSelectionCleared": true,
+    "over1000ReorderAndDisappearingRowFocusBranchCovered": false,
+    "readCancellationTested": false
+  },
+  "b3": {
+    "postLaunchAndFinalFourCompleteUnsentStringsExact": true,
+    "stringSha256": [
+      "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1",
+      "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010",
+      "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95",
+      "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+    ],
+    "beforeQuitSavedAxWasNoChangeNotice": true,
+    "beforeQuitArtifactExactTextEqualityClaimed": false,
+    "initialGetAppCompleteTextObservedByRoot": true,
+    "permissionStillUnconfirmed": true,
+    "newMessageSends": 0
+  },
+  "restoration": {
+    "visibleLibraryFiltersRestored": true,
+    "returnedToOriginalB3": true
+  },
+  "actions": {
+    "newModelSends": 0,
+    "historyReadInvocations": 1,
+    "fileSearchInvocations": 1,
+    "StopActions": 0,
+    "unknownRetries": 0,
+    "newAttachmentsOrFixtureWrites": 0,
+    "loginPermissionOrModelChanges": 0
+  },
+  "acceptance": {
+    "completeP32Closed": false,
+    "completeStandardsAdded": 0,
+    "wholeAgentsAdded": 0,
+    "all29Accepted": false
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/readonly-current/root-observations.json",
+      "sha256": "12e9a4797c2c141297aa6750873809f21774bbc7b51784830be3dcad417f22a0",
+      "bytes": 3783
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/readonly-current/readback-error-r1.json",
+      "sha256": "2a81b854f1c4d1924cf3a77ceec30a66ce82c8db6ce1200e8d759bf539640f06",
+      "bytes": 657
+    },
+    {
+      "path": "output/2026-10-30-p32-continuation/formal/preparation-r2/readonly-regression-preparation.json",
+      "sha256": "d16efa3af5e1bed6aa29f795a407163919b0dda59dbb8890534d6f9591095501",
+      "bytes": 11100
+    }
+  ],
+  "independentReview": {
+    "path": "output/2026-10-30-p32-continuation/formal/readonly-current/independent-review.json",
+    "sha256": "2a37f022d480331f9e52ad5a2cbfc17ac568b84fae9cc9d25b15f0d2ebf4c646",
+    "bytes": 16475,
+    "selectedOriginalImagesViewed": 12,
+    "blockingFindings": 0
+  },
+  "rawEvidence": {
+    "directory": "output/2026-10-30-p32-continuation/formal/readonly-current",
+    "screenshots": 26,
+    "axStates": 26
+  },
+  "limits": [
+    "Only actually returned visible history and current selected PDF; not complete history, historical bytes, backend/model/account, Agent consumption, full P32 or all29 acceptance.",
+    "Two chosen ASCII cuts do not exercise UTF16 pair cuts; four real attachments do not exercise1000-item reorder or disappearing-row FIELDSET focus.",
+    "AX inserts mark separators in detail; readable context is observed, raw-text byte equality not claimed.",
+    "Pre-quit saved AX was a no-change notice; first-launch vs final four strings are checked, strict before/after artifact text equality is not claimed.",
+    "Library scope restoration first snapshot caught pending update; settled metadata scope was subsequently recorded without repeating selection or queries.",
+    "No product operation was repeated to repair a receipt/readback error.",
+    "Installation and closed data equality are in formal-installation-summary.json; not evidence of continuous zero data changes after launch.",
+    "Independent review viewed12 selected original pictures and corresponding AX; no new product actions or stronger whole-requirement conclusion."
+  ]
+}
