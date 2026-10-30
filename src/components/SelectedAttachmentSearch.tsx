@@ -61,6 +61,20 @@ export function SelectedAttachmentSearch({
   const keys = rows.map((r) => r.key),
     keySet = JSON.stringify([...keys].sort());
   const candidates = attachmentSearchCandidates(keys, snapshot.threads);
+  const listedCandidateIds = new Set(candidates.candidates.map((c) => c.id));
+  // Keep current selections visible even when the bounded candidate list moves.
+  // These are existing choices, not additional discovered or selected files.
+  const retainedSelections = selected.filter(
+    (source) =>
+      !listedCandidateIds.has(source.id) &&
+      attachmentSearchSourceCurrent(
+        source,
+        snapshot.threads,
+        keys,
+        snapshot.index,
+      ),
+  );
+  const shownCandidates = [...retainedSelections, ...candidates.candidates];
   const validSources = selected.every((s) =>
     attachmentSearchSourceCurrent(s, snapshot.threads, keys, snapshot.index),
   );
@@ -82,7 +96,20 @@ export function SelectedAttachmentSearch({
     controller.retire();
     setError(null);
   };
-  const choose = (candidate: AttachmentSearchCandidate, checked: boolean) => {
+  const choose = (
+    candidate: AttachmentSearchCandidate,
+    checked: boolean,
+    input?: HTMLInputElement,
+  ) => {
+    const fieldset = selectionFieldset.current;
+    if (
+      !checked &&
+      !listedCandidateIds.has(candidate.id) &&
+      fieldset &&
+      input &&
+      fieldset.ownerDocument.activeElement === input
+    )
+      fieldset.focus();
     invalidate();
     setSelected((old) =>
       checked ? [...old, candidate] : old.filter((s) => s.id !== candidate.id),
@@ -152,7 +179,7 @@ export function SelectedAttachmentSearch({
         {S.coverage(
           candidates.unloaded,
           candidates.unavailable,
-          candidates.omitted,
+          Math.max(0, candidates.omitted - retainedSelections.length),
         )}
       </p>
       <fieldset
@@ -165,7 +192,7 @@ export function SelectedAttachmentSearch({
         </legend>
         {!candidates.candidates.length && <p>{S.emptyCandidates}</p>}
         <div className="history-search-candidates">
-          {candidates.candidates.map((candidate) => {
+          {shownCandidates.map((candidate) => {
             const checked = selected.some((s) => s.id === candidate.id);
             return (
               <label key={candidate.id}>
@@ -183,7 +210,9 @@ export function SelectedAttachmentSearch({
                       )) ||
                     (!checked && selected.length >= 20)
                   }
-                  onChange={(e) => choose(candidate, e.target.checked)}
+                  onChange={(e) =>
+                    choose(candidate, e.target.checked, e.currentTarget)
+                  }
                 />
                 <span>
                   {candidate.name}

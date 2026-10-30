@@ -1,0 +1,143 @@
+{
+  "kind": "P32SelectionVisibilityAndHistoryExcerptSourcePublicSummary",
+  "recordedAt": "2026-10-30T07:41:55.824888+00:00",
+  "requirementIds": ["P32"],
+  "baseHead": "c655720a52fe87de61a6f1605a10a25fc2e32c8e",
+  "change": [
+    "Keep existing valid selected attachment sources visible and cancellable when the unchanged 1000-declaration list cap moves after row reordering; preserve source ownership, the 20-selection limit and explicit-read admission.",
+    "When cancelling a focused retained off-list checkbox, move focus to the existing fieldset before that row disappears; adjust only the displayed omission count.",
+    "Use the existing surrogate-pair-safe helper for list excerpts with unchanged 48/100 UTF-16 context budgets; add directional ellipses only for actual list clipping.",
+    "Keep the helper defaults at 56/88, original source text, match offsets, locators, query scope, full detail text and Agent/read behavior unchanged."
+  ],
+  "sourceInputs": [
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "sha256": "55bbe23204c75f3c6575a20d897c928bf44c01d4b44b2a57469bcc191b747967",
+      "bytes": 17749
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.selection-visibility.test.tsx",
+      "sha256": "3bdf77315384468a19b79853760099b47dca613c404e44ffd80c6354ed35d3b0",
+      "bytes": 11946
+    },
+    {
+      "path": "src/components/HistorySearchResults.tsx",
+      "sha256": "babe66acac890ec1b15afd2f3665235eccf367496512610405521af47ee3fb84",
+      "bytes": 4568
+    },
+    {
+      "path": "src/components/HistorySearchResults.test.tsx",
+      "sha256": "bdc6a7ae5070a776c8d48b07082c7bd98f8d532485de4ca72ffe951cf3d3d303",
+      "bytes": 7122
+    },
+    {
+      "path": "src/runtime/search_snippet.ts",
+      "sha256": "76784a47af0afa6b778ceab91a5bc0d411d51886a69310fad8e31e2421a1081e",
+      "bytes": 945
+    }
+  ],
+  "controlledTests": {
+    "selectionVisibility": {
+      "red": {
+        "files": 1,
+        "passed": 1,
+        "failed": 1,
+        "exitCode": 1,
+        "singleInvocation": true,
+        "reference": {
+          "path": "output/2026-10-30-p32-continuation/selection-visibility-red/run-result.json",
+          "sha256": "60dcb647fa5e6d244ca944ddbd016c09c631aeb09256e7583add32b4c1d52289",
+          "bytes": 4130
+        },
+        "readback": {
+          "path": "output/2026-10-30-p32-continuation/selection-visibility-red/readback-review.json",
+          "sha256": "8a4bfdd7cd599a3841f79ec3ef71d228a2e467813a9c1e54356554915b293ff3",
+          "bytes": 1849
+        }
+      },
+      "green": {
+        "files": 7,
+        "passed": 123,
+        "failed": 0,
+        "exitCode": 0,
+        "reference": {
+          "path": "output/2026-10-30-p32-continuation/selection-visibility-green/result.json",
+          "sha256": "f832c0868b6140bb8c2c55679f177e08341f5f9e3b085d4b04bb6fa85b0fc045",
+          "bytes": 3648
+        }
+      },
+      "newRegressionCases": 2,
+      "independentSourceReview": {
+        "path": "output/2026-10-30-p32-continuation/independent-selection-visibility-source-review.json",
+        "sha256": "97da676def4d55e5110ffa54210012b60d2d14bd91fb8cab531e1881e11d36ef",
+        "bytes": 9613
+      }
+    },
+    "listExcerpt": {
+      "red": {
+        "files": 1,
+        "passed": 12,
+        "failed": 4,
+        "exitCode": 1,
+        "reference": {
+          "path": "output/2026-10-30-p32-continuation/excerpt-boundary-red/result.json",
+          "sha256": "a27326577698c416ed48049d280e63c2de156c20f066e951264b3f28fb2f7a3a",
+          "bytes": 1198
+        },
+        "assertionReadback": {
+          "path": "output/2026-10-30-p32-continuation/excerpt-boundary-red/assertion-review.json",
+          "sha256": "bd0a16434e0be2e2692db29fec1cda0f33b8a9f4f86e03dc66322b6a5ad0618f",
+          "bytes": 792
+        }
+      },
+      "green": {
+        "files": 10,
+        "passed": 141,
+        "failed": 0,
+        "exitCode": 0,
+        "typecheckExitCode": 0,
+        "targetedFormatExitCode": 0,
+        "reference": {
+          "path": "output/2026-10-30-p32-continuation/excerpt-boundary-green/result.json",
+          "sha256": "b98d465fe45121cfc73a4fd0128875be5635babb040a22c925d0953266311744",
+          "bytes": 3072
+        }
+      },
+      "newRegressionCases": 12,
+      "priorReadOnlyDiagnostic": {
+        "countsAsTestRed": false,
+        "reference": {
+          "path": "output/2026-10-30-p32-continuation/excerpt-boundary-preparation/prior-ssr-diagnostic.json",
+          "sha256": "255a1abb2daad11ff9dc13e89550a626fcf6d1071c5d8e7e78a46018f4f0ee5e",
+          "bytes": 1448
+        }
+      },
+      "authorSummary": {
+        "path": "output/2026-10-30-p32-continuation/excerpt-boundary-source-summary.json",
+        "sha256": "f4fd7978161ff1364089afce8b941bbbe2cdc9d39024592a36abdcea280332f7",
+        "bytes": 3659
+      },
+      "independentSourceReview": {
+        "path": "output/2026-10-30-p32-continuation/excerpt-independent-review/review.json",
+        "sha256": "949496287e298e2b2ad0e23b4c0049907c3a131bdf1cb6088102d114089cc517",
+        "bytes": 10642
+      }
+    },
+    "countsFromOverlappingRunsAdded": false
+  },
+  "boundaries": {
+    "matcherFlagsChanged": false,
+    "agentSpecificUiAdded": false,
+    "persistentBodyStoreAdded": false,
+    "realFilesReadByTests": false,
+    "newRealSends": 0,
+    "formalInstalledByThisBatch": false,
+    "completeP32Accepted": false,
+    "all29Accepted": false
+  },
+  "limits": [
+    "React hook/SSR and wire controls prove the covered synthetic interfaces only; browser controls and engineering are separate summaries.",
+    "Pair-safe clipping does not promise whole grapheme clusters; isolated-code-unit rendering is synthetic and does not prove the strict official parser admits it.",
+    "Original failure evidence, prior P12 failures and NEW-24-affected new-send pause remain."
+  ]
+}

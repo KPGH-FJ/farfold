@@ -1,0 +1,223 @@
+{
+  "kind": "P32SelectionAndExcerptBatchEngineeringPublicSummary",
+  "recordedAt": "2026-10-30T07:41:55.824888+00:00",
+  "requirementIds": ["P32"],
+  "baseHead": "c655720a52fe87de61a6f1605a10a25fc2e32c8e",
+  "checksRanBeforeCommit": true,
+  "checksRanAtFinalCommit": false,
+  "allSevenSucceeded": true,
+  "inputCount": 2335,
+  "sourceHashEndpointsEqual": true,
+  "counts": {
+    "frontend": {
+      "files": 693,
+      "passed": 9321,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ]
+  },
+  "naturalExitCodes": {
+    "format": 0,
+    "typecheck": 0,
+    "frontend-test-direct": 0,
+    "build": 0,
+    "cargo-fmt": 0,
+    "cargo-clippy": 0,
+    "cargo-test": 0
+  },
+  "actualRun": {
+    "path": "output/2026-10-30-p32-continuation/engineering/engineering-summary.json",
+    "sha256": "3a231fe847680ae49f5f2237cb24165d6a42a3f651b72905191fa14ceb83a7f0",
+    "bytes": 5971
+  },
+  "authorReadback": {
+    "path": "output/2026-10-30-p32-continuation/engineering/engineering-readback-review.json",
+    "sha256": "26ae2469e8ec6c18f4b110ac53d758e0e51b2b5bdf381f1ff8794114b7cdadc4",
+    "bytes": 12175
+  },
+  "independentReview": {
+    "path": "output/2026-10-30-p32-continuation/engineering/independent-review/summary.json",
+    "sha256": "fa440377563da286f77bb1392c7f09141112e07ca3bc7501df12419ccf01172b",
+    "bytes": 5386
+  },
+  "sourceEndpoints": {
+    "expected": {
+      "path": "output/2026-10-30-p32-continuation/engineering/source-expected.json",
+      "sha256": "490bead628b281b04c5f4335b7825f8da926040aa1c0033c2d362c78ad6b256f",
+      "bytes": 274904
+    },
+    "before": {
+      "path": "output/2026-10-30-p32-continuation/engineering/source-before.json",
+      "sha256": "1e72b2f17b363cc08aec1d39f9b3db1702e0e144713b7b79348d81793e9a006e",
+      "bytes": 276257
+    },
+    "after": {
+      "path": "output/2026-10-30-p32-continuation/engineering/source-after.json",
+      "sha256": "6edbf63e1ddd67ab50262bd4cc5fe030a56e2ff83d6c67c3730b15348e8abd2f",
+      "bytes": 276258
+    },
+    "independentCurrent": {
+      "path": "output/2026-10-30-p32-continuation/engineering/independent-review/current-inputs.json",
+      "sha256": "198e12df1365e4296d84ad08913da7668ab2c892ad0f375a6344766b95e91853",
+      "bytes": 433867
+    },
+    "modesAfter": {
+      "path": "output/2026-10-30-p32-continuation/engineering/source-mode-after.json",
+      "sha256": "188b215f50c806d52730db4dc67c42cf1af56388cf21a75e301e849d454c19cc",
+      "bytes": 384567
+    }
+  },
+  "publicSummaryReadback": {
+    "checkedAt": "2026-10-30T07:41:55.824888+00:00",
+    "currentInputHashesAndModesChecked": 2335,
+    "mismatches": 0,
+    "rawLogHashesChecked": 14,
+    "rawLogMismatches": 0,
+    "testOrBuildReruns": 0
+  },
+  "rawLogs": [
+    {
+      "check": "format",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/format.stdout",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/format.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "check": "typecheck",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/typecheck.stdout",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/typecheck.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "check": "frontend-test-direct",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/frontend-test-direct.stdout",
+        "sha256": "2bf42ecacc7e581d4aa678caf7656bdfc741aa5132bc9b5541d5643f3eb0c463",
+        "bytes": 289
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/frontend-test-direct.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "check": "build",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/build.stdout",
+        "sha256": "4594df9cb5cd6671524327f619fd19c57fa22d6fb7d0c56bd0dccfaed2c21d89",
+        "bytes": 4624
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/build.stderr",
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+        "bytes": 360
+      }
+    },
+    {
+      "check": "cargo-fmt",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-fmt.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-fmt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "check": "cargo-clippy",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-clippy.stderr",
+        "sha256": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0",
+        "bytes": 72
+      }
+    },
+    {
+      "check": "cargo-test",
+      "stdout": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-test.stdout",
+        "sha256": "693317b0febeb0cef960382571828382362e6876420b90640f5bbc73e762dac2",
+        "bytes": 267793
+      },
+      "stderr": {
+        "path": "output/2026-10-30-p32-continuation/engineering/cargo-test.stderr",
+        "sha256": "fc54fea887e68aba69d4db4bfbbd66f06f53bb8ad52587a7e5778d8bdf0429fe",
+        "bytes": 605
+      }
+    }
+  ],
+  "toolOnlyErrorsRetained": [
+    {
+      "phase": "preparation",
+      "exitCode": 1,
+      "engineeringCommandsStartedBeforeFailure": 0,
+      "meaning": "Typed prior-wrapper literal binding failed; actual AST assignments were read and the already-written expected map retained after verification.",
+      "reference": {
+        "path": "output/2026-10-30-p32-continuation/engineering/preparation-attempt-1.json",
+        "sha256": "672688699a3ee2e2153139fa3e21903c4e8af789efecff31ce7afa06e94a2232",
+        "bytes": 535
+      }
+    },
+    {
+      "phase": "post-run-readback",
+      "exitCode": 1,
+      "engineeringAlreadyComplete": true,
+      "engineeringCommandsRerun": 0,
+      "meaning": "System Python lacked zip(strict=...); original mode-after receipt was retained and compared after an explicit length assertion.",
+      "reference": {
+        "path": "output/2026-10-30-p32-continuation/engineering/readback-attempt-1.json",
+        "sha256": "89c984184d183ce6295532fd9a1d595e1aa9d73d0ee1e996706a0f8065c08bc1",
+        "bytes": 485
+      }
+    }
+  ],
+  "diagnosticsRetained": {
+    "viteLargeChunkAdvisoryCount": 1,
+    "zipWriterStoppedWriteDiagnosticCount": 4,
+    "ignoredRustTests": 6,
+    "ignoredNamesAndReasonsSameAsP18": true
+  },
+  "limits": [
+    "Hash and mode equality at recorded endpoints does not prove continuous writer absence, frozen dependency installation bytes or unchanged environment.",
+    "Seven natural integer zeros are from preserved command-completion records; independent review rechecked evidence without rerunning commands.",
+    "Precommit evidence only. Later documentation/commit binding must be checked separately; not formal installation, real affected-path, full P32, Windows or all29 acceptance."
+  ]
+}

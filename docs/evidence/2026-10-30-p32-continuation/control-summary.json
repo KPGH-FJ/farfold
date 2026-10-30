@@ -1,0 +1,241 @@
+{
+  "kind": "P32SyntheticActualSourceNativeControlPublicSummary",
+  "recordedAt": "2026-10-30T07:41:55.824888+00:00",
+  "requirementIds": ["P32"],
+  "observation": {
+    "imageAndAxPairs": 9,
+    "operatorObservation": {
+      "path": "output/2026-10-30-p32-continuation/native-current/root-observations.json",
+      "sha256": "521fe955e56ec41867e2038a59cd81f50f01c0bbe1bd329c7a5c1050d7f92b14",
+      "bytes": 2233
+    },
+    "selection": {
+      "selected": 1,
+      "reorderedRowsOnly": true,
+      "retainedNameTitlePathAndChecked": true,
+      "omittedWhileRetained": 0,
+      "keyboard": ["TabFromAtoB", "ShiftTabBackToA", "SpaceCancelA"],
+      "afterCancel": {
+        "selected": 0,
+        "startDisabled": true,
+        "retainedRowRemoved": true,
+        "focus": "FIELDSET"
+      },
+      "serviceTraps": {
+        "inspect": 0,
+        "read": 0,
+        "check": 0
+      },
+      "sourceIdentityStable": true
+    },
+    "excerpts": {
+      "casesObserved": 4,
+      "actualListMatchesFixedOracle": true,
+      "fullDetailPreserved": true,
+      "officialRequests": 0,
+      "previewClicks": 0
+    },
+    "newRealSends": 0
+  },
+  "sourceAndBuild": {
+    "actualProductionComponentsAndReactHooks": true,
+    "privateComponentSubstitutes": false,
+    "fixtureStyleOverrides": 0,
+    "cssSourceGraphFiles": 45,
+    "cssSourceGraphExternalFiles": 1,
+    "formalBundleInjectionMeasured": false,
+    "sourceGraphCount": 1436,
+    "controlInputCount": 13,
+    "outputFiles": 72,
+    "buildExitCode": 0,
+    "build": {
+      "path": "output/2026-10-30-p32-continuation/controls/current-source-control/execution-r1/build-result.json",
+      "sha256": "2deb346824c2af7c18b702ca3eb2c6c34c5c6b0f60990729cf491c30cd99f697",
+      "bytes": 4943
+    },
+    "preparationReadback": {
+      "path": "output/2026-10-30-p32-continuation/controls/current-source-control/build-readback.json",
+      "sha256": "5f4da6b69bda6b51e8cac15c327ccb68f79714d466ef5ed453a159d6d799aa65",
+      "bytes": 3678
+    },
+    "artifactManifest": {
+      "path": "output/2026-10-30-p32-continuation/controls/current-source-control/artifact-manifest.json",
+      "sha256": "e6178d91228872b1fdbf94c3c796a6dc3213d67369d7b91d9b3425e24ba724c1",
+      "bytes": 28309
+    }
+  },
+  "imagesAndAx": [
+    {
+      "label": "01-initial",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/01-initial.jpg",
+        "sha256": "94fb8d2c428168730e62ae0e21582109188f4befd2d73f389cdac2a6f36ae4be",
+        "bytes": 59866
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/01-initial.ax.txt",
+        "sha256": "65dd06e20026e15f7c173dff4ca907297720f01290009a5d47ce2582029f4643",
+        "bytes": 223903
+      }
+    },
+    {
+      "label": "02-selected-a",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/02-selected-a.jpg",
+        "sha256": "ce12f44ec81ae71c60546792482cf12b2a14b87ac3eb1325a325a2028c2914bd",
+        "bytes": 60378
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/02-selected-a.ax.txt",
+        "sha256": "7c84bfc5413f275914993d5540a8b24ddcecc56609ae52cc6cc50ba8f24cc7e9",
+        "bytes": 224031
+      }
+    },
+    {
+      "label": "03-reordered-a-retained",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/03-reordered-a-retained.jpg",
+        "sha256": "c095e15bacaa87fc20061d008960d9d63c0561789ad5eef0d2c7f8081ca52a53",
+        "bytes": 59249
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/03-reordered-a-retained.ax.txt",
+        "sha256": "3ff8e28bc1a159ded9563f6a17737b277bcd5fb4d7bc06dbae63238e369c356f",
+        "bytes": 223815
+      }
+    },
+    {
+      "label": "04-keyboard-a-focused",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/04-keyboard-a-focused.jpg",
+        "sha256": "c4a18805358ce32a4937bc87abfe8bfc6df9ec6f17c3237cbd5ba016d41035b4",
+        "bytes": 62138
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/04-keyboard-a-focused.ax.txt",
+        "sha256": "7b18789593248c68e3903d8e4e1e844323bd074fe387051b47dbb15ffb624efc",
+        "bytes": 223989
+      }
+    },
+    {
+      "label": "05-keyboard-a-cancelled",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/05-keyboard-a-cancelled.jpg",
+        "sha256": "79992bab9a1be451f8fc9ee1ffb12a9dd93fd0d5e28a9c5f5b1acc5c8d78da80",
+        "bytes": 66603
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/05-keyboard-a-cancelled.ax.txt",
+        "sha256": "1226ea2783be1aaa67a4685af37d1d237490305f51e1ddd234998d105ab22cf8",
+        "bytes": 223899
+      }
+    },
+    {
+      "label": "06-excerpts-first",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/06-excerpts-first.jpg",
+        "sha256": "af6b2fde5610789a7d92a37523a5658dcbe8e992d000065da7db153c4ce1a618",
+        "bytes": 53959
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/06-excerpts-first.ax.txt",
+        "sha256": "9725c611f21afa8b45d7027ec2c88ba65d66a7f9361141f0ee94ec751b3137b5",
+        "bytes": 2365
+      }
+    },
+    {
+      "label": "07-excerpts-right",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/07-excerpts-right.jpg",
+        "sha256": "657578b89412385a6a7505fc0214bad20b3c56ef86f1cc002803a7323aafdfa9",
+        "bytes": 62427
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/07-excerpts-right.ax.txt",
+        "sha256": "2284c21b8c3e510dc544de53544fa8a60268f165520cba9bceec7a9f8a9089f3",
+        "bytes": 2570
+      }
+    },
+    {
+      "label": "08-excerpts-ascii",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/08-excerpts-ascii.jpg",
+        "sha256": "500e7f91198433e603a810fd7e501be7dd6ea6f6748dd797faef3a7edfa2c565",
+        "bytes": 69316
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/08-excerpts-ascii.ax.txt",
+        "sha256": "e056193a3088d8e6b03bdd453bfc5a5cb99db8e5ad598155afa8ddba0bd90045",
+        "bytes": 2757
+      }
+    },
+    {
+      "label": "09-excerpts-selected-body-88",
+      "image": {
+        "path": "output/2026-10-30-p32-continuation/native-current/09-excerpts-selected-body-88.jpg",
+        "sha256": "d2695b05a29eb619b72f0da65f0ca317b11e574ce2575c181d3d03f32835f884",
+        "bytes": 63963
+      },
+      "ax": {
+        "path": "output/2026-10-30-p32-continuation/native-current/09-excerpts-selected-body-88.ax.txt",
+        "sha256": "a04957585b339606573c6726c91f830b05f9391f82c04a91e3816d7a1765baa4",
+        "bytes": 2574
+      }
+    }
+  ],
+  "oldLoadedSearchApiControl": {
+    "observedPassed": 10,
+    "observedFailed": 0,
+    "singleRunButtonClick": true,
+    "sourceChanged": false,
+    "matcherFixApplied": false,
+    "reference": {
+      "path": "output/2026-10-30-p32-continuation/native-old/result.json",
+      "sha256": "d6eb673ee85a649db448ba8aebc1627669fd13b41c87766546b0f88c1b30d5d5",
+      "bytes": 713
+    },
+    "imageAndAxPairs": [
+      {
+        "image": {
+          "path": "output/2026-10-30-p32-continuation/native-old/01-before.jpg",
+          "sha256": "885c7db82ab066448761caa381aa4ddcb9760cb2c1033f889169cc91e5b14aa0",
+          "bytes": 88571
+        },
+        "ax": {
+          "path": "output/2026-10-30-p32-continuation/native-old/01-before.ax.txt",
+          "sha256": "22096da2bffa4b43b04a8d66c83c176e7a6dc972381f44325eac0f5ced5b95f7",
+          "bytes": 3956
+        }
+      },
+      {
+        "image": {
+          "path": "output/2026-10-30-p32-continuation/native-old/02-after.jpg",
+          "sha256": "0dc3d388a2f23cd7a68aae92b73aa61f9451271c27f79831f4db6f0c5e5d6ea8",
+          "bytes": 100460
+        },
+        "ax": {
+          "path": "output/2026-10-30-p32-continuation/native-old/02-after.ax.txt",
+          "sha256": "d3b973748bbb840f42a022e3509c8f41e342fb7e7238518cc96e3f4dd18ba88a",
+          "bytes": 6708
+        }
+      }
+    ],
+    "interpretation": "Covered old actual loaded-search API inputs did not reproduce the prior P12 matcher failure; keep the positive result and do not infer a new matcher defect or reclassify P12 failures."
+  },
+  "observationRecovery": {
+    "initialCreateProducedTruncatedAX": true,
+    "oldHandleReadsFailed": "browser.user is unavailable",
+    "replReset": true,
+    "sameTabId": 9,
+    "noPageReload": true
+  },
+  "reviewBoundary": "These are original Root observations plus newly pinned files; this public summary does not add an independent image/AX interpretation or a new UI run.",
+  "limits": [
+    "Synthetic in-memory declarations and source-shaped history hits; no real attachment file, official history request, Agent send or installed search exercised.",
+    "Selection shows retained readable identity, keyboard cancellation and fieldset focus; no Start click or file-reader call occurred.",
+    "Four excerpt cases matched fixed oracles and kept full detail; not a proof of all returned text shapes, actual official replies or source availability.",
+    "AX candidate children were bounded at 500 per observation; focus also used read-only DOM. Exact engine version and installed CSS injection were not established.",
+    "Build readback predates serving; later original Root observations establish these pages were subsequently used. Browser recovery reused tab 9 without a page reload.",
+    "Complete P32, all29 and NEW-24-affected new-send pause remain."
+  ]
+}

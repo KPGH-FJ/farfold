@@ -4,6 +4,19 @@ import {
   type HistorySearchDisplayOperation,
 } from "../runtime/history_search_types";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
+import { searchSnippetContext } from "../runtime/search_snippet";
+
+function listExcerpt(hit: HistorySearchDisplayHit) {
+  const { start, end } = hit.matches[0];
+  const { before, after } = searchSnippetContext(hit.text, start, end, 48, 100);
+  return (
+    (before.length < start ? "…" : "") +
+    before +
+    hit.text.slice(start, end) +
+    after +
+    (end + after.length < hit.text.length ? "…" : "")
+  );
+}
 
 export function HistorySearchText({ hit }: { hit: HistorySearchDisplayHit }) {
   const parts = [];
@@ -111,12 +124,7 @@ export function HistorySearchResults({
                 <strong>{title(hit.rowId)}</strong> ·{" "}
                 {hit.role === "user" ? S.user : S.agent}
               </span>
-              <span className="history-search-excerpt">
-                {hit.text.slice(
-                  Math.max(0, hit.matches[0].start - 48),
-                  hit.matches[0].end + 100,
-                )}
-              </span>
+              <span className="history-search-excerpt">{listExcerpt(hit)}</span>
               <small>{S.chooseMatch}</small>
             </button>
           </li>
