@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 1,
+  "kind": "IndependentRedactedFormal4b40P12KnownMistralRegressionReview",
+  "recordedAtUtc": "2026-10-30T01:20:15.895351+00:00",
+  "conclusion": "Bounded installed known-case positive. All18 original screenshot/AX pairs reviewed. On installed4b40 the two preread Context compacted title/result fields render correct yellow glyphs, independent current outline and readable navigation, while adjacent JSON brace/text stays plain. This closes only this declared regression sample, not completeP12.",
+  "privacy": "No private conversation/draft text, local document path, account, credential or historical prompt body is copied into this public summary. Original private artifacts are referenced by path/hash/bytes/mode; B3 is represented only by lengths/fingerprints.",
+  "method": {
+    "reviewer": "progress_evidence",
+    "additionalReadonlyBindingSecondReader": "formal_binding_review",
+    "imagePairsViewedIndividually": 18,
+    "accessibilityFilesRead": 18,
+    "applicationBrowserSqlOrDataOperation": false,
+    "originalArtifactEdit": false,
+    "testBuildOrProductRerun": false,
+    "paintOutlineCountReadabilityKeptSeparate": true,
+    "noRegistryRangeInspection": true
+  },
+  "installedBinding": {
+    "appPath": "/Applications/Farfold.app",
+    "sourceCommit": "4b40c09932daad2e718b5f98e0a75eccc5f84dd7",
+    "executableSha256": "11e2be7e8ea740769250e9c041ee64618415d7a7a033a3a96eb832bfc7cacb49",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "installReceipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/install-result.json",
+      "sha256": "42b8aa17203f3e86e254975826556f389c26cd3c83321d8686d2ec6cd7c596a5",
+      "bytes": 15516,
+      "mode": 384
+    },
+    "independentInstalledReview": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/installed-independent-review-private.json",
+      "sha256": "c9be0358ce5cef03cb0ca6f02add958cd64e7c70e9020027344ffa1e845b014c",
+      "bytes": 6724,
+      "mode": 384
+    },
+    "firstLaunchIdentity": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/24-first-launch-installed-identity.json",
+      "sha256": "aef75dce1a5877ba0514d7dac651322bb8ed3c48e05390699f8507f6d1644db6",
+      "bytes": 754,
+      "mode": 384
+    },
+    "firstLaunchIdentityAt": "2026-10-30T00:56:10.478817+00:00",
+    "actualRecordsAgreeOnSourceAndExecutable": true,
+    "readbackBoundary": "Independent receipt binding to actual installation and pre-case first-launch identity record; this reviewer did not reread or operate the current application. The first-launch record contains two exact formal-executable processes, so no single-process claim is made.",
+    "screenshotPixels": [2560, 1640],
+    "formalDomViewport": null,
+    "preciseEngineBuild": null,
+    "controlledEmbeddedViewportImported": false
+  },
+  "prospectiveBindingAndBudget": {
+    "staticPreparation": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-regression-preparation/preparation.json",
+      "sha256": "f95be73be541a5ad429fab189da9b406eb8ea977da7ce25901e2cbf00e14989a",
+      "bytes": 11334,
+      "mode": 384
+    },
+    "actualBoundPlan": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/actual-bound-plan.json",
+      "sha256": "40533bef01a057eca4881e3430b7dd65ff3ce88b555fdf019e847b154c8b75c2",
+      "bytes": 5723,
+      "mode": 384
+    },
+    "planBoundAt": "2026-10-30T01:04:58.378223+00:00",
+    "matchingPlanShaInCaseStartEvent": true,
+    "planDeclared48SecondsBeforeCase": 48.506777,
+    "caseStartedAt": "2026-10-30T01:05:46.885Z",
+    "caseEndedAt": "2026-10-30T01:07:46.717Z",
+    "recomputedWallElapsedSeconds": 119.832,
+    "maximumSeconds": 600,
+    "withinProspectiveBudget": true,
+    "timerCoversInitialCollapseThroughReturnedB3Capture": true,
+    "rawEventCount": 37,
+    "rawCaptureCount": 18,
+    "preparationEventsPrefixEqual": true,
+    "rawIsoTimestampOrderNondecreasing": true,
+    "perEventElapsedSecondsAreNull": true,
+    "independentMonotonicClockAvailable": false,
+    "timingLimit": "Elapsed119.832s is independently recomputed from recorded UTC wall timestamps; no per-event monotonic duration is invented.",
+    "caseActionCount": 11,
+    "caseActionSequence": [
+      "case-initial-collapse-original-outer",
+      "case-open-Find-once",
+      "case-insert-query-once",
+      "case-next-result-once",
+      "case-manual-fold-once",
+      "case-next-wrap-title-once",
+      "case-previous-result-once",
+      "cleanup-restore-original-complete-input-closed",
+      "cleanup-restore-original-technical-closed",
+      "case-close-Find-once",
+      "case-return-original-B3"
+    ],
+    "queryInsertionsInRecordedSequence": 1,
+    "nextActions": 2,
+    "previousActions": 1,
+    "closeFindActions": 1,
+    "manualCleanupActions": 2,
+    "preQueryPreparationScrolls": 1,
+    "postQueryCompensatingScrollsInRecordedSequence": 0,
+    "newModelPromptComposerEditUnknownRetryActionsInRecordedSequence": 0,
+    "rootDeclaredNoUnloggedModelPromptEditRetry": true,
+    "allInteractionNotExternallyAudited": "Recorded actions and original observed states support this bounded sequence; still images alone do not establish absence of any unlogged event."
+  },
+  "currentFieldBoundedOracle": {
+    "agentVisible": "Mistral Vibe",
+    "object": "Same existing owned target identified through current filter/title and preread refs in bound plan; exact private title not reproduced.",
+    "query": "Context compacted",
+    "queryUtf16Units": 17,
+    "knownCurrentFieldCount": 2,
+    "twoExactFieldStringsRereadBeforeQuery": true,
+    "titleAndResultRolesDistinct": true,
+    "prereadAx05": "Title is AXcoalesced text123 with role label, separate plain result126; no claim of distinct node identities.",
+    "prereadAx06": "Exact isolated title124 and plain result129; original JSON128 contains attempt1/summaryLength413/trigger manual and no query.",
+    "negativeJson": {
+      "attempt": 1,
+      "summaryLength": 413,
+      "trigger": "manual"
+    },
+    "negativeJsonQueryOccurrences": 0,
+    "expectedNarrowCount": 2,
+    "actualNavigationCounters": ["1 / 2", "2 / 2", "2 / 2", "1 / 2", "2 / 2"],
+    "currentWholeCorpusOracleReestablished": false,
+    "historicalN2UsedAsCurrentExhaustiveProof": false,
+    "nativeSessionId": null,
+    "fullCwdReread": false,
+    "effectiveModelAccountProvenanceReread": false,
+    "visibleModelLabelOnly": "Mistral Medium 3.5"
+  },
+  "frames": [
+    {
+      "frame": "00-mistral-existing-filter",
+      "phase": "preparation",
+      "observation": "Existing Mistral filter lists the existing owned target. No new conversation created.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/00-mistral-existing-filter.jpg",
+        "sha256": "803312292acab664e8dfaa181e8fb4a5d13340ce5b7fa57c5f849adcde7088b2",
+        "bytes": 329346,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/00-mistral-existing-filter.ax.txt",
+        "sha256": "56d171f63d323274037ba6bdfb5588bf4b82f338ebb24d7a144a0cebaf6180b2",
+        "bytes": 4387,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "01-original-opening",
+      "phase": "preparation",
+      "observation": "Existing target opens in loading state; no history-completeness claim at this frame.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/01-original-opening.jpg",
+        "sha256": "db80fc317c3f70780e60dc50257cc50c980922df553ae4c8ff97ac57016e126e",
+        "bytes": 172862,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/01-original-opening.ax.txt",
+        "sha256": "bd78b54b1b07aab77cae63b1b0efbf984c689c60c309634a231adbb8c27e47e5",
+        "bytes": 2516,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "02-original-loaded-untouched",
+      "phase": "preread",
+      "observation": "Loaded existing target, visible idle label and empty composer; three indexed tool summaries off, six thought disclosures off. No attachment opened.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/02-original-loaded-untouched.jpg",
+        "sha256": "a9f7ae9b0e876803a5078ea330fe06cb2150072abbfae3e8b3cfaf1416babf28",
+        "bytes": 300939,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/02-original-loaded-untouched.ax.txt",
+        "sha256": "eaade7aee4f16d9155ae72f81ace08bc943289978f19c151c8e8173ca9dcea2c",
+        "bytes": 6962,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "03-preread-original-tool-group",
+      "phase": "preread",
+      "observation": "Last existing tool group manually opened; technical details initially collapsed.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/03-preread-original-tool-group.jpg",
+        "sha256": "a0ef2a2e57f03951a4473341b02813c266dfe11296d4fc655e0c8685e46f351c",
+        "bytes": 294772,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/03-preread-original-tool-group.ax.txt",
+        "sha256": "d5929f7c0d2981bdb0ff08e95ea3abef3a7a8b8bfa8612ea09ad4c3a273a5965",
+        "bytes": 7173,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "04-preread-technical-details",
+      "phase": "preread",
+      "observation": "Technical details manually expanded; Complete Input initially off. Target text lies below visible viewport edge at this moment, so this image alone is not a visible two-field proof.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/04-preread-technical-details.jpg",
+        "sha256": "3120761d29b2788420976dc2405e4089fc79f9ec7175c5e9ea63645b8fe581d5",
+        "bytes": 295024,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/04-preread-technical-details.ax.txt",
+        "sha256": "4ea727fae4e4a29db76eae711c2ad6c7aecf4c3b943624f461cd506f30715bf5",
+        "bytes": 7424,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "05-preread-known-fields-visible",
+      "phase": "preread",
+      "observation": "One preparation scroll makes title and separate result readable/plain. AX title is coalesced text at123 including role label; result at126 is separate. Not a claim of two distinct Text-node identities.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/05-preread-known-fields-visible.jpg",
+        "sha256": "ce6296f7c8a65d2fa228decb1790ef9265bed75d2926ba97243fb20e671fce30",
+        "bytes": 298547,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/05-preread-known-fields-visible.ax.txt",
+        "sha256": "4ea727fae4e4a29db76eae711c2ad6c7aecf4c3b943624f461cd506f30715bf5",
+        "bytes": 7424,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "06-preread-json-negative-control",
+      "phase": "preread",
+      "observation": "Complete Input manually opened. AX separates exact title124 and result129 and contains complete JSON. Image opening brace visible/plain but lower JSON/result extend below composer; full JSON text read from AX.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/06-preread-json-negative-control.jpg",
+        "sha256": "14830dd0fb0c093439b8d1e671b4c85938fb2b2d62a82956c1d51f0cc8e2d8b5",
+        "bytes": 299113,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/06-preread-json-negative-control.ax.txt",
+        "sha256": "cb4179670911fe80c7825199fa6b3f55bcdb144665bd35d015f585999cdfb3fe",
+        "bytes": 7607,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "07-case-initial-fold",
+      "phase": "case",
+      "observation": "Target outer collapsed before Find; three indexed tool groups off, composer empty.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/07-case-initial-fold.jpg",
+        "sha256": "61e4dd090be17e9896e7f53140ae0fd4ef3ad3d3b4b2daaf0874ebe79111e467",
+        "bytes": 292128,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/07-case-initial-fold.ax.txt",
+        "sha256": "2779d6fec657b9cef1f4d0b3d6fa53307be8f53bb1cfc0d6a9fd7a71a4b5cb0d",
+        "bytes": 6896,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "08-case-Find-open",
+      "phase": "case",
+      "observation": "Find open with empty query; directions disabled; target outer still off.",
+      "actualFindQuery": "",
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/08-case-Find-open.jpg",
+        "sha256": "4a9ca00f1d3a09516442dce34764fb32a582566cfe482c099ad320f0a2fd7f14",
+        "bytes": 309597,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/08-case-Find-open.ax.txt",
+        "sha256": "f5a2fd5f7acf69262631a9f4ff3c498d8b2f947355c0dccfedaf7628370fe704",
+        "bytes": 7616,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "09-case-first-title",
+      "phase": "case",
+      "observation": "Counter1/2; exact title glyphs yellow and separate selected outline; title and other yellow result fully readable above composer. JSON opening brace and complete visible JSON text plain.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "1 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/09-case-first-title.jpg",
+        "sha256": "fd72eaf6ebbaeb0ae6822e7ed6a6c7a60aa03268ccdf2e4f7f3f94c6463e7ac6",
+        "bytes": 298699,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/09-case-first-title.ax.txt",
+        "sha256": "d373a49767c9b115569ef1257a571adaf8856914930095d3c8851649c259fc64",
+        "bytes": 8392,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "10-case-next-result",
+      "phase": "case",
+      "observation": "Counter2/2; exact result yellow with separate selected outline, title all-match yellow; both readable, JSON brace/text plain.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "2 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/10-case-next-result.jpg",
+        "sha256": "e60a2bdfff20e2c93f729d4fae97da7a8c1140487ffd35f55d90fa7edf883026",
+        "bytes": 285978,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/10-case-next-result.ax.txt",
+        "sha256": "ac7121c3024a5181695d3bb4ef2f840f5baaaa67a668a1b20f4e974cf95cdd42",
+        "bytes": 8172,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "11-case-manual-fold",
+      "phase": "case",
+      "observation": "Counter2/2 retained; indexed groups76/91/118 alloff. Hidden title/result/JSON paint is not inspected. Focused-element footer repeats last summary, not a fourth group.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "2 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/11-case-manual-fold.jpg",
+        "sha256": "308915c465b86771d2ebba0cf402e6efb606997755eaa184c77b967c04c6872d",
+        "bytes": 300149,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/11-case-manual-fold.ax.txt",
+        "sha256": "a03b5387f0252b4d29cf0b078e8938b93159be78b2730175222d8952486dbb14",
+        "bytes": 7438,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "12-case-wrap-title",
+      "phase": "case",
+      "observation": "Counter1/2; target outer revealed; title yellow with selected outline, result yellow/readable, JSON brace/text plain.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "1 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/12-case-wrap-title.jpg",
+        "sha256": "0ebfafb159ca1be0d3e58cefe9aeda8b168e7894daf228e02331d8dab760c5f6",
+        "bytes": 287005,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/12-case-wrap-title.ax.txt",
+        "sha256": "52a929da7a33301e6e08d8aa2267c8f4589c3463761ccaac87d6b43d4d91a984",
+        "bytes": 8172,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "13-case-previous-result",
+      "phase": "case",
+      "observation": "Counter2/2; result yellow with selected outline, title yellow/readable, JSON brace/text plain.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "2 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/13-case-previous-result.jpg",
+        "sha256": "e3f2e8eafae69e0497c59d6ea608d30a493f874a51b43017f132e6499ef65717",
+        "bytes": 285892,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/13-case-previous-result.ax.txt",
+        "sha256": "ac7121c3024a5181695d3bb4ef2f840f5baaaa67a668a1b20f4e974cf95cdd42",
+        "bytes": 8172,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "14-cleanup-input-closed",
+      "phase": "planned-cleanup",
+      "observation": "Complete Input manually changed tooff; query2/2 retained, technical details remain expanded and result readable/yellow. This is manual restoration of preparation state.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "2 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/14-cleanup-input-closed.jpg",
+        "sha256": "8965526245ffe004a046360d123c2ee066ce56359ce52b2d307b75d585ecbffe",
+        "bytes": 315446,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/14-cleanup-input-closed.ax.txt",
+        "sha256": "bc90e63891d2314a062efc4e77970ef9772e069989ae073fe0ff4ed15dfa60d9",
+        "bytes": 8004,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "15-cleanup-technical-closed",
+      "phase": "planned-cleanup",
+      "observation": "Technical details manually collapsed; query2/2 retained and outer remains open. This is not automatic child-preference restoration proof.",
+      "actualFindQuery": "Context compacted",
+      "actualCounter": "2 / 2",
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/15-cleanup-technical-closed.jpg",
+        "sha256": "6ee3f1107564311d6b453368b9fefa21e05461dfe24db2bba54fd94e2f2f81de",
+        "bytes": 301775,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/15-cleanup-technical-closed.ax.txt",
+        "sha256": "597b57ad7c937a7e5571f061d70690104716e622f43787953e2d9cb12b15c9a2",
+        "bytes": 7682,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "16-case-closed",
+      "phase": "case",
+      "observation": "Find absent; indexed groups70/85/112 alloff; empty composer and remaining visible content plain. No registry or hidden-child introspection.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/16-case-closed.jpg",
+        "sha256": "1d0a6e5000157c9d7b0015a239ca54263bbfce65b000b616f0d38717068ddaef",
+        "bytes": 292355,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/16-case-closed.ax.txt",
+        "sha256": "3a33b700507f687cce5ba0d184f73b4a76185b9d4a2c603a79b175bf16dcffa0",
+        "bytes": 6877,
+        "mode": 384
+      }
+    },
+    {
+      "frame": "17-case-b3-return",
+      "phase": "protection-readback",
+      "observation": "Original B3 returned; four complete nonempty rendered composer payloads equal both before-exit samples and first launch. Screenshot visible model/reasoning preserved; permission still requires confirmation. Private content omitted.",
+      "actualFindQuery": null,
+      "actualCounter": null,
+      "image": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/17-case-b3-return.jpg",
+        "sha256": "a2a1b266fb284928da486c7b962e4602d3cd7aae5e240b7334e9ae3d97af6624",
+        "bytes": 443320,
+        "mode": 384
+      },
+      "accessibility": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/17-case-b3-return.ax.txt",
+        "sha256": "d1e373ae02b5f85aeee90a07115768534004d51e12a0da5cf86cf409e14e9aba",
+        "bytes": 4848,
+        "mode": 384
+      }
+    }
+  ],
+  "manualCleanupAndClose": {
+    "preQueryOriginalState": "Three tool groups closed; last tool technical and Complete Input closed when first manually opened for preread.",
+    "preparationOpenChanges": "Target outer/technical/input manually opened and one preread scroll before fixed case.",
+    "planExplicitlyIncludesManualChildRestoration": true,
+    "inputClosedByOperatorAt14": true,
+    "technicalClosedByOperatorAt15": true,
+    "automaticChildPreferenceRestorationProven": false,
+    "FindAbsentAt16": true,
+    "indexedClosedGroupsAt16": [70, 85, 112],
+    "remainingVisiblePaintPlain": true,
+    "composerEmpty": true,
+    "registryAndHiddenStateNotInspected": true
+  },
+  "sealedMetadataCorrection": {
+    "originalRootResult": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/result.json",
+      "sha256": "9235c47a8a13c2b324f5c8f016df58ac1696ae6f2ca4ae9ebccdb91e3ab920be",
+      "bytes": 5246,
+      "mode": 384
+    },
+    "originalPointer": "/manualFold/allThreeToolGroupsOff",
+    "originalValue": false,
+    "independentIndexedGroupsAt11": [
+      {
+        "id": 76,
+        "value": "off"
+      },
+      {
+        "id": 91,
+        "value": "off"
+      },
+      {
+        "id": 118,
+        "value": "off"
+      }
+    ],
+    "actualAllThreeIndexedGroupsClosed": true,
+    "unanchoredTextOccurrences": 4,
+    "whyFourIsNotFourGroups": "Focused-element footer repeats summary118. Anchoring to indexed AXtree rows yields exactly76/91/118, alloff.",
+    "rootSeparateCorrection": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-p12-result-correction.json",
+      "sha256": "9d82ba92fab43c9cd9d16f46851102941722152174aa53b7609faa9691333fd9",
+      "bytes": 1345,
+      "mode": 384
+    },
+    "originalResultAnd41FileSealPreserved": true,
+    "productFailureInferredFromDerivedFalse": false,
+    "productActionOrQueryRepeatedForCorrection": false
+  },
+  "b3ReturnProtection": {
+    "comparisonMethod": "Parse four complete nonempty composer child Text(settable) payloads below the composer AXnode, excluding role/settable metadata; compare ordered exact strings across before-quit, fresh pre-SaveExit, first-launch and post-case return, then independently compute UTF16/UTF8/SHA.",
+    "observationRefs": [
+      {
+        "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/01-b3-returned-before-quit.ax.txt",
+        "sha256": "5656544a8255b61fa5e4d9050573b532b41e091b25995c527deb857d0e7debc4",
+        "bytes": 5534,
+        "mode": 384
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/16-user-authorized-fresh-b3-before-save-exit.ax.txt",
+        "sha256": "02deead5e872f71aecf5497f366dcaff9635ad51a4ae3497777b10bb3b341484",
+        "bytes": 5479,
+        "mode": 384
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/25-updated-b3-after-load.ax.txt",
+        "sha256": "d1e373ae02b5f85aeee90a07115768534004d51e12a0da5cf86cf409e14e9aba",
+        "bytes": 4848,
+        "mode": 384
+      },
+      {
+        "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/17-case-b3-return.ax.txt",
+        "sha256": "d1e373ae02b5f85aeee90a07115768534004d51e12a0da5cf86cf409e14e9aba",
+        "bytes": 4848,
+        "mode": 384
+      }
+    ],
+    "firstLaunchReadback": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-b3-first-launch-readback.json",
+      "sha256": "df0600e8a204273693e1d78dcaf94f819dde19769a3dc3345d6737d97bd2dcfc",
+      "bytes": 3172,
+      "mode": 384
+    },
+    "allFourExactPayloadListsEqual": true,
+    "fingerprints": [
+      {
+        "utf16Length": 187,
+        "utf8Bytes": 291,
+        "sha256": "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1"
+      },
+      {
+        "utf16Length": 75,
+        "utf8Bytes": 81,
+        "sha256": "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010"
+      },
+      {
+        "utf16Length": 32,
+        "utf8Bytes": 90,
+        "sha256": "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95"
+      },
+      {
+        "utf16Length": 27,
+        "utf8Bytes": 81,
+        "sha256": "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+      }
+    ],
+    "screenshotObservedChoices": {
+      "agent": "Codex",
+      "model": "6 Astra",
+      "reasoning": "Ultra",
+      "permission": "awaiting-confirmation"
+    },
+    "permissionConfirmedOrNewSend": false,
+    "blankLineSerializationVerified": false,
+    "attachmentEntityBytesOrModelConsumptionVerified": false
+  },
+  "artifactSeal": {
+    "manifest": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/artifact-manifest.json",
+      "sha256": "dd7602c9bd82bf608cb656511ac987fa078531a8572313d515205055c9efb528",
+      "bytes": 10902,
+      "mode": 384
+    },
+    "declaredFileCount": 41,
+    "actualAllPathsShaBytesModeMatched": true,
+    "actualJpgCount": 18,
+    "actualAxCount": 18,
+    "otherFiles": [
+      "actual-bound-plan.json",
+      "preparation-events.json",
+      "operator-events.json",
+      "result.json",
+      "offline-seal-preparation-failure.json"
+    ],
+    "manifestMembershipNoMissingOrExtra": true,
+    "allRawModes": "0600",
+    "scope": "41sealed artifacts; manifest itself is referenced separately. Root correction remains a separate later file outside sealed case directory.",
+    "operatorEvents": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/operator-events.json",
+      "sha256": "1fb5605ab92fdc1595c6b6cc66665681464d484dbc205ef2b55c9e045128073c",
+      "bytes": 7019,
+      "mode": 384
+    },
+    "preparationEvents": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/preparation-events.json",
+      "sha256": "7af2f39866c4d43172b6f6551d74a25c668069ae82475832242a91cef3e1a0de",
+      "bytes": 2622,
+      "mode": 384
+    },
+    "offlineSealFailure": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-installed-regression/offline-seal-preparation-failure.json",
+      "sha256": "09966851297f5f47dc2e9727aaa0b0d23b6c8ecc92dacd18aa801341c9d60b3b",
+      "bytes": 422,
+      "mode": 384
+    },
+    "offlineFailureBoundary": "Preserved error record documents Python3.9 rejecting UTCZ during offline timestamp parsing before result/manifest writes. Parsing normalized Z to +00:00 only; raw recorded timestamps remain unchanged. Product event sequence has one case and one query insertion; no product retry or clock reset was performed for this offline correction."
+  },
+  "earlierEvidence": {
+    "original52aaFailurePreserved": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/formal-52aa-visible-json-failure-summary.json",
+      "sha256": "7b1477b99379728a1e97e8cb84df72946ddd1ef9eb07ff8ff6ffaf181488cec7",
+      "bytes": 12598,
+      "mode": 420
+    },
+    "finalCurrentSourceControlled39PairMatrix": {
+      "path": "docs/evidence/2026-10-30-p12-continuation/final-source-matrix-summary.json",
+      "sha256": "f4ca7e5dde6c097050ce94d8b7c48f82696387a35e6fae80951ca5e86951ddab",
+      "bytes": 55259,
+      "mode": 384
+    },
+    "differentProofLevels": "Earlier synthetic/native controls and this actual installed owned-object case remain distinct. Prior52aa/CFC/79e failures are not erased or retroactively marked successful."
+  },
+  "remainingUnknownOrOutsideScope": [
+    "No exhaustive current loaded corpus or unloaded/all-history/attachment oracle. Two preread fields and observed2counter are the declared scope.",
+    "No actual Range/Highlight registry identity, size, deletion or cleanup inspection. Visible no-stale state is a rendering observation.",
+    "No new real Agent stream, model send, account/auth journey or physical attachment decode/read/open was exercised.",
+    "No formal Unicode/live-stream full matrix or completeP12/29x8/Windows acceptance inferred from this ASCII known-case regression.",
+    "No unique internal WebKit cause, precise engine build or DOM viewport established. Screenshot2560x1640 does not provide CSS viewport/scale.",
+    "Manual child restoration14/15 is operator cleanup, not automatic product preference restoration.",
+    "B3 comparison covers four complete nonempty rendered strings, not exact blank-line persistence serialization or attachment entity/consumption. Permission remains unconfirmed.",
+    "Closed before/preinstall/after data manifest equality belongs to separate installation evidence; no unchanged-storage assertion after legitimate launch."
+  ]
+}

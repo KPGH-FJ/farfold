@@ -1,0 +1,183 @@
+{
+  "kind": "B3InstalledUpdateRenderedTextReadbackNarrowObservation",
+  "recordedAt": "2026-10-30T01:03:15.883140+00:00",
+  "sourceCommit": "4b40c09932daad2e718b5f98e0a75eccc5f84dd7",
+  "formalApplication": "/Applications/Farfold.app",
+  "caseAlias": "B3",
+  "result": "observed-rendered-fragments-returned-after-ordinary-open",
+  "review": {
+    "observer": "Root performed App launch and navigation; /root/installed_baseline independently read saved artifacts.",
+    "priorRoleDisclosure": "The independent reader authored earlier private control/build tooling and the candidate nine ready binding; this review is a later artifact read, not a blind design review.",
+    "imagesIndividuallyViewed": [
+      "before exit 16",
+      "initial launch 22",
+      "loading 23",
+      "loaded 25"
+    ],
+    "axRecordsCompared": ["16", "22", "23", "25"],
+    "noAppBrowserOrSqlActionByReader": true
+  },
+  "navigation": {
+    "rootReportedFirstLaunchAndOneOrdinarySidebarOpen": true,
+    "initialLaunchSnapshot": "New Conversation displayed; the retained-drafts row was visible.",
+    "loadingSnapshot": "Opening the existing conversation displayed reading/loading placeholders.",
+    "loadedSnapshot": "The existing conversation displayed historical messages and nonempty unsent composer text.",
+    "notAnAutomaticLastConversationRestoreClaim": true,
+    "actionCountAttributedToRootReceiptNotInferredFromStillImages": true
+  },
+  "textComparison": {
+    "completeNonemptyRenderedFragments": 4,
+    "privateOriginalFingerprintsEqualRootReadbackFingerprints": true,
+    "beforeAndAfterExactUtf8Sha256AndUtf16LengthMatches": [
+      {
+        "fragment": 1,
+        "beforeMatches": 1,
+        "afterMatches": 1
+      },
+      {
+        "fragment": 2,
+        "beforeMatches": 1,
+        "afterMatches": 1
+      },
+      {
+        "fragment": 3,
+        "beforeMatches": 1,
+        "afterMatches": 1
+      },
+      {
+        "fragment": 4,
+        "beforeMatches": 1,
+        "afterMatches": 1
+      }
+    ],
+    "method": "For each private baseline fingerprint, independently locate the exact UTF-8 byte-length window once in saved AX16 and once in AX25, recompute SHA-256, and verify the UTF-16 length. No protected fragment text is published.",
+    "oneComposerNotFourSeparateDrafts": true,
+    "entireDraftSimultaneouslyVisibleInScreenshot": false,
+    "visibleBoundary": "The multiline composer is visible, but lower text is clipped by its visible area. Complete-fragment equality is established from AX rather than all pixels being visible together.",
+    "draftTextMentionedDocumentPathAndDocumentChecksumPublished": false
+  },
+  "visibleControlsAfterLoad": {
+    "agent": "Codex",
+    "modelVisibleInImage": "6 Astra",
+    "reasoningVisibleInImageAndAx": "Ultra",
+    "permissionVisibleInImage": "待确认",
+    "permissionNoticeVisibleInImageAndAx": "继续发送前，请重新确认这条对话的权限。",
+    "sendControlVisibleLabel": "待发",
+    "sendControlGreyAppearanceObserved": true,
+    "permissionConfirmedOrChangedByRoot": false,
+    "newSendOrEditPerformed": false,
+    "noSendOrPermissionChangeProvenance": "Root readback receipt; the independent reader performed no UI actions.",
+    "operationalModelPermissionOrSendBehaviorTested": false
+  },
+  "identityEvidence": {
+    "rootRecordedBinaryMatchesCompletedCandidateReceipt": true,
+    "rootRecordedSourceCommitMatchesCandidateAndReadbackReceipts": true,
+    "rootIdentityRecordContainsTwoExactPathProcessRows": true,
+    "singleInstanceOrScreenshotToPidMappingClaimed": false,
+    "readerDidNotRereadAppPayloadOrProcessInventory": true
+  },
+  "limits": [
+    "Only this existing conversation, four complete rendered fragments, saved snapshots and visible controls are covered. This does not establish complete history restoration or every draft.",
+    "Exact blank-line serialization and persistent-store representation were not read or compared; no SQL or live user-data read was performed for this review.",
+    "A mentioned file path or checksum is rendered text; attachment entity bytes, file decoding and Agent consumption were not tested.",
+    "The permission state still requires confirmation. No confirmation, permission change, new send, real Agent request or model execution was tested.",
+    "Before and after layouts differ, including the content panel and text wrapping. No pixel-identical layout or all-text-visible claim is made.",
+    "Still images and AX are sampled states, not a continuous trace. Launch/navigation count and absence of edits/sends are attributed to Root action records.",
+    "Historical stopped or uncertain work is not reclassified. The loaded header and historical labels do not prove completion or cancellation.",
+    "The closed before/preinstall/after retention manifests are a separate proof interval; this record does not claim those files remain byte-identical after legitimate first launch.",
+    "This narrow readback is not the formal affected P12 object check, full P12, real streaming, complete data or29-agent acceptance."
+  ],
+  "references": [
+    {
+      "role": "Root first-launch readback receipt",
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-b3-first-launch-readback.json",
+      "sha256": "df0600e8a204273693e1d78dcaf94f819dde19769a3dc3345d6737d97bd2dcfc",
+      "bytes": 3172,
+      "mode": 384
+    },
+    {
+      "role": "Root normal saved exit receipt",
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-normal-exit-b3-ui.json",
+      "sha256": "682dc2b40df5fa61a98479ef9760f8ccb4245c40732d3c80718d2a916afd92e5",
+      "bytes": 1986,
+      "mode": 384
+    },
+    {
+      "role": "Private original four rendered-fragment fingerprints",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/b3-rendered-strings-before-quit.json",
+      "sha256": "47228a4b12a059245107f5c5f3221be7d7fff51437983ef5c318eb028f2e64fc",
+      "bytes": 1460,
+      "mode": 384
+    },
+    {
+      "role": "Before exit AX",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/16-user-authorized-fresh-b3-before-save-exit.ax.txt",
+      "sha256": "02deead5e872f71aecf5497f366dcaff9635ad51a4ae3497777b10bb3b341484",
+      "bytes": 5479,
+      "mode": 384
+    },
+    {
+      "role": "Before exit image",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/16-user-authorized-fresh-b3-before-save-exit.jpg",
+      "sha256": "8cd680946ee8ca2381745e9e9f96d69ef735d18d05b7823a914015c106e72e56",
+      "bytes": 410164,
+      "mode": 384
+    },
+    {
+      "role": "Initial new conversation AX",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/22-updated-first-launch-initial.ax.txt",
+      "sha256": "812fb09b5f9aedd5d5c3c2e4efc94ac05d8c8d18b254ebbfee7571ee058c44a0",
+      "bytes": 3117,
+      "mode": 384
+    },
+    {
+      "role": "Initial new conversation image",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/22-updated-first-launch-initial.jpg",
+      "sha256": "8c880323291375bcb368d33d8e167140573aaf08e065c1e162b035d58838dd3d",
+      "bytes": 252123,
+      "mode": 384
+    },
+    {
+      "role": "Original conversation loading AX",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/23-updated-original-b3-readback.ax.txt",
+      "sha256": "c34b2a973a4b07d7f8ee1ad5a279953edf184702764ff3b66acb600c6a0609df",
+      "bytes": 2467,
+      "mode": 384
+    },
+    {
+      "role": "Original conversation loading image",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/23-updated-original-b3-readback.jpg",
+      "sha256": "b7beaa9bd69ca8c21f38aee3e994f7575c72a3c803f273419917cb8c3d9dd82b",
+      "bytes": 183374,
+      "mode": 384
+    },
+    {
+      "role": "Root recorded installed executable identity",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/24-first-launch-installed-identity.json",
+      "sha256": "aef75dce1a5877ba0514d7dac651322bb8ed3c48e05390699f8507f6d1644db6",
+      "bytes": 754,
+      "mode": 384
+    },
+    {
+      "role": "Original conversation loaded AX",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/25-updated-b3-after-load.ax.txt",
+      "sha256": "d1e373ae02b5f85aeee90a07115768534004d51e12a0da5cf86cf409e14e9aba",
+      "bytes": 4848,
+      "mode": 384
+    },
+    {
+      "role": "Original conversation loaded image",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/25-updated-b3-after-load.jpg",
+      "sha256": "13b9e579df11f95073f55b301d96d34acd47f1fa5c40299c72c24a73406ab58a",
+      "bytes": 442449,
+      "mode": 384
+    },
+    {
+      "role": "Completed candidate identity receipt",
+      "path": "output/2026-10-30-p12-continuation/formal-final/candidate-output/candidate.json",
+      "sha256": "f626b02ba4ad959600c1636b0a8b08c7c74d1295f2839fcd0f86bcca942ed7a6",
+      "bytes": 282102,
+      "mode": 384
+    }
+  ]
+}

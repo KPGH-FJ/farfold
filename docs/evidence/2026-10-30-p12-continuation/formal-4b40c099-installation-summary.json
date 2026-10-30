@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "kind": "Formal4b40c099ClosedInstallationRetentionAndCleanupSummary",
+  "recordedAt": "2026-10-30T01:02:25.850255+00:00",
+  "result": "closed-installation-retention-and-cleanup-evidence-passed",
+  "sourceCommit": "4b40c09932daad2e718b5f98e0a75eccc5f84dd7",
+  "formalApplication": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "signingScope": "Internal ad-hoc signature; public signing and notarization are not claimed."
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/candidate-output/candidate.json",
+      "sha256": "f626b02ba4ad959600c1636b0a8b08c7c74d1295f2839fcd0f86bcca942ed7a6"
+    },
+    "actualNineReview": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/independent/review-v2.json",
+      "sha256": "6dcca200a799f7f683c13ef3bc6edbaa6d914b47f2e429fc6e9d697a4acf3468"
+    },
+    "actualNineImplementation": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/independent/review-v2-ready.py",
+      "sha256": "dd09b12fcb2e033ac2a93f3fd3f729691d4f33bc3f9bf9a5303e9a5c41922e22"
+    },
+    "ninePassed": 9,
+    "archiveSha256": "e151ca022f4080d51dd43f47662418178546578f77ccb18374d7056ad69cbd33",
+    "archiveMembers": 5,
+    "archiveRetainedAndRehashed": true
+  },
+  "sourceAndEngineeringBoundary": {
+    "productionInputs": 2330,
+    "installedTenGitAndDiskMismatches": 0,
+    "originalSevenCoveredChecked2333": true,
+    "finalFull2333EqualsOriginalSevenMap": false,
+    "onlyRequirementsP12ProgressCellChangedAfterSeven": true,
+    "fullSevenRunAtFinalCommit": false,
+    "finalCommittedFreeze": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/source-freeze-final.json",
+      "sha256": "2d7287eed71df646f3945828d1fa217d12ed311edfde646e52eca0a0cfd7f643"
+    },
+    "postCheckAuthorityProgress": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/post-check-authority-progress.json",
+      "sha256": "e9b3ab7efa2a4297cb021b8a9c7e24784cbf45a86a1f35ffe110be51bb6a08b6"
+    }
+  },
+  "normalExit": {
+    "rootReceipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-normal-exit-b3-ui.json",
+      "sha256": "682dc2b40df5fa61a98479ef9760f8ccb4245c40732d3c80718d2a916afd92e5"
+    },
+    "normalSaveAndExitObservedByRoot": true,
+    "forcedQuit": false,
+    "unknownResultsNotAssertedCompleted": true,
+    "privateDraftContentPublished": false
+  },
+  "atomicInstallation": {
+    "receipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/install-result.json",
+      "sha256": "42b8aa17203f3e86e254975826556f389c26cd3c83321d8686d2ec6cd7c596a5"
+    },
+    "journal": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/install-journal.jsonl",
+      "sha256": "0f7d9951eecfbdeb2ec7ec386dbf39da3d8ce7f6e9acb8f8eced09b0c9b016ca"
+    },
+    "parameters": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install-parameters.json",
+      "sha256": "5ba651d3545645d762b1b17def52bb803916db996827b0b7723177af97744bdc"
+    },
+    "onlyFormalApplicationUpdated": true,
+    "exactFileCount": 5,
+    "newInodeForEveryReplacement": true,
+    "oldInodesNotWritten": true,
+    "wholeAppBackupCreated": false,
+    "automaticRetry": false,
+    "rollbackOrRestorePerformed": false,
+    "journalRows": 17,
+    "formalCandidateHashesAndModesEqual": true,
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "11e2be7e8ea740769250e9c041ee64618415d7a7a033a3a96eb832bfc7cacb49",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "modes": {
+      "Contents/Info.plist": 420,
+      "Contents/MacOS/farfold": 493,
+      "Contents/Resources/icon.icns": 420,
+      "Contents/Resources/release-manifest.json": 420,
+      "Contents/_CodeSignature/CodeResources": 420
+    }
+  },
+  "closedDataRetention": {
+    "scope": "Three captured closed-state manifests; these are not post-launch data snapshots.",
+    "phases": {
+      "before": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/install/retention-before-receipt.json",
+        "sha256": "2520946b1b21bb1748696b81f94139643f9367651363aaf758264580d4b9b21f"
+      },
+      "preinstall": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/install/retention-preinstall-receipt.json",
+        "sha256": "b5d47448d91987306d6138cfcf085e97b322f6611ccb16779dbad680e9e904dd"
+      },
+      "after": {
+        "path": "output/2026-10-30-p12-continuation/formal-final/install/retention-after-receipt.json",
+        "sha256": "6587ed087315413c19978f8117366621f44c0bdd1af046ecba2a37aa3b794166"
+      }
+    },
+    "rootCount": 3,
+    "completeEntriesPerPhase": 232530,
+    "manifestSha256": "a3d8197e0d171ec3b9888e3651da215660a11f86b29eda57ef9192716b09eed6",
+    "manifestByteCountPerPhase": 63013847,
+    "allThreeManifestStreamsRehashedAndByteEqual": true,
+    "entryCountsRecomputedWithoutPublishingPaths": {
+      "appData": {
+        "directory": 22245,
+        "file": 209681,
+        "symlink": 335,
+        "special": 0
+      },
+      "webkit": {
+        "directory": 155,
+        "file": 104,
+        "symlink": 0,
+        "special": 0
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "symlink": 0,
+        "special": 0
+      }
+    },
+    "closedRawMetadataReceiptsEqual": true,
+    "retainedBackupNormalization": {
+      "recordedIntegrity": "ok",
+      "recordedModeAfter": "delete",
+      "sourceAndFirstCaptureUnchanged": true,
+      "sqlOpenScope": "Second working copy and new consolidated backup only.",
+      "auditReopenedDatabaseOrReranSql": false
+    },
+    "continuousProcessAbsenceClaimed": false
+  },
+  "installedIndependentReview": {
+    "receipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/installed-independent-review-private.json",
+      "sha256": "c9be0358ce5cef03cb0ca6f02add958cd64e7c70e9020027344ffa1e845b014c"
+    },
+    "implementation": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install-preparation/independent/review-installed-atomic-v5-ready.py",
+      "sha256": "8a5976aaa18d0334749cad40fbce40d968ea69e72f49cde1500c595203007b45"
+    },
+    "parameters": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/installed-review-parameters.json",
+      "sha256": "9508c89b28c09fc2f162a27788586e46c7894041b213af43d7bb5016b3596eed"
+    },
+    "passed": 10,
+    "total": 10,
+    "failures": [],
+    "recordedEvidenceSealsVerified": 64,
+    "checks": [
+      {
+        "name": "source-and-production-inputs",
+        "passed": true
+      },
+      {
+        "name": "receipt-and-evidence-seals",
+        "passed": true
+      },
+      {
+        "name": "formal-candidate-exact-five-files-and-modes",
+        "passed": true
+      },
+      {
+        "name": "bundle-identity",
+        "passed": true
+      },
+      {
+        "name": "arm64-mach-o",
+        "passed": true
+      },
+      {
+        "name": "strict-codesign",
+        "passed": true
+      },
+      {
+        "name": "archive-exact-five-crc-mode",
+        "passed": true
+      },
+      {
+        "name": "closed-without-launch-observed",
+        "passed": true
+      },
+      {
+        "name": "metadata-backup-and-first-capture-retained",
+        "passed": true
+      },
+      {
+        "name": "fresh-three-full-manifests-byte-identical",
+        "passed": true
+      }
+    ]
+  },
+  "duplicateCandidateCleanup": {
+    "receipt": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/candidate-cleanup.json",
+      "sha256": "7e269972f1ebc57df4552c17b344d6a9c8e022e0a2b50b9331afd24431b76a67"
+    },
+    "journal": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/install/candidate-cleanup-journal.jsonl",
+      "sha256": "887bfb9d04294fea08580307af747db7e57550dbddff1851b97cf42034183b89"
+    },
+    "parameters": {
+      "path": "output/2026-10-30-p12-continuation/formal-final/cleanup-parameters.json",
+      "sha256": "4879d3ff900d6e97cb14eb743cf3c6a84a608d522b817b94f648f7bc8585c4fe"
+    },
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "journalRows": 12,
+    "zipPreservedSha256": "e151ca022f4080d51dd43f47662418178546578f77ccb18374d7056ad69cbd33",
+    "formalFiveFilesAndModesRecordedUnchanged": true
+  },
+  "completionProvenance": {
+    "source": "Root reported actual current-task natural command completions; this audit did not rerun these operations.",
+    "reportedNaturalExitCodes": {
+      "installer": 0,
+      "retentionAfter": 0,
+      "installedIndependentTen": 0,
+      "cleanup": 0
+    },
+    "reportedSessions": {
+      "installer": 49093,
+      "retentionAfter": 32144,
+      "installedIndependentTen": 55415
+    }
+  },
+  "auditCoverage": {
+    "existingArtifactHashesAndCrossReceiptLinksRecomputed": true,
+    "capturedManifestsStreamComparedAndCountsRecomputed": true,
+    "installationAndCleanupJournalsChecked": true,
+    "archiveRehashedAndExactMemberMetadataChecked": true,
+    "liveApplicationOrLiveDataInspected": false,
+    "databaseOrBackupOpened": false,
+    "sqlBuildCaptureInstallCleanupOrAppActionPerformed": false
+  },
+  "limits": {
+    "proofEndsAtClosedInstallationAndCleanup": true,
+    "firstLaunchB3ReadbackIncluded": false,
+    "b3DraftRestorationVerifiedByThisSummary": false,
+    "p12InstalledUiAcceptanceClaimed": false,
+    "realAgentAcceptanceClaimed": false,
+    "all29Accepted": false,
+    "closedDataEqualityExtendedToPostLaunch": false
+  },
+  "redaction": {
+    "userPathsAndManifestEntriesPublished": false,
+    "draftTextOrPrivateUiContentPublished": false,
+    "credentialsOrAccountIdentifiersPublished": false,
+    "privateDatabaseContentsPublished": false
+  }
+}

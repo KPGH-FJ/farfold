@@ -1,0 +1,192 @@
+{
+  "kind": "P12SourceAndCandidateCheckpointWithFormalExitStillPending",
+  "recordedAt": "2026-10-29T22:08:18.604459+00:00",
+  "source": {
+    "commit": "4b40c09932daad2e718b5f98e0a75eccc5f84dd7",
+    "pushedTo": "origin/main",
+    "productionChanges": [
+      "Selectable searchable transcript text for WebKit highlight painting.",
+      "Only register Highlight ranges whose two endpoints have open search ancestors; retain folded matches in counts.",
+      "Retain Unicode/case-folding/UTF-16 semantics while adding inert multiline flag for observed emoji-prefix literal search miss."
+    ],
+    "fullSeven": {
+      "frontendFiles": 691,
+      "frontendPassed": 9230,
+      "rustPassed": 2326,
+      "rustIgnored": 6,
+      "allSevenNaturalZero": true,
+      "checkedInputMap": 2333,
+      "checkedPreEqualsPost": true,
+      "finalFullMapEqualsChecked": false,
+      "finalProduction2330EqualsChecked": true,
+      "onlyFinalMapDifference": "requirements/P12 progress cell; exact raw-cell reconstruction and original151conditions verified",
+      "checksRanAtFinalCommit": false
+    },
+    "controlledNativeMatrix": "39 screenshot/AX pairs independently reviewed in3 bounded synthetic routes; no new counterexample in observed cases."
+  },
+  "candidate": {
+    "buildInvocations": 1,
+    "buildExitCode": 0,
+    "rootOuterNaturalExitCode": 0,
+    "buildDurationSeconds": 87.3979959487915,
+    "version": "0.1.7",
+    "bundleId": "ai.farfold.desktop",
+    "platform": "darwin-arm64",
+    "signature": "strict verified ad hoc internal candidate",
+    "binarySha256": "11e2be7e8ea740769250e9c041ee64618415d7a7a033a3a96eb832bfc7cacb49",
+    "archive": "src-tauri/target/internal-candidate/p12-continuation-4b40c099/Farfold-0.1.7-4b40c099.zip",
+    "archiveSha256": "e151ca022f4080d51dd43f47662418178546578f77ccb18374d7056ad69cbd33",
+    "archiveBytes": 16235492,
+    "independentNine": {
+      "passed": 9,
+      "total": 9,
+      "result": "passed"
+    },
+    "launched": false,
+    "installed": false
+  },
+  "formalApplication": {
+    "sourceCommit": "52aa8419ad402bf8b4e35dcf8cf2cd127706a4ea",
+    "path": "/Applications/Farfold.app",
+    "candidateNineVerifiedStaticIdentityAndFiveFilesUnchanged": true,
+    "normalQuitRequestsThisBatch": 2,
+    "bothReturnedSameUnfinishedOrUnconfirmedWarning": true,
+    "rootSelectedLeaveInAppBothTimes": true,
+    "saveAndExitSelected": false,
+    "forcedQuit": false,
+    "workOwnerAndActualActivityState": "unresolved",
+    "userDecisionRequested": true,
+    "normalExitPrerequisiteSatisfied": false,
+    "closedDataRetentionPhasesExecuted": false,
+    "replacementPerformed": false
+  },
+  "protectedDraft": {
+    "originalObject": "B3 2026-10-29",
+    "currentSelected": true,
+    "fourCompleteNonemptyRenderedStringsEqualOriginal": true,
+    "editedOrSent": false,
+    "storageSerializationOrPostUpdateRestorationProved": false,
+    "pendingQueues": "kept paused by normal Quit flow; not automatically resumed"
+  },
+  "limits": [
+    "This checkpoint does not prove installed Tauri behavior, real Agent streaming, physical attachment decoding, arbitrary CSS visibility or all conversation search.",
+    "Normal Quit and no-active-work prerequisite are unresolved. No user data capture, original database SQL, backup or install stage ran.",
+    "Unknown requests are not reclassified as completed/stopped, retried or resent.",
+    "Full P12/P01,29x8 and NEW-24 affected-send pause remain open.",
+    "Candidate app/ZIP are generated artifacts; formal app is unchanged. Cleanup or later installation must use exact reviewed paths and actual receipts."
+  ],
+  "evidence": [
+    {
+      "role": "candidate",
+      "path": "output/2026-10-30-p12-continuation/formal-final/candidate-output/candidate.json",
+      "sha256": "f626b02ba4ad959600c1636b0a8b08c7c74d1295f2839fcd0f86bcca942ed7a6",
+      "bytes": 282102,
+      "mode": "0o600"
+    },
+    {
+      "role": "naturalCompletion",
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-candidate-natural-completion.json",
+      "sha256": "d9af7d619c0a15fd2f6cf5efb27ec2eb4486dde3826d0db4fc86a3bd2caa5df6",
+      "bytes": 1003,
+      "mode": "0o600"
+    },
+    {
+      "role": "candidateNine",
+      "path": "output/2026-10-30-p12-continuation/formal-final/independent/review-v2.json",
+      "sha256": "6dcca200a799f7f683c13ef3bc6edbaa6d914b47f2e429fc6e9d697a4acf3468",
+      "bytes": 3782,
+      "mode": "0o600"
+    },
+    {
+      "role": "actualNineImplementation",
+      "path": "output/2026-10-30-p12-continuation/formal-final/independent/review-v2-ready.py",
+      "sha256": "dd09b12fcb2e033ac2a93f3fd3f729691d4f33bc3f9bf9a5303e9a5c41922e22",
+      "bytes": 37704,
+      "mode": "0o600"
+    },
+    {
+      "role": "binding",
+      "path": "output/2026-10-30-p12-continuation/formal-final/binding-manifest.json",
+      "sha256": "475f12f221a7546e6c5008f28b86a0b8d664be6eaa6e8ac19b96d32122a8f7fd",
+      "bytes": 13653,
+      "mode": "0o600"
+    },
+    {
+      "role": "bindingIndependentReview",
+      "path": "output/2026-10-30-p12-continuation/formal-final/binding-independent-review.json",
+      "sha256": "2b9a37f4acc04870d828cd158c8f03a75719a6630d92fe903b60e35dba5407f5",
+      "bytes": 3141,
+      "mode": "0o600"
+    },
+    {
+      "role": "rootPreflight",
+      "path": "output/2026-10-30-p12-continuation/formal-final/root-candidate-readonly-preflight.json",
+      "sha256": "27e7bbe3dc9026ec95fa218637f095db9b222c57397913a8f7f4f97cd291ccea",
+      "bytes": 538,
+      "mode": "0o600"
+    },
+    {
+      "role": "finalSourceFreeze",
+      "path": "output/2026-10-30-p12-continuation/formal-final/source-freeze-final.json",
+      "sha256": "2d7287eed71df646f3945828d1fa217d12ed311edfde646e52eca0a0cfd7f643",
+      "bytes": 275979,
+      "mode": "0o600"
+    },
+    {
+      "role": "postCheckProgress",
+      "path": "output/2026-10-30-p12-continuation/formal-final/post-check-authority-progress.json",
+      "sha256": "e9b3ab7efa2a4297cb021b8a9c7e24784cbf45a86a1f35ffe110be51bb6a08b6",
+      "bytes": 6683,
+      "mode": "0o600"
+    },
+    {
+      "role": "sourceReview",
+      "path": "output/2026-10-30-p12-continuation/formal-final/p12-independent-source-evidence-review.json",
+      "sha256": "f851a8b76c5c8e10119658db24ccf7d6c3d0eb7005bd8057f642c0cbb5345866",
+      "bytes": 9796,
+      "mode": "0o600"
+    },
+    {
+      "role": "actualSourceNativeMatrix",
+      "path": "docs/evidence/2026-10-30-p12-continuation/final-source-matrix-summary.json",
+      "sha256": "f4ca7e5dde6c097050ce94d8b7c48f82696387a35e6fae80951ca5e86951ddab",
+      "bytes": 55259,
+      "mode": "0o600"
+    },
+    {
+      "role": "finalFullSeven",
+      "path": "docs/evidence/2026-10-30-p12-continuation/engineering-final-summary.json",
+      "sha256": "48e9cbf2daca43bb725334585e783b6d55081f20c3f9ce33b92f0c588757c1d0",
+      "bytes": 16535,
+      "mode": "0o644"
+    },
+    {
+      "role": "freshFormalBaseline",
+      "path": "output/2026-10-30-p12-continuation/formal-final/formal-baseline.json",
+      "sha256": "80a7726929e7e8837dbb9bbcafc25e5a01bacc2b7bb3f1b5cac79372fce9ca95",
+      "bytes": 10157,
+      "mode": "0o600"
+    },
+    {
+      "role": "freshWarningAx",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/14-after-candidate-exit-review-warning.ax.txt",
+      "sha256": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf",
+      "bytes": 937,
+      "mode": "0o600"
+    },
+    {
+      "role": "freshWarningImage",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/14-after-candidate-exit-review-warning.jpg",
+      "sha256": "25e9b7c1a8f7464eee441c4fdea61b8bf9604504ccdd99624b93a6df19649bec",
+      "bytes": 220468,
+      "mode": "0o600"
+    },
+    {
+      "role": "returnedOriginalB3Ax",
+      "path": "output/2026-10-30-p12-continuation/formal-final/private-ui/15-after-candidate-stayed-with-b3.ax.txt",
+      "sha256": "02deead5e872f71aecf5497f366dcaff9635ad51a4ae3497777b10bb3b341484",
+      "bytes": 5479,
+      "mode": "0o600"
+    }
+  ]
+}
