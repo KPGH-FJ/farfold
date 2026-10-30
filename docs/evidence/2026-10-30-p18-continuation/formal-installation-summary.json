@@ -1,0 +1,111 @@
+{
+  "kind": "P18ActivityFormalInstallationPublicSummary",
+  "requirementIds": ["P18"],
+  "sourceCommit": "7a04c6f1bf13a90a764b27c2194baaf0d7294a9e",
+  "app": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "5925de99da745da12ce5bbe0eaeb46e5d9407c54f87110b44610bb847a8163b3"
+  },
+  "candidate": {
+    "singleInvocation": true,
+    "naturalExitCode": 0,
+    "durationSeconds": 77.17017912864685,
+    "independentChecksPassed": 9,
+    "receipt": {
+      "path": "output/2026-10-30-p18-continuation/formal/candidate-output/candidate.json",
+      "sha256": "da3b36e5441c693719325c5c0e03cc4b45c22d92c386cab5e3a4e3e4422f46c1"
+    },
+    "independentReview": {
+      "path": "output/2026-10-30-p18-continuation/formal/independent/review-v2.json",
+      "sha256": "d5e26db5037c1fd26e38c94a4f636ec80a6cd20812d921ec4e8e40cf9b449724"
+    }
+  },
+  "engineering": {
+    "checksRanBeforeCommit": true,
+    "checksRanAtFinalCommit": false,
+    "fullInputCount": 2334,
+    "productionInputCount": 2331,
+    "fullBeforeAfterFinalCommittedHashesEqual": true,
+    "summary": "engineering-summary.json"
+  },
+  "dataProtection": {
+    "normalSaveExitObserved": true,
+    "freshThreeFullManifestsEntriesEach": 232530,
+    "threeManifestBytesEqual": true,
+    "secondWorkingAndNewConsolidatedSqlOnly": true,
+    "originalAndFirstCopyNotOpenedWithSql": true,
+    "newBackupIntegrityFromProducerReceipt": "ok",
+    "independentReaderDidNotRerunSql": true,
+    "retentionReceipts": [
+      {
+        "path": "output/2026-10-30-p18-continuation/formal/install/retention-before-receipt.json",
+        "sha256": "4e2d983e015dabdb505c23d18488c526a118e455239493a2d700ef6cd49f6d9f"
+      },
+      {
+        "path": "output/2026-10-30-p18-continuation/formal/install/retention-preinstall-receipt.json",
+        "sha256": "b1db4a8989429fea29f7df46cee172dd4afc8a925c0dfad7a01d107e42d661b5"
+      },
+      {
+        "path": "output/2026-10-30-p18-continuation/formal/install/retention-after-receipt.json",
+        "sha256": "758ef4da7533f4c20312724c32a36bfc7b0b7ec74d8b0dec29a9a555565d224d"
+      }
+    ]
+  },
+  "installation": {
+    "singleInvocation": true,
+    "naturalExitCode": 0,
+    "fiveAtomicNewInodeReplacements": true,
+    "result": {
+      "path": "output/2026-10-30-p18-continuation/formal/install/install-result.json",
+      "sha256": "6703f5c370c3b9735658973d7eea5f3f8fb5b69e20e603db2f11c3ddfd112478"
+    },
+    "independentChecksPassed": 6,
+    "independentChecksTotal": 6,
+    "independentProof": {
+      "path": "output/2026-10-30-p18-continuation/formal/install/installed-independent-review-private.json",
+      "sha256": "d8fd80dad6d1361cd5e2a9e6b906b9c273ac9224c308179f795f1983ec6a8937"
+    },
+    "independentProofBoundary": "Six substantive read-only groups; no claim of the historical ten-check implementation.",
+    "noContinuousOldInodeWriteAuditClaim": true,
+    "wholeBundleTransactionAtomic": false,
+    "appBackupCreated": false,
+    "forcedQuit": false,
+    "automaticRetryOrRestore": false
+  },
+  "duplicateCleanup": {
+    "naturalExitCode": 0,
+    "filesRemoved": 5,
+    "directoriesRemoved": 5,
+    "exactGeneratedCandidateOnly": true,
+    "archiveRetained": "src-tauri/target/internal-candidate/p18-activity-7a04c6f1/Farfold-0.1.7-7a04c6f1.zip",
+    "archiveSha256": "9b435d288e696b9812646fac5ac99a163981dd49e8f1c6ff99a5b131bdc6b7c8",
+    "receipt": {
+      "path": "output/2026-10-30-p18-continuation/formal/install/candidate-cleanup.json",
+      "sha256": "d70bbd568c38b3ff0822f71a631accd5904def84b842bec6458a9a7e892d0738"
+    }
+  },
+  "firstLaunch": {
+    "originalB3FourRenderedStringsMatch": true,
+    "permissionUnconfirmed": true,
+    "newModelSends": 0,
+    "selectedConversationAutomaticallyRestored": false,
+    "reference": {
+      "path": "output/2026-10-30-p18-continuation/formal/final-readonly-result.json",
+      "sha256": "41b3f494d56e2770ea4a083d6ea21f2aa54e05b914cd528d0d24379b47afc59e"
+    }
+  },
+  "limits": [
+    "Closed capture endpoints only; normal launch changes are not included in data equality.",
+    "Unknown work stays unknown; save/exit is not a stopped or completed receipt.",
+    "All input hashes equal checked maps; mode evidence is endpoints/current Git checks, not continuous monitoring.",
+    "No complete P18, P01, all29 or real unfinished-tool verification."
+  ],
+  "privacy": {
+    "rawPromptReplyOrDraftBodiesIncluded": false,
+    "nativeIdsOrCredentialsIncluded": false,
+    "databaseOrDataManifestOrBackupHashesIncluded": false
+  }
+}
