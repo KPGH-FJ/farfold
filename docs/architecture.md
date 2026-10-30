@@ -81,7 +81,7 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [document_input.ts](../src/runtime/document_input.ts) 及格式模块把明确选择的内容转换为可发送表示；本地版本信息用于防止误发旧文件，不伪造官方工具回执，也不把Farfold定位字段送成 Agent协议内容。DOCX作者文字、XLSX保存值/公式、PDF可提取文字都各有省略和准确性边界，不声称还原完整视觉排版或OCR。明确确认的文档文字在[prompt_blocks.ts](../src/runtime/prompt_blocks.ts)发送边界转换为官方普通文字块，只发送已审阅正文，不携带供接收方重新提取的原文件位置。本地来源、版本与消息附件显示先于该转换保留；普通资源及没有该本地确认字段的历史路径不变。普通文字路径与资源专属准入不同，官方历史是否保留结构化附件和多文档来源名称仍需分别验证。
 
-文件成果分开“工具报告”与“磁盘核验”。消息中的写入参数、路径或差异摘要只证明报告内容；明确打开文件后，[file_access.rs](../src-tauri/src/file_access.rs) 才按路径和文件句柄边界读取。项目索引有遍历数量、深度、名称和时间预算，不是持久全文索引；同句柄校验不提供整个文件系统原子快照。
+内容栏命令、日志与差异由同一工具活动依据派生等待、进行中或未知；呈现状态不改Agent报告的原状态，停止回复不等于工具终态。文件成果分开“工具报告”与“磁盘核验”。消息中的写入参数、路径或差异摘要只证明报告内容；明确打开文件后，[file_access.rs](../src-tauri/src/file_access.rs) 才按路径和文件句柄边界读取。项目索引有遍历数量、深度、名称和时间预算，不是持久全文索引；同句柄校验不提供整个文件系统原子快照。
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
 

@@ -1,0 +1,85 @@
+{
+  "kind": "P18ToolActivityPresentationSourcePublicSummary",
+  "recordedAt": "2026-10-30T02:09:09.890912+00:00",
+  "requirementIds": ["P18"],
+  "problem": "Command/log cards lost non-failure states; difference cards used reported status after activity became uncertain.",
+  "change": [
+    "Reuse the existing toolActivityState for all five artifact sources.",
+    "Show existing waiting, running and unknown labels; preserve official status, output and error filtering.",
+    "Reply cancellation, output text or absent activity do not establish a tool terminal result."
+  ],
+  "sourceInputs": [
+    {
+      "path": "src/runtime/artifacts.ts",
+      "sha256": "3f1fb391be3c13bfa961b527e012dbaacdac6988f190787879d8ee1d71c307fe"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "078c35107fa4c4e3843da89adeb14e7f2edd41c421544338db72f8885800a8b8"
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "sha256": "30d01e2a55f07b735826a25913d5740320ef9cfcd2f190cab1ee5f3da0e3ca16"
+    },
+    {
+      "path": "src/runtime/sessions.history.test.tsx",
+      "sha256": "aaf6e677a43c0ed6656b3c74ac428f0d9403e5395c71ae419e039f49a7201992"
+    },
+    {
+      "path": "src/components/ArtifactPane.tool-activity.test.tsx",
+      "sha256": "9c13507f02a683551a2f91a3bd45d354fa17e4ae1656c8e415bb6e8ba1e1cc13"
+    }
+  ],
+  "controlledTests": {
+    "red": {
+      "files": 1,
+      "passed": 18,
+      "failed": 59,
+      "exitCode": 1,
+      "singleInvocation": true,
+      "reference": {
+        "path": "output/2026-10-30-p18-continuation/tool-activity-red/run-result.json",
+        "sha256": "573986dc6c5b91d21179d2fdaf6709b21bb153b49ced106095829d20fadb0e1e"
+      }
+    },
+    "green": {
+      "files": 13,
+      "passed": 217,
+      "failed": 0,
+      "exitCode": 0,
+      "reference": {
+        "path": "output/2026-10-30-p18-continuation/affected/result.json",
+        "sha256": "8069740b9aa9ee176665b576c0a32ab7323d141850a48c9458b30e932abff5bd"
+      }
+    },
+    "newRegressionCases": 77,
+    "covered": [
+      "Current activity retained after cancelled reply",
+      "Disconnect, absent/different ID and failed-history connection qualification",
+      "Terminal status retained and late terminal receipt",
+      "Payload bytes, terminal output priority, call identity and zero SSR IPC"
+    ],
+    "limits": [
+      "GREEN receipt has command and raw streams, without a full source endpoint graph. Batch engineering is separate.",
+      "Counts from overlapping runs are not added."
+    ]
+  },
+  "independentSourceReview": {
+    "path": "output/2026-10-30-p18-continuation/independent-source-review.json",
+    "sha256": "0812b8731bd51280c93ccd61fd6d7d998c9c2ecec82e3446a9c44e7ea51b97d8"
+  },
+  "boundaries": {
+    "agentSendOrStopPerformed": false,
+    "officialStatusMutated": false,
+    "newPermissionOrConfiguration": false,
+    "persistentEventStoreAdded": false,
+    "agentSpecificUiAdded": false,
+    "completeRequirementAccepted": false,
+    "all29Accepted": false
+  },
+  "remaining": [
+    "No reliable existing unfinished artifact found for installed unknown-state recheck.",
+    "Original command exit code/raw shape and earlier live failure remain.",
+    "Full P18, all29 and NEW-24-affected new-send pause remain."
+  ]
+}

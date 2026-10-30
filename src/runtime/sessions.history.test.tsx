@@ -82,6 +82,7 @@ it("restores tool content without claiming replay time as execution time", async
       kind: "command",
       title: "sleep 60",
       output: "kept",
+      status: "completed",
       failed: false,
       time: 0,
     },

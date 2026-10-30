@@ -5,7 +5,12 @@
  * 这里仅放对 ThreadState 的纯操作；ThreadState 经 `import type`
  * 反向引用，不产生运行时循环依赖。
  */
-import type { ThreadState, ToolCallView, ToolContent } from "./session_types";
+import {
+  toolActivityState,
+  type ThreadState,
+  type ToolCallView,
+  type ToolContent,
+} from "./session_types";
 
 /** 命令卡输出上限：保留尾部 ~64KB。 */
 export const COMMAND_OUTPUT_CAP = 64 * 1024;
@@ -31,6 +36,7 @@ export type PaneCard =
       kind: "command";
       title: string;
       output: string;
+      status: string;
       failed: boolean;
       time: number;
     }
@@ -38,6 +44,7 @@ export type PaneCard =
       kind: "log";
       title: string;
       output: string;
+      status: string;
       failed: boolean;
       time: number;
     };
@@ -93,7 +100,7 @@ export function appendToolOutput(
  *  block; the input arguments still carry the change (`filePath` +
  *  `content`, or `oldString`/`newString`). Synthesize a card so the
  *  artifact drawer reflects every reported file write. */
-function synthesizedDiff(call: ToolCallView): PaneCard | null {
+function synthesizedDiff(call: ToolCallView, status: string): PaneCard | null {
   if (call.kind !== "edit") return null;
   if (call.content.some((c) => c.type === "diff")) return null;
   const input = call.rawInput as Record<string, unknown> | null;
@@ -119,7 +126,7 @@ function synthesizedDiff(call: ToolCallView): PaneCard | null {
     newText,
     scope: "fragment",
     source: typeof input.newString === "string" ? "edit-input" : "write-input",
-    status: call.status,
+    status,
     time: call.endedAt ?? call.startedAt,
   };
 }
@@ -131,11 +138,17 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
   for (const item of s.items.slice(fromItem)) {
     if (item.kind !== "tool") continue;
     const time = item.call.endedAt ?? item.call.startedAt;
+    // Match the message's activity evidence without rewriting the official call.
+    const status =
+      toolActivityState(s, item.call) === "unknown"
+        ? "unknown"
+        : item.call.status;
     if (item.call.kind === "execute") {
       cards.push({
         kind: "command",
         title: item.call.title || item.call.name || "",
         output: commandOutput(item.call),
+        status,
         failed: item.call.status === "failed",
         time,
       });
@@ -147,6 +160,7 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
           kind: "log",
           title: item.call.title || item.call.name || "",
           output,
+          status,
           failed: item.call.status === "failed",
           time,
         });
@@ -162,12 +176,12 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
           // a tool's location establishes a full file or either side's line offset.
           scope: "fragment",
           source: "diff",
-          status: item.call.status,
+          status,
           time,
         });
       }
     }
-    const synthesized = synthesizedDiff(item.call);
+    const synthesized = synthesizedDiff(item.call, status);
     if (synthesized) cards.push(synthesized);
   }
   return cards.sort((a, b) => a.time - b.time);

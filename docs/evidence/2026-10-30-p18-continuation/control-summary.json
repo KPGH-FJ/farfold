@@ -1,0 +1,34 @@
+{
+  "kind": "P18ActivityStaticSsrBrowserControlPublicSummary",
+  "requirementIds": ["P18"],
+  "pages": 10,
+  "imageAndAxPairs": 10,
+  "styleSources": 45,
+  "sources": ["execute command", "reported edit difference"],
+  "states": [
+    "current in_progress after reply cancellation",
+    "current pending after reply cancellation",
+    "disconnected unknown",
+    "late failed",
+    "late completed"
+  ],
+  "result": "All ten images and AX were independently read; no blocking presentation discrepancy found.",
+  "review": {
+    "path": "output/2026-10-30-p18-continuation/independent-control-review.json",
+    "sha256": "bbce074b66187f8612c572662299c24291a7616331aade9bab0d0cfc3ead661a"
+  },
+  "rendered": {
+    "path": "output/2026-10-30-p18-continuation/control/render-result.json",
+    "sha256": "c866b07564d7345a297afedb4d44bb575367031f4d6e5477ef95df56615f8e4d"
+  },
+  "preparationDiagnostic": {
+    "path": "output/2026-10-30-p18-continuation/control/preparation-notes.json",
+    "sha256": "6e79eab52dca8c12cc86c91af4df899cac12a86e4382a4964cf98a3671169bf2"
+  },
+  "limits": [
+    "Real production component SSR and source CSS concatenation; not installed-bundle CSS or browser hydration/effects.",
+    "No IPC, command execution, filesystem reads by the application, new Agent send, actual stream or filter interaction.",
+    "Independent non-command log kind and input-derived difference kinds have unit/SSR tests, not these ten browser pages.",
+    "An unrelated historical fixture dependency-scan warning was observed during initial preparation; complete raw warning output was not preserved; rendering returned zero."
+  ]
+}

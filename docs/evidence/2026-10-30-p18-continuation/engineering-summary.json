@@ -1,0 +1,60 @@
+{
+  "kind": "P18ActivityBatchEngineeringPublicSummary",
+  "requirementIds": ["P18"],
+  "baseHead": "eaaea36a446e44a948c0f62d78001a1b36127c98",
+  "checksRanBeforeCommit": true,
+  "checksRanAtFinalCommit": false,
+  "allSevenSucceeded": true,
+  "inputCount": 2334,
+  "sourceHashEndpointsEqual": true,
+  "counts": {
+    "frontend": {
+      "files": 692,
+      "passed": 9307,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ]
+  },
+  "naturalExitCodes": {
+    "format": 0,
+    "typecheck": 0,
+    "frontend-test-direct": 0,
+    "build": 0,
+    "cargo-fmt": 0,
+    "cargo-clippy": 0,
+    "cargo-test": 0
+  },
+  "actualRun": {
+    "path": "output/2026-10-30-p18-continuation/engineering/engineering-summary.json",
+    "sha256": "7d0ca2eed55c8a35be205bf965a0d229d9fcd8e0af061fd004ea746224c0469c"
+  },
+  "postRunReadback": {
+    "path": "output/2026-10-30-p18-continuation/engineering/engineering-independent-review.json",
+    "sha256": "cc12ec32d00f03a009f761370b794bc878f2790d03b58dba84e007ba20158457"
+  },
+  "reviewBoundary": "The engineering runner author recomputed its original records after the single run; this is not a blind second execution. Candidate and source review are separate.",
+  "warningsRetained": [
+    "Vite chunk larger than 500 kB",
+    "Four archive write stopped diagnostics"
+  ],
+  "limits": [
+    "No continuous writer/dependency/environment freeze proof.",
+    "No installed application, real Agent or Windows acceptance."
+  ]
+}

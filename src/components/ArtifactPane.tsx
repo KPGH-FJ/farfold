@@ -69,15 +69,23 @@ function CommandCard({
   const clipped = all.length > TERMINAL_LINE_CAP;
   const shown = clipped ? all.slice(-TERMINAL_LINE_CAP) : all;
   const truncated = clipped || card.output.length >= COMMAND_OUTPUT_CAP;
+  const statusLabel =
+    card.status === "failed"
+      ? STRINGS.artifacts.failedLog
+      : card.status === "pending"
+        ? W.stepsPending
+        : card.status === "in_progress"
+          ? W.stepsRunning
+          : card.status !== "completed"
+            ? STRINGS.thread.toolResultUnknown
+            : card.kind === "log"
+              ? STRINGS.artifacts.log
+              : null;
   return (
     <div className="a-card">
       <div className="a-card-h">
         <span className="a-path">{card.title}</span>
-        {(card.kind === "log" || card.failed) && (
-          <span className="a-sub">
-            {card.failed ? STRINGS.artifacts.failedLog : STRINGS.artifacts.log}
-          </span>
-        )}
+        {statusLabel && <span className="a-sub">{statusLabel}</span>}
       </div>
       {truncated && (
         <div className="a-note">{STRINGS.artifacts.terminalTruncated}</div>
