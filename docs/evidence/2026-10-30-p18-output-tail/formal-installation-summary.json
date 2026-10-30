@@ -1,0 +1,226 @@
+{
+  "kind": "P18OutputTailFormalInstallationPublicSummary",
+  "recordedAt": "2026-10-30T09:15:11.001476+00:00",
+  "sourceCommit": "2063416d82de4c95e5ac0f02ffa47e102ef25f35",
+  "requirementIds": ["P18"],
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "73b4d39c23618e15962d8e912c544f26100d6ab35e92ee3788cade1277b15b04",
+    "strictAdHocCodesignVerified": true
+  },
+  "candidate": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "rootObservedSessionId": 96047,
+    "durationSeconds": 77.8272020816803,
+    "independentPassed": 9,
+    "independentTotal": 9,
+    "archive": "src-tauri/target/internal-candidate/p18-output-tail-2063416d/Farfold-0.1.7-2063416d.zip",
+    "archiveSha256": "d66fddf4ffa98385ab92132d5e14f4dee456a24d38f3790f5fc085433b0df931"
+  },
+  "normalExit": {
+    "rootObserved": true,
+    "forcedQuit": false,
+    "currentDraftRecordedBeforeQuit": true,
+    "unknownWorkRemainsUnknown": true,
+    "basis": {
+      "path": "output/2026-10-30-p18-output-tail/formal/root-normal-exit-b3-ui.json",
+      "sha256": "81737f94bf5305558b68dae3b9dd7a78650cc165deaf92fd7924b0c17b6010fe"
+    }
+  },
+  "installation": {
+    "naturalExitCode": 0,
+    "rootObservedSessionId": 98409,
+    "completionBasis": "Root observed the original installation execution session finish naturally; producer and independent installed receipts are pinned below.",
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileCount": 5,
+    "newInodePerFile": true,
+    "wholeBundleTransactionAtomic": false,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "independentPassed": 6,
+    "independentTotal": 6,
+    "independentGroupsDynamic": true
+  },
+  "retention": {
+    "phaseCounts": {
+      "before": 232530,
+      "preinstall": 232530,
+      "after": 232530
+    },
+    "allThreeFullManifestsByteEqual": true,
+    "manifestSha256": "d9161fbdee6c1ee4c1215ff1c2ec2c8fc514a5b2c92916dbbe6da093cacbb5b7",
+    "closedCaptureTimesUtc": {
+      "before": "2026-10-30T09:03:08.778504+00:00",
+      "preinstall": "2026-10-30T09:04:10.083299+00:00",
+      "after": "2026-10-30T09:06:52.537309+00:00"
+    },
+    "metadataRawFilesMatchAtThreeClosedEndpoints": true,
+    "freshBackupCreatedInBeforePhaseOnly": true,
+    "freshMetadataBackupSha256": "b6f79d803b0d299a0fbd06e8fc79ab95f92a67d53a50402a9b37e9114bc8c365",
+    "backupIntegrityFromProducer": "ok",
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly",
+    "originalAndFirstRawCopyNeverOpenedWithSql": true,
+    "integrityRequeriedByIndependentReader": false,
+    "backupBytesAndFirstCaptureIndependentlyMatched": true,
+    "normalExitEvidenceSeparateFromProcessZero": true,
+    "afterPhaseDoesNotCreateAnotherBackupOrRunSql": true,
+    "dataEqualityAfterLaunchClaimed": false
+  },
+  "cleanup": {
+    "naturalExitCode": 0,
+    "completionBasis": "Root reported the single cleanup invocation naturally returned zero; exact removal receipt is pinned below.",
+    "exactGeneratedFileCount": 5,
+    "exactGeneratedDirectoryCount": 5,
+    "archiveRetained": true,
+    "retainedDataBackupsPreserved": true,
+    "formalAppRetained": true
+  },
+  "engineeringBoundary": {
+    "fullSevenRanBeforeCommit": true,
+    "checksRerunAtFinalCommit": false,
+    "fullInputsExactlyMatchSeven": true,
+    "fullInputCount": 2337,
+    "productionInputCount": 2334,
+    "authorityInputCount": 3,
+    "counts": {
+      "frontend": {
+        "files": 695,
+        "passed": 9363,
+        "failed": 0
+      },
+      "native": [
+        {
+          "passed": 2326,
+          "failed": 0,
+          "ignored": 6
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ]
+    },
+    "sourceHashEndpointEqualityNotContinuousWriterProof": true,
+    "modesObservedOnlyAtPostCommitCurrentEndpoint": true,
+    "modesObservedBeforeOrPerEngineeringCommand": false,
+    "continuousModeWriterDependencyOrEnvironmentFreezeClaimed": false
+  },
+  "preservedPreparationError": {
+    "kind": "Root path prelude read error",
+    "helperRelaunchedBecauseOfError": false,
+    "scope": "Initial read used a path without install-preparation. The actual pinned retention helper subsequently ran once; the original read-error receipt remains unchanged."
+  },
+  "postLaunchReadOnlyEvidence": {
+    "recordedSeparately": true,
+    "independentUiReviewClaimedHere": false,
+    "scope": "This summary does not establish post-launch P18/P12 behavior or protected-text restoration."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/candidate-output/candidate.json",
+      "sha256": "db6bb26a8e51bc27ba71037235ddb8e910f14937243d66824b8c25c5bed72984",
+      "bytes": 554940
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/root-candidate-natural-completion.json",
+      "sha256": "cd8546482198d565b13b475299e2f43ded6dff53858093c14a52cb4d85a70602",
+      "bytes": 703
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/independent/review-v2.json",
+      "sha256": "35fc3b7702820fc6deaf7937e906258efee44bb6fcbd8d17c6c9b0f6fab76db6",
+      "bytes": 5018
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/root-normal-exit-b3-ui.json",
+      "sha256": "81737f94bf5305558b68dae3b9dd7a78650cc165deaf92fd7924b0c17b6010fe",
+      "bytes": 2516
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/install-result.json",
+      "sha256": "e50049227b096cbc517788133596e8bb6524221965095066819872c90aea1fdb",
+      "bytes": 12856
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/retention-before-receipt.json",
+      "sha256": "efa1d76849825a49a8e08c380fefc666aac59fa94fac863223c3fd9a99722f4e",
+      "bytes": 5948
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/retention-preinstall-receipt.json",
+      "sha256": "649c63394ca7292834ddcdc1eb883eef4b0ba8a21f7815932863f97fa32fa5da",
+      "bytes": 3053
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/retention-after-receipt.json",
+      "sha256": "d1b2738db81d8688ab332ff93144300a3c7b4c471537bf0ac3407442d4544ce3",
+      "bytes": 3048
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/installed-independent-review-private.json",
+      "sha256": "ed9c9621ffb49577b19d2bca4291184ce22722259f170036b4c4bf2c85a5d673",
+      "bytes": 7174
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/install/candidate-cleanup.json",
+      "sha256": "e8e53e2b9207247803ff0c4dbc7f0bd14ab86e7d0fb186a8568f641b1aad0b7f",
+      "bytes": 7174
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/input-modes.json",
+      "sha256": "72f3d115ceab85c6568aa152e28da4544a72a2429b20ba1221b6e2dfc734d34d",
+      "bytes": 137511
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/engineering/engineering-summary.json",
+      "sha256": "a5456c2ab024ac68a5fc26b8b412c58d04bd66466d87d6d15880deec38b1ddbf",
+      "bytes": 5955
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/source-freeze.json",
+      "sha256": "b3855ce35f127a150b21478b9ef83db93da6ccf4e3c59631133b43eacf0e5bdd",
+      "bytes": 275522
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/independent/reader-command.json",
+      "sha256": "37c871ddff59ee8043f7589307dd43ad8446250dd745b6d3d97ad524fec9fea8",
+      "bytes": 1285
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/independent/installed-reader-command.json",
+      "sha256": "2919febb021878d622ad724f42aec2395b916f4b8afb980c97362e3b43820f3a",
+      "bytes": 1292
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/root-retention-prelude-read-error.json",
+      "sha256": "c3f6ec433f3572cdab527a3cd490968690231950b64c04a7f905bba097d1924f",
+      "bytes": 417
+    }
+  ],
+  "limits": [
+    "Installation and closed capture endpoint evidence only. Formal data equality is limited to the three closed captures; legitimate post-launch storage is outside this equality claim.",
+    "Five per-file new-inode atomic replacements do not make the complete application bundle one atomic transaction.",
+    "Normal-save-exit facts are Root UI observations. Process absence and closed data captures do not prove old unknown work stopped or finished.",
+    "Backup integrity comes from the before-phase producer operation on the second working and new consolidated copies. Independent reading only matched retained bytes and producer evidence; it did not rerun SQL.",
+    "Current Git/blob/mode checks and engineering hash endpoints do not prove continuous immutability or unchanged dependencies/environment.",
+    "Post-launch readonly behavior and its independent image/AX review are separate. No full P18, P12, whole Agent, complete standard, Windows or29x8 acceptance is added."
+  ],
+  "privacy": {
+    "rawDraftOrReplyBodiesIncluded": false,
+    "agentNativeSessionIdsIncluded": false,
+    "credentialsIncluded": false
+  }
+}

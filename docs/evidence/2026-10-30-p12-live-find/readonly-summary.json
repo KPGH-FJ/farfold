@@ -1,0 +1,68 @@
+{
+  "kind": "P12RealAddedStreamingSwitchFindPublicSummary",
+  "recordedAt": "2026-10-30T08:57:53.430260+00:00",
+  "requirementIds": ["P12"],
+  "formalSource": "d503a3900b1b81021c8f6c865ea4aa61f36133f6",
+  "formalExecutableSha256": "67f117607f1b52feeff8a1ef0986420d0cd5cebc414161389c11b37bcab1769a",
+  "environment": {
+    "application": "Farfold0.1.7 macOSarm64 ai.farfold.desktop",
+    "agent": "Original selected Mistral conversation",
+    "displayedModel": "Mistral Medium3.5 unchanged; account/service/backend identity not newly established"
+  },
+  "result": "Scoped positive observations; full P12 remains open.",
+  "actions": {
+    "uiPromptSubmissions": 1,
+    "stops": 0,
+    "retries": 0,
+    "permissionOrModelSettingsChanges": 0
+  },
+  "observed": [
+    "Find opened during one real response. AX showed1 /50 with Stop and partial reply; the later sequential screenshot showed1 /51. After natural completion, count became1 /70 without retyping query.",
+    "Next result2 /70 revealed the new folded thought. Five literal markers were visible there; previous returned1 /70 then wrapped70 /70 to the added response. Numbered response01..64, prompt1 and thought5 are consistent with70 in this selected rendered corpus.",
+    "Switch to original B3 closed find. Return to original Mistral and reopen produced empty query; setting same literal yielded1 /70. Close left input empty and idle.",
+    "B3 original four full AX strings exactly matched before, middle and after; permission confirmation remained untouched."
+  ],
+  "timing": {
+    "declaredObservationBudgetSeconds": 600,
+    "restorationSecondsFromStart": 188.772,
+    "scope": "Root recorded UTC endpoints independently recomputed; functional observation upper bound, not model/backend latency."
+  },
+  "captureLimits": [
+    "AX and screenshot are sequential, not atomic streaming observations. Difference50/51 is not diagnosed as a product defect.",
+    "AX shortens long per-node text; screenshot floating button partially covers one repeated prefix near62. No strict newline or full original response-byte proof.",
+    "No exact count claim for every intermediate chunk or every loaded field. Concurrent engineering load is recorded; no performance benchmark."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p12-live-find/preparation.json",
+      "sha256": "de857cce3ff6ceb4715af34d59cf24a9d62d466ca7a7cd687dc27ed5d2211979"
+    },
+    {
+      "path": "output/2026-10-30-p12-live-find/send-attempt.json",
+      "sha256": "1a063fbc379ba130ddf95fa53bd8f6976258e73c9fd35b7d74e2ea2c0be95e5e"
+    },
+    {
+      "path": "output/2026-10-30-p12-live-find/root-observations.json",
+      "sha256": "dbc2f8b7f5c0898f1e70a6ae7df430747be205806a68bac355d01cbf94860e6e"
+    },
+    {
+      "path": "output/2026-10-30-p12-live-find/root-ui-timings.json",
+      "sha256": "26753d465e35018e878fab2ab5419960647f8e5ab1198928900e52abd3dcf7df"
+    },
+    {
+      "path": "output/2026-10-30-p12-live-find/b3-restoration.json",
+      "sha256": "ecc8fb6d608d19ee01d5c3a36c687a16a8d58504d74c21a19b1d8ff5d2f4942e"
+    },
+    {
+      "path": "output/2026-10-30-p12-live-find/independent-review.json",
+      "sha256": "ada8a31d8d034d8f359a94eb8b439a7900874063b3cbcb1a5459da4593e988b9"
+    }
+  ],
+  "notAccepted": [
+    "Full P12",
+    "Whole corpus or unloaded history",
+    "Attachment file bytes",
+    "Other Agent/service/model/platform",
+    "29 Agents eight standards"
+  ]
+}

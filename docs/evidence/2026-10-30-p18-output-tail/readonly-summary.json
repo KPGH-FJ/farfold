@@ -1,0 +1,59 @@
+{
+  "kind": "P18TailInstalledReadonlyPublicSummary",
+  "recordedAt": "2026-10-30T09:15:01.868487+00:00",
+  "requirementIds": ["P18", "P12", "P01"],
+  "formalSource": "2063416d82de4c95e5ac0f02ffa47e102ef25f35",
+  "formalExecutableSha256": "73b4d39c23618e15962d8e912c544f26100d6ab35e92ee3788cade1277b15b04",
+  "environment": "Farfold0.1.7 ai.farfold.desktop,macOSarm64,original Mistral and B3;Mistral Medium3.5 display unchanged,backend/account/service identity not newly verified.",
+  "result": "Selected cold-restored command and find regressions positive,independent saved-image/AX review no blocker.",
+  "observations": [
+    "Original prior command selected through its own View content; exact BEGIN/END lines readable in command pane,correct command title,no clipping notice,neutral ended step and duration unknown.",
+    "Original Mistral opened once,cold history retained prior P18ACK and P12response. Same P12literal query1 /70,previous wraps70 /70;closed find,pane andstep restored,inputempty,idle.",
+    "B3four full AX strings187/75/32/27 and hashes exactly match complete prequit,firstafter andfinal;permission stays unconfirmed. This batch has a full prequit AX,while the previous P32capture gap remains unchanged."
+  ],
+  "actions": {
+    "newModelSubmissions": 0,
+    "originalMistralOpened": 1,
+    "stopsOrUnknownRetries": 0,
+    "settingsOrPermissionChanges": 0
+  },
+  "timing": {
+    "observationSeconds": 138.936,
+    "declaredBudgetSeconds": 600,
+    "basis": "Root UTC preparation/finish endpoints independently recomputed138.935778 seconds;functional observation bound,not backend latency."
+  },
+  "evidence": {
+    "imageAxPairs": 14,
+    "independentlyViewedPairs": 7,
+    "originalStrings": "Full exact draft string equality from AX;lower image edge clips part of fourth line."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/readonly-current/preparation.json",
+      "sha256": "6ae0ed125cd771ac9a76aa9a394720ff35744a4d69e3213bb68022c0e307dfe7"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/readonly-current/root-observations.json",
+      "sha256": "8290aa2d45130c254387e9ca76647dbdc02efdb381d3aedb2d68c3e2dff941ed"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/readonly-current/root-ui-timings.json",
+      "sha256": "9d7adf0c502461e35d35258805f223434b7b491f7734d8e0fc060598733f9dff"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/readonly-current/b3-restoration.json",
+      "sha256": "0d7f1aa67a74c64c26a5a1cf36a28eb738d60bf386bd94228f99def5d5dd6711"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/readonly-current/independent-review.json",
+      "sha256": "52dd12b6ce1f4ef5de40397ff95899fe08037917870a6907afe709455ac5699c"
+    }
+  ],
+  "limits": [
+    "Two short output lines do not exercise65536UTF16-unit surrogate/exactCAP or200-line boundary in the formal app.",
+    "No live output/unknown-tool/OS exitcode/external process stop proof or fullP18.",
+    "Loaded query result is a selected corpus observation,not fullP12/global history or original response-byte proof.",
+    "Closed3manifest equality does not imply data equality after legitimate app restart.",
+    "No other Agent/configuration/platform or29×8 acceptance."
+  ]
+}

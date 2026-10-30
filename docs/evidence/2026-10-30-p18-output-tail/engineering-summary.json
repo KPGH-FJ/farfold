@@ -1,0 +1,194 @@
+{
+  "kind": "P18OutputTailSevenChecksPublicSummary",
+  "recordedAt": "2026-10-30T09:01:01.334837+00:00",
+  "sourceCommit": "2063416d82de4c95e5ac0f02ffa47e102ef25f35",
+  "engineeringBaseHead": "46619c9acecc9ff6dfa8bd79faaaf75484019a61",
+  "checksRanBeforeCommit": true,
+  "checksRanAtFinalCommit": false,
+  "inputCount": 2337,
+  "productionInputs": 2334,
+  "authorityInputs": 3,
+  "allSevenSucceeded": true,
+  "sourceHashEndpointsEqual": true,
+  "counts": {
+    "frontend": {
+      "files": 695,
+      "passed": 9363,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/format.stdout",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/format.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/typecheck.stdout",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/typecheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "frontend-test-direct",
+      "argv": ["corepack", "pnpm", "test"],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/frontend-test-direct.stdout",
+          "sha256": "7bc976f855b9f7dd656f27a91106b7fa95be972c301fadc0b51737688670c237"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/frontend-test-direct.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/build.stdout",
+          "sha256": "e13b28f3ac0f0fa75d1a768a9070eb391a30da8883adf6d669a5a87872fab195"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/build.stderr",
+          "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+        }
+      ]
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-fmt.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-fmt.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "cargo-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-clippy.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-clippy.stderr",
+          "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+        }
+      ]
+    },
+    {
+      "name": "cargo-test",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "naturalExitCode": 0,
+      "rawStreams": [
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-test.stdout",
+          "sha256": "528516583b004148e1384119f6acfb407a7f1a4414bc4540f386dc9daaabf4ad"
+        },
+        {
+          "path": "output/2026-10-30-p18-output-tail/engineering/cargo-test.stderr",
+          "sha256": "b5be03ca56c340076a7c6afd53957720d8df02832b8378aa10fbc3e104667e00"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-30-p18-output-tail/engineering/engineering-summary.json",
+      "sha256": "a5456c2ab024ac68a5fc26b8b412c58d04bd66466d87d6d15880deec38b1ddbf"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/engineering/independent-review/summary.json",
+      "sha256": "ff7ee1c2caa7d737055e1daf39eaea57a32644a46999ddb1be92b9187fb58d8b"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/candidate-binding.json",
+      "sha256": "95c1021f3886bd2b2b9c7d484fcf277fa109c2a8a0e7366b7f3dae4ae742ff2b"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/source-freeze.json",
+      "sha256": "b3855ce35f127a150b21478b9ef83db93da6ccf4e3c59631133b43eacf0e5bdd"
+    },
+    {
+      "path": "output/2026-10-30-p18-output-tail/formal/input-modes.json",
+      "sha256": "72f3d115ceab85c6568aa152e28da4544a72a2429b20ba1221b6e2dfc734d34d"
+    }
+  ],
+  "independentReviewRole": "Runtime test author checked engineering discovery/logs independently from Root runner and records; separate source reviewer reviewed implementation and test design.",
+  "limits": [
+    "Only current postcommit modes were observed; no engineering-launch mode receipt existed.",
+    "Hash endpoints and final Git/blob/member/mode agreement do not prove continuous absence of writes or fixed dependency/environment bytes.",
+    "Vite and4ZipWriter diagnostics retained in logs; natural checks still passed.",
+    "Engineering does not establish installed/real Agent/Windows/full P18 or29×8 acceptance."
+  ]
+}
