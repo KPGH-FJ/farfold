@@ -6,6 +6,7 @@ import {
   keepSearchAncestors,
   openTranscriptAncestors,
   hasOpenSearchAncestors,
+  searchDetailsCommitted,
 } from "./transcript_search";
 
 it("temporarily reveals a closed disclosure and restores its user's choice", () => {
@@ -170,4 +171,56 @@ it("requires the actual owner path and stops checking after reaching that transc
   const detached = searchNode("SPAN");
   root.contains = () => true; // Model an ownership check made before detachment.
   expect(pathOpen(detached, root)).toBe(false);
+});
+
+function detailScope(...elements: HTMLDetailsElement[]) {
+  return { querySelectorAll: () => elements } as unknown as HTMLElement;
+}
+
+it("waits for a released sibling's requested close to reach the DOM", () => {
+  const sibling = { open: true } as HTMLDetailsElement;
+  const model = new SearchExpansion();
+  const release = model.reveal();
+  const unregister = registerSearchExpansion(sibling, model);
+  const root = detailScope(sibling);
+  expect(searchDetailsCommitted(root)).toBe(true);
+  release();
+  expect(searchDetailsCommitted(root)).toBe(false);
+  sibling.open = false;
+  expect(searchDetailsCommitted(root)).toBe(true);
+  unregister();
+});
+
+it("waits for requested opening and retains the user's committed preference", () => {
+  const element = { open: false } as HTMLDetailsElement;
+  const model = new SearchExpansion();
+  const unregister = registerSearchExpansion(element, model);
+  const root = detailScope(element);
+  const release = model.reveal();
+  expect(searchDetailsCommitted(root)).toBe(false);
+  element.open = true;
+  model.choose(true);
+  release();
+  expect(searchDetailsCommitted(root)).toBe(true);
+  expect(model.userOpen).toBe(true);
+  unregister();
+});
+
+it("does not wait on native details or another transcript's pending disclosure", () => {
+  const native = { open: true } as HTMLDetailsElement;
+  const outside = { open: false } as HTMLDetailsElement;
+  const model = new SearchExpansion(true);
+  const unregister = registerSearchExpansion(outside, model);
+  expect(searchDetailsCommitted(detailScope(native))).toBe(true);
+  expect(searchDetailsCommitted(detailScope(outside))).toBe(false);
+  unregister();
+});
+
+it("stops tracking a disclosure when its actual registration is removed", () => {
+  const element = { open: true } as HTMLDetailsElement;
+  const unregister = registerSearchExpansion(element, new SearchExpansion());
+  const root = detailScope(element);
+  expect(searchDetailsCommitted(root)).toBe(false);
+  unregister();
+  expect(searchDetailsCommitted(root)).toBe(true);
 });

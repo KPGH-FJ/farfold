@@ -63,6 +63,18 @@ export function registerSearchExpansion(
     if (disclosures.get(element) === model) disclosures.delete(element);
   };
 }
+
+/** A previous search target can still have a sibling disclosure awaiting its
+ * React close commit. Its height changes the new target's position even when
+ * all ancestors of that target are already open. Native unregistered details
+ * and disclosures in another transcript do not participate in this check. */
+export function searchDetailsCommitted(root: HTMLElement): boolean {
+  for (const element of root.querySelectorAll<HTMLDetailsElement>("details")) {
+    const model = disclosures.get(element);
+    if (model && element.open !== model.open) return false;
+  }
+  return true;
+}
 /** Only ancestors within this transcript may be changed; release is owner-bound. */
 export function revealSearchAncestors(element: HTMLElement, root: HTMLElement) {
   if (!root.contains(element)) return () => {};

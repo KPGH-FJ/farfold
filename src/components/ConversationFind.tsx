@@ -6,6 +6,7 @@ import {
 import {
   hasOpenSearchAncestors,
   revealSearchAncestors,
+  searchDetailsCommitted,
 } from "../runtime/transcript_search";
 import { scrollTranscriptRange } from "../runtime/transcript_find_scroll";
 import { LIBRARY } from "../runtime/library_strings";
@@ -160,6 +161,7 @@ export function ConversationFind({
           parent.isConnected &&
           root.contains(parent) &&
           hasOpenSearchAncestors(parent, root) &&
+          searchDetailsCommitted(root) &&
           parent.getClientRects().length
         ) {
           parent.scrollIntoView({ block: "center" });

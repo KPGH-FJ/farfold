@@ -39,6 +39,10 @@ vi.mock("react", async (original) => ({
 }));
 
 import { ConversationFind } from "./ConversationFind";
+import {
+  SearchExpansion,
+  registerSearchExpansion,
+} from "../runtime/transcript_search";
 
 type Element = ReactElement<Record<string, unknown>>;
 function elements(node: ReactNode): Element[] {
@@ -97,6 +101,8 @@ function geometryFixture(kind: "paragraph" | "tool") {
   const lineHeight = 20;
   const contentHeight = lines.length * lineHeight;
   const frames = new Map<number, () => void>();
+  const details: HTMLDetailsElement[] = [];
+  let mutation: MutationCallback | undefined;
   let frameId = 0;
   vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
     frames.set(++frameId, callback);
@@ -106,6 +112,9 @@ function geometryFixture(kind: "paragraph" | "tool") {
   vi.stubGlobal(
     "MutationObserver",
     class {
+      constructor(callback: MutationCallback) {
+        mutation = callback;
+      }
       observe() {}
       disconnect() {}
     },
@@ -130,6 +139,7 @@ function geometryFixture(kind: "paragraph" | "tool") {
     classList: { add: vi.fn(), remove: vi.fn() },
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
+    querySelectorAll: () => details,
     getBoundingClientRect: () => rect(0, 320),
     getClientRects: () => [rect(0, 320)],
     scrollBy(options: ScrollToOptions) {
@@ -157,7 +167,7 @@ function geometryFixture(kind: "paragraph" | "tool") {
     },
     childNodes: [] as unknown[],
   };
-  const contentTop = kind === "tool" ? 800 : 40;
+  let contentTop = kind === "tool" ? 800 : 40;
   const parent = {
     nodeType: 1,
     tagName: kind === "tool" ? "PRE" : "P",
@@ -293,7 +303,20 @@ function geometryFixture(kind: "paragraph" | "tool") {
     (button.props.onClick as () => void)();
     flush();
   };
-  return { root, parent, ranges, start, next, read };
+  return {
+    root,
+    parent,
+    ranges,
+    start,
+    next,
+    read,
+    flush,
+    details,
+    shiftContent: (delta: number) => {
+      contentTop += delta;
+    },
+    mutate: () => mutation?.([], {} as MutationObserver),
+  };
 }
 
 it("positions the actual first and last match inside a paragraph taller than the transcript", () => {
@@ -320,4 +343,33 @@ it("reveals a tail match inside the tool result's own scrolling viewport", () =>
   const viewport = fixture.parent.getBoundingClientRect();
   expect(hit.top).toBeGreaterThanOrEqual(viewport.top);
   expect(hit.bottom).toBeLessThanOrEqual(viewport.bottom);
+});
+
+it("waits for a released sibling disclosure to close before positioning, then leaves later scans alone", () => {
+  const fixture = geometryFixture("paragraph");
+  const sibling = { open: true } as HTMLDetailsElement;
+  const model = new SearchExpansion();
+  const release = model.reveal();
+  const unregister = registerSearchExpansion(sibling, model);
+  fixture.details.push(sibling);
+  fixture.shiftContent(300);
+  const scroll = vi.spyOn(fixture.parent, "scrollIntoView");
+  release(); // Requested close, but the preceding React DOM is still open.
+  fixture.start();
+  expect.soft(scroll).not.toHaveBeenCalled();
+
+  sibling.open = false;
+  fixture.shiftContent(-300);
+  fixture.mutate();
+  fixture.flush();
+  expect.soft(scroll).toHaveBeenCalledOnce();
+  const hit = fixture.ranges.at(-2)!.getBoundingClientRect();
+  const viewport = fixture.root.getBoundingClientRect();
+  expect.soft(hit.top).toBeGreaterThanOrEqual(viewport.top);
+  expect.soft(hit.bottom).toBeLessThanOrEqual(viewport.bottom);
+
+  fixture.mutate(); // A later revision does not start another navigation.
+  fixture.flush();
+  expect(scroll).toHaveBeenCalledOnce();
+  unregister();
 });
