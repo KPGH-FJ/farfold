@@ -1,0 +1,203 @@
+{
+  "kind": "FormalReadonlyAttempt1PublicSummary",
+  "recordedAt": "2026-10-31T11:26:04.928517+00:00",
+  "sourceCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "result": "P12-selected-failure-remains; selected-menu/P32/direct-P12-control-positive",
+  "p12FailureFirst": {
+    "id": "P12-thought-to-body-01",
+    "result": "failed",
+    "observations": [
+      "45 shows query01, selected1/2 in expanded thought.",
+      "46 shows same query selected2/2 in body, but body starts at07 and target01 is not visible."
+    ],
+    "cause": "unknown; no unique attribution to CSS, disclosure, automatic scrolling or model behavior.",
+    "evidence": ["p12Thought", "p12BodyFailure"]
+  },
+  "independentStageResults": {
+    "engineeringSeven": "passed-before-commit; post-commit2341inputs independently matched",
+    "candidateIndependent": "9/9 passed",
+    "installedIndependent": "6/6 passed",
+    "productUi": "mixed; selected P12 path still fails",
+    "doesNotUpgradeProductFromEngineering": true
+  },
+  "selectedOtherObservations": [
+    {
+      "id": "iconless-management-layout",
+      "result": "passed-selected-case",
+      "observations": [
+        "49 shows the original filtered owned command menu and management label on one horizontal line.",
+        "Existing command icon/title/description remain visible."
+      ],
+      "notCovered": [
+        "Clicking management",
+        "Skill invocation/installation/enablement/scope",
+        "All menu widths/platforms"
+      ],
+      "evidence": ["menu"]
+    },
+    {
+      "id": "P32-loaded-last-line64",
+      "result": "passed-selected-case",
+      "observations": [
+        "51 explicitly selects loaded-body scope, query64, one match and one selected reply source.",
+        "52 shows the complete yellow-highlighted64 target inside the original reply viewport.",
+        "Old36 shows the same tail target partially clipped by the viewport bottom."
+      ],
+      "notCovered": [
+        "Full P32",
+        "Unloaded history or attachment file bytes",
+        "Complete source coverage or persistent index"
+      ],
+      "evidence": ["p32Result", "p32Jump", "p32OldClipped"]
+    },
+    {
+      "id": "P12-direct-body-only-03",
+      "result": "passed-diagnostic-control",
+      "observations": [
+        "53 shows query03,1/1 and the exact highlighted target visibly inside the body viewport."
+      ],
+      "contrast": "A direct one-body-match query succeeds while thought1/2 to body2/2 navigation fails; this does not establish the failing mechanism.",
+      "notCovered": ["Fix of failed query01 path", "Complete P12"],
+      "evidence": ["p12DirectControl"]
+    }
+  ],
+  "b3Protection": {
+    "fourStringsExactlyEqual": true,
+    "unicodeLengths": [187, 75, 32, 27],
+    "utf8Sha256": [
+      "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1",
+      "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010",
+      "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95",
+      "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+    ],
+    "comparison": "Exact captured string and UTF-8 byte equality across complete before-quit, first-after42 and final54 AX captures; no trim or normalization.",
+    "permissionReconfirmationNoticePresentAtAllThreeEndpoints": true,
+    "permissionConfirmationProven": false,
+    "screenshotLimit": "The final draft paragraph is partly clipped at the input lower edge; complete-string equality comes from AX, not pixel visibility.",
+    "attachmentConsumptionOrAllDataRestorationProven": false
+  },
+  "independentReview": {
+    "path": "output/2026-10-31-common-formal/independent/installed-ui-attempt1-review.json",
+    "sha256": "f2c9a57fd8adcb1b1a300832fc778e870ac56072adbe765da26af2233b6c876c",
+    "bytes": 9431
+  },
+  "evidence": {
+    "beforeB3Ax": {
+      "path": "output/2026-10-31-common-formal/formal/current-ui-before/before-quit.ax.txt",
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42",
+      "bytes": 4847
+    },
+    "beforeB3Image": {
+      "path": "output/2026-10-31-common-formal/formal/current-ui-before/before-quit.jpg",
+      "sha256": "e723ffb8a13faa57111b04f2013f35bdba6d575ce068813d888acb624b04e1ce",
+      "bytes": 445789
+    },
+    "firstB3Ax": {
+      "path": "output/2026-10-31-common-formal/ui/42-b3-first-loaded-after-update.ax.txt",
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42",
+      "bytes": 4847
+    },
+    "firstB3Image": {
+      "path": "output/2026-10-31-common-formal/ui/42-b3-first-loaded-after-update.jpg",
+      "sha256": "fde5fa875fc4ce87af3fc07641d8b285673de926f0f54ce6d72b2ba4345bb312",
+      "bytes": 445853
+    },
+    "lastB3Ax": {
+      "path": "output/2026-10-31-common-formal/ui/54-b3-retained-during-investigation.ax.txt",
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42",
+      "bytes": 4847
+    },
+    "lastB3Image": {
+      "path": "output/2026-10-31-common-formal/ui/54-b3-retained-during-investigation.jpg",
+      "sha256": "310c21e1c781a0ae39b6c12cabdfb40d017ecb9b2a4e0037050ea07791b5a409",
+      "bytes": 445798
+    },
+    "p12ThoughtAx": {
+      "path": "output/2026-10-31-common-formal/ui/45-p12-first-line-thought-after.ax.txt",
+      "sha256": "33cf1c0cd8dfadc8861d8a98a4f93d44a4e07ccc2ecc00964d408a924f341ac2",
+      "bytes": 10360
+    },
+    "p12ThoughtImage": {
+      "path": "output/2026-10-31-common-formal/ui/45-p12-first-line-thought-after.jpg",
+      "sha256": "ffda30085feba3a332bbf48cd8352b48206b971c67cef91d5554965a724270a2",
+      "bytes": 410602
+    },
+    "p12BodyFailureAx": {
+      "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.ax.txt",
+      "sha256": "23ca3af314fe2ed51a5af46a05f6d956b45d1621fb2812a33f607e898b47db33",
+      "bytes": 9511
+    },
+    "p12BodyFailureImage": {
+      "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.jpg",
+      "sha256": "cdf0d55e0f5cbd3f2f59cfbef7857bd642628f63fdc4ac03d7f327976438f6c2",
+      "bytes": 608959
+    },
+    "menuAx": {
+      "path": "output/2026-10-31-common-formal/ui/49-owned-menu-filtered-after.ax.txt",
+      "sha256": "fab9ee7d0adea2bf349cf6648d2b5ef984ca8871632d4e7c463601d948e2996b",
+      "bytes": 8376
+    },
+    "menuImage": {
+      "path": "output/2026-10-31-common-formal/ui/49-owned-menu-filtered-after.jpg",
+      "sha256": "ed8a9e1cafa08aff51e43f3458655ce878d30b8c60f272960b8f16e9e43fc1a2",
+      "bytes": 422523
+    },
+    "p32ResultAx": {
+      "path": "output/2026-10-31-common-formal/ui/51-p32-last-line-result-after.ax.txt",
+      "sha256": "53728e64d5bea5ec1078cc9b1c63de798039b4eacc26f10a231c3b1883c79567",
+      "bytes": 1506
+    },
+    "p32ResultImage": {
+      "path": "output/2026-10-31-common-formal/ui/51-p32-last-line-result-after.jpg",
+      "sha256": "b92f8d0544b73617b9d173ae2434b029eb803cc2a45e6379b18fb78a82462110",
+      "bytes": 237646
+    },
+    "p32JumpAx": {
+      "path": "output/2026-10-31-common-formal/ui/52-p32-last-line-jump-after.ax.txt",
+      "sha256": "affe9fc15ce83665e72b6c6ae0b3c27349b1717289dfea2426e48ca5c3fad018",
+      "bytes": 8999
+    },
+    "p32JumpImage": {
+      "path": "output/2026-10-31-common-formal/ui/52-p32-last-line-jump-after.jpg",
+      "sha256": "142722b2e91650d91ff01ba84a5b8df317e93c8f35e96ba1ad3b5e2dc6c62035",
+      "bytes": 600088
+    },
+    "p12DirectControlAx": {
+      "path": "output/2026-10-31-common-formal/ui/53-p12-body-only-initial-control.ax.txt",
+      "sha256": "492e882e3275b3ac5f52df073673cbff5a346524ddc82f5e0cb349d124dd7938",
+      "bytes": 9771
+    },
+    "p12DirectControlImage": {
+      "path": "output/2026-10-31-common-formal/ui/53-p12-body-only-initial-control.jpg",
+      "sha256": "8b2a1985ef247d7eadba2c54806d3cfc332f8db99a8052fce3a290d9942586be",
+      "bytes": 538401
+    },
+    "p32OldClippedAx": {
+      "path": "output/2026-10-31-common-formal/ui/36-global-last-line-jump-before.ax.txt",
+      "sha256": "affe9fc15ce83665e72b6c6ae0b3c27349b1717289dfea2426e48ca5c3fad018",
+      "bytes": 8999
+    },
+    "p32OldClippedImage": {
+      "path": "output/2026-10-31-common-formal/ui/36-global-last-line-jump-before.jpg",
+      "sha256": "6090a0fc0029ef45d1b059e31e9ffa29c3b2662d58ffcd897d4b8f9e7700b517",
+      "bytes": 649358
+    }
+  },
+  "completeRequirementsAccepted": 0,
+  "wholeAgentsAccepted": 0,
+  "all29Accepted": false,
+  "batchComplete": false,
+  "rootCause": "unknown; investigation continues",
+  "privacy": {
+    "rawPrivateAxOrDraftContentsPublished": false,
+    "originalEvidenceRemainsUnderOutput": true
+  },
+  "limits": [
+    "This reader viewed saved images through view_image and read complete AX files; no UI, Agent, model, engineering or user-data operation was executed.",
+    "AX contains representation-limited long text fields; visible glyph position is established from images, not from mere AX presence.",
+    "No native DOM geometry or effect trace was captured by this reader; the P12 root cause remains unknown.",
+    "Selected positives do not close full P12/P32/P40/P18, permissions, any whole Agent or29-by8.",
+    "Old failures and unknown requests remain. Closed-state manifests do not imply post-launch byte equality or stop success.",
+    "Raw AX and screenshots remain private under output; public summary has references, lengths and hashes only."
+  ]
+}

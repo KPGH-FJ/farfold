@@ -1,0 +1,121 @@
+{
+  "kind": "P12DisclosureCommitCorrectionR2SourcePublicSummary",
+  "recordedAt": "2026-10-31T14:46:42.085050+00:00",
+  "sourceCommit": "3432696eaa77863bf4aeaf4751245df87674b182",
+  "previousFunctionalCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "requirementIds": ["P12"],
+  "stageAtRecording": "source and controlled verification complete; this summary has no R2 installation or actual regression proof",
+  "retainedFirstCycleFailure": {
+    "result": "failed",
+    "scope": "Selected original thought1/2 to body2/2 navigation leaves first body hit outside the viewport on ef788.",
+    "unchangedReceipt": "readonly-attempt1-summary.json"
+  },
+  "reproducedMechanism": {
+    "scope": "Controlled production React and native WKWebView geometry under explicitly adversarial scheduling.",
+    "cause": "Releasing the old search reveal requests a sibling details close. Navigation could mark the new target positioned before that real DOM close commits; the later height change moves the glyph, and positioned prevents the original observer from completing that navigation.",
+    "notClaimed": "This mechanism is not a captured unique execution trace from the formal app."
+  },
+  "change": "Before completing the original navigation, require this transcript registered details actual DOM.open to equal their existing SearchExpansion requested open. Pending old close remains unfinished and the existing open/hidden observer resumes it after commit.",
+  "preserved": [
+    "Existing root ownership, selected range and text/count/matching scope.",
+    "Original completed-navigation protection against later streamed scans stealing scroll.",
+    "User disclosure choices and owner-bound release; other transcripts and unregistered native details do not participate.",
+    "No new timer, frame-count heuristic, state owner, Agent request or P32/menu/geometry-helper change."
+  ],
+  "controlledEvidence": {
+    "componentRed": {
+      "failed": 1,
+      "passedExistingControls": 2,
+      "naturalExitCode": 1
+    },
+    "affectedGreen": {
+      "files": 9,
+      "passed": 82,
+      "failed": 0,
+      "naturalExitCode": 0
+    },
+    "nativeWkRed": {
+      "selectedCount": "2 / 2",
+      "rangeY": [38, 55],
+      "viewportY": [99, 555],
+      "currentMatchVisible": false,
+      "oldCloseFollowsRangePlacement": true
+    },
+    "nativeWkGreen": {
+      "selectedCount": "2 / 2",
+      "rangeY": [319, 336],
+      "viewportY": [99, 555],
+      "currentMatchVisible": true,
+      "oldClosePrecedesRangePlacement": true
+    },
+    "fourHarnessFilesByteEqual": true,
+    "clockQualification": "Hidden native WK documents suspended real requestAnimationFrame. A cancelable microtask frame clock exists only in the test harness; actual React lifecycle, DOM commits, CSS and native Range geometry remain in use. This is not native-rAF realtime or a formal-app result.",
+    "noNativeOrJsErrorsInSelectedRedGreen": true
+  },
+  "independentSourceReview": {
+    "blockingFindings": 0,
+    "currentFourInputsMatched": true,
+    "predicateAndLifecycleBoundaryReviewed": true
+  },
+  "formalVerification": {
+    "evidenceInThisSummary": "not established",
+    "pending": [
+      "Fresh R2 formal installation/data retention receipts.",
+      "Original selected failed-path actual regression after R2 update."
+    ],
+    "candidateIsSeparateEvidence": "engineering-r2-summary.json"
+  },
+  "references": {
+    "sourceMechanism": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/r2-source-summary.json",
+      "sha256": "5164ddf25af91d384885a871eb7bae45f9599079594c978262be27c665aa68cb",
+      "bytes": 10476
+    },
+    "independentR2SourceReview": {
+      "path": "output/2026-10-31-common-formal/independent/p12-r2-source-review.json",
+      "sha256": "2c88ab07c6ffbab576cee6ea0c2870b388c54d7b17faf637a0f467e20f866246",
+      "bytes": 8366
+    },
+    "componentRed": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/component-pending-close-red.json",
+      "sha256": "a67854dd0c404f54df8028f77ea503946c27ba116e692dcef9d034b9e99c3b75",
+      "bytes": 137
+    },
+    "componentRedRaw": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/component-pending-close-red.stdout",
+      "sha256": "e0b6b598a72df58f09df944cb8a3a312f2b5df7ebe61079165995821d92b932d",
+      "bytes": 412
+    },
+    "affectedGreen": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/affected-green.json",
+      "sha256": "53cae709b2320c1df86ec79024220a1911b5058c7daa6a4b152dd649a1e3ef00",
+      "bytes": 520
+    },
+    "affectedGreenRaw": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/affected-green.stdout",
+      "sha256": "85c54ac39cb3b3e2194845b2d795b037414d39f3813517b6b81350945efe000e",
+      "bytes": 212
+    },
+    "nativeRed": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/live-race-microtask/measurements.json",
+      "sha256": "bc303b031b15936a35761d2d19ddd40ce01ac3917ce5e0a7176bd44e8e403816",
+      "bytes": 5437
+    },
+    "nativeGreen": {
+      "path": "output/2026-10-31-common-formal/p12-native-layout/live-race-microtask-fixed/measurements.json",
+      "sha256": "d9c9b6d4a07a3e8345885ef808f276cbcf6f54262e25e343eb3758c4614f0615",
+      "bytes": 5459
+    },
+    "originalInstalledFailure": {
+      "path": "docs/evidence/2026-10-31-common-formal/readonly-attempt1-summary.json",
+      "sha256": "e1471d9ddbe58435cddd93adc0fe263d96f9ec60a272d0477d1672407284304c",
+      "bytes": 9333
+    }
+  },
+  "limits": [
+    "Registered details commit changes in this reproduced race only; hidden-div transitions, fonts, other lifecycle effects, other Agents and all-corpus coverage are not newly accepted.",
+    "Firstcycle ef788 installed P12 thought-to-body failure remains an actual failure; new controlled/source/engineering positives do not change its original receipt.",
+    "Complete P12/P32/P40/P18, all29-by8 and NEW-24 permission recovery remain open; affected new real sends stay paused.",
+    "Normal exit and process absence do not establish Agent stop, and closed-state data manifests do not establish post-launch data equality."
+  ]
+}

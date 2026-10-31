@@ -1,0 +1,159 @@
+{
+  "kind": "CommonFindAndMenuFormalInstallationPublicSummary",
+  "recordedAt": "2026-10-31T11:13:52.626502+00:00",
+  "sourceCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "actualUiRegression": {
+    "status": "investigating-after-installed-failure",
+    "p12": {
+      "selectedOriginalCase": "failed",
+      "selectedIndex": 2,
+      "matchCount": 2,
+      "visibleBodyStartsAtLine": 7,
+      "expectedFirstLineVisible": false,
+      "basis": "Root actual formal ef788 observation and saved screenshot46; this summary writer read the saved screenshot only."
+    },
+    "p32FullAcceptance": false,
+    "menuFormalAcceptanceNotClaimed": true,
+    "references": {
+      "p12FailedScreenshot": {
+        "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.jpg",
+        "sha256": "cdf0d55e0f5cbd3f2f59cfbef7857bd642628f63fdc4ac03d7f327976438f6c2",
+        "bytes": 608959
+      },
+      "p12FailedAx": {
+        "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.ax.txt",
+        "sha256": "23ca3af314fe2ed51a5af46a05f6d956b45d1621fb2812a33f607e898b47db33",
+        "bytes": 9511
+      }
+    }
+  },
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "5cb1e4cbb942dc1e0b077d064acc6759fc06d65fd29ba984e6ae2868e7c8ad26",
+    "strictAdHocCodesignVerified": true,
+    "sourceAssociation": "Installation receipt and independent comparison; application does not report a Git commit."
+  },
+  "candidate": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "independentPassed": 9,
+    "independentTotal": 9,
+    "archive": "src-tauri/target/internal-candidate/common-formal-ef788154/Farfold-0.1.7-ef788154.zip",
+    "archiveSha256": "e4810566efeafe821332d35f14f092920d24f048e5b9facc487e755ea1211cb7",
+    "archiveBytes": 16235258
+  },
+  "normalExit": {
+    "rootObserved": true,
+    "forcedQuit": false,
+    "fourCurrentB3StringsRecordedBeforeQuit": true,
+    "permissionNotConfirmed": true,
+    "unknownRequestsRemainUnknown": true
+  },
+  "installation": {
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileCount": 5,
+    "newInodePerFile": true,
+    "wholeBundleTransactionAtomic": false,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "independentPassed": 6,
+    "independentTotal": 6
+  },
+  "closedDataRetention": {
+    "phaseCounts": {
+      "before": 232530,
+      "preinstall": 232530,
+      "after": 232530
+    },
+    "manifestSha256": "40f01d1cc29526bb19ecf8bf1610ee09e3a240436d627533135b319b339ee4ee",
+    "allThreeFullManifestsByteEqual": true,
+    "closedCaptureTimesUtc": {
+      "before": "2026-10-31T11:04:40.163446+00:00",
+      "preinstall": "2026-10-31T11:05:47.735846+00:00",
+      "after": "2026-10-31T11:07:11.161293+00:00"
+    },
+    "metadataBackupIntegrityFromProducer": "ok",
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly",
+    "originalAndFirstRawCopyNotOpenedBySql": true,
+    "integrityRequeriedByIndependentReader": false,
+    "coversPostLaunchChanges": false
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "zipPreserved": true,
+    "formalFilesAndModesUnchanged": true,
+    "otherDataOrEvidenceRemoved": false
+  },
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-31-common-formal/formal/candidate-output/candidate.json",
+      "sha256": "a656d70515ca53d1f61d30a1d7e8071afa74c5ef4359f71c02adeff741865c35",
+      "bytes": 555884
+    },
+    "naturalCandidateCompletion": {
+      "path": "output/2026-10-31-common-formal/formal/root-candidate-natural-completion.json",
+      "sha256": "59e5324ec8fcd0307c1cd72e0a402ce17694ab2809e6b6e2e9fb73a65cfb49e9",
+      "bytes": 687
+    },
+    "candidateIndependent": {
+      "path": "output/2026-10-31-common-formal/formal/independent/review-v2.json",
+      "sha256": "aeb426525097a289899ae799df5740f0142d0ffdcf5743d6672e81b7d1d126a9",
+      "bytes": 5010
+    },
+    "freshNormalExit": {
+      "path": "output/2026-10-31-common-formal/formal/root-normal-exit-b3-ui.json",
+      "sha256": "e7d1475ef83cd761d396a9279f6c896fb200b4ecd5b2eb3b8b9c4d127cf03948",
+      "bytes": 2609
+    },
+    "installation": {
+      "path": "output/2026-10-31-common-formal/formal/install/install-result.json",
+      "sha256": "10fdb8c59912bbd0e30a476db87adf00d7db1f282608055b75525717428db62a",
+      "bytes": 12786
+    },
+    "beforeRetention": {
+      "path": "output/2026-10-31-common-formal/formal/install/retention-before-receipt.json",
+      "sha256": "389056f7989e98f2ff0d4d50e0bb4dc65ca46c204b53c983b5ab78df0d8db053",
+      "bytes": 5946
+    },
+    "preinstallRetention": {
+      "path": "output/2026-10-31-common-formal/formal/install/retention-preinstall-receipt.json",
+      "sha256": "ea01fb4c2b27cfa5ef35d08cb07cc47ea16931edbd0004a4176106422b1a0a22",
+      "bytes": 3051
+    },
+    "afterRetention": {
+      "path": "output/2026-10-31-common-formal/formal/install/retention-after-receipt.json",
+      "sha256": "3276cd2833b156419333eb59a403300a296a817fd6439445fbb5689fb2a1878b",
+      "bytes": 3046
+    },
+    "installedIndependent": {
+      "path": "output/2026-10-31-common-formal/formal/install/installed-independent-review-private.json",
+      "sha256": "5c2418599310d21cbaed49e761499f8f19c2c1b1a669324a4da9f17edcc0aa03",
+      "bytes": 7187
+    },
+    "candidateCleanup": {
+      "path": "output/2026-10-31-common-formal/formal/install/candidate-cleanup.json",
+      "sha256": "355b4966db161d9333b8bce488ea0b3b5a9dbd3e358588f72924bd2a4e82277e",
+      "bytes": 7174
+    }
+  },
+  "privacy": {
+    "rawAxDatabaseManifestsAndBackupsRemainPrivateUnderOutput": true,
+    "rawPrivateContentsCopiedToPublicSummary": false
+  },
+  "limits": [
+    "Three manifests prove closed-state endpoints only, not post-launch zero changes, B3 restoration or historical unknown-request stop.",
+    "Files were replaced individually with new inodes; no whole-bundle transaction atomicity.",
+    "Internal ad hoc signature does not complete deferred signing, notarization, public distribution or update channels.",
+    "Formal UI is under investigation after the selected P12 failure; no complete installed positioning success is claimed.",
+    "Complete P12/P32/P40/P18, permission recovery and all29-by8 remain open; affected NEW-24 new real sends stay paused.",
+    "Prior failures and unknown requests remain; normal exit and process0 do not prove stop.",
+    "Source, synthetic geometry, engineering, candidate, installation and actual UI are separate evidence levels."
+  ]
+}

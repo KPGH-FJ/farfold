@@ -1,0 +1,161 @@
+{
+  "kind": "P12CorrectionR2FormalInstallationPublicSummary",
+  "recordedAt": "2026-10-31T14:54:35.958096+00:00",
+  "sourceCommit": "3432696eaa77863bf4aeaf4751245df87674b182",
+  "formerFunctionalSourceCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "formalApp": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "darwin-arm64",
+    "executableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+    "strictAdHocCodesignVerified": true,
+    "sourceAssociation": "Candidate and installation receipts/current five-file comparison; application does not self-report Git commit."
+  },
+  "candidate": {
+    "invocations": 1,
+    "naturalExitCode": 0,
+    "rootObservedSessionId": 30145,
+    "independentPassed": 9,
+    "independentTotal": 9,
+    "archive": "src-tauri/target/internal-candidate/common-formal-correction-3432696e/Farfold-0.1.7-3432696e.zip",
+    "archiveSha256": "cf7c76d7735a0d2ec33ab171e2c470c83d4b77b1a1813adcec176d34f69389c3",
+    "archiveBytes": 16235398
+  },
+  "normalExit": {
+    "rootObserved": true,
+    "forcedQuit": false,
+    "freshFourCurrentB3StringsRecordedBeforeQuit": true,
+    "permissionNotConfirmed": true,
+    "unknownRequestsRemainUnknown": true
+  },
+  "installation": {
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "fileCount": 5,
+    "newInodePerFile": true,
+    "wholeBundleTransactionAtomic": false,
+    "existingInodesWrittenDeclaration": false,
+    "continuousNoOldInodeWriteIndependentlyProven": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "independentPassed": 6,
+    "independentTotal": 6
+  },
+  "closedDataRetention": {
+    "phaseCounts": {
+      "before": 232530,
+      "preinstall": 232530,
+      "after": 232530
+    },
+    "manifestSha256": "38158bc36df6fdd1c7151f0f34003ba490ec3d98a97a48b9f27d1dde35327dcc",
+    "allThreeFullManifestsByteEqual": true,
+    "closedCaptureTimesUtc": {
+      "before": "2026-10-31T14:39:27.884395+00:00",
+      "preinstall": "2026-10-31T14:43:45.979247+00:00",
+      "after": "2026-10-31T14:45:06.799632+00:00"
+    },
+    "retainedMetadataBackupSha256": "7fe272658589035a77ee6c1946539f27da54cb35c0def88d7c9c9dda2be239d6",
+    "metadataBackupIntegrityFromProducer": "ok",
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly",
+    "originalAndFirstRawCopyNotOpenedBySql": true,
+    "integrityRequeriedByIndependentReader": false,
+    "coversPostLaunchChanges": false
+  },
+  "duplicateCandidateCleanup": {
+    "exactFilesRemoved": 5,
+    "exactDirectoriesRemoved": 5,
+    "zipPreserved": true,
+    "formalFilesAndModesUnchanged": true,
+    "otherDataOrEvidenceRemoved": false
+  },
+  "actualR2Regression": {
+    "status": "selected-original-case-passed-see-separate-readonly-summary",
+    "summary": "readonly-r2-summary.json",
+    "fullP12OrProductAcceptance": false,
+    "firstCycleFailurePreserved": "readonly-attempt1-summary.json"
+  },
+  "references": {
+    "candidate": {
+      "path": "output/2026-10-31-common-formal/correction/formal/candidate-output/candidate.json",
+      "sha256": "5964055acc1ba72b19f4448f4488111315027121cc24c40a1cbbd636ce1ec6b8",
+      "bytes": 556114
+    },
+    "naturalCandidateCompletion": {
+      "path": "output/2026-10-31-common-formal/correction/formal/root-candidate-natural-completion.json",
+      "sha256": "786b73bbf3c7d8bb7a37807fd5ca563e763a0c5bc36fcfcaec4e9442adb19d16",
+      "bytes": 677
+    },
+    "candidateIndependent": {
+      "path": "output/2026-10-31-common-formal/correction/formal/independent/review-v2.json",
+      "sha256": "cab3ec18e1f6a1d26e481dbbbbab1749d0990048dc2397f134404775176c7840",
+      "bytes": 5055
+    },
+    "freshNormalExit": {
+      "path": "output/2026-10-31-common-formal/correction/formal/root-normal-exit-b3-ui.json",
+      "sha256": "a135ec796a710515b6a702e4ec3c1c7d351ee369423e47820ffdf39e37beee33",
+      "bytes": 2506
+    },
+    "installation": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/install-result.json",
+      "sha256": "cd4a811671bcdf87dabc52f8da0c1203c329c3535cc61a8e3f9b96b4fd41327a",
+      "bytes": 13171
+    },
+    "beforeRetention": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/retention-before-receipt.json",
+      "sha256": "b259ff1c9311d742d9d15efe96121f7ce21d25927d80798b9bdfd99e08b232b9",
+      "bytes": 5957
+    },
+    "preinstallRetention": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/retention-preinstall-receipt.json",
+      "sha256": "eaa789d6de89942d88379929282e439105816f02285fb22d0145159ea05058d1",
+      "bytes": 3062
+    },
+    "afterRetention": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/retention-after-receipt.json",
+      "sha256": "ff419e6fc7838d93ae40e4ea26e37791e6ced5515c50fa6288b7ce760fd974ce",
+      "bytes": 3057
+    },
+    "installedIndependent": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/installed-independent-review-private.json",
+      "sha256": "cbf369baf513e08bc7787c1ec29da481a5d48d9df6119e2d043682f8b245bd7b",
+      "bytes": 7209
+    },
+    "candidateCleanup": {
+      "path": "output/2026-10-31-common-formal/correction/formal/install/candidate-cleanup.json",
+      "sha256": "9d43f3be36d768fb8f77fde3cdd8b0545b99edeecde9ef43660c4d2194403df2",
+      "bytes": 7174
+    },
+    "afterLaunchBinary": {
+      "path": "output/2026-10-31-common-formal/correction/formal/after-launch-binary.json",
+      "sha256": "c77e631efcb287d59a0e64d1551509c5a44ea56149e82347e793ffa063c643b7",
+      "bytes": 458
+    },
+    "actualEvidenceIndependentReview": {
+      "path": "output/2026-10-31-common-formal/independent/installed-ui-r2-review.json",
+      "sha256": "7007ade468f69f38f29995b6cddd4a91b3b48c85ee0e4cd9ceae043e1cc8a337",
+      "bytes": 14204
+    },
+    "actualScalarChecks": {
+      "path": "output/2026-10-31-common-formal/independent/installed-ui-r2-scalar-checks.json",
+      "sha256": "72668deacae298c4dd0b6c3fe40c95febd76a84be64fc411a7623d2d7ed1965c",
+      "bytes": 18876
+    }
+  },
+  "privacy": {
+    "rawAxDatabaseManifestsBackupsAndLogsStayPrivateUnderOutput": true,
+    "rawPrivateContentsCopiedToPublicSummary": false
+  },
+  "limits": [
+    "Three manifests prove closed endpoints, not post-launch zero changes or unknown-request stop.",
+    "Per-file new-inode replacement is not a whole-bundle atomic transaction. Old-inode no-write is bounded source/declaration/new-inode evidence, not a continuous syscall audit.",
+    "Internal ad hoc signature does not complete deferred signing/notarization/distribution/update channels.",
+    "Selected existing macOS objects/configuration and loaded corpus only; no complete P12/P32/P40/P18 or29-by8 acceptance.",
+    "Operator recorded zero new model submissions and zero permission/model changes. This is an operator-action declaration plus saved endpoints, not a global no-RPC/no-network trace.",
+    "No source-level unique formal runtime trace was captured; the controlled R2 mechanism and actual new successful endpoints remain distinct proof levels.",
+    "B3AX equality concerns four displayed unsent paragraphs; it does not prove attachment consumption, every draft byte in storage or zero post-launch user-data changes.",
+    "P35 native cancellation/conflict/newMarkdown observations belong to the earlier206 source case. They were not rerun on3432696.",
+    "Earlier ef788 P12 failure, older failures and unknown requests remain; normal exit or process absence does not establish external-work stop."
+  ]
+}

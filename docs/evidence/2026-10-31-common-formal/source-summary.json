@@ -1,0 +1,127 @@
+{
+  "kind": "CommonFindAndMenuSourcePublicSummary",
+  "recordedAt": "2026-10-31T11:13:52.626502+00:00",
+  "sourceCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "requirementIds": ["P12", "P32"],
+  "currentFormalCounterexample": {
+    "status": "investigating-after-installed-failure",
+    "p12": {
+      "selectedOriginalCase": "failed",
+      "selectedIndex": 2,
+      "matchCount": 2,
+      "visibleBodyStartsAtLine": 7,
+      "expectedFirstLineVisible": false,
+      "basis": "Root actual formal ef788 observation and saved screenshot46; this summary writer read the saved screenshot only."
+    },
+    "p32FullAcceptance": false,
+    "menuFormalAcceptanceNotClaimed": true,
+    "references": {
+      "p12FailedScreenshot": {
+        "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.jpg",
+        "sha256": "cdf0d55e0f5cbd3f2f59cfbef7857bd642628f63fdc4ac03d7f327976438f6c2",
+        "bytes": 608959
+      },
+      "p12FailedAx": {
+        "path": "output/2026-10-31-common-formal/ui/46-p12-first-line-body-after.ax.txt",
+        "sha256": "23ca3af314fe2ed51a5af46a05f6d956b45d1621fb2812a33f607e898b47db33",
+        "bytes": 9511
+      }
+    }
+  },
+  "userProblems": [
+    {
+      "area": "P12 current conversation find",
+      "problem": "A first/last hit in a tall reply can remain outside the viewport when only the containing element is positioned.",
+      "implementation": "Added exact Range-fragment positioning after existing element navigation; formal ef788 still fails the selected first-body-hit case, so the cause and actual layout are under investigation."
+    },
+    {
+      "area": "P32 loaded result jump",
+      "problem": "The exact hit is revalidated but element-only positioning loses its line offset inside a tall paragraph.",
+      "implementation": "Reuse the shared Range helper inside the original validity guard. This is source implementation and controlled evidence, not complete formal acceptance."
+    },
+    {
+      "area": "Iconless command-menu management button",
+      "problem": "A text-only management button occupied an18px icon column and wrapped glyphs vertically.",
+      "implementation": "One flexible text column by default; direct-svg buttons retain icon/text columns. Copy and click behavior unchanged."
+    }
+  ],
+  "controlledEvidence": {
+    "p12": {
+      "originalRedFailed": 2,
+      "greenFiles": 9,
+      "greenPassed": 77,
+      "naturalExitCode": 0,
+      "qualification": "Final geometry controls were refined after initial RED; not an identical final-input RED replay. Formal counterexample supersedes any inference of installed success."
+    },
+    "p32": {
+      "originalRedFailed": 2,
+      "greenFiles": 13,
+      "greenPassed": 105,
+      "naturalExitCode": 0
+    },
+    "menu": {
+      "redFailed": 1,
+      "greenPassed": 1,
+      "associatedPassed": 31,
+      "widths": [296, 480],
+      "environment": "Offline Chromium; actual ComposerTemplateActions and project CSS, declared equivalent Agent-row markup."
+    },
+    "overlappingCountsAreNotAdded": true,
+    "syntheticGeometryIsNotNativeWebKitProof": true
+  },
+  "originalIndependentSourceReview": {
+    "reviewedFiles": 8,
+    "blockingFindingsAtReview": 0,
+    "laterFormalCounterexampleRetained": true,
+    "doesNotProveInstalledFix": true
+  },
+  "references": {
+    "independentSource": {
+      "path": "output/2026-10-31-common-formal/independent/source-review.json",
+      "sha256": "7a85e817a7778b551a59fed8b1eb8e7618bc69b2bb5b0b8513e8e9ab5dcd9749",
+      "bytes": 9912
+    },
+    "p12Source": {
+      "path": "output/2026-10-31-common-formal/p12-investigation/source-investigation.json",
+      "sha256": "54fe7efe4391f114b13fd1b484319caa88d79d73101d9d02d9b37a2b77ef46b2",
+      "bytes": 2560
+    },
+    "p12Red": {
+      "path": "output/2026-10-31-common-formal/p12-investigation/range-position-red.json",
+      "sha256": "f4fbdfa32a4e872bbeeccf127338e89d39021a8f51bd31ec583e2cc4388a60e9",
+      "bytes": 246
+    },
+    "p12Green": {
+      "path": "output/2026-10-31-common-formal/p12-investigation/range-position-green.json",
+      "sha256": "e535b585595f3193266a225b8c8ce6d9ab960fb14ca2cbcae36d29b961eea0c7",
+      "bytes": 1963
+    },
+    "p32Source": {
+      "path": "output/2026-10-31-common-formal/p32-investigation/source-summary.json",
+      "sha256": "025d9bcba67341b83ce343317e509078eec989f45cebebb0c516cc70b170d1f2",
+      "bytes": 2742
+    },
+    "p32Red": {
+      "path": "output/2026-10-31-common-formal/p32-investigation/range-position-red.json",
+      "sha256": "d17231afa183054d19e9c0c1834585c67d7052a031015814459b85e9481ba2c4",
+      "bytes": 682
+    },
+    "p32Green": {
+      "path": "output/2026-10-31-common-formal/p32-investigation/range-position-green.json",
+      "sha256": "984b3b121c2dda07d548dc2ccd8605628ef7e42de9884a92a75f4fa0f0d4b1a9",
+      "bytes": 2666
+    },
+    "menuLayout": {
+      "path": "output/2026-10-31-common-formal/command-menu-layout/summary.json",
+      "sha256": "0fc93ae97fa2a09c750a698f2e3b23999c342b6a6910717f476ac02a48e61497",
+      "bytes": 4396
+    }
+  },
+  "limits": [
+    "No text, selection, matching, count, source identity or official-data mutation was intended by these frontend changes. Source review and geometry controls did not establish real installed positioning.",
+    "The batch remains open; further root-cause work and original-object formal regression are required.",
+    "Complete P12/P32/P40/P18, permission recovery and all29-by8 remain open; affected NEW-24 new real sends stay paused.",
+    "Prior failures and unknown requests remain; normal exit and process0 do not prove stop.",
+    "Source, synthetic geometry, engineering, candidate, installation and actual UI are separate evidence levels."
+  ]
+}

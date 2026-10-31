@@ -1,0 +1,137 @@
+{
+  "kind": "P12DisclosureCommitCorrectionR2EngineeringPublicSummary",
+  "recordedAt": "2026-10-31T14:46:42.085050+00:00",
+  "sourceCommit": "3432696eaa77863bf4aeaf4751245df87674b182",
+  "engineeringBaseHead": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "requirementIds": ["P12"],
+  "checksRanBeforeCommit": true,
+  "checksRerunAtFinalCommit": false,
+  "actualSevenChecks": {
+    "completed": 7,
+    "naturalIntegerExitCodesAllZero": true,
+    "rawStdoutAndStderrLogsReferencedAndHashChecked": 14,
+    "frontend": {
+      "files": 698,
+      "passed": 9377,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "sixIgnoredNamesMatchFirstCycle": true
+  },
+  "inputVerification": {
+    "completeInputs": 2341,
+    "productionTestResourceInputs": 2338,
+    "authorityInputs": 3,
+    "prePostFullMapsEqual": true,
+    "allCommandEndpointsMatched": true,
+    "postCommitDiskGitBlobsAndExecutableBitsMatched": true,
+    "independentEngineeringReviewPassed": true,
+    "onlyFourChangedFromFirstCycle": [
+      "src/components/ConversationFind.range-position.test.tsx",
+      "src/components/ConversationFind.tsx",
+      "src/runtime/transcript_search.test.ts",
+      "src/runtime/transcript_search.ts"
+    ]
+  },
+  "candidatePreparation": {
+    "phase": "internalCandidatePreparedNotInstalled",
+    "sourceCommit": "3432696eaa77863bf4aeaf4751245df87674b182",
+    "invocations": 1,
+    "rootObservedSessionId": 30145,
+    "naturalExitCode": 0,
+    "independentChecksPassed": 9,
+    "independentChecksTotal": 9,
+    "executableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+    "identity": {
+      "bundleId": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64"
+    },
+    "strictAdHocCodesignVerified": true,
+    "publicSigningOrNotarizationClaim": false,
+    "bundleFiles": 5,
+    "bundleDirectories": 5,
+    "archiveSha256": "cf7c76d7735a0d2ec33ab171e2c470c83d4b77b1a1813adcec176d34f69389c3",
+    "archiveBytes": 16235398,
+    "phaseMeaning": "Candidate receipt and nine-item review concern the prepared candidate. They do not establish later formal replacement, data retention or actual UI success."
+  },
+  "formalVerification": {
+    "evidenceInThisSummary": "not established",
+    "installationAndActualPathMustBeReadFromLaterDedicatedR2Receipts": true
+  },
+  "nonfatalOutput": [
+    "Vite large-chunk warning remains with natural build0.",
+    "Cargo stderr retains four ZipWriter archive-write-stopped warnings; all summaries0failures. No per-warning test identity, so no unique attribution."
+  ],
+  "references": {
+    "actualSeven": {
+      "path": "output/2026-10-31-common-formal/correction/engineering/engineering-summary.json",
+      "sha256": "0572e34725d1b851824f51fabc4a5b5ebf4385cdf5592ed5e3ed137c79d071c0",
+      "bytes": 6099
+    },
+    "beforeInputs": {
+      "path": "output/2026-10-31-common-formal/correction/engineering/source-before.json",
+      "sha256": "e7a9e8d5f5ebd47682854100e7054fd490440a2da11f6f9fc1a70f3a3552be9a",
+      "bytes": 276875
+    },
+    "afterInputs": {
+      "path": "output/2026-10-31-common-formal/correction/engineering/source-after.json",
+      "sha256": "4871cd1d1f4a7e55417121f965da028b28eea6e0293fc673f659f9d4835775dc",
+      "bytes": 276876
+    },
+    "independentEngineering": {
+      "path": "output/2026-10-31-common-formal/correction/independent/engineering-review.json",
+      "sha256": "01df61fa764c8256eca0ca4be6768564b1c875e3cd8fdc39d374d31825f37e37",
+      "bytes": 15644
+    },
+    "postCommitFreeze": {
+      "path": "output/2026-10-31-common-formal/correction/formal/source-freeze.json",
+      "sha256": "0eb4e9e21427de8ae4acac4f240e2b34b456c5277fb6647708d7e011b45fc777",
+      "bytes": 275808
+    },
+    "postCommitModes": {
+      "path": "output/2026-10-31-common-formal/correction/formal/input-modes.json",
+      "sha256": "2afb27de514bee6c31d4f55b2132e2543a08c24857b43d6188045f67af3c6788",
+      "bytes": 137377
+    },
+    "candidateReceipt": {
+      "path": "output/2026-10-31-common-formal/correction/formal/candidate-output/candidate.json",
+      "sha256": "5964055acc1ba72b19f4448f4488111315027121cc24c40a1cbbd636ce1ec6b8",
+      "bytes": 556114
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-10-31-common-formal/correction/formal/root-candidate-natural-completion.json",
+      "sha256": "786b73bbf3c7d8bb7a37807fd5ca563e763a0c5bc36fcfcaec4e9442adb19d16",
+      "bytes": 677
+    },
+    "independentCandidate": {
+      "path": "output/2026-10-31-common-formal/correction/formal/independent/review-v2.json",
+      "sha256": "cab3ec18e1f6a1d26e481dbbbbab1749d0990048dc2397f134404775176c7840",
+      "bytes": 5055
+    }
+  },
+  "limits": [
+    "Seven checks ran before the commit; full committed input and mode matching follows. No final-commit seven-check rerun is claimed.",
+    "Endpoint equality does not freeze intermediate writers, dependency-install bytes or environment.",
+    "The candidate9/9 result is separate from installation6/6 and actual product observations; neither later stage is claimed here.",
+    "Firstcycle ef788 installed P12 thought-to-body failure remains an actual failure; new controlled/source/engineering positives do not change its original receipt.",
+    "Complete P12/P32/P40/P18, all29-by8 and NEW-24 permission recovery remain open; affected new real sends stay paused.",
+    "Normal exit and process absence do not establish Agent stop, and closed-state data manifests do not establish post-launch data equality."
+  ]
+}

@@ -1,0 +1,310 @@
+{
+  "kind": "FormalReadonlyR2SelectedRegressionsPublicSummary",
+  "recordedAt": "2026-10-31T14:54:35.958096+00:00",
+  "sourceCommit": "3432696eaa77863bf4aeaf4751245df87674b182",
+  "formalExecutableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+  "result": "selected-original-P12-failure-retest-passed-with-selected-P32-and-menu-regressions",
+  "priorFirstCycleFailurePreserved": "readonly-attempt1-summary.json",
+  "cases": [
+    {
+      "id": "P12-original-thought-to-first-body-01",
+      "result": "passed-selected-original-r2-retest",
+      "observed": "AX64 thought1/2 to AX65 body2/2, old thought closed; saved image65 shows the entire current01 highlight inside the original reply viewport.",
+      "evidence": [
+        "ui/64-r2-first-line-thought.ax.txt",
+        "ui/65-r2-first-line-body.ax.txt",
+        "ui/65-r2-first-line-body.jpg"
+      ],
+      "priorFailure": "Original ef788 image46 remains failed; this is a distinct later R2 success."
+    },
+    {
+      "id": "P12-thought-to-tail64",
+      "result": "passed-selected-r2-case",
+      "observed": "AX66 thought1/2 to AX67 body2/2; image67 shows the entire tail64 highlight inside the viewport.",
+      "evidence": [
+        "ui/66-r2-last-line-thought.ax.txt",
+        "ui/67-r2-last-line-body.ax.txt",
+        "ui/67-r2-last-line-body.jpg"
+      ]
+    },
+    {
+      "id": "P12-prefix-count-and-wrap",
+      "result": "passed-selected-observed-sequence",
+      "observed": "AX68/69/70 show the same prefix query1/70,70/70,1/70.",
+      "scope": "Observed counter/wrap sequence only; does not independently count every field of the entire loaded corpus or each streamed frame.",
+      "evidence": [
+        "ui/68-r2-prefix-count.ax.txt",
+        "ui/69-r2-prefix-wrap-last.ax.txt",
+        "ui/70-r2-prefix-wrap-first.ax.txt"
+      ]
+    },
+    {
+      "id": "P32-selected-loaded-body-tail64",
+      "result": "passed-selected-r2-case",
+      "observed": "AX71/72 explicitly shows loaded-body scope:2 loaded,157 unloaded,0 read-unconfirmed,1 selected reply match. Image73 shows complete tail64 highlight after source jump.",
+      "evidence": [
+        "ui/71-r2-p32-loaded-tail-result.ax.txt",
+        "ui/72-r2-p32-loaded-tail-ready.ax.txt",
+        "ui/73-r2-p32-loaded-tail-jump.ax.txt",
+        "ui/73-r2-p32-loaded-tail-jump.jpg"
+      ],
+      "notCovered": [
+        "Unloaded history",
+        "Attachment file bytes",
+        "All source coverage",
+        "Persistent index",
+        "Full P32"
+      ]
+    },
+    {
+      "id": "P40-retained-command-declaration-and-iconless-management-layout",
+      "result": "passed-selected-presentation-regression",
+      "observed": "Image75 shows the retained owned command declaration and a horizontal management label. AX74/76 retain empty composer and two unsent-file-opinion count before/after dismissing the filter menu.",
+      "commandSelectedOrInvokedByRecordedOperator": false,
+      "freshSkillDiscoveryOrAdoptionProven": false,
+      "officialAppServerMappingProven": false,
+      "evidence": [
+        "ui/74-r2-p40-loaded.ax.txt",
+        "ui/75-r2-p40-filtered-menu.ax.txt",
+        "ui/75-r2-p40-filtered-menu.jpg",
+        "ui/76-r2-p40-menu-dismissed.ax.txt"
+      ]
+    }
+  ],
+  "b3Protection": {
+    "fourCompleteAxStringsExactlyEqual": true,
+    "endpoints": ["fresh-before-quit", "first-loaded-after61", "final77"],
+    "unicodeLengths": [187, 75, 32, 27],
+    "utf8Sha256": [
+      "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1",
+      "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010",
+      "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95",
+      "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+    ],
+    "permissionReconfirmationNoticeAtAllThreeEndpoints": true,
+    "permissionConfirmed": false,
+    "basis": "Complete capturedAX strings and UTF8 bytes without trim or normalization; not inferred from partial pixels or closed manifests.",
+    "allUserDataOrAttachmentConsumptionProven": false
+  },
+  "operatorActions": {
+    "recordedNewModelSubmissions": 0,
+    "recordedPermissionOrModelChanges": 0,
+    "p12ManualScroll": 0,
+    "commandSelectedOrInvoked": false,
+    "globalNoRpcClaim": false
+  },
+  "independentReview": {
+    "path": "output/2026-10-31-common-formal/independent/installed-ui-r2-review.json",
+    "sha256": "7007ade468f69f38f29995b6cddd4a91b3b48c85ee0e4cd9ceae043e1cc8a337",
+    "bytes": 14204
+  },
+  "rootObservation": {
+    "path": "output/2026-10-31-common-formal/correction/formal/readonly-r2-root-observations.json",
+    "sha256": "2756e4dded8eef972a05dbdd90537569540ec43722d235fd521128c19eaf772d",
+    "bytes": 10744
+  },
+  "scalarChecks": {
+    "path": "output/2026-10-31-common-formal/independent/installed-ui-r2-scalar-checks.json",
+    "sha256": "72668deacae298c4dd0b6c3fe40c95febd76a84be64fc411a7623d2d7ed1965c",
+    "bytes": 18876
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-31-common-formal/ui/60-r2-b3-first-after.ax.txt",
+      "sha256": "2982fcc59a7b631876381dceb3caa9a7ed73866c84c56c5e5f4dbf02473d5e53",
+      "bytes": 2466
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/60-r2-b3-first-after.jpg",
+      "sha256": "852af31ab8600091ce1a0e103af282fc46eee329583cdba08b5bcb2de301cf7e",
+      "bytes": 186978
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/61-r2-b3-loaded-after.ax.txt",
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42",
+      "bytes": 4847
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/61-r2-b3-loaded-after.jpg",
+      "sha256": "2c5dd115084934ea8d49f4b8ddb80b98cffc0b206b2b15776f48636f4dfb88ba",
+      "bytes": 447504
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/62-r2-mistral-opening.ax.txt",
+      "sha256": "6ff847732f322bd0af9277ce25d5063baadbbcb4924aab964b9ba284438adec2",
+      "bytes": 2515
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/62-r2-mistral-opening.jpg",
+      "sha256": "e70a3563ee5f575a2194e2e93940a214fc5bfd652f56017a02e24bb53cf2b9f8",
+      "bytes": 190546
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/63-r2-mistral-loaded.ax.txt",
+      "sha256": "544a31df71ec8fb8c0bdbfb2a4ba63cc3085f8e6b0314d319745e0fe10393e36",
+      "bytes": 9014
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/63-r2-mistral-loaded.jpg",
+      "sha256": "166137e6c495a8d7aed55a4890fbe4b512f3389ad9beea220bd6dfccbb73bddd",
+      "bytes": 639585
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/64-r2-first-line-thought.ax.txt",
+      "sha256": "33cf1c0cd8dfadc8861d8a98a4f93d44a4e07ccc2ecc00964d408a924f341ac2",
+      "bytes": 10360
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/64-r2-first-line-thought.jpg",
+      "sha256": "3b6d672ba3e1e08966f07af4d6b1fba235e913ab3103a3b48476bf7b9901f7be",
+      "bytes": 410800
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/65-r2-first-line-body.ax.txt",
+      "sha256": "e9c2f3bda315baa89f56e1e1752b0acdc8b1cb4bd733596908f481127d571c9a",
+      "bytes": 9540
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/65-r2-first-line-body.jpg",
+      "sha256": "b80eec909eb267f8ae662e1a0ee640791be9a6a3b281f679e6251bf72b0b66ab",
+      "bytes": 526779
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/66-r2-last-line-thought.ax.txt",
+      "sha256": "9a84eef9fb3b64d87fd349e8e0b5ac6e01c571faf51c230b06d09613586101fd",
+      "bytes": 10360
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/66-r2-last-line-thought.jpg",
+      "sha256": "97f99d023ac626db703e6b4a157f8ca3d0ee7ac3cfd6fc6cf050721db500637d",
+      "bytes": 409052
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/67-r2-last-line-body.ax.txt",
+      "sha256": "8238c0a3f397f8a19194af8dd557757234d8e18ac79c15621052021c69fa88d8",
+      "bytes": 9511
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/67-r2-last-line-body.jpg",
+      "sha256": "4e33760c0bb637c8eca97af1009debf5890dcbcdddb8854b5cfbe65fffd190bf",
+      "bytes": 613954
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/68-r2-prefix-count.ax.txt",
+      "sha256": "f33f2f46368813bcb8d42660cf8f43ca8c6de462ab1e01e66ea0f3beaf5fedbb",
+      "bytes": 9766
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/68-r2-prefix-count.jpg",
+      "sha256": "60f6c8647cc2269f07ba777ac46f723e58d88b3be26553302e8a4a19ee505c52",
+      "bytes": 418480
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/69-r2-prefix-wrap-last.ax.txt",
+      "sha256": "a64d85966ef83dead1ef10bb7948331d3067a5ebee56c1046ad494f587383336",
+      "bytes": 9510
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/69-r2-prefix-wrap-last.jpg",
+      "sha256": "01e22eb053c4380f2ac49521573b2bb71ece718e7925530f12a7679f72b88c73",
+      "bytes": 648910
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/70-r2-prefix-wrap-first.ax.txt",
+      "sha256": "737f56af51122ef8d9f4f1389741d2f028d063390e47593ed7017d5284b4abdf",
+      "bytes": 9538
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/70-r2-prefix-wrap-first.jpg",
+      "sha256": "6c587aefd7fbdb056e65feaa40221f509d8b4b591229ec704ffc48d6bffd2bdc",
+      "bytes": 406777
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/71-r2-p32-loaded-tail-result.ax.txt",
+      "sha256": "e3407746ee8e991c2ba362f69580dee9db7934b2addbdc287cb54c32604f59d0",
+      "bytes": 1506
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/71-r2-p32-loaded-tail-result.jpg",
+      "sha256": "420bd7c7a8277d46b48011700d17125f6c34ee9f823d712c99cf741fe724363b",
+      "bytes": 239791
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/72-r2-p32-loaded-tail-ready.ax.txt",
+      "sha256": "e3407746ee8e991c2ba362f69580dee9db7934b2addbdc287cb54c32604f59d0",
+      "bytes": 1506
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/72-r2-p32-loaded-tail-ready.jpg",
+      "sha256": "f14effe7bba4fcf7fb2d4625a8df5ec73a11d21dab4627446133e2ad82724096",
+      "bytes": 239796
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/73-r2-p32-loaded-tail-jump.ax.txt",
+      "sha256": "affe9fc15ce83665e72b6c6ae0b3c27349b1717289dfea2426e48ca5c3fad018",
+      "bytes": 8999
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/73-r2-p32-loaded-tail-jump.jpg",
+      "sha256": "3bc43060620fe922854dd3aa3d5bbb48e72109a6f4de97327896e0fda4e55a7f",
+      "bytes": 600978
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/74-r2-p40-loaded.ax.txt",
+      "sha256": "9f339781297aff9920184c1e17d1db7d9626068de209105e1326f4c21f24f0a9",
+      "bytes": 7896
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/74-r2-p40-loaded.jpg",
+      "sha256": "0ad9150b395219797dcc6e2481abacbfcea90dbc6652841e0c344052d8cf2367",
+      "bytes": 404121
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/75-r2-p40-filtered-menu.ax.txt",
+      "sha256": "fab9ee7d0adea2bf349cf6648d2b5ef984ca8871632d4e7c463601d948e2996b",
+      "bytes": 8376
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/75-r2-p40-filtered-menu.jpg",
+      "sha256": "a30960d307d61125caab6f287a990a88dd9f8744f2cfc982d80ccab861ea6100",
+      "bytes": 422713
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/76-r2-p40-menu-dismissed.ax.txt",
+      "sha256": "b2e7d2736fe15bbd4be64470577d5512e1e3d5832bc9f70854543dfa895c8f71",
+      "bytes": 7818
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/76-r2-p40-menu-dismissed.jpg",
+      "sha256": "3b19fca69275b5d8774ace1aa5d6e837705ffc0f567c0dee20d2ca5c8afa6f38",
+      "bytes": 396769
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/77-r2-b3-final.ax.txt",
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42",
+      "bytes": 4847
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/77-r2-b3-final.jpg",
+      "sha256": "6cbe74809a068add26ba12c1b14246c3efb4655500388e2fb34f0a3500d4f050",
+      "bytes": 445958
+    },
+    {
+      "path": "output/2026-10-31-common-formal/correction/formal/after-launch-binary.json",
+      "sha256": "c77e631efcb287d59a0e64d1551509c5a44ea56149e82347e793ffa063c643b7",
+      "bytes": 458
+    }
+  ],
+  "privacy": {
+    "rawAxAndPixelsRemainPrivateUnderOutput": true,
+    "rawB3DraftContentsIncludedHere": false
+  },
+  "limits": [
+    "Selected existing macOS objects/configuration and loaded corpus only; no complete P12/P32/P40/P18 or29-by8 acceptance.",
+    "Operator recorded zero new model submissions and zero permission/model changes. This is an operator-action declaration plus saved endpoints, not a global no-RPC/no-network trace.",
+    "No source-level unique formal runtime trace was captured; the controlled R2 mechanism and actual new successful endpoints remain distinct proof levels.",
+    "B3AX equality concerns four displayed unsent paragraphs; it does not prove attachment consumption, every draft byte in storage or zero post-launch user-data changes.",
+    "P35 native cancellation/conflict/newMarkdown observations belong to the earlier206 source case. They were not rerun on3432696.",
+    "Earlier ef788 P12 failure, older failures and unknown requests remain; normal exit or process absence does not establish external-work stop."
+  ]
+}

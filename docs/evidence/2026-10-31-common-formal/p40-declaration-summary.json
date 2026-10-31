@@ -1,0 +1,92 @@
+{
+  "kind": "P40ExistingLoadedCommandDeclarationPublicSummary",
+  "recordedAt": "2026-10-31T14:52:39.117596+00:00",
+  "requirementIds": ["P40"],
+  "observedFunctionalSource": "2063416d82de4c95e5ac0f02ffa47e102ef25f35",
+  "environment": {
+    "application": "Farfold 0.1.7, ai.farfold.desktop, macOS arm64",
+    "object": "Existing Farfold-owned synthetic command fixture in the original selected Mistral conversation",
+    "displayedModelLabelOnly": "Mistral Medium 3.5",
+    "effectiveModelAccountOrPermissionIdentityRevalidated": false
+  },
+  "result": "Existing loaded declaration and selected filtered-menu visibility only; no new discovery, adoption or management proof.",
+  "observations": [
+    "The selected existing command declaration and its fixture warning remained visible after filtering the command/template menu.",
+    "Before and after closing the temporary menu, composer was empty and the two pending file opinions remained.",
+    "At source206 the iconless management label wrapped vertically. Later source fixes and final installed menu observations belong to separate records."
+  ],
+  "actions": {
+    "newModelSubmissions": 0,
+    "commandSelected": false,
+    "commandInvoked": false,
+    "settingsChanged": false,
+    "newSkillInstalledOrEnabled": false,
+    "managementActionPerformed": false
+  },
+  "fixture": {
+    "kind": "Previously created Farfold-owned synthetic acceptance fixture",
+    "bytes": 542,
+    "sha256": "d71ad3be50f53bad9806eeaa8a5c67c084cd19782506a223807305fdc590c7ad",
+    "currentBytesAndHashMatchBoundRecord": true,
+    "existingCommandDeclarationProvesNewDiscoveryOrAdoption": false
+  },
+  "referenceVerification": {
+    "allListedOriginalFilesExist": true,
+    "fixtureBytesAndSha256RecomputedAgainstBoundOriginal": true,
+    "currentStableReferenceHashesRecorded": true
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-31-common-formal/p40-declaration-bound.json",
+      "bytes": 1388,
+      "sha256": "3869781264cea564e969a6cdcb8be9c1564f99d87769fb374268a961f048a178"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/27-owned-skill-loaded.ax.txt",
+      "bytes": 7896,
+      "sha256": "9f339781297aff9920184c1e17d1db7d9626068de209105e1326f4c21f24f0a9"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/29-owned-command-filtered.ax.txt",
+      "bytes": 8376,
+      "sha256": "fab9ee7d0adea2bf349cf6648d2b5ef984ca8871632d4e7c463601d948e2996b"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/29-owned-command-filtered.jpg",
+      "bytes": 411526,
+      "sha256": "044bc671ca33d0a1f5d0d4218380f768c9ba5bb817e66b2f4573b23902f95267"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/30-owned-menu-closed.ax.txt",
+      "bytes": 7818,
+      "sha256": "b2e7d2736fe15bbd4be64470577d5512e1e3d5832bc9f70854543dfa895c8f71"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/27-owned-skill-loaded.jpg",
+      "bytes": 403938,
+      "sha256": "9ecc161fa0a15fb4768a2ee4ab9f40a2dfd775224cab1369004081146c1b4cdb"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/30-owned-menu-closed.jpg",
+      "bytes": 398449,
+      "sha256": "d920722d48e19c1ffcef2d31eadeeeb4fc9483531d4b2804b12b243ba455892b"
+    },
+    {
+      "path": "output/2026-10-24-agent-acceptance/p40-mistral-owned-skill-65a/workspace/.agents/skills/p40-owned-marker/SKILL.md",
+      "bytes": 542,
+      "sha256": "d71ad3be50f53bad9806eeaa8a5c67c084cd19782506a223807305fdc590c7ad"
+    }
+  ],
+  "limits": [
+    "Baseline source206 declaration evidence only. Later source commits and the current installed source are outside this baseline record.",
+    "No skill invocation, first adoption, discovery scan, official management call, install/enable/disable, full source/scope coverage or current app-server session mapping.",
+    "No current High/AcceptEdits confirmation or stronger effective model/account claim follows from the displayed model label.",
+    "The original menu layout defect and later repair are distinct observations; finalR2menu75 evidence is maintained separately.",
+    "No fullP40, complete standard, whole Agent or29x8 acceptance."
+  ],
+  "privacy": {
+    "rawDraftReplyOrThoughtBodiesPublished": false,
+    "nativeSessionIdsOrCredentialsPublished": false,
+    "rawEvidenceRemainsUnderOutput": true
+  }
+}

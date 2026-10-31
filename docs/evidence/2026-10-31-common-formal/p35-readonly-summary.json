@@ -1,0 +1,223 @@
+{
+  "kind": "P35InstalledMarkdownCancellationConflictRecoveryPublicSummary",
+  "recordedAt": "2026-10-31T14:52:39.117596+00:00",
+  "requirementIds": ["P35"],
+  "observedFunctionalSource": "2063416d82de4c95e5ac0f02ffa47e102ef25f35",
+  "environment": {
+    "application": "Farfold 0.1.7, ai.farfold.desktop, macOS arm64",
+    "object": "Selected original Mistral conversation; loaded Markdown snapshot",
+    "modelOrAccountIdentityRevalidated": false
+  },
+  "result": "Selected substantive original artifacts support native-picker cancellation, owned-target preservation and explicit fresh-destination recovery; historical mutable-index drift noted. FullP35 remains open.",
+  "scope": {
+    "format": "Markdown",
+    "includeLoadedToolDetails": false,
+    "attachmentFilesPacked": false,
+    "loadedOnlyPrivacyDisclosureObserved": true,
+    "newModelSubmissions": 0,
+    "laterSourceRetestClaimed": false
+  },
+  "nativePickerCancellation": {
+    "startedAt": "2026-10-31T10:43:23.090Z",
+    "cancelObservedAt": "2026-10-31T10:43:36.926Z",
+    "elapsedSecondsRecomputed": 13.836,
+    "displayedResult": "已取消本次保存",
+    "savedSuccessClaimed": false,
+    "saveAndCloseControlsRecovered": true,
+    "scope": "Cancellation of the native location picker; not cancellation of a backend write or an RPC/IO trace."
+  },
+  "existingOwnedDestination": {
+    "displayedResult": "保存未确认",
+    "nativeExistingTargetWarningObserved": true,
+    "falseSavedSuccessObserved": false,
+    "originalSentinelBytes": 37,
+    "originalSentinelSha256": "4aa190bf6c59d1ce7682060ea1d36dc9a8e77a7164aa7be27b38e04ec16c9238",
+    "sentinelExactOriginalBytesRetained": true,
+    "afterConflictDirectoryContainsOnlyOriginalSentinel": true,
+    "backendAlreadyExistsCause": "Inferred from the independently reviewed no-clobber implementation, not a captured raw backend error."
+  },
+  "explicitFreshDestination": {
+    "chosenSeparatelyAfterInspectingConflict": true,
+    "automaticRetryClaimed": false,
+    "displayedResult": "文件已保存",
+    "bytes": 5958,
+    "sha256": "acc0e05440b03ba3b7ca7ee405875c07a0441d0ceab6ee62ffc092a9079f98b4",
+    "selectedReplyLines": 64,
+    "exactContiguous01Through64BlockRechecked": true,
+    "exactSelectedBlockOccurrences": 1,
+    "attachmentDescriptions": 4,
+    "capturedUnsentDraftStringsExcluded": 4,
+    "selectedExpandedThoughtBodyExcluded": true,
+    "toolDetailsExcluded": true,
+    "currentAttachmentBytesPackedOrCompared": false,
+    "finalDirectoryContainsOnlySentinelAndSnapshot": true,
+    "originalOwnerEmptyComposerObservedAfterClose": true
+  },
+  "independentReview": {
+    "path": "output/2026-10-31-common-formal/independent/p35-review.json",
+    "bytes": 9544,
+    "sha256": "57f38b6b4f0dd9788626cfea4760dfd2b01cb37227c85c035373f3aad1283b6f"
+  },
+  "referenceVerification": {
+    "stableOriginalReferencesMatched": 27,
+    "originalReviewReferenceCount": 28,
+    "bytesAndSha256Recomputed": true,
+    "mutableIndexDrift": {
+      "path": "output/2026-10-31-common-formal/ui/timeline.json",
+      "originalReviewBytes": 2858,
+      "originalReviewSha256": "bbfb1710f73b4502089e536c2dbc36ef4ddf31bb2bf00a2cb89540ccb0a2d0fd",
+      "currentIndexObservedBytes": 6703,
+      "originalHistoricalReferenceMatchesCurrentFile": false,
+      "interpretation": "The UI timeline grew with later observations. Original review is retained unchanged; current index is not a reconstruction of the historical2858-byte file and is not counted among the27matched original references."
+    }
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-31-common-formal/ui/15-export-dialog-before.ax.txt",
+      "bytes": 1182,
+      "sha256": "b9d8d7387bfe5dab1f9486a613dd0878814d26ed496d392289afc3fdaca5c1e6"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/15-export-dialog-before.jpg",
+      "bytes": 244387,
+      "sha256": "28393fd7aec03f75e360cbe665af99809a48551ffcf3b18a9df34bf5bfa15f04"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/16-export-scope.ax.txt",
+      "bytes": 2118,
+      "sha256": "b234c23aedf994b5a7950d2ebe0ab5bb84614143c8a02b8ad5e3e218a3ed467b"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/16-export-scope.jpg",
+      "bytes": 325667,
+      "sha256": "d3f0fed6ab1895144afabdd00686c53d8da0b50ba28019898cb6ef526c615571"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/17-export-native-save-before-cancel.ax.txt",
+      "bytes": 3111,
+      "sha256": "0657a6edf0af154be8da5552ba4f28880f76ecee64030c1bb6a1d6173cba965a"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/17-export-native-save-before-cancel.jpg",
+      "bytes": 101682,
+      "sha256": "a9f09cebef53f2d3061e2da52186bab83d7dcb22d752f0aacdebff5c79f398a4"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/18-export-cancelled.ax.txt",
+      "bytes": 2106,
+      "sha256": "caa048810fb7aed821c155862527fbb1a0414104833459fb4cf3b8ec2be9e704"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/18-export-cancelled.jpg",
+      "bytes": 325291,
+      "sha256": "da3feabadfff14f272281b890830ee4fb1e4f86d57036006bd53494ee5000bef"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/20-native-own-existing-target.ax.txt",
+      "bytes": 2729,
+      "sha256": "4b1bf3c3cd840202fda5ec2c4e7a7ff41f2185079a66e7dd08b048cae52dc017"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/20-native-own-existing-target.jpg",
+      "bytes": 136375,
+      "sha256": "23fe3a6ec00e0793e2e2a6cee02fb08090318f833f576dd2dc42320d5f581f36"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/21-native-existing-target-confirm.ax.txt",
+      "bytes": 413,
+      "sha256": "88480dd15f4d1a0c4a272f69e91d7efbad0dfa035c708c3bd28f297deef43e2d"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/21-native-existing-target-confirm.jpg",
+      "bytes": 34117,
+      "sha256": "7421f1c1956fda1d591c321dfc2b3c8b99ec1b3aed9e47ce7e83256f344ee90e"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/22-export-existing-target-result.ax.txt",
+      "bytes": 2193,
+      "sha256": "705633cc49d3b1369f407ef063baa6a5e822e24a9c16f97ba793432ef2df41f7"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/22-export-existing-target-result.jpg",
+      "bytes": 332189,
+      "sha256": "a91e163e7fe05eaf74bf0d74af5040b624d45aa02a39d050f8599f16a057ddfc"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/23-native-new-export-target.ax.txt",
+      "bytes": 2758,
+      "sha256": "39f8008cda32c8cbd986c7667845b9afb56b96c199af5af73292a138752ca6f5"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/23-native-new-export-target.jpg",
+      "bytes": 146102,
+      "sha256": "c54bc7865d43eec1178dd21d113d5527b24de9e2d15d7a67bb70195804156a72"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/24-export-saved-after-failure.ax.txt",
+      "bytes": 2152,
+      "sha256": "5c2502b606b620d8b3bd8c9fc1558b275a637c4a7b2cb861fe8c1a71fb390e36"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/24-export-saved-after-failure.jpg",
+      "bytes": 342397,
+      "sha256": "0cee0b6533987425e2f541b63b61e4f722012b3e7efdb9fa85dd3074562927b8"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/25-mistral-after-export.ax.txt",
+      "bytes": 8969,
+      "sha256": "048edf4df5a74a16cbcbbbf6096130bdb8c1ad9c932c373b8fc13da385e6c2e3"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/25-mistral-after-export.jpg",
+      "bytes": 631466,
+      "sha256": "4940dd7a5f20e8bed782982a99b114d3fc7b603523596c3890f7cb7cc79ac194"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/p35-cancel-observation.json",
+      "bytes": 352,
+      "sha256": "f5158e0ad6cc813896fab1590627dcb293f3fca99e65958afee37b9a598db953"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/p35-output-before.json",
+      "bytes": 349,
+      "sha256": "55ea9bd31c042310a1e3bc9df2a8f4c1a4685aed852366ed252e87b0e6366d94"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/p35-output-after-conflict.json",
+      "bytes": 187,
+      "sha256": "30f8057b5e4a3a713bfd824f47f5dbdc12adb42f8021f62ae5ce9ecbf9d5df59"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/p35-output/mistral-loaded-snapshot.md",
+      "bytes": 5958,
+      "sha256": "acc0e05440b03ba3b7ca7ee405875c07a0441d0ceab6ee62ffc092a9079f98b4"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/p35-output/do-not-replace.md",
+      "bytes": 37,
+      "sha256": "4aa190bf6c59d1ce7682060ea1d36dc9a8e77a7164aa7be27b38e04ec16c9238"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/03-b3-loaded.ax.txt",
+      "bytes": 4847,
+      "sha256": "03b7d25e4934982b3c8c333760e87d33556e3d04184f9c9f998a2c8573a6ad42"
+    },
+    {
+      "path": "output/2026-10-31-common-formal/ui/12-mistral-first-line-thought-before.ax.txt",
+      "bytes": 10360,
+      "sha256": "33cf1c0cd8dfadc8861d8a98a4f93d44a4e07ccc2ecc00964d408a924f341ac2"
+    }
+  ],
+  "limits": [
+    "This observation was on functional source206; later commits and current installed source were not re-tested forP35 by this record.",
+    "Old180-second/cross-night cancellation incomplete case and old disabled-save failure remain unchanged; this new13.836-second picker cancellation does not retroactively complete them.",
+    "No disk-full, read-only-volume, backend in-flight write/ZIP cancellation, all-history/event-byte equivalence, concurrent-stream freeze or Windows acceptance.",
+    "Selected exclusions do not establish every thinking item, hidden payload, all original message bytes or real Agent attachment consumption.",
+    "No completeP35, whole Agent or29x8 acceptance."
+  ],
+  "privacy": {
+    "rawDraftReplyOrThoughtBodiesPublished": false,
+    "nativeSessionIdsOrCredentialsPublished": false,
+    "rawEvidenceRemainsUnderOutput": true
+  }
+}

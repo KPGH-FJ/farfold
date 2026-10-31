@@ -1,0 +1,89 @@
+{
+  "kind": "CommonFindAndMenuEngineeringPublicSummary",
+  "recordedAt": "2026-10-31T11:13:52.626502+00:00",
+  "sourceCommit": "ef78815494368c157c39db26f4b7dd85c6bb53c1",
+  "engineeringBaseHead": "8ce591a218ac1239b337dc2606693eb734722036",
+  "checksRanBeforeCommit": true,
+  "checksRerunAtFinalCommit": false,
+  "actualSevenChecks": {
+    "completed": 7,
+    "naturalIntegerExitCodesAllZero": true,
+    "rawStdoutAndStderrLogsReviewed": 14,
+    "frontend": {
+      "files": 698,
+      "passed": 9372,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ],
+    "sixIgnoredNamesMatchPreviousP18": true
+  },
+  "inputVerification": {
+    "completeInputs": 2341,
+    "productionTestResourceInputs": 2338,
+    "authorityInputs": 3,
+    "prePostFullMapsEqual": true,
+    "allCommandEndpointsMatched": true,
+    "postCommitDiskGitBlobsAndExecutableModesExactlyMatch": true,
+    "independentReviewPassed": true
+  },
+  "nonfatalOutput": [
+    "Vite retains a large-chunk warning; build exit0.",
+    "Four ZipWriter archive-write-stopped drop warnings remain. Test summaries have0failures; stderr lacks per-warning test identity, so no unique attribution is inferred."
+  ],
+  "references": {
+    "actualSeven": {
+      "path": "output/2026-10-31-common-formal/engineering/engineering-summary.json",
+      "sha256": "aafdbeda56b245169f14d65fafd1dd00e6e599ced099a45b1961698dce29d58d",
+      "bytes": 5923
+    },
+    "beforeInputs": {
+      "path": "output/2026-10-31-common-formal/engineering/source-before.json",
+      "sha256": "86c14229cc0b59314cd09e524c4752516e2d3f2568685705dd9ecb4c3009f0f6",
+      "bytes": 277119
+    },
+    "afterInputs": {
+      "path": "output/2026-10-31-common-formal/engineering/source-after.json",
+      "sha256": "c50a4043ff99929c0792828f1e8f1c11dc62acc86e2f073d4a48e07bb3895f6a",
+      "bytes": 277120
+    },
+    "independentEngineering": {
+      "path": "output/2026-10-31-common-formal/independent/engineering-review.json",
+      "sha256": "b731965d2c5ecd7b85e99610f51ddbd1be514e4a2a347352dd6b48a6a2bc6f7b",
+      "bytes": 13280
+    },
+    "postCommitFreeze": {
+      "path": "output/2026-10-31-common-formal/formal/source-freeze.json",
+      "sha256": "b281c45f023769a56308d9a3cd21399fe8f1b80a7779be6613d2f69a8a71a275",
+      "bytes": 275797
+    },
+    "postCommitModes": {
+      "path": "output/2026-10-31-common-formal/formal/input-modes.json",
+      "sha256": "9b8efea1f367fe884a73dd79f4f3fec59eb769be78a499ca420cc5343e55ebf1",
+      "bytes": 137377
+    }
+  },
+  "limits": [
+    "Seven checks ran before commit and committed inputs were then matched exactly; no final-commit rerun is claimed.",
+    "Endpoint equality does not freeze intermediate writers, dependencies or environment. Original14logs stay under output.",
+    "Formal ef788 P12 first-body-hit regression failed after these successful checks; engineering does not prove installed UI success.",
+    "Complete P12/P32/P40/P18, permission recovery and all29-by8 remain open; affected NEW-24 new real sends stay paused.",
+    "Prior failures and unknown requests remain; normal exit and process0 do not prove stop.",
+    "Source, synthetic geometry, engineering, candidate, installation and actual UI are separate evidence levels."
+  ]
+}
