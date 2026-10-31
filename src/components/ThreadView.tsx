@@ -64,7 +64,10 @@ import { FailedToolQueueHint } from "./FailedToolQueueHint";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
 import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
-import { reportedArtifactCounts } from "../runtime/reported_artifacts";
+import {
+  canInspectToolContent,
+  reportedArtifactCounts,
+} from "../runtime/reported_artifacts";
 import { useContentOwner } from "./useContentOwner";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { maintenanceLabel } from "../runtime/compaction_strings";
@@ -906,7 +909,10 @@ export function ThreadView({
                               onOpenFile={openFile}
                               activity={toolActivityState(thread, item.call)}
                               onOpenArtifacts={
-                                (artifactCounts.get(item.id) ?? 0) > 0
+                                canInspectToolContent(
+                                  item.call,
+                                  artifactCounts.get(item.id),
+                                )
                                   ? (event) =>
                                       openArtifacts(
                                         item.id,

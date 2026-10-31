@@ -143,6 +143,28 @@ export function reportedArtifactCount(
   return combinedCount(tools.map((item) => toolStats(thread, item)));
 }
 
+/** An unfinished, explicitly described command has a waiting/unknown view even
+ * before it reports output. Keep that navigation separate from artifact counts
+ * and refuse an unavailable/ambiguous scope; input is never a result. */
+export function canInspectToolContent(
+  call: ToolCallView,
+  count: number | null | undefined,
+): boolean {
+  if (count == null) return false;
+  if (count > 0) return true;
+  if (
+    count !== 0 ||
+    call.kind !== "execute" ||
+    call.status === "completed" ||
+    call.status === "failed"
+  )
+    return false;
+  const input = call.rawInput;
+  if (!input || typeof input !== "object" || Array.isArray(input)) return false;
+  const command = (input as Record<string, unknown>).command;
+  return typeof command === "string" && command.trim().length > 0;
+}
+
 type ToolStats = { paths: Set<string>; outputs: number };
 function toolStats(thread: ThreadState, item: ArtifactToolItem): ToolStats {
   const paths = new Set(
