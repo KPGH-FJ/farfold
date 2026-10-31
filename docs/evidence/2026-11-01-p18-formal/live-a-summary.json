@@ -1,0 +1,102 @@
+{
+  "kind": "P18NewLiveAFormal343BaselinePublicSummary",
+  "recordedAt": "2026-10-31T16:50:53.728502+00:00",
+  "requirementIds": ["P18"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "formalSource": "3432696eaa77863bf4aeaf4751245df87674b182",
+    "formalExecutableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+    "laterFixOrInstallationResultIncluded": false
+  },
+  "selectedObject": "Original Mistral conversation; unchanged displayed Medium3.5. Account identity and complete permission scope were not newly proven.",
+  "result": "New live output unverified. One Stop followed by request result unknown and sends paused; fullP18 remains open.",
+  "actions": {
+    "recordedOperatorUiSubmissions": 1,
+    "operatorResubmissions": 0,
+    "onceApprovals": 0,
+    "rememberedApprovals": 0,
+    "denyActions": 1,
+    "stopRequests": 1,
+    "configurationOrPermissionChanges": 0,
+    "underlyingCommandExecutionCount": "Unknown; submissions, proposals and denial do not establish execution count."
+  },
+  "observations": [
+    "09..10 match the prepared398-character prompt exactly.11/13 frozen current approval input is missing; nearby exact tool command cannot fill it.",
+    "14/15 first tool and selected pane report tool_denied. Agent then proposed a second tool under the same operator message; this is not an operator resubmission.",
+    "16 waits for stop confirmation.17..19 show request unknown and following sends paused. Second tool remains nonterminal, its expanded details identify the A command, but it has no content entry. Pane still belongs to the first denied tool.",
+    "No A stdout increment was captured in its output pane before terminal state. Old20261030 output, nonce in command text and technical details are not live output; no raw exit code or stop-success proof."
+  ],
+  "toolStateBoundary": "Request uncertainty and tool uncertainty differ. Second tool still renders running; actual tool-unknown content branch is not claimed passed.",
+  "b3": {
+    "frames": [1, 30],
+    "fourRenderedStringsExact": true,
+    "characterLengths": [187, 75, 32, 27],
+    "utf8Sha256": [
+      "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1",
+      "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010",
+      "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95",
+      "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+    ],
+    "permissionStillUnconfirmedBoth": true,
+    "limit": "30 follows A and initial search observations, before35..45. This is not a final B3 receipt after all later P45 actions, a cold restart or a disk-save test.",
+    "rawStringsPublished": false
+  },
+  "oldFailurePreserved": {
+    "originalDate": "2026-10-30",
+    "declaredWindowSeconds": 180,
+    "approvalSecondsFromSend": 205.702,
+    "oldCaseCompletedInsideOriginalWindow": false,
+    "newCaseIsOldUnknownResend": false,
+    "oldSummary": {
+      "path": "docs/evidence/2026-10-30-p18-live-command/readonly-summary.json",
+      "bytes": 4627,
+      "sha256": "a13807c494be6902ca27db8b6f498e674a98726dee4b936b846e1cb84ad7a788"
+    }
+  },
+  "independentReview": {
+    "path": "output/2026-11-01-p18-formal/independent/live-a-review.json",
+    "bytes": 19954,
+    "sha256": "017f7918c2d092c1bfa3d6523fe5381745f7ea10842603b6d1654c4bfbcad56b"
+  },
+  "originalCaseReferencesVerified": 38,
+  "additionalEvidence": [
+    {
+      "path": "output/2026-11-01-p18-formal/live-a-preparation-r1.json",
+      "bytes": 2092,
+      "sha256": "b5db61cf2f49e4d470c93c5163900d9afea7b495b217c83b458a8dff7d5f3397"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/live-a-send-attempt.json",
+      "bytes": 182,
+      "sha256": "0d77f1c2903b7c948b132f44ab9c0783e092c160f1df6e53299cbdd84f1b4eab"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/live-a-deny-action.json",
+      "bytes": 227,
+      "sha256": "7fea0ddf11808efb3b99841f14b194274373d5a4ebac1ead58cf5c3a11e78d8a"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/live-a-stop-action.json",
+      "bytes": 315,
+      "sha256": "36d59f54b41940a8831af56159f92acca11a9f210cd952db7a824ea1b02a997f"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/b3-after-live-a.json",
+      "bytes": 884,
+      "sha256": "b719c6cba589140671c1e333bd27aa365a32e9ff2c9c349d50366df34e51abd5"
+    }
+  ],
+  "notAccepted": [
+    "Live output",
+    "Tool-unknown content presentation",
+    "Stop success or command execution count",
+    "FullP18",
+    "Other objects/configurations/platforms or29x8"
+  ],
+  "productAcceptanceClaimed": false,
+  "privacy": {
+    "rawDraftOrReplyBodiesPublished": false,
+    "nativeSessionIdsAccountsOrCredentialsPublished": false,
+    "rawEvidenceRetainedUnderOutput": true
+  }
+}

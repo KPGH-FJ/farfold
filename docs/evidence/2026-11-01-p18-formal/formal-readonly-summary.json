@@ -1,0 +1,80 @@
+{
+  "kind": "P45SelectedFormalRegressionAndOriginalP18BlockedPublicSummary",
+  "recordedAt": "2026-10-31T17:18:52.375002+00:00",
+  "sourceCommit": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "formalBinarySha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+  "p45SelectedActual": {
+    "scopeLabels": "Metadata visible at57; loaded body visible at58.",
+    "query": "After mouseclick+paste, two-character query has one loaded-body match at60. Switching back preserves query and shows no metadata match; Escape returns focus to composer.",
+    "result": "selected-label-menu-and-query-path-passed",
+    "keyboardOnly": false,
+    "captureBoundary": "61 JPG and62 AX support returned scope; corresponding AX/JPG were at different states, and62 JPG has blank content. No same-frame identity or persistent new-defect claim.",
+    "unverified": [
+      "ActualVoiceOver",
+      "Full keyboard",
+      "Formal900x620",
+      "System text/scale",
+      "Other critical paths"
+    ]
+  },
+  "p18OriginalObject": {
+    "result": "blocked-by-cold-restore-failure",
+    "observed": "ActualMistral selection loads then shows reconnect failure and previous outcome unconfirmed/not automatically resent.",
+    "commandEntryAcceptedOnOriginalObject": false,
+    "noRetryOrAcknowledgement": "Root reports neither reconnect nor acknowledge clicked.",
+    "otherActualCase": "Later OpenCodeB realtime evidence is separate; it does not erase originalA unknown/recovery failure.",
+    "productRootCauseEstablished": false,
+    "relatedDiagnostic": "Official Mistral local saved-session restore rejected a callback-result relation without pending registration. Record origin, author and time remain unknown; no whole-fault attribution to Agent or product-bug-free claim."
+  },
+  "b3": {
+    "beforeInitialBeforeQuitColdRestoredAndFinalFourStringsExact": true,
+    "lengths": [187, 75, 32, 27],
+    "permissionUnconfirmed": true,
+    "privateTextPublished": false,
+    "allLiveDataUnchangedClaimed": false
+  },
+  "references": {
+    "readonlyEvidenceReview": {
+      "path": "output/2026-11-01-p18-formal/independent/installed-ui-readonly-review.json",
+      "sha256": "56522512ab67f95e98f60e4ee36c92ae40ea41d6b6ed20564f975939dca1584c",
+      "bytes": 12949
+    },
+    "b3Comparison": {
+      "path": "output/2026-11-01-p18-formal/b3-final-comparison.json",
+      "sha256": "05b5da04c855d1e6cd4a067f4c7a590f7f5d81638a30fa1a90ff15770a1fc76b",
+      "bytes": 1442
+    },
+    "finalBinary": {
+      "path": "output/2026-11-01-p18-formal/formal/final-binary-observation.json",
+      "sha256": "cc27e4d2ab08e9b896f26d75273a1e79a9129ba578e0c5bed5321ca7f61474da",
+      "bytes": 389
+    },
+    "originalBlockedFrame": {
+      "path": "output/2026-11-01-p18-formal/ui/56-new-formal-mistral-loaded.jpg",
+      "sha256": "bad6eb52dfbca5845f6b3241f762eee75b05f37425567bb52f179448c1d24e6f",
+      "bytes": 242542
+    },
+    "metadataVisibleFrame": {
+      "path": "output/2026-11-01-p18-formal/ui/57-new-formal-search-scope.jpg",
+      "sha256": "ecb8bb4ed19e55c5834a5aa02260577d2112bc01c4c09af979f000730c53eae9",
+      "bytes": 234162
+    },
+    "bodyQueryFrame": {
+      "path": "output/2026-11-01-p18-formal/ui/60-new-formal-search-body-pasted.jpg",
+      "sha256": "4906685eb9b2143abf896bc09bc48839976631c13d19a6cdd422f8b00dcf1a9a",
+      "bytes": 233490
+    },
+    "restoreBlocker": {
+      "path": "docs/evidence/2026-11-01-p18-formal/mistral-restore-blocker-summary.json",
+      "sha256": "fe82c97c5e7cab85b52a8b0ad024a3512030ba8218ffbf12ef6b93e633b9103c",
+      "bytes": 6151
+    }
+  },
+  "limits": [
+    "Original343 blank and originalA sparse approval/unknown remain historical evidence; no stop/cancel success or permission-association inference.",
+    "No fullP18/P45,29x8 or151-condition completion claim.",
+    "Observer read saved frames and complete AX only; no App/Agent operations.",
+    "Earlier source/engineering pending-phase summaries and installation evidence are not overwritten."
+  ],
+  "productAcceptanceClaimed": false
+}

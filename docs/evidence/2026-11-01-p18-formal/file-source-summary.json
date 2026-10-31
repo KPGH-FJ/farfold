@@ -1,0 +1,58 @@
+{
+  "kind": "ExistingFileOriginAndCurrentDiskFormal343PublicSummary",
+  "recordedAt": "2026-10-31T16:50:53.728502+00:00",
+  "requirementIds": ["P18"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "formalSource": "3432696eaa77863bf4aeaf4751245df87674b182",
+    "formalExecutableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+    "laterFixOrInstallationResultIncluded": false
+  },
+  "result": "Selected existing file-origin navigation selects that step scope; current-disk verification and separate preview are narrowly observed.",
+  "actions": {
+    "newModelSubmissions": 0,
+    "fileMutations": 0,
+    "permissionOrConfigurationChanges": 0
+  },
+  "originScope": {
+    "frames": [4, 5],
+    "observed": "Two file-origin type controls expanded under one reported-tool-record label. Only the first activated; pane changed to this-step content.",
+    "sourceControlsVisible": 2,
+    "reportedToolRecordLabelCount": 1,
+    "secondSourceControlExercised": false,
+    "asyncTasksSourceNavigationClaimed": false
+  },
+  "currentDisk": {
+    "frames": [33, 34],
+    "uiVerifiedBytes": 22,
+    "independentlyReadBytes": 22,
+    "sha256": "587199e106b0960773269f1dc7f4b5077d7545cbc6cdfe22a987da797ba903f6",
+    "exactOwnedFixtureAndTrailingLf": true,
+    "lfCount": 1,
+    "independentCurrentFilePreviewObserved": true,
+    "reportedFragmentKeptSeparateFromCurrentFile": true,
+    "beforeTextMissingAndFullDiffNotClaimed": true
+  },
+  "independentReview": {
+    "path": "output/2026-11-01-p18-formal/independent/file-p45-baseline-review.json",
+    "bytes": 22185,
+    "sha256": "fe048207aa28c95144c068dc0d0faca5e00b6fc727f755754a6cbf1c9c7a8243"
+  },
+  "rootObservation": {
+    "path": "output/2026-11-01-p18-formal/file-source-current-disk-observation.json",
+    "bytes": 2848,
+    "sha256": "68ac41fa8bb616aae1789b9602f0e2df65e3f41e583ebdb4455cb4d7fc429fc9"
+  },
+  "rootOriginalReferencesRechecked": 10,
+  "limits": [
+    "Not AsyncTasks source navigation.",
+    "One22-byte file and one origin entry only; no full diff or live-output claim.",
+    "Current-file reading does not prove Agent attachment consumption or fullP18."
+  ],
+  "productAcceptanceClaimed": false,
+  "privacy": {
+    "rawDraftOrReplyBodiesPublished": false,
+    "nativeSessionIdsAccountsOrCredentialsPublished": false,
+    "rawEvidenceRetainedUnderOutput": true
+  }
+}

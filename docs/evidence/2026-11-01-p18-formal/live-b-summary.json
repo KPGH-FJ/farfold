@@ -1,0 +1,130 @@
+{
+  "kind": "P18OpenCodeLiveBInstalledPreterminalOutputPublicSummary",
+  "recordedAt": "2026-10-31T17:28:23.508679+00:00",
+  "requirementIds": ["P18"],
+  "formalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "formalExecutableSha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+  "environment": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "object": "Original existing OpenCode S3 conversation",
+    "source": "Existing settings",
+    "displayedModel": "OpenCode/Big Pickle",
+    "mode": "build",
+    "selectionChanged": false,
+    "accountIdentityEffectiveSandboxOrCurrentRuntimeVersionNewlyProven": false
+  },
+  "result": "Selected real preterminal command-pane output increments and later reported natural completion independently verified. FullP18 remains open.",
+  "actions": {
+    "operatorUiSubmissions": 1,
+    "operatorResubmissions": 0,
+    "visibleNewToolGroups": 1,
+    "operatorApproveRememberDenyStopRetryOrSettingChanges": 0,
+    "underlyingOsCommandInvocationCountIndependentlyEstablished": false,
+    "approvalInputPathExercised": false
+  },
+  "evidenceSequence": [
+    {
+      "frames": [64, 65, 66, 67, 68],
+      "observed": "Original historical body restored and idle; existing source/model/build inspected without changing selection. Prepared334-character prompt matches exact input and submitted body."
+    },
+    {
+      "frame": 70,
+      "observed": "Expanded new step has a content entry. Ellipsis does not prove empty output; zero-content entry behavior is not formally accepted by this frame."
+    },
+    {
+      "frame": 71,
+      "capturedAt": "2026-10-31T17:12:29.712Z",
+      "secondsFromRecordedSend": 35.49,
+      "observed": "Correct newB step scope and command output pane show BEGIN separately from command input/title, with running state and Stop still visible."
+    },
+    {
+      "frame": 72,
+      "capturedAt": "2026-10-31T17:13:09.641Z",
+      "secondsFromRecordedSend": 75.419,
+      "observed": "Same selected pane now shows BEGIN+MID while still running with Stop."
+    },
+    {
+      "frame": 73,
+      "capturedAt": "2026-10-31T17:13:51.106Z",
+      "secondsFromRecordedSend": 116.884,
+      "observed": "Same pane shows BEGIN+MID+END; tool ended, exact prepared final reply and separate request completion visible; conversation idle with empty composer."
+    }
+  ],
+  "protocolWindow": {
+    "fixedMetadataRows": 13,
+    "outgoingSessionPrompt": 1,
+    "incomingSessionUpdates": 11,
+    "incomingResponse": 1,
+    "requestPermissionRecords": 0,
+    "cancelRecords": 0,
+    "fixedErrorFieldsAllNone": true,
+    "responseSecondsFromRecordedSend": 99.036,
+    "bothRunningPaneCapturesPrecedeResponse": true,
+    "payloadOrRawIdentityFieldsRetained": false,
+    "limit": "Method/time/byte metadata supports ordering; it cannot prove update content, zero content at70, raw exit status or output LF bytes."
+  },
+  "timingLimits": "Prepared command sleeps90s total. Immutable UTC captures establish order; UI01:11/01:13 are clock labels, not elapsed durations. Displayed1m30 is not raw exit proof or a performance threshold.",
+  "b3Retention": {
+    "frames": [1, 47, 52, 75],
+    "fourCompleteRenderedStringsExact": true,
+    "characterLengths": [187, 75, 32, 27],
+    "permissionStillUnconfirmed": true,
+    "rawDraftBodiesPublished": false,
+    "attachmentBytesOrAllHistoryEqualityClaimed": false
+  },
+  "independentReview": {
+    "path": "output/2026-11-01-p18-formal/independent/live-b-review.json",
+    "bytes": 14371,
+    "sha256": "0ded09a22d7e9494c660303443af8edb08be1a6d13765f4d0ec6a951b2ba1586"
+  },
+  "originalReferencesVerified": 44,
+  "protocolSnapshot": {
+    "path": "output/2026-11-01-p18-formal/independent/live-b-protocol-window.json",
+    "bytes": 2918,
+    "sha256": "1fe2277a3f10a7fed55a46e5dde9f832648db78b0d284244eade1865c0748d04"
+  },
+  "selectedUiEvidence": [
+    {
+      "path": "output/2026-11-01-p18-formal/ui/71-opencode-b-correct-pane.ax.txt",
+      "bytes": 6184,
+      "sha256": "af123b8e2935e9a384e49bb06976566420fdee3e394522a0f6bd13df0e306013"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/71-opencode-b-correct-pane.jpg",
+      "bytes": 463364,
+      "sha256": "23d137b5b3fbedc75cda6019ff33ec007d12e94b5782685c46df9d8bc6638f62"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/72-opencode-b-mid-live.ax.txt",
+      "bytes": 6211,
+      "sha256": "a69c8ae46049fafa0997ded3cc08bc6986ab5bf4e8c6ce04725fd7bf88f858a9"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/72-opencode-b-mid-live.jpg",
+      "bytes": 466572,
+      "sha256": "87637a61ff43a1ad755395b2fc8468036c75604a108498da2d2b2b4e2aac291a"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/73-opencode-b-end-natural.ax.txt",
+      "bytes": 6334,
+      "sha256": "8688e9e7e2e393afcee403dfb4f8964b1706b2f8d671668f84ea7fb68ba5e3be"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/73-opencode-b-end-natural.jpg",
+      "bytes": 466858,
+      "sha256": "f19d8225539dafa22e6eb65ea1816817b859076046c51b018d2b92d037a55835"
+    }
+  ],
+  "limits": [
+    "NewB is independent; MistralA failure/unknown and original20261030 missed observation window remain unchanged.",
+    "Zero-output content entry remains controlled20-case evidence plus actual entry existence; no installed zero-content branch pass.",
+    "No raw exit0, exact stdout/LF byte fidelity, stop/cancel/unknown/reconnect, UTF16/200line pressure, other Agents/models/platforms or fullP18 acceptance.",
+    "No complete permission/sandbox scope or exhaustive internal filesystem/network I/O census."
+  ],
+  "productAcceptanceClaimed": false,
+  "privacy": {
+    "rawPromptReplyOrDraftBodiesPublished": false,
+    "nativeSessionIdsAccountsOrCredentialsPublished": false,
+    "rawEvidenceRetainedUnderOutput": true
+  }
+}

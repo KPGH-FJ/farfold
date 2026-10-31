@@ -1,0 +1,70 @@
+{
+  "kind": "P18AndP45FormalInstallationPublicSummary",
+  "recordedAt": "2026-10-31T17:13:31.822149+00:00",
+  "sourceCommit": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "formalIdentity": {
+    "app": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+    "strictInternalAdhocSignatureVerified": true,
+    "publicSigningOrNotarization": false
+  },
+  "installation": {
+    "installed": true,
+    "onlyFormalAppUpdated": true,
+    "candidateReviewGroupsPassed": [9, 9],
+    "installedReviewGroupsPassed": [6, 6],
+    "fileReplacements": 5,
+    "newInodes": true,
+    "wholeBundleTransactionAtomic": false,
+    "forcedQuitOrAutomaticRetry": false
+  },
+  "originalSixReviewToolBoundary": "Script ended and complete6/6 result artifact passed; original tool output truncated and natural exit not observed. No session11327 natural0 claim.",
+  "dataProtection": {
+    "closedManifests": ["before", "preinstall", "after"],
+    "entriesEach": 232530,
+    "literallyByteEqual": true,
+    "sha256": "358ff49436e71241def762420211a473cf5329f19f37c2f680e500e42db050d0",
+    "backupIntegrityFromPinnedProducerReceipt": "ok",
+    "reviewerOpenedSqlOrLiveDatabase": false,
+    "postlaunchUnchangedDataClaimed": false
+  },
+  "cleanup": {
+    "exactCandidateFilesRemoved": 5,
+    "exactCandidateDirectoriesRemoved": 5,
+    "zipPreservedSha256": "d80b9562edfd4a99f621ef637f5be8e55ac7523cd08c67129983c3cc62dd42ed",
+    "dataBackupAndEvidenceRetained": true
+  },
+  "actualRegression": "Root subsequently cold-started the app. Selected P18/P45 behavior and rendered-draft restoration are separate actual evidence.",
+  "references": {
+    "installation": {
+      "path": "output/2026-11-01-p18-formal/formal/install/install-result.json",
+      "sha256": "ed03cb13c0c50fa39704f53a431f312e205f5bc18db96a8fe7eef6ca1ad1af0e",
+      "bytes": 12688
+    },
+    "sixReview": {
+      "path": "output/2026-11-01-p18-formal/formal/install/installed-independent-review-private.json",
+      "sha256": "6a3fad7da8cfa6102eb96ff839515b9113e06a3e568589c92e1ce78dc80534dc",
+      "bytes": 7181
+    },
+    "exactCleanup": {
+      "path": "output/2026-11-01-p18-formal/formal/install/candidate-cleanup.json",
+      "sha256": "e593a7467cf53aad17b6cbcc10c79febd35a609bfb0b3ff9fa878f706e684763",
+      "bytes": 7174
+    },
+    "independentReceiptAndManifestAudit": {
+      "path": "output/2026-11-01-p18-formal/independent/installation-review.json",
+      "sha256": "8a84ec8403a0d96aaab531d545b5cbbe78acf1640354b37e119ba0ca6c6fbb91",
+      "bytes": 4363
+    }
+  },
+  "limits": [
+    "P18 currentA and older unknown outcomes remain unknown; normal exit/process absence is not external stop.",
+    "No B3 draft text or sensitive data paths published; permission remains unconfirmed.",
+    "FullP18/P45, physical keyboard/VoiceOver/system scaling,29x8 and151 conditions remain open.",
+    "Earlier source/engineering/candidate-built summaries retain their original phase."
+  ],
+  "productAcceptanceClaimed": false
+}

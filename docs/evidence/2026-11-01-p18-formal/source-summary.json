@@ -1,0 +1,73 @@
+{
+  "kind": "P18CommandEntryAndP45ScopeSourcePublicSummary",
+  "recordedAt": "2026-10-31T16:56:00.713668+00:00",
+  "sourceCommit": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "changedFiles": 4,
+  "stage": "source-and-engineering-complete-not-installed-or-formally-retested",
+  "changes": [
+    {
+      "requirementId": "P18",
+      "problem": "An explicitly described unfinished command had no content entry before its first output.",
+      "implementation": "Separate content navigation from artifact counts. A known unambiguous zero-count execute call with nonempty command input can open its own existing waiting/unknown pane; no manufactured output, status, count, permission or send.",
+      "controlledEvidence": {
+        "originalSourceRed": {
+          "tests": 18,
+          "failed": 3,
+          "passed": 15
+        },
+        "finalNewTestFile": {
+          "tests": 20,
+          "twoAdditionalCases": "Reject null/undefined scope authority; original RED18 snapshot retained."
+        },
+        "affectedGreen": {
+          "files": 12,
+          "passed": 238,
+          "failed": 0
+        },
+        "sameFinalTestBytesAtOriginalRed": false
+      },
+      "independentP18SourceReview": "no-blocking-finding"
+    },
+    {
+      "requirementId": "P45",
+      "problem": "Installed343 search-scope text was blank while accessibility exposed its metadata value; raising the native window did not remove the failure.",
+      "implementation": "One selector added to the existing shared select-style group, retaining the real HTML select, both labels, query and keyboard handlers. This is an appearance workaround.",
+      "controlledEvidence": {
+        "staticBlankRedReproduced": false,
+        "fixedWidthAppearanceOnlyAB": "Both sides drew the label; not a RED/GREEN proof.",
+        "actualComponentHiddenWebKit": "Light/dark at900x620 and1280x820: labels fit; scope changes preserve query and accessible labels. Synthetic key checks only."
+      },
+      "internalNativeCause": "unknown",
+      "formalRepairAccepted": false
+    }
+  ],
+  "originalFormalEvidence": [
+    "live-a-summary.json",
+    "p45-baseline-summary.json"
+  ],
+  "references": {
+    "p18Source": {
+      "path": "output/2026-11-01-p18-formal/evidence-audit/pending-entry-source-summary.json",
+      "sha256": "5867ac77de9a8b9e7869f67215b33f1a9c039489707faff14620e369236cd479",
+      "bytes": 7524
+    },
+    "p18IndependentSource": {
+      "path": "output/2026-11-01-p18-formal/independent/source-review.json",
+      "sha256": "3144dc46dc69a5320d8817054d936d21207c934eeded2f8cf873489771512911",
+      "bytes": 4141
+    },
+    "p45SourceAndControls": {
+      "path": "output/2026-11-01-p18-formal/p45-scope-select/source-summary.json",
+      "sha256": "e0fd04be5a196f29a479e18ab427f96b0000988956e59b70fa99d2e64d0077f7",
+      "bytes": 11936
+    }
+  },
+  "limits": [
+    "Both original formal failures remain. New installation and selected actual regressions are pending.",
+    "FullP18/P45, actual native-menu/Tab/VoiceOver/system scaling,29x8 and151 conditions remain open.",
+    "Normal Save/Exit, formal0 and all10previously proven process identities absent with noncePending0 are shutdown observations; A and older unknown outcomes remain unknown, not stop/cancel success.",
+    "Private AX, request payloads, data manifests and database bytes remain in output; public summary contains no raw private captures.",
+    "These public summaries were prepared after full seven; their separate format check is not the completed full-format run."
+  ],
+  "productAcceptanceClaimed": false
+}

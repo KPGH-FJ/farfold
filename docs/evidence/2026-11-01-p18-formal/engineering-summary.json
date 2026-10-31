@@ -1,0 +1,81 @@
+{
+  "kind": "P18AndP45EngineeringPublicSummary",
+  "recordedAt": "2026-10-31T16:56:00.713668+00:00",
+  "sourceCommit": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "engineeringBaseHead": "1572f01e00df3431de44ffe6a3ff6b8f88f8d776",
+  "changedFiles": 4,
+  "checksRanBeforeCommit": true,
+  "checksRerunAtFinalCommit": false,
+  "sevenChecks": {
+    "naturalIntegerExitCodesAllZero": true,
+    "rawLogsIndependentlyReviewed": 14,
+    "frontend": {
+      "files": 699,
+      "passed": 9397,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 2326,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "sourceBinding": {
+    "completeInputs": 2342,
+    "prePostDeclaredCurrentAndFinalGitBytesExact": true,
+    "originalCommittedPreimageInputs": 2341,
+    "finalGitExecutableBitsAndPostcommitModesExact": true,
+    "independentReview": "passed",
+    "boundary": "Source endpoint and final committed-byte checks; no continuous source/dependency/environment or precheck/per-command mode freeze.",
+    "bindingAttempt": "First manually entered hash was rejected before writes; corrected exact Git commit binding succeeded. Not a first-attempt success or rerun."
+  },
+  "candidateAtThisSummary": {
+    "originalSession": 70549,
+    "naturalExitCode": 0,
+    "architecture": "arm64",
+    "binarySha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+    "review": "pending-at-summary",
+    "installed": false,
+    "actualRegressionAccepted": false
+  },
+  "references": {
+    "engineering": {
+      "path": "output/2026-11-01-p18-formal/engineering/engineering-summary.json",
+      "sha256": "ef6d5da0effa275807ebaf38270a03bca13124a0aff048b4d96762e7dd2485cd",
+      "bytes": 5875
+    },
+    "independentEngineering": {
+      "path": "output/2026-11-01-p18-formal/independent/engineering-review.json",
+      "sha256": "2383a6212730d38ddda56cb5029bd22b1062a427fe24b30377e3e6e701b7a225",
+      "bytes": 13535
+    },
+    "sourceFreeze": {
+      "path": "output/2026-11-01-p18-formal/formal/source-freeze.json",
+      "sha256": "b9f8f53d2d75cb8ba4269bf1faf792ced061e564f6ae868902093444adba707e",
+      "bytes": 275918
+    },
+    "postcommitModes": {
+      "path": "output/2026-11-01-p18-formal/formal/input-modes.json",
+      "sha256": "eeeb764939eb24f4e247aaea0546943505c9577fd3f1f55ce63159c3db087ae0",
+      "bytes": 137442
+    },
+    "candidate": {
+      "path": "output/2026-11-01-p18-formal/formal/candidate-output/candidate.json",
+      "sha256": "c42b905c9e0aabca1cb3f25cafe6ad9e857f5309be8fa031c24d5fb0d3dda83b",
+      "bytes": 556074
+    },
+    "candidateNaturalCompletion": {
+      "path": "output/2026-11-01-p18-formal/formal/root-candidate-natural-completion.json",
+      "sha256": "e90deb10ea38fceab6cedb71553f08969313b53f7a88bafdef2740c06eb45c73",
+      "bytes": 668
+    }
+  },
+  "retainedOutput": "Vite chunk-size warning and four ZipWriter archive-write-stopped diagnostics retained in original logs; no test failure is hidden.",
+  "limits": [
+    "Candidate build is separate from candidate review, installation, data preservation and real installed behavior.",
+    "New installation/actual evidence will be recorded in a separate summary; current formal app remains343 at this record.",
+    "Public JSON format is checked separately after the full seven; no claim that these new summaries were included in that run.",
+    "FullP18/P45, affected NEW24 pause,29x8 and151 conditions remain unchanged."
+  ],
+  "productAcceptanceClaimed": false
+}

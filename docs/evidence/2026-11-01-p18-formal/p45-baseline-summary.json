@@ -1,0 +1,97 @@
+{
+  "kind": "P45Formal343KeyboardAndVisibleLabelBaselinePublicSummary",
+  "recordedAt": "2026-10-31T16:50:53.728502+00:00",
+  "requirementIds": ["P45"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "formalSource": "3432696eaa77863bf4aeaf4751245df87674b182",
+    "formalExecutableSha256": "98abe63faa7095e349fa1beab928d8b3b6c41b9cda161fc9156bbbd7aebd4d4c",
+    "laterFixOrInstallationResultIncluded": false
+  },
+  "result": "Confirmed search-scope visible-label failure. Selected command-menu and shortcut-help close/focus-return/keyboard-reopen cycles observed; fullP45 remains open.",
+  "confirmedFailure": {
+    "frames": [20, 28, 45],
+    "actualPixels": "Current scope text blank in all3 actual images.",
+    "correspondingAxValue": "对话资料",
+    "internalRootCause": "Unknown; AX value is not proof of painted text."
+  },
+  "selectedKeyboardObservations": [
+    {
+      "frames": [35, 36, 37, 38],
+      "path": "Command menu",
+      "rootRecordedKeys": "Escape closes, Space reopens, Escape closes",
+      "independentlyReviewedEndpoints": "Open filter230 focused; closed invoker169 focused; reopened filter230 focused.",
+      "commandSelectedOrInvoked": false
+    },
+    {
+      "frames": [40, 41, 42, 43],
+      "path": "Keyboard shortcut help",
+      "rootRecordedKeys": "Escape closes, Space reopens, Escape closes",
+      "independentlyReviewedEndpoints": "Open close6 focused; settings invoker99 focused after Escape; reopened close6 focused.",
+      "settingsChanged": false
+    },
+    {
+      "frames": [44],
+      "path": "Ordinary settings return",
+      "independentlyReviewedEndpoints": "Original Mistral conversation, A unknown/send-paused and empty composer remain visible."
+    }
+  ],
+  "focusHypothesis": {
+    "frames": [21, 22, 23],
+    "observation": "AX reports HTML root or dialog container after Tab/backtab.",
+    "classification": "Unconfirmed; native keyboard-navigation/actual-focus conditions missing. No focus-trap or full-keyboard failure claim."
+  },
+  "b3": {
+    "frames": [1, 30],
+    "fourRenderedStringsExact": true,
+    "characterLengths": [187, 75, 32, 27],
+    "utf8Sha256": [
+      "d33cc5b08d15b0de183f19f70877fd503d6a6f180be83f02f82c808719218dc1",
+      "dbb1fda8dacb4c080e0328836b83472aa5df3ae0e14aeb66034c409180b2c010",
+      "e51f81f42b73ffe99cff39ea934de140b2331cde8f64506be57fc3330493dc95",
+      "4276bfe31c7b1c31489ba3726afe43a8fbda9afe990d7b3b568e0e8000efe42a"
+    ],
+    "permissionStillUnconfirmedBoth": true,
+    "limit": "30 follows A and initial search observations, before35..45. This is not a final B3 receipt after all later P45 actions, a cold restart or a disk-save test."
+  },
+  "actions": {
+    "newModelSubmissionsInThisCase": 0,
+    "permissionOrConfigurationChanges": 0
+  },
+  "independentReview": {
+    "path": "output/2026-11-01-p18-formal/independent/file-p45-baseline-review.json",
+    "bytes": 22185,
+    "sha256": "fe048207aa28c95144c068dc0d0faca5e00b6fc727f755754a6cbf1c9c7a8243"
+  },
+  "selectedEvidence": [
+    {
+      "path": "output/2026-11-01-p18-formal/ui/20-p45-search-keyboard-open.jpg",
+      "bytes": 258441,
+      "sha256": "eae035c37b123c3c32deab1b1314829fa12635415dafee72e82fe2a522db99b8"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/28-p45-scope-label-reopened.jpg",
+      "bytes": 259358,
+      "sha256": "a60e2b4c8482291078dd68aa2f089d92c6c57b049cde186d5cfbe9431b935d0c"
+    },
+    {
+      "path": "output/2026-11-01-p18-formal/ui/45-p45-scope-after-window-raise.jpg",
+      "bytes": 264178,
+      "sha256": "c5cb3d3baa5aa84cce5b553a087582f6a364e075b77784528589245f04eedcca"
+    }
+  ],
+  "notTested": [
+    "Actual VoiceOver",
+    "System large text/scaling",
+    "Installed900x620 supported-minimum layout",
+    "All critical paths by keyboard",
+    "FullP45 or other platforms"
+  ],
+  "futureFixPassedClaimed": false,
+  "productAcceptanceClaimed": false,
+  "privacy": {
+    "rawDraftOrReplyBodiesPublished": false,
+    "nativeSessionIdsAccountsOrCredentialsPublished": false,
+    "rawEvidenceRetainedUnderOutput": true
+  }
+}

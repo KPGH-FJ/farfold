@@ -1,0 +1,107 @@
+{
+  "kind": "P18MistralRestoreBlockerPublicSummary",
+  "recordedAt": "2026-10-31T17:18:27.410798+00:00",
+  "requirementIds": ["P18"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "formalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+    "formalExecutableSha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+    "installationReceipt": {
+      "path": "output/2026-11-01-p18-formal/formal/install/install-result.json",
+      "sha256": "ed03cb13c0c50fa39704f53a431f312e205f5bc18db96a8fe7eef6ca1ad1af0e",
+      "bytes": 12688
+    },
+    "firstLaunchBinaryObservation": {
+      "path": "output/2026-11-01-p18-formal/formal/first-launch-binary-observation.json",
+      "sha256": "13b4c72cf17b929c7caecc5af8a1035083f002a6e18736df00b82154b8869b5c",
+      "bytes": 294
+    }
+  },
+  "selectedObject": "Previously selected existing Mistral conversation; no new conversation or model request created during this restore observation.",
+  "result": "Original Mistral pending/unknown tool-content regression blocked before history/tool replay. An Agent-owned saved-session restoration exception was observed. This does not establish failure of the content-entry fix or successful original unknown-tool regression.",
+  "observations": [
+    "Successful initialization was followed by one selected-object load. The Agent returned an error after1895ms; no history update, prompt or cancel was observed on this connection.",
+    "The same-millisecond Agent-owned diagnostic identifies saved-session journal restoration rejecting a callback-result relation whose corresponding registration was absent or no longer pending.",
+    "Formal UI retained the earlier unknown-request notice and showed the open failure. Original history/tool content was unavailable for inspection.",
+    "The historical notice is restored separately from Farfold-owned request metadata. Its presence does not establish that the Agent replayed the original unknown tool."
+  ],
+  "diagnosis": {
+    "observedRejectingComponent": "Mistral local saved-session restoration",
+    "observedAgentException": true,
+    "underlyingRecordOriginKnown": false,
+    "underlyingRecordAuthorKnown": false,
+    "underlyingRecordCreationTimeKnown": false,
+    "productRootCauseEstablished": false,
+    "boundary": "The rejecting component is observed. Who or what caused the saved-record inconsistency remains unknown; no claim that all other recovery paths are correct."
+  },
+  "sourceAssessment": {
+    "loadAndRecoveryCodeUnchangedFromEngineeringBase": true,
+    "oneReplyPermissionOwnershipMechanismPresent": true,
+    "limitedPriorWireTotals": {
+      "permissionRequests": 2,
+      "outgoingResponses": 2,
+      "cancelRequests": 1
+    },
+    "limit": "Content-free diagnostics omit request identifiers. Totals cannot attribute the saved inconsistency or prove every request-response pairing.",
+    "changeMade": false
+  },
+  "operatorActionsForThisRestoreObservation": {
+    "selectedObjectLoadAttempts": 1,
+    "reconnectActions": 0,
+    "historicalNoticeAcknowledgements": 0,
+    "resendsOrNewPrompts": 0,
+    "AgentModifications": 0,
+    "historyModifications": 0
+  },
+  "repairAssessment": "No source change or saved-history repair was made. Evidence does not justify bypassing the Agent restore error, replacing the Agent, reconstructing its history or declaring uncertain work finished. A notice acknowledgement only dismisses that notice and cannot repair this load failure.",
+  "formalContinuationMinimum": "The selected original object must be successfully read and replayed by its official Agent, or another already-existing, explicitly attributable and recoverable unknown-tool object must be available. Any actual reconnect remains controlled by the root operator. This diagnosis requires no new model send.",
+  "independentlyContinuable": [
+    "Controlled recovery-error checks can verify retained loaded content, preserved uncertainty and no automatic prompt replay.",
+    "Existing source and controlled content-entry checks can continue without starting the Agent."
+  ],
+  "evidence": {
+    "ui": [
+      {
+        "path": "output/2026-11-01-p18-formal/ui/55-new-formal-mistral-select.ax.txt",
+        "sha256": "d1ac41bc702c8161b62b3d36dab4da6fc0c7edeb14741363d7d58eeac3288762",
+        "bytes": 2515
+      },
+      {
+        "path": "output/2026-11-01-p18-formal/ui/55-new-formal-mistral-select.json",
+        "sha256": "3a0c7849adb1dc0be309b4c0c8f08007ec5f177437e22b56290f4b5a8cfd9c7f",
+        "bytes": 250
+      },
+      {
+        "path": "output/2026-11-01-p18-formal/ui/56-new-formal-mistral-loaded.ax.txt",
+        "sha256": "96b178c1cf4ad0da90cf509cc8819543f6aa7fe987bc465d38c53075f20d188b",
+        "bytes": 3110
+      },
+      {
+        "path": "output/2026-11-01-p18-formal/ui/56-new-formal-mistral-loaded.json",
+        "sha256": "f33cc18212b93f33b4afc5de9904eaa4e603f016472a4ad69a4c402f16c21032",
+        "bytes": 250
+      }
+    ],
+    "privateDiagnosisPins": {
+      "path": "output/2026-11-01-p18-formal/evidence-audit/mistral-restore-blocker-private-pins.json",
+      "sha256": "b3861fb1a7dc7eab7bd9c9f538ccb919ab397cd344ea570a3bad5b9a8fa2e012",
+      "bytes": 6650
+    },
+    "officialRestoreRule": {
+      "url": "https://raw.githubusercontent.com/mistralai/mistral-vibe/7c19608af06f6c61d63f8f7a5c3430da73fba2ab/harness/runtimes/python/python/mistralai_vibe_local_harness/vibe/_storage.py",
+      "description": "Callback resolution requires the corresponding recorded callback to exist and remain pending."
+    }
+  },
+  "acceptanceBoundary": [
+    "Original Mistral pending/unknown tool content was not inspected in this installed version.",
+    "This restore blocker does not close fullP18 or establish all29-agent acceptance.",
+    "Other Agent real live-output results are recorded separately and are not represented by this Mistral summary."
+  ],
+  "productAcceptanceClaimed": false,
+  "privacy": {
+    "nativeSessionIdsOrUserPathsPublished": false,
+    "rawLogOrConversationContentPublished": false,
+    "credentialsPublished": false,
+    "privateEvidencePinsRetainedUnderOutput": true
+  }
+}
