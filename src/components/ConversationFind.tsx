@@ -7,6 +7,7 @@ import {
   hasOpenSearchAncestors,
   revealSearchAncestors,
 } from "../runtime/transcript_search";
+import { scrollTranscriptRange } from "../runtime/transcript_find_scroll";
 import { LIBRARY } from "../runtime/library_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 
@@ -162,6 +163,7 @@ export function ConversationFind({
           parent.getClientRects().length
         ) {
           parent.scrollIntoView({ block: "center" });
+          scrollTranscriptRange(current, root);
           positioned = true;
         }
       });

@@ -84,13 +84,16 @@
 }
 .workspace-action-body.composer-shortcuts > .btn {
   display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 3px 8px;
   height: auto;
   min-height: 34px;
   flex: 0 0 auto;
   align-items: start;
   white-space: normal;
+}
+.workspace-action-body.composer-shortcuts > .btn:has(> svg) {
+  grid-template-columns: 18px minmax(0, 1fr);
 }
 .composer-shortcuts .btn > span {
   overflow-wrap: anywhere;

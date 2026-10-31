@@ -56,7 +56,7 @@ function view() {
   });
   const first = make(),
     second = make();
-  const root = { isConnected: true };
+  const root = { isConnected: true, contains: () => true };
   const registry = new Map();
   const add = vi.fn();
   vi.stubGlobal("CSS", { highlights: registry });

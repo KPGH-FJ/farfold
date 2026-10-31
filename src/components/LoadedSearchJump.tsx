@@ -6,6 +6,7 @@ import {
 } from "../runtime/loaded_search";
 import { loadedSearchDOMRange } from "../runtime/loaded_search_dom";
 import { revealSearchAncestors } from "../runtime/transcript_search";
+import { scrollTranscriptRange } from "../runtime/transcript_find_scroll";
 import { LOADED_SEARCH_STRINGS as S } from "../runtime/loaded_search_strings";
 import "./LoadedSearchResults.css";
 
@@ -92,11 +93,13 @@ export function LoadedSearchJump({
         }
         setStatus("located");
         message.focus({ preventScroll: true });
-        if (valid() && currentParent.isConnected)
+        if (valid() && currentParent.isConnected) {
           currentParent.scrollIntoView({
             block: "center",
             behavior: "instant",
           });
+          scrollTranscriptRange(refreshed.range, root);
+        }
       });
     });
     return () => {
