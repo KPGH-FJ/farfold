@@ -1,0 +1,64 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "P18SelectedLiveLineCapAndDistinctTimeoutFailure",
+  "agent": "OpenCode",
+  "model": "OpenCode/Big Pickle",
+  "service": "Existing settings unchanged",
+  "mode": "build",
+  "operatorSubmissions": 1,
+  "operatorStopRetryApproval": 0,
+  "selectedLiveResult": "passed",
+  "observed": [
+    "08 correct tool still processing, tail-limit hint and first042 with intact emoji.",
+    "10 tool still processing; inner output then outer card scrolling makes last240 fully visible."
+  ],
+  "terminalResult": "failed expected END; shell tool reports terminated at120000ms default before requested150s sleep completed",
+  "assistantDoneMarkerNotCompletionProof": true,
+  "limits": [
+    "Not natural END/exit0, raw stdout/LF/OS invocation-count or all200 components proof.",
+    "E copy file obtained around terminal transition contains240 numbered lines/noEND plus timeout metadata; not a live-copy claim.",
+    "Original9f failure/cold-only D and earlier unresolved cases remain separate."
+  ],
+  "refs": {
+    "input": {
+      "path": "output/2026-11-01-p18-live-capacity/preparation-E.json",
+      "sha256": "af9b2080a14156cfa5c52180dc41a9449a48bb371bf3e7ab8d0a259f1e0d6bf7"
+    },
+    "send": {
+      "path": "output/2026-11-01-p18-live-capacity/send-E.json",
+      "sha256": "1b00d3aa99ef9fac38619187157bb79d6b0f575d6645596e8f46ef9fccc962f6"
+    },
+    "livePane": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/08-E-live-pane.ax.txt",
+      "sha256": "e28229163aabf8e984f3afc52568b78fe34ad204110778bfc7af201df422230a"
+    },
+    "livePaneImage": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/08-E-live-pane.jpg",
+      "sha256": "0851ccbc2857ef715a8f0257b41af9be1a5479e5f76f4de43a6fec9ff229b823"
+    },
+    "liveBottom": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/10-E-live-output-bottom-reachable.jpg",
+      "sha256": "e0a8e17c7170463f01d2de464aa138a3c2b605403bbe0fefa3793710f08a0c6a"
+    },
+    "liveBottomAX": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/10-E-live-output-bottom-reachable.ax.txt",
+      "sha256": "e28229163aabf8e984f3afc52568b78fe34ad204110778bfc7af201df422230a"
+    },
+    "timeout": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/13-E-ended-visible-end.ax.txt",
+      "sha256": "acc3068e0ca0616d03e227673704b86fffa2c8c5609898410e5b86d4bb17c3ea"
+    },
+    "timeoutImage": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/13-E-ended-visible-end.jpg",
+      "sha256": "265d218083d8b9fc99752e48274075b7e16106d245ce1f7de602573dc8d4ded9"
+    },
+    "copyCalibration": {
+      "path": "output/2026-11-01-p18-live-capacity/copy-E-calibration.json",
+      "sha256": "8e8faf1d8839530857dd7d05909347e812c576ba684871b92b9968b4329871d9"
+    }
+  }
+}

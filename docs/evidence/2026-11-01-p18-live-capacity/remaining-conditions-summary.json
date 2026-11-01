@@ -1,0 +1,56 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "P18RemainingConcreteConditions",
+  "unknownTool": {
+    "status": "missing-qualified-existing-object",
+    "required": "Existing explicitly attributable tool-activity unknown object successfully replayable through official path.",
+    "originalMistralLoadRetryAckOrResend": false,
+    "newObjectProduced": false,
+    "FRequestStillProcessingIsNotToolUnknown": true,
+    "priorMistralRestoreFailureNotRerun": true
+  },
+  "capacity": {
+    "status": "selected-two-official-paths-shortened-before-Farfold-cap",
+    "receivedUtf16Units": [30005, 51323, 51319, 51319],
+    "required": "A qualified official received tool source at or beyond65536 without prior tool truncation, preserving selected account/model/permissions.",
+    "otherAgentPaths": "untested, not declared blocked"
+  },
+  "poolsideAlternative": {
+    "status": "original-self-test-work-location-missing",
+    "readRestoreFailed": true,
+    "sendDisabled": true,
+    "originalLocationExists": false,
+    "directoryLossCause": "unknown",
+    "retryOrEmptyDirectoryReplacement": false,
+    "userTRHistoryUsed": false,
+    "historicalS3NotReclassified": true
+  },
+  "OpenCodeF": {
+    "status": "request remains protected; no official prompt response seen in selected content-free snapshot",
+    "noStopRetryAckResend": true
+  },
+  "unchanged": {
+    "all29x8": true,
+    "original151Conditions": true,
+    "NEW24AffectedSendsPaused": true,
+    "productAcceptanceClaimed": false
+  },
+  "refs": {
+    "poolsideUI": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/32-poolside-existing-read.ax.txt",
+      "sha256": "682a62327ba91c1a4fb0ed35dad31141754106b41d9648df6b5960077a707639"
+    },
+    "poolsideCondition": {
+      "path": "output/2026-11-01-p18-live-capacity/poolside-alternative-condition.json",
+      "sha256": "d1ed535610a92acfe8ade71aef3c69833b3f57e818a57340dd47c60e85affa59"
+    },
+    "FStatus": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/51-F-late-status-protected.ax.txt",
+      "sha256": "74e908f3e95a985967b809f09c98f61b0fcc70c788995567127b6b7e0da49ec4"
+    }
+  }
+}

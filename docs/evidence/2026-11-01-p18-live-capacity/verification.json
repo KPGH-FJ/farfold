@@ -1,0 +1,58 @@
+{
+  "kind": "P18LiveCapacityStagePublicDocumentationCheck",
+  "recordedAt": "2026-11-01T09:18:01.679097+00:00",
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "inputHead": "0a9c42dc2034c2d0613f341aa049a61c09d5c641",
+  "publicFiles": [
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/README.md",
+      "sha256": "d6481d93adffd2320006e36ee3d002de9103ad1f2ac1594e962c345d823f8799",
+      "bytes": 2311
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/capacity-F-summary.json",
+      "sha256": "9baf328f9943be84891a3aa84a7ed9c280c56e7cbdbc62612934c6163143196d",
+      "bytes": 3338
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/capacity-G-summary.json",
+      "sha256": "6b47abbf9977907d985b61bde0b8679286eda80d9240e1c2bbb2d91e8924de46",
+      "bytes": 2615
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/live-E-summary.json",
+      "sha256": "8f4a7e2e2a82d4f8eae7e2d9bed4afdba7d15d57833a355fdcb3ba684a6f1649",
+      "bytes": 3120
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/p35-busy-cancel-summary.json",
+      "sha256": "fc82f04d12c9a833b89269adcbea1fcb81213ef85679ee84fbba0c7fb39e5f27",
+      "bytes": 1934
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/preservation-summary.json",
+      "sha256": "9d760c71c916b89498ff66263b0540aef5429e75010242b72226859ccf55c80d",
+      "bytes": 905
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-live-capacity/remaining-conditions-summary.json",
+      "sha256": "2e4ccafc00f78324be886d42b8163ee335f72f26d05fecb8dfae3f3520b3b61c",
+      "bytes": 2468
+    }
+  ],
+  "privateReferenceFilesRehashed": 32,
+  "conditions": 151,
+  "activePlans": 1,
+  "changedTaskProgressOnly": ["P18", "P35"],
+  "allOtherProgressRowsEqualIgnoringTablePadding": true,
+  "originalIdsTitlesConditionsIntact": true,
+  "productionSourceUnchanged": true,
+  "fullSevenRerun": false,
+  "newInstall": false,
+  "productAcceptanceClaimed": false,
+  "checks": {
+    "docsCheckExitCode": 0,
+    "gitDiffCheckExitCode": 0
+  },
+  "limits": "Root actual observations and mechanical saved-file verification; no new independent person review. Source/model/state-specific outcomes only."
+}

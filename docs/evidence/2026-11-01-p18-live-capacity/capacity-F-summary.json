@@ -1,0 +1,65 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "P18OpenCodeCapacityNotReachedAndIncompleteRequest",
+  "agent": "OpenCode",
+  "model": "OpenCode/Big Pickle",
+  "service": "Existing settings unchanged",
+  "mode": "build",
+  "operatorSubmissions": 1,
+  "actualToolStepsObserved": 2,
+  "firstStepFailure": "Agent supplied timeout as string115000.0; tool schema expected number or undefined",
+  "secondStep": "Tool ended; no operator retry, first schema failure not OS command invocation proof",
+  "capacityResult": "not-tested-at-own-boundary",
+  "copiedPayloadUtf16Units": {
+    "inProgressSample": 30005,
+    "terminalSample": 51323
+  },
+  "sourceAlreadyShortened": true,
+  "receivedTruncationNotice": "Ellipsis while running; output truncated and full output saved notice after tool ended. Agent saved output file not read.",
+  "intendedExactPhaseActuallyAlreadyHadZ": true,
+  "requestResult": "not completed within420s observation budget; late UI still processing/Stop available",
+  "protocolSnapshot": "Time-matched F departure98ms afterSend;9 inbound update records and no inbound response in snapshot. Metadata has no request IDs, so no exact response-ID or cause claim.",
+  "limits": [
+    "65536 exact-full/+1/surrogate-boundary formal behavior remains unverified.",
+    "No fake natural completion, tool-activity unknown or stopped/cancelled success.",
+    "Only selected OpenCode path, not all Agents."
+  ],
+  "refs": {
+    "input": {
+      "path": "output/2026-11-01-p18-live-capacity/preparation-F.json",
+      "sha256": "55bdf97de891b8a314914195e0b7247080956db313cdf9eea5e35e6c2ebeb84a"
+    },
+    "send": {
+      "path": "output/2026-11-01-p18-live-capacity/send-F.json",
+      "sha256": "2f88612c1070086b33137faac9858e434bed1fe34954f95a31a8fb4b70a46b6d"
+    },
+    "schemaFailure": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/21-F-first-failed-technical.ax.txt",
+      "sha256": "8f2d5cd51642b35458851035bb1d167a712c225bfc2c54a0f25b5f80f34bce20"
+    },
+    "invalidInput": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/22-F-invalid-input-expanded.ax.txt",
+      "sha256": "d09d9d23215040c2428e04dd7665586ed85f470d6961ee13d582d7dfef2aa6a2"
+    },
+    "copyMeasurements": {
+      "path": "output/2026-11-01-p18-live-capacity/capacity-copy-observations.json",
+      "sha256": "0fd25a9444daed391af15af5f3df3ad755a92d4d9e3371dc2d9853dd34515b5c"
+    },
+    "withinWindow": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/24-F-before-independent-work.ax.txt",
+      "sha256": "13622cec532d457073385e62fefc15d312b6182d52c2c774f10ea1307bf180d1"
+    },
+    "lateStatus": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/51-F-late-status-protected.ax.txt",
+      "sha256": "74e908f3e95a985967b809f09c98f61b0fcc70c788995567127b6b7e0da49ec4"
+    },
+    "metadata": {
+      "path": "output/2026-11-01-p18-live-capacity/protocol-F-observation.json",
+      "sha256": "53309d9ad766db3c050d2ff2b302fcce1128b646385926464cfaa4ec8761a1d7"
+    }
+  }
+}

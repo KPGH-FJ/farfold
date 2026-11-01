@@ -1,0 +1,22 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "ThisBatchPreservation",
+  "fourDraftsExact": true,
+  "lengths": [187, 75, 32, 27],
+  "permissionUnconfirmed": true,
+  "appUpdated": false,
+  "sourceChanged": false,
+  "sevenRerun": false,
+  "rawEvidencePrivate": true,
+  "limits": ["Not all post-launch data byte equality or unknown work stopped."],
+  "refs": {
+    "final": {
+      "path": "output/2026-11-01-p18-live-capacity/final-preservation.json",
+      "sha256": "0804789115cd8f63a564814429d6d5c60a1708bacf9d27cb87745a17f03592a7"
+    }
+  }
+}

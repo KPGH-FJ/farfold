@@ -1,0 +1,60 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "P18KiloAlternativeCapacityNotReached",
+  "agent": "Kilo",
+  "model": "Kilo Gateway/NVIDIA: Nemotron 3 Ultra (free)",
+  "service": "Existing settings unchanged",
+  "reasoning": "None unchanged",
+  "mode": "code",
+  "operatorSubmissions": 1,
+  "specifiedToolCommands": 2,
+  "allowOnceApprovals": 2,
+  "persistentApprovals": 0,
+  "requestResult": "completed with two observed ended steps and expected assistant marker",
+  "capacityResult": "not-tested-at-own-boundary",
+  "copiedPayloadUtf16Units": {
+    "A": 51319,
+    "B": 51319
+  },
+  "receivedTruncationNotice": true,
+  "upstreamOutputFileRead": false,
+  "limits": [
+    "Both intended65536/65537 stdout samples shortened by selected tool before Farfold own cap.",
+    "No own cap/surrogate pass, raw stdout/exit0 or OS invocation-count proof.",
+    "Other Agent capacity routes untested; not a global incompatibility claim."
+  ],
+  "refs": {
+    "config": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/36-kilo-selected-config.ax.txt",
+      "sha256": "014650c679addaf340b2b826b633c68ce8119b5bd9dbd6aa635649a222547065"
+    },
+    "input": {
+      "path": "output/2026-11-01-p18-live-capacity/preparation-G.json",
+      "sha256": "01cf5cb4ec8dca27ff0a0d514812d27fe327bfa8b4c919efec0dd1a58ea72d4b"
+    },
+    "send": {
+      "path": "output/2026-11-01-p18-live-capacity/send-G.json",
+      "sha256": "c49236028121c634af1f011905095db170ef486aaee5f9575aad3b10c94f248e"
+    },
+    "approvalA": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/42-G-A-approval-frozen.ax.txt",
+      "sha256": "b28b3286638ce4c98894c085d541143a0dc06a2b81590b906d3c66770066f290"
+    },
+    "approvalB": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/46-G-B-approval-frozen.ax.txt",
+      "sha256": "0fc4d9c41dc61cda1646af807f11c7296e56d0c6f9596d5e487ca64a009de043"
+    },
+    "measurements": {
+      "path": "output/2026-11-01-p18-live-capacity/capacity-G-observations.json",
+      "sha256": "76a794dac2ab5a349a52fa855779a8ea4eca4a7ec3bd71f196f03ff6502b2ffd"
+    },
+    "done": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/50-G-after-copies.ax.txt",
+      "sha256": "1676bff2dfcbb36057cf934e28cd73fe1b9d1718e30d8b1a05e3e229d826e981"
+    }
+  }
+}

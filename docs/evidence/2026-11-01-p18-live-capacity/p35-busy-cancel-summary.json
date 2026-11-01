@@ -1,0 +1,40 @@
+{
+  "functionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "evidenceBoundary": "Root actual UI observations and saved-original parsing; no new independent person/agent review. No production source, installation or full-seven change.",
+  "kind": "P35BusyLoadedMarkdownNativePickerCancel",
+  "requestAtEntry": "Original OpenCodeF still processing; two tool steps ended, prompt completion unobserved",
+  "format": "Markdown",
+  "includeToolDetailsDefault": false,
+  "loadedToolItems": 6,
+  "explicitLoadedSnapshotAndNoAttachmentPackageNotice": true,
+  "operatorSaveClicks": 0,
+  "operatorCancelClicks": 1,
+  "observedCancelSeconds": 0.782,
+  "result": "cancelled notice, named target file absent",
+  "falseSavedNoticeObserved": false,
+  "limits": [
+    "Native destination-picker cancellation only, not in-flight write cancellation/disk failure/attachment archive/full history/Agent restore file or completeP35.",
+    "Current copied texts and temporary TextEdit documents are private evidence only."
+  ],
+  "refs": {
+    "dialog": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/26-P35-busy-export-dialog.ax.txt",
+      "sha256": "dde913fefb658c72ec5e37fee326f6d9bc10bd6d3654043ffb96df6b4bd76952"
+    },
+    "target": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/28-P35-cancel-target.ax.txt",
+      "sha256": "71cc1e681e9e9b63cd43212c8a97152e359660719b38da32003226566ce96139"
+    },
+    "cancel": {
+      "path": "output/2026-11-01-p18-live-capacity/ui/29-P35-cancelled.ax.txt",
+      "sha256": "bea287f921f237ea9e32472bdeca9f08426001e9a429a6181e40e5e4d72a5749"
+    },
+    "action": {
+      "path": "output/2026-11-01-p18-live-capacity/P35-cancel-action.json",
+      "sha256": "6dddef42cfd6b4e16caab2e8508841fcc51cf4862e0a274abf710916cc624ac9"
+    }
+  }
+}
