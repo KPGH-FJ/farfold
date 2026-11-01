@@ -1,0 +1,139 @@
+{
+  "recordedAt": "2026-11-01T16:47:31.136453+00:00",
+  "clientDate": "2026-11-02",
+  "installedSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "functionalSourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "formalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "productAcceptanceClaimed": false,
+  "kind": "FormalPassiveStreamRepairInstalledAndClosedDataPreserved",
+  "appPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "sourceAndEngineering": {
+    "productionInputs": 2341,
+    "productionBytesMatchEarlierSeven": true,
+    "currentInputsIncludingAuthority": 2344,
+    "authorityProgressSeparatelyChecked": true,
+    "original151ConditionsUnchanged": true,
+    "newSevenRerun": false,
+    "earlierFinalSevenNaturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontendFiles": 700,
+    "frontendPassed": 9407,
+    "rustPassed": 2329,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "perCommandFullFreezeClaimed": false
+  },
+  "candidate": {
+    "singleBuildInvocation": true,
+    "naturalExitCode": 0,
+    "separateMechanicalReaderPassed": 9,
+    "total": 9
+  },
+  "normalExit": {
+    "globalRunning": 0,
+    "existingUnknownPermissionAndRestoreStatesRetained": true,
+    "firstWarningStayedThenNormalSaveAndQuit": true,
+    "forcedQuit": false
+  },
+  "install": {
+    "naturalExitCode": 0,
+    "fiveNewInodeReplacements": true,
+    "strictInternalAdhocSignature": true,
+    "architecture": "arm64",
+    "separateMechanicalReaderPassed": 6,
+    "total": 6,
+    "wholeBundleSingleTransactionClaimed": false,
+    "appBackupCreated": false
+  },
+  "data": {
+    "threeClosedManifestsByteExact": true,
+    "entries": 232530,
+    "manifestSha256": "2cf6778906f8f1582ebd7e96a1d6ce7ec0ee917fbdd8cec29bcdba441e51c188",
+    "standaloneBackupSha256": "fb43af9f6266cbc31cbcfd9dd4c24eade3cbfad5737fd94de7499fc06dab4f40",
+    "backupIntegrityAccordingToProductionReceipt": "ok",
+    "independentReaderSqlExecuted": false,
+    "productionAndFirstCopyNotOpenedBySqlite": true,
+    "postLaunchAllDataUnchangedClaimed": false
+  },
+  "cleanup": {
+    "removedExactCandidateFiles": 5,
+    "removedExactCandidateDirectories": 5,
+    "duplicateCandidateAbsent": true,
+    "zipDataEvidenceRetained": true
+  },
+  "reviewBoundary": "Root ran separate mechanical readers; no new independent person or agent review. Internal signature is not public signing or notarization.",
+  "refs": [
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/parameters.json",
+      "sha256": "32a2c4239bd224ec7e05245f6bf342aaf2cf3b0fadcba48172810a5f2982428e",
+      "bytes": 689745
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/natural-candidate-completion.json",
+      "sha256": "a41e3b1d3b0738164175ed3147c5c153ab08b95a3317d700e25c09b0cdfc2b3f",
+      "bytes": 339
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/candidate-output/candidate.json",
+      "sha256": "74e9ec7a55e069acdf9cf14997f8c0a42d5716e897f96fb00d99695ec35368a1",
+      "bytes": 555816
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/independent/review-v2.json",
+      "sha256": "70eb5184f1f3b29216fad103ccfa6563fd6904f8fa1a43557aef3a4a92c6f702",
+      "bytes": 2987
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/root-normal-exit-b3-ui.json",
+      "sha256": "d30f5e99e73131f26eec9b1d352548330e38f6e89985e0a0f2556484b1a70ef1",
+      "bytes": 1916
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/ui/normal-quit-process-observation.json",
+      "sha256": "b782cc069147151a974d24fd1a6f643d356c391c627b60fc557105c0091a5beb",
+      "bytes": 129
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/retention-before-receipt.json",
+      "sha256": "873696dca4333bde44c5f69d17b1ccd6b3992e74d6e0ed21c5520a056a86dd02",
+      "bytes": 5954
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/retention-preinstall-receipt.json",
+      "sha256": "87ca28628784f812ba940d8ac8c35aea0ac0611e0f36d89d86366baf727ddd07",
+      "bytes": 3059
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/retention-after-receipt.json",
+      "sha256": "36998bb5b29014cb384d0693788cc68153e63d7d179e857eddb3141f6ab55042",
+      "bytes": 3054
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/install-result.json",
+      "sha256": "a0543bbb82b3cd0e13b2ed4a9442f31ab2ad0b684b8dc49e1fcd9c47e89159ed",
+      "bytes": 11723
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/installed-independent-review-private.json",
+      "sha256": "120071c81e2771072b4d51a9c1c4cf7dd2e53f4fc7936acac2ff44fc6ca0048b",
+      "bytes": 2128
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/install/candidate-cleanup.json",
+      "sha256": "915d24fdca0c0033ed1bebd224aca6d6bb8073f267d0c7a0dab151a442edcff4",
+      "bytes": 7174
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/launch-preservation.json",
+      "sha256": "6f9e77a31be06e1e2bbd25a142fa23ec7619d723f8852bdcaeeac414f9a8cc20",
+      "bytes": 481
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/stage-preservation-and-conditions.json",
+      "sha256": "0c4bc6ab5cc53e341e0c3db921a0a24268b5acfff133b42e645f6cb9d91ea27e",
+      "bytes": 1135
+    }
+  ]
+}

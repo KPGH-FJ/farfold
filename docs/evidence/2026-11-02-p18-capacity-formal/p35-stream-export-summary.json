@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-11-01T16:48:08.896782+00:00",
+  "clientDate": "2026-11-02",
+  "installedSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "functionalSourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "formalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedLoadedMarkdownOptionalStreamDetailsExportVerified",
+  "defaultDetailsOff": true,
+  "explicitlyEnabled": true,
+  "uiDetailCount": 15,
+  "actualBytes": 200613,
+  "actualSha256": "a9ffd9d663b419da5013f34c939d88e114829518db75160a1d9a5dd4fcb3b9ef",
+  "savedMessageObserved": true,
+  "newModelSends": 0,
+  "streamBlocks": [
+    {
+      "sample": "K",
+      "utf16": 65535,
+      "exactCopiedPayload": true,
+      "localTailNotice": true
+    },
+    {
+      "sample": "L",
+      "utf16": 65536,
+      "exactCopiedPayload": true,
+      "localTailNotice": false
+    }
+  ],
+  "rawExtensionNamesNotIncluded": true,
+  "rawMarkdownCommitted": false,
+  "limits": [
+    "Only the selected loaded Markdown snapshot with optional tool details. No full-history, attachments-byte archive, in-flight cancel, disk failure, Windows or full P35 proof.",
+    "L network-error final response retained; correct output content does not imply task success."
+  ],
+  "reviewBoundary": "Root native save observation and local Markdown fence parsing; no new independent person/agent review.",
+  "refs": [
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/20-p35-export-default.ax.txt",
+      "sha256": "6c799eb31fba0a9c601a09710c3c2a6926323c44c4e6c24d547496f5b310c4a0",
+      "bytes": 1184
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/21-p35-details-explicit.ax.txt",
+      "sha256": "e8cf30975262bf683e76f9fbf7050b56d7f3dc93b3a950c16bb5d03bf07abe1a",
+      "bytes": 2322
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/22-p35-save-target.ax.txt",
+      "sha256": "b87aeae33ffcd657f9b47bdfce08367c2bedde243103a8ad13ba3a24b71b6d7b",
+      "bytes": 2783
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/23-p35-save-result.ax.txt",
+      "sha256": "da5fc4c4a3000b5fc4cd415333b4817420cf7cdf5b934fab9a9bfc72da268b6c",
+      "bytes": 2373
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/2026-11-02-p18-stream-details.md",
+      "sha256": "a9ffd9d663b419da5013f34c939d88e114829518db75160a1d9a5dd4fcb3b9ef",
+      "bytes": 200613
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/P35-stream-export-measurement.json",
+      "sha256": "97f18f9e36f5d406ecee92e394288126f74b2494c02b2c428da1290c4da139ec",
+      "bytes": 1714
+    }
+  ]
+}

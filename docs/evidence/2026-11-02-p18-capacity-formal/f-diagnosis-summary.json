@@ -1,0 +1,113 @@
+{
+  "recordedAt": "2026-11-01T16:47:31.136453+00:00",
+  "clientDate": "2026-11-02",
+  "installedSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "functionalSourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "formalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "productAcceptanceClaimed": false,
+  "kind": "OriginalFQuotaRetryDiagnosedAndNormalStopTriggeredEnd",
+  "observedBeforeStop": {
+    "originalPromptMatched": true,
+    "sampledMessages": 125,
+    "assistantChildrenOfOriginalF": 115,
+    "childrenWithoutReadableText": 115,
+    "toolRecords": [
+      "schema error: timeout string 115000.0",
+      "completed: timeout number 115000, output 51323 characters"
+    ],
+    "currentOfficialStatus": "retry",
+    "reason": "free_tier_limit",
+    "historicalNextRetryUtc": "2026-11-02T00:49:12.836Z",
+    "protocol": {
+      "prompts": 1,
+      "updates": 9,
+      "responses": 0
+    }
+  },
+  "diagnosis": "The original request was waiting in the official Agent free-tier retry state. Tagged ACP code forwards idle but omits retry status; prompt waits for the backing result and idle.",
+  "closure": {
+    "operatorResends": 0,
+    "normalStopClicks": 1,
+    "forceQuit": false,
+    "protocolDelta": {
+      "cancel": 1,
+      "update": 1,
+      "response": 1
+    },
+    "cancelUtc": "2026-11-01T13:19:29.051Z",
+    "responseUtc": "2026-11-01T13:19:29.113Z",
+    "uiEndedAndStopAbsent": true,
+    "targetAbsentFromOfficialStatus": true,
+    "latestOriginalFChildCompletionTimestampObserved": true
+  },
+  "limits": [
+    "Earlier empty assistant-step cause remains unknown; sampled record count is not OS/model invocation count.",
+    "No ACP stopReason/request-ID attribution, natural F success, expected final reply or raw process exit0 claimed.",
+    "No provider/model/config change, upstream patch, request resend or production REST polling feature. Raw message bodies not stored."
+  ],
+  "officialVersionRead": "1.18.31",
+  "officialReferences": [
+    "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts",
+    "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/event.ts",
+    "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/session/retry.ts"
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/02-F-current.ax.txt",
+      "sha256": "743eaf43125645918c39ea1d3d7e764ceabb1513d4324169f1f99e38532d59c4",
+      "bytes": 9874
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/03-protocol-current.jsonl",
+      "sha256": "a54d671c9cff071595aba823fcd7ec8ac91521a1be2033f4454db87766fe950b",
+      "bytes": 6381
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/06-official-status.json",
+      "sha256": "cb0c8932b0699bce1cafc994aba64b787249742c0bbe5c0648eaa4656b05bdf7",
+      "bytes": 377
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/06-official-read-observation.json",
+      "sha256": "7a813e894f16d67fdf196a9711c3daf343cd050a48879a6be619f2aeba109387",
+      "bytes": 427
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/08-F-parent-and-loop-observation.json",
+      "sha256": "7dc68f7b898a129350684a2d9d29398c955e8da74227bbfcba6c52af3b207f16",
+      "bytes": 1329
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/09-official-health.json",
+      "sha256": "7a216e03315c28be4dda45ba6ee5a2f996dcf0fe59d120dbf9c898907da26e72",
+      "bytes": 131
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/10-stop-preparation.json",
+      "sha256": "d95b71bb77e0c8d1a148ca99c2c753ca63f1ffa76b06357c8e8f74ef5d6471ec",
+      "bytes": 292
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/10-before-single-stop.ax.txt",
+      "sha256": "743eaf43125645918c39ea1d3d7e764ceabb1513d4324169f1f99e38532d59c4",
+      "bytes": 9874
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/11-after-single-stop.ax.txt",
+      "sha256": "bd7454e8dc657c8fcc4cb28bd853e14e3fc6e31c0a4f89467d38cd8b3510995e",
+      "bytes": 9763
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/12-after-single-stop-observation.json",
+      "sha256": "f1d0ba835432a750ad48f118bb3ab6ba175fb8c3d36fcf429ffbe6d784b8795f",
+      "bytes": 1010
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/12-protocol-after-stop.jsonl",
+      "sha256": "71a926d50503d7d5028891c3d26dca10d7681f493e95476010c1d8d5ecc1ded0",
+      "bytes": 6663
+    }
+  ]
+}

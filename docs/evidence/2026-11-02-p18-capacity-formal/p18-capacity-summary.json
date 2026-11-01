@@ -1,0 +1,176 @@
+{
+  "recordedAt": "2026-11-01T16:47:31.136453+00:00",
+  "clientDate": "2026-11-02",
+  "installedSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "functionalSourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "formalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedInstalledLiveCapacityPresentationVerified",
+  "agent": "Goose",
+  "existingConfiguration": {
+    "service": "Existing/OpenRouter",
+    "model": "Nemotron 3 Ultra (free)",
+    "mode": "auto",
+    "reasoning": "off",
+    "changed": false
+  },
+  "operatorSends": {
+    "K": 1,
+    "L": 1,
+    "FResends": 0
+  },
+  "requestedCommands": {
+    "K": 1,
+    "L": 1
+  },
+  "K": {
+    "requestedCumulativeUtf16": 65537,
+    "liveEntryAndCurrentPaneObserved": true,
+    "liveToolInProgress": true,
+    "localTailNotice": true,
+    "copiedRetainedUtf16": 65535,
+    "copiedPayloadSha256": "727e19c59789fb3aac312c0e1fc6bf1c35b3bc7bbccefc162cc4ab9edddbf169",
+    "wholeLeadingEmojiDropped": true,
+    "replacementCharacters": 0,
+    "finalSequence": 2,
+    "finalChunkIsBlankLf": true,
+    "sourceReportedTruncated": false,
+    "liveAndEndedCopiesByteExact": true,
+    "expectedFinalReplyObserved": true,
+    "firstExactCapWindowMissed": true,
+    "fullOriginalCumulativeRawInputSeparatelyCopied": false
+  },
+  "L": {
+    "liveEntryAndCurrentPaneObserved": true,
+    "liveToolInProgress": true,
+    "copiedUtf16": 65536,
+    "copiedUtf8Bytes": 65538,
+    "copiedPayloadSha256": "1f45e9e7da3825f904f08a8f5a65148977dfed5cc4f5b57fdb2a565d4516d661",
+    "matchesRequestedText": true,
+    "leadingEmojiPreserved": true,
+    "replacementCharacters": 0,
+    "localTailNotice": false,
+    "liveAndEndedCopiesByteExact": true,
+    "toolUiEnded": true,
+    "expectedFinalReplyObserved": false,
+    "finalReply": "Network error: Could not connect to openrouter.ai; expected completion marker absent.",
+    "resent": false,
+    "lockOrNetworkCausalClaim": false
+  },
+  "selectedPresentationResults": [
+    "Full 65536 UTF-16 units without local clipping, including complete leading emoji.",
+    "Over-capacity retained tail is scalar-safe and has its own clipping notice; ended copy matches live copy.",
+    "Current live-output content entry appears on the repaired formal app."
+  ],
+  "limits": [
+    "K exact-cap phase was missed; misleading copy filename does not establish its phase. L is the separately captured exact-cap sample.",
+    "K raw cumulative source was not separately copied; requested size, sequence2 blank LF, source flag and actual retained text support the selected result.",
+    "L final network-error response remains a failure; UI ended label is not model/task success or raw exit0.",
+    "No raw stdout/LF, OS invocation count/exit, other Agent capacity path, unknown-tool branch, full P18 or 29x8 acceptance claimed."
+  ],
+  "reviewBoundary": "Root formal UI observation plus separate saved-file measurement, no new independent person/agent review.",
+  "refs": [
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/05-goose-config-unchanged.ax.txt",
+      "sha256": "0bc34628d46300b6525732cd2726067b9c746e00b3a6d2a58315296ffd95ba24",
+      "bytes": 11094
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/preparation-K.json",
+      "sha256": "022d5b3a94d53daf241370a47e5beba5a2d369655810b6021d2de3c05907a8d3",
+      "bytes": 1955
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/send-K.json",
+      "sha256": "a0ce7616da90dc46e1bb99a1f0c26b8c2ee7211996133ecb0ecc21aaa12912a2",
+      "bytes": 196
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/09-K-live-entry.ax.txt",
+      "sha256": "b03a56c9f389ca2ea99b1eead34db691cba18fd30f35eab8cebdb530af7745b0",
+      "bytes": 11099
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/10-K-live-exact-pane.ax.txt",
+      "sha256": "1baeb336ba3ed0e0e1ec2ff6e94f53d2ae4c68c5cddc75e701400df54bfeb480",
+      "bytes": 12747
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/10-K-live-exact-pane.jpg",
+      "sha256": "455deab58ab58b8ceca9fb648da51f954ddd59596a65a2b789323230c7c66720",
+      "bytes": 725658
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/K-live-exact-copy.txt",
+      "sha256": "a6f8c0a70f547d97d63f1164c83f64955ffa10e1ba7433236017dbc3edac7662",
+      "bytes": 65605
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/K-ended-copy.txt",
+      "sha256": "a6f8c0a70f547d97d63f1164c83f64955ffa10e1ba7433236017dbc3edac7662",
+      "bytes": 65605
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/12-K-ended-meta.ax.txt",
+      "sha256": "0b4a3e1dc46e63bc3517ce9c7eb593fecf84e45b8757e6d92e0ddaf4adcdc87d",
+      "bytes": 15697
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/K-copy-measurements.json",
+      "sha256": "c2548903824e12752f11f3629dd4ad60466897ae2f0ca9d6a4f7a13641b4f8ef",
+      "bytes": 1087
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/preparation-L.json",
+      "sha256": "0a9efbf8463b3e99ddd133876b20dc50b3f3d425028137f3de1f778d88fe662f",
+      "bytes": 1119
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/send-L.json",
+      "sha256": "cacca08de3c4d4d3013992b2bb014e2abbbf09e0192284402a7e6698633c4210",
+      "bytes": 178
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/16-L-live-entry.ax.txt",
+      "sha256": "61d532bc675e074208e125caf37d05b0cbc0ec60a1a200a75abca3deb6b376ce",
+      "bytes": 16905
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/17-L-live-exact-pane.ax.txt",
+      "sha256": "299f4724788773163c6f0f60ca56db2b53ef0ad1bc372923afc8691cb18d6120",
+      "bytes": 16744
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/17-L-live-exact-pane.jpg",
+      "sha256": "afc8c1a0f94ef51d1bf6c55f490e6901c90eafc73d9bec6dcb72277abb16eeca",
+      "bytes": 751219
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/L-live-exact-copy.txt",
+      "sha256": "e51b4979029bf3fdef50fc64fc203608cf59e3a6174ac5a5dff228abe390faed",
+      "bytes": 65608
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/18-L-after-unlock.ax.txt",
+      "sha256": "49f12d5a93d3e4c038f6a8ac5b38f2eb9f84aed64f0f8e7362473861f270f3a2",
+      "bytes": 17056
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/L-ended-after-unlock-copy.txt",
+      "sha256": "e51b4979029bf3fdef50fc64fc203608cf59e3a6174ac5a5dff228abe390faed",
+      "bytes": 65608
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/L-live-copy-measurement.json",
+      "sha256": "30293218ae10e586f6d916d05e094c642599cff3fb9814483f87c14e3367aba4",
+      "bytes": 383
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/L-ended-measurement.json",
+      "sha256": "2a131ce20707850dae5ce8d1546ed69b9c5fc049fb1668130bd408aae52b66e4",
+      "bytes": 854
+    }
+  ]
+}

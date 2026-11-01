@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-11-01T16:48:08.896782+00:00",
+  "clientDate": "2026-11-02",
+  "installedSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "functionalSourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "formalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "productAcceptanceClaimed": false,
+  "kind": "CurrentProtectionAndRemainingFormalConditions",
+  "B3": {
+    "fourCheckpointsExact": true,
+    "paragraphLengths": [187, 75, 32, 27],
+    "permissionStillUnconfirmed": true,
+    "typedSentOrAcknowledged": false
+  },
+  "installedFiveFilesFreshlyExact": true,
+  "originalFResends": 0,
+  "postUnlockModelSends": 0,
+  "unknownTool": {
+    "qualifiedExistingOfficialReplayableObjectAvailable": false,
+    "mistralOriginalRestoreFailureRetained": true,
+    "poolsideOriginalDirectoryMissingRetained": true,
+    "mistralOrPoolsideRetested": false,
+    "excludes": [
+      "Goose tool kind other",
+      "F request quota retry",
+      "L final network error"
+    ]
+  },
+  "pending": [
+    "Unknown-tool branch requires an explicitly attributable existing tool-activity unknown object that official replay can restore.",
+    "L final reply network error cause and increased displayed tool time remain unknown; no resend.",
+    "Other Agent capacity paths and remaining original P18/P35 conditions remain open.",
+    "NEW-24 affected new real sends remain paused; complete 29x8 and Windows acceptance remain open."
+  ],
+  "countBoundary": "Global UI rows125 to118 were observed before replacement. Cause unknown, no deletion invoked; neither data loss nor count stability claimed.",
+  "dataBoundary": "Closed-phase manifests match. No post-launch all-data-unchanged claim.",
+  "refs": [
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/f-diagnosis/01-initial-b3.ax.txt",
+      "sha256": "121a84494f42e978dfda6ee9feffd8b3e2c39592c2b93726d8259132784d94b8",
+      "bytes": 4775
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/ui/before-quit-b3.ax.txt",
+      "sha256": "b987c790c153477f65ce96642369c21fc2e77b03f09700fa77de422fa68847e3",
+      "bytes": 4877
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/03-b3-cold-ready.ax.txt",
+      "sha256": "2ea8d3129a5e8ad032ecb8df4b5b7c772704504e828a0359d2ee75c1b394e63f",
+      "bytes": 4867
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/24-b3-stage-final.ax.txt",
+      "sha256": "704a2718b2c983317e3eb416a82e11be059247882e22f0b82b59210048a361f8",
+      "bytes": 4867
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/root-normal-exit-b3-ui.json",
+      "sha256": "d30f5e99e73131f26eec9b1d352548330e38f6e89985e0a0f2556484b1a70ef1",
+      "bytes": 1916
+    },
+    {
+      "path": "output/2026-11-01-p18-capacity-followup/formal/actual/stage-preservation-and-conditions.json",
+      "sha256": "0c4bc6ab5cc53e341e0c3db921a0a24268b5acfff133b42e645f6cb9d91ea27e",
+      "bytes": 1135
+    }
+  ]
+}
