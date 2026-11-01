@@ -1,0 +1,109 @@
+{
+  "kind": "P12P32SelectedChineseLoadedSearchFormalPublicSummary",
+  "recordedAt": "2026-11-01T05:38:20.650901+00:00",
+  "requirementIds": ["P12", "P32"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "functionalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+    "executableSha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+    "sourceOrApplicationChanged": false,
+    "newInstallOrFullEngineeringRun": false,
+    "selectedAgent": "OpenCode",
+    "selectedSource": "Existing settings",
+    "displayedModel": "OpenCode/Big Pickle",
+    "mode": "build",
+    "selectionChanged": false,
+    "currentAgentRuntimeVersionNewlyVerified": false,
+    "versionBoundary": "Prior stored1.18.31 is historical metadata, not a current runtime equivalence claim or compatibility pin."
+  },
+  "query": {
+    "text": "零输出",
+    "unicodeCharacters": 3,
+    "scope": "One newly received user message in the original selected OpenCode conversation"
+  },
+  "p12": {
+    "frames": [13, 14, 15, 16, 17],
+    "result": "selected-pass",
+    "count": "1/1",
+    "nextAndPreviousRemainOnOnlyMatch": true,
+    "correctUserMessageAndMatchVisible": true,
+    "closedWithoutSending": true
+  },
+  "p32": {
+    "frames": [18, 19, 20],
+    "result": "selected-pass",
+    "loadedConversations": 2,
+    "unloadedConversations": 157,
+    "unconfirmedReads": 0,
+    "matches": 1,
+    "matchedSource": "Original selected OpenCode user message",
+    "sourceNavigationByReturnObserved": true,
+    "originalMessageAndHighlightVisible": true,
+    "scopeBoundaryDisplayed": true,
+    "notLoadedHistoryOrAttachmentBytesRead": true
+  },
+  "actions": {
+    "newModelSubmissionsForSearch": 0,
+    "fileWritesOrSettingsChanges": 0,
+    "sourceOrAppChanges": 0
+  },
+  "b3": {
+    "firstAndFinalFourRenderedDraftsExact": true,
+    "permissionUnconfirmed": true
+  },
+  "references": {
+    "p12MatchAx": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/14-p12-chinese-one-hit.ax.txt",
+      "sha256": "831a3879d90272d436d3ba05b74fb73fb4b52fa668655d4e5e80e3c897d64b64",
+      "bytes": 8341
+    },
+    "p12MatchImage": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/14-p12-chinese-one-hit.jpg",
+      "sha256": "f23ff5c5d91a845dd629c20a8c32a5df48c4d4eaddcdf11b3cde6029f45a31c9",
+      "bytes": 442991
+    },
+    "p12Next": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/15-p12-next-wrap.ax.txt",
+      "sha256": "f1aba2548ab6fb752787627a0842382f28cb4161d6d5dedd40150f870db1ae9c",
+      "bytes": 8129
+    },
+    "p12Previous": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/16-p12-previous-wrap.ax.txt",
+      "sha256": "f1aba2548ab6fb752787627a0842382f28cb4161d6d5dedd40150f870db1ae9c",
+      "bytes": 8129
+    },
+    "p32ResultAx": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/19-p32-loaded-one-source.ax.txt",
+      "sha256": "06c6f4c0678fc8a7df6db22ad123c89dd496472abe79972d0e8c1efb7f839cbe",
+      "bytes": 1626
+    },
+    "p32ResultImage": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/19-p32-loaded-one-source.jpg",
+      "sha256": "07035c0d45af98fc56265e92bbd4b0f0b4d52a7dacd4ebe5f326b0ef7ebdb60e",
+      "bytes": 266640
+    },
+    "p32NavigationAx": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/20-p32-source-navigation.ax.txt",
+      "sha256": "c9526c21e08ff5a4a8af1da1cb16766593ef096947bfb8af0f21d52852b9fdf4",
+      "bytes": 7636
+    },
+    "p32NavigationImage": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/20-p32-source-navigation.jpg",
+      "sha256": "726b6aef63904b4344b09e4a826fa0a37ab23ccf214c14086b1c377d640d0bed",
+      "bytes": 439634
+    },
+    "savedEvidenceValidation": {
+      "path": "output/2026-11-01-p18-zero-entry/saved-evidence-validation.json",
+      "sha256": "759c7b45e3f7ca13b57d5153a026c2345f4ce41fa4972258cb13ebdede392bc2",
+      "bytes": 14127
+    }
+  },
+  "limits": [
+    "One three-character Chinese query/one message within the explicitly loaded two-conversation scope.",
+    "No new full-history completeness, original byte fidelity, attachment/official-history source coverage,1000-entry stress, case/diacritic/grapheme corpus, or completeP12/P32 acceptance.",
+    "Root actual frames and separate parser only; new independent actor review not claimed.",
+    "Existing failures and other unknowns remain unchanged."
+  ],
+  "productAcceptanceClaimed": false,
+  "rawPrivatePromptReplyDraftOrIdentifiersPublished": false
+}

@@ -1,0 +1,127 @@
+{
+  "kind": "P18ZeroOutputEntryFormalCPublicSummary",
+  "recordedAt": "2026-11-01T05:38:20.649442+00:00",
+  "requirementIds": ["P18"],
+  "baseline": {
+    "application": "Farfold0.1.7,ai.farfold.desktop,macOSarm64",
+    "functionalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+    "executableSha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+    "sourceOrApplicationChanged": false,
+    "newInstallOrFullEngineeringRun": false,
+    "selectedAgent": "OpenCode",
+    "selectedSource": "Existing settings",
+    "displayedModel": "OpenCode/Big Pickle",
+    "mode": "build",
+    "selectionChanged": false,
+    "currentAgentRuntimeVersionNewlyVerified": false,
+    "versionBoundary": "Prior stored1.18.31 is historical metadata, not a current runtime equivalence claim or compatibility pin."
+  },
+  "result": "Selected zero-visible-output command entry and correct scoped pane observed before response; later command output and request completion observed.",
+  "actions": {
+    "operatorSubmissions": 1,
+    "operatorResubmissions": 0,
+    "operatorApproveRememberDenyStopRetryOrSettingsChanges": 0
+  },
+  "sequence": [
+    {
+      "frame": 10,
+      "result": "Current nonterminal tool has its own content entry before any output is visible."
+    },
+    {
+      "frame": 11,
+      "result": "Activated that step entry: correct C command, this-step scope, all-output filter, running state, disabled copy, no received output body. Global content badge still contains only the earlier output; not promoted to an explicit internal counter read.",
+      "secondsFromRecordedSendAtCaptureEnd": 95.598
+    },
+    {
+      "frame": 12,
+      "result": "Same command pane contains C_END; tool ended, exact prepared reply and separate request completed. This technical-details capture was terminal, despite its filename."
+    }
+  ],
+  "protocolWindow": {
+    "prompt": 1,
+    "updates": 10,
+    "response": 1,
+    "permission": 0,
+    "cancel": 0,
+    "responseSecondsFromSend": 108.845,
+    "emptyCaptureBeforeResponse": true,
+    "limit": "Fixed method/time/byte/error metadata does not independently prove payload empty or identify stdout bytes."
+  },
+  "unknownTool": {
+    "result": "still-unverified-no-qualified-current-object",
+    "needed": "Existing, explicitly attributable genuinely unknown tool successfully replayed by its official Agent.",
+    "originalMistralRetriedAcknowledgedOrResent": false,
+    "originalMistralRestoreFailurePreserved": true,
+    "requestUnknownDoesNotProveToolUnknown": true,
+    "originalRawToolWasInProgress": true,
+    "currentRestoreConditionNewlyTested": false,
+    "relatedSummary": "../2026-11-01-p18-formal/mistral-restore-blocker-summary.json"
+  },
+  "verification": {
+    "rootActualUiObservation": true,
+    "separateSavedEvidenceParser": true,
+    "newIndependentActorReview": false,
+    "priorSourceReviewRetainedSourceUnchanged": true
+  },
+  "b3": {
+    "firstAndFinalFourStringsExact": true,
+    "lengths": [187, 75, 32, 27],
+    "permissionUnconfirmed": true,
+    "allHistoryOrPostlaunchDataEqualityClaimed": false
+  },
+  "references": {
+    "preparation": {
+      "path": "output/2026-11-01-p18-zero-entry/live-c-preparation.json",
+      "sha256": "3b962835189f81a7a156da5b266bd738c6e31f113ebe195949e8e25e71686987",
+      "bytes": 1629
+    },
+    "submission": {
+      "path": "output/2026-11-01-p18-zero-entry/live-c-send-attempt.json",
+      "sha256": "d9904c4893d40f9bc1ea1b6e8f330a6af420ab65b370bd35f57a5c02d3e9bbce",
+      "bytes": 114
+    },
+    "emptyPaneAx": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/11-c-zero-correct-pane.ax.txt",
+      "sha256": "e232614e03ca1ea9c45da33a628a373d64d5626957c2357cb57277b9f7e50aac",
+      "bytes": 6758
+    },
+    "emptyPaneImage": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/11-c-zero-correct-pane.jpg",
+      "sha256": "7a8fb0209123ddd3ac9c7a3ae4881721f495351988cbf6c9cfe95c4c0dc10c36",
+      "bytes": 439538
+    },
+    "laterTerminalAx": {
+      "path": "output/2026-11-01-p18-zero-entry/ui/12-c-zero-technical.ax.txt",
+      "sha256": "90a0653b56ca7ea21345573157cf63a58fb700c1216ffd6b86a30ef6eb6a20eb",
+      "bytes": 7505
+    },
+    "protocol": {
+      "path": "output/2026-11-01-p18-zero-entry/live-c-protocol-window.json",
+      "sha256": "921c35f2fad3ba343cdf7dcade2584d6a5d9dabd4044868a59baa8ccb35782fd",
+      "bytes": 2468
+    },
+    "savedEvidenceValidation": {
+      "path": "output/2026-11-01-p18-zero-entry/saved-evidence-validation.json",
+      "sha256": "759c7b45e3f7ca13b57d5153a026c2345f4ce41fa4972258cb13ebdede392bc2",
+      "bytes": 14127
+    },
+    "formalIdentity": {
+      "path": "output/2026-11-01-p18-zero-entry/final-formal-identity.json",
+      "sha256": "36ef6ffe12957e27c77fb634823c609676d610958548200d22cee6cd4b6a6354",
+      "bytes": 279
+    },
+    "unknownConditions": {
+      "path": "output/2026-11-01-p18-zero-entry/unknown-tool-conditions.json",
+      "sha256": "cc0e04914900023cfcacbf71bb045010a4838e9040d0c04a27868a18a42f714b",
+      "bytes": 754
+    }
+  },
+  "limits": [
+    "One empty visible-pane sample, not continuous90-second raw-payload silence proof or a pending-before-execution branch proof.",
+    "No raw exit status, exact stdout/LF byte fidelity, underlying OS invocation count, stop/unknown/reconnect, pressure or other Agent/model/platform acceptance.",
+    "No new independent actor review; existing source review and root actual observation plus separate parser are distinct evidence.",
+    "OriginalA/old missed-window failures and unknown outcomes remain. FullP18 and29x8 remain open."
+  ],
+  "productAcceptanceClaimed": false,
+  "rawPrivatePromptReplyDraftOrIdentifiersPublished": false
+}
