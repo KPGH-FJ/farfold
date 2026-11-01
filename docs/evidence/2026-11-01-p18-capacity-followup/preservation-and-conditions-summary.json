@@ -1,0 +1,82 @@
+{
+  "recordedAt": "2026-11-01T12:56:19.637773+00:00",
+  "sourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "installedFunctionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "repairedAppInstalled": false,
+  "productAcceptanceClaimed": false,
+  "kind": "P18ProtectionAndRemainingConcreteConditions",
+  "B3": {
+    "initial": "01",
+    "final": "45",
+    "fourParagraphsExact": true,
+    "lengths": [187, 75, 32, 27],
+    "permissionStillUnconfirmed": true
+  },
+  "formalAppFiveFilesUnchanged": true,
+  "newAppBackupOrReplacement": false,
+  "capacity": {
+    "sourceConditionNowAvailable": true,
+    "receivedUtf16Units": [65536, 65537],
+    "remaining": "Repaired sole app installation and actual output-card full/over-boundary, emoji, ongoing/ended behavior after safe F/activity/data conditions."
+  },
+  "unknownTool": {
+    "status": "missing-qualified-officially-replayable-existing-tool-activity-unknown-object",
+    "MistralRestoreFailureNotRetried": true,
+    "originalMistralAcknowledgedOrResent": false,
+    "FRequestProcessingIsNotToolUnknown": true,
+    "GooseOtherKindIsNotActivityUnknown": true
+  },
+  "poolside": {
+    "priorOriginalWorkLocationMissingAndRestoreFailurePreserved": true,
+    "retestedThisBatch": false,
+    "emptyReplacementOrUserTRHistorySend": false,
+    "directoryLossCause": "unknown"
+  },
+  "independentWork": "Received-stream optional export/snapshot/detail-budget regression developed and verified with the fix; installed P35 unchanged.",
+  "stillOpen": [
+    "P18 repaired-app formal verification",
+    "Unknown-tool formal behavior",
+    "Other independent tasks from the sole plan",
+    "Windows and all29x8"
+  ],
+  "unchanged": {
+    "original151Conditions": true,
+    "all29x8": true,
+    "NEW24AffectedSendsPaused": true
+  },
+  "refs": {
+    "preservation": {
+      "path": "output/2026-11-01-p18-capacity-followup/preservation-final.json",
+      "sha256": "383587e8581784fcf8915e616eb95831b530c7343ff0924c252948f702d95f59",
+      "bytes": 921
+    },
+    "initialBundle": {
+      "path": "output/2026-11-01-p18-capacity-followup/initial-bundle.json",
+      "sha256": "541ebea94c69c476d191376a1a578d334280f2f2c1f02211830fe8f0cdbebe6d",
+      "bytes": 257
+    },
+    "finalBundle": {
+      "path": "output/2026-11-01-p18-capacity-followup/final-bundle.json",
+      "sha256": "cbf01500323c3a30c5048fdf80139f94cb077e019b430d760dd7c29d97597561",
+      "bytes": 861
+    },
+    "B3Initial": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/01-b3-initial.ax.txt",
+      "sha256": "1ba3f130e3f22c11121ff43c2f2f2826f74bc42f43244bb76eaea190e73f91d0",
+      "bytes": 4755
+    },
+    "B3Final": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/45-b3-final-preserved.ax.txt",
+      "sha256": "34d385f4f8b1592c9701adf57de4270e026f76479884030fcd6f6eea28721a39",
+      "bytes": 4914
+    },
+    "FStatus": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/32-F-stage-check.ax.txt",
+      "sha256": "d27c6a66e87f10b4d33cb17bfe3b44c1167e066f762c27f0e8dcf8c9f9227f37",
+      "bytes": 9874
+    }
+  }
+}

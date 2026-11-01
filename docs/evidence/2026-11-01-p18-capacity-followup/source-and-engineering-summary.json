@@ -1,0 +1,171 @@
+{
+  "recordedAt": "2026-11-01T12:56:19.637315+00:00",
+  "sourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "installedFunctionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "repairedAppInstalled": false,
+  "productAcceptanceClaimed": false,
+  "kind": "P18PassiveLiveOutputTranslationSourceRepairNotInstalled",
+  "changedFiles": 15,
+  "rootCause": "Only terminal-output extension was normalized. Official toolNotification/live_output stayed opaque, so other-kind tools had no live output card.",
+  "implementation": [
+    "ACP layer validates declared shape and emits unchanged raw envelope first, followed by generic passive output.",
+    "One shared per-tool in-memory tail/latest sequence, duplicate rejection and separate missing-source/local-tail indications. No new event ledger, execution or Agent UI branch.",
+    "Original status/input/content preserved. Empty incomplete receipts cannot hide actual final text.",
+    "Optional export includes the received stream with partial/tail indications, immutable snapshot and original detail budget."
+  ],
+  "sevenChecks": {
+    "naturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontend": {
+      "files": 700,
+      "passed": 9407
+    },
+    "rust": {
+      "passed": 2329,
+      "failed": 0,
+      "ignored": 6
+    },
+    "logs": [
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/format-final.log",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "bytes": 144
+        },
+        "naturalExitCode": 0,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/typecheck-final.log",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "bytes": 78
+        },
+        "naturalExitCode": 0,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/frontend-final.log",
+          "sha256": "1845c73ecb6c3c6e99f77f24f0591eff71d4fbdb405da1b65b5315659eaea2f4",
+          "bytes": 289
+        },
+        "naturalExitCode": 0,
+        "sha256": "1845c73ecb6c3c6e99f77f24f0591eff71d4fbdb405da1b65b5315659eaea2f4"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/build-final.log",
+          "sha256": "48b7fd247f39c862ade809e57d181da885459d1d1c1cae96e64cca32966807b8",
+          "bytes": 4984
+        },
+        "naturalExitCode": 0,
+        "sha256": "48b7fd247f39c862ade809e57d181da885459d1d1c1cae96e64cca32966807b8"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/cargo-fmt.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "naturalExitCode": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/clippy.log",
+          "sha256": "a1e5cb45e50cf7198091b283c9d52c94fe4d273904f030bce2f93335dd4ac45e",
+          "bytes": 139
+        },
+        "naturalExitCode": 0,
+        "sha256": "a1e5cb45e50cf7198091b283c9d52c94fe4d273904f030bce2f93335dd4ac45e"
+      },
+      {
+        "log": {
+          "path": "output/2026-11-01-p18-capacity-followup/rust-full.log",
+          "sha256": "b04b8a95a7d3b6c9399a6562f643938054aeebaabd0b1aa478ffae3f084eb969",
+          "bytes": 268785
+        },
+        "naturalExitCode": 0,
+        "sha256": "b04b8a95a7d3b6c9399a6562f643938054aeebaabd0b1aa478ffae3f084eb969"
+      }
+    ]
+  },
+  "affectedChecks": {
+    "frontendFiles": 6,
+    "frontendPassed": 131,
+    "rustSelectedPassed": 11
+  },
+  "failuresRetained": [
+    "Frontend regression RED5 failed1 passed; RustRED1 failed101",
+    "First affected frontend fixture lacked official active-tool IDs,1 failed; corrected fixture only",
+    "First typecheck failed missing explicit commandOutput return shape; fixed before finalchecks",
+    "Empty incomplete receipt fallback corrected before final frontend/build/type rerun"
+  ],
+  "sourceBinding": {
+    "endpointFiles": 21403,
+    "finalBeforeAndAfterExact": true,
+    "changed15FilesMatchCommittedBytes": true,
+    "continuousFreezeClaimed": false,
+    "boundary": "Final frontend/type/build/format after final code; Rust inputs unchanged since its checks; public docs checked separately."
+  },
+  "review": "Root second source pass only; no independent person/agent review performed.",
+  "installation": "Deferred while original F remains active/unconfirmed; sole formal app five files unchanged.",
+  "officialReferences": [
+    "https://github.com/aaif-goose/goose/blob/main/crates/goose/src/acp/server/tool_notifications.rs",
+    "https://github.com/aaif-goose/goose/blob/main/crates/goose/src/agents/platform_extensions/developer/shell_output_streaming.rs"
+  ],
+  "limits": [
+    "Latest official source explains the documented field and line-buffering; not a proof of installed version identity.",
+    "Build logs retain the existing Vite chunk-size warning. No installation, repaired-app formal behavior or final-stage acceptance claimed."
+  ],
+  "refs": {
+    "engineering": {
+      "path": "output/2026-11-01-p18-capacity-followup/engineering-result.json",
+      "sha256": "ff04d759f5b7a3decc078139e6ac70276c671c6fecfecaf6515fd22b5fd987d9",
+      "bytes": 2021
+    },
+    "committedBinding": {
+      "path": "output/2026-11-01-p18-capacity-followup/committed-source-binding.json",
+      "sha256": "33e02cc1835c57490b907f8b2b8a876de8232abf6141dba41c332f641d3a76ba",
+      "bytes": 2464
+    },
+    "sourceReview": {
+      "path": "output/2026-11-01-p18-capacity-followup/source-review.json",
+      "sha256": "56de1c3ea6d9483f7ebc2450464a42372aeef3650877324d189680b5138cfd57",
+      "bytes": 1563
+    },
+    "frontendRed": {
+      "path": "output/2026-11-01-p18-capacity-followup/reported-output-red.log",
+      "sha256": "a9d58b00eee4f1e6adb8504b0cd52beb7993f34d2bc67bd3e9e694dabcc67896",
+      "bytes": 201388
+    },
+    "rustRed": {
+      "path": "output/2026-11-01-p18-capacity-followup/reported-output-rust-red.log",
+      "sha256": "4b06e784d76a32b4d0cf6df6c6c3aeb1a9309c85e65c18b9942cf0d43fb8be93",
+      "bytes": 2331
+    },
+    "affectedFinal": {
+      "path": "output/2026-11-01-p18-capacity-followup/reported-output-affected-final.log",
+      "sha256": "e6fba0c00fc9d61fe3547fdc243bb086894da462130aa132a411a49b47750289",
+      "bytes": 554
+    },
+    "rustSelected": {
+      "path": "output/2026-11-01-p18-capacity-followup/reported-output-rust-affected.log",
+      "sha256": "5761fa6e2717915f7c569be228600633174adc1390fded3be86f455ee80bab92",
+      "bytes": 1808
+    },
+    "initialTypeFailure": {
+      "path": "output/2026-11-01-p18-capacity-followup/typecheck.log",
+      "sha256": "c14966eb9c4114830be74e846371001b107303575c4040ae81244556eaa34ebc",
+      "bytes": 453
+    },
+    "initialFixtureFailure": {
+      "path": "output/2026-11-01-p18-capacity-followup/reported-output-affected.log",
+      "sha256": "acb1484d0040e5c44dcc74616e2a14e558fd7b86622856c7ee3b5dc77ade8c44",
+      "bytes": 1712
+    }
+  }
+}

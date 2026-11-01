@@ -1,0 +1,185 @@
+{
+  "recordedAt": "2026-11-01T12:56:19.634356+00:00",
+  "sourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "installedFunctionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "repairedAppInstalled": false,
+  "productAcceptanceClaimed": false,
+  "kind": "P18QualifiedReceivedCapacitySourcesAndInstalledProjectionFailure",
+  "agent": "Goose",
+  "source": "Existing/OpenRouter",
+  "model": "Nemotron 3 Ultra (free)",
+  "mode": "auto unchanged",
+  "reasoning": "off unchanged",
+  "agentVersion": "not read or pinned; selected existing official ACP route only",
+  "operatorSubmissions": {
+    "H": 1,
+    "I-A": 1,
+    "J-A": 1
+  },
+  "specifiedCommands": {
+    "H": 2,
+    "I-A": 1,
+    "J-A": 1
+  },
+  "requestCompletionsObserved": ["H", "I-A", "J-A"],
+  "H": {
+    "correctLiveWindowCaptured": false,
+    "endedCopiedPayloadUtf16Units": 10493,
+    "endedSourceAlreadyToolShortened": true,
+    "capacityPass": false
+  },
+  "I-A": {
+    "live22ObservedOnlyInitialMetadata": true,
+    "liveArrivalPass": false,
+    "receivedSourceAfterCompletionUtf16Units": 65537,
+    "receivedHasToolAppendedLF": true,
+    "literalStdoutEqualityClaimed": false
+  },
+  "J-A": {
+    "live30Status": "in_progress with Stop available",
+    "currentToolMeta": "toolNotification/live_output, sequence1, stdout",
+    "currentToolContentEntry": "absent despite received live output",
+    "oldHBPaneNotMistakenForJOutput": true,
+    "receivedSourceUtf16Units": 65536,
+    "nativeSavedUtf8CrossCheck": true
+  },
+  "receivedMeasurements": [
+    {
+      "sample": "I-A",
+      "utf16Units": 65537,
+      "utf8Bytes": 65539,
+      "sha256": "47af792da274458e994391cc2212323a91a2e6375e7d85340b76841d9e32fa6e",
+      "sequence": 1,
+      "truncated": false,
+      "chunks": 1,
+      "stream": ["stdout"],
+      "startsEmoji": true,
+      "endsMarkerLf": true,
+      "matchesRequestedPlusToolAppendedLF": true,
+      "matchesRequestedExactly": false
+    },
+    {
+      "sample": "J-A",
+      "utf16Units": 65536,
+      "utf8Bytes": 65538,
+      "sha256": "895508ff6fde962890f4785010ee252fc92e5edad569e4af0dacf4808d3fec4e",
+      "sequence": 1,
+      "truncated": false,
+      "chunks": 1,
+      "stream": ["stdout"],
+      "startsEmoji": true,
+      "endsMarkerLf": true,
+      "matchesRequestedPlusToolAppendedLF": false,
+      "matchesRequestedExactly": true
+    }
+  ],
+  "sourceQualification": "Both exact-cap and cap-plus-one official metadata text sources now measured; no further model send for the paired measurement.",
+  "formalCardCapacityPass": false,
+  "limits": [
+    "Source receipt is distinct from repaired output-card clipping and emoji validation, which remain untested in the installed app.",
+    "H correct live window missed; I-A live arrival unproven. Original failed observations are not reclassified.",
+    "AX ordinary text nodes truncate at512; measurement uses full selected text, J additionally cross-checked to an actual native UTF8 saved file.",
+    "Second native-copy attempt captured only a command and is not used as full source proof.",
+    "No Agent automatic output-file read, settings change, new credentials/model, or upstream modification. No raw OS exit/count or complete P18 proof."
+  ],
+  "refs": {
+    "config": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/06-goose-existing-config.ax.txt",
+      "sha256": "369c7e8a75ed5b7a3bd4781cf695f4e31095f249faefd430709f45145dae6012",
+      "bytes": 7167
+    },
+    "HInput": {
+      "path": "output/2026-11-01-p18-capacity-followup/preparation-H.json",
+      "sha256": "94c29a586729b7973b9dfd4336079b252b3306d6436f962bd67e17e893ac05b3",
+      "bytes": 2376
+    },
+    "HSend": {
+      "path": "output/2026-11-01-p18-capacity-followup/send-H.json",
+      "sha256": "2e60ab8f08076bc76257a122c88f88b911ec0f8870b710a059b3cd472f76f3c8",
+      "bytes": 165
+    },
+    "HEnd": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/14-H-after-B-copy.ax.txt",
+      "sha256": "cc92b7c1bd03c72d356f02e8b740d9d25df1f8f5b00afd6aea915c8695ed361e",
+      "bytes": 9467
+    },
+    "HCopy": {
+      "path": "output/2026-11-01-p18-capacity-followup/H-B-copy-v2.txt",
+      "sha256": "cc45a64af2b642fbd766d784172b57fbe74a763018d526fd939c74aa4852985e",
+      "bytes": 10563
+    },
+    "IInput": {
+      "path": "output/2026-11-01-p18-capacity-followup/preparation-I-A.json",
+      "sha256": "b556401801c8a9073547a4725c21b89fd45336ed906d2f38932233c54e7271b0",
+      "bytes": 1446
+    },
+    "ISend": {
+      "path": "output/2026-11-01-p18-capacity-followup/send-I-A.json",
+      "sha256": "d5bc6a700653db17db59a42343f0b4efb9f53c00d6f80474a3546e2de480308e",
+      "bytes": 165
+    },
+    "ILive": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/22-I-A-live-extra.ax.txt",
+      "sha256": "26529a3fc462afa6dd76966501b2043f9d2bf4f470031d6ef5d657dc2ce060de",
+      "bytes": 14018
+    },
+    "IEnd": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/23-I-A-live-current.ax.txt",
+      "sha256": "39093e3960c8ef6edc67c605d3da7e2ffa2a95c39f076e85baea045ad7d0eca8",
+      "bytes": 16181
+    },
+    "JInput": {
+      "path": "output/2026-11-01-p18-capacity-followup/preparation-J-A.json",
+      "sha256": "234ecd1cdf456df9361d2da32cc8b19ec32b0a28b3fc70199cfcc8397e8cc38c",
+      "bytes": 1039
+    },
+    "JSend": {
+      "path": "output/2026-11-01-p18-capacity-followup/send-J-A.json",
+      "sha256": "ffe74c2d7d254a8fcf897aae8019330c159bb3e10d7a94159b5d4c0dab1256e8",
+      "bytes": 152
+    },
+    "JLive": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/30-J-A-live-extra.ax.txt",
+      "sha256": "aa3745ba5332ee2b00e5e82ba09a31a93ca78076063c477e68e71c06c2eb2651",
+      "bytes": 18548
+    },
+    "JLiveImage": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/30-J-A-live-extra.jpg",
+      "sha256": "0171a918bf0f8291a46e91c24fd0127430836549c63997ea3ee989b555cc16ca",
+      "bytes": 745139
+    },
+    "JEnd": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/31-J-A-observed-return.ax.txt",
+      "sha256": "164e4ff844d7d7899a31ae8bea08f5648b96181486c91baf863c40e976cc5176",
+      "bytes": 20405
+    },
+    "JNativeCopyReceipt": {
+      "path": "output/2026-11-01-p18-capacity-followup/J-A-visible-page.json",
+      "sha256": "f8289ed1c022a9e15fb0bc7519c8c186288e809fb8b8c71e02f88e2fcfe2679d",
+      "bytes": 204
+    },
+    "JNativeMeasurement": {
+      "path": "output/2026-11-01-p18-capacity-followup/J-A-received-source-measurement.json",
+      "sha256": "18eb86d7a71e0ab7461185c7b9c0d23f629e9aa58b6dc38e3cf77b213059d221",
+      "bytes": 1335
+    },
+    "pairSelectedText": {
+      "path": "output/2026-11-01-p18-capacity-followup/I-J-selected-full.ax.txt",
+      "sha256": "111ad47a44b054765ac431a599657ea9cd4e5e20ca013a9a4cf042761def66e0",
+      "bytes": 195081
+    },
+    "pairMeasurement": {
+      "path": "output/2026-11-01-p18-capacity-followup/received-source-pair-measurement.json",
+      "sha256": "6023f8eaec588cb843c147b8c0a9054b86de26043cd588960ac3c54d3bff1e68",
+      "bytes": 1814
+    },
+    "commandOnlyCopyAttempt": {
+      "path": "output/2026-11-01-p18-capacity-followup/I-J-command-copy-attempt.txt",
+      "sha256": "426f848bae9e8392fbc6838e9d2fe97f2f146f34fe886e9e3a75950531d79041",
+      "bytes": 175779
+    }
+  }
+}

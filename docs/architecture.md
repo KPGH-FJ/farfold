@@ -12,6 +12,8 @@ Farfold 是独立的多 Agent 桌面产品。React工作台只有一套对话、
 
 主链路为：React组件 → 前端运行时控制器 → Tauri命令 → 接入管理器及官方协议库 → 外部 Agent进程。返回事件经事件泵与通道交给前端归一化呈现。原始事件与未知 envelope 保留；可读投影不是另存的 Agent正文账本。官方协议库声明见 [Cargo.toml](../src-tauri/Cargo.toml)。
 
+[reported_output.rs](../src-tauri/src/acp_client/reported_output.rs)被动转换已核官方`toolNotification/live_output`字段；原始封套先原样交付，再发通用输出，不执行工具或推断成功。共用[artifacts.ts](../src/runtime/artifacts.ts)按已有工具ID保留内存文本尾部与最近序号，分别处理重复、缺失和本地尾部裁切；可选导出计入原详情预算，不进meta_store。该修复源码33eaac已完成七项，正式应用仍为378，安装与真实容量验证边界见[当前状态](status.md)。
+
 首发范围仍为[29家 × 八项标准](agent-first-release.md)。目录条目、可安装、握手、认证、请求、恢复、工具和真实用户效果分别判断。当前缺口不因同一界面、代表样本或测试数量而缩小；NEW-24受影响的新真实发送继续暂停，完整权限读回、OpenCode初始化和历史自动重开请求者仍有未知，详见状态页。
 
 ## 源码入口与职责

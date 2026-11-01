@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-11-01T12:56:19.629642+00:00",
+  "sourceCommit": "33eaac7fbe9ee66359359067df47a94d94fae79e",
+  "installedFunctionalSource": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "formalProgramSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "formalVersion": "0.1.7",
+  "platform": "macOS arm64",
+  "repairedAppInstalled": false,
+  "productAcceptanceClaimed": false,
+  "kind": "P18OriginalFCheckedBeforeAnyNewSendAndStillProtected",
+  "initialCheck": "Original F still processing, Stop available; selected content-free log snapshot unchanged from previous stage.",
+  "timingMatchedCountsAfterF": {
+    "out:session/prompt": 1,
+    "in:session/update": 9,
+    "in:response": 0
+  },
+  "stageCheck": "Original F still processing; metadata bytes still unchanged. No actual completion reply observed.",
+  "stopRetryAcknowledgeResend": false,
+  "limits": [
+    "Content-free log has no request IDs; no exact response-ID, cause, external-process terminal or tool-unknown proof.",
+    "Active/unconfirmed F prevents this batch from safely replacing the sole formal application."
+  ],
+  "refs": {
+    "initialUI": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/02-F-current-status.ax.txt",
+      "sha256": "74e908f3e95a985967b809f09c98f61b0fcc70c788995567127b6b7e0da49ec4",
+      "bytes": 9854
+    },
+    "initialObservation": {
+      "path": "output/2026-11-01-p18-capacity-followup/F-current-observation.json",
+      "sha256": "7d52d2c934d786ce341795e3f0d7ec89e7c233a6326dd80836c16f1515269419",
+      "bytes": 618
+    },
+    "initialProtocolSnapshot": {
+      "path": "output/2026-11-01-p18-capacity-followup/protocol-F-fresh-snapshot.jsonl",
+      "sha256": "a54d671c9cff071595aba823fcd7ec8ac91521a1be2033f4454db87766fe950b",
+      "bytes": 6381
+    },
+    "stageUI": {
+      "path": "output/2026-11-01-p18-capacity-followup/ui/32-F-stage-check.ax.txt",
+      "sha256": "d27c6a66e87f10b4d33cb17bfe3b44c1167e066f762c27f0e8dcf8c9f9227f37",
+      "bytes": 9874
+    },
+    "stageProtocol": {
+      "path": "output/2026-11-01-p18-capacity-followup/F-stage-protocol-observation.json",
+      "sha256": "c9f4e5460d599b1ad7b926c7a8afa74e0acb4bd075bf95d778271557b3dde407",
+      "bytes": 488
+    }
+  }
+}
