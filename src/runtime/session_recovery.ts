@@ -6,6 +6,7 @@ import type { ThreadState } from "./session_types";
 import { freshThreadState } from "./session_projection";
 import { STRINGS } from "./strings";
 import { composerDrafts, hasUnsentWork } from "./drafts";
+import { workDirectoryError } from "./ui_error";
 
 /** Generated only after this app's successful resumed session_open reply. */
 class HistoryReadFailure extends Error {
@@ -125,7 +126,7 @@ export function retainRecoveryFailure(
     ? error.message
     : state.unrecoverable
       ? STRINGS.thread.notResumable
-      : STRINGS.repair.reconnectFailed;
+      : (workDirectoryError(error) ?? STRINGS.repair.reconnectFailed);
   // A successful load with no observed loss supersedes the old connection flag.
   // Execution uncertainty and all history/config admission guards remain separate.
   if (state.historyUnavailable) {
@@ -247,7 +248,7 @@ export async function canonicalRecoveryOpen(
       input.agentId,
       input.cwd,
       input.nativeSessionId ?? "",
-      STRINGS.repair.reconnectFailed,
+      workDirectoryError(error) ?? STRINGS.repair.reconnectFailed,
       false,
       true,
     );

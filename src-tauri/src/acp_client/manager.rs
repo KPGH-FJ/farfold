@@ -971,15 +971,15 @@ pub(crate) async fn validate_cwd_async(cwd: &str) -> Result<PathBuf, String> {
 }
 
 pub(crate) fn validate_cwd(cwd: &str) -> Result<PathBuf, String> {
+    const UNAVAILABLE: &str = "AGENT_WORK_DIRECTORY_UNAVAILABLE";
     if cwd.trim().is_empty() {
-        return Err("project directory is empty".to_string());
+        return Err(UNAVAILABLE.into());
     }
     let path = PathBuf::from(cwd);
     if !path.is_dir() {
-        return Err(format!("project directory does not exist: {cwd}"));
+        return Err(UNAVAILABLE.into());
     }
-    path.canonicalize()
-        .map_err(|error| format!("cannot resolve {cwd}: {error}"))
+    path.canonicalize().map_err(|_| UNAVAILABLE.into())
 }
 
 /// Spawn the agent in `cwd`, run `initialize`, persist the handshake, and

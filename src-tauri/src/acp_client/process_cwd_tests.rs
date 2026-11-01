@@ -9,6 +9,21 @@ use crate::meta_store::{AgentRow, MetaStore};
 use serde_json::{Value, json};
 use std::{path::PathBuf, sync::Arc};
 
+#[test]
+fn unavailable_work_directory_has_a_fixed_path_free_error() {
+    let root = tempfile::tempdir().unwrap();
+    let file = root.path().join("owned-file");
+    std::fs::write(&file, "unchanged").unwrap();
+    for path in [root.path().join("missing"), file.clone(), PathBuf::new()] {
+        assert_eq!(
+            validate_cwd(path.to_str().unwrap()).unwrap_err(),
+            "AGENT_WORK_DIRECTORY_UNAVAILABLE"
+        );
+    }
+    assert_eq!(std::fs::read_to_string(file).unwrap(), "unchanged");
+    assert!(!root.path().join("missing").exists());
+}
+
 const PEER: &str = r#"
 import json, os, sys
 from pathlib import Path

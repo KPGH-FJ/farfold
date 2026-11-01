@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { useEffect, useRef, useState } from "react";
 import { threads } from "./sessions";
 import { STRINGS } from "./strings";
+import { workDirectoryError } from "./ui_error";
 export interface WorkSnapshot {
   cwd: string;
   enabled: Record<string, boolean>;
@@ -76,11 +77,12 @@ export function useWorkPolicy(cwd: string | null) {
           setSnapshot({ owner: currentOwner, value: latest });
           publish(latest);
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           if (current())
             setFailure({
               owner: currentOwner,
-              message: STRINGS.repair.workLoadFailed,
+              message:
+                workDirectoryError(error) ?? STRINGS.repair.workLoadFailed,
             });
         });
     return () => {

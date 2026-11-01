@@ -4,6 +4,7 @@ import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { ArchivedWorkLocationNotice } from "./ArchivedWorkLocationNotice";
 import { ErrorNotice } from "./ErrorNotice";
+import { ERROR_STRINGS } from "../runtime/error_strings";
 
 export function ComposerWorkNotice({
   message,
@@ -65,6 +66,7 @@ export function ComposerWorkNotice({
   );
   // Do not replace unrelated permission, configuration or send errors.
   return message === STRINGS.repair.workLoadFailed ||
+    message === ERROR_STRINGS.workDirectoryUnavailable ||
     message === STRINGS.repair.reconnectFailed ? (
     <ArchivedWorkLocationNotice
       cwd={cwd}

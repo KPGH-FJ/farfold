@@ -1,8 +1,18 @@
 import { STRINGS } from "./strings";
 import { ERROR_STRINGS } from "./error_strings";
+
+/** Exact app-owned directory error only, never an arbitrary diagnostic or path. */
+export function workDirectoryError(reason: unknown): string | undefined {
+  return String(reason).replace(/^Error: /, "") ===
+    "AGENT_WORK_DIRECTORY_UNAVAILABLE"
+    ? ERROR_STRINGS.workDirectoryUnavailable
+    : undefined;
+}
 /** Only present short app-authored, user-language errors; never raw transport diagnostics. */
 export function uiError(reason: unknown, fallback: string): string {
   const raw = String(reason);
+  const directory = workDirectoryError(reason);
+  if (directory) return directory;
   // Only exact app-authored codes are eligible; payloads and decorated codes
   // remain behind the caller's fallback rather than exposing transport text.
   switch (raw.replace(/^Error: /, "")) {
@@ -15,7 +25,8 @@ export function uiError(reason: unknown, fallback: string): string {
     case "AGENT_START_FAILED":
       return ERROR_STRINGS.agentStartFailed;
   }
-  if (/AGENT_(?:INITIALIZE_|CONNECTION_|START_)/i.test(raw)) return fallback;
+  if (/AGENT_(?:INITIALIZE_|CONNECTION_|START_|WORK_DIRECTORY_)/i.test(raw))
+    return fallback;
   if (raw.replace(/^Error:\s*/, "") === "AUTH_REQUIRED")
     return STRINGS.access.authRequired;
   const text = raw.replace(/^Error:\s*/, "");

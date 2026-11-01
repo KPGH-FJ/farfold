@@ -94,6 +94,29 @@ beforeEach(() => {
   h.listen.mockReset();
   h.updateWork.mockClear();
 });
+
+it.each([
+  [
+    "AGENT_WORK_DIRECTORY_UNAVAILABLE",
+    "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
+  ],
+  [
+    "AGENT_WORK_DIRECTORY_UNAVAILABLE: private-path",
+    "无法读取工作设置，请重试",
+  ],
+])(
+  "preserves the fixed work-location read failure for %s",
+  async (reason, message) => {
+    h.invoke.mockRejectedValue(reason);
+    render("/missing-work-location");
+    await settle();
+    const policy = render("/missing-work-location");
+    expect(policy.error).toBe(message);
+    expect(policy.ready).toBe(false);
+    expect(policy.enabled("a")).toBe(false);
+    expect(h.updateWork).not.toHaveBeenCalled();
+  },
+);
 afterEach(() => {
   for (const slot of h.slots) slot.cleanup?.();
   vi.clearAllMocks();
