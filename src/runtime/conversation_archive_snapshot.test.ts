@@ -54,6 +54,37 @@ it("an archive candidate budget cannot disable the unchanged Markdown export", (
   expect(c.unavailable.archive).toBe(true);
   expect(c.candidates.length).toBeLessThanOrEqual(4096);
 });
+
+it("captures reported output immutably and counts it in the optional detail budget", () => {
+  const item = tool({
+    streamedOutput: {
+      text: "LIVE\n",
+      sequence: 1,
+      truncated: false,
+      incomplete: true,
+    },
+  });
+  const c = captureConversationExport(
+    { cwd: "/owned", items: [user, item] },
+    "test",
+    "Agent",
+  );
+  expect(c.toolDetailCount).toBe(1);
+  expect(c.detailedMarkdown).toContain("LIVE\n");
+  expect(c.detailedMarkdown).toContain("已接收的运行输出不完整");
+  if (item.kind !== "tool" || !item.call.streamedOutput)
+    throw new Error("Missing stream");
+  item.call.streamedOutput.text = "LATER";
+  expect(c.detailedMarkdown).not.toContain("LATER");
+  item.call.streamedOutput.text = "X".repeat(1024 * 1024 + 1);
+  const large = captureConversationExport(
+    { cwd: "/owned", items: [user, item] },
+    "test",
+    "Agent",
+  );
+  expect(large.unavailable.markdown).toBe(false);
+  expect(large.unavailable.details).toBe(true);
+});
 it("captures readable details and portable variants once without raw or generated source paths", () => {
   const item = tool({
     locations: [{ path: "/PRIVATE_AUTOMATIC_PATH" }],

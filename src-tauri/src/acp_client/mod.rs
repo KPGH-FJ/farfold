@@ -56,6 +56,7 @@ mod prompt_charge;
 mod prompt_wait;
 pub mod pump;
 pub(crate) mod recipes;
+mod reported_output;
 pub(crate) mod service_config;
 pub mod service_connection;
 mod service_delivery;

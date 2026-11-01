@@ -5,4 +5,5 @@ export const ARTIFACT_OUTPUT = {
   log: "工具日志",
   failed: "工具错误",
   empty: "没有符合筛选条件的输出。",
+  incomplete: "已接收的运行输出不完整。",
 } as const;

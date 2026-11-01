@@ -110,6 +110,14 @@ function toolDetails(call: ToolCallView, itemOrdinal: number): string[] {
     heading(E.terminalOutput);
     out.push(E.terminalUnavailable, "");
   }
+  if (call.streamedOutput !== undefined) {
+    heading(E.streamedOutput);
+    if (call.streamedOutput.truncated)
+      out.push(`> ${E.streamedOutputTruncated}`, "");
+    if (call.streamedOutput.incomplete)
+      out.push(`> ${E.streamedOutputIncomplete}`, "");
+    out.push(...literalBody(call.streamedOutput.text));
+  }
   return out.length && call.status !== "completed"
     ? [`> ${E.partialTool}`, "", ...out]
     : out;

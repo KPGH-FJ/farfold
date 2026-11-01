@@ -9,6 +9,7 @@ import { ArtifactPane } from "./ArtifactPane";
 import { appendToolOutput, COMMAND_OUTPUT_CAP } from "../runtime/artifacts";
 import { applyUpdate, freshThreadState } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
+import { ARTIFACT_OUTPUT as O } from "../runtime/artifact_output_strings";
 
 function renderOutput(output: string, streamed = false, kind = "execute") {
   const thread = freshThreadState(
@@ -61,4 +62,32 @@ it("still explains the separate line limit for a result below the text limit", (
   const { html, text } = renderOutput(lines.join("\n"));
   expect(text).toBe(lines.slice(1).join("\n"));
   expect(html).toContain(STRINGS.artifacts.terminalTruncated);
+});
+
+it("distinguishes missing reported chunks from local head clipping without rewriting the tool", () => {
+  const thread = freshThreadState(
+    "reported-gap",
+    "agent",
+    "/synthetic",
+    "native",
+  );
+  applyUpdate(thread, {
+    sessionUpdate: "tool_call",
+    toolCallId: "reported",
+    kind: "other",
+    status: "in_progress",
+  });
+  appendToolOutput(thread, {
+    source: "reported",
+    toolCallId: "reported",
+    data: "RECEIVED&lt;🙂\n",
+    sequence: 2,
+    truncated: true,
+  });
+  const before = structuredClone(thread.items);
+  const html = renderToStaticMarkup(<ArtifactPane thread={thread} active />);
+  expect(html).toContain(O.incomplete);
+  expect(html).not.toContain(STRINGS.artifacts.terminalTruncated);
+  expect(html).toContain("RECEIVED&amp;lt;🙂");
+  expect(thread.items).toEqual(before);
 });

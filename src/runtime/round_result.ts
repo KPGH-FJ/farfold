@@ -30,7 +30,11 @@ function suppliedOutput(value: unknown): boolean {
 export function hasToolResult(call: ToolCallView): boolean {
   if (call.kind === "think") return false;
   if (call.status === "completed" || call.status === "failed") return true;
-  if (suppliedOutput(call.rawOutput) || call.terminalOutput?.trim())
+  if (
+    suppliedOutput(call.rawOutput) ||
+    call.terminalOutput?.trim() ||
+    call.streamedOutput?.text.trim()
+  )
     return true;
   return call.content.some((content) => {
     switch (content.type) {

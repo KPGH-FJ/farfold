@@ -83,6 +83,13 @@ export interface ToolCallView extends ReportedDetailsOwner {
   terminalOutput?: string;
   /** Earlier terminal output was omitted by the in-memory tail bound. */
   terminalOutputTruncated?: boolean;
+  /** Passive append-only output, independent of terminal handles and final text. */
+  streamedOutput?: {
+    text: string;
+    sequence: number;
+    truncated: boolean;
+    incomplete: boolean;
+  };
 }
 
 export type ThreadItem = (

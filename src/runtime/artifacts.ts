@@ -37,6 +37,7 @@ export type PaneCard =
       title: string;
       output: string;
       outputTruncated: boolean;
+      outputIncomplete?: boolean;
       status: string;
       failed: boolean;
       time: number;
@@ -46,6 +47,7 @@ export type PaneCard =
       title: string;
       output: string;
       outputTruncated: boolean;
+      outputIncomplete?: boolean;
       status: string;
       failed: boolean;
       time: number;
@@ -66,16 +68,27 @@ function outputTail(text: string) {
   return { output: text.slice(start), outputTruncated: start > 0 };
 }
 
-/** Prefer nonempty terminal/raw output (a string or an object's `output` field),
- *  then the concatenated `text` content. Empty placeholders must not hide an
- *  actual text result. The chosen source alone owns its clipping indication. */
-function commandOutput(call: ToolCallView) {
+/** Prefer captured terminal/stream text, then raw output and text content.
+ * Empty receipts must not hide an actual result. A source's missing chunks
+ * are separate from local tail clipping; final text keeps its own indication. */
+function commandOutput(call: ToolCallView): {
+  output: string;
+  outputTruncated: boolean;
+  outputIncomplete?: boolean;
+} {
   if (call.terminalOutput) {
     const tail = outputTail(call.terminalOutput);
     return {
       ...tail,
       outputTruncated:
         call.terminalOutputTruncated === true || tail.outputTruncated,
+    };
+  }
+  if (call.streamedOutput?.text) {
+    return {
+      output: call.streamedOutput.text,
+      outputTruncated: call.streamedOutput.truncated,
+      outputIncomplete: call.streamedOutput.incomplete,
     };
   }
   const raw = call.rawOutput;
@@ -94,7 +107,10 @@ function commandOutput(call: ToolCallView) {
       .map((c) => c.text)
       .join("");
   }
-  return outputTail(text);
+  const tail = outputTail(text);
+  return !text && call.streamedOutput?.incomplete
+    ? { ...tail, outputIncomplete: true }
+    : tail;
 }
 
 /** Normalized passive output; verify tool/terminal ownership before appending. */
@@ -106,6 +122,29 @@ export function appendToolOutput(
     (i) => i.kind === "tool" && i.call.toolCallId === event.toolCallId,
   );
   if (item?.kind !== "tool" || typeof event.data !== "string") return;
+  if (event.source === "reported") {
+    if (
+      typeof event.sequence !== "number" ||
+      !Number.isSafeInteger(event.sequence) ||
+      event.sequence <= 0 ||
+      typeof event.truncated !== "boolean"
+    )
+      return;
+    const previous = item.call.streamedOutput;
+    if (event.sequence <= (previous?.sequence ?? 0)) return;
+    const tail = outputTail((previous?.text ?? "") + event.data);
+    item.call.streamedOutput = {
+      text: tail.output,
+      sequence: event.sequence,
+      truncated: previous?.truncated === true || tail.outputTruncated,
+      incomplete:
+        previous?.incomplete === true ||
+        event.truncated ||
+        event.sequence !== (previous?.sequence ?? 0) + 1,
+    };
+    return;
+  }
+  if (event.source !== undefined) return;
   if (
     !item.call.content.some(
       (c) => c.type === "terminal" && c.terminalId === event.terminalId,
@@ -177,7 +216,7 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
       });
     }
     if (item.call.kind !== "execute") {
-      if (output.output)
+      if (output.output || output.outputIncomplete)
         cards.push({
           kind: "log",
           title: item.call.title || item.call.name || "",

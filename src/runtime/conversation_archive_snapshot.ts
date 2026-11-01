@@ -176,7 +176,8 @@ export function captureConversationExport(
                 : c.type === "diff"
                   ? utf8Size(c.oldText ?? "") + utf8Size(c.newText)
                   : 0),
-            utf8Size(item.call.terminalOutput ?? ""),
+            utf8Size(item.call.terminalOutput ?? "") +
+              utf8Size(item.call.streamedOutput?.text ?? ""),
           )
         : 0),
     0,
@@ -215,7 +216,9 @@ export function captureConversationExport(
       (item.kind === "tool"
         ? item.call.content.filter(
             (c) => c.type === "text" || c.type === "diff",
-          ).length + (item.call.terminalOutput !== undefined ? 1 : 0)
+          ).length +
+          (item.call.terminalOutput !== undefined ? 1 : 0) +
+          (item.call.streamedOutput !== undefined ? 1 : 0)
         : 0),
     0,
   );

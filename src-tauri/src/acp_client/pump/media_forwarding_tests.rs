@@ -171,6 +171,28 @@ fn receiver_can_drop_the_owned_raw_value_without_an_ack_or_replay() {
 }
 
 #[test]
+fn keeps_reported_live_output_after_its_unmodified_raw_envelope() {
+    let params = json!({"sessionId":SESSION,"futureRoot":true,"update":{
+        "sessionUpdate":"tool_call_update","toolCallId":"reported-tool","status":"in_progress",
+        "_meta":{"toolNotification":{"type":"live_output","params":{
+            "sequence":1,"chunks":[{"stream":"stdout","output":"🙂LIVE\n"},{"stream":"stderr","output":"WARN\n"}],
+            "truncated":false,"future":null
+        }}}
+    }});
+    let observed = forward(&[params.clone()], false, true);
+    assert_eq!(
+        observed.values,
+        vec![
+            params,
+            json!({
+                "kind":"toolOutput","source":"reported","toolCallId":"reported-tool",
+                "data":"🙂LIVE\nWARN\n","sequence":1,"truncated":false
+            })
+        ]
+    );
+}
+
+#[test]
 fn forwards_owned_media_string_storage_without_an_extra_value_clone() {
     // Canonical Base64 for a wire-only public corpus, not a codec/playback test.
     let params = ["audio", "image"]

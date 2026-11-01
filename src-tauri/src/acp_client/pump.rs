@@ -375,6 +375,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 let compaction_activity = ctx.compactions.observe(&params);
                 let task_activity = ctx.async_tasks.observe(&params);
                 let terminal_output = super::terminal_output::output_event(&params);
+                let reported_output = super::reported_output::output_event(&params);
                 // Raw passthrough moves the owned envelope after passive reads.
                 // Unknown fields and `_meta` survive untouched.
                 (ctx.events)(params);
@@ -388,6 +389,9 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     (ctx.events)(activity);
                 }
                 if let Some(output) = terminal_output {
+                    (ctx.events)(output);
+                }
+                if let Some(output) = reported_output {
                     (ctx.events)(output);
                 }
             } else {

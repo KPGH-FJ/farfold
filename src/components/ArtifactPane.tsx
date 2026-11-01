@@ -89,6 +89,7 @@ function CommandCard({
       {truncated && (
         <div className="a-note">{STRINGS.artifacts.terminalTruncated}</div>
       )}
+      {card.outputIncomplete && <div className="a-note">{O.incomplete}</div>}
       {all.length > 0 && <pre className="a-term">{shown.join("\n")}</pre>}
     </div>
   );
