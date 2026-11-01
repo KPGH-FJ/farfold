@@ -1,0 +1,117 @@
+{
+  "kind": "P18ActualOldFormalLineTailFailureAndControlledRepair",
+  "oldSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "oldResult": "failed-last-output-line-unreachable-in-visible-pane",
+  "sourceChange": "src/styles-artifact.css .a-card adds flex-shrink:0",
+  "rootCause": "Vertical flex list compresses overflow:hidden result card below internal terminal height, so bottom content remains clipped after scrolling terminal and outer list.",
+  "fourLayoutCases": {
+    "cases": [
+      {
+        "case": "wide",
+        "beforeVisible": false,
+        "afterVisible": true,
+        "beforeMarkerBottom": 762,
+        "beforeClipBottom": 756,
+        "afterMarkerBottom": 743,
+        "afterClipBottom": 755
+      },
+      {
+        "case": "900-592",
+        "beforeVisible": false,
+        "afterVisible": true,
+        "beforeMarkerBottom": 747,
+        "beforeClipBottom": 556,
+        "afterMarkerBottom": 543,
+        "afterClipBottom": 555
+      },
+      {
+        "case": "1280-592",
+        "beforeVisible": false,
+        "afterVisible": true,
+        "beforeMarkerBottom": 762,
+        "beforeClipBottom": 556,
+        "afterMarkerBottom": 543,
+        "afterClipBottom": 555
+      },
+      {
+        "case": "900-792",
+        "beforeVisible": true,
+        "afterVisible": true,
+        "beforeMarkerBottom": 747,
+        "beforeClipBottom": 756,
+        "afterMarkerBottom": 743,
+        "afterClipBottom": 755
+      }
+    ],
+    "oldFailed": 3,
+    "oldPassed": 1,
+    "candidatePassed": 4,
+    "firstHiddenRafAttemptTimedOut": true,
+    "initialWrapperIncompleteNotProductionProof": true,
+    "allOldFailAssumptionRejected": "900x792 old last marker remains visible despite clipped padding; retained as counterexample."
+  },
+  "actualCurrentCssNoOverride": {
+    "cases": [
+      {
+        "case": "actual-fixed-1280-792",
+        "lastLineReachable": true,
+        "markerBottom": 743,
+        "clipBottom": 755
+      },
+      {
+        "case": "actual-fixed-900-592",
+        "lastLineReachable": true,
+        "markerBottom": 543,
+        "clipBottom": 555
+      },
+      {
+        "case": "actual-fixed-1280-592",
+        "lastLineReachable": true,
+        "markerBottom": 543,
+        "clipBottom": 555
+      },
+      {
+        "case": "actual-fixed-900-792",
+        "lastLineReachable": true,
+        "markerBottom": 743,
+        "clipBottom": 755
+      }
+    ],
+    "actualCurrentCssNoOverride": true,
+    "productionChange": "src/styles-artifact.css .a-card flex-shrink:0",
+    "sourceInputReference": "source-inputs.json"
+  },
+  "evidence": {
+    "redAuthority": {
+      "path": "output/2026-11-01-p18-line-tail/layout/red-css-authority.json",
+      "sha256": "3743873901747660f2c4bbaf41a2e5d01b221f4d2b2f72024d5e78d0e02a0b1e",
+      "bytes": 1333
+    },
+    "comparison": {
+      "path": "output/2026-11-01-p18-line-tail/layout/candidate-comparison.json",
+      "sha256": "04ea0bccf9fced07023669794f31cc4cc5b854791894283e373351680ff7e927",
+      "bytes": 1186
+    },
+    "currentCSS": {
+      "path": "output/2026-11-01-p18-line-tail/layout/actual-fixed-results.json",
+      "sha256": "d58e89c0c7229a4745be7ef7aca5f736ac4430d3bc7bbbc5aa6d2662e1d768ae",
+      "bytes": 719
+    },
+    "captureCorrection": {
+      "path": "output/2026-11-01-p18-line-tail/capture-location-correction.json",
+      "sha256": "d23ab8bc17d90420e2566205764dc301320caa2a117a58dd24fbf03eeef2ac9a",
+      "bytes": 8468
+    }
+  },
+  "limits": [
+    "Controlled actual-component WK layout evidence only; formal cold-history result is recorded separately.",
+    "Old 900x792 marker already reachable; retained counterexample.",
+    "Initial incomplete-wrapper/rAF failures and assumption rejection retained, not valid production RED.",
+    "No change to output tail cap, content bytes/status, permissions, events or Agent-specific behavior.",
+    "No new permanent test mirroring the CSS property."
+  ],
+  "sourceCommit": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "onlyCommittedDelta": {
+    "src/styles-artifact.css": "M"
+  }
+}

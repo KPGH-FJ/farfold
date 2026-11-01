@@ -1,0 +1,55 @@
+{
+  "kind": "P18LineTailPublicEvidenceAndDocumentationCheck",
+  "recordedAt": "2026-11-01T07:40:37.204895+00:00",
+  "sourceCommit": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "publicFiles": [
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/README.md",
+      "sha256": "c0f4b47842e2b68e1a85816b97eee763887c62e57be470d37d9343f8ee5898c1",
+      "bytes": 2244
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/engineering-summary.json",
+      "sha256": "582eee48cfa848f03d782ccc1a38ed9e1bf2e44143967088b0f2a24e06b3295e",
+      "bytes": 2701
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/formal-installation-summary.json",
+      "sha256": "940e1b9a352a2b5028f33d3b522ca8f043db772e452c4890d057a754f3cd09ff",
+      "bytes": 3946
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/formal-readonly-summary.json",
+      "sha256": "240a3c62536437efbc5e000d2b62d12558ded02c32e531a37e16de675a5fc099",
+      "bytes": 3023
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/original-failure-summary.json",
+      "sha256": "bc35736429a92eb3a6fdf684c9b8bf47edc057c58bdb7674b3f385bf962ef94e",
+      "bytes": 2904
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/p35-loaded-details-summary.json",
+      "sha256": "bb12c4747ec63ab398723ddf725c4b418202fa66501243ab8e99f9957d6ae299",
+      "bytes": 1289
+    },
+    {
+      "path": "docs/evidence/2026-11-01-p18-line-tail/source-summary.json",
+      "sha256": "07dd3f767364863525ff2ab9c9eea2764b627aa87dbf244e4b7045f0ecb7d4d5",
+      "bytes": 4039
+    }
+  ],
+  "checks": {
+    "docsCheckExitCode": 0,
+    "originalConditions": 151,
+    "activePlans": 1,
+    "taskProgressOnlyChanged": ["P18", "P35"],
+    "allOtherProgressRowsEqualAfterTrimmingTablePadding": true,
+    "allOriginalIdsTitlesAndConditionsUnchanged": true,
+    "targetedPrettierExitCode": 0,
+    "gitDiffCheckExitCode": 0,
+    "privateEvidenceReferencesRehashed": 33,
+    "productionSourceUnchangedSinceFunctionalCommit": true
+  },
+  "limits": "Documentation checks only; no product acceptance, post-doc seven run or new independent person/agent review."
+}

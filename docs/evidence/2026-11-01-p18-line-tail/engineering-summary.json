@@ -1,0 +1,80 @@
+{
+  "kind": "P18LineTailEngineeringSourceBindingSummary",
+  "sourceCommit": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "checksRanBeforeCommit": true,
+  "checksRanAtFinalCommit": false,
+  "finalEngineering": {
+    "path": "output/2026-11-01-p18-line-tail/engineering-final/engineering-summary.json",
+    "sha256": "9f2696a71347c92660be6783f18261fefad8bc356d63f618891e00fced461311"
+  },
+  "sourceFreeze": {
+    "path": "output/2026-11-01-p18-line-tail/formal/source-freeze.json",
+    "sha256": "1cba0099e31513d19e8cddf805f2b056dedcfb05f2a246d08bae0d82ca14b437"
+  },
+  "inputModes": {
+    "path": "output/2026-11-01-p18-line-tail/formal/input-modes.json",
+    "sha256": "83bdf2fd80694eb683583fb435a9ba1e6632a1785a30f268ac2fe602ed630dbc"
+  },
+  "counts": {
+    "frontend": {
+      "files": 699,
+      "passed": 9397,
+      "failed": 0
+    },
+    "native": [
+      {
+        "passed": 2326,
+        "failed": 0,
+        "ignored": 6
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    ]
+  },
+  "inputCount": 2342,
+  "rawLogCount": 14,
+  "finalSevenNaturalExitCode": 0,
+  "originalSessionId": 3681,
+  "originalFailure": {
+    "summary": {
+      "path": "output/2026-11-01-p18-line-tail/engineering/engineering-summary.json",
+      "sha256": "891d3a119d8cc9ba366bc2061c1a1b9d6748f88f6afcfef5c6bee59779209486"
+    },
+    "sevenExitCode": 1,
+    "cargoTestExitCode": 101,
+    "passed": 2325,
+    "failed": 1,
+    "ignored": 6,
+    "failure": "transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup lifecycle wait exceeded10s",
+    "rootCauseEstablished": false,
+    "notReclassifiedByLaterPasses": true
+  },
+  "diagnosticFollowup": {
+    "summary": {
+      "path": "output/2026-11-01-p18-line-tail/rust-investigation/investigation-summary.json",
+      "sha256": "e30a083a2506028e6cb1325e4cf4847cb327bf8ffdea26382ccf308bfffb8ac3"
+    },
+    "unchangedIsolatedPassed": 1,
+    "phaseLabelOnlyDefaultRustPassed": 2326,
+    "ignored": 6,
+    "timeoutPredicatesAndParallelismUnchanged": true,
+    "diagnosticSourceRestoredByteExact": true,
+    "rustFixClaimed": false
+  },
+  "affectedChecks": {
+    "originalSession70336NaturalExitCode": 0,
+    "files": 5,
+    "passed": 130,
+    "rawCommandOutputSource": "Original unified exec completion, no invented redirected logs",
+    "controlledActualLayoutCases": 4
+  },
+  "reviewBoundary": "Root checked14 raw-log pins/exits and exact source endpoints, bind checked final Git blobs/modes; separate existing nine/six mechanical readers run later. No newly independent person/agent review, environment freeze or full product acceptance."
+}

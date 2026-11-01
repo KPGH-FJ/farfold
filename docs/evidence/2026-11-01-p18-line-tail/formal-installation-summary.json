@@ -1,0 +1,87 @@
+{
+  "kind": "P18LineTailFormalUpdateSummary",
+  "sourceCommit": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "appPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "platform": "darwin-arm64",
+  "binarySha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "candidateOriginalSession": {
+    "id": 68963,
+    "naturalExitCode": 0,
+    "buildInvocations": 1
+  },
+  "candidateNine": {
+    "path": "output/2026-11-01-p18-line-tail/formal/independent/review-v2.json",
+    "sha256": "89d5262e5f0705bc0dc9feb1d5d9369c7ea5fe65bfde92f492f9448173f65de9"
+  },
+  "installation": {
+    "path": "output/2026-11-01-p18-line-tail/formal/install/install-result.json",
+    "sha256": "f6582dba565c795c97aed79ba878bf8ae926636a80eabe8cfe6ef6faa31aa6d3"
+  },
+  "installationNaturalExitCode": 0,
+  "installedSix": {
+    "path": "output/2026-11-01-p18-line-tail/formal/install/installed-path-correction-review-private.json",
+    "sha256": "2f56604fc4b83c015cf971e0d8a3fc06f7ae82e4b13f3064072d6e50dc860271"
+  },
+  "installedSixNaturalExitCode": 0,
+  "readerFailurePreserved": {
+    "receipt": {
+      "path": "output/2026-11-01-p18-line-tail/formal/install/installed-independent-review-private.json",
+      "sha256": "2f5ad10fa1a2e16a0009c2155d528feae7b88d40972ff9056c7c62d74c67cc3b"
+    },
+    "passed": 3,
+    "total": 6,
+    "correction": {
+      "path": "output/2026-11-01-p18-line-tail/formal/reader-path-correction.json",
+      "sha256": "0864222513b093f33dea11924276edebd38d479508a87da1235edb40095bb06c"
+    },
+    "cause": "Prepared reader missed three relocated engineering evidence paths; reference-shape check rejected; dependent context unavailable. No install repeated."
+  },
+  "retention": {
+    "manifestEntries": 232530,
+    "threeManifestsByteEqual": true,
+    "manifestSha256": "5f5b9db7e0153ada55323ae35a2dc0b9d9fcf646f7c657e62effa608091cd5e5",
+    "backupSha256": "9dae4d91dc2f43bd3462e4d9e461e993871ecc4da7e53c851e83fe434948704f",
+    "backupIntegrity": "ok per pinned production normalization receipt, original database not opened SQL",
+    "refs": {
+      "before": {
+        "path": "output/2026-11-01-p18-line-tail/formal/install/retention-before-receipt.json",
+        "sha256": "3a7bbba3f0c793e79a491c9b68245d52e13bf657d66d9855f335989f5ba87b8c"
+      },
+      "preinstall": {
+        "path": "output/2026-11-01-p18-line-tail/formal/install/retention-preinstall-receipt.json",
+        "sha256": "210310f6f396398f6c85215c9e34683094894b4c51d09f0c02c915e1da38be55"
+      },
+      "after": {
+        "path": "output/2026-11-01-p18-line-tail/formal/install/retention-after-receipt.json",
+        "sha256": "073023a9ea400c57fc6dda898f78a24d71579642e74636d8028de4c5f19bb120"
+      }
+    }
+  },
+  "replacement": {
+    "fiveFilesNewInode": true,
+    "wholeBundleAtomicTransactionClaimed": false,
+    "existingInodesWritten": false,
+    "forcedQuit": false
+  },
+  "cleanup": {
+    "path": "output/2026-11-01-p18-line-tail/formal/install/candidate-cleanup.json",
+    "sha256": "8ad623453991304ad773320da142e59a3f47e94c58b94dcc7b173bc06ad84040"
+  },
+  "archive": {
+    "path": "src-tauri/target/internal-candidate/p18-line-tail-3782147a/Farfold-0.1.7-3782147a.zip",
+    "sha256": "b5b5fc8da70524239f813422d92485e22cf481ad1988d560abce77786a218e9d",
+    "retained": true
+  },
+  "currentAfterUI": {
+    "path": "output/2026-11-01-p18-line-tail/formal/formal-current-after-ui.json",
+    "sha256": "68df62812b9dab87ebaa9708cfb7b86f6cfed66dc31fd5c2405d4a95b58efc5c"
+  },
+  "limits": [
+    "Root executed existing separately authored nine/six mechanical readers; no new independent person/agent review.",
+    "Original failed engineering and first reader failure preserved, no rerun overwrite.",
+    "Three manifests prove closed-state bytes only, not data equality after launch or unknown work stopped.",
+    "Internal ad hoc signature only; public signing/notarization remain deferred."
+  ]
+}

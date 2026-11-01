@@ -1,0 +1,32 @@
+{
+  "kind": "P35SelectedLoadedMarkdownWithExplicitToolText",
+  "functionalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "agent": "OpenCode",
+  "model": "OpenCode/Big Pickle",
+  "service": "Existing settings unchanged",
+  "mode": "build",
+  "platform": "macOS arm64",
+  "result": "passed-selected-sample",
+  "default": {
+    "format": "Markdown",
+    "includeToolDetails": false
+  },
+  "operatorExplicitlyIncludedToolDetails": true,
+  "loadedToolItemsShown": 3,
+  "export": {
+    "path": "output/2026-11-01-p18-line-tail/p35-loaded-details-D.md",
+    "sha256": "672d1dcfe2f2057e8a0d95433fb265e24557b9ae2ea4781f7faeb5fe1416d79c",
+    "bytes": 11283
+  },
+  "checks": {
+    "numberedDLinesExactlyOnceInOrder": 240,
+    "standaloneEndMarkerExactlyOnce": true,
+    "replacementCharacters": 0
+  },
+  "limits": [
+    "Current received/loaded snapshot and explicitly included tool text only.",
+    "Not full Agent history, attachment byte archive, restore file, failure/cancellation acceptance or complete P35.",
+    "Root actual observation plus saved-original parsing; no newly independent person review."
+  ],
+  "nativePickerCorrection": "First Go To did not change old directory; no Save there. Exact current directory verified by setValue and fresh AX before unique filename Save."
+}

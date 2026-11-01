@@ -1,0 +1,52 @@
+{
+  "kind": "P18SelectedSameObjectColdOutputTailAfterRepair",
+  "sourceCommit": "3782147a8cc01b4f6e73d0aa9c178740334acc9c",
+  "programSha256": "99e94c154849d16a9df4545b4213609908519846b158243f421b12d6418ae3df",
+  "agent": "OpenCode",
+  "model": "OpenCode/Big Pickle",
+  "service": "Existing settings unchanged",
+  "mode": "build",
+  "platform": "macOS arm64",
+  "result": "passed-selected-cold-history-tail-accessibility",
+  "newOperatorModelSubmissionsAfterUpdate": 0,
+  "settingsOrPermissionsChanged": false,
+  "observed": [
+    "Same original D user command and assistant completion replayed through official history.",
+    "Correct original D step ended; content pane has tail-limit hint and starts043 with intact emoji.",
+    "After scrolling, screenshot31 shows219..240 with intact emoji and standalone END inside bottom card.",
+    "Returned B3 final32 has same four paragraphs187/75/32/27 byte-exact, permission unconfirmed."
+  ],
+  "evidence": {
+    "26-opencode-loaded.ax.txt": {
+      "path": "output/2026-11-01-p18-line-tail/ui/26-opencode-loaded.ax.txt",
+      "sha256": "7bb21cfddf64f7283c2280c24247509a070d2401fe3e392726f48e57f728772a"
+    },
+    "28-D-pane-after-update.ax.txt": {
+      "path": "output/2026-11-01-p18-line-tail/ui/28-D-pane-after-update.ax.txt",
+      "sha256": "235678ddf0733c5aa3508034fe1c3714f0a686fe61e80a28fcd04ac9aa5eaf57"
+    },
+    "28-D-pane-after-update.jpg": {
+      "path": "output/2026-11-01-p18-line-tail/ui/28-D-pane-after-update.jpg",
+      "sha256": "b18ce732830252c9f804200f61c4520f656337bf2d4644bfa0343aed7ceadf11"
+    },
+    "31-D-visible-end-after-update.jpg": {
+      "path": "output/2026-11-01-p18-line-tail/ui/31-D-visible-end-after-update.jpg",
+      "sha256": "338bae754c3d00e9859d0b345920e998b92ba250ba611d1c84b473d9397a03f7"
+    },
+    "31-D-visible-end-after-update.ax.txt": {
+      "path": "output/2026-11-01-p18-line-tail/ui/31-D-visible-end-after-update.ax.txt",
+      "sha256": "235678ddf0733c5aa3508034fe1c3714f0a686fe61e80a28fcd04ac9aa5eaf57"
+    },
+    "32-return-b3-final.ax.txt": {
+      "path": "output/2026-11-01-p18-line-tail/ui/32-return-b3-final.ax.txt",
+      "sha256": "d2714b0a2c282bbdffb9a6278b2922e588058ee99df4c73d4583cc8da7de19e0"
+    }
+  },
+  "scrollAttemptBoundary": "AX target29 moved outer list; first coordinate30 moved main thread. Correct right output coordinates31 reach END. Attempts retained, no resend.",
+  "limits": [
+    "A selected cold replay result; original9f live-result failure remains a separate failed observation. Cold rendering header differs; not identical live-state before/after geometry.",
+    "No live-truncation acceptance, all200 lines proof from truncated AX,65536UTF16, raw stdout/LF/exit0 or OS tool invocation-count proof.",
+    "Unknown-tool branch remains untested; no qualified existing official-replayable unknown-tool object. Original Mistral request unknown/rawtool in_progress not substituted.",
+    "Root actual observation and saved-original parsing only, no new independent person review."
+  ]
+}

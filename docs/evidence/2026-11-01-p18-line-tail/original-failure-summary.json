@@ -1,0 +1,56 @@
+{
+  "kind": "P18SelectedFormalLinePressureOriginalFailure",
+  "formalSource": "9f2c937b9a8c688be3b9fb303838b7d9a8f92846",
+  "programSha256": "0e90d7a0ea36c14491c69b7a5b429cdaf08934d18d9187150ede59d94bd81cbc",
+  "platform": "macOS arm64",
+  "agent": "OpenCode",
+  "model": "OpenCode/Big Pickle",
+  "service": "Existing settings unchanged",
+  "mode": "build",
+  "reasoning": "Not exposed; unchanged",
+  "operatorSubmissions": 1,
+  "operatorApprovalStopRetryOrSettingsChanges": 0,
+  "result": "failed-output-end-inaccessible",
+  "observed": [
+    "Correct output pane observed only after tool ended; not a live truncation pass.",
+    "Visible tail-limit hint and first D_043 emoji line observed.",
+    "Internal scrolling six pages then two more, plus outer-card scrolling three pages, left last lines and END clipped.",
+    "Explicit loaded-details Markdown export has each D001..240 and END once; payload is present in received tool text."
+  ],
+  "expectedRule": "split LF including trailing empty component, keep last200, join LF; final D043..240, END and trailing LF expected.",
+  "payloadExpectedUtf8Bytes": 7707,
+  "payloadExpectedUtf16Units": 7227,
+  "evidence": {
+    "06-d-tool-observation.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/06-d-tool-observation.ax.txt",
+      "sha256": "0e3c3898ff497c1f8fb118e027fd1a4cfd201702cb99b324711fc0ae9f52f40b"
+    },
+    "07-d-expanded.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/07-d-expanded.ax.txt",
+      "sha256": "c8d1306b9d4d4ac109db3fb52d06b1e5c4fc86ebe3425fe85304a3feace90dae"
+    },
+    "08-d-correct-tail-pane.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/08-d-correct-tail-pane.ax.txt",
+      "sha256": "bd48e15673b15226cfba03ad40fcd72603e0fa86f8db5fc76bbcadd4a12bee6f"
+    },
+    "09-d-tail-end-visible.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/09-d-tail-end-visible.ax.txt",
+      "sha256": "bd48e15673b15226cfba03ad40fcd72603e0fa86f8db5fc76bbcadd4a12bee6f"
+    },
+    "10-d-end-fully-visible.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/10-d-end-fully-visible.ax.txt",
+      "sha256": "bd48e15673b15226cfba03ad40fcd72603e0fa86f8db5fc76bbcadd4a12bee6f"
+    },
+    "11-d-outer-scroll-test.ax": {
+      "path": "output/2026-11-01-p18-line-tail/ui/11-d-outer-scroll-test.ax.txt",
+      "sha256": "bd48e15673b15226cfba03ad40fcd72603e0fa86f8db5fc76bbcadd4a12bee6f"
+    }
+  },
+  "limits": [
+    "AX per text node truncates; cannot prove all200 components or END from pre-fix AX.",
+    "No raw stdout, process exit0, LF-byte or exact OS invocation-count proof.",
+    "Below65536 UTF16 limit, not capacity-boundary acceptance.",
+    "Unknown-tool branch still lacks qualified existing official-replayable object; original Mistral request unknown/rawtool in_progress is not that branch.",
+    "Root UI observations and saved-original parsing only; no newly independent person review."
+  ]
+}
