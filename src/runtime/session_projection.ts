@@ -386,8 +386,10 @@ function upsertToolCall(
   if (update.content !== undefined && update.content !== null) {
     call.content = normalizeToolContents(update.content);
   }
-  if (update.rawInput !== undefined && update.rawInput !== null)
+  if (update.rawInput !== undefined && update.rawInput !== null) {
+    delete call.fileInputFields;
     call.rawInput = update.rawInput;
+  }
   if (update.rawOutput !== undefined && update.rawOutput !== null)
     call.rawOutput = update.rawOutput;
   if (

@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { isAbsoluteFilePath } from "./file_paths";
 import type { ToolCallView } from "./session_types";
+import { presentedToolKind } from "./tool_file_input";
 
 /** A reported path is a candidate, never proof that a file was written. */
 export interface ReportedFile {
@@ -101,7 +102,7 @@ export function reportedFileSources(call: ToolCallView): ReportedFile[] {
     }
   }
   // Locations on edit/move are protocol fields. Read/search locations are inputs.
-  if (call.kind === "edit" || call.kind === "move")
+  if (presentedToolKind(call) === "edit" || call.kind === "move")
     for (const location of call.locations) add(location.path, "location");
   return [...found.values()];
 }

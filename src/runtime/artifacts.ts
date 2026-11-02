@@ -11,6 +11,7 @@ import {
   type ToolCallView,
   type ToolContent,
 } from "./session_types";
+import { fileInputDiff } from "./tool_file_input";
 
 /** 命令卡输出上限：尾部最多65536个UTF-16单元。 */
 export const COMMAND_OUTPUT_CAP = 64 * 1024;
@@ -162,8 +163,17 @@ export function appendToolOutput(
  *  `content`, or `oldString`/`newString`). Synthesize a card so the
  *  artifact drawer reflects every reported file write. */
 function synthesizedDiff(call: ToolCallView, status: string): PaneCard | null {
-  if (call.kind !== "edit") return null;
   if (call.content.some((c) => c.type === "diff")) return null;
+  const declared = fileInputDiff(call);
+  if (declared)
+    return {
+      kind: "diff",
+      ...declared,
+      scope: "fragment",
+      status,
+      time: call.endedAt ?? call.startedAt,
+    };
+  if (call.kind !== "edit") return null;
   const input = call.rawInput as Record<string, unknown> | null;
   if (!input || typeof input !== "object") return null;
   const path =

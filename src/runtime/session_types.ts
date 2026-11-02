@@ -78,6 +78,8 @@ export interface ToolCallView extends ReportedDetailsOwner {
   startedAt: number;
   endedAt?: number;
   rawInput?: unknown;
+  /** Connection-normalized input field names; no execution or result authority. */
+  fileInputFields?: import("./tool_file_input").FileInputFields;
   rawOutput?: unknown;
   /** Read-only output streamed by the Agent's own terminal. */
   terminalOutput?: string;

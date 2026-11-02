@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { observeAuthentication } from "./authentication";
 import { observeDesktopNotification } from "./desktop_notifications";
 import { appendToolOutput } from "./artifacts";
+import { receiveFileInput } from "./tool_file_input";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
 import { receiveAsyncTasks } from "./async_tasks";
 import { receiveWorkActivity } from "./session_work_activity";
@@ -202,6 +203,8 @@ export function applySessionEvent(
     applyElicitation(s, e);
   } else if (kind === "toolOutput") {
     appendToolOutput(s, e);
+  } else if (kind === "toolFileInput") {
+    receiveFileInput(s, e);
   } else if (kind === "notification") {
     pushNotification(s, { method: e.method, params: e.params });
   } else if (kind === "session_history_complete") {

@@ -25,6 +25,9 @@ import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { STRINGS } from "../runtime/strings";
 import { ToolStep } from "./thread-items";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
+import { applySessionEvent } from "../runtime/session_event_projection";
+import { reportedArtifactFiles } from "../runtime/reported_artifacts";
+import { ReportedFilesList } from "./ReportedFilesList";
 
 type Element = ReactElement<Record<string, unknown>>;
 type Settled = Extract<ThreadItem, { kind: "settled" }>;
@@ -153,6 +156,73 @@ function select(s: ThreadState, value: string) {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.mocked(invoke).mockReset().mockResolvedValue(null);
+});
+
+it("opens each declared file input's own fragment from the shared path's source list", () => {
+  const s = state();
+  for (const [id, before, after] of [
+    ["first", "ALPHA", "BETA"],
+    ["second", "BETA", "GAMMA"],
+  ]) {
+    applyUpdate(s, {
+      sessionUpdate: "tool_call",
+      toolCallId: id,
+      kind: "other",
+      status: "completed",
+      rawInput: {
+        target: "/p/shared.md",
+        previous: before,
+        replacement: after,
+      },
+      locations: [{ path: "/p/shared.md", line: 1 }],
+    });
+    applySessionEvent(
+      s,
+      {
+        kind: "toolFileInput",
+        source: "reported",
+        toolCallId: id,
+        fields: {
+          operation: "edit",
+          path: "target",
+          oldText: "previous",
+          newText: "replacement",
+        },
+      },
+      false,
+    );
+  }
+  applyTurnEnd(s, { stopReason: "end_turn" });
+  const ended = s.items.at(-1) as Settled;
+  roundClick(s, ended)();
+  const entries = reportedArtifactFiles(s, ended.id)!;
+  expect(entries).toHaveLength(1);
+  expect(entries[0].origins).toHaveLength(2);
+  for (const [index, expected, absent] of [
+    [0, "ALPHA", "GAMMA"],
+    [1, "GAMMA", "ALPHA"],
+  ] as const) {
+    roundClick(s, ended)();
+    const list = pane(s).find((n) => n.type === ReportedFilesList)!;
+    (list.props.onOpenSource as (entry: unknown, origin: unknown) => void)(
+      entries[0],
+      entries[0].origins[index],
+    );
+    expect(s.artifactPaneTarget?.roundId).toBe(
+      entries[0].origins[index].toolItemId,
+    );
+    expect(html(s)).toContain(expected);
+    expect(html(s)).not.toContain(absent);
+    expect(html(s)).toContain("拟写入");
+    expect(html(s)).toContain("片段");
+  }
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(
+        ([name]) => name.startsWith("file_") || name.startsWith("acp_"),
+      ),
+  ).toEqual([]);
 });
 
 it("opens each step's own version of the same path and returns to its containing round", () => {

@@ -376,6 +376,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 let task_activity = ctx.async_tasks.observe(&params);
                 let terminal_output = super::terminal_output::output_event(&params);
                 let reported_output = super::reported_output::output_event(&params);
+                let file_input = super::reported_file_input::input_event(&params);
                 // Raw passthrough moves the owned envelope after passive reads.
                 // Unknown fields and `_meta` survive untouched.
                 (ctx.events)(params);
@@ -393,6 +394,9 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                 }
                 if let Some(output) = reported_output {
                     (ctx.events)(output);
+                }
+                if let Some(input) = file_input {
+                    (ctx.events)(input);
                 }
             } else {
                 (ctx.events)(serde_json::json!({

@@ -6,6 +6,7 @@ import {
 } from "../runtime/line_diff";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { DiffComparisonNote } from "./DiffComparisonNote";
+import { presentedToolKind } from "../runtime/tool_file_input";
 /**
  * Transcript item renderers (F 稿 steps/approval/diff/settled/raw).
  * User-facing vocabulary only — see PRODUCT.md §5.
@@ -341,7 +342,7 @@ function ToolDetail({
   return (
     <div className="step-detail">
       <div className="step-locs">
-        {kindLabel(call.kind)}
+        {kindLabel(presentedToolKind(call))}
         {call.title || call.name ? (
           <>
             {" "}
@@ -450,8 +451,8 @@ export function ToolStep({
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">
           {call.status === "completed" && activity !== "unknown"
-            ? toolSummary(call.kind)
-            : kindLabel(call.kind)}
+            ? toolSummary(presentedToolKind(call))
+            : kindLabel(presentedToolKind(call))}
           {loc && (
             <span className="loc">
               <MessageFileLink path={loc} onOpenFile={onOpenFile}>

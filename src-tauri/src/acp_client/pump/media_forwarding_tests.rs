@@ -193,6 +193,26 @@ fn keeps_reported_live_output_after_its_unmodified_raw_envelope() {
 }
 
 #[test]
+fn keeps_file_input_format_after_its_unmodified_raw_envelope_in_live_and_history() {
+    for live in [false, true] {
+        let params = json!({"sessionId":SESSION,"futureRoot":true,"update":{
+            "sessionUpdate":"tool_call","toolCallId":"reported-edit","kind":"other","status":"failed",
+            "rawInput":{"path":"/work/proof.txt","before":"ALPHA","after":"BETA"},
+            "_meta":{"goose":{"toolCall":{"toolName":"edit","extensionName":"developer"},"future":[1,null]}}
+        }});
+        let observed = forward(&[params.clone()], live, true);
+        assert_eq!(observed.values[0], params);
+        assert_eq!(
+            observed.values.last(),
+            Some(&json!({
+                "kind":"toolFileInput","source":"reported","toolCallId":"reported-edit",
+                "fields":{"operation":"edit","path":"path","oldText":"before","newText":"after"}
+            }))
+        );
+    }
+}
+
+#[test]
 fn forwards_owned_media_string_storage_without_an_extra_value_clone() {
     // Canonical Base64 for a wire-only public corpus, not a codec/playback test.
     let params = ["audio", "image"]
