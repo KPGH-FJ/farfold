@@ -1,0 +1,149 @@
+{
+  "recordedAt": "2026-11-02T01:28:39.966467+00:00",
+  "currentInstalledSourceCommit": "ceff162de735a9d4b2b9e969927ab6224bea825b",
+  "currentFormalProgramSha256": "a639e58018b6b8e9c674947a2f5913530bf2cb7d4cbc3ff066e1239d6bcfbcf6",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedFormalFailedEditIntentDiffAndSourceNavigation",
+  "agent": "Goose",
+  "configuration": {
+    "source": "Existing/OpenRouter",
+    "model": "Nemotron 3 Ultra (free)",
+    "mode": "auto",
+    "reasoning": "off",
+    "operatorChanges": 0
+  },
+  "testContext": "Distinct self-test conversation opened through same settings; original history and uncertain original object retained.",
+  "beforeRepair": {
+    "formalSource": "e472180104237d5f7f30bfbccf8d647424c88307",
+    "Q": {
+      "newSends": 1,
+      "nativeEditCalls": 1,
+      "nativeStatus": "failed",
+      "failure": "No match found",
+      "physicalFileUnchangedBytes": 37,
+      "proposedTextNotWritten": true,
+      "failedLabelAndErrorVisible": true,
+      "inputDiffCardMissing": true
+    },
+    "R": {
+      "newSends": 1,
+      "nativeEditCalls": 2,
+      "nativeStatuses": ["completed", "completed"],
+      "distinctEdits": ["ALPHA to BETA", "BETA to GAMMA"],
+      "physicalFinalBytes": 37,
+      "physicalFinalMatchesExpected": true,
+      "inputDiffAndReportedSourcesMissing": true
+    }
+  },
+  "afterRepairOfficialColdRestore": {
+    "QandRResends": 0,
+    "failedQIntentFragmentAndFailureNoteVisible": true,
+    "failedQCompletedFilePositions": 0,
+    "failedQErrorLogRetained": true,
+    "RCompletedFilePositions": 1,
+    "RDistinctToolSources": 2,
+    "sourceOneOpensAlphaToBetaOnly": true,
+    "sourceTwoOpensBetaToGammaOnly": true,
+    "explicitDiskReadShowsFinalGammaFile": true,
+    "inputDiffClaimedFullDiskFile": false
+  },
+  "afterRepairNewS": {
+    "newSends": 1,
+    "nativeEditCalls": 2,
+    "nativeStatuses": ["failed", "completed"],
+    "expectedReplyObserved": true,
+    "failedIntentFragmentMarkedUnsuccessful": true,
+    "failedIntentNotPromotedIntoCompletedFileList": true,
+    "successfulIntentFragmentAndOneCompletedSourceVisible": true,
+    "roundExcludesEarlierFileReports": true,
+    "physicalFinalBytes": 38,
+    "physicalFinalMatchesExpected": true,
+    "failedProposedTextAbsent": true,
+    "explicitDiskReadShowsFinalBody": true,
+    "sourceWindow": "New reception observed at tool/request end; not an in-progress diff timing measurement."
+  },
+  "limits": [
+    "Only selected Goose configuration and owned text files; no full P18, other Agents, 29x8, refusal or unknown-activity acceptance.",
+    "No independent observation of intermediate BETA disk bytes or the S failure-to-success intermediate disk state.",
+    "Input fragments remain proposed content. Native success reports and separately inspected final disk bytes are different evidence."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/Q-formal-measurement.json",
+      "sha256": "3abb79e9897cd4690697eea622e59bfabb8eb44691c0e0f3af6ff74833615965",
+      "bytes": 517
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/R-formal-measurement.json",
+      "sha256": "a965e2643559f2e2ae064a0d6aaca2e1196634e97b8d1ea805650d6c841133e6",
+      "bytes": 784
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/postinstall-cold-formal-measurement.json",
+      "sha256": "8fa782eacd99d6c5b51b8d1d11b8a1d31323f93e33f898aadf50e65c7edc0f49",
+      "bytes": 658
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/S-postinstall-formal-measurement.json",
+      "sha256": "d18b9477ec474e776316d5e0b9f2be05edf99261f3e9783c4fedb8649528d57a",
+      "bytes": 994
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/postinstall-physical-file-observation.json",
+      "sha256": "c7308fdc04242d590b86481bce93146e2f85f219c373832e1d881e7f03cd7d8b",
+      "bytes": 306
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/postinstall-protocol-observation.json",
+      "sha256": "13d27f590871c51fd278c0b9763a96e2354180b5a7bf578ba449c45a145faa3c",
+      "bytes": 483
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/33-updated-Q-failed-intent.ax.txt",
+      "sha256": "d49792b10cb8f2be7e1dad6213a5dc4c3f9069b77aa39336af666ea1f077e742",
+      "bytes": 8603
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/34-updated-Q-error-output.ax.txt",
+      "sha256": "ba363a782307551c57bf823b55a55d51ba2487eb2ae529faf6e32d5895f2fceb",
+      "bytes": 7723
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/36-updated-source-choices.ax.txt",
+      "sha256": "4c0b0d03c2c7ac006293a6b1ce742c7b36cc007e94c147575779bfdec8066a34",
+      "bytes": 9516
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/37-updated-source-one.ax.txt",
+      "sha256": "46986ac5956f52820ecfec5d14105fbba261fe0324678b5d153435d731fd4dc1",
+      "bytes": 9168
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/38-updated-source-two.ax.txt",
+      "sha256": "0fad6fb5b6adc170709754bc8e51ba735234f3d68e2587bd01480be27c4e4cf2",
+      "bytes": 9168
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/47-S-live-failed-edit-intent.ax.txt",
+      "sha256": "3adc5e48cbcd40ce47924ab28f9cb7bd90aa57084bdfe98faa35d363db382c86",
+      "bytes": 11200
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/48-S-live-success-edit-intent.ax.txt",
+      "sha256": "709c43f167af4b49f88691fee4b374aa60c47f7de7d01bc1aac48044c5c48e10",
+      "bytes": 13200
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/49-S-round-scope.ax.txt",
+      "sha256": "6c7aeb131307803457e46b7b834152011d054e7d7e407fe496c55f97c4b89d63",
+      "bytes": 13242
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/50-S-current-final-file.ax.txt",
+      "sha256": "6fad47969682747f68421c75b8f272d0cd4de17e6be5a90e5d04b0b79bf3ad2f",
+      "bytes": 11724
+    }
+  ]
+}

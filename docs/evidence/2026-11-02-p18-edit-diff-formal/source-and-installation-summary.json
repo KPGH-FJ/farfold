@@ -1,0 +1,99 @@
+{
+  "recordedAt": "2026-11-02T01:28:39.966467+00:00",
+  "currentInstalledSourceCommit": "ceff162de735a9d4b2b9e969927ab6224bea825b",
+  "currentFormalProgramSha256": "a639e58018b6b8e9c674947a2f5913530bf2cb7d4cbc3ff066e1239d6bcfbcf6",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedFileInputPresentationRepairAndFormalInstallation",
+  "implementation": {
+    "cause": "Official developer edit/write tools report default Other kind and path/before/after or path/content. Existing common projection only synthesized known edit inputs and excluded Other locations from file sources.",
+    "repair": "ACP connection passively emits generic field-name declarations after the unchanged raw envelope. Common UI derives intent fragments and completed location sources; original kind/status/input remain intact.",
+    "inputBodiesDuplicatedInDerivedEvent": false,
+    "agentSpecificFrontendBranchAdded": false,
+    "persistentToolLedgerAdded": false,
+    "readUnknownMalformedToolPromotion": false
+  },
+  "engineering": {
+    "naturalZeroCommands": 7,
+    "frontendFiles": 702,
+    "frontendPassed": 9424,
+    "rustPassed": 2333,
+    "rustFailed": 0,
+    "existingRustIgnored": 6,
+    "validatedCurrentInputs": 2348,
+    "productionInputs": 2345,
+    "sourceEndpointsAndCommitMatch": true,
+    "continuousFreezeClaimed": false
+  },
+  "installation": {
+    "actualBuildInvocations": 1,
+    "naturalBuildExit": 0,
+    "candidateMechanicalChecksPassed": 9,
+    "installedMechanicalChecksPassed": 6,
+    "normalSaveAndQuit": true,
+    "forcedQuit": false,
+    "atomicNewInodeFileReplacements": 5,
+    "originalInodesWritten": false,
+    "closedManifestEntries": 232530,
+    "threeClosedManifestsByteIdentical": true,
+    "exactDuplicateCandidateFilesRemoved": 5,
+    "onlyFormalApplicationUpdated": true,
+    "internalAdhocSignatureOnly": true,
+    "publicDistributionClaimed": false
+  },
+  "reviewBoundary": "Root actual observation and separately authored mechanical artifact readers; no new independent person/agent review.",
+  "preflight": "Inert preparation checks rejected literal comparison/baseline-mode/UI-reference schemas; corrected materials and original failures retained. Failed guards did not start a build or modify application/data.",
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/engineering-result.json",
+      "sha256": "4a4432a5c9edda53922b0e477f79aa58b31f4f26f84f322073666ad162df46c8",
+      "bytes": 2803
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/committed-source-binding.json",
+      "sha256": "0d655f7020b3184ddfb6b2a1813524e52a968cc84082fc92e2d6bb59a729b8d9",
+      "bytes": 251
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/source-review.json",
+      "sha256": "ceffea19d0e46cbb0288a351adda8c1eb01bdc049be095d166db20b8e3ed1f6d",
+      "bytes": 1243
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/official-edit-references.json",
+      "sha256": "f09e0ebc2e1b25fd70066ee21f9fac9cdc57b3842887d737b15de00db6d7add9",
+      "bytes": 928
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal-preflight-correction.json",
+      "sha256": "8eafc2e2aaa73051bc3e15bb875f80ed68e36fc8db4764b6fe1345535861d2b2",
+      "bytes": 385
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal/natural-candidate-completion.json",
+      "sha256": "67c790d4c92fdd7324eb5cb4a093c4eac58d7c9c018d2f5683c4f61e822b5af9",
+      "bytes": 391
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal/independent/review-v2.json",
+      "sha256": "70a08351e008e455ba986476a5fb0b20e45351bff3150868a15e6a1c15732d9b",
+      "bytes": 2987
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal/install/install-result.json",
+      "sha256": "631d6afac451b32b42175d1cfffdbbc2cd9ca9b987e9449c7dd3627538854261",
+      "bytes": 11763
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal/install/installed-independent-review-private.json",
+      "sha256": "a39460f7681a90ae6d2fc1b60fc88f577a3377ff186e0dab094ac18ccb4d58f4",
+      "bytes": 2128
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/formal/install/candidate-cleanup.json",
+      "sha256": "10dd2b0aea68b5c712801fae91bd61ed6ada2f48e6ad2c0611dc93a0d643154c",
+      "bytes": 7174
+    }
+  ]
+}

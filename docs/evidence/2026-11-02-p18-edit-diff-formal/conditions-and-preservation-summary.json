@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-11-02T01:28:39.966467+00:00",
+  "currentInstalledSourceCommit": "ceff162de735a9d4b2b9e969927ab6224bea825b",
+  "currentFormalProgramSha256": "a639e58018b6b8e9c674947a2f5913530bf2cb7d4cbc3ff066e1239d6bcfbcf6",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "RemainingConditionsAndPreservation",
+  "b3": {
+    "exactDraftParagraphsPreserved": true,
+    "paragraphLengths": [187, 75, 32, 27],
+    "permissionUnconfirmed": true,
+    "operatorSends": 0
+  },
+  "oldRequestResends": 0,
+  "unknownTool": {
+    "qualifiedExistingOfficialReplayObjectAvailable": false,
+    "blockedOnlyThisFormalSubcase": true,
+    "manufacturedUnknownState": false,
+    "OtherKindUsedAsUnknownActivityProof": false
+  },
+  "originalGooseO": {
+    "newPromptDeliveredOnceAccordingToOfficialReadOnlyExport": true,
+    "observedToolInputMatchedPriorNSleepCommand": true,
+    "normalStopCount": 1,
+    "newOSExecutionEstablished": false,
+    "originUniquelyAttributed": false,
+    "furtherSendsToOriginalObject": 0,
+    "toolEndAcknowledgmentClaimed": false,
+    "matchingOwnMarkerProcessPresentAtChecks": false
+  },
+  "remaining": [
+    "P18 refusal, in-progress diff timing, other uncovered sources/states and qualified unknown-activity object remain open.",
+    "Original Mistral/Poolside restore conditions and Kilo missing original working directory remain; no retry, replacement empty directory or old-request resend.",
+    "NEW-24 affected new sends remain paused. P12/P32/P40/P35/P45, other original conditions, Windows and all29x8 remain open."
+  ],
+  "reviewBoundary": "Root actual UI and local evidence review, no new independent person/agent review.",
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/O-attribution-review.json",
+      "sha256": "6e9b6ffef5d074da0949126a2a3072f7c477adf89a7680dfdf593cf89a87c2e9",
+      "bytes": 616
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/O-official-export-observation.json",
+      "sha256": "a975849c01bd27527c221cb1b2a4db4ebdcf879ea62223cf74754db1a9a8efe6",
+      "bytes": 15077
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/prequit-activity-and-marker.json",
+      "sha256": "74dbd99e80d93f9a9c17c8e4e68429a9aa38cdc5c78aac66bc6df151c5baff90",
+      "bytes": 263
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/postinstall-protocol-observation.json",
+      "sha256": "13d27f590871c51fd278c0b9763a96e2354180b5a7bf578ba449c45a145faa3c",
+      "bytes": 483
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/B3-preupdate-preservation.json",
+      "sha256": "6ebc0194a423bcae3892155a1a9d4c0930eb7f3f5ed650e3d892aa60725b934d",
+      "bytes": 148
+    },
+    {
+      "path": "output/2026-11-02-p18-edit-diff-followup/51-final-B3-after-S.ax.txt",
+      "sha256": "727cb8524945ee803fd433ecf44fe1bd6bca4ab98dd78deb54631a37bac293be",
+      "bytes": 4921
+    }
+  ]
+}
