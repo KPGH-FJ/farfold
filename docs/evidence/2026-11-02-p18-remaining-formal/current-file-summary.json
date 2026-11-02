@@ -1,0 +1,92 @@
+{
+  "recordedAt": "2026-11-02T00:24:15.814689+00:00",
+  "currentInstalledSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "currentFormalProgramSha256": "635d8dcf71cf8dfee4fef31ca9bb40a9109a7b5de6957a4388fcefba39e0632f",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedFormalCurrentFileRereadMissingAndReopen",
+  "observedFormalSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "observedFormalProgramSha256": "e391e267a1862e11a41badd642bfe9760a84becfecefeecd1b85c7bed7b97777",
+  "context": "Goose original self-test content pane, explicit native picker selecting only a new owned small file.",
+  "observations": {
+    "initialV1Bytes": 27,
+    "changedV2Bytes": 34,
+    "explicitRereadShowsV2Emoji": true,
+    "expectedMissingPathRejection": true,
+    "oldCurrentTextRemovedOnMissing": true,
+    "sameInodeAndV2BytesRestored": true,
+    "explicitReopenShowsV2": true
+  },
+  "actions": {
+    "initialOpen": 1,
+    "rereads": 2,
+    "reopen": 1,
+    "modelSends": 0,
+    "oldRequestResends": 0,
+    "fixtureRenames": 2,
+    "fixtureUnlinks": 0
+  },
+  "limits": [
+    "Controlled external change/missing path for this exact owned file; not an Agent write success or real Agent write-failure proof.",
+    "Initial new-draft attachment-only attempt and rejected stale-AX click were not counted as file-preview success. Own attachment removed.",
+    "No full P18, diff completeness, original reported-file claim, raw UI LF bytes or all-platform acceptance."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-case-preparation.json",
+      "sha256": "844ab4baec5e7b50e84403e1c8afeb0fe9f03a29db895e48f249294f1c77bddc",
+      "bytes": 567
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/03-owned-draft-attachment.ax.txt",
+      "sha256": "9db4d8a632f4b612b1ffbb4eb16c097ab2129189a0105282e80ce66aa4567c62",
+      "bytes": 3262
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/04-current-file-v1.ax.txt",
+      "sha256": "876aeccb396768e751f6cf6e7f2b78f1ff7a33609f06c076109875aa7fa4dded",
+      "bytes": 13474
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/05-current-file-v2-reread.ax.txt",
+      "sha256": "f5263c0fb714eba5a7e74a98ef12d685313d83def021031fb9ebe43df0899971",
+      "bytes": 13481
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/06-current-file-missing.ax.txt",
+      "sha256": "38d847d488e7f26b2a263b3176019c5405510372a69e54839442bade3eee9d4c",
+      "bytes": 13065
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/07-current-file-restored.ax.txt",
+      "sha256": "f5263c0fb714eba5a7e74a98ef12d685313d83def021031fb9ebe43df0899971",
+      "bytes": 13481
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-v1.txt",
+      "sha256": "7ab65d8a15f85fa9ed8236d04ad4c77c33c09ac42654a08ab1e4bdf187232a5c",
+      "bytes": 27
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-v2-physical.json",
+      "sha256": "6e0b203a6330ee89239125d8e23176a8effc3961ee0b4a75813899ff7232279e",
+      "bytes": 224
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-missing-preparation.json",
+      "sha256": "598b4a23e603a1df21834e4c31fc9416b5e548a7be188f7ff6efd7bb0de06cc0",
+      "bytes": 354
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-restored-physical.json",
+      "sha256": "92bd0ce3838662317470450573d7b4fb7d9d65959a281c962b41513e1ea9f827",
+      "bytes": 260
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/file-formal-measurement.json",
+      "sha256": "903d9d4557a20e37ecc465ded5302eae740e7346b0e372d3503632f065ced16b",
+      "bytes": 700
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "recordedAt": "2026-11-02T00:24:15.814689+00:00",
+  "currentInstalledSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "currentFormalProgramSha256": "635d8dcf71cf8dfee4fef31ca9bb40a9109a7b5de6957a4388fcefba39e0632f",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "FormalDirectoryRepairInstallationActualRegressionAndProtection",
+  "appPath": "/Applications/Farfold.app",
+  "bundleId": "ai.farfold.desktop",
+  "candidate": {
+    "singleBuild": true,
+    "naturalExitCode": 0,
+    "separateMechanicalReader": 9,
+    "total": 9
+  },
+  "install": {
+    "naturalExitCode": 0,
+    "fiveNewInodeReplacements": true,
+    "strictInternalAdhocSignature": true,
+    "separateMechanicalReader": 6,
+    "total": 6,
+    "wholeBundleSingleTransactionClaimed": false,
+    "appBackupCreated": false,
+    "forcedQuit": false
+  },
+  "data": {
+    "threeClosedManifestsByteExact": true,
+    "entries": 232530,
+    "manifestSha256": "53a4adc63abdef9f1c8b24091b40f6035145735b00ce06934fa262962a0fffb2",
+    "standaloneBackupSha256": "98215a590512c494d3c6f3473f996e422c54e8bc1dd1027fcf0f1002d73a4aab",
+    "integrityAccordingToProductionReceipt": "ok",
+    "productionOrFirstCopyOpenedBySqlite": false,
+    "independentReaderSqlExecuted": false,
+    "postLaunchAllDataUnchangedClaimed": false
+  },
+  "actual": {
+    "KiloRestoreAndWorkReadShowFixedDirectoryNotice": true,
+    "originalKiloCwdStillAbsent": true,
+    "originalKiloCwdRecreated": false,
+    "KiloReconnectOrModelSend": false,
+    "B3FourCheckpointsExact": true,
+    "B3ParagraphLengths": [187, 75, 32, 27],
+    "B3PermissionStillUnconfirmed": true,
+    "formalFiveFilesFreshExact": true,
+    "duplicateCandidateRemoved": true,
+    "zipDataEvidenceRetained": true,
+    "postUpdateModelSends": 0
+  },
+  "reviewBoundary": "Root ran separate pinned mechanical readers, not a new independent person review. Before/after manifests cover closed phase only. Internal ad hoc signature is not public signing/notarization.",
+  "backupReadBoundary": "A later investigative command-only/owned-session lookup read the sealed standalone backup with SQLite read-only immutable. It did not open production or raw first-copy databases. The first unqualified Agent-ID lookup failed before any Agent command.",
+  "remaining": [
+    "Unknown-tool formal branch still requires a qualified officially replayable existing activity-unknown object.",
+    "Real failed edit/write inputs, other Agent paths, remaining original P18 conditions and full 29x8/Windows remain open.",
+    "Original Mistral/Poolside conditions and NEW-24 affected new sends pause unchanged."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/parameters.json",
+      "sha256": "bd32cb5d35cdc889717a2e97a141c76083e6f5ba8b490234d84d957c3d68c5bd",
+      "bytes": 689990
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/natural-candidate-completion.json",
+      "sha256": "092e2296becc1f32ab8edb8513548712b6198a656d9b90e16e29bc661ca47e37",
+      "bytes": 339
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/candidate-output/candidate.json",
+      "sha256": "d8e35abc452d80e243e42e72bb8e969ec19319bc8d2cad6393845227d3d4158c",
+      "bytes": 555980
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/independent/review-v2.json",
+      "sha256": "5c5d2851647b96e0e2f0daf54012a28506aa14284cbb96540613a74a24ce7090",
+      "bytes": 2983
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/root-normal-exit-b3-ui.json",
+      "sha256": "1450a301fe4aae74f9460c7e69b9fff2aae35bac1a97dacec5ac7c6fddf80eeb",
+      "bytes": 1816
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/retention-before-receipt.json",
+      "sha256": "630d797ad05a348ae9592f1d9b369f3ae34479151d18d705ad0a4989fe7a4c4f",
+      "bytes": 5953
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/retention-preinstall-receipt.json",
+      "sha256": "371a5815ea5f585973a0f72d3ffb50792c6d6230dffa90582d5d3672f8866422",
+      "bytes": 3058
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/retention-after-receipt.json",
+      "sha256": "2ec716ef9414685d9738395b1e04e7c63018642346338a4d7ad9b6617dc2826b",
+      "bytes": 3053
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/install-result.json",
+      "sha256": "cb54424423b2dc039b19d5ee9b4c8e328f4e1df0af65e6bc963e7def36163aaa",
+      "bytes": 11698
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/installed-independent-review-private.json",
+      "sha256": "c7bd295700cf703d6c449ce28ce879f45c852744bb86ecc3c441ce4ff059dad8",
+      "bytes": 2128
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/install/candidate-cleanup.json",
+      "sha256": "76fe28778cbf8c61c8f1b2d43fe7f3b76eac23c8ede22e4d4c0ca782a3c115e7",
+      "bytes": 7174
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/02-b3-baseline.ax.txt",
+      "sha256": "a94282ecfabb883df91c4d24fdca7ba3aecb50a34116dd18213230d36ba58a9e",
+      "bytes": 4877
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/20-b3-before-quit.ax.txt",
+      "sha256": "6535522af452b76d063a3aad6dab1c0b272e8b70d788f27c84ed25cfbf3b5c2e",
+      "bytes": 4884
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/23-b3-cold-ready.ax.txt",
+      "sha256": "2ea8d3129a5e8ad032ecb8df4b5b7c772704504e828a0359d2ee75c1b394e63f",
+      "bytes": 4867
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/29-b3-stage-final.ax.txt",
+      "sha256": "86f8631f902f4e76b476d8abae34167b2c2f9c663ca399f98197635c4ed46482",
+      "bytes": 4877
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/24-kilo-directory-error-fixed.ax.txt",
+      "sha256": "53b0e428b15a18c61e6cfafd9a4cb2ff42651282695485d8b7daf639e614d0bf",
+      "bytes": 3274
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/actual-directory-and-preservation.json",
+      "sha256": "a81e6d2203c078457a1dbc69aa773cf0a664b73da30a38dc1ba5811f5971d46f",
+      "bytes": 458
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/stage-final-preservation.json",
+      "sha256": "10cec9aee6b120e09e3cd661759c6602097ff9e1c5a37b6d8c3ecf66f79b230f",
+      "bytes": 1004
+    }
+  ]
+}

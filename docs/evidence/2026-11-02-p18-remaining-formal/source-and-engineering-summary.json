@@ -1,0 +1,154 @@
+{
+  "recordedAt": "2026-11-02T00:24:15.814689+00:00",
+  "currentInstalledSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "currentFormalProgramSha256": "635d8dcf71cf8dfee4fef31ca9bb40a9109a7b5de6957a4388fcefba39e0632f",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "UnavailableWorkDirectoryExplanationRepair",
+  "sourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "changedFiles": 10,
+  "productionFiles": 6,
+  "testFiles": 4,
+  "rootCause": "Unavailable original cwd is rejected before process preparation; raw path-bearing backend errors and generic recovery/work-read fallbacks hid the cause.",
+  "originalFormalFailure": {
+    "source": "6efffb3021869699dd3c78625325dd5a75518d8e",
+    "agent": "Kilo original self-test object",
+    "originalDirectoryAbsent": true,
+    "ui": ["Generic reconnect failure", "Generic work-setting read failure"],
+    "operatorReconnectOrSend": 0
+  },
+  "repair": [
+    "One fixed path-free application error code for an unavailable directory.",
+    "Exact code mapping in common recovery/canonical precheck/work-read errors, preserving archived-location guidance.",
+    "No directory creation, relocation, empty-session replacement, native-history edits, prompt retry or Agent-specific UI."
+  ],
+  "evidence": {
+    "frontendRed": {
+      "failed": 6,
+      "passed": 24,
+      "naturalExitCode": 1
+    },
+    "rustRed": {
+      "failed": 1,
+      "naturalExitCode": 101
+    },
+    "affectedFrontend": {
+      "files": 6,
+      "passed": 92,
+      "naturalExitCode": 0
+    },
+    "selectedRust": {
+      "passed": 1,
+      "naturalExitCode": 0
+    },
+    "finalSevenNaturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontend": {
+      "files": 701,
+      "passed": 9415
+    },
+    "rust": {
+      "passed": 2330,
+      "failed": 0,
+      "existingIgnored": 6
+    },
+    "frozenInputs": 2345,
+    "productionInputs": 2342,
+    "fullSourceAndAuthorityEndpointEqual": true,
+    "continuousFreezeClaimed": false,
+    "committed10FilesMatchFinalEngineering": true
+  },
+  "review": "Root source pass and separate mechanical artifact readers; no new independent person or agent review.",
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-failure-followup/01-kilo-open-failed.ax.txt",
+      "sha256": "5624b6c8e47f4a66d679cc2e82f9e43bdcb96d174620ab38eca97f2a4c637be7",
+      "bytes": 3193
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/kilo-cwd-condition.json",
+      "sha256": "cb2f92894ef7c4a47f6f974d8376881b0a49e444e99d1ec17a2d893e25bae476",
+      "bytes": 403
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/directory-frontend-red.log",
+      "sha256": "04e224de007c1416e15ac261e92ba675dee6070b1618e223233b0a2f9ea31f5e",
+      "bytes": 5846
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/directory-rust-red.log",
+      "sha256": "a5457436b70d1755bd91ca17abce6d5f060028d8b96fe6067cc53a0dac1348b3",
+      "bytes": 1038
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/directory-frontend-green.log",
+      "sha256": "cd4a9299af669bff04d244a7212cf707eb384d6239cb243f78e874afaa258521",
+      "bytes": 212
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/directory-rust-green.log",
+      "sha256": "fc4dd23a402da8aea3da43aafe523a9dfeae6c8833ae5d6f5a2861a3941d3f2d",
+      "bytes": 650
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/engineering-result.json",
+      "sha256": "6a31ece6faa5123913958aa9ab4fe7cec751ca236f27c1654355741e852e3c3e",
+      "bytes": 2803
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/source-final-before.json",
+      "sha256": "6478c7edefa35320a6ffb80b5fc31330e594074e8f61ecfa87fff19924e7022d",
+      "bytes": 275669
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/source-final-after.json",
+      "sha256": "145ead89003cc72f36741c9e063a4a1d309d2335c07402ab229447ba1b53a84b",
+      "bytes": 275669
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/source-review.json",
+      "sha256": "9d8b6d035b5d39f803064d40f496944f6585036167d459230505fedf77189e15",
+      "bytes": 1221
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/committed-source-binding.json",
+      "sha256": "f5ddc7ecf4ef3438a9b5d627b8b174b33bd8b8b08edc9b774dd1e048cd67dafc",
+      "bytes": 642
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/frontend-final.log",
+      "sha256": "44912aa8affd75d4d955020aff41b579c625d76c0ac8a7431aaec0c0fa04e349",
+      "bytes": 289
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/build-final.log",
+      "sha256": "9c39cf94670a7300c7058be01cca19e334a14dda62aa12f27644569c0833ef0e",
+      "bytes": 4984
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/cargo-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/clippy.log",
+      "sha256": "aea023b6223fb1b1145a76cf8722681a21cd62ea8d90ce72989b6cbf2200c625",
+      "bytes": 138
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/rust-full.log",
+      "sha256": "0d0b8ab69572fb86bebabf35519685939637223928c89723c750a5e964cfd64d",
+      "bytes": 268884
+    }
+  ]
+}

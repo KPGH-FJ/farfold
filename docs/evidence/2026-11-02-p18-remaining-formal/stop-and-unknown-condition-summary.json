@@ -1,0 +1,175 @@
+{
+  "recordedAt": "2026-11-02T00:24:15.814689+00:00",
+  "currentInstalledSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "currentFormalProgramSha256": "635d8dcf71cf8dfee4fef31ca9bb40a9109a7b5de6957a4388fcefba39e0632f",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedNormalStopExternalProcessObservationAndMissingUnknownReplayCondition",
+  "liveFormalSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "coldFormalSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "agent": "Goose",
+  "stop": {
+    "operatorSends": 1,
+    "visibleToolSteps": 1,
+    "normalStopClicks": 1,
+    "commandMatched": true,
+    "ownPidReportedLiveAndObservedAliveBeforeStop": true,
+    "sameObservedPidAbsentAfterStop": true,
+    "forcedTermination": false,
+    "replyStopped": true,
+    "officialToolEndReceiptAbsent": true,
+    "toolUiRetainedInProgressAndUnconfirmed": true,
+    "fullToolStopSuccessClaimed": false
+  },
+  "liveProtocol": {
+    "prompts": 2,
+    "cancels": 1,
+    "responses": 2,
+    "updates": 75,
+    "scope": "M and N combined; no response IDs or stop reasons logged."
+  },
+  "coldProtocol": {
+    "loads": 2,
+    "prompts": 0,
+    "cancels": 0,
+    "scope": "B3 and Goose after formal launch."
+  },
+  "nativeExport": {
+    "operation": "Official exact owned session export --format json to captured memory; no --resume, output destination or publishing flags.",
+    "naturalExitCode": 0,
+    "bytes": 171143,
+    "sha256": "633112664821f9c2f5d5ae7eedc600db74393f989daa5c4af51b4865b1bb2ad9",
+    "messages": 46,
+    "NMarkerOccurrences": 1,
+    "NMarkerOnlyInUserText": true,
+    "NToolRequestOrResponseWithMarkerAbsent": true,
+    "rawBodyStored": false,
+    "NMarkerMessageIndex": 44,
+    "followingUserTextMessages": 1,
+    "noToolRequestOrResponseAtOrAfterNUser": true
+  },
+  "unknownTool": {
+    "qualifiedOfficialReplayableActivityUnknownObjectAvailable": false,
+    "NToolCardNotReproducedAfterOfficialLoad": true,
+    "originalMistralOrPoolsideRetried": false
+  },
+  "limits": [
+    "Normal stop followed by disappearance of the observed own process is a selected observation; missing tool-end receipt remains explicit.",
+    "The selected official export lacks an N tool record. Why it was not retained is unknown; no upstream patch or history editing.",
+    "Do not treat Goose kind other, request cancellation, missing N record, quota retry or network failure as an actual activity-unknown card.",
+    "No old request resend, forced disconnection to manufacture unknown state, whole S7/P18 or 29x8 acceptance."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-failure-followup/preparation-N.json",
+      "sha256": "ccba769402a3199148d56e8bd31047902fe1c7ff932f35201b1f5066111b36b9",
+      "bytes": 1369
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/send-N.json",
+      "sha256": "dfa6e5916f6b62829db6585a939773a71c2d2dee0c63ddc076b09661c9939012",
+      "bytes": 173
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/16-N-live-pid.ax.txt",
+      "sha256": "c787ee1ce8afee609a67f8ad7677b619cc911cff1b3d5855bdd340168621c9bc",
+      "bytes": 16745
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/N-process-before-stop.json",
+      "sha256": "7a1b4ac315bfeefd60f31badb7d8ce996e8ca5e67e17211ea1be36e52fa1ea12",
+      "bytes": 253
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/N-process-before-stop.txt",
+      "sha256": "b28aecc829c90db36927dff50e9e9f34700150515e8f610cfcb30aff81cf2841",
+      "bytes": 181
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/stop-N.json",
+      "sha256": "db3cd8e5c5532d63f7be70c1181628f5ecae448f7f6562375fca62d167722148",
+      "bytes": 147
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/17-N-after-single-stop.ax.txt",
+      "sha256": "66e12ee6a55c8aa9de4a8278a715dc1dd0d267791b8819c0d069f489fe703b34",
+      "bytes": 16827
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/N-process-after-stop.json",
+      "sha256": "64d9aa94b0d89050934e158d0d42d5f34d0d9c36a010db57d8fcb9a98d06bca6",
+      "bytes": 227
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/N-process-after-stop.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/18-N-after-stop-technical.ax.txt",
+      "sha256": "fd46a421a71b35ae2d691bd78a78a547839e7ea894aded3832d104432653cc6d",
+      "bytes": 17284
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/N-formal-measurement.json",
+      "sha256": "204d3b9152c896d70431aad9843cc3eb7cccdcb27803350a2e2a7f5b8a36ce12",
+      "bytes": 533
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/M-N-protocol-content-free.jsonl",
+      "sha256": "303f910dcfa2ac7a7b0338dd0f1aa8a57636a0f8b9909955ae9e19c6d187d071",
+      "bytes": 19906
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/M-N-protocol-observation.json",
+      "sha256": "8df890dbea6143c26373d47d3eed6ca543840c1a5c50ff80238130e2d5b7e63d",
+      "bytes": 397
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/25-goose-cold-opening.ax.txt",
+      "sha256": "9922381b2f7cf9f9c1b45ef7e5f816ee96a4b2439223236b6cd46c03b8a96fbb",
+      "bytes": 13974
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/26-goose-cold-last-envelope.ax.txt",
+      "sha256": "0a6be504d4b5d3f9cb1ecadb5106c64fe4c2cd2974dc9647eb019c2c01832a20",
+      "bytes": 14616
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/goose-official-help.txt",
+      "sha256": "25553d45362cd32e7b9a932b4f47d5d0dd5f819386f8c17c4922e348d09aa2c0",
+      "bytes": 1198
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/goose-official-session-help.txt",
+      "sha256": "3b4e90a3328e8e9ab83ed82cbcee3f01b4ac18b4a2aab3d12e5f9224b3ff200b",
+      "bytes": 3664
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/goose-official-export-help.txt",
+      "sha256": "843b36e65eb6e4f851515077dff2f41d9aeb3d18d5a45f67479733bfc8c104e6",
+      "bytes": 993
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/goose-official-export-observation.json",
+      "sha256": "5dfb23d48fe48d2baa5d05f46dd4f18342ec6876e94e900650730fcff1997dfd",
+      "bytes": 8736
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/cold-protocol-observation.json",
+      "sha256": "2ebe8ae0bb31e2326c1f57ecca542fafa760b032973f228490100ed8c8495a4e",
+      "bytes": 810
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/cold-M-and-N-observation.json",
+      "sha256": "e4aca6e3128d18ffcf627436735f79bcf42f07d197fd1c96bd1b09fc833c4b91",
+      "bytes": 756
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/goose-official-export-tail-review.json",
+      "sha256": "58899103ae9b802aea222ba27bb8730511fff94f67ced130fa4afd977bfcefd1",
+      "bytes": 584
+    }
+  ]
+}

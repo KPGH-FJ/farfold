@@ -1,0 +1,95 @@
+{
+  "recordedAt": "2026-11-02T00:24:15.814689+00:00",
+  "currentInstalledSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "currentFormalProgramSha256": "635d8dcf71cf8dfee4fef31ca9bb40a9109a7b5de6957a4388fcefba39e0632f",
+  "platform": "macOS arm64",
+  "formalVersion": "0.1.7",
+  "productAcceptanceClaimed": false,
+  "kind": "SelectedFormalFailedToolOutputAndColdReplay",
+  "agent": "Goose",
+  "configuration": {
+    "source": "Existing/OpenRouter",
+    "model": "Nemotron 3 Ultra (free)",
+    "mode": "auto",
+    "reasoning": "off",
+    "operatorChanges": 0
+  },
+  "liveFormalSourceCommit": "6efffb3021869699dd3c78625325dd5a75518d8e",
+  "coldFormalSourceCommit": "e472180104237d5f7f30bfbccf8d647424c88307",
+  "actual": {
+    "operatorSends": 1,
+    "visibleToolSteps": 1,
+    "requestedCommandExact": true,
+    "reportedExitCode": 7,
+    "stdoutAndStderrMarkersVisible": true,
+    "stepMarkedFailed": true,
+    "outputCardMarkedToolError": true,
+    "expectedFinalReplyObserved": true,
+    "operatorRetries": 0,
+    "oldRequestResends": 0,
+    "officialColdLoadSucceeded": true,
+    "coldFailureLabelsAndMarkersRetained": true
+  },
+  "limits": [
+    "Official tool result reported exit_code7; no separate OS exit-code observation or raw stdout/stderr LF equality.",
+    "Cold tool result adds its own exit-code text; live received stream and cold result are not claimed byte-identical.",
+    "A command failure is not proof of failed edit/write-input presentation, unknown-tool handling, all Agents or full P18."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-11-02-p18-failure-followup/preparation-M.json",
+      "sha256": "4afc4921f3a8c626c945795abb298b185d0241cd5b36f5462cdfe85d0c8082d7",
+      "bytes": 1212
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/send-M.json",
+      "sha256": "53fe227b5de8977f0abaedc8762b049a936036029b86db337f4d451b6834f5f1",
+      "bytes": 173
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/08-goose-config-before-failure.ax.txt",
+      "sha256": "6e24d1debabac154e8fca0adaa65ddefaf40bd74cce0ac80e5ffc0ce96ca0791",
+      "bytes": 14729
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/09-M-exact-input.ax.txt",
+      "sha256": "c9a729b7ea5dab477c65773b2d1cc1bcc32eff4e074a047d2a03c8eb4136bc38",
+      "bytes": 13962
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/11-M-current.ax.txt",
+      "sha256": "fceb6c042f3cb44ae9fc362578f587d6109721830c9219bfe160ed685a99022a",
+      "bytes": 14659
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/12-M-failed-output-pane.ax.txt",
+      "sha256": "00135e5ad85faa33acd0ee45dc5c2b46495d461af99eeeeafc9564059d89e86f",
+      "bytes": 14863
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/13-M-technical-result.ax.txt",
+      "sha256": "6ec023b627791ab241bf9afe6adf2cc9c344f52501537fef6204b8f2602a6bae",
+      "bytes": 15551
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/M-formal-measurement.json",
+      "sha256": "825ea27c5847436796b0bc1b5862088737585b6b51633292cba0a9aa9352b3f0",
+      "bytes": 559
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/27-M-failed-output-cold.ax.txt",
+      "sha256": "b8e25c2540ee037c5ae464675a1f43a9253251b0c44364941842741206937b81",
+      "bytes": 16049
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/28-goose-cold-config.ax.txt",
+      "sha256": "dd8cb41c5213ddb7bb6d953428ad262068dfe06b6b1c5f2bdca33ef7b03773a5",
+      "bytes": 17341
+    },
+    {
+      "path": "output/2026-11-02-p18-failure-followup/formal/cold-M-and-N-observation.json",
+      "sha256": "e4aca6e3128d18ffcf627436735f79bcf42f07d197fd1c96bd1b09fc833c4b91",
+      "bytes": 756
+    }
+  ]
+}
