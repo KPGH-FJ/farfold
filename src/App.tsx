@@ -1006,7 +1006,12 @@ export default function App() {
             filter={filter}
             onFilter={setFilter}
             onOpen={(row, opener) =>
-              openRow(row, opener ? { libraryReturn: { opener } } : undefined)
+              openRow(
+                row,
+                opener
+                  ? { libraryReturn: { opener }, focusDestination: true }
+                  : undefined,
+              )
             }
             returnFocus={view.kind === "library" ? view.returnFocus : undefined}
             onSelectLoaded={openLoadedSearch}

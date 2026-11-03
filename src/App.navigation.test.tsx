@@ -167,6 +167,9 @@ it("returns to the original library row only when leaving that conversation", as
   );
   await history.complete();
   expect(component("ConversationLibrary").active).toBe(false);
+  expect(component("ThreadPage").navigationFocus).toMatchObject({
+    key: history.canonical,
+  });
   call("ThreadPage", "onBack");
   expect(component("ConversationLibrary")).toMatchObject({
     active: true,
