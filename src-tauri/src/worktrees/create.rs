@@ -1,4 +1,5 @@
 use super::{
+    checkout::Checkout,
     git,
     inspect::{self, Snapshot},
     storage::{Identity, Intent},
@@ -54,6 +55,10 @@ fn overlap(a: &Path, b: &Path) -> bool {
     a.starts_with(b) || b.starts_with(a)
 }
 pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
+    validate_with_checkout(source, input).map(|(intent, _)| intent)
+}
+
+fn validate_with_checkout(source: &Snapshot, input: &Create) -> Result<(Intent, Checkout)> {
     #[cfg(all(test, windows))]
     let observation = super::create_observation_tests::Observation::new("validate");
     if !id(&input.inspection_id)
@@ -132,31 +137,34 @@ pub(super) fn validate(source: &Snapshot, input: &Create) -> Result<Intent> {
     }
     #[cfg(all(test, windows))]
     observation.at("target-commit-check");
-    inspect::check_target(&current, input.branch.oid())?;
+    let checkout = Checkout::prepare(&current, input.branch.oid())?;
     #[cfg(all(test, windows))]
     observation.at("intent-parent-stamp");
-    Ok(Intent {
-        input: input.clone(),
-        source: Identity::from(&current),
-        parent_stamp: inspect::stamp(Path::new(&parent))?,
-        parent,
-        target: target.to_str().ok_or(error("unsafePath"))?.into(),
-        target_stamp: None,
-        dispatched: false,
-    })
+    Ok((
+        Intent {
+            input: input.clone(),
+            source: Identity::from(&current),
+            parent_stamp: inspect::stamp(Path::new(&parent))?,
+            parent,
+            target: target.to_str().ok_or(error("unsafePath"))?.into(),
+            target_stamp: None,
+            dispatched: false,
+        },
+        checkout,
+    ))
 }
-pub(super) fn revalidate(intent: &Intent) -> Result<()> {
+pub(super) fn revalidate(intent: &Intent) -> Result<Checkout> {
     intent.source.check()?;
     inspect::same(&intent.parent, &intent.parent_stamp)?;
     let snap = inspect::snapshot(Path::new(&intent.source.root))?;
-    let fresh = validate(&snap, &intent.input)?;
+    let (fresh, checkout) = validate_with_checkout(&snap, &intent.input)?;
     if fresh.target != intent.target
         || fresh.parent_stamp != intent.parent_stamp
         || !intent.source.matches(&snap)
     {
         return Err(error("changed"));
     }
-    Ok(())
+    Ok(checkout)
 }
 pub(super) fn add(intent: &Intent, cancel: &AtomicBool) -> Result<()> {
     intent.source.check()?;

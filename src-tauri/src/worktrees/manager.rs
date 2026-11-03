@@ -535,13 +535,9 @@ impl Worktrees {
             }
             #[cfg(all(test, windows))]
             observation.at("revalidate");
-            create::revalidate(&intent)?;
+            let checkout = create::revalidate(&intent)?;
             #[cfg(all(test, windows))]
-            observation.at("source-snapshot");
-            let source = inspect::snapshot(Path::new(&intent.source.root))?;
-            #[cfg(all(test, windows))]
-            observation.at("checkout-prepare");
-            let checkout = super::checkout::Checkout::prepare(&source, intent.input.branch.oid())?;
+            observation.at("validated-checkout");
             if cancel.load(Ordering::SeqCst) {
                 return Err(error("cancelled"));
             }

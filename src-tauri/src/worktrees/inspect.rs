@@ -402,6 +402,7 @@ pub(super) fn target_allowed(s: &Snapshot, selected: &str) -> Result<()> {
     }
     s.identity()
 }
+#[cfg(test)]
 pub(super) fn check_target(s: &Snapshot, selected: &str) -> Result<()> {
     super::checkout::Checkout::prepare(s, selected).map(|_| ())
 }
