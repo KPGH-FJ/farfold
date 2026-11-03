@@ -382,10 +382,13 @@ fn terminal_cancel_before_publication_child() {
     let published = !manager.lock().unwrap().is_empty();
     let quiescent = manager.startup.wait_quiescent(Duration::ZERO);
     let exit_frames = exits.load(Ordering::SeqCst);
+    let cancelled = result
+        .as_ref()
+        .is_err_and(|error| error == "AUTH_CANCELLED");
     eprintln!(
         "FARFOLD_TERMINAL_STARTUP_CANCEL {}",
         serde_json::json!({
-            "cancelledAfterCleanup": result.as_deref() == Err("AUTH_CANCELLED"),
+            "cancelledAfterCleanup": cancelled,
             "startupResult": result,
             "heldChildExited": exited,
             "terminalPublished": published,
@@ -395,7 +398,7 @@ fn terminal_cancel_before_publication_child() {
         })
     );
     assert!(stop.load(Ordering::SeqCst));
-    assert_eq!(result.as_deref(), Err("AUTH_CANCELLED"));
+    assert!(cancelled, "{result:?}");
     assert!(exited && !published && quiescent);
     assert_eq!(exit_frames, 1);
 }

@@ -38,14 +38,15 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
   $test = 'worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification'
   @{ name = 'worktree-remove-identity-recheck'; filter = $test; exact = $true; names = @($test) }
-} elseif ($Cohort -ceq 'JobAccounting') {
-  $test = 'windows_process::current_members::tests::native_job_accounting_samples_exact_children_across_exit_and_handle_release'
-  @{ name = 'job-accounting-exact-handles'; filter = $test; exact = $true; names = @($test) }
-  $test = 'windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list'
-  @{ name = 'job-accounting-sticky-gap'; filter = $test; exact = $true; names = @($test) }
-  $test = 'pty::windows_tests::terminal_cancel_after_native_spawn_before_publication_isolated'
-  @{ name = 'terminal-cancel-before-publication'; filter = $test; exact = $true; names = @($test); ignored = $true }
-} elseif ($Cohort -ceq 'AccessDiagnostics') {
+} elseif ($Cohort -cin @('JobAccounting', 'AccessDiagnostics')) {
+  if ($Cohort -ceq 'JobAccounting') {
+    $test = 'windows_process::current_members::tests::native_job_accounting_samples_exact_children_across_exit_and_handle_release'
+    @{ name = 'job-accounting-exact-handles'; filter = $test; exact = $true; names = @($test) }
+    $test = 'windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list'
+    @{ name = 'job-accounting-sticky-gap'; filter = $test; exact = $true; names = @($test) }
+    $test = 'pty::windows_tests::terminal_cancel_after_native_spawn_before_publication_isolated'
+    @{ name = 'terminal-cancel-before-publication'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  }
   $startup = 'acp_client::process::startup_tests::'
   $tests = [ordered]@{
     'startup-parent-error' = "${startup}spawn_failure_missing_program_records_os_error_and_own_file_limits"
