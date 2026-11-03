@@ -236,5 +236,605 @@
       "exact": 1,
       "checkoutCRLF": 838
     }
+  },
+  "windowsPairedFollowup": {
+    "runId": 41645947831,
+    "sourceCommit": "779e92e599583bff26ef133af72a7d4155eb4276",
+    "artifactSha256": "5833e368aa893a9046c4ca97e1ad422b2cdf4fb152e6bd0f55bfd2255afd5a1f",
+    "providerDigestMatched": true,
+    "artifactMembers": 15,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-remove-rechecks": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+          "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+          "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 488.40s"
+        ],
+        "passed": false
+      },
+      "recovery-material-identity": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.70s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  },
+  "windowsPairedFollowupCases": [
+    {
+      "test": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 19110,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 27934,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 38732,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 84516,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 84518,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 102004,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 7267,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 8784,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 14531,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 14712,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 14816,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "result": "FAILED",
+      "outerDeadline": true,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 19041,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 27889,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 38662,
+            "phase": "prepare-remove.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 14261,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 20087,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 27618,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 70775,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 70777,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 88454,
+            "phase": "delete.complete"
+          },
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 20690,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 28711,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 84760,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 84763,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 109427,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 7271,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 8721,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 14718,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 14906,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 15010,
+            "phase": "verify-deleted.enter"
+          },
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 10490,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 12573,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 20710,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 20994,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 21144,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 19103,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 27941,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 38747,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 96365,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 96368,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 120651,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 10265,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 12327,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 20288,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 20557,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 20715,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 19011,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 27718,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 38382,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 95259,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 95262,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 119652,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 10372,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 12405,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 20498,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 20755,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 20904,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 18818,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 27590,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 38133,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 91378,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 91380,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 108405,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 7044,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 8447,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 14108,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 14298,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 14400,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    }
+  ],
+  "windowsRecoveryAndCancel": {
+    "runId": 41646566930,
+    "sourceCommit": "5701e406bca7d3dc7e0180fe35bfddc1627976a0",
+    "artifactSha256": "a400f45014eafc1aeb2167689bbdc95d3459551c1d379966080b702455465aad",
+    "providerDigestMatched": true,
+    "artifactMembers": 24,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-recover-cold": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 63.13s"
+        ],
+        "passed": true
+      },
+      "worktree-recovery-refusal": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 47.39s"
+        ],
+        "passed": false
+      },
+      "mcp-add-cancel": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.93s"
+        ],
+        "passed": true
+      },
+      "mcp-http-cancel": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.83s"
+        ],
+        "passed": true
+      },
+      "mcp-remove-cancel": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.62s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  },
+  "lateFixtureRetention": {
+    "phase": "prepare-remove.enter",
+    "lastFixtureElapsedMs": 38662,
+    "outerDeadlineSeconds": 240,
+    "gitOriginalExitCode": 0,
+    "jobListQuerySucceeded": true,
+    "accountingActive": 1,
+    "assigned": 1,
+    "listed": 0,
+    "coverageGap": true,
+    "terminationRequested": true,
+    "retirementConfirmed": false
   }
 }
