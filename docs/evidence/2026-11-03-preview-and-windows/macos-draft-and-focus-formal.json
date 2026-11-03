@@ -142,5 +142,31 @@
   },
   "modelSends": 0,
   "oldResends": 0,
-  "limits": "Selected owned keyboard and macOS window paths. Other sizes, screen reader, system scaling, theme, live tool state and 29-Agent acceptance remain open."
+  "limits": "Selected owned keyboard and macOS window paths. Other sizes, screen reader, system scaling, theme, live tool state and 29-Agent acceptance remain open.",
+  "nativeWebPane": {
+    "windowLogical": [900, 620],
+    "ownedLocalHtml": "single-B.html",
+    "nativePageAndWorktreeEntrySimultaneouslyVisible": true,
+    "nativePageSuspendedWhileWorktreeDialogOpen": true,
+    "escapeRestoredNativePageAndExactWorktreeFocus": true,
+    "explicitPageCloseRemovedNativeSurface": true,
+    "rememberedPages": 0,
+    "pageSharedWithModel": false,
+    "normalWindowAndOriginalP02DraftRestored": true
+  },
+  "p18SelectedHistoricalReplay": {
+    "source": "Existing owned Goose Q and R tool records from November 2",
+    "qUnsuccessfulAndProposedFragmentVisible": true,
+    "qCompletedFilePositions": 0,
+    "rTwoSourceLinksOpenedExactDistinctFragments": [
+      "ALPHA to BETA",
+      "BETA to GAMMA"
+    ],
+    "explicitCurrentFileShowsGamma": true,
+    "independentCurrentFileBytes": 37,
+    "independentCurrentFileSha256": "0139eb25e9821323471f465ab2cf39a8c97d2df59ee05ffc049b598739b51bab",
+    "matchesPreviousFinalReceipt": true,
+    "newRequests": 0,
+    "limits": "Current replay and disk read only. No fresh write, in-progress diff, unknown activity, or new refusal."
+  }
 }
