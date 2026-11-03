@@ -150,6 +150,34 @@ it("carries the global search focus request only to its admitted destination", a
   expect(component("ThreadPage").navigationFocus).toBeUndefined();
 });
 
+it("returns to the original library row only when leaving that conversation", async () => {
+  call("Sidebar", "onLibrary", { kind: "attention" });
+  const history = pendingHistory("success");
+  const opener = { focus: vi.fn() };
+  call(
+    "ConversationLibrary",
+    "onOpen",
+    {
+      key: history.raw,
+      agentId: "A",
+      cwd: "/alias",
+      nativeSessionId: "history",
+    },
+    opener,
+  );
+  await history.complete();
+  expect(component("ConversationLibrary").active).toBe(false);
+  call("ThreadPage", "onBack");
+  expect(component("ConversationLibrary")).toMatchObject({
+    active: true,
+    filter: { kind: "attention" },
+    returnFocus: { opener },
+  });
+
+  call("Sidebar", "onLibrary", { kind: "all" });
+  expect(component("ConversationLibrary").returnFocus).toBeUndefined();
+});
+
 it("keeps saved offline Agents in the sidebar and admits history independently of new-conversation readiness", () => {
   h.cards[0].status = "none";
   h.prepared.delete("A");

@@ -41,7 +41,10 @@ import {
   type AgentPreparationContext,
 } from "./components/AgentHub";
 import type { ServiceChoice } from "./components/ServicePicker";
-import { ConversationLibrary } from "./components/ConversationLibrary";
+import {
+  ConversationLibrary,
+  type LibraryReturnFocus,
+} from "./components/ConversationLibrary";
 import { WorkspaceDialog } from "./components/WorkspaceDialog";
 import { ImportConversations } from "./components/ImportConversations";
 import { useAgents } from "./runtime/agents";
@@ -94,7 +97,7 @@ import {
 type View = (
   | { kind: "start" }
   | { kind: "thread"; key: string }
-  | { kind: "library" }
+  | { kind: "library"; returnFocus?: LibraryReturnFocus }
   | {
       kind: "agents";
       entry?: {
@@ -114,6 +117,10 @@ type PreparedSelection = {
   config: Record<string, unknown>;
 };
 type OpenRow = IndexRow | SidebarRow;
+type OpenRowIntent = {
+  focusDestination?: boolean;
+  libraryReturn?: LibraryReturnFocus;
+};
 function afterBrowserClose<Args extends unknown[]>(
   action: (...args: Args) => void,
 ) {
@@ -543,15 +550,18 @@ export default function App() {
       followRecovery(key, request, historyFailureKey(error));
     }
   };
-  const openRow = afterBrowserClose((row: OpenRow, focusFromSearch = false) => {
+  const openRow = afterBrowserClose((row: OpenRow, intent?: OpenRowIntent) => {
     setNotificationOnlyKey(null);
     const request = ++historyOpen.current;
-    routeHistory.current = [];
+    routeHistory.current =
+      intent?.libraryReturn && currentView.current.kind === "library"
+        ? [{ kind: "library", returnFocus: intent.libraryReturn }]
+        : [];
     setPaletteOpen(false);
     const key = "key" in row ? row.key : row.id;
     const existing = threads.thread(key);
     if (existing) traceAfterPaint("thread_switch", Date.now());
-    opened(key, focusFromSearch);
+    opened(key, intent?.focusDestination);
     if (currentWorkLocationGuidance(row.cwd)?.kind === "archive") {
       if (!existing)
         threads.markOpenFailed(
@@ -995,7 +1005,10 @@ export default function App() {
             agents={agents.cards}
             filter={filter}
             onFilter={setFilter}
-            onOpen={openRow}
+            onOpen={(row, opener) =>
+              openRow(row, opener ? { libraryReturn: { opener } } : undefined)
+            }
+            returnFocus={view.kind === "library" ? view.returnFocus : undefined}
             onSelectLoaded={openLoadedSearch}
             onSelectAttachment={openAttachmentSearch}
             onImport={(opener) => openImport(null, opener)}
@@ -1195,7 +1208,7 @@ export default function App() {
           agents={agents.cards}
           returnFocusRef={searchReturnFocus}
           onClose={() => setPaletteOpen(false)}
-          onSelect={(row) => openRow(row, true)}
+          onSelect={(row) => openRow(row, { focusDestination: true })}
           onSelectLoaded={openLoadedSearch}
         />
       )}

@@ -90,6 +90,7 @@ const LIBRARY_TABS = [
   ["archived", LIBRARY.archived],
 ] as const;
 type LibraryTab = (typeof LIBRARY_TABS)[number][0];
+export type LibraryReturnFocus = { opener: HTMLButtonElement };
 
 /** Derive only from loaded events; an index timestamp is never an ending. */
 function loadedResult(state: ThreadState | undefined) {
@@ -139,6 +140,7 @@ export function ConversationLibrary({
   filter,
   onFilter,
   onOpen,
+  returnFocus,
   onImport,
   onNew,
   onReopen,
@@ -153,7 +155,8 @@ export function ConversationLibrary({
   agents: AgentCardModel[];
   filter: LibraryFilter;
   onFilter: (filter: LibraryFilter) => void;
-  onOpen: (row: SidebarRow) => void;
+  onOpen: (row: SidebarRow, opener?: HTMLButtonElement) => void;
+  returnFocus?: LibraryReturnFocus;
   onImport: (opener: HTMLButtonElement) => void;
   onNew: () => void;
   /** W3-9：用相同 Agent 与设置再开一段对话。 */
@@ -167,6 +170,19 @@ export function ConversationLibrary({
   const readState = useConversationReadState();
   const selection = normalizeLibraryFilter(filter);
   const { state: tab, query } = selection;
+  const selectedTab = useRef<HTMLButtonElement>(null);
+  const restoredFocus = useRef<LibraryReturnFocus | null>(null);
+  useEffect(() => {
+    if (!active || !returnFocus || restoredFocus.current === returnFocus)
+      return;
+    restoredFocus.current = returnFocus;
+    const { opener } = returnFocus;
+    // Reading an unread conversation can remove its row from this filter.
+    (opener.isConnected && !opener.disabled
+      ? opener
+      : selectedTab.current
+    )?.focus();
+  }, [active, returnFocus]);
   const changeFilter = (patch: Partial<LibrarySelection>) =>
     onFilter({ kind: "selection", ...selection, ...patch });
   const setTab = (state: LibraryTab) => changeFilter({ state });
@@ -744,6 +760,7 @@ export function ConversationLibrary({
               type="button"
               role="tab"
               aria-selected={tab === id}
+              ref={tab === id ? selectedTab : undefined}
               aria-controls="conversation-library-results"
               tabIndex={tab === id ? 0 : -1}
               onClick={() => setTab(id)}
@@ -956,7 +973,7 @@ export function ConversationLibrary({
                   <button
                     type="button"
                     className="library-row-open"
-                    onClick={() => onOpen(row)}
+                    onClick={(event) => onOpen(row, event.currentTarget)}
                   >
                     {agentCard ? (
                       <AgentLogo card={agentCard} />
