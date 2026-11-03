@@ -2,7 +2,7 @@ use super::{
     tests::{Repo, git},
     *,
 };
-use std::{fs, path::Path, sync::atomic::AtomicBool};
+use std::{fs, path::Path, sync::atomic::AtomicBool, time::Duration};
 #[test]
 fn recovery_content_has_no_inode_identity_but_preserves_empty_material() {
     #[cfg(windows)]
@@ -238,7 +238,11 @@ pub(super) fn prepare_removal_with_timeout(
     a: &Archive,
     timeout: std::time::Duration,
 ) -> Operation {
+    #[cfg(windows)]
+    eprintln!("FARFOLD_REMOVE_PREPARE phase=inspect.enter");
     let p = m.remove_inspect(s, &a.id, a.revision).unwrap();
+    #[cfg(windows)]
+    eprintln!("FARFOLD_REMOVE_PREPARE phase=prepare.enter");
     m.prepare_remove(
         s,
         REMOVE,
@@ -249,12 +253,17 @@ pub(super) fn prepare_removal_with_timeout(
         |_| Ok(()),
     )
     .unwrap();
+    #[cfg(windows)]
+    eprintln!("FARFOLD_REMOVE_PREPARE phase=wait.enter");
     wait_prepared_with_timeout(m, s, REMOVE, timeout)
 }
 #[test]
 fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {
-    recycle_tests::isolated(
+    let operation_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    let prepare_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 30 });
+    recycle_tests::isolated_with_timeout(
         "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+        Duration::from_secs(if cfg!(windows) { 360 } else { 90 }),
         || {
             for variant in ["assume", "empty"] {
                 let r = Repo::new();
@@ -263,7 +272,7 @@ fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {
                 git(&r.root, &["commit", "-qm", "ignore fixture"]);
                 let s = tests::store();
                 let m = Worktrees::default();
-                let l = recycle_tests::created(&m, &s, &r);
+                let l = recycle_tests::created_with_timeout(&m, &s, &r, operation_wait);
                 let path = Path::new(&l.path);
                 if variant == "assume" {
                     git(path, &["update-index", "--assume-unchanged", "a.txt"]);
@@ -272,25 +281,108 @@ fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {
                     fs::create_dir(path.join("ignored")).unwrap();
                 }
                 let a = archive(&m, &s, &l);
-                let before =
-                    material_scan::capture(Path::new(&a.retained_path), &AtomicBool::new(false))
-                        .unwrap();
-                let o = prepare_removal(&m, &s, &a);
-                assert_eq!(o.state, "failed", "{o:?}");
-                assert_eq!(o.code.as_deref(), Some("uncommittedMaterial"));
-                assert!(!o.maintenance_active);
+                let retained = Path::new(&a.retained_path);
+                let cancel = AtomicBool::new(false);
+                let before = material_scan::capture(retained, &cancel).unwrap();
+                let o = prepare_removal_with_timeout(&m, &s, &a, prepare_wait);
                 assert_eq!(o.delete_dispatched, Some(false));
-                assert_eq!(
-                    material_scan::capture(Path::new(&a.retained_path), &AtomicBool::new(false))
-                        .unwrap(),
-                    before
-                );
+                #[cfg(unix)]
+                {
+                    assert_eq!(o.state, "failed", "{o:?}");
+                    assert_eq!(o.code.as_deref(), Some("uncommittedMaterial"));
+                    assert!(!o.maintenance_active);
+                    assert_eq!(m.list(&s).unwrap().materials.len(), 1);
+                }
+                assert_eq!(material_scan::capture(retained, &cancel).unwrap(), before);
                 assert_eq!(m.list(&s).unwrap().archives.len(), 1);
-                assert_eq!(m.list(&s).unwrap().materials.len(), 1);
+                #[cfg(windows)]
+                {
+                    // Windows prepares a complete material backup before offering deletion.
+                    let target = restore_protected_fixture(&m, &s, o, operation_wait);
+                    if variant == "assume" {
+                        assert_eq!(
+                            fs::read(target.join("a.txt")).unwrap(),
+                            b"uncommitted protected bytes"
+                        );
+                    } else {
+                        assert_eq!(fs::read(target.join("a.txt")).unwrap(), b"fixture");
+                        let ignored = target.join("ignored");
+                        assert!(ignored.is_dir());
+                        assert!(fs::read_dir(ignored).unwrap().next().is_none());
+                    }
+                    assert_eq!(material_scan::capture(retained, &cancel).unwrap(), before);
+                    let list = m.list(&s).unwrap();
+                    assert_eq!(list.archives.len(), 1);
+                    assert_eq!(list.recoveries.len(), 1);
+                    assert!(list.materials.is_empty());
+                    eprintln!("FARFOLD_RECOVERY_PROTECTED_MATERIAL verified={variant}");
+                }
             }
         },
     );
 }
+
+#[cfg(windows)]
+fn restore_protected_fixture(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    prepared: Operation,
+    timeout: Duration,
+) -> std::path::PathBuf {
+    assert_eq!(prepared.state, "prepared", "{prepared:?}");
+    assert_eq!(
+        prepared.removal_phase.as_deref(),
+        Some("awaitingConfirmation")
+    );
+    let recovery = prepared.recovery.unwrap();
+    assert_eq!(recovery.availability, "verified");
+    let cancelled = tests::op(m.cancel(s, REMOVE).unwrap());
+    assert_eq!(cancelled.state, "cancelled", "{cancelled:?}");
+    assert!(!cancelled.maintenance_active);
+    assert_eq!(cancelled.delete_dispatched, Some(false));
+    assert!(
+        m.confirm_remove(
+            s,
+            REMOVE,
+            RemoveConfirmation {
+                record_id: recovery.archive_id.clone(),
+                expected_revision: recovery.archive_revision,
+                recovery_id: recovery.id.clone(),
+                recovery_sha256: recovery.bundle_sha256,
+                manifest_sha256: recovery.manifest_sha256,
+            },
+        )
+        .is_err()
+    );
+    let parent = Path::new(&recovery.original_path).parent().unwrap();
+    let directory_name = "restored-protected-material";
+    let target = parent.join(directory_name);
+    let recover = "52345678-1234-4123-8123-123456789abc";
+    let prepared = tests::op(
+        m.prepare_recover(
+            s,
+            recover,
+            RecoverInput {
+                recovery_id: recovery.id,
+                expected_revision: recovery.revision,
+                parent_path: parent.to_str().unwrap().into(),
+                directory_name: directory_name.into(),
+            },
+        )
+        .unwrap(),
+    );
+    assert_eq!(prepared.state, "prepared", "{prepared:?}");
+    assert!(!target.exists());
+    m.start(s, recover).unwrap();
+    let restored = recycle_tests::wait_with_timeout(m, s, recover, timeout);
+    assert_eq!(restored.state, "ready", "{restored:?}");
+    let location = restored.location.unwrap();
+    assert_eq!(location.ownership, "existing");
+    assert_eq!(Path::new(&location.path), target);
+    assert_eq!(location.repository_root, location.path);
+    target
+}
+
 #[test]
 fn recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority() {
     recycle_tests::isolated(

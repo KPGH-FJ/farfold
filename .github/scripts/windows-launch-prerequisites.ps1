@@ -53,6 +53,8 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   }
   $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
+  $test = 'worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories'
+  @{ name = 'worktree-recovery-refusal'; filter = $test; exact = $true; names = @($test) }
 } elseif ($Cohort -ceq 'RecoveryCancel') {
   $tests = [ordered]@{
     'worktree-recover-cold' = 'worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts'
