@@ -6,6 +6,44 @@ use std::{
     collections::HashSet,
     io::{self, Write},
 };
+
+#[cfg(any(windows, test))]
+fn windows_drive_cwd_matches(expected: &str, reported: &str) -> bool {
+    use super::sdk_paths::disk_path;
+    // The selected directory is still held and rechecked by the caller.
+    // Compare only validated local-drive spellings that differ by the
+    // verbatim prefix used by Windows canonicalization.
+    matches!((disk_path(expected), disk_path(reported)), (Ok(a), Ok(b)) if a == b)
+}
+
+#[cfg(test)]
+mod cwd_tests {
+    use super::windows_drive_cwd_matches;
+
+    #[test]
+    fn windows_history_accepts_only_safe_local_drive_prefix_aliases() {
+        let plain = r"C:\evidence é\project";
+        let extended = r"\\?\C:\evidence é\project";
+        assert!(windows_drive_cwd_matches(extended, plain));
+        assert!(windows_drive_cwd_matches(plain, extended));
+        for different in [
+            r"C:\evidence é\other",
+            r"c:\evidence é\project",
+            r"C:/evidence é/project",
+            r"C:\evidence é\project.",
+            r"C:\evidence é\project:stream",
+            r"C:\evidence é\..\project",
+        ] {
+            assert!(!windows_drive_cwd_matches(extended, different));
+        }
+        assert!(!windows_drive_cwd_matches(r"\\?\C:\NUL", r"C:\NUL"));
+        assert!(!windows_drive_cwd_matches(
+            r"\\?\UNC\host\share",
+            r"\\host\share",
+        ));
+    }
+}
+
 #[derive(Clone, Copy)]
 enum Step {
     Initialize,
@@ -161,9 +199,14 @@ impl<'a> Exchange<'a> {
             }
             Step::Metadata => {
                 let thread = result.get("thread").ok_or(Code::InvalidOutput)?;
+                let expected_cwd = self.job.source.rows[self.index].cwd.as_str();
+                let reported_cwd = thread.get("cwd").and_then(Value::as_str);
+                let cwd_matches = reported_cwd == Some(expected_cwd);
+                #[cfg(windows)]
+                let cwd_matches = cwd_matches
+                    || reported_cwd.is_some_and(|cwd| windows_drive_cwd_matches(expected_cwd, cwd));
                 if thread.get("id").and_then(Value::as_str) != Some(self.native_id())
-                    || thread.get("cwd").and_then(Value::as_str)
-                        != Some(self.job.source.rows[self.index].cwd.as_str())
+                    || !cwd_matches
                 {
                     return Err(Code::IndexChanged.into());
                 }
