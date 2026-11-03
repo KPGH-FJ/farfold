@@ -14,7 +14,15 @@ fn wire(label: &str, value: &impl serde::Serialize) {
     );
 }
 pub(super) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore, id: &str) -> Operation {
-    let deadline = Instant::now() + Duration::from_secs(20);
+    wait_with_timeout(m, s, id, Duration::from_secs(20))
+}
+pub(super) fn wait_with_timeout(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    id: &str,
+    timeout: Duration,
+) -> Operation {
+    let deadline = Instant::now() + timeout;
     loop {
         let o = op(m.status(s, id).unwrap());
         if o.settled && !o.maintenance_active {
@@ -25,6 +33,14 @@ pub(super) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore, id: &str) ->
     }
 }
 pub(super) fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Location {
+    created_with_timeout(m, s, r, Duration::from_secs(20))
+}
+pub(super) fn created_with_timeout(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    r: &Repo,
+    timeout: Duration,
+) -> Location {
     let args = input(
         m,
         s,
@@ -37,7 +53,7 @@ pub(super) fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo)
     );
     m.prepare(s, OP, args).unwrap();
     m.start(s, OP).unwrap();
-    let result = wait(m, s, OP);
+    let result = wait_with_timeout(m, s, OP, timeout);
     assert_eq!(result.state, "ready");
     result.location.unwrap()
 }

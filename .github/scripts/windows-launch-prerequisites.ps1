@@ -51,6 +51,8 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
       "${prefix}late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation"
     )
   }
+  $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
+  @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
 } elseif ($Cohort -ceq 'RetirementAndRemove') {
   $test = 'platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement'
   @{ name = 'terminal-retirement-reply'; filter = $test; exact = $true; names = @($test); ignored = $true }

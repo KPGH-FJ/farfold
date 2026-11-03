@@ -1,8 +1,18 @@
 use super::*;
 use crate::worktrees::{recovery_tests as fixture, recycle_tests, tests, *};
-use std::{fs, path::Path};
+use std::{fs, path::Path, time::Duration};
+
+const OPERATION_WAIT: Duration = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+const PREPARE_WAIT: Duration = Duration::from_secs(if cfg!(windows) { 60 } else { 30 });
 
 const RECOVER: &str = "52345678-1234-4123-8123-123456789abc";
+
+fn isolated(name: &str, body: impl FnOnce()) {
+    // These scenarios include checkout creation, recovery preparation, deletion and replay.
+    // Hosted Windows runners spend longer in native Git verification with two fixtures active.
+    let seconds = if cfg!(windows) { 240 } else { 90 };
+    recycle_tests::isolated_with_timeout(name, Duration::from_secs(seconds), body);
+}
 
 fn deleted(m: &Worktrees, s: &MetaStore, r: &tests::Repo) -> Recovery {
     let started = std::time::Instant::now();
@@ -13,11 +23,11 @@ fn deleted(m: &Worktrees, s: &MetaStore, r: &tests::Repo) -> Recovery {
         );
     };
     phase("create.enter");
-    let l = recycle_tests::created(m, s, r);
+    let l = recycle_tests::created_with_timeout(m, s, r, OPERATION_WAIT);
     phase("archive.enter");
     let a = fixture::archive(m, s, &l);
     phase("prepare-remove.enter");
-    let p = fixture::prepare_removal(m, s, &a);
+    let p = fixture::prepare_removal_with_timeout(m, s, &a, PREPARE_WAIT);
     assert_eq!(p.state, "prepared", "{p:?}");
     let b = p.recovery.unwrap();
     phase("confirm-remove.enter");
@@ -34,7 +44,7 @@ fn deleted(m: &Worktrees, s: &MetaStore, r: &tests::Repo) -> Recovery {
     )
     .unwrap();
     phase("wait-remove.enter");
-    let o = recycle_tests::wait(m, s, fixture::REMOVE);
+    let o = recycle_tests::wait_with_timeout(m, s, fixture::REMOVE, OPERATION_WAIT);
     assert_eq!(o.state, "ready", "{o:?}");
     assert!(!Path::new(&b.retained_path).exists());
     phase("delete.complete");
@@ -103,7 +113,7 @@ fn check_then_recover(cold: bool) {
         Some(&proof)
     );
     m.start(&s, RECOVER).unwrap();
-    let done = recycle_tests::wait(&m, &s, RECOVER);
+    let done = recycle_tests::wait_with_timeout(&m, &s, RECOVER, OPERATION_WAIT);
     assert_eq!(done.state, "ready", "{done:?}");
     let location = done.location.as_ref().unwrap();
     assert_eq!(location.ownership, "existing");
@@ -127,7 +137,7 @@ fn check_then_recover(cold: bool) {
 
 #[test]
 fn warm_remove_recheck_can_recover_through_the_manager() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
         || check_then_recover(false),
     );
@@ -135,7 +145,7 @@ fn warm_remove_recheck_can_recover_through_the_manager() {
 
 #[test]
 fn cold_remove_recheck_can_recover_through_the_manager() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
         || check_then_recover(true),
     );
@@ -143,7 +153,7 @@ fn cold_remove_recheck_can_recover_through_the_manager() {
 
 #[test]
 fn removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
         || {
             let r = tests::Repo::new();
@@ -212,7 +222,7 @@ fn removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recover
 
 #[test]
 fn removal_recheck_never_promotes_tampered_bundle_or_manifest() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
         || {
             for file in ["recovery.bundle", "manifest.json"] {
@@ -251,7 +261,7 @@ fn removal_recheck_never_promotes_tampered_bundle_or_manifest() {
 
 #[test]
 fn removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
         || {
             let r = tests::Repo::new();
@@ -292,7 +302,7 @@ fn removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verif
 
 #[test]
 fn late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation() {
-    recycle_tests::isolated(
+    isolated(
         "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
         || {
             let r = tests::Repo::new();

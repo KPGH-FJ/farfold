@@ -59,7 +59,7 @@ jobs:
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites
       - name: Run the selected native test cohort
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
-        timeout-minutes: 8
+        timeout-minutes: ${{ inputs.cohort == 'RemoveRechecks' && 14 || 8 }}
         env:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT

@@ -52,11 +52,14 @@ impl Fixture {
         .unwrap()
     }
     fn output(&self, memory: &MixedMemory) -> MaterialStoreRequest {
+        self.output_at(&self.artifact, memory)
+    }
+    fn output_at(&self, artifact: &Path, memory: &MixedMemory) -> MaterialStoreRequest {
         let parent = PinnedPath::directory(&self.base).unwrap();
-        let output = PinnedPath::directory(&self.artifact).unwrap();
+        let output = PinnedPath::directory(artifact).unwrap();
         recovery_pack::material::reserved(
             &self.base,
-            &self.artifact,
+            artifact,
             &inspect::pinned_stamp(&parent).unwrap(),
             &inspect::pinned_stamp(&output).unwrap(),
             memory,
@@ -64,13 +67,16 @@ impl Fixture {
         .unwrap()
     }
     fn seal(&self) -> WindowsMaterial {
+        self.seal_at(&self.source, &self.artifact)
+    }
+    fn seal_at(&self, source: &Path, artifact: &Path) -> WindowsMaterial {
         let memory = MixedMemory::default();
         let owner = material_owner::Owner::default();
         // Keep failures attributable to the actual boundary, without logging any
         // material, descriptor, ACL, path or user data. This separate read-only
         // capture distinguishes source/native parsing from persistent storage.
         owner
-            .capture_complete_tree(self.input(&memory), &AtomicBool::new(false))
+            .capture_complete_tree(Self::input_at(source, &memory), &AtomicBool::new(false))
             .unwrap_or_else(|failure| {
                 panic!(
                     "ordinary material phase=source-capture code={}",
@@ -80,8 +86,8 @@ impl Fixture {
         let phase = Cell::new("seal-before-consumer");
         let (descriptor, _) = owner
             .sealed_material(
-                self.input(&memory),
-                self.output(&memory),
+                Self::input_at(source, &memory),
+                self.output_at(artifact, &memory),
                 &AtomicBool::new(false),
                 |sealed| {
                     phase.set("descriptor");
@@ -108,7 +114,7 @@ impl Fixture {
                 )
             });
         assert!(
-            self.source.exists(),
+            source.exists(),
             "first independent reconstruction never needs original deletion"
         );
         owner.available().unwrap();
@@ -159,23 +165,28 @@ pub(super) fn assert_recovery_material_identity() {
     // Restore alongside the original. The native receipt also asserts that
     // every restored object has a different FileID from its source.
     let target = fixture.restore(&sealed, "restored sibling").unwrap();
-    let owner = material_owner::Owner::default();
-    let memory = MixedMemory::default();
-    let cancel = AtomicBool::new(false);
-    let capture = || {
-        owner
-            .capture_complete_tree(Fixture::input_at(&target, &memory), &cancel)
-            .unwrap()
+    let reseal = |leaf| {
+        let artifact = fixture.base.join(leaf);
+        fs::create_dir(&artifact).unwrap();
+        fixture.seal_at(&target, &artifact)
     };
-    let restored = capture();
-    assert_eq!(restored.entries, u64::from(sealed.content.nodes));
-    assert_eq!(restored.bytes, sealed.content.bytes);
-    assert_eq!(restored.sha256, material_scan::hex(sealed.content.sha256));
+    // The persistent store hashes normalized native material. Re-seal the
+    // restored tree in the same mode to compare those semantic digests.
+    let restored = reseal("restored material");
+    let same_node_semantics = restored
+        .nodes
+        .iter()
+        .map(|node| node.semantic_sha256)
+        .eq(sealed.nodes.iter().map(|node| node.semantic_sha256));
+    assert_eq!(
+        restored.content, sealed.content,
+        "resealed per-node native semantics equal: {same_node_semantics}"
+    );
 
     fs::create_dir(target.join("ignored-empty")).unwrap();
-    let changed = capture();
-    assert_eq!(changed.entries, restored.entries + 1);
-    assert_ne!(changed.sha256, restored.sha256);
+    let changed = reseal("changed material");
+    assert_eq!(changed.content.nodes, restored.content.nodes + 1);
+    assert_ne!(changed.content.sha256, restored.content.sha256);
 }
 
 fn receipt(actual: &crate::file_access::MaterialTreeReceipt, expected: &WindowsMaterial) {

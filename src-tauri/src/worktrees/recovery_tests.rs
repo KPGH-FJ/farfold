@@ -192,7 +192,15 @@ pub(super) fn wait_prepared(
     s: &crate::meta_store::MetaStore,
     id: &str,
 ) -> Operation {
-    let end = std::time::Instant::now() + std::time::Duration::from_secs(30);
+    wait_prepared_with_timeout(m, s, id, std::time::Duration::from_secs(30))
+}
+fn wait_prepared_with_timeout(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    id: &str,
+    timeout: std::time::Duration,
+) -> Operation {
+    let end = std::time::Instant::now() + timeout;
     loop {
         let o = tests::op(m.status(s, id).unwrap());
         if o.state == "prepared" || o.settled {
@@ -222,6 +230,14 @@ pub(super) fn prepare_removal(
     s: &crate::meta_store::MetaStore,
     a: &Archive,
 ) -> Operation {
+    prepare_removal_with_timeout(m, s, a, std::time::Duration::from_secs(30))
+}
+pub(super) fn prepare_removal_with_timeout(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    a: &Archive,
+    timeout: std::time::Duration,
+) -> Operation {
     let p = m.remove_inspect(s, &a.id, a.revision).unwrap();
     m.prepare_remove(
         s,
@@ -233,7 +249,7 @@ pub(super) fn prepare_removal(
         |_| Ok(()),
     )
     .unwrap();
-    wait_prepared(m, s, REMOVE)
+    wait_prepared_with_timeout(m, s, REMOVE, timeout)
 }
 #[test]
 fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {
