@@ -18,7 +18,7 @@ import { STRINGS } from "../runtime/strings";
 import { useCollections } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
 import { AgentLogo } from "./AgentLogo";
-import { useModalDialog } from "./useModalDialog";
+import { useModalDialog, wrapModalTab } from "./useModalDialog";
 import "../command-palette.css";
 import {
   LoadedSearchResults,
@@ -193,6 +193,7 @@ export function CommandPalette({
       aria-labelledby={titleId}
       onCancel={onCancel}
       onKeyDown={(event) => {
+        wrapModalTab(event);
         if (
           !event.nativeEvent.isComposing &&
           (event.metaKey || event.ctrlKey) &&

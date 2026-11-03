@@ -1,47 +1,7 @@
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
-import {
-  useRef,
-  type KeyboardEvent,
-  type ReactNode,
-  type RefObject,
-} from "react";
+import { useRef, type ReactNode, type RefObject } from "react";
 import { LIBRARY } from "../runtime/library_strings";
-import { hasOpenDisclosureAncestors } from "../runtime/disclosure_ancestry";
-import { useModalDialog } from "./useModalDialog";
-
-const TAB_STOPS =
-  "button, input, select, textarea, a[href], summary, [tabindex]";
-
-function wrapTab(event: KeyboardEvent<HTMLDialogElement>) {
-  const { currentTarget: dialog, target, shiftKey } = event;
-  if (
-    event.key !== "Tab" ||
-    event.defaultPrevented ||
-    event.nativeEvent.isComposing ||
-    event.altKey ||
-    event.ctrlKey ||
-    event.metaKey ||
-    !(target instanceof HTMLElement) ||
-    target.closest("dialog") !== dialog
-  )
-    return;
-  const controls = Array.from(dialog.querySelectorAll<HTMLElement>(TAB_STOPS));
-  const available = (control: HTMLElement) =>
-    (control.tabIndex >= 0 ||
-      control.matches("details > summary:first-of-type:not([tabindex])")) &&
-    !control.matches(":disabled") &&
-    !control.closest("[inert]") &&
-    hasOpenDisclosureAncestors(control, dialog) &&
-    control.getClientRects().length > 0 &&
-    getComputedStyle(control).visibility === "visible";
-  const first = controls.find(available);
-  const last = controls.reverse().find(available);
-  // WebKit can send the next Tab to the viewport at a native dialog edge.
-  if (target === dialog || target === (shiftKey ? first : last)) {
-    event.preventDefault();
-    (shiftKey ? last : first)?.focus();
-  }
-}
+import { useModalDialog, wrapModalTab } from "./useModalDialog";
 
 export function WorkspaceDialog({
   title,
@@ -79,7 +39,7 @@ export function WorkspaceDialog({
       aria-busy={busy || undefined}
       onCancel={onCancel}
       onClick={onClick}
-      onKeyDown={wrapTab}
+      onKeyDown={wrapModalTab}
     >
       <div className="workspace-dialog-title">
         <h2>{title}</h2>

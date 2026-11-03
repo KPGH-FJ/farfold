@@ -94,20 +94,67 @@ function searchInput() {
   }
   renderToStaticMarkup(<Capture />);
   let input: ReactElement<ComponentProps<"input">> | undefined;
+  let dialog: ReactElement<ComponentProps<"dialog">> | undefined;
   const visit = (node: ReactNode) =>
     Children.forEach(node, (child) => {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       if (child.type === "input")
         input = child as ReactElement<ComponentProps<"input">>;
+      if (child.type === "dialog")
+        dialog = child as ReactElement<ComponentProps<"dialog">>;
       visit(child.props.children as ReactNode);
     });
   visit(tree);
   return {
     input: input!.props,
+    dialog: dialog!.props,
     onClose,
     onSelect,
   };
 }
+
+it("keeps focus inside the global search dialog at both Tab edges", () => {
+  class Control {
+    tabIndex = 0;
+    focus = vi.fn();
+    parentElement: Control | null = null;
+    closest = (selector: string) =>
+      selector === "dialog" ? this.parentElement : null;
+    matches = () => false;
+    getClientRects = () => [{}];
+  }
+  const first = new Control();
+  const last = new Control();
+  const dialog = Object.assign(new Control(), {
+    querySelectorAll: () => [first, last],
+    contains: (control: Control) => control === first || control === last,
+  });
+  first.parentElement = last.parentElement = dialog;
+  vi.stubGlobal("HTMLElement", Control);
+  vi.stubGlobal("getComputedStyle", () => ({ visibility: "visible" }));
+  try {
+    const view = searchInput();
+    const tab = (target: Control, shiftKey: boolean) => {
+      const preventDefault = vi.fn();
+      view.dialog.onKeyDown?.({
+        key: "Tab",
+        shiftKey,
+        target,
+        currentTarget: dialog,
+        nativeEvent: { isComposing: false },
+        preventDefault,
+      } as unknown as KeyboardEvent<HTMLDialogElement>);
+      expect(preventDefault).toHaveBeenCalledOnce();
+    };
+    tab(last, false);
+    expect(first.focus).toHaveBeenCalledOnce();
+    tab(first, true);
+    expect(last.focus).toHaveBeenCalledOnce();
+    expect(view.onClose).not.toHaveBeenCalled();
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
 
 function keyboard(key: string, isComposing: boolean, keyCode: number) {
   return {
