@@ -1,0 +1,44 @@
+{
+  "installedSource": "3b4e62da8e96887e81e560b577d131412bfffcaf",
+  "previousInstalledSource": "5d85b9e4c9e114132c834617cf2a393526b4eaa9",
+  "engineering": {
+    "naturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontendFiles": 704,
+    "frontendPassed": 9446,
+    "rustPassed": 2333,
+    "rustIgnored": 6,
+    "boundInputs": 2352
+  },
+  "installedBinarySha256": "52920751e1f7a803d51c70778f8beef1e7f250e49f4d72fa4043906f8a5b3378",
+  "installation": {
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "singleCandidate": true,
+    "closedManifestEntries": 232530,
+    "closedManifestSha256": "22fc9ed0fc4cd5804a2d7525131ee469cc7deb9cf9c82c42d3c0634eeaa96385",
+    "closedManifestsMatch": true,
+    "exactDuplicateCleanup": true
+  },
+  "currentFormal": {
+    "globalSearchTab": "Tab from query to close, Shift+Tab to query with typed value",
+    "globalSearchEscape": "exact originating composer",
+    "globalSearchConfirm": "selected Q composer in AX; landmark as final focused element not confirmed",
+    "narrowWindowLogicalSize": [900, 620],
+    "restoredWindowLogicalSize": [1280, 820],
+    "narrowContentClose": "Escape and button click each restore exact opener",
+    "protectedDrafts": "B3 four exact paragraphs 187/75/32/27 and permission unconfirmed",
+    "modelSends": 0,
+    "oldResends": 0
+  },
+  "previousFormal": {
+    "P05": "native file picker cancel and two owned files; @ query cancel and keyboard choice; draft restored",
+    "P08": "owned 32044-byte audio changed in place, refused then reread and confirmed; exact bytes verified read-only; unsupported Goose send disabled; malformed WAV refused",
+    "P16": "valid two-page PDF with independent visual rendering; corrupt/encrypted explicit states; selected DOCX, XLSX, PPTX and PNG visuals",
+    "P20-P22": "owned A/B/C changes, stale and missing file, both version notes retained, selected PNG region, exact 4808-byte native Save As; zero model rework",
+    "P30": "two native public tabs, hide/show, switch owner, close background and all; zero permission grants",
+    "P45": "normal, large and minimum windows, previous narrow close lost focus; VoiceOver and system zoom not run",
+    "H17": "owned preparation and rejection/cancellation preview; no dependency or port run",
+    "L": "33 minutes, one app/Codex/Goose PID each; no child-inclusive memory or idle-reaping conclusion"
+  },
+  "open": "P07 system drag, real Agent media, real permission revocation, VoiceOver and scale, P18 eligible unknown tools, whole P45 and 29 by 8"
+}
