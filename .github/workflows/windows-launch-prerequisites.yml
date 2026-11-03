@@ -24,6 +24,7 @@ on:
             AccessDiagnostics,
             GitJobWorktree,
             TerminalProbe,
+            WorktreeWrapper,
           ]
 
 permissions:

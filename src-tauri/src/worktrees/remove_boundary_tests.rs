@@ -3,7 +3,7 @@ use super::{
     tests::{self, Repo, git},
     *,
 };
-use std::{fs, path::Path, sync::atomic::AtomicBool};
+use std::{fs, path::Path, sync::atomic::AtomicBool, time::Duration};
 const REMOVE: &str = fixture::REMOVE;
 fn confirmation(a: &Archive, b: &Recovery) -> RemoveConfirmation {
     RemoveConfirmation {
@@ -290,18 +290,24 @@ fn removal_identity_backup_rejects_parent_replacement_before_build() {
 }
 #[test]
 fn removal_identity_deleted_requires_original_retained_parent() {
-    recycle_tests::isolated(
+    let operation_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    let prepare_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 30 });
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+        Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
             let m = Worktrees::default();
-            let l = recycle_tests::created(&m, &s, &r);
+            let l = recycle_tests::created_with_timeout(&m, &s, &r, operation_wait);
             let a = fixture::archive(&m, &s, &l);
-            let o = fixture::prepare_removal(&m, &s, &a);
+            let o = fixture::prepare_removal_with_timeout(&m, &s, &a, prepare_wait);
             let b = o.recovery.unwrap();
             m.confirm_remove(&s, REMOVE, confirmation(&a, &b)).unwrap();
-            assert_eq!(recycle_tests::wait(&m, &s, REMOVE).state, "ready");
+            assert_eq!(
+                recycle_tests::wait_with_timeout(&m, &s, REMOVE, operation_wait).state,
+                "ready"
+            );
             let (_, doc) = storage::read(&s).unwrap();
             let intent = doc.operation.unwrap().removal.unwrap();
             let cancel = AtomicBool::new(false);

@@ -110,7 +110,7 @@ fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
                 )
                 .unwrap();
             assert_eq!(tests::op(reply).action, "remove");
-            let prepared = wait_prepared_with_timeout(&m, &s, remove, prepare_wait);
+            let prepared = wait_prepared(&m, &s, remove, prepare_wait);
             assert_eq!(prepared.state, "prepared", "{prepared:?}");
             assert_eq!(
                 prepared.removal_phase.as_deref(),
@@ -209,13 +209,6 @@ pub(super) fn wait_prepared(
     m: &Worktrees,
     s: &crate::meta_store::MetaStore,
     id: &str,
-) -> Operation {
-    wait_prepared_with_timeout(m, s, id, std::time::Duration::from_secs(30))
-}
-fn wait_prepared_with_timeout(
-    m: &Worktrees,
-    s: &crate::meta_store::MetaStore,
-    id: &str,
     timeout: std::time::Duration,
 ) -> Operation {
     let end = std::time::Instant::now() + timeout;
@@ -273,7 +266,7 @@ pub(super) fn prepare_removal_with_timeout(
     .unwrap();
     #[cfg(windows)]
     eprintln!("FARFOLD_REMOVE_PREPARE phase=wait.enter");
-    wait_prepared_with_timeout(m, s, REMOVE, timeout)
+    wait_prepared(m, s, REMOVE, timeout)
 }
 #[test]
 fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {

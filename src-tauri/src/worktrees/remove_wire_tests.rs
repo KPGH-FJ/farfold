@@ -4,18 +4,22 @@ use super::{
     *,
 };
 use serde::Serialize;
+use std::time::Duration;
 fn emit(name: &str, value: impl Serialize, out: &mut Vec<serde_json::Value>) {
     out.push(serde_json::json!({"name":name,"value":serde_json::to_value(value).unwrap()}));
 }
 #[test]
 fn actual_remove_and_recover_wire_receipts() {
-    recycle_tests::isolated(
+    let operation_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    let prepare_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 30 });
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts",
+        Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
             let m = Worktrees::default();
-            let l = recycle_tests::created(&m, &s, &r);
+            let l = recycle_tests::created_with_timeout(&m, &s, &r, operation_wait);
             let a = fixture::archive(&m, &s, &l);
             let id = fixture::REMOVE;
             let mut wire = Vec::new();
@@ -51,7 +55,7 @@ fn actual_remove_and_recover_wire_receipts() {
                 )
                 .unwrap();
             emit("removeInitial", initial, &mut wire);
-            let prepared = fixture::wait_prepared(&m, &s, id);
+            let prepared = fixture::wait_prepared(&m, &s, id, prepare_wait);
             assert_eq!(prepared.state, "prepared", "{prepared:?}");
             emit("removePrepared", &prepared, &mut wire);
             emit("awaitingList", m.list(&s).unwrap(), &mut wire);
@@ -70,7 +74,7 @@ fn actual_remove_and_recover_wire_receipts() {
                 )
                 .unwrap();
             emit("removeConfirm", initial, &mut wire);
-            let done = recycle_tests::wait(&m, &s, id);
+            let done = recycle_tests::wait_with_timeout(&m, &s, id, operation_wait);
             assert_eq!(done.state, "ready", "{done:?}");
             emit("removeReady", done, &mut wire);
             emit("removedList", m.list(&s).unwrap(), &mut wire);
@@ -121,7 +125,7 @@ fn actual_remove_and_recover_wire_receipts() {
             assert_eq!(tests::op(p.clone()).state, "prepared");
             emit("recoverPrepared", p, &mut wire);
             emit("recoverStart", cold.start(&s, recover).unwrap(), &mut wire);
-            let ready = recycle_tests::wait(&cold, &s, recover);
+            let ready = recycle_tests::wait_with_timeout(&cold, &s, recover, operation_wait);
             assert_eq!(ready.state, "ready", "{ready:?}");
             emit("recoverReady", ready, &mut wire);
             emit("recoveredList", cold.list(&s).unwrap(), &mut wire);

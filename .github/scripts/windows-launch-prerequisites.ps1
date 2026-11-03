@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -58,6 +58,12 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
+} elseif ($Cohort -ceq 'WorktreeWrapper') {
+  $tests = @(
+    'worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent',
+    'worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts'
+  )
+  @{ name = 'worktree-removal-wrappers'; filter = $tests; exact = $false; threads = 2; names = $tests }
 } elseif ($Cohort -ceq 'TerminalProbe') {
   $prefix = 'platform_tests::windows_conpty::'
   $tests = [ordered]@{
@@ -203,7 +209,7 @@ $failures = @()
 foreach ($group in $groups) {
   Confirm-Inputs
   $threads = $group.threads ?? 1
-  $testArgs = @($group.filter, '--show-output', "--test-threads=$threads", '--color=never')
+  $testArgs = @($group.filter) + @('--show-output', "--test-threads=$threads", '--color=never')
   if ($group.exact) { $testArgs += '--exact' }
   if ($group.ignored) { $testArgs += '--ignored' }
   foreach ($name in $group.skip) { $testArgs += @('--skip', $name) }
