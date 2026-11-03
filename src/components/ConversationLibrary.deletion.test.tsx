@@ -82,7 +82,9 @@ import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 type Element = ReactElement<Record<string, unknown>>;
 let filter: LibraryFilter;
 const onFilter = vi.fn();
-function render() {
+function render(
+  extra: Partial<Parameters<typeof ConversationLibrary>[0]> = {},
+) {
   h.cursor = 0;
   const tree = ConversationLibrary({
     agents: [],
@@ -92,11 +94,12 @@ function render() {
     onImport: vi.fn(),
     onNew: vi.fn(),
     defaultCwd: null,
+    ...extra,
   });
   const pending = h.effects.splice(0);
   if (pending.length) {
     pending.forEach((effect) => effect());
-    return render();
+    return render(extra);
   }
   const nodes: Element[] = [];
   const visit = (node: ReactNode) =>
@@ -153,6 +156,27 @@ beforeEach(() => {
     query: "",
     favorites: false,
   };
+});
+
+it("restores the selected filter once when reading removes the opening row", () => {
+  filter = { kind: "unread" };
+  const selected = render().find(
+    (node) => node.props["aria-selected"] === true,
+  )!;
+  const focus = vi.fn();
+  (selected.props.ref as { current: unknown }).current = { focus };
+  const opener = {
+    isConnected: false,
+    focus: vi.fn(),
+  } as unknown as HTMLButtonElement;
+  const returnFocus = { opener };
+  render({ returnFocus });
+  expect(focus).toHaveBeenCalledOnce();
+  expect(opener.focus).not.toHaveBeenCalled();
+
+  render({ active: false, returnFocus });
+  render({ active: true, returnFocus });
+  expect(focus).toHaveBeenCalledOnce();
 });
 
 it("freezes the reviewed filtered archive set and excludes conversations entering it later", async () => {
