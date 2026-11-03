@@ -1,0 +1,81 @@
+{
+  "kind": "ExecutionPlanMaintenance",
+  "reviewDate": "2026-11-03",
+  "dateAuthority": "client Asia/Shanghai",
+  "schedulingAuthority": false,
+  "onlyActivePlan": "plans/agent-access.md",
+  "sourceCommitBefore": "7c0182ed402e909d1113ad3b453085e2b2a5811e",
+  "functionalSourceCommitUnchanged": "ceff162de735a9d4b2b9e969927ab6224bea825b",
+  "purpose": "Clarify the current dependency-closed batch and conditional continuation; preserve all original product and acceptance conditions.",
+  "changes": [
+    "Name search, source navigation and saving as the current shared-capability batch.",
+    "Keep conditional P18 work first; unavailable unknown/restore cases wait for concrete new evidence while independent work continues.",
+    "Separate subsequent common batches, per-Agent evidence, Windows and cross-cutting resource/data work.",
+    "Reuse validated tools and unchanged evidence; batch full engineering, independent review, installation and actual validation."
+  ],
+  "unchangedFiles": {
+    "docs/agent-access-requirements.md": "392e3749d911f042a6fa3906143926149c08b60b151ed50b7569fdd0e0883939",
+    "PRODUCT.md": "b7f00e53aa29b9c743766ac7f7f7e321e563f2ea0acb8978cc11b2c61e197c1c",
+    "AGENTS.md": "d2db958483bc29a52b68e978533b1e0e1dd0df9895179de1e1b4f15eff3fba06",
+    "docs/agent-first-release.md": "4359d2a9ee1828b7bcf661b024295dbf47428d62bc4171ca248542c1aee50b2b"
+  },
+  "scope": {
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "originalRequirementCount": 151,
+    "newAcceptanceGateAdded": false,
+    "originalPostponedAndUndecidedBoundariesRetained": true,
+    "sixJourneyGateRestored": false,
+    "anotherMacGateAdded": false
+  },
+  "observedBaseline": {
+    "productionInputsMatchInstalledCandidate": true,
+    "formalApplicationFiveFilesMatch": true,
+    "newRealRequests": 0,
+    "oldRequestResends": 0,
+    "newInstallation": false,
+    "fullEngineeringRerun": false,
+    "productAcceptanceClaimed": false
+  },
+  "ciMetadata": {
+    "readOnlySource": "https://api.github.com/repos/KPGH-FJ/farfold/actions/runs?per_page=10",
+    "pageSize": 10,
+    "totalRunsReported": 57,
+    "latestFullWindowsRunOnPage": {
+      "id": 40498060809,
+      "name": "Windows verification",
+      "path": ".github/workflows/windows.yml",
+      "status": "completed",
+      "conclusion": "failure",
+      "createdAt": "2026-10-27T11:41:43Z",
+      "updatedAt": "2026-10-27T12:21:32Z",
+      "sourceCommit": "cfcfce6386aaca99c7a56d9a810bb59244733671",
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/40498060809"
+    },
+    "newWindowsExecutionProduced": false,
+    "billingOrCreditAvailabilityVerified": false,
+    "observationRef": {
+      "path": "output/2026-11-03-development-plan-review/ci-metadata-observation.json",
+      "sha256": "1801782c2b16ce2fd4c8c01c2f31ec2bd2582047c79db56161befcb1f77cfa42"
+    }
+  },
+  "planBeforeSha256": "621abc74571fc0cd7f5a499751e2195c5b5d71dfd43cdb4c23fdd76b2beddc96",
+  "developmentEnvironment": {
+    "rootNodeModulesBinPresent": false,
+    "declaredPrettierVersion": "3.9.6",
+    "cachedMatchingVersionUsedForDocs": true,
+    "fullRootDependenciesRestored": false,
+    "causeOfMissingDependencies": "unknown",
+    "nextSourceBatchMustRestoreLockedDependencies": true
+  },
+  "planAfterSha256": "670f88965d688124326f58b1bb8334f2e5292f8fbe5a6b496ce27560e5ea45df",
+  "documentationValidation": {
+    "originalConditions": 151,
+    "activePlans": 1,
+    "activePlanBytes": 4946,
+    "activePlanLines": 40,
+    "formatterVersion": "3.9.6",
+    "formatterSource": "existing matching npm cache",
+    "fullEngineeringRerun": false
+  }
+}

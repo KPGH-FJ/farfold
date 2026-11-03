@@ -1,10 +1,12 @@
 # Farfold 当前状态
 
-更新：2026-11-02。**P18新补失败编辑、拟写入差异与来源导航正式分项；遗漏编辑差异/文件来源的缺陷已修并正式安装为ceff162de。所选官方冷恢复及新请求结束态已验证，未知工具仍缺合格现有对象；完整P18及29×8保持开放，旧请求零重发。** 本页统一当前实现、工程检查、正式应用与真实分项；执行顺序只见[唯一活动计划](../plans/agent-access.md)。首次交付仍为全部 **29家×八项标准**，151条原始任务及完成条件完整保存在[要求参考](agent-access-requirements.md)，产品契约不变。
+更新：2026-11-03（本次更新执行安排，功能及正式验证仍据11月2日回执）。**P18新补失败编辑、拟写入差异与来源导航正式分项；遗漏编辑差异/文件来源的缺陷已修并正式安装为ceff162de。所选官方冷恢复及新请求结束态已验证，未知工具仍缺合格现有对象；完整P18及29×8保持开放，旧请求零重发。** 本页统一当前实现、工程检查、正式应用与真实分项；执行顺序只见[唯一活动计划](../plans/agent-access.md)。首次交付仍为全部 **29家×八项标准**，151条原始任务及完成条件完整保存在[要求参考](agent-access-requirements.md)，产品契约不变。
 
 ## 当前工作与接续
 
 当前处于既有第3批“集中补正式证据与29×8缺口”。共用能力已有多批实现和正式分项，**尚未形成任何一家八项全部完成的结论**，不能以源码、测试数量或代表样本折算整体完成百分比。
+
+11月3日计划复核已把当前共用批明确为查找、来源定位与保存，并列出后续依赖批次和缺条件恢复触发；具体执行只见[唯一活动计划](../plans/agent-access.md)。按原约定成批检查/安装、复用未变化证据，以可用成果汇报。本次未新增功能、真实发送或完整工程复测，要求与正式安装身份不变，见[计划维护记录](maintenance/2026-11-03-development-plan-review.json)。
 
 | 层级           | 当前统一口径                                                                                                                                                                        |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -136,10 +138,11 @@ d503的P32[安装](evidence/2026-10-30-p32-continuation/formal-installation-summ
 
 ## 未解决问题与执行边界
 
+- **本机检查前置**：11/3发现开发依赖目录缺少`.bin`与Prettier入口，原因未知；本次用已有缓存中同为3.9.6的格式器检查文档，未恢复整套依赖、未重跑工程。下一源码批先按锁文件恢复依赖并核工具链；这不改变已安装应用或既有工程回执。
 - **六项保留等待**：Antigravity、Autohand、Gemini、Nova、Grok、Amp。前三中的Antigravity/Gemini/Nova有需登录观察；Autohand/Grok沿用旧认证负结果，未在后续批次重测；Amp另保留认证未完成及结果未知。均不催登录、不换服务或重发。Claude为保存基线未确认，DimCode为声明读取失败，不统称缺账号。见[已有配置读取](evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json)、[Amp未知](evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json)。
 - **旧失败与未知**：siGit、Droid、MiniMax、Kimchi/Amp等未知，以及Kimi/Goose回答、Kilo文件缺LF、Qoder冷开失败等原记录保持；新安装、进程存活或正常退出都不补终态。已核错误只按证据归因，额度文字、握手超时、默认OpenCode初始化及历史自动重开请求者仍有未知。
 - **官方契约与版本**：ARCH-44仍缺Antigravity、Devin、DimCode、Factory、Poolside的具体回调路由契约；Nova所选1.1.49的V1权限方法差异、Grok1.0.46发行与公开源码映射未齐。Kilo/OpenCode获准后自行写入及回调拒绝反例不等于应由Farfold另建执行器；不改官方程序或加私有协议绕过。
-- **Windows实际失败**：最近完整运行40498060809的前端691文件9192通过/3跳过且打包通过，Rust2292通过/72失败/66忽略；六条窄路径成功不关闭整组。汇总因GitHub付款/额度未启动、安装包依赖跳过，不能补Cargo退出码。后续临时文件清理、OS32错误分类、LF及ConPTY对照源码待Windows复验；交叉检查曾在ring缺MinGW时停止，未到项目编译。旧间歇收尾根因、完整恢复和真实系统流程仍开放。见[窄修与完整运行](evidence/2026-10-24-agent-acceptance/windows-stdout-handoff-and-full-run-summary.json)、[临时清理](evidence/2026-10-24-agent-acceptance/windows-temporary-cleanup-source-summary.json)、[LF/ConPTY测试](evidence/2026-10-24-agent-acceptance/windows-followup-test-fixtures-summary.json)。72是失败用例数，不是72个独立缺陷；10/30只读API最近20条的最新仍为该旧运行，无新结果；45项集中Create未收尾、10项停共用初连，余17项分12组；付款/额度当前是否解除未核。详见[本次调查](../output/2026-10-30-p18-output-tail/windows-next-investigation/summary.json)。
+- **Windows实际失败**：最近完整运行40498060809的前端691文件9192通过/3跳过且打包通过，Rust2292通过/72失败/66忽略；六条窄路径成功不关闭整组。汇总因GitHub付款/额度未启动、安装包依赖跳过，不能补Cargo退出码。后续临时文件清理、OS32错误分类、LF及ConPTY对照源码待Windows复验；交叉检查曾在ring缺MinGW时停止，未到项目编译。旧间歇收尾根因、完整恢复和真实系统流程仍开放。见[窄修与完整运行](evidence/2026-10-24-agent-acceptance/windows-stdout-handoff-and-full-run-summary.json)、[临时清理](evidence/2026-10-24-agent-acceptance/windows-temporary-cleanup-source-summary.json)、[LF/ConPTY测试](evidence/2026-10-24-agent-acceptance/windows-followup-test-fixtures-summary.json)。72是失败用例数，不是72个独立缺陷；11/3只读API最近10次运行中，最新完整Windows仍为10/27的40498060809，无新实机结果；45项集中Create未收尾、10项停共用初连，余17项分12组。该元数据不证明付款/额度已解除，此条件仍未知；见[本次只读核对](maintenance/2026-11-03-development-plan-review.json)。详见[本次调查](../output/2026-10-30-p18-output-tail/windows-next-investigation/summary.json)。
 - **数据与更新**：保留历史、草稿、附件、未知请求、证据与备份；每次更新重新核活动工作、正常退出和新基线。206的P35/P40分项、ef788首次失败/正例与343 R2安装/实际观察分开。关闭态清单不延伸到启动后，正常退出不补停止。原冻结回执中的要求文件属于检查当时输入，后续进度文档另核，不称最终文档重跑七项；不以新快照覆盖旧数据。
 - **范围保持**：29家八项、151条原始条件不变；不恢复六旅程或另一台Mac验收门槛。签名、公证、公开分发/更新渠道仍后置；LifeModel真实采集/注入及编辑器等契约排除项不自动恢复。
 
