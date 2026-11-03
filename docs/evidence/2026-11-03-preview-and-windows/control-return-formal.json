@@ -1,0 +1,86 @@
+{
+  "installedSource": "dc066276be845a24b21d68952476797dfd3b9f84",
+  "installedBinarySha256": "7001e44a2b9c1074d8ec28d3db3c27fbd830cfcfcba43307a03cc69df4d27837",
+  "engineering": {
+    "naturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontendFiles": 704,
+    "frontendPassed": 9449,
+    "rustPassed": 2333,
+    "rustIgnored": 6,
+    "boundInputs": 2354
+  },
+  "installation": {
+    "builds": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "closedManifestEntries": 232671,
+    "closedManifestSha256": "760fcab1244aea840462e754079f9a8df4902f78acba426d73b6c6c3ebe986b9",
+    "closedManifestsMatch": true,
+    "exactDuplicateCleanup": true
+  },
+  "identityRead": {
+    "previousFullCheck": "one failure before dispatch: timeout raced the expected changed receipt",
+    "sourceFix": "831b9c2a6",
+    "affectedTestsPassed": 15,
+    "priorNoWireOraclePreserved": true,
+    "formalOfficialIdentityReadNewOperation": false
+  },
+  "p42": {
+    "ownedOriginal": "2026-10-06 owned Codex parallel isolation fixture",
+    "selectedAttentionFilterPreserved": true,
+    "keyboardRowEntry": true,
+    "keyboardBackReturnedExactRow": true,
+    "nextTabExactRowAction": "收藏",
+    "warmEntryInitialFocus": "document; keyboard sequence restarts from sidebar",
+    "warmEntrySourceFix": "bb69ed759",
+    "warmEntryAffectedTestsPassed": 99,
+    "warmEntryFixInstalled": false,
+    "unreadRowDisappearance": "controlled fallback to selected filter; selected installed unread list had no confirmed owned test row"
+  },
+  "resource": {
+    "installedSource": "ba6720e15",
+    "totalObservedSeconds": 2040,
+    "sampleOffsetsSeconds": [0, 300, 900, 1740, 1920, 2040],
+    "noAppInteractionBetweenSamples": true,
+    "newModelSends": 0,
+    "scope": "Single installed app, visible owned Goose conversation, hidden protected Codex conversation. Other local development processes also running.",
+    "rssKiB": {
+      "farfold": [104720, 102736, 104064, 90352, 91424, 91792],
+      "goose": [38848, 38832, 38864, 34352, 34352, 34352],
+      "codex": [282400, 177216, 178752, 161168, 94992, 95056]
+    },
+    "sameObservedProcessesAtAllSamples": true,
+    "idleExitObservedForTheseThree": false,
+    "coverageLimits": "No exact close reason, memory sum, OS sleep, disconnect, model load, or causal memory claim.",
+    "privateRawSha256": "2d7d3c0575bd41812bb9b18ab42240db841645280ebc5c94f28f972cd6fc726f"
+  },
+  "p18AndOfflineHtml": {
+    "installed": "ba6720e15",
+    "P18": {
+      "source": "owned 2026-10-06 Codex application browser refusal",
+      "originalUserApprovalAction": "cancelled in the original documented run",
+      "currentHistoricalReplay": "exact page-read tool visible as a failed execution; distinct follow-on closed step and exact refusal reply visible",
+      "newRequestCount": 0,
+      "rawRefusalFieldVisible": false,
+      "newLiveRefusalProved": false
+    },
+    "P24": {
+      "ownedLoopbackControlReceived": 1,
+      "nativeOfflineProbeRequestsAtServer": 0,
+      "nativeScriptReportedRefusal": true,
+      "testPageClosed": true,
+      "ownedLoopbackServerStopped": true
+    },
+    "modelSends": 0,
+    "oldResends": 0
+  },
+  "coldRestore": {
+    "b3FourParagraphsExact": true,
+    "b3Lengths": [187, 75, 32, 27],
+    "b3PermissionUnconfirmed": true,
+    "qTwoParagraphsAttachmentAndThreeOpinions": true,
+    "p02DraftAndSavedCountOne": true
+  },
+  "modelSends": 0,
+  "oldResends": 0
+}

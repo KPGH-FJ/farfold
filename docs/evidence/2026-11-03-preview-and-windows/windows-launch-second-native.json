@@ -1,0 +1,154 @@
+{
+  "runId": 41597228006,
+  "sourceCommit": "18143e71d5ab4127b470382faffed35c71ac4bd8",
+  "artifactSha256": "1949de8f8744984283d3b581a33b49fbf38df4abde735e94bee816d83e26512c",
+  "providerDigestMatched": true,
+  "artifactMembers": 18,
+  "nativeBuild": {
+    "buildSucceeded": true,
+    "runnerExitCode": 0,
+    "testBuildExit": 0,
+    "fixtureBuildExit": 0,
+    "failure": null
+  },
+  "groups": {
+    "initial-connect": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_exact_whole_file_limit_sends_and_two_extra_bytes_never_reach_control",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::prompt_context_baseline_text_and_link_need_no_embedded_handshake",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::prompt_context_false_or_omitted_actual_session_rejects_despite_supported_preparation_and_cache",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::prompt_context_missing_actual_handshake_rejects_before_control_send",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::prompt_context_supported_actual_wire_preserves_content_and_pump_busy_guard",
+          "result": "ok"
+        },
+        {
+          "name": "acp_client::session::prompt_context_tests::prompt_context_supported_does_not_bypass_existing_preview_protection",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard",
+        "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_exact_whole_file_limit_sends_and_two_extra_bytes_never_reach_control",
+        "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache",
+        "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending",
+        "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback",
+        "acp_client::session::prompt_context_tests::prompt_context_baseline_text_and_link_need_no_embedded_handshake",
+        "acp_client::session::prompt_context_tests::prompt_context_false_or_omitted_actual_session_rejects_despite_supported_preparation_and_cache",
+        "acp_client::session::prompt_context_tests::prompt_context_missing_actual_handshake_rejects_before_control_send",
+        "acp_client::session::prompt_context_tests::prompt_context_supported_actual_wire_preserves_content_and_pump_busy_guard",
+        "acp_client::session::prompt_context_tests::prompt_context_supported_does_not_bypass_existing_preview_protection"
+      ],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 2430 filtered out; finished in 15.69s"
+      ],
+      "passed": true
+    },
+    "create": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook"
+      ],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 20.65s"
+      ],
+      "passed": true
+    },
+    "create-launch-control": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "worktrees::windows_git::launch_matrix_tests::owned_same_program_known_config_extended_plain_observations_preserve_original_owner",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.53s"
+      ],
+      "passed": true
+    }
+  },
+  "sourceMapMatches": {
+    "exact": 1,
+    "checkoutCRLF": 837
+  },
+  "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/41597228006",
+  "originalWaitSeconds": 15,
+  "observedWorkerElapsedMilliseconds": 12939,
+  "startMilestonesMilliseconds": {
+    "revalidate": 0,
+    "validated-checkout": 5738,
+    "reserve-target": 5738,
+    "persist-reservation-and-dispatch": 5741,
+    "git-add": 5741,
+    "materialize-reserved": 6779,
+    "verify-created": 12117,
+    "verify-final-namespace": 12936
+  },
+  "retainedOriginalExactAssertions": [
+    "new branch at same selected commit",
+    "dirty working bytes and ignored file untouched",
+    "original index bytes preserved",
+    "untrusted hook did not run",
+    "new checkout clean"
+  ],
+  "scope": "Eleven original full failures and one independent Git control; remaining Create cases still depend on full native suite.",
+  "fullRun": {
+    "runUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/41600391428",
+    "sourceCommit": "4f60c4444c27b19a210e006b64f93e26321fd724",
+    "stateAtRecord": "running"
+  },
+  "firstFullRun": {
+    "runId": 41599078388,
+    "source": "5ca666934ceaa89bb7a972246ae27c5a63c21102",
+    "frontend": {
+      "files": 704,
+      "passed": 9445,
+      "skipped": 3,
+      "buildPassed": true
+    },
+    "rustBlockedAt": "Clippy two cloned-reference-to-slice warnings in owned test fixture",
+    "rustSuiteStarted": false,
+    "installerSkipped": true,
+    "rustLogSha256": "1a354eb4310359a1877290eb184c6f9551b3100a8c73f521354a5c2fd7da0e5f"
+  }
+}
