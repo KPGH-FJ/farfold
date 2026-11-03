@@ -240,11 +240,37 @@ fn replaced_root_during_read_is_rejected() {
     fs::create_dir(&root).unwrap();
     let source = root.join("source.txt");
     fs::write(&source, "original").unwrap();
+    let prior = inspect(&root, &source).unwrap();
     let opened = open_source(&root, &source, MAX_FILE_BYTES).unwrap();
-    fs::rename(&root, outer.path().join("moved-root")).unwrap();
+    let moved = outer.path().join("moved-root");
+    let still_open = match fs::rename(&root, &moved) {
+        Ok(()) => Some(opened),
+        #[cfg(windows)]
+        Err(error)
+            if matches!(
+                error.raw_os_error().map(|code| code as u32),
+                Some(
+                    windows_sys::Win32::Foundation::ERROR_ACCESS_DENIED
+                        | windows_sys::Win32::Foundation::ERROR_SHARING_VIOLATION
+                )
+            ) =>
+        {
+            // Some Windows filesystems refuse to rename a directory with an
+            // open descendant. Confirm the read still sees the original, then
+            // require that the same rename succeeds once the handles close.
+            assert_eq!(recheck(&opened), Ok(()));
+            drop(opened);
+            fs::rename(&root, &moved).unwrap();
+            None
+        }
+        Err(error) => panic!("could not replace the fixture directory: {error}"),
+    };
     fs::create_dir(&root).unwrap();
     fs::write(root.join("source.txt"), "original").unwrap();
-    assert_eq!(recheck(&opened), Err(DeliveryError::Changed));
+    if let Some(opened) = still_open {
+        assert_eq!(recheck(&opened), Err(DeliveryError::Changed));
+    }
+    assert!(matches!(read_text(&prior), Err(DeliveryError::Changed)));
 }
 
 #[cfg(unix)]
