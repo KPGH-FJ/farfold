@@ -1,0 +1,364 @@
+{
+  "nativeGitAndWorktree": {
+    "runId": 41671625376,
+    "sourceCommit": "ff0af178fb8d8e2ecb5c9a75be5b01c3c255c4eb",
+    "artifactSha256": "0a6b5fb8ecf3877d2505f9bd2b92b373389a2eeed9ced10657eb88d3d4c8c978",
+    "providerDigestMatched": true,
+    "artifactMembers": 24,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "git-job-exact-handle": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::git_exact_handle_tests::actual_git_job_observes_exact_launch_handle_across_exit",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 0.11s"
+        ],
+        "passed": true
+      },
+      "maintenance-failed-unseal": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 30.49s"
+        ],
+        "passed": true
+      },
+      "worktree-removal-parent-identity": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 101.05s"
+        ],
+        "passed": true
+      },
+      "worktree-remove-recover-wire": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 130.26s"
+        ],
+        "passed": true
+      },
+      "worktree-remove-offline-two-confirmations": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 107.09s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 840
+    }
+  },
+  "exactGitHandle": {
+    "fixedCommand": "hash-object --stdin --no-filters",
+    "detached": true,
+    "selectedAbsolutePathGitMayBeLauncher": true,
+    "topology": "original Job wrapper, extra test fixture, selected Git and any Git descendants",
+    "selectedHandleFromSpawn": true,
+    "selectedHandleBelongsToOriginalJob": true,
+    "before": {
+      "accountingBefore": 3,
+      "listedCount": 3,
+      "listError": null,
+      "accountingAfter": 3,
+      "totalProcesses": 3,
+      "helperWait": 258,
+      "gitWait": 258
+    },
+    "exitSamples": 7494,
+    "firstAssignedOneListedZero": null,
+    "bothHandlesSignaled": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": 0
+    },
+    "afterSelectedHandleRelease": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": null
+    },
+    "finalEmptyAccountingSample": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": null
+    }
+  },
+  "removalWireCases": [
+    "removeInspection",
+    "knownRefusal",
+    "removeInitial",
+    "removePrepared",
+    "awaitingList",
+    "removeConfirm",
+    "removeReady",
+    "removedList",
+    "coldRemovalList",
+    "removeRechecked",
+    "recoveryChecked",
+    "recoverPrepared",
+    "recoverStart",
+    "recoverReady",
+    "recoveredList",
+    "coldRecoveredList",
+    "recoverRechecked",
+    "exactUnknown"
+  ],
+  "nativeTerminal": {
+    "runId": 41674065470,
+    "sourceCommit": "2e1fd34ab08984c485021c2ad81e4d26551c6821",
+    "artifactSha256": "286f606aab4e83332d56659ec2d04c7978f0f6882f6d8f097953843e3d4efb69",
+    "providerDigestMatched": true,
+    "artifactMembers": 18,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "terminal-manager-python": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 0.32s"
+        ],
+        "passed": true
+      },
+      "terminal-manager-no-reply-close": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 3.13s"
+        ],
+        "passed": true
+      },
+      "terminal-raw-cursor-reply": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::raw_conpty_replies_only_to_an_observed_query",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 0.15s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 840
+    }
+  },
+  "terminalPythonReadiness": {
+    "case": "Manager",
+    "readyObserved": true,
+    "waitElapsedMs": 231,
+    "bytes": 118,
+    "cursorQueries": 1,
+    "cursorReplies": 1,
+    "rootCause": "unknown"
+  },
+  "terminalPythonOwner": {
+    "case": "Manager",
+    "terminated": false,
+    "deadlineReached": false,
+    "cancelRequested": false,
+    "invalidPipeObserved": false,
+    "inputFailedObserved": false,
+    "tryWaitErrorObserved": false,
+    "stdinWrittenAndClosed": true,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "stdoutFailed": false,
+    "stderrFailed": false,
+    "stdoutOverflow": false,
+    "stderrOverflow": false,
+    "childReaped": true,
+    "directJobInactive": true,
+    "elapsedMs": 318,
+    "childExitCode": 0
+  },
+  "terminalNoReply": {
+    "case": "ManagerCursorNoReply",
+    "replyEnabled": false,
+    "readyObserved": false,
+    "finishSent": false,
+    "confirmedExistingClose": true,
+    "secondCloseAbsent": true,
+    "closeError": false,
+    "fixtureExit": 1,
+    "cursorQueries": 1,
+    "cursorReplies": 0,
+    "pendingReplies": 0,
+    "consumerFailed": false,
+    "internalPtyEOF": "notObservableViaPublicSink",
+    "scope": "independent diagnostic; no original Manager/Drain pass inferred"
+  },
+  "terminalNoReplyOwner": {
+    "case": "ManagerCursorNoReply",
+    "terminated": false,
+    "deadlineReached": false,
+    "cancelRequested": false,
+    "invalidPipeObserved": false,
+    "inputFailedObserved": false,
+    "tryWaitErrorObserved": false,
+    "stdinWrittenAndClosed": true,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "stdoutFailed": false,
+    "stderrFailed": false,
+    "stdoutOverflow": false,
+    "stderrOverflow": false,
+    "childReaped": true,
+    "directJobInactive": true,
+    "elapsedMs": 3127,
+    "childExitCode": 0
+  },
+  "rawTerminalReply": {
+    "case": "CursorReply",
+    "cursorCoverage": "observed",
+    "cursorQueries": 1,
+    "cursorReplies": 1,
+    "closePauseCoverage": "notcovered",
+    "ptyEOF": "zero",
+    "bytes": 128,
+    "fixtureExit": 1,
+    "rootCause": "unknown"
+  },
+  "fullNativeRunStarted": false,
+  "oldAgentRequestsResent": 0,
+  "nativeWorktreeWrappers": {
+    "runId": 41676228548,
+    "sourceCommit": "a5bf71f755428045fc84eab70e31121e3940a078",
+    "artifactSha256": "fc4974fab6ce36777f051226f0ec4b11d5687e9841f3de479f09a0c907b48514",
+    "providerDigestMatched": true,
+    "artifactMembers": 12,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-removal-wrappers": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+          "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 147.38s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 840
+    }
+  },
+  "isolatedChildCompletion": [
+    "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+    "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+  ]
+}
