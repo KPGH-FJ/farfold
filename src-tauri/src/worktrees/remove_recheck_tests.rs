@@ -5,11 +5,22 @@ use std::{fs, path::Path};
 const RECOVER: &str = "52345678-1234-4123-8123-123456789abc";
 
 fn deleted(m: &Worktrees, s: &MetaStore, r: &tests::Repo) -> Recovery {
+    let started = std::time::Instant::now();
+    let phase = |name| {
+        eprintln!(
+            "FARFOLD_REMOVE_RECHECK_FIXTURE elapsedMs={} phase={name}",
+            started.elapsed().as_millis()
+        );
+    };
+    phase("create.enter");
     let l = recycle_tests::created(m, s, r);
+    phase("archive.enter");
     let a = fixture::archive(m, s, &l);
+    phase("prepare-remove.enter");
     let p = fixture::prepare_removal(m, s, &a);
     assert_eq!(p.state, "prepared", "{p:?}");
     let b = p.recovery.unwrap();
+    phase("confirm-remove.enter");
     m.confirm_remove(
         s,
         fixture::REMOVE,
@@ -22,9 +33,11 @@ fn deleted(m: &Worktrees, s: &MetaStore, r: &tests::Repo) -> Recovery {
         },
     )
     .unwrap();
+    phase("wait-remove.enter");
     let o = recycle_tests::wait(m, s, fixture::REMOVE);
     assert_eq!(o.state, "ready", "{o:?}");
     assert!(!Path::new(&b.retained_path).exists());
+    phase("delete.complete");
     b
 }
 

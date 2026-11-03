@@ -72,7 +72,7 @@ pub(super) fn isolated_with_timeout(name: &str, timeout: Duration, body: impl Fn
         eprintln!("completed:{name}");
         return;
     }
-    use std::io::{Read, Seek};
+    use std::io::{Read, Seek, SeekFrom};
     let mut stdout = tempfile::tempfile().unwrap();
     let mut stderr = tempfile::tempfile().unwrap();
     let mut child = std::process::Command::new(std::env::current_exe().unwrap())
@@ -89,7 +89,19 @@ pub(super) fn isolated_with_timeout(name: &str, timeout: Duration, body: impl Fn
         if Instant::now() > end {
             let _ = child.kill();
             let _ = child.wait();
-            panic!("isolated maintenance test deadline");
+            fn tail(file: &mut std::fs::File) -> String {
+                let end = file.seek(SeekFrom::End(0)).unwrap();
+                file.seek(SeekFrom::Start(end.saturating_sub(262144)))
+                    .unwrap();
+                let mut bytes = Vec::new();
+                file.take(262144).read_to_end(&mut bytes).unwrap();
+                String::from_utf8_lossy(&bytes).into_owned()
+            }
+            panic!(
+                "isolated maintenance test deadline: {name}\nstdout:\n{}\nstderr:\n{}",
+                tail(&mut stdout),
+                tail(&mut stderr)
+            );
         }
         std::thread::sleep(Duration::from_millis(10));
     };
