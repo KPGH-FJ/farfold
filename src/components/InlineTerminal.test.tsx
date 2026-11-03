@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
   created: vi.fn(),
   focus: vi.fn(),
   write: vi.fn(),
+  dataHandler: null as ((data: string) => void) | null,
   writeln: vi.fn(),
   dispose: vi.fn(),
 }));
@@ -53,7 +54,8 @@ vi.mock("@xterm/xterm", () => ({
     writeln = h.writeln;
     focus = h.focus;
     dispose = h.dispose;
-    onData() {
+    onData(handler: (data: string) => void) {
+      h.dataHandler = handler;
       return { dispose: vi.fn() };
     }
   },
@@ -65,6 +67,7 @@ vi.mock("@xterm/addon-fit", () => ({
 }));
 
 import { InlineTerminal } from "./InlineTerminal";
+import { ptyWrite } from "../runtime/agents";
 import { BufferedLoginTerminal } from "../runtime/login_terminal";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 
@@ -81,7 +84,9 @@ beforeEach(() => {
   h.refs = [];
   h.effects = [];
   h.pending = [];
+  h.dataHandler = null;
   vi.clearAllMocks();
+  vi.stubGlobal("window", { atob });
   vi.stubGlobal(
     "ResizeObserver",
     class {
@@ -133,4 +138,34 @@ it("keeps a plain cancellation distinct when no finish intent belongs to this te
   await vi.waitFor(() => expect(h.focus).toHaveBeenCalledOnce());
   await session.close();
   expect(h.writeln).toHaveBeenCalledExactlyOnceWith(`\r\n${S.cancelled}`);
+});
+
+it("can send a terminal reply to output received before the terminal ID", async () => {
+  let accept!: (id: string) => void;
+  let output!: (data: string) => void;
+  const session = new BufferedLoginTerminal({
+    start: (onOutput) => {
+      output = onOutput;
+      return new Promise((resolve) => {
+        accept = resolve;
+      });
+    },
+    wait: () => new Promise(() => {}),
+    close: async () => 0,
+    exit: vi.fn(),
+  });
+  h.write.mockImplementation(() => h.dataHandler?.("\x1b[1;1R"));
+  try {
+    const started = session.start();
+    render(session, () => false);
+    await vi.waitFor(() => expect(h.focus).toHaveBeenCalledOnce());
+    output(btoa("\x1b[6n"));
+    expect(h.write).not.toHaveBeenCalled();
+    accept("owned");
+    await started;
+    expect(h.write).toHaveBeenCalledOnce();
+    expect(ptyWrite).toHaveBeenCalledExactlyOnceWith("owned", "\x1b[1;1R");
+  } finally {
+    h.write.mockReset();
+  }
 });

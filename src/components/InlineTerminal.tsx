@@ -71,10 +71,14 @@ export function InlineTerminal({
           resizedId = value.id;
           void ptyResize(value.id, term.cols, term.rows).catch(() => undefined);
         }
-        for (const chunk of value.output) {
-          if (chunk.sequence > sequence) {
-            term.write(decodeChunk(chunk.data));
-            sequence = chunk.sequence;
+        // Parsing can immediately emit a terminal response. Keep early output
+        // buffered until the response has a terminal ID to write back to.
+        if (value.id) {
+          for (const chunk of value.output) {
+            if (chunk.sequence > sequence) {
+              term.write(decodeChunk(chunk.data));
+              sequence = chunk.sequence;
+            }
           }
         }
         if (value.exit !== null && !showedExit) {
