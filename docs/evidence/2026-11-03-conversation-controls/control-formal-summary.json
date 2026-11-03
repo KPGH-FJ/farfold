@@ -1,0 +1,258 @@
+{
+  "system": "macOS arm64",
+  "previousInstalledSource": "485a6515f41442762135356472f381d89e4d3cc6",
+  "currentInstalledSource": "5d85b9e4c9e114132c834617cf2a393526b4eaa9",
+  "installedApp": {
+    "path": "/Applications/Farfold.app",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "binarySha256": "e813a7ea78fd3dccec07cb01fcd28d137c76c8c169998d022b9ceca57088df0d"
+  },
+  "sourceCheckpoints": [
+    "0bbd05b579925edc06ebbdd4d4320df6519ba15d",
+    "5d85b9e4c9e114132c834617cf2a393526b4eaa9"
+  ],
+  "engineering": {
+    "naturalZero": 7,
+    "frontFilesPassed": 704,
+    "frontTestsPassed": 9443,
+    "rustTestsPassed": 2333,
+    "rustExistingIgnored": 6,
+    "engineeringInputs": 2352,
+    "admittedInputs": 2351,
+    "productionInputs": 2348,
+    "frozenInputEndpointMatch": true,
+    "targetedRelatedFiles": 7,
+    "targetedRelatedTests": 91
+  },
+  "installation": {
+    "candidateBuildCount": 1,
+    "candidateMechanicalGroupsPassed": 9,
+    "installedMechanicalGroupsPassed": 6,
+    "mechanicalReadersRanSeparatelyBySameOperator": true,
+    "normalExitObserved": true,
+    "appClosedDataManifestsExact": true,
+    "manifestEntries": 232530,
+    "manifestSha256": "91aa6ec419806329070ecc18d34bc8c66d8895a1bf1b907ad1e4d7d179832dc8",
+    "exactDuplicateCandidateCleaned": true
+  },
+  "officialReadOnlyOnPreviousSource": {
+    "observedSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "system": "macOS arm64",
+    "existingAgent": "Codex",
+    "observedIntegrationVersion": "1.13.1",
+    "modelRequests": 0,
+    "configWriteConfirmed": 0,
+    "p39": {
+      "projectFixture": "farfold-owned-project-readcheck",
+      "extraDirectoryFixture": "farfold-owned-extra-readcheck",
+      "source": "官方程序的技能报告",
+      "projectOnlyFirst": true,
+      "projectAndExtraReportedTogether": true,
+      "extraDirectoryPerItemReportedOrigin": "用户范围",
+      "extraDiscoveryReadOnly": true,
+      "removeExtraMarksOldResultStale": true,
+      "newProjectOnlyReport": true,
+      "toolInventoryGapVisible": true
+    },
+    "p40": {
+      "reviewTarget": "farfold-owned-project-readcheck",
+      "declaredOrigin": "项目范围",
+      "reviewedWriteScope": "用户配置",
+      "requestedState": "停用",
+      "confirmationSeen": true,
+      "confirmationClicked": false,
+      "reviewClosedAndOfficialStatusStillEnabled": true,
+      "adoptionTested": false
+    },
+    "p41": {
+      "source": "官方程序的配置报告",
+      "reportedRows": 4,
+      "fixtureName": "farfold-p41-review-only-20261103",
+      "fixturePath": "/usr/bin/true",
+      "arguments": [],
+      "reviewedWriteScope": "用户配置",
+      "reviewedState": "停用",
+      "reviewRetiredOnFormClose": true,
+      "completeOfficialResultAreaSameAfterRequery": true,
+      "fixtureAbsentFromOfficialRows": true,
+      "connectionAndToolUseTested": false
+    },
+    "p45Discovery": {
+      "menuTabAndEscapeReturn": true,
+      "commandKSearchAndEscapeReturn": true,
+      "exportOpenByKeyboard": true,
+      "reverseFromFirst": "导出对话容器",
+      "forwardFromLast": "HTML 内容，随后导出对话容器",
+      "visibleFocusRingAroundContainer": true,
+      "discovery": "p45-keyboard-discovery.md"
+    }
+  },
+  "draftFlowOnPreviousSource": {
+    "installedSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "originalConversationSeparateDraftChecked": true,
+    "originalConversationAttachmentNameRetained": "embedded-04-original.txt",
+    "openedFromOwnedGooseConversationSameSetup": true,
+    "returnedThroughDraftIndicatorAfterNavigation": true,
+    "conflictPreviewAndReturnRetainedOwnText": true,
+    "preservedDraftCountBeforeAfterSaveAfterRestore": [1, 2, 1],
+    "newDraftEmptyAfterPreserving": true,
+    "restoredByExactOwnedRow": true,
+    "restoredExactText": true,
+    "untouchedPreexistingPreservedDrafts": 1,
+    "modelRequests": 0,
+    "savedDraftFailureTested": false
+  },
+  "keyboardJumpOnPreviousSource": {
+    "installedSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "keyboardShortcut": "Command+K",
+    "firstOrigin": "对话内容",
+    "selectedOwnedSearchResult": true,
+    "escapeReturnedToSameComposer": true,
+    "draftExactAfterEscape": true,
+    "returnNavigatedToOwnedGooseQ": true,
+    "originalQDraftAndAttachmentStillVisible": true,
+    "typedActualQuery": "P18Q",
+    "rawInputMethodDroppedUnderscore": true,
+    "modelRequests": 0
+  },
+  "autoArchiveBefore": {
+    "installedSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "generalSettingsObservedPreference": "30 天无活动后",
+    "observedAlert": "自动归档未完成，对话保留原处。可以重试。",
+    "metadataOnlyQuery": {
+      "sqliteAccess": "mode=ro, query_only",
+      "storedActivityRows": 159,
+      "eligibleByAgeAndStoredEndedAndNotPinnedOrArchived": 4,
+      "ofThoseMissingDirectoriesAndNoSavedUnsentWork": 2,
+      "ofThoseAvailableDirectoriesWithSavedUnsentWork": 2,
+      "productionCauseFromThisQueryConfirmed": false
+    },
+    "retryClicked": false,
+    "settingsChanged": false,
+    "historyManuallyChanged": false
+  },
+  "worktreeKeyboardBefore": {
+    "installedSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "verification": "Farfold AX after keyboard-only input on the existing global worktree operations entry",
+    "tabFromPage": "按钮 查看工作树操作",
+    "returnFocus": "按钮 关闭",
+    "escapeFocus": "HTML内容",
+    "dialogClosed": true,
+    "locationOrOperationChanged": false
+  },
+  "selectedFormalReadback": {
+    "installedSource": "5d85b9e4c9e114132c834617cf2a393526b4eaa9",
+    "b3Cold": {
+      "loadingObservedBeforeComparison": true,
+      "loadedFourParagraphsExact": true,
+      "lengths": [187, 75, 32, 27],
+      "permissionStillUnconfirmed": true
+    },
+    "p01Cold": {
+      "ownedDraftTwoParagraphsExact": true,
+      "ownedAttachmentNameExact": true
+    },
+    "p02Cold": {
+      "ownedNewDraftExact": true,
+      "priorPreservedDraftCount": 1
+    },
+    "p45Export": {
+      "initialFocus": "关闭",
+      "reverseTabFocus": "选择保存位置",
+      "forwardTabFocus": "关闭",
+      "escapeReturnedToExactConversationMenu": true,
+      "clipboardActionRenamed": "复制对话文字"
+    },
+    "p45Worktree": {
+      "keyboardReachedExactGlobalOpener": true,
+      "returnOpenedWithCloseFocused": true,
+      "escapeReturnedToExactOpener": true,
+      "worktreeOperationChanged": false
+    },
+    "p37": {
+      "unchangedPreferenceDays": 30,
+      "automaticallyDisplayedUnconfirmedRows": 2,
+      "manualRetryClicked": false,
+      "eligibleSuccessfulProductionRowObserved": false
+    },
+    "p48": {
+      "systemAllowedDisplayed": true,
+      "successPreferenceEnabled": false,
+      "deliveryObserved": false
+    },
+    "modelRequests": 0,
+    "oldRequestsResent": 0
+  },
+  "p01ControlledCapacity": {
+    "exactUTF8Bytes": 33554432,
+    "exactAccepted": true,
+    "overflowBytes": 33554433,
+    "overflowRejected": true,
+    "previousSnapshotPreserved": true,
+    "correctedRevisionColdRead": true,
+    "settingsIPCControlled": true
+  },
+  "p11Surface": {
+    "lockedSchema": "agent-client-protocol-schema 1.9.1 v1",
+    "lockedStandardForkHasMessageSelector": false,
+    "gooseOwnedQDisplayedCurrentFork": false,
+    "officialPublishedExtensions": [
+      {
+        "connector": "codex-acp",
+        "source": "https://github.com/agentclientprotocol/codex-acp/blob/main/docs/air-extensions.md#session-fork-point",
+        "scope": "Experimental JetBrains AIR extension; advertised-client boundary; installed version not established from main."
+      },
+      {
+        "connector": "claude-agent-acp",
+        "source": "https://github.com/agentclientprotocol/claude-agent-acp/pull/1046",
+        "scope": "AIR point translated to official SDK message UUID; does not imply local installation, eligible sample or confirmed Farfold integration."
+      }
+    ],
+    "selectedActualHistoryPointForkRun": false
+  },
+  "artifactRefs": [
+    {
+      "path": "output/2026-11-03-control-final/engineering-result.json",
+      "sha256": "a9575e9bf8136c93b85e709ce085502a82b64568e95599d4d582ebe94eb9baa9"
+    },
+    {
+      "path": "output/2026-11-03-control-final/draft-capacity.log",
+      "sha256": "83371ebe7fe44a450c6a6dbac34e2c532e7de49d07f340fcade998fb81a6084c"
+    },
+    {
+      "path": "output/2026-11-03-control-final/formal/independent/review-v2.json",
+      "sha256": "d81b2e7811a963a26a40723b45965f2e2d4e5dba01dbcf9523ecae3fb0e4883f"
+    },
+    {
+      "path": "output/2026-11-03-control-final/formal/install/installed-independent-review-private.json",
+      "sha256": "fb5313943a060cd019995d6297e56089992af872e7560feca4efa0c6d4289879"
+    },
+    {
+      "path": "output/2026-11-03-control-final/formal/exact-duplicate-cleanup-completion.json",
+      "sha256": "634f1c155bb82a49b89c97afc816e42ef9605c0c1824ea263ac5d2951d8c1970"
+    },
+    {
+      "path": "output/2026-11-03-control-final/formal/ui/selected-product-readback.json",
+      "sha256": "7b10d7b6f95a3eba862e81b85f82d428c6c4961276d04b4f14efd642d9da50ef"
+    },
+    {
+      "path": "output/2026-11-03-three-hour/p45-tab-red.log",
+      "sha256": "4436e7795c830f8fe662bff315c5a002e46aad922efc3e003549b1a787bbfb8d"
+    },
+    {
+      "path": "output/2026-11-03-control-batch/independent-red.log",
+      "sha256": "9c3934c05eb6ce260d32081ab771e29dcc2201c2727be86304868f0a86e719cf"
+    },
+    {
+      "path": "output/2026-11-03-control-batch/independent-green.log",
+      "sha256": "52a80ba199cddc27ccbea9741b831da3304c7acdcd5e882462411170d086f33f"
+    }
+  ],
+  "boundaries": [
+    "P37 independent eligible archive success was controlled. Formal sample only observed two uncertain rows.",
+    "No model prompt, prior request resend or official configuration write in these observations.",
+    "A wrong clipboard action on the owned Q test conversation replaced previous clipboard content. Previous content was unavailable for restoration.",
+    "The selected checks do not close entire P01, P02, P11, P37, P39–42, P44–45, P48 or any full agent acceptance."
+  ]
+}
