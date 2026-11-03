@@ -153,7 +153,9 @@ for line in sys.stdin:
  elif method is None and m.get('id')==100:
   reply=m.get('result',{})
   cancelled=reply.get('action')=='cancel' or reply.get('outcome',{}).get('outcome')=='cancelled'
-  open(sys.argv[1]+'_answered','w').write('cancelled' if cancelled else 'accepted'); continue
+  marker=sys.argv[1]+'_answered'
+  with open(marker+'.tmp','w',encoding='utf-8') as f: f.write('cancelled' if cancelled else 'accepted')
+  os.replace(marker+'.tmp',marker); continue
  else: continue
  send({'id':m['id'],'result':result})
 "#;

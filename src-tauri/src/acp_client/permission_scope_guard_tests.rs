@@ -14,7 +14,7 @@ import sys,json,os
 root=os.path.dirname(os.path.realpath(__file__));pending=None
 options=[{'id':'mode','name':'Mode','category':'mode','type':'select','currentValue':'agent','options':[{'value':v,'name':v} for v in ['read-only','agent','agent-full-access']]}]
 def send(v): print(json.dumps(dict(jsonrpc='2.0',**v)),flush=True)
-for line in sys.stdin:
+for line in sys.stdin.buffer:
  m=json.loads(line);p=m.get('params',{});method=m.get('method');result={}
  if method=='initialize':result={'protocolVersion':1,'agentCapabilities':{'loadSession':True,'promptCapabilities':{'embeddedContext':True}},'authMethods':[]}
  elif method in ('session/new','session/load'):
@@ -22,7 +22,7 @@ for line in sys.stdin:
   if method=='session/new':result['sessionId']='scope-'+str(os.getpid())
  elif method=='session/set_config_option':options[0]['currentValue']=p['value'];result={'configOptions':options}
  elif method=='session/prompt':
-  with open(root+'/prompts.jsonl','a') as f:f.write(json.dumps(p)+'\n')
+  with open(os.path.join(root,'prompts.jsonl'),'a',encoding='utf-8') as f:f.write(json.dumps(p)+'\n')
   if p['prompt'][0].get('text')=='wait':pending=m;continue
   result={'stopReason':'end_turn'}
  elif method=='session/cancel':
