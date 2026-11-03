@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,7 +33,17 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -cne 'LaunchPrerequisites') {
+$groups = if ($Cohort -ceq 'TerminalClose') {
+  $terminal = 'pty::windows_tests::'
+  foreach ($reply in @('reply', 'no_reply')) {
+    $test = "${terminal}terminal_cancel_cursor_${reply}_isolated"
+    @{ name = "terminal-close-$reply"; filter = $test; exact = $true; names = @($test); ignored = $true }
+  }
+  $test = "${terminal}cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated"
+  @{ name = 'terminal-close-original'; filter = $test; exact = $true; names = @($test) }
+  $test = 'auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated'
+  @{ name = 'terminal-auth-cancel'; filter = $test; exact = $true; names = @($test) }
+} elseif ($Cohort -cne 'LaunchPrerequisites') {
   $transport = 'acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_'
   $terminal = 'platform_tests::windows_conpty::'
   $cases = [ordered]@{
@@ -97,6 +107,7 @@ foreach ($group in $groups) {
   $threads = $group.threads ?? 1
   $testArgs = @($group.filter, '--show-output', "--test-threads=$threads", '--color=never')
   if ($group.exact) { $testArgs += '--exact' }
+  if ($group.ignored) { $testArgs += '--ignored' }
   foreach ($name in $group.skip) { $testArgs += @('--skip', $name) }
   $stdout = Join-Path $raw ($group.name + '.stdout.log')
   $stderr = Join-Path $raw ($group.name + '.stderr.log')

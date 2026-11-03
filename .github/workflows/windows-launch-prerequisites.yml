@@ -8,7 +8,13 @@ on:
         description: Exact native test cohort
         type: choice
         default: LaunchPrerequisites
-        options: [LaunchPrerequisites, TransportTerminalFile, TransportOnly]
+        options:
+          [
+            LaunchPrerequisites,
+            TransportTerminalFile,
+            TransportOnly,
+            TerminalClose,
+          ]
 
 permissions:
   contents: read
