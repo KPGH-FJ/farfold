@@ -1,5 +1,8 @@
 import type { Attachment, ThreadItem } from "./session_types";
-import { transcriptMarkdown } from "./conversation_export";
+import {
+  transcriptMarkdown,
+  type TranscriptExportSource,
+} from "./conversation_export";
 import { localResourcePath, reportedFileSources } from "./file_delivery";
 import { fileBasename } from "./file_paths";
 import {
@@ -61,7 +64,7 @@ function local(uri: string): string | null {
 }
 /** Pure immutable capture. No file inspection, history load or URL read. */
 export function captureConversationExport(
-  thread: { items: ThreadItem[]; cwd: string },
+  thread: TranscriptExportSource & { cwd: string },
   title: string,
   agentName: string,
 ): ConversationExportSnapshot {

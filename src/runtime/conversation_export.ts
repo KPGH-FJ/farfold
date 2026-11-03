@@ -1,4 +1,10 @@
-import type { Attachment, ThreadItem, ToolCallView } from "./session_types";
+import {
+  toolActivityState,
+  type Attachment,
+  type ThreadState,
+  type ToolCallView,
+} from "./session_types";
+import { presentedToolKind } from "./tool_file_input";
 import { STRINGS } from "./strings";
 import { THREAD_VIEW_STRINGS as T } from "./thread_view_strings";
 import { EXPORT_STRINGS as E } from "./export_strings";
@@ -9,6 +15,18 @@ export interface TranscriptExportOptions {
   includeLoadedToolDetails?: boolean;
   attachmentScope?: "descriptions" | "selectedArchive";
 }
+
+/** Optional current-view evidence; absent evidence cannot establish live work. */
+export type TranscriptExportSource = Pick<ThreadState, "items"> &
+  Partial<
+    Pick<
+      ThreadState,
+      | "activeToolCallIds"
+      | "connectionLost"
+      | "connectionId"
+      | "historyUnavailable"
+    >
+  >;
 
 /** Metadata is text, never executable Markdown/HTML or another conversation row. */
 function label(value: string): string {
@@ -127,13 +145,25 @@ function toolLines(
   call: ToolCallView,
   options: TranscriptExportOptions,
   itemOrdinal: number,
+  thread: TranscriptExportSource,
 ): string[] {
-  const summary = Object.hasOwn(T.toolKinds, call.kind)
-    ? T.toolKinds[call.kind as keyof typeof T.toolKinds]
+  const kind = presentedToolKind(call);
+  const summary = Object.hasOwn(T.toolKinds, kind)
+    ? T.toolKinds[kind as keyof typeof T.toolKinds]
     : T.toolKinds.other;
-  const status = Object.hasOwn(E.status, call.status)
-    ? E.status[call.status as keyof typeof E.status]
-    : E.unknown;
+  const activity = toolActivityState(
+    {
+      activeToolCallIds: thread.activeToolCallIds ?? [],
+      connectionLost: thread.connectionLost ?? true,
+      connectionId: thread.connectionId,
+      historyUnavailable: thread.historyUnavailable,
+    },
+    call,
+  );
+  const status =
+    activity !== "unknown" && Object.hasOwn(E.status, call.status)
+      ? E.status[call.status as keyof typeof E.status]
+      : E.unknown;
   const first =
     options.sourceLocations === "omit" ? undefined : call.locations[0];
   const out = [
@@ -176,7 +206,7 @@ function toolLines(
 /** A synchronous snapshot of the loaded readable surface. No history reads,
  * attachment fetching, disk access or transcript persistence occur here. */
 export function transcriptMarkdown(
-  thread: { items: ThreadItem[] },
+  thread: TranscriptExportSource,
   title: string,
   agentName: string,
   options: TranscriptExportOptions = {},
@@ -225,7 +255,7 @@ export function transcriptMarkdown(
         break;
       }
       case "tool":
-        out.push(...toolLines(item.call, options, itemOrdinal));
+        out.push(...toolLines(item.call, options, itemOrdinal, thread));
         break;
       case "plan":
         if (!item.entries.length) break;

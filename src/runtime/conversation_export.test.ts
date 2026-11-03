@@ -90,7 +90,15 @@ it.each([
   ["failed", "失败"],
   ["future_status", "状态未确认"],
 ])("does not export %s as a successful operation", (status, label) => {
-  const result = render([tool({ status })]);
+  const result = transcriptMarkdown(
+    {
+      items: [tool({ status })],
+      activeToolCallIds: ["t"],
+      connectionLost: false,
+    },
+    "当前对话",
+    "助手",
+  );
   expect(result).toContain(label);
   expect(result).not.toContain("查看了文件");
   expect(result).not.toContain("future_status");

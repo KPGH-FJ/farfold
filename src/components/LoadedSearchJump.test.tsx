@@ -24,6 +24,8 @@ vi.mock("../runtime/loaded_search_dom", () => ({
 }));
 vi.mock("../runtime/transcript_search", () => ({
   revealSearchAncestors: h.reveal,
+  hasOpenSearchAncestors: () => true,
+  searchDetailsCommitted: () => true,
 }));
 import { LoadedSearchJump } from "./LoadedSearchJump";
 import type { LoadedSearchHit } from "../runtime/loaded_search";
@@ -39,6 +41,13 @@ beforeEach(() => {
     h.frames.push(callback),
   );
   vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  vi.stubGlobal(
+    "MutationObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
 });
 afterEach(() => {
   cleanup?.();
@@ -46,17 +55,29 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 function view() {
-  const make = () => ({
-    range: {
-      startContainer: {
-        parentElement: { isConnected: true, scrollIntoView: vi.fn() },
+  const make = () => {
+    const parent = {
+      isConnected: true,
+      scrollIntoView: vi.fn(),
+      getClientRects: () => [{ width: 1, height: 1 }],
+    };
+    return {
+      range: {
+        startContainer: { parentElement: parent },
+        endContainer: { parentElement: parent },
+        getClientRects: () => [{ width: 1, height: 1 }],
       },
-    },
-    message: { focus: vi.fn(), classList: { add: vi.fn(), remove: vi.fn() } },
-  });
+      message: { focus: vi.fn(), classList: { add: vi.fn(), remove: vi.fn() } },
+    };
+  };
   const first = make(),
     second = make();
-  const root = { isConnected: true, contains: () => true };
+  const root = {
+    isConnected: true,
+    contains: () => true,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  };
   const registry = new Map();
   const add = vi.fn();
   vi.stubGlobal("CSS", { highlights: registry });

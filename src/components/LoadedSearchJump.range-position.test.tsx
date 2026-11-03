@@ -24,6 +24,8 @@ vi.mock("../runtime/loaded_search_dom", () => ({
 }));
 vi.mock("../runtime/transcript_search", () => ({
   revealSearchAncestors: () => h.release,
+  hasOpenSearchAncestors: () => true,
+  searchDetailsCommitted: () => true,
 }));
 import { LoadedSearchJump } from "./LoadedSearchJump";
 
@@ -36,6 +38,13 @@ beforeEach(() => {
     h.frames.push(callback),
   );
   vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  vi.stubGlobal(
+    "MutationObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
 });
 afterEach(() => {
   cleanup?.();
@@ -63,6 +72,8 @@ function fixture(line: number) {
     scrollTop: 0,
     scrollLeft: 0,
     contains: (node: unknown) => node === parent,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
     getBoundingClientRect: () => ({ top: 0, bottom: 320, left: 0 }),
     scrollTo(options: ScrollToOptions) {
       this.scrollTop = Math.max(
@@ -86,6 +97,7 @@ function fixture(line: number) {
     scrollWidth: 640,
     scrollTop: 0,
     scrollLeft: 0,
+    getClientRects: () => [{ width: 640, height: contentHeight }],
     scrollIntoView() {
       root.scrollTo({
         top: contentTop + (contentHeight - root.clientHeight) / 2,
@@ -94,6 +106,7 @@ function fixture(line: number) {
   };
   const range = {
     startContainer: { parentElement: parent },
+    endContainer: { parentElement: parent },
     getBoundingClientRect() {
       const top = contentTop + line * lineHeight - root.scrollTop;
       return {

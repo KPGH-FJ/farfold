@@ -1,7 +1,7 @@
 /** Selected readable categories only: neither a complete archive nor a recovery file. */
 const included =
   "用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。";
-const loadedDetails = "已载入的工具文本、修改前后内容和已接收的终端输出";
+const loadedDetails = "已载入的工具文本、报告的修改前后内容和已接收的终端输出";
 export const EXPORT_STRINGS = {
   scope: `导出时当前已载入的${included}`,
   excludedScope:
@@ -36,7 +36,7 @@ export const EXPORT_STRINGS = {
   loadedDetails,
   detailsScope: `另外包含${loadedDetails}；只保存打开导出窗口时收到的部分，不读取后续输出。`,
   detailsExcludedScope:
-    "这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件与未转换的工具数据、未载入的历史、草稿与待发内容。",
+    "这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、工具输入与拟写入内容、未转换的工具数据、未载入的历史、草稿与待发内容。",
   detailsPrivacyScope:
     "自动列出的附件与工具来源地址中的认证与附加参数未导出。消息正文与工具内容保持原文，保存前请检查其中的私人信息。",
   archiveScope:

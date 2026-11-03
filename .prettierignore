@@ -351,3 +351,6 @@ docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate.j
 docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/duplicate-cleanup.json
 docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/installation.json
+
+# Preserve the generated migration-cleanup receipt exactly as recorded.
+docs/maintenance/2026-11-02-migration-cleanup/plan-summary.json
