@@ -1,0 +1,164 @@
+{
+  "formalSource": "a96aa4fac",
+  "installedBinarySha256": "4e7b1d5332c84982851b9e81653ebbac2de7c88b0e9eee4168706ebe07e19a54",
+  "newModelRequests": 0,
+  "oldRequestsResent": 0,
+  "staleSource": {
+    "selectionBytes": 148,
+    "diskBytesAfterSelection": 203,
+    "observedResult": ["本次所选内容未保存完成。", "文件已变化，请重新核对。"],
+    "targetAbsent": true
+  },
+  "twoVersions": {
+    "archiveBytes": 11805,
+    "archiveSha256": "9d907151f3f6a39aa92d67ed28ba29295438f1ce4321da42abaf0e1233bc7f97",
+    "crcVerified": true,
+    "selected": [
+      {
+        "origin": {
+          "itemOrdinal": 23,
+          "role": "user",
+          "attachmentOrdinal": 3,
+          "toolContentOrdinal": null,
+          "declaration": "messageAttachment"
+        },
+        "representation": "receivedText",
+        "included": {
+          "member": "attachments/0001.txt",
+          "size": 148,
+          "sha256": "774f54993bebd94dd1c715a9f8c9959f93e55d18a076fd307d4f54b206c1b83c"
+        }
+      },
+      {
+        "origin": {
+          "itemOrdinal": 23,
+          "role": "user",
+          "attachmentOrdinal": 3,
+          "toolContentOrdinal": null,
+          "declaration": "messageAttachment"
+        },
+        "representation": "localCurrentFile",
+        "included": {
+          "member": "attachments/0002.txt",
+          "size": 203,
+          "sha256": "2983794975cc7078939d4c6543a2370b0a395e751f88ac26c11829a8523e5f55"
+        }
+      }
+    ],
+    "omitted": 13
+  },
+  "inFlightCancel": {
+    "requestedOnce": true,
+    "totalBytes": 1073741824,
+    "lastObservedBytes": 331743232,
+    "verifiedItemsAtCancel": 1,
+    "selectedItems": 4,
+    "observedIntermediate": "正在取消，请等待保存工作结束。",
+    "observedTerminal": "已取消保存。",
+    "targetAndTemporaryFilesAbsentInDedicatedDirectory": true
+  },
+  "fixturesRestoredToOriginalBytes": 4,
+  "remaining": ["实际磁盘I/O故障与其他平台", "完整P35"],
+  "foundIssue": "并发附件核对忙提示误称已有保存或记录已满。",
+  "p32SelectedCurrentFiles": {
+    "selected": 2,
+    "searched": 1,
+    "matches": 1,
+    "omitted": "embedded-03.txt · 未能检索 内容、位置或来源已变化，请重新选择。",
+    "matched": "embedded-04.txt",
+    "sourceNavigation": "已定位到来源附件；文件匹配片段仍以本次查找为准。",
+    "matchingBytes": "current disk revision only",
+    "fixturesRestored": true
+  },
+  "inspectionFix": {
+    "originalAlert": "已有保存正在处理或记录已满，请先查看保存文件。",
+    "correctedAlert": "正在核对其他附件，请稍后重新核对这一项。",
+    "red": "p35-inspection-red-confirmed.log",
+    "green": "p35-inspection-green.log",
+    "targetedTestsPassed": 41,
+    "typecheckPassed": true,
+    "formalRetestPending": true,
+    "formalRetestCondition": "同一独立Goose对象的冷恢复只给出3个工具来源候选，未返回此前收到文字及其位置候选，不能复现快速并发选择。",
+    "installed": true
+  },
+  "actualDiskWriteFailure": {
+    "formalSource": "485a6515f41442762135356472f381d89e4d3cc6",
+    "ownedTestVolume": "24 MiB HFS+ disk image",
+    "availableBeforeKiB": 23960,
+    "selectedBytes": 67108864,
+    "processedBeforeFailureBytes": 24510464,
+    "result": [
+      "本次所选内容未保存完成。",
+      "未能完成保存，请检查位置和可用空间。"
+    ],
+    "noTargetOrArchiveTemporary": true,
+    "testImageDetached": true
+  },
+  "draftColdRecovery": {
+    "onSource": "485a6515f",
+    "normalExit": true,
+    "twoParagraphsAndOneOwnedAttachmentExact": true,
+    "b3FourParagraphsExact": true,
+    "b3PermissionUnconfirmed": true,
+    "sent": 0,
+    "warmExtractionNote": "AX used one multiline node before navigation and two separate text nodes after. Text-only comparison was exact."
+  },
+  "sourceAndInstall": {
+    "commit": "485a6515f41442762135356472f381d89e4d3cc6",
+    "sha256": "8c9cc105ddfac4ad7830a4f64f56fbdbfdcc81c164cb01c7972de1f60ab3791f",
+    "formatTypeFrontendBuildRustFormatClippyRustAllNaturalZero": true,
+    "frontendFiles": 704,
+    "frontendTests": 9440,
+    "rustPassed": 2333,
+    "rustIgnoredExisting": 6,
+    "candidateBuildCount": 1,
+    "candidateSeparateMechanicalChecks": 9,
+    "installedSeparateMechanicalChecks": 6,
+    "closedDataManifest": {
+      "counts": {
+        "appData": {
+          "directory": 22245,
+          "file": 209681,
+          "symlink": 335,
+          "special": 0
+        },
+        "webkit": {
+          "directory": 155,
+          "file": 104,
+          "symlink": 0,
+          "special": 0
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "symlink": 0,
+          "special": 0
+        }
+      },
+      "sha256": "cd15b0bd3132f8ad6531c1e56fdbc24e882f9c2207196b26639ab762c564c398"
+    },
+    "newIndependentPersonReview": false
+  },
+  "privateArtifactPins": [
+    {
+      "name": "output/2026-11-03-three-hour/p35-results.json",
+      "sha256": "f3254ef7a69fbf293f1c7ed5f6746cd0f2fd63668e1c992ac271548cf9b86a4d"
+    },
+    {
+      "name": "output/2026-11-03-three-hour/engineering-result.json",
+      "sha256": "9c64cc1e76e03f5a00f57a39bc2c404107115a8595c2f3ba155ac907af7b13e8"
+    },
+    {
+      "name": "output/2026-11-03-three-hour/formal/install/install-result.json",
+      "sha256": "800a7387ef7f83986d4f72fe30382dbd706cf09b58e739cdeab9fc47b46bdd06"
+    },
+    {
+      "name": "output/2026-11-03-three-hour/formal/install/installed-independent-review-private.json",
+      "sha256": "d050a1541709b8fc2fb4dee9ed031021797b8b96c311f496872968e5e9096c0a"
+    },
+    {
+      "name": "output/2026-11-03-three-hour/p35-two-versions.zip",
+      "sha256": "9d907151f3f6a39aa92d67ed28ba29295438f1ce4321da42abaf0e1233bc7f97"
+    }
+  ]
+}
