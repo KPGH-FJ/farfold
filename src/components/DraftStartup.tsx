@@ -225,8 +225,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   }, [retry]);
   if (status.ready && setup.ready && connected)
     return (
-      <>
-        <WorktreeManagementHost />
+      <div className="draft-workspace">
         {exitReview !== null && (
           <WorkspaceDialog
             title={E.title}
@@ -342,7 +341,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
           </div>
         )}
         <div
-          style={{ display: "contents" }}
+          className="draft-workspace-main"
           inert={
             Boolean(status.interactionLocked) ||
             (exitToken !== null && !exitError)
@@ -350,7 +349,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
         >
           {children}
         </div>
-      </>
+        <WorktreeManagementHost />
+      </div>
     );
   const failure =
     setup.error ??

@@ -69,10 +69,9 @@
   border-radius: 10px;
 }
 .worktree-reopen {
-  position: fixed;
-  z-index: 40;
-  right: 16px;
-  bottom: 16px;
+  flex: none;
+  align-self: flex-end;
+  margin: 4px 16px 8px;
 }
 .worktree-paths {
   margin: 0;

@@ -79,6 +79,17 @@ body {
   user-select: none;
 }
 
+.draft-workspace {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.draft-workspace-main {
+  flex: 1;
+  min-height: 0;
+}
+
 .app {
   height: 100%;
   display: flex;
