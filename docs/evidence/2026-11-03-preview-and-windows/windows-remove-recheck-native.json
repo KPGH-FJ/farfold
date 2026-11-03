@@ -836,5 +836,542 @@
     "coverageGap": true,
     "terminationRequested": true,
     "retirementConfirmed": false
-  }
+  },
+  "windowsAfterSourceGraphReuse": {
+    "runId": 41650078103,
+    "sourceCommit": "a0024c19259d6663f86512c4f86cd99900b8e52a",
+    "artifactSha256": "013a80bcee697c9c8c86fdbaaf22951173e119f0162c2a79da900da1328e0bb5",
+    "providerDigestMatched": true,
+    "artifactMembers": 18,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-remove-rechecks": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+          "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+          "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 419.47s"
+        ],
+        "passed": true
+      },
+      "recovery-material-identity": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.54s"
+        ],
+        "passed": true
+      },
+      "worktree-recovery-refusal": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 138.18s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  },
+  "windowsAfterSourceGraphReuseCases": [
+    {
+      "test": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 17615,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 25567,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 35376,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 85461,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 85464,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 107070,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8732,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10830,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17957,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 18193,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 18334,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 17647,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 25568,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 35376,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 85456,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 85459,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 106987,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8749,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10797,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17906,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 18128,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 18263,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 16868,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 24631,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 34142,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 81775,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 81778,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 102656,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8496,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10342,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17360,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 17600,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 17738,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 16866,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 24689,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 34143,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 81833,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 81836,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 103145,
+            "phase": "delete.complete"
+          },
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 24543,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 33945,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 82081,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 82083,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 103050,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8607,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10417,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17559,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 17810,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 17941,
+            "phase": "verify-deleted.enter"
+          },
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8604,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10403,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17506,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 17734,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 17865,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 16840,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 24724,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 34161,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 82355,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 82358,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 103266,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 8464,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 10321,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 17352,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 17584,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 17721,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "result": "ok",
+      "outerDeadline": false,
+      "createWaitExpired": false,
+      "lastCreateWorkerStage": {
+        "ms": 14609,
+        "phase": "verify-final-namespace"
+      },
+      "childCompleted": true,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          },
+          {
+            "ms": 22430,
+            "phase": "archive.enter"
+          },
+          {
+            "ms": 29114,
+            "phase": "prepare-remove.enter"
+          },
+          {
+            "ms": 62848,
+            "phase": "confirm-remove.enter"
+          },
+          {
+            "ms": 62850,
+            "phase": "wait-remove.enter"
+          },
+          {
+            "ms": 77512,
+            "phase": "delete.complete"
+          }
+        ],
+        "NATIVE": [
+          {
+            "ms": 0,
+            "phase": "capture.enter"
+          },
+          {
+            "ms": 5980,
+            "phase": "verify-package.enter"
+          },
+          {
+            "ms": 7268,
+            "phase": "freeze-source.enter"
+          },
+          {
+            "ms": 12197,
+            "phase": "delete-tree.enter"
+          },
+          {
+            "ms": 12354,
+            "phase": "dispatch.enter"
+          },
+          {
+            "ms": 12437,
+            "phase": "verify-deleted.enter"
+          }
+        ]
+      }
+    }
+  ],
+  "protectedMaterialVerified": ["assume", "empty"]
 }
