@@ -21,6 +21,7 @@ pub(crate) enum Case {
     TerminalCursorNoReply,
     TerminalCursorReply,
     TerminalPendingCursorClose,
+    TerminalCancelBeforePublication,
     TerminalMasterBoundedUnknown,
 }
 
@@ -41,6 +42,9 @@ impl Case {
             Self::TerminalPendingCursorClose => {
                 "pty::windows_tests::terminal_close_pending_cursor_child"
             }
+            Self::TerminalCancelBeforePublication => {
+                "pty::windows_tests::terminal_cancel_before_publication_child"
+            }
             Self::TerminalMasterBoundedUnknown => {
                 "pty::windows_tests::terminal_master_drop_retains_bounded_unknown_child"
             }
@@ -57,6 +61,7 @@ impl Case {
             | Self::TerminalCursorNoReply
             | Self::TerminalCursorReply
             | Self::TerminalPendingCursorClose
+            | Self::TerminalCancelBeforePublication
             | Self::TerminalMasterBoundedUnknown => 20,
             Self::ManagerCursorReply | Self::ManagerCursorNoReply => 12,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close

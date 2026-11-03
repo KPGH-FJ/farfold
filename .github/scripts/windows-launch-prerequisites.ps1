@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -38,6 +38,13 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
   $test = 'worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification'
   @{ name = 'worktree-remove-identity-recheck'; filter = $test; exact = $true; names = @($test) }
+} elseif ($Cohort -ceq 'JobAccounting') {
+  $test = 'windows_process::current_members::tests::native_job_accounting_samples_exact_children_across_exit_and_handle_release'
+  @{ name = 'job-accounting-exact-handles'; filter = $test; exact = $true; names = @($test) }
+  $test = 'windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list'
+  @{ name = 'job-accounting-sticky-gap'; filter = $test; exact = $true; names = @($test) }
+  $test = 'pty::windows_tests::terminal_cancel_after_native_spawn_before_publication_isolated'
+  @{ name = 'terminal-cancel-before-publication'; filter = $test; exact = $true; names = @($test); ignored = $true }
 } elseif ($Cohort -ceq 'RemoveRechecks') {
   $prefix = 'worktrees::manager::remove_recheck_tests::'
   @{

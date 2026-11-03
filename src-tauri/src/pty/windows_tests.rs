@@ -283,6 +283,129 @@ fn terminal_close_confirms_exit_with_unanswered_startup_cursor() {
     );
 }
 
+use crate::platform_tests::{held_process::HeldProcess, windows_conpty::Case};
+
+type StartupChild = Arc<Mutex<Option<HeldProcess>>>;
+
+struct CancelOnNativeSpawn {
+    stop: Arc<AtomicBool>,
+    observed_child: StartupChild,
+}
+
+impl portable_pty::PtySystem for CancelOnNativeSpawn {
+    fn openpty(&self, size: PtySize) -> anyhow::Result<portable_pty::PtyPair> {
+        let mut pair = native_pty_system().openpty(size)?;
+        pair.slave = Box::new(CancelOnNativeSlave {
+            inner: pair.slave,
+            stop: self.stop.clone(),
+            observed_child: self.observed_child.clone(),
+        });
+        Ok(pair)
+    }
+}
+
+struct CancelOnNativeSlave {
+    inner: Box<dyn portable_pty::SlavePty + Send>,
+    stop: Arc<AtomicBool>,
+    observed_child: StartupChild,
+}
+
+impl portable_pty::SlavePty for CancelOnNativeSlave {
+    fn spawn_command(
+        &self,
+        command: CommandBuilder,
+    ) -> anyhow::Result<Box<dyn portable_pty::Child + Send + Sync>> {
+        let child = self.inner.spawn_command(command)?;
+        let held = child
+            .process_id()
+            .and_then(|pid| HeldProcess::open(pid as i32).ok())
+            .filter(|held| held.observe().is_running());
+        let observed_running = held.is_some();
+        *self.observed_child.lock().unwrap() = held;
+        // After real ConPTY spawn, before startup_owner can attach and publish.
+        self.stop.store(true, Ordering::SeqCst);
+        eprintln!(
+            "FARFOLD_TERMINAL_STARTUP_CANCEL nativeSpawnReturned=true heldRunning={observed_running}"
+        );
+        Ok(child)
+    }
+}
+
+#[test]
+#[ignore = "executed by the bounded native startup-cancellation wrapper"]
+fn terminal_cancel_before_publication_child() {
+    use super::startup_owner::{self, Engines, Launch};
+    use std::sync::atomic::AtomicUsize;
+
+    crate::platform_tests::windows_conpty::entered(Case::TerminalCancelBeforePublication);
+    let directory = tempfile::tempdir().unwrap();
+    let marker = directory.path().join("terminal-started");
+    let executable = crate::windows_process::helper_executable().unwrap();
+    let manager = PtyManager::new();
+    let stop = Arc::new(AtomicBool::new(false));
+    let observed_child = StartupChild::default();
+    let probe = CancelOnNativeSpawn {
+        stop: stop.clone(),
+        observed_child: observed_child.clone(),
+    };
+    let exits = Arc::new(AtomicUsize::new(0));
+    let counted_exits = exits.clone();
+    let (cursor_sink, cursor) = CursorConsumer::new(false);
+    let capture = cursor.capture.clone();
+    let mut engines = Engines::native();
+    engines.system = Box::new(move || Box::new(probe));
+    let result = startup_owner::begin(
+        &manager,
+        Launch {
+            command: executable.to_str().unwrap().into(),
+            args: vec!["wait".into(), marker.to_str().unwrap().into()],
+            env: Vec::new(),
+            cwd: directory.path().into(),
+            size: PtySize::default(),
+            output: Arc::new(move |frame| {
+                if frame.get("exit").is_some() {
+                    counted_exits.fetch_add(1, Ordering::SeqCst);
+                }
+                cursor_sink(frame);
+            }),
+        },
+        stop.clone(),
+        crate::managed_update::activity().unwrap(),
+        CLOSE_TIMEOUT,
+        engines,
+    );
+    let exited = observed_child
+        .lock()
+        .unwrap()
+        .as_ref()
+        .is_some_and(|child| child.observe().is_exited());
+    let published = !manager.lock().unwrap().is_empty();
+    let quiescent = manager.startup.wait_quiescent(Duration::ZERO);
+    let exit_frames = exits.load(Ordering::SeqCst);
+    eprintln!(
+        "FARFOLD_TERMINAL_STARTUP_CANCEL {}",
+        serde_json::json!({
+            "cancelledAfterCleanup": result.as_deref() == Err("AUTH_CANCELLED"),
+            "startupResult": result,
+            "heldChildExited": exited,
+            "terminalPublished": published,
+            "startupQuiescent": quiescent,
+            "exitFrames": exit_frames,
+            "observedQueries": capture.lock().unwrap().queries,
+        })
+    );
+    assert!(stop.load(Ordering::SeqCst));
+    assert_eq!(result.as_deref(), Err("AUTH_CANCELLED"));
+    assert!(exited && !published && quiescent);
+    assert_eq!(exit_frames, 1);
+}
+
+#[test]
+#[ignore = "manual native regression for cancellation during real ConPTY startup"]
+fn terminal_cancel_after_native_spawn_before_publication_isolated() {
+    crate::platform_tests::windows_conpty::run(Case::TerminalCancelBeforePublication);
+}
+
 #[test]
 fn terminal_cursor_query_recognizes_every_chunk_partition() {
     let input = b"x\x1b[6ny\x1b[6nz";

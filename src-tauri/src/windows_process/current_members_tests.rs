@@ -531,3 +531,100 @@ fn native_current_observation_never_holds_the_shared_process_registry_lock() {
     owner.group.terminate();
     until(|| unsafe { WaitForSingleObject(held.0, 0) } == WAIT_OBJECT_0);
 }
+
+#[test]
+fn native_job_accounting_samples_exact_children_across_exit_and_handle_release() {
+    use std::os::windows::io::AsRawHandle;
+    use windows_sys::Win32::System::JobObjects::AssignProcessToJobObject;
+
+    let launch = |job: &super::super::Job| {
+        let child = Command::new(fixture())
+            .arg("argv")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
+        assert_ne!(
+            unsafe { AssignProcessToJobObject(job.handle.0, child.as_raw_handle()) },
+            0,
+            "{}",
+            io::Error::last_os_error()
+        );
+        child
+    };
+    let sample = |job: &super::super::Job| {
+        let before = job.activity_query();
+        let mut incomplete = None;
+        let listed = list(job.handle.0, &mut incomplete);
+        let after = job.activity_query();
+        assert_ne!(before.ok, 0);
+        assert_ne!(after.ok, 0);
+        assert_eq!(after.info.TotalProcesses, 2);
+        (
+            before.info.ActiveProcesses,
+            listed.map(|value| value.len),
+            incomplete,
+            after.info.ActiveProcesses,
+        )
+    };
+    for forced in [false, true] {
+        let job = pending().unwrap();
+        let first = launch(&job.0);
+        let second = launch(&job.0);
+        let (before, listed, _, after) = sample(&job.0);
+        assert_eq!((before, listed.unwrap(), after), (2, 2, 2));
+        let mut sample_count = 0;
+        let mut mismatches = 0;
+        let mut first_mismatch = None;
+        let mut signaled_accounting = [0; 2];
+        let mut released_accounting = [0; 2];
+        for (index, mut child) in [first, second].into_iter().enumerate() {
+            if forced {
+                child.kill().unwrap();
+            } else {
+                drop(child.stdin.take());
+            }
+            let started = Instant::now();
+            while started.elapsed() < Duration::from_millis(100) {
+                let (before, _, incomplete, after) = sample(&job.0);
+                sample_count += 1;
+                if let Some(incomplete) = incomplete
+                    && incomplete.query_return != 0
+                    && incomplete.assigned != incomplete.listed
+                {
+                    mismatches += 1;
+                    first_mismatch.get_or_insert_with(|| {
+                        serde_json::json!({
+                            "childOrdinal": index + 1,
+                            "accountingBefore": before,
+                            "list": incomplete,
+                            "accountingAfter": after,
+                        })
+                    });
+                }
+                std::thread::yield_now();
+            }
+            until(|| child.try_wait().unwrap().is_some());
+            signaled_accounting[index] = sample(&job.0).3;
+            drop(child);
+            released_accounting[index] = sample(&job.0).3;
+        }
+        until(|| {
+            let (before, listed, _, after) = sample(&job.0);
+            before == 0 && listed.is_ok_and(|count| count == 0) && after == 0
+        });
+        eprintln!(
+            "FARFOLD_WINDOWS_JOB_EXIT_SAMPLES {}",
+            serde_json::json!({
+                "forcedExit": forced,
+                "samples": sample_count,
+                "nativeAssignedListedMismatches": mismatches,
+                "firstMismatch": first_mismatch,
+                "signaledAccounting": signaled_accounting,
+                "immediatelyAfterHandleReleaseAccounting": released_accounting,
+                "settledAccounting": 0,
+            })
+        );
+    }
+}
