@@ -1,0 +1,228 @@
+{
+  "runId": 41600391428,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41600391428",
+  "sourceCommit": "4f60c4444c27b19a210e006b64f93e26321fd724",
+  "jobResultsObserved": {
+    "frontend": {
+      "databaseId": 125797498952,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "rust": {
+      "databaseId": 125797499221,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "verify": {
+      "databaseId": 125815373639,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "installer": {
+      "databaseId": 125815374668,
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  },
+  "frontend": {
+    "files": 704,
+    "passed": 9445,
+    "skipped": 3,
+    "buildPassed": true,
+    "rawLogSha256": "082c2925dff511a7ce6c530c3e64a97c63f9100cccd9c178b952a7109fb28b51"
+  },
+  "rust": {
+    "rawLogSha256": "6092fb7b967bb950bcd1d6dc0c7002ef80015f80e6650db02469207357d348aa",
+    "rawBytes": 4791299,
+    "rawLines": 30940,
+    "originalKnownFailures": 72,
+    "completeLibrarySummaryObserved": true,
+    "topLevelSummary": {
+      "passed": 2348,
+      "failed": 26,
+      "ignored": 66,
+      "measured": 0,
+      "filtered": 0,
+      "status": "FAILED",
+      "seconds": 1729.47,
+      "line": 30925,
+      "failureListBeginsAt": 30896
+    },
+    "failures": [
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+      "acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets",
+      "acp_client::process::startup_tests::spawn_failure_missing_program_records_os_error_and_own_file_limits",
+      "acp_client::process::startup_tests::startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome",
+      "acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped",
+      "acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "file_delivery::tests::replaced_root_during_read_is_rejected",
+      "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit",
+      "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded",
+      "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup",
+      "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded",
+      "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+      "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+      "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+      "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects",
+      "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+      "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+    ],
+    "priorFailuresStillFailing": [
+      "acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets",
+      "acp_client::process::startup_tests::spawn_failure_missing_program_records_os_error_and_own_file_limits",
+      "acp_client::process::startup_tests::startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome",
+      "acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped",
+      "acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "file_delivery::tests::replaced_root_during_read_is_rejected",
+      "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit",
+      "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded",
+      "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded",
+      "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+      "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+      "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+      "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects",
+      "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+      "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+    ],
+    "newFailures": [
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+      "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+    ],
+    "priorFailureNamedOkMarkers": [
+      "acp_client::discovery_tests::readonly::search_read_preview_same_live_token_cannot_change_into_import",
+      "acp_client::permission_scope_guard_tests::permission_scope_actual_pump_rejects_before_work_save_and_mcp_and_never_promotes",
+      "acp_client::permission_scope_guard_tests::permission_scope_custom_agent_and_first_resource_keep_original_forwarding",
+      "acp_client::session::close_tests::auth_cleanup_rejects_late_pending_interactions_without_sending_remote_close",
+      "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard",
+      "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_exact_whole_file_limit_sends_and_two_extra_bytes_never_reach_control",
+      "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache",
+      "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending",
+      "acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback",
+      "acp_client::session::prompt_context_tests::prompt_context_baseline_text_and_link_need_no_embedded_handshake",
+      "acp_client::session::prompt_context_tests::prompt_context_false_or_omitted_actual_session_rejects_despite_supported_preparation_and_cache",
+      "acp_client::session::prompt_context_tests::prompt_context_missing_actual_handshake_rejects_before_control_send",
+      "acp_client::session::prompt_context_tests::prompt_context_supported_actual_wire_preserves_content_and_pump_busy_guard",
+      "acp_client::session::prompt_context_tests::prompt_context_supported_does_not_bypass_existing_preview_protection",
+      "file_archive::writer_tests::exact_temporary_replaced_before_cleanup_is_unknown_and_preserves_both_objects",
+      "worktrees::checkout_boundary_tests::held_checkout_denies_late_source_config_mutation_and_keeps_source_and_target_safe",
+      "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+      "worktrees::manager::cold_restore_recheck_tests::cold_restore_recheck_rejects_a_replacement_directory_at_the_same_path",
+      "worktrees::manager::cold_restore_recheck_tests::cold_restore_recheck_rejects_changed_material_without_rewriting_it",
+      "worktrees::manager::cold_restore_recheck_tests::cold_restore_recheck_rejects_head_change_without_resetting_the_checkout",
+      "worktrees::manager::cold_restore_recheck_tests::cold_restored_location_recheck_publishes_one_canonical_result_without_moving_history",
+      "worktrees::manager::cold_restore_recheck_tests::late_restore_verification_cannot_erase_an_acknowledged_unknown_operation",
+      "worktrees::manager::cold_restore_recheck_tests::late_restore_verification_preserves_a_newer_location_revision_then_allows_a_fresh_recheck",
+      "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+      "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+      "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+      "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+      "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+      "worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority",
+      "worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move",
+      "worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable",
+      "worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error",
+      "worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start",
+      "worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action",
+      "worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path",
+      "worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history",
+      "worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation",
+      "worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved",
+      "worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build",
+      "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated",
+      "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+      "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+      "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+      "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+      "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+      "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+      "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+      "worktrees::wire_tests::actual_worktree_wire_and_linked_source_material_root"
+    ],
+    "priorFailureNamedIgnoredMarkers": [],
+    "priorFailureWithoutConfirmedNamedResult": []
+  },
+  "originalFailureReference": {
+    "runId": 40498060809,
+    "oldFailures": 72,
+    "comparison": "Exact previous FQNs, final top-level failure list, and named pass/ignore markers. A missing name does not count as a pass."
+  },
+  "limits": "Exact Windows hosted runner and the pinned source commit. No physical Windows install, real accounts, desktop acceptance or release.",
+  "selectedRawObservations": {
+    "windowConPtyControl": {
+      "serverBuild": 20348,
+      "noReply": {
+        "cursorQueries": 1,
+        "cursorReplies": 0,
+        "ready": false,
+        "readinessWaitMs": 3001,
+        "closeConfirmed": false
+      },
+      "reply": {
+        "cursorQueries": 1,
+        "cursorReplies": 1,
+        "ready": true,
+        "readinessWaitMs": 119,
+        "existingAndSecondCloseConfirmed": true,
+        "fixtureExit": 0
+      },
+      "originalManagerAndRawDrainPass": false,
+      "limits": "A controlled reply-path difference; exact ConPTY DLL selection and general cleanup or authentication remain open."
+    },
+    "eventTransport": {
+      "modes": ["approval", "stop"],
+      "missingRoutingFenceAtOriginalTimeout": true,
+      "ownedTestManagerCleanupConfirmed": true,
+      "rootCause": "unresolved"
+    },
+    "fileDelivery": {
+      "observedOpenDescendantRenameError": 5,
+      "failureReachedExistingFileReplacementOracle": false,
+      "productionBehaviorChange": false
+    },
+    "worktreeExamples": [
+      "original remove/recovery wait ended with unsettled state in owned subprocess",
+      "ordinary public recovery expected prepared but returned failed with maintenanceBusy",
+      "separate recovery material test returned unsupportedGit"
+    ],
+    "installer": "Skipped by failed verify dependency; no Windows installation evidence."
+  },
+  "subsequentSourceOnly": {
+    "fileDelivery": {
+      "commit": "1fb8f48b4",
+      "kind": "portable fixture oracle",
+      "changedProductionCode": false,
+      "macosAffectedPassed": 15,
+      "macosAllTargetsClippyPassed": true,
+      "windowsNativeRetested": false
+    },
+    "terminalView": {
+      "commit": "49900347e",
+      "kind": "gate early buffered terminal output on owned ID",
+      "controlledBeforeFailedOnEarlyParse": true,
+      "controlledAffectedPassed": 28,
+      "typecheckAndFrontendBuildPassed": true,
+      "installed": false,
+      "windowsNativeRetested": false,
+      "limits": "Separate renderer race. It does not explain or resolve the native Rust tests with no renderer."
+    }
+  }
+}
