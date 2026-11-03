@@ -285,11 +285,13 @@ fn actual_prepared_git_enters_complete_mixed_material_under_its_original_leaf() 
     assert_ne!(snapshot.git_stamp, snapshot.common_stamp);
     assert_eq!(snapshot.head.as_deref(), Some(COMMIT));
     let owner = material_owner::Owner::default();
+    let source_graph = git::source_roots::SourceGraph::capture(&snapshot, &cancel).unwrap();
     let captured = recovery_pack::capture(
         &owner,
         &snapshot,
         Some(&MaterialProfile::WindowsDefaultDataEaStreamsOwnerGroupDaclLinksLabelV1),
         &cancel,
+        &source_graph,
     )
     .unwrap();
     let expected = Identity::from(&snapshot);

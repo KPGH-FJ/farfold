@@ -27,7 +27,11 @@ pub(super) fn capture(
 ) -> Result<Capture> {
     let s = recycle::verify_at(material, saved, true, cancel)?;
     #[cfg(windows)]
-    git::source_roots::SourceGraph::capture(&s, cancel)?.require_clean_index(cancel)?;
+    let source_graph = {
+        let graph = git::source_roots::SourceGraph::capture(&s, cancel)?;
+        graph.require_clean_index(cancel)?;
+        graph
+    };
     #[cfg(not(windows))]
     {
         let diff = git::execute(
@@ -48,7 +52,14 @@ pub(super) fn capture(
             return Err(error("dirtyTracked"));
         }
     }
-    let plan = recovery_pack::capture(material, &s, saved.material.profile.as_ref(), cancel)?;
+    let plan = recovery_pack::capture(
+        material,
+        &s,
+        saved.material.profile.as_ref(),
+        cancel,
+        #[cfg(windows)]
+        &source_graph,
+    )?;
     recycle::verify_at(material, saved, true, cancel)?;
     Ok(plan)
 }

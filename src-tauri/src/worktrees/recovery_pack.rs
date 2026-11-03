@@ -140,11 +140,10 @@ pub(super) fn capture(
     s: &Snapshot,
     profile: Option<&super::MaterialProfile>,
     cancel: &AtomicBool,
+    #[cfg(windows)] source_graph: &git::source_roots::SourceGraph,
 ) -> Result<Capture> {
     #[cfg(not(windows))]
     let _ = (owner, profile);
-    #[cfg(windows)]
-    let source_graph = git::source_roots::SourceGraph::capture(s, cancel)?;
     #[cfg(windows)]
     let roots = source_graph.roots().clone();
     #[cfg(windows)]
@@ -212,7 +211,7 @@ pub(super) fn capture(
     #[cfg(windows)]
     let content = material::capture(
         owner,
-        &source_graph,
+        source_graph,
         s,
         material::archive_full(profile)?,
         cancel,
