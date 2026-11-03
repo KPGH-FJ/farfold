@@ -905,7 +905,11 @@ export function BrowserWorkspacePage({
     if (presentationSuspended || !active || !visible || !hasPage || blocked)
       return;
     const owner = scope.current;
-    if (!owner || owner.isRetired) return;
+    const label = visibleState?.label;
+    // A replacement owns the scope before its native page exists. A frame
+    // scheduled for the old page must never resize or close that replacement.
+    if (!owner || owner.isRetired || !label || owner.current?.label !== label)
+      return;
     let cancelled = false;
     let frame = 0;
     let last: BrowserWorkspaceBounds | null = null;
@@ -918,6 +922,8 @@ export function BrowserWorkspacePage({
       mounted.current &&
       !owner.isRetired &&
       scope.current === owner &&
+      owner.current?.label === label &&
+      owner.current.phase !== "closed" &&
       available.current.taskKey === taskKey &&
       available.current.active &&
       available.current.visible &&

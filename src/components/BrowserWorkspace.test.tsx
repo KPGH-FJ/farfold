@@ -804,6 +804,9 @@ it("rechecks the same local file on explicit reload and waits for old-page closu
   const closed = deferred<void>();
   h.inspect.mockReturnValueOnce(checked.promise);
   vi.mocked(backend.close).mockReturnValueOnce(closed.promise);
+  const opened = deferred<Awaited<ReturnType<typeof backend.openHtml>>>();
+  vi.mocked(backend.openHtml).mockReturnValueOnce(opened.promise);
+  vi.mocked(requestAnimationFrame).mockClear();
   clickLabel(render(props).tree, "重新载入文件");
   expect(h.inspect).toHaveBeenCalledWith("/fixture", "game.html");
   expect(backend.close).not.toHaveBeenCalled();
@@ -820,9 +823,28 @@ it("rechecks the same local file on explicit reload and waits for old-page closu
     }),
   );
   expect(backend.openHtml).toHaveBeenCalledOnce();
+  render(props);
+  for (const [frame] of vi.mocked(requestAnimationFrame).mock.calls.slice())
+    frame(0);
+  await Promise.resolve();
   closed.resolve();
   await vi.waitFor(() => expect(backend.openHtml).toHaveBeenCalledTimes(2));
   expect(vi.mocked(backend.openHtml).mock.lastCall?.[0].file).toEqual(next);
+  opened.resolve({
+    taskKey: "task-a",
+    label: "local-b",
+    phase: "ready",
+    url: "about:blank",
+    localFileName: "game.html",
+    revision: 1,
+  });
+  await vi.waitFor(() => expect(render(props).html).toContain("game.html"));
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenLastCalledWith(
+      expect.objectContaining({ label: "local-b", visible: true }),
+    ),
+  );
+  expect(backend.close).toHaveBeenCalledOnce();
   expect(backend.navigate).not.toHaveBeenCalled();
 });
 
