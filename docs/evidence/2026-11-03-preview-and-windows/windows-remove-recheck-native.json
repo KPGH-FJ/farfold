@@ -1,0 +1,240 @@
+{
+  "windowsPairedBaseline": {
+    "runId": 41643137170,
+    "sourceCommit": "be2edb6a6054bed821c0c4de015be2cf11db597e",
+    "artifactSha256": "cecba83182c2d46957efb7cf51c9fbcd982cea4ee95ba6d722ed601f0cca1135",
+    "providerDigestMatched": true,
+    "artifactMembers": 12,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-remove-rechecks": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+          "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+          "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 90.40s"
+        ],
+        "passed": false
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  },
+  "windowsPairedBaselineCases": [
+    {
+      "test": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19818,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19806,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19458,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19390,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19033,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    },
+    {
+      "test": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "result": "FAILED",
+      "outerDeadline": false,
+      "createWaitExpired": true,
+      "lastCreateWorkerStage": {
+        "ms": 19036,
+        "phase": "verify-created"
+      },
+      "childCompleted": false,
+      "phases": {
+        "FIXTURE": [
+          {
+            "ms": 0,
+            "phase": "create.enter"
+          }
+        ],
+        "NATIVE": []
+      }
+    }
+  ],
+  "windowsIndependentInitial": {
+    "runId": 41643324847,
+    "sourceCommit": "15e8f3a13bead9da526128fd55e876dfe8b0fd78",
+    "artifactSha256": "4b34abed79c3173fd74c3f020700dd8d0ab830835f6963f57773d84295a2b0a6",
+    "providerDigestMatched": true,
+    "artifactMembers": 15,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "recovery-material-identity": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.33s"
+        ],
+        "passed": false
+      },
+      "worktree-remove-identity-recheck": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 68.70s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  }
+}
