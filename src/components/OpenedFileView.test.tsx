@@ -548,6 +548,19 @@ it("does not display arbitrary inspection errors as recovery guidance", async ()
   expect(render().html).not.toContain("private-path-and-secret");
 });
 
+it("keeps verified file actions when a small text file cannot be decoded", async () => {
+  const failure = "此文件无法作为文字预览，请另存或使用其他应用打开";
+  await ready();
+  h.readText.mockRejectedValueOnce(failure);
+  click(S.refresh);
+  await vi.waitFor(() => expect(render().html).toContain(failure));
+  expect(render().html).not.toContain("Real disk content");
+  expect(button(S.feedback)).toBeUndefined();
+  expect(button(S.open)?.props.disabled).toBe(false);
+  expect(button(S.reveal)?.props.disabled).toBe(false);
+  expect(h.open).not.toHaveBeenCalled();
+});
+
 it("renders code and CSV as literal text instead of executing their contents", async () => {
   const file = { ...receipt, name: "result.csv" };
   h.inspectLink.mockResolvedValue(file);

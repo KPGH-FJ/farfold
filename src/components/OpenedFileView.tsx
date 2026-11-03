@@ -228,7 +228,9 @@ function openFailureNotice(error: unknown): string {
   const message = error instanceof Error ? error.message : error;
   if (error && typeof error === "object" && "code" in error)
     return T.failures[textBlockFailure(error)];
-  return message === D.checkWaitExpired || message === D.checkBusy
+  return message === D.checkWaitExpired ||
+    message === D.checkBusy ||
+    message === D.unsupportedText
     ? message
     : S.failed;
 }
@@ -595,7 +597,10 @@ export function OpenedFileView({
                     ? pptxFailure(error)
                     : previous.note,
               }
-            : inspected && isText(inspected) && inspected.size > MAX_TEXT_BYTES
+            : inspected &&
+                isText(inspected) &&
+                (inspected.size > MAX_TEXT_BYTES ||
+                  failureMessage === D.unsupportedText)
               ? {
                   identity,
                   phase: "ready",
