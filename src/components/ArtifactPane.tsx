@@ -312,16 +312,27 @@ export function ArtifactPane({
       media.removeEventListener("change", update);
       if (main) main.inert = originalInert;
       const target = returnFocusRef?.current ?? previous;
-      if (
-        (pane.contains(document.activeElement) ||
-          document.activeElement === document.body ||
-          document.activeElement === document.documentElement) &&
-        target?.isConnected &&
-        !pane.contains(target) &&
-        !target.closest("[hidden], [inert]") &&
-        target.getClientRects().length > 0
-      )
-        target.focus();
+      const restoreFocus = () => {
+        const focused = document.activeElement;
+        if (
+          (!focused ||
+            pane.contains(focused) ||
+            focused === document.body ||
+            focused === document.documentElement) &&
+          target?.isConnected &&
+          !pane.contains(target) &&
+          !target.closest("[hidden], [inert]") &&
+          target.getClientRects().length > 0
+        )
+          target.focus({ preventScroll: true });
+      };
+      if (pane.hidden && (media.matches || (expanded && showingBrowser))) {
+        // Let WebKit finish hiding the pane and release its covered controls.
+        requestAnimationFrame(() => {
+          if (pane.hidden && !document.querySelector("dialog[open]"))
+            restoreFocus();
+        });
+      } else restoreFocus();
     };
   }, [thread.key, active, displayed, expanded, showingBrowser, returnFocusRef]);
   useEffect(() => {

@@ -90,9 +90,10 @@ const thread = freshThreadState("artifact-focus", "agent", "/notes", "native");
 function render(
   active = true,
   returnFocusRef?: { current: HTMLElement | null },
+  open = true,
 ) {
   hooks.cursor = 0;
-  const tree = elements(ArtifactPane({ thread, active, returnFocusRef }));
+  const tree = elements(ArtifactPane({ thread, active, returnFocusRef, open }));
   for (const node of tree) {
     const ref = node.props.ref as { current: Host | null } | undefined;
     if (ref && node.type === "aside") ref.current = pane;
@@ -178,6 +179,28 @@ it("returns Escape to the explicit pointer opener even when the browser left foc
   expect(threads.closeArtifactPane).toHaveBeenCalledWith(thread.key);
   unmount();
   expect(doc.activeElement === opener).toBe(true);
+});
+
+it("returns focus after a narrow pane hides and the covered control can receive focus", () => {
+  let frame: FrameRequestCallback | undefined;
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    frame = callback;
+    return 1;
+  });
+  const returnFocusRef = { current: opener as unknown as HTMLElement };
+  render(true, returnFocusRef);
+  pane.hidden = true;
+  doc.activeElement = body;
+  // A covered control can remain unfocusable until WebKit updates the layout.
+  opener.focus.mockImplementation(() => {});
+  render(true, returnFocusRef, false);
+  expect(main.inert).toBe(false);
+  expect(frame).toBeDefined();
+  opener.focus.mockImplementation(() => {
+    doc.activeElement = opener;
+  });
+  frame?.(0);
+  expect(doc.activeElement).toBe(opener);
 });
 
 it("keeps the explicit opener across breakpoint and in-pane scope changes", () => {
