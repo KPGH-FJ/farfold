@@ -1,5 +1,8 @@
 //! Synthetic OS-only fixture. Never loads an Agent, account or model.
 #[cfg(windows)]
+#[path = "windows_process_fixture/git_job_probe.rs"]
+mod git_job_probe;
+#[cfg(windows)]
 #[path = "windows_process_fixture/manual_privileges.rs"]
 mod manual_privileges;
 #[cfg(windows)]
@@ -537,6 +540,7 @@ fn main() {
         return;
     }
     match args.first().and_then(|v| v.to_str()) {
+        Some("git-job-probe") => git_job_probe::run(&args),
         Some("wait") => {
             std::fs::write(&args[1], std::process::id().to_string()).unwrap();
             std::thread::sleep(std::time::Duration::from_secs(60));

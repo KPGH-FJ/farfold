@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -54,6 +54,17 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     'startup-selected-helper-error' = "${startup}missing_selected_program_is_reported_by_the_owned_windows_helper"
     'history-selected-read' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets'
     'history-wrong-source' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_rejects_wrong_native_id_and_different_cwd'
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
+} elseif ($Cohort -ceq 'GitJobWorktree') {
+  $tests = [ordered]@{
+    'git-job-exact-handle' = 'windows_process::current_members::tests::git_exact_handle_tests::actual_git_job_observes_exact_launch_handle_across_exit'
+    'maintenance-failed-unseal' = 'meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit'
+    'worktree-removal-parent-identity' = 'worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent'
+    'worktree-remove-recover-wire' = 'worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts'
+    'worktree-remove-offline-two-confirmations' = 'worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects'
   }
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }

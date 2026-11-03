@@ -22,6 +22,7 @@ on:
             RecoveryCancel,
             JobAccounting,
             AccessDiagnostics,
+            GitJobWorktree,
           ]
 
 permissions:

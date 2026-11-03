@@ -9,6 +9,9 @@ use std::{
 };
 use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetCurrentProcessId};
 
+#[path = "git_exact_handle_tests.rs"]
+mod git_exact_handle_tests;
+
 // Only the original production list call supplies these values. The logger
 // performs no native query, lookup or wait and retains no process handle.
 #[derive(serde::Serialize)]
