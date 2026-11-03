@@ -179,7 +179,7 @@ fn keeps_reported_live_output_after_its_unmodified_raw_envelope() {
             "truncated":false,"future":null
         }}}
     }});
-    let observed = forward(&[params.clone()], false, true);
+    let observed = forward(std::slice::from_ref(&params), false, true);
     assert_eq!(
         observed.values,
         vec![
@@ -200,7 +200,7 @@ fn keeps_file_input_format_after_its_unmodified_raw_envelope_in_live_and_history
             "rawInput":{"path":"/work/proof.txt","before":"ALPHA","after":"BETA"},
             "_meta":{"goose":{"toolCall":{"toolName":"edit","extensionName":"developer"},"future":[1,null]}}
         }});
-        let observed = forward(&[params.clone()], live, true);
+        let observed = forward(std::slice::from_ref(&params), live, true);
         assert_eq!(observed.values[0], params);
         assert_eq!(
             observed.values.last(),
