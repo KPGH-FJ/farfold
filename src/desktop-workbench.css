@@ -665,6 +665,20 @@
     flex-wrap: wrap;
   }
 }
+@media (max-height: 680px) {
+  .product-app .workspace-start .empty-wrap,
+  .product-app
+    .workspace-start
+    .empty-wrap:has(.composer-attachments, .composer-chips) {
+    padding-top: 12px;
+  }
+  .product-app .workspace-start-intro {
+    margin-bottom: 12px;
+  }
+  .product-app .workspace-start-intro h1 {
+    margin-block: 4px;
+  }
+}
 
 .product-app .composer-box.file-drop-over {
   outline: 2px solid var(--ink);
