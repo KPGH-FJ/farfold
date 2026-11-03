@@ -484,16 +484,11 @@ impl Worktrees {
             .spawn(move || {
                 let _progress = work.scope();
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    let p = removal::capture(&manager.0.material, &intent.saved, &cancel)?;
-                    removal::same_plan(&intent, &p)?;
-                    recovery_pack::verify(
-                        &manager.0.material,
-                        intent.recovery.as_ref().ok_or(error("recoveryInvalid"))?,
-                        &cancel,
-                    )?;
                     if cancel.load(Ordering::SeqCst) {
                         return Err(error("cancelled"));
                     }
+                    // The platform deletion path captures and verifies the same
+                    // source and recovery package before the dispatch callback.
                     removal::delete(&manager.0.material, &intent, &cancel, || {
                         let mut dispatched = intent.clone();
                         dispatched.dispatched = true;
