@@ -425,6 +425,11 @@ impl AcpManager {
         let scope = self
             .workspace_access_configuration_scope(agent_id, &connection)
             .map_err(|_| Code::Busy)?;
+        // An expired admission has no request to wait for. Letting it enter
+        // the actor would race the manager timeout against the actor's reply.
+        if tokio::time::Instant::now() >= deadline {
+            return Err(Code::Changed.into());
+        }
         let request = Request {
             connection_id: connection_id.into(),
             session_id: session_id.into(),
