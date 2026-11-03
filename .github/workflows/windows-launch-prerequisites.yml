@@ -8,7 +8,7 @@ on:
         description: Exact native test cohort
         type: choice
         default: LaunchPrerequisites
-        options: [LaunchPrerequisites, TransportTerminalFile]
+        options: [LaunchPrerequisites, TransportTerminalFile, TransportOnly]
 
 permissions:
   contents: read
@@ -37,7 +37,7 @@ jobs:
           rustup default 1.96.0
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Check synthetic protocol fixture interpreter
-        if: ${{ inputs.cohort == 'TransportTerminalFile' }}
+        if: ${{ inputs.cohort != 'LaunchPrerequisites' }}
         run: |
           $fixturePython = (Get-Command python.exe -CommandType Application -ErrorAction Stop).Source
           & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"

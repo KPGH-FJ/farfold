@@ -559,6 +559,11 @@ async fn session_pump(
     mcp_requests: Option<super::transient_mcp::SessionMcpRequests>,
     received: load_notifications::State,
 ) {
+    // The synchronous event sink may hold up this session's delivery. Release
+    // the runtime worker so other pumps and protocol ingress can still run.
+    let events: SessionSink = Arc::new(move |event| {
+        tokio::task::block_in_place(|| events(event));
+    });
     let purpose = opening.purpose;
     let mut opening = Some(opening);
     let mut detached = None;

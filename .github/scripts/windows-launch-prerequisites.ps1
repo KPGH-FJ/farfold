@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,7 +33,7 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -ceq 'TransportTerminalFile') {
+$groups = if ($Cohort -cne 'LaunchPrerequisites') {
   $transport = 'acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_'
   $terminal = 'platform_tests::windows_conpty::'
   $cases = [ordered]@{
@@ -46,6 +46,7 @@ $groups = if ($Cohort -ceq 'TransportTerminalFile') {
     'file-root-replacement' = 'file_delivery::tests::replaced_root_during_read_is_rejected'
   }
   foreach ($case in $cases.GetEnumerator()) {
+    if ($Cohort -ceq 'TransportOnly' -and $case.Key -cnotlike 'transport-*') { continue }
     @{ name = $case.Key; filter = $case.Value; exact = $true; names = @($case.Value); threads = 1 }
   }
   @{
