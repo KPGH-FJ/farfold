@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,7 +33,12 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -ceq 'RemoveRechecks') {
+$groups = if ($Cohort -ceq 'RemoveFixtures') {
+  $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
+  @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
+  $test = 'worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification'
+  @{ name = 'worktree-remove-identity-recheck'; filter = $test; exact = $true; names = @($test) }
+} elseif ($Cohort -ceq 'RemoveRechecks') {
   $prefix = 'worktrees::manager::remove_recheck_tests::'
   @{
     name = 'worktree-remove-rechecks'; filter = $prefix; exact = $false; threads = 2

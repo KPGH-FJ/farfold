@@ -18,6 +18,7 @@ on:
             RetirementAndRemove,
             TerminalRetirementFix,
             RemoveRechecks,
+            RemoveFixtures,
           ]
 
 permissions:

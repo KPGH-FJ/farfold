@@ -5,6 +5,14 @@ use super::{
 use std::{fs, path::Path, sync::atomic::AtomicBool};
 #[test]
 fn recovery_content_has_no_inode_identity_but_preserves_empty_material() {
+    #[cfg(windows)]
+    super::recovery_ordinary_windows_tests::assert_recovery_material_identity();
+    #[cfg(unix)]
+    assert_unix_recovery_material_identity();
+}
+
+#[cfg(unix)]
+fn assert_unix_recovery_material_identity() {
     let t = tempfile::tempdir().unwrap();
     let a = t.path().canonicalize().unwrap().join("a");
     let b = t.path().canonicalize().unwrap().join("b");

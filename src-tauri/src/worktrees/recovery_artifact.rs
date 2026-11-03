@@ -46,6 +46,14 @@ struct WindowsId {
     file_id: [u8; 16],
 }
 impl FileIdentity {
+    #[cfg(test)]
+    pub(in crate::worktrees) fn change_file_id_for_test(&mut self) {
+        match self {
+            Self::Unix(identity) => identity.ino ^= 1,
+            Self::Windows(identity) => identity.windows.file_id[0] ^= 1,
+        }
+    }
+
     fn native(file: &File) -> Result<Self> {
         let s = crate::file_access::stamp(file).map_err(|_| error("recoveryChanged"))?;
         #[cfg(unix)]

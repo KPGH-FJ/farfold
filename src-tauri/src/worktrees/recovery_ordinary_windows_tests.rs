@@ -35,10 +35,12 @@ impl Fixture {
         }
     }
     fn input(&self, memory: &MixedMemory) -> MixedRequest {
+        Self::input_at(&self.source, memory)
+    }
+    fn input_at(root: &Path, memory: &MixedMemory) -> MixedRequest {
         MixedRequest::held_ordinary(
-            PinnedPath::directory(&self.source).unwrap(),
-            self.source
-                .file_name()
+            PinnedPath::directory(root).unwrap(),
+            root.file_name()
                 .unwrap()
                 .to_str()
                 .unwrap()
@@ -149,6 +151,33 @@ impl Fixture {
         target
     }
 }
+
+pub(super) fn assert_recovery_material_identity() {
+    let fixture = Fixture::new();
+    fs::write(fixture.source.join("same"), b"x").unwrap();
+    let sealed = fixture.seal();
+    // Restore alongside the original. The native receipt also asserts that
+    // every restored object has a different FileID from its source.
+    let target = fixture.restore(&sealed, "restored sibling").unwrap();
+    let owner = material_owner::Owner::default();
+    let memory = MixedMemory::default();
+    let cancel = AtomicBool::new(false);
+    let capture = || {
+        owner
+            .capture_complete_tree(Fixture::input_at(&target, &memory), &cancel)
+            .unwrap()
+    };
+    let restored = capture();
+    assert_eq!(restored.entries, u64::from(sealed.content.nodes));
+    assert_eq!(restored.bytes, sealed.content.bytes);
+    assert_eq!(restored.sha256, material_scan::hex(sealed.content.sha256));
+
+    fs::create_dir(target.join("ignored-empty")).unwrap();
+    let changed = capture();
+    assert_eq!(changed.entries, restored.entries + 1);
+    assert_ne!(changed.sha256, restored.sha256);
+}
+
 fn receipt(actual: &crate::file_access::MaterialTreeReceipt, expected: &WindowsMaterial) {
     let writes = expected
         .nodes

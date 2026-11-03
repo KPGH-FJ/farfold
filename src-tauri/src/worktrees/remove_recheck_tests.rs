@@ -260,19 +260,14 @@ fn removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verif
             deleted(&m, &s, &r);
             m.recheck(&s, fixture::REMOVE).unwrap();
             let baseline = m.lock().unwrap().doc.clone();
-            for variant in ["hash", "inode", "origin", "older"] {
+            for variant in ["hash", "file-id", "origin", "older"] {
                 {
                     let mut i = m.lock().unwrap();
                     let mut doc = baseline.clone();
                     let recovery = &mut doc.recoveries[0];
                     match variant {
                         "hash" => recovery.receipt.bundle_sha256 = "0".repeat(64),
-                        "inode" => match &mut recovery.bundle_stamp {
-                            recovery_pack::FileIdentity::Unix(value) => value.ino += 1,
-                            recovery_pack::FileIdentity::Windows(_) => {
-                                panic!("Unix fixture identity required")
-                            }
-                        },
+                        "file-id" => recovery.bundle_stamp.change_file_id_for_test(),
                         "origin" => recovery.operation_id = RECOVER.into(),
                         "older" => recovery.receipt.revision -= 1,
                         _ => unreachable!(),
