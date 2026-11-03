@@ -1,0 +1,238 @@
+{
+  "initialNativeBuildFailures": [
+    {
+      "runId": 41658106435,
+      "sourceCommit": "846d2c5c3fd72ed0c418192893c41ef2a23071f5",
+      "artifactSha256": "3863e689cf06a4fc4efe35a7a5b6df4376c778239a3c8ef99cd52636748aab51",
+      "providerDigestMatched": true,
+      "artifactMembers": 6,
+      "nativeBuild": {
+        "buildSucceeded": false,
+        "runnerExitCode": 101,
+        "testBuildExit": 101,
+        "fixtureBuildExit": null,
+        "failure": "Selected test build returned a failure exit"
+      },
+      "groups": {}
+    },
+    {
+      "runId": 41658222842,
+      "sourceCommit": "e42ab429eea37456c87be35d46af5845cad5037c",
+      "artifactSha256": "8556d17b8995f30b3f4a9ffa5d1cbd965b0e9d868bc2dc3660c1d19762cc40b6",
+      "providerDigestMatched": true,
+      "artifactMembers": 6,
+      "nativeBuild": {
+        "buildSucceeded": false,
+        "runnerExitCode": 101,
+        "testBuildExit": 101,
+        "fixtureBuildExit": null,
+        "failure": "Selected test build returned a failure exit"
+      },
+      "groups": {}
+    }
+  ],
+  "initialBuildFailureScope": "Windows-only startup probe mismatched error-reference types. No selected tests executed.",
+  "combinedNative": {
+    "runId": 41659910994,
+    "sourceCommit": "eeaba79cd4741a7e2c0289ae1a392b726a13f787",
+    "artifactSha256": "96fd82852db43e501a1c3590173fe70d04f0b4f820e5a48f697d44b72e6f6220",
+    "providerDigestMatched": true,
+    "artifactMembers": 33,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "job-accounting-exact-handles": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::native_job_accounting_samples_exact_children_across_exit_and_handle_release",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.41s"
+        ],
+        "passed": true
+      },
+      "job-accounting-sticky-gap": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::unknown_accounting_with_failed_snapshot_keeps_gap_after_a_later_empty_list",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.00s"
+        ],
+        "passed": true
+      },
+      "terminal-cancel-before-publication": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::terminal_cancel_after_native_spawn_before_publication_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.10s"
+        ],
+        "passed": true
+      },
+      "startup-parent-error": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::process::startup_tests::spawn_failure_missing_program_records_os_error_and_own_file_limits",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::process::startup_tests::spawn_failure_missing_program_records_os_error_and_own_file_limits"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.01s"
+        ],
+        "passed": true
+      },
+      "startup-cancel-precedence": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::process::startup_tests::startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::process::startup_tests::startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.01s"
+        ],
+        "passed": true
+      },
+      "startup-selected-helper-error": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::process::startup_tests::missing_selected_program_is_reported_by_the_owned_windows_helper",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.02s"
+        ],
+        "passed": true
+      },
+      "history-selected-read": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.46s"
+        ],
+        "passed": true
+      },
+      "history-wrong-source": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::history_search::tests::admission_tests::reviewed_codex_history_rejects_wrong_native_id_and_different_cwd",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2449 filtered out; finished in 0.40s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    }
+  },
+  "jobSamples": [
+    {
+      "forcedExit": false,
+      "samples": 94890,
+      "nativeAssignedListedMismatches": 0,
+      "firstMismatch": null,
+      "signaledAccounting": [1, 0],
+      "immediatelyAfterHandleReleaseAccounting": [1, 0],
+      "settledAccounting": 0
+    },
+    {
+      "forcedExit": true,
+      "samples": 96901,
+      "nativeAssignedListedMismatches": 1,
+      "firstMismatch": {
+        "childOrdinal": 2,
+        "accountingBefore": 1,
+        "list": {
+          "queryReturn": 1,
+          "nativeError": null,
+          "assigned": 1,
+          "listed": 0,
+          "written": 16,
+          "parseRejections": ["assigned-listed-mismatch"]
+        },
+        "accountingAfter": 0
+      },
+      "signaledAccounting": [1, 0],
+      "immediatelyAfterHandleReleaseAccounting": [1, 0],
+      "settledAccounting": 0
+    }
+  ],
+  "jobProofScope": "Two explicitly associated fixture processes with original handles. No inference that every member of the historical Git Job signaled.",
+  "terminalStartupCancellation": {
+    "cancelledAfterCleanup": true,
+    "startupResult": {
+      "Err": "AUTH_CANCELLED"
+    },
+    "heldChildExited": true,
+    "terminalPublished": false,
+    "startupQuiescent": true,
+    "exitFrames": 1,
+    "observedQueries": 0
+  },
+  "terminalNativeOwner": {
+    "case": "TerminalCancelBeforePublication",
+    "childExit": 0,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "directJobInactive": true
+  },
+  "selectedMissingProgram": {
+    "helperExitCode": 126,
+    "systemError": 2
+  },
+  "fullNativeRunStarted": false,
+  "oldAgentRequestsResent": 0
+}
