@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,7 +33,12 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -ceq 'WorktreeRecovery') {
+$groups = if ($Cohort -ceq 'RetirementAndRemove') {
+  $test = 'platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement'
+  @{ name = 'terminal-retirement-reply'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  $test = 'worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager'
+  @{ name = 'worktree-cold-remove-recheck'; filter = $test; exact = $true; names = @($test) }
+} elseif ($Cohort -ceq 'WorktreeRecovery') {
   $public = 'worktrees::recovery_ordinary_windows_tests::ordinary_public_'
   @{
     name = 'worktree-public-recovery'; filter = $public; exact = $false; threads = 2

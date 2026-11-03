@@ -14,6 +14,7 @@ pub(crate) enum Case {
     ManagerCursorNoReply,
     Drain,
     CloseInputWithoutReply,
+    ReplyAfterJobEnd,
     CursorReply,
     CloseDrain,
     TerminalCancel,
@@ -196,6 +197,7 @@ pub(crate) fn run(case: Case) {
                 | Case::ManagerCursorNoReply
                 | Case::Drain
                 | Case::CloseInputWithoutReply
+                | Case::ReplyAfterJobEnd
                 | Case::TerminalCursorNoReply
                 | Case::TerminalCursorReply
                 | Case::TerminalMasterBoundedUnknown
@@ -330,7 +332,7 @@ pub(crate) fn run(case: Case) {
     };
     if matches!(
         case,
-        Case::Manager | Case::Drain | Case::CloseInputWithoutReply
+        Case::Manager | Case::Drain | Case::CloseInputWithoutReply | Case::ReplyAfterJobEnd
     ) {
         // Separate schema from the original cursor and bounded-unknown receipts.
         // Reached only after the same child/Job/streams/input have settled.
@@ -763,8 +765,10 @@ fn raw_probe(case: Case) {
                         .filter(|(i, s)| i + 4 > previous && *s == b"\x1b[6n")
                         .count();
                     query_read.fetch_add(new_queries, Ordering::SeqCst);
-                    if !matches!(case, Case::Drain | Case::CloseInputWithoutReply)
-                        && new_queries != 0
+                    if !matches!(
+                        case,
+                        Case::Drain | Case::CloseInputWithoutReply | Case::ReplyAfterJobEnd
+                    ) && new_queries != 0
                     {
                         assert!(reply_read.load(Ordering::SeqCst) + new_queries <= 8);
                         let mut writer = write.lock().unwrap();
@@ -813,7 +817,7 @@ fn raw_probe(case: Case) {
             "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
             "cursorReplies":replies.load(Ordering::SeqCst),"rootCause":"unknown"})
     );
-    if case == Case::CloseInputWithoutReply {
+    if matches!(case, Case::CloseInputWithoutReply | Case::ReplyAfterJobEnd) {
         assert!(!ready_observed, "expected a pending cursor handshake");
         assert_eq!(queries.load(Ordering::SeqCst), 1);
         assert_eq!(replies.load(Ordering::SeqCst), 0);
@@ -826,19 +830,32 @@ fn raw_probe(case: Case) {
             );
             std::thread::sleep(Duration::from_millis(10));
         }
-        eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.enter");
-        drop(writer.lock().unwrap().take().unwrap());
-        eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.return");
+        if case == Case::ReplyAfterJobEnd {
+            // No application child can receive this: the exact Job is inactive.
+            eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.enter");
+            let mut writer = writer.lock().unwrap();
+            let writer = writer.as_mut().unwrap();
+            writer.write_all(b"\x1b[1;1R").unwrap();
+            writer.flush().unwrap();
+            replies.fetch_add(1, Ordering::SeqCst);
+            eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.return");
+        } else {
+            eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.enter");
+            drop(writer.lock().unwrap().take().unwrap());
+            eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.return");
+        }
         eprintln!("FARFOLD_CONPTY_PHASE raw.close.enter");
         drop(pair.master);
         eprintln!("FARFOLD_CONPTY_PHASE raw.close.return");
         let (actual_eof, _, eof_kind) = closed.recv_timeout(Duration::from_secs(1)).unwrap();
         reader_thread.join().unwrap();
         assert!(actual_eof);
-        assert_eq!(replies.load(Ordering::SeqCst), 0);
+        let expected_replies = usize::from(case == Case::ReplyAfterJobEnd);
+        assert_eq!(replies.load(Ordering::SeqCst), expected_replies);
         eprintln!(
-            "FARFOLD_CONPTY_INPUT_EOF {}",
-            serde_json::json!({"childReaped":true,"jobInactive":true,"cursorReplies":0,"ptyEOF":eof_kind})
+            "FARFOLD_CONPTY_RETIREMENT {}",
+            serde_json::json!({"case":format!("{case:?}"),"childReaped":true,
+                "jobInactive":true,"cursorReplies":expected_replies,"ptyEOF":eof_kind})
         );
         return;
     }
@@ -924,6 +941,7 @@ fn diagnostic_child() {
             | Case::ManagerCursorNoReply
             | Case::Drain
             | Case::CloseInputWithoutReply
+            | Case::ReplyAfterJobEnd
             | Case::CursorReply
             | Case::CloseDrain
     ));
@@ -958,6 +976,11 @@ fn raw_conpty_draining_without_cursor_reply_is_bounded() {
 #[ignore = "manual diagnostic for closing ConPTY with an unanswered cursor query"]
 fn raw_conpty_input_eof_before_close_without_cursor_reply() {
     run(Case::CloseInputWithoutReply);
+}
+#[test]
+#[ignore = "manual diagnostic for a ConPTY reply after the exact Job has stopped"]
+fn raw_conpty_reply_after_job_end_unblocks_retirement() {
+    run(Case::ReplyAfterJobEnd);
 }
 #[test]
 fn raw_conpty_replies_only_to_an_observed_query() {
