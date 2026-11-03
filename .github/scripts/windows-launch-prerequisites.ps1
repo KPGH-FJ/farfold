@@ -43,6 +43,8 @@ $groups = if ($Cohort -ceq 'TerminalClose') {
   @{ name = 'terminal-close-original'; filter = $test; exact = $true; names = @($test) }
   $test = 'auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated'
   @{ name = 'terminal-auth-cancel'; filter = $test; exact = $true; names = @($test) }
+  $test = 'platform_tests::windows_conpty::raw_conpty_input_eof_before_close_without_cursor_reply'
+  @{ name = 'terminal-input-eof'; filter = $test; exact = $true; names = @($test); ignored = $true }
 } elseif ($Cohort -cne 'LaunchPrerequisites') {
   $transport = 'acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_'
   $terminal = 'platform_tests::windows_conpty::'

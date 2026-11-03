@@ -13,6 +13,7 @@ pub(crate) enum Case {
     ManagerCursorReply,
     ManagerCursorNoReply,
     Drain,
+    CloseInputWithoutReply,
     CursorReply,
     CloseDrain,
     TerminalCancel,
@@ -194,6 +195,7 @@ pub(crate) fn run(case: Case) {
                 | Case::ManagerCursorReply
                 | Case::ManagerCursorNoReply
                 | Case::Drain
+                | Case::CloseInputWithoutReply
                 | Case::TerminalCursorNoReply
                 | Case::TerminalCursorReply
                 | Case::TerminalMasterBoundedUnknown
@@ -326,7 +328,10 @@ pub(crate) fn run(case: Case) {
             );
         }
     };
-    if matches!(case, Case::Manager | Case::Drain) {
+    if matches!(
+        case,
+        Case::Manager | Case::Drain | Case::CloseInputWithoutReply
+    ) {
         // Separate schema from the original cursor and bounded-unknown receipts.
         // Reached only after the same child/Job/streams/input have settled.
         eprintln!(
@@ -702,7 +707,7 @@ fn raw_probe(case: Case) {
     eprintln!("FARFOLD_CONPTY_PHASE raw.openpty.return");
     environment();
     let mut reader = pair.master.try_clone_reader().unwrap();
-    let writer = Arc::new(Mutex::new(pair.master.take_writer().unwrap()));
+    let writer = Arc::new(Mutex::new(Some(pair.master.take_writer().unwrap())));
     let write = writer.clone();
     let ready = Arc::new(AtomicBool::new(false));
     let ready_read = ready.clone();
@@ -758,9 +763,12 @@ fn raw_probe(case: Case) {
                         .filter(|(i, s)| i + 4 > previous && *s == b"\x1b[6n")
                         .count();
                     query_read.fetch_add(new_queries, Ordering::SeqCst);
-                    if case != Case::Drain && new_queries != 0 {
+                    if !matches!(case, Case::Drain | Case::CloseInputWithoutReply)
+                        && new_queries != 0
+                    {
                         assert!(reply_read.load(Ordering::SeqCst) + new_queries <= 8);
                         let mut writer = write.lock().unwrap();
+                        let writer = writer.as_mut().unwrap();
                         for _ in 0..new_queries {
                             writer.write_all(b"\x1b[1;1R").unwrap();
                         }
@@ -805,12 +813,45 @@ fn raw_probe(case: Case) {
             "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
             "cursorReplies":replies.load(Ordering::SeqCst),"rootCause":"unknown"})
     );
+    if case == Case::CloseInputWithoutReply {
+        assert!(!ready_observed, "expected a pending cursor handshake");
+        assert_eq!(queries.load(Ordering::SeqCst), 1);
+        assert_eq!(replies.load(Ordering::SeqCst), 0);
+        group.terminate();
+        let deadline = Instant::now() + Duration::from_secs(2);
+        while child.try_wait().unwrap().is_none() || group.active() {
+            assert!(
+                Instant::now() < deadline,
+                "exact child and Job must settle before retiring ConPTY"
+            );
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.enter");
+        drop(writer.lock().unwrap().take().unwrap());
+        eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.return");
+        eprintln!("FARFOLD_CONPTY_PHASE raw.close.enter");
+        drop(pair.master);
+        eprintln!("FARFOLD_CONPTY_PHASE raw.close.return");
+        let (actual_eof, _, eof_kind) = closed.recv_timeout(Duration::from_secs(1)).unwrap();
+        reader_thread.join().unwrap();
+        assert!(actual_eof);
+        assert_eq!(replies.load(Ordering::SeqCst), 0);
+        eprintln!(
+            "FARFOLD_CONPTY_INPUT_EOF {}",
+            serde_json::json!({"childReaped":true,"jobInactive":true,"cursorReplies":0,"ptyEOF":eof_kind})
+        );
+        return;
+    }
     assert!(ready_observed, "valid Python peer must actually start");
     if case == Case::CloseDrain {
         pause.store(true, Ordering::SeqCst);
     }
-    writer.lock().unwrap().write_all(b"finish\r").unwrap();
-    writer.lock().unwrap().flush().unwrap();
+    {
+        let mut writer = writer.lock().unwrap();
+        let writer = writer.as_mut().unwrap();
+        writer.write_all(b"finish\r").unwrap();
+        writer.flush().unwrap();
+    }
     let pause_observed =
         case == Case::CloseDrain && await_flag(&paused, Duration::from_millis(500));
     let close_returned = Arc::new(AtomicBool::new(false));
@@ -882,6 +923,7 @@ fn diagnostic_child() {
             | Case::ManagerCursorReply
             | Case::ManagerCursorNoReply
             | Case::Drain
+            | Case::CloseInputWithoutReply
             | Case::CursorReply
             | Case::CloseDrain
     ));
@@ -911,6 +953,11 @@ fn manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup() {
 #[test]
 fn raw_conpty_draining_without_cursor_reply_is_bounded() {
     run(Case::Drain);
+}
+#[test]
+#[ignore = "manual diagnostic for closing ConPTY with an unanswered cursor query"]
+fn raw_conpty_input_eof_before_close_without_cursor_reply() {
+    run(Case::CloseInputWithoutReply);
 }
 #[test]
 fn raw_conpty_replies_only_to_an_observed_query() {

@@ -148,6 +148,15 @@ fn terminal_cursor_case(case: crate::platform_tests::windows_conpty::Case, reply
         cursor.phase("marker.missing.close.enter", reply, started);
         let result = manager.close(&id);
         cursor.phase("marker.missing.close.return", reply, started);
+        let master_taken = session.master.lock().unwrap().is_none();
+        eprintln!(
+            "FARFOLD_TERMINAL_CURSOR_OWNER_STATE {}",
+            serde_json::json!({
+                "masterTaken":master_taken,
+                "jobActive":crate::windows_process::active(session.pid.unwrap()),
+                "exitConfirmed":session.exit.0.lock().unwrap().is_some()
+            })
+        );
         eprintln!(
             "FARFOLD_TERMINAL_CURSOR_CLOSE {}",
             serde_json::json!({
