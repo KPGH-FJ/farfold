@@ -163,7 +163,14 @@
   "originalFailureReference": {
     "runId": 40498060809,
     "oldFailures": 72,
-    "comparison": "Exact previous FQNs, final top-level failure list, and named pass/ignore markers. A missing name does not count as a pass."
+    "comparison": "Exact previous FQNs, final top-level failure list, and named pass/ignore markers. A missing name does not count as a pass.",
+    "previouslyPassingNamedNowFailing": [
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop"
+    ],
+    "addedDiagnosticNowFailing": [
+      "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+    ]
   },
   "limits": "Exact Windows hosted runner and the pinned source commit. No physical Windows install, real accounts, desktop acceptance or release.",
   "selectedRawObservations": {
@@ -222,7 +229,12 @@
       "typecheckAndFrontendBuildPassed": true,
       "installed": false,
       "windowsNativeRetested": false,
-      "limits": "Separate renderer race. It does not explain or resolve the native Rust tests with no renderer."
+      "limits": "Separate renderer race. It does not explain or resolve the native Rust tests with no renderer.",
+      "macosFullFrontend": {
+        "files": 704,
+        "passed": 9450,
+        "logSha256": "83073210cdd27bff12a8d3dca18094c7e7c8f9897b26f54d920c5d003fedbf72"
+      }
     }
   }
 }
