@@ -17,6 +17,19 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> String {
     };
     #[cfg(not(windows))]
     let (program, hooks) = ("/usr/bin/git", "core.hooksPath=/dev/null".to_owned());
+    git_with_hooks(root, args, program, &hooks)
+}
+
+// Inspect recovered material without adding a test hook directory to that tree.
+pub(super) fn recovered_remotes(root: &Path) -> String {
+    #[cfg(windows)]
+    let (program, hooks) = ("git.exe", "core.hooksPath=NUL");
+    #[cfg(not(windows))]
+    let (program, hooks) = ("/usr/bin/git", "core.hooksPath=/dev/null");
+    git_with_hooks(root, &["remote"], program, hooks)
+}
+
+fn git_with_hooks(root: &Path, args: &[&str], program: &str, hooks: &str) -> String {
     let o = Command::new(program)
         .arg("-C")
         .arg(root)

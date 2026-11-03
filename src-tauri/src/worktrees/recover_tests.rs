@@ -72,7 +72,7 @@ fn recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts()
                     .starts_with("refs/heads/recovery/")
             );
             assert_eq!(fs::read(target.join("a.txt")).unwrap(), b"fixture");
-            assert!(git(&target, &["remote"]).is_empty());
+            assert!(tests::recovered_remotes(&target).is_empty());
             assert!(!target.join(".git/objects/info/alternates").exists());
             assert_eq!(m.check_location(&s, &l.id).unwrap().ownership, "existing");
             assert!(

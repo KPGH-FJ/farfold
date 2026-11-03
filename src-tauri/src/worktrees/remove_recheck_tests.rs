@@ -121,7 +121,7 @@ fn check_then_recover(cold: bool) {
     assert_eq!(location.repository_root, location.path);
     assert_eq!(fs::read(target.join("a.txt")).unwrap(), b"fixture");
     assert!(!target.join(".git/objects/info/alternates").exists());
-    assert!(tests::git(&target, &["remote"]).is_empty());
+    assert!(tests::recovered_remotes(&target).is_empty());
     if cold {
         println!(
             "COLD_RECOVERY_WIRE={}",
