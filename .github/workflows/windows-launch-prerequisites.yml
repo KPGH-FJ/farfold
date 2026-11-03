@@ -17,6 +17,7 @@ on:
             WorktreeRecovery,
             RetirementAndRemove,
             TerminalRetirementFix,
+            RemoveRechecks,
           ]
 
 permissions:

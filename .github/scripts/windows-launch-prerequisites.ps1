@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,7 +33,20 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = if ($Cohort -ceq 'RetirementAndRemove') {
+$groups = if ($Cohort -ceq 'RemoveRechecks') {
+  $prefix = 'worktrees::manager::remove_recheck_tests::'
+  @{
+    name = 'worktree-remove-rechecks'; filter = $prefix; exact = $false; threads = 2
+    names = @(
+      "${prefix}warm_remove_recheck_can_recover_through_the_manager",
+      "${prefix}cold_remove_recheck_can_recover_through_the_manager",
+      "${prefix}removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "${prefix}removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "${prefix}removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "${prefix}late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation"
+    )
+  }
+} elseif ($Cohort -ceq 'RetirementAndRemove') {
   $test = 'platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement'
   @{ name = 'terminal-retirement-reply'; filter = $test; exact = $true; names = @($test); ignored = $true }
   $test = 'worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager'
