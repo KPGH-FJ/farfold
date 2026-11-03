@@ -15,6 +15,7 @@ export const ARCHIVE_STRINGS = {
   replacement: "你选择的替代文件，不是已核实的原附件",
   chooseReplacement: "选择替代文件…",
   checking: "正在核对…",
+  inspectionBusy: "正在核对其他附件，请稍后重新核对这一项。",
   selected: "已选择",
   excluded: "未打包",
   retry: "重新核对",

@@ -190,7 +190,9 @@ export function ConversationArchiveDialog({
                       {row.state === "checking"
                         ? S.checking
                         : row.state === "error"
-                          ? S.errors[row.code ?? "invalidData"]
+                          ? row.code === "busy"
+                            ? S.inspectionBusy
+                            : S.errors[row.code ?? "invalidData"]
                           : row.state === "selected"
                             ? `${S.selected} · ${sourceBytes(row.source!)} 字节`
                             : S.omission[

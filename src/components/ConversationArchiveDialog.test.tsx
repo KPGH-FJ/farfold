@@ -46,7 +46,8 @@ import { ConversationArchiveDialog } from "./ConversationArchiveDialog";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { ARCHIVE_STRINGS as S } from "../runtime/conversation_archive_strings";
 import { captureConversationExport } from "../runtime/conversation_archive_snapshot";
-const capture = () =>
+import { fileDelivery } from "../runtime/file_delivery";
+const capture = (attachmentCount = 0) =>
   captureConversationExport(
     {
       cwd: "/owned",
@@ -55,7 +56,10 @@ const capture = () =>
           kind: "user",
           id: "u",
           text: "original content",
-          attachments: [],
+          attachments: Array.from({ length: attachmentCount }, (_, i) => ({
+            name: `source-${i}.txt`,
+            uri: `/owned/source-${i}.txt`,
+          })),
           streaming: false,
           time: 1,
         },
@@ -210,4 +214,38 @@ it("cancelled chooser keeps original capture without fabricating a saved result"
   expect(nodes().some((n) => n.props.children === S.pickerCancelled)).toBe(
     true,
   );
+});
+
+it("reports an attachment inspection limit before any save has started", async () => {
+  c = capture(3);
+  let release!: () => void;
+  const held = new Promise<never>((_, reject) => {
+    release = () => reject({ code: "unreadable" });
+  });
+  const inspect = vi.spyOn(fileDelivery, "inspectLink").mockReturnValue(held);
+  const select = (index: number) => {
+    const row = nodes().filter(
+      (n) => n.type === "input" && n.props.type === "checkbox",
+    )[index];
+    (row.props.onChange as (event: { target: { checked: boolean } }) => void)({
+      target: { checked: true },
+    });
+  };
+  try {
+    select(0);
+    select(1);
+    select(2);
+    await flush();
+    expect(inspect).toHaveBeenCalledTimes(2);
+    expect(h.begin).not.toHaveBeenCalled();
+    expect(nodes().find((n) => n.props.role === "alert")?.props.children).toBe(
+      "正在核对其他附件，请稍后重新核对这一项。",
+    );
+    expect(
+      nodes().find((n) => n.props.children === S.save)?.props.disabled,
+    ).toBe(true);
+  } finally {
+    release();
+    await flush();
+  }
 });
