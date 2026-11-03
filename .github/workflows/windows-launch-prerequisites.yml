@@ -19,6 +19,7 @@ on:
             TerminalRetirementFix,
             RemoveRechecks,
             RemoveFixtures,
+            RecoveryCancel,
           ]
 
 permissions:

@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -53,6 +53,17 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   }
   $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
+} elseif ($Cohort -ceq 'RecoveryCancel') {
+  $tests = [ordered]@{
+    'worktree-recover-cold' = 'worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts'
+    'worktree-recovery-refusal' = 'worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories'
+    'mcp-add-cancel' = 'acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot'
+    'mcp-http-cancel' = 'acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped'
+    'mcp-remove-cancel' = 'acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot'
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
 } elseif ($Cohort -ceq 'RetirementAndRemove') {
   $test = 'platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement'
   @{ name = 'terminal-retirement-reply'; filter = $test; exact = $true; names = @($test); ignored = $true }

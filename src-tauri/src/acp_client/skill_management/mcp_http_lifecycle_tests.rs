@@ -1,7 +1,7 @@
 //! Actual owned synthetic child/pipe cleanup through the unchanged production wrapper.
 use super::*;
 use inventory::process::Control;
-use mcp_add_tests::Fixture;
+use mcp_add_tests::{Fixture, hold_cancelled_worker};
 use serde_json::json;
 use std::{path::PathBuf, process::Command, time::Duration};
 
@@ -21,13 +21,14 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
     let admission = crate::managed_update::UpdateAdmission::default();
     let activity = admission.activity().unwrap();
     let root = f.temp.path().to_path_buf();
+    let (hold, mut worker) = hold_cancelled_worker();
     let execution = tokio::spawn(super::execute_with(
         f.store.clone(),
         j.clone(),
         activity,
         scope,
         move |store, job| {
-            mcp_add::run_with(store, job, |stage| {
+            let result = mcp_add::run_with(store, job, |stage| {
                 let mut c = Command::new(crate::platform_tests::python());
                 c.arg("-u")
                     .arg(
@@ -42,7 +43,8 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
                         mcp_add::Stage::AppServer => "server",
                     });
                 Ok(c)
-            })
+            });
+            hold(result)
         },
     ));
     let marker = f.temp.path().join("waiting");
@@ -53,15 +55,15 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
     })
     .await
     .is_ok();
+    assert!(reached);
+    let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
+    assert_eq!(crate::platform_tests::process_check(pid), 0);
     let cancel = f
         .registry
         .cancel_domain(&f.agent, &j.snapshot().request_id, domain::Domain::McpAdd)
         .unwrap();
-    assert!(reached);
     assert!(!cancel.operation.as_ref().unwrap().settled);
-    let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
-    tokio::time::sleep(Duration::from_millis(100)).await;
-    assert_eq!(crate::platform_tests::process_check(pid), 0);
+    let worker_sample = worker.observe(pid).await;
     assert!(admission.update().is_err());
     assert!(
         manager
@@ -73,12 +75,13 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
         inventory::execution::acquire(),
         Err(Failure { code: Code::Busy })
     ));
-    // A real outstanding worker publishes this controlled sample; this is not
-    // a claim that the operating system exceeded the production cleanup bound.
+    // Exercise publication while the owning wrapper is still unsettled.
     j.pending_cleanup();
     let pending = j.snapshot();
     assert!(!pending.settled && pending.write_dispatched);
+    assert_eq!(pending.state, State::PendingCleanup);
     assert_eq!(pending.outcome, None);
+    drop(worker);
     tokio::time::timeout(Duration::from_secs(5), execution)
         .await
         .unwrap()
@@ -95,6 +98,7 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
     assert!(final_op.settled);
     assert_eq!(final_op.write_ack, Ack::Ok);
     assert_eq!(final_op.outcome, Some(Outcome::Unknown));
+    assert_eq!(final_op.code, Some(Code::Cancelled));
     assert_eq!(f.state()["writes"], 1);
     let check = f.recheck(&j);
     f.run(&check, "normal");
@@ -103,6 +107,6 @@ async fn mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_re
     assert_eq!(f.state()["writes"], 1);
     println!(
         "MCP_HTTP_CLEANUP_WIRE={}",
-        json!({"inspection":inspection.snapshot(),"pendingCleanup":pending,"cancellation":cancel,"cancelledAfterWrite":final_op,"recheck":check.snapshot()})
+        json!({"inspection":inspection.snapshot(),"pendingCleanup":pending,"cancellation":cancel,"workerSample":worker_sample,"cancelledAfterWrite":final_op,"recheck":check.snapshot()})
     );
 }

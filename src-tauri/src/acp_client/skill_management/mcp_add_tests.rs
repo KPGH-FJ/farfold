@@ -4,6 +4,55 @@ use domain::Domain;
 use inventory::{Kind, mcp_targets};
 use serde_json::{Value, json};
 use std::{path::PathBuf, process::Command};
+
+pub(super) struct CancelledWorkerObservation {
+    retired: tokio::sync::oneshot::Receiver<Option<Code>>,
+    _release: std::sync::mpsc::Sender<()>,
+}
+
+pub(super) fn hold_cancelled_worker() -> (
+    impl FnOnce(Result<()>) -> Result<()> + Send,
+    CancelledWorkerObservation,
+) {
+    let (retired_tx, retired) = tokio::sync::oneshot::channel();
+    let (_release, release_rx) = std::sync::mpsc::channel();
+    let hold = move |result: Result<()>| {
+        let _ = retired_tx.send(result.as_ref().err().map(|failure| failure.code));
+        // Keep the real wrapper's permits until the test observes ownership.
+        // Dropping the sender releases this even if an assertion fails.
+        if matches!(
+            release_rx.recv_timeout(std::time::Duration::from_secs(10)),
+            Err(std::sync::mpsc::RecvTimeoutError::Timeout)
+        ) {
+            return Err(Code::TimedOut.into());
+        }
+        result
+    };
+    (hold, CancelledWorkerObservation { retired, _release })
+}
+
+impl CancelledWorkerObservation {
+    pub(super) async fn observe(&mut self, pid: i32) -> &'static str {
+        use std::time::Duration;
+        if cfg!(windows) {
+            // Windows terminates the Job on TERM. Sample the outer worker
+            // after native retirement, while its admission guards are held.
+            let failure = tokio::time::timeout(Duration::from_secs(5), &mut self.retired)
+                .await
+                .unwrap()
+                .unwrap();
+            assert_eq!(failure, Some(Code::Cancelled));
+            assert_ne!(crate::platform_tests::process_check(pid), 0);
+            "nativeRetiredWorkerHeld"
+        } else {
+            // The Unix fixture ignores SIGTERM during the real grace period.
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            assert_eq!(crate::platform_tests::process_check(pid), 0);
+            "peerAliveDuringGrace"
+        }
+    }
+}
+
 pub(super) struct Fixture {
     _serial: std::sync::MutexGuard<'static, ()>,
     pub temp: tempfile::TempDir,
@@ -457,13 +506,14 @@ async fn mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot() {
     let admission = crate::managed_update::UpdateAdmission::default();
     let activity = admission.activity().unwrap();
     let root = f.temp.path().to_path_buf();
+    let (hold, mut worker) = hold_cancelled_worker();
     let execution = tokio::spawn(super::execute_with(
         f.store.clone(),
         j.clone(),
         activity,
         scope,
         move |store, job| {
-            mcp_add::run_with(store, job, |stage| {
+            let result = mcp_add::run_with(store, job, |stage| {
                 let mut c = Command::new(crate::platform_tests::python());
                 c.arg("-u")
                     .arg(
@@ -478,7 +528,8 @@ async fn mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot() {
                         mcp_add::Stage::AppServer => "server",
                     });
                 Ok(c)
-            })
+            });
+            hold(result)
         },
     ));
     let marker = f.temp.path().join("waiting");
@@ -489,26 +540,27 @@ async fn mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot() {
     })
     .await
     .is_ok();
+    assert!(reached);
+    let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
+    assert_eq!(crate::platform_tests::process_check(pid), 0);
     let cancellation = f
         .registry
         .cancel_domain(&f.agent, &j.snapshot().request_id, Domain::McpAdd)
         .unwrap();
-    assert!(reached);
     assert!(!cancellation.operation.as_ref().unwrap().settled);
-    let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
-    tokio::time::sleep(Duration::from_millis(100)).await;
-    assert_eq!(crate::platform_tests::process_check(pid), 0);
+    let worker_sample = worker.observe(pid).await;
     assert!(admission.update().is_err());
     let second = inventory::execution::acquire().unwrap();
     assert!(matches!(
         inventory::execution::acquire(),
         Err(Failure { code: Code::Busy })
     ));
-    // Explicitly exercise the actual Job publication while its real worker is
-    // pending. This does not claim the OS exceeded the production deadline.
+    // Exercise publication while the owning wrapper is still unsettled.
     j.pending_cleanup();
     let pending = j.snapshot();
     assert!(!pending.settled);
+    assert_eq!(pending.state, State::PendingCleanup);
+    drop(worker);
     tokio::time::timeout(Duration::from_secs(5), execution)
         .await
         .unwrap()
@@ -518,10 +570,11 @@ async fn mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot() {
     drop(second);
     assert_eq!(j.snapshot().write_ack, Ack::Ok);
     assert_eq!(j.snapshot().outcome, Some(Outcome::Unknown));
+    assert_eq!(j.snapshot().code, Some(Code::Cancelled));
     assert_eq!(j.snapshot().state, State::Failed);
     assert_eq!(f.state()["writes"], 1);
     println!(
         "MCP_ADD_LIFECYCLE_WIRE={}",
-        json!({"pendingInspection":inspection.snapshot(),"pendingCleanup":pending,"cancellation":cancellation,"cancelledAfterWrite":j.snapshot()})
+        json!({"pendingInspection":inspection.snapshot(),"pendingCleanup":pending,"cancellation":cancellation,"workerSample":worker_sample,"cancelledAfterWrite":j.snapshot()})
     );
 }
