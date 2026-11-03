@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -49,9 +49,10 @@ $groups = if ($Cohort -ceq 'RetirementAndRemove') {
   }
   $test = 'worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager'
   @{ name = 'worktree-cold-remove-recheck'; filter = $test; exact = $true; names = @($test) }
-} elseif ($Cohort -ceq 'TerminalClose') {
+} elseif ($Cohort -cin @('TerminalClose', 'TerminalRetirementFix')) {
   $terminal = 'pty::windows_tests::'
-  foreach ($reply in @('reply', 'no_reply')) {
+  $replies = if ($Cohort -ceq 'TerminalClose') { @('reply', 'no_reply') } else { @('reply') }
+  foreach ($reply in $replies) {
     $test = "${terminal}terminal_cancel_cursor_${reply}_isolated"
     @{ name = "terminal-close-$reply"; filter = $test; exact = $true; names = @($test); ignored = $true }
   }
@@ -59,8 +60,13 @@ $groups = if ($Cohort -ceq 'RetirementAndRemove') {
   @{ name = 'terminal-close-original'; filter = $test; exact = $true; names = @($test) }
   $test = 'auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated'
   @{ name = 'terminal-auth-cancel'; filter = $test; exact = $true; names = @($test) }
-  $test = 'platform_tests::windows_conpty::raw_conpty_input_eof_before_close_without_cursor_reply'
-  @{ name = 'terminal-input-eof'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  if ($Cohort -ceq 'TerminalClose') {
+    $test = 'platform_tests::windows_conpty::raw_conpty_input_eof_before_close_without_cursor_reply'
+    @{ name = 'terminal-input-eof'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  } else {
+    $test = "${terminal}terminal_close_confirms_exit_with_unanswered_startup_cursor"
+    @{ name = 'terminal-pending-cursor-close'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  }
 } elseif ($Cohort -cne 'LaunchPrerequisites') {
   $transport = 'acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_'
   $terminal = 'platform_tests::windows_conpty::'

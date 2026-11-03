@@ -5,7 +5,7 @@
 //! exit-wait are separate commands. Used by terminal-style login flows.
 
 use std::collections::HashMap;
-use std::io::Write as _;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
@@ -38,6 +38,9 @@ fn now_millis() -> u64 {
 /// destruction precede the exit sink and every `pty_await` notification.
 type ExitLatch = Arc<(Mutex<Option<u32>>, Condvar)>;
 type MasterSlot = Arc<Mutex<Option<Box<dyn MasterPty + Send>>>>;
+type Input = Arc<Mutex<Box<dyn Write + Send>>>;
+#[cfg(any(windows, test))]
+mod cursor_retirement;
 mod startup_control;
 mod startup_owner;
 
@@ -82,6 +85,10 @@ struct TerminalOwner<'a> {
     exit: &'a ExitLatch,
     id: &'a str,
     on_output: &'a PtySink,
+    #[cfg(windows)]
+    cursor: &'a cursor_retirement::CursorRetirement,
+    #[cfg(windows)]
+    writer: Option<&'a Input>,
 }
 impl TerminalOwner<'_> {
     fn settle(&mut self) -> bool {
@@ -124,6 +131,15 @@ impl TerminalOwner<'_> {
                     break;
                 }
                 thread::sleep(Duration::from_millis(if killed { 100 } else { 25 }));
+            }
+            #[cfg(windows)]
+            if let Some(writer) = self.writer
+                && !self._group.active()
+                && let Ok(mut writer) = writer.try_lock()
+            {
+                // The exact child has exited and its Job is inactive. Any
+                // retirement reply can only go to the host-side ConPTY.
+                self.cursor.reply(&mut **writer);
             }
             finish_exit(
                 self.master,
@@ -174,7 +190,9 @@ impl TerminalOwner<'_> {
 }
 
 struct PtySession {
-    writer: Mutex<Box<dyn std::io::Write + Send>>,
+    writer: Input,
+    #[cfg(windows)]
+    cursor: Arc<cursor_retirement::CursorRetirement>,
     /// The process owner takes and destroys this object before confirming exit.
     /// Session/resize references share the slot, never an extra master object.
     master: MasterSlot,
@@ -275,6 +293,8 @@ impl PtyManager {
             .writer
             .lock()
             .map_err(|_| "pty writer lock poisoned".to_string())?;
+        #[cfg(windows)]
+        session.cursor.disarm();
         writer
             .write_all(data)
             .and_then(|()| writer.flush())

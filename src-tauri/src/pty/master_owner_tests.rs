@@ -66,7 +66,9 @@ impl MasterPty for GatedMaster {
 fn fixture(gate: Arc<DropGate>) -> (PtyManager, Arc<PtySession>) {
     let manager = PtyManager::new();
     let session = Arc::new(PtySession {
-        writer: Mutex::new(Box::new(std::io::sink())),
+        writer: Arc::new(Mutex::new(Box::new(std::io::sink()))),
+        #[cfg(windows)]
+        cursor: Arc::default(),
         master: Arc::new(Mutex::new(Some(Box::new(GatedMaster(gate))))),
         pid: None,
         stop: Arc::new(AtomicBool::new(false)),

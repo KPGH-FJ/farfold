@@ -20,6 +20,7 @@ pub(crate) enum Case {
     TerminalCancel,
     TerminalCursorNoReply,
     TerminalCursorReply,
+    TerminalPendingCursorClose,
     TerminalMasterBoundedUnknown,
 }
 
@@ -37,6 +38,9 @@ impl Case {
                 "pty::windows_tests::terminal_cancel_cursor_no_reply_child"
             }
             Self::TerminalCursorReply => "pty::windows_tests::terminal_cancel_cursor_reply_child",
+            Self::TerminalPendingCursorClose => {
+                "pty::windows_tests::terminal_close_pending_cursor_child"
+            }
             Self::TerminalMasterBoundedUnknown => {
                 "pty::windows_tests::terminal_master_drop_retains_bounded_unknown_child"
             }
@@ -52,6 +56,7 @@ impl Case {
             | Self::TerminalCancel
             | Self::TerminalCursorNoReply
             | Self::TerminalCursorReply
+            | Self::TerminalPendingCursorClose
             | Self::TerminalMasterBoundedUnknown => 20,
             Self::ManagerCursorReply | Self::ManagerCursorNoReply => 12,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
@@ -200,6 +205,7 @@ pub(crate) fn run(case: Case) {
                 | Case::ReplyAfterJobEnd
                 | Case::TerminalCursorNoReply
                 | Case::TerminalCursorReply
+                | Case::TerminalPendingCursorClose
                 | Case::TerminalMasterBoundedUnknown
         );
         let mut deadline_seen = false;
@@ -347,7 +353,7 @@ pub(crate) fn run(case: Case) {
         );
     } else if matches!(
         case,
-        Case::TerminalCursorNoReply | Case::TerminalCursorReply
+        Case::TerminalCursorNoReply | Case::TerminalCursorReply | Case::TerminalPendingCursorClose
     ) {
         // Result receipt was sent only after original Child/Job/stream/input
         // settlement. EOF remains distinct from a failed reader. No raw bytes.

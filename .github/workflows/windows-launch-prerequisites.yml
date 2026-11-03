@@ -16,6 +16,7 @@ on:
             TerminalClose,
             WorktreeRecovery,
             RetirementAndRemove,
+            TerminalRetirementFix,
           ]
 
 permissions:

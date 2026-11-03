@@ -144,6 +144,28 @@ fn terminal_cursor_case(case: crate::platform_tests::windows_conpty::Case, reply
         reply,
         started,
     );
+    if case == crate::platform_tests::windows_conpty::Case::TerminalPendingCursorClose {
+        assert!(
+            !observed,
+            "a pending query must hold the fixture before readiness"
+        );
+        {
+            let state = cursor.capture.lock().unwrap();
+            assert_eq!(state.queries, 1);
+            assert_eq!(state.replies, 0);
+            assert!(!state.failed);
+        }
+        let pid = session.pid.unwrap();
+        assert!(crate::windows_process::owns(pid));
+        assert!(manager.close(&id).unwrap().is_some());
+        assert!(!crate::windows_process::active(pid));
+        assert!(!manager.lock().unwrap().contains_key(&id));
+        assert_eq!(manager.close(&id).unwrap(), None);
+        assert_eq!(cursor.capture.lock().unwrap().replies, 0);
+        cursor.finish();
+        eprintln!("FARFOLD_TERMINAL_PENDING_CURSOR_CLOSE confirmed=true");
+        return;
+    }
     if !observed {
         cursor.phase("marker.missing.close.enter", reply, started);
         let result = manager.close(&id);
@@ -241,6 +263,23 @@ fn terminal_cancel_cursor_no_reply_isolated() {
 fn terminal_cancel_cursor_reply_isolated() {
     crate::platform_tests::windows_conpty::run(
         crate::platform_tests::windows_conpty::Case::TerminalCursorReply,
+    );
+}
+
+#[test]
+#[ignore = "executed only by the bounded owned isolation wrapper"]
+fn terminal_close_pending_cursor_child() {
+    terminal_cursor_case(
+        crate::platform_tests::windows_conpty::Case::TerminalPendingCursorClose,
+        false,
+    );
+}
+
+#[test]
+#[ignore = "manual native regression for runners with a blocking ConPTY cursor handshake"]
+fn terminal_close_confirms_exit_with_unanswered_startup_cursor() {
+    crate::platform_tests::windows_conpty::run(
+        crate::platform_tests::windows_conpty::Case::TerminalPendingCursorClose,
     );
 }
 

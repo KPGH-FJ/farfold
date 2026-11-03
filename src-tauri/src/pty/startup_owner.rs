@@ -85,7 +85,9 @@ pub(super) struct Resources {
     pub master: MasterSlot,
     pub slave: Option<Box<dyn portable_pty::SlavePty + Send>>,
     pub reader: Option<Box<dyn std::io::Read + Send>>,
-    pub writer: Option<Box<dyn std::io::Write + Send>>,
+    pub writer: Option<Input>,
+    #[cfg(windows)]
+    cursor: Arc<cursor_retirement::CursorRetirement>,
     pub child: Option<Box<dyn portable_pty::Child + Send + Sync>>,
     pub group: Option<crate::process_platform::OwnedGroup>,
     #[cfg(windows)]
@@ -151,7 +153,7 @@ impl Resources {
             return Err("AUTH_CANCELLED".into());
         }
         start.stage(Stage::Writer);
-        self.writer = Some(
+        self.writer = Some(Arc::new(Mutex::new(
             self.master
                 .lock()
                 .map_err(|_| "无法写入终端")?
@@ -159,7 +161,7 @@ impl Resources {
                 .ok_or("无法写入终端")?
                 .take_writer()
                 .map_err(|error| format!("cannot take pty writer: {error}"))?,
-        );
+        )));
         if start.stopped(closing) {
             return Err("AUTH_CANCELLED".into());
         }
@@ -204,6 +206,8 @@ impl Resources {
         let mut reader = self.reader.take().ok_or("无法读取终端")?;
         let output = launch.output.clone();
         let id = id.to_owned();
+        #[cfg(windows)]
+        let cursor = self.cursor.clone();
         // A failed reader-thread factory drops this closure on THIS owner,
         // never the IPC caller. Child/Job/master stay in Resources for cleanup.
         self.reader_thread = Some(
@@ -212,9 +216,13 @@ impl Resources {
                 loop {
                     match std::io::Read::read(&mut reader, &mut buffer) {
                         Ok(0) | Err(_) => return,
-                        Ok(count) => output(
-                            serde_json::json!({"id":id,"data":BASE64.encode(&buffer[..count])}),
-                        ),
+                        Ok(count) => {
+                            #[cfg(windows)]
+                            cursor.observe(&buffer[..count]);
+                            output(
+                                serde_json::json!({"id":id,"data":BASE64.encode(&buffer[..count])}),
+                            );
+                        }
                     }
                 }
             }))
@@ -302,6 +310,10 @@ impl Resources {
             exit,
             id,
             on_output: output,
+            #[cfg(windows)]
+            cursor: &self.cursor,
+            #[cfg(windows)]
+            writer: self.writer.as_ref(),
         };
         #[cfg(unix)]
         if self.pid.is_none() {
@@ -423,12 +435,16 @@ fn run_owner(work: Work) {
             if sessions.contains_key(&id) {
                 return Err("无法登记终端".into());
             }
-            // No fallible action/callback/native Drop after taking the writer.
+            #[cfg(windows)]
+            let writer = resources.writer.as_ref().ok_or("无法写入终端")?.clone();
+            #[cfg(not(windows))]
             let writer = resources.writer.take().ok_or("无法写入终端")?;
             sessions.insert(
                 id.clone(),
                 Arc::new(PtySession {
-                    writer: Mutex::new(writer),
+                    writer,
+                    #[cfg(windows)]
+                    cursor: resources.cursor.clone(),
                     master: resources.master.clone(),
                     #[cfg(test)]
                     pid: resources.pid,
@@ -454,6 +470,10 @@ fn run_owner(work: Work) {
                 exit: &exit,
                 id: &id,
                 on_output: &launch.output,
+                #[cfg(windows)]
+                cursor: &resources.cursor,
+                #[cfg(windows)]
+                writer: resources.writer.as_ref(),
             }
             .settle();
             if settled {
