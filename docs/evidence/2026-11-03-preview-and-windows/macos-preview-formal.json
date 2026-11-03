@@ -1,0 +1,55 @@
+{
+  "installedSource": "ba6720e1547ecad6b90408d7588bb98a25a20204",
+  "installedBinarySha256": "e0f5c41d668eb1d956a05648edeee6f9b9b7caf1a06541341df3917d44366c34",
+  "engineering": {
+    "naturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontendFiles": 704,
+    "frontendPassed": 9447,
+    "rustPassed": 2333,
+    "rustIgnored": 6,
+    "boundInputs": 2354,
+    "firstPreflight": "Two tracked Windows diagnostics paths missing from the admitted manifest, no candidate build ran. Complete manifest and seven commands rechecked."
+  },
+  "installation": {
+    "builds": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "closedManifestEntries": 232621,
+    "closedManifestSha256": "986428800930c5bb840df8b57c75a0da744622a6a1af9011a229a2f96380e327",
+    "closedManifestsMatch": true,
+    "exactDuplicateCleanup": true
+  },
+  "formal": {
+    "P14": "Finder selected the exact owned Markdown file in the prior installed app. In the new build the malformed file also saved as a byte-identical separate file.",
+    "P15": {
+      "originalNotice": "generic file location message on malformed UTF-8",
+      "originalMarkdown": "heading with emoji, table, literal code and raw source; embedded script displayed only in source",
+      "fixedNotice": "specific text-preview failure, exact verified file actions available, no stale preview",
+      "savedBytes": 22,
+      "savedSha256": "a89ce67e917b5307469fd5229c57c9f52af72b7997acea78e20adc7fc26f9798",
+      "bytesMatch": true
+    },
+    "P24": {
+      "originalReplacement": "A to B and B to A both left blank tabs; either opened from a blank tab",
+      "newReplacement": [
+        "A with its fixture store",
+        "B with empty separate store",
+        "A with original fixture store"
+      ],
+      "sameFileReload": "A V1 before explicit reload, V2 after; A store preserved",
+      "directory": "selected external script and SVG; explicit reload V1 to V2; owned outside-project entry rejected",
+      "protectedResource": "selected owned .env request rejected, same-origin owned script fetched",
+      "localhost": "explicit port required; root, CSS, JS and SVG 200 on both loads; JS V2 to V3 and server stopped",
+      "permissionGrants": 0
+    },
+    "P09": "Goose official /status fills input only, original Q text and attachment restored, no invocation.",
+    "P10": "Independent edit opened, Escape restored exact original menu, reopen retained edit, discarded only that own edit, main draft and attachment preserved.",
+    "P11": "Two owned Codex history samples opened. One had an existing draft, the other had unconfirmed permissions with current-context action disabled. No fork; historical point remains open.",
+    "P42": "Original attention and unread filters used by keyboard. Exact owned row opened by Tab and Return. Returning kept that row and filter but put AX focus on the document through three Tab presses. Fix has a separate source checkpoint.",
+    "P43": "Model preview opened and cancelled, local page opened and closed before first prompt, same draft and saved-draft count 1, visible history count 103 before and after.",
+    "P07": "Native drag attempted with exact owned Finder source, drop coordinate remained unverified and no attachment appeared. Product result open.",
+    "data": "B3 four exact lengths 187/75/32/27 with unconfirmed permissions, Q two paragraphs and attachment, 3 own saved file opinions and P02 saved count 1.",
+    "modelSends": 0,
+    "oldResends": 0
+  }
+}
