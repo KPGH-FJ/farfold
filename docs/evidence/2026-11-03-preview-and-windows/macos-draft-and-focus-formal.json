@@ -1,0 +1,146 @@
+{
+  "installedSource": "168db42e5bbe2fb3c480fb4930869227a84ec25a",
+  "installedBinarySha256": "e3eccba47c505ba0118b5de3679872810eca5d26775b1ae228ca7e11c918f2da",
+  "engineering": {
+    "naturalExitCodes": [0, 0, 0, 0, 0, 0, 0],
+    "frontendFiles": 704,
+    "frontendPassed": 9449,
+    "rustPassed": 2333,
+    "rustIgnored": 6,
+    "boundInputs": 2354
+  },
+  "installation": {
+    "builds": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "closedManifestEntries": 232671,
+    "closedManifestSha256": "1887b38d9682120a8dd3ebf95261c8fe195779823c232bf3c9fbc5969e610c7e",
+    "closedManifestsMatch": true,
+    "exactDuplicateCleanup": true
+  },
+  "p42": {
+    "ownedHistoricalCodexObject": true,
+    "warmLoadedFromOfficialRestore": true,
+    "targetContainerFocused": true,
+    "firstTab": "返回",
+    "exactListRowRestored": true,
+    "nextTab": "收藏",
+    "attentionFilterPreserved": true,
+    "permissionUnconfirmed": true
+  },
+  "p46": {
+    "oldInstalledFixedOverlay": {
+      "source": "dc066276b",
+      "partiallyCoveredSendAtSelected900x620": true
+    },
+    "intermediateInstalled": {
+      "source": "ce1ac6a9fcfd2171c45f92a3bb56e0b46eea78e0",
+      "windowLogical": [900, 620],
+      "draftFixtureLinesAfterOriginal": 48,
+      "ownedAttachments": 2,
+      "worktreeOverlaidSendAfterFix": false,
+      "firstScrollPositionSendPartiallyClipped": true,
+      "outerScrollMadeFullSendAndWorktreeVisible": true,
+      "worktreeOpenedAndEscapeReturnedToSameButton": true,
+      "sourceFollowup": "168db42e5",
+      "originalDraftRestored": true,
+      "attachmentsRemovedFromDraft": true,
+      "preservedDraftsCount": 1,
+      "windowRestoredLogical": [1280, 820]
+    },
+    "controlledBeforeAndAfter": [
+      {
+        "clipBottom": 578,
+        "height": 620,
+        "initialScroll": 0,
+        "sendBottom": 598,
+        "sendFullyVisible": false,
+        "sendTop": 562,
+        "separate": false,
+        "width": 900,
+        "worktreeTop": 582
+      },
+      {
+        "clipBottom": 578,
+        "height": 620,
+        "initialScroll": 0,
+        "sendBottom": 550,
+        "sendFullyVisible": true,
+        "sendTop": 514,
+        "separate": true,
+        "width": 900,
+        "worktreeTop": 582
+      },
+      {
+        "clipBottom": 778,
+        "height": 820,
+        "initialScroll": 0,
+        "sendBottom": 604,
+        "sendFullyVisible": true,
+        "sendTop": 568,
+        "separate": true,
+        "width": 1280,
+        "worktreeTop": 782
+      },
+      {
+        "clipBottom": 778,
+        "height": 820,
+        "initialScroll": 0,
+        "sendBottom": 604,
+        "sendFullyVisible": true,
+        "sendTop": 568,
+        "separate": true,
+        "width": 1280,
+        "worktreeTop": 782
+      }
+    ],
+    "after": {
+      "logicalWindow": [900, 620],
+      "capturePixels": [1800, 1240],
+      "deviceScale": 2,
+      "sameOwnedLongDraftExtraLines": 48,
+      "sameOwnedAttachmentCount": 2,
+      "initialSendFullyVisible": true,
+      "noOuterScrollBeforeFirstCapture": true,
+      "sendKeyboardFocusable": true,
+      "sendInvoked": false,
+      "worktreeReopenDisjoint": true,
+      "worktreeOpened": true,
+      "escapeExactWorktreeOpener": true,
+      "testAttachmentsRemoved": true,
+      "p02OriginalDraftRestored": true,
+      "olderDraftCount": 1,
+      "normalLogicalWindowRestored": [1280, 820]
+    }
+  },
+  "otherInstalledReadback": {
+    "installedSource": "dc066276be845a24b21d68952476797dfd3b9f84",
+    "p14": {
+      "observedDefaultApplication": "TextEdit",
+      "actualFileUrlMatchedOwnedFixture": true,
+      "currentMarkerObserved": true,
+      "sourceSha256": "b0ad31e26deec1bb62406a7a79a0edff143e004bcdbc7dcaab7e24c2e3b63b90",
+      "closedOnlyOwnedWindow": true
+    },
+    "p23": {
+      "publicPage": "https://example.com/",
+      "visiblePageLoaded": true,
+      "manualTextReadTitle": "Example Domain",
+      "pageAndSnapshotRemovedAfterClose": true,
+      "rememberedPermissionCount": 0,
+      "invalidPublicHttpInputRejected": true,
+      "invalidInputClearedAfterDismissal": true,
+      "modelPageShare": false
+    }
+  },
+  "coldRestore": {
+    "b3FourParagraphsExact": true,
+    "b3Lengths": [187, 75, 32, 27],
+    "b3PermissionUnconfirmed": true,
+    "qTwoDraftParagraphsOneAttachmentAndThreeOpinions": true,
+    "p02ExactAndOlderCountOne": true
+  },
+  "modelSends": 0,
+  "oldResends": 0,
+  "limits": "Selected owned keyboard and macOS window paths. Other sizes, screen reader, system scaling, theme, live tool state and 29-Agent acceptance remain open."
+}
