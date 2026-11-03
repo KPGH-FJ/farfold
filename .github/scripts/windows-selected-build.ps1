@@ -1,13 +1,16 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('Legacy', 'StdioEof')][string]$Scope = 'Legacy'
+  [ValidateSet('Legacy', 'StdioEof', 'LaunchPrerequisites')][string]$Scope = 'Legacy'
 )
 
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $false
 $raw = Join-Path $PWD 'windows-diagnostics-raw'
 New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
-$inputScopes = @('src-tauri/src', 'src-tauri/native', 'src-tauri/examples', 'src-tauri/Cargo.toml', 'src-tauri/Cargo.lock', 'src-tauri/build.rs', 'src-tauri/*.json', 'src-tauri/*.manifest', '.github/scripts', '.github/workflows/windows-diagnostics.yml')
+$workflow = if ($Scope -ceq 'LaunchPrerequisites') { '.github/workflows/windows-launch-prerequisites.yml' } else { '.github/workflows/windows-diagnostics.yml' }
+$inputScopes = @('src-tauri/src', 'src-tauri/native', 'src-tauri/examples', 'src-tauri/Cargo.toml', 'src-tauri/Cargo.lock', 'src-tauri/build.rs', 'src-tauri/*.json', 'src-tauri/*.manifest', '.github/scripts', $workflow)
+$requiredScripts = @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1', '.github/scripts/windows-stdout-controls.ps1')
+if ($Scope -ceq 'LaunchPrerequisites') { $requiredScripts += '.github/scripts/windows-launch-prerequisites.ps1' }
 function Inputs([switch]$CaptureChangedSource) {
   $head = (& git rev-parse HEAD).Trim()
   if ($LASTEXITCODE -ne 0) { throw 'Unable to read selected build source head' }
@@ -22,7 +25,7 @@ function Inputs([switch]$CaptureChangedSource) {
   foreach ($path in $paths) {
     $map[$path] = if ($CaptureChangedSource -and -not (Test-Path -LiteralPath $path -PathType Leaf)) { $null } else { (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }
   }
-  foreach ($required in @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1', '.github/workflows/windows-diagnostics.yml')) {
+  foreach ($required in @($requiredScripts) + @($workflow)) {
     if (-not $map.Contains($required)) { throw "Selected build input missing: $required" }
   }
   return $map
@@ -34,7 +37,11 @@ function Same-Inputs($Left, $Right) {
 }
 # The legacy scope text is retained verbatim from the original inline build.
 $legacyScope = 'selected parser/publication/originalTerminalCancel/auth2/partialADS/SDK-path/material16/privateInput7/artifact6/firstImport7/sourceExport5/materialEntry5/preparationCache4/bundleGraph9/producerPairing3/offlineGraph6/carrierPortable20Ordinary2/sourceRoots4/sourceGraph9/materialDirectoryBudget11/rawContentStream12/carrierFragment7/rawName5/rawPinOrdinary7/ownedRelativeLinks6/checkoutProfile6/shapeFraming2/shapeOwned4/carrierFullSD4/rawPinFullSD1/ownedLinkFullSD1/gitPathForms4/directoryParser7/directoryFacet9/directoryOrdinary3/directoryFullSD1/directoryRestoreWindowsSharedApi3/directoryRestoreOrdinary3/directoryRestoreFullSD1/directoryTreeCodec6/directoryTreeOrdinary4/directoryTreeFullSD1/regularSharedGuard2IncludingInertFake1/regularSharedOrdinaryPurposeRefusal1/regularSharedFullSD3/gitKnownConfigFiveCall1SeparateDiagnostic/continuation30SeparateMixed12Alias9GitPlain4RawGuid3OwnedLinkSharing2/ownedPersistentTargetRole24/sealedTree8/managedEdge8/ordinaryLink2552SeparateCohort42/ownedLinkAllocationTransition1SeparateExact/legacyFullSecurity27SeparateConditioned positives plus strict master-retirement bounded-unknown negative only'
-$identityScope = if ($Scope -ceq 'Legacy') { $legacyScope } else { 'one exact synthetic stdout EOF test with held-open and closed-stdout internal controls plus five exact preservation tests; not product or whole-Windows acceptance' }
+$identityScope = switch -CaseSensitive ($Scope) {
+  'Legacy' { $legacyScope }
+  'StdioEof' { 'one exact synthetic stdout EOF test with held-open and closed-stdout internal controls plus five exact preservation tests; not product or whole-Windows acceptance' }
+  'LaunchPrerequisites' { 'ten exact original initial-connect cases and two exact owned Create prerequisites' }
+}
 $started = [DateTime]::UtcNow.ToString('o')
 $before = $null
 $after = $null
@@ -52,7 +59,7 @@ try {
   $before | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $raw 'inputs-before.json') -Encoding utf8
   [ordered]@{ head = $ExpectedHead; sourceHead = $ExpectedHead; runId = $env:GITHUB_RUN_ID; runAttempt = $env:GITHUB_RUN_ATTEMPT; cohort = $Scope; scope = $identityScope } |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
-  foreach ($path in @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1', '.github/scripts/windows-stdout-controls.ps1')) {
+  foreach ($path in $requiredScripts) {
     $tokens = $null
     $parseErrors = $null
     $null = [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$parseErrors)
@@ -92,7 +99,7 @@ try {
     inputsBeforeSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'inputs-before.json') -Algorithm SHA256).Hash
     inputsAfterSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'inputs-after.json') -Algorithm SHA256).Hash
     buildScriptSha256 = $buildScriptSha256
-    workflowSha256 = $after['.github/workflows/windows-diagnostics.yml']
+    workflowSha256 = $after[$workflow]
     stdioRunnerSha256 = $after['.github/scripts/windows-stdio-eof.ps1']
   } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Encoding utf8
   $buildSucceeded = $true

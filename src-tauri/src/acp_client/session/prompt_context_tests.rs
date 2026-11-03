@@ -14,11 +14,11 @@ def send(m): print(json.dumps(dict(jsonrpc='2.0',**m)),flush=True)
 for line in sys.stdin:
  m=json.loads(line);p=m.get('params',{});method=m.get('method')
  if method=='initialize':
-  result={'protocolVersion':1,'agentCapabilities':json.load(open(root+'/capabilities.json')),'authMethods':[]}
+  result={'protocolVersion':1,'agentCapabilities':json.load(open(os.path.join(root,'capabilities.json'))),'authMethods':[]}
  elif method=='session/new':result={'sessionId':'context-'+str(os.getpid()),'configOptions':[]}
  elif method=='session/prompt':
-  with open(root+'/wire.tmp','w') as f:json.dump(p,f)
-  os.replace(root+'/wire.tmp',root+'/wire.json');prompt=m;continue
+  with open(os.path.join(root,'wire.tmp'),'w') as f:json.dump(p,f)
+  os.replace(os.path.join(root,'wire.tmp'),os.path.join(root,'wire.json'));prompt=m;continue
  elif method=='session/cancel':
   if prompt:send({'id':prompt['id'],'result':{'stopReason':'cancelled'}});prompt=None
   continue
