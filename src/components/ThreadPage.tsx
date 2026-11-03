@@ -66,6 +66,8 @@ import { exportFileName } from "../runtime/conversation_actions";
 import { fileDelivery } from "../runtime/file_delivery";
 import { uiError } from "../runtime/ui_error";
 
+export type ThreadNavigationFocus = { key: string; target?: HTMLElement };
+
 export function ThreadPage({
   onManualOpen,
   viewKey,
@@ -86,10 +88,12 @@ export function ThreadPage({
   preparedComposerIsCurrent,
   searchRequest,
   attachmentSearchRequest,
+  navigationFocus,
 }: {
   onManualOpen?: () => void;
   searchRequest?: LoadedSearchRequest | null;
   attachmentSearchRequest?: AttachmentSearchRequest | null;
+  navigationFocus?: ThreadNavigationFocus;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   preparedComposerIsCurrent?: (() => boolean) | null;
   onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
@@ -163,6 +167,19 @@ export function ThreadPage({
     name: string;
   } | null>(null);
   const host = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (
+      !active ||
+      !navigationFocus ||
+      navigationFocus.target ||
+      !host.current ||
+      document.querySelector("dialog[open]")
+    )
+      return;
+    // The conversation landmark survives the transition from loading to history.
+    navigationFocus.target = host.current;
+    host.current.focus({ preventScroll: true });
+  }, [active, navigationFocus]);
   const artifactReturnFocus = useRef<HTMLElement | null>(null);
   const [menu, setMenu] = useState(false);
   const menuAnchor = useRef<HTMLButtonElement>(null);
@@ -339,7 +356,12 @@ export function ThreadPage({
     <TranscriptSearchContext.Provider
       value={active && (finding || !!loadedSearch || !!attachmentSearch)}
     >
-      <main className="main workspace-thread" ref={host}>
+      <main
+        className="main workspace-thread"
+        ref={host}
+        aria-label={navigationFocus ? title : undefined}
+        tabIndex={navigationFocus ? -1 : undefined}
+      >
         {thread ? (
           <ThreadView
             attachmentSearchRequest={attachmentSearch}

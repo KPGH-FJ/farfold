@@ -30,7 +30,10 @@ import { EmptyState } from "./components/EmptyState";
 import { SettingsPage, type SettingsTab } from "./components/SettingsPage";
 import { CustomAgentDialog } from "./components/CustomAgentDialog";
 import { Sidebar } from "./components/Sidebar";
-import { ThreadPage } from "./components/ThreadPage";
+import {
+  ThreadPage,
+  type ThreadNavigationFocus,
+} from "./components/ThreadPage";
 import { MessageMediaVisibility } from "./components/message-media-visibility";
 import {
   AgentHub,
@@ -110,6 +113,7 @@ type PreparedSelection = {
   service: ServiceChoice | null;
   config: Record<string, unknown>;
 };
+type OpenRow = IndexRow | SidebarRow;
 function afterBrowserClose<Args extends unknown[]>(
   action: (...args: Args) => void,
 ) {
@@ -143,6 +147,7 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  const threadNavigationFocus = useRef<ThreadNavigationFocus | null>(null);
   const [attachmentSearchRequest, setAttachmentSearchRequest] =
     useState<AttachmentSearchRequest | null>(null);
   const [loadedSearchRequest, setLoadedSearchRequest] =
@@ -161,11 +166,12 @@ export default function App() {
         currentView.current.key === key,
     };
   };
-  const setView = (next: View) => {
+  const setView = (next: View, focus: ThreadNavigationFocus | null = null) => {
     historyReadInterest.current?.abort();
     historyReadInterest.current = null;
     setLoadedSearchRequest(null);
     setAttachmentSearchRequest(null);
+    threadNavigationFocus.current = focus;
     currentView.current = next;
     queueMicrotask(() => {
       historyReads.retireUninterested();
@@ -484,9 +490,9 @@ export default function App() {
       setView({ kind: "agents" });
     },
   );
-  const opened = afterBrowserClose((key: string) => {
+  const opened = afterBrowserClose((key: string, focusFromSearch = false) => {
     setThreadKey(key);
-    setView({ kind: "thread", key });
+    setView({ kind: "thread", key }, focusFromSearch ? { key } : null);
   });
   const followRecovery = (
     originalKey: string,
@@ -505,8 +511,13 @@ export default function App() {
       currentView.current.kind === "thread" &&
       currentView.current.key === originalKey
     ) {
-      if (!browserSurfaceGuard.hasPendingNavigation) opened(canonicalKey);
-      else {
+      if (!browserSurfaceGuard.hasPendingNavigation) {
+        const focus = threadNavigationFocus.current;
+        const keepFocus =
+          focus?.key === originalKey &&
+          (!focus.target || document.activeElement === focus.target);
+        opened(canonicalKey, keepFocus);
+      } else {
         // A newer route is still waiting for native close. Repair the identity
         // used by rememberOrigin without replacing that queued destination.
         currentView.current = { kind: "thread", key: canonicalKey };
@@ -532,7 +543,7 @@ export default function App() {
       followRecovery(key, request, historyFailureKey(error));
     }
   };
-  const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
+  const openRow = afterBrowserClose((row: OpenRow, focusFromSearch = false) => {
     setNotificationOnlyKey(null);
     const request = ++historyOpen.current;
     routeHistory.current = [];
@@ -540,7 +551,7 @@ export default function App() {
     const key = "key" in row ? row.key : row.id;
     const existing = threads.thread(key);
     if (existing) traceAfterPaint("thread_switch", Date.now());
-    opened(key);
+    opened(key, focusFromSearch);
     if (currentWorkLocationGuidance(row.cwd)?.kind === "archive") {
       if (!existing)
         threads.markOpenFailed(
@@ -1015,6 +1026,11 @@ export default function App() {
                   pageKey === preparedDraftKey ? preparedComposerOwner : null
                 }
                 viewKey={pageKey}
+                navigationFocus={
+                  threadNavigationFocus.current?.key === pageKey
+                    ? threadNavigationFocus.current
+                    : undefined
+                }
                 attachmentSearchRequest={
                   attachmentSearchRequest?.source.threadKey === pageKey
                     ? attachmentSearchRequest
@@ -1179,7 +1195,7 @@ export default function App() {
           agents={agents.cards}
           returnFocusRef={searchReturnFocus}
           onClose={() => setPaletteOpen(false)}
-          onSelect={openRow}
+          onSelect={(row) => openRow(row, true)}
           onSelectLoaded={openLoadedSearch}
         />
       )}

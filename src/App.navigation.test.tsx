@@ -123,6 +123,33 @@ function pendingHistory(outcome: "success" | "empty") {
   };
 }
 
+it("carries the global search focus request only to its admitted destination", async () => {
+  const history = pendingHistory("success");
+  call("Sidebar", "onSearch", null);
+  call("CommandPalette", "onSelect", {
+    id: history.raw,
+    agentId: "A",
+    cwd: "/alias",
+    nativeSessionId: "history",
+  });
+  expect(component("ThreadPage").navigationFocus).toMatchObject({
+    key: history.raw,
+  });
+
+  await history.complete();
+  expect(component("ThreadPage").navigationFocus).toMatchObject({
+    key: history.canonical,
+  });
+
+  call("ConversationLibrary", "onOpen", {
+    id: "test-B",
+    agentId: "B",
+    cwd: "/test-B",
+    nativeSessionId: "test-B",
+  });
+  expect(component("ThreadPage").navigationFocus).toBeUndefined();
+});
+
 it("keeps saved offline Agents in the sidebar and admits history independently of new-conversation readiness", () => {
   h.cards[0].status = "none";
   h.prepared.delete("A");
