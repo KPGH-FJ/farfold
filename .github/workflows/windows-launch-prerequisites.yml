@@ -14,6 +14,7 @@ on:
             TransportTerminalFile,
             TransportOnly,
             TerminalClose,
+            WorktreeRecovery,
           ]
 
 permissions:

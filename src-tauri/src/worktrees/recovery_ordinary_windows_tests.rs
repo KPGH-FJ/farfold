@@ -646,9 +646,21 @@ fn public_cold(delete: bool) {
 }
 #[test]
 fn ordinary_public_backup_cold_recover_keeps_original_and_rechecks() {
-    public_cold(false);
+    recycle_tests::isolated_with_timeout(
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+        PUBLIC_COLD_TEST_TIMEOUT,
+        || public_cold(false),
+    );
 }
 #[test]
 fn ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material() {
-    public_cold(true);
+    recycle_tests::isolated_with_timeout(
+        "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+        PUBLIC_COLD_TEST_TIMEOUT,
+        || public_cold(true),
+    );
 }
+
+// Both tests acquire the real application-wide maintenance gate. Keep their
+// fixtures independent and allow for the full Git, archive and recovery path.
+const PUBLIC_COLD_TEST_TIMEOUT: Duration = Duration::from_secs(180);

@@ -62,6 +62,10 @@ pub(super) fn prepare(
 // Production uses one global gate. Isolate only tests that take its write side;
 // never serialize or alter the actual application's gate for test convenience.
 pub(crate) fn isolated(name: &str, body: impl FnOnce()) {
+    isolated_with_timeout(name, Duration::from_secs(90), body);
+}
+
+pub(super) fn isolated_with_timeout(name: &str, timeout: Duration, body: impl FnOnce()) {
     let args: Vec<_> = std::env::args().collect();
     if args.iter().any(|s| s == name) && args.iter().any(|s| s == "--exact") {
         body();
@@ -77,7 +81,7 @@ pub(crate) fn isolated(name: &str, body: impl FnOnce()) {
         .stderr(stderr.try_clone().unwrap())
         .spawn()
         .unwrap();
-    let end = Instant::now() + Duration::from_secs(90);
+    let end = Instant::now() + timeout;
     let status = loop {
         if let Some(s) = child.try_wait().unwrap() {
             break s;
