@@ -16,27 +16,36 @@ export function WorktreeManagementHost() {
     worktrees.snapshot,
     worktrees.snapshot,
   );
-  return request ? (
-    <WorktreeDialog
-      key={request.key}
-      cwd={request.cwd}
-      target={request.target}
-      returnFocusRef={request.returnFocusRef}
-      onClose={() => worktreeManagement.close(request)}
-    />
-  ) : state.operationId ? (
-    <button
-      type="button"
-      className="btn worktree-reopen"
-      onClick={() => {
-        if (
-          !worktreeManagement.snapshot() &&
-          worktrees.snapshot().operationId === state.operationId
-        )
-          worktreeManagement.open({ cwd: null, target: null });
-      }}
-    >
-      {S.reopen}
-    </button>
-  ) : null;
+  return (
+    <>
+      {state.operationId && (
+        <button
+          type="button"
+          className="btn worktree-reopen"
+          onClick={(event) => {
+            if (
+              !worktreeManagement.snapshot() &&
+              worktrees.snapshot().operationId === state.operationId
+            )
+              worktreeManagement.open({
+                cwd: null,
+                target: null,
+                returnFocusRef: { current: event.currentTarget },
+              });
+          }}
+        >
+          {S.reopen}
+        </button>
+      )}
+      {request && (
+        <WorktreeDialog
+          key={request.key}
+          cwd={request.cwd}
+          target={request.target}
+          returnFocusRef={request.returnFocusRef}
+          onClose={() => worktreeManagement.close(request)}
+        />
+      )}
+    </>
+  );
 }

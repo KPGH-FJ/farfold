@@ -17,6 +17,8 @@ export const ARCHIVE_STRINGS = {
   restored: "手动移回的对话重新等待完整期限。浏览、改名和分组不重新计时。",
   checking: "正在检查归档条件…",
   failed: "自动归档未完成，对话保留原处。可以重试。",
+  unconfirmed: (count: number) =>
+    `有 ${count} 段对话的自动归档未能确认。可以重新检查。`,
   retry: "重新检查",
   run: "归档符合条件的对话",
   view: "查看已归档",
@@ -83,21 +85,31 @@ export function runAutoArchive(): Promise<void> {
         archiveEligible(row, threads.thread(row.id), snapshot.autoArchiveDays),
       );
       publish({ ready: true, count: candidates.length });
+      let unconfirmed = 0;
       for (const row of candidates) {
         // Re-read after each asynchronous metadata write. New work always wins.
         const current = threads.getSnapshot();
         const actual = current.index.find((item) => item.id === row.id);
         if (
-          actual &&
-          archiveEligible(
+          !actual ||
+          !archiveEligible(
             actual,
             threads.thread(row.id),
             current.autoArchiveDays,
           )
         )
+          continue;
+        try {
           await threads.setArchived(row.id, true);
+        } catch {
+          unconfirmed++;
+        }
       }
-      publish({ ready: true, count: 0 });
+      publish({
+        ready: true,
+        count: unconfirmed,
+        error: unconfirmed ? ARCHIVE_STRINGS.unconfirmed(unconfirmed) : null,
+      });
     } catch {
       publish({ error: ARCHIVE_STRINGS.failed });
     } finally {

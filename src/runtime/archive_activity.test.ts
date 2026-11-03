@@ -85,6 +85,28 @@ it("retains cold known endings while treating old v1 values without activity as 
   expect(h.archive).not.toHaveBeenCalled();
 });
 
+it("continues with an independent conversation after one archive fails", async () => {
+  disk.activity.b = { lastActivityAt: 1, ended: true };
+  h.rows.push({ ...h.rows[0], id: "b", nativeSessionId: "b", cwd: "/q" });
+  h.archive.mockImplementation(async (id) => {
+    if (id === "a") throw new Error("directory unavailable");
+    h.rows[1] = { ...h.rows[1], archived: true };
+  });
+
+  const scope = await load();
+  await scope.runAutoArchive();
+
+  expect(h.archive.mock.calls).toEqual([
+    ["a", true],
+    ["b", true],
+  ]);
+  expect(h.rows.map(({ archived }) => archived)).toEqual([false, true]);
+
+  h.archive.mockClear();
+  await scope.retryAutoArchive();
+  expect(h.archive).toHaveBeenCalledExactlyOnceWith("a", true);
+});
+
 it("does not persist a cleared draft without its refreshed activity, including failed save and cold restart", async () => {
   disk.composers["session:a"] = { text: "UNSENT", attachments: [] };
   let scope = await load();
