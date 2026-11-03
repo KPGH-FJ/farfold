@@ -77,13 +77,16 @@ fn recovery_discovers_deleted_private_ref_log_and_orig_head_drift() {
 }
 #[test]
 fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects() {
-    recycle_tests::isolated(
+    let operation_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    let prepare_wait = Duration::from_secs(if cfg!(windows) { 60 } else { 30 });
+    recycle_tests::isolated_with_timeout(
         "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects",
+        Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
             let m = Worktrees::default();
-            let l = recycle_tests::created(&m, &s, &r);
+            let l = recycle_tests::created_with_timeout(&m, &s, &r, operation_wait);
             let arch = "22345678-1234-4123-8123-123456789abc";
             let remove = "42345678-1234-4123-8123-123456789abc";
             let p = m
@@ -91,7 +94,9 @@ fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
                 .unwrap();
             recycle_tests::prepare(&m, &s, arch, p);
             m.start(&s, arch).unwrap();
-            let a = recycle_tests::wait(&m, &s, arch).archive.unwrap();
+            let a = recycle_tests::wait_with_timeout(&m, &s, arch, operation_wait)
+                .archive
+                .unwrap();
             let p = m.remove_inspect(&s, &a.id, a.revision).unwrap();
             let reply = m
                 .prepare_remove(
@@ -105,15 +110,7 @@ fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
                 )
                 .unwrap();
             assert_eq!(tests::op(reply).action, "remove");
-            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
-            let prepared = loop {
-                let o = tests::op(m.status(&s, remove).unwrap());
-                if o.state == "prepared" || o.settled {
-                    break o;
-                }
-                assert!(std::time::Instant::now() < deadline, "{o:?}");
-                std::thread::sleep(std::time::Duration::from_millis(5));
-            };
+            let prepared = wait_prepared_with_timeout(&m, &s, remove, prepare_wait);
             assert_eq!(prepared.state, "prepared", "{prepared:?}");
             assert_eq!(
                 prepared.removal_phase.as_deref(),
@@ -141,8 +138,8 @@ fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
             );
             assert!(Path::new(&a.retained_path).exists());
             m.confirm_remove(&s, remove, c.clone()).unwrap();
-            m.confirm_remove(&s, remove, c).unwrap();
-            let done = recycle_tests::wait(&m, &s, remove);
+            m.confirm_remove(&s, remove, c.clone()).unwrap();
+            let done = recycle_tests::wait_with_timeout(&m, &s, remove, operation_wait);
             assert_eq!(done.state, "ready", "{done:?}");
             assert!(!Path::new(&a.retained_path).exists());
             assert_eq!(
@@ -153,37 +150,58 @@ fn recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
             assert!(list.archives.is_empty());
             assert_eq!(list.recoveries.len(), 1);
             assert!(list.locations.is_empty());
-            let raw = fs::read(Path::new(&recovery.path).join("manifest.json")).unwrap();
-            let manifest: recovery_pack::Manifest = serde_json::from_slice(&raw).unwrap();
+            // Replay while the removal is still the current persisted operation.
+            let cold = Worktrees::default();
+            assert_eq!(cold.list(&s).unwrap().recoveries[0].availability, "unknown");
+            let replay = tests::op(cold.confirm_remove(&s, remove, c).unwrap());
+            assert_eq!(replay.state, "unknown");
+            assert_eq!(replay.delete_dispatched, Some(true));
+            let parent = r._dir.path().canonicalize().unwrap();
+            let destination = parent.join("restored");
             let objects = r.root.join(".git/objects");
             let offline = r.root.join(".git/objects.offline");
             fs::rename(&objects, &offline).unwrap();
-            let destination = r._dir.path().canonicalize().unwrap().join("restored");
-            let actual = recovery_pack::recover_into(
-                &Path::new(&recovery.path).join("recovery.bundle"),
-                &manifest,
-                &destination,
-                &AtomicBool::new(false),
-            );
-            fs::rename(&offline, &objects).unwrap();
-            actual.unwrap();
-            assert_eq!(fs::read(destination.join("a.txt")).unwrap(), b"fixture");
-            let cold = Worktrees::default();
-            assert_eq!(cold.list(&s).unwrap().recoveries[0].availability, "unknown");
-            assert!(
-                cold.confirm_remove(
-                    &s,
-                    remove,
-                    RemoveConfirmation {
-                        record_id: a.id,
-                        expected_revision: a.revision,
-                        recovery_id: recovery.id,
-                        recovery_sha256: recovery.bundle_sha256,
-                        manifest_sha256: recovery.manifest_sha256
-                    }
+            #[cfg(unix)]
+            {
+                let raw = fs::read(Path::new(&recovery.path).join("manifest.json")).unwrap();
+                let manifest: recovery_pack::Manifest = serde_json::from_slice(&raw).unwrap();
+                recovery_pack::recover_into(
+                    &Path::new(&recovery.path).join("recovery.bundle"),
+                    &manifest,
+                    &destination,
+                    &AtomicBool::new(false),
                 )
-                .is_ok()
-            );
+                .unwrap();
+            }
+            #[cfg(windows)]
+            {
+                let canonical = &list.recoveries[0];
+                let restore = "52345678-1234-4123-8123-123456789abc";
+                let prepared = tests::op(
+                    m.prepare_recover(
+                        &s,
+                        restore,
+                        RecoverInput {
+                            recovery_id: canonical.id.clone(),
+                            expected_revision: canonical.revision,
+                            parent_path: parent.to_str().unwrap().into(),
+                            directory_name: "restored".into(),
+                        },
+                    )
+                    .unwrap(),
+                );
+                assert_eq!(prepared.state, "prepared", "{prepared:?}");
+                assert!(!destination.exists());
+                m.start(&s, restore).unwrap();
+                let ready = recycle_tests::wait_with_timeout(&m, &s, restore, operation_wait);
+                assert_eq!(ready.state, "ready", "{ready:?}");
+                let location = ready.location.unwrap();
+                assert_eq!(location.ownership, "existing");
+                assert_eq!(Path::new(&location.path), destination);
+                assert!(!objects.exists());
+            }
+            fs::rename(&offline, &objects).unwrap();
+            assert_eq!(fs::read(destination.join("a.txt")).unwrap(), b"fixture");
         },
     );
 }

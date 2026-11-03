@@ -207,7 +207,7 @@ mod tests {
             "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit",
             || {
                 use crate::worktrees::{
-                    tests::{OP, Repo, git, input, op, wait},
+                    tests::{OP, Repo, git, input, op, wait_with_timeout},
                     *,
                 };
                 unsafe extern "C" fn deny_second_write_window(
@@ -249,7 +249,10 @@ mod tests {
                 );
                 m.prepare(&s, OP, args).unwrap();
                 m.start(&s, OP).unwrap();
-                let location = wait(&m, &s).location.unwrap();
+                // This test targets SQLite unseal after archive preparation;
+                // Windows creation is real Git work and can take longer on CI.
+                let timeout = std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 15 });
+                let location = wait_with_timeout(&m, &s, timeout).location.unwrap();
                 let preview = m
                     .recycle_inspect(&s, RecycleAction::Archive, &location.id, location.revision)
                     .unwrap();

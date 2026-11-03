@@ -108,7 +108,14 @@ pub(crate) fn input(
 }
 pub(crate) const OP: &str = "12345678-1234-4123-8123-123456789abc";
 pub(crate) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore) -> Operation {
-    let end = std::time::Instant::now() + std::time::Duration::from_secs(15);
+    wait_with_timeout(m, s, std::time::Duration::from_secs(15))
+}
+pub(crate) fn wait_with_timeout(
+    m: &Worktrees,
+    s: &crate::meta_store::MetaStore,
+    timeout: std::time::Duration,
+) -> Operation {
+    let end = std::time::Instant::now() + timeout;
     loop {
         let value = op(m.status(s, OP).unwrap());
         if value.settled {
@@ -116,7 +123,7 @@ pub(crate) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore) -> Operation
         }
         assert!(
             std::time::Instant::now() < end,
-            "worktree operation did not settle"
+            "worktree operation did not settle: {value:?}"
         );
         std::thread::sleep(std::time::Duration::from_millis(10));
     }
