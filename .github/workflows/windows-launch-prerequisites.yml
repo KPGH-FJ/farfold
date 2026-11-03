@@ -23,6 +23,7 @@ on:
             JobAccounting,
             AccessDiagnostics,
             GitJobWorktree,
+            TerminalProbe,
           ]
 
 permissions:

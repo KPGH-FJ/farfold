@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -54,6 +54,16 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     'startup-selected-helper-error' = "${startup}missing_selected_program_is_reported_by_the_owned_windows_helper"
     'history-selected-read' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets'
     'history-wrong-source' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_rejects_wrong_native_id_and_different_cwd'
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
+} elseif ($Cohort -ceq 'TerminalProbe') {
+  $prefix = 'platform_tests::windows_conpty::'
+  $tests = [ordered]@{
+    'terminal-manager-python' = "${prefix}actual_manager_with_valid_windows_python_is_bounded"
+    'terminal-manager-no-reply-close' = "${prefix}manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+    'terminal-raw-cursor-reply' = "${prefix}raw_conpty_replies_only_to_an_observed_query"
   }
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }

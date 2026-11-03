@@ -536,16 +536,14 @@ fn await_flag(flag: &AtomicBool, budget: Duration) -> bool {
 }
 
 fn manager_probe() {
+    use super::windows_cursor::CursorConsumer;
     use base64::Engine;
     let directory = tempfile::tempdir().unwrap();
-    let manager = crate::pty::PtyManager::new();
+    let manager = Arc::new(crate::pty::PtyManager::new());
+    let (cursor_sink, mut cursor) = CursorConsumer::new(true);
     let ready = Arc::new(AtomicBool::new(false));
     let seen = ready.clone();
     let tail = Mutex::new(Vec::<u8>::new());
-    let bytes = Arc::new(AtomicUsize::new(0));
-    let count = bytes.clone();
-    let queries = Arc::new(AtomicUsize::new(0));
-    let query_read = queries.clone();
     eprintln!("FARFOLD_CONPTY_PHASE manager.spawn.enter");
     let id = manager
         .spawn(
@@ -555,41 +553,39 @@ fn manager_probe() {
             directory.path(),
             portable_pty::PtySize::default(),
             Arc::new(move |frame| {
+                let mut frame_ready = false;
                 if let Some(data) = frame.get("data").and_then(serde_json::Value::as_str) {
                     let decoded = base64::engine::general_purpose::STANDARD
                         .decode(data)
                         .unwrap();
-                    count.fetch_add(decoded.len(), Ordering::SeqCst);
                     let mut tail = tail.lock().unwrap();
-                    let previous = tail.len();
                     tail.extend_from_slice(&decoded);
-                    query_read.fetch_add(
-                        tail.windows(4)
-                            .enumerate()
-                            .filter(|(i, s)| i + 4 > previous && *s == b"\x1b[6n")
-                            .count(),
-                        Ordering::SeqCst,
-                    );
-                    if tail.windows(READY.len()).any(|s| s == READY) {
-                        seen.store(true, Ordering::SeqCst);
-                    }
+                    frame_ready = tail.windows(READY.len()).any(|s| s == READY);
                     let discard = tail.len().saturating_sub(READY.len());
                     tail.drain(..discard);
+                }
+                cursor_sink(frame);
+                if frame_ready {
+                    seen.store(true, Ordering::SeqCst);
                 }
             }),
         )
         .unwrap();
     eprintln!("FARFOLD_CONPTY_PHASE manager.spawn.return");
+    cursor.start(Arc::downgrade(&manager), id.clone(), true);
     environment();
     let readiness_started = Instant::now();
     let ready_observed = await_flag(&ready, Duration::from_secs(3));
-    eprintln!(
-        "FARFOLD_CONPTY_PROBE_READINESS {}",
-        serde_json::json!({"case":"Manager","readyObserved":ready_observed,
-            "waitElapsedMs":readiness_started.elapsed().as_millis(),
-            "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
-            "cursorReplies":0,"rootCause":"unknown"})
-    );
+    {
+        let state = cursor.capture.lock().unwrap();
+        eprintln!(
+            "FARFOLD_CONPTY_PROBE_READINESS {}",
+            serde_json::json!({"case":"Manager","readyObserved":ready_observed,
+                "waitElapsedMs":readiness_started.elapsed().as_millis(),
+                "bytes":state.bytes,"cursorQueries":state.queries,
+                "cursorReplies":state.replies,"rootCause":"unknown"})
+        );
+    }
     assert!(ready_observed, "valid Python peer must actually start");
     manager.write(&id, b"finish\r").unwrap();
     eprintln!("FARFOLD_CONPTY_PHASE manager.close.enter");
@@ -599,9 +595,11 @@ fn manager_probe() {
         .expect("existing terminal must close");
     eprintln!("FARFOLD_CONPTY_PHASE manager.close.return");
     assert!(manager.close(&id).unwrap().is_none());
+    cursor.finish();
+    cursor.assert_settled();
     eprintln!(
         "FARFOLD_CONPTY_RESULT {}",
-        serde_json::json!({"case":"Manager","bytes":bytes.load(Ordering::SeqCst),"fixtureExit":exit,"rootCause":"unknown","internalPtyEOF":"notObservableViaPublicSink"})
+        serde_json::json!({"case":"Manager","bytes":cursor.capture.lock().unwrap().bytes,"fixtureExit":exit,"rootCause":"unknown","internalPtyEOF":"notObservableViaPublicSink"})
     );
 }
 
