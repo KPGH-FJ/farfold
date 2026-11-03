@@ -1,0 +1,448 @@
+{
+  "runId": 41623628350,
+  "sourceCommit": "8a728b39c01bf6d46b85f2bf73fdca57bb8c3e4c",
+  "artifactSha256": "041e82c7b8a1ec834c1db0081a37bcaea19103073199cf2cadecbca480e14f97",
+  "providerDigestMatched": true,
+  "artifactMembers": 24,
+  "nativeBuild": {
+    "buildSucceeded": true,
+    "runnerExitCode": 0,
+    "testBuildExit": 0,
+    "fixtureBuildExit": 0,
+    "failure": null
+  },
+  "groups": {
+    "terminal-input-eof": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "platform_tests::windows_conpty::raw_conpty_input_eof_before_close_without_cursor_reply",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 10.02s"
+      ],
+      "passed": false
+    },
+    "terminal-close-reply": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "pty::windows_tests::terminal_cancel_cursor_reply_isolated",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 0.23s"
+      ],
+      "passed": true
+    },
+    "terminal-close-no_reply": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "pty::windows_tests::terminal_cancel_cursor_no_reply_isolated",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 20.02s"
+      ],
+      "passed": false
+    },
+    "terminal-close-original": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 0.12s"
+      ],
+      "passed": true
+    },
+    "terminal-auth-cancel": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 0.58s"
+      ],
+      "passed": true
+    }
+  },
+  "sourceMapMatches": {
+    "exact": 1,
+    "checkoutCRLF": 837
+  },
+  "managerStateAfterClose": {
+    "masterTaken": true,
+    "jobActive": false,
+    "exitConfirmed": false
+  },
+  "inputEofReached": [
+    "raw.openpty.enter",
+    "raw.openpty.return",
+    "raw.spawn.enter",
+    "raw.spawn.return",
+    "raw.input.close.enter",
+    "raw.input.close.return",
+    "raw.close.enter"
+  ],
+  "inputEofOuterOwner": {
+    "case": "CloseInputWithoutReply",
+    "terminated": true,
+    "deadlineReached": true,
+    "cancelRequested": false,
+    "invalidPipeObserved": false,
+    "inputFailedObserved": false,
+    "tryWaitErrorObserved": false,
+    "stdinWrittenAndClosed": true,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "stdoutFailed": false,
+    "stderrFailed": false,
+    "stdoutOverflow": false,
+    "stderrOverflow": false,
+    "childReaped": true,
+    "directJobInactive": true
+  },
+  "inputEofIsSufficientOnThisRunner": false,
+  "followupRunId": 41626356357,
+  "worktreeBaseline": {
+    "runId": 41623694507,
+    "sourceCommit": "6fd8a054f53be6294e371b79f44ab3efd7d76874",
+    "artifactSha256": "c1df8cea1d818dd0922f920246218619e999e4b338f049f254f04cb210679d98",
+    "providerDigestMatched": true,
+    "artifactMembers": 15,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-public-recovery": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 166.63s"
+        ],
+        "passed": true
+      },
+      "worktree-cold-remove-recheck": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2440 filtered out; finished in 86.72s"
+        ],
+        "passed": false
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 837
+    }
+  },
+  "worktreeRemoveSourceFix": {
+    "commit": "1b87393be",
+    "macosRemoveRecheckPassed": 6,
+    "nativeFollowupRunId": 41626356357
+  },
+  "fullSuiteDispatched": false,
+  "oldRequestResends": 0,
+  "retirementAndRemoveFollowup": {
+    "runId": 41626356357,
+    "sourceCommit": "69a695c3dfeb532df2fb7631668590c330f9c116",
+    "artifactSha256": "84c577e31837e3dc2eb6850d9ec2319edf24506e70f31a7695ea00fc95bccf26",
+    "providerDigestMatched": true,
+    "artifactMembers": 15,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "terminal-retirement-reply": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2441 filtered out; finished in 3.10s"
+        ],
+        "passed": true
+      },
+      "worktree-cold-remove-recheck": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2441 filtered out; finished in 75.04s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 837
+    },
+    "nativeRetirement": {
+      "case": "ReplyAfterJobEnd",
+      "childReaped": true,
+      "jobInactive": true,
+      "cursorReplies": 1,
+      "ptyEOF": "zero"
+    },
+    "outerOwner": {
+      "case": "ReplyAfterJobEnd",
+      "terminated": false,
+      "deadlineReached": false,
+      "cancelRequested": false,
+      "invalidPipeObserved": false,
+      "inputFailedObserved": false,
+      "tryWaitErrorObserved": false,
+      "stdinWrittenAndClosed": true,
+      "stdoutEOF": true,
+      "stderrEOF": true,
+      "stdoutFailed": false,
+      "stderrFailed": false,
+      "stdoutOverflow": false,
+      "stderrOverflow": false,
+      "childReaped": true,
+      "directJobInactive": true
+    }
+  },
+  "productionPty": {
+    "runId": 41628688301,
+    "sourceCommit": "aad370f557202f14ac55dcc5216307cc9df5bac2",
+    "artifactSha256": "d39bbf792b0f8cd2da30ad2b827a69108717a77e8928dc317aa30b6630af04ea",
+    "providerDigestMatched": true,
+    "artifactMembers": 21,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "terminal-pending-cursor-close": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::terminal_close_confirms_exit_with_unanswered_startup_cursor",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 5.12s"
+        ],
+        "passed": true
+      },
+      "terminal-close-reply": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::terminal_cancel_cursor_reply_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.75s"
+        ],
+        "passed": true
+      },
+      "terminal-close-original": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 0.24s"
+        ],
+        "passed": true
+      },
+      "terminal-auth-cancel": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2444 filtered out; finished in 2.05s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    },
+    "pendingCursorBeforeClose": {
+      "phase": "marker.wait.deadline",
+      "replyEnabled": false,
+      "elapsedMillis": 5023,
+      "bytes": 4,
+      "queries": 1,
+      "replies": 0,
+      "pending": 0,
+      "failed": false,
+      "cursorCoverage": "observed"
+    },
+    "pendingCursorCloseConfirmed": true,
+    "ownedNativeCompletion": {
+      "case": "TerminalPendingCursorClose",
+      "terminated": false,
+      "deadlineReached": false,
+      "cancelRequested": false,
+      "invalidPipeObserved": false,
+      "inputFailedObserved": false,
+      "tryWaitErrorObserved": false,
+      "stdinWrittenAndClosed": true,
+      "stdoutEOF": true,
+      "stderrEOF": true,
+      "stdoutFailed": false,
+      "stderrFailed": false,
+      "stdoutOverflow": false,
+      "stderrOverflow": false,
+      "childReaped": true,
+      "directJobInactive": true
+    },
+    "macosPtyAffectedPassed": 23,
+    "macosAllTargetsClippyExit": 0
+  },
+  "worktreeConcurrentRechecks": {
+    "runId": 41628731854,
+    "sourceCommit": "c13a7a6446e21e54611a1114508854a73b5e477b",
+    "artifactSha256": "cc4d15c8888f4a32e2ba3967ccbb5194de28a82dd0b1a2a78a00dec174ceed68",
+    "providerDigestMatched": true,
+    "artifactMembers": 12,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "worktree-remove-rechecks": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+          "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+          "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+          "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 270.06s"
+        ],
+        "passed": false
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 838
+    },
+    "outerFixtureDeadlines": 6,
+    "innerOperationStageConfirmed": false
+  },
+  "modelSends": 0
+}
