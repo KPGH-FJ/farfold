@@ -11,7 +11,7 @@ const PEER: &str = r#"
 import json,os,sys
 root=sys.argv[1];prompt=None
 def send(m): print(json.dumps(dict(jsonrpc='2.0',**m)),flush=True)
-for line in sys.stdin:
+for line in sys.stdin.buffer:
  m=json.loads(line);p=m.get('params',{});method=m.get('method')
  if method=='initialize':
   result={'protocolVersion':1,'agentCapabilities':json.load(open(os.path.join(root,'capabilities.json'))),'authMethods':[]}
