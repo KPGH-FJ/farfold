@@ -1,0 +1,521 @@
+{
+  "runId": 41609225954,
+  "sourceCommit": "978088b6a1ab6b54d1c07047694843c4c8875237",
+  "artifactSha256": "341b72b548681111e6f35008dce8ec8569d5731168e76fdc50e372d19d4b7d79",
+  "providerDigestMatched": true,
+  "artifactMembers": 33,
+  "nativeBuild": {
+    "buildSucceeded": true,
+    "runnerExitCode": 0,
+    "testBuildExit": 0,
+    "fixtureBuildExit": 0,
+    "failure": null
+  },
+  "groups": {
+    "transport-approval": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval"
+      ],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.80s"
+      ],
+      "passed": true
+    },
+    "transport-stop": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop"
+      ],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.73s"
+      ],
+      "passed": true
+    },
+    "transport-concurrent": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+          "result": "FAILED"
+        },
+        {
+          "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+        "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop"
+      ],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2438 filtered out; finished in 5.40s"
+      ],
+      "passed": false
+    },
+    "terminal-manager": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded"
+      ],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 12.01s"
+      ],
+      "passed": false
+    },
+    "terminal-drain": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded"
+      ],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 10.02s"
+      ],
+      "passed": false
+    },
+    "terminal-no-reply": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup",
+          "result": "FAILED"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+      ],
+      "naturalExitCode": 101,
+      "summary": [
+        "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 12.02s"
+      ],
+      "passed": false
+    },
+    "terminal-reply": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "platform_tests::windows_conpty::manager_cursor_reply_control_reaches_ready_and_confirms_cleanup",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.17s"
+      ],
+      "passed": true
+    },
+    "file-root-replacement": {
+      "receiptPresent": true,
+      "actualCases": [
+        {
+          "name": "file_delivery::tests::replaced_root_during_read_is_rejected",
+          "result": "ok"
+        }
+      ],
+      "originalFullFailureExactMatches": [
+        "file_delivery::tests::replaced_root_during_read_is_rejected"
+      ],
+      "naturalExitCode": 0,
+      "summary": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.02s"
+      ],
+      "passed": true
+    }
+  },
+  "sourceMapMatches": {
+    "exact": 1,
+    "checkoutCRLF": 837
+  },
+  "transport": {
+    "concurrentFenceTimeouts": 2,
+    "cleanedOwnedFixtureProcesses": [
+      {
+        "phase": "exact-owner-cleanup",
+        "mode": "stop",
+        "registeredOwners": 1,
+        "cleanupConfirmed": true,
+        "notProductComplete": true
+      },
+      {
+        "phase": "exact-owner-cleanup",
+        "mode": "approval",
+        "registeredOwners": 1,
+        "cleanupConfirmed": true,
+        "notProductComplete": true
+      }
+    ]
+  },
+  "terminal": {
+    "manager": {
+      "case": "Manager",
+      "readyObserved": false,
+      "waitElapsedMs": 3000,
+      "bytes": 4,
+      "cursorQueries": 1,
+      "cursorReplies": 0,
+      "rootCause": "unknown"
+    },
+    "drain": {
+      "case": "Drain",
+      "readyObserved": false,
+      "waitElapsedMs": 3001,
+      "bytes": 4,
+      "cursorQueries": 1,
+      "cursorReplies": 0,
+      "rootCause": "unknown"
+    },
+    "noReply": {
+      "case": "ManagerCursorNoReply",
+      "replyEnabled": false,
+      "readyObserved": false,
+      "finishSent": false,
+      "confirmedExistingClose": false,
+      "secondCloseAbsent": false,
+      "closeError": true,
+      "fixtureExit": null,
+      "cursorQueries": 1,
+      "cursorReplies": 0,
+      "pendingReplies": 0,
+      "consumerFailed": false,
+      "internalPtyEOF": "notObservableViaPublicSink",
+      "scope": "independent diagnostic; no original Manager/Drain pass inferred"
+    },
+    "replyReadiness": {
+      "case": "ManagerCursorReply",
+      "replyEnabled": true,
+      "readyObserved": true,
+      "waitElapsedMs": 68,
+      "bytes": 118,
+      "cursorQueries": 1,
+      "cursorReplies": 1,
+      "pendingReplies": 0,
+      "consumerFailed": false,
+      "scope": "independent cursor-response hypothesis; original Manager oracle unchanged"
+    },
+    "reply": {
+      "case": "ManagerCursorReply",
+      "replyEnabled": true,
+      "readyObserved": true,
+      "finishSent": true,
+      "confirmedExistingClose": true,
+      "secondCloseAbsent": true,
+      "closeError": false,
+      "fixtureExit": 1,
+      "cursorQueries": 1,
+      "cursorReplies": 1,
+      "pendingReplies": 0,
+      "consumerFailed": false,
+      "internalPtyEOF": "notObservableViaPublicSink",
+      "scope": "independent diagnostic; no original Manager/Drain pass inferred"
+    },
+    "replyOuterOwner": {
+      "case": "ManagerCursorReply",
+      "childExit": 0,
+      "stdoutEOF": true,
+      "stderrEOF": true,
+      "directJobInactive": true
+    }
+  },
+  "transportFollowup": {
+    "sourceCommit": "070ebba9e6ff8dc0098e4c1f71164b1f6bbd5baf",
+    "macosConstrainedWorkers": 2,
+    "beforePairExit": 101,
+    "afterPairExit": 0,
+    "windowsRunId": 41611603983,
+    "runId": 41611603983,
+    "artifactSha256": "512456f19c1a838111f4df5fc52dbb25a69b605291dd932e3584742819bd7e8c",
+    "providerDigestMatched": true,
+    "artifactMembers": 18,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "transport-approval": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 1.29s"
+        ],
+        "passed": true
+      },
+      "transport-stop": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.70s"
+        ],
+        "passed": true
+      },
+      "transport-concurrent": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+            "result": "ok"
+          },
+          {
+            "name": "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+          "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2438 filtered out; finished in 1.86s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 837
+    },
+    "concurrentPhaseMarkers": [
+      {
+        "phase": "callback-held-routing-fence",
+        "mode": "stop",
+        "ownedFrames": 64,
+        "textBytesPerFrame": 16384,
+        "callbacksCompletedOrEntered": 1,
+        "undeliveredFrameLowerBound": 63,
+        "minimumTextBytesUndelivered": 1032192,
+        "scope": "real stdio and Tauri controlled callback; no WebView or memory measurement"
+      },
+      {
+        "phase": "consumed-controls-and-raw",
+        "mode": "stop",
+        "rawOrderedExact": 64,
+        "approvalSubmitted": 0,
+        "cancelDispatchReceipts": 1,
+        "callbackCountAtActualCancelCallback": 1,
+        "callbackCountWhenTestObservedCancel": 1,
+        "scope": "not a latency target or render-consumed acknowledgement"
+      },
+      {
+        "phase": "exact-owner-cleanup",
+        "mode": "stop",
+        "registeredOwners": 1,
+        "cleanupConfirmed": true,
+        "notProductComplete": true
+      },
+      {
+        "phase": "callback-held-routing-fence",
+        "mode": "approval",
+        "ownedFrames": 64,
+        "textBytesPerFrame": 16384,
+        "callbacksCompletedOrEntered": 1,
+        "undeliveredFrameLowerBound": 63,
+        "minimumTextBytesUndelivered": 1032192,
+        "scope": "real stdio and Tauri controlled callback; no WebView or memory measurement"
+      },
+      {
+        "phase": "consumed-controls-and-raw",
+        "mode": "approval",
+        "rawOrderedExact": 64,
+        "approvalSubmitted": 1,
+        "cancelDispatchReceipts": 0,
+        "callbackCountAtActualCancelCallback": null,
+        "callbackCountWhenTestObservedCancel": null,
+        "scope": "not a latency target or render-consumed acknowledgement"
+      },
+      {
+        "phase": "exact-owner-cleanup",
+        "mode": "approval",
+        "registeredOwners": 1,
+        "cleanupConfirmed": true,
+        "notProductComplete": true
+      }
+    ],
+    "macosAffected": {
+      "passed": 1066,
+      "ignored": 3,
+      "exitCode": 0,
+      "clippyAllTargetsExitCode": 0,
+      "oneWorkerConcurrentPassed": true
+    }
+  },
+  "terminalCloseFollowup": {
+    "runId": 41611822450,
+    "sourceCommit": "14c7a16a9a45e8e4a532d390603bd8bc34c43dfa",
+    "artifactSha256": "8b840856a8e622dc62d875f0e54f49ef66ada0923840ce0a08ff1ed770fa253f",
+    "providerDigestMatched": true,
+    "artifactMembers": 21,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "terminal-close-reply": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::terminal_cancel_cursor_reply_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.20s"
+        ],
+        "passed": true
+      },
+      "terminal-close-no_reply": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::terminal_cancel_cursor_no_reply_isolated",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 20.02s"
+        ],
+        "passed": false
+      },
+      "terminal-close-original": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "pty::windows_tests::cancelling_a_windows_terminal_confirms_job_end_without_an_agent_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.13s"
+        ],
+        "passed": true
+      },
+      "terminal-auth-cancel": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "auth::terminal::tests::windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2439 filtered out; finished in 0.44s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 837
+    },
+    "confirmedOuterOwners": {
+      "terminal-close-reply": {
+        "case": "TerminalCursorReply",
+        "childExit": 0,
+        "stdoutEOF": true,
+        "stderrEOF": true,
+        "directJobInactive": true
+      },
+      "terminal-close-original": {
+        "case": "TerminalCancel",
+        "childExit": 0,
+        "stdoutEOF": true,
+        "stderrEOF": true,
+        "directJobInactive": true
+      },
+      "terminal-auth-cancel": {
+        "case": "Cancellation",
+        "childExit": 0,
+        "stdoutEOF": true,
+        "stderrEOF": true,
+        "directJobInactive": true
+      }
+    },
+    "noReplyInnerClose": {
+      "confirmedExisting": false,
+      "error": true,
+      "sessionHeldAcrossClose": true
+    },
+    "noReplyOuterDeadlineCleanup": {
+      "case": "TerminalCursorNoReply",
+      "terminated": true,
+      "deadlineReached": true,
+      "cancelRequested": false,
+      "invalidPipeObserved": false,
+      "inputFailedObserved": false,
+      "tryWaitErrorObserved": false,
+      "stdinWrittenAndClosed": true,
+      "stdoutEOF": true,
+      "stderrEOF": true,
+      "stdoutFailed": false,
+      "stderrFailed": false,
+      "stdoutOverflow": false,
+      "stderrOverflow": false,
+      "childReaped": true,
+      "directJobInactive": true
+    }
+  },
+  "fullSuiteDispatched": false,
+  "modelSends": 0,
+  "oldRequestResends": 0
+}
