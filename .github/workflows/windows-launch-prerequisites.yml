@@ -1,8 +1,14 @@
 name: Windows launch prerequisites
 
-# Explicit diagnostic for the original initial-connect and Create prerequisites.
+# Selected native tests with source and executable receipts.
 on:
   workflow_dispatch:
+    inputs:
+      cohort:
+        description: Exact native test cohort
+        type: choice
+        default: LaunchPrerequisites
+        options: [LaunchPrerequisites, TransportTerminalFile]
 
 permissions:
   contents: read
@@ -30,14 +36,22 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           rustup default 1.96.0
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Check synthetic protocol fixture interpreter
+        if: ${{ inputs.cohort == 'TransportTerminalFile' }}
+        run: |
+          $fixturePython = (Get-Command python.exe -CommandType Application -ErrorAction Stop).Source
+          & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build and bind the selected library test binary
         id: selected_build
         timeout-minutes: 30
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites
-      - name: Observe the exact initial-connect cases and the two Create controls
+      - name: Run the selected native test cohort
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
-        timeout-minutes: 5
-        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}'
+        timeout-minutes: 8
+        env:
+          FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
         with:

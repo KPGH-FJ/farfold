@@ -1,5 +1,6 @@
 param(
-  [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead
+  [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,7 +33,29 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
-$groups = @(
+$groups = if ($Cohort -ceq 'TransportTerminalFile') {
+  $transport = 'acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_'
+  $terminal = 'platform_tests::windows_conpty::'
+  $cases = [ordered]@{
+    'transport-approval' = "${transport}approval"
+    'transport-stop' = "${transport}stop"
+    'terminal-manager' = "${terminal}actual_manager_with_valid_windows_python_is_bounded"
+    'terminal-drain' = "${terminal}raw_conpty_draining_without_cursor_reply_is_bounded"
+    'terminal-no-reply' = "${terminal}manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+    'terminal-reply' = "${terminal}manager_cursor_reply_control_reaches_ready_and_confirms_cleanup"
+    'file-root-replacement' = 'file_delivery::tests::replaced_root_during_read_is_rejected'
+  }
+  foreach ($case in $cases.GetEnumerator()) {
+    @{ name = $case.Key; filter = $case.Value; exact = $true; names = @($case.Value); threads = 1 }
+  }
+  @{
+    name = 'transport-concurrent'
+    filter = $transport
+    exact = $false
+    names = @($cases['transport-approval'], $cases['transport-stop'])
+    threads = 2
+  }
+} else { @(
   @{
     name = 'initial-connect'
     filter = 'acp_client::session::prompt_context_tests::'
@@ -66,11 +89,12 @@ $groups = @(
     exact = $true
     names = @('worktrees::windows_git::launch_matrix_tests::owned_same_program_known_config_extended_plain_observations_preserve_original_owner')
   }
-)
+) }
 $failures = @()
 foreach ($group in $groups) {
   Confirm-Inputs
-  $testArgs = @($group.filter, '--show-output', '--test-threads=1', '--color=never')
+  $threads = $group.threads ?? 1
+  $testArgs = @($group.filter, '--show-output', "--test-threads=$threads", '--color=never')
   if ($group.exact) { $testArgs += '--exact' }
   foreach ($name in $group.skip) { $testArgs += @('--skip', $name) }
   $stdout = Join-Path $raw ($group.name + '.stdout.log')
@@ -80,18 +104,22 @@ foreach ($group in $groups) {
   $exit = [int]$LASTEXITCODE
   $ended = [DateTime]::UtcNow.ToString('o')
   $outText = [IO.File]::ReadAllText($stdout)
-  $cases = @([regex]::Matches($outText, '(?m)^test (?<name>\S+) \.\.\. (?<result>ok|FAILED|ignored)\r?$') |
+  # Captured child libtest output can contain its own results and summary.
+  $resultPrefix = ($outText -split '(?m)^(?:successes|failures):\r?$', 2)[0]
+  $cases = @([regex]::Matches($resultPrefix, '(?m)^test (?<name>\S+) \.\.\. (?<result>ok|FAILED|ignored)\r?$') |
     ForEach-Object { [ordered]@{ name = $_.Groups['name'].Value; result = $_.Groups['result'].Value } })
   $caseNames = @($cases | ForEach-Object { $_.name })
   $exactNames = $caseNames.Count -eq $group.names.Count -and
     @($group.names | Where-Object { $_ -cnotin $caseNames }).Count -eq 0
   $summary = @([regex]::Matches($outText, '(?m)^test result: (ok|FAILED)\. \d+ passed; \d+ failed; \d+ ignored;.*$') |
-    ForEach-Object { $_.Value.Trim() })
-  $success = $exit -eq 0 -and $exactNames -and $summary.Count -eq 1 -and
+    ForEach-Object { $_.Value.Trim() } | Select-Object -Last 1)
+  $success = $exit -eq 0 -and $exactNames -and
+    $summary -match "^test result: ok\. $($group.names.Count) passed; 0 failed; 0 ignored;" -and
     @($cases | Where-Object { $_.result -cne 'ok' }).Count -eq 0
   Confirm-Inputs
   [ordered]@{
     sourceHead = $ExpectedHead
+    cohort = $Cohort
     selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
     testBinarySha256 = $selection.testBinarySha256
     fixtureSha256 = $selection.fixtureSha256
