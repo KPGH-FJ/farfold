@@ -1,17 +1,76 @@
 //! Launch failure must not pre-empt the caller's chosen cancellation.
 use super::*;
 
+// On Windows the parent launches an ownership helper. The target is opened
+// by that helper, so a missing target is not a parent spawn failure.
+fn parent_spawn_failure(dir: &Path, target: &str, control: &ProcessControl) -> i32 {
+    let agent = AcpAgent::new(agent_client_protocol::AcpAgentConfig::new(dir.join(target)));
+    #[cfg(unix)]
+    let (cwd, expected) = (dir.to_path_buf(), libc::ENOENT);
+    #[cfg(windows)]
+    let (cwd, expected) = {
+        let cwd = dir.join("regular-file-cwd");
+        std::fs::write(&cwd, []).unwrap();
+        let error =
+            std::process::Command::new(crate::windows_process::helper_executable().unwrap())
+                .current_dir(&cwd)
+                .spawn()
+                .expect_err("the Windows launch cwd must be a directory");
+        (cwd, error.raw_os_error().unwrap())
+    };
+    assert!(spawn_process_in(&agent, &cwd, control).is_err());
+    assert!(control.start_failed());
+    expected
+}
+
+#[cfg(windows)]
+#[tokio::test]
+async fn missing_selected_program_is_reported_by_the_owned_windows_helper() {
+    use futures_lite::io::AsyncReadExt;
+    let dir = tempfile::tempdir().unwrap();
+    let diagnostics = Diagnostics::open(&dir.path().join("logs"), "fixture");
+    let control = ProcessControl::new(diagnostics);
+    let canary = "missing-selected-private-canary.exe";
+    let agent = AcpAgent::new(agent_client_protocol::AcpAgentConfig::new(
+        dir.path().join(canary),
+    ));
+    let (_, _, mut stderr, mut child, group) =
+        spawn_process_in(&agent, dir.path(), &control).unwrap();
+    let status = tokio::time::timeout(Duration::from_secs(5), child.status())
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(status.code(), Some(126));
+    assert!(!control.start_failed());
+    let mut output = String::new();
+    tokio::time::timeout(Duration::from_secs(5), stderr.read_to_string(&mut output))
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(!output.contains(canary));
+    assert!(output.lines().any(|line| line == "无法启动所选程序"));
+    assert!(
+        output
+            .lines()
+            .any(|line| line == "执行或等待程序时失败，系统错误：2")
+    );
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while group.active() {
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .expect("the exact helper Job must retire");
+    eprintln!("FARFOLD_WINDOWS_SELECTED_SPAWN_FAILURE helperExit=126 systemError=2");
+}
+
 #[test]
 fn spawn_failure_missing_program_records_os_error_and_own_file_limits() {
     let dir = tempfile::tempdir().unwrap();
     let logs = dir.path().join("logs");
     let diagnostics = Diagnostics::open(&logs, "fixture");
     let control = ProcessControl::new(diagnostics.clone());
-    let agent = AcpAgent::new(agent_client_protocol::AcpAgentConfig::new(
-        dir.path().join("missing-spawn-private-canary"),
-    ));
-    assert!(spawn_process_in(&agent, dir.path(), &control).is_err());
-    assert!(control.start_failed());
+    let expected = parent_spawn_failure(dir.path(), "missing-spawn-private-canary", &control);
     assert_eq!(control.pid.load(Ordering::SeqCst), 0);
     diagnostics.outcome(super::super::startup_diagnostics::Outcome::StartFailed);
     let until = std::time::Instant::now() + Duration::from_secs(2);
@@ -27,7 +86,7 @@ fn spawn_failure_missing_program_records_os_error_and_own_file_limits() {
             })
             .find(|value| value["startupOutcome"] == "start_failed");
         if let Some(value) = observed {
-            assert_eq!(value["spawnFailure"]["osError"], 2);
+            assert_eq!(value["spawnFailure"]["osError"], expected);
             assert_eq!(value["childStarted"], false);
             #[cfg(unix)]
             {
@@ -143,11 +202,7 @@ fn startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outco
     let logs = dir.path().join("logs");
     let diagnostics = Diagnostics::open(&logs, "fixture");
     let control = ProcessControl::new(diagnostics.clone());
-    let agent = AcpAgent::new(agent_client_protocol::AcpAgentConfig::new(
-        dir.path().join("missing-canary"),
-    ));
-    assert!(spawn_process_in(&agent, dir.path(), &control).is_err());
-    assert!(control.start_failed());
+    parent_spawn_failure(dir.path(), "missing-canary", &control);
     // The probe's biased branch selects cancellation when both are ready.
     diagnostics.outcome(super::super::startup_diagnostics::Outcome::Cancelled);
     let until = std::time::Instant::now() + Duration::from_secs(2);

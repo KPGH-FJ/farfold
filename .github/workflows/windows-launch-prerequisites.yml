@@ -21,6 +21,7 @@ on:
             RemoveFixtures,
             RecoveryCancel,
             JobAccounting,
+            AccessDiagnostics,
           ]
 
 permissions:

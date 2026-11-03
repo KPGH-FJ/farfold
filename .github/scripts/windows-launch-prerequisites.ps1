@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -45,6 +45,18 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   @{ name = 'job-accounting-sticky-gap'; filter = $test; exact = $true; names = @($test) }
   $test = 'pty::windows_tests::terminal_cancel_after_native_spawn_before_publication_isolated'
   @{ name = 'terminal-cancel-before-publication'; filter = $test; exact = $true; names = @($test); ignored = $true }
+} elseif ($Cohort -ceq 'AccessDiagnostics') {
+  $startup = 'acp_client::process::startup_tests::'
+  $tests = [ordered]@{
+    'startup-parent-error' = "${startup}spawn_failure_missing_program_records_os_error_and_own_file_limits"
+    'startup-cancel-precedence' = "${startup}startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome"
+    'startup-selected-helper-error' = "${startup}missing_selected_program_is_reported_by_the_owned_windows_helper"
+    'history-selected-read' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets'
+    'history-wrong-source' = 'acp_client::history_search::tests::admission_tests::reviewed_codex_history_rejects_wrong_native_id_and_different_cwd'
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
 } elseif ($Cohort -ceq 'RemoveRechecks') {
   $prefix = 'worktrees::manager::remove_recheck_tests::'
   @{
