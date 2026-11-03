@@ -1,0 +1,93 @@
+{
+  "date": "2026-11-03",
+  "sourceCommit": "a96aa4fac723de8d6ecc902b2cb6a8594cce526d",
+  "changes": [
+    "P32来源跳转等待折叠祖先及同级展开实际提交、有效范围和当前页面归属；过期回调不恢复导航。",
+    "P35使用共用工具活动依据，断开、旧连接或缺活动ID时不再把未结束工具导出为进行中；完成/失败原状态保留。",
+    "导出复用通用文件操作名称，明确工具输入与拟写入内容未导出，不改原始工具数据。"
+  ],
+  "controlledEvidence": {
+    "originalEightRegressionsFailed": {
+      "path": "output/2026-11-03-search-save-batch/regression-red.log",
+      "sha256": "5c56195e673cf4c64a02df1812d9ddd26ec0d4a2c3cd134eb790692cd8452029"
+    },
+    "additionalOwnershipTwoFailed": {
+      "path": "output/2026-11-03-search-save-batch/search-ownership-red.log",
+      "sha256": "108e990128025b7465904f7c8aef0d0cd9437243364fb40f60324e0b66ff7a7d"
+    },
+    "searchFinal4files13tests": {
+      "path": "output/2026-11-03-search-save-batch/search-targeted-v2.log",
+      "sha256": "a2da0d48570678795120584a4a38d8415ca621b56491fcb9a9a835ca99c05e4d"
+    },
+    "exportFinal7files127tests": {
+      "path": "output/2026-11-03-search-save-batch/export-targeted.log",
+      "sha256": "6accd309775ec750fb99b61b462a2632d4b268fb0d3ef930b046961ae6150591"
+    },
+    "rootSecondPass": {
+      "path": "output/2026-11-03-search-save-batch/source-second-pass.json",
+      "sha256": "b4efa1628b58c040dab4155e63eeaf6e4200042bda101d74144b8e2440aff194"
+    }
+  },
+  "engineering": {
+    "allSevenNaturalExit0": true,
+    "frontendFiles": 704,
+    "frontendTests": 9439,
+    "rustPassed": 2333,
+    "rustFailed": 0,
+    "rustExistingIgnored": 6,
+    "endpointInputs": 2351,
+    "admittedSourceAndAuthorityInputs": 2350,
+    "productionInputs": 2347,
+    "additionalCheckConfiguration": ".prettierignore",
+    "continuousFreezeClaimed": false,
+    "receipt": {
+      "path": "output/2026-11-03-search-save-batch/engineering-result.json",
+      "sha256": "22e73f5478064ff4968b636f69a372600a239344765f8455fe06bb78edd6ba7b"
+    },
+    "projection": {
+      "path": "output/2026-11-03-search-save-batch/validated-source-projection.json",
+      "sha256": "74e93ea460286e48a0eb51df75964ba89348bf309cfe7885e49fa0c937bb9ed2"
+    }
+  },
+  "preservedFailures": [
+    "首次格式检查只报既有未跟踪的清理回执；原字节未改，按现行规则精确排除该回执。",
+    "候选首次预检因旧读取器不接纳额外检查配置退出，未启动构建；保留原件，以明确来源投影核合全部生产/契约输入后续接。"
+  ],
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "4e7b1d5332c84982851b9e81653ebbac2de7c88b0e9eee4168706ebe07e19a54",
+    "actualBuildInvocations": 1,
+    "candidateReaderChecks": 9,
+    "installedReaderChecks": 6,
+    "reviewBoundary": "root运行另一机械读取器及源码第二次核对；无新增独立人员/Agent复核。",
+    "fiveNewInodeReplacements": true,
+    "temporaryInternalSignatureOnly": true,
+    "duplicateAppRemovedExact": true,
+    "zipAndEvidenceRetained": true,
+    "closedThreeRootEntries": 232530,
+    "closedThreeManifestsSha256": "e1af8a90dde7c5632a886885853495fa0bd2cad0f9567d3e07f1e8c8e72a40cf",
+    "closedThreeManifestsEqual": true,
+    "originalOrFirstCopyOpenedWithSQLite": false,
+    "integrityAccordingToBackupReceipt": "ok",
+    "finalProof": {
+      "path": "output/2026-11-03-search-save-batch/formal/stage-final-proof.json",
+      "sha256": "f1e55a14fd70d97414f024deb49a8b12cedbd8a64a3253cf460ecacd91118e9a"
+    },
+    "candidateProof": {
+      "path": "output/2026-11-03-search-save-batch/formal/independent/review-v2.json",
+      "sha256": "ff8645b967f493a9dda113a0c1d27e446ce0013e6a8075d0c77ed855a2101c9b"
+    },
+    "installedProof": {
+      "path": "output/2026-11-03-search-save-batch/formal/install/installed-independent-review-private.json",
+      "sha256": "61f6ac42009b9bbcae780cb4a395f5a5c16c508141387bf502dad8939f948a80"
+    }
+  },
+  "notClaimed": [
+    "完整P12/P18/P32/P35、29家八项或Windows通过",
+    "正式未知工具路径已验",
+    "公开签名、公证或分发完成"
+  ]
+}

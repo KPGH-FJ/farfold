@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-03",
+  "sourceCommit": "a96aa4fac723de8d6ecc902b2cb6a8594cce526d",
+  "B3": {
+    "freshCheckpoints": 3,
+    "beforeColdFinalExact": true,
+    "paragraphLengths": [187, 75, 32, 27],
+    "permissionUnconfirmed": true,
+    "unsent": true
+  },
+  "oldRequestsResent": 0,
+  "protectedOriginalGooseNandO": "未恢复或重发原对象；新A/B限已完成的独立Q/R/S自测对象",
+  "P18Remaining": {
+    "unknownTool": "缺官方可成功恢复且归属明确的现有活动未知对象；不人为断开或重发凑证。",
+    "pendingEditDiffOrRefusal": "缺适合当前正式观察的独立进行中编辑/专用拒绝对象；不使用B3待确认权限作为样本。"
+  },
+  "otherConditionsUnchanged": [
+    "NEW-24受影响新真实发送暂停",
+    "Mistral恢复/Poolside及Kilo原目录条件，未重测或重建空目录",
+    "Windows实机与29家各八项仍开放"
+  ],
+  "closedData": "仅关闭态安装前/紧邻安装前/安装后清单相同；不声称启动后全部数据不变。",
+  "rootUIIncidents": [
+    "一次误点Dirac收藏已在退出前恢复为0；保留原件。",
+    "初次typeText丢字在发送前改用完整粘贴并核对；未发送残缺文本。",
+    "首次Markdown读取断言使用未转义文件名失败，按现有Markdown转义修正断言；无产品改动。"
+  ],
+  "resourceSample": {
+    "path": {
+      "path": "output/2026-11-03-search-save-batch/formal/resource-after-two-requests.json",
+      "sha256": "893f8f3ff2ec347328e8792b92c8616c7f520e68a47f52bbd2cdbcf12714ea4a"
+    },
+    "mainAppRSSKiB": 127248,
+    "scope": "一次小样本，初次组合ps列导致名称被截断而未选中，零计数无效；不称长历史/多Agent、休眠断网或性能改善。"
+  },
+  "privateFinalProof": {
+    "path": "output/2026-11-03-search-save-batch/formal/stage-final-proof.json",
+    "sha256": "f1e55a14fd70d97414f024deb49a8b12cedbd8a64a3253cf460ecacd91118e9a"
+  },
+  "fullTasksStillOpen": ["P12", "P18", "P32", "P35", "29x8", "Windows"]
+}

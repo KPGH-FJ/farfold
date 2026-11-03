@@ -1,0 +1,165 @@
+{
+  "date": "2026-11-03",
+  "sourceCommit": "a96aa4fac723de8d6ecc902b2cb6a8594cce526d",
+  "agent": {
+    "id": "goose",
+    "source": "沿用已有设置",
+    "provider": "OpenRouter",
+    "model": "Nemotron 3 Ultra (free)",
+    "mode": "auto",
+    "reasoning": "off",
+    "changed": false
+  },
+  "newRequests": {
+    "A": {
+      "sent": 1,
+      "ended": true,
+      "purpose": "四个仅位置附件及正文中文emoji查找",
+      "bodyQueryMatches": 2,
+      "nextPrevious": "1/2→2/2→1/2",
+      "locationOnlyAttachmentTextAbsentCorrectly": true
+    },
+    "B": {
+      "sent": 1,
+      "ended": true,
+      "purpose": "四个明确项目文字附件，独立新请求；未重发A",
+      "findBeforeSend": "无匹配，未发草稿不计入",
+      "afterUserMessage": "1/1",
+      "afterResponse": "1/3",
+      "threeOrigins": "新用户正文、已载入折叠思考、新助手回复各一处",
+      "noToolStepAddedObserved": true
+    }
+  },
+  "P12": {
+    "fourthAttachmentInitiallyFolded": true,
+    "query": "第四来源🙂精确导航",
+    "matches": 2,
+    "actualExpandedAndHighlighted": true,
+    "temporaryExpansionReleased": true,
+    "evidence": [
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-before-new-b.txt",
+        "sha256": "1727df842acc356d4de4330b16d8bf3a2729c9314ca56eee78ced8a07e3503b8"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-b-new-user.txt",
+        "sha256": "897956afe4a9bf6df397fa3963b47702bad9faa41ea35c73e394cbea80574184"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-b-reply-arrived.txt",
+        "sha256": "3060e44f19b2a5115e6e23e3b5587885daf62b8b0f9e25cc8947f9b61f063005"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-b-second-of-three.txt",
+        "sha256": "7ed639825778ac0b29494fa9b9dc57ba8b1935e613b7fcc6428fbdb06aa99cfe"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-b-fourth-text.txt",
+        "sha256": "4ad780b3dd12fbf79983b1a108b528217fd18c945b0e62e609fe2b8b6d42b894"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p12-b-fourth-text.png",
+        "sha256": "b95c36d090d7e58cdae7c0a483144638b1fd9c3a9ab296e7c8c21faabc71f948"
+      }
+    ]
+  },
+  "P32": {
+    "scope": "已加载用户消息/回复/已接收附件文字；排除未加载历史、文件、思考和工具详情",
+    "loadedConversations": 2,
+    "unloadedConversations": 101,
+    "unconfirmedReads": 0,
+    "query": "第四来源🙂精确导航",
+    "matches": 2,
+    "selectedHit": 2,
+    "origin": "独立B用户消息的第四份已接收文字",
+    "actualFourthGroupAndDetailsExpanded": true,
+    "secondExactLineHighlightedAndVisible": true,
+    "locatedStatusObserved": true,
+    "evidence": [
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p32-fourth-text-hits.txt",
+        "sha256": "0f9791b5b349be2fc1b0267343c54ce475384299ab20e67bc5b19fec2df4a473"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p32-fourth-text-jump.txt",
+        "sha256": "bc804388d8c8546bc135b4ff54b487d23a859a90867ed18158df6e25ea8b261e"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p32-fourth-text-jump.png",
+        "sha256": "53e3f74bfa6276d112931217357a4d14d1bd92ec300b24d6c6cdba5d04cd71d9"
+      }
+    ]
+  },
+  "P35": {
+    "defaultToolDetails": false,
+    "defaultFormat": "Markdown",
+    "markdown": {
+      "bytes": 6771,
+      "sha256": "120bdf2936ae6553cd76a1fce8fbcb7267a976b4716b737da6b5d3cbef5c55c6",
+      "newRequestsAandBExactlyOnce": true,
+      "readyMarkersPromptAndReplyTwiceEach": true,
+      "receivedAttachmentBodiesExcluded": true,
+      "observedThinkingPhraseExcluded": true,
+      "sourceNamesPresentAsEscapedMarkdown": true
+    },
+    "nativeZipSavePickerCancel": {
+      "exportsAfter": ["loaded-scope.md"],
+      "noZipCreated": true,
+      "inFlightCancellationClaimed": false
+    },
+    "archive": {
+      "bytes": 12435,
+      "sha256": "77084132de344722df030f1e8d05448660bd75f788c7bd279a400894c3499b1b",
+      "members": 7,
+      "includedReceivedText": 4,
+      "includedPayloadBytes": 418,
+      "omittedUnselectedLocalFiles": 11,
+      "exactBytesAndSha256": true,
+      "allZipCRCPassed": true,
+      "zeroBasedItemOrdinal": 23,
+      "visibleItemNumber": 24,
+      "attachmentOrdinals": [0, 1, 2, 3],
+      "manifestNoAbsolutePaths": true,
+      "observedThinkingPhraseExcluded": true,
+      "bodiesOnlyInSelectedMembers": true
+    },
+    "readers": [
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/p35-md-and-cancel-readback.json",
+        "sha256": "94df1e676e42d5c6fe9773b7ec70bf3f5b6bf1d32401dda7b9eccf6ab87dfd8b"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/p35-archive-readback.json",
+        "sha256": "9291c5a2242c186ec7c1c7023d1ed5a5532976cbe90f6908ccb8cfc9ac64fc8b"
+      }
+    ],
+    "actualUI": [
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p35-default-dialog.txt",
+        "sha256": "3ff725375ddebf7ce50c0e48be9997baba6460e16670b1957862c32b742b3844"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p35-four-received-selected.txt",
+        "sha256": "63863730302deda31778b21ae12c45898bb8e0b78c6c2d1284be521aaeb199bc"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p35-zip-native-cancel.txt",
+        "sha256": "256c974a392d783461e6c6d38038f4701550ceff252e342395d480528577e313"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p35-zip-completed.txt",
+        "sha256": "0712ecfde8b6e6b21fb15a7a1965d23897eac4ef46c60ffdcb0dd876410c56a1"
+      },
+      {
+        "path": "output/2026-11-03-search-save-batch/formal/ui/p35-zip-hashes.txt",
+        "sha256": "89959f99fecb88d1f4dc498d5748f81159934f5dd86bfb610549563d34928707"
+      }
+    ]
+  },
+  "boundary": [
+    "P32仅所选已加载文字，不替代官方全历史/全部格式或压力。",
+    "P35只验证所选快照、四份收到文字的打包与默认隐私、原生选择器取消；不是在途取消、磁盘失败、历史字节或恢复文件。",
+    "延迟折叠提交和旧回调反例为受控回归；正式应用另取得正常提交的折叠第四附件跳转正例。",
+    "未知工具导出修复有共用状态/快照受控证据，正式未知对象仍缺条件。"
+  ]
+}
