@@ -30,29 +30,7 @@ export class SearchExpansion {
 
 const disclosures = new WeakMap<HTMLElement, SearchExpansion>();
 
-/** A closed details body can retain nonempty cached rects. Check the DOM commit,
- * not the requested expansion model, before treating navigation as positioned. */
-export function hasOpenSearchAncestors(
-  element: HTMLElement,
-  root: HTMLElement,
-) {
-  if (!root.contains(element)) return false;
-  for (
-    let node: HTMLElement | null = element;
-    node;
-    node = node.parentElement
-  ) {
-    if (node.hidden) return false;
-    if (node.tagName === "DETAILS" && !(node as HTMLDetailsElement).open) {
-      const summary = Array.from(node.children).find(
-        (child) => child.tagName === "SUMMARY",
-      );
-      if (!summary?.contains(element)) return false;
-    }
-    if (node === root) return true;
-  }
-  return false;
-}
+export { hasOpenDisclosureAncestors as hasOpenSearchAncestors } from "./disclosure_ancestry";
 
 export function registerSearchExpansion(
   element: HTMLElement,

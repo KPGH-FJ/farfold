@@ -84,7 +84,7 @@ export const LIBRARY = {
   expandNav: "展开导航",
   collapseNav: "收起导航",
   back: "返回",
-  copy: "复制对话",
+  copy: "复制对话文字",
   find: "查找当前对话",
   findPlaceholder: "输入要查找的内容",
   findEmpty: "没有匹配内容",
