@@ -2,6 +2,9 @@
 use super::*;
 use std::{ffi::OsString, os::windows::io::AsRawHandle};
 
+#[path = "git_job_debug_tests.rs"]
+mod git_job_debug_tests;
+
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 struct Sample {
@@ -14,8 +17,8 @@ struct Sample {
     git_wait: Option<u32>,
 }
 impl Sample {
-    fn observe(owner: &Owned, git: Option<&Handle>) -> Self {
-        let job = &owner.group.job;
+    fn observe(group: &OwnedGroup, helper: &Child, git: Option<&Handle>) -> Self {
+        let job = &group.job;
         let before = job.activity_query();
         let mut list_error = None;
         let listed_count = list(job.handle.0, &mut list_error)
@@ -28,7 +31,7 @@ impl Sample {
             list_error,
             accounting_after: (after.ok != 0).then_some(after.info.ActiveProcesses),
             total_processes: (after.ok != 0).then_some(after.info.TotalProcesses),
-            helper_wait: unsafe { WaitForSingleObject(owner.child.as_raw_handle(), 0) },
+            helper_wait: unsafe { WaitForSingleObject(helper.as_raw_handle(), 0) },
             git_wait: git.map(|process| unsafe { WaitForSingleObject(process.0, 0) }),
         }
     }
@@ -39,13 +42,22 @@ impl Sample {
     }
 }
 
+fn pinned_git() -> crate::file_access::PinnedPath {
+    std::env::split_paths(&std::env::var_os("PATH").unwrap())
+        .filter(|entry| entry.is_absolute())
+        .find_map(|entry| crate::file_access::PinnedPath::regular(&entry.join("git.exe")).ok())
+        .expect("Windows native tests require Git")
+}
+
+#[test]
+fn actual_git_job_debugger_observes_transient_descendant_handles() {
+    git_job_debug_tests::run();
+}
+
 #[test]
 fn actual_git_job_observes_exact_launch_handle_across_exit() {
     let directory = tempfile::tempdir().unwrap();
-    let executable = std::env::split_paths(&std::env::var_os("PATH").unwrap())
-        .filter(|entry| entry.is_absolute())
-        .find_map(|entry| crate::file_access::PinnedPath::regular(&entry.join("git.exe")).ok())
-        .expect("Windows native tests require Git");
+    let executable = pinned_git();
     let fixture = fixture();
     let mut command = Command::new(fixture);
     command
@@ -77,7 +89,7 @@ fn actual_git_job_observes_exact_launch_handle_across_exit() {
         0
     );
     assert_ne!(belongs, 0);
-    let before = Sample::observe(&owner, Some(&git));
+    let before = Sample::observe(&owner.group, &owner.child, Some(&git));
     assert_eq!(before.git_wait, Some(WAIT_TIMEOUT));
     assert_eq!(before.helper_wait, WAIT_TIMEOUT);
     drop(owner.child.stdin.take().unwrap());
@@ -85,7 +97,7 @@ fn actual_git_job_observes_exact_launch_handle_across_exit() {
     let mut first_mismatch = None;
     let deadline = Instant::now() + Duration::from_secs(5);
     let signaled = loop {
-        let sample = Sample::observe(&owner, Some(&git));
+        let sample = Sample::observe(&owner.group, &owner.child, Some(&git));
         sampled += 1;
         if sample.exact_mismatch() && first_mismatch.is_none() {
             first_mismatch = Some(serde_json::to_value(&sample).unwrap());
@@ -101,10 +113,10 @@ fn actual_git_job_observes_exact_launch_handle_across_exit() {
     };
     assert!(owner.child.wait().unwrap().success());
     drop(git);
-    let released = Sample::observe(&owner, None);
+    let released = Sample::observe(&owner.group, &owner.child, None);
     let mut final_sample = None;
     until(|| {
-        let sample = Sample::observe(&owner, None);
+        let sample = Sample::observe(&owner.group, &owner.child, None);
         if sample.accounting_before == Some(0)
             && sample.listed_count == Some(0)
             && sample.accounting_after == Some(0)
