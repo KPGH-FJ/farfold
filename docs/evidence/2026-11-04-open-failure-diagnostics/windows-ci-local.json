@@ -31,5 +31,12 @@
     ".github/scripts/windows-selected-build.ps1"
   ],
   "noNewWorkflowOrProductionEnvSwitch": true,
-  "dispatchPending": true
+  "dispatchPending": false,
+  "dispatched": {
+    "runId": 41841306844,
+    "sourceHead": "96c0f902b",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41841306844",
+    "status": "in_progress",
+    "nativeResultPending": true
+  }
 }

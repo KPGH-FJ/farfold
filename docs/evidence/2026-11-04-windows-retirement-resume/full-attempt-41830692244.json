@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T13:42:11.179727+00:00",
+  "runId": 41830692244,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41830692244",
+  "sourceHead": "eeac890c30ae295a79c8ce237c9c2a0bdc0d49dd",
+  "conclusion": "cancelled",
+  "watch": {
+    "command": "gh run watch 41830692244 --exit-status --interval 30",
+    "ghNaturalExitCode": 1,
+    "wrapperNaturalExitCode": 0,
+    "watchLogPath": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/watch.log",
+    "watchLogSha256": "95e19f3b8da1271fb39a8b5e6ba4075bc54e15a5024b175a19f374c3303f0a66"
+  },
+  "jobs": [
+    {
+      "name": "frontend",
+      "id": 126576809466,
+      "conclusion": "success",
+      "startedAtUtc": "2026-11-04T12:36:15Z",
+      "finishedAtUtc": "2026-11-04T12:53:58Z"
+    },
+    {
+      "name": "rust",
+      "id": 126576810148,
+      "conclusion": "cancelled",
+      "startedAtUtc": "2026-11-04T12:36:15Z",
+      "finishedAtUtc": "2026-11-04T13:36:27Z"
+    },
+    {
+      "name": "verify",
+      "id": 126607493832,
+      "conclusion": "failure",
+      "startedAtUtc": "2026-11-04T13:36:30Z",
+      "finishedAtUtc": "2026-11-04T13:36:34Z"
+    },
+    {
+      "name": "installer",
+      "id": 126607495165,
+      "conclusion": "skipped",
+      "startedAtUtc": "2026-11-04T13:36:28Z",
+      "finishedAtUtc": "2026-11-04T13:36:27Z"
+    }
+  ],
+  "frontend": {
+    "typecheckPassed": true,
+    "filesPassed": 705,
+    "testsPassed": 9456,
+    "testsSkipped": 3,
+    "testsTotal": 9459,
+    "vitestSeconds": 910.63,
+    "viteBuildPassed": true,
+    "viteBuildSeconds": 4.1,
+    "jobSeconds": 1063
+  },
+  "rust": {
+    "formatContinuedSuccessfully": true,
+    "allTargetClippyContinuedSuccessfully": true,
+    "clippySeconds": 351,
+    "fixtureBuildContinuedSuccessfully": true,
+    "fixtureBuildSeconds": 445,
+    "testBuildCompleted": true,
+    "testBuildSeconds": 343,
+    "topLevelDeclaredTests": 2462,
+    "topLevelTestStartedAtUtc": "2026-11-04T12:56:31.1752850Z",
+    "cancelledAtUtc": "2026-11-04T13:36:23.4928887Z",
+    "testExecutionBeforeCancellationSeconds": 2392.317604,
+    "naturalCargoTestExitCode": null,
+    "topLevelFinalSummaryPresent": false,
+    "jobMaximumSeconds": 3600,
+    "explicitServiceAnnotation": "The job has exceeded the maximum execution time of 1h0m0s",
+    "partialFailureAnalysis": {
+      "sourceHead": "eeac890c30ae295a79c8ce237c9c2a0bdc0d49dd",
+      "rawLog": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/complete-run-logs/rust/7_Check shared Rust and Windows implementation.txt",
+      "rawLogSha256": "6b554bf1fde7e25784216cbaf156086d4cb0dc52b29585f26d62818473ff395f",
+      "topLevelTestCountDeclared": 2462,
+      "topLevelFinalSummaryPresent": false,
+      "observedDifferentFailedFqns": 5,
+      "failures": [
+        {
+          "fqn": "acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit",
+          "terminalLogLines": [1369],
+          "panicSource": "src-tauri/src/acp_client/history_search/tests.rs:298",
+          "observation": "PID text parsed as empty; ParseIntError { kind: Empty }"
+        },
+        {
+          "fqn": "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+          "terminalLogLines": [13061],
+          "panicSource": "src-tauri/src/worktrees/recycle_tests.rs:119",
+          "observation": "Parent isolated-maintenance deadline before child terminal result"
+        },
+        {
+          "fqn": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+          "terminalLogLines": [17522, 18351],
+          "panicSource": "src-tauri/src/worktrees/recycle_tests.rs:31",
+          "observation": "Actual recover action remained state=running at recycle_tests::wait default20s (recycle_tests.rs:16-17,31; recover_tests.rs:62); creation setup had already completed. Child and parent terminal lines duplicate this FQN."
+        },
+        {
+          "fqn": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+          "terminalLogLines": [18447, 19297],
+          "panicSource": "src-tauri/src/worktrees/recycle_tests.rs:31",
+          "observation": "Actual recover action remained state=running at recycle_tests::wait default20s (recycle_tests.rs:16-17,31; recover_tests.rs:173); creation setup had already completed. Child and parent terminal lines duplicate this FQN."
+        },
+        {
+          "fqn": "worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material",
+          "terminalLogLines": [21498],
+          "panicSource": "src-tauri/src/worktrees/recycle_tests.rs:119",
+          "observation": "Parent isolated-maintenance deadline before child terminal result"
+        }
+      ],
+      "countBoundary": "At least five different tests emitted FAILED before job cancellation. Child libtest output duplicates some FQNs; no complete pass/fail/ignored total is claimed."
+    },
+    "completeCounts": null
+  },
+  "previousCompleteRustBaselineStillApplies": {
+    "runId": 41750118511,
+    "passed": 2363,
+    "failed": 17,
+    "ignored": 72,
+    "replacedByThisAttempt": false
+  },
+  "boundaries": [
+    "This full run covers eeac source only, not later installed aeb0dc491 open-failure changes.",
+    "At least five different Rust failures were observed; this cancelled run is not a complete Rust result.",
+    "Installer was skipped; no unsigned NSIS, Windows installation, real Agent, or 29-by-8 acceptance is established."
+  ],
+  "originalsArchive": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/full-attempt-41830692244-originals.zip",
+    "bytes": 812663,
+    "sha256": "12b06727408209302a77717680a1b7951c5d112da79ade53a1759b3a330df6ba",
+    "entries": 11
+  },
+  "originals": {
+    "complete-run-logs.zip": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/complete-run-logs.zip",
+      "bytes": 824698,
+      "sha256": "d13a01f6de03f8822b799805239804e766e5fb8ae8e7011f786e44d72a1278e3"
+    },
+    "run.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/run.json",
+      "bytes": 5318,
+      "sha256": "f4590ca34c8761fad5e3cf891a66965ff134e5f21d043d9713a650572874adc7"
+    },
+    "metadata-download.result.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/metadata-download.result.json",
+      "bytes": 336,
+      "sha256": "20b8a08d914ffc4b1d0c16398e611dee7b95bdfb6501e180367c6ccb84c5a0ce"
+    },
+    "logs-download.result.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/logs-download.result.json",
+      "bytes": 348,
+      "sha256": "4e2bc409bb36594c5d5b978c9d95fb877244d149f1fbb15f86f81b6116a10279"
+    },
+    "watch-result.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/watch-result.json",
+      "bytes": 104,
+      "sha256": "4978913e86203c4b0f2fdbced8d0c7ab521468881e475b2323ab80b024905fdf"
+    },
+    "rust-job.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/rust-job.json",
+      "bytes": 2754,
+      "sha256": "a1bd3e454f5eb2ffb5304ccb4be2c3247c1607ba68ee789acefc610c56fbdcf1"
+    },
+    "rust-job-download.result.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/rust-job-download.result.json",
+      "bytes": 325,
+      "sha256": "ca3728f676faf063bbdef9c6c65c898578581ed34680b79d60fc71c1177842b4"
+    },
+    "rust-check-annotations.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/rust-check-annotations.json",
+      "bytes": 1212,
+      "sha256": "4f0072f2e2b5971e2dd1d93d32901f937735141736bf3c3748299632d566c33e"
+    },
+    "rust-annotations-download.result.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/rust-annotations-download.result.json",
+      "bytes": 335,
+      "sha256": "bf66f0a6eb7995f8b6fa79f48778432a5933083f1a69d26445e68c4509b656f1"
+    },
+    "partial-failure-analysis.json": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/partial-failure-analysis.json",
+      "bytes": 2488,
+      "sha256": "62ed7ee37d58d6a4f06e01a2585e267a1fcce9810865d39dec7895b7f5b3e091"
+    },
+    "source-windows.yml": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/source-windows.yml",
+      "bytes": 5556,
+      "sha256": "398274ee002be483b85b3d8b9bdedf4f2dbae0e89bce9ee819058e9c15657287"
+    }
+  },
+  "analysisCorrection": {
+    "sourceHead": "eeac890c30ae295a79c8ce237c9c2a0bdc0d49dd",
+    "scope": "The two recover_* observations above correct the broader created()/operation-wait wording in the archived partial-failure-analysis.json. Their original operation action=recover/state=running and pinned source call sites identify the default20s recovery wait, not the Windows60s created setup wait. Original ZIP and logs remain byte-for-byte unchanged; original conditions and production deadlines are unchanged.",
+    "logLines": [18346, 18347, 19293, 19294],
+    "sourceLines": [
+      "src-tauri/src/worktrees/recycle_tests.rs:16-17,31",
+      "src-tauri/src/worktrees/recover_tests.rs:62,173"
+    ]
+  }
+}

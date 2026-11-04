@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T13:02:14.670266+00:00",
+  "updatedAt": "2026-11-04T13:52:52.298960+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -14,7 +14,10 @@
     "windowsFullSource": "063dd128f",
     "windowsObserverAlias": "eeac890c3",
     "windowsFullAfterAliasRun": 41830692244,
-    "windowsFullAfterAliasSource": "eeac890c3"
+    "windowsFullAfterAliasSource": "eeac890c3",
+    "commonOpenFailures": "aeb0dc491",
+    "windowsOpenFailuresCI": "96c0f902b",
+    "windowsOpenFailuresRun": 41841306844
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -23,19 +26,20 @@
     "P01 associated localAudio/activity fixes completed; final unified705 files9459 frontend tests/2335 Rust6 ignored passed; nine candidate/six installed checks and206275 closed-state entry equality passed; current only formal app updated.",
     "P01 real SQLite readOnly through actual frontend persistence passed eight exchanges; independent review passed.",
     "P01 actual DraftStartup save/exit connection through controlled hooks and real SQLite passed ten exchanges; failed save blocked exit and released its lock, explicit retry saved before one recorded exit request; cold read preserved new input. No native exit/installed fault UI claim.",
-    "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends."
+    "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends.",
+    "Common safe opening diagnostics aeb0dc491: associated frontend154 and Rust18 passed; final frontend705files9481pass/Rust2339pass7ignored with explicit type-annotation-only dependency reuse; independent review passed.",
+    "Common aeb0dc491 installed once, candidate9/installed6, three closed-state206275-entry manifests equal. Actual B3 safe timeout message, Q history32 updates, preserved original drafts/attachments/feedback and visible model choices, returned P02/retained1. Zero new prompt or resend."
   ],
   "active": [
-    "Windows full41830692244 remains fixedeeac890c3; Frontend natural success, Rust job still active at last event. source_review owns one watch and raw final analysis. New common open-error changes are not part of that source.",
-    "Common opening diagnostics 7 source files frozen: frontend related154 and backend18 passed; root independent review and cross-review passed. Genuine final seven results collected:705 frontend files9481 tests, Rust2339pass7ignored. Frontend-only unknown[] annotation typefix: frontend4 rerun, Rust3 reused on exact delta+TS emit equivalence, all2365 other inputs same; formal binder is being prepared to validate this scope explicitly.",
-    "Formal app d314 normally saved/exited; appPID7405 and GoosePID9722 absent/group empty at observation, no manual signals. Unsent16composers/11feedback/7queues hashes unchanged across normal exit. Fresh d314 five-file baseline exists. New formal tools remainUNBOUND awaiting actual final commit and engineering/UI aggregate."
+    "Windows eeac full41830692244 hit60-minute job maximum and was cancelled; no final Rust count/natural exit. At least5different FQN failures: PID empty read, two actual recovery20s waits, two parent isolation deadlines. source_review owns causal analysis and original17partial matrix.",
+    "Scoped OpenFailureDiagnostics run41841306844 fixed96c0f902b; environment_review owns sole watch/download and exact18native+51frontend proof. No duplicate watch/dispatch."
   ],
-  "formalPreparation": "Formal app source d31447be7, binary59dc8a5604d9841a3f0f4b88846cdac98c623ef85bd6780747400b7c81bee6d7; exact candidate duplicate removed; private formal receipts inoutput/2026-11-04-p01-draft-formal/formal.",
+  "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "Commit only common7 source+exact public evidence after current docs checkpoint, then bind actual source/evidence to prepared formal tools, build once and replace unique formalApp with retention checks.",
-    "After installation verify safe known initialization/open-result messages on actual interface as conditions permit; no root-cause/allAgent claim or resend.",
-    "Complete Windows actual full result, then validate new common wait/session change separately by affected native checks;do not mix sources.",
-    "Original P01 installed storage fault/other formats/queues, wider151 and29x8 remain open. Preserve original unrelated debugger JSON."
+    "Analyze/fix Windows failed test synchronization and parent/child budgets based on observed stage evidence, keep production deadlines/proof unchanged; verify affected native cases before another full.",
+    "Complete current exact18native/51frontend Windows run and update evidence by actual names, exits and source maps.",
+    "Original P01 installed storage faults/other formats/queues, broader151/29x8, generic open-result installed negative paths and actual Agent root causes remain open.",
+    "Preserve original unrelated debugger JSON and protected data. This is a locator, not a second queue."
   ],
   "constraints": [
     "Single writable checkout.",

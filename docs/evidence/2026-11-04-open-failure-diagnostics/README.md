@@ -10,4 +10,6 @@
 
 两份最终输入清单封存在上述工程ZIP的 `engineering-final/source-before.json`、`engineering-final/source-after.json`，不重复纳入Git。需要重建本机绑定工作副本时，分别提取为本目录 `engineering-final-before.json`、`engineering-final-after.json`；原件摘要与报告所列相同。
 
-这批受控 IPC/服务端渲染和通道回归不代表安装界面、真实 Agent 恢复、29家八项或 Windows 当前源码已通过。Windows全量41830692244固定在此前eeac源码；本批改变须另做受影响平台验证。正式安装和实际界面分项尚待完成。
+[正式安装与界面分项](formal-summary.json)：aeb0dc491一次构建，候选9项/安装6项通过；正常保存退出，三份关闭态206275项清单相同，精确重复应用清理完成。安装版一次B3读取显示安全初始化超时提示，原四段保持；一次Goose Q本次读取成功、32条历史更新，原稿/附件/三份意见和可见服务模型设置保持。已回P02原稿/保留数1，16份输入、11组意见及7组队列存储值核合；零新模型发送、零旧请求重发。
+
+Q此前失败原因仍未知，不将本次成功归因于提示改动；通用打开结果超时/通道关闭的安装版负例及认证身份未验。这批受控回归与所选正式读取不代表29家八项或Windows安装通过。Windows全量41830692244固定此前eeac源码且因作业限时取消；本批改变从96c另作[定向41841306844](https://github.com/KPGH-FJ/farfold/actions/runs/41841306844)，尚在运行。
