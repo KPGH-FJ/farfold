@@ -169,7 +169,7 @@ it("cold restoration preserves complete bytes in draft and queue, adds a review 
     choice: { agentId: "chosen", cwd: "/chosen", service: null, config: {} },
     feedback: {},
     queues: {
-      sample: { blocks: [[block]], uncertainIndex: null, paused: true },
+      sample: { blocks: [[block]], uncertainIndex: null },
     },
   };
   vi.resetModules();
