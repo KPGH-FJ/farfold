@@ -25,6 +25,7 @@ on:
             GitJobWorktree,
             TerminalProbe,
             WorktreeWrapper,
+            NativeRetirement,
           ]
 
 permissions:
@@ -62,7 +63,9 @@ jobs:
       - name: Build and bind the selected library test binary
         id: selected_build
         timeout-minutes: 30
-        run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites
+        env:
+          FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
+        run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites -SelectedCohort $env:FARFOLD_SELECTED_COHORT
       - name: Run the selected native test cohort
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
         timeout-minutes: ${{ inputs.cohort == 'RemoveRechecks' && 14 || 8 }}

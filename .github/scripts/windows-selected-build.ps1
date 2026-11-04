@@ -1,9 +1,13 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('Legacy', 'StdioEof', 'LaunchPrerequisites')][string]$Scope = 'Legacy'
+  [ValidateSet('Legacy', 'StdioEof', 'LaunchPrerequisites')][string]$Scope = 'Legacy',
+  [string]$SelectedCohort
 )
 
 $ErrorActionPreference = 'Stop'
+if ($Scope -ceq 'LaunchPrerequisites' -and [string]::IsNullOrWhiteSpace($SelectedCohort)) {
+  throw 'Selected test cohort is required for this build'
+}
 $PSNativeCommandUseErrorActionPreference = $false
 $raw = Join-Path $PWD 'windows-diagnostics-raw'
 New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
@@ -40,7 +44,7 @@ $legacyScope = 'selected parser/publication/originalTerminalCancel/auth2/partial
 $identityScope = switch -CaseSensitive ($Scope) {
   'Legacy' { $legacyScope }
   'StdioEof' { 'one exact synthetic stdout EOF test with held-open and closed-stdout internal controls plus five exact preservation tests; not product or whole-Windows acceptance' }
-  'LaunchPrerequisites' { 'ten exact original initial-connect cases and two exact owned Create prerequisites' }
+  'LaunchPrerequisites' { 'selected native test build; exact cases and arguments are recorded by the test runner' }
 }
 $started = [DateTime]::UtcNow.ToString('o')
 $before = $null
@@ -57,8 +61,9 @@ $buildScriptSha256 = (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256
 try {
   $before = Inputs
   $before | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $raw 'inputs-before.json') -Encoding utf8
-  [ordered]@{ head = $ExpectedHead; sourceHead = $ExpectedHead; runId = $env:GITHUB_RUN_ID; runAttempt = $env:GITHUB_RUN_ATTEMPT; cohort = $Scope; scope = $identityScope } |
-    ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
+  $identity = [ordered]@{ head = $ExpectedHead; sourceHead = $ExpectedHead; runId = $env:GITHUB_RUN_ID; runAttempt = $env:GITHUB_RUN_ATTEMPT; cohort = $Scope; scope = $identityScope }
+  if ($Scope -ceq 'LaunchPrerequisites') { $identity['selectedCohort'] = $SelectedCohort }
+  $identity | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'identity.json') -Encoding utf8
   foreach ($path in $requiredScripts) {
     $tokens = $null
     $parseErrors = $null
@@ -91,7 +96,7 @@ try {
   & git diff --quiet --no-ext-diff HEAD -- @inputScopes
   if ($LASTEXITCODE -ne 0) { throw 'Selected build source changed from the dispatched commit' }
   if (-not (Same-Inputs $before $after)) { throw 'Selected build inputs changed' }
-  [ordered]@{
+  $selection = [ordered]@{
     sourceHead = $ExpectedHead; cohort = $Scope
     testBinary = $binary; testBinarySha256 = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash
     fixture = $fixture; fixtureSha256 = (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash
@@ -101,7 +106,9 @@ try {
     buildScriptSha256 = $buildScriptSha256
     workflowSha256 = $after[$workflow]
     stdioRunnerSha256 = $after['.github/scripts/windows-stdio-eof.ps1']
-  } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Encoding utf8
+  }
+  if ($Scope -ceq 'LaunchPrerequisites') { $selection['selectedCohort'] = $SelectedCohort }
+  $selection | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $raw 'build-selection.json') -Encoding utf8
   $buildSucceeded = $true
   $runnerExit = 0
 } catch {

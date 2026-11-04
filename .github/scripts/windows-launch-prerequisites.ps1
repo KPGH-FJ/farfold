@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -18,7 +18,7 @@ $fixture = (Resolve-Path -LiteralPath $selection.fixture).Path
 function Confirm-Inputs {
   $head = (& git rev-parse HEAD).Trim()
   if ($LASTEXITCODE -ne 0 -or $head -cne $ExpectedHead -or $selection.sourceHead -cne $ExpectedHead -or
-      $selection.cohort -cne 'LaunchPrerequisites' -or -not $selection.sourceInputsStable) {
+      $selection.cohort -cne 'LaunchPrerequisites' -or $selection.selectedCohort -cne $Cohort -or -not $selection.sourceInputsStable) {
     throw 'Selected Windows source binding changed'
   }
   if ((Get-FileHash -LiteralPath $sourceMapPath -Algorithm SHA256).Hash -cne $selection.inputsAfterSha256 -or
@@ -57,6 +57,19 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   }
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
+} elseif ($Cohort -ceq 'NativeRetirement') {
+  $conpty = 'platform_tests::windows_conpty::'
+  $gitJob = 'windows_process::current_members::tests::git_exact_handle_tests::'
+  $tests = [ordered]@{
+    'conpty-no-reply-drain' = @{ name = "${conpty}raw_conpty_draining_without_cursor_reply_is_bounded" }
+    'conpty-reply-after-job-end' = @{ name = "${conpty}raw_conpty_reply_after_job_end_unblocks_retirement"; ignored = $true }
+    'git-exact-handle-control' = @{ name = "${gitJob}actual_git_job_observes_exact_launch_handle_across_exit" }
+    'git-debugger-descendants' = @{ name = "${gitJob}actual_git_job_debugger_observes_transient_descendant_handles" }
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    $case = $test.Value
+    @{ name = $test.Key; filter = $case.name; exact = $true; names = @($case.name); ignored = $case.ignored }
   }
 } elseif ($Cohort -ceq 'WorktreeWrapper') {
   $tests = @(
