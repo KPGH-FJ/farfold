@@ -1,0 +1,1110 @@
+{
+  "recordedAt": "2026-11-04T05:37:02.251767+00:00",
+  "scope": "Independent fixed System32/SysWOW64 cmd /d /c exit0 OS-debugger observation; diagnostic only. Not Rust integration,32bitGit,Agent,installedWindows or whole-product acceptance.",
+  "run": {
+    "conclusion": "success",
+    "databaseId": 41779718695,
+    "headSha": "ac468b39098222aaf2b76095bed638f365ec2ea6",
+    "jobs": [
+      {
+        "completedAt": "2026-11-04T05:31:36Z",
+        "conclusion": "success",
+        "databaseId": 126408250559,
+        "name": "observe",
+        "startedAt": "2026-11-04T05:31:04Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-04T05:31:06Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-04T05:31:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:07Z",
+            "conclusion": "success",
+            "name": "Enable long Git paths before checkout",
+            "number": 2,
+            "startedAt": "2026-11-04T05:31:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:30Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+            "number": 3,
+            "startedAt": "2026-11-04T05:31:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:30Z",
+            "conclusion": "skipped",
+            "name": "Observe fixed owned original process objects (default)",
+            "number": 4,
+            "startedAt": "2026-11-04T05:31:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:30Z",
+            "conclusion": "skipped",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-11-04T05:31:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:30Z",
+            "conclusion": "skipped",
+            "name": "Observe fixed owned original process objects (detached)",
+            "number": 6,
+            "startedAt": "2026-11-04T05:31:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:30Z",
+            "conclusion": "skipped",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-11-04T05:31:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:32Z",
+            "conclusion": "success",
+            "name": "Observe fixed System32 and WOW64 loader breakpoints",
+            "number": 8,
+            "startedAt": "2026-11-04T05:31:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:34Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 9,
+            "startedAt": "2026-11-04T05:31:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:35Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+            "number": 18,
+            "startedAt": "2026-11-04T05:31:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:31:35Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 19,
+            "startedAt": "2026-11-04T05:31:35Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41779718695/job/126408250559"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41779718695"
+  },
+  "ciIdentity": {
+    "sourceHead": "ac468b39098222aaf2b76095bed638f365ec2ea6",
+    "runId": "41779718695",
+    "runAttempt": "1",
+    "mode": "DebuggerBreakpoints",
+    "observerSha256": "17ab0cb1089099fe4f86fd3aad2b7f7ba099a82d19f8b2655b31c6b7ed4e5c24",
+    "sharedApiSha256": "93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19",
+    "scope": "Fixed official system cmd loader events and exact original Job/process cleanup only; diagnostic, no product acceptance"
+  },
+  "artifactSha256": "f29360165ef8ef889ae3741f8300023ed9e21488f31e9b5e02cb60a0f4b8d0bc",
+  "providerDigestMatched": true,
+  "artifactMemberSha256": {
+    "ci-identity.json": "b40705696e8481585e3738e1981c937910a9846cb97994e12e89a012fbe04815",
+    "events.jsonl": "4eb5ce26d9b48b48e0b0d34e5b1e1ae56dc96bb1a730e6e8d747afe80cdf489d",
+    "summary.json": "971a2551913ed38f0da098314513488d9011a091209802d4c26763233800e8c9",
+    "windows-debugger-breakpoint-observer.py": "17ab0cb1089099fe4f86fd3aad2b7f7ba099a82d19f8b2655b31c6b7ed4e5c24",
+    "windows-job-query-observer.py": "93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19",
+    "worker-summary.json": "e77ff680f5d27d83d50ce43e6e5461507f0d611a8cc88bb1aa3db7f2a3b97f7a"
+  },
+  "rawEventsSha256": "4eb5ce26d9b48b48e0b0d34e5b1e1ae56dc96bb1a730e6e8d747afe80cdf489d",
+  "rawEventCount": 228,
+  "workerSummary": {
+    "observationCompleted": true,
+    "productionAcceptance": false,
+    "cases": [
+      {
+        "architecture": "System32",
+        "policy": "candidate-native-only",
+        "debuggerOwnerThreadId": 6088,
+        "command": "C:\\Windows\\system32\\cmd.exe",
+        "exceptions": [
+          {
+            "pid": 8160,
+            "code": 2147483651,
+            "codeHex": "0x80000003",
+            "firstChance": 1,
+            "continuation": 65538,
+            "beforeContinue": true
+          }
+        ],
+        "events": 14,
+        "originalObjectsSettled": true,
+        "forced": false,
+        "errors": [],
+        "naturalExitZero": true,
+        "observationCompleted": true,
+        "final": {
+          "completeOriginalObjects": true,
+          "objects": [
+            {
+              "pid": 8160,
+              "exitContinued": true,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null,
+              "originalJobMembershipAfterSignal": {
+                "ok": 1,
+                "nativeError": null,
+                "belongsToOriginalJob": true,
+                "queriedAfterThisExactObjectSignaled": true
+              }
+            }
+          ],
+          "originalLeader": {
+            "pid": 8160,
+            "wait": 0,
+            "waitError": null,
+            "exitCodeIfSignaled": 0,
+            "exitQueryError": null
+          },
+          "accountingBefore": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "list": {
+            "ok": 1,
+            "error": null,
+            "assigned": 0,
+            "listed": 0,
+            "written": 8,
+            "validLayout": true,
+            "ids": []
+          },
+          "accountingAfter": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "nonAtomicObservations": true
+        },
+        "pendingEvent": false,
+        "elapsedSeconds": 0.047000000000025466
+      },
+      {
+        "architecture": "System32",
+        "policy": "known-loader-classes-once",
+        "debuggerOwnerThreadId": 6088,
+        "command": "C:\\Windows\\system32\\cmd.exe",
+        "exceptions": [
+          {
+            "pid": 4216,
+            "code": 2147483651,
+            "codeHex": "0x80000003",
+            "firstChance": 1,
+            "continuation": 65538,
+            "beforeContinue": true
+          }
+        ],
+        "events": 14,
+        "originalObjectsSettled": true,
+        "forced": false,
+        "errors": [],
+        "naturalExitZero": true,
+        "observationCompleted": true,
+        "final": {
+          "completeOriginalObjects": true,
+          "objects": [
+            {
+              "pid": 4216,
+              "exitContinued": true,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null,
+              "originalJobMembershipAfterSignal": {
+                "ok": 1,
+                "nativeError": null,
+                "belongsToOriginalJob": true,
+                "queriedAfterThisExactObjectSignaled": true
+              }
+            }
+          ],
+          "originalLeader": {
+            "pid": 4216,
+            "wait": 0,
+            "waitError": null,
+            "exitCodeIfSignaled": 0,
+            "exitQueryError": null
+          },
+          "accountingBefore": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "list": {
+            "ok": 1,
+            "error": null,
+            "assigned": 0,
+            "listed": 0,
+            "written": 8,
+            "validLayout": true,
+            "ids": []
+          },
+          "accountingAfter": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "nonAtomicObservations": true
+        },
+        "pendingEvent": false,
+        "elapsedSeconds": 0.03100000000000591
+      },
+      {
+        "architecture": "SysWOW64",
+        "policy": "candidate-native-only",
+        "debuggerOwnerThreadId": 6088,
+        "command": "C:\\Windows\\SysWOW64\\cmd.exe",
+        "exceptions": [
+          {
+            "pid": 2300,
+            "code": 2147483651,
+            "codeHex": "0x80000003",
+            "firstChance": 1,
+            "continuation": 65538,
+            "beforeContinue": true
+          },
+          {
+            "pid": 2300,
+            "code": 1073741855,
+            "codeHex": "0x4000001f",
+            "firstChance": 1,
+            "continuation": 2147549185,
+            "beforeContinue": true
+          }
+        ],
+        "events": 21,
+        "originalObjectsSettled": true,
+        "forced": false,
+        "errors": [],
+        "naturalExitZero": true,
+        "observationCompleted": true,
+        "final": {
+          "completeOriginalObjects": true,
+          "objects": [
+            {
+              "pid": 2300,
+              "exitContinued": true,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null,
+              "originalJobMembershipAfterSignal": {
+                "ok": 1,
+                "nativeError": null,
+                "belongsToOriginalJob": true,
+                "queriedAfterThisExactObjectSignaled": true
+              }
+            }
+          ],
+          "originalLeader": {
+            "pid": 2300,
+            "wait": 0,
+            "waitError": null,
+            "exitCodeIfSignaled": 0,
+            "exitQueryError": null
+          },
+          "accountingBefore": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "list": {
+            "ok": 1,
+            "error": null,
+            "assigned": 0,
+            "listed": 0,
+            "written": 8,
+            "validLayout": true,
+            "ids": []
+          },
+          "accountingAfter": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "nonAtomicObservations": true
+        },
+        "pendingEvent": false,
+        "elapsedSeconds": 0.09399999999999409
+      },
+      {
+        "architecture": "SysWOW64",
+        "policy": "known-loader-classes-once",
+        "debuggerOwnerThreadId": 6088,
+        "command": "C:\\Windows\\SysWOW64\\cmd.exe",
+        "exceptions": [
+          {
+            "pid": 512,
+            "code": 2147483651,
+            "codeHex": "0x80000003",
+            "firstChance": 1,
+            "continuation": 65538,
+            "beforeContinue": true
+          },
+          {
+            "pid": 512,
+            "code": 1073741855,
+            "codeHex": "0x4000001f",
+            "firstChance": 1,
+            "continuation": 65538,
+            "beforeContinue": true
+          }
+        ],
+        "events": 21,
+        "originalObjectsSettled": true,
+        "forced": false,
+        "errors": [],
+        "naturalExitZero": true,
+        "observationCompleted": true,
+        "final": {
+          "completeOriginalObjects": true,
+          "objects": [
+            {
+              "pid": 512,
+              "exitContinued": true,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null,
+              "originalJobMembershipAfterSignal": {
+                "ok": 1,
+                "nativeError": null,
+                "belongsToOriginalJob": true,
+                "queriedAfterThisExactObjectSignaled": true
+              }
+            }
+          ],
+          "originalLeader": {
+            "pid": 512,
+            "wait": 0,
+            "waitError": null,
+            "exitCodeIfSignaled": 0,
+            "exitQueryError": null
+          },
+          "accountingBefore": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "list": {
+            "ok": 1,
+            "error": null,
+            "assigned": 0,
+            "listed": 0,
+            "written": 8,
+            "validLayout": true,
+            "ids": []
+          },
+          "accountingAfter": {
+            "ok": 1,
+            "error": null,
+            "written": 48,
+            "active": 0,
+            "total": 1,
+            "limitTerminated": 0
+          },
+          "nonAtomicObservations": true
+        },
+        "pendingEvent": false,
+        "elapsedSeconds": 0.03100000000000591
+      }
+    ],
+    "unsupported": [],
+    "failure": null,
+    "directoryApiReplies": [
+      {
+        "api": "GetSystemDirectoryW",
+        "requestedMachine": null,
+        "nativeError": null,
+        "returnedCount": 19,
+        "capacityWchars": 1024,
+        "bufferUtf16Units": 19,
+        "bufferValue": "C:\\Windows\\system32",
+        "bufferValueTruncated": false,
+        "nonemptyAbsoluteCountMatched": true
+      },
+      {
+        "api": "GetSystemWow64DirectoryW",
+        "requestedMachine": null,
+        "nativeError": null,
+        "returnedCount": 19,
+        "capacityWchars": 1024,
+        "bufferUtf16Units": 19,
+        "bufferValue": "C:\\Windows\\SysWOW64",
+        "bufferValueTruncated": false,
+        "nonemptyAbsoluteCountMatched": true
+      },
+      {
+        "api": "GetSystemWow64DirectoryW",
+        "requestedMachine": null,
+        "nativeError": null,
+        "returnedCount": 20,
+        "capacityWchars": 32768,
+        "bufferUtf16Units": 0,
+        "bufferValue": "",
+        "bufferValueTruncated": false,
+        "nonemptyAbsoluteCountMatched": false
+      },
+      {
+        "api": "GetSystemWow64Directory2W",
+        "requestedMachine": 332,
+        "unavailable": true,
+        "bindingDll": "kernel32",
+        "unavailabilityScope": "optional-export-binding-only; not architecture support evidence",
+        "nonemptyAbsoluteCountMatched": false
+      }
+    ],
+    "comparison": [
+      {
+        "architecture": "System32",
+        "policies": [
+          {
+            "policy": "candidate-native-only",
+            "naturalExitZero": true,
+            "originalObjectsSettled": true,
+            "originalExitCode": 0,
+            "firstChanceCodes": ["0x80000003"]
+          },
+          {
+            "policy": "known-loader-classes-once",
+            "naturalExitZero": true,
+            "originalObjectsSettled": true,
+            "originalExitCode": 0,
+            "firstChanceCodes": ["0x80000003"]
+          }
+        ]
+      },
+      {
+        "architecture": "SysWOW64",
+        "policies": [
+          {
+            "policy": "candidate-native-only",
+            "naturalExitZero": true,
+            "originalObjectsSettled": true,
+            "originalExitCode": 0,
+            "firstChanceCodes": ["0x80000003", "0x4000001f"]
+          },
+          {
+            "policy": "known-loader-classes-once",
+            "naturalExitZero": true,
+            "originalObjectsSettled": true,
+            "originalExitCode": 0,
+            "firstChanceCodes": ["0x80000003", "0x4000001f"]
+          }
+        ]
+      }
+    ],
+    "originalJobCloses": [
+      {
+        "architecture": "System32",
+        "policy": "candidate-native-only",
+        "ok": 1,
+        "error": null
+      },
+      {
+        "architecture": "System32",
+        "policy": "known-loader-classes-once",
+        "ok": 1,
+        "error": null
+      },
+      {
+        "architecture": "SysWOW64",
+        "policy": "candidate-native-only",
+        "ok": 1,
+        "error": null
+      },
+      {
+        "architecture": "SysWOW64",
+        "policy": "known-loader-classes-once",
+        "ok": 1,
+        "error": null
+      }
+    ],
+    "rawRecords": 228,
+    "rawBytes": 48918,
+    "rawSha256": "4eb5ce26d9b48b48e0b0d34e5b1e1ae56dc96bb1a730e6e8d747afe80cdf489d",
+    "elapsedSeconds": 0.25,
+    "knownLoaderControlCaseCount": 2,
+    "knownLoaderControlExpectedCaseCount": 2,
+    "knownLoaderControlAllNaturalZero": true,
+    "debugSchedulingDiffersFromProduct": true,
+    "scope": "Fixed official system cmd loader events only; no selected Git/Agent/product acceptance."
+  },
+  "supervisorSummary": {
+    "observationCompleted": true,
+    "productionAcceptance": false,
+    "toolSha256": "17ab0cb1089099fe4f86fd3aad2b7f7ba099a82d19f8b2655b31c6b7ed4e5c24",
+    "sharedApiSha256": "93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19",
+    "limits": {
+      "caseSeconds": 8,
+      "caseCleanupSeconds": 5,
+      "workerWorkSeconds": 40,
+      "workerSeconds": 50,
+      "supervisorWaitSeconds": 55,
+      "totalSeconds": 60,
+      "maxCases": 4,
+      "maxMembersPerCase": 16,
+      "maxEventsPerCase": 512,
+      "maxRawRecords": 4096,
+      "maxRawBytes": 2097152,
+      "maxFixedCommandSpawns": 4,
+      "maxObserverSpawns": 1
+    },
+    "scope": "System32/SysWOW64 cmd /d /c exit 0; original owned objects only.",
+    "systemDirectoryApiReply": {
+      "api": "GetSystemDirectoryW",
+      "requestedMachine": null,
+      "nativeError": null,
+      "returnedCount": 19,
+      "capacityWchars": 1024,
+      "bufferUtf16Units": 19,
+      "bufferValue": "C:\\Windows\\system32",
+      "bufferValueTruncated": false,
+      "nonemptyAbsoluteCountMatched": true
+    },
+    "observerAssignment": {
+      "ok": 1,
+      "error": null
+    },
+    "observerResume": {
+      "previousSuspendCount": 1,
+      "error": null
+    },
+    "observerTerminal": {
+      "pid": 4880,
+      "wait": 0,
+      "waitError": null,
+      "exitCodeIfSignaled": 0,
+      "exitQueryError": null
+    },
+    "observerFinalWait": {
+      "pid": 4880,
+      "wait": 0,
+      "waitError": null,
+      "exitCodeIfSignaled": 0,
+      "exitQueryError": null
+    },
+    "observerOriginalHandleCloses": {
+      "threadClose": 1,
+      "threadError": null,
+      "processClose": 1,
+      "processError": null
+    },
+    "originalOuterJobClose": {
+      "ok": 1,
+      "error": null
+    },
+    "workerSummarySha256": "e77ff680f5d27d83d50ce43e6e5461507f0d611a8cc88bb1aa3db7f2a3b97f7a",
+    "workerSummary": {
+      "observationCompleted": true,
+      "productionAcceptance": false,
+      "cases": [
+        {
+          "architecture": "System32",
+          "policy": "candidate-native-only",
+          "debuggerOwnerThreadId": 6088,
+          "command": "C:\\Windows\\system32\\cmd.exe",
+          "exceptions": [
+            {
+              "pid": 8160,
+              "code": 2147483651,
+              "codeHex": "0x80000003",
+              "firstChance": 1,
+              "continuation": 65538,
+              "beforeContinue": true
+            }
+          ],
+          "events": 14,
+          "originalObjectsSettled": true,
+          "forced": false,
+          "errors": [],
+          "naturalExitZero": true,
+          "observationCompleted": true,
+          "final": {
+            "completeOriginalObjects": true,
+            "objects": [
+              {
+                "pid": 8160,
+                "exitContinued": true,
+                "wait": 0,
+                "waitError": null,
+                "exitCodeIfSignaled": 0,
+                "exitQueryError": null,
+                "originalJobMembershipAfterSignal": {
+                  "ok": 1,
+                  "nativeError": null,
+                  "belongsToOriginalJob": true,
+                  "queriedAfterThisExactObjectSignaled": true
+                }
+              }
+            ],
+            "originalLeader": {
+              "pid": 8160,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null
+            },
+            "accountingBefore": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "list": {
+              "ok": 1,
+              "error": null,
+              "assigned": 0,
+              "listed": 0,
+              "written": 8,
+              "validLayout": true,
+              "ids": []
+            },
+            "accountingAfter": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "nonAtomicObservations": true
+          },
+          "pendingEvent": false,
+          "elapsedSeconds": 0.047000000000025466
+        },
+        {
+          "architecture": "System32",
+          "policy": "known-loader-classes-once",
+          "debuggerOwnerThreadId": 6088,
+          "command": "C:\\Windows\\system32\\cmd.exe",
+          "exceptions": [
+            {
+              "pid": 4216,
+              "code": 2147483651,
+              "codeHex": "0x80000003",
+              "firstChance": 1,
+              "continuation": 65538,
+              "beforeContinue": true
+            }
+          ],
+          "events": 14,
+          "originalObjectsSettled": true,
+          "forced": false,
+          "errors": [],
+          "naturalExitZero": true,
+          "observationCompleted": true,
+          "final": {
+            "completeOriginalObjects": true,
+            "objects": [
+              {
+                "pid": 4216,
+                "exitContinued": true,
+                "wait": 0,
+                "waitError": null,
+                "exitCodeIfSignaled": 0,
+                "exitQueryError": null,
+                "originalJobMembershipAfterSignal": {
+                  "ok": 1,
+                  "nativeError": null,
+                  "belongsToOriginalJob": true,
+                  "queriedAfterThisExactObjectSignaled": true
+                }
+              }
+            ],
+            "originalLeader": {
+              "pid": 4216,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null
+            },
+            "accountingBefore": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "list": {
+              "ok": 1,
+              "error": null,
+              "assigned": 0,
+              "listed": 0,
+              "written": 8,
+              "validLayout": true,
+              "ids": []
+            },
+            "accountingAfter": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "nonAtomicObservations": true
+          },
+          "pendingEvent": false,
+          "elapsedSeconds": 0.03100000000000591
+        },
+        {
+          "architecture": "SysWOW64",
+          "policy": "candidate-native-only",
+          "debuggerOwnerThreadId": 6088,
+          "command": "C:\\Windows\\SysWOW64\\cmd.exe",
+          "exceptions": [
+            {
+              "pid": 2300,
+              "code": 2147483651,
+              "codeHex": "0x80000003",
+              "firstChance": 1,
+              "continuation": 65538,
+              "beforeContinue": true
+            },
+            {
+              "pid": 2300,
+              "code": 1073741855,
+              "codeHex": "0x4000001f",
+              "firstChance": 1,
+              "continuation": 2147549185,
+              "beforeContinue": true
+            }
+          ],
+          "events": 21,
+          "originalObjectsSettled": true,
+          "forced": false,
+          "errors": [],
+          "naturalExitZero": true,
+          "observationCompleted": true,
+          "final": {
+            "completeOriginalObjects": true,
+            "objects": [
+              {
+                "pid": 2300,
+                "exitContinued": true,
+                "wait": 0,
+                "waitError": null,
+                "exitCodeIfSignaled": 0,
+                "exitQueryError": null,
+                "originalJobMembershipAfterSignal": {
+                  "ok": 1,
+                  "nativeError": null,
+                  "belongsToOriginalJob": true,
+                  "queriedAfterThisExactObjectSignaled": true
+                }
+              }
+            ],
+            "originalLeader": {
+              "pid": 2300,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null
+            },
+            "accountingBefore": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "list": {
+              "ok": 1,
+              "error": null,
+              "assigned": 0,
+              "listed": 0,
+              "written": 8,
+              "validLayout": true,
+              "ids": []
+            },
+            "accountingAfter": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "nonAtomicObservations": true
+          },
+          "pendingEvent": false,
+          "elapsedSeconds": 0.09399999999999409
+        },
+        {
+          "architecture": "SysWOW64",
+          "policy": "known-loader-classes-once",
+          "debuggerOwnerThreadId": 6088,
+          "command": "C:\\Windows\\SysWOW64\\cmd.exe",
+          "exceptions": [
+            {
+              "pid": 512,
+              "code": 2147483651,
+              "codeHex": "0x80000003",
+              "firstChance": 1,
+              "continuation": 65538,
+              "beforeContinue": true
+            },
+            {
+              "pid": 512,
+              "code": 1073741855,
+              "codeHex": "0x4000001f",
+              "firstChance": 1,
+              "continuation": 65538,
+              "beforeContinue": true
+            }
+          ],
+          "events": 21,
+          "originalObjectsSettled": true,
+          "forced": false,
+          "errors": [],
+          "naturalExitZero": true,
+          "observationCompleted": true,
+          "final": {
+            "completeOriginalObjects": true,
+            "objects": [
+              {
+                "pid": 512,
+                "exitContinued": true,
+                "wait": 0,
+                "waitError": null,
+                "exitCodeIfSignaled": 0,
+                "exitQueryError": null,
+                "originalJobMembershipAfterSignal": {
+                  "ok": 1,
+                  "nativeError": null,
+                  "belongsToOriginalJob": true,
+                  "queriedAfterThisExactObjectSignaled": true
+                }
+              }
+            ],
+            "originalLeader": {
+              "pid": 512,
+              "wait": 0,
+              "waitError": null,
+              "exitCodeIfSignaled": 0,
+              "exitQueryError": null
+            },
+            "accountingBefore": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "list": {
+              "ok": 1,
+              "error": null,
+              "assigned": 0,
+              "listed": 0,
+              "written": 8,
+              "validLayout": true,
+              "ids": []
+            },
+            "accountingAfter": {
+              "ok": 1,
+              "error": null,
+              "written": 48,
+              "active": 0,
+              "total": 1,
+              "limitTerminated": 0
+            },
+            "nonAtomicObservations": true
+          },
+          "pendingEvent": false,
+          "elapsedSeconds": 0.03100000000000591
+        }
+      ],
+      "unsupported": [],
+      "failure": null,
+      "directoryApiReplies": [
+        {
+          "api": "GetSystemDirectoryW",
+          "requestedMachine": null,
+          "nativeError": null,
+          "returnedCount": 19,
+          "capacityWchars": 1024,
+          "bufferUtf16Units": 19,
+          "bufferValue": "C:\\Windows\\system32",
+          "bufferValueTruncated": false,
+          "nonemptyAbsoluteCountMatched": true
+        },
+        {
+          "api": "GetSystemWow64DirectoryW",
+          "requestedMachine": null,
+          "nativeError": null,
+          "returnedCount": 19,
+          "capacityWchars": 1024,
+          "bufferUtf16Units": 19,
+          "bufferValue": "C:\\Windows\\SysWOW64",
+          "bufferValueTruncated": false,
+          "nonemptyAbsoluteCountMatched": true
+        },
+        {
+          "api": "GetSystemWow64DirectoryW",
+          "requestedMachine": null,
+          "nativeError": null,
+          "returnedCount": 20,
+          "capacityWchars": 32768,
+          "bufferUtf16Units": 0,
+          "bufferValue": "",
+          "bufferValueTruncated": false,
+          "nonemptyAbsoluteCountMatched": false
+        },
+        {
+          "api": "GetSystemWow64Directory2W",
+          "requestedMachine": 332,
+          "unavailable": true,
+          "bindingDll": "kernel32",
+          "unavailabilityScope": "optional-export-binding-only; not architecture support evidence",
+          "nonemptyAbsoluteCountMatched": false
+        }
+      ],
+      "comparison": [
+        {
+          "architecture": "System32",
+          "policies": [
+            {
+              "policy": "candidate-native-only",
+              "naturalExitZero": true,
+              "originalObjectsSettled": true,
+              "originalExitCode": 0,
+              "firstChanceCodes": ["0x80000003"]
+            },
+            {
+              "policy": "known-loader-classes-once",
+              "naturalExitZero": true,
+              "originalObjectsSettled": true,
+              "originalExitCode": 0,
+              "firstChanceCodes": ["0x80000003"]
+            }
+          ]
+        },
+        {
+          "architecture": "SysWOW64",
+          "policies": [
+            {
+              "policy": "candidate-native-only",
+              "naturalExitZero": true,
+              "originalObjectsSettled": true,
+              "originalExitCode": 0,
+              "firstChanceCodes": ["0x80000003", "0x4000001f"]
+            },
+            {
+              "policy": "known-loader-classes-once",
+              "naturalExitZero": true,
+              "originalObjectsSettled": true,
+              "originalExitCode": 0,
+              "firstChanceCodes": ["0x80000003", "0x4000001f"]
+            }
+          ]
+        }
+      ],
+      "originalJobCloses": [
+        {
+          "architecture": "System32",
+          "policy": "candidate-native-only",
+          "ok": 1,
+          "error": null
+        },
+        {
+          "architecture": "System32",
+          "policy": "known-loader-classes-once",
+          "ok": 1,
+          "error": null
+        },
+        {
+          "architecture": "SysWOW64",
+          "policy": "candidate-native-only",
+          "ok": 1,
+          "error": null
+        },
+        {
+          "architecture": "SysWOW64",
+          "policy": "known-loader-classes-once",
+          "ok": 1,
+          "error": null
+        }
+      ],
+      "rawRecords": 228,
+      "rawBytes": 48918,
+      "rawSha256": "4eb5ce26d9b48b48e0b0d34e5b1e1ae56dc96bb1a730e6e8d747afe80cdf489d",
+      "elapsedSeconds": 0.25,
+      "knownLoaderControlCaseCount": 2,
+      "knownLoaderControlExpectedCaseCount": 2,
+      "knownLoaderControlAllNaturalZero": true,
+      "debugSchedulingDiffersFromProduct": true,
+      "scope": "Fixed official system cmd loader events only; no selected Git/Agent/product acceptance."
+    },
+    "elapsedSeconds": 0.75,
+    "nativeCallBoundary": "Wait/loop budgets finite; external workflow timeout preserves incomplete evidence if a native call fails to return."
+  },
+  "priorAttempts": [
+    {
+      "runId": 41777034934,
+      "actual": "Checkout failed on long paths, no case started;909e011de added existing Windows long-path setup."
+    },
+    {
+      "runId": 41777569531,
+      "actual": "Two System32 cases passed. Two WOW64 labels rejected before loader exceptions because directory response accepted a relative cmd.exe and image was64-bit. Both were owned/cleaned, not32bit samples."
+    },
+    {
+      "runId": 41779105044,
+      "actual": "Two System32 cases passed, exact membershipafterexittrue. Primary1024API directory valid; supplementalDirectory2 kernel32 binding absent made WOW64 skip. No32bit sample."
+    }
+  ],
+  "conclusion": "Four actual cases across two architectures and two policies naturally exited0. Current policy NOT_HANDLED for WOW64firstchance4000001f also exits0; controlCONTINUE also exits0. No observed reason to modify production exception policy.",
+  "independentVerification": "Root plus evidence_audit reader checked provider ZIP/CRC,6 exact members,228 raw records,script/shared Gitblob+workflow pins,ownerthread6088/originalimages/I386 beforecontinue,6 exception dispositions,4 continuedEXIT+exactsignals/exit0+fresh originalJobmembershiptrue,Job0/Total1/complete empty list,no forcedkill,outerworker4880 natural0 andhandles/Jobclose.",
+  "limits": "The directoryAPI32768 query returned20 with emptybuffer, while1024 query returned19 and validpath. This is an observedboundary, not a general Windows OS bug finding. Optional export absence is not architecture support evidence. All earlier failed/skipped receipts retained."
+}
