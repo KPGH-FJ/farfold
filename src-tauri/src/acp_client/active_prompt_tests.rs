@@ -513,6 +513,23 @@ async fn real_stdio_eof_is_not_a_terminal_but_actual_reap_releases() {
     checked(|s| {
         Box::pin(async move {
             let mut a = s.open(0, "eof-a", "eof").await;
+            #[cfg(windows)]
+            let mut retirement_observations = {
+                let (send, receive) = mpsc::unbounded_channel();
+                assert!(
+                    s.lives[0]
+                        .retirement_observer
+                        .set(Arc::new(move |value| {
+                            let _ = send.send(value);
+                        }))
+                        .is_ok()
+                );
+                eprintln!(
+                    "FARFOLD_ACP_EOF_CASE {}",
+                    json!({"originalChildPid": a.pid, "case": "real_stdio_eof_is_not_a_terminal_but_actual_reap_releases", "phase": "beforePrompt", "scope": "PID copied from this live connection's exact process control; binds later owner records, not earlier unlabelled runs"})
+                );
+                receive
+            };
 
             let (ba, da) = blocks(0);
             s.manager
@@ -544,7 +561,32 @@ async fn real_stdio_eof_is_not_a_terminal_but_actual_reap_releases() {
                 assert_eq!(work, 1);
                 assert!(exit_blocked);
             }
-            s.lives[0].closed().await.unwrap();
+            let closed = s.lives[0].closed().await;
+            #[cfg(windows)]
+            {
+                let mut completed = false;
+                let mut observations = 0;
+                while let Ok(value) = retirement_observations.try_recv() {
+                    eprintln!("FARFOLD_ACP_EOF_RETIREMENT {value}");
+                    assert_eq!(value["originalChildPid"], a.pid);
+                    assert_eq!(value["sameOriginalChildPid"], true);
+                    assert_eq!(value["retainedLeader"]["sameOriginalChildPid"], true);
+                    if value["point"] == "actualOwnerCompletion" {
+                        assert_eq!(value["originalChildReaped"], true);
+                        completed = true;
+                    }
+                    observations += 1;
+                }
+                eprintln!(
+                    "FARFOLD_ACP_EOF_CLOSE {}",
+                    json!({"originalChildPid": a.pid, "closedSucceeded": closed.is_ok(), "ownerObservationCount": observations, "ownerCompletionObserved": completed, "promptAdmissionCounts": s.manager.prompt_admission.counts(), "work": s.lives[0].work.load(Ordering::SeqCst)})
+                );
+                assert!(observations > 0, "original owner observation must be associated");
+                if closed.is_ok() {
+                    assert!(completed, "successful close must follow exact owner completion");
+                }
+            }
+            closed.unwrap();
             assert_eq!(s.manager.prompt_admission.counts(), (0, 0, 0));
         })
     })

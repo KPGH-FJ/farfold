@@ -1,5 +1,62 @@
 use super::*;
 
+impl OwnedGroup {
+    /// Borrowed inside the existing exact Child owner. No witness Arc/handle is
+    /// added, so this sample cannot postpone kill-on-last-Job-handle cleanup.
+    /// Additional native reads never feed the production completion verdict.
+    pub(crate) fn acp_retirement_observation_for_test(
+        &self,
+        point: &'static str,
+        original_child_pid: u32,
+        exit: &Option<io::Result<std::process::ExitStatus>>,
+    ) -> serde_json::Value {
+        use windows_sys::Win32::{
+            Foundation::WAIT_FAILED,
+            System::{JobObjects::IsProcessInJob, Threading::GetExitCodeProcess},
+        };
+        let leader = self.job.leader.get().map(|leader| {
+            // This is the handle retained at attach while the exact Child was
+            // still held; no listed/saved PID is reopened for this observation.
+            let wait = unsafe { WaitForSingleObject(leader.handle.0, 0) };
+            let wait_error = (wait == WAIT_FAILED).then(|| unsafe { GetLastError() });
+            let mut member = 0;
+            let member_ok =
+                unsafe { IsProcessInJob(leader.handle.0, self.job.handle.0, &mut member) };
+            let member_error = (member_ok == 0).then(|| unsafe { GetLastError() });
+            let mut code = 0;
+            let code_ok = unsafe { GetExitCodeProcess(leader.handle.0, &mut code) };
+            let code_error = (code_ok == 0).then(|| unsafe { GetLastError() });
+            serde_json::json!({
+                "pid": leader.pid,
+                "sameOriginalChildPid": leader.pid == original_child_pid,
+                "waitReturn": wait,
+                "waitError": wait_error,
+                "memberOfOriginalJob": (member_ok != 0).then_some(member != 0),
+                "membershipError": member_error,
+                "exitCode": (code_ok != 0).then_some(code),
+                "exitCodeError": code_error,
+            })
+        });
+        let query = self.job.activity_query();
+        let current = self.job.current.try_lock().ok().map(|v| v.observation());
+        serde_json::json!({
+            "point": point,
+            "originalChildPid": original_child_pid,
+            "retainedGroupHelperPid": self.pid,
+            "sameOriginalChildPid": original_child_pid == self.pid,
+            "originalChildReaped": exit.as_ref().is_some_and(Result::is_ok),
+            "originalChildExitCode": exit.as_ref().and_then(|v| v.as_ref().ok()).and_then(|v| v.code()),
+            "originalChildWaitError": exit.as_ref().and_then(|v| v.as_ref().err()).map(|e| format!("{:?}", e.kind())),
+            "retainedLeader": leader,
+            "accountingQueryReturn": query.ok,
+            "accountingError": query.native_error,
+            "accountingActiveProcesses": (query.ok != 0).then_some(query.info.ActiveProcesses),
+            "currentMembers": current,
+            "scope": "selected test callback inside original ACP Child owner; borrowed original Job and leader handles; extra native reads do not alter completion; no PID reopen, new handle, Job lifetime extension, or complete historical membership claim",
+        })
+    }
+}
+
 // Diagnostic-only reference to the EXISTING Job captured before cancellation.
 // No new Job/handle/registry/controller and no terminate method. Its Arc extends
 // this same Job/leader handle lifetime until the final observation is dropped.

@@ -206,6 +206,11 @@ pub(crate) struct ConnectionLife {
     activity: Mutex<Activity>,
     stop: watch::Sender<bool>,
     done: watch::Sender<Option<Result<(), String>>>,
+    // Installed by one owned test before prompting. This carries values only;
+    // it retains no Child, Job, handle, or production completion authority.
+    #[cfg(all(test, windows))]
+    pub(super) retirement_observer:
+        Arc<std::sync::OnceLock<Arc<dyn Fn(serde_json::Value) + Send + Sync>>>,
 }
 impl ConnectionLife {
     pub fn retain_opening(&self, opening: OpenReservation) {
@@ -273,6 +278,8 @@ impl ConnectionLife {
             }),
             stop: watch::channel(false).0,
             done: watch::channel(None).0,
+            #[cfg(all(test, windows))]
+            retirement_observer: Arc::new(std::sync::OnceLock::new()),
         })
     }
     pub fn stop_receiver(&self) -> watch::Receiver<bool> {

@@ -357,7 +357,15 @@ impl ConnectTo<Client> for ProcessTransport {
         let (registered, registration_result) = tokio::sync::oneshot::channel();
         let command = self.agent.config().command().to_string_lossy().into_owned();
         let owner_diagnostics = diagnostics.clone();
+        #[cfg(all(test, windows))]
+        let retirement_observer = self.life.retirement_observer.clone();
         super::manager::runtime().spawn(async move {
+            #[cfg(all(test, windows))]
+            let observe_retirement = |point, original_child_pid, exit: &Option<std::io::Result<std::process::ExitStatus>>| {
+                if let Some(observer) = retirement_observer.get() {
+                    observer(guard._group.acp_retirement_observation_for_test(point, original_child_pid, exit));
+                }
+            };
             let registration_dir = data_dir.clone();
             let mut registration_task = tauri::async_runtime::spawn_blocking(move || {
                 supervisor::register_pid(&registration_dir, &self.agent_id, &self.cwd, &command, pid)
@@ -392,6 +400,8 @@ impl ConnectTo<Client> for ProcessTransport {
             }
             if let Some(status) = &exit { owner_diagnostics.exit(status); }
             owner_diagnostics.phase(Phase::Cleanup);
+            #[cfg(all(test, windows))]
+            observe_retirement("beforeInitialTermination", child.id(), &exit);
             owner_diagnostics.signal_requested(false, exit.as_ref().is_some_and(Result::is_ok));
             supervisor::signal_owned_group(pid, supervisor::TERM);
             guard.drain_stop.store(true, Ordering::SeqCst);
@@ -413,6 +423,8 @@ impl ConnectTo<Client> for ProcessTransport {
                     break reaped;
                 }
                 if !killed && started.elapsed() >= Duration::from_secs(2) {
+                    #[cfg(all(test, windows))]
+                    observe_retirement("beforeEscalation", child.id(), &exit);
                     owner_diagnostics.signal_requested(true, false);
                     supervisor::signal_owned_group(pid, supervisor::KILL);
                     killed = true;
@@ -428,6 +440,8 @@ impl ConnectTo<Client> for ProcessTransport {
                 ))
                 .await;
             };
+            #[cfg(all(test, windows))]
+            observe_retirement("actualOwnerCompletion", child.id(), &exit);
             guard.armed = false;
             let _ = tokio::time::timeout(Duration::from_millis(100), draining).await;
             let outcome = if unexpected_exit
