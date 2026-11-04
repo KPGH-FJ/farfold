@@ -17,5 +17,12 @@
   ],
   "independentReviewer": "/root/status_evidence_review",
   "independentReview": "No required corrections; scope, previous document byte hashes, product/requirements hashes, NEW-24 and Windows boundaries preserved.",
-  "productAcceptance": false
+  "productAcceptance": false,
+  "latestStatusRecordedAt": "2026-11-04T11:40:13.753759+00:00",
+  "latestDocumentationCheck": {
+    "exitCode": 0,
+    "originalConditions": 151,
+    "activePlans": 1,
+    "productAcceptanceClaimed": false
+  }
 }

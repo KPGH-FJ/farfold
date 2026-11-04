@@ -1,0 +1,34 @@
+{
+  "updatedAt": "2026-11-04T11:33:24.829823+00:00",
+  "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
+  "branch": "codex/2026-11-04-development-resume",
+  "checkpoints": {
+    "documentation": "6bab747d0",
+    "windowsCandidateAndRunner": "d194ff52a",
+    "windowsRun": 41818072244,
+    "p01Source": "d31447be7"
+  },
+  "completed": [
+    "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
+    "P01 composer/attachment unknown-key overwrite reproduced and fixed;13 related files166 passed; independent review passed.",
+    "First current-source Mac seven commands passed:704 frontend files9452 tests;Rust2335 pass6 ignored.",
+    "P01 associated localAudio/activity fixes completed; final unified705 files9459 frontend tests/2335 Rust6 ignored passed; nine candidate/six installed checks and206275 closed-state entry equality passed; current only formal app updated."
+  ],
+  "active": [
+    "Windows selected41818072244 finished36pass9fail;four new lifetime/originalEOF/resource release andGit/terminal controls passed;source_review investigates create/recovery wait failures from raw receipts.",
+    "Mac locked during attempted owned-marker UI action; manual unlock requested asynchronously; action outcome unobserved, inspect fresh state before retry."
+  ],
+  "formalPreparation": "Formal app source d31447be7, binary59dc8a5604d9841a3f0f4b88846cdac98c623ef85bd6780747400b7c81bee6d7; exact candidate duplicate removed; private formal receipts inoutput/2026-11-04-p01-draft-formal/formal.",
+  "remaining": [
+    "Continue Windows causal timing investigation;do not replace17 full failures with selected result.",
+    "GUI attachment restart/recheck and diagnostic B3 official read require user manual unlock.",
+    "P01 realSQLite backend failure tests already exist;next safe minimal connection verification remains to design, not repeat equivalent backend cases.",
+    "Preserve original unrelated debugger-system-native.json diff."
+  ],
+  "constraints": [
+    "Single writable checkout.",
+    "Preserve user drafts/history/unknown requests;NEW24 affected sends remain paused.",
+    "Keep selected Agent/model/reasoning; no resend or account changes.",
+    "This record only locates work; plans/agent-access.md remains sole scheduler."
+  ]
+}

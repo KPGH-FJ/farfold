@@ -6,6 +6,8 @@
 
 最终统一输入2366份前后摘要一致；七项均自然0，前端705文件9459项，Rust2335通过/6忽略。见 [工程结果](engineering-result.json)、[检查前输入](engineering-final-before.json)和[检查后输入](engineering-final-after.json)。源码经独立复核；原两字段修复和关联修复分别复核，未发现必改缺陷。
 
-当前只完成源码、合成持久化回归及本机工程层。本批正式候选、安装与实际恢复仍在推进；物理满盘、真实设备I/O故障和安装版故障UI未由这些测试证明。已有生产MetaStore临时文件SQLite FULL/max_page_count及readOnly/query_only通过，与物理满盘和前后端连通验证分别说明。Windows实际执行另走原生运行，不继承本机通过。
+当前只完成源码、合成持久化回归及本机工程层。本批已正式更新为d31447be7，候选9项/安装6项核验通过，三份关闭态清单一致；启动后原P02文字和保留草稿入口已观察。附件重启/重核实测因Mac锁屏待用户解锁；物理满盘、真实设备I/O故障和安装版故障UI未由这些测试证明。已有生产MetaStore临时文件SQLite FULL/max_page_count及readOnly/query_only通过，与物理满盘和前后端连通验证分别说明。Windows实际执行另走原生运行，不继承本机通过。
 
 首次两字段改动的原始 `change.patch` 也逐字节保存在同一归档；本地原文件未改写。最终完整源码变更以本批提交为准。
+
+正式更新及实际界面范围见 [formal-summary.json](formal-summary.json)。

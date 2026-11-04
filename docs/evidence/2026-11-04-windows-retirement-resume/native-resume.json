@@ -1,0 +1,396 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T11:35:43.136964+00:00",
+  "runId": 41818072244,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41818072244",
+  "sourceCommit": "d194ff52a9cbb4daa764e57465236b85a0a98336",
+  "cohort": "FrozenRetirementResume",
+  "workflowConclusion": "failure",
+  "scope": "Selected native synthetic Windows retirement, fixed Git, create/recovery and terminal regressions only; no real Agent, user data or installed Windows application validation.",
+  "sourceBinding": {
+    "eightFrozenCandidateBindings": [
+      {
+        "path": "src-tauri/src/windows_process.rs",
+        "frozenAndCommittedBlobSha256": "47f4a8aaa672788b18ed71e1594ed7e3384c7d95597d9a19a7652b8f2306a934",
+        "nativeCheckoutSha256": "3d9973c8d520fe1a79e93183d85f303dca70c89ddc6a47af331b7accb43c7737",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/windows_process/current_members.rs",
+        "frozenAndCommittedBlobSha256": "34cc3ecb583d942fecb53a95b411be1dde91a2f7aa34b59dd314e2e4716c4057",
+        "nativeCheckoutSha256": "d5dab4813da541356b0491b1de25ca28cb81ea027238eb479f0a17d838da43b0",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/windows_process/current_members_tests.rs",
+        "frozenAndCommittedBlobSha256": "cdb0f3e191f52bcc0d2828a9bfd647879d98d6f8bf3b667a2afc5943add42693",
+        "nativeCheckoutSha256": "fbf7ee0d3b079f1b7532106a9fd32d36f8ff078916ea964118501e247a335d35",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/windows_process/current_members_lifetime_tests.rs",
+        "frozenAndCommittedBlobSha256": "00ae4ca016cfb75f7a04d5fea7452a41d2e07ea6f2ae16915b3e14b6a2aeffe7",
+        "nativeCheckoutSha256": "53cee704a713b84dde7466f7c4c0bfb75ea10f9b08b7cd7179e11cf5a2c10bec",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/windows_process/diagnostic_tests.rs",
+        "frozenAndCommittedBlobSha256": "715168486ee959d4aabc9d099bdbca5ceb27695581ba735bac44264ba168ec58",
+        "nativeCheckoutSha256": "e7e11da20084c068a37037c9b118ee731c845b69f400995666ea251c4eb12a88",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/worktrees/git.rs",
+        "frozenAndCommittedBlobSha256": "8af9a7ecf35ca5fc1e0eab6bff836a78d958d38e82968004ead5a63a835c57cf",
+        "nativeCheckoutSha256": "f08dda78a92adbd491c10027ea5af5adf3193a807dc9a919eaf254ebdf7d51b5",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/worktrees/git_debug_windows.rs",
+        "frozenAndCommittedBlobSha256": "048172ef4968bc5801e1ab9538ec42df0251044011d6595efaa677ec516a407b",
+        "nativeCheckoutSha256": "f80e1a4b637f2e0b663adcf41443346fe9b9084ec79dcef9bcdead79d0ddf4fe",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      },
+      {
+        "path": "src-tauri/src/worktrees/git_command_observation_tests.rs",
+        "frozenAndCommittedBlobSha256": "e1e800afb634cf829108d853da18279911a7adc821135725b02b9dc724d8b181",
+        "nativeCheckoutSha256": "ca2a4c56adefad090f1747c5650b2db8be9db011a24457b20bcb774d3bcc67d4",
+        "nativeEqualsCommittedBlobWithCrLf": true
+      }
+    ],
+    "note": "Frozen hashes equal committed LF blobs; all eight native checkout hashes equal those exact blobs with LF converted to CRLF. Native CRLF bytes are not called byte-identical to local LF files.",
+    "frozenRecord": {
+      "path": "docs/evidence/2026-11-04-create-eof-recovery/pause-review.json",
+      "sha256": "0cc3089c7dfc0ca694669f45b8ee4e0ab471d90468093dbff4355527f959a41e"
+    },
+    "sourceMap": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/inputs-after.json",
+      "sha256": "9af4d3c0ad2df73ebe28aa92a84facdb37252484d68c657ea49706bca5cdf193"
+    },
+    "buildSelection": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/build-selection.json",
+      "sha256": "3f33a74c275b4787f7eb70a4f9dfb964d7fed62113591d385555c10b1e50e1f4"
+    }
+  },
+  "actualOutcomes": {
+    "groups": 26,
+    "executions": 45,
+    "passed": 36,
+    "failed": 9,
+    "missingGroupReceipts": 0,
+    "allGroupsReturnedNaturally": true,
+    "actualNamesAndOutputHashesChecked": true,
+    "phases": [
+      {
+        "phase": "Retirement",
+        "groups": 6,
+        "executions": 6,
+        "passed": 6,
+        "failed": 0,
+        "allReturned": true,
+        "exactAllPassed": true,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/resume-Retirement.result.json",
+          "sha256": "9c61bc325995db40987da25a7487410cb1304f7168c4ff6beda09fa83813881f"
+        }
+      },
+      {
+        "phase": "GitControls",
+        "groups": 3,
+        "executions": 16,
+        "passed": 16,
+        "failed": 0,
+        "allReturned": true,
+        "exactAllPassed": true,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/resume-GitControls.result.json",
+          "sha256": "946c35dcfc8a6eab892d0cd8545d37eac43453603df323334749f6c33db59ac9"
+        }
+      },
+      {
+        "phase": "CreateRecovery",
+        "groups": 14,
+        "executions": 20,
+        "passed": 11,
+        "failed": 9,
+        "allReturned": true,
+        "exactAllPassed": false,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/resume-CreateRecovery.result.json",
+          "sha256": "3179ba47f56062cac41043b29a6589b9746efd7d6bab69073853b9d085801c64"
+        }
+      },
+      {
+        "phase": "Terminal",
+        "groups": 3,
+        "executions": 3,
+        "passed": 3,
+        "failed": 0,
+        "allReturned": true,
+        "exactAllPassed": true,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/resume-Terminal.result.json",
+          "sha256": "2cec0d87484875feedd177693d07498c97ce8923db61ae497279d28dd2a0cf9f"
+        }
+      }
+    ],
+    "failedActualTests": [
+      "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+      "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+      "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+      "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+      "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+      "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+      "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+      "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+      "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook"
+    ]
+  },
+  "eofResult": {
+    "originalChildPid": 2764,
+    "initialIncompleteNativeList": {
+      "assigned": 2,
+      "listed": 1,
+      "observedLiveObjects": 2,
+      "coverageGap": true
+    },
+    "completionProof": {
+      "observedLiveObjects": 2,
+      "exactRetiredObjects": 2,
+      "originalLeaderMemberOfJob": true,
+      "beforeActive": 0,
+      "beforeTotal": 3,
+      "afterActive": 0,
+      "afterTotal": 3,
+      "historicalCoverageGapRetained": true
+    },
+    "actualOwnerCompletion": true,
+    "originalChildReaped": true,
+    "originalLeaderWaitReturn": 0,
+    "closedSucceeded": true,
+    "promptAdmissionCounts": [0, 0, 0],
+    "work": 0,
+    "raw": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/acp-eof-retirement.stdout.log",
+      "sha256": "f047bcb885d3fde1c581bd6aaac77560c49c3b74d8b14539296755d12bbbc917"
+    },
+    "oldFailedPid1392Reobserved": false
+  },
+  "gitThroughput": {
+    "selectedSamples": [
+      {
+        "group": "create-existing-branch",
+        "spawned": 244,
+        "settled": 244,
+        "originalObjectCertificates": 244,
+        "medianCommandMs": 99.5,
+        "maxCommandMs": 161,
+        "raw": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-existing-branch.stdout.log",
+          "sha256": "9140ea2186714fc908779162512fb51cb1a4fd81cf927d9a4dab1567e0f2d163"
+        }
+      },
+      {
+        "group": "create-eof-paired",
+        "spawned": 244,
+        "settled": 244,
+        "originalObjectCertificates": 244,
+        "medianCommandMs": 99.0,
+        "maxCommandMs": 126,
+        "raw": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-eof-paired.stdout.log",
+          "sha256": "c8ecba55d52b057e7475e1d00c2353c79acff6c15c78930498120fb3045ff8f6"
+        }
+      },
+      {
+        "group": "archive-create-paired",
+        "spawned": 244,
+        "settled": 244,
+        "originalObjectCertificates": 244,
+        "medianCommandMs": 137.0,
+        "maxCommandMs": 166,
+        "raw": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/archive-create-paired.stdout.log",
+          "sha256": "169d2aaf4162c234dbe9b592a22d2d688709abc3fb0f57aeae2a5fc1d567dac6"
+        }
+      }
+    ],
+    "previousSeparateRunReportedMedianMs": 167,
+    "preDebuggerSeparateBaselineReportedMedianMs": 61,
+    "limit": "Separate-run measurements are not a controlled performance benchmark; selected creation still takes long enough to exceed original test fixture waits."
+  },
+  "remainingFailureClassification": {
+    "observed": "All nine failures reached creation/setup while still running and hit existing 15/20-second test fixture waits. Four direct create tests and five recovery tests fail before their intended terminal assertions. No production error code or missed original Git object is established for these failures.",
+    "next": "Measure the original create completion with an explicitly bounded Windows-only observation before changing any fixture wait or production behavior. Keep original assertions, deadlines, object proofs and failures.",
+    "productionDeadlinesChanged": false,
+    "testWaitsChangedThisRun": false
+  },
+  "groupReceipts": [
+    {
+      "name": "lifetime-complete-retirement",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/lifetime-complete-retirement.json",
+      "sha256": "c60223a2f973dd593f0c58369a091bbd0e75a5fbd94edf2b4e0a7089ac26e432"
+    },
+    {
+      "name": "lifetime-missing-object-refused",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/lifetime-missing-object-refused.json",
+      "sha256": "98a8d7d89ffbc9693c65d4a3792992a911586be791430ee8b8675bcaeff3fe0d"
+    },
+    {
+      "name": "lifetime-leader-context-refused",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/lifetime-leader-context-refused.json",
+      "sha256": "6a38f005bc0fe67616864565ca9d2c44ca919fad07e116582ef85f7497c1ffe1"
+    },
+    {
+      "name": "lifetime-count-overflow-refused",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/lifetime-count-overflow-refused.json",
+      "sha256": "061fb17a4dba983b3813224f2ec9767d8adb775fdeca0dce63d11ea52f84a9aa"
+    },
+    {
+      "name": "acp-eof-retirement",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/acp-eof-retirement.json",
+      "sha256": "6c1e3e1d699eb508124f69250f39d22e5f7392623e21e138a5e60cbc035e4617"
+    },
+    {
+      "name": "acp-eof-descendant-edge",
+      "phase": "Retirement",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/acp-eof-descendant-edge.json",
+      "sha256": "6c9124bae825ff0e4f614abad92d2c836777c9608f666b1b3e819fad9522ba5d"
+    },
+    {
+      "name": "git-complete-object-certificate",
+      "phase": "GitControls",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/git-complete-object-certificate.json",
+      "sha256": "a9c320051ce1e8eda1a3ad204030dadbe8467e37d5c7e737fb43e193afba6c9c"
+    },
+    {
+      "name": "git-original-owner-lifecycle",
+      "phase": "GitControls",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/git-original-owner-lifecycle.json",
+      "sha256": "36c68861701048065665add76781b59f407a10bbd3649404093abd047126afc1"
+    },
+    {
+      "name": "git-finite-input",
+      "phase": "GitControls",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/git-finite-input.json",
+      "sha256": "0b1b8d21a654ba5248cc183a98ca08da3374c9de0343f2a6ef6be239f13673d9"
+    },
+    {
+      "name": "create-existing-branch",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-existing-branch.json",
+      "sha256": "3dc685f45ee851b9d962a6888d6c724007880cf1550305c8c4deb0dc8efdbe64"
+    },
+    {
+      "name": "archive-cold-restore",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/archive-cold-restore.json",
+      "sha256": "47a89e6a5ae2c7c6e3b39a6c9b8e5f4d85344dd5134aff5f203fa3417e7f17a1"
+    },
+    {
+      "name": "recovery-cancel-paired",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-cancel-paired.json",
+      "sha256": "e2f2fba8f98678e1a1c51b23443ea960629242a57f1e787d5b9c7e59633b1c26"
+    },
+    {
+      "name": "create-eof-paired",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-eof-paired.json",
+      "sha256": "bf9c13d39cad167299137f58be24a1c7dac1b5f2d11cd09e70821191a2f2f6b1"
+    },
+    {
+      "name": "archive-create-paired",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/archive-create-paired.json",
+      "sha256": "1efc4f10b4b0dfc5beef97d0120fad7b5536d93eebee9d6d3c7abe07ad390089"
+    },
+    {
+      "name": "recovery-original-remaining",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-original-remaining.json",
+      "sha256": "8e3b70c0b5dc5c41262564cd92ba5ae26b39d6fb7121fd7176391007f3e9c1e0"
+    },
+    {
+      "name": "recovery-confirmation",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-confirmation.json",
+      "sha256": "535e82bead2b3d416a2fe7ca55782cd77fef4e8f45daa393d3c4db7a7fa51f7e"
+    },
+    {
+      "name": "recovery-cold",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-cold.json",
+      "sha256": "694c20d43b0e12c740b1d62b3bc19cf56da72649c35e1f1858dafb9cb6acd1ef"
+    },
+    {
+      "name": "create-official-config-aliases",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-official-config-aliases.json",
+      "sha256": "acd4d7ab22a9eb3e71e219ea5acd3dbeb3e317cfa2061ebf50d10093d1717cb1"
+    },
+    {
+      "name": "create-cold-location",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-cold-location.json",
+      "sha256": "65d51ef468962a6988aa3768cd1aa7efa979243fb9a41db28d4f8d223518109c"
+    },
+    {
+      "name": "create-storage-failure",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-storage-failure.json",
+      "sha256": "8ee85ad61d5a5ab40e3f6c8830339af983b800d7300c10fd8577a003f2aa2fd8"
+    },
+    {
+      "name": "create-new-branch",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/create-new-branch.json",
+      "sha256": "4e70ee9140c99156b133f986adc0471b2f7dba533ebf0ec3f82e8759fc1f6c50"
+    },
+    {
+      "name": "recovery-prepared-cancel",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-prepared-cancel.json",
+      "sha256": "45d5aa1b9177b7852dfa52a445bde54f04e05fdcffdcf6709e740d39bb3e1475"
+    },
+    {
+      "name": "recovery-parent-identity",
+      "phase": "CreateRecovery",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/recovery-parent-identity.json",
+      "sha256": "2c91ac050686e1604167c4a106013d195bed20dadff75c24ee90d2f908d7d132"
+    },
+    {
+      "name": "terminal-manager-python",
+      "phase": "Terminal",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/terminal-manager-python.json",
+      "sha256": "39d8892db12f85c1e9dd3c40f2ff872970603977d52da86181a871d4e0099bc7"
+    },
+    {
+      "name": "terminal-manager-no-reply-close",
+      "phase": "Terminal",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/terminal-manager-no-reply-close.json",
+      "sha256": "32404511bf1aaa59228de387b60bff498dc5bfa0fb987d24ac38465707e4ef93"
+    },
+    {
+      "name": "terminal-raw-cursor-reply",
+      "phase": "Terminal",
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/artifact/terminal-raw-cursor-reply.json",
+      "sha256": "208654c5abe3d85ec847d7da3a7fe2c54d3444767e11132fe33a44aa51c33212"
+    }
+  ],
+  "limits": {
+    "latestFullWindowsRun": 41750118511,
+    "fullPassed": 2363,
+    "fullFailed": 17,
+    "fullIgnored": 72,
+    "fullResultUpdated": false,
+    "windowsAppInstalled": false,
+    "productOr29By8Complete": false,
+    "continueOnErrorStepColorUsedAsEvidence": false
+  }
+}
