@@ -1,0 +1,103 @@
+{
+  "kind": "P01OwnedQueueUnknownFieldProtectionScopedCheckpoint",
+  "recordedAtUtc": "2026-11-04T23:25:45.358352+00:00",
+  "sourceCommit": "16442f1b86683d3b82e06962b46dc7ab171da452",
+  "productionChange": "six-line known-field check on Farfold-owned saved queue records before complete snapshot hydration; no official message-block field restriction",
+  "reproducedPath": [
+    "draftPersistence.load",
+    "threads.markOpenFailed",
+    "restoreQueue",
+    "ThreadStore.emit",
+    "draftQueues.write",
+    "draftPersistence.flush"
+  ],
+  "red": {
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/runtime/draft_storage.queue-schema.test.ts"
+    ],
+    "startedAtUtc": "2026-11-04T23:11:19.719807+00:00",
+    "finishedAtUtc": "2026-11-04T23:11:20.519408+00:00",
+    "naturalExitCode": 1,
+    "logSha256": "6a25055ae3d9701df33625608b4cc898fe911e9095981a78bc9c2b488dfa37cf",
+    "failed": 2,
+    "positiveControlPassed": 1,
+    "cause": "Actual before/after diff dropped futureInput on queued and notice-only records; normalization differences were additional observations, not the sole failing evidence.",
+    "storage": "controlled JS settings value; not SQLite"
+  },
+  "sameByteGreen": {
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/runtime/draft_storage.queue-schema.test.ts"
+    ],
+    "startedAtUtc": "2026-11-04T23:11:47.052635+00:00",
+    "finishedAtUtc": "2026-11-04T23:11:47.644686+00:00",
+    "naturalExitCode": 0,
+    "logSha256": "bd79ebfe2fa6135b317c2239a92307062b15bf0918a9ba4852a3b029be708343",
+    "sameRegressionBytesAsRed": true,
+    "testSha256": "65bd778f910666fee971be58ced73168556f208ede4c257079f0ec5e3b109206",
+    "passed": 3,
+    "scope": "whole snapshot rejected before content publication; later local draft retained; only settings_get after refusal; known queue and opaque official _meta survive actual failed-open emit"
+  },
+  "formattedAssociated": {
+    "command": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/runtime/draft_storage.failure.test.ts",
+      "src/runtime/draft_storage.nested-schema.test.ts",
+      "src/runtime/draft_storage.queue-schema.test.ts",
+      "src/runtime/draft_storage.receipt.test.ts",
+      "src/runtime/draft_storage.recovery.test.ts",
+      "src/runtime/draft_storage.test.ts",
+      "src/runtime/drafts.test.ts",
+      "src/runtime/drafts.outcome-marker.test.ts",
+      "src/runtime/queue_edit.test.ts",
+      "src/runtime/sessions.queue-edit.test.ts",
+      "src/runtime/sessions.cold-outcome.test.ts",
+      "src/components/DraftStartup.test.tsx",
+      "src/components/DraftStartup.restore.test.tsx"
+    ],
+    "startedAtUtc": "2026-11-04T23:14:40.313938+00:00",
+    "finishedAtUtc": "2026-11-04T23:14:44.231608+00:00",
+    "naturalExitCode": 0,
+    "selectedTestFiles": 13,
+    "declaredInputs": 22,
+    "listedEndpointsEqual": true,
+    "logSha256": "abc96f08ec8d83ebc2202242b25e7e6967db1c0b380c3a2104a396acd729578f",
+    "testsPassed": 110,
+    "scope": "13 selected persistence/draft/queue/cold-outcome/startup files;22 declared relevant input endpoints equal; not a full transitive-source freeze",
+    "originalFixtureSha256": "65bd778f910666fee971be58ced73168556f208ede4c257079f0ec5e3b109206",
+    "currentFormattedFixtureSha256": "141ed138c4e4b6bb2662b9f572580d41bec44fac1136188464e283e788ce3e88",
+    "note": "Original same-byte RED/GREEN preserved. Prettier changed only presentation before this related final run; no claim that current formatted fixture bytes equal RED."
+  },
+  "independentReview": {
+    "reviewer": "environment_review",
+    "result": "no blocking findings",
+    "basis": "read-only source/data-flow review plus original RED/GREEN hashes; confirms default failed-open paths reachable from App and session open failure, while preserveQueues=true branch does not eliminate later ordinary emits",
+    "receiptKind": "transcribed received agent report; no separate reviewer artifact claimed"
+  },
+  "pending": {
+    "actualSqliteBridge": "prepared only; no binding/execution yet",
+    "unifiedEngineering": "pending current MCP dependent batch stability",
+    "formalUpdate": "Mac still locked; no new normal exit/binding/build/install",
+    "windows": "full41931045918 belongs previous2e and does not cover this guard"
+  },
+  "originals": {
+    "path": "source-originals.zip",
+    "entries": 15,
+    "bytes": 18733,
+    "sha256": "cc52c654b380bd291e63b7f4f7c05accc60177b897174093b89c28787601d781",
+    "manifest": "manifest.json"
+  }
+}

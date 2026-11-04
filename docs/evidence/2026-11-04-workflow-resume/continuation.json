@@ -25,7 +25,10 @@
     "boundaryWaitsCandidate": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
     "boundaryWaitsNativeRun": 41869099411,
     "finalEngineeringInputCommit": "2f5c90550f41e701db64725947db505e0f3bbbd5",
-    "finalEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json"
+    "finalEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json",
+    "p01QueueSchema": "16442f1b86683d3b82e06962b46dc7ab171da452",
+    "currentWindowsFullRun": 41931045918,
+    "currentWindowsFullSource": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -46,18 +49,22 @@
     "Windows BoundaryWaits41869099411 fixedfc1c naturally2/2passed with original parent wrappers and assertions;849Git-bound inputs (846CRLF/3exact),4PSparses, real2child completion markers. No same-source newfull success or installer claim.",
     "P11 bounded source review independently confirmed official Codex turn-level and Claude inclusive-message point APIs; current selected/runtime version unknown and no generic point guarantee from fork{}. No new UI; SDK candidate explicitly not_run because whole-module import effects not fully bounded.",
     "Final stable Mac seven recorded fresh:707files9509frontend/Rust2339pass7ignored and all finalcommands0. Initial format failed onlystatus table spacing, corrected and format retried; other6fresh in same2369 declared-input interval;4deltas from earlier69 map.",
-    "Final2369captured input SHA256 values independently matched all exact Git blobs of2f5c90550 via onecat-filebatch. Later current-status/handoff wording is documentation-only and separatelychecked; original unrelated dirtyJSON unchanged."
+    "Final2369captured input SHA256 values independently matched all exact Git blobs of2f5c90550 via onecat-filebatch. Later current-status/handoff wording is documentation-only and separatelychecked; original unrelated dirtyJSON unchanged.",
+    "2026-11-05 resumed again byuser; Windowscomplete41931045918 uniquelydispatchedon2e, and newP01 queued-field data-loss RED investigated/fixed16442f1b8 with independent review."
   ],
   "active": [
-    "Stable common configuration/Windows fixture batch closed and pushed; current-source seven and scoped Windows2 passed with independent evidence review. No Cargo/ghwatch/native collector remains.",
-    "New common config final installation/UI is blocked by freshly rechecked locked Mac; onlyAEB remains formal. No normalexit/parameter binding/candidate build/install obtained.",
-    "P11 official interface evidence does not satisfy originalP11; safe selected interface/node semantics and actual branch/counterexamples remain open. No account/model/query/invalid-point probe."
+    "Root P01 queued unknown-owned-fields minimalguard committed/pushed16442f1b8, RED2fail1positive -> samebytesGREEN3, associated13files110pass; only drafts.ts production6lines+newtest. Unified7 pending dependent currentbatch stable.",
+    "source_review owns MCP scope/refusal implementation and localCargo untilrelease. root must not runCargo meanwhile. No realuser config/credentials/Agent/model calls.",
+    "environment_review prepares actual temporarySQLite bridge for currentP01 path, no Cargo/execution until rootprovides freshlybound finaltestbinary after stable7.",
+    "windows_budget_review owns fixed2e Windowsfull41931045918 unique watchsession6967/output2026-11-05-development-continuation/windows-full; no secondwatch/dispatch.",
+    "Fresh rootCUA stilllocked, soleAEB unchanged. formal-preparation proposedpatch/adapter staticonly; allbinding/exit/baseline/build/install stillunexecuted."
   ],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "Unlock is the next required external input for normal current-app save/exit, data/activity checks, single formal update and actual UI paths. Pending unlock question already asked; no repeated approval needed.",
-    "Windows69 complete failed result remains2389/2/75; laterfc1c2/2 is scoped only. Select later full-platform rerun at next dependent stable batch; do not mechanically relabel this as all0.",
-    "Continue soleplan common configuration/history, approvals/stop/recovery and official skill/MCP adoption/calls; P11/NEW24/P01/151/29x8 and specific account/system gaps persist."
+    "FinishMCP scope refusal source/scopedREDGREEN, P01 SQLite boundedlink, independent review, then unified7 onlywhen currentbatch source stable.",
+    "Windowsfullresult belongsfixed2e notP01/MCP newbatch. Retain failures/naturalexit/actualinstaller scopes, diagnose actualnew failures proportionately.",
+    "Manualunlock needed onlyformal/UI dependentline; priorpendingunlockquestion persists, do notforceexit/reuseoldexit orstopindependentwork.",
+    "Preserve151/29x8/NEW24pause andselectedmodel/reasoning; no realnewmodelsend/oldresend/userconfig mutation; protectoriginaldebuggerJSON."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -82,5 +89,5 @@
     "originalRequestsResent": 0,
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5"
   },
-  "updatedAtUtc": "2026-11-04T17:06:04.738268+00:00"
+  "updatedAtUtc": "2026-11-04T23:17:04.194551+00:00"
 }
