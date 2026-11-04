@@ -1,0 +1,384 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-11-04T04:31:00Z",
+  "scope": "Windows 2022 selected native tests; same original owner observations and bounded OS counterexample. No installed-app, real account, full-suite, or all-Agent acceptance claim.",
+  "initialCompileFailure": {
+    "runId": 41763678225,
+    "sourceCommit": "29b1b63a6",
+    "testsStarted": false,
+    "reason": "manager test hook git module qualification",
+    "correctedBy": "66141fae7"
+  },
+  "firstSelected": {
+    "runId": 41764517932,
+    "sourceCommit": "66141fae7dcf97b37912ca4ac1afecf2fb08bd28",
+    "artifactSha256": "b0107084465230ccab3fe380894f629c0f28fbecd78f897c0ef5046d3878b968",
+    "providerDigestMatched": true,
+    "artifactMembers": 24,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "create-existing-branch": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 19.94s"
+        ],
+        "passed": true
+      },
+      "acp-eof-retirement": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 1.15s"
+        ],
+        "passed": true
+      },
+      "archive-cold-restore": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 34.90s"
+        ],
+        "passed": true
+      },
+      "recovery-cancel-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 104.41s"
+        ],
+        "passed": true
+      },
+      "archive-create-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 45.92s"
+        ],
+        "passed": false
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 842
+    },
+    "rawMemberSha256": {
+      "acp-eof-retirement.json": "5f9bedeb7a0e44d8ce1ddac3d0101f58b6e68408fa27097ee613abe8c2dcd096",
+      "acp-eof-retirement.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "acp-eof-retirement.stdout.log": "401fbca67c8d6599ae62fd7fa981cbb83a4fea2cfc1ab3657aec3277b2597be7",
+      "archive-cold-restore.json": "c39e2f3b173d7c821a68435abc6509f2e7d8c7eae068a710e1f983221a2e84e7",
+      "archive-cold-restore.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive-cold-restore.stdout.log": "df81fc2a01a61481ada0fdd08323b10f6c4c878cb23d44dff65d42f90440700c",
+      "archive-create-paired.json": "a392067fe9422abd924fe70726eedc900392a8bba80c848bcc6372a7d89650d5",
+      "archive-create-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive-create-paired.stdout.log": "4a88b46f7248a52cca2a216eb0b3abd44874b415da6b130aefdc89b69a6e32f1",
+      "build-selection.json": "f3a4488979fa04e21eac142fb7830e966bba2936f5be13d3a015a681624873ec",
+      "create-existing-branch.json": "d1031585ca5a58773aa4aaba91564a61add0661d26c22c23d5038969bb25cbce",
+      "create-existing-branch.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "create-existing-branch.stdout.log": "9851eda623d7a2bb0609189fce11f4e92b07fc859f148b7be563d46fc7753697",
+      "fixture-build.stderr.log": "993dcded69619682289131a808d7d251203256344196a007fd55b61ebef5641d",
+      "fixture-build.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identity.json": "8d0f0bb128f6cb7e0b85644ba0050dcd4f58dd2c5a6b2bbdfb6fd1ed917ce28d",
+      "inputs-after.json": "2d839b14d837e5290649e3196c595eb04ea1232f28e8828b40b9642c0f35af08",
+      "inputs-before.json": "2d839b14d837e5290649e3196c595eb04ea1232f28e8828b40b9642c0f35af08",
+      "recovery-cancel-paired.json": "4cbfa816b6e3df9b3c51780c3b7215dd03f1bd23740d5a213c2ebf352ab4ce04",
+      "recovery-cancel-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "recovery-cancel-paired.stdout.log": "4b920a7245f165f90ec694736996907e512efdcfc1bbbebaad1ba55bd03b2124",
+      "selected-build.result.json": "4232e43fb1d1f4b7daa2e2c1b4ffe4a96a6e389e857b08f3c596acbd16d76e20",
+      "test-build.stderr.log": "25f7ef297b2575a1c11b97275d36049407923866f5b3ce026d00463a87f5da63",
+      "test-build.stdout.jsonl": "84739fa798015a2d09ad5b1fb539e695de8ed45dd3e0e8d6f1ae70a7eaecc97b"
+    },
+    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/fixed-original.zip"
+  },
+  "secondSelected": {
+    "runId": 41770888678,
+    "sourceCommit": "fe9cd9ae9a0b7d1cd695f26dc9faa5ecd221ca90",
+    "artifactSha256": "7dea063f29f9fabd723b910ee6461da7420ef2d9ddf513895360027838323718",
+    "providerDigestMatched": true,
+    "artifactMembers": 30,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "job-gap-shadow-challenge": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal",
+            "result": "FAILED"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 0.78s"
+        ],
+        "passed": false
+      },
+      "create-existing-branch": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 21.29s"
+        ],
+        "passed": true
+      },
+      "acp-eof-retirement": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 0.85s"
+        ],
+        "passed": true
+      },
+      "archive-cold-restore": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 36.58s"
+        ],
+        "passed": true
+      },
+      "recovery-cancel-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 106.47s"
+        ],
+        "passed": true
+      },
+      "archive-create-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 48.51s"
+        ],
+        "passed": true
+      },
+      "create-eof-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 20.01s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 843
+    },
+    "rawMemberSha256": {
+      "acp-eof-retirement.json": "563837baadd30866319fd5f0c9774c6cf65b3a449a1106240d533fd507dea397",
+      "acp-eof-retirement.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "acp-eof-retirement.stdout.log": "51a6a5e0c0a35166b2b41423ce0ae04168090d972491a6e55c2b694ed2f5d28a",
+      "archive-cold-restore.json": "10d1dca95adef780ac7950b1f807f89cd1690e34cd7c92705ec71b28c0b4614b",
+      "archive-cold-restore.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive-cold-restore.stdout.log": "964dc38c171879adb81e99bd21a4bafd70f4d07edef0d666747485608c3f1a95",
+      "archive-create-paired.json": "50f96ad993c107bc8f8bfc3ebc9683f52030df4a3ec541f5b09985ab650068fb",
+      "archive-create-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive-create-paired.stdout.log": "c3aeab91e6938f4cd7017f8a5e4516a8b1a977eda1b447b5495f1c4b0e761a6a",
+      "build-selection.json": "441f71e3c3ebc4b19ca86ca5f8c5c8da00b1726e6d4438a6387017f9f5449497",
+      "create-eof-paired.json": "ef48e39c0989e09a3b99e8d2310344c5ce6623d02b86d2818d1e7cbdc8e91490",
+      "create-eof-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "create-eof-paired.stdout.log": "c61b414dbc61ef2d74e9bd3e3b205021782e9026729b6c00c9880b9e2ea74457",
+      "create-existing-branch.json": "0ae0feb531f5edb94b5076ae6afdaa795470fcc4efd3098543a1565dfc2dbc65",
+      "create-existing-branch.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "create-existing-branch.stdout.log": "35dc82d00d67513a40f808f22364ec676deb7bbe3c2e7d0111d4745fac32ce53",
+      "fixture-build.stderr.log": "4b75297154307d5d96c44a8873e70da6be0ce103d8f462277d3fa037124ed2cb",
+      "fixture-build.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identity.json": "7dd3bfacb0c005a2ad899bd74478a5f573d123b517016e835599fd39e555351c",
+      "inputs-after.json": "a9a511f39f6f235236c21171d6e60177295c0aad01781b30d66a0057cd2d491a",
+      "inputs-before.json": "a9a511f39f6f235236c21171d6e60177295c0aad01781b30d66a0057cd2d491a",
+      "job-gap-shadow-challenge.json": "43514caa9499093793e8f1c4aa9902b29ebd54dbacd2e6b323aade2437171d41",
+      "job-gap-shadow-challenge.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "job-gap-shadow-challenge.stdout.log": "80406c81a157ab05641279b0472c0500de076ca7fee93fede2531bc08cdaf5c0",
+      "recovery-cancel-paired.json": "cfa4607cba39526297e49aaa9cfdca1bd5ecb4120a13afbd03a52408c88f5cc5",
+      "recovery-cancel-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "recovery-cancel-paired.stdout.log": "762006c0962b835ec7e42326b455cf67fe279097e641244a2909d3a2210f9ee9",
+      "selected-build.result.json": "47f0b9a40b22d231f72848353dc253a971bc1542b890fc159c828ddaf34961cc",
+      "test-build.stderr.log": "e92e45b0cd9f56ccb3eb0d0d4cc3d7b7450ffa87792746da4f901ecb67bfbd8d",
+      "test-build.stdout.jsonl": "cb495015b5a3d63dde8206f5f00ecb9e714522d48064b52efa4753c6c6ec27de"
+    },
+    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/challenge-original.zip"
+  },
+  "firstOverlapFailure": {
+    "group": "archive-create-paired",
+    "createStateAtFailure": "running; settled=false",
+    "fixtureWaitSeconds": 15,
+    "lastCorrelatedCommand": {
+      "ordinal": 188,
+      "originalChildPid": 5592,
+      "phase": "spawned"
+    },
+    "gitGapAttribution": "not established; no FIRST_INCOMPLETE, unknown or pretermination receipt for that command",
+    "archivePassed": true,
+    "fix": "fe9cd9ae9 changes only this exact Windows fixture wait to60 seconds, existing macOS15/production deadlines/assertions unchanged",
+    "samePairAfterChange": "natural0,2 passed,48.51s"
+  },
+  "eofIdentity": {
+    "single": {
+      "originalChildPid": 7064,
+      "completionReaped": true,
+      "originalLeaderWaitReturn": 0,
+      "nativeJobActiveProcesses": 0,
+      "closedSucceeded": true,
+      "admissionCounts": [0, 0, 0],
+      "work": 0
+    },
+    "withCreate": {
+      "originalChildPid": 1904,
+      "completionReaped": true,
+      "originalLeaderWaitReturn": 0,
+      "nativeJobActiveProcesses": 0,
+      "closedSucceeded": true,
+      "admissionCounts": [0, 0, 0],
+      "work": 0
+    },
+    "limitation": "Does not retrospectively identify the original full-suite EOF failure; no production ACP completion change."
+  },
+  "recoveryPreparation": {
+    "coveredOriginalCases": 2,
+    "originalAffectedCases": 10,
+    "latestWaitMs": [38852, 38932],
+    "enteredVerifyingMs": [27933, 27953],
+    "budgetMs": 60000,
+    "helperTotalMs": [60946, 61011],
+    "deleteDispatched": false,
+    "scope": "Two original cancellation fixtures isolated in their existing exact child tests.60s starts after synchronous inspect and prepare; outer240 bounds total fixture, not product operation. Eight original fixtures remain untested this stage."
+  },
+  "counterexample": {
+    "manualIgnoredTest": true,
+    "naturalExitCode": 101,
+    "trials": 16,
+    "nativeZeroCompleteEmptyFinalZeroWindows": 16,
+    "followedByExactOmittedTargetWaitTimeout": 16,
+    "waitErrors": 0,
+    "originalLeaderSignaledBeforeTermination": true,
+    "targetOriginalJobMembershipConfirmedBeforeTermination": true,
+    "shadowHeldAndPendingCounts": 0,
+    "proposedWouldClear": true,
+    "unchangedProductionShadowRemainedActive": true,
+    "allTargetsSignaledAndOriginalJobsZeroAfterOwnedCleanup": true,
+    "rawStdoutLines": "12-28",
+    "conclusion": "Reject native current-zero/list-empty/final-zero plus exact leader signal as sufficient historical-gap recovery. Original descendant can remain unsignaled. This injected historical-list-failure shadow is an OS fixture, not a real Git or Agent reproduction."
+  },
+  "nextFix": "Scoped fixed-Git caller debugger candidate under development: creation-time exact original handles, matching original Job cumulative count, all handles signaled after continued exits and nativeJob0. No such production change in this recorded source.",
+  "unchangedOpen": {
+    "latestFullRun": 41750118511,
+    "rustPassed": 2363,
+    "rustFailed": 17,
+    "rustIgnored": 72,
+    "p18": "Official attributable recoverable unknown object, active diff/new attributable refusal and N/O terminal/identity remain missing. Old requests not resent.",
+    "formalAppCommit": "168db42e5",
+    "installationPerformed": false
+  },
+  "verification": "Root raw audit plus independent evidence_audit reader verified provider SHA/ZIP CRC/member stream hashes/source inputs/executable pins/natural exits/exact selected names.844 source inputs in second selected:1exact,843CRLF."
+}
