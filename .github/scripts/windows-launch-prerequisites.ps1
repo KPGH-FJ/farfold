@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
   [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics')][string]$Cohort = 'LaunchPrerequisites',
-  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend', 'FullRunFailures')][string]$Phase = 'All'
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend', 'FullRunFailures', 'BoundaryWaits')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -45,7 +45,7 @@ function Confirm-Inputs {
 
 Confirm-Inputs
 $allowedPhases = if ($Cohort -ceq 'FrozenRetirementResume') {
-  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'FullRunFailures')
+  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'FullRunFailures', 'BoundaryWaits')
 } elseif ($Cohort -ceq 'OpenFailureDiagnostics') {
   @('All', 'Frontend')
 } else { @('All') }
@@ -528,8 +528,19 @@ if ($Cohort -ceq 'FrozenRetirementResume') {
       @{ name = 'recovery-parent-budgets'; filter = $parentBudgets; exact = $false; threads = 2; names = $parentBudgets }
     )
   }
-  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 3 }[$Phase]
-  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 5 }[$Phase]
+  if ($Phase -ceq 'BoundaryWaits') {
+    # Exactly the two failures from full41853291008. Keep both isolated parent
+    # wrappers active, including contention between their owned repositories.
+    $boundaries = @(
+      'worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent',
+      'worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns'
+    )
+    $groups = @(
+      @{ name = 'removal-boundary-waits'; filter = $boundaries; exact = $false; threads = 2; names = $boundaries }
+    )
+  }
+  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 3; BoundaryWaits = 1 }[$Phase]
+  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 5; BoundaryWaits = 2 }[$Phase]
   if ($groups.Count -ne $expectedGroups -or @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum -ne $expectedExecutions) {
     throw 'Resumed phase selection incomplete'
   }

@@ -187,8 +187,9 @@ fn remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids() {
 }
 #[test]
 fn remove_cancelled_retirement_keeps_maintenance_until_worker_returns() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::remove_cancelled_retirement_keeps_maintenance_until_worker_returns",
+        Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -216,7 +217,8 @@ fn remove_cancelled_retirement_keeps_maintenance_until_worker_returns() {
                     },
                 )
             });
-            rx.recv_timeout(std::time::Duration::from_secs(10)).unwrap();
+            rx.recv_timeout(Duration::from_secs(if cfg!(windows) { 60 } else { 10 }))
+                .unwrap();
             let cancelled = tests::op(m.cancel(&s, REMOVE).unwrap());
             assert_eq!(cancelled.state, "cancelling");
             assert!(cancelled.maintenance_active);
@@ -359,7 +361,16 @@ fn removal_identity_recovered_repository_rejects_replaced_parent() {
             );
             assert_eq!(prepared.state, "prepared");
             m.start(&s, id).unwrap();
-            assert_eq!(recycle_tests::wait(&m, &s, id).state, "ready");
+            assert_eq!(
+                recycle_tests::wait_with_timeout(
+                    &m,
+                    &s,
+                    id,
+                    Duration::from_secs(if cfg!(windows) { 60 } else { 20 }),
+                )
+                .state,
+                "ready"
+            );
             let (_, doc) = storage::read(&s).unwrap();
             let intent = doc.operation.unwrap().recovery.unwrap();
             replace_parent_keep_children(&parent);

@@ -36,7 +36,8 @@ on:
         description: Scope within FrozenRetirementResume only
         type: choice
         default: All
-        options: [All, CreateUnfinishedAndTiming, FullRunFailures]
+        options:
+          [All, CreateUnfinishedAndTiming, FullRunFailures, BoundaryWaits]
 
 permissions:
   contents: read
@@ -155,6 +156,11 @@ jobs:
         timeout-minutes: 3
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase Terminal
+      - name: Two removal boundary waits from the completed full run
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'BoundaryWaits' }}
+        timeout-minutes: 6
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase BoundaryWaits
       - name: Require all resumed phases to have executed exactly and passed
         if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
         timeout-minutes: 1
@@ -164,6 +170,7 @@ jobs:
           $expected = @{ Retirement = @(6, 6); GitControls = @(3, 16); CreateRecovery = @(14, 20); Terminal = @(3, 3) }
           if ('${{ inputs.resume_scope }}' -ceq 'CreateUnfinishedAndTiming') { $expected = @{ CreateTiming = @(1, 1); CreateUnfinished = @(9, 9) } }
           if ('${{ inputs.resume_scope }}' -ceq 'FullRunFailures') { $expected = @{ FullRunFailures = @(3, 5) } }
+          if ('${{ inputs.resume_scope }}' -ceq 'BoundaryWaits') { $expected = @{ BoundaryWaits = @(1, 2) } }
           foreach ($phase in $expected.Keys) {
             $result = Get-Content -LiteralPath "windows-diagnostics-raw/resume-$phase.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
             if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'FrozenRetirementResume' -or $result.phase -cne $phase -or $result.expectedGroups -ne $expected[$phase][0] -or $result.expectedExecutions -ne $expected[$phase][1] -or $result.completedGroups -ne $expected[$phase][0] -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Resumed phase missing, incomplete or failed: $phase" }
