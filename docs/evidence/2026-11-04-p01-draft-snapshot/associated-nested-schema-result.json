@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-11-04T11:08:27.960694+00:00",
+  "scope": "Synthetic unsentWork.v1 settings IPC persistence regression only; no user data, formal application, real Agent, Git mutation or full-suite execution.",
+  "changes": [
+    "Unknown localAudio and localAudio.file keys now escape the legacy malformed-source downgrade and reject the complete saved snapshot before hydration or overwrite.",
+    "Unknown activity record keys now reject complete hydration rather than being discarded when reconstructing the record.",
+    "Existing composer/attachment field protection retained. Known missing/malformed audio sources retain bytes while clearing local read authority. Arbitrary Agent scalar configuration option names remain allowed."
+  ],
+  "runs": [
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/draft_storage.nested-schema.test.ts",
+      "log": "associated-nested-schema-red.log",
+      "exitCode": 1,
+      "tests": {
+        "passed": 4,
+        "failed": 3
+      },
+      "phase": "before source fix"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/draft_storage.nested-schema.test.ts",
+      "log": "associated-nested-schema-green.log",
+      "exitCode": 0,
+      "tests": {
+        "passed": 7,
+        "failed": 0
+      },
+      "phase": "after source fix"
+    },
+    {
+      "command": "corepack pnpm exec prettier --write src/runtime/drafts.ts src/runtime/archive_activity.ts src/runtime/draft_storage.nested-schema.test.ts",
+      "log": "associated-nested-schema-format.log",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/draft_storage.nested-schema.test.ts src/runtime/draft_storage.recovery.test.ts src/runtime/audio_input.test.ts src/runtime/archive_activity.test.ts",
+      "log": "associated-nested-schema-related.log",
+      "exitCode": 0,
+      "files": 4,
+      "tests": {
+        "passed": 73,
+        "failed": 0
+      }
+    }
+  ],
+  "sourceAfterSha256": {
+    "src/runtime/drafts.ts": "da471eff093aae6ab7e135a2d293e231eb1b314edca07c62a9759a5cd9e59e50",
+    "src/runtime/archive_activity.ts": "f9fab494840b186fc6fdf97beede989be1d4680b3f35ad71ee69dcbdaac48bf2",
+    "src/runtime/draft_storage.nested-schema.test.ts": "ba59e0a2c42ff536c309e083e1fbd5aebcd4ab85f0cce43c59c735fbefee1a4a"
+  },
+  "logSha256": {
+    "associated-nested-schema-red.log": "f2a6ec22c5ac12606cd89dd3a0d2ad9db271c6787ec598d365ed22719ff10887",
+    "associated-nested-schema-green.log": "55ca062273d341c95a8a5d3706b124baf6e9c7c4a62cac52314985aa676e7169",
+    "associated-nested-schema-format.log": "3a790eeeae95fa5e2a116937effa066821571da2fb2de9405713a9c6471ec1bf",
+    "associated-nested-schema-related.log": "28f291198d2f30975e2fb49b4bfc2719d09efa2c612fcd737b9f781c4d0410a5"
+  },
+  "limits": [
+    "Settings get/set are mocked with synthetic values; no actual database, disk-full, formal installed UI or restart validation.",
+    "Root owns complete engineering checks and final integration; these targeted results do not replace those checks."
+  ]
+}

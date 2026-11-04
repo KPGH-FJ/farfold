@@ -88,6 +88,66 @@ it.each(["uri", "data", "mimeType"])(
   },
 );
 
+it.each([
+  ["composer", { futureInput: { text: "retain unrecognized input" } }],
+  [
+    "attachment",
+    {
+      attachments: [
+        {
+          id: "file",
+          name: "notes.md",
+          kind: "file",
+          uri: "file:///notes.md",
+          futureSource: { text: "retain unrecognized attachment" },
+        },
+      ],
+    },
+  ],
+])(
+  "preserves unknown %s fields before hydration or a later save, then allows an explicit supported retry",
+  async (_name, fields) => {
+    let disk = original(fields as Record<string, unknown>);
+    const captured = structuredClone(disk);
+    mock.invoke.mockImplementation(async (command, input) => {
+      if (command === "settings_get") return structuredClone(disk);
+      if (command === "settings_set") disk = structuredClone(input.value);
+    });
+    const d = await import("./drafts");
+    const reading = await Promise.allSettled([d.draftPersistence.load()]);
+    d.composerDrafts.update("new", (draft) => ({
+      ...draft,
+      text: "keep later local input",
+    }));
+    const flushing = await Promise.allSettled([d.draftPersistence.flush()]);
+    expect(disk).toEqual(captured);
+    expect(reading[0].status).toBe("rejected");
+    expect(flushing[0].status).toBe("rejected");
+    expect(d.draftPersistence.snapshot().ready).toBe(false);
+    expect(d.composerDrafts.read("session:previous").text).toBe("");
+    expect(
+      mock.invoke.mock.calls.every(([command]) => command === "settings_get"),
+    ).toBe(true);
+
+    disk = original({});
+    await d.draftPersistence.load();
+    await d.draftPersistence.flush();
+    expect(d.draftPersistence.snapshot().ready).toBe(true);
+    expect(d.composerDrafts.read("new").text).toBe("keep later local input");
+    expect(d.composerDrafts.read("session:previous").text).toBe(
+      "keep previous",
+    );
+    expect(disk).toMatchObject({
+      composers: { new: { text: "keep later local input" } },
+    });
+    expect(
+      mock.invoke.mock.calls.every(([command]) =>
+        ["settings_get", "settings_set"].includes(command),
+      ),
+    ).toBe(true);
+  },
+);
+
 it("restores legacy omitted optional fields and valid pending input without dispatching", async () => {
   mock.invoke.mockResolvedValue(
     original({

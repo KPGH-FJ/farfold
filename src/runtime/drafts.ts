@@ -535,6 +535,44 @@ function parseChoice(value: unknown): ConversationChoice {
   } as ConversationChoice;
 }
 function retainedAudioSource(value: unknown): LocalAudio | null {
+  // Unknown saved fields must block replacement of the complete snapshot.
+  // Known malformed legacy sources still lose read authority below.
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const source = value as Record<string, unknown>;
+    if (
+      Object.keys(source).some(
+        (key) =>
+          ![
+            "file",
+            "channels",
+            "sampleRate",
+            "bitsPerSample",
+            "frames",
+            "durationMs",
+          ].includes(key),
+      )
+    )
+      throw new Error("unsupported draft audio source");
+    const file = source.file;
+    if (
+      file &&
+      typeof file === "object" &&
+      !Array.isArray(file) &&
+      Object.keys(file).some(
+        (key) =>
+          ![
+            "root",
+            "path",
+            "resolvedPath",
+            "name",
+            "size",
+            "sha256",
+            "version",
+          ].includes(key),
+      )
+    )
+      throw new Error("unsupported draft audio source");
+  }
   try {
     return parseLocalAudio(value);
   } catch {
@@ -543,7 +581,20 @@ function retainedAudioSource(value: unknown): LocalAudio | null {
 }
 function parseComposer(value: unknown): ComposerDraft {
   const raw = record(value);
+  // Reconstructing only supported fields must not silently discard newer
+  // persisted input before an ordinary edit replaces the saved snapshot.
   if (
+    Object.keys(raw).some(
+      (key) =>
+        ![
+          "text",
+          "attachments",
+          "sendPending",
+          "queueEdit",
+          "pendingConversation",
+          "savedChoice",
+        ].includes(key),
+    ) ||
     typeof raw.text !== "string" ||
     !Array.isArray(raw.attachments) ||
     (raw.sendPending !== undefined && typeof raw.sendPending !== "boolean")
@@ -595,6 +646,26 @@ function parseComposer(value: unknown): ComposerDraft {
     attachments: raw.attachments.map((item: unknown) => {
       const a = record(item);
       if (
+        Object.keys(a).some(
+          (key) =>
+            ![
+              "id",
+              "name",
+              "kind",
+              "uri",
+              "data",
+              "mimeType",
+              "deliveryMode",
+              "documentText",
+              "localAudio",
+              "audioClassificationFailed",
+              // Known legacy transient fields remain readable but are not trusted.
+              "content",
+              "loading",
+              "recovered",
+              "imageChecked",
+            ].includes(key),
+        ) ||
         typeof a.id !== "string" ||
         typeof a.name !== "string" ||
         typeof a.kind !== "string" ||

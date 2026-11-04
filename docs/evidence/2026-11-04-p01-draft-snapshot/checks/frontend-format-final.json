@@ -1,0 +1,10 @@
+{
+  "label": "frontend-format-final",
+  "command": ["corepack", "pnpm", "format:check"],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T11:09:47.796108+00:00",
+  "finishedAt": "2026-11-04T11:10:44.040209+00:00",
+  "durationSeconds": 56.244,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-format-final.log"
+}

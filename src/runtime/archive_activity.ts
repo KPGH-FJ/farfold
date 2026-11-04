@@ -21,6 +21,9 @@ export function parseArchiveActivity(value: unknown): Records {
       throw new Error("invalid archive metadata");
     const item = raw as ArchiveActivity;
     if (
+      Object.keys(item).some(
+        (field) => !["lastActivityAt", "ended"].includes(field),
+      ) ||
       !Number.isFinite(item.lastActivityAt) ||
       item.lastActivityAt <= 0 ||
       typeof item.ended !== "boolean"

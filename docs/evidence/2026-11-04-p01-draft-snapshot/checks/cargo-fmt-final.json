@@ -1,0 +1,16 @@
+{
+  "label": "cargo-fmt-final",
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T11:09:47.796581+00:00",
+  "finishedAt": "2026-11-04T11:09:49.953125+00:00",
+  "durationSeconds": 2.156,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/cargo-fmt-final.log"
+}

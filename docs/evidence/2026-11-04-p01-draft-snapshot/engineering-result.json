@@ -1,0 +1,127 @@
+{
+  "at": "2026-11-04T11:15:15.049740+00:00",
+  "sevenCommands": [
+    {
+      "log": "format-final.log",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "naturalExitCode": 0,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "startedAt": "2026-11-04T11:09:47.796108+00:00",
+      "endedAt": "2026-11-04T11:10:44.040209+00:00"
+    },
+    {
+      "log": "typecheck-final.log",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "naturalExitCode": 0,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "startedAt": "2026-11-04T11:09:47.796936+00:00",
+      "endedAt": "2026-11-04T11:10:05.081893+00:00"
+    },
+    {
+      "log": "frontend-final.log",
+      "argv": ["corepack", "pnpm", "test"],
+      "naturalExitCode": 0,
+      "sha256": "b06e660469b36dca650973d73d3c8e2b34d808eadb6ae229c80eb8b61dac7bc0",
+      "startedAt": "2026-11-04T11:09:47.797225+00:00",
+      "endedAt": "2026-11-04T11:10:29.705012+00:00"
+    },
+    {
+      "log": "build-final.log",
+      "argv": ["corepack", "pnpm", "build"],
+      "naturalExitCode": 0,
+      "sha256": "4a975f9b471e284be2d5e2e8b967ea5c7a003976e272a913fb81d24d1f6933c9",
+      "startedAt": "2026-11-04T11:10:47.556620+00:00",
+      "endedAt": "2026-11-04T11:10:55.728043+00:00"
+    },
+    {
+      "log": "cargo-fmt.log",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "naturalExitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-04T11:09:47.796581+00:00",
+      "endedAt": "2026-11-04T11:09:49.953125+00:00"
+    },
+    {
+      "log": "clippy.log",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "naturalExitCode": 0,
+      "sha256": "bcb74884a78099501f6bfc31de29d15aae4eb48dcd18d5c99bdde44d75b90089",
+      "startedAt": "2026-11-04T11:12:13.916593+00:00",
+      "endedAt": "2026-11-04T11:12:14.350314+00:00"
+    },
+    {
+      "log": "rust-full.log",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "naturalExitCode": 0,
+      "sha256": "163e76134d1816ad31623e7af96b11b04cae286bd9bf382f54535a2b18758d30",
+      "startedAt": "2026-11-04T11:12:14.375684+00:00",
+      "endedAt": "2026-11-04T11:14:03.369694+00:00"
+    }
+  ],
+  "sourceInputs": 2366,
+  "sourceFinalBeforeAndCurrentExact": true,
+  "sourceContinuousFreezeClaimed": false,
+  "frontendFiles": 705,
+  "frontendPassed": 9459,
+  "rustPassed": 2335,
+  "rustIgnored": 6,
+  "logProvenance": {
+    "format-final.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "stagedCopyByteIdentical": true
+    },
+    "typecheck-final.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "stagedCopyByteIdentical": true
+    },
+    "frontend-final.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-tests-final.log",
+      "sha256": "b06e660469b36dca650973d73d3c8e2b34d808eadb6ae229c80eb8b61dac7bc0",
+      "stagedCopyByteIdentical": true
+    },
+    "build-final.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/frontend-build-final.log",
+      "sha256": "4a975f9b471e284be2d5e2e8b967ea5c7a003976e272a913fb81d24d1f6933c9",
+      "stagedCopyByteIdentical": true
+    },
+    "cargo-fmt.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/cargo-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stagedCopyByteIdentical": true
+    },
+    "clippy.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/cargo-clippy-final.log",
+      "sha256": "bcb74884a78099501f6bfc31de29d15aae4eb48dcd18d5c99bdde44d75b90089",
+      "stagedCopyByteIdentical": true
+    },
+    "rust-full.log": {
+      "source": "docs/evidence/2026-11-04-p01-draft-snapshot/checks/cargo-tests-final.log",
+      "sha256": "163e76134d1816ad31623e7af96b11b04cae286bd9bf382f54535a2b18758d30",
+      "stagedCopyByteIdentical": true
+    }
+  },
+  "scope": "Final unified P01 nested snapshot protection after associated fixes; local macOS only. Earlier passing checks retain their earlier source scope."
+}
