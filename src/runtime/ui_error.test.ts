@@ -11,6 +11,14 @@ const failures = [
   ["AGENT_CONNECTION_ENDED", "连接在检查完成前结束，请检查程序后重试"],
   ["AGENT_START_FAILED", "程序未能启动，请检查程序文件和资料文件夹后重试"],
   [
+    "AGENT_OPEN_TIMEOUT",
+    "打开对话尚未确认完成，等待已超时。原内容已保留，请先查看是否有待处理的提示。",
+  ],
+  [
+    "AGENT_OPEN_CLOSED",
+    "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
+  ],
+  [
     "AGENT_WORK_DIRECTORY_UNAVAILABLE",
     "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
   ],

@@ -26,6 +26,77 @@ use crate::meta_store::{AgentRow, MetaStore};
 #[path = "session/readonly_admission_tests.rs"]
 mod readonly;
 
+async fn open_reply<T>(
+    receive: oneshot::Receiver<T>,
+    duration: std::time::Duration,
+) -> Result<T, String> {
+    // This covers the whole opening result, including post-new/load setup.
+    // A caller deadline or closed receiver does not settle unknown Agent work.
+    super::wait::reply_typed(receive, duration)
+        .await
+        .map_err(|failure| match failure {
+            super::wait::ReplyFailure::Timeout => "AGENT_OPEN_TIMEOUT".to_owned(),
+            super::wait::ReplyFailure::Closed => "AGENT_OPEN_CLOSED".to_owned(),
+        })
+}
+
+#[cfg(test)]
+mod open_reply_tests {
+    use super::*;
+    use std::sync::atomic::AtomicUsize;
+    use std::time::Duration;
+
+    #[derive(Debug)]
+    struct Receipt(Arc<AtomicUsize>);
+    impl Drop for Receipt {
+        fn drop(&mut self) {
+            self.0.fetch_add(1, Ordering::SeqCst);
+        }
+    }
+
+    #[tokio::test]
+    async fn open_reply_timeout_is_fixed_and_late_receipt_returns_to_sender() {
+        let (send, receive) = oneshot::channel::<Result<Receipt, String>>();
+        let failure = open_reply(receive, Duration::from_millis(1))
+            .await
+            .unwrap_err();
+        assert_eq!(failure, "AGENT_OPEN_TIMEOUT");
+        let drops = Arc::new(AtomicUsize::new(0));
+        let receipt = send.send(Ok(Receipt(drops.clone()))).unwrap_err().unwrap();
+        assert!(Arc::ptr_eq(&receipt.0, &drops));
+        assert_eq!(drops.load(Ordering::SeqCst), 0);
+        drop(receipt);
+        assert_eq!(drops.load(Ordering::SeqCst), 1);
+    }
+
+    #[tokio::test]
+    async fn open_reply_closed_is_fixed_without_a_remote_error() {
+        let (send, receive) = oneshot::channel::<()>();
+        drop(send);
+        assert_eq!(
+            open_reply(receive, Duration::from_secs(1)).await,
+            Err("AGENT_OPEN_CLOSED".to_owned())
+        );
+    }
+
+    #[tokio::test]
+    async fn open_reply_keeps_delayed_success_and_inner_manager_errors() {
+        for outcome in [Ok(7), Err("controlled Manager/SDK failure".to_owned())] {
+            let (send, receive) = oneshot::channel();
+            let expected = outcome.clone();
+            let sending = tokio::spawn(async move {
+                tokio::task::yield_now().await;
+                send.send(outcome).unwrap();
+            });
+            assert_eq!(
+                open_reply(receive, Duration::from_secs(1)).await.unwrap(),
+                expected
+            );
+            sending.await.unwrap();
+        }
+    }
+}
+
 fn session_control(
     connection: &ManagedConnection,
     session_id: &str,
@@ -633,13 +704,9 @@ impl AcpManager {
                 .map_err(|_| "新对话读取结果尚未确认".to_string())??
                 .accept();
         }
-        super::wait::reply(
-            result_rx,
-            std::time::Duration::from_secs(120),
-            "session open",
-        )
-        .await??
-        .accept()
+        open_reply(result_rx, std::time::Duration::from_secs(120))
+            .await??
+            .accept()
     }
 
     pub(crate) fn browser_tool_unavailable(
