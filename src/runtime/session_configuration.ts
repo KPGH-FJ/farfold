@@ -1,8 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
-import { applyConfigCheck, type ConfigCheck } from "./config_check";
+import {
+  applyConfigCheck,
+  releaseConfigurationPause,
+  type ConfigCheck,
+} from "./config_check";
 import {
   configOptionChangeBlocked,
   protectedConfigIds,
+  configChangeBusy,
 } from "./protected_config";
 import {
   normalizeConfigOptions,
@@ -26,6 +31,7 @@ import type {
 import { workspaceAccessCapability } from "./workspace_access_types";
 import { WORKSPACE_ACCESS } from "./workspace_access_strings";
 import { forgetSessionIdentity } from "./session_identity_types";
+import { ConfigurationConfirmation } from "./session_configuration_confirmation";
 
 interface Change {
   thread: ThreadState;
@@ -33,6 +39,7 @@ interface Change {
   pending: ConfigCheck | null;
   defer: boolean;
   interrupted: boolean;
+  confirmation?: ConfigurationConfirmation;
 }
 
 export interface ConfirmedConfigUpdate {
@@ -87,6 +94,16 @@ export class SessionConfiguration {
   receiveCheck(thread: ThreadState, check: ConfigCheck): boolean {
     const change = this.changes.get(thread.key);
     if (change?.thread !== thread || !change.defer) return false;
+    if (change.confirmation) {
+      if (!thread.configuring || check.status !== "ready") {
+        change.interrupted = true;
+        change.pending = check;
+      }
+      change.ready = check.status === "ready" ? structuredClone(check) : null;
+      // Ready is only an observation until the matching complete save receipt.
+      // A later ready event cannot erase an intervening failure.
+      return check.status === "ready";
+    }
     if (
       !thread.configuring ||
       check.status === "record_failed" ||
@@ -101,6 +118,87 @@ export class SessionConfiguration {
     // configuring guard blocks sending without replacing any existing pause.
     // Unknown/save failure and later drift still block immediately.
     return check.status === "ready" || !change.interrupted;
+  }
+
+  receiveOptions(thread: ThreadState): void {
+    const change = this.changes.get(thread.key);
+    if (change?.thread === thread && change.confirmation)
+      change.interrupted = true;
+  }
+
+  observe(thread: ThreadState): void {
+    const change = this.changes.get(thread.key);
+    if (
+      change?.thread === thread &&
+      change.confirmation &&
+      !change.confirmation.owns()
+    )
+      change.interrupted = true;
+  }
+
+  async confirm(key: string, refresh: () => Promise<void>): Promise<void> {
+    const s = this.hooks.thread(key);
+    if (!s?.configCheck || configChangeBusy(s)) return;
+    const confirmation = new ConfigurationConfirmation(
+      s,
+      () => this.hooks.thread(key),
+      () => this.hooks.permissionRevision(key),
+    );
+    const change: Change = {
+      thread: s,
+      ready: null,
+      pending: null,
+      defer: true,
+      interrupted: false,
+      confirmation,
+    };
+    this.changes.set(key, change);
+    s.configuring = true;
+    s.configError = null;
+    this.hooks.emit();
+    const request = (async () => {
+      let published = false;
+      try {
+        const result = await invoke<unknown>("session_confirm_config", {
+          agentId: s.agentId,
+          cwd: s.cwd,
+          sessionId: s.nativeSessionId,
+          displayed: structuredClone(confirmation.displayed),
+        });
+        if (this.hooks.thread(key) !== s) return;
+        const receipt = confirmation.receipt(result, change.ready);
+        if (change.interrupted || !confirmation.owns() || !receipt)
+          throw new Error(STRINGS.repair.confirmConfigFailed);
+        replaceConfigOptions(
+          s,
+          receipt.options,
+          receipt.configuration.configOptionsModern,
+        );
+        s.service = receipt.configuration.service ?? undefined;
+        applyConfigCheck(s, receipt.check);
+        releaseConfigurationPause(s);
+        // Publication is atomic. Later pulled events belong to the ordinary
+        // live view, even while the independent sidebar refresh is pending.
+        published = true;
+        this.changes.delete(key);
+        this.requests.delete(key);
+        s.configuring = false;
+        this.hooks.emit();
+        await refresh();
+      } catch {
+        if (!published && confirmation.ownsFeedback())
+          s.configError = STRINGS.repair.confirmConfigFailed;
+      } finally {
+        if (this.changes.get(key) === change) {
+          this.changes.delete(key);
+          this.requests.delete(key);
+          s.configuring = false;
+        }
+        this.hooks.emit();
+      }
+    })();
+    this.requests.set(key, request);
+    return request;
   }
 
   async decideWorkspaceAccess(

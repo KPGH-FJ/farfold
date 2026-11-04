@@ -62,11 +62,13 @@
     "workflowJobMinutes": 70,
     "sourceBinaryFixtureBindingRetained": true,
     "dispatched": true,
-    "allWindowsPassed": false,
+    "allWindowsPassed": true,
     "runId": 41843965055,
     "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41843965055",
     "sourceHead": "0bfc79a46801be0d077fd9d8f282a0fe95d1427d",
-    "resultPending": true
+    "resultPending": false,
+    "actualSelectedResult": "3groups/5FQN naturally passed;4real parent wrappers and paired threads2 retained",
+    "actualSummary": "full-run-wait-fixes-native.json"
   },
   "baseline17PartialObservations": {
     "counts": {

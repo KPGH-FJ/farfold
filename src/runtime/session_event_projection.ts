@@ -36,6 +36,7 @@ export interface SessionEventEffects {
   owns(): boolean;
   promptOwner(): PromptRequestOwner | undefined;
   configurationChanging(): boolean;
+  configurationOptionsReceived?(): void;
   receiveConfigCheck(check: ConfigCheck): boolean;
   finishActivity(): void;
   permissionChanged(): void;
@@ -76,6 +77,7 @@ export function applySessionEvent(
   if (effects)
     observeDesktopNotification(s, updateEnvelope ? {} : e, live, effects.owns);
   if (kind === "configOptions") {
+    effects?.configurationOptionsReceived?.();
     if (!effects?.configurationChanging())
       replaceConfigOptions(
         s,
@@ -210,6 +212,16 @@ export function applySessionEvent(
   } else if (kind === "session_history_complete") {
     if (!isHistoryMarkerShape(e)) pushRaw(s, e);
   } else if (updateEnvelope || e.update !== undefined) {
+    if (
+      [
+        "config_option_update",
+        "current_model_update",
+        "current_mode_update",
+      ].includes(
+        String((e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate),
+      )
+    )
+      effects?.configurationOptionsReceived?.();
     if (
       (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
       "config_option_update"

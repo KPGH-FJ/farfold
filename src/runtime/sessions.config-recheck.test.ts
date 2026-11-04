@@ -334,7 +334,17 @@ it.each([false, true])(
         h.channels
           .get(old.nativeSessionId)
           .onmessage({ kind: "configCheck", check });
-        return check;
+        return {
+          ...check,
+          configuration: {
+            configOptions: [option],
+            configOptionsModern: true,
+            configCheck: check,
+            service: null,
+            permissionConfigId: null,
+            permissionState: old.permissionState,
+          },
+        };
       }
       return command === "settings_get" ? null : [];
     });

@@ -762,7 +762,7 @@ it("reads all repeated categories into the preparation draft without setters, pr
 });
 
 it.each([1, 2])(
-  "confirms a complete v%s current snapshot verbatim without sending or draining paused input",
+  "passes the v%s snapshot verbatim, blocks incomplete protected evidence, and never drains paused input",
   async (version) => {
     const s = seed(`confirm-${version}`);
     s.identity = "established";
@@ -797,7 +797,14 @@ it.each([1, 2])(
       if (command !== "session_confirm_config") return [];
       const ready = { ...check, status: "ready", issues: [] };
       event(s, ready);
-      return ready;
+      return {
+        ...ready,
+        configuration: {
+          ...confirmed(s, s.configOptions),
+          configOptionsModern: true,
+          configCheck: ready,
+        },
+      };
     });
     await threads.confirmConfig(s.key);
     expect(h.invoke).toHaveBeenCalledWith(
@@ -805,7 +812,12 @@ it.each([1, 2])(
       expect.objectContaining({ displayed: current }),
     );
     expect(s.configOptions).toEqual(options());
-    expect(s.modelDrift).toBe(false);
+    // This old synthetic v1 current contains two choices for four protected
+    // options. A complete RPC cannot make that incomplete evidence trustworthy.
+    expect(s.modelDrift).toBe(version === 1);
+    expect(s.configError).toBe(
+      version === 1 ? STRINGS.repair.confirmConfigFailed : null,
+    );
     expect(s.queued[0][0]).toMatchObject({ text: "keep paused" });
     expect(s.queuePaused).toBe("unavailable");
     expect(

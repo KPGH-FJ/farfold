@@ -1,0 +1,117 @@
+{
+  "recordedAtUtc": "2026-11-04T14:56:47.083037+00:00",
+  "scope": "ARCH20/21 explicit saved-configuration retry; original151 conditions/29-by-8 unchanged.",
+  "implemented": [
+    "Non-restore save confirmation returns original check plus complete actual options, modern flag, guard, permission facts and committed non-secret service, sharing the setter serializer.",
+    "Frontend defers ordinary ready until the explicit complete reply is validated against the same owner, displayed snapshot and all observed changes, then atomically updates options/check/service.",
+    "Complete RPC may arrive before channel-ready: real delivery asynchronously pulls/acks and does not guarantee their order.",
+    "Intervening failure/unknown/options/permission/busy changes block publication. Original protected IDs retain their role after Agent category relabeling.",
+    "Late old-owner failures do not write new-owner errors; original operation token still releases its own busy state. Only an owned empty pause can release; no automatic send or setter retry."
+  ],
+  "frontend": {
+    "finalFiles": 25,
+    "finalPassed": 417,
+    "finalSkipped": 0,
+    "typecheckExit": 0,
+    "changedFilesFormatExit": 0,
+    "sourceSha256": {
+      "src/runtime/session_configuration.ts": "62d7b2f5e5c045bdc23cab362ddad1c850a57ac0ca9c75cc6e6c3a40692dfba8",
+      "src/runtime/session_configuration_confirmation.ts": "3c2cb9cbf54b31914073427363850761194d28202e30a6202803600b879cf609",
+      "src/runtime/session_event_projection.ts": "5663449755607d5acb24ab0493fe764ff9d6303ae7b1ddf850a52dbb59ba2bae",
+      "src/runtime/sessions.ts": "5f99837a7fd605452233ed5af9f076f73bcaaaa0488e84624db6e1157b688276",
+      "src/runtime/sessions.config-save-retry.test.ts": "970ef528e08d09cc23f10400ee8fe7effbf1b14f30b89d3ae6f9bf88a4c9d286",
+      "src/runtime/sessions.config-save-retry-ordering.test.ts": "478b0cefbae4f29174189bb08ce99e5b102a3485ace5e2d859c235ec0b70679b",
+      "src/runtime/sessions.config-categories.test.ts": "23b2e9fc4835d7c7c3b71be2662de552ee876699a7ead1eb88e6e8e6f8c54282",
+      "src/runtime/sessions.config-recheck.test.ts": "0367b21f95cb0530cbb063965816dbd3fc0ae0617f9f6767ecce89b02aca1192",
+      "src/runtime/sessions.regression.test.ts": "51aa9a345466b8d3f1f7ce2030bc213878916d0657361e55ec79a4f01410f69a"
+    },
+    "fixtureEvolution": {
+      "originalCheckOnlyRed": {
+        "result": "red/result.json",
+        "exit": 1,
+        "status": "Original bug reproduction preserved byte-for-byte; not claimed as final GREEN."
+      },
+      "fullReceiptV1": {
+        "fixtureSha256": "fa420feb30a8dece6c4cb556f4a86b2f02ce9f4dae78c0b4a561b08e698c2d41",
+        "red": "full-receipt-red/result.json",
+        "redCounts": {
+          "failed": 2,
+          "filtered": 22
+        },
+        "firstGreen": "full-receipt-green/result.json",
+        "firstGreenPassed": 24,
+        "redGreenFixtureByteEqual": true
+      },
+      "fullReceiptFinalV2": {
+        "fixtureSha256": "970ef528e08d09cc23f10400ee8fe7effbf1b14f30b89d3ae6f9bf88a4c9d286",
+        "exactDiff": "fixture-v1-to-v2.diff",
+        "change": "Correct owner negative cases: connection/service replacement retains new-owner error instead of demanding an old-request error; assert own configuring flag releases.",
+        "positiveRegistrationBodyUnchangedFromV1": true,
+        "positiveRegistrationBodySha256": "d6204a707bb97dfed822fd9b1003fc8ca58d445797d07921ff30fbef86cb72f3",
+        "notClaimed": "Final whole V2 fixture is not byte-equal to the V1 full-receipt RED."
+      },
+      "recategorizedProtectedId": {
+        "red": "recategorized-red/result.json",
+        "green": "recategorized-green/result.json",
+        "sameFixtureBytes": true,
+        "passedAfterFix": 1,
+        "filtered": 4
+      },
+      "sameObjectReconnectedOwner": {
+        "red": "owner-feedback-red-confirmed-path/result.json",
+        "green": "owner-feedback-green/result.json",
+        "sameFixtureBytes": true,
+        "passedAfterFix": 1,
+        "filtered": 5,
+        "path": "pending confirm -> connectionLost -> actual threads.open -> locally empty history failure reuses old object with new connection/context -> late old full reply; new-owner error unchanged, old configuring flag released."
+      },
+      "harnessPreconditionFailures": [
+        {
+          "result": "owner-feedback-red/result.json",
+          "classification": "Fixture setup did not reach expected replacement connection; not a product RED. Raw command and source preserved."
+        },
+        {
+          "result": "owner-feedback-red-path/result.json",
+          "classification": "Fixture setup did not reach expected replacement connection; not a product RED. Raw command and source preserved."
+        },
+        {
+          "result": "owner-feedback-red-valid-path/result.json",
+          "classification": "Fixture setup did not reach expected replacement connection; not a product RED. Raw command and source preserved."
+        }
+      ],
+      "legacyFixtures": "An old synthetic v1 current listed two choices for four protected options. It now remains a blocking negative control while displayed bytes and paused queue remain intact. The existing complete two-option legacy regression keeps its semantics.",
+      "fileLimit": "Two existing confirmation regressions moved intact from sessions.regression.test.ts into ordering.test.ts; no cases removed. All nine changed TS files <=1500 lines."
+    },
+    "manifestScope": "1362 TS/TSX+six explicit configs endpoint comparisons; excludes other transitive inputs. Final full engineering has its own2369-input boundary."
+  },
+  "backend": {
+    "actualScopedPassed": 35,
+    "ignored": 0,
+    "red": "Actual SQLite save retry compiled and failed due to missing full payload; original one build reused after artifact-selector collection error.",
+    "green": "Single rebuilt binary passed original35tests including15restore-selection cases and actual configured serviceB metadata assertions.",
+    "formatAndClippyExit": 0,
+    "restoreSelectionBytesUnchanged": true,
+    "storageAndAgentBehaviorsChanged": false
+  },
+  "independentReview": {
+    "kind": "RootTranscribedIndependentReviewMessages",
+    "recordedAtUtc": "2026-11-04T14:56:46.817824+00:00",
+    "frontendReview": "Separate source_review agent reviewed actual None flow, owner/late/permission/options/snapshot guards; required recategorized-ID and same-object feedback fixes completed, final small delta passed. No duplicate test execution claimed.",
+    "backendReview": "Root read shared pure snapshot and actual actor callsite diff; old setter fields preserved, only successful non-restore confirmation gains complete configuration, restore-selection branch unchanged. Backend agent separately ran genuine SQLite transport and35 scoped cases.",
+    "boundaries": "Static reviews supplement raw tests, not actual Tauri fault UI or real Agent/account/model acceptance."
+  },
+  "originals": {
+    "path": "docs/evidence/2026-11-04-config-save-retry/regression-originals.zip",
+    "entries": 237,
+    "bytes": 3573208,
+    "sha256": "765799bfc68ea88772acd65603cef9641ec89bb0e5e327ad0ac6c47d2606a1c6",
+    "everyEntryByteExact": true
+  },
+  "limits": [
+    "Frontend uses actual methods/reducer/prompt dispatch with synthetic IPC receipts; not full Tauri IPC/installed fault UI.",
+    "Backend uses real SQLite and controlled ACP transport/fixtures; not a real provider/model request or credential acceptance.",
+    "The original check-only RED remains a reproduction only; final whole v2 fixture is not falsely called byte-equal to v1 RED. Three owner harness setup failures are preserved and excluded from product RED counts.",
+    "This source is not installed; sole formalApp remainsaeb0dc491 while Mac is locked.",
+    "All seven macOS engineering commands have now separately passed on2369declared inputs; new source Windows full and installed UI remain pending."
+  ]
+}

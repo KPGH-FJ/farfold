@@ -395,6 +395,18 @@ async fn configuration_change_transport_save_failure_keeps_exact_retry_without_r
         .unwrap();
     assert_eq!(confirmed["status"], "ready");
     assert_choices(&confirmed["current"], "m2", "high");
+    let configuration = &confirmed["configuration"];
+    assert_eq!(configuration["configOptionsModern"], true);
+    let mut check = confirmed.clone();
+    check.as_object_mut().unwrap().remove("configuration");
+    assert_eq!(configuration["configCheck"], check);
+    assert_eq!(configuration["configOptions"], fixture.state()["options"]);
+    assert_eq!(configuration["configOptions"][0]["currentValue"], "m2");
+    assert_eq!(configuration["configOptions"][1]["currentValue"], "high");
+    assert_eq!(configuration["service"], Value::Null);
+    assert_eq!(configuration["permissionConfigId"], Value::Null);
+    assert_eq!(configuration["permissionState"], "ready");
+    assert!(configuration.get("permissionEffect").is_some());
     fixture.assert_record("m2", "high");
     fixture.assert_calls(1, 0, 1, 1);
     let cold = fixture.cold_check("ready").await;

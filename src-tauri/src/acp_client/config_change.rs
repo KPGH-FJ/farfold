@@ -1,6 +1,29 @@
 //! Confirmation and storage of one explicitly requested session configuration.
 use crate::acp_client::model_guard::{Choice, ConfigStore, ModelGuard};
-use serde_json::Value;
+use crate::acp_client::permission_guard::PermissionGuard;
+use serde_json::{Value, json};
+
+/// One complete view of the actual actor state, never reconstructed from choices.
+pub(super) fn configuration_snapshot(
+    options: Value,
+    modern: bool,
+    guard: &ModelGuard,
+    store: &ConfigStore,
+    permission: &PermissionGuard,
+) -> Value {
+    json!({
+        "configOptions": options,
+        "configOptionsModern": modern,
+        "configCheck": guard.check(),
+        "permissionConfigId": permission.id(),
+        "permissionState": permission.state(),
+        "permissionEffect": permission.effect(),
+        "service": match &store.service_record {
+            Some(crate::acp_client::service_connection::ServiceRecord::Configured { identity }) => Some(identity),
+            _ => None,
+        },
+    })
+}
 
 #[allow(clippy::too_many_arguments)]
 pub(super) async fn complete_choice_change(

@@ -17,11 +17,7 @@ import {
   discardEmptyDraft,
   retirePreparationRead,
 } from "./session_draft_cleanup";
-import {
-  releaseConfigurationPause,
-  sameConfigurationSnapshot,
-  type ConfigCheck,
-} from "./config_check";
+import type { ConfigCheck } from "./config_check";
 import {
   ConfigurationRecheck,
   recheckConfiguration,
@@ -429,6 +425,8 @@ class ThreadsStore {
         owns: () => this.thread(key) === state,
         promptOwner: () => this.promptOwners.get(state),
         configurationChanging: () => this.configurations.changing(state),
+        configurationOptionsReceived: () =>
+          this.configurations.receiveOptions(state),
         receiveConfigCheck: (check) =>
           this.configurations.receiveCheck(state, check),
         finishActivity: () => this.finishArchiveActivity(state),
@@ -448,6 +446,7 @@ class ThreadsStore {
       },
       activityConnectionId,
     );
+    this.configurations.observe(state);
   }
 
   /** Concurrent opens for the same target share one close/load request. */
@@ -1096,36 +1095,7 @@ class ThreadsStore {
   }
 
   async confirmConfig(key: string): Promise<void> {
-    const s = this.thread(key);
-    if (!s?.configCheck || configChangeBusy(s)) return;
-    s.configuring = true;
-    s.configError = null;
-    const displayed = s.configCheck.current;
-    this.emit(key);
-    try {
-      const check = await invoke<ConfigCheck>("session_confirm_config", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-        displayed,
-      });
-      if (this.thread(key) !== s) return;
-      // Ordered channel events are authoritative; this reply can arrive after
-      // a newer configuration notification and must not overwrite its guard.
-      if (check.status !== "ready")
-        throw new Error(STRINGS.repair.confirmConfigFailed);
-      if (
-        s.configCheck?.status === "ready" &&
-        sameConfigurationSnapshot(s.configCheck.current, check.current)
-      )
-        releaseConfigurationPause(s);
-      await this.refreshIndex();
-    } catch {
-      s.configError = STRINGS.repair.confirmConfigFailed;
-    } finally {
-      s.configuring = false;
-      this.emit(key);
-    }
+    return this.configurations.confirm(key, () => this.refreshIndex());
   }
 
   confirmRestoredConfig(

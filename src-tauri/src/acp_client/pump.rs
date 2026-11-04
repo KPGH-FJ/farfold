@@ -53,7 +53,7 @@ mod media_forwarding_tests;
 
 #[path = "config_change.rs"]
 mod config_change;
-use config_change::{complete_choice_change, save_confirmed_change};
+use config_change::{complete_choice_change, configuration_snapshot, save_confirmed_change};
 
 #[path = "pump/load_notifications.rs"]
 mod load_notifications;
@@ -961,18 +961,8 @@ async fn session_pump(
                     let closed = matches!(completed.kind, MutationKind::Close | MutationKind::Delete) && outcome.is_ok();
                     if closed && let Ok(mut entries) = sessions.lock() { entries.remove(&session_id); }
                     if matches!(&completed.kind, MutationKind::Config { .. }) {
-                        outcome = outcome.map(|options| serde_json::json!({
-                            "configOptions": options,
-                            "configOptionsModern": configuration.modern_options().is_some(),
-                            "configCheck": model_guard.check(),
-                            "permissionConfigId": permission_guard.id(),
-                            "permissionState": permission_guard.state(),
-                            "permissionEffect": permission_guard.effect(),
-                            "service": match &config_store.service_record {
-                                Some(super::service_connection::ServiceRecord::Configured { identity }) => Some(identity),
-                                _ => None,
-                            },
-                        }));
+                        outcome = outcome.map(|options| configuration_snapshot(options,
+                            configuration.modern_options().is_some(), &model_guard, &config_store, &permission_guard));
                     }
                     completed.finish(outcome);
                     if closed { break; }
@@ -1304,7 +1294,10 @@ async fn session_pump(
                         if displayed != model_guard.current_value() || !model_guard.admissible() {
                             Err("当前设置已变化，请重新检查".to_string())
                         } else {
-                            Ok(serde_json::to_value(model_guard.check()).unwrap())
+                            let mut check = serde_json::to_value(model_guard.check()).unwrap();
+                            check["configuration"] = configuration_snapshot(configuration.options().unwrap_or(Value::Null),
+                                configuration.modern_options().is_some(), &model_guard, &config_store, &permission_guard);
+                            Ok(check)
                         }
                     };
                     events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));

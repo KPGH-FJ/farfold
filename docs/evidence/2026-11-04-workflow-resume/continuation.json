@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T14:13:45.083923+00:00",
+  "updatedAt": "2026-11-04T14:58:52.932300+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -33,16 +33,20 @@
     "Common safe opening diagnostics aeb0dc491: associated frontend154 and Rust18 passed; final frontend705files9481pass/Rust2339pass7ignored with explicit type-annotation-only dependency reuse; independent review passed.",
     "Common aeb0dc491 installed once, candidate9/installed6, three closed-state206275-entry manifests equal. Actual B3 safe timeout message, Q history32 updates, preserved original drafts/attachments/feedback and visible model choices, returned P02/retained1. Zero new prompt or resend.",
     "Windows five-failure causal review completed; original17partial matrix7pass/2fail/1running/7unknown preserved separately. Test-only PID atomic publication,2Windows recovery waits and2composed parent budgets committed0bfc; Mac PID1/recovery2/tampered1 plusfmt/build/Clippy naturally passed,821Rust inputs stable; no NTFS proof fromMac.",
-    "Windows common safe-open scoped run41841306844 fixed96c naturally passed18native+51frontend/typecheck/4PSparses;2301inputs independently bound to exact fixed Git source with explicit LF/CRLF handling. Job1065s/build-binding912.820166s. Raw archive8edbc635...a131d4e; no executable byte upload/no installer/full-suite claim."
+    "Windows common safe-open scoped run41841306844 fixed96c naturally passed18native+51frontend/typecheck/4PSparses;2301inputs independently bound to exact fixed Git source with explicit LF/CRLF handling. Job1065s/build-binding912.820166s. Raw archive8edbc635...a131d4e; no executable byte upload/no installer/full-suite claim.",
+    "Fixed0bfc Windows41843965055 exact3groups5FQN naturally passed;849 source inputs bound LF/CRLF;4actual parent wrappers/completion markers and2tamper variants confirmed. Actual ordinary234.35s/tamper326.45s exceed old180/240 parent limits; only this5-case scope, not full suite.",
+    "ARCH20 complete saved configuration retry implemented across4TS production and2Rust production sources; frontend final417 scoped and backend35 scoped passed with real RED/fixture evolution preserved. Independent review closed recategorized-ID and stale same-object feedback defects. Full707files9509frontend/Rust2339pass7ignored and all7natural0 passed;2369declared inputs equal before/after, no old-results reuse."
   ],
   "active": [
-    "Windows FullRunFailures41843965055 fixed0bfc79a46:3groups5FQN actual parent wrappers and paired threads2, source_review sole watch/download owner. Native results pending; only then one full with CI Rust90min capacity. Original complete2363/17/72 baseline remains until genuine complete result."
+    "Root staging coherent config retry source/evidence and completed0bfc Windows5evidence; next exact source commit will feed one Windows full90min Rust capacity. No full dispatched yet.",
+    "Mac CUA is locked, no fresh normal exit/closed-data evidence; no binding/build/install. Sole formal remainsAEB, new retry behavior not installed.",
+    "formal-tools-preparation contains original9tools/5pins copies and static same-interval binder proposal, reviewed as preparation only. No binder execution or private exit helper."
   ],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "Collect Windows five targeted test-fix results by actual exact names, child completion and natural parent exits; resolve any failure without weakening product/proof. If all5pass, one full run with90min Rust job capacity, unchanged suite/default concurrency.",
-    "Original P01 installed storage faults/other formats/queues, broader151/29x8, generic open-result installed negative paths and actual Agent root causes remain open.",
-    "Preserve original unrelated debugger JSON and protected data. This is a locator, not a second queue."
+    "Commit/push exact verified increment (preserve original unrelated debugger JSON), dispatch one Windows full on that source and retain actual logs/completion.",
+    "Formal installation/UI requires manual unlock, actual currentApp normal save exit and activity/data checks. Do not reuse older exit receipts.",
+    "Keep actual pending/failed/unknown source, platform and installed proof separate; P01 remaining conditions, full151/29x8 andNEW24specific pause persist."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -59,5 +63,12 @@
     "installedBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
     "originalUnrelatedDirtySha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
     "originalUnrelatedDirtyMode": "0644"
+  },
+  "knownConfigRetryEvidence": {
+    "frontendOriginalRed": "output/2026-11-04-config-save-retry/red/result.json",
+    "backend": "output/2026-11-04-config-save-retry/backend/summary.json",
+    "currentHead": "40310e086",
+    "currentFormalSource": "aeb0dc491",
+    "originalRequestsResent": 0
   }
 }
