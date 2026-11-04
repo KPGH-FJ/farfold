@@ -221,7 +221,7 @@
   },
   "remainingFailureClassification": {
     "observed": "All nine failures reached creation/setup while still running and hit existing 15/20-second test fixture waits. Four direct create tests and five recovery tests fail before their intended terminal assertions. No production error code or missed original Git object is established for these failures.",
-    "next": "Measure the original create completion with an explicitly bounded Windows-only observation before changing any fixture wait or production behavior. Keep original assertions, deadlines, object proofs and failures.",
+    "next": "Observe the nine unchanged original terminal assertions with bounded Windows-only60s creation setup waits; separately measure actual native wait and caller polling sleep wall time. Neither longer fixture observation nor passing assertions prove faster product behavior.",
     "productionDeadlinesChanged": false,
     "testWaitsChangedThisRun": false
   },
@@ -392,5 +392,90 @@
     "windowsAppInstalled": false,
     "productOr29By8Complete": false,
     "continueOnErrorStepColorUsedAsEvidence": false
+  },
+  "ciTiming": {
+    "jobSeconds": 1776.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Enable long Git paths before checkout",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+        "seconds": 32.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare pinned Rust toolchain",
+        "seconds": 24.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check synthetic protocol fixture interpreter",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Build and bind the selected library test binary",
+        "seconds": 864.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the selected native test cohort",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Frozen candidate retirement proof and original EOF controls",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Original Git certificate lifecycle and finite input controls",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Original create recovery and paired regressions",
+        "seconds": 827.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Affected original terminal controls",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Require all resumed phases to have executed exactly and passed",
+        "seconds": 1.0,
+        "conclusion": "failure"
+      },
+      {
+        "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "metadata": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41818072244/run.json",
+      "sha256": "8a39bf59fc5a508facc1409e73ea6273bdf10bb0e52ce8a25fecbbc8ec29e868"
+    },
+    "interpretation": "The single native build took864s of1776s job time; create/recovery took827s. Build cost is a material iteration bottleneck. This run already reused its one built test binary and fixture across all phases."
   }
 }
