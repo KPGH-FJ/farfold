@@ -3,3 +3,6 @@
 src/runtime/fixtures/plugin-management-wire.json -text
 src/runtime/fixtures/plugin-management-scoped-wire.json -text
 src/runtime/fixtures/pptx/author-oracle.json.raw -text
+# Reviewed native diagnostic script hashes must survive Windows checkout exactly.
+.github/scripts/windows-job-query-observer.py -text
+.github/scripts/windows-debugger-breakpoint-observer.py -text

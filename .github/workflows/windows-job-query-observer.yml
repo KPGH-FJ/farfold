@@ -2,6 +2,14 @@ name: Windows owned Job query observation
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Fixed owned-object observation mode
+        type: choice
+        default: OriginalJobQuery
+        options:
+          - OriginalJobQuery
+          - DebuggerBreakpoints
 
 permissions:
   contents: read
@@ -16,6 +24,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - name: Observe fixed owned original process objects (default)
+        if: ${{ inputs.mode == 'OriginalJobQuery' }}
         timeout-minutes: 2
         shell: pwsh
         run: |
@@ -38,13 +47,13 @@ jobs:
           }
           exit $exitCode
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always()
+        if: ${{ always() && inputs.mode == 'OriginalJobQuery' }}
         with:
           name: farfold-job-query-default-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/farfold-job-query-default-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: error
       - name: Observe fixed owned original process objects (detached)
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && inputs.mode == 'OriginalJobQuery' }}
         timeout-minutes: 2
         shell: pwsh
         run: |
@@ -67,8 +76,50 @@ jobs:
           }
           exit $exitCode
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always()
+        if: ${{ always() && inputs.mode == 'OriginalJobQuery' }}
         with:
           name: farfold-job-query-detached-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/farfold-job-query-detached-${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
+      - name: Observe fixed System32 and WOW64 loader breakpoints
+        if: ${{ inputs.mode == 'DebuggerBreakpoints' }}
+        timeout-minutes: 2
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $observer = '.github/scripts/windows-debugger-breakpoint-observer.py'
+          $sharedApi = '.github/scripts/windows-job-query-observer.py'
+          $expectedObserverSha256 = 'a28e198e35bcd2ef87a6642d014af7786a49eae0d5ef6b9b941380d7d9f7f245'
+          $expectedSharedApiSha256 = '93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19'
+          $observerSha256 = (Get-FileHash -LiteralPath $observer -Algorithm SHA256).Hash.ToLowerInvariant()
+          $sharedApiSha256 = (Get-FileHash -LiteralPath $sharedApi -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($observerSha256 -cne $expectedObserverSha256 -or $sharedApiSha256 -cne $expectedSharedApiSha256) {
+            throw 'Reviewed debugger observer script identity mismatch'
+          }
+          $out = Join-Path '${{ runner.temp }}' 'farfold-debugger-breakpoints-${{ github.run_id }}-${{ github.run_attempt }}'
+          $exitCode = 1
+          try {
+            & python -I -S -B $observer --output $out
+            $exitCode = $LASTEXITCODE
+          } finally {
+            if (Test-Path -LiteralPath $out -PathType Container) {
+              Copy-Item -LiteralPath $observer -Destination (Join-Path $out 'windows-debugger-breakpoint-observer.py')
+              Copy-Item -LiteralPath $sharedApi -Destination (Join-Path $out 'windows-job-query-observer.py')
+              [ordered]@{
+                sourceHead = '${{ github.sha }}'
+                runId = '${{ github.run_id }}'
+                runAttempt = '${{ github.run_attempt }}'
+                mode = 'DebuggerBreakpoints'
+                observerSha256 = $observerSha256
+                sharedApiSha256 = $sharedApiSha256
+                scope = 'Fixed official system cmd loader events and exact original Job/process cleanup only; diagnostic, no product acceptance'
+              } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $out 'ci-identity.json') -Encoding utf8
+            }
+          }
+          exit $exitCode
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ always() && inputs.mode == 'DebuggerBreakpoints' }}
+        with:
+          name: farfold-debugger-breakpoints-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/farfold-debugger-breakpoints-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: error
