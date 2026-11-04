@@ -1,0 +1,575 @@
+{
+  "recordedAt": "2026-11-04T05:28:26.539576+00:00",
+  "scope": "Windows2022 controlled native tests of fixed-Git direct debugger completion. This source is not stable: normal command throughput regressed; no full rerun or install claim.",
+  "run": {
+    "conclusion": "failure",
+    "databaseId": 41774830760,
+    "headSha": "4bd56413b8d83f40db666045b869f4a1f7e7df70",
+    "jobs": [
+      {
+        "completedAt": "2026-11-04T05:18:08Z",
+        "conclusion": "failure",
+        "databaseId": 126392652277,
+        "name": "selected",
+        "startedAt": "2026-11-04T04:42:40Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-04T04:42:42Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-04T04:42:41Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T04:42:43Z",
+            "conclusion": "success",
+            "name": "Enable long Git paths before checkout",
+            "number": 2,
+            "startedAt": "2026-11-04T04:42:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T04:43:09Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+            "number": 3,
+            "startedAt": "2026-11-04T04:42:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T04:43:20Z",
+            "conclusion": "success",
+            "name": "Prepare pinned Rust toolchain",
+            "number": 4,
+            "startedAt": "2026-11-04T04:43:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T04:43:22Z",
+            "conclusion": "success",
+            "name": "Check synthetic protocol fixture interpreter",
+            "number": 5,
+            "startedAt": "2026-11-04T04:43:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T04:58:03Z",
+            "conclusion": "success",
+            "name": "Build and bind the selected library test binary",
+            "number": 6,
+            "startedAt": "2026-11-04T04:43:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:18:03Z",
+            "conclusion": "failure",
+            "name": "Run the selected native test cohort",
+            "number": 7,
+            "startedAt": "2026-11-04T04:58:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:18:05Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 8,
+            "startedAt": "2026-11-04T05:18:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:18:07Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+            "number": 16,
+            "startedAt": "2026-11-04T05:18:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T05:18:07Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "startedAt": "2026-11-04T05:18:07Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41774830760/job/126392652277"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41774830760"
+  },
+  "audit": {
+    "runId": 41774830760,
+    "sourceCommit": "4bd56413b8d83f40db666045b869f4a1f7e7df70",
+    "artifactSha256": "0e50e21845685f872a7ed232a772f27585352c33b6aa0cc2d30180c5b3ed1d4e",
+    "providerDigestMatched": true,
+    "artifactMembers": 50,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "create-existing-branch": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2457 filtered out; finished in 139.70s"
+        ],
+        "passed": false
+      },
+      "acp-eof-retirement": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+            "result": "ok"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2457 filtered out; finished in 1.55s"
+        ],
+        "passed": true
+      },
+      "archive-cold-restore": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2457 filtered out; finished in 198.98s"
+        ],
+        "passed": false
+      },
+      "recovery-cancel-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+          "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 140.95s"
+        ],
+        "passed": false
+      },
+      "create-eof-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 139.90s"
+        ],
+        "passed": false
+      },
+      "archive-create-paired": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 202.70s"
+        ],
+        "passed": false
+      },
+      "git-complete-object-certificate": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::debug_certificate::tests::certificate_requires_every_distinct_original_object_signal",
+            "result": "ok"
+          }
+        ],
+        "latestFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2457 filtered out; finished in 0.02s"
+        ],
+        "passed": true
+      },
+      "acp-eof-descendant-edge": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_isolated",
+            "result": "ok"
+          }
+        ],
+        "latestFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2457 filtered out; finished in 0.52s"
+        ],
+        "passed": true
+      },
+      "git-original-owner-lifecycle": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::git::settlement_tests::changed_finite_input_after_original_exit_is_not_success",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::cancellation_after_original_exit_reaps_same_job_before_return",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::late_stderr_over_limit_after_original_exit_is_not_success",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::late_stdout_over_limit_after_original_exit_is_not_success",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::naturally_settled_job_preserves_original_nonzero_exit_code",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::original_deadline_still_limits_live_job_after_original_exit",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::settlement_tests::unwind_after_original_exit_pumps_debug_events_until_exact_descendant_signal",
+            "result": "ok"
+          }
+        ],
+        "latestFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2450 filtered out; finished in 5.90s"
+        ],
+        "passed": true
+      },
+      "git-finite-input": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::git::input::tests::cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::empty_finite_file_is_valid_and_not_a_failed_or_truncated_input",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::common_file_output_path_retains_exact_input_and_original_output_limit_cleanup",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved",
+            "result": "ok"
+          },
+          {
+            "name": "worktrees::git::input::tests::selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits",
+            "result": "ok"
+          }
+        ],
+        "latestFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 1.90s"
+        ],
+        "passed": true
+      },
+      "recovery-original-remaining": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+          "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 140.82s"
+        ],
+        "passed": false
+      },
+      "recovery-confirmation": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+          "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 105.18s"
+        ],
+        "passed": false
+      },
+      "recovery-cold": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+            "result": "FAILED"
+          },
+          {
+            "name": "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+            "result": "FAILED"
+          }
+        ],
+        "latestFullFailureExactMatches": [
+          "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+          "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence"
+        ],
+        "naturalExitCode": 101,
+        "summary": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2456 filtered out; finished in 101.46s"
+        ],
+        "passed": false
+      },
+      "create-official-config-aliases": {
+        "receiptPresent": false
+      },
+      "create-cold-location": {
+        "receiptPresent": false
+      },
+      "create-storage-failure": {
+        "receiptPresent": false
+      },
+      "create-new-branch": {
+        "receiptPresent": false
+      },
+      "recovery-prepared-cancel": {
+        "receiptPresent": false
+      },
+      "recovery-parent-identity": {
+        "receiptPresent": false
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 846
+    }
+  },
+  "rawMemberSha256": {
+    "acp-eof-descendant-edge.json": "757e43585aceb3c99727a9a1594bfe75596d509769a4d61d3cb9ae04c7586a76",
+    "acp-eof-descendant-edge.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "acp-eof-descendant-edge.stdout.log": "1118ad795b3fe97edb580626a25868d234f7dca5e2c14e3751b1c4554c1cc5c5",
+    "acp-eof-retirement.json": "dd4585f58b9277f69e424f7828d08097b6185661324db5baa219eb9158eb3ffc",
+    "acp-eof-retirement.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "acp-eof-retirement.stdout.log": "4f7bc493099cdc9e1e6e220525dd29aaf0205b6929879806cbbb3bc7f5111f13",
+    "archive-cold-restore.json": "b556925fbaaeab2fdb14809a95703f6cd10f12110a82d5135885ffbee8fc34b3",
+    "archive-cold-restore.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive-cold-restore.stdout.log": "b9377ea46c48612469fcec9bb3d4bd33476c15513b7502eacf664706bc5edf4f",
+    "archive-create-paired.json": "de0075e6ba329553e4daf330d9eebc2f9de25b40989b5e32034621657afb856f",
+    "archive-create-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive-create-paired.stdout.log": "51cf662e8d6fb270e89de4865e1ffdc30092322c76b45485f1ad2641dc23fe6d",
+    "build-selection.json": "1f49bdc328478dc1af34f3ecf5cadc9986486ce88108daaba8bef59653da5b72",
+    "create-eof-paired.json": "fd9990adde88a53418fe56cd8ede13985071caefb48bdf63c962468420cbc4b1",
+    "create-eof-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "create-eof-paired.stdout.log": "78dd2d569c934212cc909a6a2819d330ca2f9abf213ec5deb8582d3040ce4495",
+    "create-existing-branch.json": "4de09a9e8120d3ee49d0647f374085a75eda12b85857bc2ec0741eb839b2fe3b",
+    "create-existing-branch.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "create-existing-branch.stdout.log": "70364ab901e019a176f8cddcec3d547de8dc7111a2c5481a96848f177f564330",
+    "create-official-config-aliases.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "create-official-config-aliases.stdout.log": "586c6ba01c8048711a3394136b2e10af7d68c14cd6ac464056cea2d97eca7434",
+    "fixture-build.stderr.log": "c48cf4359c4ba17e18972026799b1bbe3825e707948eacfc36c26141c7745369",
+    "fixture-build.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git-complete-object-certificate.json": "3d9c5d21e75a7aa206908be5ffe50f98de0f27eddb81f32a28cd7bc5a1c4c2bf",
+    "git-complete-object-certificate.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git-complete-object-certificate.stdout.log": "1675cffc4be4d141f7a4575705bda33af5138e8e561e0f8a9113f9759f19e884",
+    "git-finite-input.json": "455df21e6293f4716c49765fa63fa0303b150525d90911178fd3ead664430d74",
+    "git-finite-input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git-finite-input.stdout.log": "a9922a6a069094dba6a3f8d03cb133cf61f7bab5f2e0b0387b2e81c01447adcf",
+    "git-original-owner-lifecycle.json": "f0f15a34e24389a8a428176ee8d4f2c5e84776f2a8af39a2c8744acb3502540c",
+    "git-original-owner-lifecycle.stderr.log": "95ba0c04ff0ac51942f9427b8508a07894dd1396cf8226cabc1da52203d1ed1d",
+    "git-original-owner-lifecycle.stdout.log": "6bebc3e0e35d363e34dbc470aefc7640a7cf459ed723a968cdb38e89730b67c0",
+    "identity.json": "21a33a2d2221f9fbdf2883714bf1ed4a11a9585f6e4afd30c86dc1f60bdf39cf",
+    "inputs-after.json": "24e9007cef371d15689d4d4336387bf70b39913365794d09fc07c0a8211d3695",
+    "inputs-before.json": "24e9007cef371d15689d4d4336387bf70b39913365794d09fc07c0a8211d3695",
+    "recovery-cancel-paired.json": "1f851acd0f312c9e6ff849f8d72cacd552f989003eb4fa8a2c30328f7d4839ac",
+    "recovery-cancel-paired.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "recovery-cancel-paired.stdout.log": "ab1f62ca3e22b66f59c49f4301f3fe06e4035c3202744f87c3fc19af7a7a6773",
+    "recovery-cold.json": "3453b772d997941f9ce5389d5f1245cde55c671fd95a7d88032cce7dcbb98f64",
+    "recovery-cold.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "recovery-cold.stdout.log": "1afb7af0d3c09918b4476f7937519d47e5b14afab8fabf66e5595310a3458c4e",
+    "recovery-confirmation.json": "204b3195e0f6bd9fb5bd1cf7d8fd5aa8da7fd18130c8d3777d987c1d5306c91f",
+    "recovery-confirmation.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "recovery-confirmation.stdout.log": "8a3489bc86971f6c56a9e3512acf368214c452d9cfe3baa278c5f0375485ebb8",
+    "recovery-original-remaining.json": "9f986f13ba7e1fba4dabd695a91d2ce89255b82d3440fdeb91b25095fbd3716d",
+    "recovery-original-remaining.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "recovery-original-remaining.stdout.log": "9d48815260d657b180f1835255033fcc51a5d06564cac6e589bdeb08ac0c8dc5",
+    "selected-build.result.json": "001f05704a3c7581974b47e6fb9dc9adf4e8e0a5e96f11464989fff7a03acf52",
+    "test-build.stderr.log": "84b0696446ac9b911e2c4e8ef807657a43fecf42d169b62562caf2c42797ccda",
+    "test-build.stdout.jsonl": "e2d8b4122ff2e6967532cea1503287904f46b6db3481f473c766d1090e9a5cb3"
+  },
+  "termination": "selected test step timed out20minutes;13groups completed with32executions(19pass13fail); aliases started without natural receipt and remaining5groups not started",
+  "actualNativeSuccesses": {
+    "certificateUnit": "Live/missing/duplicate/foreign/wrong-leader negatives and complete set positive after actual signals, while generic historical Current gap remains conservative.",
+    "originalGitLifecycle": 8,
+    "finiteInput": 7,
+    "eofOriginal": {
+      "originalChildPid": 5912,
+      "ownerCompleted": true
+    },
+    "eofDescendantEdge": {
+      "originalChildPid": 4592,
+      "descendantPid": 1048,
+      "sameOriginalJobMemberBeforeEof": true,
+      "originalLeaderAndDescendantHeldExited": true,
+      "originalOwnerNaturalCompletion": true,
+      "outerForcedTermination": false,
+      "gapObserved": false,
+      "admissionCounts": [0, 0, 0],
+      "work": 0,
+      "limitation": "Does not reproduce or retrospectively attribute original full-suite EOF failure."
+    }
+  },
+  "throughputRegression": {
+    "sameExactCase": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+    "source4bd": {
+      "caseSeconds": 139.7,
+      "naturallySettledAndCertifiedCommands": 134,
+      "minMs": 959,
+      "medianMs": 1009.0,
+      "maxMs": 1084,
+      "totalMs": 135644,
+      "lastStartedCommand": {
+        "case": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+        "processId": 3528,
+        "command": 135,
+        "originalChildPid": 2584,
+        "phase": "spawned",
+        "elapsedMs": 1,
+        "classification": "checkoutEffectiveConfig",
+        "configKey": "core.filemode",
+        "boolean": true,
+        "originalChildExitCode": null,
+        "stopReason": null
+      }
+    },
+    "sourceFe9Baseline": {
+      "caseSeconds": 21.29,
+      "settledCommands": 244,
+      "medianMs": 61,
+      "totalMs": 14345
+    },
+    "conclusion": "134 original commands actually completed strong object certification; this refutes a universal permanent-false certificate/membership hypothesis. Creation still running at60s fixture wait. Last command start without settlement is not proof of a specific permanent Job gap.",
+    "workingCause": "Zero-time debug-event polls combined with existing10ms outer sleep are consistent with sequential loader-event handoff latency. Exact scheduler cause and1ms benefit remain unverified until new raw receipts."
+  },
+  "nextCandidate": {
+    "sourceCommit": "164cd35f0",
+    "runId": 41779101282,
+    "status": "in progress",
+    "change": "WaitForDebugEvent0->1ms only production behavior; same32event/pass cap, original owner/clock/limits/certificate unchanged. Test-only counters in test file record received events/empty waits, no extra native queries.",
+    "validation": "Actual changed debug module and actual test observation module cross-typechecked for Windows test and production configs; cargo fmt/diff check passed. Existing source4bd macGit23/activePrompt10/alltargetClippy remain separate receipts.",
+    "selectedCohort": "GitCompletionRecovery; same19groups38executions/all17latestfullfailure names"
+  },
+  "standalone32Diagnostic": {
+    "initialCheckoutFailureRun": 41777034934,
+    "fixedCheckoutRun": 41777569531,
+    "fixedCheckoutResult": "System32 bothpolicies natural0; relativecmd from unaccepted directory reply triggered architecture gate and original cleanup, no32loader result.",
+    "strictPathRun": 41779105044,
+    "strictPathResult": "System32 bothpolicies natural0, original objects signaled and fresh sameJob membership true after signal. Primary smallWOW64 query yielded valid absolute directory; supplementalDirectory2 API unavailable caused32skip. Only2cases, not4; diagnosis stillpending while optionalquerygate is repaired.",
+    "productionRustChangeForWow64": false,
+    "limitation": "No real32Git or Agent acceptance."
+  },
+  "currentFormalBinary": {
+    "app": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "binarySha256": "e3eccba47c505ba0118b5de3679872810eca5d26775b1ae228ca7e11c918f2da",
+    "matchesPrior168db42e5Binary": true,
+    "scope": "Read-only executable/Info receipt only. No app start/update, user history access, or preservation claim for all runtime data."
+  },
+  "unchangedOpen": {
+    "latestFullRun": 41750118511,
+    "rustFailed": 17,
+    "P18": "Missing attributable official recoverable unknown object/active diff/new refusal and N/O terminal identity; no old Agent request resend.",
+    "fullBatchStartedAfterThisRegression": false
+  },
+  "evidenceVerification": "Root raw audit and independent evidence_audit reader matched provider digest/ZIP CRC/all stream hashes/binary pins/847source inputs (1exact846CRLF)/actual selected names and natural integer exits. New raw zip retained output/2026-11-04-create-eof-recovery/completion-original.zip."
+}
