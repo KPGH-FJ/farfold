@@ -9,6 +9,8 @@ use std::{
 };
 use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetCurrentProcessId};
 
+#[path = "current_members_gap_shadow_tests.rs"]
+mod gap_shadow_tests;
 #[path = "git_exact_handle_tests.rs"]
 mod git_exact_handle_tests;
 
