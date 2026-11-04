@@ -10,7 +10,7 @@ import ctypes as C
 import hashlib
 import importlib.util
 import json
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import subprocess
 import sys
 import tempfile
@@ -89,10 +89,26 @@ class Api(BASE.Api):
             ("GetProcessId", [HANDLE], DWORD),
             ("IsProcessInJob", [HANDLE, HANDLE, C.POINTER(C.c_int)], C.c_int),
             ("IsWow64Process2", [HANDLE, C.POINTER(C.c_uint16), C.POINTER(C.c_uint16)], C.c_int),
-            ("GetSystemWow64DirectoryW", [C.c_wchar_p, C.c_uint], C.c_uint),
+            ("GetSystemDirectoryW", [C.POINTER(C.c_wchar), C.c_uint], C.c_uint),
+            ("GetSystemWow64DirectoryW", [C.POINTER(C.c_wchar), C.c_uint], C.c_uint),
+            ("QueryFullProcessImageNameW", [HANDLE, DWORD, C.POINTER(C.c_wchar), C.POINTER(DWORD)], C.c_int),
         ]:
             function = getattr(self.k, name)
             function.argtypes, function.restype = args, result
+        try:
+            self.wow64_directory2 = self.k.GetSystemWow64Directory2W
+        except AttributeError:
+            self.wow64_directory2 = None
+        if self.wow64_directory2 is not None:
+            self.wow64_directory2.argtypes = [C.POINTER(C.c_wchar), C.c_uint, C.c_uint16]
+            self.wow64_directory2.restype = C.c_uint
+        # The shared API's legacy 32768-WCHAR directory result is not authority
+        # for this mode. Validate a bounded fresh reply before loading any DLL
+        # by path or selecting a process cwd/executable.
+        self.initial_system_reply = directory_reply(self.k.GetSystemDirectoryW, "GetSystemDirectoryW")
+        if not self.initial_system_reply["nonemptyAbsoluteCountMatched"]:
+            raise DirectoryReplyError(self.initial_system_reply)
+        self.system = Path(self.initial_system_reply["bufferValue"])
         # CompareObjectHandles is documented in KernelBase.dll, unlike the
         # Kernel32 exports above. Bind its exact system DLL rather than assume a
         # noncontractual Kernel32 forwarder exists on this Windows image.
@@ -101,6 +117,8 @@ class Api(BASE.Api):
         self.same_object.argtypes, self.same_object.restype = [HANDLE, HANDLE], C.c_int
 
     def create_debug(self, command, cwd):
+        if not command.is_absolute() or command.name.casefold() != "cmd.exe":
+            raise RuntimeError("fixed-debug-command-not-absolute")
         info, start = BASE.ProcessInfo(), BASE.Startup()
         start.cb = C.sizeof(start)
         argv = C.create_unicode_buffer(subprocess.list2cmdline([str(command), "/d", "/c", "exit", "0"]))
@@ -132,6 +150,39 @@ class Api(BASE.Api):
         return {"wait": result, "waitError": error,
                 "exitCodeIfSignaled": code.value if result == WAIT_OBJECT_0 and code_error is None else None,
                 "exitQueryError": code_error}
+
+
+def path_reply(count, value, capacity):
+    """A positive API count alone never authorizes a relative executable path."""
+    units = len(value.encode("utf-16-le", errors="surrogatepass")) // 2
+    valid = bool(0 < count < capacity and units == count and value
+                 and PureWindowsPath(value).is_absolute())
+    return {"returnedCount": count, "capacityWchars": capacity,
+            "bufferUtf16Units": units, "bufferValue": value[:1024],
+            "bufferValueTruncated": len(value) > 1024,
+            "nonemptyAbsoluteCountMatched": valid}
+
+
+class DirectoryReplyError(RuntimeError):
+    def __init__(self, reply):
+        super().__init__("fixed-system32-directory-reply-invalid")
+        self.reply = reply
+
+
+def directory_reply(function, name, capacity=1024, machine=None):
+    buffer = C.create_unicode_buffer(capacity)
+    args = (buffer, capacity) if machine is None else (buffer, capacity, machine)
+    count = int(function(*args))
+    error = C.get_last_error() if not count else None
+    return {"api": name, "requestedMachine": machine, "nativeError": error,
+            **path_reply(count, buffer.value, capacity)}
+
+
+def process_image_reply(api, handle):
+    buffer, count = C.create_unicode_buffer(1024), DWORD(1024)
+    ok = int(api.k.QueryFullProcessImageNameW(handle, 0, buffer, C.byref(count)))
+    error = C.get_last_error() if not ok else None
+    return {"ok": ok, "nativeError": error, **path_reply(int(count.value), buffer.value, len(buffer))}
 
 
 class Journal(BASE.Journal):
@@ -179,8 +230,18 @@ def list_snapshot(api, job):
 def completion(api, job, original, members):
     before = BASE.accounting(api, job)
     listing = list_snapshot(api, job)
-    objects = [{"pid": pid, "exitContinued": item["exitContinued"],
-                **api.object_wait(item["handle"])} for pid, item in members.items()]
+    objects = []
+    for pid, item in members.items():
+        wait = api.object_wait(item["handle"])
+        membership = None
+        if wait["wait"] == WAIT_OBJECT_0:
+            belongs = C.c_int()
+            ok = int(api.k.IsProcessInJob(item["handle"], job, C.byref(belongs)))
+            error = C.get_last_error() if not ok else None
+            membership = {"ok": ok, "nativeError": error, "belongsToOriginalJob": bool(belongs.value),
+                          "queriedAfterThisExactObjectSignaled": True}
+        objects.append({"pid": pid, "exitContinued": item["exitContinued"], **wait,
+                        "originalJobMembershipAfterSignal": membership})
     leader = api.wait(original)
     after = BASE.accounting(api, job)
     complete = bool(members and int(original.pid) in members
@@ -242,12 +303,24 @@ def run_case(api, job, command, architecture, policy, cwd, journal, work_end, wo
         if not ok:
             errors.append("original-job-assignment-failed")
             terminate("assignment-failure")
-        resumed = int(api.k.ResumeThread(original.thread))
-        error = C.get_last_error() if resumed == 0xFFFFFFFF else None
-        record("original-thread-resumed", previousSuspendCount=resumed, error=error)
-        if resumed != 1:
-            errors.append("original-thread-resume-unconfirmed")
-            terminate("resume-failure")
+        image = process_image_reply(api, original.process)
+        image_matches = bool(image["ok"] and image["nonemptyAbsoluteCountMatched"]
+                             and PureWindowsPath(image["bufferValue"]) == PureWindowsPath(str(command)))
+        record("original-process-image-before-resume", pid=int(original.pid),
+               expectedCommand=str(command), matchesExpectedAbsoluteCommand=image_matches, **image)
+        if not image_matches:
+            errors.append("original-process-image-does-not-match-fixed-absolute-command")
+            terminate("original-image-identity-failure")
+        if original.assigned and image_matches and not kill_requested:
+            resumed = int(api.k.ResumeThread(original.thread))
+            error = C.get_last_error() if resumed == 0xFFFFFFFF else None
+            record("original-thread-resumed", previousSuspendCount=resumed, error=error)
+            if resumed != 1:
+                errors.append("original-thread-resume-unconfirmed")
+                terminate("resume-failure")
+        else:
+            record("original-thread-resume-skipped", assignedToOriginalJob=original.assigned,
+                   imageMatched=image_matches, terminationAlreadyRequested=kill_requested)
         while time.monotonic() < cleanup_end:
             if not kill_requested and time.monotonic() >= case_end:
                 errors.append("case-observation-deadline")
@@ -442,36 +515,51 @@ def run_case(api, job, command, architecture, policy, cwd, journal, work_end, wo
             "elapsedSeconds": time.monotonic() - start}
 
 
-def commands(api):
-    result = [("System32", api.system / "cmd.exe")]
-    buffer = C.create_unicode_buffer(32768)
-    count = api.k.GetSystemWow64DirectoryW(buffer, len(buffer))
-    error = C.get_last_error() if not count else None
-    unsupported = None
-    if not 0 < count < len(buffer):
-        unsupported = {"architecture": "SysWOW64", "reason": "system-wow64-directory-unavailable", "error": error}
+def commands(api, journal):
+    replies = [directory_reply(api.k.GetSystemDirectoryW, "GetSystemDirectoryW"),
+               directory_reply(api.k.GetSystemWow64DirectoryW, "GetSystemWow64DirectoryW"),
+               directory_reply(api.k.GetSystemWow64DirectoryW, "GetSystemWow64DirectoryW", 32768)]
+    if api.wow64_directory2 is not None:
+        replies.append(directory_reply(api.wow64_directory2, "GetSystemWow64Directory2W", machine=MACHINE_I386))
     else:
-        path = Path(buffer.value) / "cmd.exe"
-        if not path.is_file() or path.is_symlink():
+        replies.append({"api": "GetSystemWow64Directory2W", "requestedMachine": MACHINE_I386,
+                        "unavailable": True, "nonemptyAbsoluteCountMatched": False})
+    for reply in replies:
+        journal.add({"kind": "system-directory-api-reply", **reply})
+    system, wow64, _, wow64_i386 = replies
+    if (not system["nonemptyAbsoluteCountMatched"]
+            or PureWindowsPath(system["bufferValue"]) != PureWindowsPath(str(api.system))):
+        raise RuntimeError("fixed-system32-directory-reply-invalid-or-inconsistent")
+    result = [("System32", Path(system["bufferValue"]) / "cmd.exe")]
+    unsupported = None
+    if not wow64["nonemptyAbsoluteCountMatched"] or not wow64_i386["nonemptyAbsoluteCountMatched"]:
+        unsupported = {"architecture": "SysWOW64", "reason": "system-wow64-directory-reply-invalid-or-unavailable"}
+    elif PureWindowsPath(wow64["bufferValue"]) != PureWindowsPath(wow64_i386["bufferValue"]):
+        unsupported = {"architecture": "SysWOW64", "reason": "system-wow64-directory-apis-disagree"}
+    else:
+        path = Path(wow64_i386["bufferValue"]) / "cmd.exe"
+        if not path.is_absolute() or not path.is_file() or path.is_symlink():
             unsupported = {"architecture": "SysWOW64", "reason": "fixed-wow64-command-unavailable"}
         else:
             result.append(("SysWOW64", path))
-    if not result[0][1].is_file() or result[0][1].is_symlink():
+    if not result[0][1].is_absolute() or not result[0][1].is_file() or result[0][1].is_symlink():
         raise RuntimeError("fixed-system32-command-unavailable")
-    return result, unsupported
+    return result, unsupported, replies
 
 
 def worker(output):
-    api, journal = Api(), Journal(output / "events.jsonl")
+    api, journal = None, Journal(output / "events.jsonl")
     start = time.monotonic()
-    cases, fixed, unsupported, failure, job_closes = [], [], None, None, []
+    cases, fixed, unsupported, failure, job_closes, directory_replies = [], [], None, None, [], []
     complete = False
     try:
+        api = Api()
+        journal.add({"kind": "system-directory-before-dll-load", **api.initial_system_reply})
         journal.add({"kind": "debugger-owner", "killOnDebuggerExitDefaultPreserved": True,
                      "sameLaunchingThreadOwnsEveryWaitAndContinue": True,
                      "createSuspendedBeforeOriginalJobAssignment": True,
                      "debugSchedulingDiffersFromProduct": True})
-        fixed, unsupported = commands(api)
+        fixed, unsupported, directory_replies = commands(api, journal)
         with tempfile.TemporaryDirectory(prefix="farfold-breakpoint-observer-") as cwd:
             for architecture, command in fixed:
                 for policy in POLICIES:
@@ -494,7 +582,9 @@ def worker(output):
                     and all(row["ok"] for row in job_closes))
     except Exception as error:
         failure = {"type": type(error).__name__,
-                   "phase": str(error) if type(error) is RuntimeError else "worker-exception"}
+                   "phase": str(error) if isinstance(error, RuntimeError) else "worker-exception"}
+        if isinstance(error, DirectoryReplyError):
+            failure["directoryApiReply"] = error.reply
     finally:
         journal.close()
     # A nonzero candidate exit is an observed result, not a diagnostic failure.
@@ -514,6 +604,7 @@ def worker(output):
     controls = [case for case in cases if case["policy"] == "known-loader-classes-once"]
     result = {"observationCompleted": complete, "productionAcceptance": False,
               "cases": cases, "unsupported": [unsupported] if unsupported else [], "failure": failure,
+              "directoryApiReplies": directory_replies,
               "comparison": comparisons,
               "originalJobCloses": job_closes,
               "rawRecords": journal.count, "rawBytes": journal.size,
@@ -534,7 +625,7 @@ def supervisor(output):
     if any(path.is_symlink() for path in [output, *output.parents]):
         raise RuntimeError("output-symlink-refused")
     output.mkdir(mode=0o700, exist_ok=False)
-    api, control, child = BASE.Api(), None, None
+    api, control, child = None, None, None
     status = {"observationCompleted": False, "productionAcceptance": False,
               "toolSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               "sharedApiSha256": SHARED_API_SHA256,
@@ -547,6 +638,8 @@ def supervisor(output):
                          "maxObserverSpawns": 1},
               "scope": "System32/SysWOW64 cmd /d /c exit 0; original owned objects only."}
     try:
+        api = Api()
+        status["systemDirectoryApiReply"] = api.initial_system_reply
         control = api.job()
         args = ["-I", "-S", "-B", str(Path(__file__).absolute()), "--worker", "--output", str(output)]
         child = api.create(Path(sys.executable).absolute(), args)
@@ -564,7 +657,9 @@ def supervisor(output):
         status["observerTerminal"] = api.wait(child, max(0, int((start + PARENT_SECONDS - time.monotonic()) * 1000)))
     except Exception as error:
         status["failure"] = {"type": type(error).__name__,
-                             "phase": str(error) if type(error) is RuntimeError else "supervisor-exception"}
+                             "phase": str(error) if isinstance(error, RuntimeError) else "supervisor-exception"}
+        if isinstance(error, DirectoryReplyError):
+            status["failure"]["directoryApiReply"] = error.reply
     finally:
         if child is not None:
             current = api.wait(child)

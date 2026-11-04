@@ -94,7 +94,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $observer = '.github/scripts/windows-debugger-breakpoint-observer.py'
           $sharedApi = '.github/scripts/windows-job-query-observer.py'
-          $expectedObserverSha256 = 'a28e198e35bcd2ef87a6642d014af7786a49eae0d5ef6b9b941380d7d9f7f245'
+          $expectedObserverSha256 = '1ca6797e456ec8e1987049689b04cb19bd7e5feba62e44bdd28b19f8fd403dd4'
           $expectedSharedApiSha256 = '93777c5d669317331b6ea221f4964fa042973644dd0cb50394bd0d3662c30f19'
           $observerSha256 = (Get-FileHash -LiteralPath $observer -Algorithm SHA256).Hash.ToLowerInvariant()
           $sharedApiSha256 = (Get-FileHash -LiteralPath $sharedApi -Algorithm SHA256).Hash.ToLowerInvariant()
