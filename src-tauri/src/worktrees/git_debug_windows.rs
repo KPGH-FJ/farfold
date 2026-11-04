@@ -62,6 +62,8 @@ pub(super) struct DebugProcesses {
     members: Vec<Member>,
     pending: Option<Event>,
     uncertain: bool,
+    #[cfg(test)]
+    event_observation: super::command_observation::DebugEvents,
     _launch_thread: PhantomData<Rc<()>>,
 }
 impl DebugProcesses {
@@ -75,6 +77,8 @@ impl DebugProcesses {
             members,
             pending: None,
             uncertain: false,
+            #[cfg(test)]
+            event_observation: super::command_observation::DebugEvents::default(),
             _launch_thread: PhantomData,
         })
     }
@@ -91,9 +95,15 @@ impl DebugProcesses {
             }
             if self.pending.is_none() {
                 let mut raw = DEBUG_EVENT::default();
-                if unsafe { WaitForDebugEvent(&mut raw, 0) } == 0 {
+                // Let the continued process hand off its next loader event
+                // before returning to the caller's regular polling interval.
+                if unsafe { WaitForDebugEvent(&mut raw, 1) } == 0 {
                     let error = io::Error::last_os_error();
                     if error.raw_os_error() == Some(ERROR_SEM_TIMEOUT as i32) {
+                        #[cfg(test)]
+                        {
+                            self.event_observation.empty_wait();
+                        }
                         return Ok(());
                     }
                     // A drained debugger can report no attached process. That
@@ -114,6 +124,10 @@ impl DebugProcesses {
                     }
                     self.uncertain = true;
                     return Err(error);
+                }
+                #[cfg(test)]
+                {
+                    self.event_observation.event_received();
                 }
                 self.pending = Some(Event::new(raw));
             }
@@ -219,11 +233,14 @@ impl DebugProcesses {
     }
     #[cfg(test)]
     pub(super) fn observation(&self) -> serde_json::Value {
+        let (events, empty_waits) = self.event_observation.counts();
         serde_json::json!({
             "capturedMemberCount": self.members.len(),
             "capturedMemberPids": self.members.iter().map(|member| member.pid).collect::<Vec<_>>(),
             "allExitContinued": self.all_exits_continued(),
             "unresolvedDebugError": self.uncertain,
+            "debugEventCount": events,
+            "debugEmptyWaitCount": empty_waits,
         })
     }
     pub(super) fn confirmed(

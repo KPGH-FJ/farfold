@@ -13,6 +13,23 @@ const CASE: &str =
     "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved";
 const COMMAND_LIMIT: u32 = 256;
 
+#[derive(Default)]
+pub(super) struct DebugEvents {
+    received: u64,
+    empty_waits: u64,
+}
+impl DebugEvents {
+    pub(super) fn event_received(&mut self) {
+        self.received = self.received.saturating_add(1);
+    }
+    pub(super) fn empty_wait(&mut self) {
+        self.empty_waits = self.empty_waits.saturating_add(1);
+    }
+    pub(super) fn counts(&self) -> (u64, u64) {
+        (self.received, self.empty_waits)
+    }
+}
+
 #[derive(Clone, Copy)]
 struct Classification {
     config_key: &'static str,
