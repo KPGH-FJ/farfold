@@ -17,9 +17,23 @@
     "originalP02TextObserved": "P02_20261103 仅验证未发送草稿切换🙂",
     "retainedDraftCountObserved": 1,
     "B3PreUpdateParagraphLengths": [187, 75, 32, 27],
-    "B3OfficialRead": "One pre-update initialize timeout; original draft still displayed; cleanup confirmed. No reconnect/resend.",
-    "laterOwnedMarkerAttempt": "unobserved because Mac locked; no success claim",
-    "attachmentRestartAndRecheck": "pending manual unlock"
+    "B3OfficialRead": "One pre-update initialize timeout, then one post-update read with bounded metadata observation also timed out. Original four paragraphs matched exactly; no reconnect or resend.",
+    "laterOwnedMarkerAttempt": "Initial locked action outcome was unobserved; fresh AX later confirmed original P02 and no owned marker. Follow-up modification aborted before dispatch.",
+    "attachmentRestartAndRecheck": {
+      "normalSaveAndColdRecovery": true,
+      "originalP02TextKept": true,
+      "retainedDraftCountKept": 1,
+      "missingOwnedFileShowsError": true,
+      "missingOwnedFileMessage": "无法读取“attachment-note.txt”，请取消勾选或重新选择附件。",
+      "restoredOriginalBytesRechecked": true,
+      "reviewSucceededMessage": "附件已核对，已保留你的选择。",
+      "ownedAttachmentRemovedAndColdChecked": true,
+      "sendActions": 0,
+      "oldRequestsResent": 0,
+      "scope": "Selected location-only text fixture in new-conversation draft; not Agent reading, all media, physical storage fault or other queued work."
+    },
+    "B3PostUpdateParagraphLengths": [187, 75, 32, 27],
+    "B3PostUpdateExactParagraphMatch": true
   },
   "privateEvidence": {
     "installation": {
@@ -51,11 +65,57 @@
     "lockedInterruption": {
       "path": "output/2026-11-04-p01-draft-formal/formal/ui/locked-interruption.json",
       "sha256": "b3b921a76a55ef6583c1dfba044bc173bedb1feec494c3f834bccd12a9ea08d6"
+    },
+    "unlockFollowup": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/unlock-followup.json",
+      "sha256": "af409ed0d5858d845685bf65a2adccd10ea72a04219872be886752b58ff6b5e4"
+    },
+    "attachmentBeforeQuit": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/attachment-before-quit.json",
+      "sha256": "0fa753acc39f097b17e105eea182ecc47434fa4deeec12bdba9182a56b674f9d"
+    },
+    "attachmentClosed": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/attachment-closed.json",
+      "sha256": "43f846f9cbef03b108b9b54bf0152574c397c45d77bb4d0a0bc7a3798fbbf833"
+    },
+    "attachmentColdNegative": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/attachment-cold-negative.json",
+      "sha256": "4fb26c8bf19357e4ee08b2c3224d789b876da81ed66ff9bb2c0c2f813a3f2088"
+    },
+    "attachmentPositiveAndCleanup": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/attachment-positive-and-cleanup.json",
+      "sha256": "46fd9a104bd31c1ee69290e1c294e6463df8d4bfb198daadca78243015a8250d"
+    },
+    "attachmentCleanCold": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/attachment-clean-cold.json",
+      "sha256": "b4d7fd076b571f75ae3b0be1dd4423142383772c59f92e573768bd228e22d856"
+    },
+    "B3AfterDiagnostic": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/b3-after-diagnostic.json",
+      "sha256": "12def771c3058278d35e23bef0a09dc152c19061803cb5efdd2b12c6956b8862"
     }
   },
   "limits": [
     "Synthetic unknown-schema regressions do not establish installed fault UI or physical disk failure.",
     "Data equality covers closed installation interval only, not later app startup or UI actions.",
     "Windows verification is independent and not inferred from Mac checks."
-  ]
+  ],
+  "B3Diagnostic": {
+    "initialize": "timeout after60s; no response observed",
+    "stdinBytes": 486,
+    "stdoutBytes": 0,
+    "stderrBytes": 0,
+    "cleanup": {
+      "signal": 15,
+      "killRequested": false,
+      "childReaped": true,
+      "groupEnded": true,
+      "connectionRemoved": true
+    },
+    "observerNaturalExitCode": 0,
+    "observerOffsetsSeconds": [0, 5, 15, 30],
+    "selectedNodeSeenAtSeconds": [5, 15, 30],
+    "codexDescendantObserved": false,
+    "scope": "Metadata-only non-atomic snapshots. No observation does not prove no process ever started. No argv/env/config/content or stack sample. Root cause remains unknown."
+  }
 }

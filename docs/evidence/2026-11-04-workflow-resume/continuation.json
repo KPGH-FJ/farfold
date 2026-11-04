@@ -1,28 +1,34 @@
 {
-  "updatedAt": "2026-11-04T11:33:24.829823+00:00",
+  "updatedAt": "2026-11-04T11:59:53.135176+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
     "windowsCandidateAndRunner": "d194ff52a",
     "windowsRun": 41818072244,
-    "p01Source": "d31447be7"
+    "p01Source": "d31447be7",
+    "windowsCreateTiming": "9a32d6b9f",
+    "windowsTargetedRun": 41824384963
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
     "P01 composer/attachment unknown-key overwrite reproduced and fixed;13 related files166 passed; independent review passed.",
     "First current-source Mac seven commands passed:704 frontend files9452 tests;Rust2335 pass6 ignored.",
-    "P01 associated localAudio/activity fixes completed; final unified705 files9459 frontend tests/2335 Rust6 ignored passed; nine candidate/six installed checks and206275 closed-state entry equality passed; current only formal app updated."
+    "P01 associated localAudio/activity fixes completed; final unified705 files9459 frontend tests/2335 Rust6 ignored passed; nine candidate/six installed checks and206275 closed-state entry equality passed; current only formal app updated.",
+    "P01 real SQLite readOnly through actual frontend persistence passed eight exchanges; independent review passed.",
+    "P01 actual DraftStartup save/exit connection through controlled hooks and real SQLite passed ten exchanges; failed save blocked exit and released its lock, explicit retry saved before one recorded exit request; cold read preserved new input. No native exit/installed fault UI claim.",
+    "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends."
   ],
   "active": [
-    "Windows selected41818072244 finished36pass9fail;four new lifetime/originalEOF/resource release andGit/terminal controls passed;source_review investigates create/recovery wait failures from raw receipts.",
-    "Mac locked during attempted owned-marker UI action; manual unlock requested asynchronously; action outcome unobserved, inspect fresh state before retry."
+    "Windows9a32d6b9f exact nine prior failures plus one timing control dispatched once as41824384963;source_review owns single watch and native artifact analysis.",
+    "P01 bridge final reproducibility builder/archival records finishing; current new builder must be marked static-only, actual first/two rounds preserved.",
+    "B3 one post-update diagnostic read still initialize timeout; parent cleanup confirmed and original four paragraphs exact. Static review did not establish root cause; no retry/resend."
   ],
   "formalPreparation": "Formal app source d31447be7, binary59dc8a5604d9841a3f0f4b88846cdac98c623ef85bd6780747400b7c81bee6d7; exact candidate duplicate removed; private formal receipts inoutput/2026-11-04-p01-draft-formal/formal.",
   "remaining": [
-    "Continue Windows causal timing investigation;do not replace17 full failures with selected result.",
-    "GUI attachment restart/recheck and diagnostic B3 official read require user manual unlock.",
-    "P01 realSQLite backend failure tests already exist;next safe minimal connection verification remains to design, not repeat equivalent backend cases.",
+    "Finish collecting native10 results and diagnose actual timing; stable afterward Windows full regression, do not replace17 full failures with selected result.",
+    "Finish bridge evidence/source checkpoint and update current status/requirement progress without changing original conditions.",
+    "P01 installed storage fault, remaining attachment types/queues and all wider original requirements remain open; existing approved plan remains sole queue.",
     "Preserve original unrelated debugger-system-native.json diff."
   ],
   "constraints": [
