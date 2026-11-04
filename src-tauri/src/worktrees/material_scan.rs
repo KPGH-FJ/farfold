@@ -341,7 +341,7 @@ mod links;
 #[cfg(windows)]
 #[path = "material_windows.rs"]
 mod windows;
-#[cfg(unix)]
+#[cfg(not(windows))]
 pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
     scan(root, cancel, false)
 }
@@ -391,38 +391,47 @@ pub(super) fn capture_security_complete_pin_owned(
 ) -> Result<(crate::file_access::PinnedPath, MaterialSummary)> {
     windows::capture_security_complete_pin(root, cancel, retired)
 }
-#[cfg(unix)]
+#[cfg(any(unix, test))]
 pub(super) fn content(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
     scan(root, cancel, true)
 }
-#[cfg(unix)]
+#[cfg(any(unix, test))]
 fn scan(root: &Path, cancel: &AtomicBool, content_only: bool) -> Result<MaterialSummary> {
-    let dir = crate::file_access::open_directory(root).map_err(|_| error("unsafePath"))?;
-    let mut scan = Scan {
-        hash: Sha256::new(),
-        entries: ListingBudget::new(MAX_ENTRIES),
-        bytes: 0,
-        content_only,
-    };
-    if !content_only {
-        scan.field(
-            &dir.metadata()
-                .map_err(|_| error("unavailable"))?
-                .mode()
-                .to_le_bytes(),
-        );
+    #[cfg(not(unix))]
+    {
+        let _ = (root, cancel, content_only);
+        Err(error("unsupportedGit"))
     }
-    walk(&mut scan, &dir, b"", 0, cancel)?;
-    let fresh = crate::file_access::open_directory(root).map_err(|_| error("materialChanged"))?;
-    if !crate::file_access::same_object(&dir, &fresh).map_err(|_| error("materialChanged"))? {
-        return Err(error("materialChanged"));
+    #[cfg(unix)]
+    {
+        let dir = crate::file_access::open_directory(root).map_err(|_| error("unsafePath"))?;
+        let mut scan = Scan {
+            hash: Sha256::new(),
+            entries: ListingBudget::new(MAX_ENTRIES),
+            bytes: 0,
+            content_only,
+        };
+        if !content_only {
+            scan.field(
+                &dir.metadata()
+                    .map_err(|_| error("unavailable"))?
+                    .mode()
+                    .to_le_bytes(),
+            );
+        }
+        walk(&mut scan, &dir, b"", 0, cancel)?;
+        let fresh =
+            crate::file_access::open_directory(root).map_err(|_| error("materialChanged"))?;
+        if !crate::file_access::same_object(&dir, &fresh).map_err(|_| error("materialChanged"))? {
+            return Err(error("materialChanged"));
+        }
+        Ok(MaterialSummary {
+            profile: None,
+            entries: scan.entries.reserved,
+            bytes: scan.bytes,
+            sha256: hex(scan.hash.finalize()),
+        })
     }
-    Ok(MaterialSummary {
-        profile: None,
-        entries: scan.entries.reserved,
-        bytes: scan.bytes,
-        sha256: hex(scan.hash.finalize()),
-    })
 }
 
 #[cfg(test)]
