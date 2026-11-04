@@ -1,0 +1,282 @@
+{
+  "recordedAtUtc": "2026-11-04T14:03:49.959639+00:00",
+  "basedOnCancelledRun": 41830692244,
+  "baseSourceHead": "7cc5b297d4614e279f523a792afae83aeee2a9f1",
+  "implementation": "Test-only synchronization and finite test/runner capacity; production behavior and all original terminal/data/unknown-exit assertions retained.",
+  "changes": [
+    {
+      "file": "src-tauri/src/acp_client/history_search/tests.rs",
+      "change": "Write/close same-directory temporary PID file before os.replace publishes final marker. Original5s readiness/6s join and actual process/cancel/budget assertions remain."
+    },
+    {
+      "file": "src-tauri/src/worktrees/recover_tests.rs",
+      "change": "Only two actual recovery waits use Windows60s/Mac20s; global20s helper and240s/90s parent unchanged."
+    },
+    {
+      "file": "src-tauri/src/worktrees/remove_recheck_tests.rs",
+      "change": "Only two-fixture tamper test has Windows2*240=480s parent; other parents240s and Mac90s unchanged."
+    },
+    {
+      "file": "src-tauri/src/worktrees/recovery_ordinary_windows_tests.rs",
+      "change": "Windows public-cold parent5*180+60=960s accommodates five existing180s phase budgets plus setup/recheck; all internal waits/assertions unchanged."
+    },
+    {
+      "file": ".github/workflows/windows.yml",
+      "change": "Only Rust job60→90min finite CI capacity, based on18m59s build plus39m52s tests before cancellation. No automatic120min or proof of sufficiency."
+    }
+  ],
+  "sourceSha256": {
+    "src-tauri/src/acp_client/history_search/tests.rs": "e6d382786e7633f076aa8dbf21c3436ac58b8b224db1e803eaeeffb3b62c1242",
+    "src-tauri/src/worktrees/recover_tests.rs": "054cfa81690870b53ae42e7dc82afab9e771af24466ade780079600d59631ae0",
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": "bdf6b31188da96470ad3fe1a089a422969b50524e22b6096665a07399beb0c7f",
+    "src-tauri/src/worktrees/recovery_ordinary_windows_tests.rs": "3aee3e82a59ffa0843816a45e86468e3e909356495314fe813c77deba5b78b6c",
+    ".github/scripts/windows-launch-prerequisites.ps1": "93562e2eb385bf572a235e297299ab291894f36e33539e26c10e4b396305fffb",
+    ".github/workflows/windows-launch-prerequisites.yml": "d053c263687058c7147d5eb272b4380b55adbce46234cede25b4d292624a0f70",
+    ".github/workflows/windows.yml": "368410b3e3e9a16a9b0332f9ccfbba28dc57598aecb1ded929b26ad5585b9eee"
+  },
+  "localMac": {
+    "pidTestPassed": 1,
+    "recoveryParentPairPassed": 2,
+    "tamperedParentPassed": 1,
+    "fmtNaturalExitCode": 0,
+    "libBuildNaturalExitCode": 0,
+    "clippyLibTestsNaturalExitCode": 0,
+    "stableRustInputs": 821,
+    "ordinaryWindowsCaseExecuted": false,
+    "fullSuiteExecuted": false,
+    "laterBudgetTestBinarySha256": "6d7f89ea2edcefdc94b8a2609374cf1572fcbd363749ab7bd7f64e10a1eee6eb",
+    "pidEarlierSeparateBuild": true
+  },
+  "nativePlan": {
+    "cohort": "FrozenRetirementResume",
+    "scope": "FullRunFailures",
+    "groups": 3,
+    "executions": 5,
+    "groupShapes": [
+      "PID exact1/thread1",
+      "Two recovery parents, complete FQN filters without --exact, threads2",
+      "Tampered and ordinary-delete parents, complete FQN filters without --exact, threads2"
+    ],
+    "oldDefaultInventory": "Unchanged26groups/45executions; old scope/default choices unchanged.",
+    "workflowStepMinutes": 30,
+    "workflowJobMinutes": 70,
+    "sourceBinaryFixtureBindingRetained": true,
+    "dispatched": false,
+    "allWindowsPassed": false
+  },
+  "baseline17PartialObservations": {
+    "counts": {
+      "passed": 7,
+      "failed": 2,
+      "running_notice_without_terminal": 1,
+      "no_name_observed": 7
+    },
+    "rows": [
+      {
+        "fqn": "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 1040,
+            "result": "ok",
+            "provenance": "single_direct_libtest_result"
+          }
+        ],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 5517,
+            "result": "ok",
+            "provenance": "single_direct_libtest_result"
+          }
+        ],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 14306,
+            "result": "ok",
+            "provenance": "single_direct_libtest_result"
+          }
+        ],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 15955,
+            "result": "ok",
+            "provenance": "single_direct_libtest_result"
+          }
+        ],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 16176,
+            "result": "ok",
+            "provenance": "captured_child_libtest_output"
+          },
+          {
+            "line": 16845,
+            "result": "ok",
+            "provenance": "outer_libtest_result"
+          }
+        ],
+        "runningNoticeLines": [16172]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 16848,
+            "result": "ok",
+            "provenance": "captured_child_libtest_output"
+          },
+          {
+            "line": 17515,
+            "result": "ok",
+            "provenance": "outer_libtest_result"
+          }
+        ],
+        "runningNoticeLines": [16173]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+        "partialStatus": "failed",
+        "terminalRecords": [
+          {
+            "line": 17522,
+            "result": "FAILED",
+            "provenance": "captured_child_libtest_output"
+          },
+          {
+            "line": 18351,
+            "result": "FAILED",
+            "provenance": "outer_libtest_result"
+          }
+        ],
+        "runningNoticeLines": [17516]
+      },
+      {
+        "fqn": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        "partialStatus": "failed",
+        "terminalRecords": [
+          {
+            "line": 18447,
+            "result": "FAILED",
+            "provenance": "captured_child_libtest_output"
+          },
+          {
+            "line": 19297,
+            "result": "FAILED",
+            "provenance": "outer_libtest_result"
+          }
+        ],
+        "runningNoticeLines": [17517]
+      },
+      {
+        "fqn": "worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority",
+        "partialStatus": "passed",
+        "terminalRecords": [
+          {
+            "line": 21798,
+            "result": "ok",
+            "provenance": "captured_child_libtest_output"
+          },
+          {
+            "line": 22467,
+            "result": "ok",
+            "provenance": "outer_libtest_result"
+          }
+        ],
+        "runningNoticeLines": [21794]
+      },
+      {
+        "fqn": "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+        "partialStatus": "running_notice_without_terminal",
+        "terminalRecords": [],
+        "runningNoticeLines": [25774]
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      },
+      {
+        "fqn": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+        "partialStatus": "no_name_observed",
+        "terminalRecords": [],
+        "runningNoticeLines": []
+      }
+    ],
+    "scope": "Only same-FQN observations in cancelled eeac run; captured child duplicates are not extra tests. No-name means unknown, not unexecuted. Prior complete baseline2363pass/17fail/72ignored is not replaced."
+  },
+  "independentReview": {
+    "testOnlyScopeAndAssertions": "Passed; separate agent read-only review of4test files and CI Rust budget.",
+    "newCISelection": "Passed; separate agent verified original inventory/defaults,3groups5FQN,parent wrappers,thread2 groups and unchanged exact result/hash/exit checks.",
+    "PowerShellLocallyExecuted": false
+  },
+  "causalReview": {
+    "path": "output/2026-11-04-windows-retirement-resume/full-run-41830692244/followup-investigation/five-failure-cause-and-fix-analysis.json",
+    "sha256": "85ffebeca08700ce9899802e7b7409028f04d5bc5b9a79a7e4f519916dcd41fe",
+    "scope": "Private local investigation only; public original cancelled-run logs and byte-exact local regression archive retain supporting evidence."
+  },
+  "originals": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/full-run-wait-fixes-originals.zip",
+    "sha256": "a8d884b29963b9deff7ba1aa0de12d508bb174f06d89d928d6965579be679b27",
+    "bytes": 324364,
+    "entries": 49,
+    "byteExact": true
+  },
+  "limits": [
+    "Candidate has not yet executed on Windows; Mac success is not NTFS proof.",
+    "No complete result or post-cancel process-tree cleanup receipt was obtained for original cancelled run.",
+    "Larger test/CI budgets are capacity, not lower product latency requirements or actual future runtime.",
+    "These changes do not require another Mac app installation; installed functional source remainsaeb0dc491."
+  ]
+}

@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
   [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics')][string]$Cohort = 'LaunchPrerequisites',
-  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend')][string]$Phase = 'All'
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend', 'FullRunFailures')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -45,7 +45,7 @@ function Confirm-Inputs {
 
 Confirm-Inputs
 $allowedPhases = if ($Cohort -ceq 'FrozenRetirementResume') {
-  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal')
+  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'FullRunFailures')
 } elseif ($Cohort -ceq 'OpenFailureDiagnostics') {
   @('All', 'Frontend')
 } else { @('All') }
@@ -508,8 +508,28 @@ if ($Cohort -ceq 'FrozenRetirementResume') {
       @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
     })
   }
-  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3 }[$Phase]
-  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3 }[$Phase]
+  if ($Phase -ceq 'FullRunFailures') {
+    # Exactly the five distinct failures observed before full41830692244 was
+    # cancelled. Preserve the ordinary cohort and its paired selections.
+    $history = 'acp_client::history_search::tests::real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit'
+    $recoveries = @(
+      'worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts',
+      'worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline'
+    )
+    $parentBudgets = @(
+      'worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest',
+      'worktrees::recovery_ordinary_windows_tests::ordinary_public_confirm_delete_then_offline_cold_recover_preserves_all_material'
+    )
+    # Worktree --exact invocations are the isolated child entrypoint. Keep the
+    # full-suite parent wrapper active, including contention between fixtures.
+    $groups = @(
+      @{ name = 'history-cancel-pid-publication'; filter = $history; exact = $true; names = @($history) },
+      @{ name = 'recovery-running-waits'; filter = $recoveries; exact = $false; threads = 2; names = $recoveries },
+      @{ name = 'recovery-parent-budgets'; filter = $parentBudgets; exact = $false; threads = 2; names = $parentBudgets }
+    )
+  }
+  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 3 }[$Phase]
+  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3; FullRunFailures = 5 }[$Phase]
   if ($groups.Count -ne $expectedGroups -or @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum -ne $expectedExecutions) {
     throw 'Resumed phase selection incomplete'
   }

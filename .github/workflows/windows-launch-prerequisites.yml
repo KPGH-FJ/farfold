@@ -36,7 +36,7 @@ on:
         description: Scope within FrozenRetirementResume only
         type: choice
         default: All
-        options: [All, CreateUnfinishedAndTiming]
+        options: [All, CreateUnfinishedAndTiming, FullRunFailures]
 
 permissions:
   contents: read
@@ -145,6 +145,11 @@ jobs:
         timeout-minutes: 20
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase CreateUnfinished
+      - name: Five failures from the cancelled full run
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'FullRunFailures' }}
+        timeout-minutes: 30
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase FullRunFailures
       - name: Affected original terminal controls
         if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 3
@@ -158,6 +163,7 @@ jobs:
           $selection = Get-Content -LiteralPath 'windows-diagnostics-raw/build-selection.json' -Raw | ConvertFrom-Json
           $expected = @{ Retirement = @(6, 6); GitControls = @(3, 16); CreateRecovery = @(14, 20); Terminal = @(3, 3) }
           if ('${{ inputs.resume_scope }}' -ceq 'CreateUnfinishedAndTiming') { $expected = @{ CreateTiming = @(1, 1); CreateUnfinished = @(9, 9) } }
+          if ('${{ inputs.resume_scope }}' -ceq 'FullRunFailures') { $expected = @{ FullRunFailures = @(3, 5) } }
           foreach ($phase in $expected.Keys) {
             $result = Get-Content -LiteralPath "windows-diagnostics-raw/resume-$phase.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
             if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'FrozenRetirementResume' -or $result.phase -cne $phase -or $result.expectedGroups -ne $expected[$phase][0] -or $result.expectedExecutions -ne $expected[$phase][1] -or $result.completedGroups -ne $expected[$phase][0] -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Resumed phase missing, incomplete or failed: $phase" }

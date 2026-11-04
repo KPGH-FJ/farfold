@@ -46,7 +46,9 @@ jobs:
 
   rust:
     runs-on: windows-2022
-    timeout-minutes: 60
+    # Full41830692244 spent ~19m compiling and ~40m testing before the old
+    # job cap cancelled it. This is finite runner capacity, not a test deadline.
+    timeout-minutes: 90
     defaults:
       run:
         shell: pwsh

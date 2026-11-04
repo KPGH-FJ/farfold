@@ -222,8 +222,10 @@ fn removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recover
 
 #[test]
 fn removal_recheck_never_promotes_tampered_bundle_or_manifest() {
-    isolated(
+    // Both tamper cases independently create, archive, prepare and delete a tree.
+    recycle_tests::isolated_with_timeout(
         "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+        Duration::from_secs(if cfg!(windows) { 2 * 240 } else { 90 }),
         || {
             for file in ["recovery.bundle", "manifest.json"] {
                 let r = tests::Repo::new();

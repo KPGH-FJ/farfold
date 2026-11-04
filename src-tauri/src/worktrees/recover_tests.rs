@@ -6,6 +6,9 @@ use super::{
 use std::{fs, path::Path};
 const REMOVE: &str = "42345678-1234-4123-8123-123456789abc";
 const RECOVER: &str = "52345678-1234-4123-8123-123456789abc";
+// Actual recovery verification follows creation setup and needs its own test wait.
+const RECOVER_WAIT: std::time::Duration =
+    std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
 fn backup(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Recovery {
     let timeout = std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
     let l = recycle_tests::created_with_timeout(m, s, r, timeout);
@@ -59,7 +62,7 @@ fn recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts()
             fs::rename(&objects, &offline).unwrap();
             m.start(&s, RECOVER).unwrap();
             m.start(&s, RECOVER).unwrap();
-            let done = recycle_tests::wait(&m, &s, RECOVER);
+            let done = recycle_tests::wait_with_timeout(&m, &s, RECOVER, RECOVER_WAIT);
             fs::rename(&offline, &objects).unwrap();
             assert_eq!(done.state, "ready", "{done:?}");
             let l = done.location.unwrap();
@@ -170,7 +173,7 @@ fn recover_keeps_private_ref_and_orphan_reflog_only_commits_offline() {
             let prepared = m.prepare_recover(&s, RECOVER, args.clone());
             let outcome = prepared
                 .and_then(|_| m.start(&s, RECOVER))
-                .map(|_| recycle_tests::wait(&m, &s, RECOVER));
+                .map(|_| recycle_tests::wait_with_timeout(&m, &s, RECOVER, RECOVER_WAIT));
             fs::rename(&offline, &objects).unwrap();
             let ready = outcome.unwrap();
             assert_eq!(ready.state, "ready", "{ready:?}");
