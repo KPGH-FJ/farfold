@@ -78,6 +78,12 @@ export const SKILL_MANAGEMENT_STRINGS = {
     reviewExpired: "此次审阅已过期，请重新审阅。",
     reviewConsumed: "此次确认已经使用，不能重复修改。",
     configurationUnsupported: "当前配置的修改方式尚未提供。",
+    configurationProjectOnly:
+      "此 MCP 在项目设置中定义，本次未找到可修改的用户设置；尚未修改。",
+    configurationInherited:
+      "此 MCP 来自继承的设置，本次仅支持修改用户设置；尚未修改。",
+    configurationLayerConflict:
+      "同名 MCP 出现在多处设置中，无法确定修改范围；尚未修改。",
     configurationChanged: "配置已变化，请重新审阅。",
     configurationReadOnly: "当前配置不允许本次修改。",
     configurationRejected: "官方程序未接受本次配置修改。",

@@ -20,6 +20,11 @@ def send(request, result=None, error=None):
     print(json.dumps(value), flush=True)
 
 
+def scoped_config(directory):
+    paths = state["scopeFiles"]["directory" if directory else "global"]
+    return {"layers": [json.loads((root / name).read_text()) for name in paths]}
+
+
 if stage == "get":
     if state["writes"] and mode == "postget-fail":
         sys.exit(9)
@@ -28,7 +33,10 @@ if stage == "get":
         (root / "postget-waiting").write_text(str(__import__("os").getpid()))
         __import__("time").sleep(60)
     result = state["report"]
-    result["enabled"] = state["config"]["layers"][0]["config"]["mcp_servers"][state["name"]].get("enabled", True)
+    selected = state["config"]["layers"][0]
+    if mode == "scope-files":
+        selected = json.loads((root / state["scopeFiles"]["effective"]).read_text())
+    result["enabled"] = selected["config"]["mcp_servers"][state["name"]].get("enabled", True)
     if state["writes"] and mode == "postget-filter-drift":
         result["enabled_tools"] = ["changed-after-configuration-read"]
     if state["writes"] and mode == "policy-disabled":
@@ -47,7 +55,17 @@ for line in sys.stdin:
     elif method == "initialized":
         pass
     elif method == "config/read":
-        result = json.loads(json.dumps(state["config"]))
+        if mode == "scope-files" and (root / "scope-pause").exists():
+            temporary = root / "scope-waiting.tmp"
+            temporary.write_text(str(__import__("os").getpid()))
+            temporary.replace(root / "scope-waiting")
+            while (root / "scope-pause").exists():
+                __import__("time").sleep(0.01)
+        result = (
+            scoped_config(request["params"]["cwd"] is not None)
+            if mode == "scope-files"
+            else json.loads(json.dumps(state["config"]))
+        )
         if request["params"]["cwd"] is not None and mode == "project-conflict":
             result["layers"].insert(0, {"name": {"type": "project", "file": "/synthetic/project.toml"}, "version": "p1", "config": {"mcp_servers": {state["name"]: {"enabled": False}}}})
         send(request, result)

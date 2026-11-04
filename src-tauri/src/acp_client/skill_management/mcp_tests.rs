@@ -178,6 +178,304 @@ fn mcp_inherited_or_project_same_name_refuses_without_write() {
     assert!(!job.snapshot().write_dispatched);
     assert_eq!(f.state()["writes"], 0);
 }
+
+fn scope_files(f: &Fixture, kind: &str) -> Vec<(PathBuf, Vec<u8>)> {
+    let mut user = config()["layers"][0].clone();
+    user["name"] = json!({"type":"user","file":f.temp.path().join("user.layer.json")});
+    let entry = user["config"]["mcp_servers"]["fixture.one"].clone();
+    if !matches!(kind, "conflict" | "unknown-conflict") {
+        user["config"]["mcp_servers"]
+            .as_object_mut()
+            .unwrap()
+            .remove("fixture.one");
+    }
+    let other_name = match kind {
+        "inherited" => json!({"type":"system","file":f.temp.path().join("other.layer.json")}),
+        "unknown" | "unknown-conflict" => {
+            json!({"type":"futureUnknown","file":f.temp.path().join("other.layer.json")})
+        }
+        "missing" => json!({"type":"project"}),
+        "malformed" => json!({"type":"project","dotCodexFolder":"relative/.codex"}),
+        _ => json!({"type":"project","dotCodexFolder":f.temp.path().join(".codex")}),
+    };
+    let other = json!({"name":other_name,"version":"scope-v1","config":{"mcp_servers":{"fixture.one":entry}},"disabledReason":null});
+    let mut original = Vec::new();
+    for (name, value) in [("user.layer.json", user), ("other.layer.json", other)] {
+        let bytes = serde_json::to_vec(&value).unwrap();
+        let path = f.temp.path().join(name);
+        std::fs::write(&path, &bytes).unwrap();
+        original.push((path, bytes));
+    }
+    let mut state = f.state();
+    state["scopeFiles"] = json!({
+        "global":if kind=="inherited" {vec!["other.layer.json","user.layer.json"]}else{vec!["user.layer.json"]},
+        "directory":["user.layer.json","other.layer.json"],
+        "effective":"other.layer.json"
+    });
+    std::fs::write(
+        f.temp.path().join("state.json"),
+        serde_json::to_vec(&state).unwrap(),
+    )
+    .unwrap();
+    original
+}
+
+fn assert_scope_refusal(kind: &str, expected: &str) {
+    let f = Fixture::new();
+    let sources = scope_files(&f, kind);
+    let job = f.job();
+    f.run(&job, "scope-files");
+    let op = job.snapshot();
+    assert!(op.settled);
+    assert_eq!(op.state, State::Failed);
+    assert!(!op.write_dispatched);
+    assert_eq!(op.write_ack, Ack::None);
+    assert!(op.review.is_none());
+    assert_eq!(f.state()["writes"], 0);
+    assert!(
+        f.state()["methods"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|v| v != "config/value/write")
+    );
+    for (path, bytes) in sources {
+        assert_eq!(std::fs::read(path).unwrap(), bytes);
+    }
+    let public = serde_json::to_string(&op).unwrap();
+    assert!(!public.contains("never-public-value"));
+    assert!(!public.contains("do-not-show"));
+    assert!(!public.contains("user.layer.json"));
+    assert!(!public.contains("other.layer.json"));
+    println!(
+        "MCP_SCOPE_WIRE={}",
+        json!({"case":kind,"inventory":inventory::requests::shared().get(&f.agent,&f.inventory).unwrap().snapshot(),"operation":op})
+    );
+    assert_eq!(serde_json::to_value(op.code).unwrap(), json!(expected));
+}
+
+#[test]
+fn mcp_scope_project_only_is_precise_and_never_writes() {
+    assert_scope_refusal("project", "configurationProjectOnly");
+}
+
+#[test]
+fn mcp_scope_inherited_is_precise_and_never_writes() {
+    assert_scope_refusal("inherited", "configurationInherited");
+}
+
+#[test]
+fn mcp_scope_cross_layer_conflict_is_precise_and_never_writes() {
+    assert_scope_refusal("conflict", "configurationLayerConflict");
+}
+
+#[test]
+fn mcp_scope_untrusted_sources_keep_the_generic_refusal() {
+    for kind in ["unknown", "missing", "malformed", "unknown-conflict"] {
+        assert_scope_refusal(kind, "configurationUnsupported");
+    }
+}
+
+#[test]
+fn mcp_scope_disabled_project_source_does_not_block_the_user_review() {
+    let f = Fixture::new();
+    let mut sources = scope_files(&f, "conflict");
+    let (path, bytes) = &mut sources[1];
+    let mut layer: Value = serde_json::from_slice(bytes).unwrap();
+    layer["disabledReason"] = json!("owned untrusted-project fixture");
+    *bytes = serde_json::to_vec(&layer).unwrap();
+    std::fs::write(path, &*bytes).unwrap();
+    let job = f.job();
+    f.run(&job, "scope-files");
+    assert_eq!(job.snapshot().state, State::Ready);
+    assert!(job.snapshot().review.is_some());
+    assert!(!job.snapshot().write_dispatched);
+    assert_eq!(f.state()["writes"], 0);
+    for (path, bytes) in sources {
+        assert_eq!(std::fs::read(path).unwrap(), bytes);
+    }
+}
+
+#[test]
+fn mcp_scope_user_only_unknown_source_metadata_keeps_existing_review() {
+    let f = Fixture::new();
+    let mut sources = scope_files(&f, "conflict");
+    let (path, bytes) = &mut sources[0];
+    let mut layer: Value = serde_json::from_slice(bytes).unwrap();
+    layer["name"]["futureOpaque"] = json!({"nested":["private-source-canary",true]});
+    *bytes = serde_json::to_vec(&layer).unwrap();
+    std::fs::write(path, &*bytes).unwrap();
+    let mut state = f.state();
+    state["scopeFiles"] = json!({"global":["user.layer.json"],"directory":["user.layer.json"],"effective":"user.layer.json"});
+    std::fs::write(
+        f.temp.path().join("state.json"),
+        serde_json::to_vec(&state).unwrap(),
+    )
+    .unwrap();
+    let job = f.job();
+    f.run(&job, "scope-files");
+    let op = job.snapshot();
+    assert_eq!(op.state, State::Ready);
+    assert!(op.review.is_some());
+    assert_eq!(op.code, None);
+    assert!(!op.write_dispatched);
+    assert_eq!(f.state()["writes"], 0);
+    assert!(
+        !serde_json::to_string(&op)
+            .unwrap()
+            .contains("private-source-canary")
+    );
+    for (path, bytes) in sources {
+        assert_eq!(std::fs::read(path).unwrap(), bytes);
+    }
+}
+
+fn assert_duplicate_scope_refusal(variant: &str) {
+    let f = Fixture::new();
+    let mut sources = scope_files(&f, "conflict");
+    let mut other: Value = serde_json::from_slice(&sources[0].1).unwrap();
+    if variant == "snapshot" {
+        other["version"] = json!("another-version-same-source");
+        other["config"]["other"]["future"] = json!(["another-value-same-source"]);
+    } else if variant == "default-profile" {
+        other["name"]["profile"] = Value::Null;
+    }
+    sources[1].1 = serde_json::to_vec(&other).unwrap();
+    std::fs::write(&sources[1].0, &sources[1].1).unwrap();
+    let mut state = f.state();
+    state["scopeFiles"] = json!({"global":["user.layer.json","other.layer.json"],"directory":["user.layer.json","other.layer.json"],"effective":"user.layer.json"});
+    std::fs::write(
+        f.temp.path().join("state.json"),
+        serde_json::to_vec(&state).unwrap(),
+    )
+    .unwrap();
+    let job = f.job();
+    f.run(&job, "scope-files");
+    let op = job.snapshot();
+    assert!(op.settled);
+    assert_eq!(op.state, State::Failed);
+    assert!(!op.write_dispatched);
+    assert_eq!(op.write_ack, Ack::None);
+    assert!(op.review.is_none());
+    assert_eq!(f.state()["writes"], 0);
+    assert!(
+        f.state()["methods"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|v| v != "config/value/write")
+    );
+    for (path, bytes) in sources {
+        assert_eq!(std::fs::read(path).unwrap(), bytes);
+    }
+    let public = serde_json::to_string(&op).unwrap();
+    assert!(!public.contains("never-public-value"));
+    assert!(!public.contains("do-not-show"));
+    println!(
+        "MCP_SCOPE_DUPLICATE_WIRE={}",
+        json!({"case":variant,"operation":op})
+    );
+    assert_eq!(op.code, Some(Code::ConfigurationUnsupported));
+}
+
+#[test]
+fn mcp_scope_duplicate_same_user_source_keeps_generic_refusal() {
+    assert_duplicate_scope_refusal("exact");
+}
+
+#[test]
+fn mcp_scope_duplicate_user_source_changed_snapshot_keeps_generic_refusal() {
+    assert_duplicate_scope_refusal("snapshot");
+}
+
+#[test]
+fn mcp_scope_duplicate_user_default_profile_keeps_generic_refusal() {
+    assert_duplicate_scope_refusal("default-profile");
+}
+
+#[cfg(unix)]
+#[tokio::test(flavor = "multi_thread")]
+async fn mcp_scope_cancelled_layer_read_ends_worker_without_writing() {
+    use std::time::Duration;
+    let f = Fixture::new();
+    let sources = scope_files(&f, "project");
+    std::fs::write(f.temp.path().join("scope-pause"), b"owned test gate").unwrap();
+    let job = f.job();
+    let row = f.store.get_agent(&f.agent).unwrap().unwrap();
+    let manager = crate::acp_client::manager::AcpManager::new(
+        f.temp.path().join("controlled-logs"),
+        f.temp.path().into(),
+    );
+    let scope = manager
+        .reserve_preparation_action(&row, &row.command, &row.args)
+        .unwrap();
+    let admission = crate::managed_update::UpdateAdmission::default();
+    let activity = admission.activity().unwrap();
+    let root = f.temp.path().to_path_buf();
+    let execution = tokio::spawn(super::execute_with(
+        f.store.clone(),
+        job.clone(),
+        activity,
+        scope,
+        move |store, job| {
+            mcp::run_with(store, job, |stage| {
+                let mut command = Command::new(crate::platform_tests::python());
+                command
+                    .arg("-u")
+                    .arg(
+                        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                            .join("src/acp_client/skill_management/mcp_peer.py"),
+                    )
+                    .arg(&root)
+                    .arg("scope-files")
+                    .arg(match stage {
+                        mcp::Stage::Get => "get",
+                        mcp::Stage::AppServer => "server",
+                    });
+                Ok(command)
+            })
+        },
+    ));
+    let marker = f.temp.path().join("scope-waiting");
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while !marker.exists() {
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
+    assert!(admission.update().is_err());
+    assert!(
+        f.registry
+            .cancel_kind(&f.agent, &job.snapshot().request_id, Kind::Mcp)
+            .unwrap()
+            .cancel_requested
+    );
+    tokio::time::timeout(Duration::from_secs(5), execution)
+        .await
+        .unwrap()
+        .unwrap();
+    assert_ne!(crate::platform_tests::process_check(pid), 0);
+    assert!(admission.update().is_ok());
+    assert_eq!(job.snapshot().state, State::Cancelled);
+    assert_eq!(job.snapshot().code, Some(Code::Cancelled));
+    assert!(!job.snapshot().write_dispatched);
+    assert_eq!(job.snapshot().write_ack, Ack::None);
+    assert!(job.snapshot().review.is_none());
+    assert_eq!(f.state()["writes"], 0);
+    assert!(
+        f.state()["methods"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|v| v != "config/value/write")
+    );
+    for (path, bytes) in sources {
+        assert_eq!(std::fs::read(path).unwrap(), bytes);
+    }
+}
+
 #[test]
 fn mcp_postwrite_failures_never_become_cancelled_or_verified() {
     for mode in ["lost-ack", "postwrite-error", "postget-fail"] {

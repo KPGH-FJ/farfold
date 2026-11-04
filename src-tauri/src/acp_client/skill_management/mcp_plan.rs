@@ -45,6 +45,125 @@ fn unique(config: &Config, name: &str) -> bool {
                 .is_none_or(|v| v.as_object().is_some_and(|v| !v.contains_key(name)))
     })
 }
+
+#[derive(Clone, Copy, PartialEq)]
+enum SourceScope {
+    User,
+    Project,
+    Inherited,
+}
+
+fn source_scope(name: &Value) -> Option<SourceScope> {
+    let object = name.as_object()?;
+    let (scope, path_key, keys): (_, _, &[&str]) = match object.get("type")?.as_str()? {
+        "user" => (SourceScope::User, "file", &["type", "file", "profile"]),
+        "project" => (
+            SourceScope::Project,
+            "dotCodexFolder",
+            &["type", "dotCodexFolder"],
+        ),
+        "system" | "packagedDefaults" => (SourceScope::Inherited, "file", &["type", "file"]),
+        _ => return None,
+    };
+    if object.keys().any(|key| !keys.contains(&key.as_str()))
+        || object
+            .get("profile")
+            .is_some_and(|v| !v.is_null() && !v.is_string())
+    {
+        return None;
+    }
+    let path = object.get(path_key)?.as_str()?;
+    super::plan::display_path(path).ok()?;
+    if std::path::Path::new(path).components().any(|part| {
+        matches!(
+            part,
+            std::path::Component::ParentDir | std::path::Component::CurDir
+        )
+    }) || (scope == SourceScope::Project && std::path::Path::new(path).file_name()? != ".codex")
+    {
+        return None;
+    }
+    Some(scope)
+}
+
+fn source_identity(name: &Value) -> Option<(&str, &str, Option<&str>)> {
+    let kind = name.get("type")?.as_str()?;
+    let path = name
+        .get(if kind == "project" {
+            "dotCodexFolder"
+        } else {
+            "file"
+        })?
+        .as_str()?;
+    // These are official metadata identities only. Missing/null User profile
+    // both mean the default source; no filesystem alias identity is inferred.
+    Some((kind, path, name.get("profile").and_then(Value::as_str)))
+}
+
+fn definitions<'a>(
+    config: &'a Config,
+    name: &str,
+) -> Result<Vec<(SourceScope, &'a super::plan::Layer)>> {
+    let mut result: Vec<(SourceScope, &super::plan::Layer)> = Vec::new();
+    for layer in &config.layers {
+        if layer.disabled_reason.is_some() {
+            continue;
+        }
+        let Some(servers) = layer.config.get("mcp_servers") else {
+            continue;
+        };
+        let servers = servers.as_object().ok_or(Code::ConfigurationUnsupported)?;
+        if let Some(entry) = servers.get(name) {
+            if !entry.is_object() {
+                return Err(Code::ConfigurationUnsupported.into());
+            }
+            let scope = source_scope(&layer.name).ok_or(Code::ConfigurationUnsupported)?;
+            let identity = source_identity(&layer.name).ok_or(Code::ConfigurationUnsupported)?;
+            if result
+                .iter()
+                .any(|(_, prior)| source_identity(&prior.name) == Some(identity))
+            {
+                return Err(Code::ConfigurationUnsupported.into());
+            }
+            result.push((scope, layer));
+        }
+    }
+    Ok(result)
+}
+
+fn require_user_source(before: &Config, directory: &Config, name: &str) -> Result<()> {
+    let global = definitions(before, name)?;
+    let local = definitions(directory, name)?;
+    if global.len() > 1 || local.len() > 1 {
+        return Err(Code::ConfigurationLayerConflict.into());
+    }
+    if global.is_empty()
+        && local
+            .first()
+            .is_some_and(|(kind, _)| *kind == SourceScope::Project)
+    {
+        return Err(Code::ConfigurationProjectOnly.into());
+    }
+    if let ([(SourceScope::Inherited, a)], [(SourceScope::Inherited, b)]) =
+        (global.as_slice(), local.as_slice())
+        && a == b
+    {
+        return Err(Code::ConfigurationInherited.into());
+    }
+    // Unrecognized or inconsistent provenance never grants a more specific fact
+    // or creates authority to write an inherited/project setting.
+    if global
+        .first()
+        .is_some_and(|(kind, _)| *kind != SourceScope::User)
+        || local
+            .first()
+            .is_some_and(|(kind, _)| *kind != SourceScope::User)
+    {
+        return Err(Code::ConfigurationUnsupported.into());
+    }
+    Ok(())
+}
+
 pub(super) fn preserved(before: &Config, after: &Config, intended: &Value) -> bool {
     before.active == after.active
         && before.file == after.file
@@ -67,7 +186,13 @@ pub(super) fn preserved(before: &Config, after: &Config, intended: &Value) -> bo
 impl Plan {
     pub fn new(before: Config, directory: Config, report: Report, enabled: bool) -> Result<Self> {
         let name = &report.target.name;
-        if !same_scope(&before, &directory) || !unique(&before, name) || !unique(&directory, name) {
+        if !same_scope(&before, &directory) {
+            return Err(Code::ConfigurationUnsupported.into());
+        }
+        if !unique(&before, name) || !unique(&directory, name) {
+            // Refine an existing refusal only. Supported unique User entries
+            // retain their existing handling of opaque source metadata.
+            require_user_source(&before, &directory, name)?;
             return Err(Code::ConfigurationUnsupported.into());
         }
         if report.policy_disabled {
