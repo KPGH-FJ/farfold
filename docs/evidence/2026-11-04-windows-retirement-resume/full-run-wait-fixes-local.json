@@ -61,8 +61,12 @@
     "workflowStepMinutes": 30,
     "workflowJobMinutes": 70,
     "sourceBinaryFixtureBindingRetained": true,
-    "dispatched": false,
-    "allWindowsPassed": false
+    "dispatched": true,
+    "allWindowsPassed": false,
+    "runId": 41843965055,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41843965055",
+    "sourceHead": "0bfc79a46801be0d077fd9d8f282a0fe95d1427d",
+    "resultPending": true
   },
   "baseline17PartialObservations": {
     "counts": {

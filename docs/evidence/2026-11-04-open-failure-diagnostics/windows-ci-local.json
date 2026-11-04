@@ -34,9 +34,11 @@
   "dispatchPending": false,
   "dispatched": {
     "runId": 41841306844,
-    "sourceHead": "96c0f902b",
+    "sourceHead": "96c0f902becb84718e38fc61280b0c92e3dee043",
     "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41841306844",
-    "status": "in_progress",
-    "nativeResultPending": true
+    "status": "completed",
+    "nativeResultPending": false,
+    "actualSelectedResult": "passed18native/51frontend/typecheck/PSparse4",
+    "actualSummary": "windows-open-failure-41841306844.json"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T13:52:52.298960+00:00",
+  "updatedAt": "2026-11-04T14:13:45.083923+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -17,7 +17,10 @@
     "windowsFullAfterAliasSource": "eeac890c3",
     "commonOpenFailures": "aeb0dc491",
     "windowsOpenFailuresCI": "96c0f902b",
-    "windowsOpenFailuresRun": 41841306844
+    "windowsOpenFailuresRun": 41841306844,
+    "formalResultsDocumentation": "7cc5b297d",
+    "windowsFiveTestFixes": "0bfc79a46",
+    "windowsFiveTestFixesRun": 41843965055
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -28,16 +31,16 @@
     "P01 actual DraftStartup save/exit connection through controlled hooks and real SQLite passed ten exchanges; failed save blocked exit and released its lock, explicit retry saved before one recorded exit request; cold read preserved new input. No native exit/installed fault UI claim.",
     "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends.",
     "Common safe opening diagnostics aeb0dc491: associated frontend154 and Rust18 passed; final frontend705files9481pass/Rust2339pass7ignored with explicit type-annotation-only dependency reuse; independent review passed.",
-    "Common aeb0dc491 installed once, candidate9/installed6, three closed-state206275-entry manifests equal. Actual B3 safe timeout message, Q history32 updates, preserved original drafts/attachments/feedback and visible model choices, returned P02/retained1. Zero new prompt or resend."
+    "Common aeb0dc491 installed once, candidate9/installed6, three closed-state206275-entry manifests equal. Actual B3 safe timeout message, Q history32 updates, preserved original drafts/attachments/feedback and visible model choices, returned P02/retained1. Zero new prompt or resend.",
+    "Windows five-failure causal review completed; original17partial matrix7pass/2fail/1running/7unknown preserved separately. Test-only PID atomic publication,2Windows recovery waits and2composed parent budgets committed0bfc; Mac PID1/recovery2/tampered1 plusfmt/build/Clippy naturally passed,821Rust inputs stable; no NTFS proof fromMac.",
+    "Windows common safe-open scoped run41841306844 fixed96c naturally passed18native+51frontend/typecheck/4PSparses;2301inputs independently bound to exact fixed Git source with explicit LF/CRLF handling. Job1065s/build-binding912.820166s. Raw archive8edbc635...a131d4e; no executable byte upload/no installer/full-suite claim."
   ],
   "active": [
-    "Windows eeac full41830692244 hit60-minute job maximum and was cancelled; no final Rust count/natural exit. At least5different FQN failures: PID empty read, two actual recovery20s waits, two parent isolation deadlines. source_review owns causal analysis and original17partial matrix.",
-    "Scoped OpenFailureDiagnostics run41841306844 fixed96c0f902b; environment_review owns sole watch/download and exact18native+51frontend proof. No duplicate watch/dispatch."
+    "Windows FullRunFailures41843965055 fixed0bfc79a46:3groups5FQN actual parent wrappers and paired threads2, source_review sole watch/download owner. Native results pending; only then one full with CI Rust90min capacity. Original complete2363/17/72 baseline remains until genuine complete result."
   ],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "Analyze/fix Windows failed test synchronization and parent/child budgets based on observed stage evidence, keep production deadlines/proof unchanged; verify affected native cases before another full.",
-    "Complete current exact18native/51frontend Windows run and update evidence by actual names, exits and source maps.",
+    "Collect Windows five targeted test-fix results by actual exact names, child completion and natural parent exits; resolve any failure without weakening product/proof. If all5pass, one full run with90min Rust job capacity, unchanged suite/default concurrency.",
     "Original P01 installed storage faults/other formats/queues, broader151/29x8, generic open-result installed negative paths and actual Agent root causes remain open.",
     "Preserve original unrelated debugger JSON and protected data. This is a locator, not a second queue."
   ],
@@ -46,5 +49,15 @@
     "Preserve user drafts/history/unknown requests;NEW24 affected sends remain paused.",
     "Keep selected Agent/model/reasoning; no resend or account changes.",
     "This record only locates work; plans/agent-access.md remains sole scheduler."
-  ]
+  ],
+  "machineCheckpoint": {
+    "observedAtUtc": "2026-11-04T14:10:29.934032+00:00",
+    "availableFilesystemGiB": 56.62,
+    "branchTrackingAheadBehind": [0, 0],
+    "installedId": "ai.farfold.desktop",
+    "installedVersion": "0.1.7",
+    "installedBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
+    "originalUnrelatedDirtySha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
+    "originalUnrelatedDirtyMode": "0644"
+  }
 }
