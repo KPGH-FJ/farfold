@@ -93,6 +93,10 @@
     "B3AfterDiagnostic": {
       "path": "output/2026-11-04-p01-draft-formal/formal/ui/b3-after-diagnostic.json",
       "sha256": "12def771c3058278d35e23bef0a09dc152c19061803cb5efdd2b12c6956b8862"
+    },
+    "selectedCodexShellVersion": {
+      "path": "output/2026-11-04-p01-draft-formal/diagnostics/selected-codex-version-shell-eg9u1mq0/result.json",
+      "sha256": "51211b0e80b996e676e3235393eec1ecc152dc12e5fa5bc1431fbdd2da54b274"
     }
   },
   "limits": [
@@ -116,6 +120,20 @@
     "observerOffsetsSeconds": [0, 5, 15, 30],
     "selectedNodeSeenAtSeconds": [5, 15, 30],
     "codexDescendantObserved": false,
-    "scope": "Metadata-only non-atomic snapshots. No observation does not prove no process ever started. No argv/env/config/content or stack sample. Root cause remains unknown."
+    "scope": "Metadata-only non-atomic snapshots. No observation does not prove no process ever started. No argv/env/config/content or stack sample. Root cause remains unknown.",
+    "actualSavedCodexSource": {
+      "officialPackage": "@openai/codex",
+      "version": "0.155.1",
+      "entryType": "External official JavaScript CLI through a saved CODEX_PATH symlink; package native exists. This is not the managed0.156.1 default.",
+      "inheritedEnvironmentInspected": false
+    },
+    "developmentShellControl": {
+      "argvSuffix": ["--version"],
+      "actualVersion": "codex-cli 0.155.1",
+      "naturalExitCode": 0,
+      "seconds": 0.125591,
+      "cleanupSignals": false,
+      "scope": "One version-only check in development shell; does not test the actual Farfold environment or ACP initialization."
+    }
   }
 }

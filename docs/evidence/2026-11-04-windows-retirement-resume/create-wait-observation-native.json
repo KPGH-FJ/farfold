@@ -1,0 +1,397 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T12:14:23.962217+00:00",
+  "sourceCommit": "9a32d6b9f133577321db6653b3b068325fe39dca",
+  "runId": 41824384963,
+  "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41824384963",
+  "cohort": "FrozenRetirementResume",
+  "resumeScope": "CreateUnfinishedAndTiming",
+  "actualOutcomes": {
+    "groups": 10,
+    "executions": 10,
+    "passed": 10,
+    "failed": 0,
+    "missingReceipts": 0,
+    "allNaturalExitZero": true,
+    "actualNamesAndOutputHashesChecked": true,
+    "exactNinePreviousActualFailures": true,
+    "groupsDetail": [
+      {
+        "group": "create-existing-branch",
+        "phase": "CreateTiming",
+        "test": "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 22.360843,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-existing-branch.json",
+          "sha256": "854ddedec233066a7ff59749d38c1dc78329fcee29d0d5a3e665215576d141ce"
+        }
+      },
+      {
+        "group": "create-official-config-aliases",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 23.9147,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-official-config-aliases.json",
+          "sha256": "0fdbb7118f7b4c9e3c827f414fc3f9c77d930e731b3c3d1e0bd85f583539deb4"
+        }
+      },
+      {
+        "group": "create-cold-location",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 25.997212,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-cold-location.json",
+          "sha256": "2354d9307eee70b3e02ee1f643f2557ea90b4146b5263de1be09cfccef8d40ab"
+        }
+      },
+      {
+        "group": "create-storage-failure",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 23.374391,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-storage-failure.json",
+          "sha256": "f24f2c530171e8eeadf6fbdcf4485ffc84bc9a90513975e3f68aaeced21a35c9"
+        }
+      },
+      {
+        "group": "create-new-branch",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 22.144203,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-new-branch.json",
+          "sha256": "d61441465c38e8e5ac7d65f32d4fdab7c614b073c9820b08df33df844f6a01ad"
+        }
+      },
+      {
+        "group": "recovery-orphan-roots",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 84.595033,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/recovery-orphan-roots.json",
+          "sha256": "f412d9bae0a7691b14d4ea11ce0f80478c6e23590f173f981cf9c9ed1de56338"
+        }
+      },
+      {
+        "group": "recovery-confirmation-reflog",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 77.898652,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/recovery-confirmation-reflog.json",
+          "sha256": "a91672ea99b119b7d35137c5d6e0c9f31b16366c8a37f46e1c1c458948cc971b"
+        }
+      },
+      {
+        "group": "recovery-confirmation-corrupt",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 75.895119,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/recovery-confirmation-corrupt.json",
+          "sha256": "5f29accf2f813965e5e8c27a30e6335cdc2a29f5f72126da39a48db103118197"
+        }
+      },
+      {
+        "group": "recovery-cold-dispatched",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 76.958683,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/recovery-cold-dispatched.json",
+          "sha256": "698d99e35e7bc7152e63062818719930b4a22f623d666e84b2da1bd9555352da"
+        }
+      },
+      {
+        "group": "recovery-cold-contract",
+        "phase": "CreateUnfinished",
+        "test": "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+        "naturalExitCode": 0,
+        "wholeTestSeconds": 69.440358,
+        "receipt": {
+          "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/recovery-cold-contract.json",
+          "sha256": "0aa10666b20827161e2e5957d4181ae1c9550a27d88dc6d638e5939d63c897f6"
+        }
+      }
+    ]
+  },
+  "meaning": "The nine original assertions now reach their intended terminal state within bounded Windows-only creation setup observation; intentional storage-unknown and corrupt-recovery refusal assertions remain. This is test-fixture observation, not a claim of faster product behavior.",
+  "sourceBinding": {
+    "checkedCandidateBindings": [
+      {
+        "path": "src-tauri/src/windows_process.rs",
+        "committedLfSha256": "450dbc54de096a5124dbadff297f4ccbb06053471d274fe294105c5ba75fee62",
+        "nativeCrLfSha256": "a0fc5f72ac125021da3d1484290e2ce89f77b296439ff1883aa3387dc91b8785"
+      },
+      {
+        "path": "src-tauri/src/worktrees/git.rs",
+        "committedLfSha256": "12260a349a96243d3cf778757cad7a42896fb489f9f646507d11224fc061381d",
+        "nativeCrLfSha256": "90bee53c9b8be5b22d9b0ddc694abc2d369c92530eee227d8403fdb7a98380a7"
+      },
+      {
+        "path": "src-tauri/src/worktrees/git_command_observation_tests.rs",
+        "committedLfSha256": "03790db1b3665968edbcbd2ed576b55eb36cde359c5cb63423e7f0ed27ccb61a",
+        "nativeCrLfSha256": "ab4c46d13e59029ff849d5c7323d53fa29a7136eac70fe7ec5d81e68d134777c"
+      },
+      {
+        "path": "src-tauri/src/worktrees/git_debug_windows.rs",
+        "committedLfSha256": "97b8b25e280a4519800383a250ef418fa7ba2802a63d3e328e9739c6dbfe597a",
+        "nativeCrLfSha256": "71a3d30fd71c5bc5f4cdb1daba992be0bf3a9a1fe2c7fc0d555dfb72c837532f"
+      },
+      {
+        "path": "src-tauri/src/worktrees/manager_tests.rs",
+        "committedLfSha256": "91fc86e532bbc67dc0ca4ebc88b2dd5dfa2904f36a34e27504d9e423286334ae",
+        "nativeCrLfSha256": "1e9a37417907c04f9dc066e46656823da60ca93ca0eefadd5103de13238a96e4"
+      },
+      {
+        "path": "src-tauri/src/worktrees/recycle_tests.rs",
+        "committedLfSha256": "f9b18d1e784ecf8127499f91dc5aade44c02315d48cf37e85784edd8463b1e85",
+        "nativeCrLfSha256": "6ef3e74bf17f2740715b583e4bdc966bfe9350401f1dcf8503673a89c6294942"
+      },
+      {
+        "path": "src-tauri/src/worktrees/tests.rs",
+        "committedLfSha256": "d27e19d5c27afee45cab8033cdff468e45c6a03420584ee353b9c3d75ecee870",
+        "nativeCrLfSha256": "2bba9ae1a68ea53b3c25e76e6ad957b8f7ce7b79d684cb9a7577d1260b564bd2"
+      },
+      {
+        "path": ".github/scripts/windows-launch-prerequisites.ps1",
+        "committedLfSha256": "fa8e0120be044fbd0bb4ac32d627b5be83367f902ee0cd06b62b62304b7ad1b4",
+        "nativeCrLfSha256": "cd9f0c7f53e992d22686ef591a61657ba1d51e8a6195e3415530876978b86669"
+      },
+      {
+        "path": ".github/workflows/windows-launch-prerequisites.yml",
+        "committedLfSha256": "e3e1e874352fcad784d16403a48ef159cd1c3959cbd2cf7d468e188204d8076a",
+        "nativeCrLfSha256": "127ecb4e49d3f1029b4a0596b78191b1d91bcbceb95632c4fcdd94ce75d5ae20"
+      },
+      {
+        "path": "src-tauri/src/windows_process/current_members.rs",
+        "committedLfSha256": "34cc3ecb583d942fecb53a95b411be1dde91a2f7aa34b59dd314e2e4716c4057",
+        "nativeCrLfSha256": "d5dab4813da541356b0491b1de25ca28cb81ea027238eb479f0a17d838da43b0"
+      },
+      {
+        "path": "src-tauri/src/windows_process/debug_certificate.rs",
+        "committedLfSha256": "eee78abdc87af7d49578439ab98b85f11cb071b073790db02c8d7f211d958083",
+        "nativeCrLfSha256": "e5da5a607469d3570efd2d7b9936e650d91b5698a220aaa39cbaa4714ff644cf"
+      },
+      {
+        "path": "src-tauri/src/windows_process/stdout_handoff.rs",
+        "committedLfSha256": "9434ecfb4f54dbebf44133778d31f5b3b75540b9f6c40574c525566c72812947",
+        "nativeCrLfSha256": "5bbb832b9ed0f21b57e771c953f62da264f0cc9ce683259fe87e55fb1286203b"
+      },
+      {
+        "path": "src-tauri/examples/windows_process_fixture.rs",
+        "committedLfSha256": "f98db4625e630b1a06d4624f7fd499cf89b6bc10c6e0372aed894cc1ed6e2978",
+        "nativeCrLfSha256": "e0556b64f035d74e91a35e02e03de32a8995de1d118767eac9721d1c1c8eeb2a"
+      },
+      {
+        "path": "src-tauri/examples/windows_process_fixture/git_job_probe.rs",
+        "committedLfSha256": "4468ac0ba612dafc64d2930fc96f2946954e26a3f616a7e3a71294944c0ba208",
+        "nativeCrLfSha256": "98de421f83fa032b9b002d39c1518ddd7e77f0d7057bbdc2a4aa4247d506ef49"
+      },
+      {
+        "path": "src-tauri/examples/windows_process_fixture/manual_privileges.rs",
+        "committedLfSha256": "4d49ecef3d49f0ace27274c058443f8a66f617d1d926077845034c0465d4af9d",
+        "nativeCrLfSha256": "99e26dd835a2dc16a42ba04a6b5b2df3bdcfcb38aca71e69d22939435c79f855"
+      }
+    ],
+    "note": "Committed LF blobs equal the local checked candidate; native checkout hashes equal those exact blobs with LF converted to CRLF.",
+    "buildSelection": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/build-selection.json",
+      "sha256": "943f98043c5162b28c6867ae91115ba89b723357d066aa1163d01398ce78c3a9"
+    },
+    "inputsBefore": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/inputs-before.json",
+      "sha256": "c9c6a0037e4254dcb3739616ce26c5348428cfe65e1cb90e51a89d9bc084d852"
+    },
+    "inputsAfter": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/inputs-after.json",
+      "sha256": "c9c6a0037e4254dcb3739616ce26c5348428cfe65e1cb90e51a89d9bc084d852"
+    }
+  },
+  "gitTiming": {
+    "group": "create-existing-branch",
+    "commandsSpawnedSettledAndCertified": 244,
+    "metricUnits": "Wall-clock milliseconds except explicitly named call counts; p95Lower is the lower empirical percentile.",
+    "metrics": {
+      "commandElapsedMs": {
+        "count": 244,
+        "minimum": 63,
+        "median": 70.0,
+        "p95Lower": 90,
+        "maximum": 121,
+        "sum": 18311
+      },
+      "nativeWaitMs": {
+        "count": 244,
+        "minimum": 48.904,
+        "median": 66.65899999999999,
+        "p95Lower": 80.475,
+        "maximum": 92.645,
+        "sum": 16768.806
+      },
+      "nativeTimeoutWaitMs": {
+        "count": 244,
+        "minimum": 6.765,
+        "median": 24.0625,
+        "p95Lower": 36.89,
+        "maximum": 55.492,
+        "sum": 5838.2599999999975
+      },
+      "ordinaryCallerPollSleepMs": {
+        "count": 244,
+        "minimum": 0.0,
+        "median": 0.0,
+        "p95Lower": 10.545,
+        "maximum": 30.482,
+        "sum": 765.915
+      },
+      "nativeTimeoutCalls": {
+        "count": 244,
+        "minimum": 3,
+        "median": 5.0,
+        "p95Lower": 7,
+        "maximum": 8,
+        "sum": 1317
+      },
+      "ordinaryCallerPollSleepCalls": {
+        "count": 244,
+        "minimum": 0,
+        "median": 0.0,
+        "p95Lower": 1,
+        "maximum": 3,
+        "sum": 75
+      }
+    },
+    "raw": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/artifact/create-existing-branch.stdout.log",
+      "sha256": "241c70d0c6696f13dbc2a2a23bd29ccd1febf7ef0831ef63035b1441604326f2"
+    },
+    "interpretation": "Actual native event waits total16768.806ms versus765.915ms ordinary caller polling sleeps within18311ms total selected command time. Native waits include selected-process progress and kernel scheduling; timeout waits are only part of them. These figures do not isolate removable overhead, CPU cost or all cleanup sleeps.",
+    "crossRunLimit": "Median command70ms differs from the earlier99.5ms sample although production scheduling did not change; no speedup is attributed to fixture timeouts or timer instrumentation."
+  },
+  "ciTiming": {
+    "jobSeconds": 1134.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Enable long Git paths before checkout",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+        "seconds": 21.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare pinned Rust toolchain",
+        "seconds": 9.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check synthetic protocol fixture interpreter",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Build and bind the selected library test binary",
+        "seconds": 587.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the selected native test cohort",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Frozen candidate retirement proof and original EOF controls",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Original Git certificate lifecycle and finite input controls",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Existing create completion with test-only native wait timing",
+        "seconds": 24.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Original create recovery and paired regressions",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Nine unfinished original create and recovery cases",
+        "seconds": 486.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Affected original terminal controls",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Require all resumed phases to have executed exactly and passed",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "metadata": {
+      "path": "output/2026-11-04-windows-retirement-resume/run-41824384963/run.json",
+      "sha256": "bf43193b95dba80125dcf722ce65d8f0158b04dc0386019e0b25c0b521192db5"
+    }
+  },
+  "originalsZip": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/create-wait-observation-native-originals.zip",
+    "sha256": "057a9c1a9548c0a390161637a8552b80a5c902bea0e017c4bd1cf7db1b5167cc",
+    "entries": 44,
+    "bytes": 175150,
+    "allEntriesByteExactToDownloadedOrWatchOriginals": true,
+    "otherRunsTargetsOrUserDataIncluded": false
+  },
+  "limits": {
+    "previous45ExecutionsRerun": false,
+    "fullWindowsRun17FailuresChanged": false,
+    "previousFourLifetimeAndEofEvidence": "41818072244 remains its original source/configuration evidence; not repeated here.",
+    "windowsAppInstalled": false,
+    "realAgentValidation": false,
+    "productOr29By8Complete": false,
+    "productionDeadlinesRelaxed": false,
+    "productionSchedulerChangedAfter41818072244": false
+  }
+}

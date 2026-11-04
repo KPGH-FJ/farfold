@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T11:59:53.135176+00:00",
+  "updatedAt": "2026-11-04T12:16:31.846369+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -8,7 +8,10 @@
     "windowsRun": 41818072244,
     "p01Source": "d31447be7",
     "windowsCreateTiming": "9a32d6b9f",
-    "windowsTargetedRun": 41824384963
+    "windowsTargetedRun": 41824384963,
+    "p01BridgeAndFormalRecord": "063dd128f",
+    "windowsFullRun": 41827378725,
+    "windowsFullSource": "063dd128f"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -20,15 +23,13 @@
     "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends."
   ],
   "active": [
-    "Windows9a32d6b9f exact nine prior failures plus one timing control dispatched once as41824384963;source_review owns single watch and native artifact analysis.",
-    "P01 bridge final reproducibility builder/archival records finishing; current new builder must be marked static-only, actual first/two rounds preserved.",
-    "B3 one post-update diagnostic read still initialize timeout; parent cleanup confirmed and original four paragraphs exact. Static review did not establish root cause; no retry/resend."
+    "Windows targeted41824384963 exact10/10 natural0, including all9 prior failures; public source-bound receipts/ZIP complete. Full41827378725 from063dd128f dispatched once;source_review owns one watch and raw result analysis.",
+    "B3 root cause unresolved. Actual saved source is external official0.155.1 CLI, managed0.156.1 is not proof of that source. One version-only control succeeded in development shell; no further Agent retry, no environment/account/model changes."
   ],
   "formalPreparation": "Formal app source d31447be7, binary59dc8a5604d9841a3f0f4b88846cdac98c623ef85bd6780747400b7c81bee6d7; exact candidate duplicate removed; private formal receipts inoutput/2026-11-04-p01-draft-formal/formal.",
   "remaining": [
-    "Finish collecting native10 results and diagnose actual timing; stable afterward Windows full regression, do not replace17 full failures with selected result.",
-    "Finish bridge evidence/source checkpoint and update current status/requirement progress without changing original conditions.",
-    "P01 installed storage fault, remaining attachment types/queues and all wider original requirements remain open; existing approved plan remains sole queue.",
+    "Collect Windows full actual result, map original17 failure names individually and fix failures; do not infer from targeted10 or job colors.",
+    "P01 installed storage fault, remaining attachment types/queues and all wider original requirements remain open; existing plan is sole queue.",
     "Preserve original unrelated debugger-system-native.json diff."
   ],
   "constraints": [
