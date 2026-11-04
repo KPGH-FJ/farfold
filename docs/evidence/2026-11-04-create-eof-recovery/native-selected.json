@@ -36,7 +36,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 19.94s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ]
       },
       "acp-eof-retirement": {
         "receiptPresent": true,
@@ -51,7 +54,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 1.15s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases"
+        ]
       },
       "archive-cold-restore": {
         "receiptPresent": true,
@@ -66,7 +72,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 34.90s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata"
+        ]
       },
       "recovery-cancel-paired": {
         "receiptPresent": true,
@@ -85,7 +94,11 @@
         "summary": [
           "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 104.41s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+          "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved"
+        ]
       },
       "archive-create-paired": {
         "receiptPresent": true,
@@ -104,7 +117,11 @@
         "summary": [
           "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 45.92s"
         ],
-        "passed": false
+        "passed": false,
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ]
       }
     },
     "sourceMapMatches": {
@@ -137,7 +154,9 @@
       "test-build.stderr.log": "25f7ef297b2575a1c11b97275d36049407923866f5b3ce026d00463a87f5da63",
       "test-build.stdout.jsonl": "84739fa798015a2d09ad5b1fb539e695de8ed45dd3e0e8d6f1ae70a7eaecc97b"
     },
-    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/fixed-original.zip"
+    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/fixed-original.zip",
+    "originalFullComparisonBaselineRun": 41600391428,
+    "latestFullComparisonBaselineRun": 41750118511
   },
   "secondSelected": {
     "runId": 41770888678,
@@ -166,7 +185,8 @@
         "summary": [
           "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 0.78s"
         ],
-        "passed": false
+        "passed": false,
+        "latestFullFailureExactMatches": []
       },
       "create-existing-branch": {
         "receiptPresent": true,
@@ -181,7 +201,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 21.29s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ]
       },
       "acp-eof-retirement": {
         "receiptPresent": true,
@@ -196,7 +219,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 0.85s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases"
+        ]
       },
       "archive-cold-restore": {
         "receiptPresent": true,
@@ -211,7 +237,10 @@
         "summary": [
           "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 36.58s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata"
+        ]
       },
       "recovery-cancel-paired": {
         "receiptPresent": true,
@@ -230,7 +259,11 @@
         "summary": [
           "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 106.47s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+          "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved"
+        ]
       },
       "archive-create-paired": {
         "receiptPresent": true,
@@ -249,7 +282,11 @@
         "summary": [
           "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 48.51s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ]
       },
       "create-eof-paired": {
         "receiptPresent": true,
@@ -268,7 +305,11 @@
         "summary": [
           "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2452 filtered out; finished in 20.01s"
         ],
-        "passed": true
+        "passed": true,
+        "latestFullFailureExactMatches": [
+          "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+          "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+        ]
       }
     },
     "sourceMapMatches": {
@@ -307,7 +348,9 @@
       "test-build.stderr.log": "e92e45b0cd9f56ccb3eb0d0d4cc3d7b7450ffa87792746da4f901ecb67bfbd8d",
       "test-build.stdout.jsonl": "cb495015b5a3d63dde8206f5f00ecb9e714522d48064b52efa4753c6c6ec27de"
     },
-    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/challenge-original.zip"
+    "retainedRawArchive": "output/2026-11-04-create-eof-recovery/challenge-original.zip",
+    "originalFullComparisonBaselineRun": 41600391428,
+    "latestFullComparisonBaselineRun": 41750118511
   },
   "firstOverlapFailure": {
     "group": "archive-create-paired",
@@ -380,5 +423,41 @@
     "formalAppCommit": "168db42e5",
     "installationPerformed": false
   },
-  "verification": "Root raw audit plus independent evidence_audit reader verified provider SHA/ZIP CRC/member stream hashes/source inputs/executable pins/natural exits/exact selected names.844 source inputs in second selected:1exact,843CRLF."
+  "verification": "Root raw audit plus independent evidence_audit reader verified provider SHA/ZIP CRC/member stream hashes/source inputs/executable pins/natural exits/exact selected names.844 source inputs in second selected:1exact,843CRLF.",
+  "implementationCandidate": {
+    "sourceCommit": "4bd56413b8d83f40db666045b869f4a1f7e7df70",
+    "nativeRunId": 41774830760,
+    "nativeRunUrl": "https://github.com/KPGH-FJ/farfold/actions/runs/41774830760",
+    "nativeStatusAtRecord": "pending; building",
+    "scope": "Fixed noninteractive Git only: same caller thread captures finite original creation handles; distinct objects all signaled after continued EXIT; same original Job membership and TotalProcesses matched before and after native0. Generic Current historical gap remains sticky.",
+    "originalOwner": "Attach failure and unwind retain same original Child/Job and keep pumping; debug capture/continuation/proof failure never falls back to native0.",
+    "sourceReview": "Independent reviewer cleared final safety and liveness source changes.",
+    "localValidation": {
+      "macGit": {
+        "passed": 23,
+        "failed": 0
+      },
+      "macActivePrompt": {
+        "passed": 10,
+        "failed": 0
+      },
+      "macAllTargetClippy": "passed -D warnings",
+      "cargoFmt": "passed",
+      "diffCheck": "passed",
+      "docsCheck": "151 original conditions;1 active plan; passed",
+      "isolatedWindowsCrossClippy": "actual Windows ownership/certificate/debug modules, verbatim executor/OwnedProcess/8 lifecycle tests with app/Input stubs passed; not native app compile"
+    },
+    "selectedNext": {
+      "groups": 19,
+      "executions": 38,
+      "uniqueCases": 34,
+      "allLatest17FailureNamesIncluded": true,
+      "newEofDescendantEdge": "test-only; exact same original Job membership verified before EOF with temporary witness dropped before teardown; original held leader/descendant objects and owner callbacks; actual Windows result pending"
+    },
+    "officialApiReferences": [
+      "https://learn.microsoft.com/en-us/windows/win32/debug/debugging-events",
+      "https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-waitfordebugevent"
+    ],
+    "limitations": "Native complete-set behavior, actual errors, cancellation/limits/unwind and original operations remain unverified for this new source until raw receipts return. Historical full17 and formal app remain unchanged."
+  }
 }
