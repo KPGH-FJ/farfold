@@ -523,7 +523,9 @@ def commands(api, journal):
         replies.append(directory_reply(api.wow64_directory2, "GetSystemWow64Directory2W", machine=MACHINE_I386))
     else:
         replies.append({"api": "GetSystemWow64Directory2W", "requestedMachine": MACHINE_I386,
-                        "unavailable": True, "nonemptyAbsoluteCountMatched": False})
+                        "unavailable": True, "bindingDll": "kernel32",
+                        "unavailabilityScope": "optional-export-binding-only; not architecture support evidence",
+                        "nonemptyAbsoluteCountMatched": False})
     for reply in replies:
         journal.add({"kind": "system-directory-api-reply", **reply})
     system, wow64, _, wow64_i386 = replies
@@ -532,12 +534,17 @@ def commands(api, journal):
         raise RuntimeError("fixed-system32-directory-reply-invalid-or-inconsistent")
     result = [("System32", Path(system["bufferValue"]) / "cmd.exe")]
     unsupported = None
-    if not wow64["nonemptyAbsoluteCountMatched"] or not wow64_i386["nonemptyAbsoluteCountMatched"]:
+    if not wow64["nonemptyAbsoluteCountMatched"]:
         unsupported = {"architecture": "SysWOW64", "reason": "system-wow64-directory-reply-invalid-or-unavailable"}
-    elif PureWindowsPath(wow64["bufferValue"]) != PureWindowsPath(wow64_i386["bufferValue"]):
+    elif not wow64_i386.get("unavailable") and (
+            not wow64_i386["nonemptyAbsoluteCountMatched"]
+            or PureWindowsPath(wow64["bufferValue"]) != PureWindowsPath(wow64_i386["bufferValue"])):
         unsupported = {"architecture": "SysWOW64", "reason": "system-wow64-directory-apis-disagree"}
     else:
-        path = Path(wow64_i386["bufferValue"]) / "cmd.exe"
+        # The strict primary reply selects the fixture. Directory2 is only a
+        # cross-check when bound; original image and I386 gates still precede
+        # execution/first debug continuation, respectively.
+        path = Path(wow64["bufferValue"]) / "cmd.exe"
         if not path.is_absolute() or not path.is_file() or path.is_symlink():
             unsupported = {"architecture": "SysWOW64", "reason": "fixed-wow64-command-unavailable"}
         else:
