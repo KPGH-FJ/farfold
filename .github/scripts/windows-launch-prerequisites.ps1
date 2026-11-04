@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')][string]$Cohort = 'LaunchPrerequisites',
-  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal')][string]$Phase = 'All'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics')][string]$Cohort = 'LaunchPrerequisites',
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -31,14 +31,141 @@ function Confirm-Inputs {
       (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -cne $selection.fixtureSha256) {
     throw 'Selected Windows test executable or fixture changed'
   }
+  if ($Cohort -ceq 'OpenFailureDiagnostics') {
+    foreach ($required in @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx', 'package.json', 'pnpm-lock.yaml', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'index.html')) {
+      if (-not $sourceMap.ContainsKey($required)) { throw "Selected frontend input missing: $required" }
+    }
+    foreach ($path in $sourceMap.Keys) {
+      if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $sourceMap[$path]) {
+        throw "Selected open-failure source changed: $path"
+      }
+    }
+  }
 }
 
 Confirm-Inputs
-if (($Cohort -ceq 'FrozenRetirementResume' -and $Phase -ceq 'All') -or
-    ($Cohort -cne 'FrozenRetirementResume' -and $Phase -cne 'All')) {
-  throw 'Only the resumed cohort uses separately bounded phases; original cohorts keep their original selection'
+$allowedPhases = if ($Cohort -ceq 'FrozenRetirementResume') {
+  @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal')
+} elseif ($Cohort -ceq 'OpenFailureDiagnostics') {
+  @('All', 'Frontend')
+} else { @('All') }
+if ($Phase -cnotin $allowedPhases) {
+  throw 'Selected cohort does not accept this diagnostic phase'
 }
-$groups = if ($Cohort -ceq 'RemoveFixtures') {
+if ($Cohort -ceq 'OpenFailureDiagnostics' -and $Phase -ceq 'Frontend') {
+  $testFiles = @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx')
+  $reportPath = Join-Path $raw 'open-failure-frontend.vitest.json'
+  if (Test-Path -LiteralPath $reportPath) { throw 'Selected frontend report already exists' }
+  $started = [DateTime]::UtcNow.ToString('o')
+  $typecheckExit = $null
+  $testExit = $null
+  $nodeVersion = $null
+  $pnpmVersion = $null
+  $actualFiles = @()
+  $actualTests = 0
+  $exactFiles = $false
+  $exactAllPassed = $false
+  $sourceInputsStable = $false
+  $failure = $null
+  $frontendExit = 1
+  try {
+    $nodeVersion = (& node --version | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to read the selected Node version' }
+    $pnpmVersion = (& corepack pnpm --version | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to read the selected pnpm version' }
+    & corepack pnpm typecheck 1> (Join-Path $raw 'open-failure-typecheck.stdout.log') 2> (Join-Path $raw 'open-failure-typecheck.stderr.log')
+    $typecheckExit = [int]$LASTEXITCODE
+    & corepack pnpm exec vitest run @testFiles --reporter=json "--outputFile=$reportPath" 1> (Join-Path $raw 'open-failure-frontend.stdout.log') 2> (Join-Path $raw 'open-failure-frontend.stderr.log')
+    $testExit = [int]$LASTEXITCODE
+    $report = Get-Content -LiteralPath $reportPath -Raw -ErrorAction Stop | ConvertFrom-Json
+    $files = @($report.testResults)
+    $expectedFiles = @($testFiles | ForEach-Object { [IO.Path]::GetFullPath((Join-Path $PWD $_)).Replace('\', '/').ToLowerInvariant() })
+    $actualFiles = @($files | ForEach-Object { [IO.Path]::GetFullPath($_.name).Replace('\', '/').ToLowerInvariant() })
+    $exactFiles = $actualFiles.Count -eq 2 -and @($expectedFiles | Where-Object { $_ -cnotin $actualFiles }).Count -eq 0
+    $cases = @($files | ForEach-Object { $_.assertionResults })
+    $actualTests = $cases.Count
+    $exactAllPassed = $testExit -eq 0 -and $exactFiles -and $report.success -eq $true -and
+      $report.numTotalTests -eq 51 -and $report.numPassedTests -eq 51 -and $report.numFailedTests -eq 0 -and
+      $report.numPendingTests -eq 0 -and $report.numTodoTests -eq 0 -and $actualTests -eq 51 -and
+      @($files | Where-Object { $_.status -cne 'passed' }).Count -eq 0 -and
+      @($cases | Where-Object { $_.status -cne 'passed' }).Count -eq 0
+    if ($typecheckExit -ne 0 -or -not $exactAllPassed) { throw 'Selected frontend checks failed or did not execute the exact 2 files and 51 tests' }
+    $frontendExit = 0
+  } catch {
+    $failure = $_.Exception.Message
+    Write-Output $failure
+  } finally {
+    try { Confirm-Inputs; $sourceInputsStable = $true } catch { $failure = $_.Exception.Message; $frontendExit = 1 }
+    $rawHashes = [ordered]@{}
+    foreach ($name in @('open-failure-typecheck.stdout.log', 'open-failure-typecheck.stderr.log', 'open-failure-frontend.stdout.log', 'open-failure-frontend.stderr.log', 'open-failure-frontend.vitest.json')) {
+      $path = Join-Path $raw $name
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $rawHashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        if ($name -cne 'open-failure-frontend.vitest.json') { Get-Content -LiteralPath $path }
+      }
+    }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+      startedAtUtc = $started; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      nodeVersion = $nodeVersion; pnpmVersion = $pnpmVersion
+      typecheckNaturalExitCode = $typecheckExit; testNaturalExitCode = $testExit
+      expectedFiles = $testFiles; actualFiles = $actualFiles; expectedTests = 51; actualTests = $actualTests
+      exactFiles = $exactFiles; exactAllPassed = $exactAllPassed
+      allReturned = $null -ne $typecheckExit -and $null -ne $testExit
+      sourceInputsStable = $sourceInputsStable; failure = $failure; runnerExitCode = $frontendExit
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      rawFileSha256 = $rawHashes; productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'open-failure-Frontend.result.json') -Encoding utf8
+  }
+  exit $frontendExit
+}
+$groups = if ($Cohort -ceq 'OpenFailureDiagnostics') {
+  $wait = 'acp_client::wait::tests::'
+  @{
+    name = 'open-wait-replies'; filter = $wait; exact = $false
+    names = @(
+      "${wait}typed_reply_classifies_only_outer_oneshot_failures",
+      "${wait}replies_yield_and_distinguish_timeout_from_closed"
+    )
+  }
+  $reply = 'acp_client::session::open_reply_tests::'
+  @{
+    name = 'open-reply-diagnostics'; filter = $reply; exact = $false
+    names = @(
+      "${reply}open_reply_timeout_is_fixed_and_late_receipt_returns_to_sender",
+      "${reply}open_reply_closed_is_fixed_without_a_remote_error",
+      "${reply}open_reply_keeps_delayed_success_and_inner_manager_errors"
+    )
+  }
+  $delivery = 'acp_client::lifecycle_tests::open_delivery_tests::'
+  @{
+    name = 'open-delivery-ownership'; filter = $delivery; exact = $false
+    names = @(
+      "${delivery}open_delivery_success_releases_both_reservations_before_actual_reply",
+      "${delivery}open_delivery_failure_releases_both_reservations_before_actual_reply",
+      "${delivery}open_delivery_receiver_drops_during_notification_retains_identity_until_reaping",
+      "${delivery}open_delivery_buffered_success_is_owned_until_consumed_or_dropped",
+      "${delivery}open_delivery_timeout_keeps_native_reservation_until_actual_process_reaping",
+      "${delivery}open_delivery_abandoned_caller_keeps_native_reservation_until_actual_process_reaping",
+      "${delivery}open_delivery_unstarted_expired_or_closed_queue_never_sends_load",
+      "${delivery}cold_admission_unconsumed_delivery_holds_slot_until_real_reap",
+      "${delivery}cold_admission_timeout_holds_slot_until_real_reap"
+    )
+  }
+  $test = 'acp_client::operations::open_result::tests::open_delivery_closing_retains_reservation_until_process_completion'
+  @{ name = 'open-result-reservation'; filter = $test; exact = $true; names = @($test) }
+  $fork = 'acp_client::session_fork::owner_tests::'
+  @{
+    name = 'fork-owner-preservation'; filter = $fork; exact = $false
+    names = @(
+      "${fork}fork_observer_keeps_open_identity_after_all_delivery_and_pump_owners_drop",
+      "${fork}fork_observer_retires_on_whole_operation_finish_while_parent_stays_live",
+      "${fork}fork_observer_source_release_does_not_end_pending_destination_after_parent_reap"
+    )
+  }
+} elseif ($Cohort -ceq 'RemoveFixtures') {
   $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
   $test = 'worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification'
@@ -387,6 +514,14 @@ if ($Cohort -ceq 'FrozenRetirementResume') {
     throw 'Resumed phase selection incomplete'
   }
 }
+if ($Cohort -ceq 'OpenFailureDiagnostics') {
+  $expectedGroups = 5
+  $expectedExecutions = 18
+  $selectedNames = @($groups | ForEach-Object { $_.names })
+  if ($groups.Count -ne $expectedGroups -or $selectedNames.Count -ne $expectedExecutions -or @($selectedNames | Sort-Object -Unique).Count -ne $expectedExecutions) {
+    throw 'Selected open-failure native cohort incomplete'
+  }
+}
 $failures = @()
 $completedGroups = @()
 foreach ($group in $groups) {
@@ -451,6 +586,20 @@ if ($Cohort -ceq 'FrozenRetirementResume') {
     testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
     sourceInputsStable = $true; productOrAllWindowsComplete = $false
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ("resume-$Phase.result.json")) -Encoding utf8
+}
+if ($Cohort -ceq 'OpenFailureDiagnostics') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'open-failure-All.result.json') -Encoding utf8
 }
 if ($failures.Count -gt 0) {
   throw ('Selected checks did not pass: ' + ($failures -join ', '))

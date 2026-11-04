@@ -30,6 +30,7 @@ on:
             CreateEofChallenge,
             GitCompletionRecovery,
             FrozenRetirementResume,
+            OpenFailureDiagnostics,
           ]
       resume_scope:
         description: Scope within FrozenRetirementResume only
@@ -43,7 +44,7 @@ permissions:
 jobs:
   selected:
     runs-on: windows-2022
-    timeout-minutes: ${{ inputs.cohort == 'FrozenRetirementResume' && 70 || 45 }}
+    timeout-minutes: ${{ (inputs.cohort == 'FrozenRetirementResume' || inputs.cohort == 'OpenFailureDiagnostics') && 70 || 45 }}
     defaults:
       run:
         shell: pwsh
@@ -69,18 +70,56 @@ jobs:
           $fixturePython = (Get-Command python.exe -CommandType Application -ErrorAction Stop).Source
           & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' }}
+        with:
+          node-version: 22.22.3
+      - name: Prepare selected frontend dependencies
+        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' }}
+        timeout-minutes: 7
+        run: |
+          corepack enable
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          corepack prepare pnpm@9.15.0 --activate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          corepack pnpm install --frozen-lockfile
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build and bind the selected library test binary
         id: selected_build
         timeout-minutes: 30
         env:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites -SelectedCohort $env:FARFOLD_SELECTED_COHORT
+      - name: Check selected frontend types and exact open-failure tests
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'OpenFailureDiagnostics' }}
+        timeout-minutes: 5
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort OpenFailureDiagnostics -Phase Frontend
       - name: Run the selected native test cohort
-        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort != 'FrozenRetirementResume' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort != 'FrozenRetirementResume' && inputs.cohort != 'OpenFailureDiagnostics' }}
         timeout-minutes: ${{ inputs.cohort == 'GitCompletionRecovery' && 20 || (inputs.cohort == 'RemoveRechecks' || inputs.cohort == 'CreateEofRecovery' || inputs.cohort == 'CreateEofChallenge') && 14 || 8 }}
         env:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT
+      - name: Run exact native open-failure ownership tests
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'OpenFailureDiagnostics' }}
+        timeout-minutes: 5
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort OpenFailureDiagnostics
+      - name: Require exact selected open-failure frontend and native receipts
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'OpenFailureDiagnostics' }}
+        timeout-minutes: 1
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $selectionPath = 'windows-diagnostics-raw/build-selection.json'
+          $selection = Get-Content -LiteralPath $selectionPath -Raw | ConvertFrom-Json
+          $selectionHash = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+          foreach ($phase in @('Frontend', 'All')) {
+            $result = Get-Content -LiteralPath "windows-diagnostics-raw/open-failure-$phase.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
+            if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'OpenFailureDiagnostics' -or $result.phase -cne $phase -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.selectionSha256 -cne $selectionHash -or $result.inputsAfterSha256 -cne $selection.inputsAfterSha256 -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Selected open-failure phase missing, incomplete or failed: $phase" }
+            if ($phase -ceq 'Frontend' -and ($result.typecheckNaturalExitCode -ne 0 -or $result.testNaturalExitCode -ne 0 -or $result.runnerExitCode -ne 0 -or $result.expectedTests -ne 51 -or $result.actualTests -ne 51 -or $result.expectedFiles.Count -ne 2 -or $result.actualFiles.Count -ne 2 -or $result.exactFiles -ne $true)) { throw 'Selected frontend did not execute exactly and pass' }
+            if ($phase -ceq 'All' -and ($result.expectedGroups -ne 5 -or $result.completedGroups -ne 5 -or $result.expectedExecutions -ne 18 -or @($result.groups | Where-Object { $_.naturalExitCode -ne 0 -or $_.passed -ne $true }).Count -ne 0 -or ($result.groups | Measure-Object -Property expectedTests -Sum).Sum -ne 18)) { throw 'Selected native cases did not execute exactly and pass' }
+          }
       - name: Frozen candidate retirement proof and original EOF controls
         if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 3
