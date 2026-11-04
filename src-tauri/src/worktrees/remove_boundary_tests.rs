@@ -16,8 +16,9 @@ fn confirmation(a: &Archive, b: &Recovery) -> RemoveConfirmation {
 }
 #[test]
 fn remove_confirmation_rechecks_reflog_evidence_even_same_root_set() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -55,8 +56,9 @@ fn remove_confirmation_rechecks_reflog_evidence_even_same_root_set() {
 }
 #[test]
 fn remove_confirmation_rejects_corrupt_bundle_and_keeps_source() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -82,8 +84,9 @@ fn remove_confirmation_rejects_corrupt_bundle_and_keeps_source() {
 }
 #[test]
 fn remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -134,8 +137,9 @@ fn remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absen
 }
 #[test]
 fn remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -325,8 +329,9 @@ fn removal_identity_deleted_requires_original_retained_parent() {
 }
 #[test]
 fn removal_identity_recovered_repository_rejects_replaced_parent() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();

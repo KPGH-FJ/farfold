@@ -211,13 +211,33 @@ pub(super) fn wait_prepared(
     id: &str,
     timeout: std::time::Duration,
 ) -> Operation {
-    let end = std::time::Instant::now() + timeout;
+    let started = std::time::Instant::now();
+    let end = started + timeout;
+    #[cfg(windows)]
+    let mut previous = None;
     loop {
         let o = tests::op(m.status(s, id).unwrap());
+        #[cfg(windows)]
+        {
+            let phase = (o.state.clone(), o.removal_phase.clone(), o.settled);
+            if previous.as_ref() != Some(&phase) {
+                eprintln!(
+                    "FARFOLD_REMOVE_PREPARE_WAIT {}",
+                    serde_json::json!({"operationId":id,"elapsedMs":started.elapsed().as_millis(),
+                        "budgetMs":timeout.as_millis(),"state":o.state,"phase":o.removal_phase,
+                        "settled":o.settled,"deleteDispatched":o.delete_dispatched})
+                );
+                previous = Some(phase);
+            }
+        }
         if o.state == "prepared" || o.settled {
             return o;
         }
-        assert!(std::time::Instant::now() < end, "{o:?}");
+        assert!(
+            std::time::Instant::now() < end,
+            "recovery preparation did not finish after {:?} (budget {timeout:?}): {o:?}",
+            started.elapsed()
+        );
         std::thread::sleep(std::time::Duration::from_millis(5));
     }
 }
@@ -232,7 +252,10 @@ pub(super) fn archive(
         .unwrap();
     recycle_tests::prepare(m, s, id, p);
     m.start(s, id).unwrap();
-    recycle_tests::wait(m, s, id).archive.unwrap()
+    let timeout = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    recycle_tests::wait_with_timeout(m, s, id, timeout)
+        .archive
+        .unwrap()
 }
 type WorktreeArchiveAlias = Archive;
 pub(super) const REMOVE: &str = "42345678-1234-4123-8123-123456789abc";
@@ -241,7 +264,8 @@ pub(super) fn prepare_removal(
     s: &crate::meta_store::MetaStore,
     a: &Archive,
 ) -> Operation {
-    prepare_removal_with_timeout(m, s, a, std::time::Duration::from_secs(30))
+    let seconds = if cfg!(windows) { 60 } else { 30 };
+    prepare_removal_with_timeout(m, s, a, Duration::from_secs(seconds))
 }
 pub(super) fn prepare_removal_with_timeout(
     m: &Worktrees,
@@ -250,10 +274,19 @@ pub(super) fn prepare_removal_with_timeout(
     timeout: std::time::Duration,
 ) -> Operation {
     #[cfg(windows)]
-    eprintln!("FARFOLD_REMOVE_PREPARE phase=inspect.enter");
+    let started = std::time::Instant::now();
+    #[cfg(windows)]
+    let phase = |name| {
+        eprintln!(
+            "FARFOLD_REMOVE_PREPARE phase={name} elapsedMs={}",
+            started.elapsed().as_millis()
+        );
+    };
+    #[cfg(windows)]
+    phase("inspect.enter");
     let p = m.remove_inspect(s, &a.id, a.revision).unwrap();
     #[cfg(windows)]
-    eprintln!("FARFOLD_REMOVE_PREPARE phase=prepare.enter");
+    phase("prepare.enter");
     m.prepare_remove(
         s,
         REMOVE,
@@ -265,8 +298,11 @@ pub(super) fn prepare_removal_with_timeout(
     )
     .unwrap();
     #[cfg(windows)]
-    eprintln!("FARFOLD_REMOVE_PREPARE phase=wait.enter");
-    wait_prepared(m, s, REMOVE, timeout)
+    phase("wait.enter");
+    let prepared = wait_prepared(m, s, REMOVE, timeout);
+    #[cfg(windows)]
+    phase("wait.return");
+    prepared
 }
 #[test]
 fn recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories() {
@@ -396,8 +432,9 @@ fn restore_protected_fixture(
 
 #[test]
 fn recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();

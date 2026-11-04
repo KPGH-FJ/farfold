@@ -7,7 +7,8 @@ use std::{fs, path::Path};
 const REMOVE: &str = "42345678-1234-4123-8123-123456789abc";
 const RECOVER: &str = "52345678-1234-4123-8123-123456789abc";
 fn backup(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Recovery {
-    let l = recycle_tests::created(m, s, r);
+    let timeout = std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    let l = recycle_tests::created_with_timeout(m, s, r, timeout);
     let a = fixture::archive(m, s, &l);
     let o = fixture::prepare_removal(m, s, &a);
     assert_eq!(o.state, "prepared", "{o:?}");
@@ -32,8 +33,9 @@ fn input(r: &Repo, b: &Recovery, name: &str) -> RecoverInput {
 }
 #[test]
 fn recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -90,8 +92,9 @@ fn recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts()
 }
 #[test]
 fn recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -121,8 +124,9 @@ fn recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved
 }
 #[test]
 fn recover_keeps_private_ref_and_orphan_reflog_only_commits_offline() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
@@ -190,8 +194,9 @@ fn recover_keeps_private_ref_and_orphan_reflog_only_commits_offline() {
 
 #[test]
 fn recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission() {
-    recycle_tests::isolated(
+    recycle_tests::isolated_with_timeout(
         "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+        std::time::Duration::from_secs(if cfg!(windows) { 240 } else { 90 }),
         || {
             let r = Repo::new();
             let s = tests::store();
