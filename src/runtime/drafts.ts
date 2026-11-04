@@ -850,6 +850,13 @@ export function parseDraftSnapshot(value: unknown) {
   });
   const queues = Object.entries(record(raw.queues)).map(([key, item]) => {
     const q = record(item);
+    if (
+      Object.keys(q).some(
+        (field) =>
+          !["blocks", "uncertainIndex", "outcomeUnknown"].includes(field),
+      )
+    )
+      throw new Error("unsupported draft queue");
     if (q.outcomeUnknown !== undefined && typeof q.outcomeUnknown !== "boolean")
       throw new Error("invalid outcome notice");
     if (
