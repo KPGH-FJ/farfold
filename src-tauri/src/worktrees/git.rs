@@ -12,6 +12,9 @@ use std::{
 #[cfg(windows)]
 #[path = "git_bundle_output_windows.rs"]
 pub(super) mod bundle_output;
+#[cfg(all(windows, test))]
+#[path = "git_command_observation_tests.rs"]
+pub(super) mod command_observation;
 #[path = "git_input.rs"]
 mod input;
 #[cfg(windows)]
@@ -218,6 +221,8 @@ fn execute_bounded(
     limit: u64,
     collect: bool,
 ) -> Result<Output> {
+    #[cfg(all(windows, test))]
+    let command_trace = command_observation::CommandObservation::new();
     #[cfg(windows)]
     let pending = crate::process_platform::prepare_noninteractive_git_command(&mut cmd)
         .map_err(|_| error("gitUnavailable"))?;
@@ -245,6 +250,8 @@ fn execute_bounded(
         return Err(error("cancelled"));
     }
     let child = cmd.spawn().map_err(|_| error("gitUnavailable"))?;
+    #[cfg(all(windows, test))]
+    command_trace.emit("spawned", child.id(), None, None);
     #[cfg(windows)]
     let mut child = child;
     #[cfg(windows)]
@@ -301,6 +308,12 @@ fn execute_bounded(
                 let (active, observation) = child.group.active_with_observation(&child.child);
                 child.report_retirement_unknown();
                 if active {
+                    command_trace.emit(
+                        "firstActiveAfterOriginalExit",
+                        child.id(),
+                        status.code(),
+                        stopped,
+                    );
                     first_active_query = Some(observation);
                 }
                 active
@@ -342,6 +355,13 @@ fn execute_bounded(
                 // reaches this branch only after an original bound/error.
                 stopped = Some(stopped.unwrap_or("unknown"));
                 #[cfg(all(windows, test))]
+                command_trace.emit(
+                    "beforeOriginalTermination",
+                    child.id(),
+                    status.code(),
+                    stopped,
+                );
+                #[cfg(all(windows, test))]
                 child.group.emit_unsettled_observation(
                     "beforeOriginalTermination",
                     child.id(),
@@ -372,6 +392,8 @@ fn execute_bounded(
                 }
             }
             child.finished = true;
+            #[cfg(all(windows, test))]
+            command_trace.emit("settled", child.id(), status.code(), stopped);
             #[cfg(all(windows, test))]
             if let Some(observation) = first_active_query {
                 observation.emit(child.id(), status.code(), stopped);

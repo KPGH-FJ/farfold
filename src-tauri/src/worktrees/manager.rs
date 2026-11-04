@@ -505,10 +505,14 @@ impl Worktrees {
         let manager = self.clone();
         let worker_store = store.clone();
         let key = id.to_owned();
+        #[cfg(all(windows, test))]
+        let command_case = git::command_observation::capture();
         // Thread ownership retains both gates through final readback, including errors.
         let spawned = std::thread::Builder::new()
             .name("farfold-worktree".into())
             .spawn(move || {
+                #[cfg(all(windows, test))]
+                let _command_case = git::command_observation::enter(command_case);
                 let _progress = work.scope();
                 let _own = own;
                 let _global = global;

@@ -97,8 +97,11 @@ fn config(
         command.arg("--path");
     }
     command.args(["--get", key.name()]);
-    let output =
-        git::execute_command_input(command, git::Input::null(), cancel, Duration::from_secs(10));
+    let output = {
+        #[cfg(test)]
+        let _classification = git::command_observation::ConfigScope::new(key.name(), boolean);
+        git::execute_command_input(command, git::Input::null(), cancel, Duration::from_secs(10))
+    };
     paths.verify()?;
     owner.context().scope.matches(owner.snapshot())?;
     owner

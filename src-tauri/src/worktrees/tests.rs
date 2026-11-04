@@ -215,6 +215,8 @@ fn registered_unused_filter_is_allowed_but_effective_info_attribute_is_rejected_
 }
 #[test]
 fn existing_branch_and_checkout_transforms_modes_links_are_preserved() {
+    #[cfg(windows)]
+    let _case = git::command_observation::CaseScope::selected_create();
     let r = Repo::new();
     fs::write(r.root.join("a.txt"), "hello\nworld\n").unwrap();
     fs::write(r.root.join(".gitattributes"), "a.txt text eol=crlf\n").unwrap();
