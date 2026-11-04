@@ -82,16 +82,18 @@ impl DebugProcesses {
             _launch_thread: PhantomData,
         })
     }
+    /// True means this bounded pass continued at least one debug event.
     pub(super) fn drain(
         &mut self,
         group: &crate::process_platform::OwnedGroup,
         child: &Child,
-    ) -> io::Result<()> {
+    ) -> io::Result<bool> {
         // Bound each pass so the original cancellation, output caps and clock
         // remain checked even while a command generates many debug events.
+        let mut progressed = false;
         for _ in 0..32 {
             if self.confirmed(group, child).unwrap_or(false) {
-                return Ok(());
+                return Ok(progressed);
             }
             if self.pending.is_none() {
                 let mut raw = DEBUG_EVENT::default();
@@ -104,7 +106,7 @@ impl DebugProcesses {
                         {
                             self.event_observation.empty_wait();
                         }
-                        return Ok(());
+                        return Ok(progressed);
                     }
                     // A drained debugger can report no attached process. That
                     // result is never an exit witness: accept it only after
@@ -117,7 +119,7 @@ impl DebugProcesses {
                         )
                     {
                         return if self.confirmed(group, child).unwrap_or(false) {
-                            Ok(())
+                            Ok(progressed)
                         } else {
                             Err(error)
                         };
@@ -156,6 +158,11 @@ impl DebugProcesses {
                 return Err(error);
             }
             let event = self.pending.take().unwrap();
+            #[cfg(test)]
+            if !progressed {
+                self.event_observation.productive_pass();
+            }
+            progressed = true;
             if let Some(index) = event.exit_member {
                 self.members[index].exit_continued = true;
             }
@@ -164,7 +171,7 @@ impl DebugProcesses {
             }
             handled?;
         }
-        Ok(())
+        Ok(progressed)
     }
     fn handle(members: &mut Vec<Member>, event: &mut Event) -> io::Result<()> {
         let raw = &event.raw;
@@ -233,7 +240,7 @@ impl DebugProcesses {
     }
     #[cfg(test)]
     pub(super) fn observation(&self) -> serde_json::Value {
-        let (events, empty_waits) = self.event_observation.counts();
+        let (events, empty_waits, productive_passes) = self.event_observation.counts();
         serde_json::json!({
             "capturedMemberCount": self.members.len(),
             "capturedMemberPids": self.members.iter().map(|member| member.pid).collect::<Vec<_>>(),
@@ -241,6 +248,7 @@ impl DebugProcesses {
             "unresolvedDebugError": self.uncertain,
             "debugEventCount": events,
             "debugEmptyWaitCount": empty_waits,
+            "debugProductivePassCount": productive_passes,
         })
     }
     pub(super) fn confirmed(

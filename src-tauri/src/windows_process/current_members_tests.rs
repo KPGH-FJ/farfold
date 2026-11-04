@@ -13,6 +13,8 @@ use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetCurrentProcess
 mod gap_shadow_tests;
 #[path = "git_exact_handle_tests.rs"]
 mod git_exact_handle_tests;
+#[path = "current_members_lifetime_tests.rs"]
+mod lifetime_tests;
 
 // Only the original production list call supplies these values. The logger
 // performs no native query, lookup or wait and retains no process handle.
@@ -493,6 +495,7 @@ fn real_member_wait_failure_skipping_enumeration_preserves_live_gap() {
         pid,
         handle: Handle(raw),
         admitted: true,
+        counted_live: false,
     });
     assert!(current.observe_using(
         owner.group.job.handle.0,

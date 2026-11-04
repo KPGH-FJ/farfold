@@ -175,12 +175,14 @@ impl Drop for OwnedProcess {
         super::manager::mark_unknown();
         #[cfg(windows)]
         loop {
-            let _ = self.debug.drain(&self.group, &self.child);
+            let progressed = self.debug.drain(&self.group, &self.child).unwrap_or(false);
             let reaped = matches!(self.child.try_wait(), Ok(Some(_)));
             if reaped && !self.group_alive() {
                 return;
             }
-            thread::sleep(Duration::from_millis(10));
+            if !progressed {
+                thread::sleep(Duration::from_millis(10));
+            }
         }
         #[cfg(unix)]
         {
@@ -299,11 +301,15 @@ fn execute_bounded(
     let mut first_active_query = None;
     loop {
         #[cfg(windows)]
-        if child.debug.drain(&child.group, &child.child).is_err() {
-            stopped.get_or_insert("unknown");
-            super::manager::mark_unknown();
-            child.terminate();
-        }
+        let debug_progress = match child.debug.drain(&child.group, &child.child) {
+            Ok(progressed) => progressed,
+            Err(_) => {
+                stopped.get_or_insert("unknown");
+                super::manager::mark_unknown();
+                child.terminate();
+                false
+            }
+        };
         let waited = match child.try_wait() {
             Ok(value) => value,
             Err(_wait_error) => {
@@ -378,7 +384,9 @@ fn execute_bounded(
                     );
                 }
                 if group_alive && stopped.is_none() {
-                    thread::sleep(Duration::from_millis(10));
+                    if !debug_progress {
+                        thread::sleep(Duration::from_millis(10));
+                    }
                     continue;
                 }
             }
@@ -423,7 +431,9 @@ fn execute_bounded(
                 );
                 while child.group_alive() {
                     #[cfg(windows)]
-                    let _ = child.debug.drain(&child.group, &child.child);
+                    if matches!(child.debug.drain(&child.group, &child.child), Ok(true)) {
+                        continue;
+                    }
                     thread::sleep(Duration::from_millis(10));
                 }
             }
@@ -516,6 +526,10 @@ fn execute_bounded(
                 child.terminate();
                 // A cancellation never releases ownership before the exact child is reaped.
             }
+        }
+        #[cfg(windows)]
+        if debug_progress {
+            continue;
         }
         thread::sleep(Duration::from_millis(10));
     }

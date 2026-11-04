@@ -18,7 +18,7 @@ use windows_sys::Win32::Security::Cryptography::{
     BCRYPT_USE_SYSTEM_PREFERRED_RNG, BCryptGenRandom,
 };
 use windows_sys::Win32::System::JobObjects::{
-    AssignProcessToJobObject, CreateJobObjectW, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
+    AssignProcessToJobObject, CreateJobObjectW, IsProcessInJob, JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
     JOBOBJECT_BASIC_ACCOUNTING_INFORMATION, JOBOBJECT_EXTENDED_LIMIT_INFORMATION,
     JobObjectBasicAccountingInformation, JobObjectExtendedLimitInformation, OpenJobObjectW,
     QueryInformationJobObject, SetInformationJobObject, TerminateJobObject,
@@ -201,19 +201,93 @@ impl Job {
             // The exact original leader also covers its pre-Job-entry interval.
             return true;
         }
-        let current_active = self.observe_current_from_query(query);
-        if query.not_confirmed_inactive() || leader_active || current_active {
+        let Ok(mut current) = self.current.lock() else {
             return true;
+        };
+        let current_active = current.observe(
+            self.handle.0,
+            self.leader.get().map(|leader| leader.pid),
+            (query.ok != 0).then_some(query.info.ActiveProcesses),
+        );
+        if query.not_confirmed_inactive() || leader_active {
+            return true;
+        }
+        if current_active {
+            return !self.complete_retired_object_count(&mut current);
         }
         // A member could appear during the bounded observation. Keep the old
         // accounting condition too; held-member waits never replace it.
         let final_query = self.activity_query();
-        if final_query.ok == 0
-            && let Ok(mut current) = self.current.lock()
-        {
+        if final_query.ok == 0 {
             current.query_unknown();
         }
         final_query.not_confirmed_inactive()
+    }
+    /// Historical PID coverage remains unknown. A separate lifetime cardinality
+    /// proof can nevertheless account for EVERY original Job object: only live
+    /// exact objects counted once, every one subsequently signaled, plus this
+    /// exact original leader. The Current lock spans both real native queries
+    /// and the successful empty list between them. The gap is not cleared;
+    /// retired handles are dropped, and a missed object leaves a Total mismatch.
+    fn complete_retired_object_count(&self, current: &mut current_members::Current) -> bool {
+        let Some(leader) = self.leader.get() else {
+            return false;
+        };
+        let Some(observed) = current.completely_retired_live(leader.pid) else {
+            return false;
+        };
+        if unsafe { WaitForSingleObject(leader.handle.0, 0) } != WAIT_OBJECT_0 {
+            return false;
+        }
+        let mut belongs = 0;
+        if unsafe { IsProcessInJob(leader.handle.0, self.handle.0, &mut belongs) } == 0 {
+            current.query_unknown();
+            return false;
+        }
+        let Some(expected) = observed.checked_add(u32::from(belongs != 0)) else {
+            return false;
+        };
+        let before = self.activity_query();
+        if before.ok == 0 {
+            current.query_unknown();
+            return false;
+        }
+        if before.info.ActiveProcesses != 0 || before.info.TotalProcesses != expected {
+            return false;
+        }
+        current.observe(
+            self.handle.0,
+            Some(leader.pid),
+            Some(before.info.ActiveProcesses),
+        );
+        if current.completely_retired_live(leader.pid) != Some(observed) {
+            return false;
+        }
+        let after = self.activity_query();
+        if after.ok == 0 {
+            current.query_unknown();
+            return false;
+        }
+        let confirmed = after.info.ActiveProcesses == 0 && after.info.TotalProcesses == expected;
+        #[cfg(test)]
+        if confirmed {
+            eprintln!(
+                "FARFOLD_WINDOWS_CURRENT_OBJECT_COUNT_CONFIRMED {}",
+                serde_json::json!({
+                    "originalLeaderPid": leader.pid,
+                    "observedLiveObjects": observed,
+                    "exactRetiredObjects": observed,
+                    "originalLeaderMemberOfJob": belongs != 0,
+                    "accountingBeforeActive": before.info.ActiveProcesses,
+                    "accountingBeforeTotal": before.info.TotalProcesses,
+                    "accountingAfterActive": after.info.ActiveProcesses,
+                    "accountingAfterTotal": after.info.TotalProcesses,
+                    "historicalCoverageGapRetained": current.unknown(),
+                    "scope": "original object scalar coverage; both native queries and complete empty list under the original Current lock; no PID history or gap clearing"
+                })
+            );
+        }
+        confirmed
     }
     fn activity_query(&self) -> ActivityQuery {
         let mut info: JOBOBJECT_BASIC_ACCOUNTING_INFORMATION = unsafe { std::mem::zeroed() };

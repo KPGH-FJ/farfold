@@ -17,6 +17,7 @@ const COMMAND_LIMIT: u32 = 256;
 pub(super) struct DebugEvents {
     received: u64,
     empty_waits: u64,
+    productive_passes: u64,
 }
 impl DebugEvents {
     pub(super) fn event_received(&mut self) {
@@ -25,8 +26,11 @@ impl DebugEvents {
     pub(super) fn empty_wait(&mut self) {
         self.empty_waits = self.empty_waits.saturating_add(1);
     }
-    pub(super) fn counts(&self) -> (u64, u64) {
-        (self.received, self.empty_waits)
+    pub(super) fn productive_pass(&mut self) {
+        self.productive_passes = self.productive_passes.saturating_add(1);
+    }
+    pub(super) fn counts(&self) -> (u64, u64, u64) {
+        (self.received, self.empty_waits, self.productive_passes)
     }
 }
 

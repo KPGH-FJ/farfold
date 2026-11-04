@@ -1,6 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')][string]$Cohort = 'LaunchPrerequisites',
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'Terminal')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,6 +34,10 @@ function Confirm-Inputs {
 }
 
 Confirm-Inputs
+if (($Cohort -ceq 'FrozenRetirementResume' -and $Phase -ceq 'All') -or
+    ($Cohort -cne 'FrozenRetirementResume' -and $Phase -cne 'All')) {
+  throw 'Only the resumed cohort uses separately bounded phases; original cohorts keep their original selection'
+}
 $groups = if ($Cohort -ceq 'RemoveFixtures') {
   $test = 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material'
   @{ name = 'recovery-material-identity'; filter = $test; exact = $true; names = @($test) }
@@ -58,7 +63,30 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
-} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')) {
+} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')) {
+  if ($Cohort -ceq 'FrozenRetirementResume') {
+    # Run the four frozen candidate regressions first, without changing their
+    # assertions or reopening the separate historical-gap challenge cohort.
+    $lifetime = 'windows_process::current_members::tests::lifetime_tests::'
+    $tests = [ordered]@{
+      'lifetime-complete-retirement' = "${lifetime}complete_live_objects_retire_original_job_without_clearing_historical_gap"
+      'lifetime-missing-object-refused' = "${lifetime}reopening_signaled_objects_never_compensates_for_an_unobserved_original_member"
+      'lifetime-leader-context-refused' = "${lifetime}missing_or_changed_leader_context_permanently_refuses_lifetime_proof"
+      'lifetime-count-overflow-refused' = "${lifetime}checked_live_count_overflow_cannot_supply_lifetime_coverage"
+    }
+    foreach ($test in $tests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+    $terminal = 'platform_tests::windows_conpty::'
+    $tests = [ordered]@{
+      'terminal-manager-python' = "${terminal}actual_manager_with_valid_windows_python_is_bounded"
+      'terminal-manager-no-reply-close' = "${terminal}manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup"
+      'terminal-raw-cursor-reply' = "${terminal}raw_conpty_replies_only_to_an_observed_query"
+    }
+    foreach ($test in $tests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+  }
   if ($Cohort -ceq 'CreateEofChallenge') {
     $test = 'windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal'
     @{ name = 'job-gap-shadow-challenge'; filter = $test; exact = $true; names = @($test); ignored = $true }
@@ -79,7 +107,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
       'worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved'
     )
   }
-  if ($Cohort -cin @('CreateEofChallenge', 'GitCompletionRecovery')) {
+  if ($Cohort -cin @('CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')) {
     $parallel = @(
       'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved',
       'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
@@ -91,7 +119,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
   )
   @{ name = 'archive-create-paired'; filter = $archivePair; exact = $false; threads = 2; names = $archivePair }
-  if ($Cohort -ceq 'GitCompletionRecovery') {
+  if ($Cohort -cin @('GitCompletionRecovery', 'FrozenRetirementResume')) {
     $test = 'windows_process::debug_certificate::tests::certificate_requires_every_distinct_original_object_signal'
     @{ name = 'git-complete-object-certificate'; filter = $test; exact = $true; names = @($test) }
     $test = 'acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_isolated'
@@ -321,7 +349,30 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     names = @('worktrees::windows_git::launch_matrix_tests::owned_same_program_known_config_extended_plain_observations_preserve_original_owner')
   }
 ) }
+if ($Cohort -ceq 'FrozenRetirementResume') {
+  $retirementGroups = @('lifetime-complete-retirement', 'lifetime-missing-object-refused', 'lifetime-leader-context-refused', 'lifetime-count-overflow-refused', 'acp-eof-retirement', 'acp-eof-descendant-edge')
+  $gitGroups = @('git-complete-object-certificate', 'git-original-owner-lifecycle', 'git-finite-input')
+  $terminalGroups = @('terminal-manager-python', 'terminal-manager-no-reply-close', 'terminal-raw-cursor-reply')
+  $groupNames = @($groups | ForEach-Object { $_.name })
+  $plannedExecutions = @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum
+  if ($groups.Count -ne 26 -or @($groupNames | Select-Object -Unique).Count -ne 26 -or $plannedExecutions -ne 45) {
+    throw 'Resumed frozen candidate inventory changed'
+  }
+  $selectedGroupNames = switch ($Phase) {
+    'Retirement' { $retirementGroups }
+    'GitControls' { $gitGroups }
+    'Terminal' { $terminalGroups }
+    'CreateRecovery' { $groupNames | Where-Object { $_ -cnotin ($retirementGroups + $gitGroups + $terminalGroups) } }
+  }
+  $groups = @($groups | Where-Object { $_.name -cin $selectedGroupNames })
+  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; Terminal = 3 }[$Phase]
+  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; Terminal = 3 }[$Phase]
+  if ($groups.Count -ne $expectedGroups -or @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum -ne $expectedExecutions) {
+    throw 'Resumed phase selection incomplete'
+  }
+}
 $failures = @()
+$completedGroups = @()
 foreach ($group in $groups) {
   Confirm-Inputs
   $threads = $group.threads ?? 1
@@ -352,6 +403,7 @@ foreach ($group in $groups) {
   [ordered]@{
     sourceHead = $ExpectedHead
     cohort = $Cohort
+    phase = $Phase
     selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
     testBinarySha256 = $selection.testBinarySha256
     fixtureSha256 = $selection.fixtureSha256
@@ -369,7 +421,20 @@ foreach ($group in $groups) {
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ($group.name + '.json')) -Encoding utf8
   Get-Content -LiteralPath $stdout
   Get-Content -LiteralPath $stderr
+  $completedGroups += [ordered]@{ name = $group.name; naturalExitCode = $exit; expectedTests = $group.names.Count; passed = $success }
   if (-not $success) { $failures += $group.name }
+}
+if ($Cohort -ceq 'FrozenRetirementResume') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw ("resume-$Phase.result.json")) -Encoding utf8
 }
 if ($failures.Count -gt 0) {
   throw ('Selected checks did not pass: ' + ($failures -join ', '))

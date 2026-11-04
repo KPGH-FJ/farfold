@@ -29,6 +29,7 @@ on:
             CreateEofRecovery,
             CreateEofChallenge,
             GitCompletionRecovery,
+            FrozenRetirementResume,
           ]
 
 permissions:
@@ -37,7 +38,7 @@ permissions:
 jobs:
   selected:
     runs-on: windows-2022
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.cohort == 'FrozenRetirementResume' && 70 || 45 }}
     defaults:
       run:
         shell: pwsh
@@ -70,11 +71,42 @@ jobs:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites -SelectedCohort $env:FARFOLD_SELECTED_COHORT
       - name: Run the selected native test cohort
-        if: ${{ always() && steps.selected_build.outcome == 'success' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort != 'FrozenRetirementResume' }}
         timeout-minutes: ${{ inputs.cohort == 'GitCompletionRecovery' && 20 || (inputs.cohort == 'RemoveRechecks' || inputs.cohort == 'CreateEofRecovery' || inputs.cohort == 'CreateEofChallenge') && 14 || 8 }}
         env:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT
+      - name: Frozen candidate retirement proof and original EOF controls
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase Retirement
+      - name: Original Git certificate lifecycle and finite input controls
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase GitControls
+      - name: Original create recovery and paired regressions
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        timeout-minutes: 20
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase CreateRecovery
+      - name: Affected original terminal controls
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase Terminal
+      - name: Require all resumed phases to have executed exactly and passed
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        timeout-minutes: 1
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $selection = Get-Content -LiteralPath 'windows-diagnostics-raw/build-selection.json' -Raw | ConvertFrom-Json
+          $expected = @{ Retirement = @(6, 6); GitControls = @(3, 16); CreateRecovery = @(14, 20); Terminal = @(3, 3) }
+          foreach ($phase in $expected.Keys) {
+            $result = Get-Content -LiteralPath "windows-diagnostics-raw/resume-$phase.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
+            if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'FrozenRetirementResume' -or $result.phase -cne $phase -or $result.expectedGroups -ne $expected[$phase][0] -or $result.expectedExecutions -ne $expected[$phase][1] -or $result.completedGroups -ne $expected[$phase][0] -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Resumed phase missing, incomplete or failed: $phase" }
+          }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
         with:
