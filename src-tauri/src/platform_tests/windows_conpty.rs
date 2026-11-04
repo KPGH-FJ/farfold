@@ -826,7 +826,9 @@ fn raw_probe(case: Case) {
             "bytes":bytes.load(Ordering::SeqCst),"cursorQueries":queries.load(Ordering::SeqCst),
             "cursorReplies":replies.load(Ordering::SeqCst),"rootCause":"unknown"})
     );
-    if matches!(case, Case::CloseInputWithoutReply | Case::ReplyAfterJobEnd) {
+    if matches!(case, Case::CloseInputWithoutReply | Case::ReplyAfterJobEnd)
+        || (case == Case::Drain && !ready_observed)
+    {
         assert!(!ready_observed, "expected a pending cursor handshake");
         assert_eq!(queries.load(Ordering::SeqCst), 1);
         assert_eq!(replies.load(Ordering::SeqCst), 0);
@@ -839,15 +841,64 @@ fn raw_probe(case: Case) {
             );
             std::thread::sleep(Duration::from_millis(10));
         }
+        let retire = {
+            let writer = writer.clone();
+            let replies = replies.clone();
+            move || {
+                eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.enter");
+                let mut writer = writer.lock().unwrap();
+                let writer = writer.as_mut().unwrap();
+                writer.write_all(b"\x1b[1;1R")?;
+                writer.flush()?;
+                replies.fetch_add(1, Ordering::SeqCst);
+                eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.return");
+                Ok::<(), std::io::Error>(())
+            }
+        };
+        if case == Case::Drain {
+            let (entered, closing) = mpsc::sync_channel(0);
+            let close_returned = Arc::new(AtomicBool::new(false));
+            let returned = close_returned.clone();
+            let observer = std::thread::spawn(move || {
+                let close_started: Instant = closing.recv_timeout(Duration::from_secs(1)).unwrap();
+                std::thread::sleep(Duration::from_millis(500));
+                let blocked = !returned.load(Ordering::SeqCst);
+                let eof_pending = matches!(closed.try_recv(), Err(mpsc::TryRecvError::Empty));
+                eprintln!(
+                    "FARFOLD_CONPTY_RAW_NO_REPLY_WINDOW {}",
+                    serde_json::json!({"case":"Drain","readyObserved":false,
+                        "childReaped":true,"jobInactive":true,"cursorQueries":1,
+                        "cursorReplies":0,"closeReturned":!blocked,"rawEOFPending":eof_pending,
+                        "observedMs":close_started.elapsed().as_millis()})
+                );
+                // At this point only ConPTY can consume the late cleanup reply.
+                if blocked {
+                    retire().unwrap();
+                }
+                (closed, blocked, eof_pending)
+            });
+            eprintln!("FARFOLD_CONPTY_PHASE raw.close.enter");
+            entered.send(Instant::now()).unwrap();
+            drop(pair.master);
+            close_returned.store(true, Ordering::SeqCst);
+            eprintln!("FARFOLD_CONPTY_PHASE raw.close.return");
+            let (closed, blocked, eof_pending) = observer.join().unwrap();
+            assert!(blocked && eof_pending, "expected a bounded no-reply stall");
+            let (actual_eof, _, eof_kind) = closed.recv_timeout(Duration::from_secs(1)).unwrap();
+            reader_thread.join().unwrap();
+            assert!(actual_eof);
+            assert_eq!(queries.load(Ordering::SeqCst), 1);
+            assert_eq!(replies.load(Ordering::SeqCst), 1);
+            eprintln!(
+                "FARFOLD_CONPTY_RAW_NO_REPLY_RETIREMENT {}",
+                serde_json::json!({"case":"Drain","lateCleanupReplies":1,
+                    "closeReturned":true,"ptyEOF":eof_kind})
+            );
+            return;
+        }
         if case == Case::ReplyAfterJobEnd {
             // No application child can receive this: the exact Job is inactive.
-            eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.enter");
-            let mut writer = writer.lock().unwrap();
-            let writer = writer.as_mut().unwrap();
-            writer.write_all(b"\x1b[1;1R").unwrap();
-            writer.flush().unwrap();
-            replies.fetch_add(1, Ordering::SeqCst);
-            eprintln!("FARFOLD_CONPTY_PHASE raw.retirement.reply.return");
+            retire().unwrap();
         } else {
             eprintln!("FARFOLD_CONPTY_PHASE raw.input.close.enter");
             drop(writer.lock().unwrap().take().unwrap());
@@ -869,6 +920,13 @@ fn raw_probe(case: Case) {
         return;
     }
     assert!(ready_observed, "valid Python peer must actually start");
+    if case == Case::Drain {
+        assert_eq!(replies.load(Ordering::SeqCst), 0);
+        eprintln!(
+            "FARFOLD_CONPTY_RAW_NO_REPLY_WINDOW {}",
+            serde_json::json!({"case":"Drain","coverage":"notObserved","readyObserved":true})
+        );
+    }
     if case == Case::CloseDrain {
         pause.store(true, Ordering::SeqCst);
     }
