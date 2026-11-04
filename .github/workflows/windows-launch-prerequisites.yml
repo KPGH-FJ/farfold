@@ -26,6 +26,7 @@ on:
             TerminalProbe,
             WorktreeWrapper,
             NativeRetirement,
+            CreateEofRecovery,
           ]
 
 permissions:
@@ -68,7 +69,7 @@ jobs:
         run: ./.github/scripts/windows-selected-build.ps1 -ExpectedHead '${{ github.sha }}' -Scope LaunchPrerequisites -SelectedCohort $env:FARFOLD_SELECTED_COHORT
       - name: Run the selected native test cohort
         if: ${{ always() && steps.selected_build.outcome == 'success' }}
-        timeout-minutes: ${{ inputs.cohort == 'RemoveRechecks' && 14 || 8 }}
+        timeout-minutes: ${{ (inputs.cohort == 'RemoveRechecks' || inputs.cohort == 'CreateEofRecovery') && 14 || 8 }}
         env:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT

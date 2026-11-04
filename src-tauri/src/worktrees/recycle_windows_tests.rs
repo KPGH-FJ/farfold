@@ -53,7 +53,8 @@ fn prepare(manager: &Worktrees, store: &MetaStore, id: &str, preview: RecycleIns
             |_| Ok(()),
         )
         .unwrap();
-    assert_eq!(tests::op(reply).state, "prepared");
+    let prepared = tests::op(reply);
+    assert_eq!(prepared.state, "prepared", "{prepared:?}");
 }
 fn identity(path: &Path, directory: bool) -> crate::file_access::Identity {
     let pin = if directory {

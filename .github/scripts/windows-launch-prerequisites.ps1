@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -58,6 +58,28 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
+} elseif ($Cohort -ceq 'CreateEofRecovery') {
+  $tests = [ordered]@{
+    'create-existing-branch' = 'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
+    'acp-eof-retirement' = 'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
+    'archive-cold-restore' = 'worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata'
+  }
+  foreach ($test in $tests.GetEnumerator()) {
+    @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+  }
+  $prefix = 'worktrees::recover_tests::recover_cancel'
+  @{
+    name = 'recovery-cancel-paired'; filter = $prefix; exact = $false; threads = 2
+    names = @(
+      'worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission',
+      'worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved'
+    )
+  }
+  $archivePair = @(
+    'worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata',
+    'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
+  )
+  @{ name = 'archive-create-paired'; filter = $archivePair; exact = $false; threads = 2; names = $archivePair }
 } elseif ($Cohort -ceq 'NativeRetirement') {
   $conpty = 'platform_tests::windows_conpty::'
   $gitJob = 'windows_process::current_members::tests::git_exact_handle_tests::'
