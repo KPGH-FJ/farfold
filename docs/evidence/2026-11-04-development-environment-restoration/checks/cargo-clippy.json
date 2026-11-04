@@ -1,0 +1,19 @@
+{
+  "label": "cargo-clippy",
+  "command": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T09:50:11.604640+00:00",
+  "finishedAt": "2026-11-04T09:50:39.042494+00:00",
+  "durationSeconds": 27.438,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/cargo-clippy.log"
+}

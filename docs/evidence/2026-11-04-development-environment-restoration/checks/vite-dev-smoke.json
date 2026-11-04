@@ -1,0 +1,13 @@
+{
+  "label": "vite-dev-smoke",
+  "command": [
+    "node",
+    "docs/evidence/2026-11-04-development-environment-restoration/dev-smoke.mjs"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-11-04T09:52:21.531611+00:00",
+  "finishedAt": "2026-11-04T09:52:22.366973+00:00",
+  "durationSeconds": 0.835,
+  "exitCode": 0,
+  "log": "docs/evidence/2026-11-04-development-environment-restoration/checks/vite-dev-smoke.log"
+}

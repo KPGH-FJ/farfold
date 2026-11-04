@@ -1,0 +1,11 @@
+{
+  "reason": "Prettier reports only these existing raw cleanup receipts. Preserve their original bytes as with the earlier exact 2026-11-02 receipt exclusion.",
+  "files": {
+    "docs/maintenance/2026-11-04-download-cache-cleanup/final-review.json": "4443e7256b6f9144ee0489e5189f13b187eba4fc639dbfe5c407fd9d0c6cd124",
+    "docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review-2.json": "d31c3262442ad5469c698524d8a1e0c41d3812cf7349db537e32abe268461be8",
+    "docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review.json": "9c2763c67097881658f2dcaf51ce5a6306d37a8fec56987a7d9ee6671ab05959",
+    "docs/maintenance/2026-11-04-migration-cleanup/final-review.json": "6bc582ca9d94642943cbb195dd9f9a0f80726f08da19a24668fbd42f1aa8412b",
+    "docs/maintenance/2026-11-04-migration-cleanup/plan-summary.json": "aeab04c2d00a3240d50a5a31d8b2a61b5d44be0d57a5865db40115256df8f693",
+    "docs/maintenance/2026-11-04-migration-cleanup/pre-deletion-review.json": "2b4588a4557b70357d3ce90a9d850170deb15b61be6c8eb0629455817b7c6dc5"
+  }
+}

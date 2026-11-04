@@ -354,3 +354,11 @@ docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/installatio
 
 # Preserve the generated migration-cleanup receipt exactly as recorded.
 docs/maintenance/2026-11-02-migration-cleanup/plan-summary.json
+
+# Preserve the original generated scope and independent cleanup review receipts.
+docs/maintenance/2026-11-04-download-cache-cleanup/final-review.json
+docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review-2.json
+docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review.json
+docs/maintenance/2026-11-04-migration-cleanup/final-review.json
+docs/maintenance/2026-11-04-migration-cleanup/plan-summary.json
+docs/maintenance/2026-11-04-migration-cleanup/pre-deletion-review.json

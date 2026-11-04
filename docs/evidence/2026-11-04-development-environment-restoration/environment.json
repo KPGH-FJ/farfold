@@ -1,0 +1,106 @@
+{
+  "recordedAt": "2026-11-04T09:48:43.488088+00:00",
+  "commands": {
+    "system": {
+      "command": ["sw_vers"],
+      "exitCode": 0,
+      "output": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0\nBuildVersion:\t\t26A425"
+    },
+    "architecture": {
+      "command": ["uname", "-m"],
+      "exitCode": 0,
+      "output": "arm64"
+    },
+    "hardware": {
+      "command": ["sysctl", "-n", "machdep.cpu.brand_string"],
+      "exitCode": 0,
+      "output": "Apple M6"
+    },
+    "memoryBytes": {
+      "command": ["sysctl", "-n", "hw.memsize"],
+      "exitCode": 0,
+      "output": "17179869184"
+    },
+    "node": {
+      "command": ["node", "--version"],
+      "exitCode": 0,
+      "output": "v22.22.3"
+    },
+    "corepack": {
+      "command": ["corepack", "--version"],
+      "exitCode": 0,
+      "output": "0.34.6"
+    },
+    "pnpm": {
+      "command": ["corepack", "pnpm", "--version"],
+      "exitCode": 0,
+      "output": "9.15.0"
+    },
+    "rustc": {
+      "command": ["rustc", "--version"],
+      "exitCode": 0,
+      "output": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+    },
+    "cargo": {
+      "command": ["cargo", "--version"],
+      "exitCode": 0,
+      "output": "cargo 1.96.0 (30a34c682 2026-05-25)"
+    },
+    "rustComponents": {
+      "command": ["rustup", "component", "list", "--installed"],
+      "exitCode": 0,
+      "output": "cargo-aarch64-apple-darwin\nclippy-aarch64-apple-darwin\nrust-docs-aarch64-apple-darwin\nrust-std-aarch64-apple-darwin\nrust-std-x86_64-pc-windows-gnu\nrust-std-x86_64-pc-windows-gnullvm\nrustc-aarch64-apple-darwin\nrustfmt-aarch64-apple-darwin"
+    },
+    "rustTargets": {
+      "command": ["rustup", "target", "list", "--installed"],
+      "exitCode": 0,
+      "output": "aarch64-apple-darwin\nx86_64-pc-windows-gnu\nx86_64-pc-windows-gnullvm"
+    },
+    "developerDirectory": {
+      "command": ["xcode-select", "-p"],
+      "exitCode": 0,
+      "output": "/Library/Developer/CommandLineTools"
+    },
+    "sdkVersion": {
+      "command": ["xcrun", "--sdk", "macosx", "--show-sdk-version"],
+      "exitCode": 0,
+      "output": "15.5"
+    },
+    "sdkPath": {
+      "command": ["xcrun", "--sdk", "macosx", "--show-sdk-path"],
+      "exitCode": 0,
+      "output": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+    },
+    "clang": {
+      "command": ["clang", "--version"],
+      "exitCode": 0,
+      "output": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin"
+    },
+    "git": {
+      "command": ["git", "--version"],
+      "exitCode": 0,
+      "output": "git version 2.39.5 (Apple Git-154)"
+    },
+    "systemPython": {
+      "command": ["/usr/bin/python3", "--version"],
+      "exitCode": 0,
+      "output": "Python 3.9.6"
+    },
+    "disk": {
+      "command": ["df", "-k", "."],
+      "exitCode": 0,
+      "output": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   239311296 121201464  90619084    58% 1209871 906190840    0%   /System/Volumes/Data"
+    },
+    "formalSignature": {
+      "command": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "/Applications/Farfold.app"
+      ],
+      "exitCode": 0,
+      "output": ""
+    }
+  }
+}

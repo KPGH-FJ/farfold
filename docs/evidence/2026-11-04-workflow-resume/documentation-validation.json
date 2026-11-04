@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-11-04T10:59:49.907911+00:00",
+  "checks": [
+    {
+      "command": "corepack pnpm docs:check",
+      "exitCode": 0,
+      "originalConditions": 151,
+      "currentRows": 151,
+      "activePlans": 1,
+      "activePlanBytes": 4793,
+      "activePlanLines": 34
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "independentReviewer": "/root/status_evidence_review",
+  "independentReview": "No required corrections; scope, previous document byte hashes, product/requirements hashes, NEW-24 and Windows boundaries preserved.",
+  "productAcceptance": false
+}
