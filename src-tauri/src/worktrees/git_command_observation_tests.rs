@@ -101,6 +101,24 @@ impl CommandObservation {
             })
         );
     }
+    pub(super) fn enabled(&self) -> bool {
+        self.command.is_some()
+    }
+    pub(super) fn emit_certificate(&self, child: u32, objects: serde_json::Value) {
+        let Some(command) = self.command else { return };
+        eprintln!(
+            "FARFOLD_WINDOWS_CREATE_GIT_CERTIFICATE {}",
+            serde_json::json!({
+                "case": CASE,
+                "processId": std::process::id(),
+                "command": command,
+                "originalChildPid": child,
+                "certificateConfirmed": true,
+                "objects": objects,
+                "scope": "same successful complete-object certificate branch; owned state only; no extra native query",
+            })
+        );
+    }
 }
 
 #[test]

@@ -2,7 +2,7 @@
 //! These use only synthetic argv gates, never an Agent or production test hook.
 use super::*;
 use std::{
-    cell::RefCell,
+    cell::{Cell, RefCell},
     os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle},
     sync::mpsc::{self, Receiver, RecvTimeoutError, Sender},
 };
@@ -17,6 +17,7 @@ use windows_sys::Win32::System::Threading::{
 type ExitReceipt = (u32, Option<i32>);
 thread_local! {
     static EXIT_OBSERVER: RefCell<Option<Sender<ExitReceipt>>> = const { RefCell::new(None) };
+    static PANIC_AFTER_EXIT: Cell<bool> = const { Cell::new(false) };
 }
 struct ExitObservation;
 impl ExitObservation {
@@ -33,6 +34,9 @@ impl Drop for ExitObservation {
 pub(super) fn observed_active_after_original_exit(pid: u32, code: Option<i32>) {
     if let Some(sender) = EXIT_OBSERVER.with(|slot| slot.take()) {
         let _ = sender.send((pid, code));
+    }
+    if PANIC_AFTER_EXIT.with(|slot| slot.replace(false)) {
+        panic!("owned Git executor unwind after original exit");
     }
 }
 
@@ -249,5 +253,46 @@ fn changed_finite_input_after_original_exit_is_not_success() {
         run.still_owned();
         run.release("descendant-release");
         assert_eq!(run.finish().err().unwrap().code, "changed");
+    });
+}
+
+#[test]
+fn unwind_after_original_exit_pumps_debug_events_until_exact_descendant_signal() {
+    let directory = tempfile::tempdir().unwrap();
+    let cancel = AtomicBool::new(false);
+    thread::scope(|scope| {
+        let (sender, result) = mpsc::channel();
+        let (stage_sender, stage_receiver) = mpsc::channel();
+        let path = directory.path();
+        let cancel = &cancel;
+        scope.spawn(move || {
+            let _observation = ExitObservation::new(stage_sender);
+            PANIC_AFTER_EXIT.with(|slot| slot.set(true));
+            let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                let mut command =
+                    Command::new(crate::windows_process::helper_executable().unwrap());
+                command
+                    .args(["settlement-parent"])
+                    .arg(path)
+                    .args(["tail", "0"]);
+                let input = Input::from_bytes(b"finite input", 64, cancel).unwrap();
+                execute_command_input(command, input, cancel, Duration::from_secs(10))
+            }));
+            let _ = sender.send(outcome.is_err());
+        });
+        let _cancel_on_drop = CancelOnDrop(cancel);
+        let (pid, original) = observed_handle(path, "helper-pid");
+        let (_, descendant) = observed_handle(path, "descendant-pid");
+        assert!(!exited(&original));
+        assert!(!exited(&descendant));
+        std::fs::write(path.join("parent-release"), "release").unwrap();
+        assert_eq!(
+            stage_receiver.recv_timeout(Duration::from_secs(5)).unwrap(),
+            (pid, Some(0))
+        );
+        assert!(result.recv_timeout(Duration::from_secs(10)).unwrap());
+        assert!(finish_exited(&original, "original"));
+        assert!(finish_exited(&descendant, "descendant"));
+        eprintln!("FARFOLD_WINDOWS_GIT_UNWIND_EXACT_OBJECTS_REAPED=true");
     });
 }

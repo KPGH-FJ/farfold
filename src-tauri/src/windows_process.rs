@@ -32,6 +32,9 @@ use windows_sys::Win32::System::Threading::{
 
 #[path = "windows_process/current_members.rs"]
 mod current_members;
+#[path = "windows_process/debug_certificate.rs"]
+mod debug_certificate;
+pub(crate) use debug_certificate::DEBUG_MEMBER_LIMIT;
 #[path = "windows_process/stdout_handoff.rs"]
 pub(crate) mod stdout_handoff;
 
@@ -189,11 +192,6 @@ impl Job {
             )
         })
     }
-    fn retirement_unknown(&self) -> bool {
-        self.current
-            .lock()
-            .map_or(true, |current| current.unknown())
-    }
     fn active_from_query(&self, query: &ActivityQuery) -> bool {
         let leader_active = self.leader.get().is_some_and(|leader| unsafe {
             WaitForSingleObject(leader.handle.0, 0) != WAIT_OBJECT_0
@@ -295,6 +293,18 @@ impl PendingGroup {
             job: self.0.clone(),
         })
     }
+    pub(crate) fn attach_for_fixed_git(&self, pid: u32) -> (OwnedGroup, io::Result<()>) {
+        match self.attach(pid) {
+            Ok(group) => (group, Ok(())),
+            Err(error) => (
+                OwnedGroup {
+                    pid,
+                    job: self.0.clone(),
+                },
+                Err(error),
+            ),
+        }
+    }
     /// A failed registration has no usable registry entry. Keep this direct Job
     /// owner and the caller's exact Child until both termination facts hold.
     /// The reap closure kills/polls only that Child, including before Job entry.
@@ -366,9 +376,6 @@ impl OwnedGroup {
     }
     pub(crate) fn active(&self) -> bool {
         self.job.active()
-    }
-    pub(crate) fn retirement_unknown(&self) -> bool {
-        self.job.retirement_unknown()
     }
 }
 impl Drop for OwnedGroup {

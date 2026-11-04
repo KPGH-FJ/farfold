@@ -58,6 +58,9 @@ impl AcpManager {
 }
 const TEXT_BYTES: usize = 64 * 1024;
 const MAX_EVENTS: usize = 128;
+#[cfg(windows)]
+#[path = "active_prompt_eof_descendant_windows_tests.rs"]
+mod eof_descendant_tests;
 const PEER: &str = r#"
 import sys,json,pathlib,threading,time,hashlib
 count=int(sys.argv[1]); fence=pathlib.Path(sys.argv[2]); prompt=None

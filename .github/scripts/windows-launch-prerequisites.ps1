@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -58,7 +58,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
-} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge')) {
+} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery')) {
   if ($Cohort -ceq 'CreateEofChallenge') {
     $test = 'windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal'
     @{ name = 'job-gap-shadow-challenge'; filter = $test; exact = $true; names = @($test); ignored = $true }
@@ -79,7 +79,7 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
       'worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved'
     )
   }
-  if ($Cohort -ceq 'CreateEofChallenge') {
+  if ($Cohort -cin @('CreateEofChallenge', 'GitCompletionRecovery')) {
     $parallel = @(
       'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved',
       'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
@@ -91,6 +91,76 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
     'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
   )
   @{ name = 'archive-create-paired'; filter = $archivePair; exact = $false; threads = 2; names = $archivePair }
+  if ($Cohort -ceq 'GitCompletionRecovery') {
+    $test = 'windows_process::debug_certificate::tests::certificate_requires_every_distinct_original_object_signal'
+    @{ name = 'git-complete-object-certificate'; filter = $test; exact = $true; names = @($test) }
+    $test = 'acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_isolated'
+    @{ name = 'acp-eof-descendant-edge'; filter = $test; exact = $true; names = @($test); ignored = $true }
+    $settlement = 'worktrees::git::settlement_tests::'
+    @{
+      name = 'git-original-owner-lifecycle'; filter = $settlement; exact = $false; threads = 2
+      names = @(
+        "${settlement}original_exit_waits_for_same_job_natural_end_and_collects_descendant_tail",
+        "${settlement}naturally_settled_job_preserves_original_nonzero_exit_code",
+        "${settlement}cancellation_after_original_exit_reaps_same_job_before_return",
+        "${settlement}original_deadline_still_limits_live_job_after_original_exit",
+        "${settlement}late_stdout_over_limit_after_original_exit_is_not_success",
+        "${settlement}late_stderr_over_limit_after_original_exit_is_not_success",
+        "${settlement}changed_finite_input_after_original_exit_is_not_success",
+        "${settlement}unwind_after_original_exit_pumps_debug_events_until_exact_descendant_signal"
+      )
+    }
+    $inputs = 'worktrees::git::input::tests::'
+    @{
+      name = 'git-finite-input'; filter = $inputs; exact = $false; threads = 2
+      names = @(
+        "${inputs}real_runner_delivers_opaque_finite_bytes_and_true_eof_after_platform_command_rebuild",
+        "${inputs}explicit_null_replaces_preconfigured_stdin_while_generic_platform_behavior_is_preserved",
+        "${inputs}selected_held_file_range_is_snapshotted_from_its_current_offset_without_prefix_or_later_edits",
+        "${inputs}factory_caps_cancel_and_invalid_offset_refuse_without_exposing_payload_in_errors",
+        "${inputs}empty_finite_file_is_valid_and_not_a_failed_or_truncated_input",
+        "${inputs}cancellation_before_spawn_and_staged_size_drift_cannot_dispatch_the_selected_peer",
+        "${inputs}common_file_output_path_retains_exact_input_and_original_output_limit_cleanup"
+      )
+    }
+    $recoverRemaining = @(
+      'worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts',
+      'worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline'
+    )
+    @{ name = 'recovery-original-remaining'; filter = $recoverRemaining; exact = $false; threads = 2; names = $recoverRemaining }
+    $confirmation = 'worktrees::remove_boundary_tests::remove_confirmation_'
+    @{
+      name = 'recovery-confirmation'; filter = $confirmation; exact = $false; threads = 2
+      names = @(
+        "${confirmation}rechecks_reflog_evidence_even_same_root_set",
+        "${confirmation}rejects_corrupt_bundle_and_keeps_source"
+      )
+    }
+    $cold = 'worktrees::remove_boundary_tests::remove_cold_'
+    @{
+      name = 'recovery-cold'; filter = $cold; exact = $false; threads = 2
+      names = @(
+        "${cold}contract_rejects_misaligned_recovery_and_duplicate_ids",
+        "${cold}dispatched_record_survives_next_intent_and_reconciles_exact_absence"
+      )
+    }
+    $remainingOriginal = [ordered]@{
+      'create-official-config-aliases' = 'worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository'
+      'create-cold-location' = 'worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work'
+      'create-storage-failure' = 'worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only'
+      'create-new-branch' = 'worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook'
+    }
+    foreach ($test in $remainingOriginal.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+    $recoverySingles = [ordered]@{
+      'recovery-prepared-cancel' = 'worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority'
+      'recovery-parent-identity' = 'worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent'
+    }
+    foreach ($test in $recoverySingles.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    }
+  }
 } elseif ($Cohort -ceq 'NativeRetirement') {
   $conpty = 'platform_tests::windows_conpty::'
   $gitJob = 'windows_process::current_members::tests::git_exact_handle_tests::'

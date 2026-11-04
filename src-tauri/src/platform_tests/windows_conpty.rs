@@ -23,6 +23,7 @@ pub(crate) enum Case {
     TerminalPendingCursorClose,
     TerminalCancelBeforePublication,
     TerminalMasterBoundedUnknown,
+    AcpEofDescendant,
 }
 
 impl Case {
@@ -48,6 +49,9 @@ impl Case {
             Self::TerminalMasterBoundedUnknown => {
                 "pty::windows_tests::terminal_master_drop_retains_bounded_unknown_child"
             }
+            Self::AcpEofDescendant => {
+                "acp_client::active_prompt_tests::eof_descendant_tests::actual_eof_descendant_exit_edge_child"
+            }
             _ => "platform_tests::windows_conpty::diagnostic_child",
         }
     }
@@ -62,7 +66,8 @@ impl Case {
             | Self::TerminalCursorReply
             | Self::TerminalPendingCursorClose
             | Self::TerminalCancelBeforePublication
-            | Self::TerminalMasterBoundedUnknown => 20,
+            | Self::TerminalMasterBoundedUnknown
+            | Self::AcpEofDescendant => 20,
             Self::ManagerCursorReply | Self::ManagerCursorNoReply => 12,
             Self::Manager => 12, // up to3s startup+3s readiness+5s close
             _ => 10,             //3s startup+3s readiness+2s exit+1s EOF; not a production cap
@@ -212,6 +217,7 @@ pub(crate) fn run(case: Case) {
                 | Case::TerminalCursorReply
                 | Case::TerminalPendingCursorClose
                 | Case::TerminalMasterBoundedUnknown
+                | Case::AcpEofDescendant
         );
         let mut deadline_seen = false;
         let mut child_alive_before_deadline_kill = false;
@@ -371,6 +377,11 @@ pub(crate) fn run(case: Case) {
         eprintln!(
             "FARFOLD_CONPTY_BOUNDED_UNKNOWN_OWNER {}",
             diagnostic_receipt.expect("bounded-unknown exact owner receipt")
+        );
+    } else if case == Case::AcpEofDescendant {
+        eprintln!(
+            "FARFOLD_ACP_EOF_DESCENDANT_OWNER {}",
+            diagnostic_receipt.expect("EOF descendant exact owner receipt")
         );
     }
     assert!(

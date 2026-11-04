@@ -15,6 +15,9 @@ pub(super) mod bundle_output;
 #[cfg(all(windows, test))]
 #[path = "git_command_observation_tests.rs"]
 pub(super) mod command_observation;
+#[cfg(windows)]
+#[path = "git_debug_windows.rs"]
+mod debug_windows;
 #[path = "git_input.rs"]
 mod input;
 #[cfg(windows)]
@@ -113,6 +116,8 @@ struct OwnedProcess {
     group: i32,
     #[cfg(windows)]
     group: crate::process_platform::OwnedGroup,
+    #[cfg(windows)]
+    debug: debug_windows::DebugProcesses,
     finished: bool,
 }
 impl OwnedProcess {
@@ -135,15 +140,17 @@ impl OwnedProcess {
         }
         #[cfg(windows)]
         {
-            let active = self.group.active();
-            self.report_retirement_unknown();
-            active
+            self.debug_group_alive()
         }
     }
     #[cfg(windows)]
-    fn report_retirement_unknown(&self) {
-        if self.group.retirement_unknown() {
-            super::manager::mark_unknown();
+    fn debug_group_alive(&self) -> bool {
+        match self.debug.confirmed(&self.group, &self.child) {
+            Ok(confirmed) => !confirmed,
+            Err(_) => {
+                super::manager::mark_unknown();
+                true
+            }
         }
     }
 }
@@ -164,14 +171,28 @@ impl Drop for OwnedProcess {
             return;
         }
         self.terminate();
+        #[cfg(windows)]
+        super::manager::mark_unknown();
+        #[cfg(windows)]
         loop {
-            if self.child.wait().is_ok() {
-                break;
+            let _ = self.debug.drain(&self.group, &self.child);
+            let reaped = matches!(self.child.try_wait(), Ok(Some(_)));
+            if reaped && !self.group_alive() {
+                return;
             }
             thread::sleep(Duration::from_millis(10));
         }
-        while self.group_alive() {
-            thread::sleep(Duration::from_millis(10));
+        #[cfg(unix)]
+        {
+            loop {
+                if self.child.wait().is_ok() {
+                    break;
+                }
+                thread::sleep(Duration::from_millis(10));
+            }
+            while self.group_alive() {
+                thread::sleep(Duration::from_millis(10));
+            }
         }
     }
 }
@@ -226,6 +247,8 @@ fn execute_bounded(
     #[cfg(windows)]
     let pending = crate::process_platform::prepare_noninteractive_git_command(&mut cmd)
         .map_err(|_| error("gitUnavailable"))?;
+    #[cfg(windows)]
+    let debug = debug_windows::DebugProcesses::new(&mut cmd).map_err(|_| error("unavailable"))?;
     if let Some(input) = &input {
         // The Windows wrapper intentionally rebuilds Command. Install the
         // explicit finite input only AFTER that replacement, not on the lost
@@ -253,24 +276,21 @@ fn execute_bounded(
     #[cfg(all(windows, test))]
     command_trace.emit("spawned", child.id(), None, None);
     #[cfg(windows)]
-    let mut child = child;
-    #[cfg(windows)]
     drop(cmd);
     #[cfg(windows)]
-    let group = pending
-        .attach_or_reap(Some(child.id()), || {
-            let _ = child.kill();
-            matches!(child.try_wait(), Ok(Some(_)))
-        })
-        .map_err(|_| error("gitUnavailable"))?;
+    let (group, attached) = pending.attach_for_fixed_git(child.id());
     let mut child = OwnedProcess {
         #[cfg(unix)]
         group: child.id() as i32,
         #[cfg(windows)]
         group,
+        #[cfg(windows)]
+        debug,
         child,
         finished: false,
     };
+    #[cfg(windows)]
+    attached.map_err(|_| error("gitUnavailable"))?;
     let started = Instant::now();
     let mut stopped = None;
     #[cfg(windows)]
@@ -278,6 +298,12 @@ fn execute_bounded(
     #[cfg(all(windows, test))]
     let mut first_active_query = None;
     loop {
+        #[cfg(windows)]
+        if child.debug.drain(&child.group, &child.child).is_err() {
+            stopped.get_or_insert("unknown");
+            super::manager::mark_unknown();
+            child.terminate();
+        }
         let waited = match child.try_wait() {
             Ok(value) => value,
             Err(_wait_error) => {
@@ -292,7 +318,13 @@ fn execute_bounded(
                     false,
                     stopped,
                 );
-                // Keep the admission until wait confirms this child has ended.
+                // Windows must keep pumping debug events before the exact
+                // object can finish. A blocking wait here would strand it.
+                #[cfg(windows)]
+                {
+                    None
+                }
+                #[cfg(unix)]
                 match child.wait() {
                     Ok(status) => Some(status),
                     Err(_) => {
@@ -305,8 +337,8 @@ fn execute_bounded(
         if let Some(status) = waited {
             #[cfg(all(windows, test))]
             let group_alive = if first_active_query.is_none() {
-                let (active, observation) = child.group.active_with_observation(&child.child);
-                child.report_retirement_unknown();
+                let (_, observation) = child.group.active_with_observation(&child.child);
+                let active = child.debug_group_alive();
                 if active {
                     command_trace.emit(
                         "firstActiveAfterOriginalExit",
@@ -354,6 +386,8 @@ fn execute_bounded(
                 // Unix still rejects surviving helpers immediately. Windows
                 // reaches this branch only after an original bound/error.
                 stopped = Some(stopped.unwrap_or("unknown"));
+                #[cfg(windows)]
+                super::manager::mark_unknown();
                 #[cfg(all(windows, test))]
                 command_trace.emit(
                     "beforeOriginalTermination",
@@ -388,10 +422,16 @@ fn execute_bounded(
                     stopped,
                 );
                 while child.group_alive() {
+                    #[cfg(windows)]
+                    let _ = child.debug.drain(&child.group, &child.child);
                     thread::sleep(Duration::from_millis(10));
                 }
             }
             child.finished = true;
+            #[cfg(all(windows, test))]
+            if command_trace.enabled() {
+                command_trace.emit_certificate(child.id(), child.debug.observation());
+            }
             #[cfg(all(windows, test))]
             command_trace.emit("settled", child.id(), status.code(), stopped);
             #[cfg(all(windows, test))]
