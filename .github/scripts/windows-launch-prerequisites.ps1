@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
   [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume')][string]$Cohort = 'LaunchPrerequisites',
-  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'Terminal')][string]$Phase = 'All'
+  [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal')][string]$Phase = 'All'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -362,11 +362,27 @@ if ($Cohort -ceq 'FrozenRetirementResume') {
     'Retirement' { $retirementGroups }
     'GitControls' { $gitGroups }
     'Terminal' { $terminalGroups }
+    'CreateTiming' { 'create-existing-branch' }
+    'CreateUnfinished' { 'create-official-config-aliases', 'create-cold-location', 'create-storage-failure', 'create-new-branch' }
     'CreateRecovery' { $groupNames | Where-Object { $_ -cnotin ($retirementGroups + $gitGroups + $terminalGroups) } }
   }
   $groups = @($groups | Where-Object { $_.name -cin $selectedGroupNames })
-  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; Terminal = 3 }[$Phase]
-  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; Terminal = 3 }[$Phase]
+  if ($Phase -ceq 'CreateUnfinished') {
+    # Only the nine actual failures from41818072244. The other original tests
+    # keep their existing cohort selection; no passing sibling is added here.
+    $remainingTests = [ordered]@{
+      'recovery-orphan-roots' = 'worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline'
+      'recovery-confirmation-reflog' = 'worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set'
+      'recovery-confirmation-corrupt' = 'worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source'
+      'recovery-cold-dispatched' = 'worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence'
+      'recovery-cold-contract' = 'worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids'
+    }
+    $groups += @(foreach ($test in $remainingTests.GetEnumerator()) {
+      @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
+    })
+  }
+  $expectedGroups = @{ Retirement = 6; GitControls = 3; CreateRecovery = 14; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3 }[$Phase]
+  $expectedExecutions = @{ Retirement = 6; GitControls = 16; CreateRecovery = 20; CreateTiming = 1; CreateUnfinished = 9; Terminal = 3 }[$Phase]
   if ($groups.Count -ne $expectedGroups -or @($groups | ForEach-Object { $_.names.Count } | Measure-Object -Sum).Sum -ne $expectedExecutions) {
     throw 'Resumed phase selection incomplete'
   }

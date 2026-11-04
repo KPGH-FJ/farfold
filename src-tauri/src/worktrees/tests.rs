@@ -108,7 +108,10 @@ pub(crate) fn input(
 }
 pub(crate) const OP: &str = "12345678-1234-4123-8123-123456789abc";
 pub(crate) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore) -> Operation {
-    wait_with_timeout(m, s, std::time::Duration::from_secs(15))
+    // The native fixed-Git owner completes the observed Windows creation in
+    // 20–28s. Keep waiting for its actual result; this is not a production cap.
+    let timeout = std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 15 });
+    wait_with_timeout(m, s, timeout)
 }
 pub(crate) fn wait_with_timeout(
     m: &Worktrees,

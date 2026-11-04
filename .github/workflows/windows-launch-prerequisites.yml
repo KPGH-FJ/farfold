@@ -31,6 +31,11 @@ on:
             GitCompletionRecovery,
             FrozenRetirementResume,
           ]
+      resume_scope:
+        description: Scope within FrozenRetirementResume only
+        type: choice
+        default: All
+        options: [All, CreateUnfinishedAndTiming]
 
 permissions:
   contents: read
@@ -77,22 +82,32 @@ jobs:
           FARFOLD_SELECTED_COHORT: ${{ inputs.cohort }}
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort $env:FARFOLD_SELECTED_COHORT
       - name: Frozen candidate retirement proof and original EOF controls
-        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 3
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase Retirement
       - name: Original Git certificate lifecycle and finite input controls
-        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 3
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase GitControls
+      - name: Existing create completion with test-only native wait timing
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'CreateUnfinishedAndTiming' }}
+        timeout-minutes: 3
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase CreateTiming
       - name: Original create recovery and paired regressions
-        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 20
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase CreateRecovery
+      - name: Nine unfinished original create and recovery cases
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'CreateUnfinishedAndTiming' }}
+        timeout-minutes: 20
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase CreateUnfinished
       - name: Affected original terminal controls
-        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' }}
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'FrozenRetirementResume' && inputs.resume_scope == 'All' }}
         timeout-minutes: 3
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort FrozenRetirementResume -Phase Terminal
@@ -103,6 +118,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $selection = Get-Content -LiteralPath 'windows-diagnostics-raw/build-selection.json' -Raw | ConvertFrom-Json
           $expected = @{ Retirement = @(6, 6); GitControls = @(3, 16); CreateRecovery = @(14, 20); Terminal = @(3, 3) }
+          if ('${{ inputs.resume_scope }}' -ceq 'CreateUnfinishedAndTiming') { $expected = @{ CreateTiming = @(1, 1); CreateUnfinished = @(9, 9) } }
           foreach ($phase in $expected.Keys) {
             $result = Get-Content -LiteralPath "windows-diagnostics-raw/resume-$phase.result.json" -Raw -ErrorAction Stop | ConvertFrom-Json
             if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'FrozenRetirementResume' -or $result.phase -cne $phase -or $result.expectedGroups -ne $expected[$phase][0] -or $result.expectedExecutions -ne $expected[$phase][1] -or $result.completedGroups -ne $expected[$phase][0] -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Resumed phase missing, incomplete or failed: $phase" }

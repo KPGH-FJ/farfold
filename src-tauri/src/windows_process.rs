@@ -34,7 +34,7 @@ use windows_sys::Win32::System::Threading::{
 mod current_members;
 #[path = "windows_process/debug_certificate.rs"]
 mod debug_certificate;
-pub(crate) use debug_certificate::DEBUG_MEMBER_LIMIT;
+pub(crate) const DEBUG_MEMBER_LIMIT: usize = debug_certificate::DEBUG_MEMBER_LIMIT;
 #[path = "windows_process/stdout_handoff.rs"]
 pub(crate) mod stdout_handoff;
 

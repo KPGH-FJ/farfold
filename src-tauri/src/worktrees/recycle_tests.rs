@@ -33,7 +33,10 @@ pub(super) fn wait_with_timeout(
     }
 }
 pub(super) fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Location {
-    created_with_timeout(m, s, r, Duration::from_secs(20))
+    // Creation is setup for the later recovery assertions. Native Windows
+    // creation has completed after this old20s wait; don't abort setup early.
+    let timeout = Duration::from_secs(if cfg!(windows) { 60 } else { 20 });
+    created_with_timeout(m, s, r, timeout)
 }
 pub(super) fn created_with_timeout(
     m: &Worktrees,

@@ -99,8 +99,16 @@ impl DebugProcesses {
                 let mut raw = DEBUG_EVENT::default();
                 // Let the continued process hand off its next loader event
                 // before returning to the caller's regular polling interval.
+                #[cfg(test)]
+                let wait_started = std::time::Instant::now();
                 if unsafe { WaitForDebugEvent(&mut raw, 1) } == 0 {
                     let error = io::Error::last_os_error();
+                    #[cfg(test)]
+                    self.event_observation.native_wait(
+                        wait_started.elapsed(),
+                        error.raw_os_error() == Some(ERROR_SEM_TIMEOUT as i32),
+                        progressed,
+                    );
                     if error.raw_os_error() == Some(ERROR_SEM_TIMEOUT as i32) {
                         #[cfg(test)]
                         {
@@ -129,6 +137,8 @@ impl DebugProcesses {
                 }
                 #[cfg(test)]
                 {
+                    self.event_observation
+                        .native_wait(wait_started.elapsed(), false, progressed);
                     self.event_observation.event_received();
                 }
                 self.pending = Some(Event::new(raw));
@@ -249,7 +259,13 @@ impl DebugProcesses {
             "debugEventCount": events,
             "debugEmptyWaitCount": empty_waits,
             "debugProductivePassCount": productive_passes,
+            "debugNativeWait": self.event_observation.wait_observation(),
+            "debugCallerPollSleep": self.event_observation.poll_sleep_observation(),
         })
+    }
+    #[cfg(test)]
+    pub(super) fn observe_poll_sleep(&mut self, elapsed: std::time::Duration) {
+        self.event_observation.caller_poll_sleep(elapsed);
     }
     pub(super) fn confirmed(
         &self,

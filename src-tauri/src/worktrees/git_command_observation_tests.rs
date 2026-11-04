@@ -6,7 +6,7 @@ use std::{
         Arc,
         atomic::{AtomicU32, Ordering},
     },
-    time::Instant,
+    time::{Duration, Instant},
 };
 
 const CASE: &str =
@@ -18,6 +18,13 @@ pub(super) struct DebugEvents {
     received: u64,
     empty_waits: u64,
     productive_passes: u64,
+    native_wait_calls: u64,
+    native_wait_micros: u64,
+    timeout_wait_calls: u64,
+    timeout_wait_micros: u64,
+    idle_timeout_waits: u64,
+    caller_poll_sleep_calls: u64,
+    caller_poll_sleep_micros: u64,
 }
 impl DebugEvents {
     pub(super) fn event_received(&mut self) {
@@ -28,6 +35,41 @@ impl DebugEvents {
     }
     pub(super) fn productive_pass(&mut self) {
         self.productive_passes = self.productive_passes.saturating_add(1);
+    }
+    pub(super) fn native_wait(&mut self, elapsed: Duration, timed_out: bool, progressed: bool) {
+        let micros = elapsed.as_micros().min(u64::MAX as u128) as u64;
+        self.native_wait_calls = self.native_wait_calls.saturating_add(1);
+        self.native_wait_micros = self.native_wait_micros.saturating_add(micros);
+        if timed_out {
+            self.timeout_wait_calls = self.timeout_wait_calls.saturating_add(1);
+            self.timeout_wait_micros = self.timeout_wait_micros.saturating_add(micros);
+            if !progressed {
+                self.idle_timeout_waits = self.idle_timeout_waits.saturating_add(1);
+            }
+        }
+    }
+    pub(super) fn wait_observation(&self) -> serde_json::Value {
+        serde_json::json!({
+            "calls": self.native_wait_calls,
+            "wallMicros": self.native_wait_micros,
+            "timeoutCalls": self.timeout_wait_calls,
+            "timeoutWallMicros": self.timeout_wait_micros,
+            "timeoutWithoutProgress": self.idle_timeout_waits,
+            "scope": "test-only wall time around the original native wait; no new native query, sleep or process control"
+        })
+    }
+    pub(super) fn caller_poll_sleep(&mut self, elapsed: Duration) {
+        self.caller_poll_sleep_calls = self.caller_poll_sleep_calls.saturating_add(1);
+        self.caller_poll_sleep_micros = self
+            .caller_poll_sleep_micros
+            .saturating_add(elapsed.as_micros().min(u64::MAX as u128) as u64);
+    }
+    pub(super) fn poll_sleep_observation(&self) -> serde_json::Value {
+        serde_json::json!({
+            "calls": self.caller_poll_sleep_calls,
+            "wallMicros": self.caller_poll_sleep_micros,
+            "scope": "test-only wall time around ordinary execute-loop polling sleeps; cleanup and Drop sleeps are excluded"
+        })
     }
     pub(super) fn counts(&self) -> (u64, u64, u64) {
         (self.received, self.empty_waits, self.productive_passes)

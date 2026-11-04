@@ -385,7 +385,11 @@ fn execute_bounded(
                 }
                 if group_alive && stopped.is_none() {
                     if !debug_progress {
+                        #[cfg(test)]
+                        let sleep_started = Instant::now();
                         thread::sleep(Duration::from_millis(10));
+                        #[cfg(test)]
+                        child.debug.observe_poll_sleep(sleep_started.elapsed());
                     }
                     continue;
                 }
@@ -531,7 +535,11 @@ fn execute_bounded(
         if debug_progress {
             continue;
         }
+        #[cfg(all(windows, test))]
+        let sleep_started = Instant::now();
         thread::sleep(Duration::from_millis(10));
+        #[cfg(all(windows, test))]
+        child.debug.observe_poll_sleep(sleep_started.elapsed());
     }
 }
 fn stop_reason(
