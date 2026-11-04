@@ -1,0 +1,152 @@
+{
+  "attempts": {
+    "first": {
+      "databaseId": 41748652153,
+      "headSha": "60f85c2a2624eaf9634f5d892268b9461c0da53a",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41748652153",
+      "jobs": {
+        "frontend": "success",
+        "rust": "failure",
+        "verify": "failure",
+        "installer": "skipped"
+      },
+      "rustReachedTests": false,
+      "failure": "Windows all-target Clippy reported 15 unused legacy Unix helper functions"
+    },
+    "completedTests": {
+      "databaseId": 41750118511,
+      "headSha": "e02c543578571c9941bbb509bd6d654545a089da",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41750118511",
+      "jobs": {
+        "rust": "failure",
+        "frontend": "success",
+        "verify": "failure",
+        "installer": "skipped"
+      }
+    },
+    "overlappingMaterialCleanup": {
+      "databaseId": 41750703142,
+      "headSha": "ff6fbfaf6e900ef9204f122959bbf030bc412089",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41750703142",
+      "jobs": {
+        "frontend": "success",
+        "rust": "failure",
+        "verify": "failure",
+        "installer": "skipped"
+      },
+      "rustReachedTests": false,
+      "failure": "Windows material profile test still imports the removed content helper",
+      "revertedBy": "264826db0",
+      "testedSourceTreeRestored": true
+    }
+  },
+  "frontend": {
+    "filesPassed": 704,
+    "testsPassed": 9447,
+    "testsSkipped": 3,
+    "buildPassed": true
+  },
+  "rust": {
+    "passed": 2363,
+    "failed": 17,
+    "ignored": 72,
+    "durationSeconds": 2256.39,
+    "failedNames": [
+      "acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases",
+      "worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository",
+      "worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work",
+      "worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only",
+      "worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission",
+      "worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved",
+      "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts",
+      "worktrees::recover_tests::recover_keeps_private_ref_and_orphan_reflog_only_commits_offline",
+      "worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority",
+      "worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata",
+      "worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent",
+      "worktrees::remove_boundary_tests::remove_cold_contract_rejects_misaligned_recovery_and_duplicate_ids",
+      "worktrees::remove_boundary_tests::remove_cold_dispatched_record_survives_next_intent_and_reconciles_exact_absence",
+      "worktrees::remove_boundary_tests::remove_confirmation_rechecks_reflog_evidence_even_same_root_set",
+      "worktrees::remove_boundary_tests::remove_confirmation_rejects_corrupt_bundle_and_keeps_source",
+      "worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook",
+      "worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved"
+    ],
+    "originalFailuresStillFailed": [
+      "worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts"
+    ],
+    "originalFailureNamesNowPassing": [
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_approval",
+      "acp_client::event_transport_baseline_tests::real_stdio_tauri_callback_backlog_preserves_unknowns_and_stop",
+      "acp_client::history_search::tests::admission_tests::reviewed_codex_history_uses_fixed_read_pages_and_preserves_source_offsets",
+      "acp_client::process::startup_tests::spawn_failure_missing_program_records_os_error_and_own_file_limits",
+      "acp_client::process::startup_tests::startup_diagnostics_cancel_selected_after_spawn_failure_keeps_cancelled_outcome",
+      "acp_client::skill_management::mcp_add_tests::mcp_add_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "acp_client::skill_management::mcp_http_lifecycle_tests::mcp_http_cancel_after_write_keeps_real_worker_scope_and_budget_until_reaped",
+      "acp_client::skill_management::mcp_remove_tests::mcp_remove_cancel_after_write_retains_real_cleanup_and_shared_slot",
+      "file_delivery::tests::replaced_root_during_read_is_rejected",
+      "meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit",
+      "platform_tests::windows_conpty::actual_manager_with_valid_windows_python_is_bounded",
+      "platform_tests::windows_conpty::manager_cursor_no_reply_control_records_readiness_and_confirms_cleanup",
+      "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded",
+      "worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager",
+      "worktrees::manager::remove_recheck_tests::late_removal_verification_cannot_overwrite_newer_catalogue_or_another_operation",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_never_promotes_tampered_bundle_or_manifest",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_rejects_changed_proof_identity_or_older_revision_before_verification",
+      "worktrees::manager::remove_recheck_tests::removal_recheck_uses_newer_canonical_revision_without_accepting_stale_recovery_input",
+      "worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager",
+      "worktrees::recovery_ordinary_windows_tests::ordinary_public_backup_cold_recover_keeps_original_and_rechecks",
+      "worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material",
+      "worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories",
+      "worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects",
+      "worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent",
+      "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts"
+    ]
+  },
+  "worktreeFailureGroups": {
+    "removalVerifyingRecoveryNotDispatched": 10,
+    "createWaitOrUnknown": 5,
+    "archivePrepareFailed": 1
+  },
+  "selectedCases": {
+    "rawNoReplyConpty": {
+      "passed": true,
+      "noReplyWindowMs": 529,
+      "lateCleanupReplies": 1,
+      "internalEOF": "zero"
+    },
+    "gitDebuggerExactMembers": {
+      "passed": true,
+      "verifiedHandles": 4
+    },
+    "gitJobRecurrence": {
+      "createPhase": "materialize checkout profile capture-inputs",
+      "accountingActive": 1,
+      "assigned": 1,
+      "listed": 0,
+      "totalProcesses": 4,
+      "originalExitCode": 1,
+      "retirementConfirmed": false
+    },
+    "acpEOF": {
+      "passed": false,
+      "nearbyJobObservation": {
+        "accountingActive": 2,
+        "assigned": 2,
+        "listed": 1
+      },
+      "jobIdentityLinkedToFixture": false
+    }
+  },
+  "providerJobLogSha256": {
+    "full-rust-first.log": "a8c20f0165eda83ff25e59bfe2f22d88fcc25352912b9d809ad20e904d512b3e",
+    "full-rust-retry.log": "9f8048ca2e0e5a5cae5cbac45638eee5b8cb513c186ed01a25e958e30964bc97",
+    "full-rust-current.log": "b403677b978e9d1ba7b014a391f7383bf3c09c658ba4fa090677f052b15154c2",
+    "full-frontend-retry.log": "f52c66170390cc3c9e38d7cb8dfeb0830af0dab37f2b86e63e43865e8a132145"
+  },
+  "oldAgentRequestsResent": 0
+}

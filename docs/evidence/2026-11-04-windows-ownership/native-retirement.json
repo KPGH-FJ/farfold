@@ -1,0 +1,319 @@
+{
+  "nativeSelection": {
+    "runId": 41746879084,
+    "sourceCommit": "60f85c2a2624eaf9634f5d892268b9461c0da53a",
+    "artifactSha256": "60f049a09772d8a9207c5aad2d086e3db1c0e02fd58ccde1973a96eac5428c42",
+    "providerDigestMatched": true,
+    "artifactMembers": 21,
+    "nativeBuild": {
+      "buildSucceeded": true,
+      "runnerExitCode": 0,
+      "testBuildExit": 0,
+      "fixtureBuildExit": 0,
+      "failure": null
+    },
+    "groups": {
+      "conpty-no-reply-drain": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [
+          "platform_tests::windows_conpty::raw_conpty_draining_without_cursor_reply_is_bounded"
+        ],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 3.61s"
+        ],
+        "passed": true
+      },
+      "conpty-reply-after-job-end": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "platform_tests::windows_conpty::raw_conpty_reply_after_job_end_unblocks_retirement",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 3.08s"
+        ],
+        "passed": true
+      },
+      "git-exact-handle-control": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::git_exact_handle_tests::actual_git_job_observes_exact_launch_handle_across_exit",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 0.07s"
+        ],
+        "passed": true
+      },
+      "git-debugger-descendants": {
+        "receiptPresent": true,
+        "actualCases": [
+          {
+            "name": "windows_process::current_members::tests::git_exact_handle_tests::actual_git_job_debugger_observes_transient_descendant_handles",
+            "result": "ok"
+          }
+        ],
+        "originalFullFailureExactMatches": [],
+        "naturalExitCode": 0,
+        "summary": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2451 filtered out; finished in 0.08s"
+        ],
+        "passed": true
+      }
+    },
+    "sourceMapMatches": {
+      "exact": 1,
+      "checkoutCRLF": 841
+    }
+  },
+  "conptyNoReplyWindow": {
+    "case": "Drain",
+    "readyObserved": false,
+    "childReaped": true,
+    "jobInactive": true,
+    "cursorQueries": 1,
+    "cursorReplies": 0,
+    "closeReturned": false,
+    "rawEOFPending": true,
+    "observedMs": 500
+  },
+  "conptyAfterLateReply": {
+    "case": "Drain",
+    "lateCleanupReplies": 1,
+    "closeReturned": true,
+    "ptyEOF": "zero"
+  },
+  "conptyOuterOwner": {
+    "case": "Drain",
+    "terminated": false,
+    "deadlineReached": false,
+    "cancelRequested": false,
+    "invalidPipeObserved": false,
+    "inputFailedObserved": false,
+    "tryWaitErrorObserved": false,
+    "stdinWrittenAndClosed": true,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "stdoutFailed": false,
+    "stderrFailed": false,
+    "stdoutOverflow": false,
+    "stderrOverflow": false,
+    "childReaped": true,
+    "directJobInactive": true,
+    "elapsedMs": 3606,
+    "childExitCode": 0
+  },
+  "conptyReplyBeforeClose": {
+    "case": "ReplyAfterJobEnd",
+    "childReaped": true,
+    "jobInactive": true,
+    "cursorReplies": 1,
+    "ptyEOF": "zero"
+  },
+  "conptyReplyBeforeCloseOuterOwner": {
+    "case": "ReplyAfterJobEnd",
+    "terminated": false,
+    "deadlineReached": false,
+    "cancelRequested": false,
+    "invalidPipeObserved": false,
+    "inputFailedObserved": false,
+    "tryWaitErrorObserved": false,
+    "stdinWrittenAndClosed": true,
+    "stdoutEOF": true,
+    "stderrEOF": true,
+    "stdoutFailed": false,
+    "stderrFailed": false,
+    "stdoutOverflow": false,
+    "stderrOverflow": false,
+    "childReaped": true,
+    "directJobInactive": true
+  },
+  "gitOrdinaryControl": {
+    "fixedCommand": "hash-object --stdin --no-filters",
+    "detached": true,
+    "selectedAbsolutePathGitMayBeLauncher": true,
+    "topology": "original Job wrapper, extra test fixture, selected Git and any Git descendants",
+    "selectedHandleFromSpawn": true,
+    "selectedHandleBelongsToOriginalJob": true,
+    "before": {
+      "accountingBefore": 3,
+      "listedCount": 3,
+      "listError": null,
+      "accountingAfter": 3,
+      "totalProcesses": 3,
+      "helperWait": 258,
+      "gitWait": 258
+    },
+    "exitSamples": 6922,
+    "firstAssignedOneListedZero": null,
+    "bothHandlesSignaled": {
+      "accountingBefore": 1,
+      "listedCount": 1,
+      "listError": null,
+      "accountingAfter": 1,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": 0
+    },
+    "afterSelectedHandleRelease": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": null
+    },
+    "finalEmptyAccountingSample": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 5,
+      "helperWait": 0,
+      "gitWait": null
+    }
+  },
+  "gitDebuggerControl": {
+    "fixedCommand": "hash-object --stdin --no-filters",
+    "detached": true,
+    "debuggerChangesScheduling": true,
+    "selectedAbsolutePathGitMayBeLauncher": true,
+    "debugEvents": 103,
+    "knownOriginalMembers": 4,
+    "observedMemberCountMatchesJobTotal": true,
+    "members": [
+      {
+        "role": "originalWrapper",
+        "verifiedOriginalJob": true,
+        "exit": {
+          "debugExitCode": 0,
+          "beforeContinue": {
+            "accountingBefore": 1,
+            "listedCount": 1,
+            "listError": null,
+            "accountingAfter": 1,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          },
+          "afterContinue": {
+            "accountingBefore": 1,
+            "listedCount": 1,
+            "listError": null,
+            "accountingAfter": 1,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          }
+        },
+        "exactFinalWait": 0
+      },
+      {
+        "role": "selectedGit",
+        "verifiedOriginalJob": true,
+        "exit": {
+          "debugExitCode": 0,
+          "beforeContinue": {
+            "accountingBefore": 3,
+            "listedCount": 3,
+            "listError": null,
+            "accountingAfter": 3,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          },
+          "afterContinue": {
+            "accountingBefore": 3,
+            "listedCount": 3,
+            "listError": null,
+            "accountingAfter": 3,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          }
+        },
+        "exactFinalWait": 0
+      },
+      {
+        "role": "gitDescendant",
+        "verifiedOriginalJob": true,
+        "exit": {
+          "debugExitCode": 0,
+          "beforeContinue": {
+            "accountingBefore": 4,
+            "listedCount": 4,
+            "listError": null,
+            "accountingAfter": 4,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          },
+          "afterContinue": {
+            "accountingBefore": 4,
+            "listedCount": 4,
+            "listError": null,
+            "accountingAfter": 4,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          }
+        },
+        "exactFinalWait": 0
+      },
+      {
+        "role": "gitDescendant",
+        "verifiedOriginalJob": true,
+        "exit": {
+          "debugExitCode": 0,
+          "beforeContinue": {
+            "accountingBefore": 4,
+            "listedCount": 4,
+            "listError": null,
+            "accountingAfter": 4,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          },
+          "afterContinue": {
+            "accountingBefore": 4,
+            "listedCount": 4,
+            "listError": null,
+            "accountingAfter": 4,
+            "totalProcesses": 4,
+            "helperWait": 258,
+            "gitWait": 258
+          }
+        },
+        "exactFinalWait": 0
+      }
+    ],
+    "afterCreationHandleRelease": {
+      "accountingBefore": 0,
+      "listedCount": 0,
+      "listError": null,
+      "accountingAfter": 0,
+      "totalProcesses": 4,
+      "helperWait": 0,
+      "gitWait": null
+    }
+  },
+  "historicalGitMismatchEliminated": false,
+  "fullRunStarted": 41748652153,
+  "oldAgentRequestsResent": 0
+}
