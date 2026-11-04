@@ -21,7 +21,9 @@
     "formalResultsDocumentation": "7cc5b297d",
     "windowsFiveTestFixes": "0bfc79a46",
     "windowsFiveTestFixesRun": 41843965055,
-    "configRetrySource": "69e43d16d582841e71eab2a11ebb81ba9678831f"
+    "configRetrySource": "69e43d16d582841e71eab2a11ebb81ba9678831f",
+    "boundaryWaitsCandidate": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
+    "boundaryWaitsNativeRun": 41869099411
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -38,20 +40,21 @@
     "Fixed0bfc Windows41843965055 exact3groups5FQN naturally passed;849 source inputs bound LF/CRLF;4actual parent wrappers/completion markers and2tamper variants confirmed. Actual ordinary234.35s/tamper326.45s exceed old180/240 parent limits; only this5-case scope, not full suite.",
     "ARCH20 complete saved configuration retry implemented across4TS production and2Rust production sources; frontend final417 scoped and backend35 scoped passed with real RED/fixture evolution preserved. Independent review closed recategorized-ID and stale same-object feedback defects. Full707files9509frontend/Rust2339pass7ignored and all7natural0 passed;2369declared inputs equal before/after, no old-results reuse.",
     "Config retry source committed69e43d16d and Windows full41853291008 completed: frontend707files9506pass3skip; libtest2389pass2fail75ignored in3499.97s, no90min cap. Original17 now16pass1fail, one extra failure; full failure/installer skipped retained, not all-target success.",
-    "BoundaryWaits test-only candidate fc1c297a1: actual recover Windows60/Mac20, callback entry Windows60/Mac10, cancellation parent Windows240/Mac90; held10/finalwait20/all assertions/production unchanged. Same-binary Mac2 parents andfmt/onebuild/testsClippy passed; independent source+CI review passed."
+    "BoundaryWaits test-only candidate fc1c297a1: actual recover Windows60/Mac20, callback entry Windows60/Mac10, cancellation parent Windows240/Mac90; held10/finalwait20/all assertions/production unchanged. Same-binary Mac2 parents andfmt/onebuild/testsClippy passed; independent source+CI review passed.",
+    "Windows BoundaryWaits41869099411 fixedfc1c naturally2/2passed with original parent wrappers and assertions;849Git-bound inputs (846CRLF/3exact),4PSparses, real2child completion markers. No same-source newfull success or installer claim.",
+    "P11 bounded source review independently confirmed official Codex turn-level and Claude inclusive-message point APIs; current selected/runtime version unknown and no generic point guarantee from fork{}. No new UI; SDK candidate explicitly not_run because whole-module import effects not fully bounded.",
+    "Final stable Mac seven recorded fresh:707files9509frontend/Rust2339pass7ignored and all finalcommands0. Initial format failed onlystatus table spacing, corrected and format retried; other6fresh in same2369 declared-input interval;4deltas from earlier69 map."
   ],
   "active": [
-    "Unique Windows BoundaryWaits41869099411 runs on fixedfc1c297a1e191fa58b3b563874cf7bd8e6d446ba;1group2FQNs threads2 no outer--exact. Root watch held by unified exec session50998; no duplicate watch/dispatch.",
-    "source_review prepares public full41853291008 JSON/ZIP/README using complete original logs/physicalLF indexes; root updates status/plan/this continuation separately.",
-    "environment_review read-only checks P11 official historical-node fork surfaces and runtime exposure, no source/Agent/account/send actions.",
-    "Mac CUA remains locked as last observed. No fresh exit/binding/build/install for69/fc1c; sole formalAEB. Formal templates only static preparation."
+    "Root closes this stable common configuration/Windows fixture batch: exact evidence independent review, docscheck and commit/push. No running Cargo, ghwatch or native collector remains.",
+    "New common config final installation/UI is blocked by freshly rechecked locked Mac; onlyAEB remains formal. No normalexit/parameter binding/candidate build/install obtained.",
+    "P11 official interface evidence does not satisfy originalP11; safe selected interface/node semantics and actual branch/counterexamples remain open. No account/model/query/invalid-point probe."
   ],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "Finish exactWindows2native and retain rawbinding/cases/parents/natural exits, repair actual failures ifany. A targeted success does not convert fixed69full failure into a full success.",
-    "Commit current factual docs with151/oneplan checks when complete public evidence lands; protected unrelateddirtyJSON remains excluded.",
-    "New formal/UI evidence requires manual unlock, current normal save/exit/activity/data checks. P01/151/29x8/NEW24specific limits unchanged.",
-    "Continue next dependent common capabilities using P11 official evidence; do not emulate history with drafts or infer unknown extension support."
+    "Unlock is the next required external input for normal current-app save/exit, data/activity checks, single formal update and actual UI paths. Pending unlock question already asked; no repeated approval needed.",
+    "Windows69 complete failed result remains2389/2/75; laterfc1c2/2 is scoped only. Select later full-platform rerun at next dependent stable batch; do not mechanically relabel this as all0.",
+    "Continue soleplan common configuration/history, approvals/stop/recovery and official skill/MCP adoption/calls; P11/NEW24/P01/151/29x8 and specific account/system gaps persist."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -72,9 +75,9 @@
   "knownConfigRetryEvidence": {
     "frontendOriginalRed": "output/2026-11-04-config-save-retry/red/result.json",
     "backend": "output/2026-11-04-config-save-retry/backend/summary.json",
-    "currentHead": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
+    "currentHead": "ba010e452d72aa54c9449050413753eba175e9aa plus staged phase evidence; next commit to bind exact map",
     "currentFormalSource": "aeb0dc491",
     "originalRequestsResent": 0
   },
-  "updatedAtUtc": "2026-11-04T16:38:29.792343+00:00"
+  "updatedAtUtc": "2026-11-04T17:01:47.877535+00:00"
 }
