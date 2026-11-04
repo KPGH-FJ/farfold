@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T12:16:31.846369+00:00",
+  "updatedAt": "2026-11-04T13:02:14.670266+00:00",
   "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -11,7 +11,10 @@
     "windowsTargetedRun": 41824384963,
     "p01BridgeAndFormalRecord": "063dd128f",
     "windowsFullRun": 41827378725,
-    "windowsFullSource": "063dd128f"
+    "windowsFullSource": "063dd128f",
+    "windowsObserverAlias": "eeac890c3",
+    "windowsFullAfterAliasRun": 41830692244,
+    "windowsFullAfterAliasSource": "eeac890c3"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -23,14 +26,16 @@
     "Formal d314 location-only text fixture cold recovery, missing-file failure, original-byte restoration/recheck, exact owned attachment removal and another cold startup passed; original P02 and retained count1 preserved, zero sends."
   ],
   "active": [
-    "Windows targeted41824384963 exact10/10 natural0, including all9 prior failures; public source-bound receipts/ZIP complete. Full41827378725 from063dd128f dispatched once;source_review owns one watch and raw result analysis.",
-    "B3 root cause unresolved. Actual saved source is external official0.155.1 CLI, managed0.156.1 is not proof of that source. One version-only control succeeded in development shell; no further Agent retry, no environment/account/model changes."
+    "Windows full41830692244 remains fixedeeac890c3; Frontend natural success, Rust job still active at last event. source_review owns one watch and raw final analysis. New common open-error changes are not part of that source.",
+    "Common opening diagnostics 7 source files frozen: frontend related154 and backend18 passed; root independent review and cross-review passed. Genuine final seven results collected:705 frontend files9481 tests, Rust2339pass7ignored. Frontend-only unknown[] annotation typefix: frontend4 rerun, Rust3 reused on exact delta+TS emit equivalence, all2365 other inputs same; formal binder is being prepared to validate this scope explicitly.",
+    "Formal app d314 normally saved/exited; appPID7405 and GoosePID9722 absent/group empty at observation, no manual signals. Unsent16composers/11feedback/7queues hashes unchanged across normal exit. Fresh d314 five-file baseline exists. New formal tools remainUNBOUND awaiting actual final commit and engineering/UI aggregate."
   ],
   "formalPreparation": "Formal app source d31447be7, binary59dc8a5604d9841a3f0f4b88846cdac98c623ef85bd6780747400b7c81bee6d7; exact candidate duplicate removed; private formal receipts inoutput/2026-11-04-p01-draft-formal/formal.",
   "remaining": [
-    "Collect Windows full actual result, map original17 failure names individually and fix failures; do not infer from targeted10 or job colors.",
-    "P01 installed storage fault, remaining attachment types/queues and all wider original requirements remain open; existing plan is sole queue.",
-    "Preserve original unrelated debugger-system-native.json diff."
+    "Commit only common7 source+exact public evidence after current docs checkpoint, then bind actual source/evidence to prepared formal tools, build once and replace unique formalApp with retention checks.",
+    "After installation verify safe known initialization/open-result messages on actual interface as conditions permit; no root-cause/allAgent claim or resend.",
+    "Complete Windows actual full result, then validate new common wait/session change separately by affected native checks;do not mix sources.",
+    "Original P01 installed storage fault/other formats/queues, wider151 and29x8 remain open. Preserve original unrelated debugger JSON."
   ],
   "constraints": [
     "Single writable checkout.",

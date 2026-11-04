@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-11-04T12:30:39.320676+00:00",
+  "nativeFailure": {
+    "runId": 41827378725,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41827378725",
+    "sourceCommit": "063dd128f543e9a47c169b90bf3eeb889b21f8c7",
+    "jobId": 126565475329,
+    "completedJobConclusion": "failure",
+    "stage": "cargo clippy --locked --all-targets -- -D warnings",
+    "diagnostic": "acp_client/lifecycle.rs:213 clippy::type_complexity on cfg(all(test,windows)) retirement observer field",
+    "jobExitCode": 1,
+    "cargoTestExecuted": false,
+    "fixtureBuildExecuted": false,
+    "fullRunNotYetCompletedAtThisRecord": true,
+    "frontendStillInCheckFrontendStep": true,
+    "old17RustTestFailuresReplaced": false,
+    "rawJobLog": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-api.log",
+      "sha256": "299b5a64267e3877de0d4c9a01d79c8dd74d22926fc972a4948dcc433e86c3cc"
+    },
+    "directApiFetch": {
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-api-fetch.json",
+      "sha256": "94862500df6f0a81d5eb0382ecb95ad49911d3c596850b8bb52277c841931258"
+    },
+    "clientGuard": "Initial gh run view --job --log refused because the overall run was active; direct completed-job logs API then returnedHTTP200. This is not evidence that the completed-job API was unavailable."
+  },
+  "candidate": {
+    "file": "src-tauri/src/acp_client/lifecycle.rs",
+    "sha256": "8e3c919620ae9766b373aaf9be663d8f3bd7ed5e1f92c7627c28b1a06faee9a2",
+    "cfg": "all(test,windows)",
+    "change": "Name the unchanged inner Arc<dyn Fn(Value)+Send+Sync> type RetirementObserver; outer Arc<OnceLock<RetirementObserver>> keeps exactly the same type.",
+    "runtimeBehaviorOrRetirementProofChanged": false,
+    "lintAllowAddedToProductSource": false,
+    "formatAndDiffChecksPassed": true
+  },
+  "localCrossCheck": {
+    "result": {
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/result.json",
+      "sha256": "fb7f7b3fb8b273f241352dcdb380d8bdd175b20fa4c4b5d959352db7c97f37d7"
+    },
+    "naturalExitCode": 0,
+    "target": "x86_64-pc-windows-gnu",
+    "clippyWarningsDenied": true,
+    "sourceUnchanged": true,
+    "scope": "Compiler/Clippy probe of verbatim actual Windows cfg(test) observer alias and field declarations, alongside the actual debug/counter modules already used by this locked harness; remaining ConnectionLife fields and lifecycle behavior are not compiled here. No native or full-app claim.",
+    "verbatimCfgAlias": "#[cfg(all(test, windows))]\npub(super) type RetirementObserver = Arc<dyn Fn(serde_json::Value) + Send + Sync>;",
+    "verbatimCfgField": "    #[cfg(all(test, windows))]\n    pub(super) retirement_observer: Arc<std::sync::OnceLock<RetirementObserver>>,",
+    "fullLifecycleOrApplicationCompileClaimed": false,
+    "nativeRetestPassedClaimed": false,
+    "macFullRepeated": false
+  },
+  "originalFiles": [
+    {
+      "zipEntry": "cross/Cargo.toml",
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/Cargo.toml",
+      "sha256": "9d2303c6f37ea95866491fae02c9594032e7ad3452dddc5b07b17136021b6876"
+    },
+    {
+      "zipEntry": "cross/Cargo.lock",
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/Cargo.lock",
+      "sha256": "cf4cc26df28a63080cdff67f79334baeb60ae8cb9237282732c85b53f2ad88ef"
+    },
+    {
+      "zipEntry": "cross/src/lib.rs",
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/src/lib.rs",
+      "sha256": "8dca2994f07e227c4d677c82004ab32392c260a7dc066286a845fa2f0e45d998"
+    },
+    {
+      "zipEntry": "cross/clippy.log",
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/clippy.log",
+      "sha256": "c71a37c28be95a931a18f4a77fb583c4b8650350b933a61be5ad0e5088bb696f"
+    },
+    {
+      "zipEntry": "cross/result.json",
+      "path": "output/2026-11-04-windows-retirement-resume/lifecycle-observer-alias-cross/result.json",
+      "sha256": "fb7f7b3fb8b273f241352dcdb380d8bdd175b20fa4c4b5d959352db7c97f37d7"
+    },
+    {
+      "zipEntry": "completed-rust-job/rust-completed-job-api.log",
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-api.log",
+      "sha256": "299b5a64267e3877de0d4c9a01d79c8dd74d22926fc972a4948dcc433e86c3cc"
+    },
+    {
+      "zipEntry": "completed-rust-job/rust-completed-job-api-fetch.json",
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-api-fetch.json",
+      "sha256": "94862500df6f0a81d5eb0382ecb95ad49911d3c596850b8bb52277c841931258"
+    },
+    {
+      "zipEntry": "completed-rust-job/rust-completed-job-fetch.stderr.log",
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-fetch.stderr.log",
+      "sha256": "e3d8db2a9edf392f8b4e0a70a74fa51b325dbb8ccecb6df8c0b4d732ccbc7aa9"
+    },
+    {
+      "zipEntry": "completed-rust-job/rust-completed-job-fetch.json",
+      "path": "output/2026-11-04-windows-retirement-resume/full-run-41827378725/rust-completed-job-fetch.json",
+      "sha256": "13b5fe354dc6ff04117ae9b3a5047aeeb56c8b1f871fa449bbf185af9ba00e39"
+    }
+  ],
+  "originalsZip": {
+    "path": "docs/evidence/2026-11-04-windows-retirement-resume/lifecycle-observer-clippy-originals.zip",
+    "sha256": "82df84cf128414ce808a4404bf34704730419df6059ab6545c54db3afa892af1",
+    "entries": 9,
+    "bytes": 21320,
+    "allEntriesByteExact": true,
+    "targetsBinariesOtherRunsOrPrivateHttpHeadersIncluded": false
+  }
+}

@@ -33,7 +33,19 @@
       "scope": "Selected location-only text fixture in new-conversation draft; not Agent reading, all media, physical storage fault or other queued work."
     },
     "B3PostUpdateParagraphLengths": [187, 75, 32, 27],
-    "B3PostUpdateExactParagraphMatch": true
+    "B3PostUpdateExactParagraphMatch": true,
+    "QPostUpdate": {
+      "draftParagraphsObserved": 2,
+      "attachmentNameObserved": "embedded-04-original.txt",
+      "unsentFileFeedbackCount": 3,
+      "attachmentReviewRequired": true,
+      "sendDisabled": true,
+      "priorFullDraftByteComparisonPerformed": false,
+      "newSendActions": 0,
+      "oldRequestsResent": 0,
+      "officialRead": "Initialize succeeded in3.389s; six session/load updates then no end response within120s; transcript not loaded. Separate from Codex initialize timeout.",
+      "connectionOrProcessCleanupClaimed": false
+    }
   },
   "privateEvidence": {
     "installation": {
@@ -97,6 +109,10 @@
     "selectedCodexShellVersion": {
       "path": "output/2026-11-04-p01-draft-formal/diagnostics/selected-codex-version-shell-eg9u1mq0/result.json",
       "sha256": "51211b0e80b996e676e3235393eec1ecc152dc12e5fa5bc1431fbdd2da54b274"
+    },
+    "QPostUpdate": {
+      "path": "output/2026-11-04-p01-draft-formal/formal/ui/q-readback-and-startup-failure.json",
+      "sha256": "8f51c3b0a70b7c3decd539155c158f7b5b731000cafe09ae422eff89f3e5ff8a"
     }
   },
   "limits": [
