@@ -198,6 +198,9 @@ struct Activity {
     closing_history: Vec<super::history_admission::Permit>,
     detached_work: u64,
 }
+#[cfg(all(test, windows))]
+pub(super) type RetirementObserver = Arc<dyn Fn(serde_json::Value) + Send + Sync>;
+
 pub(crate) struct ConnectionLife {
     pub(super) routes: Arc<super::session_routes::Routes>,
     pub(super) ingress: super::ingress_permit::ConsumerProbe,
@@ -209,8 +212,7 @@ pub(crate) struct ConnectionLife {
     // Installed by one owned test before prompting. This carries values only;
     // it retains no Child, Job, handle, or production completion authority.
     #[cfg(all(test, windows))]
-    pub(super) retirement_observer:
-        Arc<std::sync::OnceLock<Arc<dyn Fn(serde_json::Value) + Send + Sync>>>,
+    pub(super) retirement_observer: Arc<std::sync::OnceLock<RetirementObserver>>,
 }
 impl ConnectionLife {
     pub fn retain_opening(&self, opening: OpenReservation) {
