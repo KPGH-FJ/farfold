@@ -244,7 +244,8 @@ fn existing_branch_and_checkout_transforms_modes_links_are_preserved() {
     );
     assert_eq!(op(m.prepare(&s, OP, args).unwrap()).state, "prepared");
     m.start(&s, OP).unwrap();
-    let result = wait(&m, &s);
+    let timeout = std::time::Duration::from_secs(if cfg!(windows) { 60 } else { 15 });
+    let result = wait_with_timeout(&m, &s, timeout);
     assert_eq!(result.state, "ready", "{result:?}");
     let p = PathBuf::from(result.location.unwrap().path);
     assert_eq!(fs::read(p.join("a.txt")).unwrap(), b"hello\r\nworld\r\n");

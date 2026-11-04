@@ -7,6 +7,7 @@ use windows_sys::Win32::{
 };
 
 #[test]
+#[ignore = "manual native challenge of a proposed historical-gap recovery rule"]
 fn native_zero_empty_window_never_precedes_untracked_exact_target_signal() {
     const TRIALS: usize = 16;
     const WINDOW: Duration = Duration::from_millis(500);

@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery')][string]$Cohort = 'LaunchPrerequisites'
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge')][string]$Cohort = 'LaunchPrerequisites'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -58,7 +58,11 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
   foreach ($test in $tests.GetEnumerator()) {
     @{ name = $test.Key; filter = $test.Value; exact = $true; names = @($test.Value) }
   }
-} elseif ($Cohort -ceq 'CreateEofRecovery') {
+} elseif ($Cohort -cin @('CreateEofRecovery', 'CreateEofChallenge')) {
+  if ($Cohort -ceq 'CreateEofChallenge') {
+    $test = 'windows_process::current_members::tests::gap_shadow_tests::native_zero_empty_window_never_precedes_untracked_exact_target_signal'
+    @{ name = 'job-gap-shadow-challenge'; filter = $test; exact = $true; names = @($test); ignored = $true }
+  }
   $tests = [ordered]@{
     'create-existing-branch' = 'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved'
     'acp-eof-retirement' = 'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
@@ -74,6 +78,13 @@ $groups = if ($Cohort -ceq 'RemoveFixtures') {
       'worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission',
       'worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved'
     )
+  }
+  if ($Cohort -ceq 'CreateEofChallenge') {
+    $parallel = @(
+      'worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved',
+      'acp_client::active_prompt_tests::real_stdio_eof_is_not_a_terminal_but_actual_reap_releases'
+    )
+    @{ name = 'create-eof-paired'; filter = $parallel; exact = $false; threads = 2; names = $parallel }
   }
   $archivePair = @(
     'worktrees::recycle::windows_tests::public_ordinary_archive_cold_restore_preserves_owned_objects_and_readable_metadata',
