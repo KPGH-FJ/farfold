@@ -48,7 +48,7 @@ pub(super) fn environment() -> Result<()> {
     }
     Ok(())
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 pub(super) fn command(root: &Path, args: &[&str]) -> Result<Command> {
     environment()?;
     if !cfg!(target_os = "macos") {

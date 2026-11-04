@@ -15,11 +15,13 @@ use super::{
 use serde::{Deserialize, Serialize};
 #[cfg(any(unix, test))]
 use sha2::{Digest, Sha256};
+#[cfg(unix)]
+use std::process::Command;
 use std::{
     collections::BTreeSet, fs, io::Write, path::Path, sync::atomic::AtomicBool, time::Duration,
 };
 #[cfg(any(unix, test))]
-use std::{fs::File, io::Read, process::Command};
+use std::{fs::File, io::Read};
 #[path = "recovery_artifact.rs"]
 mod artifact;
 #[path = "recovery_capture.rs"]
@@ -82,7 +84,7 @@ pub(super) struct SavedRecovery {
     )]
     pub windows_program_origin: Option<super::windows_offline_program::Origin>,
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
     let mut c = git::command(root, args)?;
     c.env("GIT_CONFIG_NOSYSTEM", "1")
@@ -90,7 +92,7 @@ fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
         .env("GIT_ATTR_NOSYSTEM", "1");
     Ok(c)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
     // MAX_ROOTS/MAX_OBJECTS with admitted SHA1/SHA256 OIDs fit the existing
     // output budget. This is not a new cap on user material or pack payload.
@@ -100,7 +102,7 @@ fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>>
     };
     run_input(c, input, cancel)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn run_input(c: Command, input: git::Input, cancel: &AtomicBool) -> Result<Vec<u8>> {
     let o = git::execute_command_input(c, input, cancel, COMMAND_TIME)?;
     if !o.success {
@@ -108,7 +110,7 @@ fn run_input(c: Command, input: git::Input, cancel: &AtomicBool) -> Result<Vec<u
     }
     Ok(o.bytes)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn private(
     root: &Path,
     args: &[&str],
@@ -117,11 +119,11 @@ fn private(
 ) -> Result<Vec<u8>> {
     run(private_command(root, args)?, bytes, cancel)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn text(bytes: Vec<u8>) -> Result<String> {
     String::from_utf8(bytes).map_err(|_| error("recoveryInvalid"))
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>> {
     let raw = text(run(c, Some(&roots.input()), cancel)?)?;
     let mut set = BTreeSet::new();
@@ -226,12 +228,12 @@ pub(super) fn capture(
         attributes,
     })
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn init(root: &Path, format: &str, bare: bool, cancel: &AtomicBool) -> Result<()> {
     fs::create_dir(root).map_err(|_| error("targetExists"))?;
     initialize(root, format, bare, cancel)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn initialize(root: &Path, format: &str, bare: bool, cancel: &AtomicBool) -> Result<()> {
     let flag = format!("--object-format={format}");
     let mut args = vec!["init", "--template=", flag.as_str()];
@@ -249,7 +251,7 @@ fn refs(m: &Manifest) -> Vec<(String, String)> {
         .map(|(i, oid)| (oid.clone(), format!("refs/heads/recovery/root-{i:04}")))
         .collect()
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn install_refs(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     for (oid, name) in refs(m) {
         private(root, &["update-ref", &name, &oid], None, cancel)?;
@@ -262,7 +264,7 @@ fn install_refs(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     private(root, &["symbolic-ref", "HEAD", &head], None, cancel)?;
     Ok(())
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn verify_objects(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     private(
         root,
@@ -289,7 +291,7 @@ fn verify_objects(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> 
     }
     Ok(())
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     let info = root.join(".git/info");
     fs::create_dir_all(&info).map_err(|_| error("unavailable"))?;
@@ -383,7 +385,7 @@ fn validate_profile(configs: &[String], attributes: &[u8]) -> Result<()> {
     }
     Ok(())
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 pub(super) fn recover_into(
     bundle: &Path,
     m: &Manifest,
@@ -414,7 +416,7 @@ pub(super) fn recover_reserved(
     initialize(target, &m.roots.format, false, cancel)?;
     populate(bundle, m, target, cancel)
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 fn populate(bundle: &Path, m: &Manifest, target: &Path, cancel: &AtomicBool) -> Result<()> {
     let bundle = bundle.to_str().ok_or(error("unsafePath"))?;
     private(target, &["bundle", "verify", bundle], None, cancel)?;
@@ -459,7 +461,7 @@ pub(super) fn expected_branch(m: &Manifest) -> Result<String> {
         .map(|(_, n)| n)
         .ok_or(error("recoveryInvalid"))
 }
-#[cfg(any(unix, test))]
+#[cfg(unix)]
 pub(super) fn verify_restored(target: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
     validate(m)?;
     if target.join(".git/objects/info/alternates").exists() || target.join(".git/shallow").exists()
