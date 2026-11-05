@@ -84,7 +84,7 @@ function Equal-Inputs($Left, $Right) {
   foreach ($key in $Left.Keys) { if (-not $Right.Contains($key) -or $Left[$key] -cne $Right[$key]) { return $false } }
   return $true
 }
-function Configuration {
+function Read-InstallConfiguration {
   $base = Get-Content -LiteralPath 'src-tauri/tauri.conf.json' -Raw | ConvertFrom-Json -AsHashtable
   $platform = Get-Content -LiteralPath 'src-tauri/tauri.windows.conf.json' -Raw | ConvertFrom-Json -AsHashtable
   $package = Get-Content -LiteralPath 'package.json' -Raw | ConvertFrom-Json -AsHashtable
@@ -118,7 +118,7 @@ if ($Phase -ceq 'Build') {
   try {
     $before = Source-Inputs
     Write-Record 'inputs-before.json' $before
-    $config = Configuration
+    $config = Read-InstallConfiguration
     & corepack pnpm tauri build --ci --no-sign --target x86_64-pc-windows-msvc --bundles nsis -- --locked 1> (Join-Path $raw 'build.stdout.log') 2> (Join-Path $raw 'build.stderr.log')
     $buildExit = [int]$LASTEXITCODE
     if ($buildExit -ne 0) { throw 'NSIS build did not return naturally with zero' }
@@ -263,7 +263,7 @@ $failure = $null; $fixtureProcess = $null; $sentinels = @(); $webBefore = $null
 $started = [DateTime]::UtcNow.ToString('o')
 try {
   Confirm-Selection
-  $config = Configuration
+  $config = Read-InstallConfiguration
   $taskRoot = Join-Path $env:RUNNER_TEMP ("farfold-install-$($env:GITHUB_RUN_ID)-$($env:GITHUB_RUN_ATTEMPT)-$([Guid]::NewGuid().ToString('N'))")
   $installDir = Join-Path $taskRoot 'app with spaces'; $fixtureDir = Join-Path $taskRoot 'fixture'; $fixtureExe = Join-Path $fixtureDir 'farfold.exe'
   $roaming = Join-Path ([Environment]::GetFolderPath('ApplicationData')) $config.identifier
