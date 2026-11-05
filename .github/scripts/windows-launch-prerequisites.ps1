@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $true)][ValidatePattern('^[0-9a-f]{40}$')][string]$ExpectedHead,
-  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics', 'McpScope')][string]$Cohort = 'LaunchPrerequisites',
+  [ValidateSet('LaunchPrerequisites', 'TransportTerminalFile', 'TransportOnly', 'TerminalClose', 'WorktreeRecovery', 'RetirementAndRemove', 'TerminalRetirementFix', 'RemoveRechecks', 'RemoveFixtures', 'RecoveryCancel', 'JobAccounting', 'AccessDiagnostics', 'GitJobWorktree', 'TerminalProbe', 'WorktreeWrapper', 'NativeRetirement', 'CreateEofRecovery', 'CreateEofChallenge', 'GitCompletionRecovery', 'FrozenRetirementResume', 'OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval')][string]$Cohort = 'LaunchPrerequisites',
   [ValidateSet('All', 'Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'Frontend', 'FullRunFailures', 'BoundaryWaits')][string]$Phase = 'All'
 )
 
@@ -31,8 +31,10 @@ function Confirm-Inputs {
       (Get-FileHash -LiteralPath $fixture -Algorithm SHA256).Hash -cne $selection.fixtureSha256) {
     throw 'Selected Windows test executable or fixture changed'
   }
-  if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope')) {
-    $frontendRequired = if ($Cohort -ceq 'McpScope') {
+  if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval')) {
+    $frontendRequired = if ($Cohort -ceq 'RecoveryApproval') {
+      @('src/runtime/permission_options.test.tsx', 'src/runtime/opening_permissions.test.ts', 'src/runtime/sessions.recovery-user-work.test.ts', 'src/components/Composer.send-ownership.test.tsx')
+    } elseif ($Cohort -ceq 'McpScope') {
       @('src/runtime/mcp_scope_refusal.wire.test.tsx', 'src/components/SkillChangeReview.mcp.test.tsx', 'src/runtime/draft_storage.queue-schema.test.ts', 'src/runtime/fixtures/mcp-scope-refusals-wire.json', 'src/components/SkillChangeReview.tsx')
     } else { @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx') }
     foreach ($required in $frontendRequired + @('package.json', 'pnpm-lock.yaml', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts', 'index.html')) {
@@ -40,7 +42,7 @@ function Confirm-Inputs {
     }
     foreach ($path in $sourceMap.Keys) {
       if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $sourceMap[$path]) {
-        $sourceLabel = if ($Cohort -ceq 'McpScope') { 'MCP' } else { 'open-failure' }
+        $sourceLabel = if ($Cohort -ceq 'RecoveryApproval') { 'recovery/approval' } elseif ($Cohort -ceq 'McpScope') { 'MCP' } else { 'open-failure' }
         throw "Selected $sourceLabel source changed: $path"
       }
     }
@@ -50,16 +52,18 @@ function Confirm-Inputs {
 Confirm-Inputs
 $allowedPhases = if ($Cohort -ceq 'FrozenRetirementResume') {
   @('Retirement', 'GitControls', 'CreateRecovery', 'CreateTiming', 'CreateUnfinished', 'Terminal', 'FullRunFailures', 'BoundaryWaits')
-} elseif ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope')) {
+} elseif ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval')) {
   @('All', 'Frontend')
 } else { @('All') }
 if ($Phase -cnotin $allowedPhases) {
   throw 'Selected cohort does not accept this diagnostic phase'
 }
-if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope') -and $Phase -ceq 'Frontend') {
-  $receiptPrefix = if ($Cohort -ceq 'McpScope') { 'mcp-scope' } else { 'open-failure' }
-  $expectedFrontendTests = if ($Cohort -ceq 'McpScope') { 15 } else { 51 }
-  $testFiles = if ($Cohort -ceq 'McpScope') {
+if ($Cohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval') -and $Phase -ceq 'Frontend') {
+  $receiptPrefix = if ($Cohort -ceq 'RecoveryApproval') { 'recovery-approval' } elseif ($Cohort -ceq 'McpScope') { 'mcp-scope' } else { 'open-failure' }
+  $expectedFrontendTests = if ($Cohort -ceq 'RecoveryApproval') { 28 } elseif ($Cohort -ceq 'McpScope') { 15 } else { 51 }
+  $testFiles = if ($Cohort -ceq 'RecoveryApproval') {
+    @('src/runtime/permission_options.test.tsx', 'src/runtime/opening_permissions.test.ts', 'src/runtime/sessions.recovery-user-work.test.ts', 'src/components/Composer.send-ownership.test.tsx')
+  } elseif ($Cohort -ceq 'McpScope') {
     @('src/runtime/mcp_scope_refusal.wire.test.tsx', 'src/components/SkillChangeReview.mcp.test.tsx', 'src/runtime/draft_storage.queue-schema.test.ts')
   } else { @('src/runtime/ui_error.test.ts', 'src/components/ThreadView.history-recovery.test.tsx') }
   $reportPath = Join-Path $raw ($receiptPrefix + '-frontend.vitest.json')
@@ -151,6 +155,14 @@ $groups = if ($Cohort -ceq 'McpScope') {
       'acp_client::skill_management::mcp_tests::mcp_postget_filter_drift_cannot_verify_the_reviewed_target',
       'acp_client::skill_management::mcp_tests::mcp_http_profile_literal_names_default_enabled_and_unrelated_values_are_preserved',
       'acp_client::skill_management::mcp_tests::mcp_initial_user_and_reported_enabled_mismatch_cannot_issue_a_plan'
+    )
+  }
+} elseif ($Cohort -ceq 'RecoveryApproval') {
+  @{
+    name = 'recovery-approval-worker'; filter = 'acp_client::permission_request_tests::'; exact = $false; threads = 1
+    names = @(
+      'acp_client::permission_request_tests::permission_request_preserves_full_params_and_compatibility_fields',
+      'acp_client::permission_request_tests::ambiguous_permission_option_cannot_consume_the_original_responder'
     )
   }
 } elseif ($Cohort -ceq 'OpenFailureDiagnostics') {
@@ -637,6 +649,58 @@ if ($Cohort -ceq 'McpScope') {
   }
   if (-not $listPassed) { throw 'Selected MCP list failed; raw list receipt retained' }
 }
+if ($Cohort -ceq 'RecoveryApproval') {
+  $expectedGroups = 1
+  $expectedExecutions = 2
+  $expectedNames = @($groups | ForEach-Object { $_.names })
+  if (@($groups).Count -ne 1 -or $expectedNames.Count -ne 2 -or @($expectedNames | Sort-Object -Unique).Count -ne 2) { throw 'Selected recovery/approval native cohort incomplete' }
+  $listArgs = @('acp_client::permission_request_tests::', '--list', '--color=never')
+  $listStdout = Join-Path $raw 'recovery-approval-list.stdout.log'
+  $listStderr = Join-Path $raw 'recovery-approval-list.stderr.log'
+  $listStarted = [DateTime]::UtcNow.ToString('o')
+  $listExit = $null
+  $actualNames = @()
+  $exactNames = $false
+  $listPassed = $false
+  $listStable = $false
+  $listFailure = $null
+  try {
+    Confirm-Inputs
+    & $binary @listArgs 1> $listStdout 2> $listStderr
+    $listExit = [int]$LASTEXITCODE
+    $listText = [IO.File]::ReadAllText($listStdout)
+    $actualNames = @([regex]::Matches($listText, '(?m)^(?<name>\S+): test\r?$') | ForEach-Object { $_.Groups['name'].Value })
+    $exactNames = $actualNames.Count -eq 2 -and @($actualNames | Sort-Object -Unique).Count -eq 2 -and
+      @($expectedNames | Where-Object { $_ -cnotin $actualNames }).Count -eq 0
+    $listPassed = $listExit -eq 0 -and $exactNames -and $listText -match '(?m)^2 tests, 0 benchmarks\r?$'
+    if (-not $listPassed) { throw 'Selected recovery/approval list did not return exactly the expected 2 native tests' }
+  } catch {
+    $listFailure = $_.Exception.Message
+    $listPassed = $false
+  } finally {
+    try { Confirm-Inputs; $listStable = $true } catch { $listFailure = $_.Exception.Message; $listPassed = $false }
+    $listHashes = [ordered]@{}
+    foreach ($path in @($listStdout, $listStderr)) {
+      if (Test-Path -LiteralPath $path -PathType Leaf) {
+        $listHashes[[IO.Path]::GetFileName($path)] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        Get-Content -LiteralPath $path
+      }
+    }
+    $listRunnerExit = if ($listPassed) { 0 } else { 1 }
+    [ordered]@{
+      sourceHead = $ExpectedHead; cohort = $Cohort; phase = 'List'; argv = $listArgs
+      startedAtUtc = $listStarted; finishedAtUtc = [DateTime]::UtcNow.ToString('o')
+      naturalExitCode = $listExit; expectedNames = $expectedNames; actualNames = $actualNames; exactNames = $exactNames
+      allReturned = $null -ne $listExit; exactAllPassed = $listPassed; sourceInputsStable = $listStable
+      failure = $listFailure; runnerExitCode = $listRunnerExit; rawFileSha256 = $listHashes
+      selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+      inputsAfterSha256 = $selection.inputsAfterSha256
+      testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+      productOrAllWindowsComplete = $false
+    } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'recovery-approval-List.result.json') -Encoding utf8
+  }
+  if (-not $listPassed) { throw 'Selected recovery/approval list failed; raw list receipt retained' }
+}
 $failures = @()
 $completedGroups = @()
 foreach ($group in $groups) {
@@ -730,6 +794,21 @@ if ($Cohort -ceq 'McpScope') {
     listResultSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'mcp-scope-List.result.json') -Algorithm SHA256).Hash
     sourceInputsStable = $true; productOrAllWindowsComplete = $false
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'mcp-scope-All.result.json') -Encoding utf8
+}
+if ($Cohort -ceq 'RecoveryApproval') {
+  Confirm-Inputs
+  [ordered]@{
+    sourceHead = $ExpectedHead; cohort = $Cohort; phase = $Phase
+    expectedGroups = $expectedGroups; expectedExecutions = $expectedExecutions
+    completedGroups = $completedGroups.Count; groups = $completedGroups
+    allReturned = $completedGroups.Count -eq $expectedGroups
+    exactAllPassed = $completedGroups.Count -eq $expectedGroups -and $failures.Count -eq 0
+    testBinarySha256 = $selection.testBinarySha256; fixtureSha256 = $selection.fixtureSha256
+    selectionSha256 = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+    inputsAfterSha256 = $selection.inputsAfterSha256
+    listResultSha256 = (Get-FileHash -LiteralPath (Join-Path $raw 'recovery-approval-List.result.json') -Algorithm SHA256).Hash
+    sourceInputsStable = $true; productOrAllWindowsComplete = $false
+  } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $raw 'recovery-approval-All.result.json') -Encoding utf8
 }
 if ($failures.Count -gt 0) {
   throw ('Selected checks did not pass: ' + ($failures -join ', '))

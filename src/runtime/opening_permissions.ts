@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type { PendingPermission, ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
+import { selectablePermissionOption } from "./permission_options";
 
 export interface OpeningPermission extends PendingPermission {
   owner: Record<string, unknown>;
@@ -150,6 +151,7 @@ export class OpeningPermissions {
       option = p.options.find((o) => o.optionId === optionId);
     if (
       !option ||
+      !selectablePermissionOption(p.options, option) ||
       !entry.ports.canSubmit() ||
       p.status !== "pending" ||
       p.decision

@@ -32,6 +32,7 @@ on:
             FrozenRetirementResume,
             OpenFailureDiagnostics,
             McpScope,
+            RecoveryApproval,
           ]
       resume_scope:
         description: Scope within FrozenRetirementResume only
@@ -73,11 +74,11 @@ jobs:
           & $fixturePython -c "import sys; assert sys.version_info >= (3, 9); print(sys.version)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' || inputs.cohort == 'McpScope' }}
+        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' || inputs.cohort == 'McpScope' || inputs.cohort == 'RecoveryApproval' }}
         with:
           node-version: 22.22.3
       - name: Prepare selected frontend dependencies
-        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' || inputs.cohort == 'McpScope' }}
+        if: ${{ inputs.cohort == 'OpenFailureDiagnostics' || inputs.cohort == 'McpScope' || inputs.cohort == 'RecoveryApproval' }}
         timeout-minutes: 7
         run: |
           corepack enable
@@ -102,6 +103,11 @@ jobs:
         timeout-minutes: 5
         continue-on-error: true
         run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort McpScope -Phase Frontend
+      - name: Check selected types and exact recovery and approval frontend tests
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'RecoveryApproval' }}
+        timeout-minutes: 5
+        continue-on-error: true
+        run: ./.github/scripts/windows-launch-prerequisites.ps1 -ExpectedHead '${{ github.sha }}' -Cohort RecoveryApproval -Phase Frontend
       - name: Run the selected native test cohort
         if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort != 'FrozenRetirementResume' && inputs.cohort != 'OpenFailureDiagnostics' }}
         timeout-minutes: ${{ inputs.cohort == 'GitCompletionRecovery' && 20 || (inputs.cohort == 'RemoveRechecks' || inputs.cohort == 'CreateEofRecovery' || inputs.cohort == 'CreateEofChallenge') && 14 || 8 }}
@@ -144,6 +150,25 @@ jobs:
             if ($phase -ceq 'All') {
               $listHash = (Get-FileHash -LiteralPath 'windows-diagnostics-raw/mcp-scope-List.result.json' -Algorithm SHA256).Hash
               if ($result.expectedGroups -ne 1 -or $result.completedGroups -ne 1 -or $result.expectedExecutions -ne 18 -or $result.groups.Count -ne 1 -or $result.groups[0].expectedTests -ne 18 -or $result.groups[0].naturalExitCode -ne 0 -or $result.groups[0].passed -ne $true -or $result.listResultSha256 -cne $listHash) { throw 'Selected MCP native cases did not execute exactly and pass' }
+            }
+          }
+      - name: Require exact selected recovery/approval list, frontend and native receipts
+        if: ${{ always() && steps.selected_build.outcome == 'success' && inputs.cohort == 'RecoveryApproval' }}
+        timeout-minutes: 1
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $selectionPath = 'windows-diagnostics-raw/build-selection.json'
+          $selection = Get-Content -LiteralPath $selectionPath -Raw | ConvertFrom-Json
+          $selectionHash = (Get-FileHash -LiteralPath $selectionPath -Algorithm SHA256).Hash
+          foreach ($phase in @('List', 'Frontend', 'All')) {
+            $resultPath = "windows-diagnostics-raw/recovery-approval-$phase.result.json"
+            $result = Get-Content -LiteralPath $resultPath -Raw -ErrorAction Stop | ConvertFrom-Json
+            if ($result.sourceHead -cne '${{ github.sha }}' -or $result.cohort -cne 'RecoveryApproval' -or $result.phase -cne $phase -or $result.allReturned -ne $true -or $result.exactAllPassed -ne $true -or $result.sourceInputsStable -ne $true -or $result.selectionSha256 -cne $selectionHash -or $result.inputsAfterSha256 -cne $selection.inputsAfterSha256 -or $result.testBinarySha256 -cne $selection.testBinarySha256 -or $result.fixtureSha256 -cne $selection.fixtureSha256) { throw "Selected recovery/approval phase missing, incomplete or failed: $phase" }
+            if ($phase -ceq 'List' -and ($result.naturalExitCode -ne 0 -or $result.runnerExitCode -ne 0 -or $result.expectedNames.Count -ne 2 -or $result.actualNames.Count -ne 2 -or $result.exactNames -ne $true)) { throw 'Selected recovery/approval native list did not match the exact 2 tests' }
+            if ($phase -ceq 'Frontend' -and ($result.typecheckNaturalExitCode -ne 0 -or $result.testNaturalExitCode -ne 0 -or $result.runnerExitCode -ne 0 -or $result.expectedTests -ne 28 -or $result.actualTests -ne 28 -or $result.expectedFiles.Count -ne 4 -or $result.actualFiles.Count -ne 4 -or $result.exactFiles -ne $true)) { throw 'Selected shared frontend did not execute exactly and pass' }
+            if ($phase -ceq 'All') {
+              $listHash = (Get-FileHash -LiteralPath 'windows-diagnostics-raw/recovery-approval-List.result.json' -Algorithm SHA256).Hash
+              if ($result.expectedGroups -ne 1 -or $result.completedGroups -ne 1 -or $result.expectedExecutions -ne 2 -or $result.groups.Count -ne 1 -or $result.groups[0].expectedTests -ne 2 -or $result.groups[0].naturalExitCode -ne 0 -or $result.groups[0].passed -ne $true -or $result.listResultSha256 -cne $listHash) { throw 'Selected recovery/approval native cases did not execute exactly and pass' }
             }
           }
       - name: Frozen candidate retirement proof and original EOF controls

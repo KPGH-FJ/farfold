@@ -900,7 +900,8 @@ export function applyPermissionRequest(
   }
   const options: PermissionOption[] = Array.isArray(event.options)
     ? (event.options as Record<string, unknown>[]).map((o) => ({
-        optionId: String(o?.optionId ?? ""),
+        optionId: typeof o?.optionId === "string" ? o.optionId : "",
+        ...(typeof o?.optionId === "string" ? {} : { invalidId: true }),
         name: String(o?.name ?? o?.optionId ?? ""),
         kind: String(o?.kind ?? ""),
       }))

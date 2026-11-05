@@ -5,6 +5,7 @@ import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { useComposerSourceError } from "./useComposerSourceError";
+import { beginComposerPendingSend } from "./composer_pending_send";
 import { ThreadUsage } from "./ThreadUsage";
 import {
   ComposerTemplateActions,
@@ -565,6 +566,7 @@ export function Composer({
     let submitted = input;
     const targetKey = storageKey;
     const targetErrorContext = errorContext;
+    let releasePending = () => {};
     try {
       await draftPersistence.flush();
       const prepared = await prepareDraftAttachments(
@@ -581,11 +583,7 @@ export function Composer({
         thread?.connectionOutcomeUnknown
       )
         return;
-      if (!queueEditing)
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: true,
-        }));
+      if (!queueEditing) releasePending = beginComposerPendingSend(targetKey);
       submitted = composerDrafts.read(targetKey);
       await draftPersistence.flush();
       let sent: void | boolean = true;
@@ -597,25 +595,11 @@ export function Composer({
       // `false` means the send did not happen (e.g. waiting on a folder
       // choice): keep the draft instead of treating it as delivered.
       if (sent !== false) composerDrafts.clearIfUnchanged(targetKey, submitted);
-      if (
-        composerDrafts.read(targetKey).sendPending &&
-        !composerDrafts.read(targetKey).pendingConversation
-      )
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: false,
-        }));
+      releasePending();
       await draftPersistence.flush();
       requestAnimationFrame(autogrow);
     } catch (error) {
-      if (
-        composerDrafts.read(targetKey).sendPending &&
-        !composerDrafts.read(targetKey).pendingConversation
-      )
-        composerDrafts.update(targetKey, (draft) => ({
-          ...draft,
-          sendPending: false,
-        }));
+      releasePending();
       if (
         liveKey.current === targetKey &&
         liveErrorContext.current === targetErrorContext

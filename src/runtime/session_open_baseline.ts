@@ -42,6 +42,7 @@ export class OpeningBaseline {
   private originalQueue?: ThreadState["queued"];
   private originalMembers: ThreadState["queued"] = [];
   private initialPause: QueuePause = null;
+  private initialWorkPauseRevision = 0;
   private initialUncertain: ThreadState["uncertainPrompt"] = null;
   private firstTitle?: string;
   private lastOptions?: { options: ConfigOptionView[]; modern: boolean };
@@ -88,6 +89,9 @@ export class OpeningBaseline {
     this.originalMembers = this.state.queued.slice();
     this.state.queued = this.state.queued.slice();
     this.initialPause = this.state.queuePaused;
+    this.initialWorkPauseRevision = this.existing
+      ? configurationPauseRevision(this.existing)
+      : 0;
     this.initialUncertain = this.state.uncertainPrompt;
     if (this.lastPause) {
       pauseQueue(this.state, this.lastPause.reason);
@@ -254,6 +258,36 @@ export class OpeningBaseline {
         if (removed.has(this.originalQueue[index]))
           this.originalQueue.splice(index, 1);
       state.queued = this.originalQueue;
+    }
+    if (this.existing) {
+      // History owns the returned configuration, not later user work choices.
+      // Keeping or discarding a retry copy never settles its external outcome.
+      state.workEnabled = this.existing.workEnabled;
+      if (
+        this.initialUncertain &&
+        state.uncertainPrompt === this.initialUncertain &&
+        this.existing.uncertainPrompt === null &&
+        !this.existing.queued.includes(this.initialUncertain)
+      )
+        state.uncertainPrompt = null;
+      if (
+        this.existing.queuePaused !== null &&
+        configurationPauseRevision(this.existing) !==
+          this.initialWorkPauseRevision
+      ) {
+        const pause = this.existing.queuePaused;
+        // A confirmed historical end can clear the old unknown copy while a
+        // user edits later work. Keep that edit paused without reviving unknown.
+        pauseQueue(
+          state,
+          pause === "uncertain" &&
+            !state.uncertainPrompt &&
+            !state.connectionOutcomeUnknown &&
+            !state.stopUnconfirmed
+            ? "stopped"
+            : pause,
+        );
+      }
     }
     this.accepted = true;
     return state;

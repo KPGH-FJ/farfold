@@ -187,6 +187,8 @@ export interface ConfigOptionView {
 
 export interface PermissionOption {
   optionId: string;
+  /** Malformed wire IDs remain visible but cannot become a different choice. */
+  invalidId?: boolean;
   name: string;
   /** `allow_once` | `allow_always` | `reject_once` | `reject_always`. */
   kind: string;

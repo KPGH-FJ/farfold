@@ -1,4 +1,5 @@
 import { usesMacShortcuts } from "../runtime/platform_shortcuts";
+import { selectablePermissionOption } from "../runtime/permission_options";
 import {
   compareLines,
   comparisonFor,
@@ -659,16 +660,21 @@ export function ApprovalCard({
       <div className="ap-title">{title || STRINGS.thread.permissionOther}</div>
       <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>
       <ToolInput input={rawInput} showMissing />
+      {options.some(
+        (option) => !selectablePermissionOption(options, option),
+      ) && <p role="status">{STRINGS.thread.permissionOptionsUnavailable}</p>}
       <div className="ap-actions">
-        {ordered.map((option) => {
+        {ordered.map((option, index) => {
           const kbd = optionKbd(option);
           const label = optionLabel(option);
           return (
             <button
-              key={option.optionId}
+              key={`${index}:${option.optionId}`}
               type="button"
               className={optionClass(option)}
-              disabled={disabled}
+              disabled={
+                disabled || !selectablePermissionOption(options, option)
+              }
               onClick={() => onPick(option)}
             >
               <span>{label}</span>

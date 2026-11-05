@@ -28,6 +28,25 @@ async fn permission_request_preserves_full_params_and_compatibility_fields() {
         "_meta": {"futureRootField": {"nested": [null, false, "untouched"]}},
         "futureRootField": {"arbitrary": ["unchanged", 23]}
     });
+    exercise_request(request, "yes", &[]).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn ambiguous_permission_option_cannot_consume_the_original_responder() {
+    let request = json!({
+        "sessionId": "fixture-session",
+        "toolCall": {"toolCallId": "ambiguous", "title": "Fixture only", "kind": "execute"},
+        "options": [
+            {"optionId": "same", "name": "Allow", "kind": "allow_once"},
+            {"optionId": "same", "name": "Reject", "kind": "reject_once"},
+            {"optionId": "safe", "name": "Separate rejection", "kind": "reject_once"}
+        ],
+        "_meta": {"opaque": [null, "unchanged"]}
+    });
+    exercise_request(request, "safe", &["same", "same"]).await;
+}
+
+async fn exercise_request(request: Value, selected: &str, blocked: &[&str]) {
     let dir = tempfile::tempdir().unwrap();
     let script = dir.path().join("permission.py");
     std::fs::write(
@@ -46,10 +65,11 @@ for line in sys.stdin:
   prompt=m
   send({'id':100,'method':'session/request_permission','params':permission})
  elif method is None and m.get('id')==100:
-  assert m['result']['outcome']['optionId']=='yes'
+  assert m['result']['outcome']['optionId']=='__SELECTED__'
   reply(prompt,{'stopReason':'end_turn'})
 "#
-        .replace("__REQUEST__", &request.to_string()),
+        .replace("__REQUEST__", &request.to_string())
+        .replace("__SELECTED__", selected),
     )
     .unwrap();
     let cwd = dir.path().canonicalize().unwrap();
@@ -108,7 +128,7 @@ for line in sys.stdin:
         manager
             .permission_respond_owned(
                 event["requestId"].as_str().unwrap(),
-                Some("yes"),
+                Some(selected),
                 None,
                 Some(&foreign_owner),
             )
@@ -116,11 +136,26 @@ for line in sys.stdin:
             .status,
         "expired"
     );
+    for option in blocked {
+        assert_eq!(
+            manager
+                .permission_respond_owned(
+                    event["requestId"].as_str().unwrap(),
+                    Some(option),
+                    None,
+                    Some(owner),
+                )
+                .unwrap()
+                .status,
+            "retryable"
+        );
+        assert_eq!(manager.pending_permissions.lock().unwrap().len(), 1);
+    }
     assert_eq!(
         manager
             .permission_respond_owned(
                 event["requestId"].as_str().unwrap(),
-                Some("yes"),
+                Some(selected),
                 None,
                 Some(owner),
             )

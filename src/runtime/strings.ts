@@ -457,6 +457,8 @@ export const STRINGS = {
     permissionInputMissing: "Agent 未提供本次操作的输入详情",
     permissionEdit: "写入文件",
     permissionOther: "操作请求",
+    permissionOptionsUnavailable:
+      "审批选项的标识重复或无效，相关选项暂不可用。",
     secondsLeft: (n: number) => `${n}s`,
   },
   artifacts: {

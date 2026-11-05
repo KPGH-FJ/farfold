@@ -13,7 +13,7 @@ $raw = Join-Path $PWD 'windows-diagnostics-raw'
 New-Item -ItemType Directory -Path $raw -ErrorAction Stop | Out-Null
 $workflow = if ($Scope -ceq 'LaunchPrerequisites') { '.github/workflows/windows-launch-prerequisites.yml' } else { '.github/workflows/windows-diagnostics.yml' }
 $inputScopes = @('src-tauri/src', 'src-tauri/native', 'src-tauri/examples', 'src-tauri/Cargo.toml', 'src-tauri/Cargo.lock', 'src-tauri/build.rs', 'src-tauri/*.json', 'src-tauri/*.manifest', '.github/scripts', $workflow)
-if ($Scope -ceq 'LaunchPrerequisites' -and $SelectedCohort -cin @('OpenFailureDiagnostics', 'McpScope')) {
+if ($Scope -ceq 'LaunchPrerequisites' -and $SelectedCohort -cin @('OpenFailureDiagnostics', 'McpScope', 'RecoveryApproval')) {
   $inputScopes += @('src', 'package.json', 'pnpm-lock.yaml', 'tsconfig*.json', 'vite.config.ts', 'vitest.config.ts', 'index.html')
 }
 $requiredScripts = @('.github/scripts/windows-selected-build.ps1', '.github/scripts/windows-stdio-eof.ps1', '.github/scripts/windows-stdout-controls.ps1')

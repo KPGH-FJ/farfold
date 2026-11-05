@@ -146,6 +146,37 @@ it("only sends an explicit original option once and preserves uncertain outcomes
   ]);
 });
 
+it("keeps ambiguous opening choices pending while allowing a separate exact option", async () => {
+  vi.useFakeTimers();
+  const value = owner();
+  const event = {
+    ...permission,
+    options: [
+      { optionId: "same", name: "Allow", kind: "allow_once" },
+      { optionId: "same", name: "Reject", kind: "reject_once" },
+      { optionId: "safe", name: "Separate rejection", kind: "reject_once" },
+    ],
+  };
+  value.receive(event);
+  const original = value.snapshot().permissions[0];
+  value.decidePermission(permission.requestId, "same");
+  await vi.runAllTimersAsync();
+  expect(h.invoke).not.toHaveBeenCalled();
+  expect(original.decision).toBeNull();
+  expect(value.snapshot().permissions).toEqual([original]);
+  value.decidePermission(permission.requestId, "safe");
+  await vi.runAllTimersAsync();
+  expect(h.invoke).toHaveBeenCalledExactlyOnceWith(
+    "session_permission_respond",
+    {
+      requestId: permission.requestId,
+      requestOwner: permission.owner,
+      sessionId: "loading-session",
+      optionId: "safe",
+    },
+  );
+});
+
 it("keeps the common remember undo window and does not submit an aborted caller's queued choice", async () => {
   vi.useFakeTimers();
   const abort = new AbortController();

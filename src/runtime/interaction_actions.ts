@@ -11,6 +11,7 @@ import {
 } from "./session_projection";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
+import { selectablePermissionOption } from "./permission_options";
 
 interface InteractionReply {
   status: "submitted" | "retryable" | "expired" | "uncertain";
@@ -97,7 +98,10 @@ export class InteractionActions {
       !p ||
       p.status !== "pending" ||
       p.decision ||
-      !p.options.some((o) => o.optionId === optionId)
+      !p.options.some(
+        (o) =>
+          o.optionId === optionId && selectablePermissionOption(p.options, o),
+      )
     )
       return;
     const decision = { optionId, label, allow, undoable: remember };

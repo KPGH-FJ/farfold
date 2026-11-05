@@ -1296,10 +1296,17 @@ impl AcpManager {
             pending.remove(request_id);
             return Ok(InteractionReply::new("expired", None));
         }
-        if option_id.is_some_and(|option| !request.options.iter().any(|id| id == option)) {
+        if option_id.is_some_and(|option| {
+            request
+                .options
+                .iter()
+                .filter(|id| id.as_str() == option)
+                .count()
+                != 1
+        }) {
             return Ok(InteractionReply::new(
                 "retryable",
-                Some("审批选项无效，请重新选择"),
+                Some("审批选项的标识重复或无效，请重新选择"),
             ));
         }
         let Some(responder) = request.responder.take() else {
