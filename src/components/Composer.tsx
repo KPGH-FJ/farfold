@@ -956,9 +956,9 @@ export function Composer({
             <button
               type="button"
               className="btn btn-ghost"
+              disabled={editingDraft.attachments.some((item) => item.loading)}
               onClick={() => {
-                keepQueueEditAsDraft(thread.key);
-                setQueueEditOpen(false);
+                if (keepQueueEditAsDraft(thread.key)) setQueueEditOpen(false);
               }}
             >
               {C.keepAsDraft}

@@ -247,6 +247,8 @@ pub fn agent_skill_change_cancel(
 #[cfg(test)]
 mod independent_tests;
 #[cfg(test)]
+mod prewrite_owner_tests;
+#[cfg(test)]
 mod shared_scope_tests;
 #[cfg(test)]
 mod tests;

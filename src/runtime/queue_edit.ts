@@ -74,10 +74,14 @@ export function queueEditorTarget(
 export function keepQueueEditAsDraft(threadKey: string) {
   const key = queueEditorKey(threadKey);
   const editing = composerDrafts.read(key);
+  // Clearing this key retires its importer. Keep unfinished bytes with their
+  // owner until they are ready, rather than moving an unfinishable placeholder.
+  if (editing.attachments.some((item) => item.loading)) return false;
   composerDrafts.update(`session:${threadKey}`, (draft) => ({
     ...draft,
     text: [draft.text, editing.text].filter(Boolean).join("\n\n"),
     attachments: [...draft.attachments, ...editing.attachments],
   }));
   composerDrafts.clear(key);
+  return true;
 }

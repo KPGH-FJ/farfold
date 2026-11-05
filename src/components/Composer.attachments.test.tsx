@@ -138,3 +138,29 @@ it("blocks the restored queue's Continue action and scopes queue-edit recovery t
     )!.props.disabled,
   ).toBe(true);
 });
+
+it("cannot join an editor's unfinished attachment to the main input, even through its retained callback", () => {
+  const key = "composer-pending-queue-transfer";
+  const original = [{ type: "text" as const, text: "paused input" }];
+  draftQueues.write(key, [original], null);
+  const thread = threads.markOpenFailed(key, "a", "/p", key, "fixture");
+  thread.openError = null;
+  startQueueEditor(key, 0, thread.queued[0]);
+  composerDrafts.update(queueEditorKey(key), (draft) => ({
+    ...draft,
+    attachments: [
+      { id: "pending", kind: "image", name: "pending.png", loading: true },
+    ],
+  }));
+  const source = composerDrafts.read(queueEditorKey(key));
+  const main = composerDrafts.read(`session:${key}`);
+  const view = capture({ thread, imageEnabled: true, onGoSettings() {} });
+  const join = view.elements.find(
+    (node) => node.props.children === COMPOSER_CONTROLS.keepAsDraft,
+  )!;
+  expect.soft(join.props.disabled).toBe(true);
+  (join.props.onClick as () => void)();
+  expect.soft(composerDrafts.read(queueEditorKey(key))).toBe(source);
+  expect.soft(composerDrafts.read(`session:${key}`)).toBe(main);
+  expect(thread.queued).toEqual([original]);
+});

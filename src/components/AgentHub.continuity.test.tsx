@@ -102,7 +102,13 @@ function clickEntry(id: string, manage = false) {
         ? String(node.props.className).includes("agent-hub-detail-button")
         : String(node.props.className).includes("agent-hub-start")),
   )!;
-  (button.props.onClick as () => void)();
+  (
+    button.props.onClick as (event: {
+      currentTarget: HTMLButtonElement;
+    }) => void
+  )({
+    currentTarget: { focus: vi.fn() } as unknown as HTMLButtonElement,
+  });
 }
 function closeSetup() {
   (setup().props.onClose as () => void)();

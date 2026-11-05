@@ -465,14 +465,15 @@ impl<'a> Exchange<'a> {
         if self.sent == self.pending.len() {
             return Ok(());
         }
-        if self.step == Step::Write
-            && matches!(
+        if self.step == Step::Write {
+            self.job.within()?;
+            // A queued frame does not keep a replaced cwd/selection current.
+            // An independently admitted enablement still survives inventory revocation.
+            let require_inventory = matches!(
                 self.job.source.domain(),
                 super::domain::Domain::McpAdd | super::domain::Domain::McpRemove
-            )
-        {
-            self.job.within()?;
-            self.job.source.current(self.store, true)?;
+            );
+            self.job.source.current(self.store, require_inventory)?;
         }
         match writer.write(&self.pending[self.sent..]) {
             Ok(0) => Err(Code::QueryFailed.into()),

@@ -185,14 +185,23 @@ export class ConfigurationRecheck {
   }
 
   rememberFailure(): void {
-    if (this.detached && this.current() === this.original)
+    if (this.detached && this.current() === this.original) {
+      const observedCheck = this.original.configCheck;
+      // An identical known observation can arrive as a new object during detach.
+      // Keep changed, unknown and failed-save checks outside this retry owner.
+      const sameKnownCheck =
+        observedCheck &&
+        observedCheck.status !== "record_failed" &&
+        !observedCheck.issues.some((issue) => issue.reason === "unknown") &&
+        sameConfigurationSnapshot(observedCheck, this.check);
       failedRechecks.set(this.original, {
         ...this.target,
-        check: this.check,
+        check: sameKnownCheck ? observedCheck : this.check,
         permissionId: this.permissionId,
         permissionState: this.permissionState,
         permissionRevision: this.permissionRevision,
       });
+    }
   }
 }
 

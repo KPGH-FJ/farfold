@@ -114,6 +114,15 @@ function primary(id = card.id) {
       String(node.props.className).includes("agent-hub-start"),
   )!;
 }
+function clickCard(button: Element) {
+  (
+    button.props.onClick as (event: {
+      currentTarget: HTMLButtonElement;
+    }) => void
+  )({
+    currentTarget: { focus: vi.fn() } as unknown as HTMLButtonElement,
+  });
+}
 function status(id = card.id) {
   return text(
     nodes(article(id)).find(
@@ -231,7 +240,7 @@ it("opens details from the card description and keeps rediscovery in the toolbar
 });
 
 it("keeps the existing installation visible after leaving setup and reopens it without another action", () => {
-  (primary().props.onClick as () => void)();
+  clickCard(primary());
   let setup = render().find((node) => node.type === AgentSetup)!;
   expect(setup.props.card).toBe(agents.cards[0]);
   (setup.props.onClose as () => void)();
@@ -239,7 +248,7 @@ it("keeps the existing installation visible after leaving setup and reopens it w
   expect(status()).toContain(STRINGS.install.stages.install);
   expect(status()).not.toContain(S.installedLocally);
   expect(text(primary().props.children as ReactNode)).toContain("查看进度");
-  (primary().props.onClick as () => void)();
+  clickCard(primary());
   setup = render().find((node) => node.type === AgentSetup)!;
   expect(setup.props.agents).toBe(agents);
   expect(setup.props.card).toBe(agents.cards[0]);
@@ -256,7 +265,7 @@ it.each(["install", "connect"] as const)(
   (busy) => {
     agents.busy[card.id] = null;
     agents.cards[0].status = "installed";
-    (primary().props.onClick as () => void)();
+    clickCard(primary());
     let setup = render().find((node) => node.type === AgentSetup)!;
     const useProgress = {
       step: 2,
@@ -272,7 +281,7 @@ it.each(["install", "connect"] as const)(
     const manage = nodes(article()).find(
       (node) => node.props["aria-label"] === `${U.manage} · ${card.name}`,
     )!;
-    (manage.props.onClick as () => void)();
+    clickCard(manage);
     setup = render().find((node) => node.type === AgentSetup)!;
     expect(setup.props.intent).toBe("use");
     expect(setup.props.progress).toEqual(useProgress);
@@ -292,7 +301,7 @@ it.each(["install", "connect"] as const)(
     (setup.props.onProgress as (value: unknown) => void)(manageProgress);
     agents.busy[card.id] = busy;
     (setup.props.onClose as () => void)();
-    (primary().props.onClick as () => void)();
+    clickCard(primary());
     setup = render().find((node) => node.type === AgentSetup)!;
     expect(setup.props.intent).toBe("use");
     expect(setup.props.progress).toEqual(manageProgress);
@@ -300,7 +309,7 @@ it.each(["install", "connect"] as const)(
     expect(agents.connect).not.toHaveBeenCalled();
     (setup.props.onClose as () => void)();
     agents.busy[card.id] = null;
-    (primary().props.onClick as () => void)();
+    clickCard(primary());
     expect(
       render().find((node) => node.type === AgentSetup)?.props.progress,
     ).toEqual(manageProgress);
@@ -309,7 +318,7 @@ it.each(["install", "connect"] as const)(
 
 it("locates an in-progress operation at step zero while retaining the use entry's source and model", () => {
   agents.busy[card.id] = null;
-  (primary().props.onClick as () => void)();
+  clickCard(primary());
   let setup = render().find((node) => node.type === AgentSetup)!;
   const progress = {
     step: 2,
@@ -320,7 +329,7 @@ it("locates an in-progress operation at step zero while retaining the use entry'
   (setup.props.onProgress as (value: unknown) => void)(progress);
   (setup.props.onClose as () => void)();
   agents.busy[card.id] = "install";
-  (primary().props.onClick as () => void)();
+  clickCard(primary());
   setup = render().find((node) => node.type === AgentSetup)!;
   expect(setup.props.progress).toEqual({ ...progress, step: 0 });
   expect(hooks.invoke).not.toHaveBeenCalled();

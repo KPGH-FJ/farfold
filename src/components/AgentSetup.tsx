@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { X } from "@phosphor-icons/react";
@@ -116,6 +116,7 @@ export function AgentSetup({
   onClose,
   onStart,
   onOpenApi,
+  returnFocusRef,
   active = true,
   progress: setupProgress,
   onProgress,
@@ -143,6 +144,7 @@ export function AgentSetup({
     selection?: AgentSetupSelection,
   ) => void | Promise<void>;
   onOpenApi: (agentId?: string) => void;
+  returnFocusRef?: RefObject<HTMLElement | null>;
   active?: boolean;
   progress: AgentSetupProgress;
   onProgress: (progress: AgentSetupProgress) => void;
@@ -565,6 +567,7 @@ export function AgentSetup({
     dialogRef: dialog,
     open: active,
     onDismiss: close,
+    returnFocusRef,
   });
   useEffect(() => {
     let active = true;
