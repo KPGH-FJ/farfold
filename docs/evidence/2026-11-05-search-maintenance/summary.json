@@ -1,0 +1,305 @@
+{
+  "kind": "SearchMaintenanceSafeTextEvidenceCapsule",
+  "state": "FROZEN_FOR_ROOT_REVIEW_NOT_COMMITTED_BY_PACKAGER",
+  "preparedAtUtc": "2026-11-05T12:02:13.533098+00:00",
+  "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+  "parent": "a96f7f57e2a8a487c3f3483a2b88bce65537cd30",
+  "ownedSourceFiles": {
+    "src/components/AttachmentSearchJump.tsx": "202595bc8e996e269fde302020bd95c9c629aff6df92ad459a4b5cb78a50675d",
+    "src/components/AttachmentSearchJump.test.tsx": "6b30c77649da11370d47f762ceb8a4356ffb8d1d9d46da442405ca5aa8e22057",
+    "src/components/AttachmentSearchJump.readiness.test.tsx": "d45acac8502e615b6a822db86720f133901cb3adb4e01967bb851b350df3864e",
+    "src/runtime/skill_management_controller.ts": "91d26013d5e698d4538870a1019f7e1aa06cc8e32d803f58adaa3a6a240e5abd",
+    "src/runtime/extension_inventory_controller.ts": "7ae63c033d9fbcf41f86a7a72ade1a7b1a046a335097c4004ac9bda48572f04e",
+    "src/runtime/management.cancel-observation.test.tsx": "19433f08f0f2319e53b303eb9eb0730552bd269de30c89557d96926618578725",
+    "src-tauri/src/file_delivery.rs": "2ad97c4788db6c012ba4e5169cf64d1ecef9b519f2ad11135c4492d799c5564d",
+    "src-tauri/src/file_delivery/copy_stream.rs": "c806bfaa46c3ac485e264922d99dc6aedae0d90032995eb21f7e09c2ee591943",
+    "src-tauri/src/file_delivery/published_receipt_tests.rs": "e7c979843648a9c0a367ff064e0ea4d54269dc6e8b21056e0a546d9c2c500b8f"
+  },
+  "attachmentSourceSearchFix": {
+    "behavior": "Wait for actual selected-source visibility, managed-details commit and nonzero geometry before focus/located. Existing source identity and grant guards retained; event/revision driven, no polling loop.",
+    "finalTypedFixture": {
+      "cases": 7,
+      "red": {
+        "passed": 3,
+        "failed": 4,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 7,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "associated": {
+      "actualFiles": 8,
+      "passed": 103,
+      "failed": 0,
+      "skipped": 0,
+      "includesNewSevenAndExistingFour": true
+    },
+    "retainedEarlierEvidence": "Initial five 3pass2fail to5pass is distinct. Initial typecheck1 was a fixture missing required streaming:false, not product RED. Initial five GREEN had no immediate after map; not reconstructed. Final legal seven has genuine both endpoints.",
+    "implementation": {
+      "path": "output/2026-11-05-search-maintenance-stage/search/implementation-summary.json",
+      "sha256": "dd8e5dea0dee4d3b8d7cd82ad0ea1e7501e8a335b6cd0ac785e76a54914e46cb",
+      "bytes": 15910
+    },
+    "reader": {
+      "path": "output/2026-11-05-search-maintenance-stage/search-independent-review/reader.json",
+      "sha256": "f404dde070bae521c501f911b6cbb38b290df90dbd88a8367c86798247436aca",
+      "bytes": 15049
+    },
+    "boundary": "Real production component/source grant/disclosure logic with controlled React hooks/DOM/scheduling. Not real browser layout, complete App/IPC, installed UI, all-history search, Windows or official Agent."
+  },
+  "managementObservationOwnershipFix": {
+    "behavior": "Explicit cancel-null can release only its own checking state; old observation timers cannot clear newer explicit status. Conservative lost/changed facts remain. Existing epoch is captured before publication, no new ledger/counter/deadline.",
+    "firstCandidateChallenge": {
+      "reader": {
+        "path": "output/2026-11-05-search-maintenance-stage/management-independent-review/candidate-v1-reader.json",
+        "sha256": "b5aa87f78e1918c8a8d61ab03c8a54cdd584ce3cc9336cfab69cec2f35d52a0b",
+        "bytes": 5036
+      },
+      "status": "CHANGES_REQUESTED_STATIC_COUNTEREXAMPLE",
+      "mustFixCount": 1,
+      "retained": true
+    },
+    "sealedFourteen": {
+      "red": {
+        "passed": 8,
+        "failed": 6,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 14,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "finalAssociated": {
+      "actualFiles": 17,
+      "passed": 221,
+      "failed": 0,
+      "skipped": 0,
+      "includesFourteen": true
+    },
+    "bindingQualification": "First14GREEN preceded final controller changes; final inventory passes already-captured epoch rather than construction-time capture. Final221 and format endpoints pin final3. Do not label every subsequent change comment-only or add prior215/14 to221.",
+    "implementation": {
+      "path": "output/2026-11-05-search-maintenance-stage/management/timer-ownership/implementation-summary-v2.json",
+      "sha256": "dd019ded47e847338d1ad504daf8d51bfc12b0fbb7971254dffd164647c5ce7e",
+      "bytes": 7554
+    },
+    "reader": {
+      "path": "output/2026-11-05-search-maintenance-stage/management-independent-review/reader-v2.json",
+      "sha256": "7072f7d98fbdc3875d7c668d910cce204b12a0517d74656c610b988075c344c8",
+      "bytes": 14646
+    },
+    "boundary": "Actual controllers/shared review callbacks, controlled ports and fake timers; not official CLI/process cancellation, fullIPC, installed UI, actual skill/MCP adoption or full P39/P40/P41."
+  },
+  "publishedFileReceiptFidelityFix": {
+    "behavior": "Ordinary-copy and text-snapshot final receipt helper verifies published bytes/size/hash, file state and reopened/parent identity. Changed published outputs are retained, not deleted/replaced/retried.",
+    "baseline": "Old production checks mechanically extracted into shared actual helper; not wholly unchanged source. Same corrected sealed fixture across RED/GREEN.",
+    "firstAttempt": {
+      "passed": 1,
+      "failed": 6,
+      "naturalExitCode": 101,
+      "setupFailuresNotProductRed": 5,
+      "qualification": "Noncanonical /var alias fixture setup; all original failures retained."
+    },
+    "correctedRed": {
+      "passed": 3,
+      "failed": 4,
+      "ignored": 0,
+      "naturalExitCode": 101
+    },
+    "green": {
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "naturalExitCode": 0
+    },
+    "associated": {
+      "passed": 46,
+      "failed": 0,
+      "existingIgnoredBenchmark": 1,
+      "selectedCases": 47,
+      "sameGreenExecutable": true
+    },
+    "witness": "Real stream_copy existing publication callback changes its sole owned temp in place before publication; old Completed claimed original hash, actual disk hash differs. Three helper before-final-observation changes also fail. No post-success edit or new production hook.",
+    "implementation": {
+      "path": "output/2026-11-05-search-maintenance-stage/delivery/implementation-summary.json",
+      "sha256": "c22916497b66f860962a8f202e683e95ebe036675b4ff6ddd8b1ab183a166a1e",
+      "bytes": 6213
+    },
+    "reader": {
+      "path": "output/2026-11-05-search-maintenance-stage/delivery-independent-review/reader.json",
+      "sha256": "620fa16ec36af84617701893e887feb217a3777511fd3e8abd587b899f35d17b",
+      "bytes": 6589
+    },
+    "boundary": "Owned actual filesystem/helper/copy plus inspected text-export linkage and existing text positives. No actual native-dialogue negative, completeIPC, installedUI, officialAgent or Windows. 2MiB positive only; ignored256MiB benchmark is not a pass. Final observation is not a continuous freeze."
+  },
+  "freshMacEngineering": {
+    "report": {
+      "path": "output/2026-11-05-search-maintenance-stage/engineering-result.json",
+      "sha256": "59db26cdb1988c0c237a1a9cd0f4d14a2a4f7d44a48dd9df34b60a7d25de26bc",
+      "bytes": 5587
+    },
+    "sourceInputs": 2403,
+    "fullProductionInputs": 2399,
+    "freshFixtureInputs": 11,
+    "frontendFiles": 719,
+    "frontendPassed": 9615,
+    "rustPassed": 2398,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "binAndDocPassed": 0,
+    "sevenFreshNaturalZero": true,
+    "originalMaps": [
+      {
+        "path": "output/2026-11-05-search-maintenance-stage/engineering/source-before.json",
+        "sha256": "0b3c11516c5f4d7a4f252f838785fe22d600d263593b8a010154bce64c15d8a9"
+      },
+      {
+        "path": "output/2026-11-05-search-maintenance-stage/engineering/source-after.json",
+        "sha256": "0b3c11516c5f4d7a4f252f838785fe22d600d263593b8a010154bce64c15d8a9"
+      }
+    ],
+    "commands": [
+      {
+        "log": "format-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "format:check"],
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/format-final.json",
+          "sha256": "3fd9c8d4f346b03a8d3eb7707b8ce631a69fd6b881f98408aca3691a943abe0d"
+        }
+      },
+      {
+        "log": "typecheck-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/typecheck-final.json",
+          "sha256": "6a035f60fc44cfe1dfb152b379dce574604383475d22424e4f0e22932c8d5f61"
+        }
+      },
+      {
+        "log": "frontend-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "test"],
+        "sha256": "5bdda6c7b3f8ef60e485334b626eda3af02b22934f810f35a3b18867c2ab5ab3",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/frontend-final.json",
+          "sha256": "238bd683fa1f70022f02a6a7dbf5b0152f80d50bd04d30a069de48802607bf19"
+        }
+      },
+      {
+        "log": "build-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "build"],
+        "sha256": "84d5a059303896bf608582e74343fd5d5ca8f1842e395e2ce796002659d69b11",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/build-final.json",
+          "sha256": "5d40e9e7962547d646cca5c430f6266090fd95dcdea487f6784140e1cc142171"
+        }
+      },
+      {
+        "log": "cargo-fmt.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/cargo-fmt.json",
+          "sha256": "1b82c5886a009f5ada6bc2214101220ff07b9738b253a8371d4b302cf37428e8"
+        }
+      },
+      {
+        "log": "clippy.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "sha256": "c7242b24b0818c9650a809ed6a195922d4c31c71cb1b92d11272a2281c0ad6a6",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/clippy.json",
+          "sha256": "acbd85dd4d5e8627755fa072ef1da76ebdc41500c0293b7be480f1c9d258ab98"
+        }
+      },
+      {
+        "log": "rust-full.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "sha256": "5e93057044fc869e15d7306d70d11cc7dd4959a907775f760b7073c9a05c4ef0",
+        "receipt": {
+          "path": "output/2026-11-05-search-maintenance-stage/engineering/checks/rust-full.json",
+          "sha256": "689b1e6c7628b85bbacfb3a38695289ce56d37c44297e6b3675e1f648e4a79da"
+        }
+      }
+    ],
+    "sourceCheckpoint": {
+      "path": "output/2026-11-05-search-maintenance-stage/source-commit.json",
+      "sha256": "9d2784a58f18aa42078606091c32f1667def6bc1f4c7cd7d16e0b61b2d6d2ada",
+      "bytes": 1410
+    },
+    "independentReader": {
+      "path": "output/2026-11-05-search-maintenance-stage/engineering-independent-review/reader.json",
+      "sha256": "86aeb4e9ee01bda73609b09103d4ecc018a18a09695d699091c8204f94aad5a8",
+      "bytes": 27078
+    },
+    "gitInputDetail": {
+      "path": "output/2026-11-05-search-maintenance-stage/engineering-independent-review/input-git-binding.json",
+      "sha256": "0a1e134207591e726d9ee1da5be4417d5edb7c699bdaad271213752a88a73339",
+      "bytes": 785967
+    },
+    "qualification": "Both byte maps equal; current source0644 modes and fixedGit verified independently, not fabricated historical modes. Complete declared scope includes11 fixtures/four authority-config inputs, not every external toolchain/environment dependency. No historical Rust reuse."
+  },
+  "publicationBoundary": {
+    "exactOriginalTextFiles": 211,
+    "derivedMembers": [
+      "README.md",
+      "summary.json",
+      "text-allowlist.json",
+      "safety-check.json"
+    ],
+    "excluded": [
+      "Entire stage metadata directory and metadata independent review",
+      "All SQLite/DB copies, backups and private row hashes",
+      "Exact user-time reports, full user-file/data manifests, original drafts",
+      "RawAX/screenshots/UI content, original user files and App/Agent/test binary or binary CI packages",
+      "Formal tools/parameters, baseline, retention/user-data manifests and installed UI evidence"
+    ],
+    "formalOrUiResultsIncluded": false,
+    "windowsResultsIncluded": false,
+    "newRealAgentOrModelActivity": false,
+    "futureFormalBoundary": "Root may later add separately derived actual delivery/UI summaries. This engineering capsule does not claim updated App installed or a completed user journey.",
+    "notAcceptance": "No entire151 item, any Agent eight-item acceptance, 29x8 completion or performance percentage."
+  },
+  "preservationAndRole": {
+    "allSelectedOriginalsByteExact": true,
+    "privateOriginalsModified": false,
+    "sourceFilesModifiedByPackager": false,
+    "packagerIsNotIndependentSafetyReviewer": true,
+    "codeAndEngineeringReadersHaveTheirOwnExplicitScope": true
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "kind": "DerivedSearchSaveManagementBatchFormalAndSelectedUiSummary",
+  "recordedAtUtc": "2026-11-05T12:09:52.975025+00:00",
+  "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+  "formerFunctionalSource": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+  "status": "delivered_with_explicit_unverified_scope",
+  "controlledAndEngineeringPackage": "summary.json",
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "frontendFiles": 719,
+    "frontendPassed": 9615,
+    "rustPassed": 2398,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "completeDeclaredInputs": 2403,
+    "completeProductionInputs": 2399,
+    "freshFixturesIncludedInBothEndpoints": 11,
+    "legacyHelperProjectionProduction": 2388,
+    "legacyHelperProjectionAdmitted": 2391,
+    "sourceBeforeAfterShaEqual": true,
+    "currentModesAndGitIndependentlyVerified": true,
+    "historicalModeEndpointsCaptured": false,
+    "oldRustReuse": false
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS27.0 build26A425 arm64",
+    "mainSha256": "4ac9afe08503b13d00154c0a5cb9ae425e0882f9bb7aeee3c860854edd944839",
+    "candidateBuildCount": 1,
+    "buildNaturalExitCode": 0,
+    "candidateMechanicalChecks": 9,
+    "installedMechanicalChecks": 6,
+    "atomicNewInodeFiles": 5,
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "forcedQuit": false,
+    "automaticRetry": false,
+    "freshClosedStateManifests": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 206275,
+      "sha256": "a09d6f6070b4277aeda038408d5566b75753123f74cf544d51d657ca43a4ce83",
+      "equal": true,
+      "scope": "Closed-state interval only; not all data unchanged after startup."
+    },
+    "secondCopiedDatabaseBackupIntegrity": "ok",
+    "exactGeneratedDuplicateAppRemoved": true,
+    "candidateZipRetainedSha256": "60bbba1300fca194d6bc645304e631f0136359c5f7cc5dc83139a4bb24f629d2",
+    "distribution": "Internal adhoc signature only; public signing/notarization/distribution remains deferred."
+  },
+  "rootNativeUi": {
+    "originalP02AndRetained1AndCwdVisibleAfterColdStartAndReturn": true,
+    "agentStillUnselected": true,
+    "testAttachmentAbsent": true,
+    "preQuitIndexDisplayed": 91,
+    "preQuitArchivedDisplayed": 69,
+    "preQuitRunningDisplayed": 0,
+    "preQuitAwaitingResponseDisplayed": 0,
+    "coldAndFinalIndexDisplayed": 91,
+    "newRealModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "explicitProviderModelReasoningCredentialPermissionChanges": false,
+    "noConversationOpenedOrReconnected": true,
+    "noIndexRenameArchiveDeleteRestore": true,
+    "originalObservation": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/ui/root-selected-installed-observation.json",
+      "sha256": "85f677828812c401ca6b03f8b6f0735f42a3215f27d522cee92abd71c31ff2e7"
+    },
+    "evidenceBoundary": "Single Root Cua witness; original AX stored privately, not copied here and no second UI witness. Displayed counts do not enumerate full native-Agent history."
+  },
+  "privateMetadataDiagnosticAggregate": {
+    "historicalCopiedSnapshots": 2,
+    "indexRowsEach": 160,
+    "addedRows": 0,
+    "removedRows": 0,
+    "archivedRows": [64, 67],
+    "unarchivedRows": [96, 93],
+    "changedArchiveRows": 3,
+    "comparisonPoint": "Index updated_at is only a latest metadata-write time proxy, not an independently observed archive action timestamp.",
+    "activityResult": "All three matching activity records stable and ended; each exceeds30days at the later row metadata timestamp.",
+    "storedAutoArchiveDaysAbsentInBoth": true,
+    "currentSourceDefaultDays": 30,
+    "inference": "Consistent with automatic archive policy; no uniquely observed actor/event, exact94 intermediate snapshot, complete native-Agent history or explanation of later current91 UI count.",
+    "privateMaterialNotPublished": "SQLite copies, private row hashes and exact user timestamps plus metadata-reader originals remain local; only this Root-derived aggregate is public."
+  },
+  "independentReaders": {
+    "search": {
+      "path": "output/2026-11-05-search-maintenance-stage/search-independent-review/reader.json",
+      "sha256": "f404dde070bae521c501f911b6cbb38b290df90dbd88a8367c86798247436aca"
+    },
+    "management": {
+      "path": "output/2026-11-05-search-maintenance-stage/management-independent-review/reader-v2.json",
+      "sha256": "7072f7d98fbdc3875d7c668d910cce204b12a0517d74656c610b988075c344c8"
+    },
+    "delivery": {
+      "path": "output/2026-11-05-search-maintenance-stage/delivery-independent-review/reader.json",
+      "sha256": "620fa16ec36af84617701893e887feb217a3777511fd3e8abd587b899f35d17b"
+    },
+    "engineering": {
+      "path": "output/2026-11-05-search-maintenance-stage/engineering-independent-review/reader.json",
+      "sha256": "86aeb4e9ee01bda73609b09103d4ecc018a18a09695d699091c8204f94aad5a8"
+    },
+    "textCapsule": {
+      "path": "output/2026-11-05-search-maintenance-stage/capsule-independent-review/reader.json",
+      "sha256": "7b1f2efb029ffa2ebd56f1bc829b85aee55f490f77910dffb9eff51fcc865ad0"
+    },
+    "formalDelivery": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-delivery-independent-review/reader.json",
+      "sha256": "98eb57fd4b530423b7a7e06280e7278ccf49dbee409cf2df143d0fb577959048"
+    }
+  },
+  "privateOriginalReceipts": {
+    "candidateNatural": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/candidate-natural-completion-v2.json",
+      "sha256": "0541e28e1ef1c903895eaf8265c8774f1d744ea0ad0f9711a8f72421ee5fb396"
+    },
+    "candidate": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/candidate-output/candidate.json",
+      "sha256": "3bf5d627d1c05556c16fe09c3f10b0236d9a4f5c6f12bd37068e5f9020bf9adb"
+    },
+    "candidateMechanicalReader": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/independent/review-v2.json",
+      "sha256": "b237369aae4e8ac2c0d97105d74bd3140a9cf4562b621f45dfdb6261d02714ed"
+    },
+    "orderedDelivery": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/root-delivery-completion.json",
+      "sha256": "e638982f9b54a700e75aeaa4d0df5fb2850f02157f45e44f486bd0b032011761"
+    },
+    "atomicInstall": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/install-result.json",
+      "sha256": "ac5c784c0a1844f6561da43bcf415f0a4ac8351bf11867731b26268e004c5af0"
+    },
+    "installedMechanicalReader": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "caf821b7366c90ee36a8f1681066c93ba8fb0a4680a79245bf966ea4dbd96843"
+    },
+    "before": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/retention-before-receipt.json",
+      "sha256": "ec0c17067f64f3590731ff2793fec8e65c95e327ae3684c63c469e7cdb256310"
+    },
+    "preinstall": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/retention-preinstall-receipt.json",
+      "sha256": "0499e18519f7d9925b43fdd08f7cb8a31cc76590ae52afaed418b885aa67dd79"
+    },
+    "after": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/retention-after-receipt.json",
+      "sha256": "9b3e4f70af33629eef6622b636b4827c9303866f0afb7f0bb2d37bf0f70db3ba"
+    },
+    "exactCleanup": {
+      "path": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/install/candidate-cleanup.json",
+      "sha256": "ab3771e7a6fe826a3850d47911e72a0b416fe3fa575f905f6be793b1d66bba46"
+    }
+  },
+  "remaining": [
+    "Attachment file-source jump delayed DOM readiness/native fault branch not exercised in installed app; current disk-file source entry differs from previously received-text line jump.",
+    "Official skill/MCP cancel-null and stale-timer races not produced in installed UI; actual adoption/connection/calls still missing.",
+    "Publication same-inode mutation remains controlled real owned I/O, not native installed fault injection; new copy native normal-save route untested. Copy remains Unknown; text export returns existing DestinationChanged error, both retain published output.",
+    "One additional full destination read before successful receipt,64KiB buffer/expected-size bound; real2MiB positive passed but maximum-capacity/performance impact not measured. No postreceipt continuous byte immutability guarantee.",
+    "B3/Q root causes, P18/N/O ownership, missing accounts/directories/contracts, storage fault UI, official compaction and NEW24 affected-new-send pause remain. No old requests resent.",
+    "Windows41984263036 still no runner under payment/spending availability; no new retry or billing change. Original151/29x8 remain open at their exact original scopes."
+  ],
+  "scopeUnchanged": {
+    "agents": 29,
+    "standardsEach": 8,
+    "originalRequirementIds": 151,
+    "noWholeProductOrAgentEightStandardAcceptance": true
+  },
+  "publicationBoundary": "Derived facts and receipt references only; no userDB/backup/full userdata manifest/rawAX/draft body/executable or private metadata row hash/time copied here. Original four controlled capsule files stay frozen; later formal/UI epoch separate."
+}
