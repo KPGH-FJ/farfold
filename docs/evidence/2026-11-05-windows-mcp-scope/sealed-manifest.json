@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "state": "SEALED_PRIVATE_DRAFT_PENDING_ROOT_PUBLICATION",
+  "sourceHead": "b7147e530742c47b96713495dea8b736dc9ec630",
+  "runId": 41942738310,
+  "archive": {
+    "file": "originals.zip",
+    "sha256": "29730ebc18584bec9d21ed7061eca21dcabc8523f65fe632354dc5457e197dc8",
+    "bytes": 545112,
+    "members": 31,
+    "crcAllPassed": true,
+    "everyMemberMatchesOriginalSourceBytes": true
+  },
+  "members": {
+    "derived/extraction-manifest.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/extraction-manifest.json",
+      "sha256": "87f9a6aefa286e3be30183b5df9f1f6883581e1d8684d36af55d1bfe7c0cae3e",
+      "bytes": 7751,
+      "crc32": "df0d30b3"
+    },
+    "derived/native-source-map-git-binding.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/analysis/native-source-map-git-binding.json",
+      "sha256": "2d281f90577158647e6e14cdf6931ec807bdc662b9a4121167cd9c6937cf9774",
+      "bytes": 636390,
+      "crc32": "e675b1dd"
+    },
+    "derived/result.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/analysis/result.json",
+      "sha256": "66daa6686dc399fbb12ef7dd63079449613d0fd8a7df66b451a2a815c4f13622",
+      "bytes": 15137,
+      "crc32": "95439235"
+    },
+    "raw/artifact-13377433297.zip": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/artifact-13377433297.zip",
+      "sha256": "008eb498e84d12dc32416a48b059bdb6e24f965421c9687ae2c0aee1a1036c57",
+      "bytes": 260087,
+      "crc32": "dc7bf484"
+    },
+    "raw/artifact-13377433297.zip.receipt.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/artifact-13377433297.zip.receipt.json",
+      "sha256": "6b18b002933140b58a749ccb16a3959b32fbb99d3bd740d9e5348db344fb5226",
+      "bytes": 539,
+      "crc32": "c103079d"
+    },
+    "raw/artifacts-completed.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/artifacts-completed.json",
+      "sha256": "e10f77a00d35d15e885b1deff2e25713466f2c361809594f439a5b4d9b5c3ce4",
+      "bytes": 771,
+      "crc32": "fae13e77"
+    },
+    "raw/artifacts-completed.json.receipt.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/artifacts-completed.json.receipt.json",
+      "sha256": "8bcb39a138f4e179d7e670d66d8f4dfe1d91f298b91c75291b3b4845b5f0504e",
+      "bytes": 435,
+      "crc32": "013cdeaa"
+    },
+    "raw/artifacts-completed.json.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/artifacts-completed.json.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/head-confirmation.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/head-confirmation.json",
+      "sha256": "c39e746ec52d9ebcc2a99cb4eccb2a21213a783ec948877781375e69176524f9",
+      "bytes": 683,
+      "crc32": "9d66acfa"
+    },
+    "raw/jobs-completed.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/jobs-completed.json",
+      "sha256": "83e657669c8160b0ecd4a800036b60e663673823c9605c6666b4817dfe363c17",
+      "bytes": 6105,
+      "crc32": "5c8bc6c9"
+    },
+    "raw/jobs-completed.json.receipt.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/jobs-completed.json.receipt.json",
+      "sha256": "856957bc944b7e8d99b8bdd84235ba42ad6240674c6c92b1ae4dc991ab876771",
+      "bytes": 431,
+      "crc32": "d8676823"
+    },
+    "raw/jobs-completed.json.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/jobs-completed.json.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/logs-completed.zip": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/logs-completed.zip",
+      "sha256": "278dc9338878bbafa230130e080a30d8f8e82a39d128db4efd737942ae93f217",
+      "bytes": 49292,
+      "crc32": "dc4b2d3a"
+    },
+    "raw/logs-completed.zip.receipt.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/logs-completed.zip.receipt.json",
+      "sha256": "5d30deaf829407bf5c4f19e22ddb00b63920cc0f05401bf8d285cccccfeb09d2",
+      "bytes": 419,
+      "crc32": "32dcdce7"
+    },
+    "raw/preflight-and-dispatch/dispatch.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/dispatch.json",
+      "sha256": "4b82281731881f9114cee6463c602d9b6e9a1ddd05ec77b971fd9859b58c44d4",
+      "bytes": 627,
+      "crc32": "a16f68d8"
+    },
+    "raw/preflight-and-dispatch/dispatch.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/dispatch.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/preflight-and-dispatch/dispatch.stdout.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/dispatch.stdout.log",
+      "sha256": "2ad16323f98544fb1348304fd57a9ff4e3de913a45bbf511b721aa6b91b53718",
+      "bytes": 60,
+      "crc32": "61df593b"
+    },
+    "raw/preflight-and-dispatch/remote-preflight.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/remote-preflight.json",
+      "sha256": "1eca01dbe408101250b618f5e15a44e58de08aa75968d12809a5bdd1f65256bf",
+      "bytes": 473,
+      "crc32": "3bc53066"
+    },
+    "raw/preflight-and-dispatch/remote-preflight.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/remote-preflight.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/preflight-and-dispatch/remote-preflight.stdout.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/remote-preflight.stdout.log",
+      "sha256": "087cf0abbe39a6d56cf533bb6de1cded8085f9f3e730a4995cdcc43df79c00bb",
+      "bytes": 88,
+      "crc32": "bddb704f"
+    },
+    "raw/preflight-and-dispatch/runs-before-dispatch.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/runs-before-dispatch.json",
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915",
+      "bytes": 36,
+      "crc32": "7a5bf0df"
+    },
+    "raw/preflight-and-dispatch/runs-before-dispatch.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/runs-before-dispatch.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/preflight-and-dispatch/runs-preflight.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/runs-preflight.json",
+      "sha256": "a6e141c5d52931d037ad0c8ff47c9102614ce69e9a8dce3d33faff80bed8eb66",
+      "bytes": 849,
+      "crc32": "d9a9c358"
+    },
+    "raw/run-completed.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/run-completed.json",
+      "sha256": "e9a39bd67da8d6b6c02c7bc661149aad1f7a1b9342b2f4ca6f78f347dd4ef131",
+      "bytes": 11761,
+      "crc32": "82d9b964"
+    },
+    "raw/run-completed.json.receipt.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/run-completed.json.receipt.json",
+      "sha256": "430139621fcafe1cd2d75cecf5a38054c59e6cca4b499a9225c14ee322ede365",
+      "bytes": 414,
+      "crc32": "56a2cd73"
+    },
+    "raw/run-completed.json.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/run-completed.json.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/run-initial.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/run-initial.json",
+      "sha256": "b95edcbcfd34b6648474aa0392b47442ff71599f3a2c27fb68910981e71eaade",
+      "bytes": 11758,
+      "crc32": "95c0c900"
+    },
+    "raw/run-initial.stderr.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/run-initial.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "crc32": "00000000"
+    },
+    "raw/watch.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/watch.json",
+      "sha256": "e2430ae6d67e3e24a958598f0cdbe587279482339529e8149e1e907fa1f3dc69",
+      "bytes": 373,
+      "crc32": "b65e379d"
+    },
+    "raw/watch.log": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/watch.log",
+      "sha256": "2fa34bd63a299b5745c5a513975780dd5d610bd8949ffb3890876bcbe88fd16c",
+      "bytes": 25968,
+      "crc32": "5daea43e"
+    },
+    "review/independent-review.json": {
+      "originalSourcePath": "output/2026-11-05-development-continuation/mcp-windows-native/run-41942738310/analysis/independent-review.json",
+      "sha256": "2d8294fde4a1a782557b66009f8c1241b6650dde53a93e981e55504bd24ced64",
+      "bytes": 29094,
+      "crc32": "80e535cd"
+    }
+  },
+  "nestedArchives": {
+    "raw/artifact-13377433297.zip": {
+      "members": 22,
+      "allMemberCrcPassed": true,
+      "apiDigest": "sha256:008eb498e84d12dc32416a48b059bdb6e24f965421c9687ae2c0aee1a1036c57",
+      "archiveSha256MatchesApiDigest": true,
+      "allMemberPayloadsUtf8JsonOrLogs": true,
+      "executableDllOrHelperPayloads": false
+    },
+    "raw/logs-completed.zip": {
+      "members": 17,
+      "allMemberCrcPassed": true,
+      "allMemberPayloadsUtf8TextLogs": true
+    }
+  },
+  "integrityBoundary": "Content bytes are preserved. The new container metadata is deterministic, with ZIP timestamps set to1980; actual capture/finish times remain in original receipts. Independent reader reviews originals, not this new ZIP. This manifest does not include its own hash.",
+  "files": {
+    "README.md": {
+      "sha256": "10481de0c98a83b1853bc6272974917901098f21a3c4e9e654a51eb9008fd000",
+      "bytes": 2564
+    },
+    "summary.json": {
+      "sha256": "662c2c67c16fe097f634050730f1f972f454f9347a9571ed481fc2d5aa448ccb",
+      "bytes": 5861
+    },
+    "originals.zip": {
+      "sha256": "29730ebc18584bec9d21ed7061eca21dcabc8523f65fe632354dc5457e197dc8",
+      "bytes": 545112
+    }
+  }
+}

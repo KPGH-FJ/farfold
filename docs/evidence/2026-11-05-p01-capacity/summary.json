@@ -1,0 +1,332 @@
+{
+  "schema": 1,
+  "state": "ARCHIVED_CHECKPOINT_EVIDENCE",
+  "recordedAtUtc": "2026-11-05T00:42:41.811347+00:00",
+  "sourceCommit": "b7147e530742c47b96713495dea8b736dc9ec630",
+  "originalP01ConditionUnchanged": true,
+  "userResult": "Actual bounded SQLite FULL reaches existing frontend persistence and DraftStartup failure handling; old disk value/local new input survive, explicit actual retry saves and cold reads.",
+  "sourceBoundary": {
+    "sourceInputs": 2372,
+    "beforeAfterMapByteEqual": true,
+    "mapSha256": "bb41ef5d03984ef3221440fc178db2fdefb5fb16f13baf22065e024c3a68df2a",
+    "gitBindingReportsMatched": 2372,
+    "gitBindingReportsMismatch": [],
+    "sourceModeOrCompleteTransitiveEnvironmentFreezeClaimed": false,
+    "sourceSnapshotMember": "checkpoint-source/src-tauri/src/meta_store/recovery_tests.rs",
+    "driverBeforeSha256": "6a6d43575e0d7ab3ceb0398f896cd4ae99172831a1ef39cf40f6419f279b4c5b",
+    "driverAfterSha256": "b9bfef549b0b3a893440ee4f0eefda5e7bc7596252857a1bb78a4c1e09b62983",
+    "candidatePatchSha256": "bbe846010722b6a46a0ecdaf2bfb01e5b045c70f2ad947947fa7105ca49eec8c",
+    "outsideExistingDriverPrefixUnchanged": true,
+    "existingMacOnlyDefaultIgnoredTestNotNewProductionEntry": true,
+    "fixtureLines": 540,
+    "fixtureSha256": "035a9847d37a387a1e25048b39a0949e67b47fb5868b3e2f7c7805c169d53ecd"
+  },
+  "actualExperiment": {
+    "vitestNaturalExit": 0,
+    "files": 1,
+    "tests": 1,
+    "durationSeconds": 1.557,
+    "exchanges": [
+      {
+        "n": 1,
+        "origin": "frontend",
+        "phase": "initial",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 2,
+        "origin": "frontend",
+        "phase": "initial",
+        "command": "settings_set",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 3,
+        "origin": "fixture-control",
+        "phase": "initial",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 4,
+        "origin": "frontend",
+        "phase": "sqlite-full",
+        "command": "settings_set",
+        "limited": true,
+        "ok": false,
+        "actualError": "FARFOLD_STORAGE:full:无法读取或保存本机资料",
+        "testSqliteLimit": {
+          "pageCount": 9,
+          "pageSize": 4096,
+          "freePages": 0,
+          "maxPageCount": 9
+        }
+      },
+      {
+        "n": 5,
+        "origin": "fixture-control",
+        "phase": "sqlite-full",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 6,
+        "origin": "frontend",
+        "phase": "sqlite-full",
+        "command": "settings_set",
+        "limited": true,
+        "ok": false,
+        "actualError": "FARFOLD_STORAGE:full:无法读取或保存本机资料",
+        "testSqliteLimit": {
+          "pageCount": 9,
+          "pageSize": 4096,
+          "freePages": 0,
+          "maxPageCount": 9
+        }
+      },
+      {
+        "n": 7,
+        "origin": "fixture-control",
+        "phase": "sqlite-full",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 8,
+        "origin": "frontend",
+        "phase": "explicit-retry",
+        "command": "settings_set",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 9,
+        "origin": "fixture-control",
+        "phase": "explicit-retry",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      },
+      {
+        "n": 10,
+        "origin": "frontend",
+        "phase": "cold-module-read",
+        "command": "settings_get",
+        "limited": false,
+        "ok": true,
+        "actualError": null,
+        "testSqliteLimit": null
+      }
+    ],
+    "allTenDriverChildrenNaturalExitZero": true,
+    "eachChildPassed": 1,
+    "eachChildIgnored": 0,
+    "actualSqliteFullErrors": 2,
+    "fullErrorsAreExpectedNotRustTestFailures": true,
+    "fullReceipt": "FARFOLD_STORAGE:full:无法读取或保存本机资料",
+    "limit": {
+      "pageCount": 9,
+      "pageSize": 4096,
+      "maxPageCount": 9,
+      "freePages": 0
+    },
+    "maxReconstructedRequestJsonBytes": 49590,
+    "requestGuardBytes": 65536,
+    "actualTestPassed": true,
+    "exitCoordinator": {
+      "exitBlocked": true,
+      "exitLeaseReleased": true,
+      "renderedFullError": true,
+      "requests": [
+        [
+          "app_exit_after_save",
+          {
+            "token": 74
+          }
+        ]
+      ],
+      "nativeExitExecuted": false
+    },
+    "fixtureRemovedResult": true,
+    "cleanupError": null,
+    "oldValueAndLocalDraftAssertionsPassed": true,
+    "noAutomaticWriteAfterExplicitLimitOff": true,
+    "actualRetryButtonUsed": true,
+    "coldMeaning": "frontend module reset + new Rust process/SQLite connection per request; not App restart",
+    "driverBinarySha256HistoricalOnly": "e78cf993545f61bde7089bc609db2e83b0e934573cf44157df8219cd4d894ad7",
+    "bindingSha256": "af59995d422c2f17cc09e4a3975083a17330f045df4bb664dcc820af27c5126d",
+    "noBinaryReadOrUploadByPackager": true
+  },
+  "engineering": {
+    "fresh": [
+      {
+        "label": "cargo-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "naturalExit": 0,
+        "durationSeconds": 1.264
+      },
+      {
+        "label": "clippy-all-targets",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "naturalExit": 0,
+        "durationSeconds": 8.42
+      },
+      {
+        "label": "rust-full",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "naturalExit": 0,
+        "durationSeconds": 138.623
+      },
+      {
+        "label": "format-final",
+        "command": ["corepack", "pnpm", "format:check"],
+        "naturalExit": 0,
+        "durationSeconds": 33.401
+      }
+    ],
+    "rustFull": {
+      "passed": 2349,
+      "failed": 0,
+      "ignored": 7,
+      "topLevelCountsExcludeExplicitDriverInvocations": true
+    },
+    "retainedFrontend": {
+      "fromCommit": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+      "commands": ["typecheck", "test", "build"],
+      "files": 709,
+      "passed": 9523,
+      "unchangedFrontendSourceAssetScriptConfigInputsReported": 1510,
+      "fullCapturedMapOnlyChangesComparedByPackager": [
+        ".github/scripts/windows-launch-prerequisites.ps1",
+        ".github/scripts/windows-selected-build.ps1",
+        ".github/workflows/windows-launch-prerequisites.yml",
+        "docs/agent-access-requirements.md",
+        "src-tauri/src/meta_store/recovery_tests.rs"
+      ],
+      "allOriginalThreeReceiptsAndLogsIncluded": true
+    },
+    "fullSevenFreshClaimed": false,
+    "sameAllInputIntervalForAllSevenClaimed": false,
+    "reuseProofMember": "output/2026-11-05-development-continuation/engineering-capacity/frontend-reuse-review.json"
+  },
+  "historicalPreparation": {
+    "originalNotRunStatesPreserved": true,
+    "candidateReadmeAndPreparationAreHistoricalNotCurrentStatus": true,
+    "noProductRedCreated": true,
+    "firstFormatterEdition2021CorrectedToCargoEdition2024": true,
+    "staticSyntaxNotSemanticTypecheckOrBridgeProof": true
+  },
+  "nativeBoundary": {
+    "ref": "output/2026-11-05-development-continuation/p01-capacity-preparation/native-condition.json",
+    "observationOwner": "root",
+    "macLocked": true,
+    "soleAppBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
+    "packagerDidNotUseApp": true,
+    "noNewInstallClaim": true
+  },
+  "independentReview": {
+    "ready": true,
+    "path": "output/2026-11-05-development-continuation/p01-capacity-preparation/independent-review.json",
+    "sha256": "f50022898362ec9c87389aa311f38b24fc135e166a54ba0dcd96c0c7d2fdd99e",
+    "scope": "Actual reader report only; no placeholder verdict and no independent review of the assembled ZIP claimed.",
+    "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+    "blockingFindings": [],
+    "originalEvidenceFileCount": 73,
+    "originalEvidenceBeforeAfterUnchanged": true,
+    "assembledArchiveIndependentlyReviewed": false
+  },
+  "originals": {
+    "path": "originals.zip",
+    "bytes": 587589,
+    "sha256": "b1f90d69492995305f89289b24360a1e6da127b916ae820f3ed043881756a219",
+    "entries": 89,
+    "payloadEntries": 88,
+    "crcPassed": true,
+    "allPayloadBytesComparedExact": true,
+    "manifestPath": "archive-manifest.json",
+    "manifestSha256": "4faec6767b2727a1f58ecb1fb2dbb1f26ddc7ec4a85cf9d0538fe88bbe069b32",
+    "externalAndZipManifestBytesEqual": true,
+    "allOriginalFilesUnchangedDuringAssembly": true
+  },
+  "excluded": [
+    "binary/executable",
+    "SQLite/temporary DB",
+    "formal App",
+    "user data/credentials",
+    "new Agent/model activity"
+  ],
+  "packagerActions": [
+    "Read named existing original files",
+    "Compare recorded maps/hash pins and necessary driver snapshot",
+    "Assemble original bytes/manifest/ZIP and this derived summary only"
+  ],
+  "notExecuted": [
+    "Cargo",
+    "tests/checks",
+    "SQL",
+    "GH/CI/watch/download",
+    "Git",
+    "App/UI/quit/build/install",
+    "Agent/model/account"
+  ],
+  "notProven": [
+    "physical full disk/system quota/device I/O",
+    "complete Tauri IPC",
+    "DOM or installed-App capacity failure",
+    "native exit/App restart/recovery UI",
+    "attachment revalidation",
+    "complete P01/151/29 Agents"
+  ],
+  "ownershipRaceBoundary": "Controlled directory/file checks are not atomic hostile-same-UID race resistance.",
+  "rootArchiveReview": {
+    "recordedAtUtc": "2026-11-05T00:52:58.851476+00:00",
+    "readmeAndSummaryRead": true,
+    "members": 89,
+    "payloadShaAndSizes": 88,
+    "manifestBytesEqualInternalExternal": true,
+    "rawOriginalsUnchanged": true,
+    "laterChanges": "Vite dev-only configuration and progress documentation require separate affected checks. This package remains fixedb714."
+  }
+}

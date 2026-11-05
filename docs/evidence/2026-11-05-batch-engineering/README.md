@@ -21,3 +21,5 @@ originals.zip保留完整原件字节、原路径和必要脚本；archive-manif
 主代理已核ZIP CRC、93成员和92个payload大小/SHA，归档清单内外同字节。ZIP内保留准备时README原件，公开README后补本句不替换历史成员。后续[浏览器与焦点](../2026-11-05-mcp-scope-review/README.md)另有输入与检查范围，不由本批自动覆盖。
 
 后续公开胶囊的[独立复核](publication-review.json)分别保留603/65c/6f范围；[进度补记核对](progress-alignment-review.json)证明151原编号/顺序/标题/完成条件及16包共用要求不变。后补要求参考仅进度字段变化，其他2371个声明输入保持，不冒称补记文档执行过七项。
+
+本大阶段最后的[进度核对](final-progress-review.json)以ea6为源码检查点，P01/P39/P41/P49/H18仅进度变化，151原编号/顺序/标题/条件、16包与共用要求均不变，其他2371个声明输入保持。后续容量、开发服务与两份Windows分项各按自身固定源归档，不由本603旧批覆盖。

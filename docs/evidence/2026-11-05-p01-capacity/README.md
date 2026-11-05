@@ -1,0 +1,17 @@
+# P01容量不足：实际SQLite FULL与退出保存联通
+
+本记录固定b7147e530742c47b96713495dea8b736dc9ec630的测试及工程输入。沿唯一计划P01原条件补容量不足的实际联通，不新增产品门槛。它不关闭完整P01、151条或29家八项。后续源码与文档变化需按影响另核。
+
+独占临时SQLite中的production MetaStore连接设置max_page_count=9；page_size=4096、freelist_count=0。实际前端的新本地草稿约48KiB，低于前端32MiB限制，请求先编码核≤65,536B。第4与第6次真实set_setting各返回FARFOLD_STORAGE:full；不是测试端伪造的错误，也不是物理磁盘满或系统配额实验。
+
+单独Vitest实际1文件1项自然0。10个默认ignored Rust driver子进程各1通过、0忽略、自然0；两个FULL是期待的SQLite写错误，不是两个Rust测试失败，也不额外加进完整Rust通过计数。完整原值独立读回保持，本地新稿与未保存标记保持。实际DraftStartup收到受控保存退出事件后不派发退出、释放交互锁，并在受控钩子下实际组件返回的alert中保留容量原因。明确解除fixture限制后不会自动保存；点实际重试按钮才保存成功，记录唯一token74的退出请求，随后冷模块/新SQLite连接读回新稿。退出命令只记录，没有执行退出。自有fixture已由实际执行路径清理，cleanupError为null；packager未再扫其他临时目录补观察。
+
+本批全仓格式、Rust fmt、全目标Clippy和完整Cargo test四条命令均新执行自然0：Rust库2349通过、0失败、7忽略，main/doc零用例通过。前端type/test/build三项保留6f01327cb的实际结果（709文件9523通过）；与新批2372映射比较，变化为CI三文件、要求进度一文件和Mac-only测试driver一文件，root复用复核记录1510个前端源码/资源/脚本/配置输入哈希相同。两期源码map和原始回执均收录，不称晚期七条命令重跑，也不声称全部传递环境连续冻结。该检查点2372项前后map逐字节同，原Git绑定记录全部对应b7147e53；packager只核原映射/记录和必要单文件，不重做全树Git核验。
+
+原p01-capacity-preparation/README.md、preparation.json及engineering-capacity/preparation.json保留候选未运行时的原字节；它们的NOT_RUN、无binding等字段是历史观察，不是当前状态。随后真实binding、忽略清单、Vitest、10交换、工程回执和独审另列于summary。最初目标格式化误用edition2021，后按实际edition2024纠正，原件保留；本轮是GREEN补覆盖，没有新增或伪称产品RED。
+
+originals.zip包含完整driver before/patch/当前after源码、540行独立fixture与配置、绑定/list/执行回执与日志、全部10组请求响应和stdout/stderr、必要收集/执行脚本、两期map、当前Git绑定、复用与进度复核、原候选记录和实际独审。archive-manifest.json逐成员记录来源、大小与SHA，亦同字节置于ZIP；summary在ZIP外避免自哈希循环。JSON绝对/相对原路径不改写，使用manifest映射归档成员。复现需要仓库完整相应源码和已有依赖，必须重新明确构建/绑定当前二进制；不应直接运行旧绝对路径或假定共享target仍保留历史SHA。归档不含可执行二进制、SQLite/临时数据库、正式App、账户/用户数据。
+
+本次范围为production MetaStore→实际前端保存状态→实际DraftStartup函数，经受控hooks/events和替换传输。冷指模块重置及每请求新Rust进程/SQLite连接，不是App重启；不覆盖完整Tauri IPC、DOM/安装版容量故障、真实退出、恢复UI、物理满盘、真实设备I/O、附件重核或真实Agent/模型。目录/token/UID/inode/单链接/白名单检查不构成原子抵抗同UID恶意替换的证明。native-condition是root另次观察：Mac仍锁定、唯一正式App二进制保持ed410bc9…db6；packager未操作App。本批纯测试变化不机械触发Mac重装。
+
+主代理已阅读全文及摘要，并核89成员CRC、88payload大小/SHA与清单内外原字节；这是归档复核，与源码独审分别记录。随后开发服务配置和进度补记不由本包固定b714结论自动覆盖。

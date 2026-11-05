@@ -1,0 +1,226 @@
+{
+  "recordedAtUtc": "2026-11-05T00:55:40.971585+00:00",
+  "sourceCommit": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
+  "userResult": "Default forced-cold dependency discovery scans the actual application index rather than historical HTML evidence.",
+  "onlySourceChange": "vite.config.ts optimizeDeps.entries = [index.html]",
+  "warmAttempt": "No dependency scan failure reproduced after optimizer cache changed; over-broad audit assertion1 kept. Server itself ready and explicitly stopped.",
+  "coldBefore": {
+    "recordedAtUtc": "2026-11-05T00:45:39.972Z",
+    "serverSession": 79951,
+    "forceOptimizerCacheIgnored": true,
+    "ready": true,
+    "dependencyScanFailed": true,
+    "legacyHtmlIncluded": true,
+    "parseError": true,
+    "rawBytes": 189881,
+    "tail": "rapBindingResult (file:///Users/tw/Desktop/farfold/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/shared/error-HDibX49O.mjs:18:128)\n    at scan (file:///Users/tw/Desktop/farfold/node_modules/.pnpm/rolldown@1.2.6/node_modules/rolldown/dist/experimental-index.mjs:237:3)\n    at async Object.build (file:///Users/tw/Desktop/farfold/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/node/chunks/node.js:31493:3)\n    at async scan (file:///Users/tw/Desktop/farfold/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/node/chunks/node.js:31432:4)\n    at async file:///Users/tw/Desktop/farfold/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/node/chunks/node.js:34462:15\n2026-11-05T00:45:26.773Z vite:deps new dependencies found: react, react-dom, react/jsx-dev-runtime, react/jsx-runtime\n2026-11-05T00:45:26.773Z vite:deps creating package.json in /Users/tw/Desktop/farfold/node_modules/.vite/deps_temp_bac33d61\n2026-11-05T00:45:26.780Z vite:deps Dependencies bundled in 6.69ms\n2026-11-05T00:45:26.780Z vite:deps creating _metadata.json in /Users/tw/Desktop/farfold/node_modules/.vite/deps_temp_bac33d61\n2026-11-05T00:45:26.780Z vite:deps renaming /Users/tw/Desktop/farfold/node_modules/.vite/deps_temp_bac33d61 to /Users/tw/Desktop/farfold/node_modules/.vite/deps\n2026-11-05T00:45:26.780Z vite:deps dependencies optimized\n"
+  },
+  "coldAfter": {
+    "recordedAtUtc": "2026-11-05T00:46:45.277Z",
+    "serverSession": 54455,
+    "ready": true,
+    "forceOptimizerCacheIgnored": true,
+    "dependencyScanFailed": false,
+    "dependenciesOptimized": true,
+    "rawBytes": 3443,
+    "scanLines": [
+      "2026-11-05T00:46:14.165Z vite:deps scanning for dependencies...",
+      "  /Users/tw/Desktop/farfold/index.html",
+      "2026-11-05T00:46:14.216Z vite:deps Scan completed in 51.16ms: ",
+      "2026-11-05T00:46:14.473Z vite:deps using post-scan optimizer result, the scanner found every used dependency",
+      "2026-11-05T00:46:14.474Z vite:deps dependencies optimized"
+    ]
+  },
+  "httpAfter": {
+    "recordedAtUtc": "2026-11-05T00:47:02.005202+00:00",
+    "scope": "HTTP asset delivery only, no browser DOM, Tauri bridge, App or Agent launched",
+    "routes": {
+      "/": {
+        "status": 200,
+        "contentType": "text/html",
+        "prefixBytes": 606,
+        "prefixSha256": "52c7837e5ae6bf52d505ba8d9ed577b38c9b6e2574145a9bc6f0e764d8d8b9bb"
+      },
+      "/src/main.tsx": {
+        "status": 200,
+        "contentType": "text/javascript",
+        "prefixBytes": 3377,
+        "prefixSha256": "ac97e6242848cc36bf34bb296c698d102bcb61c9110aafbb5cd2b11e550a9ede"
+      }
+    }
+  },
+  "latestFrontend": {
+    "files": 709,
+    "passed": 9523,
+    "freshCommands": 4,
+    "allNaturalExitZero": true
+  },
+  "sourceBinding": {
+    "recordedAtUtc": "2026-11-05T00:51:34.197737+00:00",
+    "commit": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
+    "manifestSha256": "4c8470a4c50965764d8951010a305f8f0b8163491c2db32c137e96987d66cf07",
+    "declaredInputs": 2372,
+    "matchedGitBlobs": 2372,
+    "mismatch": [],
+    "onlyInputChangeFromB714": "vite.config.ts",
+    "freshFrontendFourNaturalZero": true,
+    "retainedRustSource": "b7147e530742c47b96713495dea8b736dc9ec630",
+    "productionBuiltAssetsByteIdentical": 104,
+    "sevenFreshNotClaimed": true,
+    "WindowsScopedRunStillFixedAtB714": "41942738310"
+  },
+  "reuse": {
+    "onlyDeclaredInputDeltaFromB714": ["vite.config.ts"],
+    "declaredInputs": 2372,
+    "distFiles": 104,
+    "distByteIdenticalBeforeAfter": true,
+    "distChanged": [],
+    "distRemoved": [],
+    "freshFrontendFour": "All actual command receipts in checks; raw stats retained",
+    "retainedRustThree": "b714 fresh fmt/all-target Clippy/full test2349pass7ignored. Rust/native/build/dependency sources and104 built assets unchanged; no new Rust execution or installed App proof."
+  },
+  "independentReview": {
+    "path": "dev-server-scan/independent-review.json",
+    "sha256": "78334f673dfb32c08f6c2b6b88053c34fcd613dcf4ce576041845262b4f712e4",
+    "readOnlyNoNewExecution": true
+  },
+  "privateFixtureBoundary": "The historical MCP browser config uses mergeConfig arrays. With this new base it would scan index+fixture, still excludes arbitrary historical HTML. That private config was not restarted here; old results remain bound to their earlier inputs.",
+  "notClaimed": [
+    "Measured startup/token improvement",
+    "Runtime worker/DOM/Tauri/installed-App verification",
+    "Windows b714 coverage for this later Vite config",
+    "Seven fresh commands in this later interval"
+  ],
+  "originals": {
+    "path": "originals.zip",
+    "bytes": 273383,
+    "sha256": "ca6fe7e59de50f69797f96507eef963402f6136b762b68ad486c49ddcfd6f9d6",
+    "members": 31,
+    "files": {
+      "dev-server-scan/before.log": {
+        "bytes": 71,
+        "sha256": "fe73556837be5fc31dd261b9297390c6c9ffb4263c1942387554275865b1bcad"
+      },
+      "dev-server-scan/cold-after.json": {
+        "bytes": 606,
+        "sha256": "9e96cfeb8aa0b8a3d0764f9033801a8672f531795178fb18524f863a06e820f3"
+      },
+      "dev-server-scan/cold-after.log": {
+        "bytes": 3443,
+        "sha256": "f92ff153da52c9bbb36b4c92c11488446285cfa436bba5d1cc935df56b931696"
+      },
+      "dev-server-scan/cold-before.json": {
+        "bytes": 1662,
+        "sha256": "8fd036fb552f7fc9a495df995b4ab6915df1637532f629a00973dfffa136f4dd"
+      },
+      "dev-server-scan/cold-before.log": {
+        "bytes": 189881,
+        "sha256": "711351a72a7292bee25b6b0325c9edc753af7a25b8bc349e4b78d10f35def684"
+      },
+      "dev-server-scan/controlled-stops.owner-observation.json": {
+        "bytes": 574,
+        "sha256": "dd9a9774481db3b69fef731b8c00a9627dab4f0bf048a1e788a9296ac5b77831"
+      },
+      "dev-server-scan/http-after.json": {
+        "bytes": 563,
+        "sha256": "28c4837950e3b0d0267c08a2aff793c17addec5da6ed34cc7d83755417b9d5d7"
+      },
+      "dev-server-scan/independent-review.json": {
+        "bytes": 9039,
+        "sha256": "78334f673dfb32c08f6c2b6b88053c34fcd613dcf4ce576041845262b4f712e4"
+      },
+      "dev-server-scan/preparation.json": {
+        "bytes": 522,
+        "sha256": "67d601c5f2fa97924c018e8f8bdb99cbdb228953b4a57747e46035be2e52baae"
+      },
+      "dev-server-scan/source.patch": {
+        "bytes": 304,
+        "sha256": "e14277083b832c41ee239a418042687c77ff28d1a40d3afd159462ec9ccb1969"
+      },
+      "dev-server-scan/vite.config.after.ts": {
+        "bytes": 1090,
+        "sha256": "dd0e6a7ce96d2f23711a55292526d8252c870a95362c9c1600d5707c8d6380b5"
+      },
+      "dev-server-scan/vite.config.before.ts": {
+        "bytes": 1045,
+        "sha256": "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0"
+      },
+      "dev-server-scan/warm-attempt.json": {
+        "bytes": 625,
+        "sha256": "d7afe03916e0579dc04ea3971dde39106abca2d377880cb5f1b95dce74e00842"
+      },
+      "engineering-dev-server/checks/build-final.json": {
+        "bytes": 376,
+        "sha256": "3c3d1fd1727f8aaf5c5de31454f524902400d2e91a7b2b1a63ba08fc20b531ab"
+      },
+      "engineering-dev-server/checks/build-final.log": {
+        "bytes": 4984,
+        "sha256": "d0b53c214e3ba65ef87179f485c489819b9596dafc2e24ccf15a1a766c578af1"
+      },
+      "engineering-dev-server/checks/format-final.json": {
+        "bytes": 386,
+        "sha256": "46da8be51ca8d47a474cd3c80a772a86a73f526a29a01d447a20c7da8792693f"
+      },
+      "engineering-dev-server/checks/format-final.log": {
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "engineering-dev-server/checks/frontend-final.json": {
+        "bytes": 382,
+        "sha256": "9bb69981c07f4f4df64d96a028e139cf925bd77d3def1ba6fa46cfdba04af854"
+      },
+      "engineering-dev-server/checks/frontend-final.log": {
+        "bytes": 288,
+        "sha256": "2ed1ed7966a5edf9506b2af8a16e7bc90822f35b996196b4d3c55f6bafe90d7d"
+      },
+      "engineering-dev-server/checks/typecheck-final.json": {
+        "bytes": 388,
+        "sha256": "c174f9006bc8c8c7669658169765a9169728d5385b79cf5be5e12211ac6f3d89"
+      },
+      "engineering-dev-server/checks/typecheck-final.log": {
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "engineering-dev-server/collect-inputs.py": {
+        "bytes": 2324,
+        "sha256": "5ea463d492dc40d1f6e39c2488d596131c998149a7215e8cc731914e9071aefb"
+      },
+      "engineering-dev-server/dist-after.json": {
+        "bytes": 10916,
+        "sha256": "4d52d616c1e9376935bd5193903605da7a0004dc8f554926bcc1dbfca053550e"
+      },
+      "engineering-dev-server/dist-before.json": {
+        "bytes": 10916,
+        "sha256": "4d52d616c1e9376935bd5193903605da7a0004dc8f554926bcc1dbfca053550e"
+      },
+      "engineering-dev-server/git-input-binding.json": {
+        "bytes": 558,
+        "sha256": "a6d7d9b089ae332cf17076c20d73fe6a9d723abea8f21bb47679d3422a547574"
+      },
+      "engineering-dev-server/preparation.json": {
+        "bytes": 434,
+        "sha256": "c9684cb530cfb394706a642521f9e490ae5ca4494477f2bb164271d102024e13"
+      },
+      "engineering-dev-server/reuse-review.json": {
+        "bytes": 479,
+        "sha256": "fab71c17c0f0edf5fee93965e857c160489f4859f675e28d7798a0897220c6bf"
+      },
+      "engineering-dev-server/run-check.py": {
+        "bytes": 1392,
+        "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e"
+      },
+      "engineering-dev-server/run-sequence.py": {
+        "bytes": 756,
+        "sha256": "a5d4d2075839b0429dc7a43ff99a2c7d04d08e8d6fcf9b05eace49050f6187fc"
+      },
+      "engineering-dev-server/source-after.json": {
+        "bytes": 278982,
+        "sha256": "4c8470a4c50965764d8951010a305f8f0b8163491c2db32c137e96987d66cf07"
+      },
+      "engineering-dev-server/source-before.json": {
+        "bytes": 278982,
+        "sha256": "4c8470a4c50965764d8951010a305f8f0b8163491c2db32c137e96987d66cf07"
+      }
+    }
+  }
+}
