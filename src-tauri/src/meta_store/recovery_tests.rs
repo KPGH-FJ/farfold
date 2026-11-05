@@ -240,6 +240,8 @@ fn explicit_frontend_storage_bridge() {
         key: String,
         read_only: bool,
         #[serde(default)]
+        limit_pages_to_current: bool,
+        #[serde(default)]
         value: serde_json::Value,
     }
 
@@ -287,6 +289,10 @@ fn explicit_frontend_storage_bridge() {
         "settings_get" | "settings_set"
     ));
     assert!(!request.read_only || request.command == "settings_set");
+    assert!(
+        !request.limit_pages_to_current
+            || (request.command == "settings_set" && !request.read_only)
+    );
     let store = MetaStore::open(&directory.join("fixture.sqlite3")).unwrap();
     if request.read_only {
         store
@@ -295,6 +301,35 @@ fn explicit_frontend_storage_bridge() {
             .pragma_update(None, "query_only", true)
             .unwrap();
     }
+    let sqlite_limit = if request.limit_pages_to_current {
+        let connection = store.lock().unwrap();
+        let pages: i64 = connection
+            .pragma_query_value(None, "page_count", |row| row.get(0))
+            .unwrap();
+        let page_size: i64 = connection
+            .pragma_query_value(None, "page_size", |row| row.get(0))
+            .unwrap();
+        let free_pages: i64 = connection
+            .pragma_query_value(None, "freelist_count", |row| row.get(0))
+            .unwrap();
+        assert!((1..=256).contains(&pages));
+        assert!((512..=4096).contains(&page_size));
+        assert_eq!(free_pages, 0);
+        assert!(request.value.to_string().len() >= 48 * 1024);
+        connection
+            .pragma_update(None, "max_page_count", pages)
+            .unwrap();
+        let maximum: i64 = connection
+            .pragma_query_value(None, "max_page_count", |row| row.get(0))
+            .unwrap();
+        assert_eq!(maximum, pages);
+        Some(json!({
+            "pageCount":pages,"pageSize":page_size,
+            "freePages":free_pages,"maxPageCount":maximum
+        }))
+    } else {
+        None
+    };
     let result = if request.command == "settings_get" {
         store
             .get_setting("unsentWork.v1")
@@ -305,11 +340,20 @@ fn explicit_frontend_storage_bridge() {
             .set_setting("unsentWork.v1", &request.value)
             .map(|()| serde_json::Value::Null)
     };
+    if request.limit_pages_to_current {
+        assert!(matches!(
+            &result,
+            Err(error) if error.starts_with("FARFOLD_STORAGE:full:")
+        ));
+    }
     drop(store);
-    let response = match result {
+    let mut response = match result {
         Ok(value) => json!({"id":request.id,"ok":true,"value":value}),
         Err(error) => json!({"id":request.id,"ok":false,"error":error}),
     };
+    if let Some(limit) = sqlite_limit {
+        response["testSqliteLimit"] = limit;
+    }
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
