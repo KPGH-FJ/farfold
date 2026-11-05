@@ -573,6 +573,15 @@ export default function App() {
         );
       return;
     }
+    // Returning to a failed view is navigation. Only the explicit recovery
+    // action may retry this same conversation and change connection intent.
+    if (
+      existing?.openError &&
+      existing.agentId === row.agentId &&
+      existing.cwd === row.cwd &&
+      (existing.nativeSessionId ?? "") === (row.nativeSessionId ?? "")
+    )
+      return;
     allowAutomaticConnection(row.agentId);
     if (!row.nativeSessionId) {
       threads.markOpenFailed(
