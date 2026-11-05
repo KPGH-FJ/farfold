@@ -21,6 +21,8 @@ vi.mock("../runtime/attachment_search_source", () => ({
 }));
 vi.mock("../runtime/transcript_search", () => ({
   revealSearchAncestors: h.reveal,
+  hasOpenSearchAncestors: () => true,
+  searchDetailsCommitted: () => true,
 }));
 import { AttachmentSearchJump } from "./AttachmentSearchJump";
 import type { AttachmentSearchLocation } from "../runtime/attachment_search_source";
@@ -33,6 +35,13 @@ beforeEach(() => {
   h.reveal.mockReturnValue(h.release);
   vi.stubGlobal("requestAnimationFrame", (f: () => void) => h.frames.push(f));
   vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  vi.stubGlobal(
+    "MutationObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
 });
 afterEach(() => {
   cleanup?.();
@@ -44,6 +53,7 @@ function view() {
     const attachment = {
       dataset: { loadedAttachment: "4" },
       isConnected: true,
+      getClientRects: () => [{ width: 80, height: 20 }],
       scrollIntoView: vi.fn(),
     };
     return {
@@ -60,7 +70,12 @@ function view() {
   const first = make(),
     second = make();
   let visible = first;
-  const root = { isConnected: true, querySelectorAll: () => [visible.message] };
+  const root = {
+    isConnected: true,
+    querySelectorAll: () => [visible.message],
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  };
   const host = {
     current: { querySelector: () => root } as unknown as HTMLElement,
   };

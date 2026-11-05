@@ -104,32 +104,19 @@ pub(crate) fn stream_copy(
         temporary.retain_unknown();
         return CopyOutcome::Unknown(DeliveryError::WriteFailed);
     }
-    let published = (|| {
-        check_destination_parent(
-            destination
-                .parent()
-                .ok_or(DeliveryError::InvalidDestination)?,
-            &parent,
-            &temporary.directory,
-            true,
-        )?;
-        let current = file_access::open_relative(&temporary.directory, Path::new(name))
-            .map_err(|_| DeliveryError::DestinationChanged)?;
-        if !file_access::same_object(&temporary.file, &current)
-            .map_err(|_| DeliveryError::DestinationChanged)?
-        {
-            return Err(DeliveryError::DestinationChanged);
-        }
-        Ok(())
-    })();
-    if let Err(error) = published {
-        return CopyOutcome::Unknown(error);
+    match published_receipt(
+        &temporary,
+        destination,
+        &parent,
+        DeliveryReceipt {
+            kind: DeliveryKind::FileCopy,
+            destination: destination_text,
+            size: file.size,
+            sha256: file.sha256.clone(),
+            source_version: Some(file.version.clone()),
+        },
+    ) {
+        Ok(receipt) => CopyOutcome::Completed(receipt),
+        Err(error) => CopyOutcome::Unknown(error),
     }
-    CopyOutcome::Completed(DeliveryReceipt {
-        kind: DeliveryKind::FileCopy,
-        destination: destination_text,
-        size: file.size,
-        sha256: file.sha256.clone(),
-        source_version: Some(file.version.clone()),
-    })
 }

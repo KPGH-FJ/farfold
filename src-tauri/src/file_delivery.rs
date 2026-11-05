@@ -47,6 +47,9 @@ mod selected_location;
 pub(crate) use selected_location::{document_extension, selected_location};
 
 #[cfg(test)]
+#[path = "file_delivery/published_receipt_tests.rs"]
+mod published_receipt_tests;
+#[cfg(test)]
 #[path = "file_delivery/stream_tests.rs"]
 mod stream_tests;
 #[cfg(test)]
@@ -471,21 +474,93 @@ fn write_new(
     // A rename/replaced parent racing publication must not yield a receipt
     // claiming the old location. Publication may have happened: report that
     // distinction explicitly and leave the source and completed copy intact.
-    check_destination_parent(requested_parent, &parent, &temporary.directory, true)?;
-    let published_file = file_access::open_relative(&temporary.directory, Path::new(name))
+    published_receipt(
+        &temporary,
+        destination,
+        &parent,
+        DeliveryReceipt {
+            kind,
+            destination: destination_text,
+            size: bytes.len() as u64,
+            sha256: content_hash(bytes),
+            source_version,
+        },
+    )
+}
+
+/// Turn one exclusively published, owned object into its delivery receipt.
+/// A failed observation leaves the published object intact for inspection.
+fn published_receipt(
+    temporary: &TemporaryExport,
+    destination: &Path,
+    parent: &Path,
+    receipt: DeliveryReceipt,
+) -> Result<DeliveryReceipt, DeliveryError> {
+    check_destination_parent(
+        destination
+            .parent()
+            .ok_or(DeliveryError::InvalidDestination)?,
+        parent,
+        &temporary.directory,
+        true,
+    )?;
+    let name = destination
+        .file_name()
+        .ok_or(DeliveryError::InvalidDestination)?;
+    let mut published_file = file_access::open_relative(&temporary.directory, Path::new(name))
         .map_err(|_| DeliveryError::DestinationChanged)?;
     if !file_access::same_object(&temporary.file, &published_file)
         .map_err(|_| DeliveryError::DestinationChanged)?
     {
         return Err(DeliveryError::DestinationChanged);
     }
-    Ok(DeliveryReceipt {
-        kind,
-        destination: destination_text,
-        size: bytes.len() as u64,
-        sha256: content_hash(bytes),
-        source_version,
-    })
+    let before =
+        file_access::stamp(&published_file).map_err(|_| DeliveryError::DestinationChanged)?;
+    if !before.regular || before.size != receipt.size {
+        return Err(DeliveryError::DestinationChanged);
+    }
+    // The owned object can still have been edited in place. Read bounded chunks
+    // from its published name before claiming that the expected bytes arrived.
+    let mut hash = Sha256::new();
+    let mut total = 0u64;
+    let mut buffer = [0u8; stream::BUFFER_BYTES];
+    loop {
+        let length = published_file
+            .read(&mut buffer)
+            .map_err(|_| DeliveryError::DestinationChanged)?;
+        if length == 0 {
+            break;
+        }
+        total += length as u64;
+        if total > receipt.size {
+            return Err(DeliveryError::DestinationChanged);
+        }
+        hash.update(&buffer[..length]);
+    }
+    let sha256: String = hash
+        .finalize()
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    let reopened = file_access::open_relative(&temporary.directory, Path::new(name))
+        .map_err(|_| DeliveryError::DestinationChanged)?;
+    if total != receipt.size
+        || sha256 != receipt.sha256
+        || file_access::stamp(&published_file).map_err(|_| DeliveryError::DestinationChanged)?
+            != before
+        || file_access::stamp(&reopened).map_err(|_| DeliveryError::DestinationChanged)? != before
+    {
+        return Err(DeliveryError::DestinationChanged);
+    }
+    check_destination_parent(
+        destination
+            .parent()
+            .ok_or(DeliveryError::InvalidDestination)?,
+        parent,
+        &temporary.directory,
+        true,
+    )?;
+    Ok(receipt)
 }
 
 #[cfg(test)]

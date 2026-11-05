@@ -244,12 +244,14 @@ export class SkillManagementController {
     const epoch = ++f.epoch;
     const timer = setTimeout(() => {
       if (this.attached(f) && f.view.unresolved) {
+        // Losing an older reply still matters, even when a newer check owns UI.
         f.lost = true;
         if (
           ["setEnabled", "add", "remove"].includes(f.view.request?.action ?? "")
         )
           f.target.changed();
-        this.publish(f, { checking: false, error: "timedOut" });
+        if (epoch === f.epoch)
+          this.publish(f, { checking: false, error: "timedOut" });
       }
     }, this.waitMs);
     void Promise.resolve()
@@ -270,7 +272,9 @@ export class SkillManagementController {
               trackingReleased: true,
               error: "unknownRequest",
             });
-          }
+          } else if (epoch === f.epoch)
+            // Only this observation ended; the operation remains unresolved.
+            this.publish(f, { checking: false });
         } else this.accept(f, raw);
       })
       .catch((reason) => {

@@ -5,7 +5,11 @@ import {
   type AttachmentSearchLocation,
   type AttachmentPdfPreview,
 } from "../runtime/attachment_search_source";
-import { revealSearchAncestors } from "../runtime/transcript_search";
+import {
+  hasOpenSearchAncestors,
+  revealSearchAncestors,
+  searchDetailsCommitted,
+} from "../runtime/transcript_search";
 import { ATTACHMENT_SEARCH_STRINGS as S } from "../runtime/attachment_search_strings";
 import "./LoadedSearchResults.css";
 export type AttachmentSearchRequest = {
@@ -29,13 +33,13 @@ export function AttachmentSearchJump({
   );
   const live = useRef(request);
   live.current = request;
+  const resumePosition = useRef<(() => void) | undefined>(undefined);
   const validNow = attachmentSearchSourceCurrent(
     request.source,
     threads.getSnapshot().threads,
     undefined,
     threads.getSnapshot().index,
   );
-  void revision;
   useEffect(() => {
     if (!validNow) {
       setStatus("stale");
@@ -45,9 +49,29 @@ export function AttachmentSearchJump({
     let disposed = false,
       release = () => {},
       highlighted: HTMLElement | undefined;
+    let root: HTMLElement | null | undefined;
+    let observer: MutationObserver | undefined;
+    let schedule: (() => void) | undefined;
+    let settled = false;
+    const stopWaiting = () => {
+      observer?.disconnect();
+      if (schedule) root?.removeEventListener("toggle", schedule, true);
+      if (resumePosition.current === schedule)
+        resumePosition.current = undefined;
+    };
+    const stale = () => {
+      settled = true;
+      stopWaiting();
+      release();
+      release = () => {};
+      highlighted?.classList.remove("search-match");
+      setStatus("stale");
+    };
     const valid = () =>
       !disposed &&
       live.current === request &&
+      !!root?.isConnected &&
+      host.current?.querySelector(".transcript") === root &&
       attachmentSearchSourceCurrent(
         request.source,
         threads.getSnapshot().threads,
@@ -55,14 +79,14 @@ export function AttachmentSearchJump({
         threads.getSnapshot().index,
       );
     let frame = requestAnimationFrame(() => {
-      const root = host.current?.querySelector<HTMLElement>(".transcript");
+      root = host.current?.querySelector<HTMLElement>(".transcript");
       if (!root || !valid()) {
-        setStatus("stale");
+        stale();
         return;
       }
       const find = () => {
         const messages = [
-          ...root.querySelectorAll<HTMLElement>("[data-loaded-message]"),
+          ...root!.querySelectorAll<HTMLElement>("[data-loaded-message]"),
         ].filter((n) => n.dataset.loadedMessage === request.source.itemId);
         const nodes =
           messages.length === 1
@@ -82,45 +106,71 @@ export function AttachmentSearchJump({
       };
       const source = find();
       if (!source) {
-        setStatus("stale");
+        stale();
         return;
       }
       release = revealSearchAncestors(source.attachment, root);
-      frame = requestAnimationFrame(() => {
-        const refreshed =
-          valid() &&
-          root.isConnected &&
-          host.current?.querySelector(".transcript") === root
-            ? find()
-            : null;
+      let pending = false;
+      const position = () => {
+        pending = false;
+        const refreshed = valid() ? find() : null;
         if (
+          !root ||
           !refreshed ||
           !refreshed.attachment.isConnected ||
           !refreshed.message.isConnected
         ) {
-          release();
-          release = () => {};
-          setStatus("stale");
+          stale();
           return;
         }
+        if (
+          !hasOpenSearchAncestors(refreshed.attachment, root) ||
+          !searchDetailsCommitted(root) ||
+          !Array.from(refreshed.attachment.getClientRects()).some(
+            (rect) => rect.width > 0 && rect.height > 0,
+          )
+        )
+          return;
         highlighted = refreshed.message;
         highlighted.classList.add("search-match");
         highlighted.focus({ preventScroll: true });
-        if (valid() && refreshed.attachment.isConnected)
+        if (valid() && refreshed.attachment.isConnected) {
           refreshed.attachment.scrollIntoView({
             block: "center",
             behavior: "instant",
           });
-        setStatus("located");
+          settled = true;
+          stopWaiting();
+          setStatus("located");
+        } else stale();
+      };
+      schedule = () => {
+        if (disposed || settled || pending) return;
+        pending = true;
+        frame = requestAnimationFrame(position);
+      };
+      observer = new MutationObserver(schedule);
+      observer.observe(root, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["open", "hidden"],
       });
+      root.addEventListener("toggle", schedule, true);
+      resumePosition.current = schedule;
+      schedule();
     });
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      stopWaiting();
       release();
       highlighted?.classList.remove("search-match");
     };
   }, [host, request, validNow]);
+  useEffect(() => {
+    resumePosition.current?.();
+  }, [revision]);
   return (
     <div className="loaded-search-jump">
       <span role="status">{S[validNow ? status : "stale"]}</span>
