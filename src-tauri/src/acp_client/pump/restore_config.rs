@@ -222,10 +222,12 @@ fn offers(options: &Value, value: &str) -> bool {
     })
 }
 
+fn work_busy(ctx: &DispatchContext<'_>) -> bool {
+    ctx.tools.busy() || ctx.compactions.busy() || ctx.async_tasks.busy()
+}
+
 pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
-    ctx.tools.busy()
-        || ctx.compactions.busy()
-        || ctx.async_tasks.busy()
+    work_busy(ctx)
         || ctx
             .pending
             .lock()
@@ -255,6 +257,25 @@ pub(super) async fn next_mutation(
 ) -> Option<Result<Value, String>> {
     // This async body runs only when the select branch is polled. An inbox
     // update can invalidate a prepared continuation before its first poll.
+    if let Some(pending) = mutation.as_ref()
+        && !pending.started()
+    {
+        // Repeat each control's existing work admission. Ordinary close need
+        // not wait for pending inquiries; ForkClose still owns its actual reply
+        // independently of caller interest/deadline in Mutation::poll.
+        let rejected = match &pending.kind {
+            MutationKind::Config { .. } if busy(ctx) => {
+                Some("当前无法修改此设置，请等待已发出的请求结束")
+            }
+            MutationKind::Mode | MutationKind::Close | MutationKind::Delete if work_busy(ctx) => {
+                Some("上次请求尚未结束，请先停止或等待")
+            }
+            _ => None,
+        };
+        if let Some(error) = rejected {
+            return Some(Err(error.into()));
+        }
+    }
     if let Some(pending) = mutation.as_ref()
         && !pending.started()
         && let MutationKind::Restore { plan, .. } = &pending.kind

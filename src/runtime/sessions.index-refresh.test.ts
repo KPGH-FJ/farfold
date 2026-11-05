@@ -50,10 +50,12 @@ beforeEach(async () => {
 
 it("preserves exact row authority across fresh equal JSON IPC responses", async () => {
   const before = current();
+  const beforeIndex = threads.getSnapshot().index;
   await threads.refreshIndex();
   expect(current()).toEqual(before);
   expect(current()).toBe(before);
   expect(current()).not.toBe(native.rows[0]);
+  expect(threads.getSnapshot().index).toBe(beforeIndex);
 });
 
 it("does not treat JSON object key order as a source change", async () => {
@@ -122,7 +124,7 @@ it("does not revive an old row when a removed row is later restored", async () =
   expect(current()).not.toBe(before);
 });
 
-it("compares with the current rows after await, never a pre-request ABA reference", async () => {
+it("rereads when an awaited response crosses a real row change, never reviving a prior ABA reference", async () => {
   const before = current();
   let release!: (rows: unknown[]) => void;
   native.next = new Promise((resolve) => {
@@ -131,10 +133,12 @@ it("compares with the current rows after await, never a pre-request ABA referenc
   const late = threads.refreshIndex();
   native.rows = [{ ...original, cwd: "/controlled/changed" }];
   await threads.refreshIndex();
-  expect(current()).not.toBe(before);
+  const changed = current();
+  expect(changed).not.toBe(before);
   release([structuredClone(original)]);
   await late;
-  expect(current()).toEqual(before);
+  expect(current()).toEqual(native.rows[0]);
+  expect(current()).toBe(changed);
   expect(current()).not.toBe(before);
 });
 

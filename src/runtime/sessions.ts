@@ -9,7 +9,7 @@ import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
 import { PromptRequestOwner } from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
-import { retainIndexRows } from "./session_index_refresh";
+import { refreshIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
 import { observeAuthentication } from "./authentication";
@@ -383,8 +383,13 @@ class ThreadsStore {
   async refreshIndex(): Promise<void> {
     const archiveRevision = this.archiveRevision;
     try {
-      const rows = await invoke<IndexRow[]>("session_index_list");
-      this.indexRows = retainIndexRows(this.indexRows, rows);
+      await refreshIndexRows(
+        () => invoke<IndexRow[]>("session_index_list"),
+        () => this.indexRows,
+        (rows) => {
+          this.indexRows = rows;
+        },
+      );
     } catch {
       // Keep the last known index; a failed read must not blank the sidebar.
     }
@@ -608,10 +613,13 @@ class ThreadsStore {
       // before pull pauses. The command can return without any further body.
       await replay.waitForReady(result.resumed);
       const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
-      const rows = await invoke<IndexRow[]>("session_index_list").catch(
-        () => null,
-      );
-      if (rows) this.indexRows = retainIndexRows(this.indexRows, rows);
+      await refreshIndexRows(
+        () => invoke<IndexRow[]>("session_index_list"),
+        () => this.indexRows,
+        (rows) => {
+          this.indexRows = rows;
+        },
+      ).catch(() => undefined);
       recheck?.validateResult(result);
       let state: ThreadState;
       try {

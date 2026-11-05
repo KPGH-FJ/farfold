@@ -33,6 +33,9 @@ use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, RequestCancellation, Responder, UntypedMessage,
 };
 use serde_json::Value;
+
+#[cfg(test)]
+mod config_activity_pending_tests;
 use tokio::sync::{mpsc, oneshot};
 
 #[cfg(test)]
