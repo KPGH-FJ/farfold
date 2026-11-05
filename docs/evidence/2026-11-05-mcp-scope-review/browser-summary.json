@@ -1,0 +1,237 @@
+{
+  "sourceCheckpoint": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
+  "browser": {
+    "recordedAtUtc": "2026-11-05T00:01:27.477519+00:00",
+    "scope": "Actual IAB browser DOM + real shared component/controller with read/inspect DTO replay; not official CLI, Tauri IPC, installed App, connection or tool invocation",
+    "productionBeforeSha256": "91b58c649fcab09da891b40102d669018ee41078d04a7d4ce18e865b440a9889",
+    "productionAfterSha256": "47f70694de1e9ec05b805574224366359e4ebaf4ed7e05e21888715ebd280bed",
+    "sameFixtureSha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+    "red": "project-reopened actual document.activeElement BODY. Visible receipt focus text was stale; actual DOM focus was used. Earliest three original observations preceded production fix. Later scope observations are not claimed exact pre-fix input-bound.",
+    "green": {
+      "cases": 3,
+      "observations": 9,
+      "openAndReopenFocus": "H5 MCP 启用偏好",
+      "collapseFocus": "BUTTON 查看 MCP 修改状态",
+      "read": 3,
+      "inspect": 3,
+      "confirm": 0,
+      "native": 0,
+      "noComponentHorizontalOverflow": true,
+      "viewport": "1280x720"
+    },
+    "cleanupAttempts": {
+      "mcpInspection": 3,
+      "inventory": 2,
+      "meaning": "Original exact ownership cleanup attempts recorded and rejected by private fixture; not successful backend cancellation or configuration writes. Reopen adds no port calls. Initial zero-otherPorts expectation was too strict; production cleanup preserved."
+    },
+    "notTested": [
+      "active=false or owner-current=false browser negative controls; unchanged guards reviewed",
+      "host Escape",
+      "other themes/sizes/accessibility assistive tools",
+      "installed app or real vendor adoption/connection"
+    ],
+    "originals": {
+      "browser-before.png": "c725d11b4f020dd99e1ae95a12cb6ad4ab129b70c31f09e59d65618a63ec9c79",
+      "browser-final.png": "ecac7585dd22dfcade2ae01ff6838f31db08fd757e6c6f35b9f288c0016f5bcd",
+      "fixture.test.html": "0b694a75bcf1d5603772a9d097571f1b1a16b6d8b5248b4bd47e2e698ded3e8b",
+      "README.md": "131a62c451cd9315395f1bb64f5c14561024d73b4d7cba8df79b612e615b88a3",
+      "server-preparation.json": "4c785624923f35f38fe8fcd1f6c14c236e83ae4b24151f0567faaf480e6902ae",
+      "vite.config.mts": "02521f032c6d0da862f6019ab697f6c13a76021324279e5f8bc91147bc553fd4",
+      "browser-original.json": "e0a78148863ab3ec4e73c9673e5162b521b8359425c5d3f1ab92e7294b0e7202",
+      "browser-scope-before.png": "121a2fb146e1b7e29fdac899ec3561d67b5def2a0d8de5283b6ea892443852f4",
+      "browser-final.json": "399b48f05273fd5cf9cc7399d2e917e3e606758e8b1486acc19fd878c33fab8e",
+      "fixture.test.tsx": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+      "server.log": "30d8bb52312361df56ad91211117f1fbf61f7d0699a2bfd87d4a9112b1508811"
+    }
+  },
+  "engineering": {
+    "recordedAtUtc": "2026-11-05T00:02:53.395160+00:00",
+    "commit": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
+    "files": 2372,
+    "matched": 2372,
+    "mismatch": [],
+    "manifestSha256": "13e3cf5e60b197132086f8de151533d52cd57273fa7ade0df376ba77aa3a6fd0",
+    "earlierFullSevenCommit": "603056dd11baea68a438f686ee83f96d89377ba4",
+    "onlyInputDelta": ["src/components/SkillChangeReview.tsx"],
+    "freshCommands": 4,
+    "rustCommandsReused": 3,
+    "rustReuseReason": "Every captured input except one TSX component is byte-identical; all Rust sources/build config/dependencies/native resources unchanged. No new Rust execution or compiled/installed-app claim.",
+    "notClaimed": "Seven commands freshly executed during this frontend-only interval; installed Tauri assets or actual app validation."
+  },
+  "archive": {
+    "path": "browser-originals.zip",
+    "sha256": "448b87da402191d49cb15ad25909de0ab36868bbece1d5b1443243adef29a402",
+    "bytes": 437964,
+    "files": {
+      "mcp-browser-ui/README.md": {
+        "sha256": "a4a6d226d938dfbda85454cb7f2d5ffed45397ee19b2b058f91de4957f6ea30c",
+        "bytes": 2816
+      },
+      "mcp-browser-ui/browser-before.png": {
+        "sha256": "c725d11b4f020dd99e1ae95a12cb6ad4ab129b70c31f09e59d65618a63ec9c79",
+        "bytes": 62212
+      },
+      "mcp-browser-ui/browser-final.json": {
+        "sha256": "399b48f05273fd5cf9cc7399d2e917e3e606758e8b1486acc19fd878c33fab8e",
+        "bytes": 17283
+      },
+      "mcp-browser-ui/browser-final.png": {
+        "sha256": "ecac7585dd22dfcade2ae01ff6838f31db08fd757e6c6f35b9f288c0016f5bcd",
+        "bytes": 71176
+      },
+      "mcp-browser-ui/browser-original.json": {
+        "sha256": "e0a78148863ab3ec4e73c9673e5162b521b8359425c5d3f1ab92e7294b0e7202",
+        "bytes": 10708
+      },
+      "mcp-browser-ui/browser-scope-before.png": {
+        "sha256": "121a2fb146e1b7e29fdac899ec3561d67b5def2a0d8de5283b6ea892443852f4",
+        "bytes": 67165
+      },
+      "mcp-browser-ui/browser-summary.json": {
+        "sha256": "dc05c56e54bd3e6cf00e100ed7ed4d397951be604d2af3cee0c238c511e9058c",
+        "bytes": 2711
+      },
+      "mcp-browser-ui/fixture.test.html": {
+        "sha256": "0b694a75bcf1d5603772a9d097571f1b1a16b6d8b5248b4bd47e2e698ded3e8b",
+        "bytes": 334
+      },
+      "mcp-browser-ui/fixture.test.tsx": {
+        "sha256": "16a07be9d65890090f658adbf3cce8de69d7a7f7ceb57d149b790d45c33f06be",
+        "bytes": 8022
+      },
+      "mcp-browser-ui/native-condition.json": {
+        "sha256": "44b4462f20c1324b256d67f873fad55499dedffed7af3cbce30ed1c83232c064",
+        "bytes": 404
+      },
+      "mcp-browser-ui/server-preparation.json": {
+        "sha256": "4c785624923f35f38fe8fcd1f6c14c236e83ae4b24151f0567faaf480e6902ae",
+        "bytes": 728
+      },
+      "mcp-browser-ui/server.log": {
+        "sha256": "30d8bb52312361df56ad91211117f1fbf61f7d0699a2bfd87d4a9112b1508811",
+        "bytes": 631
+      },
+      "mcp-browser-ui/vite.config.mts": {
+        "sha256": "02521f032c6d0da862f6019ab697f6c13a76021324279e5f8bc91147bc553fd4",
+        "bytes": 254
+      },
+      "mcp-review-focus/README.md": {
+        "sha256": "eeea93f5ebd1f0558f5d6eb52d6a643d75aa9e02ae4aef33ef6943df7a8c4112",
+        "bytes": 2956
+      },
+      "mcp-review-focus/SkillChangeReview.after.tsx": {
+        "sha256": "47f70694de1e9ec05b805574224366359e4ebaf4ed7e05e21888715ebd280bed",
+        "bytes": 13071
+      },
+      "mcp-review-focus/SkillChangeReview.before.tsx": {
+        "sha256": "91b58c649fcab09da891b40102d669018ee41078d04a7d4ce18e865b440a9889",
+        "bytes": 12904
+      },
+      "mcp-review-focus/checks/component-regressions.json": {
+        "sha256": "75ea8666a6b6e4ae952ec65ae6fec04756f578b607f3fe0a6e74ca8c345a9104",
+        "bytes": 752
+      },
+      "mcp-review-focus/checks/component-regressions.log": {
+        "sha256": "0efde70841feb742568e6212d09da2782f99b5d629a5e5f20ead4fe2cb704430",
+        "bytes": 211
+      },
+      "mcp-review-focus/checks/format.json": {
+        "sha256": "4398db1b1f621ceb069d93caab0e9f3862234e86d77dcfe95e31eab29bc94152",
+        "bytes": 434
+      },
+      "mcp-review-focus/checks/format.log": {
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      },
+      "mcp-review-focus/checks/typecheck.json": {
+        "sha256": "74a40af6f11fb28de683ee54e9c2f8935b887cef4da600ad6b5f94161537e64b",
+        "bytes": 370
+      },
+      "mcp-review-focus/checks/typecheck.log": {
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "mcp-review-focus/run-check.py": {
+        "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+        "bytes": 1392
+      },
+      "mcp-review-focus/source-before.json": {
+        "sha256": "f1ba4abc8bd1337df1d3ac0e945281300af4a062a220a4fcf78c8fe2aed10985",
+        "bytes": 666
+      },
+      "mcp-review-focus/source.patch": {
+        "sha256": "deec42ce404aaed7f4a193fa24ef7fc3982f67e711afcf8fdd1e93eaff93fc01",
+        "bytes": 1009
+      },
+      "mcp-review-focus/summary-before-browser-green.json": {
+        "sha256": "208d5e05bc5acf137887a8871721935bfcc1cf24d6f3249aa631d3803ac8720a",
+        "bytes": 3308
+      },
+      "mcp-review-focus/summary.json": {
+        "sha256": "64df389c39f7cfac8ed2b0b398ea96429c9e7960d679b087756bdc08d2152b71",
+        "bytes": 9549
+      },
+      "engineering-focus/checks/build-final.json": {
+        "sha256": "dae8d6113add4810d606291b5bc3032e3a9602ceda3f4029085959e3bdc2b0ac",
+        "bytes": 371
+      },
+      "engineering-focus/checks/build-final.log": {
+        "sha256": "a442f6b55830adfeaf752f0a80d04223ead093e0ac43ec15d08a8d49ed70024a",
+        "bytes": 4984
+      },
+      "engineering-focus/checks/format-final.json": {
+        "sha256": "fdffbe791be570622a0e97312a8964c767e001d7296ba8dd6782e545c77f9823",
+        "bytes": 381
+      },
+      "engineering-focus/checks/format-final.log": {
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      },
+      "engineering-focus/checks/frontend-final.json": {
+        "sha256": "8fa4db31139ee469d9d6ae7b795029ff3e3e1e8dd248021dd892d25083ad8815",
+        "bytes": 377
+      },
+      "engineering-focus/checks/frontend-final.log": {
+        "sha256": "1551185b8220f02cc97c14d08d3554e195df544c33d9aae05bdb469a6b0d77b9",
+        "bytes": 288
+      },
+      "engineering-focus/checks/typecheck-final.json": {
+        "sha256": "c48ede4cae8bcae91b3c3ee229eb4e271c323093d4a9928884867cc64427da10",
+        "bytes": 383
+      },
+      "engineering-focus/checks/typecheck-final.log": {
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "engineering-focus/collect-inputs.py": {
+        "sha256": "5ea463d492dc40d1f6e39c2488d596131c998149a7215e8cc731914e9071aefb",
+        "bytes": 2324
+      },
+      "engineering-focus/git-input-binding.json": {
+        "sha256": "485bb90bcaa5a4137e96a24f8d32457dc796401bfca5c6a557e972885b734e52",
+        "bytes": 798
+      },
+      "engineering-focus/preparation.json": {
+        "sha256": "dce8401e88c6fed42dd192f2f21b001a9ee48dc08b0605f303d88aeaab0e509f",
+        "bytes": 423
+      },
+      "engineering-focus/run-check.py": {
+        "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+        "bytes": 1392
+      },
+      "engineering-focus/run-sequence.py": {
+        "sha256": "a5d4d2075839b0429dc7a43ff99a2c7d04d08e8d6fcf9b05eace49050f6187fc",
+        "bytes": 756
+      },
+      "engineering-focus/source-after.json": {
+        "sha256": "13e3cf5e60b197132086f8de151533d52cd57273fa7ade0df376ba77aa3a6fd0",
+        "bytes": 278982
+      },
+      "engineering-focus/source-before.json": {
+        "sha256": "13e3cf5e60b197132086f8de151533d52cd57273fa7ade0df376ba77aa3a6fd0",
+        "bytes": 278982
+      }
+    }
+  },
+  "laterDocumentation": "Progress-only updates are separate; no claim these documentation bytes ran seven again."
+}
