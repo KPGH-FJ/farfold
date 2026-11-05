@@ -12,6 +12,7 @@
       },
       "nsis": {
         "installMode": "currentUser",
+        "installerHooks": "native/windows-installer-hooks.nsh",
         "installerIcon": "icons/icon.ico",
         "languages": ["English", "SimpChinese"],
         "displayLanguageSelector": true

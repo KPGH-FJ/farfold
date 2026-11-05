@@ -87,7 +87,7 @@ export class InteractionActions {
     requestId: string,
     optionId: string,
     label: string,
-    allow: boolean,
+    allow: boolean | null,
     remember = false,
   ): void {
     const s = this.get(key);

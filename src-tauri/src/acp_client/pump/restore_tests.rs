@@ -64,8 +64,14 @@ for line in sys.stdin:
   prefix=[update()];result={'configOptions':copy.deepcopy(options)}
   if mode=='late-drift' and p['configId']=='reasoning_effort':
    options[0]['currentValue']='m1';suffix=[update()]
+   suffix[0]['params']['update']['_fixtureRestorePhase']='thought-post-reply-drift'
+  if mode=='thought-before-stale-reply' and p['configId']=='reasoning_effort':
+   options[0]['currentValue']='m1';prefix=[update()]
   if mode=='model-late-drift' and p['configId']=='model':
    options[0]['currentValue']='m1';suffix=[update()]
+   suffix[0]['params']['update']['_fixtureRestorePhase']='model-post-reply-drift'
+  if mode=='model-before-stale-reply' and p['configId']=='model':
+   options[0]['currentValue']='m1';prefix=[update()]
   if mode=='active-tool':
    prefix.append({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'tool_call','toolCallId':'restore-tool','title':'Fixture running tool','kind':'read','status':'in_progress'}}})
   if mode=='new-model':
@@ -334,7 +340,7 @@ async fn configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_
     for mode in [
         "error",
         "wrong",
-        "model-late-drift",
+        "model-before-stale-reply",
         "active-tool",
         "new-model",
     ] {
@@ -357,13 +363,80 @@ async fn configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_
     }
 }
 
+async fn assert_post_reply_drift(fault: &str, phase: &'static str, thought_sent: bool) {
+    let mut fixture = Fixture::established().await;
+    let baseline = fixture.record();
+    let seen = Arc::new(tokio::sync::Notify::new());
+    let notify = seen.clone();
+    let previous = fixture.sink.clone();
+    fixture.sink = Arc::new(move |event| {
+        let drift = event
+            .pointer("/update/_fixtureRestorePhase")
+            .and_then(Value::as_str)
+            == Some(phase);
+        previous(event);
+        if drift {
+            notify.notify_one();
+        }
+    });
+    // This preserves the original post-response suffix. A single write does
+    // not promise when it reaches the pump relative to the next setter.
+    std::fs::write(fixture.cwd.join("fault"), fault).unwrap();
+    let _opened = fixture.cold().await;
+    tokio::time::timeout(Duration::from_secs(5), seen.notified())
+        .await
+        .expect("the actual post-reply drift must reach the original sink");
+    let check = fixture
+        .events
+        .lock()
+        .unwrap()
+        .iter()
+        .rev()
+        .find(|event| event["kind"] == "configCheck")
+        .cloned()
+        .unwrap();
+    assert!(matches!(
+        check["check"]["status"].as_str(),
+        Some("blocked" | "record_failed")
+    ));
+    let blocks =
+        serde_json::from_value(json!([{"type":"text","text":"must remain unsent"}])).unwrap();
+    assert!(
+        fixture
+            .manager
+            .session_prompt(&fixture.row.id, &fixture.cwd, SESSION, blocks)
+            .await
+            .is_err()
+    );
+    let sets = fixture.restore_sets();
+    let model = ("model".into(), "m2".into());
+    let thought = ("reasoning_effort".into(), "low".into());
+    if thought_sent {
+        assert_eq!(sets, vec![model, thought]);
+    } else {
+        assert!(sets == vec![model.clone()] || sets == vec![model, thought]);
+    }
+    assert_eq!(fixture.record(), baseline);
+    fixture.assert_identity_and_no_prompt();
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_restore_post_reply_model_drift_blocks_after_receiving_it() {
+    assert_post_reply_drift("model-late-drift", "model-post-reply-drift", false).await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_restore_post_reply_thought_drift_blocks_after_receiving_it() {
+    assert_post_reply_drift("late-drift", "thought-post-reply-drift", true).await;
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_restore_last_reply_followed_by_drift_never_publishes_stale_ready() {
     let fixture = Fixture::established().await;
     let baseline = fixture.record();
-    // The peer writes the matching last reply and its later, incompatible
-    // notification in one flush; recovery must settle the received prefix.
-    std::fs::write(fixture.cwd.join("fault"), "late-drift").unwrap();
+    // The incompatible notification precedes the stale final receipt, so
+    // never-ready is a received-input requirement rather than a future guess.
+    std::fs::write(fixture.cwd.join("fault"), "thought-before-stale-reply").unwrap();
     let opened = fixture.cold().await;
     assert_not_ready(&fixture, opened).await;
     assert_eq!(

@@ -239,7 +239,7 @@ class ThreadsStore {
     requestId: string,
     optionId: string,
     label: string,
-    allow: boolean,
+    allow: boolean | null,
     remember = false,
   ): void =>
     this.interactions.decide(key, requestId, optionId, label, allow, remember);

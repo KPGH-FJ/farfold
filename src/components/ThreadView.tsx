@@ -1,4 +1,5 @@
 import { DecisionLine } from "./PermissionDecisionLine";
+import { permissionDecision } from "../runtime/permission_options";
 import { audioCapability } from "../runtime/audio_input";
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
@@ -545,19 +546,14 @@ export function ThreadView({
     option: PermissionOption,
   ) => {
     if (!activeRef.current || thread.stopping || thread.stopUnconfirmed) return;
-    const label =
-      option.kind === "allow_once"
-        ? STRINGS.thread.approved(option.name)
-        : option.kind === "allow_always"
-          ? STRINGS.thread.approvedRemember(option.name)
-          : STRINGS.thread.rejected;
+    const decision = permissionDecision(option);
     threads.decidePermission(
       thread.key,
       requestId,
       option.optionId,
-      label,
-      option.kind.startsWith("allow"),
-      option.kind === "allow_always",
+      decision.label,
+      decision.allow,
+      decision.undoable,
     );
   };
 
@@ -1112,7 +1108,11 @@ export function ThreadView({
                   {permission.decision ? (
                     <DecisionLine
                       decision={permission.decision}
-                      submitting={permission.status === "submitting"}
+                      submitting={
+                        permission.status === "submitting" ||
+                        (permission.status === "pending" &&
+                          !permission.decision.undoable)
+                      }
                       onUndo={() =>
                         threads.undoPermissionDecision(
                           thread.key,

@@ -1,15 +1,23 @@
 name: Windows verification
 
-# Run explicitly while Windows implementation is being completed. This is an
-# unsigned build check, never a release/publish or an installed-product receipt.
+# Run explicitly while Windows implementation is being completed.
+# Full remains engineering plus unsigned build. InstallLifecycle is a separate
+# explicit install/uninstall receipt without App launch, never full acceptance.
 on:
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Explicit Windows verification scope
+        type: choice
+        default: Full
+        options: [Full, InstallLifecycle]
 
 permissions:
   contents: read
 
 jobs:
   frontend:
+    if: ${{ inputs.scope != 'InstallLifecycle' }}
     runs-on: windows-2022
     timeout-minutes: 60
     defaults:
@@ -45,6 +53,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
   rust:
+    if: ${{ inputs.scope != 'InstallLifecycle' }}
     runs-on: windows-2022
     # Full41830692244 spent ~19m compiling and ~40m testing before the old
     # job cap cancelled it. This is finite runner capacity, not a test deadline.
@@ -87,6 +96,7 @@ jobs:
 
   installer:
     needs: [frontend, rust]
+    if: ${{ always() && !cancelled() && (inputs.scope == 'InstallLifecycle' || (needs.frontend.result == 'success' && needs.rust.result == 'success')) }}
     runs-on: windows-2022
     timeout-minutes: 60
     defaults:
@@ -118,7 +128,11 @@ jobs:
       - name: Install locked JavaScript dependencies
         run: corepack pnpm install --frozen-lockfile
       - name: Build unsigned per-user installer
+        if: ${{ inputs.scope != 'InstallLifecycle' }}
         run: corepack pnpm tauri build --ci --no-sign --target x86_64-pc-windows-msvc --bundles nsis -- --locked
+      - name: Build and bind the explicit installation lifecycle candidate
+        if: ${{ inputs.scope == 'InstallLifecycle' }}
+        run: ./.github/scripts/windows-install-lifecycle.ps1 -ExpectedHead '${{ github.sha }}' -Phase Build
       - name: Keep unsigned build artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -126,10 +140,22 @@ jobs:
           path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
           if-no-files-found: error
           retention-days: 7
+      - name: Verify per-user installation and uninstall data retention without App launch
+        if: ${{ inputs.scope == 'InstallLifecycle' }}
+        timeout-minutes: 10
+        run: ./.github/scripts/windows-install-lifecycle.ps1 -ExpectedHead '${{ github.sha }}' -Phase Install
+      - name: Keep explicit installation lifecycle receipts
+        if: ${{ always() && inputs.scope == 'InstallLifecycle' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: farfold-windows-install-lifecycle-${{ github.run_id }}-${{ github.run_attempt }}
+          path: windows-install-raw/
+          if-no-files-found: warn
+          retention-days: 7
 
-  # Keep the original verification context; a skipped dependency is not success.
+  # Keep the original Full context; a skipped dependency is not success.
   verify:
-    if: ${{ always() }}
+    if: ${{ always() && inputs.scope != 'InstallLifecycle' }}
     needs: [frontend, rust, installer]
     runs-on: windows-2022
     timeout-minutes: 5

@@ -60,12 +60,21 @@ const EMPTY: SkillManagementView = Object.freeze({
   additionInput: null,
   originalOperation: null,
 });
+type ChangeTarget = Pick<
+  SkillChangeTargetOwner,
+  "owner" | "result" | "current" | "changed"
+>;
+type RemovalParent = "mayRemainEmpty" | "preserveSiblings" | null;
+interface LastWrite {
+  request: SkillChangeRequest;
+  operation: SkillChangeOperation;
+  port: SkillManagementPort;
+  target: ChangeTarget;
+  removalParent: RemovalParent;
+}
 interface Flight {
   port: SkillManagementPort;
-  target: Pick<
-    SkillChangeTargetOwner,
-    "owner" | "result" | "current" | "changed"
-  >;
+  target: ChangeTarget;
   view: SkillManagementView;
   retired: boolean;
   consumed: boolean;
@@ -74,9 +83,9 @@ interface Flight {
   epoch: number;
   inspection: SkillChangeRequest;
   inspectionRevoked: boolean;
-  confirmation: SkillChangeRequest | null;
+  lastWrite: LastWrite | null;
   reviewDeadline: number | null;
-  removalParent: "mayRemainEmpty" | "preserveSiblings" | null;
+  removalParent: RemovalParent;
   inheritedWrite: Pick<
     SkillChangeOperation,
     "writeDispatched" | "writeAck"
@@ -202,9 +211,22 @@ export class SkillManagementController {
       f.reviewDeadline ??= op.review.observedAtMs + op.review.validForMs;
       if (this.now() < f.reviewDeadline) rev = op.review;
     }
+    // A read or an undispatched confirmation never replaces the last actual write.
+    if (
+      op.writeDispatched &&
+      ["setEnabled", "add", "remove"].includes(f.view.request.action)
+    )
+      f.lastWrite = {
+        request: f.view.request,
+        operation: op,
+        port: f.port,
+        target: f.target,
+        removalParent: f.removalParent,
+      };
     if (op.writeDispatched) f.target.changed();
     this.publish(f, {
       operation: op,
+      originalOperation: f.lastWrite?.operation ?? null,
       review: rev,
       reviewRetired: !!op.review && !rev,
       unresolved: !op.settled,
@@ -333,6 +355,7 @@ export class SkillManagementController {
         ...EMPTY,
         request,
         unresolved: true,
+        originalOperation: previous?.lastWrite?.operation ?? null,
         additionInput: "input" in target ? target.input : null,
       },
       retired: false,
@@ -342,7 +365,7 @@ export class SkillManagementController {
       epoch: 0,
       inspection: request,
       inspectionRevoked: false,
-      confirmation: null,
+      lastWrite: previous?.lastWrite ?? null,
       reviewDeadline: null,
       inheritedWrite: null,
       removalParent: null,
@@ -425,12 +448,12 @@ export class SkillManagementController {
         request,
         unresolved: true,
         reviewRetired: true,
+        originalOperation: old.lastWrite?.operation ?? null,
         additionInput: old.view.additionInput,
       },
       dispatched: false,
       epoch: 0,
       lost: false,
-      confirmation: request,
       removalParent: "parentHandling" in review ? review.parentHandling : null,
     };
     this.entries.set(owner.agentId, f);
@@ -553,40 +576,44 @@ export class SkillManagementController {
       this.retire(owner);
   }
   recheck(agentId: string, requestId: string): boolean {
-    const old = this.entries.get(agentId);
+    const old = this.entries.get(agentId),
+      write = old?.lastWrite;
     if (
       !old ||
       old.view.request?.requestId !== requestId ||
       old.view.unresolved ||
-      !old.view.operation?.settled ||
-      !old.view.operation.writeDispatched ||
-      !old.confirmation
+      !write?.operation.settled ||
+      !write.operation.writeDispatched
     )
       return false;
     this.dropHttpInput(old);
+    this.revokeReview(old);
     const request: SkillChangeRequest = Object.freeze({
-      ...old.confirmation,
+      ...write.request,
       requestId: this.uuid(),
       action: "recheck",
-      operationId: old.confirmation.requestId,
+      operationId: write.request.requestId,
     });
     const f: Flight = {
       ...old,
+      port: write.port,
+      target: write.target,
       view: {
         ...EMPTY,
         request,
         unresolved: true,
         reviewRetired: true,
-        additionInput: old.view.additionInput,
-        originalOperation: old.view.originalOperation ?? old.view.operation,
+        originalOperation: write.operation,
       },
       retired: true,
+      inspectionRevoked: true,
+      removalParent: write.removalParent,
       dispatched: true,
       epoch: 0,
       lost: false,
       inheritedWrite: {
-        writeDispatched: old.view.operation.writeDispatched,
-        writeAck: old.view.operation.writeAck,
+        writeDispatched: write.operation.writeDispatched,
+        writeAck: write.operation.writeAck,
       },
     };
     this.entries.set(agentId, f);

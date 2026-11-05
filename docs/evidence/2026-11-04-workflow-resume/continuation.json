@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-05T04:33:46.067148+00:00",
-  "objective": "Continue the sole plan: protect newer explicit draft submissions and user recovery decisions; preserve exact permission choice identity. Missing platform and real-send conditions remain scoped.",
+  "updatedAt": "2026-11-05T06:28:15.001316+00:00",
+  "objective": "Continue sole plan: preserve explicitly dispatched management write outcome/recheck ownership, guard shared family configuration, render approval meanings truthfully; prepare current Windows install/uninstall evidence without launching App.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
@@ -78,10 +78,51 @@
     "Windows41965725276 attempt1/sourcecfd completed success;2native/4files28frontend andtypes natural0,actualList2FQN/fourPSparse passed;2312inputs stable and all20changedfiles sourcebound(35exact2277LFtoCRLF). Raw22artifact+17logs and digests independently reviewed;189root derived assertions are not189tests. Unique watch closed. No App/installer/realAgent or currentfullWindows claim.",
     "Current progress docs finalized after rawWindows proof: original151titles/conditions/order,16packages/common/scope unchanged; onlyARCH21/26/41/P01/P02progress. Finaldocscheck0/globalformat0. Public capsule251exactUTF8textmembers validated against rawstagebytes,manifest/archiveSHA; finalrecord formatted separately. All owned checks/watch/download processes ended; formalAEB andoriginaldirtyJSON0644SHA90117 retained."
   ],
-  "active": [],
-  "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
+  "active": [
+    {
+      "owner": "root",
+      "scope": "ARCH41 exact permission meaning and pending receipt truth",
+      "state": "11 scoped GREEN,101 related; independent PASS, source frozen"
+    },
+    {
+      "owner": "environment_review",
+      "scope": "P39/P41 retain last dispatched write and original explicit recheck",
+      "state": "9 GREEN and18files169 related including private1; independent PASS, source frozen"
+    },
+    {
+      "owner": "source_review",
+      "scope": "shared-family guard for3 management writes",
+      "state": "5 GREEN and17 exact existing tests, independent PASS, source frozen"
+    },
+    {
+      "owner": "windows_budget_review",
+      "scope": "Windows owned installer/uninstaller lifecycle and same-basename console negative controls",
+      "state": "helpers/workflow being finalized; no actual install/CI/App yet"
+    },
+    {
+      "owner": "environment_review",
+      "scope": "shared5native/2files20frontend CI and NSIS hook independent review",
+      "state": "selected cohort v2 frozen after stream correction;106line hook under independent review"
+    },
+    {
+      "owner": "source_review",
+      "scope": "single Rust restore-late-drift failure causal investigation",
+      "state": "Restore first-poll guard and final fixture boundaries frozen; sealed7 GREEN/4 valid RED; final full seven passed. v2 independent review0mustfix; originalA/B not uniquely assigned.",
+      "evidence": "output/2026-11-05-management-install-stage/restore-late-drift-investigation/"
+    }
+  ],
+  "formalPreparation": {
+    "directory": "output/2026-11-05-management-install-stage/formal",
+    "state": "UNBOUND_NOT_EXECUTED",
+    "freshFormerFiveFileBaseline": "formal/formal-baseline.json",
+    "source": "aeb0dc491dbea76003aad988d86b675034b837ad",
+    "sourceCommitForNewCandidateStillUnknown": true,
+    "normalExitOriginals": "root3 originals plus exact copies formal/ui",
+    "rootExitAggregate": "formal/root-normal-exit-b3-ui.UNBOUND.json",
+    "dataCaptureBuildInstall": false
+  },
   "remaining": [
-    "Major source/selectedWindows review stage completed; continue later work only from plans/agent-access.md. Original151conditions and29x8 remain open as recorded; this checkpoint is not whole-product completion, a new queue, or renewed real-send authorization.",
+    "Current management/install stage in progress; source patches are not yet committed or fully checked. Finish scoped repairs/reviews, review installer safety/ownership proposal before implementation, freeze shared inputs, full7 and current selected Windows validation, then finalize progress evidence. Existing Mac/NEW24/credential/platform boundaries remain; no completed old run should be restarted.",
     "Unique plans/agent-access.md governs later common-capability/Windows/29-agent work; original151conditions and29x8 remain open as recorded. This is a major stage review checkpoint, not whole product completion or a new queue.",
     "Windowscfd41965725276 selected2native/28frontend passed andsourcebound; old2e installer remains build/integrity only, not installed/executed. Actual desktop/user/account/Agent flows and currentfullWindows remain unknown. NEW24 affected real sends staypaused,oldresends0,preserve original services/models/reasoning/history/credentials and unrelateddirtyJSON.",
     "Windows old2e installer was built/integritychecked only, not installed/executed. Actual desktop/user/account/Agent flows and uncovered paths remain unknown. Newb714 scope is not a full currentWindows run; ea6lateVite only localvalidated. NEW24 affected real sends staypaused, oldresends0, preserve services/models/reasoning/credentials/history and unrelateddirtyJSON."
@@ -110,8 +151,8 @@
     "originalRequestsResent": 0,
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5"
   },
-  "updatedAtUtc": "2026-11-05T04:33:46.067148+00:00",
-  "stage": "completed_major_stage_source_and_selected_windows_review",
+  "updatedAtUtc": "2026-11-05T05:01:51.901420+00:00",
+  "stage": "final_full7_passed_ready_source_checkpoint",
   "finalEvidence": {
     "currentSource": "cfd14b749d5e008359edc4901d3c6da00350f323",
     "latestEngineeringBinding": "output/2026-11-05-next-capability-stage/engineering/git-input-binding.json",
@@ -147,5 +188,57 @@
     "protectedMode": "0644",
     "currentFormalBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
     "fileIdentityOnlyNoUiProbe": true
+  },
+  "formalUnlockInput": {
+    "userReply": "已解锁",
+    "cuaObservedAccessible": true,
+    "observedUnsentStartupMarker": "P02_20261103 仅验证未发送草稿切换🙂",
+    "retainedDraftCount": 1,
+    "formalUpdated": false,
+    "normalExitForCurrentBatch": true,
+    "note": "Root actual Cua normal save-and-exit after B3 history read; original unknown kept unknown. Formal main and previous known Goose absent. Fresh five-file former bundle baseline prepared; no data capture/build/install, target remains UNBOUND."
+  },
+  "nextExactContinuation": "Commit/push exact31files preserving sole unrelated dirtyJSON; independently bind2384Git blobs. Dispatch fixed-source SharedManagement and InstallLifecycle once each. Bind final seven/actual exit/former bundle and fresh protected data; one Mac candidate/build/install/readers/cleanup, then actual installed UI. Complete platform raw readers and stage facts/evidence without reducing29x8/151.",
+  "initialEngineeringAttempt": {
+    "directory": "output/2026-11-05-management-install-stage/engineering",
+    "inputCount": 2383,
+    "productionInputs": 2379,
+    "sourceBeforeAfterEqual": true,
+    "frontendFiles": 714,
+    "frontendPassed": 9563,
+    "sixOtherCommandsNaturalZero": true,
+    "rust": {
+      "exitCode": 101,
+      "passed": 2354,
+      "failed": 1,
+      "ignored": 7,
+      "failure": "acp_client::pump::restore_tests::configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_blocks_prompt",
+      "mode": "model-late-drift",
+      "symptom": "assert_not_ready passed, but expected only model setter; wire calls also contained reasoning_effort low"
+    },
+    "rootCauseState": "Single stdout flush gives no suffix-arrival barrier. Separate deterministic real Plan/Mutation/Routes/drain witness confirms received drift can still first-poll an unstarted continuation. Initial full failure is not uniquely assigned A or B. Production helper extraction and sealed regression in progress."
+  },
+  "finalEngineering": {
+    "directory": "output/2026-11-05-management-install-stage/engineering-final",
+    "canonicalReport": "output/2026-11-05-management-install-stage/engineering-result.json",
+    "allSevenNaturalZero": true,
+    "sourceInputs": 2384,
+    "productionInputs": 2380,
+    "frontendFiles": 714,
+    "frontendPassed": 9563,
+    "rustPassed": 2364,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "sourceEndpointsEqual": true,
+    "gitSourceBinding": "pending checkpoint commit",
+    "initialFailedRunPreserved": "output/2026-11-05-management-install-stage/engineering"
+  },
+  "selectedWindowsPreparation": {
+    "cohort": "SharedManagement",
+    "nativeGroupCounts": [5, 7, 16, 2],
+    "nativeCases": 30,
+    "frontendCases": 20,
+    "actualWindowsExecuted": false,
+    "independentReview": "output/2026-11-05-management-install-stage/selected-ci-preparation/independent-restore-selection-review.json"
   }
 }

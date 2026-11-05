@@ -18,7 +18,7 @@
 //! - `{"kind": "connectionLost"}` when the process dies or disconnects.
 
 use super::lifecycle::{ConnectionLife, WorkLease};
-use super::mutation::{self, Kind as MutationKind, Mutation, Reply as MutationReply};
+use super::mutation::{Kind as MutationKind, Mutation, Reply as MutationReply};
 use super::operations::Operation;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
@@ -42,6 +42,10 @@ mod preparation_mode_tests;
 #[cfg(test)]
 #[path = "pump/restore_tests.rs"]
 mod restore_tests;
+
+#[cfg(test)]
+#[path = "pump/restore_pending_tests.rs"]
+mod restore_pending_tests;
 
 #[cfg(test)]
 #[path = "pump/model_id_retention_tests.rs"]
@@ -826,7 +830,7 @@ async fn session_pump(
                     events(serde_json::json!({"kind":"interactionExpired", "requestId":request_id}));
                 }
             }
-            outcome = mutation::next(&mut mutation) => {
+            outcome = restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permission_guard) => {
                 if let Some(outcome) = outcome {
                     let mut completed = mutation.take().expect("completed mutation exists");
                     let mut outcome = match &completed.kind {

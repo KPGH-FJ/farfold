@@ -12,6 +12,19 @@ import { SKILL_MANAGEMENT_STRINGS as SKILLS } from "../runtime/skill_management_
 import { EXTENSION_INVENTORY_STRINGS as I } from "../runtime/extension_inventory_strings";
 import { MCP_MANAGEMENT_STRINGS as MCP } from "../runtime/mcp_management_strings";
 import "./SkillChangeReview.css";
+import type { ExtensionChangeRequest } from "../runtime/extension_management_types";
+
+function stringsForTarget(target: ExtensionChangeRequest["target"]) {
+  return !("kind" in target)
+    ? SKILLS
+    : target.kind === "mcpRemoval"
+      ? REMOVE
+      : target.kind === "mcpAddition"
+        ? target.transport === "streamableHttp"
+          ? HTTP
+          : ADD
+        : MCP;
+}
 
 export function SkillChangeReview({
   agentId,
@@ -86,24 +99,15 @@ export function SkillChangeReview({
         }
       </button>
     );
-  const isMcp = "kind" in request.target;
   const isAddition =
     "kind" in request.target && request.target.kind === "mcpAddition";
   const isRemoval =
     "kind" in request.target && request.target.kind === "mcpRemoval";
-  const isHttp =
-    isAddition &&
-    "transport" in request.target &&
-    request.target.transport === "streamableHttp";
-  const S = isRemoval
-    ? REMOVE
-    : isHttp
-      ? HTTP
-      : isAddition
-        ? ADD
-        : isMcp
-          ? MCP
-          : SKILLS;
+  const S = stringsForTarget(request.target);
+  const prior =
+    view.originalOperation?.requestId !== op?.requestId
+      ? view.originalOperation
+      : null;
   const outcome = op?.outcome;
   const refusedWithoutReview =
     request.action === "inspect" &&
@@ -143,6 +147,21 @@ export function SkillChangeReview({
               ? REMOVE.checkUnknown
               : S[outcome]
             : S.unknown;
+  const readback =
+    !view.unresolved &&
+    view.originalOperation?.settled &&
+    view.originalOperation.writeDispatched ? (
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={!active}
+        onClick={() => {
+          if (allowed()) skillManagement.recheck(agentId, request.requestId);
+        }}
+      >
+        {S.recheck}
+      </button>
+    ) : null;
   return (
     <section className="skill-change-review" aria-label={S.heading}>
       <div className="skill-change-header">
@@ -184,13 +203,26 @@ export function SkillChangeReview({
       {isRemoval && "transport" in request.target && (
         <p>{I.transport[request.target.transport]}</p>
       )}
-      {isRemoval && view.originalOperation && (
-        <p>
-          {REMOVE.original}：
-          {view.originalOperation.outcome
-            ? REMOVE[view.originalOperation.outcome]
-            : REMOVE.unknown}
-        </p>
+      {prior && (
+        <div className="agent-extension-progress">
+          <p>
+            {isRemoval && request.action === "recheck"
+              ? REMOVE.original
+              : SKILLS.priorOperation}
+          </p>
+          <p>{prior.target.name}</p>
+          <p className="skill-change-path">
+            {SKILLS.priorDirectory}：{prior.cwd}
+          </p>
+          <p role="status">
+            {!prior.outcome || prior.outcome === "unknown"
+              ? "kind" in prior.target && prior.target.kind === "mcpRemoval"
+                ? REMOVE.unknown
+                : SKILLS.priorUnknown
+              : stringsForTarget(prior.target)[prior.outcome]}
+          </p>
+          {readback}
+        </div>
       )}
       {summary && <p role="status">{summary}</p>}
       {view.error && !view.trackingReleased && (
@@ -394,19 +426,7 @@ export function SkillChangeReview({
             </button>
           </>
         )}
-        {!view.unresolved && op?.settled && op.writeDispatched && (
-          <button
-            type="button"
-            className="btn btn-ghost"
-            disabled={!active}
-            onClick={() => {
-              if (allowed())
-                skillManagement.recheck(agentId, request.requestId);
-            }}
-          >
-            {S.recheck}
-          </button>
-        )}
+        {!prior && readback}
       </div>
     </section>
   );

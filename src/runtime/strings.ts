@@ -397,6 +397,8 @@ export const STRINGS = {
     approved: (title: string) => `已批准 · ${title}`,
     approvedRemember: (title: string) => `已批准 · ${title}`,
     rejected: "已拒绝 · 已告知 Agent",
+    permissionChoiceSubmitted: (name: string) =>
+      name ? `已回复 · ${name}` : "已回复",
     done: "已完成",
     ended: "已结束",
     noResult: "已结束，但未收到可展示结果",

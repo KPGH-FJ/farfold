@@ -2,7 +2,10 @@ import { invoke } from "@tauri-apps/api/core";
 import type { PendingPermission, ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
-import { selectablePermissionOption } from "./permission_options";
+import {
+  permissionDecision,
+  selectablePermissionOption,
+} from "./permission_options";
 
 export interface OpeningPermission extends PendingPermission {
   owner: Record<string, unknown>;
@@ -157,12 +160,7 @@ export class OpeningPermissions {
       p.decision
     )
       return;
-    const decision = {
-      optionId,
-      label: option.name,
-      allow: option.kind.startsWith("allow"),
-      undoable: option.kind === "allow_always",
-    };
+    const decision = { ...permissionDecision(option), label: option.name };
     p.decision = decision;
     const revision = this.revision();
     p.error = null;

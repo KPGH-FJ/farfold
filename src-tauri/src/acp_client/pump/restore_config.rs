@@ -122,7 +122,7 @@ impl Plan {
         self.observed = Some(options.clone());
     }
 
-    pub(super) fn next(&mut self, options: &Value) -> Result<Option<Choice>, String> {
+    fn validate_confirmed(&self, options: &Value) -> Result<(), String> {
         if ModelGuard::new(options, Some(&self.record), true)
             .check()
             .issues
@@ -136,6 +136,21 @@ impl Plan {
                 return Err("Agent 已恢复的选择又发生变化，请重新检查此对话".into());
             }
         }
+        Ok(())
+    }
+
+    fn validate_pending(&self, options: &Value) -> Result<(), String> {
+        self.validate_confirmed(options)?;
+        let requested = self.requested.as_ref().ok_or(UNCONFIRMED)?;
+        let option = declared(options, requested)?;
+        if !offers(&option["options"], &requested.value) {
+            return Err(UNCONFIRMED.into());
+        }
+        Ok(())
+    }
+
+    pub(super) fn next(&mut self, options: &Value) -> Result<Option<Choice>, String> {
+        self.validate_confirmed(options)?;
         while let Some(choice) = self.remaining.pop_front() {
             let option = declared(options, &choice)?;
             if option["currentValue"] == choice.value {
@@ -230,6 +245,38 @@ pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
                     .any(|entry| entry.session_id == ctx.session_id)
             })
             .unwrap_or(true)
+}
+
+pub(super) async fn next_mutation(
+    mutation: &mut Option<Mutation>,
+    opening: &Option<Opening>,
+    ctx: &mut DispatchContext<'_>,
+    permissions: &super::super::permission_guard::PermissionGuard,
+) -> Option<Result<Value, String>> {
+    // This async body runs only when the select branch is polled. An inbox
+    // update can invalidate a prepared continuation before its first poll.
+    if let Some(pending) = mutation.as_ref()
+        && !pending.started()
+        && let MutationKind::Restore { plan, .. } = &pending.kind
+    {
+        let admission = if !pending.awaiting_reply()
+            || busy(ctx)
+            || !matches!(permissions.state(), "ready" | "required")
+        {
+            Err("恢复结果尚未确认，请完成待处理事项后重试".into())
+        } else {
+            plan.validate_pending(
+                opening
+                    .as_ref()
+                    .and_then(|opening| opening.options.as_ref())
+                    .unwrap_or(&Value::Null),
+            )
+        };
+        if let Err(error) = admission {
+            return Some(Err(error));
+        }
+    }
+    super::super::mutation::next(mutation).await
 }
 
 pub(super) fn update(

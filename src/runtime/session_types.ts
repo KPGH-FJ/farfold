@@ -143,7 +143,7 @@ export type ThreadItem = (
       kind: "decision";
       id: string;
       label: string;
-      allow: boolean;
+      allow: boolean | null;
       time: number;
     }
   | {
@@ -227,7 +227,7 @@ export interface PendingPermission extends PendingRequest {
   decision: {
     optionId: string;
     label: string;
-    allow: boolean;
+    allow: boolean | null;
     /** `allow_always` only — undo reverts the "remember" before it lands. */
     undoable: boolean;
   } | null;
