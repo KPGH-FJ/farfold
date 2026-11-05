@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-04T14:58:52.932300+00:00",
-  "objective": "Continue authorized development under updated single plan; P01 draft preservation and Windows retirement verification.",
+  "updatedAt": "2026-11-05T04:33:46.067148+00:00",
+  "objective": "Continue the sole plan: protect newer explicit draft submissions and user recovery decisions; preserve exact permission choice identity. Missing platform and real-send conditions remain scoped.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
@@ -36,13 +36,16 @@
     "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
     "mcpSourceAndBrowserEvidence": "c2aa64f11",
     "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
-    "latestSourceEngineeringBinding": "output/2026-11-05-development-continuation/engineering-dev-server/git-input-binding.json",
+    "latestSourceEngineeringBinding": "output/2026-11-05-next-capability-stage/engineering/git-input-binding.json",
     "capacityToolsAndWindowsScope": "b7147e530742c47b96713495dea8b736dc9ec630",
     "devServerColdScan": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "windowsFullSuccessRun": 41931045918,
     "windowsFullSuccessSource": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
     "windowsSharedScopeRun": 41942738310,
-    "windowsSharedScopeSource": "b7147e530742c47b96713495dea8b736dc9ec630"
+    "windowsSharedScopeSource": "b7147e530742c47b96713495dea8b736dc9ec630",
+    "recoveryApprovalSource": "cfd14b749d5e008359edc4901d3c6da00350f323",
+    "recoveryApprovalWindowsRun": 41965725276,
+    "recoveryApprovalEngineeringIndependentReview": "output/2026-11-05-next-capability-stage/engineering-independent-review/independent-review.json"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -69,13 +72,18 @@
     "2026-11-05 full7 checkpoint603:709files9518frontend/Rust2349pass7ignored,2372before/after and committed blobs equal; P01 real SQLite8exchanges and independent raw review passed. Original front failure/audio fixture correction retained; public checkpoint capsule prepared.",
     "Actual browser found and fixed MCP detail reopen focus65c and fresh refusal falsely labeled expired6f. Same replay fixture3cases9DOM after each correction, latest complete frontend4 passes709files9523; Rust3 reused with unchanged declared Rust inputs, no later7-rerun claim.2372Git6f exact; independent supplemental review passed.151conditions/order/16packages/common unchanged after progress-only docs.",
     "b714 test-only capacity10exchangeGREEN including2realSQLiteFULL; newformat/Rust3all0,2372Gitbound,independentf500pass. Windows41931045918 fixed2e fullfourjobs success/native2391/0/75,front9506/3skip,unsignedNSISbuild/integrity only; original17 same-run17/17,independent3e+0f4pass.",
-    "Windows41942738310 fixedb714 scoped18native+3files15frontend/type and4PSparse passed,2307sourcebound(35exact2272CRLF),independent2d8294pass. Later ea6dev-onlyVitecoldscan fixed withactualcoldlogs/HTTP200/freshfrontend4all0,9523pass,104distassets unchanged,Rustb714retained;independent783pass. All owned servers/watch/download/build processes ended."
+    "Windows41942738310 fixedb714 scoped18native+3files15frontend/type and4PSparse passed,2307sourcebound(35exact2272CRLF),independent2d8294pass. Later ea6dev-onlyVitecoldscan fixed withactualcoldlogs/HTTP200/freshfrontend4all0,9523pass,104distassets unchanged,Rustb714retained;independent783pass. All owned servers/watch/download/build processes ended.",
+    "cfd14b749 common batch committed/pushed: Composer pending owner protects later explicit sends; OpeningBaseline preserves current retry-copy disposition/work pause; duplicate/non-string approval IDs protected in frontend/opening/backend. RED and scoped GREEN plus independent reviews complete. Current full7 natural0:712files9543frontend,Rust2350/0/7,2377before/after/Git blobs equal. Original format-only continuation failure retained and corrected before complete frontend4 rerun.",
+    "Root reviewed three progress documents; only ARCH21/26/41/P01/P02 progress cells changed.151original task titles/completions/order,16packages/common/scope preserved by deterministic parse; in-progress docs:check0. Independent final engineering audit verified all2377Git blobs and exact7 command/results; no must-fix. Documentation edits after the checked interval remain separate and will get final docs/format/source-only proof.",
+    "Windows41965725276 attempt1/sourcecfd completed success;2native/4files28frontend andtypes natural0,actualList2FQN/fourPSparse passed;2312inputs stable and all20changedfiles sourcebound(35exact2277LFtoCRLF). Raw22artifact+17logs and digests independently reviewed;189root derived assertions are not189tests. Unique watch closed. No App/installer/realAgent or currentfullWindows claim.",
+    "Current progress docs finalized after rawWindows proof: original151titles/conditions/order,16packages/common/scope unchanged; onlyARCH21/26/41/P01/P02progress. Finaldocscheck0/globalformat0. Public capsule251exactUTF8textmembers validated against rawstagebytes,manifest/archiveSHA; finalrecord formatted separately. All owned checks/watch/download processes ended; formalAEB andoriginaldirtyJSON0644SHA90117 retained."
   ],
   "active": [],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
+    "Major source/selectedWindows review stage completed; continue later work only from plans/agent-access.md. Original151conditions and29x8 remain open as recorded; this checkpoint is not whole-product completion, a new queue, or renewed real-send authorization.",
     "Unique plans/agent-access.md governs later common-capability/Windows/29-agent work; original151conditions and29x8 remain open as recorded. This is a major stage review checkpoint, not whole product completion or a new queue.",
-    "Mac remains locked at the final actual Cua observation. Current formalApp is stillAEB; normalexit/no-active-work/freshprotectedbaseline must precede one authorized formal update and applicable UI validation. Do not force/privatequit or restore obsolete fresh-seven/direct-parent gates; puretest/devchanges do not mechanically trigger reinstall.",
+    "Windowscfd41965725276 selected2native/28frontend passed andsourcebound; old2e installer remains build/integrity only, not installed/executed. Actual desktop/user/account/Agent flows and currentfullWindows remain unknown. NEW24 affected real sends staypaused,oldresends0,preserve original services/models/reasoning/history/credentials and unrelateddirtyJSON.",
     "Windows old2e installer was built/integritychecked only, not installed/executed. Actual desktop/user/account/Agent flows and uncovered paths remain unknown. Newb714 scope is not a full currentWindows run; ea6lateVite only localvalidated. NEW24 affected real sends staypaused, oldresends0, preserve services/models/reasoning/credentials/history and unrelateddirtyJSON."
   ],
   "constraints": [
@@ -92,7 +100,8 @@
     "installedVersion": "0.1.7",
     "installedBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
     "originalUnrelatedDirtySha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
-    "originalUnrelatedDirtyMode": "0644"
+    "originalUnrelatedDirtyMode": "0644",
+    "currentFormalFileOnlyObservation": "output/2026-11-05-next-capability-stage/formal-identity.json; AEB binary still exact, no UI unlock probe/exit/update."
   },
   "knownConfigRetryEvidence": {
     "frontendOriginalRed": "output/2026-11-04-config-save-retry/red/result.json",
@@ -101,9 +110,26 @@
     "originalRequestsResent": 0,
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5"
   },
-  "updatedAtUtc": "2026-11-05T01:15:13.161059+00:00",
-  "stage": "completed_major_stage_source_and_ci_review",
+  "updatedAtUtc": "2026-11-05T04:33:46.067148+00:00",
+  "stage": "completed_major_stage_source_and_selected_windows_review",
   "finalEvidence": {
+    "currentSource": "cfd14b749d5e008359edc4901d3c6da00350f323",
+    "latestEngineeringBinding": "output/2026-11-05-next-capability-stage/engineering/git-input-binding.json",
+    "lateProgressProof": "output/2026-11-05-next-capability-stage/requirements-final-proof.json",
+    "windowsRun": 41965725276,
+    "windowsRawAndSourceReview": "output/2026-11-05-next-capability-stage/windows-run/root-independent-review.json",
+    "public": ["docs/evidence/2026-11-05-recovery-approval/README.md"],
+    "watchers": "All completed; no active watch. Do not restart completed runs.",
+    "documentationChecks": "docs/evidence/2026-11-05-recovery-approval/documentation-checks.json",
+    "capsule": {
+      "archive": "docs/evidence/2026-11-05-recovery-approval/originals.zip",
+      "members": 251,
+      "sha256": "9022f75e6a548425612476209965d632cf1f484b700e9b80b6895710911ef1e7",
+      "allOriginalTextBytesAndHashesVerified": true,
+      "binaryApiArchivesKeptInOutputNotPublished": true
+    }
+  },
+  "previousFinalEvidence": {
     "currentSource": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "latestEngineeringBinding": "output/2026-11-05-development-continuation/engineering-dev-server/git-input-binding.json",
     "lateProgressProof": "output/2026-11-05-development-continuation/final-progress-review.json",
@@ -114,5 +140,12 @@
       "docs/evidence/2026-11-05-windows-mcp-scope/README.md"
     ],
     "watchers": "Both runs completed; no active owned watch. Do not restart them."
+  },
+  "stageFinalProtection": {
+    "checkedAtUtc": "2026-11-05T04:32:10.523565+00:00",
+    "protectedUnrelatedSha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
+    "protectedMode": "0644",
+    "currentFormalBinarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
+    "fileIdentityOnlyNoUiProbe": true
   }
 }

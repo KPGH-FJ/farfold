@@ -1,0 +1,125 @@
+{
+  "recordedAtUtc": "2026-11-05T04:31:01.815457+00:00",
+  "sourceCommit": "cfd14b749d5e008359edc4901d3c6da00350f323",
+  "branch": "codex/2026-11-04-development-resume",
+  "stage": "common source batch and selected Windows verification complete; formal update and remaining product conditions open",
+  "implemented": [
+    "Later explicit Composer send keeps its own pending writer against stale attachment/admission callbacks.",
+    "History/config recovery retains current retry-copy disposition and work pause; no automatic continuation.",
+    "Ambiguous/non-string permission identifiers cannot select a different advertised choice; unique safe choices and original raw requests remain available."
+  ],
+  "macDevelopmentSource": {
+    "finalSevenNaturalExits": [0, 0, 0, 0, 0, 0, 0],
+    "commands": [
+      ["corepack", "pnpm", "format:check"],
+      ["corepack", "pnpm", "typecheck"],
+      ["corepack", "pnpm", "test"],
+      ["corepack", "pnpm", "build"],
+      ["cargo", "fmt", "--check", "--manifest-path", "src-tauri/Cargo.toml"],
+      [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked"]
+    ],
+    "frontend": {
+      "filesPassed": 712,
+      "passed": 9543,
+      "failed": 0
+    },
+    "rustLib": {
+      "passed": 2350,
+      "failed": 0,
+      "ignored": 7
+    },
+    "declaredInputsBeforeAfterAndGitBlobsEqual": 2377,
+    "firstFormatFailure": "Continuation JSON formatting only; fixed, then all four frontend commands reran. Original failure retained.",
+    "lateProgressDocs": "Checked separately. Only five progress cells changed; no fresh full-seven claim for new document bytes."
+  },
+  "windowsSelected": {
+    "runId": 41965725276,
+    "attempt": 1,
+    "jobId": 127042164355,
+    "url": "https://github.com/KPGH-FJ/farfold/actions/runs/41965725276",
+    "sourceCommit": "cfd14b749d5e008359edc4901d3c6da00350f323",
+    "status": "completed",
+    "conclusion": "success",
+    "native": {
+      "listed": 2,
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "naturalExitCode": 0
+    },
+    "frontend": {
+      "files": 4,
+      "passed": 28,
+      "failed": 0,
+      "pending": 0,
+      "todo": 0,
+      "typecheckNaturalExitCode": 0,
+      "testNaturalExitCode": 0
+    },
+    "actualPowerShellParseFiles": 4,
+    "declaredInputs": 2312,
+    "gitExact": 35,
+    "gitExactLfToCrlfTransform": 2277,
+    "all20ChangedSourceFilesIncluded": true,
+    "artifactId": 13388121703,
+    "artifactBytes": 257448,
+    "artifactSha256": "9a7a51347c687d028542fecafaaa53bc503e6aae35f7485b15e08064f9ff9364",
+    "archivedArtifactTextMembers": 22,
+    "archivedJobTextLogs": 17,
+    "independentRawAndSourceReview": "PASS_WITH_EXPLICIT_SCOPE; derived checks are not additional product tests",
+    "fullWindowsOrInstallerOrDesktopOrRealAgentAcceptance": false
+  },
+  "formalApp": {
+    "observedAtUtc": "2026-11-05T04:09:43.468876+00:00",
+    "app": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "executable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "binarySha256": "ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6",
+    "expectedAebBinaryUnchanged": true,
+    "scope": "File identity only. No Cua unlock probe, launch, quit, install or current UI observation."
+  },
+  "requirements": {
+    "tasks": 151,
+    "workPackages": 16,
+    "originalTitlesConditionsOrderAndScopeUnchanged": true,
+    "changedProgressOnly": ["ARCH-21", "ARCH-26", "ARCH-41", "P01", "P02"],
+    "releaseScope": "29 Agents x8 original standards, not complete"
+  },
+  "realModelRequests": 0,
+  "oldRequestsResent": 0,
+  "remaining": [
+    "Formal Mac update/installed fault UI awaits applicable device/normal-exit/data conditions; no new unlock observation was made.",
+    "Actual Windows installation and desktop user flows remain unverified.",
+    "NEW-24 affected real sends remain paused; existing account/API/recovery-object/directory gaps retain their original scope."
+  ],
+  "archive": {
+    "file": "originals.zip",
+    "members": 251,
+    "bytes": 1615845,
+    "sha256": "9022f75e6a548425612476209965d632cf1f484b700e9b80b6895710911ef1e7",
+    "contents": "Exact original stage-owned UTF-8 text only; no executable or App. Original API ZIP containers remain under output with their verified text members and hashes archived here."
+  },
+  "documentationCheckReceipt": "documentation-checks.json",
+  "evidencePathsInsideArchive": [
+    "engineering/summary.json",
+    "engineering/git-input-binding.json",
+    "engineering-independent-review/independent-review.json",
+    "approval-independent-review/review.json",
+    "session-root-review.json",
+    "draft-send-ownership/independent-review.json",
+    "windows-run/root-independent-review.json",
+    "windows-run/source-binding.json",
+    "requirements-final-proof.json"
+  ]
+}

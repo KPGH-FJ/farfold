@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "cfd14b749d5e008359edc4901d3c6da00350f323",
+  "checks": [
+    {
+      "label": "docs-navigation",
+      "command": ["corepack", "pnpm", "docs:check"],
+      "naturalExitCode": 0,
+      "startedAtUtc": "2026-11-05T04:32:10.772980+00:00",
+      "finishedAtUtc": "2026-11-05T04:32:10.906658+00:00",
+      "durationSeconds": 0.134,
+      "log": "docs-navigation-final.log",
+      "logSha256": "e6e011e8dfaa814d2fa01c4c21970f62f45ded0cbc1623992215e2e24a7363d9"
+    },
+    {
+      "label": "docs-format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "naturalExitCode": 0,
+      "startedAtUtc": "2026-11-05T04:32:10.906805+00:00",
+      "finishedAtUtc": "2026-11-05T04:32:39.209700+00:00",
+      "durationSeconds": 28.303,
+      "log": "docs-format-final.log",
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    }
+  ],
+  "scope": "Final progress/navigation/format validation; separate from the source full-seven interval. Original151/16package proof is in the archive."
+}
