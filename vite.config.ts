@@ -24,6 +24,7 @@ export default defineConfig({
       },
     ],
   },
+  optimizeDeps: { entries: ["index.html"] },
   clearScreen: false,
   worker: { format: "es" },
   server: {
