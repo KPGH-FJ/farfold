@@ -33,11 +33,18 @@ export function SkillChangeReview({
   const heading = useRef<HTMLHeadingElement>(null);
   const reopen = useRef<HTMLButtonElement>(null);
   const priorRequest = useRef(request);
+  const priorClosed = useRef(closed);
   useEffect(() => {
-    if (request !== priorRequest.current && active && owner.current())
+    if (
+      (request !== priorRequest.current ||
+        (priorClosed.current !== null && closed === null)) &&
+      active &&
+      owner.current()
+    )
       heading.current?.focus();
     priorRequest.current = request;
-  }, [request, owner, active]);
+    priorClosed.current = closed;
+  }, [request, closed, owner, active]);
   useEffect(() => {
     if (closed && active && owner.current()) reopen.current?.focus();
   }, [closed, active, owner]);
