@@ -28,7 +28,15 @@
     "finalEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json",
     "p01QueueSchema": "16442f1b86683d3b82e06962b46dc7ab171da452",
     "currentWindowsFullRun": 41931045918,
-    "currentWindowsFullSource": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd"
+    "currentWindowsFullSource": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
+    "mcpScopeRefusal": "aa1b00e733164e69099233996be33e354bf6a6dc",
+    "p01QueueSourceEvidence": "cfe7d8a09fe0e1a03ed1c54a606c77686c93f451",
+    "audioFixtureCorrection": "032d8a03e34d9bae1c2233dfadedd2d0cfae0c19",
+    "p01McpFullSevenInputCommit": "603056dd11baea68a438f686ee83f96d89377ba4",
+    "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
+    "mcpSourceAndBrowserEvidence": "c2aa64f11",
+    "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
+    "latestSourceEngineeringBinding": "output/2026-11-05-development-continuation/engineering-presentation/git-input-binding.json"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -50,21 +58,21 @@
     "P11 bounded source review independently confirmed official Codex turn-level and Claude inclusive-message point APIs; current selected/runtime version unknown and no generic point guarantee from fork{}. No new UI; SDK candidate explicitly not_run because whole-module import effects not fully bounded.",
     "Final stable Mac seven recorded fresh:707files9509frontend/Rust2339pass7ignored and all finalcommands0. Initial format failed onlystatus table spacing, corrected and format retried; other6fresh in same2369 declared-input interval;4deltas from earlier69 map.",
     "Final2369captured input SHA256 values independently matched all exact Git blobs of2f5c90550 via onecat-filebatch. Later current-status/handoff wording is documentation-only and separatelychecked; original unrelated dirtyJSON unchanged.",
-    "2026-11-05 resumed again byuser; Windowscomplete41931045918 uniquelydispatchedon2e, and newP01 queued-field data-loss RED investigated/fixed16442f1b8 with independent review."
+    "2026-11-05 resumed again byuser; Windowscomplete41931045918 uniquelydispatchedon2e, and newP01 queued-field data-loss RED investigated/fixed16442f1b8 with independent review.",
+    "MCPaa1b00e73 finalized with precise source refusals only on originalrejected path; unknown/duplicate same-source remainsgeneric, priorUser metadata path preserved. RootTypepreflight0;20worker/2independent/50frontend plus finalcode/raw review passed. Source and realDTO fixtures immutable for unified7.",
+    "2026-11-05 full7 checkpoint603:709files9518frontend/Rust2349pass7ignored,2372before/after and committed blobs equal; P01 real SQLite8exchanges and independent raw review passed. Original front failure/audio fixture correction retained; public checkpoint capsule prepared.",
+    "Actual browser found and fixed MCP detail reopen focus65c and fresh refusal falsely labeled expired6f. Same replay fixture3cases9DOM after each correction, latest complete frontend4 passes709files9523; Rust3 reused with unchanged declared Rust inputs, no later7-rerun claim.2372Git6f exact; independent supplemental review passed.151conditions/order/16packages/common unchanged after progress-only docs."
   ],
   "active": [
-    "Root P01 queued unknown-owned-fields minimalguard committed/pushed16442f1b8, RED2fail1positive -> samebytesGREEN3, associated13files110pass; only drafts.ts production6lines+newtest. Unified7 pending dependent currentbatch stable.",
-    "source_review owns MCP scope/refusal implementation and localCargo untilrelease. root must not runCargo meanwhile. No realuser config/credentials/Agent/model calls.",
-    "environment_review prepares actual temporarySQLite bridge for currentP01 path, no Cargo/execution until rootprovides freshlybound finaltestbinary after stable7.",
-    "windows_budget_review owns fixed2e Windowsfull41931045918 unique watchsession6967/output2026-11-05-development-continuation/windows-full; no secondwatch/dispatch.",
-    "Fresh rootCUA stilllocked, soleAEB unchanged. formal-preparation proposedpatch/adapter staticonly; allbinding/exit/baseline/build/install stillunexecuted."
+    "Windows unique full41931045918 fixed2e23056cc remains owned by windows_budget_review/watch6967. No duplicate dispatch/watch. New P01/MCP/focus source is not covered. Collect natural completion/raw cases/installer through owner event.",
+    "Root source batch stable6f01327cb. Latest frontend4 final0 including corrected handoff JSON format; old first format1 retained. Source maps2372 equal before/after and exactGit6f; late requirements edits progress-only/other2371unchanged. Public engineering/MCP capsules independently reviewed, docscheck151 and targeted formatting passed. Source/evidence checkpoint commits are located in Git history; no further local build/test is running.",
+    "Mac locked at2026-11-05T00:01:41Z; sole App AEB binaryed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6 unchanged. No quit/build/replace/install, no fresh closed-state data baseline; formal templates remain UNBOUND/static.",
+    "Own browser tabs and Vite servers closed. All local frontend/Rust/SQLite checks ended. No new real model sends/old resends, no account/model/reasoning/config/credential changes. Original unrelated dirty debuggerJSON must remain exactSHA90117ac...166."
   ],
   "formalPreparation": "Current sole formalApp functional source aeb0dc491, binary ed410bc9ff64b1705f87de225e7a57b5850387ba3be36fef68e146bb30b37db6. CI/docs-only96c does not require Mac reinstall; original private data/tools/receipts preserved under output/2026-11-04-open-failure-formal.",
   "remaining": [
-    "FinishMCP scope refusal source/scopedREDGREEN, P01 SQLite boundedlink, independent review, then unified7 onlywhen currentbatch source stable.",
-    "Windowsfullresult belongsfixed2e notP01/MCP newbatch. Retain failures/naturalexit/actualinstaller scopes, diagnose actualnew failures proportionately.",
-    "Manualunlock needed onlyformal/UI dependentline; priorpendingunlockquestion persists, do notforceexit/reuseoldexit orstopindependentwork.",
-    "Preserve151/29x8/NEW24pause andselectedmodel/reasoning; no realnewmodelsend/oldresend/userconfig mutation; protectoriginaldebuggerJSON."
+    "Collect unique Windows fixed2e full natural result and actual failed names/installer outcome; diagnose failures without broad timeout relaxation.",
+    "Formal install requires manual unlock, normal save/exit/no-active-work and fresh protected baseline. Continue independent work; do not repeat pending unlock question or force/private quit."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -89,5 +97,5 @@
     "originalRequestsResent": 0,
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5"
   },
-  "updatedAtUtc": "2026-11-04T23:17:04.194551+00:00"
+  "updatedAtUtc": "2026-11-05T00:15:04.297053+00:00"
 }

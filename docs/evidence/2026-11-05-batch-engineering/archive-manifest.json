@@ -1,0 +1,855 @@
+{
+  "schema": 1,
+  "kind": "PreFocusCheckpointOriginalsManifest",
+  "sourceCommit": "603056dd11baea68a438f686ee83f96d89377ba4",
+  "payloadEntries": 92,
+  "manifestSelfExcluded": true,
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 3962,
+      "sha256": "2671c18af21241f91a2d469c665dd61c21cd24fe405dd91b233b1513aecfcae3",
+      "origin": {
+        "kind": "derived-capsule-readme"
+      }
+    },
+    {
+      "path": "checkpoint-source/src-tauri/src/meta_store.rs",
+      "bytes": 53222,
+      "sha256": "a9944f7508a2582e2a1b82839a000259b8625bfe3175af96ca567b92afccddc2",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src-tauri/src/meta_store.rs",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src-tauri/src/meta_store/recovery_tests.rs",
+      "bytes": 11627,
+      "sha256": "6a6d43575e0d7ab3ceb0398f896cd4ae99172831a1ef39cf40f6419f279b4c5b",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src-tauri/src/meta_store/recovery_tests.rs",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/audio_input_draft.test.ts",
+      "bytes": 9132,
+      "sha256": "c8b3fccac76259def62e5b81f5f316150b6c4c0be055f286c90b0465d68428a2",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/audio_input_draft.test.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/draft_storage.queue-schema.test.ts",
+      "bytes": 3792,
+      "sha256": "141ed138c4e4b6bb2662b9f572580d41bec44fac1136188464e283e788ce3e88",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/draft_storage.queue-schema.test.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/draft_storage.ts",
+      "bytes": 7239,
+      "sha256": "a86d7f616f9d91dd06f9ec1e819cf3a524138fecb1efff0b0dc435eeec961e4c",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/draft_storage.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/drafts.ts",
+      "bytes": 30912,
+      "sha256": "7c9ad5871d14b9619d95a0d605802e92559c114887e078fe786ccf44ccc689e2",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/drafts.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/sessions.ts",
+      "bytes": 42257,
+      "sha256": "5f99837a7fd605452233ed5af9f076f73bcaaaa0488e84624db6e1157b688276",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/sessions.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/storage_restore.preview.test.ts",
+      "bytes": 8697,
+      "sha256": "6406ed8e4af556ef4f4851885e5f87edafc4819c1bc9b34e324a2f9f415ff43f",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/storage_restore.preview.test.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "checkpoint-source/src/runtime/storage_restore.ts",
+      "bytes": 8718,
+      "sha256": "16c7d45f7dedca8710fb0d7bccb42e155303c95c33bab25fae55b6647285c9d5",
+      "origin": {
+        "kind": "source-bytes-matching-checkpoint-map",
+        "path": "src/runtime/storage_restore.ts",
+        "checkpoint": "603056dd11baea68a438f686ee83f96d89377ba4",
+        "capturedMapSha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5"
+      }
+    },
+    {
+      "path": "output/2026-10-30-p12-continuation/formal-final/candidate.py",
+      "bytes": 32226,
+      "sha256": "af5ed6afd31f9a2a48a31f10f4db5e4df5ddb064ff862ed03c2b879c53ea2452",
+      "origin": {
+        "kind": "pinned-collector-shared-definition",
+        "path": "output/2026-10-30-p12-continuation/formal-final/candidate.py",
+        "recordedPinSha256": "af5ed6afd31f9a2a48a31f10f4db5e4df5ddb064ff862ed03c2b879c53ea2452"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/audio-fixture-correction/checkpoint.json",
+      "bytes": 224,
+      "sha256": "0a9a5240451f8c1b7ef04be668fa7dd4306def2af48cdd68e8f357f4e1051aec",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/audio-fixture-correction/checkpoint.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/audio-fixture-correction/command.log",
+      "bytes": 212,
+      "sha256": "7ad1c466afe490a749b3eae9cd24c73ed3e8af3518cd5c600a159d0d2015c7f4",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/audio-fixture-correction/command.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/audio-fixture-correction/investigation.json",
+      "bytes": 946,
+      "sha256": "629b2e10e7395f3c5f013c7f159eb8b1d680fcb091dda9aeb2c8dd239bfc0aff",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/audio-fixture-correction/investigation.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/audio-fixture-correction/result.json",
+      "bytes": 501,
+      "sha256": "8cec270a123d61559800652cbea24800affd0c4cf3bc7d72b4e17e0b7d0f3a1b",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/audio-fixture-correction/result.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/audio-fixture-correction/source.patch",
+      "bytes": 596,
+      "sha256": "e726b85a791d1c3878c26819ed801335531d9686e5cdc42070737a56117ab858",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/audio-fixture-correction/source.patch"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.json",
+      "bytes": 371,
+      "sha256": "c1e98b5eac53d37ae6f6ebfa678a452ba540787ee32a8087fffdf026fd4d1eca",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.log",
+      "bytes": 4984,
+      "sha256": "5a0579387e1adb29e7ca3238f9e93aabffc2127ada7a241c42dd8607772c67fe",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/build-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.json",
+      "bytes": 416,
+      "sha256": "604da909155ec7dab3fedacfb6918df9a8249fbba5df998dece466b20c05a527",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/cargo-fmt.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.json",
+      "bytes": 450,
+      "sha256": "8aadcf954b7fab0c969319bb120fb18245a6412fa8924c3492dd06966ecf251d",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.log",
+      "bytes": 72,
+      "sha256": "45f75b19e5718ce74d75d27dc949e2b0cc21908a1e53dca4d31c24e03ebe8e09",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/clippy.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.json",
+      "bytes": 381,
+      "sha256": "fa62dbfae21aaca651045c2ac9ec7d3d0be7d4aeb905c4f1f232e74301e1a2fa",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.log",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/format-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.json",
+      "bytes": 377,
+      "sha256": "49147cd5ab5f31121da0af06e9020a73ab8b826d1e03ef91594703c56d57e80f",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.log",
+      "bytes": 288,
+      "sha256": "c039f8b64084101902a79af065d9b70fdbf34329b44e012981628d082f26a1ca",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/frontend-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.json",
+      "bytes": 420,
+      "sha256": "dadcd661b0dc86d497ff8ae05f1e7d630091c8c39bb5484cee2ac879211f0ca2",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.log",
+      "bytes": 271130,
+      "sha256": "9192dd434b5bd599ad1741c66e7f79703a283e31f8d5880f7fe795bcd58d2569",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/rust-full.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.json",
+      "bytes": 383,
+      "sha256": "ca907207642dd57967db7dc9dce759062dc9611e241b939a0067b6835addcd8c",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/checks/typecheck-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/collect-inputs.py",
+      "bytes": 2324,
+      "sha256": "5ea463d492dc40d1f6e39c2488d596131c998149a7215e8cc731914e9071aefb",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/collect-inputs.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/git-input-binding.json",
+      "bytes": 569,
+      "sha256": "0b71532d9213ccd8b1face18896e47c9b1b1435bb4758a055bb53a5cf271dee6",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/git-input-binding.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/preparation.json",
+      "bytes": 371,
+      "sha256": "df5b47e7f275a82047d21a501e19427348cc03ad753ba08861439f5589c98304",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/preparation.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/run-check.py",
+      "bytes": 1392,
+      "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/run-check.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/run-sequence.py",
+      "bytes": 756,
+      "sha256": "a5d4d2075839b0429dc7a43ff99a2c7d04d08e8d6fcf9b05eace49050f6187fc",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/run-sequence.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/source-after.json",
+      "bytes": 278982,
+      "sha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/source-after.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering-final/source-before.json",
+      "bytes": 278982,
+      "sha256": "fdf4d4e2f2fff2817fc78c8f024e7f0500fdd46c69c1acd06ca9ab557bb5e5c5",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering-final/source-before.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.json",
+      "bytes": 409,
+      "sha256": "58c3c6c3d92281bf16262b5d10285f8442b889eb804a6fa87b4be400a597f4a0",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/cargo-fmt.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/clippy.json",
+      "bytes": 443,
+      "sha256": "664dc6ca5a171d34c3e1afe210bed61b1417652386ad836c97990fbb9802e945",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/clippy.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/clippy.log",
+      "bytes": 72,
+      "sha256": "a41051563a4cb5fc1b1bcdd9aa0ba28ca80f7736d629d90cc138218756e8e3a9",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/clippy.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/format-final.json",
+      "bytes": 375,
+      "sha256": "b51a40abc211a10d135a90cfd1a555a996151f3c20ca3b83cccff490740c3f30",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/format-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/format-final.log",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/format-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.json",
+      "bytes": 371,
+      "sha256": "94e949fcf27e40fdb90f024b8c96faedd0e564feb61a4579f940e6c78c0f86ca",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.log",
+      "bytes": 2001,
+      "sha256": "0397b308ef2758ae2ee0388ae2cdffaa18a89b1fb7dfd075c2f1cbd0acea52d7",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/frontend-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/rust-full.json",
+      "bytes": 414,
+      "sha256": "d735261655dc438c4e8106592b36f1c9e48b7b02b6181a7c1b095d3af6ec3e4b",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/rust-full.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/rust-full.log",
+      "bytes": 271197,
+      "sha256": "69a1a906d6032301f9ac57207a797d729757fa3b518b848ecd42eaa17737e8f9",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/rust-full.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.json",
+      "bytes": 377,
+      "sha256": "0ab12c99a9a6478b9c22bd143c4fd6de814c128e0b4769e8b395e36d95719e79",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/checks/typecheck-final.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/collect-inputs.py",
+      "bytes": 2324,
+      "sha256": "5ea463d492dc40d1f6e39c2488d596131c998149a7215e8cc731914e9071aefb",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/collect-inputs.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/preparation.json",
+      "bytes": 858,
+      "sha256": "a84a9f57d136a25a5a9d09c955a48abeba107cb1c3beba93ae8c03f177b2ea97",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/preparation.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/run-check.py",
+      "bytes": 1392,
+      "sha256": "6c662c586952cba1e0310ffe97ad1d5c603eed57014efec9650cf925bb26ac2e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/run-check.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/run-sequence.py",
+      "bytes": 756,
+      "sha256": "a5d4d2075839b0429dc7a43ff99a2c7d04d08e8d6fcf9b05eace49050f6187fc",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/run-sequence.py"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/source-after.json",
+      "bytes": 278982,
+      "sha256": "6218ed5341817283702ff1cf9cc95ec4ba7a11a958b604cd118fa0532bd1425c",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/source-after.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/engineering/source-before.json",
+      "bytes": 278982,
+      "sha256": "6218ed5341817283702ff1cf9cc95ec4ba7a11a958b604cd118fa0532bd1425c",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/engineering/source-before.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/independent-final-review.json",
+      "bytes": 22526,
+      "sha256": "01fb7b552cede869950a9a3f489c6cdabc6a9a25ba00a78f086d1ee374e6f9d7",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/independent-final-review.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.json",
+      "bytes": 456,
+      "sha256": "19541913c109fcf3e5abe15f5df34e3111c0c8fa485f242c2a5ae870ba49ff15",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.stdout.log",
+      "bytes": 89,
+      "sha256": "163fa5c0bf4ee33803795418c80ce34fe1c4a595e3fc4435cddb668fe9f54c92",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-evidence/ignored-list.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-inputs.md",
+      "bytes": 5805,
+      "sha256": "ccd39076bceaf3f6683a722e1b418706e5970c3adc3123f962387dff56608f56",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/binding-inputs.md"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/driver-binding.json",
+      "bytes": 2058,
+      "sha256": "f52bce7508b6566a0975c4c91817e092b8a4d960a036efa0df7cff62e989d18d",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/driver-binding.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/frontend-queue-schema.test.ts",
+      "bytes": 16025,
+      "sha256": "66a07aa0ec8dafcd9872ce84e68c8de6b1ef442d0b5b0fd30abbc9ab9e339c76",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/frontend-queue-schema.test.ts"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/preparation.json",
+      "bytes": 1996,
+      "sha256": "cd58127cfddaf8f8b3af38a4e03ba28948e2d44e6a9126813dffc9d04f6c6f2c",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/preparation.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.json",
+      "bytes": 1507,
+      "sha256": "ec7cbdf8407036cd25352955079e4ccb3b060142db1c27240a9ab2ee44598da3",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.stdout.log",
+      "bytes": 188,
+      "sha256": "4796c56637a0721c7dd8ad262d1521e3210b8a0452d3b37bb4285f5bcdd59c0e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/01.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.json",
+      "bytes": 1481,
+      "sha256": "c0c9b8346f73e16f756c53f9943b9f3839c0644baf38d9e3aa0c37c2ab50ec00",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.stdout.log",
+      "bytes": 188,
+      "sha256": "525982548f90627afc15d0afa565d9c8dd00ead4d89a89ddd444e7e67a28a966",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/02.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.json",
+      "bytes": 1481,
+      "sha256": "9efa4514f06a5a4ddd2fd38ce5a65b1b0af4044bd2ef3f0c649941496214ab17",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.stdout.log",
+      "bytes": 188,
+      "sha256": "525982548f90627afc15d0afa565d9c8dd00ead4d89a89ddd444e7e67a28a966",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/03.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.json",
+      "bytes": 1488,
+      "sha256": "e87b287370ef825b387b9faee2646f022740baeeaca960bb5ed539f1f06cc919",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.stdout.log",
+      "bytes": 188,
+      "sha256": "4796c56637a0721c7dd8ad262d1521e3210b8a0452d3b37bb4285f5bcdd59c0e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/04.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.json",
+      "bytes": 1415,
+      "sha256": "82c89176e5b65b3c9b29aaca990ef837573828432bdf3cc98f239e8c6a4b194c",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.stdout.log",
+      "bytes": 188,
+      "sha256": "525982548f90627afc15d0afa565d9c8dd00ead4d89a89ddd444e7e67a28a966",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/05.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.json",
+      "bytes": 1389,
+      "sha256": "ed02d4697a530ddcdcdce3492e482d0c853028fcd12ac1d840f06f5f9c195ee0",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.stdout.log",
+      "bytes": 188,
+      "sha256": "525982548f90627afc15d0afa565d9c8dd00ead4d89a89ddd444e7e67a28a966",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/06.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.json",
+      "bytes": 1630,
+      "sha256": "610e075784afbf8af818860a45d21ce18172756b500091e2b58ce4e0c8a24c6e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.stdout.log",
+      "bytes": 188,
+      "sha256": "4796c56637a0721c7dd8ad262d1521e3210b8a0452d3b37bb4285f5bcdd59c0e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/07.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.json",
+      "bytes": 1604,
+      "sha256": "162f5308f500cd4856a40b32a48a86294e937c35049cbb00bdd589270cb95655",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.stdout.log",
+      "bytes": 188,
+      "sha256": "4796c56637a0721c7dd8ad262d1521e3210b8a0452d3b37bb4285f5bcdd59c0e",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/08.stdout.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/result.json",
+      "bytes": 1915,
+      "sha256": "ada3ad182336532e8a3a62e544c959245a6d1b7e1368537a3a2ebd1e73793355",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/run-A3EaAa/result.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest-result.json",
+      "bytes": 507,
+      "sha256": "d25f38c4957d310b5f09cb8b3a62b2fe8086f90bf110a066fb0f89f06e92e715",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest-result.json"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.config.mts",
+      "bytes": 320,
+      "sha256": "21e3463b8887a18f460d3d7745f8cbf2f3c744efd64888d5bfc58ddcbd1facab",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.config.mts"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.stderr.log"
+      }
+    },
+    {
+      "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.stdout.log",
+      "bytes": 209,
+      "sha256": "f6fc16f4bc4cfa5f450dab3a9d92cf46dfeb54eb7a5db634f3b789acb50c44d1",
+      "origin": {
+        "kind": "byte-exact-existing-original",
+        "path": "output/2026-11-05-development-continuation/p01-queue-schema/sqlite-bridge/vitest.stdout.log"
+      }
+    }
+  ]
+}

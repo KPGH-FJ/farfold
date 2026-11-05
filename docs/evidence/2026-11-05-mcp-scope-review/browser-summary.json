@@ -233,5 +233,10 @@
       }
     }
   },
-  "laterDocumentation": "Progress-only updates are separate; no claim these documentation bytes ran seven again."
+  "laterDocumentation": "Progress-only updates are separate; no claim these documentation bytes ran seven again.",
+  "observationPinBoundary": {
+    "earlyObservationReadmeSha256": "131a62c451cd9315395f1bb64f5c14561024d73b4d7cba8df79b612e615b88a3",
+    "actualArchiveReadmeSha256": "a4a6d226d938dfbda85454cb7f2d5ffed45397ee19b2b058f91de4957f6ea30c",
+    "explanation": "browser.originals pins preserve the earlier observation-summary state, before the README cleanup-attempt correction was appended. archive.files pins the actual ZIP payload. The original embedded browser-summary JSON is preserved, not rewritten."
+  }
 }
