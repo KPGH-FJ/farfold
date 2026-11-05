@@ -1,0 +1,151 @@
+{
+  "kind": "DerivedReliabilityBatchFormalAndSelectedUiSummary",
+  "sourceCommit": "38e53a304b10d15c5eb10fecb6b55d922a100357",
+  "formerFunctionalSource": "755568a83cffeb24ae2beea9a4e2111e4b34a713",
+  "recordedAtUtc": "2026-11-05T10:01:00.616931+00:00",
+  "status": "delivered_with_explicit_unverified_scope",
+  "implementationAndEngineering": "summary.json",
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "frontendFiles": 716,
+    "frontendPassed": 9584,
+    "rustPassed": 2369,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "completeDeclaredInputs": 2398,
+    "completeProductionInputs": 2394,
+    "freshFixturesIncludedInBothEndpoints": 11,
+    "helperProjectionProduction": 2383,
+    "helperProjectionAdmitted": 2386,
+    "oldRustReuse": false,
+    "firstCargoFmtFailurePreserved": true
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "mainSha256": "32e6510a57da481ad152487f74e9e54f16745bd8578b2b1f8d9f9484d1632d53",
+    "oneCandidateBuildNaturalExitCode": 0,
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 6,
+    "atomicNewInodeFileCount": 5,
+    "appBackupCreated": false,
+    "forcedQuit": false,
+    "automaticRetry": false,
+    "threeFreshClosedStateManifests": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 206275,
+      "sha256": "32e88e9e8f9540e34750b8bfb90a7368733a38667bcc66f36abf86d97ab974de",
+      "equal": true,
+      "boundary": "Closed-state interval only; not a post-startup whole-data equality claim."
+    },
+    "privateSecondCopyBackupIntegrity": "ok",
+    "exactGeneratedDuplicateAppRemoved": true,
+    "candidateZipRetainedSha256": "d7124ae237f35deb54a05850d388a77e079c7c88430008a8d0df3c0eccb30445"
+  },
+  "actualRootNativeUi": {
+    "originalUnsentP02VisibleAfterColdStartAndAfterNavigation": true,
+    "retainedDraftCount": 1,
+    "originalWorkingDirectoryVisible": true,
+    "selectedAgentStillUnset": true,
+    "codexManagementEscapeFocusReturn": "original manage button; next Tab Pi details",
+    "codexManagementCloseButtonFocusReturn": "original manage button; next Tab Pi details",
+    "existingReadonlyDetailsEscapeFocusReturn": "original details button",
+    "newRealModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "programCheckOrAgentConnect": false,
+    "explicitDraftSettingCredentialPermissionChanges": false,
+    "countsObserved": {
+      "startupConversations": 96,
+      "laterSidebarConversations": 94,
+      "newReplies": 4,
+      "settingsUnconfirmedAutoArchives": 2
+    },
+    "countBoundary": "No manual archive/delete/retry or setting change. No cause assigned to the visible index count change; no full history integrity or unchanged-after-startup claim.",
+    "originalObservation": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-ui-observation.json",
+      "sha256": "de139437798c0e45701e0d6217704a6c6c92c4eedf1e6475fd77ba8e8e2ca19d"
+    },
+    "evidenceBoundary": "Root actual native Cua observations in this conversation; no persisted raw AX/screenshot and no second UI witness."
+  },
+  "independentReaders": {
+    "engineering": {
+      "path": "output/2026-11-05-next-reliability-stage/engineering-independent-review/independent-review.json",
+      "sha256": "dd7ede332827b1fa7402bf0350250f6a339328080492d1272512817131718bef"
+    },
+    "formalPreparation": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation-independent-review/independent-review.json",
+      "sha256": "6ed90057e8ffb8b10be2b1997454630683d262741f093e3bd532f2d0a4739974"
+    },
+    "actualBinding": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-binding-independent-review/reader.json",
+      "sha256": "76480559e2520e411f721200c68a62cfb4b6543c4de4293504ccb26ca7f16eb5"
+    },
+    "actualDelivery": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-delivery-independent-review/reader.json",
+      "sha256": "0619f936e112365e67b445d50a899b8b15ed2fe2d2bc1cf2581edb7bc93ecfb3"
+    },
+    "textCapsule": {
+      "path": "output/2026-11-05-next-reliability-stage/capsule-independent-review/capsule-independent-review.json",
+      "sha256": "a5398715949b1dd979c3c1b85de7a5c33c6fb03f972d05e39d31395c51fe98ee"
+    }
+  },
+  "privateOriginalReceipts": {
+    "candidateNaturalCompletion": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/candidate-natural-completion-v2.json",
+      "sha256": "1a914cdf837978aa6bdb882bc0af3b52f2519d1696d1ab955bfae9026a5f32e6"
+    },
+    "candidate": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/candidate-output/candidate.json",
+      "sha256": "5525c7f05e7e8edcd397b5309166f7fcd69e7d571f1f86dc0de7b81fb18f10e2"
+    },
+    "candidateMechanicalReader": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/independent/review-v2.json",
+      "sha256": "2f5c773ac0283542189c413a94a46f9484f6bfa0c25cd7bd122e14ce78371f23"
+    },
+    "orderedDeliveryNaturalCompletion": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/root-delivery-completion.json",
+      "sha256": "2642dd4ac7ef27520a4f405ac400fd945c43092eebd81d6793c7ac979ac8abbc"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/install-result.json",
+      "sha256": "d04b1feb2a94160aec81e6f921cfedab9d75497fb9100d87fb4e75def3193e8c"
+    },
+    "installedMechanicalReader": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "e0879ecf709ef5346da6bc3fe8bbd4e43ab2ab85ef42b1bf1c4647b038392228"
+    },
+    "retentionBefore": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/retention-before-receipt.json",
+      "sha256": "a5fa452127ffaa6c419bd370f6676120908a42e1287bbf72df9b424bbaeb8f89"
+    },
+    "retentionPreinstall": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/retention-preinstall-receipt.json",
+      "sha256": "e74032dc88b1f777d86b19eff895fe4050cae4abcda6a54372ac20bf08db42d7"
+    },
+    "retentionAfter": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/retention-after-receipt.json",
+      "sha256": "282bee3677e503fdfaf58de38a3c186a75480bd8c5974c1180a3dd94bea7a65c"
+    },
+    "exactCleanup": {
+      "path": "output/2026-11-05-next-reliability-stage/formal-preparation/formal/install/candidate-cleanup.json",
+      "sha256": "9a839aef7d7a8e9bed0cb4bf4b28c6aa541b6937599831b6e9657896b953dcb5"
+    }
+  },
+  "remaining": [
+    "Installed pending-image transfer and corresponding cold recovery were not exercised; controlled production-path tests do not close fullP01/P02/ARCH26.",
+    "Explicit configuration retry with an actual official Agent, actual saved model/reasoning recovery and full drift behavior remain open.",
+    "Official skill/MCP configuration adoption, connection, tool calls and actual write/cancel recovery remain open.",
+    "Details-to-new-conversation preparation, full keyboard/screenreader/scaling/window coverage remain open.",
+    "Current Windows source was not executed; parser fix and install/uninstall remain unverified because run41984263036 got no runner under account payment/spending restriction. User chose other independent work; no retry this batch.",
+    "B3/Q startup/load root causes, original unknown work, installed storage-fault UI and NEW24 affected-new-send pause remain."
+  ],
+  "scopeUnchanged": {
+    "agents": 29,
+    "standardsPerAgent": 8,
+    "originalRequirementIds": 151,
+    "noAgentHasAllEightProvenByThisBatch": true
+  },
+  "publicationBoundary": "Derived facts and private raw receipt hashes only. No userDB/backup/full user-data manifest/draft body/raw AX/App binary is copied into this public summary. Source capsule four frozen files remain unchanged."
+}
