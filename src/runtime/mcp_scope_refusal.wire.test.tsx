@@ -34,53 +34,67 @@ const request = (op: McpChangeOperation): McpChangeRequest => ({
 afterEach(() => vi.restoreAllMocks());
 
 for (const wire of wires) {
-  it(`keeps the actual ${wire.case} refusal through the shared controller and UI without confirmation`, async () => {
-    const op = wire.operation;
-    expect(parseMcpChangeOperation(op, request(op))).toEqual(op);
-    const ids = [wire.inventory.requestId, op.requestId];
-    vi.spyOn(crypto, "randomUUID").mockImplementation(() => ids.shift()!);
-    vi.spyOn(inventoryPort, "read").mockResolvedValue(wire.inventory);
-    vi.spyOn(mcpManagementPort, "inspect").mockResolvedValue(op);
-    const confirm = vi.spyOn(mcpManagementPort, "confirm");
-    const owner = { agentId: op.agentId, token: {}, current: () => true };
-    extensionInventory.begin(owner, op.cwd, wire.inventory.requestId, "mcp");
-    await flush();
-    const result = extensionInventory.get(owner.agentId).results.mcp!;
-    expect(
-      skillManagement.inspect({
-        owner,
-        result,
-        item: result.snapshot.items[0],
-        requestedEnabled: false,
-        current: () => extensionInventory.isCurrentResult(owner, result),
-        changed: () => extensionInventory.markStale(result),
-      }),
-    ).toBe(true);
-    await flush();
-    const view = skillManagement.get(owner.agentId);
-    expect(view.operation).toEqual(op);
-    expect(view.error).toBe(op.code);
-    expect(view.review).toBeNull();
-    expect(view.unresolved).toBe(false);
-    const html = renderToStaticMarkup(
-      <SkillChangeReview agentId={owner.agentId} owner={owner} active />,
-    );
-    expect(html).toContain(S.errors[op.code!]);
-    expect(html).toContain(
-      {
-        project: "在项目设置中定义",
-        inherited: "来自继承的设置",
-        conflict: "同名 MCP 出现在多处设置中",
-      }[wire.case],
-    );
-    expect(html).not.toContain(S.errors.configurationUnsupported);
-    expect(html).not.toContain("确认停用偏好");
-    expect(html).not.toContain("均已核对为所选状态");
-    expect(html).not.toContain("never-public-value");
-    expect(html).not.toContain("do-not-show");
-    expect(html).not.toContain("layer.json");
-    expect(confirm).not.toHaveBeenCalled();
-  });
+  it.each(["fresh", "after collapse retirement"] as const)(
+    `keeps the actual ${wire.case} refusal %s without implying an expired review`,
+    async (phase) => {
+      const op = wire.operation;
+      expect(parseMcpChangeOperation(op, request(op))).toEqual(op);
+      const ids = [wire.inventory.requestId, op.requestId];
+      vi.spyOn(crypto, "randomUUID").mockImplementation(() => ids.shift()!);
+      vi.spyOn(inventoryPort, "read").mockResolvedValue(wire.inventory);
+      vi.spyOn(mcpManagementPort, "inspect").mockResolvedValue(op);
+      vi.spyOn(mcpManagementPort, "cancel").mockResolvedValue(null);
+      const confirm = vi.spyOn(mcpManagementPort, "confirm");
+      const owner = { agentId: op.agentId, token: {}, current: () => true };
+      extensionInventory.begin(owner, op.cwd, wire.inventory.requestId, "mcp");
+      await flush();
+      const result = extensionInventory.get(owner.agentId).results.mcp!;
+      expect(
+        skillManagement.inspect({
+          owner,
+          result,
+          item: result.snapshot.items[0],
+          requestedEnabled: false,
+          current: () => extensionInventory.isCurrentResult(owner, result),
+          changed: () => extensionInventory.markStale(result),
+        }),
+      ).toBe(true);
+      await flush();
+      const view = skillManagement.get(owner.agentId);
+      expect(view.operation).toEqual(op);
+      expect(view.error).toBe(op.code);
+      expect(view.review).toBeNull();
+      expect(view.reviewRetired).toBe(false);
+      expect(view.unresolved).toBe(false);
+      if (phase === "after collapse retirement") {
+        // Collapse retires the controller entry. Render the same retained request
+        // again, as reopening does; this is SSR state coverage, not a DOM click.
+        skillManagement.retire(owner);
+        await flush();
+        expect(skillManagement.get(owner.agentId).reviewRetired).toBe(true);
+        expect(skillManagement.get(owner.agentId).operation).toEqual(op);
+      }
+      const html = renderToStaticMarkup(
+        <SkillChangeReview agentId={owner.agentId} owner={owner} active />,
+      );
+      expect(html).toContain(S.errors[op.code!]);
+      expect(html).toContain(
+        {
+          project: "在项目设置中定义",
+          inherited: "来自继承的设置",
+          conflict: "同名 MCP 出现在多处设置中",
+        }[wire.case],
+      );
+      expect(html).not.toContain(S.errors.configurationUnsupported);
+      expect(html).not.toContain(S.retired);
+      expect(html).not.toContain("确认停用偏好");
+      expect(html).not.toContain("均已核对为所选状态");
+      expect(html).not.toContain("never-public-value");
+      expect(html).not.toContain("do-not-show");
+      expect(html).not.toContain("layer.json");
+      expect(confirm).not.toHaveBeenCalled();
+    },
+  );
 
   it(`never presents the ${wire.case} no-write reason for a dispatched change or cancellation`, () => {
     const changed = {

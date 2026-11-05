@@ -105,6 +105,15 @@ export function SkillChangeReview({
           ? MCP
           : SKILLS;
   const outcome = op?.outcome;
+  const refusedWithoutReview =
+    request.action === "inspect" &&
+    op?.state === "failed" &&
+    op.settled &&
+    op.review === null &&
+    !op.writeDispatched &&
+    op.writeAck === "none" &&
+    op.code !== null &&
+    view.error === op.code;
   const summary = view.trackingReleased
     ? S.trackingReleased
     : view.admissionRejected ||
@@ -123,7 +132,8 @@ export function SkillChangeReview({
                 ? REMOVE.checkingResult
                 : S.waiting
         : request.action === "inspect"
-          ? review && skillManagement.canConfirm(owner, review)
+          ? refusedWithoutReview ||
+            (review && skillManagement.canConfirm(owner, review))
             ? null
             : S.retired
           : outcome
