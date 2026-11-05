@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-05T10:02:41.379852+00:00",
-  "objective": "Continue sole active plan after delivered38e reliability batch. This is a current pointer, not a second plan;29x8/151 originals, data and actual-Agent boundaries remain.",
+  "updatedAt": "2026-11-05T11:10:31.236543+00:00",
+  "objective": "Continue sole active plan after delivered844 pending-control/index lifecycle batch. Original151/29x8/data and real-Agent boundaries remain; this is a current pointer, not a second queue.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
@@ -24,8 +24,6 @@
     "configRetrySource": "69e43d16d582841e71eab2a11ebb81ba9678831f",
     "boundaryWaitsCandidate": "fc1c297a1e191fa58b3b563874cf7bd8e6d446ba",
     "boundaryWaitsNativeRun": 41869099411,
-    "finalEngineeringInputCommit": "2f5c90550f41e701db64725947db505e0f3bbbd5",
-    "finalEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json",
     "p01QueueSchema": "16442f1b86683d3b82e06962b46dc7ab171da452",
     "currentWindowsFullRun": 41931045918,
     "currentWindowsFullSource": "2e23056cc4a3cf50f94a75ee393dd2cc4b0f78bd",
@@ -36,7 +34,7 @@
     "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
     "mcpSourceAndBrowserEvidence": "c2aa64f11",
     "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
-    "latestSourceEngineeringBinding": "output/2026-11-05-next-reliability-stage/engineering-independent-review/independent-review.json",
+    "latestSourceEngineeringBinding": "output/2026-11-05-input-lifecycle-stage/engineering-independent-review/independent-review.json",
     "capacityToolsAndWindowsScope": "b7147e530742c47b96713495dea8b736dc9ec630",
     "devServerColdScan": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "windowsFullSuccessRun": 41931045918,
@@ -52,7 +50,10 @@
     "windowsParserRenameSource": "5b9f1449a5df3bbd86b044b7dc91b952b6e54d1a",
     "windowsInstallerProviderBlockedRun": 41984263036,
     "cachedFailureNavigationSource": "755568a83cffeb24ae2beea9a4e2111e4b34a713",
-    "currentReliabilitySource": "38e53a304b10d15c5eb10fecb6b55d922a100357"
+    "previousReliabilitySource": "38e53a304b10d15c5eb10fecb6b55d922a100357",
+    "currentLifecycleSource": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+    "configRetryEngineeringInputCommit": "2f5c90550f41e701db64725947db505e0f3bbbd5",
+    "configRetryEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -85,29 +86,30 @@
     "Windows41965725276 attempt1/sourcecfd completed success;2native/4files28frontend andtypes natural0,actualList2FQN/fourPSparse passed;2312inputs stable and all20changedfiles sourcebound(35exact2277LFtoCRLF). Raw22artifact+17logs and digests independently reviewed;189root derived assertions are not189tests. Unique watch closed. No App/installer/realAgent or currentfullWindows claim.",
     "Current progress docs finalized after rawWindows proof: original151titles/conditions/order,16packages/common/scope unchanged; onlyARCH21/26/41/P01/P02progress. Finaldocscheck0/globalformat0. Public capsule251exactUTF8textmembers validated against rawstagebytes,manifest/archiveSHA; finalrecord formatted separately. All owned checks/watch/download processes ended; formalAEB andoriginaldirtyJSON0644SHA90117 retained.",
     "559 actual seven0(9563frontend/Rust2364+7), Mac formal559 delivered, Windows fixed559 selected30native20frontend0. Original installer PSparse failure retained;5b9 rename not yet natively validated because later run runner0/steps[] provider billing/spending block. User chose other work.755 cached-navigation13 RED7/6->13 GREEN,140 associated, freshfrontend4 715files9576,2385declared endpoints; Rust3 retained via835declared+11supplemental fixture closure with original11endpoints explicitly not captured.755 one build0/candidate9/install6/5newinodes/new3x206275closed manifests equal and exactduplicate cleanup0; independent code/engineering/preparation/delivery all0mustfix. Actual Root cached returns/public2pages/hide/nav/close preserve4draft paragraphs; returnedP02/retained1/zero sends. B3 remains timeout,Q not retriedon755.",
-    "38e reliability:pending image transfer/known-identical config retry/skill-MCP prewrite owner/native management focus; fresh7/4code reviews/singleformal update/selectedRootUI passed; original failures retained."
+    "38e reliability:pending image transfer/known-identical config retry/skill-MCP prewrite owner/native management focus; fresh7/4code reviews/singleformal update/selectedRootUI passed; original failures retained.",
+    "844 pending-control firstpoll active/unknown guard and stale-index/memberABA fix:22/66 control,14files301 index;fresh7/2400/modes/Git/two code readers;oneformal update and Root selectedmetadata/originaldraft UI passed. NativePNG location2cold cycles belong38e,notinline/queue/Agent."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "sole-plan common capability continuation",
-      "state": "Larger38e batch delivered; evidence/progress closeout only. No owned engineering/CI/build process remains. Read plans/agent-access.md for next dependency-closed available user result; missing conditions remain separately recorded."
+      "state": "Larger844 delivered;currentprogress closeout only. No owned engineering/CI/build jobs remain. Next dependency-closed available result comes only from plans/agent-access.md."
     }
   ],
   "formalPreparation": {
-    "directory": "output/2026-11-05-next-reliability-stage/formal-preparation",
-    "state": "actual_single_build_delivery_and_selected_ui_complete",
-    "sourceCommit": "38e53a304b10d15c5eb10fecb6b55d922a100357",
-    "formerFunctionalSource": "755568a83cffeb24ae2beea9a4e2111e4b34a713",
+    "directory": "output/2026-11-05-input-lifecycle-stage/formal-preparation",
+    "state": "actual_single_build_delivery_selected_ui_and_separate_reader_complete",
+    "sourceCommit": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+    "formerFunctionalSource": "38e53a304b10d15c5eb10fecb6b55d922a100357",
     "normalSaveExitObserved": true,
     "newCaptureBuildInstallExecuted": true,
-    "independentDeliveryReview": "output/2026-11-05-next-reliability-stage/formal-delivery-independent-review/reader.json"
+    "independentDeliveryReview": "output/2026-11-05-input-lifecycle-stage/formal-delivery-independent-review/reader.json"
   },
   "remaining": [
-    "Continue P01/configuration/history/management/daily interaction under the sole plan; actual installed pending-image transfer, configuration retry and storage-fault UI remain unverified. No old request resend or manufacture of unknown work.",
-    "Official skill/MCP actual adoption, connection, calls and cancel recovery remain open; Root selected focus UI does not close fullP45 or29agents eight standards.",
-    "Windows41984263036 got no runner under account payment/spending restrictions. User chose independent work; no automatic retry or billing change without new availability input. Existing2e full and559 selected evidence retain their exact source scopes.",
-    "B3/Q root causes, P18/N/O final ownership, required accounts/directories/contracts and NEW24 affected new-send pause remain as docs/status.md. No account/model/reasoning/credential/permission change or automatic old retry."
+    "Continue available P01/configuration-history/management/daily interaction under sole plan;installed inline-image/clipboard/queue transfer and storage-fault UI remain unverified. Preserve original drafts/unknowns and zero old resends.",
+    "No official Agent compaction with Config/Mode/Close/Delete or fullNEW29;no installed index race timing injection. Earlier94to93 cause unknown. ControlledSDK/Store tests and basicnative UI do not close these conditions.",
+    "Windows41984263036 still no runner under account payment/spending conditions;user chose independent work,no manual retry/billing change without new input.2e full and559 selected evidence retain exact scopes.",
+    "Official MCP/skill adoption,connection/calls,B3/Q rootcauses,P18/N/O ownership,accounts/directories/contracts and NEW24 affected-new-send pause remain in current status;no model/reasoning/account/credential/permission change."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -122,58 +124,46 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-05T10:02:41.379852+00:00",
-  "stage": "larger_reliability_batch_delivered_selected_native_ui_verified",
+  "updatedAtUtc": "2026-11-05T11:10:31.236543+00:00",
+  "stage": "larger_control_index_batch_delivered_selected_native_ui_verified",
   "finalEvidence": {
+    "controlledAndEngineering": "docs/evidence/2026-11-05-input-lifecycle/README.md",
+    "formalAndUi": "docs/evidence/2026-11-05-input-lifecycle/formal-summary.json"
+  },
+  "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-05-reliability-stage/README.md",
     "formalAndUi": "docs/evidence/2026-11-05-reliability-stage/formal-summary.json"
   },
-  "previousFinalEvidence": {
-    "currentSource": "cfd14b749d5e008359edc4901d3c6da00350f323",
-    "latestEngineeringBinding": "output/2026-11-05-next-capability-stage/engineering/git-input-binding.json",
-    "lateProgressProof": "output/2026-11-05-next-capability-stage/requirements-final-proof.json",
-    "windowsRun": 41965725276,
-    "windowsRawAndSourceReview": "output/2026-11-05-next-capability-stage/windows-run/root-independent-review.json",
-    "public": ["docs/evidence/2026-11-05-recovery-approval/README.md"],
-    "watchers": "All completed; no active watch. Do not restart completed runs.",
-    "documentationChecks": "docs/evidence/2026-11-05-recovery-approval/documentation-checks.json",
-    "capsule": {
-      "archive": "docs/evidence/2026-11-05-recovery-approval/originals.zip",
-      "members": 251,
-      "sha256": "9022f75e6a548425612476209965d632cf1f484b700e9b80b6895710911ef1e7",
-      "allOriginalTextBytesAndHashesVerified": true,
-      "binaryApiArchivesKeptInOutputNotPublished": true
-    }
-  },
   "stageFinalProtection": {
-    "checkedAtUtc": "2026-11-05T10:02:41.379852+00:00",
+    "checkedAtUtc": "2026-11-05T11:10:31.236543+00:00",
     "protectedUnrelatedSha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
     "protectedMode": "0644",
-    "currentFormalBinarySha256": "32e6510a57da481ad152487f74e9e54f16745bd8578b2b1f8d9f9484d1632d53",
+    "currentFormalBinarySha256": "2e3d8e5133e3165e3bc20f09a3e378a510082471652055239163ed876a15f091",
     "nativeSelectedUiObserved": true
   },
   "formalUnlockInput": {
-    "state": "Root actual native Cua accessible this batch; no unlock question pending",
+    "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Read docs/status.md and sole plans/agent-access.md; continue available P01/config-history/management/daily user result. Preserve B3/Q uncertainty, NEW24 pause, original unknowns and Windows billing separately. No automatic old send, model/account change or CI retry; no mechanical reinstall for later pure progress documentation.",
+  "nextExactContinuation": "Read current docs/status.md and sole plans/agent-access.md;continue availableP01/config-history/management/daily user result. Keep officialcompaction/indexrace/storagefault/Agentadoption gaps,unknownB3Q/P18 and Windowsbilling separately.No automatic old resend,account/modelchange or installerretry;no mechanical reinstall for pureprogressdocs.",
   "initialEngineeringAttempt": {
-    "directory": "output/2026-11-05-next-reliability-stage/engineering",
-    "result": "cargo fmt natural1 module registration order only; other six commands not started; originals preserved"
+    "directory": "output/2026-11-05-input-lifecycle-stage/engineering",
+    "allSevenFirstInvocationNaturalZero": true,
+    "laterOrchestrationError": "KeyError grouping archive reader mustFix[] as mustFixCount after all7 andcanonicalcopy completed;correctedwithout source/evidencechange or rerun.Original correctionrecord retained."
   },
   "finalEngineering": {
-    "directory": "output/2026-11-05-next-reliability-stage/engineering-final",
-    "canonicalReport": "output/2026-11-05-next-reliability-stage/formal-preparation/engineering-result.json",
+    "directory": "output/2026-11-05-input-lifecycle-stage/engineering",
+    "canonicalReport": "output/2026-11-05-input-lifecycle-stage/formal-preparation/engineering-result.json",
     "allSevenFreshNaturalZero": true,
-    "sourceCommit": "38e53a304b10d15c5eb10fecb6b55d922a100357",
-    "completeDeclaredInputs": 2398,
-    "completeProductionInputs": 2394,
+    "sourceCommit": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+    "completeDeclaredInputs": 2400,
+    "completeProductionInputs": 2396,
     "freshFixtureInputs": 11,
-    "helperProductionProjection": 2383,
-    "helperAdmittedProjection": 2386,
-    "frontendFiles": 716,
-    "frontendPassed": 9584,
-    "rustPassed": 2369,
+    "helperProductionProjection": 2385,
+    "helperAdmittedProjection": 2388,
+    "frontendFiles": 717,
+    "frontendPassed": 9594,
+    "rustPassed": 2391,
     "rustFailed": 0,
     "rustIgnored": 7,
     "oldRustReuse": false,
@@ -191,18 +181,18 @@
     "state": "success30native20frontend;selected not full/installer/realAgent"
   },
   "latestFormalStage": {
-    "sourceCommit": "38e53a304b10d15c5eb10fecb6b55d922a100357",
-    "evidence": "docs/evidence/2026-11-05-reliability-stage/formal-summary.json",
-    "mainSha256": "32e6510a57da481ad152487f74e9e54f16745bd8578b2b1f8d9f9484d1632d53",
-    "actualRootUiReceipt": "output/2026-11-05-next-reliability-stage/formal-ui-observation.json",
-    "actualRootUiSha256": "de139437798c0e45701e0d6217704a6c6c92c4eedf1e6475fd77ba8e8e2ca19d",
+    "sourceCommit": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+    "evidence": "docs/evidence/2026-11-05-input-lifecycle/formal-summary.json",
+    "mainSha256": "2e3d8e5133e3165e3bc20f09a3e378a510082471652055239163ed876a15f091",
+    "actualRootUiReceipt": "output/2026-11-05-input-lifecycle-stage/formal-ui-observation.json",
+    "actualRootUiSha256": "21bd5ca02b914e22a0d69c89d78a7f05bf9a1cf20a39649d1a0df54886ef8634",
     "closedManifestEntriesEach": 206275,
-    "closedManifestSha256": "32e88e9e8f9540e34750b8bfb90a7368733a38667bcc66f36abf86d97ab974de",
-    "currentView": "originalP02,retained1,originalcwd,Agentunselected",
+    "closedManifestSha256": "7224044e2af9c3e6a748b759c288b1372083e46ec65e1917932276c4c245848c",
+    "currentView": "originalP02,retained1,originalcwd,Agentunset,no testattachment",
     "newPrompts": 0,
     "oldResends": 0,
     "currentProcessNotRecorded": true,
-    "sourceVsLaterDocuments": "38e code/check/build/closed-data/UI epoch is separate from later progress-only documentation; docs checks do not claim a new seven or reinstall."
+    "sourceVsLaterDocuments": "844 code/check/build/closed-data/UI epoch is separate from later progress-only documents;laterdocs checks do not claim another full7 or install."
   },
   "windowsInstallBlocked": {
     "run": 41984263036,
