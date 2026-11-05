@@ -1,0 +1,238 @@
+{
+  "kind": "ScopedInstalledNavigationStageSummary",
+  "sourceCommit": "755568a83cffeb24ae2beea9a4e2111e4b34a713",
+  "priorManagementSource": "5598138f2ddd658e9559bd3e7419babfa32ef178",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "mainSha256": "a781a96e828b739c32199271e61ece2d8ec826d68eb6c6b08d8eb0e91c771d60",
+    "candidateBuilds": 1,
+    "actualBuildNaturalExitCode": 0,
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 6,
+    "newInodeFiles": 5,
+    "appBackupCreated": false,
+    "generatedAppRemoved": true,
+    "candidateArchiveRetained": true
+  },
+  "engineering": {
+    "freshFrontendCommands": 4,
+    "naturalExitCodeEach": 0,
+    "files": 715,
+    "passed": 9576,
+    "declaredInputEndpoints": 2385,
+    "declaredEndpointsEqual": true,
+    "retainedRustFrom559": {
+      "commands": 3,
+      "passed": 2364,
+      "failed": 0,
+      "ignored": 7,
+      "unchangedDeclaredSrcTauriFiles": 835
+    },
+    "supplementalFixtureClosure": {
+      "files": 11,
+      "originalEndpointCapture": false,
+      "basis": "Fixed559 Git/current bytes and modes plus original whole tracked status; ordinary Rust dev/test does not embed dist. New Release built separately."
+    },
+    "notSevenFreshExecutions": true,
+    "independentEngineering": {
+      "path": "output/2026-11-05-management-install-stage/engineering-navigation/independent-engineering-review.json",
+      "sha256": "2ab39f0607b6facb3d0da11e64b742d38fbce293b4a5c94adf06cfa49b6c768c"
+    }
+  },
+  "closedDataRetention": {
+    "manifestEntriesEach": 206275,
+    "manifestSha256": "49fed597a92adb6bc1d16be33f8389e9b4ea1ac9c04c28148a424d9e85a048df",
+    "freshReceipts": [
+      {
+        "phase": "before",
+        "receipt": {
+          "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/install/retention-before-receipt.json",
+          "sha256": "61458c9712ad7739af317fbb47d51d7ddcffcc9f6a780b1e17c2a29e4f406205"
+        },
+        "manifestSha256": "49fed597a92adb6bc1d16be33f8389e9b4ea1ac9c04c28148a424d9e85a048df",
+        "entries": 206275
+      },
+      {
+        "phase": "preinstall",
+        "receipt": {
+          "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/install/retention-preinstall-receipt.json",
+          "sha256": "58605fc68ef0c0c5febdd6bc662f93836c7b0232789a231d4598f66a65d4b068"
+        },
+        "manifestSha256": "49fed597a92adb6bc1d16be33f8389e9b4ea1ac9c04c28148a424d9e85a048df",
+        "entries": 206275
+      },
+      {
+        "phase": "after",
+        "receipt": {
+          "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/install/retention-after-receipt.json",
+          "sha256": "be22254ec1167f7f85897be09e2308c5fcf47f09311992bca8a9eab81294d411"
+        },
+        "manifestSha256": "49fed597a92adb6bc1d16be33f8389e9b4ea1ac9c04c28148a424d9e85a048df",
+        "entries": 206275
+      }
+    ],
+    "scope": "Only the three closed-state observations; does not assert data remains byte-identical after startup."
+  },
+  "actualRootUi": {
+    "origin": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/ui/selected-product-readback.json",
+      "sha256": "ceb41627bf38b41e421064c25561a93e70dae16db22ce4b8708ee1d5398d8534"
+    },
+    "newDraftP02AndRetained1AndOriginalCwdObserved": true,
+    "singleInitialB3Open": "connection-check timeout; cause undetermined; history not recovered",
+    "cachedReturns": 2,
+    "cachedFailureImmediatelyVisible": true,
+    "loadingTextOnCachedReturn": false,
+    "B3FourParagraphLengths": [187, 75, 32, 27],
+    "observedB3TextEqualAcrossPublicBrowserOperations": true,
+    "publicWeb": {
+      "initialView": "new empty tab; remembered count0",
+      "urls": ["https://example.com/", "https://example.com/?farfold-view=2"],
+      "nativeHtmlTitleBoth": "Example Domain",
+      "bothLoadedAndUrlObserved": true,
+      "switchFirstThenSecond": true,
+      "collapseRemovedNativePageFromAX": true,
+      "reopenKeptSecondUrlAndBothTabs": true,
+      "newConversationHidNativePage": true,
+      "returnSameB3KeptSecondUrlAndBothTabs": true,
+      "closedOnlyOwnTwoPublicPages": true,
+      "finalPageState": "new empty tab; remembered count0; no Example Domain native HTML",
+      "contentCollapsedAtEnd": true,
+      "readTextSnapshotClicked": false,
+      "rememberPageClicked": false,
+      "newAgentReadPermissionGrantedByRoot": false
+    },
+    "finalOriginalP02Observed": true,
+    "QNotOpenedOn755": true,
+    "newRealModelPrompts": 0,
+    "oldRequestsResent": 0,
+    "observerBoundary": "Initial restore positive control observed one tap/childStarted and one initialize. Comparable cached-return and full public-web intervals observed no added tap/start/init/load/new records; asynchronous/missing/capped tap limitations remain, not proof of no process.",
+    "passiveObservations": [
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/after-b3-failure.json",
+        "sha256": "6affc0e5471a9223679c0bbdb4403f6df875ec4a50716822930f62ad2bc4b252",
+        "phase": "after-b3-failure",
+        "tapCount": 1,
+        "delta": {
+          "previousPhase": "before-b3",
+          "prefixesMatch": true,
+          "newLogicalTapFiles": ["protocol-v1-1793866321097-0.jsonl"],
+          "childStartedNewlyObserved": ["protocol-v1-1793866321097-0.jsonl"],
+          "newlyObservedRecords": 8,
+          "newlyObservedCounts": {
+            "out:initialize": 1
+          },
+          "recordTsAtOrBeforePreviousSnapshotStart": 0
+        }
+      },
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/after-new-conversation.json",
+        "sha256": "6c810df077445607dc73c8c5256294185392cc45d191737a2f2c9f6fb6d04490",
+        "phase": "after-new-conversation",
+        "tapCount": 1,
+        "delta": {
+          "previousPhase": "after-b3-failure",
+          "prefixesMatch": true,
+          "newLogicalTapFiles": [],
+          "childStartedNewlyObserved": [],
+          "newlyObservedRecords": 0,
+          "newlyObservedCounts": {},
+          "recordTsAtOrBeforePreviousSnapshotStart": 0
+        }
+      },
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/after-public-web.json",
+        "sha256": "a00b5d202344bc48becb618c0cf7979a35da9f40278fd3e5867d7f2eb56d3eb7",
+        "phase": "after-public-web",
+        "tapCount": 1,
+        "delta": {
+          "previousPhase": "before-public-web",
+          "prefixesMatch": true,
+          "newLogicalTapFiles": [],
+          "childStartedNewlyObserved": [],
+          "newlyObservedRecords": 0,
+          "newlyObservedCounts": {},
+          "recordTsAtOrBeforePreviousSnapshotStart": 0
+        }
+      },
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/after-return-cached.json",
+        "sha256": "2cf007e584a65d31c0dbf4a2c398529ea47d9b345e49c22af3d28918bf2a78a2",
+        "phase": "after-return-cached",
+        "tapCount": 1,
+        "delta": {
+          "previousPhase": "after-new-conversation",
+          "prefixesMatch": true,
+          "newLogicalTapFiles": [],
+          "childStartedNewlyObserved": [],
+          "newlyObservedRecords": 0,
+          "newlyObservedCounts": {},
+          "recordTsAtOrBeforePreviousSnapshotStart": 0
+        }
+      },
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/before-b3.json",
+        "sha256": "a948aef9940c337c2c20346a5e7f4186a0b79ab10a98093ccc229bb721c3892b",
+        "phase": "before-b3",
+        "tapCount": 0,
+        "delta": null
+      },
+      {
+        "path": "output/2026-11-05-management-install-stage/navigation-ui-observer/observations/epoch-1793866278021/before-public-web.json",
+        "sha256": "3cae65e005a0c404b8c87e74cae65e0369340541d52c451f6d7c902b848febb1",
+        "phase": "before-public-web",
+        "tapCount": 1,
+        "delta": {
+          "previousPhase": "after-return-cached",
+          "prefixesMatch": true,
+          "newLogicalTapFiles": [],
+          "childStartedNewlyObserved": [],
+          "newlyObservedRecords": 0,
+          "newlyObservedCounts": {},
+          "recordTsAtOrBeforePreviousSnapshotStart": 0
+        }
+      }
+    ],
+    "witnessBoundary": "Root actual Cua observation and separately captured passive logs. No independent witness of UI; one screenshot observed inline, no local screenshot artifact."
+  },
+  "formalOriginalRefs": {
+    "binding": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/binding-result.json",
+      "sha256": "382aaea4aaeac94c2cf5a80cbe176304cc360a90e9b921d97ca6aeb7643faf9e"
+    },
+    "candidate": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/candidate-output/candidate.json",
+      "sha256": "751673426431d2c9c0f8a3812f0443dad8799d2edd3bc1be230cad2d155e52cf"
+    },
+    "installed": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/install/install-result.json",
+      "sha256": "9a23385bcbd15043a89bc081f7fa4ff239d51a55f07a9e9670b1f927dad75b48"
+    },
+    "installedMechanicalReader": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "d35b932ae2aa96f1de52629c4e95e0aa1b060570c0dcf9232b555e0f331a0a23"
+    },
+    "preparationIndependentReview": {
+      "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/independent/semantic-review.json",
+      "sha256": "470a3a7f8a664bc2a8428ed37fa0f963bea26d0e3b1cb23e02bc9ea4cebabcd4"
+    }
+  },
+  "independentDeliveryReview": {
+    "path": "output/2026-11-05-management-install-stage/navigation-formal-preparation/independent/delivery-review.json",
+    "sha256": "bc71d6cea8bf974ba792c7f624939d3c7c1eda34ec1beee282915fb8ce00bfe1",
+    "mustFixCount": 0,
+    "scope": "Closed-state delivery originals independently read; Root UI refs/limits checked, not independently witnessed."
+  },
+  "notClaimed": [
+    "B3 or Q recovery fixed",
+    "Real Agent auth/model/tool success",
+    "Page sharing permission/revocation/real Agent reading",
+    "Cold webpage restore or all29x8 acceptance",
+    "User database unchanged after startup",
+    "Formal explicit reconnect success (covered only by controlled test)"
+  ],
+  "publicationBoundary": "Derived content-free summary. Archive contains controlled source/tests/engineering only; user databases, full retention manifests, draft text and binaries remain private. Documents changed later and receive separate checks."
+}

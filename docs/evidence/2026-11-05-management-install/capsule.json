@@ -1,0 +1,244 @@
+{
+  "kind": "PublishedScopedTextCapsuleIndex",
+  "title": "管理、审批与Windows分项",
+  "artifact": {
+    "path": "capsule.zip",
+    "sha256": "264baf0ea31bf1163da066628a92cb9429b310e9bdeb44c43c313e9c28ff4379",
+    "bytes": 46831
+  },
+  "originManifest": {
+    "path": "output/2026-11-05-management-install-stage/publication-preparation/manifest.json",
+    "sha256": "92fe2b0ed8e2977bb97511339e14b0a5add7230be1034d841337c8f2822bf3b1"
+  },
+  "originSummary": {
+    "path": "output/2026-11-05-management-install-stage/publication-preparation/summary.json",
+    "sha256": "05cfc477aab3f9fdbb44b0dcf5a946ab41c95d29b8c0d3a9fa4cedde42434e5f"
+  },
+  "members": [
+    {
+      "member": "README.md",
+      "bytes": 3558,
+      "sha256": "65201c85f37c259d2f9900ebe88b088ebe9216ba84d7db33fea480551d4789c7",
+      "crc32": 2944676313,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "progress-update-suggestions.json",
+      "bytes": 10791,
+      "sha256": "873f40fb95347058c39aac7e458bb3c0575639b61f7f7b8439d782715a785209",
+      "crc32": 2839659012,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "safety-review.json",
+      "bytes": 17078,
+      "sha256": "a2c91cea0f3d52b12c6a548dc8d103ade0f9f7522554526014b7864cf9a0c5f1",
+      "crc32": 4003824891,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "summary.json",
+      "bytes": 17869,
+      "sha256": "05cfc477aab3f9fdbb44b0dcf5a946ab41c95d29b8c0d3a9fa4cedde42434e5f",
+      "crc32": 3717232730,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text-allowlist.json",
+      "bytes": 20947,
+      "sha256": "f3abd4de5aad5aa3af0f6566e77fb73988ecd7431574e42730713683ce12259e",
+      "crc32": 1640790593,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/derived/mac-first-rust-failure-extract.json",
+      "bytes": 981,
+      "sha256": "85913984289cbdbccabf5da86b576e36bbfe822baca8fc68cc3928ab3aee9855",
+      "crc32": 163930770,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/derived/windows-parser-failure-extract.json",
+      "bytes": 1290,
+      "sha256": "b6d27499256a5af9b2a2c4717db06307355ba17d2fc75764745cb4a550d7e1e1",
+      "crc32": 782359838,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/mac-candidate-completion.json",
+      "bytes": 404,
+      "sha256": "528531da0a6a38305f79958f29428f7d1cbfa1d9573d0f381139ebcb97ff7313",
+      "crc32": 2284857038,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/mac-candidate-nine.json",
+      "bytes": 2991,
+      "sha256": "584d8bb005c409e5c9e65ee5a07da0a43bdc460788e64299f3852e51eaed42d8",
+      "crc32": 2076400383,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/mac-engineering-result.json",
+      "bytes": 5683,
+      "sha256": "145c22c4a42950eb7c87119f2ca2f528d47c228ac259dbd3307766b3e5c692c7",
+      "crc32": 3105923319,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/mac-installed-six.json",
+      "bytes": 2128,
+      "sha256": "b01d8bdbcb63daf02155c3a7f2c72f981ce3a1fb6c2b68e9b473295fbb721d9f",
+      "crc32": 4097347691,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/protocol-v1-1793861147824-0.jsonl",
+      "bytes": 3883,
+      "sha256": "fa13c080c038f4613ed81dfd1ab68103ea7997a60fa4fa7831e0e937a71a41b3",
+      "crc32": 557387223,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/protocol-v1-1793861542758-1.jsonl",
+      "bytes": 3007,
+      "sha256": "7ce8e1053c33f57716c97b9d41d6b40efef4a410d34b895f0c1f979d67cd96f1",
+      "crc32": 149631801,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-build-selection.json",
+      "bytes": 1076,
+      "sha256": "f91da617f11e17f77d66a3283f43c5dfdea0af7ed96c7da519ae50fae5bdb255",
+      "crc32": 3677807557,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-parser-three-rename.patch",
+      "bytes": 1661,
+      "sha256": "26e30aadb70bb96af7a195aee3f4e89b84dc4bb932dc39c8277c07e367c2834e",
+      "crc32": 3066374046,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-provider-block-annotation.json",
+      "bytes": 432,
+      "sha256": "559257a51eaeac393d60aea7506c928a2280604f709cf1be7758fd023bfb2b8f",
+      "crc32": 600986391,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-provider-block-independent-review.json",
+      "bytes": 5441,
+      "sha256": "f4fdf8e556e3f1fcef213e008993cbb0bba9c3f8b8b139918aa5eb38e1da01bb",
+      "crc32": 3640091861,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-provider-block-job.json",
+      "bytes": 861,
+      "sha256": "5f168df02a946d2b1c65cf55d280960a01489f9b223eadd1251100c55838b35a",
+      "crc32": 3722918774,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-restore-configuration.json",
+      "bytes": 5512,
+      "sha256": "7500b3aef25680eda5794aaeb13a148aefd92a82b8a522891a86d34b6afb6d54",
+      "crc32": 2110854371,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-restore-first-poll.json",
+      "bytes": 2702,
+      "sha256": "1d426c1e03a941745563a852e14ce4538116f30bff69028fe8359a024fd95d1f",
+      "crc32": 407461841,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-restore-owner-deadline.json",
+      "bytes": 1623,
+      "sha256": "9b1f63b87ab3369add45425b9efad14e8b691093cdfa52ea284f751333e7052d",
+      "crc32": 2926374863,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-selected-artifact-metadata.json",
+      "bytes": 711,
+      "sha256": "4245a79f9bf261314a90b1c7a5d39c2ec6f44b69f0b2d63b149d5bddf951552d",
+      "crc32": 666019810,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-selected-build.result.json",
+      "bytes": 2139,
+      "sha256": "00a2a4c48b4523d4c5f411e8acb107180a08667389049583dc0a87530691cc8d",
+      "crc32": 181897434,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-selected-independent-review.json",
+      "bytes": 6288,
+      "sha256": "e988a7e4e5bd1a2afc3f9c6807cad96548507c31fd4da02f8203d62846a780a0",
+      "crc32": 1526794905,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-shared-management-All.result.json",
+      "bytes": 1325,
+      "sha256": "f66a8f60923dd9b4ecdac1030fea9b4ca01a72f46cb4b1d12764892c5e00aefc",
+      "crc32": 3585505248,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-shared-management-Frontend.result.json",
+      "bytes": 1860,
+      "sha256": "e1d9614daa6170237cc9947ef8e2cc53894c75c476bc3c72a0d149abf79efbfb",
+      "crc32": 912684300,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-shared-management-frontend.vitest.json",
+      "bytes": 6848,
+      "sha256": "de6fa72eefe9190925e3a9723da2e13a8f352fb85c019e7c6285b65a56bfdadb",
+      "crc32": 3978712824,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    },
+    {
+      "member": "text/raw/windows-shared-management-worker.json",
+      "bytes": 2493,
+      "sha256": "844c97c59d01919769cff1744664240a27a2f54d74c7ad68fcdcc735ffc3b26c",
+      "crc32": 1247907780,
+      "mode": "0600",
+      "type": "UTF-8 text"
+    }
+  ],
+  "boundary": "Archive member bytes retained exactly. This outer index is a derived formatted projection; content-free/controlled evidence only. No user databases, drafts, full data manifests, executable or original binary CI archive included. Results and limits are defined per member; later formal UI is separately recorded."
+}
