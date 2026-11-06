@@ -18,6 +18,7 @@ const failures = [
     "AGENT_OPEN_CLOSED",
     "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
   ],
+  ["AGENT_OPEN_WAIT_CANCELLED", "已取消等待读取。原内容已保留。"],
   [
     "AGENT_WORK_DIRECTORY_UNAVAILABLE",
     "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",

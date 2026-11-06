@@ -35,7 +35,7 @@ async fn open_reply<T>(
     super::wait::reply_typed(receive, duration)
         .await
         .map_err(|failure| match failure {
-            super::wait::ReplyFailure::Timeout => "AGENT_OPEN_TIMEOUT".to_owned(),
+            super::wait::ReplyFailure::Timeout => super::operations::OPEN_WAIT_TIMEOUT.to_owned(),
             super::wait::ReplyFailure::Closed => "AGENT_OPEN_CLOSED".to_owned(),
         })
 }

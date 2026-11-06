@@ -14,6 +14,7 @@ export const ERROR_STRINGS = {
     "打开对话尚未确认完成，等待已超时。原内容已保留，请先查看是否有待处理的提示。",
   agentOpenClosed:
     "打开对话尚未确认完成，未能取得结果。原内容已保留，请检查连接后重试。",
+  agentOpenWaitCancelled: "已取消等待读取。原内容已保留。",
   workDirectoryUnavailable:
     "工作文件夹不存在或无法访问，请恢复后重试。原内容已保留。",
 } as const;

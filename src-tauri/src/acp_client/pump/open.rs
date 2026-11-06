@@ -69,11 +69,14 @@ pub(crate) async fn open_session_on_connection(
     }
 
     let has_mcp = mcp.is_some();
-    let describe_open_error = |error| {
+    let describe_open_error = |error: agent_client_protocol::Error| {
         if has_mcp {
             super::super::transient_mcp::safe_open_error()
+        } else if error.code == agent_client_protocol::schema::v1::ErrorCode::AuthRequired {
+            "AUTH_REQUIRED".into()
         } else {
-            describe_acp_error(error)
+            // Peer text cannot claim an application-owned opening outcome.
+            "会话未能打开，请重试".into()
         }
     };
 

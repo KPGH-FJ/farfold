@@ -280,15 +280,16 @@ async fn abandoned_open(timeout: bool) {
         timeout.then(|| tokio::time::Instant::now() + Duration::from_secs(1)),
     );
     until(|| f.cwd.join("listed_loading").exists()).await;
-    if timeout {
+    let timeout_error = if timeout {
         let outcome = tokio::time::timeout(Duration::from_secs(3), receive)
             .await
             .unwrap()
             .unwrap();
-        assert!(outcome.err().unwrap().contains("尚未确认"));
+        outcome.err()
     } else {
         drop(receive);
-    }
+        None
+    };
     let pending = available(&f, &connection, "restored");
     let other = available(&f, &connection, "other");
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
@@ -340,6 +341,9 @@ async fn abandoned_open(timeout: bool) {
     assert!(orphan_gone);
     assert!(unconfirmed_retained);
     assert!(retried);
+    if timeout {
+        assert_eq!(timeout_error.as_deref(), Some("AGENT_OPEN_TIMEOUT"));
+    }
 }
 
 #[tokio::test]

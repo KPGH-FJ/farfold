@@ -16,6 +16,66 @@ afterEach(async () => {
   expect(historyReads.getSnapshot()).toEqual([]);
 });
 
+it("keeps the confirmed cancellation of a waiting open visible after the progress row is released", async () => {
+  let progress!: { onmessage: (event: unknown) => void };
+  let token!: string;
+  let rejectOpen!: (reason: string) => void;
+  const key = "controlled:/work:cancelled-open";
+  h.invoke.mockImplementation((command, args) => {
+    if (command === "session_open") {
+      progress = args.admissionChannel;
+      token = args.openToken;
+      return new Promise((_, reject) => {
+        rejectOpen = reject;
+      });
+    }
+    if (command === "session_open_cancel_waiting") {
+      progress.onmessage({
+        kind: "session_history_admission",
+        openToken: token,
+        phase: "notStarted",
+      });
+      rejectOpen("AGENT_OPEN_WAIT_CANCELLED");
+      return Promise.resolve({
+        openToken: args.openToken,
+        outcome: "cancelledWaiting",
+      });
+    }
+    return Promise.resolve([]);
+  });
+  opened.push(key);
+  const reading = Promise.allSettled([
+    threads.open({
+      agentId: "controlled",
+      cwd: "/work",
+      nativeSessionId: "cancelled-open",
+    }),
+  ]);
+  progress.onmessage({
+    kind: "session_history_admission",
+    openToken: token,
+    phase: "waiting",
+  });
+  await historyReads.cancel(token);
+  expect(await reading).toEqual([
+    { status: "rejected", reason: "AGENT_OPEN_WAIT_CANCELLED" },
+  ]);
+  expect(historyReads.getSnapshot()).toEqual([]);
+  expect(threads.thread(key)?.openError).toBe("已取消等待读取。原内容已保留。");
+  expect(
+    h.invoke.mock.calls.filter(
+      ([name]) => name === "session_open_cancel_waiting",
+    ),
+  ).toEqual([["session_open_cancel_waiting", { openToken: token }]]);
+  expect(
+    h.invoke.mock.calls
+      .filter(([name]) =>
+        ["session_open", "session_prompt", "session_cancel"].includes(name),
+      )
+      .map(([name]) => name),
+  ).toEqual(["session_open"]);
+});
+
 it.each([false, true])(
   "keeps the shared open, original mixed replay order, and raw control collisions (response first=%s)",
   async (responseFirst) => {

@@ -32,6 +32,8 @@ export function agentOpenError(reason: unknown): string | undefined {
       return ERROR_STRINGS.agentOpenTimeout;
     case "AGENT_OPEN_CLOSED":
       return ERROR_STRINGS.agentOpenClosed;
+    case "AGENT_OPEN_WAIT_CANCELLED":
+      return ERROR_STRINGS.agentOpenWaitCancelled;
   }
 }
 

@@ -25,6 +25,8 @@ pub(crate) use open_result::OpenDelivery;
 mod owned_reply;
 pub(crate) use owned_reply::until_owner_ended;
 
+pub(super) const OPEN_WAIT_TIMEOUT: &str = "AGENT_OPEN_TIMEOUT";
+
 #[derive(Clone)]
 pub(crate) struct Operation {
     pub abandoned: Arc<AtomicBool>,
@@ -164,11 +166,32 @@ impl ManagerCommand {
 /// A caller deadline ends delivery, never ownership. Effectful operations retain
 /// their one reservation until the peer responds or the connection actually ends.
 pub(crate) async fn execute<T>(
+    reply: oneshot::Sender<Result<T, String>>,
+    life: Arc<ConnectionLife>,
+    operation: Operation,
+    deadline: tokio::time::Instant,
+    retain: bool,
+    future: impl std::future::Future<Output = Result<T, String>>,
+) -> Option<T> {
+    execute_with_timeout_receipt(
+        reply,
+        life,
+        operation,
+        deadline,
+        retain,
+        "Agent 无响应，操作结果尚未确认",
+        future,
+    )
+    .await
+}
+
+async fn execute_with_timeout_receipt<T>(
     mut reply: oneshot::Sender<Result<T, String>>,
     life: Arc<ConnectionLife>,
     operation: Operation,
     deadline: tokio::time::Instant,
     retain: bool,
+    timeout_receipt: &'static str,
     future: impl std::future::Future<Output = Result<T, String>>,
 ) -> Option<T> {
     if reply.is_closed()
@@ -201,7 +224,7 @@ pub(crate) async fn execute<T>(
     let message = if unclaimed {
         "Agent 在确认对话前发送了过多消息，操作结果尚未确认；请检查此连接，不要重复创建"
     } else {
-        "Agent 无响应，操作结果尚未确认"
+        timeout_receipt
     };
     let _ = reply.send(Err(message.into()));
     if !retain {

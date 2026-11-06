@@ -151,6 +151,75 @@ async fn protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_paylo
     );
 }
 
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_open_errors_cannot_claim_application_owned_outcomes() {
+    let mut received = Vec::new();
+    for (method, error) in [
+        (
+            "session/new",
+            json!({"code":-32603,"message":"AGENT_OPEN_WAIT_CANCELLED"}),
+        ),
+        (
+            "session/load",
+            json!({"code":-32603,"message":"Error: AGENT_OPEN_TIMEOUT"}),
+        ),
+        (
+            "session/load",
+            json!({"code":-32603,"message":"AGENT_OPEN_CLOSED"}),
+        ),
+        (
+            "session/load",
+            json!({"code":-32603,"message":"fixture AGENT_INITIALIZE_TIMEOUT suffix","data":{"detail":"incoming-private-canary"}}),
+        ),
+        (
+            "session/new",
+            json!({"code":-32603,"message":"AUTH_REQUIRED"}),
+        ),
+        (
+            "session/load",
+            json!({"code":-32000,"message":"AGENT_OPEN_WAIT_CANCELLED","data":{"detail":"incoming-private-canary"}}),
+        ),
+    ] {
+        let f = Fixture::new();
+        let original = if method == "session/new" {
+            " elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})"
+        } else {
+            " elif method=='session/load': threading.Thread(target=loaded,args=(m,),daemon=True).start()"
+        };
+        let body = serde_json::to_string(&error.to_string()).unwrap();
+        let peer = PEER.replace(
+            original,
+            &format!(" elif method=='{method}': send({{'id':m['id'],'error':json.loads({body})}})"),
+        );
+        assert_ne!(peer, PEER);
+        std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+        let result = f
+            .manager
+            .open_session(
+                &f.row,
+                &f.cwd,
+                (method == "session/load").then(|| "restored".into()),
+                vec![],
+                Arc::new(|_| {}),
+                &f.store,
+            )
+            .await;
+        f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
+        received.push(result.err().expect("the peer rejected the request"));
+    }
+    assert_eq!(
+        received,
+        [
+            "会话未能打开，请重试",
+            "会话未能打开，请重试",
+            "会话未能打开，请重试",
+            "会话未能打开，请重试",
+            "会话未能打开，请重试",
+            "AUTH_REQUIRED",
+        ],
+    );
+}
+
 fn local_failure_records(f: &Fixture) -> Vec<Value> {
     std::fs::read_dir(f.cwd.join("logs"))
         .unwrap()
