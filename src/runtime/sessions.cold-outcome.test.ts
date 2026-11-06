@@ -29,7 +29,8 @@ const h = vi.hoisted(() => ({
   }[],
   prompts: [] as { args: PromptWire; receiptId: number }[],
   admission: "accepted" as "accepted" | "unknown",
-  pendingAdmission: undefined as Promise<{ status: "unknown" }> | undefined,
+  pendingAdmission: undefined as
+    Promise<{ status: "unknown" | "accepted" }> | undefined,
   pendingRouteClose: undefined as Promise<null> | undefined,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
@@ -559,6 +560,77 @@ it("quarantines an offered prompt with no observed ending across an acknowledged
   expect(warm?.uncertainPrompt).toBe(pending);
   expect(warm?.queued).toEqual([pending, next]);
   expectNoColdDispatch(1);
+});
+
+it("does not transfer an acknowledged input's uncertainty to a repeated queue item during reconnect", async () => {
+  const original = await loadRuntime();
+  const hot = await original.threads.open({
+    ...input,
+    nativeSessionId: nativeId,
+  });
+  const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
+  const repeated = blocks("Same input deliberately queued a second time");
+  const tail = blocks("Independent unsent follow-up");
+  let acknowledgePrompt!: () => void;
+  h.pendingAdmission = new Promise((resolve) => {
+    acknowledgePrompt = () => resolve({ status: "accepted" });
+  });
+  let openingStarted!: () => void;
+  const opening = new Promise<void>((resolve) => {
+    openingStarted = resolve;
+  });
+  let releaseOpening!: () => void;
+  const held = new Promise<void>((resolve) => {
+    releaseOpening = resolve;
+  });
+  const invoke = h.invoke.getMockImplementation()!;
+  h.invoke.mockImplementation(async (command: string, args) => {
+    const result = await invoke(command, args);
+    if (command === "session_open" && h.opens.length === 2) {
+      openingStarted();
+      await held;
+    }
+    return result;
+  });
+  const sending = original.threads.send(hot.key, repeated);
+  let reopening: ReturnType<Runtime["threads"]["reconnect"]> | undefined;
+  try {
+    await vi.waitFor(() => expect(h.prompts).toHaveLength(1));
+    expect(await original.threads.send(hot.key, repeated)).toEqual({
+      status: "queued",
+    });
+    expect(await original.threads.send(hot.key, tail)).toEqual({
+      status: "queued",
+    });
+    owner.args.channel.onmessage({ kind: "deliveryUnavailable" });
+    reopening = original.threads.reconnect(hot.key);
+    await opening;
+    expect(hot.uncertainPrompt).toBe(repeated);
+    expect(hot.queued).toEqual([repeated, repeated, tail]);
+
+    acknowledgePrompt();
+    expect(await sending).toEqual({ status: "accepted" });
+    expect(hot.uncertainPrompt).toBeNull();
+    expect(hot.queued).toEqual([repeated, tail]);
+    releaseOpening();
+
+    const replacement = await reopening;
+    expect(replacement).toBeDefined();
+    expect(replacement).not.toBe(hot);
+    expect(replacement!.queued).toEqual([repeated, tail]);
+    expect.soft(replacement!.uncertainPrompt).toBeNull();
+    expect(replacement!.connectionOutcomeUnknown).toBe(true);
+    await original.drafts.draftPersistence.flush();
+    const cold = await reloadPersisted(original);
+    expect(cold.state.queued).toEqual([repeated, tail]);
+    expect.soft(cold.state.uncertainPrompt).toBeNull();
+    expect(cold.state.historicalOutcomeUnknown).toBe(true);
+    expectNoColdDispatch(1);
+  } finally {
+    acknowledgePrompt();
+    releaseOpening();
+    await Promise.allSettled([sending, reopening]);
+  }
 });
 
 it("preserves an accepted empty-queue unknown outcome across a complete cold rebuild without reviving the old live owner", async () => {

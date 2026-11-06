@@ -1,0 +1,49 @@
+{
+  "archiveSha256": "ed8f7895f1721fb129d08b5139d140a01af5df716c319698fd79f8fb7f9e19a1",
+  "authSelectorsAndExecutableOverridesExcluded": true,
+  "authenticatedEndpointsInvoked": 0,
+  "childCleanup": {
+    "directSignals": 0,
+    "exitCode": 1,
+    "groupGone": true,
+    "outbound": {
+      "connect": 1
+    },
+    "stdinEof": true
+  },
+  "endedUtc": "2026-11-06T23:09:23.379170+00:00",
+  "executableSha256": "fde4cb4bfc3c5a9fe1d546433488f9e22ea63dab71d94ff9347ef9a46d5a04d8",
+  "existingSessionUsed": false,
+  "inertHelperUsedExactPythonFrameworkExecutable": true,
+  "kernelPolicy": {
+    "browserAndGitHubCliOutsideExactExecAllowlist": true,
+    "exactAllowedExecutableCount": 2,
+    "keychainMachLookupDenied": true,
+    "knownReachableLoopbackDenied": true,
+    "ordinaryHomeReadDenied": true,
+    "outsideScratchWriteDenied": true,
+    "unlistedInertExecutableDenied": true
+  },
+  "kind": "OfficialStandaloneCopilotLocalUnauthenticatedSdkPreflight",
+  "loginInvocations": 0,
+  "logoutInvocations": 0,
+  "maxStandaloneLaunches": 1,
+  "modelPrompts": 0,
+  "noRawTerminalOrAccountDataRetained": true,
+  "officialRelease": "https://github.com/github/copilot-cli/releases/tag/v1.0.106",
+  "ordinaryHomePreserved": true,
+  "outcome": "owned-official-stdout-ended",
+  "productionAppOperated": false,
+  "productionStateAccessed": false,
+  "publicExecutableOutsideOrdinaryHome": true,
+  "publicReleaseAsset": "copilot-darwin-arm64.tar.gz",
+  "realBrowserOpened": false,
+  "realCredentialAccessed": false,
+  "scope": "exact standalone official publication, local status only with credential discovery and network blocked",
+  "standaloneLaunches": 1,
+  "startedUtc": "2026-11-06T23:09:19.517815+00:00",
+  "stderrCategoriesOnly": [],
+  "stderrHadBytes": true,
+  "strictCodesignVerified": true,
+  "temporaryFixtureRemoved": true
+}

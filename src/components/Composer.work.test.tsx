@@ -35,9 +35,13 @@ import {
   startQueueEditor,
 } from "../runtime/queue_edit";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { REDESIGN } from "../runtime/redesign_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 // Render the real component and retain its event handlers, without a DOM or
 // changes to production hooks. Nested Composer callbacks are exercised below.
@@ -238,68 +242,124 @@ it.each([
   },
 );
 
-it("does not save an old queue edit into the target chosen after it was cancelled during persistence", async () => {
-  const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
-  const thread = threads.markOpenFailed(
-    "a:/p:queue-cancel-race",
-    "a",
-    "/p",
-    "queue-cancel-race",
-    "fixture",
-  );
-  thread.openError = null;
-  thread.queued = [
-    [{ type: "text", text: "original A" }],
-    [{ type: "text", text: "original B" }],
-  ];
-  const originalA = thread.queued[0];
-  const originalB = thread.queued[1];
-  const editingKey = queueEditorKey(thread.key);
-  startQueueEditor(thread.key, 0, threads.beginQueueEdit(thread.key, 0));
-  composerDrafts.update(editingKey, (draft) => ({
-    ...draft,
-    text: "edited A",
-  }));
-  const props = {
-    thread,
-    imageEnabled: false,
-    onGoSettings: () => {},
-  };
-  const outer = captureComposer(props);
-  const nested = outer.find((node) => node.type === Composer)!;
-  const nestedProps = nested.props as ComponentProps<typeof Composer>;
-  const onSend = vi.fn(nestedProps.onSend!);
-  const inner = captureComposer({ ...nestedProps, onSend });
-  let finishSave!: () => void;
-  const save = new Promise<void>((resolve) => (finishSave = resolve));
-  flush.mockReset().mockResolvedValueOnce().mockReturnValueOnce(save);
-  const saveButton = inner.find(
-    (node) =>
-      node.type === "button" && node.props["aria-label"] === C.saveQueued,
-  )!;
-  expect(saveButton.props.disabled).toBe(false);
-  (saveButton.props.onClick as () => void)();
-  await vi.waitFor(() => expect(flush).toHaveBeenCalledTimes(2));
+it.each(["retargets the editor", "edits the same draft"] as const)(
+  "does not save an older queue edit when the user %s during persistence",
+  async (action) => {
+    const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+    const id = `queue-save-race-${action}`;
+    const thread = threads.markOpenFailed(
+      `a:/p:${id}`,
+      "a",
+      "/p",
+      id,
+      "fixture",
+    );
+    thread.openError = null;
+    thread.queued = [
+      [{ type: "text", text: "original A" }],
+      [{ type: "text", text: "original B" }],
+    ];
+    const originalA = thread.queued[0];
+    const originalB = thread.queued[1];
+    const editingKey = queueEditorKey(thread.key);
+    startQueueEditor(thread.key, 0, threads.beginQueueEdit(thread.key, 0));
+    composerDrafts.update(editingKey, (draft) => ({
+      ...draft,
+      text: "edited A",
+    }));
+    const props = {
+      thread,
+      imageEnabled: false,
+      onGoSettings: () => {},
+    };
+    const outer = captureComposer(props);
+    const nested = outer.find((node) => node.type === Composer)!;
+    const nestedProps = nested.props as ComponentProps<typeof Composer>;
+    const onSend = vi.fn(nestedProps.onSend!);
+    const inner = captureComposer({ ...nestedProps, onSend });
+    let finishSave!: () => void;
+    const save = new Promise<void>((resolve) => (finishSave = resolve));
+    flush
+      .mockReset()
+      .mockResolvedValue()
+      .mockResolvedValueOnce()
+      .mockReturnValueOnce(save);
+    const saveButton = inner.find(
+      (node) =>
+        node.type === "button" && node.props["aria-label"] === C.saveQueued,
+    )!;
+    expect(saveButton.props.disabled).toBe(false);
+    (saveButton.props.onClick as () => void)();
+    await vi.waitFor(() => expect(flush).toHaveBeenCalledTimes(2));
 
-  const discard = outer.find(
-    (node) =>
-      node.type === "button" && node.props.children === C.discardQueueEdit,
-  )!;
-  (discard.props.onClick as () => void)();
-  const editB = captureComposer(props).filter(
-    (node) => node.type === "button" && node.props.children === C.editQueued,
-  )[1];
-  expect(editB.props.disabled).toBe(false);
-  (editB.props.onClick as () => void)();
-  const newDraft = composerDrafts.read(editingKey);
-  const replace = vi.spyOn(threads, "replaceQueued");
+    const submitted = composerDrafts.read(editingKey);
+    if (action === "retargets the editor") {
+      const discard = outer.find(
+        (node) =>
+          node.type === "button" && node.props.children === C.discardQueueEdit,
+      )!;
+      (discard.props.onClick as () => void)();
+      const editB = captureComposer(props).filter(
+        (node) =>
+          node.type === "button" && node.props.children === C.editQueued,
+      )[1];
+      expect(editB.props.disabled).toBe(false);
+      (editB.props.onClick as () => void)();
+    } else {
+      const area = inner.find((node) => node.type === "textarea")!;
+      expect(area.props.disabled).toBe(false);
+      (area.props.onChange as (event: { target: { value: string } }) => void)({
+        target: { value: "latest edit A" },
+      });
+      expect(composerDrafts.read(editingKey).queueEdit).toBe(
+        submitted.queueEdit,
+      );
+    }
+    const newDraft = composerDrafts.read(editingKey);
+    const replace = vi.spyOn(threads, "replaceQueued");
+    const send = vi.spyOn(threads, "send");
 
-  finishSave();
-  await vi.waitFor(() => expect(onSend).toHaveBeenCalledTimes(1));
-  await expect(onSend.mock.results[0].value).rejects.toThrow(C.queueEditStale);
-  expect(replace).not.toHaveBeenCalled();
-  expect(thread.queued[0]).toBe(originalA);
-  expect(thread.queued[1]).toBe(originalB);
-  expect(composerDrafts.read(editingKey)).toBe(newDraft);
-  expect(newDraft.text).toBe("original B");
-});
+    finishSave();
+    await vi.waitFor(() => expect(onSend).toHaveBeenCalledTimes(1));
+    await expect
+      .soft(onSend.mock.results[0].value)
+      .rejects.toThrow(
+        action === "retargets the editor"
+          ? C.queueEditStale
+          : REDESIGN.draftChanged,
+      );
+    expect.soft(replace).not.toHaveBeenCalled();
+    expect.soft(thread.queued[0]).toBe(originalA);
+    expect(thread.queued[1]).toBe(originalB);
+    expect(composerDrafts.read(editingKey)).toBe(newDraft);
+    expect(send).not.toHaveBeenCalled();
+    if (action === "retargets the editor") {
+      expect(newDraft.text).toBe("original B");
+      expect(queueEditorTarget(newDraft, thread.queued)).toBe(originalB);
+      return;
+    }
+
+    expect(newDraft.text).toBe("latest edit A");
+    expect(queueEditorTarget(newDraft, thread.queued)).toBe(originalA);
+    vi.stubGlobal("requestAnimationFrame", vi.fn());
+    const latest = captureComposer(props).find(
+      (node) => node.type === Composer,
+    )!;
+    const saveLatest = captureComposer(
+      latest.props as ComponentProps<typeof Composer>,
+    ).find(
+      (node) =>
+        node.type === "button" && node.props["aria-label"] === C.saveQueued,
+    )!;
+    expect(saveLatest.props.disabled).toBe(false);
+    (saveLatest.props.onClick as () => void)();
+    await vi.waitFor(() =>
+      expect(composerDrafts.read(editingKey).queueEdit).toBeUndefined(),
+    );
+    expect(replace).toHaveBeenCalledOnce();
+    expect(thread.queued[0]).toEqual([{ type: "text", text: "latest edit A" }]);
+    expect(thread.queued[1]).toBe(originalB);
+    expect(thread.queuePaused).toBe("stopped");
+    expect(send).not.toHaveBeenCalled();
+  },
+);

@@ -1,0 +1,120 @@
+{
+  "agentStillAliveAfterPeerDisconnectAndStop": true,
+  "assistantChunkCountBeforeShutdown": 0,
+  "cleanup": {
+    "directSignals": 0,
+    "exitCode": 0,
+    "ownedProcessGroupGone": true,
+    "stdinEof": true
+  },
+  "endedUtc": "2026-11-06T23:02:57.249737+00:00",
+  "existingSessionUsed": false,
+  "externalInferenceCalls": 0,
+  "heldProviderControl": {
+    "cancelToAcpStopMs": 1,
+    "cancelToPeerDisconnectMs": 0,
+    "cancelWrittenAfterHold": true,
+    "headersAndCommentSent": true,
+    "holdBeforeCancelMs": 325,
+    "lateProviderResultReleasedByFixture": false,
+    "observedPeerDisconnectKind": "eof",
+    "unexpectedClientBytesAfterHttpRequest": false
+  },
+  "initialOwnedExtensionScope": {
+    "count": 1,
+    "knownDefaultBuiltin": "developer"
+  },
+  "kernelPolicy": {
+    "differentListeningPortDenied": true,
+    "exactLoopbackAllowed": true,
+    "ordinaryHomeReadDenied": true,
+    "realHomeWritesDeniedBySamePolicy": true
+  },
+  "kind": "registered-official-goose-loopback-held-provider-response-cancel",
+  "loopbackRequestCounts": {
+    "getModels": 1,
+    "postCompletions": 1
+  },
+  "noProductionSettingsOrDatabaseReadByHarness": true,
+  "observedAcpUpdateCounts": {
+    "available_commands_update": 1,
+    "session_info_update": 2,
+    "usage_update": 2
+  },
+  "observedOfficialAcpStopReason": "cancelled",
+  "officialAgentVersion": "1.52.0",
+  "officialRegisteredExecutableAndStrictSignatureMatched": true,
+  "ordinaryHomeInherited": true,
+  "outboundAcpCounts": {
+    "_goose/unstable/session/extensions/list": 2,
+    "_goose/unstable/session/extensions/remove": 1,
+    "_goose/unstable/tools/list": 1,
+    "initialize": 1,
+    "session/cancel": 1,
+    "session/new": 1,
+    "session/prompt": 1
+  },
+  "outcome": "official-goose-held-provider-stop-and-socket-release-confirmed",
+  "peerDisconnectBeforeAgentStdinEof": true,
+  "preflight": {
+    "chatMode": true,
+    "clientFileAndTerminalCapabilitiesDisabled": true,
+    "exactModel": "nvidia/nemotron-3.5-super-vl:free",
+    "extensions": 0,
+    "isolatedSecretFileAbsent": true,
+    "keyringDisabled": true,
+    "nativeMessagesBefore": 0,
+    "noModelPostsBeforePrompt": true,
+    "oneOwnedNativeSession": true,
+    "provider": "openrouter",
+    "telemetryAndSessionNamingDisabled": true,
+    "tools": 0
+  },
+  "priorRequestBodyHarnessSourceDigestVerified": true,
+  "productionAppOperated": false,
+  "promptAttempts": 1,
+  "realKeyReadOrPassedByHarness": false,
+  "removedOnlyKnownDefaultBuiltinInOwnedSession": true,
+  "requestBodyProjection": [
+    {
+      "agentSessionHeaderMatchesOwnedNativeId": true,
+      "bodyUserAndSessionIdMatchOwnedNativeId": true,
+      "boundedJson": true,
+      "exactFivePluginDisables": true,
+      "exactKnownTopLevelFields": true,
+      "exactLoopbackHost": true,
+      "exactSuperVlFree": true,
+      "exactUserSyntheticTextPlusOwnedCwdAndCurrentMinuteOnly": true,
+      "expectedOrderedRoleAndTextShapes": true,
+      "fakeAuthOnly": true,
+      "modelRequestBodyKeys": [
+        "messages",
+        "model",
+        "plugins",
+        "provider",
+        "session_id",
+        "stream",
+        "stream_options",
+        "transforms",
+        "usage",
+        "user"
+      ],
+      "noModelFallbackFields": true,
+      "noToolOrHostedToolFields": true,
+      "onlyFixedPinnedGooseSystemTextAfterWhitespaceNormalization": true,
+      "onlyForcedMiddleOutTransform": true,
+      "onlyNvidiaNoProviderFallbackAndZeroCaps": true,
+      "requestPathExact": true,
+      "streamAndUsageOptionsExact": true,
+      "streaming": true,
+      "systemCharacterCount": 1303
+    }
+  ],
+  "sourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "standaloneOfficialGoose": true,
+  "startedUtc": "2026-11-06T23:02:56.047213+00:00",
+  "systemConfigMetadataUnchanged": {
+    "system": true
+  },
+  "temporaryFixtureRemoved": true
+}

@@ -263,11 +263,12 @@ export class OpeningBaseline {
       // History owns the returned configuration, not later user work choices.
       // Keeping or discarding a retry copy never settles its external outcome.
       state.workEnabled = this.existing.workEnabled;
+      // A later queued occurrence can reuse the same blocks after the old
+      // request's uncertainty has been cleared by its live owner.
       if (
         this.initialUncertain &&
         state.uncertainPrompt === this.initialUncertain &&
-        this.existing.uncertainPrompt === null &&
-        !this.existing.queued.includes(this.initialUncertain)
+        this.existing.uncertainPrompt === null
       )
         state.uncertainPrompt = null;
       if (

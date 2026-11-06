@@ -21,14 +21,17 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
     "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
+    "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-isolated-startup-guard-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-official-standalone-noauth-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-loopback-held-provider-cancel.json",
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json",
     "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json"
   ],
@@ -207,7 +210,7 @@
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
-        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。当前 1.0.106 的隔离程序在两种启动路线均未返回连接确认，未进入账号读取。完整新登录、退出换号与影响范围仍待实测。",
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 的隔离程序三种启动路线（含官方独立包）均未返回连接确认，未进入账号读取。完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
           {
             "standards": ["S2"],
@@ -449,9 +452,17 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
             ]
+          },
+          {
+            "standards": ["S4"],
+            "environment": "macOS arm64 正式版 6ce829c5，已打开的归档自测对话",
+            "result": "同一已有服务从免费 Ultra 确认保存 Dots3，再明确恢复 Ultra。两次设置的正式界面、对应回执及数据库读回核合；恢复原配置，其他行、草稿、待发及原通信保持，零新开、发送或取消。范围限已打开的设置回执，正式冷开和实际模型回复待验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json"
+            ]
           }
         ],
-        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。正式版同会话切换、实际模型回复和冷恢复，以及旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
+        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。正式版切换后的实际模型回复和冷恢复，以及旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
       }
     },
     {

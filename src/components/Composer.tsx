@@ -18,6 +18,7 @@ import { localResourcePath as uriToSelectedPath } from "../runtime/file_delivery
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { REDESIGN } from "../runtime/redesign_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
@@ -945,11 +946,10 @@ export function Composer({
             disabled={!queueEditorTarget(editingDraft, queued)}
             editableWhenDisabled
             onSend={async (replacement, submitted) => {
-              if (
-                composerDrafts.read(editingKey).queueEdit !==
-                submitted.queueEdit
-              )
+              const current = composerDrafts.read(editingKey);
+              if (current.queueEdit !== submitted.queueEdit)
                 throw new Error(C.queueEditStale);
+              if (current !== submitted) throw new Error(REDESIGN.draftChanged);
               const original = queueEditorTarget(submitted, thread.queued);
               if (!original) throw new Error(C.queueEditStale);
               threads.replaceQueued(thread.key, original, replacement);
