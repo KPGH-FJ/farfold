@@ -384,13 +384,13 @@ fn explicit_model(options: &Value, snapshot: &Snapshot) -> bool {
     {
         return false;
     }
-    fn matching_choices(entries: &[Value], value: &str) -> Option<usize> {
+    fn matching_choices(entries: &[Value], value: &str) -> Option<bool> {
         let named = |item: &Value| {
             item["name"]
                 .as_str()
                 .is_some_and(|name| !name.trim().is_empty())
         };
-        let mut matches = 0;
+        let mut selected = Vec::new();
         for entry in entries {
             if !named(entry) {
                 return None;
@@ -399,18 +399,29 @@ fn explicit_model(options: &Value, snapshot: &Snapshot) -> bool {
                 if entry.get("options").is_some() {
                     return None;
                 }
-                matches += usize::from(leaf == value);
+                if leaf == value {
+                    selected.push((entry["name"].as_str()?, false));
+                }
             } else {
                 entry["group"].as_str()?;
                 for leaf in entry["options"].as_array()? {
                     if !named(leaf) || leaf.get("options").is_some() {
                         return None;
                     }
-                    matches += usize::from(leaf["value"].as_str()? == value);
+                    if leaf["value"].as_str()? == value {
+                        selected.push((leaf["name"].as_str()?, true));
+                    }
                 }
             }
         }
-        Some(matches)
+        // Only the wire value is written. Agents may repeat the same value
+        // with the same display name but different descriptive metadata.
+        Some(match selected.as_slice() {
+            [] => false,
+            [_] => true,
+            [(label, false), rest @ ..] => rest.iter().all(|choice| choice == &(*label, false)),
+            _ => false,
+        })
     }
     options.as_array().is_some_and(|entries| {
         entries.iter().any(|entry| {
@@ -424,7 +435,7 @@ fn explicit_model(options: &Value, snapshot: &Snapshot) -> bool {
                 && entry["options"]
                     .as_array()
                     .and_then(|entries| matching_choices(entries, &choice.value))
-                    == Some(1)
+                    == Some(true)
         })
     })
 }
@@ -549,6 +560,18 @@ mod tests {
         wrong_service["_farfoldService"] = json!({"kind":"configured"});
         assert!(!ModelGuard::new(&options, Some(&wrong_service), true).needs_model_record());
         assert!(!ModelGuard::new(&options, None, true).needs_model_record());
+        options[0]["options"] = json!([
+            {"value":"auto","name":"Auto","description":"A","_meta":{"a":true}},
+            {"value":"auto","name":"Auto","description":"B","_meta":{"b":true}}
+        ]);
+        guard.observe(&options);
+        assert!(guard.can_record_model(Some(&options)));
+        options[0]["options"] = json!([
+            {"group":"one","name":"One","options":[{"value":"auto","name":"Auto"}]},
+            {"group":"two","name":"Two","options":[{"value":"auto","name":"Auto"}]}
+        ]);
+        guard.observe(&options);
+        assert!(!guard.can_record_model(Some(&options)));
         options[0]["options"] = json!([{"value":"auto","name":"A"},{"value":"auto","name":"B"}]);
         guard.observe(&options);
         assert_eq!(guard.check().status, "blocked");

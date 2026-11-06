@@ -60,7 +60,7 @@ async fn missing_model_confirmation_only_updates_the_original_empty_row() {
     let cwd = dir.path().canonicalize().unwrap();
     let peer = cwd.join("peer.py");
     let calls = cwd.join("calls");
-    std::fs::write(&peer, PEER.replace("def send", "options = options[:1]\ndef send")
+    std::fs::write(&peer, PEER.replace("def send", "options = options[:1]\noptions[0]['options'].append({'value':'m','name':'M','description':'Same selection'})\ndef send")
         .replace(" if method=='initialize'", " with open(sys.argv[2],'a') as out: out.write(str(method)+'\\n')\n if method=='initialize'"))
         .unwrap();
     let db = cwd.join("meta.db");
