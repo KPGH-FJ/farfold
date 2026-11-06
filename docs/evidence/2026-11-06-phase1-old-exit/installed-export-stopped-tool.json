@@ -1,0 +1,18 @@
+{
+  "installedSource": "6ce829c5",
+  "scope": "One previously loaded owned Copilot approval-and-stop test conversation in the sole formal macOS application.",
+  "conversationShowedReplyStoppedWithUnconfirmedSteps": true,
+  "nativeSaveShowedSuccess": true,
+  "exportFormat": "Markdown of the loaded conversation without optional tool details",
+  "exportBytes": 1357,
+  "exportSha256": "adac372a36c86b155fe21a843f99633166c7373743ff9a8fea77d8aea6e2be25",
+  "exportContainedReplyStopped": true,
+  "exportedToolLabel": "执行（等待中）",
+  "exportOmittedUnconfirmedToolStatus": true,
+  "exportContainedToolSuccessClaim": false,
+  "rawAgentWireByteIdentical": true,
+  "originalDraftRetainedDraftAndQueuesUnchanged": true,
+  "fileDestination": "one owned temporary directory, no upload",
+  "newAgentRequests": 0,
+  "formalFixVerified": false
+}

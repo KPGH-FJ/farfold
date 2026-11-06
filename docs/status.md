@@ -66,7 +66,9 @@
 
 **第1阶段待发与退出结果归属。** 已复现旧待发按钮能误编辑或移除移位后的另一条，及确认退出后丢失仍运行请求的冷启动未知提示。源码核对按钮对应的消息，且保存当前确切未结束工作以供冷启动。取消退出仍按真实运行状态显示，收到匹配终态后撤下派生标记。正式版仍待安全退出后更新。[受控分项](evidence/2026-11-07-stop-during-draft-save/README.md#待发按钮归属与退出时尚无终态的工作)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档16个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。补入Kilo隔离关闭和模型菜单、Copilot直连停止对照。原模型分别核到Kilo原对话报告值、Goose正式样本的出站选择及回复、Copilot隔离Auto样本的报告值。零新增请求。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [模型原件摘要](evidence/2026-11-06-phase1-next/actual-models-readonly.json)
+**第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
+
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档18个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。新补Goose正式第二候选菜单及Copilot旧版停止状态导出差异。原模型分别核到Kilo原对话报告值、Goose正式样本的出站选择及回复、Copilot隔离Auto样本的报告值。零新增请求。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式候选](evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json)
 
 **第1阶段Kilo隔离会话关闭。** 官方程序7.8.1在独立库创建两个无消息自测会话，仅关闭A一次并收到对应回执；B在同一进程重新接入并读回原设置，两条历史保留。零模型、工具和审批；A专属资源及B原路由连续性未证，不替代正式复验或跨版授权。[隔离回执](evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json)
 

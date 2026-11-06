@@ -1,0 +1,89 @@
+{
+  "kind": "FirstWavePublicModelEligibilityReadOnly",
+  "checkedAtUtc": "2026-11-06T19:39:56Z",
+  "checkedDateBeijing": "2026-11-07",
+  "scope": "Public vendor catalog and product documentation only. No authenticated access, Agent process, installed application action, model request, or configuration write.",
+  "gooseOpenRouter": {
+    "priorOwnedProfileEvidence": "actual-models-readonly.json",
+    "priorOwnedService": "OpenRouter",
+    "priorOwnedOutboundModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "publicEndpoints": [
+      {
+        "role": "existing profile model",
+        "source": "https://openrouter.ai/api/v1/models/nvidia/nemotron-3-ultra-550b-a55b:free/endpoints",
+        "modelId": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "providerName": "Nvidia",
+        "endpointName": "Nvidia | nvidia/nemotron-3-ultra-550b-a55b-20260604:free",
+        "statusRaw": 0,
+        "inputModalities": ["text"],
+        "outputModalities": ["text"],
+        "pricing": {
+          "prompt": "0",
+          "completion": "0"
+        },
+        "toolParametersAdvertised": ["tools", "tool_choice"],
+        "reportedUptimePercent": {
+          "last5m": 100,
+          "last30m": 100,
+          "last1d": 89.375
+        }
+      },
+      {
+        "role": "second public candidate on the same service",
+        "source": "https://openrouter.ai/api/v1/models/nvidia/nemotron-3.5-super-vl:free/endpoints",
+        "modelId": "nvidia/nemotron-3.5-super-vl:free",
+        "providerName": "Nvidia",
+        "endpointName": "Nvidia | nvidia/nemotron-3.5-super-vl-20261015:free",
+        "statusRaw": 0,
+        "inputModalities": ["text", "image", "video"],
+        "outputModalities": ["text"],
+        "pricing": {
+          "prompt": "0",
+          "completion": "0"
+        },
+        "toolParametersAdvertised": ["tools", "tool_choice"],
+        "reportedUptimePercent": {
+          "last5m": 100,
+          "last30m": 100,
+          "last1d": 100
+        }
+      }
+    ],
+    "remaining": "Public catalog does not establish the effective account route, a model switch, a subsequent reply, or cold restore. The separate later formal menu receipt only verifies that the second option is displayed. This snapshot does not resolve the older Claude Sonnet failure or the long wait.",
+    "separateLaterFormalMenuEvidence": "installed-goose-model-candidate.json"
+  },
+  "kiloGateway": {
+    "priorOwnedMenuEvidence": "kilo-model-options-isolated.json",
+    "publicCatalogSource": "https://kilo.ai/landing/free-models",
+    "publicCardsMatchingPriorMenu": [
+      {
+        "modelId": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "source": "https://kilo.ai/models/nvidia-nemotron-3-ultra-550b-a55b-free",
+        "inputUsdPerMillionTokens": 0,
+        "outputUsdPerMillionTokens": 0
+      },
+      {
+        "modelId": "nvidia/nemotron-3.5-super-vl:free",
+        "source": "https://kilo.ai/models/nvidia-nemotron-3-5-super-vl-free",
+        "inputUsdPerMillionTokens": 0,
+        "outputUsdPerMillionTokens": 0
+      },
+      {
+        "modelId": "dots-studio/dots-3-note-preview:free",
+        "source": "https://kilo.ai/models/dots-studio-dots-3-note-preview-free",
+        "inputUsdPerMillionTokens": 0,
+        "outputUsdPerMillionTokens": 0
+      }
+    ],
+    "backgroundBillingSource": "https://kilo.ai/docs/getting-started/using-kilo-for-free#free-background-tasks",
+    "defaultBackgroundModelCanConsumeCredits": true,
+    "remaining": "Effective helper configuration and billing for the existing profile, a real switch, subsequent reply, and cold restore are unverified."
+  },
+  "githubCopilot": {
+    "source": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/configure-access-to-ai-models#setup-for-individual-plans",
+    "priorSameAccountPlanEvidence": "../2026-11-06-phase1-followup/README.md",
+    "copilotFreeStandardModelSelection": "auto-only",
+    "remaining": "The standard Free plan cannot supply a second explicitly selected model for the current profile. Current account usage or a different plan was not accessed."
+  },
+  "firstWaveAcceptanceCountChange": 0
+}

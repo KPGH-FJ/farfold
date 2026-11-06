@@ -1,0 +1,17 @@
+{
+  "installedSource": "6ce829c5",
+  "verifiedByUtc": "2026-11-06T19:43:17.668025+00:00",
+  "scope": "One previously loaded and completed owned Goose test conversation in the sole formal macOS app.",
+  "sameLiveTransportReadOnly": true,
+  "selectedProviderBeforeAndAfter": "OpenRouter",
+  "selectedModelBeforeAndAfter": "Nemotron 3 Ultra (free)",
+  "providerWasStillShownDuringExactModelSearch": true,
+  "exactVisibleAlternative": "nvidia/nemotron-3.5-super-vl:free",
+  "alternativeSelected": false,
+  "modelOrProviderSetterCalls": 0,
+  "newAgentPrompts": 0,
+  "wholeTransportLogByteIdentical": true,
+  "originalDraftRetainedDraftAndQueuesUnchanged": true,
+  "actualAlternativeModelUseVerified": false,
+  "billingForThisConversationVerifiedByThisSample": false
+}

@@ -11,7 +11,10 @@
   "stage1SupplementScope": "首波三家后续分项按实际版本与证据层级记录。原字段及计数仍为 b7763508 底稿；S2–S7 标注对应的八项标准分项，首波完整验收仍为 0/3。新登录及换号、同会话改模型实际生效与冷恢复、永久审批及其冷恢复、安装版草稿写入故障及其余八项条件继续开放。",
   "stage1SupplementEvidencePaths": [
     "PRODUCT.md",
-    "docs/evidence/2026-11-06-phase1-old-exit/README.md"
+    "docs/evidence/2026-11-06-phase1-old-exit/README.md",
+    "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
+    "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json",
+    "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json"
   ],
   "rows": [
     {
@@ -221,6 +224,14 @@
               "docs/evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json",
               "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json"
             ]
+          },
+          {
+            "standards": ["S7"],
+            "environment": "macOS arm64 正式版 6ce829c5，已加载的 Copilot 停止自测对话",
+            "result": "界面明确显示回复已停、步骤仍未确认；实际 Markdown 保存成功但把工具写成等待中。旧版导出差异已复现，修复后的正式复验仍待。通信和原草稿保持，零新增 Agent 请求。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json"
+            ]
           }
         ],
         "remainingCondition": "原长等待的系统原因和旧工具终态仍缺。两条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
@@ -272,6 +283,15 @@
             "result": "首次审批未获批准的自测 A 明确停止并收到对应关闭回执，同一官方进程已查不到 A 的活动会话；B 仍可查询且独立完成。A 旧工具无终态，未测操作系统子进程或文件句柄。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json"
+            ]
+          },
+          {
+            "standards": ["S4"],
+            "environment": "macOS arm64 正式版 6ce829c5，已加载的 Goose 自测对话",
+            "result": "保留 OpenRouter 和原 Ultra Free，同一模型菜单明确列出 nvidia/nemotron-3.5-super-vl:free。通信逐字保持，未选新模型或发送；该选项实际启用、运行及冷恢复待验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
+              "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json"
             ]
           }
         ],

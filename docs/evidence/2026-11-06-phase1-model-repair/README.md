@@ -29,3 +29,5 @@ Kilo 桌面授权及 Goose 旧等待点的独立结果另记。 [排查记录](d
 Kilo 7.8.1 的模型选择源码另作核对：已打开的会话执行 `session/set_config_option` 时只更新该会话当前进程的选择并返回菜单；重开时从已有消息取模型，没有消息则用默认值。这个设置路径本身没有发送模型请求或触发标题生成。仅将 `KILO_DB` 指向临时库不足以隔离整个冷启动；Kilo 仍可能迁移或补写宿主配置。当前 Farfold 有共用恢复路径：记录已确认的选择，同一对话同一来源重开后，仅在官方仍列出该选项时恢复并复核回执。Kilo 实际切换和该恢复组合均未运行，不以源码或菜单代替复验。
 
 [Kilo 设置入口](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/acp/service.ts#L379-L399) · [重开取值](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/acp/service.ts#L278-L312) · [配置迁移](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/config/config.ts#L397-L429)
+
+11 月 7 日在 `6ce829c5` 正式应用打开已加载、已完成的 Goose 自测对话。原服务为 OpenRouter，原模型为 Nemotron 3 Ultra (free)。用精确免费后缀搜索，同一模型菜单列出 `nvidia/nemotron-3.5-super-vl:free`。关闭菜单后服务与原选择保持，同一正式通信逐字一致，原稿、保留稿与待发保持。此次只证明正式界面在现有连接下显示第二候选，实际切换、同模型回复、冷恢复与具体计费继续待验。公开目录独立记录 Goose 的两个模型、Kilo 的同服务候选和 Copilot Free 的 Auto 限制。 [正式菜单回执](../2026-11-06-phase1-next/installed-goose-model-candidate.json) · [公开来源回执](../2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json)
