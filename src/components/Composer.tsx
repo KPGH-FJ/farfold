@@ -568,6 +568,13 @@ export function Composer({
     const targetKey = storageKey;
     const targetErrorContext = errorContext;
     const submissionStopped = captureSubmissionStop(thread);
+    const submissionInterrupted = () =>
+      submissionStopped() ||
+      Boolean(
+        !onSend &&
+        thread &&
+        (thread.connectionLost || threads.thread(thread.key) !== thread),
+      );
     let releasePending = () => {};
     try {
       await draftPersistence.flush();
@@ -577,13 +584,12 @@ export function Composer({
       );
       const payload = attachmentPromptBlocks(text, prepared, embedContext);
       if (composerDrafts.read(targetKey) !== submitted) return;
-      // A stop may arrive while attachments or the draft are being saved.
-      // Keep that input in place rather than silently adding it to the queue.
-      if (submissionStopped()) return;
+      // A stop or disconnect during saving keeps the input in the editor.
+      if (submissionInterrupted()) return;
       if (!queueEditing) releasePending = beginComposerPendingSend(targetKey);
       submitted = composerDrafts.read(targetKey);
       await draftPersistence.flush();
-      if (submissionStopped()) {
+      if (submissionInterrupted()) {
         releasePending();
         await draftPersistence.flush();
         return;

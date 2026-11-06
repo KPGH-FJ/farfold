@@ -53,7 +53,8 @@ export function MessageResendDialog({
           prepareAction={readRequired ? onGoSettings : undefined}
           sendActionLabel={R.resendSend}
           onSend={async (blocks) => {
-            if (threads.thread(thread.key) !== thread) return false;
+            if (thread.connectionLost || threads.thread(thread.key) !== thread)
+              return false;
             if (thread.identity === "draft" && pendingPreparationRead(thread))
               throw new Error(C.readRequired);
             await threads.send(thread.key, blocks);

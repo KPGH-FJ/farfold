@@ -2,6 +2,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import {
   Children,
   isValidElement,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -20,6 +21,7 @@ vi.mock("../runtime/work_policy", () => ({
 }));
 
 import { Composer } from "./Composer";
+import { MessageResendDialog } from "./MessageResendDialog";
 import { ThreadView } from "./ThreadView";
 import {
   freshThreadState,
@@ -29,12 +31,14 @@ import {
 import { threads, type ThreadState } from "../runtime/sessions";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { STRINGS } from "../runtime/strings";
+import { emitOpeningHeader } from "../runtime/session_open_test_fixture";
 
-function render(thread: ThreadState) {
+function renderComposer(props: ComponentProps<typeof Composer>) {
   let tree: ReactNode;
   function Capture() {
-    tree = Composer({ thread, imageEnabled: false, onGoSettings: () => {} });
+    tree = Composer(props);
     return tree;
   }
   const html = renderToStaticMarkup(<Capture />);
@@ -54,6 +58,10 @@ function render(thread: ThreadState) {
           element.type === "button" && element.props["aria-label"] === name,
       ),
   };
+}
+
+function render(thread: ThreadState) {
+  return renderComposer({ thread, imageEnabled: false, onGoSettings() {} });
 }
 
 afterEach(() => {
@@ -318,6 +326,234 @@ it.each(["waiting", "confirmed"] as const)(
     composerDrafts.clear(key);
   },
 );
+
+it("keeps a held submission in the draft when the reconnect button installs a replacement connection", async () => {
+  type OpenWire = {
+    cwd: string;
+    nativeSessionId: string;
+    openToken: string;
+    channel: { onmessage(event: unknown): void };
+  };
+  const opens: OpenWire[] = [];
+  const input = {
+    agentId: "held-reconnect-fixture",
+    cwd: "/held-reconnect-fixture",
+    nativeSessionId: "owned-connection-replacement",
+  };
+  h.invoke.mockImplementation(async (command: string, args: unknown) => {
+    if (command === "session_open") {
+      const wire = args as OpenWire;
+      opens.push(wire);
+      const result = {
+        cwd: wire.cwd,
+        nativeSessionId: wire.nativeSessionId,
+        connectionId: `owned-connection-${opens.length}`,
+        resumed: true,
+        configOptions: [],
+        service: null,
+      };
+      emitOpeningHeader(wire, result);
+      wire.channel.onmessage({
+        update: {
+          sessionUpdate: "agent_message_chunk",
+          content: { type: "text", text: "Owned retained history" },
+        },
+      });
+      wire.channel.onmessage({
+        kind: "session_history_complete",
+        openToken: wire.openToken,
+      });
+      return result;
+    }
+    if (command === "settings_get") return null;
+    if (command === "session_prompt") return { status: "accepted" };
+    return [];
+  });
+  const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  const original = await threads.open(input);
+  expect(original.connectionId).toBe("owned-connection-1");
+  expect(original.running).toBe(false);
+  const key = `session:${original.key}`;
+  const draft = { text: "Keep the input across reconnect", attachments: [] };
+  composerDrafts.update(key, () => draft);
+
+  let releaseSave!: () => void;
+  const heldSave = new Promise<void>((resolve) => {
+    releaseSave = resolve;
+  });
+  let pendingSaveStarted = false;
+  flush.mockImplementation(async () => {
+    if (!composerDrafts.read(key).sendPending) return;
+    pendingSaveStarted = true;
+    await heldSave;
+  });
+
+  try {
+    const send = render(original).button(STRINGS.composer.sendTitle)!;
+    expect(send.props.disabled).toBe(false);
+    (send.props.onClick as () => void)();
+    await vi.waitFor(() => expect(pendingSaveStarted).toBe(true));
+    expect(original.submitting).toBe(false);
+    expect(composerDrafts.read(key).sendPending).toBe(true);
+    opens[0]!.channel.onmessage({
+      kind: "connectionLost",
+      closeReason: "unexpected",
+    });
+    expect(original.connectionLost).toBe(true);
+    expect(original.connectionCloseReason).toBe("unexpected");
+    expect(original.connectionOutcomeUnknown).toBe(false);
+
+    let reconnect: ReactElement<Record<string, unknown>> | undefined;
+    function Capture() {
+      const view = ThreadView({
+        thread: original,
+        active: true,
+        agents: [],
+        onGoSettings() {},
+        onOpened() {},
+      });
+      const visit = (node: ReactNode) =>
+        Children.forEach(node, (child) => {
+          if (!isValidElement<Record<string, unknown>>(child)) return;
+          if (
+            child.type === "button" &&
+            child.props.children === STRINGS.thread.reconnect
+          )
+            reconnect = child;
+          visit(child.props.children as ReactNode);
+        });
+      visit(view);
+      return view;
+    }
+    renderToStaticMarkup(<Capture />);
+    expect(reconnect?.props.disabled).toBe(false);
+    (reconnect!.props.onClick as () => void)();
+    await vi.waitFor(() =>
+      expect(threads.thread(original.key)?.connectionId).toBe(
+        "owned-connection-2",
+      ),
+    );
+    const replacement = threads.thread(original.key)!;
+    expect(replacement).not.toBe(original);
+    expect(replacement.key).toBe(original.key);
+    expect(replacement.connectionLost).toBe(false);
+    expect(replacement.queuePaused).toBe("unavailable");
+    expect(replacement.queued).toEqual([]);
+  } finally {
+    releaseSave();
+  }
+
+  await vi.waitFor(() =>
+    expect(composerDrafts.read(key).sendPending).not.toBe(true),
+  );
+  expect.soft(composerDrafts.read(key)).toMatchObject(draft);
+  expect.soft(threads.thread(original.key)!.queued).toEqual([]);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toEqual([]);
+  composerDrafts.clear(key);
+});
+
+it("keeps the edited resend open and unsent when its connection ends during the pending save", async () => {
+  const id = "held-resend-disconnected";
+  const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+  thread.openError = null;
+  thread.identity = "established";
+  thread.connectionId = "owned-resend-connection";
+  const key = `resend:${thread.key}`;
+  const mainKey = `session:${thread.key}`;
+  const mainDraft = { text: "Original main draft", attachments: [] };
+  const edit = {
+    text: "Edited draft stays here",
+    attachments: [
+      {
+        id: "retained-attachment",
+        kind: "file" as const,
+        name: "retained.txt",
+        uri: "file:///p/retained.txt",
+        deliveryMode: "location" as const,
+      },
+    ],
+  };
+  composerDrafts.update(mainKey, () => mainDraft);
+  composerDrafts.update(key, () => edit);
+
+  let releaseSave!: () => void;
+  const heldSave = new Promise<void>((resolve) => {
+    releaseSave = resolve;
+  });
+  let pendingSaveStarted = false;
+  vi.spyOn(draftPersistence, "flush").mockImplementation(async () => {
+    if (!composerDrafts.read(key).sendPending) return;
+    pendingSaveStarted = true;
+    await heldSave;
+  });
+
+  const close = vi.fn();
+  let composer: ComponentProps<typeof Composer> | undefined;
+  function CaptureResend() {
+    const dialog = MessageResendDialog({
+      thread,
+      imageEnabled: false,
+      embedContext: false,
+      continued: false,
+      onClose: close,
+      onGoSettings() {},
+    });
+    const visit = (node: ReactNode) =>
+      Children.forEach(node, (child) => {
+        if (!isValidElement<Record<string, unknown>>(child)) return;
+        if (child.type === Composer)
+          composer = child.props as ComponentProps<typeof Composer>;
+        visit(child.props.children as ReactNode);
+      });
+    visit(dialog);
+    return dialog;
+  }
+  expect(renderToStaticMarkup(<CaptureResend />)).toContain(R.editMessage);
+  expect(composer?.draftKey).toBe(key);
+
+  try {
+    const send = renderComposer(composer!).button(R.resendSend)!;
+    expect(send.props.disabled).toBe(false);
+    (send.props.onClick as () => void)();
+    await vi.waitFor(() => expect(pendingSaveStarted).toBe(true));
+    expect(composerDrafts.read(key)).toMatchObject({
+      ...edit,
+      sendPending: true,
+    });
+    expect(thread.submitting).toBe(false);
+    expect(close).not.toHaveBeenCalled();
+    (
+      threads as unknown as {
+        applyChannelEvent(key: string, event: unknown): void;
+      }
+    ).applyChannelEvent(thread.key, {
+      kind: "connectionLost",
+      closeReason: "unexpected",
+    });
+    expect(threads.thread(thread.key)).toBe(thread);
+    expect(thread.connectionLost).toBe(true);
+    expect(thread.connectionOutcomeUnknown).toBe(false);
+    expect(thread.queuePaused).toBe("unavailable");
+    expect(thread.queued).toEqual([]);
+  } finally {
+    releaseSave();
+  }
+
+  await vi.waitFor(() =>
+    expect(composerDrafts.read(key).sendPending).not.toBe(true),
+  );
+  expect.soft(composerDrafts.read(key)).toMatchObject(edit);
+  expect.soft(composerDrafts.read(mainKey)).toMatchObject(mainDraft);
+  expect.soft(thread.queued).toEqual([]);
+  expect.soft(close).not.toHaveBeenCalled();
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toEqual([]);
+  composerDrafts.clear(key);
+  composerDrafts.clear(mainKey);
+});
 
 it("keeps the waiting confirmation beside the input with a disabled stop control", () => {
   const thread = freshThreadState("a:/p:waiting", "a", "/p", "waiting");

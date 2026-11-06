@@ -1305,6 +1305,11 @@ export function ThreadView({
                   ? async (blocks) => {
                       // Composer calls after attachments and draft persistence settle.
                       if (
+                        thread.connectionLost ||
+                        threads.thread(thread.key) !== thread
+                      )
+                        return false;
+                      if (
                         thread.identity === "draft" &&
                         pendingPreparationRead(thread)
                       )

@@ -153,6 +153,9 @@ beforeEach(() => {
       { id: "file", kind: "file", name: "notes.md", uri: "file:///p/notes.md" },
     ],
   }));
+  vi.spyOn(threads, "thread").mockImplementation((key) =>
+    props.thread?.key === key ? props.thread : undefined,
+  );
   vi.spyOn(threads, "send").mockResolvedValue({ status: "queued" });
 });
 

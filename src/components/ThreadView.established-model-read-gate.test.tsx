@@ -166,6 +166,7 @@ it("keeps an idle confirmed established model change review reachable despite th
 it("keeps a new draft gated by that same real preparation marker without a model selection or implicit send", async () => {
   const thread = seed("draft-model-read-gate", "draft");
   const before = structuredClone(thread);
+  vi.spyOn(threads, "thread").mockReturnValue(thread);
   const set = vi.spyOn(threads, "setConfig").mockResolvedValue(undefined);
   const send = vi.spyOn(threads, "send");
   const rendered = view(thread);

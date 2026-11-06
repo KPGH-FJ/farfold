@@ -123,6 +123,7 @@ it("blocks an already opened draft at the actual send callback and preserves its
     },
   ];
   const onGoSettings = vi.fn();
+  vi.spyOn(threads, "thread").mockReturnValue(thread);
   const send = vi.spyOn(threads, "send");
   const composer = view(thread, onGoSettings).find(
     (node) => node.type === Composer,
@@ -158,6 +159,7 @@ it.each(["existing-conversation", "other-directory", "api-source"])(
     if (kind === "existing-conversation")
       expect(composer.props.onSend).toBeUndefined();
     else {
+      vi.spyOn(threads, "thread").mockReturnValue(thread);
       const send = vi
         .spyOn(threads, "send")
         .mockResolvedValue({ status: "accepted" });
@@ -166,6 +168,19 @@ it.each(["existing-conversation", "other-directory", "api-source"])(
     }
   },
 );
+
+it("keeps a prepared draft when the same conversation now owns a different connection", async () => {
+  const thread = freshThreadState("draft-owner", "a", "/original", "draft");
+  thread.identity = "draft";
+  const composer = view(thread).find((node) => node.type === Composer)!;
+  const replacement = { ...thread, connectionId: "replacement" };
+  vi.spyOn(threads, "thread").mockReturnValue(replacement);
+  const send = vi.spyOn(threads, "send");
+  await expect(
+    (composer.props.onSend as (blocks: unknown[]) => Promise<boolean>)([]),
+  ).resolves.toBe(false);
+  expect(send).not.toHaveBeenCalled();
+});
 
 it("observes the actual prepared target while reserving the sole editor for the original first-send path", () => {
   const thread = freshThreadState(
