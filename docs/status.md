@@ -1,6 +1,6 @@
 # Farfold 当前状态
 
-更新：2026-11-06。**已按用户批准的新计划恢复持续开发；当前正式功能版6ce829c5。** 执行顺序见[唯一活动计划](../plans/agent-access.md)，151条原条件与29家八项标准见[要求参考](agent-access-requirements.md)。
+更新：2026-11-07。**已按用户批准的新计划恢复持续开发；当前正式功能版6ce829c5。** 执行顺序见[唯一活动计划](../plans/agent-access.md)，151条原条件与29家八项标准见[要求参考](agent-access-requirements.md)。
 
 ## 当前工作与接续
 
@@ -46,7 +46,7 @@
 
 **第1阶段正式版多图草稿。** 6ce829c5经系统选择器一次导入三张自测PNG，切到原未发稿再返回，自测对话三张、原未发稿零测试图片，三份保存字节分别核合。仅移除三条测试引用，原稿、保留1份和原位置保持，自测通信记录与先前封存一致。未证实切换瞬间正在读取，严格时序和安装版写入故障仍待。[多图分项](evidence/2026-11-06-phase1-draft-image/batch-switch-summary.json)
 
-**第1阶段Goose隔离管理器实测。** 当前源码经官方Goose 1.52.0和独立测试库，首个审批未批准时只停A，确认原轮已取消后只关闭A。收到精确回执、工作占用下降，Goose查询确认A的活动会话已不存在；同连接B保持并准确完成，A工具终态仍未取得。正式版、Copilot同路径及操作系统资源验证仍待。[Goose隔离回执](evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json)
+**第1阶段Goose与Copilot隔离管理器实测。** 当前源码接实际官方程序和独立测试库。两家均在A的首个审批未批准时只停A，确认原轮已取消后只关闭A。同连接B保持并准确完成，A工具终态仍未取得。Goose 1.52.0查询确认A的活动会话消失，管理器工作占用下降。Copilot CLI 1.0.106在同一官方进程中A的历史文件句柄1→0、B保持1，工作计数2→1。正式应用复验仍待。[Goose隔离回执](evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json) · [Copilot隔离回执](evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json)
 
 **第1阶段缺条件。** 首波完整验收0/3，三家各有原会话真实续接样本，其余审批分项和完整标准继续核验。安装版存储故障已明确需隔离的macOS图形测试账号或实例，同机测试须顺序启动同一正式应用；Windows安装待可用runner。OpenCode所选原记录的工作目录不可用；Mistral原目录可访问，连接检查超时且原因未定。两条均为一次只读尝试，原草稿保持。已有六家历史分项按各自原配置保留。[29家证据及缺项](evidence/2026-11-06-cycle-01/agent-conditions.json)
 
