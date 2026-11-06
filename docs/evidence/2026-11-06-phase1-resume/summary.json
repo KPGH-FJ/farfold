@@ -1,0 +1,356 @@
+{
+  "kind": "Phase1ResumeEvidence",
+  "status": "FORMAL_UPDATE_AND_BOUNDED_AGENT_RESULTS_RECORDED",
+  "source": {
+    "commit": "dbe23bb6ea3eaa714205b4290f32cafffe1218f9",
+    "scope": "同一等待请求在停止回执丢失后若被接收，保留停止未确认并暂停待发项；不同请求回执不能推进其状态。明确未送出仍按原确定结果处理。",
+    "files": [
+      "src/runtime/prompt_admission.ts",
+      "src/runtime/sessions.cancellation.test.ts"
+    ],
+    "regressionBefore": {
+      "failed": 2,
+      "naturalExitCode": 1
+    },
+    "regressionAfter": {
+      "passed": 20,
+      "naturalExitCode": 0
+    }
+  },
+  "engineering": {
+    "platform": "macOS arm64",
+    "freshCommands": 7,
+    "retainedCommands": 0,
+    "allNaturalExitZero": true,
+    "declaredInputs": 2405,
+    "fixtureInputs": 11,
+    "sourceEndpointBytesEqual": true,
+    "gitFileRowsEqual": true,
+    "frontend": {
+      "files": 721,
+      "passed": 9644
+    },
+    "rust": {
+      "passed": 2405,
+      "failed": 0,
+      "ignored": 7
+    },
+    "receipt": {
+      "path": "engineering-qualified/engineering-result.json",
+      "bytes": 6343,
+      "sha256": "15e026af56140ecd23f24a1f82a715257dc1cd6650872f7750fa485a772e15e1"
+    },
+    "independentReview": {
+      "path": "formal-preparation/engineering-independent-review/reader.json",
+      "bytes": 16685,
+      "sha256": "aaa9b27352a0aac770b3eaf77c492cbdace0db962e1f7bf06f326ee30e2a4e28"
+    }
+  },
+  "actualOlderFormalApp": {
+    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+    "mainSha256": "ad8b6ed5613404ed6e65a1686bba9882d2eedcd55732b1c67eb842149d667c5c",
+    "identityReader": {
+      "path": "output/2026-11-06-wave-01/delivery-independent-review/reader.json",
+      "bytes": 15497,
+      "sha256": "3cf04a3980238adee1b355f1c72bd854a4a8dc1e73827cd34a67af5c9bb8509f"
+    },
+    "scope": "两条各自新建的受测对话共用同一个自有空目录；对话界面与进程归属原件交叉核对。各提交一次授权的短测试请求并得到精准回复。",
+    "sameOwnedEmptyDirectory": true,
+    "directoryOriginalEntryCount": 0,
+    "agents": [
+      {
+        "agent": "Kilo",
+        "service": "Kilo Gateway",
+        "model": "Nemotron free",
+        "reasoning": "None",
+        "newRequests": 1,
+        "exactReplies": 1,
+        "resultAx": {
+          "path": "kilo-neutral-passed.ax.txt",
+          "bytes": 612,
+          "sha256": "d215d9cc6c9e08b19381d1e42b93fe317ae8becd2a73381c7bf4a1f320c8b680"
+        },
+        "conversationAx": {
+          "path": "kilo-neutral-conversation.ax.txt",
+          "bytes": 876,
+          "sha256": "2817a577ebb617571d7c77b1a8045083f4b7c415c1b563643d745dc1570a6aa7"
+        }
+      },
+      {
+        "agent": "Goose",
+        "service": "OpenRouter",
+        "serviceSource": "已有设置；本机 Goose 的 active_provider 为 openrouter，界面核对模型和思考等级。",
+        "model": "Nemotron free",
+        "reasoning": "off",
+        "newRequests": 1,
+        "exactReplies": 1,
+        "resultAx": {
+          "path": "goose-neutral-passed.ax.txt",
+          "bytes": 640,
+          "sha256": "a26035e6f64fbbb8fb32241f68c1827b12bfeeb6766f5bac10d74206937f32eb"
+        },
+        "conversationAx": {
+          "path": "goose-neutral-conversation.ax.txt",
+          "bytes": 472,
+          "sha256": "5732b009aa6c3333d7bb9baa1ec434c1fb00ae245a1555b39df2dc9cde87c35c"
+        },
+        "localProviderSelection": {
+          "path": "goose-existing-provider.json",
+          "bytes": 392,
+          "sha256": "55352d379bdda90268e9a171ae1b26cf3e0035bcc5c65890ff152056e92abdac"
+        }
+      }
+    ],
+    "ownershipReceipt": {
+      "path": "neutral-process.json",
+      "bytes": 466,
+      "sha256": "2b332adeea4b4eed9877f31aea6224e45a2887861a15907d641526451605bb79"
+    },
+    "copilotNewRequests": 0,
+    "originalDirectoriesRetested": false,
+    "threeAgentFullAcceptanceCompleted": false,
+    "actualStopPerformed": false,
+    "actualApprovalPerformed": false
+  },
+  "kiloOffline": {
+    "status": "MATCHED_IMAGE_AND_FIXED_ARGUMENTS",
+    "fixedDirectoryFd": "AT_FDCWD",
+    "fixedFlags": ["O_RDONLY", "O_DIRECTORY"],
+    "createFlagSet": false,
+    "unknown": [
+      "动态路径及其绝对或相对形式",
+      "调用是否返回及返回值",
+      "是否涉及 TCC 或其他系统条件"
+    ],
+    "receipt": {
+      "path": "kilo-offline-callsite/kilo-offline-review.json",
+      "bytes": 4331,
+      "sha256": "ac5b3271b9e6c8f2324907393ca189d923f338abc7ab7405afb782244922f64d"
+    }
+  },
+  "arch28Controlled": {
+    "actualClockMs": 30001.715165999998,
+    "passed": 1,
+    "naturalExitCode": 0,
+    "scope": "真实前端 30 秒计时；两条受控通道。A 的停止未确认只暂停 A 待发项，B 继续，A 匹配的迟到终态不自动放行待发项。",
+    "realAgentBackendOrInstalledAppTested": false,
+    "actualStopOrApprovalPerformed": false,
+    "receipt": {
+      "path": "arch28-stop-clock/summary.json",
+      "bytes": 4616,
+      "sha256": "2fac7c1137a1b7783cd8c6979d1c872d970fe01fe719d6285331e79686548dfe"
+    },
+    "observation": {
+      "path": "arch28-stop-clock/observation-v3.json",
+      "bytes": 7024,
+      "sha256": "7ed69f8e6acdba4c1778b63949976f124a678fd7230fce40c92ef2734c491a67"
+    },
+    "testedProductionFileMatchesCommit": true
+  },
+  "normalExitBeforeUpdate": {
+    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+    "p02Restored": true,
+    "forcedQuit": false,
+    "formalMainCountAfter": 0,
+    "oldOwnedProcessGroupCountAfter": 0,
+    "p02Observation": {
+      "path": "p02-restored-before-exit.ax.txt",
+      "bytes": 326,
+      "sha256": "e8fe782f1c81a891d631ffd7d83662d4045d16b8dc66e6c10fb4d60649a31844"
+    },
+    "saveExitAction": {
+      "path": "formal-save-exit-action.json",
+      "bytes": 175,
+      "sha256": "108097ac41b1eee662ab7f395622e36609d69789b0063c1c04ec2cdb492a8b60"
+    },
+    "ownershipAfter": {
+      "path": "formal-process-after.json",
+      "bytes": 128,
+      "sha256": "4bbc34334f420564896872404a8c6bbd82d0c5b64ad846b00974b7131482b95c"
+    }
+  },
+  "formalUpdate": {
+    "targetSourceCommit": "dbe23bb6ea3eaa714205b4290f32cafffe1218f9",
+    "status": "installedAndColdStarted",
+    "bundleId": "ai.farfold.desktop",
+    "mainSha256": "b8f3b2cf7c10fa08c23a64f25ba2fc73048bacbf6ea340f54ab80cc6f2a7bfe3",
+    "candidateIndependentReviewPassed": 9,
+    "installedIndependentReviewPassed": 6,
+    "retentionEntriesPerManifest": 206275,
+    "retentionManifests": {
+      "before": {
+        "path": "formal-preparation/formal/install/install-data-before.jsonl",
+        "bytes": 56865684,
+        "sha256": "4d81c27c469b4d65c849674a68b93bfaded44ff459c2f1347b2956012b85f510"
+      },
+      "preinstall": {
+        "path": "formal-preparation/formal/install/install-data-preinstall.jsonl",
+        "bytes": 56865684,
+        "sha256": "4d81c27c469b4d65c849674a68b93bfaded44ff459c2f1347b2956012b85f510"
+      },
+      "after": {
+        "path": "formal-preparation/formal/install/install-data-after.jsonl",
+        "bytes": 56865684,
+        "sha256": "4d81c27c469b4d65c849674a68b93bfaded44ff459c2f1347b2956012b85f510"
+      }
+    },
+    "deliveryReceipt": {
+      "path": "formal-preparation/formal/root-delivery-completion.json",
+      "bytes": 577,
+      "sha256": "9f759ada5fcf8795f6f63313d44c614eaa4e2f3cc10872ed197d593db3e33a48"
+    },
+    "installedReview": {
+      "path": "formal-preparation/formal/install/installed-independent-review-private.json",
+      "bytes": 2128,
+      "sha256": "ce03568bc9551e597e5e996ea25c71cfc5eb3c8d4e3783304e56f77084574920"
+    },
+    "duplicateCandidateCleanup": {
+      "path": "formal-preparation/formal/exact-duplicate-cleanup-completion.json",
+      "bytes": 673,
+      "sha256": "8e7fb08761c81123e29bd460e89843e24f98ec456e370d260ac1b0f5ec8e925d"
+    },
+    "originalDraftCold": {
+      "path": "installed-cold-original-draft.ax.txt",
+      "bytes": 325,
+      "sha256": "42e62cb4878468d9ab130b9dde741d49ee1004c1e24839c4600f7512aa43e422"
+    },
+    "originalDraftAfterTests": {
+      "path": "installed-final-original-draft.ax.txt",
+      "bytes": 325,
+      "sha256": "42e62cb4878468d9ab130b9dde741d49ee1004c1e24839c4600f7512aa43e422"
+    },
+    "finalActivity": {
+      "path": "installed-final-activity.ax.txt",
+      "bytes": 123,
+      "sha256": "950421c64ca0fa6778612cada51e656aa981cd1c7112e988ce3f61001028e3e6"
+    }
+  },
+  "privateEvidenceHandling": "本批原件位置相对 privateEvidenceRoot。以 output/ 开头的前序指纹相对仓库根。原工作目录、草稿正文及进程明细留在私有原件。",
+  "actualNewFormalApp": {
+    "scope": "同一自有空目录及两条有界自测对话。模型真实回复与停止终态分项记录；取消帧与随后回复仅为内容无关诊断，不含原始回复正文或远端进程状态。",
+    "agents": [
+      {
+        "agent": "Kilo",
+        "sameTestHistoryAfterAppColdStart": true,
+        "continuationExactReply": true,
+        "newRequests": 2,
+        "stopRequests": 1,
+        "explicitStopTerminal": true,
+        "continuedAfterStop": false,
+        "coldHistory": {
+          "path": "installed-kilo-cold.ax.txt",
+          "bytes": 916,
+          "sha256": "88e738f223bd59a851131c2c1cba484cb6caf62c9f47f92b239696cc0fc5ca15"
+        },
+        "coldSelection": {
+          "path": "installed-kilo-cold-selection.ax.txt",
+          "bytes": 329,
+          "sha256": "6ff3fae62e7900136b2507fc575aff2e8975ab896948914cf3f03546ec8a4963"
+        },
+        "continuationQuestion": {
+          "path": "installed-kilo-recall-before.ax.txt",
+          "bytes": 396,
+          "sha256": "40da9a68c8569bcf8dae7a1531906a59b424d7bf25a827650ec22bd0f4b5a75e"
+        },
+        "continuationOutcome": {
+          "path": "installed-kilo-recall-passed.ax.txt",
+          "bytes": 661,
+          "sha256": "4fa9344034fcb4aa65c637b7e3ea7e2a8e8ce34db7f144f5136765f8440dfa2f"
+        },
+        "stopInFlight": {
+          "path": "installed-kilo-stop-inflight.ax.txt",
+          "bytes": 551,
+          "sha256": "07ba1d1df9891a02afb4ff36c5c318823b3edf4dfd7ada07d2d5063017907c20"
+        },
+        "stopAction": {
+          "path": "installed-kilo-stop-after-action.ax.txt",
+          "bytes": 465,
+          "sha256": "2f0fbda0d8c3a6d94fef57dba4b01a00d2898055f770cf8aa80d66829d742091"
+        },
+        "stopTerminal": {
+          "path": "installed-kilo-stop-result.ax.txt",
+          "bytes": 261,
+          "sha256": "ffca387abc6276dd8a022359d60695735acb316a83fb501337e13f2c6802b38c"
+        },
+        "stopWireEnvelope": {
+          "path": "installed-kilo-stop-protocol-window.json",
+          "bytes": 770,
+          "sha256": "5ecd9c751c74e011e4a1f1ef37dc19632f970020a440b7696ed1a538ebe2ba9c"
+        }
+      },
+      {
+        "agent": "Goose",
+        "sameTestHistoryAfterAppColdStart": true,
+        "continuationExactReply": true,
+        "newRequests": 2,
+        "stopRequests": 1,
+        "explicitStopTerminal": true,
+        "continuedAfterStop": true,
+        "coldHistory": {
+          "path": "installed-goose-cold.ax.txt",
+          "bytes": 472,
+          "sha256": "57068eeae5d05effc5786f00b0d004c43508b0adc2b68d05a6dd612dfa7c07d9"
+        },
+        "coldSelection": {
+          "path": "installed-goose-cold-selection.ax.txt",
+          "bytes": 293,
+          "sha256": "8cd798c0fdeeadb714f5cd97da8aaccae36d6f9e37605b04af626088fbce0ab4"
+        },
+        "continuationQuestion": {
+          "path": "installed-goose-recall-before.ax.txt",
+          "bytes": 432,
+          "sha256": "c772a91cc1ad7dda188f2faafc5b0b015405f45723279713792c72173dd19936"
+        },
+        "continuationOutcome": {
+          "path": "installed-goose-recall-passed.ax.txt",
+          "bytes": 658,
+          "sha256": "23c098582cce5312333dc7b8a66e45978706784d9287bcbcc0c1d7ee16135195"
+        },
+        "stopInFlight": {
+          "path": "installed-goose-stop-inflight.ax.txt",
+          "bytes": 552,
+          "sha256": "757b83562746dec1b78ec98e01cd59b21db6b2d0d9ca4a28642be5e524198250"
+        },
+        "stopAction": {
+          "path": "installed-goose-stop-after-action.ax.txt",
+          "bytes": 465,
+          "sha256": "b833a347a2666fd313c7455ef19ac0209e9dd448905910bbb502e1d2ac9b521f"
+        },
+        "stopTerminal": {
+          "path": "installed-goose-stop-result.ax.txt",
+          "bytes": 261,
+          "sha256": "cbe893ac27f6f0ea5710e58c9d2dbe5dd5b069c6a021ceaf62f1f2766145f00f"
+        },
+        "stopWireEnvelope": {
+          "path": "installed-goose-stop-protocol-window.json",
+          "bytes": 770,
+          "sha256": "d9d548b13f76490269df48216846747a031786d4756f399fa8905b27b9cd3f9f"
+        }
+      }
+    ],
+    "originalHistoryRetested": false,
+    "realApprovalPerformed": false,
+    "originalRequestsResent": 0,
+    "firstWaveCompleted": 0,
+    "firstWaveTotal": 3
+  },
+  "openConditions": [
+    {
+      "scope": "Goose 与 Kilo 正式原桌面历史",
+      "condition": "获得可归属的系统调用路径及结果，或核实实际环境变化后复测。"
+    },
+    {
+      "scope": "Copilot Auto 实际模型",
+      "condition": "确认当前原账号的可用额度和计费边界。"
+    },
+    {
+      "scope": "真实审批与跨会话隔离",
+      "condition": "等 NEW-24 涉及的官方权限与恢复条件核清；受控回执与两条独立真实停止分别计证。"
+    },
+    {
+      "scope": "Windows 安装",
+      "condition": "待可用 runner。"
+    }
+  ],
+  "privateEvidenceRoot": "output/2026-11-06-phase1-resume/"
+}
