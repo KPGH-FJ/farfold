@@ -25,3 +25,7 @@ Copilot 1.0.106 在原会话与独立空目录对照均声明当前值 `auto`，
 后续从正式应用的指定原工作目录查到同一原会话，确认已加入、原位置和原 Auto 保持，无新发送。[官方查找](../2026-11-06-phase1-copilot-list/README.md)
 
 Kilo 桌面授权及 Goose 旧等待点的独立结果另记。 [排查记录](diagnostics.md)
+
+Kilo 7.8.1 的模型选择源码另作核对：已打开的会话执行 `session/set_config_option` 时只更新该会话当前进程的选择并返回菜单；重开时从已有消息取模型，没有消息则用默认值。这个设置路径本身没有发送模型请求或触发标题生成。仅将 `KILO_DB` 指向临时库不足以隔离整个冷启动；Kilo 仍可能迁移或补写宿主配置。当前 Farfold 有共用恢复路径：记录已确认的选择，同一对话同一来源重开后，仅在官方仍列出该选项时恢复并复核回执。Kilo 实际切换和该恢复组合均未运行，不以源码或菜单代替复验。
+
+[Kilo 设置入口](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/acp/service.ts#L379-L399) · [重开取值](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/acp/service.ts#L278-L312) · [配置迁移](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/config/config.ts#L397-L429)
