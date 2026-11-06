@@ -19,7 +19,9 @@
     "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
-    "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json"
+    "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
+    "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -257,6 +259,14 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json"
             ]
+          },
+          {
+            "standards": ["S2", "S4"],
+            "environment": "macOS arm64 正式版 6ce829c5 的已完成自测对话，同账号 GitHub 页面",
+            "result": "空搜索的正式模型菜单只显示一项已选中的 Auto，原保存值不变。GitHub 套餐和账单页与当前 GitHub CLI 账号一致，Free 包含额度显示已用 0%、CLI 启用，当前筛选无账单明细。零 Agent 请求、账号或模型变更。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json"
+            ]
           }
         ],
         "remainingCondition": "原长等待的系统原因和旧工具终态仍缺。两条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
@@ -421,6 +431,14 @@
             "result": "A 切到同服务 Dots3 后仅 A 保存值变化。两条原会话的独立只读加载均报告官方默认模型。新进程普通冷开，各自先加载同一原会话再应用已保存选择，A 恢复 Dots3、B 保持 Ultra，均就绪，原保存值保持，零新增消息。测试使用按官方回执预置的索引。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json"
+            ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "当前 Farfold 连接管理器与官方 Kilo 7.8.1，匿名免费入口、独立空目录和会话库",
+            "result": "同一 A 冷开恢复 Dots3 后发出一次合成请求，2.764 秒收到准确回复；原生记录报告准确模型、费用 0。B 仍保持 Ultra，连接、保存设置和会话行保持，零工具或审批。未测正式界面、已登录账号或实际 HTTP 次数。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
             ]
           }
         ],

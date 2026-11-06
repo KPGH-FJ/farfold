@@ -1,0 +1,31 @@
+{
+  "installedSource": "6ce829c5",
+  "checkedAtLocalDate": "2026-11-07",
+  "timeZone": "Asia/Shanghai",
+  "scope": "Read-only Farfold inspection of one warm completed owned synthetic Copilot conversation, followed by a read-only GitHub check.",
+  "installedMenu": {
+    "modelSearchEmpty": true,
+    "visibleOptions": [{ "label": "Auto", "selected": true }],
+    "persistedModelId": "auto",
+    "allFarfoldSavedModelConfigurationsUnchanged": true,
+    "modelSelectionsOrConfirmations": 0,
+    "agentRequests": 0
+  },
+  "account": {
+    "copilotSettingsAndBillingPageMatchedCurrentGitHubCliAccount": true,
+    "planDisplayed": "GitHub Copilot Free",
+    "copilotCliDisplayedEnabled": true,
+    "includedCreditsDisplayedUsedPercent": 0,
+    "billingPageMessage": "No usage data found for the selected filters.",
+    "newLoginOrAccountChanges": 0
+  },
+  "preservation": {
+    "originalDraftAndOneRetainedDraftUnchanged": true,
+    "otherConversationQueuesAndActivityUnchanged": true,
+    "exactProtocolCaptureDigestsUnchanged": 4
+  },
+  "limits": [
+    "The one visible option was observed in Farfold. This check did not request the current raw option list or load a cold or archived session.",
+    "The billing page was inspected without changing the selected filters. No request-level charge, remaining credit amount or overage policy was verified in this check."
+  ]
+}

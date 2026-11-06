@@ -76,11 +76,15 @@
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档21个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档23个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+
+**第1阶段Copilot正式模型与同账号额度。** 6ce829c5已完成的自测对话，模型菜单空搜索仅显示已选中的Auto，已保存模型、原稿、保留1份和四份通信摘要均保持。GitHub同账号页面显示Free、CLI启用及包含额度已用0%，账单当前筛选无明细。零发送或设置变更，未核新登录、冷开和逐笔费用。[正式只读回执](evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json)
 
 **第1阶段原服务计费与模型隔离。** Goose旧正式自测的请求编号与OpenRouter默认工作区准确匹配，该次账单显示$0.00。聊天模式仍携带本地Skills上下文，当前正式版没有单对话关闭入口，第二候选未发送。Kilo官方7.8.1隔离自测仅切A到同服务免费Dots3再恢复Ultra，B设置读回一致，零提示，测试进程自然退出。Kilo正式版和真实回复仍待。[Goose工作区核对](evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json) · [Kilo隔离切换](evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json)
 
-**第1阶段Kilo模型冷恢复。** 当前连接管理器与官方7.8.1在独立库中核合。只读打开两条原自测会话均返回默认模型。普通冷开两条独立连接均先加载原会话再应用已保存选择，A恢复Dots3、B保持Ultra，均就绪。两条保存记录不被覆盖，零新增消息。定向1项通过，首次夹具误读已处理字段，修正为独立只读对照。正式界面、账号、实际回复和跨版授权仍待。[管理器冷恢复回执](evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json)
+**第1阶段Kilo模型冷恢复。** 当前连接管理器与官方7.8.1在独立库中核合。只读打开两条原自测会话均返回默认模型。普通冷开两条独立连接均先加载原会话再应用已保存选择，A恢复Dots3、B保持Ultra，均就绪。两条保存记录不被覆盖，零新增消息。定向1项通过，首次夹具误读已处理字段，修正为独立只读对照。本轮只核恢复，实际回复见下条。[管理器冷恢复回执](evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json)
+
+**第1阶段Kilo匿名实际模型。** 另一次隔离自测中，当前连接管理器用官方7.8.1冷开后恢复同一A的免费Dots3。仅发一次合成提示，2.764秒准确回复，原生记录报告准确模型和费用0。B的Ultra、会话行、保存设置及连接保持，零工具或审批。实际网关请求次数未采，正式界面、已登录账号和跨版授权继续待验。[匿名冷开回执](evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json)
 
 **第1阶段Goose模型冷恢复。** 用已登记的官方1.52.0程序在独立目录打开两个空自测会话，核对扩展和工具为空。只切A到Super VL，新进程按原会话加载后A保持Super VL、B保持Ultra，零提示及登录请求。仅覆盖官方程序自己保存恢复，Farfold正式界面、账号归属及实际回复仍待。[Goose隔离冷恢复](evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json)
 

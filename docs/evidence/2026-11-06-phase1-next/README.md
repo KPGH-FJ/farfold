@@ -1,6 +1,6 @@
 # 第 1 阶段原会话复测与同 Agent 隔离
 
-本批沿用 macOS arm64 27.0（26A425）的正式版 `dbe23bb6e`。原未发稿、保留草稿和原工作位置已复核，历史请求零重发。
+原会话复测使用 macOS arm64 27.0（26A425）的正式版 `dbe23bb6e`，后续分项分别记录实际版本和环境。原未发稿、保留草稿和原工作位置已复核，历史请求零重发。
 
 ## Kilo 原目录
 
@@ -22,6 +22,8 @@ Goose 1.52.0 的官方源码显示，保存用户消息后还有整理判断、�
 
 Copilot Free 每月含免费 AI Credits，模型走 Auto。同账号前一批测试前显示包含额度已用 0%，空目录 Auto 真实回复和停止均通过。额度与旧会话的模型基线分别计证。 [GitHub Copilot 套餐](https://docs.github.com/en/copilot/get-started/plans) · [前批账户与实测](../2026-11-06-phase1-followup/README.md#copilot-当前账号与实测)
 
+11 月 7 日在正式版 `6ce829c5` 已完成的自测对话中打开模型菜单，空搜索只显示一项已选中的 Auto。没有选择、确认或发送。全部已保存模型配置、原稿、保留 1 份及四份测试通信摘要均保持。随后将 GitHub 套餐和账单两页与当前 GitHub CLI 的登录账号核合，页面仍显示 Copilot Free、CLI 启用、包含额度已用 0%。账单页只显示当前筛选无明细，未核本次超额规则或请求费用。正式菜单结果仅覆盖此条已打开的自测对话，未重新读取原始选项回执或冷开。[正式菜单与同账号回执](installed-copilot-auto-eligibility.json)
+
 11 月 7 日补只读模型证据，未另发请求。Kilo 正式原对话的助手记录报告所选免费模型；Goose 正式并发样本核合出站免费模型、回复和用量，回复没有报告具体后端模型；Copilot 隔离并发样本的助手记录报告 Auto 实际选到的一个模型。三个范围分别记录，不代表同会话新切换及冷恢复。[逐家模型回执](actual-models-readonly.json)
 
 Goose 正式自测 B 的既有回复，已用原请求编号核对 OpenRouter 账户和默认工作区日志。详细页显示 NVIDIA，工作区同一行费用显示 $0.00。当前同工作区的 Response Healing 和 Pareto Router 开关为关，服务器网页搜索显示可用。服务器工具仍需在请求中显式声明，旧网页搜索插件的实际默认值没有读到。本次只读既有日志和开关，没有更改账号或发新请求。[同请求回执](goose-openrouter-workspace-readonly.json) · [OpenRouter 工具](https://openrouter.ai/docs/guides/features/server-tools/overview) · [OpenRouter 插件](https://openrouter.ai/docs/guides/features/plugins/overview)
@@ -42,6 +44,10 @@ Kilo 7.8.1 官方程序在隔离目录和会话库中建立两个无消息测试
 
 首次断言把 Farfold 已处理的返回字段当成官方原始回执，导致验证失败。复验改为独立只读对照，定向测试通过，产品代码未改。
 
+11 月 7 日用当前产品源码 `077b4b988` 的连接管理器和同一官方 Kilo 7.8.1 补实际匿名回复。测试沿用普通用户主目录，隔离配置目录、会话库与空工作目录；未复制登录配置或凭据。发送前核对隔离认证和机器级托管配置为空，标题、自动整理、遥测及外部上下文入口已关闭，28 项工具均禁用，官方公开列表的准确 Dots3 候选输入、输出费率均为 0。冷开恢复同一原会话后，A 使用恢复出的 Dots3，发出一个合成标识请求，2.764 秒返回准确标识并结束。Kilo 原生记录报告提供方 `kilo`、模型 `dots-studio/dots-3-note-preview:free` 和费用 0。原生记录仅 A 增加一组问答，B 无消息，保存设置、会话行及原连接均保持；未观察到工具或审批事件。八个自测进程组均退出，未强制升级，产品文件恢复至原字节。[匿名冷开实测回执](kilo-native-manager-anonymous-cold-reply.json) · [官方匿名访问](https://kilo.ai/docs/gateway/authentication#anonymous-access) · [官方计费说明](https://kilo.ai/docs/gateway/usage-and-billing)
+
+通信只观察到一次 Farfold 发送，操作者未重试。官方程序对服务错误不重试，遇不完整回复可在同一免费模型上最多额外尝试两次；未观测实际 HTTP 请求次数。原生记录的费用字段限这次匿名样本。已有登录账号、正式版模型切换及冷开、桌面跨版本权限仍待验。
+
 两条 Kilo 测试对话共用一个自有空目录，并使用同一免费模型。两条对话的 Agent 原会话标识和协议记录分别核对。两条请求同时运行时，取消只发给 A，A 明确停止，B 独立回复其专属标识并回到空闲。范围限这一次同 Agent、同目录测试。
 
-首波完整验收仍为 0/3。Kilo 长期授权、Goose 前次续接等待点、Copilot 的 Farfold 模型基线恢复与旧工具状态、真实审批、安装版存储故障及 Windows 安装仍按各自条件推进。 [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)
+首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)
