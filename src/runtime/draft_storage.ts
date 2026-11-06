@@ -60,6 +60,7 @@ export class DraftSaveError extends Error {
 let snapshot: () => unknown = () => ({});
 let restore: (value: unknown) => void = () => {};
 let legacyInteractionLock = false;
+let interactionRevision = 0;
 const interactionOwners = new Set<object>();
 function publish(change: Partial<Status>) {
   status = { ...status, ...change };
@@ -102,13 +103,21 @@ export const draftPersistence = {
     );
   },
   lockInteraction(value: boolean) {
+    if (value && !legacyInteractionLock) interactionRevision++;
     legacyInteractionLock = value;
     publish({ interactionLocked: value || interactionOwners.size > 0 });
+  },
+  /** A lock also interrupts work that resumes after the lock is released. */
+  captureInteractionInterruption(): () => boolean {
+    const captured = interactionRevision;
+    const alreadyLocked = this.snapshot().interactionLocked === true;
+    return () => alreadyLocked || captured !== interactionRevision;
   },
   /** Independent maintenance cannot release a quit/storage lock or a newer owner. */
   acquireInteractionLock(): () => void {
     const owner = {};
     interactionOwners.add(owner);
+    interactionRevision++;
     publish({ interactionLocked: true });
     return () => {
       if (!interactionOwners.delete(owner)) return;

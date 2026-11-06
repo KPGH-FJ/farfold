@@ -5,6 +5,7 @@ const h = vi.hoisted(() => ({
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   layouts: [] as (() => void)[],
   effects: [] as (() => void)[],
+  portalHost: null as unknown,
 }));
 vi.mock("react", async (original) => {
   const effect = (
@@ -40,21 +41,29 @@ vi.mock("react", async (original) => {
       effect(h.effects, setup, deps),
   };
 });
-vi.mock("react-dom", () => ({ createPortal: (node: unknown) => node }));
+vi.mock("react-dom", () => ({
+  createPortal: (node: unknown, host: unknown) => {
+    h.portalHost = host;
+    return node;
+  },
+}));
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 
 class Host {
   isConnected = true;
   hidden = false;
   disabled = false;
+  openDialog = false;
   tabIndex = 0;
   parent: Host | null = null;
   children: Host[] = [];
-  rect = { top: 60, bottom: 90, right: 300, width: 224, height: 100 };
+  rect = { top: 60, bottom: 90, left: 76, right: 300, width: 224, height: 100 };
   focus = vi.fn(() => {
     doc.activeElement = this;
   });
-  closest() {
+  closest(selector: string): Host | null {
+    if (selector === "dialog[open]")
+      return this.openDialog ? this : (this.parent?.closest(selector) ?? null);
     return this.hidden || this.parent?.hidden ? this : null;
   }
   getClientRects() {
@@ -110,6 +119,7 @@ beforeEach(() => {
   h.slots = [];
   h.layouts = [];
   h.effects = [];
+  h.portalHost = null;
   listeners.clear();
   close.mockClear();
   anchor = new Host();
@@ -140,6 +150,7 @@ afterEach(() => {
 it("focuses visible enabled controls and wraps Tab only inside the menu", () => {
   first.hidden = true;
   render();
+  expect(h.portalHost).toBe(doc.body);
   expect(doc.activeElement).toBe(last);
   expect(key("Tab").preventDefault).toHaveBeenCalledOnce();
   first.hidden = false;
@@ -162,6 +173,47 @@ it("keeps focus contained when all actions are disabled", () => {
   expect(doc.activeElement).toBe(panel);
   key("Escape");
   expect(close).toHaveBeenCalledOnce();
+});
+
+it("places a nested menu inside its dialog and returns focus to its trigger", () => {
+  const dialog = new Host();
+  dialog.openDialog = true;
+  dialog.rect = {
+    top: 100,
+    bottom: 480,
+    left: 220,
+    right: 580,
+    width: 360,
+    height: 380,
+  };
+  anchor.parent = dialog;
+  anchor.rect = {
+    top: 390,
+    bottom: 420,
+    left: 240,
+    right: 270,
+    width: 30,
+    height: 30,
+  };
+
+  render();
+  expect(h.portalHost).toBe(dialog);
+  expect(render().props.style).toEqual({
+    top: 282,
+    left: 232,
+    maxWidth: 336,
+    maxHeight: 356,
+  });
+  expect(doc.activeElement).toBe(first);
+  last.focus();
+  expect(key("Tab").preventDefault).toHaveBeenCalledOnce();
+  expect(doc.activeElement).toBe(first);
+  const escape = key("Escape");
+  expect(escape.preventDefault).toHaveBeenCalledOnce();
+  expect(escape.stopPropagation).toHaveBeenCalledOnce();
+  expect(close).toHaveBeenCalledOnce();
+  unmount();
+  expect(doc.activeElement).toBe(anchor);
 });
 
 it("does not dismiss composition and restores only a visible invoking control", () => {

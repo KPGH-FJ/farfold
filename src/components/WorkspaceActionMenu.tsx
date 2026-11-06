@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
@@ -41,7 +42,9 @@ export function WorkspaceActionMenu({
   const activeAnchor = useRef(anchor);
   close.current = onClose;
   activeAnchor.current = anchor;
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  // A native modal makes body-level siblings inert, including other portals.
+  const dialog = anchor?.closest<HTMLDialogElement>("dialog[open]");
+  const [position, setPosition] = useState<CSSProperties>({ top: 0, left: 0 });
   useLayoutEffect(() => {
     if (!browserReady) return;
     if (!visible(anchor)) {
@@ -53,34 +56,41 @@ export function WorkspaceActionMenu({
     const positionPanel = () => {
       const rect = anchor.getBoundingClientRect();
       const bounds = element.getBoundingClientRect();
+      const modal = dialog?.getBoundingClientRect();
+      const left = Math.max(0, modal?.left ?? 0) + 12;
+      const right =
+        Math.min(window.innerWidth, modal?.right ?? window.innerWidth) - 12;
+      const top = Math.max(0, modal?.top ?? 0) + 12;
+      const bottom =
+        Math.min(window.innerHeight, modal?.bottom ?? window.innerHeight) - 12;
+      const maxWidth = Math.max(0, right - left);
+      const maxHeight = Math.max(0, bottom - top);
+      const width = modal ? Math.min(bounds.width, maxWidth) : bounds.width;
+      const height = modal ? Math.min(bounds.height, maxHeight) : bounds.height;
       setPosition({
-        left: Math.max(
-          12,
-          Math.min(
-            rect.right - bounds.width,
-            window.innerWidth - bounds.width - 12,
-          ),
-        ),
+        left: Math.max(left, Math.min(rect.right - width, right - width)),
         top: Math.max(
-          12,
+          top,
           Math.min(
-            window.innerHeight - bounds.height - 12,
-            rect.bottom + 8 + bounds.height > window.innerHeight - 12
-              ? rect.top - bounds.height - 8
+            bottom - height,
+            rect.bottom + 8 + height > bottom
+              ? rect.top - height - 8
               : rect.bottom + 8,
           ),
         ),
+        ...(modal ? { maxWidth, maxHeight } : {}),
       });
     };
     positionPanel();
-    (controls(element)[0] ?? element).focus();
+    (controls(element)[0] ?? element).focus({ preventScroll: Boolean(dialog) });
     const observer =
       typeof ResizeObserver === "undefined"
         ? null
         : new ResizeObserver(positionPanel);
     observer?.observe(element);
+    if (dialog) observer?.observe(dialog);
     return () => observer?.disconnect();
-  }, [anchor, browserReady]);
+  }, [anchor, browserReady, dialog]);
   useEffect(() => {
     if (!browserReady) return;
     const current = panel.current;
@@ -150,6 +160,6 @@ export function WorkspaceActionMenu({
     >
       {children}
     </div>,
-    document.body,
+    dialog ?? document.body,
   );
 }

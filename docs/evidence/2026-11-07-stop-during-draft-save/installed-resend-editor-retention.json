@@ -1,0 +1,34 @@
+{
+  "kind": "InstalledWarmResendEditorRetentionAndAttachmentMenu",
+  "installedSource": "6ce829c5",
+  "checkedDateBeijing": "2026-11-07",
+  "scope": "One completed, already loaded owned Copilot B conversation in the existing macOS application. No launch, reconnect, send, quit or update.",
+  "textRetention": {
+    "initialResendDraftAbsent": true,
+    "syntheticLines": 2,
+    "closeAndKeepDismissedEditor": true,
+    "readOnlyStorageMatchedExactMultilineText": true,
+    "mainEditorStayedEmpty": true,
+    "sameMessageReopenedExactRetainedText": true,
+    "retentionNoticeVisible": true,
+    "discardedOnlyNewSyntheticEdit": true,
+    "readOnlyStorageConfirmedSyntheticEditRemoved": true
+  },
+  "attachmentMenu": {
+    "pointerAndAccessibilityActionsObserved": true,
+    "visibleMenuBehindModal": true,
+    "menuMissingFromModalAccessibilityTree": true,
+    "systemPickerOpened": false,
+    "attachmentStored": false,
+    "outcome": "attachment-selection-path-blocked"
+  },
+  "preservation": {
+    "originalDraftAndOneRetainedUnchanged": true,
+    "otherDraftsAndQueuesUnchanged": true,
+    "oldThreeAndExactBProtocolCapturesByteIdentical": true,
+    "newAgentRequests": 0
+  },
+  "limits": [
+    "Warm dialog close and reopen only. No cold application start, attachment import or storage fault."
+  ]
+}

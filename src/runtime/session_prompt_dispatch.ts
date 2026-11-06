@@ -45,6 +45,9 @@ export async function drainPrompt(
   s.submitting = true;
   s.running = false;
   const firstPrompt = s.identity === "draft";
+  const firstSendInterrupted = firstPrompt
+    ? draftPersistence.captureInteractionInterruption()
+    : undefined;
   sealStreams(s);
   const text = promptText(blocks);
   const item: ThreadItem = {
@@ -94,8 +97,10 @@ export async function drainPrompt(
     hooks.emit(key);
     await draftPersistence.flush();
     await archiveActivity.begin(key);
+    const interrupted = firstSendInterrupted?.();
     if (
       hooks.thread(key) !== s ||
+      interrupted ||
       composerDrafts.read(`queue-edit:${key}`).queueEdit ||
       !canDrain({ ...s, running: false, submitting: false })
     ) {
@@ -103,6 +108,7 @@ export async function drainPrompt(
       s.items = s.items.filter((i) => i !== item);
       if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
       if (firstPrompt) s.identity = "draft";
+      if (interrupted && !s.queuePaused) pauseQueue(s, "stopped");
       return { status: "rejected", reason: "unavailable" };
     }
     const content = wirePromptBlocks(blocks);

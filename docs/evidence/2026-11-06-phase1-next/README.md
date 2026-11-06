@@ -62,4 +62,10 @@ Kilo 7.8.1 的真实终端登录由已登记程序执行。对应官方协议方
 
 Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目录，禁止网络、实际用户目录读取和两个钥匙串服务查询。首次启动的路径解析限制已定位并在隔离对照中修正；再次尝试仍在握手返回前退出。未启动后续账号读取，零登录、退出账号或模型请求。既有账号的正式应用证据保持独立，隔离状态与新登录仍待核。[Copilot 尝试回执](copilot-isolated-startup-guard-attempt.json) · [官方凭据存放规则](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli#how-copilot-cli-stores-credentials)
 
+独立改用同版本官方原生运行程序后，仍在回复一次 SDK 连接请求前退出，账号状态查询没有开始。网络、用户文件内容、隔离外写入及钥匙串两项查询均由系统实测拦截。未执行登录、退出、模型或额度请求。[原生 SDK 尝试回执](copilot-native-isolated-sdk-attempt.json)
+
+另用已登记 Kilo 7.8.1、空资料目录和只允许访问指定本机端口的环境完成设备授权对照。官方程序在本机服务返回待授权再批准后取资料和默认模型，将唯一合成凭据写为权限 0600，第二个官方进程读回 Kilo OAuth 类型。另一组由本机服务返回明确拒绝，官方程序显示拒绝并退出，无凭据写入。两次尝试从本机发停止信号时仍继续轮询，超时后清理；即时取消未通过。全部只用合成响应，真实账户、服务端取消和收费仍未验证。[本机批准、拒绝及取消回执](kilo-local-device-approval-and-denial.json)
+
+此轮先核发行来源。官方下载 ZIP 与当时 ACP 登记和 GitHub 发布摘要一致，GitHub 签发的软件物料清单证明通过，408 个归档文件逐一与登记目录相同。严格签名核验在正式程序和官方解压件上都失败，源于最后一个不完整页的哈希按补零后长度生成。两份原字节保持，未重新签名或替换。[历史登记](../2026-09-30-agent-access-mechanisms/kilo/static-receipt.json) · [官方发行](https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.1)
+
 首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)

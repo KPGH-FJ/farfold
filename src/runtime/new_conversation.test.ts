@@ -185,6 +185,78 @@ afterEach(async () => {
   await draftPersistence.flush();
 });
 
+it("does not offer a first prompt when quit was already cancelled during its pre-offer save", async () => {
+  const state = permissionDraft("quit-before-first-offer");
+  state.permissionState = "ready";
+  const draft = { text: "Keep the first input", attachments: [] };
+  const blocks: PromptBlock[] = [{ type: "text", text: draft.text }];
+  composerDrafts.update("new", () => ({ ...draft, sendPending: true }));
+  const attempt = await rememberPendingConversation(
+    "new",
+    composerDrafts.read("new"),
+    state,
+  );
+  let releaseSave!: () => void;
+  const heldSave = new Promise<void>((resolve) => {
+    releaseSave = resolve;
+  });
+  let writing = false;
+  mock.invoke.mockImplementation(async (command, args) => {
+    if (
+      command === "settings_set" &&
+      args?.key === DRAFT_STORAGE_KEY &&
+      args.value.queues[state.key]?.uncertainIndex === 0 &&
+      !writing
+    ) {
+      writing = true;
+      await heldSave;
+    }
+    return command === "session_prompt"
+      ? { status: "accepted" }
+      : localCommand(command, args);
+  });
+  const sending = Promise.allSettled([sendNewConversation(state.key, blocks)]);
+  const prompts = () =>
+    mock.invoke.mock.calls.filter(([name]) => name === "session_prompt");
+  try {
+    await vi.waitFor(() => expect(writing).toBe(true));
+    expect(state.queued).toEqual([blocks]);
+    expect(state.submitting).toBe(true);
+    expect(prompts()).toEqual([]);
+    // Exercise the final dispatch guard without relying on the separate
+    // exit queue pause to reject this already-preparing request.
+    draftPersistence.acquireInteractionLock()();
+    expect(draftPersistence.snapshot().interactionLocked).toBe(false);
+    releaseSave();
+    const [outcome] = await sending;
+    expect(prompts()).toEqual([]);
+    expect(outcome).toMatchObject({
+      status: "rejected",
+      reason: { message: STRINGS.repair.sendFailed },
+    });
+    expect(state.identity).toBe("draft");
+    expect(state.queued).toEqual([]);
+    expect(state.uncertainPrompt).toBeNull();
+    expect(state.submitting).toBe(false);
+    finishPendingConversation(attempt, "rejected");
+    expect(composerDrafts.read("new")).toMatchObject({
+      ...draft,
+      sendPending: false,
+    });
+    expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+    const explicit = [{ type: "text" as const, text: "A new explicit send" }];
+    await expect(
+      sendNewConversation(state.key, explicit),
+    ).resolves.toBeUndefined();
+    expect(prompts()).toHaveLength(1);
+    expect(prompts()[0]?.[1]?.content).toEqual(explicit);
+  } finally {
+    releaseSave();
+    await sending;
+    composerDrafts.clear("new");
+  }
+});
+
 it("retains rejected first-message input through the editor error without an extra queued copy", async () => {
   const state = threads.markOpenFailed(
     "a:/p:first-rejected",

@@ -923,6 +923,71 @@ it("rechecks directory admission after preserving a pending target and keeps rej
   }
 });
 
+it.each(["exiting", "staying"] as const)(
+  "keeps the prepared first-send draft when quit interrupted its save (%s)",
+  async (exit) => {
+    await startEditableDraft();
+    const { draftPersistence } = await import("../runtime/drafts");
+    const sending = await import("../runtime/new_conversation");
+    let finish!: () => void;
+    const held = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    const flush = vi.spyOn(draftPersistence, "flush").mockReturnValue(held);
+    const dispatch = vi
+      .spyOn(sending, "sendNewConversation")
+      .mockResolvedValue();
+    let releaseExit: (() => void) | undefined;
+    try {
+      const attachment = {
+        id: "retained-source",
+        kind: "file" as const,
+        name: "notes.txt",
+        uri: "file:///work/notes.txt",
+      };
+      composerDrafts.update("new", (draft) => ({
+        ...draft,
+        attachments: [attachment],
+        sendPending: true,
+      }));
+      const submitted = composerDrafts.read("new");
+      const send = composer().props.onSend as NonNullable<
+        ComponentProps<typeof Composer>["onSend"]
+      >;
+      const outcome = Promise.allSettled([
+        send([{ type: "text", text: submitted.text }], submitted),
+      ]);
+      expect(composerDrafts.read("new").pendingConversation).toMatchObject({
+        nativeSessionId: "native",
+      });
+      expect(h.live!.queued).toEqual([]);
+      releaseExit = draftPersistence.acquireInteractionLock();
+      if (exit === "staying") releaseExit();
+      finish();
+      const [result] = await outcome;
+
+      expect(dispatch).not.toHaveBeenCalled();
+      expect(result).toMatchObject({
+        status: "rejected",
+        reason: { message: STRINGS.repair.sendFailed },
+      });
+      expect(composerDrafts.read("new")).toMatchObject({
+        text: submitted.text,
+        attachments: [attachment],
+        sendPending: false,
+      });
+      expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+      expect(h.live!.queued).toEqual([]);
+      expect(props.onStarted).not.toHaveBeenCalled();
+    } finally {
+      finish();
+      releaseExit?.();
+      flush.mockRestore();
+      dispatch.mockRestore();
+    }
+  },
+);
+
 it.each(["existing", "api"])(
   "rechecks current %s authentication after draft persistence before React renders",
   async (source) => {

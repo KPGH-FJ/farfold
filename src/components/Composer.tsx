@@ -573,8 +573,11 @@ export function Composer({
     const targetKey = storageKey;
     const targetErrorContext = errorContext;
     const submissionStopped = captureSubmissionStop(thread);
+    const interactionInterrupted =
+      draftPersistence.captureInteractionInterruption();
     const submissionInterrupted = () =>
       submissionStopped() ||
+      interactionInterrupted() ||
       Boolean(
         !onSend &&
         thread &&
@@ -583,6 +586,7 @@ export function Composer({
     let releasePending = () => {};
     try {
       await draftPersistence.flush();
+      if (submissionInterrupted()) return;
       const prepared = await prepareDraftAttachments(
         submitted.attachments,
         embedContext,

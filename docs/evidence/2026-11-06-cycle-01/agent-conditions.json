@@ -21,7 +21,14 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
     "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
-    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json"
+    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-isolated-startup-guard-attempt.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
+    "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -198,7 +205,7 @@
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
-        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。当前 Farfold 版本的完整新登录、退出换号与影响范围仍待实测。",
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。当前 1.0.106 的隔离程序在两种启动路线均未返回连接确认，未进入账号读取。完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
           {
             "standards": ["S2"],
@@ -341,7 +348,7 @@
             ]
           }
         ],
-        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核。聊天模式仍带本地技能信息，第二候选真实回复待能隔离该上下文时再验。旧 Sonnet 和旧 N/O 条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核。正式聊天模式仍带本地技能信息，本机模拟已核隔离后的请求内容，第二候选的真实工作区、回复和费用仍待。旧 Sonnet 和旧 N/O 条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
       }
     },
     {
@@ -368,7 +375,7 @@
       ],
       "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。当前付款身份、网关路由和计费、完整新登录与退出换号待实测。",
+        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。首个隔离设备挑战尝试未确认。本机模拟批准时官方程序保存并由新进程读回合成认证，服务拒绝时未写认证；本机停止信号的即时取消未通过。当前付款身份、网关路由和计费、完整新登录与退出换号待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3", "S4"],

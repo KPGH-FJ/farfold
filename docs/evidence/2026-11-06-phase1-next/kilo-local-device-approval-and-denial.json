@@ -1,0 +1,173 @@
+{
+  "kind": "RegisteredKiloLocalDeviceFlow",
+  "version": "7.8.1",
+  "scope": "Actual registered Kilo, synthetic loopback service, temporary data only.",
+  "approval": {
+    "mode": "approve",
+    "reaped": true,
+    "authorizedSyntheticProfileOnly": true,
+    "policy": {
+      "ownLoopbackAllowed": true,
+      "otherReachablePortDenied": true,
+      "homeDataReadAndWriteDenied": true,
+      "ownedScratchWriteAllowed": true,
+      "registeredBinaryReadable": true,
+      "realBrowserOpenerDenied": true
+    },
+    "exactVersion": true,
+    "authInitiallyAbsent": true,
+    "oneNativeLoginInvocation": true,
+    "directCancelAfterPending": false,
+    "forcedCleanup": false,
+    "exactSyntheticChallengePrinted": true,
+    "loginSuccessPrinted": true,
+    "exit": 0,
+    "ownedGroupGone": true,
+    "authFilePresent": true,
+    "fileMode600": true,
+    "onlySyntheticOAuthStored": true,
+    "secondNativeProcessReadOAuthType": true,
+    "secondNativeProcessExit": 0,
+    "localRequests": {
+      "publicCatalog": 2,
+      "deviceCreate": 1,
+      "pollPending": 1,
+      "pollApproved": 1,
+      "profile": 1,
+      "defaults": 1
+    },
+    "authRequestOrder": [
+      "deviceCreate",
+      "pollPending",
+      "pollApproved",
+      "profile",
+      "defaults"
+    ],
+    "recognizedErrorClassesOnly": [],
+    "passed": true
+  },
+  "cancelFirstSignalIntThenCleanup": {
+    "mode": "cancel",
+    "reaped": true,
+    "authorizedSyntheticProfileOnly": false,
+    "policy": {
+      "ownLoopbackAllowed": true,
+      "otherReachablePortDenied": true,
+      "homeDataReadAndWriteDenied": true,
+      "ownedScratchWriteAllowed": true,
+      "registeredBinaryReadable": true,
+      "realBrowserOpenerDenied": true
+    },
+    "exactVersion": true,
+    "authInitiallyAbsent": true,
+    "oneNativeLoginInvocation": true,
+    "directCancelAfterPending": true,
+    "forcedCleanup": true,
+    "exactSyntheticChallengePrinted": true,
+    "loginSuccessPrinted": false,
+    "exit": -15,
+    "ownedGroupGone": true,
+    "authFilePresent": false,
+    "localRequests": {
+      "publicCatalog": 2,
+      "deviceCreate": 1,
+      "pollPending": 6
+    },
+    "authRequestOrder": [
+      "deviceCreate",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending"
+    ],
+    "recognizedErrorClassesOnly": [],
+    "passed": false
+  },
+  "cancelWithTerm": {
+    "mode": "cancel",
+    "reaped": true,
+    "authorizedSyntheticProfileOnly": false,
+    "policy": {
+      "ownLoopbackAllowed": true,
+      "otherReachablePortDenied": true,
+      "homeDataReadAndWriteDenied": true,
+      "ownedScratchWriteAllowed": true,
+      "registeredBinaryReadable": true,
+      "realBrowserOpenerDenied": true
+    },
+    "exactVersion": true,
+    "authInitiallyAbsent": true,
+    "oneNativeLoginInvocation": true,
+    "directCancelAfterPending": true,
+    "cancelSignal": "TERM",
+    "forcedCleanup": true,
+    "exactSyntheticChallengePrinted": true,
+    "loginSuccessPrinted": false,
+    "exit": -15,
+    "ownedGroupGone": true,
+    "authFilePresent": false,
+    "localRequests": {
+      "publicCatalog": 2,
+      "deviceCreate": 1,
+      "pollPending": 6
+    },
+    "authRequestOrder": [
+      "deviceCreate",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending",
+      "pollPending"
+    ],
+    "recognizedErrorClassesOnly": [],
+    "passed": false
+  },
+  "watchedProductionMetadataUnchanged": true,
+  "isolatedDataRemoved": true,
+  "externalAccountOrInferenceOperated": false,
+  "rawSecretsOrTerminalTextRetained": false,
+  "serverDenial": {
+    "mode": "deny",
+    "reaped": true,
+    "authorizedSyntheticProfileOnly": false,
+    "policy": {
+      "ownLoopbackAllowed": true,
+      "otherReachablePortDenied": true,
+      "homeDataReadAndWriteDenied": true,
+      "ownedScratchWriteAllowed": true,
+      "registeredBinaryReadable": true,
+      "realBrowserOpenerDenied": true
+    },
+    "exactVersion": true,
+    "authInitiallyAbsent": true,
+    "oneNativeLoginInvocation": true,
+    "directCancelAfterPending": false,
+    "forcedCleanup": false,
+    "exactSyntheticChallengePrinted": true,
+    "loginSuccessPrinted": false,
+    "exit": 1,
+    "ownedGroupGone": true,
+    "authFilePresent": false,
+    "localRequests": {
+      "publicCatalog": 2,
+      "deviceCreate": 1,
+      "pollPending": 1,
+      "pollDenied": 1
+    },
+    "authRequestOrder": ["deviceCreate", "pollPending", "pollDenied"],
+    "recognizedErrorClassesOnly": ["apiError"],
+    "passed": true,
+    "nativeDenialTextObserved": true
+  },
+  "officialSource": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+  "distribution": {
+    "releaseZipSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+    "releaseApiDigestAndHistoricalRegistryReceiptMatched": true,
+    "githubCycloneDxAttestationVerified": true,
+    "all408ReleaseFilesMatchedRegisteredDirectory": true,
+    "bothBinaryCopiesStrictAdHocSignatureInvalidAtFinalPartialPage": true
+  }
+}

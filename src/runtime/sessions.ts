@@ -867,6 +867,10 @@ class ThreadsStore {
     }
     const connectionId = s.connectionId;
     const stopped = captureSubmissionStop(s);
+    const firstSendInterrupted =
+      s.identity === "draft"
+        ? draftPersistence.captureInteractionInterruption()
+        : undefined;
     const interrupted = () =>
       stopped() ||
       s.connectionLost ||
@@ -878,12 +882,15 @@ class ThreadsStore {
     if (
       sourceDraft &&
       (interrupted() ||
+        firstSendInterrupted?.() ||
         draftPersistence.snapshot().interactionLocked ||
         (sourceDraft.key !== `session:${key}` &&
           sourceDraft.key !== `resend:${key}`) ||
         composerDrafts.read(sourceDraft.key) !== sourceDraft.value)
     )
       throw new Error(STRINGS.repair.sendFailed);
+    if (firstSendInterrupted?.())
+      return { status: "rejected", reason: "unavailable" };
     // Explicit new input can start after permission/work is restored for an
     // empty queue. Never resume existing or uncertain queued input.
     const pauseRevision = configurationPauseRevision(s);

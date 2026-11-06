@@ -755,6 +755,8 @@ export function EmptyState({
       throw new Error(STRINGS.repair.sendFailed);
   };
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    const interrupted = draftPersistence.captureInteractionInterruption();
+    if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
     locationOwner.current.retire();
     const authenticationBlocked = (key = draftKey) => {
       if (!agentId) return true;
@@ -773,6 +775,7 @@ export function EmptyState({
     };
     requireSendSelection();
     if (service) await requireCurrentService();
+    if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
     archiveGuard.requireAvailable();
     if (
       !mounted.current ||
@@ -832,6 +835,7 @@ export function EmptyState({
         target,
       );
       if (service) await requireCurrentService();
+      if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
       archiveGuard.requireAvailable();
       if (
         !isCurrentCandidate(agentId) ||

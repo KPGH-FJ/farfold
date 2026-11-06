@@ -811,67 +811,74 @@ it("retains only one saved copy when a disconnected handoff cannot be rolled bac
   }
 });
 
-it("keeps the original draft when exit takes its lock before queue handoff", async () => {
-  const id = "exit-lock-before-queue-handoff";
-  const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
-  thread.openError = null;
-  thread.connectionId = `connection-${id}`;
-  const key = `session:${thread.key}`;
-  const draft = { text: "Original unsent input at quit", attachments: [] };
-  const snapshots: SavedWork[] = [];
-  const send = vi.spyOn(threads, "send");
-  let acknowledge!: () => void;
-  const receipt = new Promise<void>((resolve) => {
-    acknowledge = resolve;
-  });
-  let pendingSaveWaiting = false;
-  let releaseExit: (() => void) | undefined;
-  h.invoke.mockImplementation(async (command, args) => {
-    if (command === "settings_set" && args.key === "unsentWork.v1") {
-      const snapshot = structuredClone(args.value as SavedWork);
-      snapshots.push(snapshot);
-      if (snapshot.composers[key]?.sendPending && !pendingSaveWaiting) {
-        pendingSaveWaiting = true;
-        await receipt;
+it.each(["exit stays open", "exit cancelled"] as const)(
+  "keeps the original draft when %s before queue handoff",
+  async (scenario) => {
+    const id = `exit-lock-before-queue-handoff-${scenario}`;
+    const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+    thread.openError = null;
+    thread.connectionId = `connection-${id}`;
+    const key = `session:${thread.key}`;
+    const draft = { text: "Original unsent input at quit", attachments: [] };
+    const snapshots: SavedWork[] = [];
+    const send = vi.spyOn(threads, "send");
+    let acknowledge!: () => void;
+    const receipt = new Promise<void>((resolve) => {
+      acknowledge = resolve;
+    });
+    let pendingSaveWaiting = false;
+    let releaseExit: (() => void) | undefined;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "settings_set" && args.key === "unsentWork.v1") {
+        const snapshot = structuredClone(args.value as SavedWork);
+        snapshots.push(snapshot);
+        if (snapshot.composers[key]?.sendPending && !pendingSaveWaiting) {
+          pendingSaveWaiting = true;
+          await receipt;
+        }
       }
-    }
-    return command === "session_prompt" ? { status: "accepted" } : null;
-  });
-  try {
-    await draftPersistence.load();
-    composerDrafts.update(key, () => draft);
-    await draftPersistence.flush();
-    const submit = render(thread).button(STRINGS.composer.sendTitle)!;
-    expect(submit.props.disabled).toBe(false);
-    (submit.props.onClick as () => void)();
-    await vi.waitFor(() => expect(pendingSaveWaiting).toBe(true));
-    expect(send).not.toHaveBeenCalled();
-    expect(thread.queued).toEqual([]);
+      return command === "session_prompt" ? { status: "accepted" } : null;
+    });
+    try {
+      await draftPersistence.load();
+      composerDrafts.update(key, () => draft);
+      await draftPersistence.flush();
+      const submit = render(thread).button(STRINGS.composer.sendTitle)!;
+      expect(submit.props.disabled).toBe(false);
+      (submit.props.onClick as () => void)();
+      await vi.waitFor(() => expect(pendingSaveWaiting).toBe(true));
+      expect(send).not.toHaveBeenCalled();
+      expect(thread.queued).toEqual([]);
 
-    threads.pauseQueuesForExit();
-    releaseExit = draftPersistence.acquireInteractionLock();
-    acknowledge();
-    await vi.waitFor(() =>
-      expect(composerDrafts.read(key).sendPending).not.toBe(true),
-    );
-    await draftPersistence.flush();
-    expect(draftPersistence.snapshot().interactionLocked).toBe(true);
-    expect(snapshots.every((value) => !value.queues[thread.key])).toBe(true);
-    expect(snapshots.at(-1)?.composers[key]).toMatchObject(draft);
-    expect(composerDrafts.read(key)).toMatchObject(draft);
-    expect(thread.queued).toEqual([]);
-    expect(
-      h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
-    ).toEqual([]);
-  } finally {
-    acknowledge();
-    releaseExit?.();
-    await send.mock.results[0]?.value.catch(() => undefined);
-    threads.dequeue(thread.key, 0);
-    composerDrafts.clear(key);
-    await draftPersistence.flush();
-  }
-});
+      threads.pauseQueuesForExit();
+      releaseExit = draftPersistence.acquireInteractionLock();
+      if (scenario === "exit cancelled") releaseExit();
+      acknowledge();
+      await vi.waitFor(() =>
+        expect(composerDrafts.read(key).sendPending).not.toBe(true),
+      );
+      await draftPersistence.flush();
+      expect(draftPersistence.snapshot().interactionLocked).toBe(
+        scenario === "exit stays open",
+      );
+      expect(send).not.toHaveBeenCalled();
+      expect(snapshots.every((value) => !value.queues[thread.key])).toBe(true);
+      expect(snapshots.at(-1)?.composers[key]).toMatchObject(draft);
+      expect(composerDrafts.read(key)).toMatchObject(draft);
+      expect(thread.queued).toEqual([]);
+      expect(
+        h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+      ).toEqual([]);
+    } finally {
+      acknowledge();
+      releaseExit?.();
+      await send.mock.results[0]?.value.catch(() => undefined);
+      threads.dequeue(thread.key, 0);
+      composerDrafts.clear(key);
+      await draftPersistence.flush();
+    }
+  },
+);
 
 it.each(["quit pause", "no newer pause"] as const)(
   "keeps the correct outcome when a durable handoff receives %s",
