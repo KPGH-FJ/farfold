@@ -1,0 +1,115 @@
+{
+  "aFixtureWasExplicitlySetToPriorExactKiloModelBeforeTest": true,
+  "approvalsAuthorized": 0,
+  "beginUtc": "2026-11-06T20:45:25.970+00:00",
+  "checkedInheritedAccountAndConfigOverridesAbsent": true,
+  "cleanScope": {
+    "aAndBSameFactoryCurrentSettings": true,
+    "exactFreeAlternativesOfferedOnBoth": {
+      "kilo/dots-studio/dots-3-note-preview:free": true,
+      "kilo/nvidia/nemotron-3.5-super-vl:free": true
+    },
+    "factoryCurrentEqualsPriorExactKiloModel": false,
+    "factoryCurrentIsKiloGateway": true,
+    "kiloGatewayOptionCounts": [317, 317],
+    "priorExactKiloModelOfferedOnBoth": true,
+    "usesExistingSignedAccount": false
+  },
+  "cleanup": {
+    "eofSentToOwnedProcess": true,
+    "exitCode": 0,
+    "ownedProcessGroupGone": true,
+    "targetedSignalsSent": 0
+  },
+  "credentialOrExistingConfigCopiedByHarness": false,
+  "endUtc": "2026-11-06T20:45:29.266+00:00",
+  "existingProfileFileMetadataUnchanged": {
+    "existingKiloAuthMetadataOnly": true,
+    "existingKiloConfigJson": true,
+    "existingKiloConfigJsonc": true,
+    "existingKiloConfigLegacy": true,
+    "existingKiloLegacyModelState": true,
+    "existingKiloModelState": true,
+    "legacyKiloAuth": true
+  },
+  "initializedMs": 902,
+  "installedRegistryCommandMatched": true,
+  "isolatedDatabaseBeforeCreatingSessions": true,
+  "legacyAuthMigrationSourceAbsentByStat": true,
+  "lifecycleUpdateCounts": {
+    "available_commands_update": 2
+  },
+  "officialProtocol": 1,
+  "officialSetters": [
+    {
+      "elapsedMs": 7,
+      "exactAck": true,
+      "option": "model",
+      "owner": "A"
+    },
+    {
+      "elapsedMs": 1,
+      "exactAck": true,
+      "option": "model",
+      "owner": "A"
+    },
+    {
+      "elapsedMs": 0,
+      "exactAck": true,
+      "option": "mode",
+      "owner": "B"
+    },
+    {
+      "elapsedMs": 0,
+      "exactAck": true,
+      "option": "model",
+      "owner": "A"
+    }
+  ],
+  "oldOrUserSessionUsed": false,
+  "outboundMethodCounts": {
+    "initialize": 1,
+    "session/new": 2,
+    "session/set_config_option": 4
+  },
+  "outcome": "official-a-model-switch-restore-b-live-config-unchanged-zero-inference",
+  "privateHomeCreated": false,
+  "processEnvironment": {
+    "absoluteOwnedKiloDb": true,
+    "fourXdgRootsFreshAndOwned": true,
+    "inheritedHome": true,
+    "ordinaryEnvironmentInherited": true
+  },
+  "productionAppOperated": false,
+  "productionNativeDatabaseStatUnchanged": true,
+  "registeredVersion": "7.8.1",
+  "repositoryFilesEdited": false,
+  "requestedModelPrompts": 0,
+  "sessionIsolation": {
+    "aExactKnownBaselineRestored": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free",
+    "aSameGatewayAlternate": "kilo/dots-studio/dots-3-note-preview:free",
+    "bCurrentModeIdempotentReceiptOnly": true,
+    "bLiveModelModeEffortUnchanged": true,
+    "bModelSetterCalls": 0,
+    "isolatedAuthFileAbsent": true,
+    "nativeMessagesAfter": 0,
+    "nativeRowsUnchangedAfterSetters": true,
+    "sameProcessThroughout": true
+  },
+  "temporaryFixtureRemoved": true,
+  "toolRequestsAuthorized": 0,
+  "twoFreshDistinctOwnedRows": {
+    "createdMs": [1771, 3],
+    "nativeMessagesBefore": 0,
+    "sameProcess": true
+  },
+  "unexpectedTrailingProtocolFrameCount": 0,
+  "sourceExecutionReceiptSha256": "5edd6d230f6eb3ea1717146c26e1c5c47509dadb3508e2cee6c19a1739543f47",
+  "independentReview": "Matched the original successful execution receipt and verified that the exact A owner received the model setters, B submitted only its current mode, each response matched its request, and the own process exited 0 on EOF.",
+  "scopeLimits": [
+    "Official installed Kilo executable in isolated XDG paths and a separate database, outside Farfold.",
+    "A was explicitly set to the previously known model first. The clean program default was a different model.",
+    "No signed account, inference, cold restore, model billing or formal app acceptance was exercised.",
+    "The existing profile check compared metadata for the selected files. Zero session/prompt is a protocol observation, not a network traffic audit."
+  ]
+}

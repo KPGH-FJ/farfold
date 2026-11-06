@@ -15,7 +15,9 @@
     "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
     "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json",
     "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
-    "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json"
+    "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -270,7 +272,7 @@
       ],
       "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 OpenRouter 设置确实用于一次正式回复，出站服务和测试回复核合。当前付款身份、实际计费、完整新登录和退出换号待实测。",
+        "authenticationBoundary": "已有 OpenRouter 设置用于一次正式回复，同一请求编号核对到既有账户的默认工作区，账单显示 $0.00。完整新登录和退出换号待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3"],
@@ -293,10 +295,11 @@
           {
             "standards": ["S4", "S6", "S7"],
             "environment": "macOS arm64 正式版 6ce829c5",
-            "result": "同目录两条自测对话中只停止等待审批的 A；B 未收到停止或审批，返回专用标识并完成。B 该次 OpenRouter 日志的出站模型为 nvidia/nemotron-3-ultra-550b-a55b:free，流式回复与专用标识核合；回复未提供上游模型或服务字段。",
+            "result": "同目录两条自测对话中只停止等待审批的 A；B 未收到停止或审批，返回专用标识并完成。B 出站模型为 nvidia/nemotron-3-ultra-550b-a55b:free，流式回复与专用标识核合。同一请求编号的 OpenRouter 详细页显示 NVIDIA，默认工作区该行账单显示 $0.00。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-isolation/README.md",
-              "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json"
+              "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json",
+              "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json"
             ]
           },
           {
@@ -318,7 +321,7 @@
             ]
           }
         ],
-        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核；旧 Sonnet 和旧 N/O 的原条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核。聊天模式仍带本地技能信息，第二候选真实回复待能隔离该上下文时再验。旧 Sonnet 和旧 N/O 条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
       }
     },
     {
@@ -393,9 +396,17 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/kilo-model-options-isolated.json"
             ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "官方 Kilo 7.8.1 协议直连，独立资料目录和会话库",
+            "result": "同一进程两个无消息测试会话，A 从明确设置的原免费 Ultra 切到同服务免费 Dots3，再恢复 Ultra。B 仅重设当前模式以读回完整设置，模型、模式和可用的推理选项保持。零提示发送，隔离进程自然退出。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json"
+            ]
           }
         ],
-        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。同会话切换实际生效及冷恢复、旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
+        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。正式版同会话切换、实际模型回复和冷恢复，以及旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
       }
     },
     {

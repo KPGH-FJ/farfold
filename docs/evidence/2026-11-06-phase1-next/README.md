@@ -24,11 +24,17 @@ Copilot Free 每月含免费 AI Credits，模型走 Auto。同账号前一批测
 
 11 月 7 日补只读模型证据，未另发请求。Kilo 正式原对话的助手记录报告所选免费模型；Goose 正式并发样本核合出站免费模型、回复和用量，回复没有报告具体后端模型；Copilot 隔离并发样本的助手记录报告 Auto 实际选到的一个模型。三个范围分别记录，不代表同会话新切换及冷恢复。[逐家模型回执](actual-models-readonly.json)
 
+Goose 正式自测 B 的既有回复，已用原请求编号核对 OpenRouter 账户和默认工作区日志。详细页显示 NVIDIA，工作区同一行费用显示 $0.00。当前同工作区的 Response Healing 和 Pareto Router 开关为关，服务器网页搜索显示可用。服务器工具仍需在请求中显式声明，旧网页搜索插件的实际默认值没有读到。本次只读既有日志和开关，没有更改账号或发新请求。[同请求回执](goose-openrouter-workspace-readonly.json) · [OpenRouter 工具](https://openrouter.ai/docs/guides/features/server-tools/overview) · [OpenRouter 插件](https://openrouter.ai/docs/guides/features/plugins/overview)
+
+第二免费候选的公开输入与输出费率为零。Goose 的聊天模式会跳过模型要求执行的工具，但构建请求时仍加入 Skills 的名称和说明。上一次同一测试对话的实际出站请求中，核到 5 个来自用户目录的技能名称。本机正式版没有只对这条会话关闭 Skills 的入口，因此这次没有发送新的合成测试消息。[候选端点](https://openrouter.ai/api/v1/models/nvidia/nemotron-3.5-super-vl:free/endpoints) · [提示准备](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/agents/reply_parts.rs#L197-L240) · [Skills 内容](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/skills/client.rs#L248-L269)
+
 ## 独立验证与缺项
 
 Kilo 7.8.1 的真实隔离连接声明支持关闭、继续和列出。在两个无消息的自测对话中，只对 A 关闭一次，收到同请求回执；B 在同一进程以官方继续入口读回原设置，两条历史都保留。未发送模型、工具或审批。B 原活动路由是否全程连续、A 专属资源是否已释放，以及正式界面和跨版桌面授权仍未验证。[隔离会话关闭回执](kilo-lifecycle-isolated.json)
 
-另一次同样隔离的 Kilo 零发送查询，官方新对话实际列出 Kilo Gateway 的既有 Ultra 和两个免费候选 Super VL、Dots。新对话的默认值与原对话不同，不能代替原基线。未改模型或服务；免费主模型仍不证明后台标题等请求不会产生费用，真实切换等待这项条件。Copilot 的 Free 账号仅 Auto，Goose 尚缺原服务实际提供第二选项的回执。[实际模型菜单](kilo-model-options-isolated.json) · [Kilo 免费及后台请求说明](https://kilo.ai/docs/getting-started/using-kilo-for-free) · [Copilot 模型访问说明](https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/configure-access-to-ai-models)
+另一次同样隔离的 Kilo 零发送查询，官方新对话实际列出 Kilo Gateway 的既有 Ultra 和两个免费候选 Super VL、Dots。该次默认模型与原对话不同，未改模型或服务。免费主模型的菜单声明与后台标题等请求的计费条件分别核验。[实际模型菜单](kilo-model-options-isolated.json) · [Kilo 免费及后台请求说明](https://kilo.ai/docs/getting-started/using-kilo-for-free)
+
+Kilo 7.8.1 官方程序在隔离目录和会话库中建立两个无消息测试会话。先把 A 设到已有正式样本使用的免费 Ultra，再切到同服务免费 Dots3 并恢复 Ultra。切换期间，B 仅重设其当前模式以读回完整设置，模型、模式及可用的推理选项与初值一致。两条测试库记录保持、零提示和审批，进程经标准输入关闭正常退出。此次未使用登录账号，正式版切换、真实回复、计费和冷恢复继续待验。[隔离切换回执](kilo-isolated-model-switch.json)
 
 两条 Kilo 测试对话共用一个自有空目录，并使用同一免费模型。两条对话的 Agent 原会话标识和协议记录分别核对。两条请求同时运行时，取消只发给 A，A 明确停止，B 独立回复其专属标识并回到空闲。范围限这一次同 Agent、同目录测试。
 

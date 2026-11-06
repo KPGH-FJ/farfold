@@ -1,0 +1,41 @@
+{
+  "kind": "Phase1GoosePriorGenerationWorkspaceAndSendBoundary",
+  "checkedDateBeijing": "2026-11-07",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "gooseVersion": "1.52.0",
+  "gooseOfficialSource": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "priorOwnedGeneration": {
+    "providerGenerationIdSha256": "75d0ef12c7ec9d22fb1c249edd9c82b741c905324cacd0d00a79fd07ef6667eb",
+    "officialLocalRecordMatchedToOwnedFarfoldReply": true,
+    "sameGenerationIdMatchedInProviderAccountLogs": true,
+    "sameGenerationIdMatchedInDefaultWorkspaceLogs": true,
+    "knownApp": "goose",
+    "selectedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "providerShownInAccountDetail": "NVIDIA",
+    "inputTokens": 5762,
+    "outputTokens": 334,
+    "amountShownForThatWorkspaceRow": "$0.00"
+  },
+  "sameDefaultWorkspacePluginView": {
+    "responseHealingEnabled": false,
+    "paretoRouterEnabled": false,
+    "serverWebSearchAvailable": true,
+    "legacyWebPluginEffectiveDefault": "unknown; its visible card had no switch"
+  },
+  "warmOwnedGoosePreflight": {
+    "currentMode": "auto",
+    "existingService": "OpenRouter",
+    "bundledPlatformExtensionCount": 7,
+    "priorWireSystemPromptIncludedLocalSkillNamesMatchingUserDirectories": 5,
+    "chatSuppressesModelToolExecutionButStillBuildsSkillsContext": true,
+    "normalInstalledPerConversationControlToExcludeSkillsAvailable": false
+  },
+  "newModelRequests": 0,
+  "settingsChanges": 0,
+  "limits": [
+    "Account logs match the earlier owned generation. Displayed cost is for that existing generation only.",
+    "Workspace server tool availability is distinct from per-request tool declaration and from default plugins.",
+    "No raw provider generation ID, account identifier, key, local skill name, description or prompt is retained here.",
+    "No second model reply or cold restore was attempted. The synthetic prompt would still include local skill metadata in this warm session."
+  ]
+}
