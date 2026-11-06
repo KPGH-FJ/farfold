@@ -114,6 +114,7 @@ export const conversationReadState = {
   },
   load,
   flush,
+  hasPending: () => pending.size > 0,
   flushPending: () => (pending.size ? flush() : Promise.resolve()),
   setVisible(key: string | null, readable = true) {
     visibleKey = readable ? key : null;

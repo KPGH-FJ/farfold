@@ -52,9 +52,16 @@ fn recovery_gate_rejects_every_existing_non_recovery_command() {
     assert!(caller_check < storage_dispatch);
 }
 
+#[tauri::command]
+fn draft_ipc_dispatch_probe() -> bool {
+    true
+}
+
 #[test]
 fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
-    use tauri::ipc::{CallbackFn, InvokeBody};
+    use std::sync::mpsc;
+    use std::time::Duration;
+    use tauri::ipc::{CallbackFn, InvokeBody, InvokeResponse};
     use tauri::test::{INVOKE_KEY, get_ipc_response, mock_builder, mock_context, noop_assets};
     use tauri::webview::InvokeRequest;
 
@@ -82,7 +89,11 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
         .invoke_handler(|invoke| {
             crate::dispatch_storage_command(
                 invoke,
-                tauri::generate_handler![crate::auth::settings_get, crate::auth::settings_set],
+                tauri::generate_handler![
+                    crate::auth::settings_get,
+                    crate::auth::settings_set,
+                    draft_ipc_dispatch_probe
+                ],
             )
         })
         .build(mock_context(noop_assets()))
@@ -90,26 +101,24 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
     let window = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
         .build()
         .unwrap();
+    let request = |command: &str, body| InvokeRequest {
+        cmd: command.into(),
+        callback: CallbackFn(0),
+        error: CallbackFn(1),
+        url: if cfg!(windows) {
+            "http://tauri.localhost"
+        } else {
+            "tauri://localhost"
+        }
+        .parse()
+        .unwrap(),
+        body: InvokeBody::Json(body),
+        headers: Default::default(),
+        invoke_key: INVOKE_KEY.into(),
+    };
     let invoke = |command: &str, body| {
-        get_ipc_response(
-            &window,
-            InvokeRequest {
-                cmd: command.into(),
-                callback: CallbackFn(0),
-                error: CallbackFn(1),
-                url: if cfg!(windows) {
-                    "http://tauri.localhost"
-                } else {
-                    "tauri://localhost"
-                }
-                .parse()
-                .unwrap(),
-                body: InvokeBody::Json(body),
-                headers: Default::default(),
-                invoke_key: INVOKE_KEY.into(),
-            },
-        )
-        .map(|response| response.deserialize::<serde_json::Value>().unwrap())
+        get_ipc_response(&window, request(command, body))
+            .map(|response| response.deserialize::<serde_json::Value>().unwrap())
     };
     let get = || invoke("settings_get", json!({"key": key}));
     let set = || invoke("settings_set", json!({"key": key, "value": new}));
@@ -137,8 +146,56 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
     assert_eq!(get(), Ok(old.clone()));
     transaction.rollback().unwrap();
     assert_eq!(get(), Ok(old));
-    assert_eq!(set(), Ok(serde_json::Value::Null));
+
+    // While another writer still holds the test DB, a second command on the
+    // same dispatch thread must be handled before this save can finish.
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let (sent, reply) = mpsc::sync_channel(1);
+    window.as_ref().clone().on_message(
+        request("settings_set", json!({"key": key, "value": new})),
+        Box::new(move |_, _, response, _, _| {
+            sent.send(response).unwrap();
+        }),
+    );
+    let second_command = invoke("draft_ipc_dispatch_probe", json!({}));
+    let pending = matches!(reply.try_recv(), Err(mpsc::TryRecvError::Empty));
+    transaction.rollback().unwrap();
+    assert_eq!(second_command, Ok(json!(true)));
+    assert!(pending, "the dispatch thread waited for the locked write");
+    assert!(matches!(
+        reply.recv_timeout(Duration::from_secs(5)).unwrap(),
+        InvokeResponse::Ok(_)
+    ));
     assert_eq!(get(), Ok(new.clone()));
+
+    // An unrelated setting still uses its existing synchronous write path:
+    // it is not among the writes the normal exit coordinator waits for.
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let (sent, reply) = mpsc::sync_channel(1);
+    window.as_ref().clone().on_message(
+        request("settings_set", json!({"key": "themeMode", "value": "dark"})),
+        Box::new(move |_, _, response, _, _| {
+            sent.send(response).unwrap();
+        }),
+    );
+    let before_unlock = reply.try_recv();
+    transaction.rollback().unwrap();
+    if before_unlock.is_err() {
+        // Let the unexpected asynchronous save finish before reporting red.
+        let _ = reply.recv_timeout(Duration::from_secs(5));
+    }
+    assert!(
+        matches!(
+            before_unlock,
+            Ok(InvokeResponse::Err(tauri::ipc::InvokeError(value)))
+                if value == json!("FARFOLD_STORAGE:busy:无法读取或保存本机资料")
+        ),
+        "unrelated setting left the dispatch thread before the save receipt"
+    );
     drop(writer);
     drop(window);
     drop(app);

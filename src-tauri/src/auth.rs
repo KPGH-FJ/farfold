@@ -902,11 +902,12 @@ pub async fn agent_logout(
 
 /// Read one settings value (`None` when unset).
 #[tauri::command]
-pub fn settings_get(
+pub async fn settings_get(
     store: tauri::State<'_, MetaStore>,
     key: String,
 ) -> Result<Option<serde_json::Value>, String> {
-    store.get_setting(&key)
+    // A read shares the same mutex as saves; never wait for it on the UI thread.
+    store.run(move |store| store.get_setting(&key)).await
 }
 
 /// Write one settings value.
@@ -917,6 +918,25 @@ pub fn settings_set(
     value: serde_json::Value,
 ) -> Result<(), String> {
     store.set_setting(&key, &value)
+}
+
+pub(crate) const DRAFT_SETTING_KEY: &str = "unsentWork.v1";
+
+// Only the draft write may return to the dispatcher before its receipt: the
+// renderer already waits for this receipt before allowing normal exit.
+#[tauri::command(rename = "settings_set")]
+async fn draft_settings_set(
+    store: tauri::State<'_, MetaStore>,
+    value: serde_json::Value,
+) -> Result<(), String> {
+    store
+        .run(move |store| store.set_setting(DRAFT_SETTING_KEY, &value))
+        .await
+}
+
+pub(crate) fn dispatch_draft_settings<R: tauri::Runtime>(invoke: tauri::ipc::Invoke<R>) -> bool {
+    let handler: fn(tauri::ipc::Invoke<R>) -> bool = tauri::generate_handler![draft_settings_set];
+    handler(invoke)
 }
 
 // ---------------------------------------------------------------------------

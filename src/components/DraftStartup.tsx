@@ -120,15 +120,24 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       await Promise.all([draftPersistence.flush(), setupStorage.flush()]);
       if (currentExit.current !== token || saveAttempt.current !== attempt)
         return;
-      // Include replies received while other metadata was being saved. A failed
-      // read without any unread edits is unrelated to this exit's save barrier.
-      await conversationReadState.flushPending().catch((reason) => {
-        if (currentExit.current === token && saveAttempt.current === attempt)
-          setExitReadError(conversationReadState.snapshot().error);
-        throw reason;
-      });
-      if (currentExit.current !== token || saveAttempt.current !== attempt)
-        return;
+      // Replies and stop receipts can update either store while the other is
+      // saving. Check both in the same turn before acknowledging this exit.
+      for (;;) {
+        await conversationReadState.flushPending().catch((reason) => {
+          if (currentExit.current === token && saveAttempt.current === attempt)
+            setExitReadError(conversationReadState.snapshot().error);
+          throw reason;
+        });
+        if (currentExit.current !== token || saveAttempt.current !== attempt)
+          return;
+        if (!draftPersistence.isSaved(draftPersistence.revision())) {
+          await draftPersistence.flush();
+          if (currentExit.current !== token || saveAttempt.current !== attempt)
+            return;
+        } else if (!conversationReadState.hasPending()) {
+          break;
+        }
+      }
       // A save may have started while metadata was flushing. The backend
       // repeats admission atomically through the actual native quit.
       if (

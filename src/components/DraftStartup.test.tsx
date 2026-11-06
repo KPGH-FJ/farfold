@@ -7,8 +7,11 @@ const h = vi.hoisted(() => ({
   effects: [] as (() => unknown)[],
   invoke: vi.fn(),
   flush: vi.fn(),
+  draftRevision: vi.fn<() => number>(),
+  draftIsSaved: vi.fn<(expectedRevision: number) => boolean>(),
   setupFlush: vi.fn(),
   readFlush: vi.fn(),
+  readHasPending: vi.fn<() => boolean>(),
   lock: vi.fn(),
   acquireLock: vi.fn(),
   active: false,
@@ -44,6 +47,8 @@ vi.mock("../runtime/drafts", () => ({
   draftPersistence: {
     load: async () => undefined,
     flush: h.flush,
+    revision: h.draftRevision,
+    isSaved: h.draftIsSaved,
     lockInteraction: h.lock,
     acquireInteractionLock: h.acquireLock,
   },
@@ -87,6 +92,7 @@ vi.mock("../runtime/setup_storage", () => ({
 vi.mock("../runtime/conversation_read_state", () => ({
   conversationReadState: {
     flushPending: h.readFlush,
+    hasPending: h.readHasPending,
     snapshot: () => ({ error: "新回复状态尚未保存，请重试。" }),
   },
 }));
@@ -135,8 +141,11 @@ beforeEach(async () => {
   h.listeners.clear();
   h.invoke.mockReset().mockResolvedValue(undefined);
   h.flush.mockReset();
+  h.draftRevision.mockReset().mockReturnValue(0);
+  h.draftIsSaved.mockReset().mockReturnValue(true);
   h.setupFlush.mockReset().mockResolvedValue(undefined);
   h.readFlush.mockReset().mockResolvedValue(undefined);
+  h.readHasPending.mockReset().mockReturnValue(false);
   h.lock.mockReset();
   h.acquireLock.mockReset().mockImplementation(() => {
     h.lock(true);
@@ -802,5 +811,65 @@ it("waits for pending unread metadata, keeps its actual save error and retries b
   retry.resolve();
   await vi.waitFor(() =>
     expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 41 }),
+  );
+});
+
+it("waits for alternating unread and draft writes before acknowledging exit", async () => {
+  const firstSave = deferred();
+  const unreadSave = deferred();
+  const outcomeSave = deferred();
+  const lateUnreadSave = deferred();
+  let revision = 1;
+  let savedRevision = 0;
+  let unreadWrite: Promise<void> | null = null;
+  const beginUnreadWrite = (save: ReturnType<typeof deferred>) => {
+    const writing = save.promise.then(() => {
+      unreadWrite = null;
+    });
+    unreadWrite = writing;
+    return writing;
+  };
+  h.draftRevision.mockImplementation(() => revision);
+  h.draftIsSaved.mockImplementation(
+    (expected) => expected <= savedRevision && savedRevision === revision,
+  );
+  h.flush.mockImplementation(() =>
+    revision === 1 ? firstSave.promise : outcomeSave.promise,
+  );
+  h.readFlush.mockImplementation(() => unreadWrite ?? Promise.resolve());
+  h.readHasPending.mockImplementation(() => unreadWrite !== null);
+  const firstUnreadWrite = beginUnreadWrite(unreadSave);
+  h.listeners.get("app:save-before-exit")!({ payload: 42 });
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  savedRevision = 1;
+  firstSave.resolve();
+  await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalledTimes(1));
+
+  // A connection can report an unknown outcome while unread metadata saves.
+  // Its draft revision advances and the automatic write starts independently.
+  revision = 2;
+  const automaticWrite = h.flush();
+  unreadSave.resolve();
+  await firstUnreadWrite;
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 42,
+  });
+  await vi.waitFor(() => expect(h.flush).toHaveBeenCalledTimes(3));
+
+  // Another conversation gets a new reply while exit waits for the new draft.
+  const lateUnreadWrite = beginUnreadWrite(lateUnreadSave);
+  savedRevision = 2;
+  outcomeSave.resolve();
+  await automaticWrite;
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 42,
+  });
+
+  lateUnreadSave.resolve();
+  await lateUnreadWrite;
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 42 }),
   );
 });

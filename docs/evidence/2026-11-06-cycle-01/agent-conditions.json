@@ -8,6 +8,11 @@
     "wholeAgentConfirmed": 0
   },
   "scope": "Current re-entry notes derived from committed records. Scoped historical evidence retains its original scope. Scheduling and requirements remain in their respective existing documents.",
+  "stage1SupplementScope": "首波三家后续分项按实际版本与证据层级记录。原字段及计数仍为 b7763508 底稿；S2–S7 标注对应的八项标准分项，首波完整验收仍为 0/3。新登录及换号、同会话改模型实际生效与冷恢复、永久审批及其冷恢复、安装版草稿写入故障及其余八项条件继续开放。",
+  "stage1SupplementEvidencePaths": [
+    "PRODUCT.md",
+    "docs/evidence/2026-11-06-phase1-old-exit/README.md"
+  ],
   "rows": [
     {
       "agentId": "amp-acp",
@@ -162,7 +167,55 @@
         "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json"
       ],
-      "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed."
+      "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
+      "stage1Supplement": {
+        "verifiedSamples": [
+          {
+            "standards": ["S2"],
+            "environment": "macOS arm64 正式版 dbe23bb6e，官方 Copilot CLI 1.0.106",
+            "result": "同一已有账号为 Copilot Free，实测前网页显示包含额度已用 0% 且 CLI 启用，SDK 报告不允许超额；沿用 Auto 完成一次短回复。未改套餐，未核该次实际扣费。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-followup/README.md"
+            ]
+          },
+          {
+            "standards": ["S3", "S4"],
+            "environment": "macOS arm64 正式版 6ce829c5",
+            "result": "从原目录查到指定会话并读回正文，明确补存该会话原 Auto，未发设置指令。旧长等待轮明确停止后，用不同问题续接，6.757 秒返回原历史标识。该轮原生记录报告 gpt-6-luna；保存选择仍是 Auto。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-copilot-list/README.md",
+              "docs/evidence/2026-11-06-phase1-model-repair/README.md",
+              "docs/evidence/2026-11-06-phase1-tool-tail/README.md"
+            ]
+          },
+          {
+            "standards": ["S5"],
+            "environment": "macOS arm64 正式版 dbe23bb6e",
+            "result": "同一自测对话分别完成一次拒绝与一次批准；原生记录与界面结果核合，批准的固定命令返回专用标识及退出码 0。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-approval/README.md"
+            ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "macOS arm64 正式版 6ce829c5",
+            "result": "同目录两条自测对话中只停止等待审批的 A，B 独立完成。另一有界自测确认运行中的指定 shell 与 sleep 在停止后提前结束；原轮明确停止，同一工具未获匹配终态。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-isolation/README.md",
+              "docs/evidence/2026-11-06-phase1-tool-tail/README.md"
+            ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "隔离 Farfold 连接管理器源码 fc7eb6a68，官方 Copilot CLI 1.0.106",
+            "result": "首次审批未获批准的自测 A 明确停止并收到对应关闭回执。同一官方进程中 A 历史文件句柄由 1 降为 0，B 的保持 1 且 B 独立完成；A 的旧工具仍无终态。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json"
+            ]
+          }
+        ],
+        "remainingCondition": "原长等待的系统原因和旧工具终态仍缺。两条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+      }
     },
     {
       "agentId": "goose",
@@ -174,7 +227,46 @@
         "docs/evidence/2026-10-24-agent-acceptance/goose-formal-e6e1-summary.json",
         "docs/evidence/2026-11-02-p18-edit-diff-formal/conditions-and-preservation-summary.json"
       ],
-      "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers."
+      "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers.",
+      "stage1Supplement": {
+        "verifiedSamples": [
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64 正式版 dbe23bb6e、6ce829c5",
+            "result": "dbe23bb6e 从原目录读回指定原会话，沿用原 OpenRouter 免费模型用不同问题续接，5.540 秒返回原历史标识。6ce829c5 在指定原目录官方查找结果中找到同一条目。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-followup/README.md",
+              "docs/evidence/2026-11-06-phase1-next/README.md",
+              "docs/evidence/2026-11-06-phase1-tool-tail/README.md"
+            ]
+          },
+          {
+            "standards": ["S5", "S6"],
+            "environment": "macOS arm64 正式版 dbe23bb6e",
+            "result": "手动审批模式下一次拒绝、一次批准。并发时先拒绝 Kilo，Goose 仍等待自己的审批；单独批准后取得 Goose 专用输出。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-approval/README.md"
+            ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "macOS arm64 正式版 6ce829c5",
+            "result": "同目录两条自测对话中只停止等待审批的 A；B 未收到停止或审批，返回专用标识并完成。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-isolation/README.md"
+            ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "隔离 Farfold 连接管理器源码 fc7eb6a68，官方 Goose 1.52.0",
+            "result": "首次审批未获批准的自测 A 明确停止并收到对应关闭回执，同一官方进程已查不到 A 的活动会话；B 仍可查询且独立完成。A 旧工具无终态，未测操作系统子进程或文件句柄。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json"
+            ]
+          }
+        ],
+        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核；旧 Sonnet 和旧 N/O 的原条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+      }
     },
     {
       "agentId": "grok-build",
@@ -198,7 +290,40 @@
         "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-625158ab-saved-details-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-e954-history-continuation-summary.json"
       ],
-      "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee."
+      "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
+      "stage1Supplement": {
+        "verifiedSamples": [
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64 正式版 dbe23bb6e",
+            "result": "从原桌面目录找到同一原会话并读回正文，沿用 Kilo Gateway 的 Nemotron 3 Ultra (free) 续接，准确返回首条历史标识。",
+            "evidencePaths": ["docs/evidence/2026-11-06-phase1-next/README.md"]
+          },
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64 正式版 6ce829c5 同版本冷启动",
+            "result": "未重新选目录，原目录访问获得同一系统请求的允许回执，直接读回原正文且零发送。范围仅为该版本签名及该次冷启动。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-tool-tail/README.md"
+            ]
+          },
+          {
+            "standards": ["S5", "S6"],
+            "environment": "macOS arm64 正式版 dbe23bb6e",
+            "result": "一次批准后取得专用输出；与 Goose 并发时另一次只拒绝 Kilo，Kilo 无该次工具输出，Goose 的审批保持独立。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-approval/README.md"
+            ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "macOS arm64 正式版 dbe23bb6e",
+            "result": "同目录及同一免费模型的两条自测对话同时运行，取消只发给 A，A 明确停止，B 独立返回专用标识。",
+            "evidencePaths": ["docs/evidence/2026-11-06-phase1-next/README.md"]
+          }
+        ],
+        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
+      }
     },
     {
       "agentId": "kimchi",
