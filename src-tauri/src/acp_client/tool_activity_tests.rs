@@ -255,14 +255,34 @@ async fn tool_activity_is_released_only_with_real_process_termination() {
 #[cfg(unix)]
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn external_peer_exit_emits_ordered_receipts_for_its_owner_only() {
+    exact_peer_end_receipt(b"exit normally").await;
+}
+
+#[cfg(unix)]
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn peer_terminated_by_signal_emits_ordered_receipts_for_its_owner_only() {
+    exact_peer_end_receipt(b"self SIGTERM").await;
+}
+
+#[cfg(unix)]
+async fn exact_peer_end_receipt(exit_kind: &[u8]) {
     use super::{lifecycle::CloseReason, pump::ProcessEndedReceipt};
 
     const SELF_EXIT: &str = r#"
-import os, pathlib, threading, time
+import os, pathlib, signal, threading, time
 def exit_after_fence():
     fence = pathlib.Path.cwd() / 'fixture-exit'
-    while not fence.is_file():
+    while True:
+        try:
+            action = fence.read_bytes()
+            if action:
+                break
+        except FileNotFoundError:
+            pass
         time.sleep(0.01)
+    if action == b'self SIGTERM':
+        os.kill(os.getpid(), signal.SIGTERM)
+        raise RuntimeError('fixture did not terminate on SIGTERM')
     os._exit(0)
 threading.Thread(target=exit_after_fence, daemon=True).start()
 "#;
@@ -361,9 +381,12 @@ threading.Thread(target=exit_after_fence, daemon=True).start()
         assert!(target.life.work.load(Ordering::SeqCst) > 0);
         assert!(crate::supervisor::owned_group_alive(*target_pid));
 
-        // Only the temporary peer reads this fence and exits itself. Farfold
-        // learns about it through its ordinary transport and process observers.
-        std::fs::write(target_cwd.join("fixture-exit"), b"exit normally").unwrap();
+        // Only the temporary peer reads this fence and exits or signals itself.
+        // Publish it atomically so the peer cannot read an incomplete action.
+        let exit_fence = target_cwd.join("fixture-exit");
+        let pending_fence = target_cwd.join("fixture-exit.pending");
+        std::fs::write(&pending_fence, exit_kind).unwrap();
+        std::fs::rename(pending_fence, exit_fence).unwrap();
         let mut ordered = Vec::new();
         loop {
             let (scope, observation) = receive.recv().await.unwrap();
