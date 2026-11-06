@@ -1,5 +1,6 @@
 import type { LocalAudio } from "./audio_input";
 import { hasActiveFork } from "./session_fork_activity";
+import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
 /**
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
@@ -404,9 +405,11 @@ export function hasActiveWork(state: ThreadState): boolean {
 
 /** Rendering only: never rewrite the Agent's reported tool status. */
 export function toolActivityState(
-  state: ToolActivityEvidence,
+  state: ToolActivityEvidence & Partial<Pick<ThreadState, "items">>,
   call: ToolCallView,
+  stoppedToolCalls = unfinishedStoppedToolCallIds(state),
 ): "active" | "finished" | "unknown" {
+  if (stoppedToolCalls.has(call.toolCallId)) return "unknown";
   if (call.status === "completed" || call.status === "failed")
     return "finished";
   return !state.connectionLost &&

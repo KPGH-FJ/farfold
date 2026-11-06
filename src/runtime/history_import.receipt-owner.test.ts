@@ -81,7 +81,8 @@ it("retains the acknowledged exact preview owner after local history conversion 
       args.channel.onmessage({
         update: {
           sessionUpdate: "tool_call",
-          toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+          toolCallId: "malformed-tool-title",
+          title: JSON.parse('{"toString":null,"valueOf":null}'),
         },
       });
       marker(args);

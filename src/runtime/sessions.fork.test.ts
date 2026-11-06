@@ -970,7 +970,11 @@ it.each(["tool", "config"] as const)(
         args.channel.onmessage({
           update:
             kind === "tool"
-              ? { sessionUpdate: "tool_call", toolCallId: bad }
+              ? {
+                  sessionUpdate: "tool_call",
+                  toolCallId: "malformed-tool-title",
+                  title: bad,
+                }
               : {
                   sessionUpdate: "config_option_update",
                   configOptions: [

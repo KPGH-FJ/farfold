@@ -39,6 +39,7 @@ import { hasActiveCompaction } from "./compaction_activity";
 import { hasActiveFork } from "./session_fork_activity";
 import { SessionForks } from "./session_fork";
 import { threadNeedsAttention } from "./thread_attention";
+import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
 import {
   applyStoppedWorkClose,
   currentStoppedWork,
@@ -178,40 +179,6 @@ export const DEFAULT_AUTO_ARCHIVE_DAYS = 30;
 
 export type SendAdmission = PromptAdmission | { status: "queued" };
 
-/** A live stopped round can outlast its prompt even when the Agent later
- * omits the unfinished tool from history. Reuse the in-memory round links. */
-function hasUnfinishedStoppedTool(s: ThreadState): boolean {
-  if (
-    !s.connectionId ||
-    s.connectionLost ||
-    s.historyUnavailable ||
-    s.activeToolCallIds.length === 0
-  )
-    return false;
-
-  const active = new Set(s.activeToolCallIds);
-  const stoppedTools = new Set<string>();
-  for (let i = s.items.length - 1; i >= 0; i--) {
-    const item = s.items[i]!;
-    if (
-      item.kind === "settled" &&
-      item.status === "stopped" &&
-      item.stopReason === "cancelled" &&
-      item.replyReceived !== undefined
-    ) {
-      for (const toolId of item.artifactToolItemIds ?? [])
-        stoppedTools.add(toolId);
-    } else if (item.kind === "tool" && active.delete(item.call.toolCallId)) {
-      // Display parsing is deliberately tolerant. Only the owning connection's
-      // active ID set can say the original step has actually left activity.
-      if (stoppedTools.has(item.id)) return true;
-      // A settled round can only refer to tool cards before its own ending.
-      if (active.size === 0) return false;
-    }
-  }
-  return false;
-}
-
 class ThreadsStore {
   constructor() {
     observeBrowserRequests(
@@ -313,7 +280,7 @@ class ThreadsStore {
           state.historicalOutcomeUnknown ||
           state.connectionOutcomeUnknown ||
           state.stopUnconfirmed ||
-          hasUnfinishedStoppedTool(state),
+          unfinishedStoppedToolCallIds(state).size > 0,
         ),
       );
     }

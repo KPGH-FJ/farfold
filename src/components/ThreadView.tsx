@@ -53,7 +53,9 @@ import {
   type PermissionOption,
   type ThreadItem,
   type ThreadState,
+  type ToolCallView,
 } from "../runtime/sessions";
+import { unfinishedStoppedToolCallIds } from "../runtime/stopped_tool_results";
 import {
   configCheckMessage,
   configurationConfirmationBusy,
@@ -602,6 +604,9 @@ export function ThreadView({
 
   const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
+  const stoppedToolCalls = unfinishedStoppedToolCallIds(thread);
+  const stepActivity = (call: ToolCallView) =>
+    toolActivityState(thread, call, stoppedToolCalls);
   const artifactCounts = reportedArtifactCounts(thread);
   const empty =
     thread.items.length === 0 &&
@@ -865,7 +870,7 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "active" &&
+                          stepActivity(item.call) === "active" &&
                           item.call.status === "in_progress",
                       ) && (
                         <span className="workspace-step-running">
@@ -875,7 +880,7 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "active" &&
+                          stepActivity(item.call) === "active" &&
                           item.call.status === "pending",
                       ) && (
                         <span className="workspace-step-running">
@@ -885,11 +890,13 @@ export function ThreadView({
                       {block.some(
                         (item) =>
                           item.kind === "tool" &&
-                          toolActivityState(thread, item.call) === "unknown",
+                          stepActivity(item.call) === "unknown",
                       ) && <span>{STRINGS.thread.toolResultUnknown}</span>}
                       {block.some(
                         (item) =>
-                          item.kind === "tool" && item.call.status === "failed",
+                          item.kind === "tool" &&
+                          stepActivity(item.call) === "finished" &&
+                          item.call.status === "failed",
                       ) && (
                         <span className="workspace-step-failed">
                           {W.stepsFailed}
@@ -910,7 +917,7 @@ export function ThreadView({
                               call={item.call}
                               transcriptItemId={item.id}
                               onOpenFile={openFile}
-                              activity={toolActivityState(thread, item.call)}
+                              activity={stepActivity(item.call)}
                               onOpenArtifacts={
                                 canInspectToolContent(
                                   item.call,

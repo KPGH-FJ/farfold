@@ -268,7 +268,8 @@ it("still rejects the original late JSON TypeError before replacing any old body
   const malformed = {
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
   h.invoke.mockImplementation(async (command: string, wire: Wire) => {
@@ -524,7 +525,8 @@ it("keeps synchronous accept's typed conversion failure on the actual private re
   replay.push({
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   });
   replay.receiveMarker({

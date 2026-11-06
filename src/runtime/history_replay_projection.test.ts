@@ -174,7 +174,8 @@ it("keeps the first actual JSON conversion failure private and typed without rep
     history.push({
       update: {
         sessionUpdate: "tool_call",
-        toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+        toolCallId: "malformed-tool-title",
+        title: JSON.parse('{"toString":null,"valueOf":null}'),
       },
     }),
   ).toBe("consumed");
@@ -265,7 +266,8 @@ it("keeps the real delivery flow draining through a failed projection to its mar
   const malformed = {
     update: {
       sessionUpdate: "tool_call",
-      toolCallId: JSON.parse('{"toString":null,"valueOf":null}'),
+      toolCallId: "malformed-tool-title",
+      title: JSON.parse('{"toString":null,"valueOf":null}'),
     },
   };
   const events = [

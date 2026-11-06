@@ -14,7 +14,11 @@ import {
   applyUpdate,
   freshThreadState,
 } from "../runtime/session_projection";
-import type { ThreadState, ToolCallView } from "../runtime/session_types";
+import {
+  hasActiveTools,
+  type ThreadState,
+  type ToolCallView,
+} from "../runtime/session_types";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 
@@ -78,6 +82,7 @@ function stopped(thread: ThreadState) {
   applyTurnEnd(thread, { stopReason: "cancelled" });
   expect(thread.running).toBe(false);
   expect(thread.activeToolCallIds).toEqual(["original-tool"]);
+  expect(hasActiveTools(thread)).toBe(true);
 }
 
 function history(thread: ThreadState, owner?: string) {
@@ -181,15 +186,15 @@ const cases: {
   arrange: (thread: ThreadState) => void;
 }[] = [
   {
-    name: "official in-progress tools remain active after reply cancellation",
+    name: "reports unknown after reply cancellation while retaining the active in-progress ID",
     reported: "in_progress",
-    shown: "in_progress",
+    shown: "unknown",
     arrange: stopped,
   },
   {
-    name: "official pending tools remain waiting after reply cancellation",
+    name: "reports unknown after reply cancellation while retaining the active pending ID",
     reported: "pending",
-    shown: "pending",
+    shown: "unknown",
     arrange: stopped,
   },
   ...(["in_progress", "pending"] as const).map((reported) => ({

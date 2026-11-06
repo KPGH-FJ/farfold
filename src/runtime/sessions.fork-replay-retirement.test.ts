@@ -118,7 +118,11 @@ it.each(["tool", "config"] as const)(
       wire.channel.onmessage({
         update:
           kind === "tool"
-            ? { sessionUpdate: "tool_call", toolCallId: uncoercible }
+            ? {
+                sessionUpdate: "tool_call",
+                toolCallId: "malformed-tool-title",
+                title: uncoercible,
+              }
             : {
                 sessionUpdate: "config_option_update",
                 configOptions: [

@@ -7,6 +7,7 @@ type OpenWire = {
   nativeSessionId?: string | null;
   openToken: string;
   channel: { onmessage(event: unknown): void };
+  processEndedChannel: { onmessage(event: unknown): void };
 };
 type PromptWire = {
   sessionId: string;
@@ -234,6 +235,12 @@ it.each([
     expectUnknown: true,
   },
   {
+    event: "exact process ended",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
     event: "newer prompt",
     priorUnknown: false,
     hasQueue: true,
@@ -288,8 +295,10 @@ it.each([
         status: "queued",
       });
     const toolCallId = "7";
-    const wire = h.opens.find((open) => open.connectionId === hot.connectionId)!
-      .args.channel;
+    const owner = h.opens.find(
+      (open) => open.connectionId === hot.connectionId,
+    )!;
+    const wire = owner.args.channel;
     wire.onmessage({
       update: {
         sessionUpdate: "tool_call",
@@ -335,6 +344,65 @@ it.each([
         kind: "raw",
         update: impostor,
       });
+    } else if (event === "exact process ended") {
+      const otherOwner = h.opens.find(
+        (open) => open.connectionId === other.connectionId,
+      )!;
+      const receipt = {
+        connectionId: owner.connectionId,
+        closeReason: "unexpected",
+      };
+      owner.args.processEndedChannel.onmessage({
+        ...receipt,
+        connectionId: otherOwner.connectionId,
+      });
+      otherOwner.args.processEndedChannel.onmessage(receipt);
+      expect(hot.processEndedConnectionId).toBeUndefined();
+      expect(hot.connectionLost).toBe(false);
+      expect(hot.connectionOutcomeUnknown).toBe(false);
+      expect(other.processEndedConnectionId).toBeUndefined();
+      expect(other.connectionLost).toBe(false);
+
+      // Malformed terminal values cannot rewrite this still-unfinished step,
+      // including after the exact process really ends.
+      for (const bad of [
+        { toolCallId: Number(toolCallId), status: "completed" },
+        { toolCallId, status: ["failed"] },
+      ]) {
+        const update = { sessionUpdate: "tool_call_update", ...bad };
+        const envelope = { update };
+        wire.onmessage(envelope);
+        expect
+          .soft(hot.items.at(-1))
+          .toMatchObject({ kind: "raw", update: envelope });
+      }
+
+      // The typed process-owner channel can arrive without a tool terminal or
+      // a normal event-channel disconnect. End ownership, not the tool result.
+      owner.args.processEndedChannel.onmessage(receipt);
+      expect(hot.processEndedConnectionId).toBe(owner.connectionId);
+      expect(hot.connectionLost).toBe(true);
+      expect(hot.connectionOutcomeUnknown).toBe(true);
+      expect(hot.items.find((item) => item.kind === "tool")).toMatchObject({
+        call: { toolCallId, status: "pending" },
+      });
+      expect(other.processEndedConnectionId).toBeUndefined();
+      expect(other.connectionLost).toBe(false);
+      expect(other.connectionOutcomeUnknown).toBe(false);
+      expect(other.queued).toEqual([]);
+      await original.drafts.draftPersistence.flush();
+      expect(h.settings.get("unsentWork.v1")).toMatchObject({
+        queues: {
+          [hot.key]: {
+            blocks: [pending],
+            uncertainIndex: null,
+            outcomeUnknown: true,
+          },
+        },
+      });
+      expect(
+        h.invoke.mock.calls.filter(([name]) => name === "session_close"),
+      ).toEqual([]);
     } else if (
       event === "different terminal" ||
       event === "malformed terminal" ||
@@ -356,10 +424,16 @@ it.each([
       if (event === "matching terminal")
         wire.onmessage({ kind: "toolActivity", toolCallIds: [] });
       if (event === "malformed terminal") {
-        // A tolerant display parser stringifies the ID; the owning backend's
-        // real activity still includes the pending step.
+        // A malformed ID is still visible as raw evidence without touching
+        // the original tool or retiring its active ID.
         expect(hot.items.find((item) => item.kind === "tool")).toMatchObject({
-          call: { toolCallId, status: "completed" },
+          call: { toolCallId, status: "pending" },
+        });
+        expect(hot.items.at(-1)).toMatchObject({
+          kind: "raw",
+          update: {
+            update: { toolCallId: Number(toolCallId), status: "completed" },
+          },
         });
         expect(hot.activeToolCallIds).toEqual([toolCallId]);
       }

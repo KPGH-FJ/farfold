@@ -9,6 +9,7 @@ import { STRINGS } from "./strings";
 import { THREAD_VIEW_STRINGS as T } from "./thread_view_strings";
 import { EXPORT_STRINGS as E } from "./export_strings";
 import { checkedMessageContentOrder } from "./message_content_order";
+import { unfinishedStoppedToolCallIds } from "./stopped_tool_results";
 
 export interface TranscriptExportOptions {
   sourceLocations?: "reported" | "omit";
@@ -98,7 +99,11 @@ function literalBody(value: string): string[] {
   ];
 }
 
-function toolDetails(call: ToolCallView, itemOrdinal: number): string[] {
+function toolDetails(
+  call: ToolCallView,
+  itemOrdinal: number,
+  completed: boolean,
+): string[] {
   const out: string[] = [];
   const heading = (name: string, contentOrdinal?: number) => {
     out.push(
@@ -136,9 +141,7 @@ function toolDetails(call: ToolCallView, itemOrdinal: number): string[] {
       out.push(`> ${E.streamedOutputIncomplete}`, "");
     out.push(...literalBody(call.streamedOutput.text));
   }
-  return out.length && call.status !== "completed"
-    ? [`> ${E.partialTool}`, "", ...out]
-    : out;
+  return out.length && !completed ? [`> ${E.partialTool}`, "", ...out] : out;
 }
 
 function toolLines(
@@ -146,6 +149,7 @@ function toolLines(
   options: TranscriptExportOptions,
   itemOrdinal: number,
   thread: TranscriptExportSource,
+  stoppedToolCalls: ReadonlySet<string>,
 ): string[] {
   const kind = presentedToolKind(call);
   const summary = Object.hasOwn(T.toolKinds, kind)
@@ -159,6 +163,7 @@ function toolLines(
       historyUnavailable: thread.historyUnavailable,
     },
     call,
+    stoppedToolCalls,
   );
   const status =
     activity !== "unknown" && Object.hasOwn(E.status, call.status)
@@ -199,7 +204,13 @@ function toolLines(
   return [
     ...out,
     "",
-    ...(options.includeLoadedToolDetails ? toolDetails(call, itemOrdinal) : []),
+    ...(options.includeLoadedToolDetails
+      ? toolDetails(
+          call,
+          itemOrdinal,
+          activity === "finished" && call.status === "completed",
+        )
+      : []),
   ];
 }
 
@@ -216,6 +227,7 @@ export function transcriptMarkdown(
   if (options.attachmentScope === "selectedArchive")
     options = { ...options, sourceLocations: "omit" };
   const out: string[] = [];
+  const stoppedToolCalls = unfinishedStoppedToolCallIds(thread);
   for (const [itemOrdinal, item] of thread.items.entries()) {
     switch (item.kind) {
       case "user":
@@ -255,7 +267,15 @@ export function transcriptMarkdown(
         break;
       }
       case "tool":
-        out.push(...toolLines(item.call, options, itemOrdinal, thread));
+        out.push(
+          ...toolLines(
+            item.call,
+            options,
+            itemOrdinal,
+            thread,
+            stoppedToolCalls,
+          ),
+        );
         break;
       case "plan":
         if (!item.entries.length) break;

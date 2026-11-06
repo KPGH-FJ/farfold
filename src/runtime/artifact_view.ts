@@ -1,5 +1,9 @@
 import { paneCards, type PaneCard } from "./artifacts";
 import type { ThreadState } from "./session_types";
+import {
+  NO_STOPPED_TOOL_CALLS,
+  unfinishedStoppedToolCallIds,
+} from "./stopped_tool_results";
 
 export type FileArtifact = Extract<PaneCard, { kind: "diff" }>;
 import type { DiffLine } from "./line_diff";
@@ -94,15 +98,19 @@ export function artifactPaneCards(
   roundId: string | null,
 ): PaneCard[] | null {
   if (roundId === null) return paneCards(thread);
+  // A selected step/round contains only tool cards. Keep the full conversation
+  // as the source of its matched cancellation receipt.
+  const selectedCards = (items: ThreadState["items"]) =>
+    paneCards({ ...thread, items }, 0, unfinishedStoppedToolCallIds(thread));
   const round = thread.items.find((item) => item.id === roundId);
-  if (round?.kind === "tool") return paneCards({ ...thread, items: [round] });
+  if (round?.kind === "tool") return selectedCards([round]);
   if (round?.kind !== "settled" || !round.artifactToolItemIds) return null;
   const ids = new Set(round.artifactToolItemIds);
   const items = thread.items.filter(
     (item) => item.kind === "tool" && ids.has(item.id),
   );
   if (items.length !== ids.size) return null;
-  return paneCards({ ...thread, items });
+  return selectedCards(items);
 }
 
 /** Refresh displayed counts from the same references as navigation, including
@@ -122,7 +130,11 @@ export function artifactRoundCounts(thread: ThreadState): Map<string, number> {
         break;
       }
       if (!toolCounts.has(id))
-        toolCounts.set(id, paneCards({ ...thread, items: [tool] }).length);
+        toolCounts.set(
+          id,
+          paneCards({ ...thread, items: [tool] }, 0, NO_STOPPED_TOOL_CALLS)
+            .length,
+        );
       count += toolCounts.get(id)!;
     }
     if (complete) rounds.set(item.id, count);

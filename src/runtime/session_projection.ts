@@ -340,15 +340,29 @@ function findToolItem(s: ThreadState, toolCallId: string): number {
   );
 }
 
+function typedToolUpdate(update: Record<string, unknown>): update is Record<
+  string,
+  unknown
+> & {
+  toolCallId: string;
+  status?: string | null;
+} {
+  return (
+    typeof update.toolCallId === "string" &&
+    update.toolCallId.length > 0 &&
+    (update.status == null || typeof update.status === "string")
+  );
+}
+
 function upsertToolCall(
   s: ThreadState,
   update: Record<string, unknown>,
 ): ToolCallView | undefined {
-  const toolCallId = String(update.toolCallId ?? "");
-  if (!toolCallId) {
+  if (!typedToolUpdate(update)) {
     pushRaw(s, update);
     return;
   }
+  const { toolCallId, status } = update;
   sealStreams(s);
   const index = findToolItem(s, toolCallId);
   const call: ToolCallView =
@@ -375,9 +389,7 @@ function upsertToolCall(
   if (update.kind !== undefined && update.kind !== null) {
     call.kind = String(update.kind);
   }
-  if (update.status !== undefined && update.status !== null) {
-    call.status = String(update.status);
-  }
+  if (typeof status === "string") call.status = status;
   // ACP v1 nullable optional fields treat null like omission. Explicit []
   // still replaces a collection; v2's null-clearing rule does not apply here.
   if (update.locations !== undefined && update.locations !== null) {
@@ -657,6 +669,16 @@ export function applyUpdate(
   update: unknown,
   envelope?: unknown,
 ): void {
+  const u = update as Record<string, unknown> | null;
+  if (
+    (u?.sessionUpdate === "tool_call" ||
+      u?.sessionUpdate === "tool_call_update") &&
+    !typedToolUpdate(u)
+  ) {
+    // Keep the original envelope, without assigning any of it to another tool.
+    pushRaw(s, envelope ?? update);
+    return;
+  }
   let projectedTool: ToolCallView | undefined;
   if (isKnownAsyncTaskUpdate(s, update, envelope))
     pushRaw(s, update, "asyncTaskUpdate");

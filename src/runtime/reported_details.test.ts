@@ -108,6 +108,62 @@ describe("reported extension fields stay with their existing entity", () => {
     expect(JSON.stringify(calls.map(details))).not.toContain("body");
   });
 
+  it.each([
+    {
+      name: "numeric ID with its envelope",
+      fields: { toolCallId: 7, status: "completed" },
+      withEnvelope: true,
+    },
+    {
+      name: "array status without an envelope",
+      fields: { toolCallId: "7", status: ["failed"] },
+      withEnvelope: false,
+    },
+  ])(
+    "keeps malformed tool evidence away from the original card ($name)",
+    ({ fields, withEnvelope }) => {
+      const state = fresh();
+      applyUpdate(state, {
+        sessionUpdate: "tool_call",
+        toolCallId: "7",
+        title: "Original step",
+        status: "pending",
+        _meta: { owner: "original" },
+        content: [
+          {
+            type: "diff",
+            path: "/work/real",
+            newText: "original content",
+            future: { source: "original" },
+          },
+        ],
+      });
+      const original = state.items[0];
+      const originalSnapshot = structuredClone(original);
+      const update = {
+        sessionUpdate: "tool_call_update",
+        ...fields,
+        _meta: { owner: "malformed" },
+        content: [],
+      };
+      const envelope = withEnvelope
+        ? {
+            sessionId: state.nativeSessionId,
+            update,
+            _meta: { origin: ["raw-only", null] },
+          }
+        : undefined;
+      applyUpdate(state, update, envelope);
+
+      expect.soft(state.items[0]).toBe(original);
+      expect.soft(state.items[0]).toEqual(originalSnapshot);
+      const raw = state.items[1];
+      expect.soft(raw?.kind === "raw" && raw.update).toBe(envelope ?? update);
+      expect.soft(details(raw)).toBeUndefined();
+      expect(state.items).toHaveLength(2);
+    },
+  );
+
   it("preserves media metadata without another image or resource body", () => {
     const state = fresh();
     applyUpdate(state, {
@@ -285,26 +341,25 @@ describe("projected tool owner handoff", () => {
     expect(state.reportedDetails).toBeUndefined();
   });
 
-  it("keeps an empty tool ID as the same raw update and retains envelope extras without a projected owner", () => {
+  it("keeps the full original envelope of an empty tool ID without assigning an owner", () => {
     const state = fresh();
     const update = {
       sessionUpdate: "tool_call_update",
       toolCallId: "",
       opaque: { publicMarker: "raw-only" },
     };
-    applyUpdate(state, update, {
+    const envelope = {
       sessionId: "history",
       update,
       _meta: { observed: "envelope" },
-    });
+    };
+    applyUpdate(state, update, envelope);
     expect(state.items).toHaveLength(1);
     const item = state.items[0];
     expect(item?.kind).toBe("raw");
     if (item?.kind !== "raw") throw new Error("raw fallback expected");
-    expect(item.update).toBe(update);
-    expect(item.reportedDetails).toEqual({
-      "/_meta": { observed: "envelope" },
-    });
+    expect(item.update).toBe(envelope);
+    expect(item.reportedDetails).toBeUndefined();
     expect(state.reportedDetails).toBeUndefined();
   });
 });

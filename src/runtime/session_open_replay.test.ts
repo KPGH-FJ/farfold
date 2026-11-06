@@ -531,7 +531,13 @@ it("rejects a non-coercible JSON tool field before replacing prior readable hist
   const rejected = expect(w.promise).rejects.toThrow();
   // These are ordinary JSON fields, not a hostile getter/function fixture.
   const malformed = JSON.parse('{"toString":null,"valueOf":null}');
-  w.deliver({ update: { sessionUpdate: "tool_call", toolCallId: malformed } });
+  w.deliver({
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId: "malformed-tool-title",
+      title: malformed,
+    },
+  });
   w.deliver(message("readable-after-malformed", "OWNED_NEW_BODY"));
   w.deliver(w.marker());
   w.finish();
@@ -605,7 +611,11 @@ it.each(["tool", "config"] as const)(
     const value = JSON.parse('{"toString":null,"valueOf":null}');
     const update =
       kind === "tool"
-        ? { sessionUpdate: "tool_call", toolCallId: value }
+        ? {
+            sessionUpdate: "tool_call",
+            toolCallId: "malformed-tool-title",
+            title: value,
+          }
         : {
             sessionUpdate: "config_option_update",
             configOptions: [

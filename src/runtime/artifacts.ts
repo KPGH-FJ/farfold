@@ -12,6 +12,10 @@ import {
   type ToolContent,
 } from "./session_types";
 import { fileInputDiff } from "./tool_file_input";
+import {
+  NO_STOPPED_TOOL_CALLS,
+  unfinishedStoppedToolCallIds,
+} from "./stopped_tool_results";
 
 /** 命令卡输出上限：尾部最多65536个UTF-16单元。 */
 export const COMMAND_OUTPUT_CAP = 64 * 1024;
@@ -204,14 +208,18 @@ function synthesizedDiff(call: ToolCallView, status: string): PaneCard | null {
 
 /** Cards for the artifact drawer, oldest first. `items` is sliced to
  *  `fromItem` when only the latest round is wanted. */
-export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
+export function paneCards(
+  s: ThreadState,
+  fromItem = 0,
+  stoppedToolCalls = unfinishedStoppedToolCallIds(s),
+): PaneCard[] {
   const cards: PaneCard[] = [];
   for (const item of s.items.slice(fromItem)) {
     if (item.kind !== "tool") continue;
     const time = item.call.endedAt ?? item.call.startedAt;
     // Match the message's activity evidence without rewriting the official call.
     const status =
-      toolActivityState(s, item.call) === "unknown"
+      toolActivityState(s, item.call, stoppedToolCalls) === "unknown"
         ? "unknown"
         : item.call.status;
     const output = commandOutput(item.call);
@@ -221,7 +229,7 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
         title: item.call.title || item.call.name || "",
         ...output,
         status,
-        failed: item.call.status === "failed",
+        failed: status === "failed",
         time,
       });
     }
@@ -232,7 +240,7 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
           title: item.call.title || item.call.name || "",
           ...output,
           status,
-          failed: item.call.status === "failed",
+          failed: status === "failed",
           time,
         });
     }
@@ -260,5 +268,5 @@ export function paneCards(s: ThreadState, fromItem = 0): PaneCard[] {
 
 /** Diff/command cards produced during the current/last round. */
 export function roundArtifactCount(s: ThreadState): number {
-  return paneCards(s, s.roundItemBase).length;
+  return paneCards(s, s.roundItemBase, NO_STOPPED_TOOL_CALLS).length;
 }

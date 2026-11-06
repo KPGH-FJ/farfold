@@ -194,8 +194,7 @@ function ownerOf(
   if (kind === "tool_call" || kind === "tool_call_update") {
     const item = s.items.find(
       (item) =>
-        item.kind === "tool" &&
-        item.call.toolCallId === String(update.toolCallId ?? ""),
+        item.kind === "tool" && item.call.toolCallId === update.toolCallId,
     );
     if (item?.kind === "tool") return item.call;
   }
@@ -239,7 +238,7 @@ export function retainReportedDetails(
     projectedTool &&
     (u?.sessionUpdate === "tool_call" ||
       u?.sessionUpdate === "tool_call_update") &&
-    projectedTool.toolCallId === String(u.toolCallId ?? "")
+    projectedTool.toolCallId === u.toolCallId
       ? projectedTool
       : undefined;
   const owner = projectedOwner ?? (u ? ownerOf(s, u) : undefined);
