@@ -38,6 +38,21 @@ fn read_error(error: DeliveryError) -> String {
     .to_owned()
 }
 
+fn read_bitmap(root: &Path, path: &Path) -> Result<ImageCandidate, String> {
+    let bytes = file_delivery::attachment_bytes(root, path, MAX_IMAGE_BYTES).map_err(|error| {
+        if error == DeliveryError::TooLarge {
+            read_error(error)
+        } else {
+            "图片已识别，但暂时无法读取，请重新选择或移除。".to_owned()
+        }
+    })?;
+    let mime_type = mime(&bytes).ok_or("图片内容已变化，请重新选择")?;
+    Ok(ImageCandidate {
+        mime_type,
+        data: Some(STANDARD.encode(bytes)),
+    })
+}
+
 pub(super) fn read_candidate(path: &Path, read: bool) -> Result<Option<ImageCandidate>, String> {
     let root = path.parent().ok_or("附件位置无效，请重新选择")?;
     let prefix = file_delivery::attachment_prefix(root, path).map_err(read_error)?;
@@ -50,12 +65,7 @@ pub(super) fn read_candidate(path: &Path, read: bool) -> Result<Option<ImageCand
             data: None,
         }));
     }
-    let bytes = file_delivery::attachment_bytes(root, path, MAX_IMAGE_BYTES).map_err(read_error)?;
-    let mime_type = mime(&bytes).ok_or("图片内容已变化，请重新选择")?;
-    Ok(Some(ImageCandidate {
-        mime_type,
-        data: Some(STANDARD.encode(bytes)),
-    }))
+    read_bitmap(root, path).map(Some)
 }
 
 #[cfg(test)]
@@ -75,6 +85,25 @@ mod tests {
         assert_eq!(STANDARD.decode(image.data.unwrap()).unwrap(), png);
         std::fs::write(&path, "changed ordinary text").unwrap();
         assert!(read_candidate(&path, true).unwrap().is_none());
+    }
+
+    #[test]
+    fn missing_source_preserves_bitmap_classification_only_after_reading_its_prefix() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("image.txt");
+        std::fs::write(&path, b"\x89PNG\r\n\x1a\n").unwrap();
+        let prefix = file_delivery::attachment_prefix(dir.path(), &path).unwrap();
+        assert_eq!(mime(&prefix), Some("image/png"));
+        std::fs::remove_file(&path).unwrap();
+
+        assert_eq!(
+            read_bitmap(dir.path(), &path).err().unwrap(),
+            "图片已识别，但暂时无法读取，请重新选择或移除。"
+        );
+        assert_eq!(
+            read_candidate(&path, true).err().unwrap(),
+            "附件已无法读取，请重新选择或移除"
+        );
     }
 
     #[test]

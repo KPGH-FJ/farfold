@@ -203,11 +203,12 @@ export async function addPickedAttachments(
         }
       } catch (error) {
         const message = imageInputError(error);
-        // These two native read failures occur only after identifying a bitmap.
+        // These native read failures occur only after identifying a bitmap.
         const knownImage =
           imageEnabled &&
           (message === IMAGE_BYTES_STRINGS.tooLarge ||
-            message === IMAGE_INPUT_STRINGS.changed);
+            message === IMAGE_INPUT_STRINGS.changed ||
+            message === IMAGE_INPUT_STRINGS.sourceUnreadable);
         if (
           work.patch(attachment, {
             ...(knownImage ? { kind: "image", deliveryMode: undefined } : {}),

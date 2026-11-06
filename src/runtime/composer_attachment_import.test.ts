@@ -112,22 +112,28 @@ it("retains invalid bounded image data and its selected source while reporting a
   );
 });
 
-it("does not infer bitmap type from an unrecognized probe failure or filename", async () => {
-  h.invoke.mockRejectedValue("unrecognized image probe failure");
-  const report = vi.fn();
-  await addPickedAttachments(key, ["/chosen.png"], true, report);
-  const attachment = composerDrafts.read(key).attachments[0]!;
-  expect(attachment).toMatchObject({
-    kind: "file",
-    deliveryMode: "location",
-    uri: "file:///chosen.png",
-    loading: false,
-  });
-  expect(report).toHaveBeenCalledExactlyOnceWith(
-    IMAGE_INPUT_STRINGS.invalid,
-    attachment.id,
-  );
-});
+it.each([
+  "unrecognized image probe failure",
+  "附件已无法读取，请重新选择或移除",
+])(
+  "does not infer bitmap type from an ambiguous probe failure or filename (%s)",
+  async (failure) => {
+    h.invoke.mockRejectedValue(failure);
+    const report = vi.fn();
+    await addPickedAttachments(key, ["/chosen.png"], true, report);
+    const attachment = composerDrafts.read(key).attachments[0]!;
+    expect(attachment).toMatchObject({
+      kind: "file",
+      deliveryMode: "location",
+      uri: "file:///chosen.png",
+      loading: false,
+    });
+    expect(report).toHaveBeenCalledExactlyOnceWith(
+      IMAGE_INPUT_STRINGS.invalid,
+      attachment.id,
+    );
+  },
+);
 
 it("discards a late read after its draft is cleared without adding it to later input or another conversation", async () => {
   let finish!: (value: unknown) => void;

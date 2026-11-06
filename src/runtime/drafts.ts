@@ -96,6 +96,7 @@ type PreservedNew = {
   interrupted: () => boolean;
 };
 const retainedNewKeys = new WeakMap<ComposerDraft, Map<string, string>>();
+const savingRestoredDrafts = new WeakSet<ComposerDraft>();
 function capturePreservedNew(): PreservedNew {
   return {
     draft: composerDrafts.read("new"),
@@ -161,12 +162,19 @@ export const composerDrafts = {
   },
   async restorePreserved(key: string) {
     const saved = values.get(key);
-    if (!key.startsWith("saved-new:") || !saved?.savedChoice) return false;
+    if (
+      !key.startsWith("saved-new:") ||
+      !saved?.savedChoice ||
+      savingRestoredDrafts.has(saved)
+    )
+      return false;
     // The restore belongs to the draft visible when the user requested it,
     // including while an earlier save still owns the storage writer.
     const ticket = await this.preserveNew(capturePreservedNew());
     assertPreservedNew(ticket);
+    if (values.get(key) !== saved) return false;
     const { savedChoice, ...content } = structuredClone(saved);
+    savingRestoredDrafts.add(saved);
     values.set("new", {
       ...content,
       attachments: content.attachments.map((a) => ({
@@ -189,7 +197,10 @@ export const composerDrafts = {
           changed();
         }
       })
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => {
+        savingRestoredDrafts.delete(saved);
+      });
     return true;
   },
   read(key: string): ComposerDraft {

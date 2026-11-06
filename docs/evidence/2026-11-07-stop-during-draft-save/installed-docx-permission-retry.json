@@ -1,0 +1,31 @@
+{
+  "kind": "InstalledDocxDraftReadPermissionFailureAndRetry",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c5",
+  "scope": "One owned synthetic document and draft in an already-open, completed Copilot test conversation.",
+  "fixture": {
+    "bytes": 1195,
+    "sha256": "0f6d5eae8a7d5d26e807eff7a9823a21bd93997a3f19e03295f753e3465399fd",
+    "originalAndRestoredMode": "0600",
+    "deniedMode": "0000",
+    "sourceIdentityAndBytesMatchedAfterRestoration": true
+  },
+  "observed": {
+    "sameUserOpenError": "EACCES",
+    "installedReadFailureVisible": true,
+    "confirmWasDisabledDuringFailure": true,
+    "previousTextWasVisibleDuringFailure": true,
+    "approvedTextUtf8Bytes": 338,
+    "approvedTextSha256": "048c431c490b19e78153e05f9fe51cfcd15c606c5438d0993e6b9b15c86febf3",
+    "savedDraftAndApprovedAttachmentUnchangedDuringFailure": true,
+    "samePathReadAndExplicitConfirmationSucceededAfterRestoringMode": true,
+    "sameAttachmentAndExactApprovedTextAfterRetry": true,
+    "syntheticDraftAndAttachmentRemoved": true,
+    "originalDraftAndOtherUnsentWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "protectedAndTargetProtocolTapsUnchanged": 4,
+    "newAgentRequests": 0
+  },
+  "boundary": "Installed file-level read permission and warm draft recovery. SQLite write failure, cold reopen, TCC, and Agent consumption require separate evidence."
+}

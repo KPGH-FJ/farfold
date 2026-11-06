@@ -127,7 +127,11 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-it.each([IMAGE_BYTES_STRINGS.tooLarge, IMAGE_INPUT_STRINGS.changed])(
+it.each([
+  IMAGE_BYTES_STRINGS.tooLarge,
+  IMAGE_INPUT_STRINGS.changed,
+  IMAGE_INPUT_STRINGS.sourceUnreadable,
+])(
   "keeps a native bitmap read failure as a recoverable image instead of sending a file link (%s)",
   async (failure) => {
     const settings = h.invoke.getMockImplementation()!;
@@ -154,7 +158,7 @@ it.each([IMAGE_BYTES_STRINGS.tooLarge, IMAGE_INPUT_STRINGS.changed])(
     await addPickedAttachments(key, [path], true, report);
     const hot = composerDrafts.read(key);
     const attachment = hot.attachments[0]!;
-    expect(report).toHaveBeenCalledExactlyOnceWith(failure, attachment.id);
+    expect.soft(report).toHaveBeenCalledExactlyOnceWith(failure, attachment.id);
     expect
       .soft(attachment)
       .toMatchObject({ kind: "image", uri, loading: false });

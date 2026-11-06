@@ -78,6 +78,8 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 官方 Kilo 7.8.1 的本地退出另用独立测试资料核对。一次本机合成授权后，新进程读到恰好一条 Kilo OAuth。执行一次官方指定服务的退出命令，隔离凭据文件清空，仍为权限 0600，另一个新进程读到零凭据。五次官方程序调用均正常退出，对应进程组回收。范围为合成凭据本地清理，真实换号、远端撤销、其他账号保留和正式应用界面仍待实测。[本地退出回执](kilo-local-synthetic-logout.json)
 
+向同一版本客户端使用的官方 HTTPS 发起入口发送一次无凭据请求，取得 HTTP 200 和 JSON 对象。本次夹具额外限制码长、字符、地址长度和整数有效期，首层合并校验未通过，后续验证地址及轮询未执行。回执只保留合并结果，无法判定具体字段，也无法确认有效挑战。官方客户端成功响应后解析 JSON，其公开类型没有夹具的长度和整数限制。没有保存原响应、浏览器登录或账号操作，未重试。[实网发起回执](kilo-live-device-start-bounded.json) · [官方发起实现](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/auth/device.ts#L4-L20) · [公开类型](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/types.ts#L8-L18)
+
 此轮先核发行来源。官方下载 ZIP 与当时 ACP 登记和 GitHub 发布摘要一致，GitHub 签发的软件物料清单证明通过，408 个归档文件逐一与登记目录相同。严格签名核验在正式程序和官方解压件上都失败，源于最后一个不完整页的哈希按补零后长度生成。两份原字节保持，未重新签名或替换。[历史登记](../2026-09-30-agent-access-mechanisms/kilo/static-receipt.json) · [官方发行](https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.1)
 
 首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)

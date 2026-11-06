@@ -199,3 +199,65 @@ it.each(["later input", "cancelled quit"] as const)(
     ).toEqual([retained.text, expected.text]);
   },
 );
+
+it("ignores a second restore of the same retained draft while its new value is being saved", async () => {
+  const restoreWriteStarted = deferred();
+  const releaseRestoreWrite = deferred();
+  const originalText = "previous unsent input";
+  let disk: unknown = {
+    version: 1,
+    composers: {
+      new: { text: originalText, attachments: [] },
+      [key]: retained,
+    },
+    choice: activeChoice,
+    feedback: {},
+    queues: {},
+  };
+  let held = false;
+  h.invoke.mockImplementation(
+    async (command: string, args: { key: string; value?: typeof disk }) => {
+      expect(args.key).toBe("unsentWork.v1");
+      if (command === "settings_get") return structuredClone(disk);
+      expect(command).toBe("settings_set");
+      const composers = (
+        args.value as { composers: Record<string, ComposerDraft> }
+      ).composers;
+      if (!held && composers.new?.text === retained.text) {
+        held = true;
+        restoreWriteStarted.resolve();
+        await releaseRestoreWrite.promise;
+      }
+      disk = structuredClone(args.value);
+    },
+  );
+
+  const d = await import("./drafts");
+  await d.draftPersistence.load();
+  expect(await d.composerDrafts.restorePreserved(key)).toBe(true);
+  await restoreWriteStarted.promise;
+  expect(d.composerDrafts.read("new").text).toBe(retained.text);
+  expect(d.composerDrafts.preserved().map(([savedKey]) => savedKey)).toContain(
+    key,
+  );
+
+  const repeated = d.composerDrafts.restorePreserved(key);
+  releaseRestoreWrite.resolve();
+  expect.soft(await repeated).toBe(false);
+  await d.draftPersistence.flush();
+  expect
+    .soft(d.composerDrafts.preserved().map(([, draft]) => draft.text))
+    .toEqual([originalText]);
+
+  vi.resetModules();
+  const cold = await import("./drafts");
+  await cold.draftPersistence.load();
+  expect(cold.composerDrafts.read("new")).toMatchObject({
+    text: retained.text,
+    attachments: retained.attachments,
+  });
+  expect(cold.newConversationChoice).toMatchObject(retained.savedChoice!);
+  expect(
+    cold.composerDrafts.preserved().map(([, draft]) => draft.text),
+  ).toEqual([originalText]);
+});
