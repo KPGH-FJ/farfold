@@ -120,6 +120,16 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
         get_ipc_response(&window, request(command, body))
             .map(|response| response.deserialize::<serde_json::Value>().unwrap())
     };
+    let dispatch_setting = |key: &str, value: &serde_json::Value| {
+        let (sent, reply) = mpsc::sync_channel(1);
+        window.as_ref().clone().on_message(
+            request("settings_set", json!({"key": key, "value": value})),
+            Box::new(move |_, _, response, _, _| {
+                sent.send(response).unwrap();
+            }),
+        );
+        reply
+    };
     let get = || invoke("settings_get", json!({"key": key}));
     let set = || invoke("settings_set", json!({"key": key, "value": new}));
     let blocked = || Err(json!("本机资料尚未就绪，请先完成资料恢复"));
@@ -152,13 +162,7 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
     let transaction = writer
         .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
         .unwrap();
-    let (sent, reply) = mpsc::sync_channel(1);
-    window.as_ref().clone().on_message(
-        request("settings_set", json!({"key": key, "value": new})),
-        Box::new(move |_, _, response, _, _| {
-            sent.send(response).unwrap();
-        }),
-    );
+    let reply = dispatch_setting(key, &new);
     let second_command = invoke("draft_ipc_dispatch_probe", json!({}));
     let pending = matches!(reply.try_recv(), Err(mpsc::TryRecvError::Empty));
     transaction.rollback().unwrap();
@@ -175,13 +179,7 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
     let transaction = writer
         .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
         .unwrap();
-    let (sent, reply) = mpsc::sync_channel(1);
-    window.as_ref().clone().on_message(
-        request("settings_set", json!({"key": "themeMode", "value": "dark"})),
-        Box::new(move |_, _, response, _, _| {
-            sent.send(response).unwrap();
-        }),
-    );
+    let reply = dispatch_setting("themeMode", &json!("dark"));
     let before_unlock = reply.try_recv();
     transaction.rollback().unwrap();
     if before_unlock.is_err() {
@@ -196,12 +194,58 @@ fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
         ),
         "unrelated setting left the dispatch thread before the save receipt"
     );
+
+    // Updates to other saved metadata can arrive during a draft save. None
+    // may delay the next quit/cancel dispatch.
+    let latest = snapshot("owned draft with a background write");
+    let unread_key = "conversationReadState.v1";
+    let unread = json!({"version": 1, "unread": ["owned-other-conversation"]});
+    let setup_key = "agentSetup.v1";
+    let setup = json!({"version": 1, "completed": ["owned-agent"], "pending": {}, "progress": {}, "selections": {}});
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    let draft_reply = dispatch_setting(key, &latest);
+    let unread_reply = dispatch_setting(unread_key, &unread);
+    let setup_reply = dispatch_setting(setup_key, &setup);
+    let quit_dispatch = invoke("draft_ipc_dispatch_probe", json!({}));
+    let draft_before_unlock = draft_reply.try_recv();
+    let unread_before_unlock = unread_reply.try_recv();
+    let setup_before_unlock = setup_reply.try_recv();
+    transaction.rollback().unwrap();
+    for (before_unlock, reply) in [
+        (&draft_before_unlock, draft_reply),
+        (&unread_before_unlock, unread_reply),
+        (&setup_before_unlock, setup_reply),
+    ] {
+        if matches!(before_unlock, Err(mpsc::TryRecvError::Empty)) {
+            assert!(matches!(
+                reply.recv_timeout(Duration::from_secs(5)).unwrap(),
+                InvokeResponse::Ok(_)
+            ));
+        }
+    }
+    assert_eq!(quit_dispatch, Ok(json!(true)));
+    assert!(
+        matches!(setup_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "Agent setup write returned before the next quit/cancel command while SQLite was locked: {setup_before_unlock:?}"
+    );
+    assert!(
+        matches!(unread_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "background unread write returned before the next quit/cancel command while SQLite was locked: {unread_before_unlock:?}"
+    );
+    assert!(
+        matches!(draft_before_unlock, Err(mpsc::TryRecvError::Empty)),
+        "draft write returned before the next quit/cancel command while SQLite was locked: {draft_before_unlock:?}"
+    );
     drop(writer);
     drop(window);
     drop(app);
 
     let cold = MetaStore::open(&path).unwrap();
-    assert_eq!(cold.get_setting(key).unwrap(), Some(new));
+    assert_eq!(cold.get_setting(key).unwrap(), Some(latest));
+    assert_eq!(cold.get_setting(unread_key).unwrap(), Some(unread));
+    assert_eq!(cold.get_setting(setup_key).unwrap(), Some(setup));
 }
 
 #[test]

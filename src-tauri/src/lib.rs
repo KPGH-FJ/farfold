@@ -111,9 +111,9 @@ fn dispatch_storage_command<R: tauri::Runtime>(
     }
     if invoke.message.command() == "settings_set"
         && matches!(invoke.message.payload(), tauri::ipc::InvokeBody::Json(payload)
-            if payload.get("key").and_then(serde_json::Value::as_str) == Some(auth::DRAFT_SETTING_KEY))
+            if payload.get("key").and_then(serde_json::Value::as_str).is_some_and(auth::settings_write_awaited_on_exit))
     {
-        return auth::dispatch_draft_settings(invoke);
+        return auth::dispatch_exit_settings(invoke);
     }
     dispatch(invoke)
 }

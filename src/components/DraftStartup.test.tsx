@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
   draftRevision: vi.fn<() => number>(),
   draftIsSaved: vi.fn<(expectedRevision: number) => boolean>(),
   setupFlush: vi.fn(),
+  setupHasPending: vi.fn<() => boolean>(),
   readFlush: vi.fn(),
   readHasPending: vi.fn<() => boolean>(),
   lock: vi.fn(),
@@ -85,7 +86,11 @@ vi.mock("../runtime/update_impact", () => ({
 }));
 vi.mock("./WorkspaceDialog", () => ({ WorkspaceDialog: () => null }));
 vi.mock("../runtime/setup_storage", () => ({
-  setupStorage: { load: async () => undefined, flush: h.setupFlush },
+  setupStorage: {
+    load: async () => undefined,
+    flush: h.setupFlush,
+    hasPending: h.setupHasPending,
+  },
   useSetupStorage: () => ({ ready: true, error: null }),
   SETUP_STORAGE_STRINGS: {},
 }));
@@ -144,6 +149,7 @@ beforeEach(async () => {
   h.draftRevision.mockReset().mockReturnValue(0);
   h.draftIsSaved.mockReset().mockReturnValue(true);
   h.setupFlush.mockReset().mockResolvedValue(undefined);
+  h.setupHasPending.mockReset().mockReturnValue(false);
   h.readFlush.mockReset().mockResolvedValue(undefined);
   h.readHasPending.mockReset().mockReturnValue(false);
   h.lock.mockReset();
@@ -872,4 +878,88 @@ it("waits for alternating unread and draft writes before acknowledging exit", as
   await vi.waitFor(() =>
     expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 42 }),
   );
+});
+
+it("waits for an Agent setup completion that starts while unread metadata is saving", async () => {
+  const { setupStorage: setup, SETUP_STORAGE_KEY } = await vi.importActual<
+    typeof import("../runtime/setup_storage")
+  >("../runtime/setup_storage");
+  const { conversationReadState: unread } = await vi.importActual<
+    typeof import("../runtime/conversation_read_state")
+  >("../runtime/conversation_read_state");
+  const unreadKey = "conversationReadState.v1";
+  const unreadReceipt = deferred();
+  const setupReceipt = deferred();
+  const saved = new Map<string, unknown>();
+  const acknowledgedSetup: unknown[] = [];
+  const selection = { service: null, config: { model: "selected-model" } };
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "settings_get") return saved.get(args.key) ?? null;
+    if (command === "settings_set") {
+      if (args.key === unreadKey) await unreadReceipt.promise;
+      else if (args.key === SETUP_STORAGE_KEY) await setupReceipt.promise;
+      else throw new Error(`Unexpected setting ${args.key}`);
+      saved.set(args.key, args.value);
+    }
+    if (command === "app_exit_after_save")
+      acknowledgedSetup.push(saved.get(SETUP_STORAGE_KEY));
+  });
+  h.setupFlush.mockImplementation(() => setup.flush());
+  h.setupHasPending.mockImplementation(() => setup.hasPending());
+  h.readFlush.mockImplementation(unread.flushPending);
+  h.readHasPending.mockImplementation(unread.hasPending);
+  await Promise.all([setup.load(), unread.load()]);
+  const exitCalls = () =>
+    h.invoke.mock.calls.filter(
+      ([command]) => command === "app_exit_after_save",
+    );
+  let completing: ReturnType<typeof setup.complete> | undefined;
+  try {
+    unread.receiveUpdate("owned-reply", {
+      sessionUpdate: "agent_message_chunk",
+      content: { type: "text", text: "Unread fixture" },
+    });
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith("settings_set", {
+        key: unreadKey,
+        value: { version: 1, unread: ["owned-reply"] },
+      }),
+    );
+    h.listeners.get("app:save-before-exit")!({ payload: 43 });
+    await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalledOnce());
+
+    completing = setup.complete("owned-agent", selection);
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith("settings_set", {
+        key: SETUP_STORAGE_KEY,
+        value: expect.objectContaining({
+          completed: ["owned-agent"],
+          selections: { "owned-agent": selection },
+        }),
+      }),
+    );
+    expect(setup.confirmedSelection("owned-agent")).toBeUndefined();
+    unreadReceipt.resolve();
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    expect.soft(saved.has(unreadKey)).toBe(true);
+    expect.soft(exitCalls()).toEqual([]);
+    expect.soft(setup.confirmedSelection("owned-agent")).toBeUndefined();
+
+    setupReceipt.resolve();
+    expect(await completing).toEqual(selection);
+    await vi.waitFor(() =>
+      expect(exitCalls()).toEqual([["app_exit_after_save", { token: 43 }]]),
+    );
+    expect(acknowledgedSetup).toEqual([
+      expect.objectContaining({
+        completed: ["owned-agent"],
+        selections: { "owned-agent": selection },
+      }),
+    ]);
+  } finally {
+    unreadReceipt.resolve();
+    setupReceipt.resolve();
+    await completing?.catch(() => undefined);
+    await unread.flushPending().catch(() => undefined);
+  }
 });

@@ -210,6 +210,7 @@ export function parseSetupSnapshot(value: unknown): Data {
 /** Farfold-owned choices only. A completed wizard is never an auth or model-test receipt. */
 export const setupStorage = {
   snapshot: () => state,
+  hasPending: () => savedRevision !== revision,
   subscribe(fn: () => void) {
     listeners.add(fn);
     return () => {

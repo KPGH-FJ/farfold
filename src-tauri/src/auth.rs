@@ -920,22 +920,27 @@ pub fn settings_set(
     store.set_setting(&key, &value)
 }
 
-pub(crate) const DRAFT_SETTING_KEY: &str = "unsentWork.v1";
+pub(crate) fn settings_write_awaited_on_exit(key: &str) -> bool {
+    matches!(
+        key,
+        "unsentWork.v1" | "conversationReadState.v1" | "agentSetup.v1"
+    )
+}
 
-// Only the draft write may return to the dispatcher before its receipt: the
-// renderer already waits for this receipt before allowing normal exit.
+// The renderer checks these settings for late writes before normal exit.
 #[tauri::command(rename = "settings_set")]
-async fn draft_settings_set(
+async fn exit_settings_set(
     store: tauri::State<'_, MetaStore>,
+    key: String,
     value: serde_json::Value,
 ) -> Result<(), String> {
     store
-        .run(move |store| store.set_setting(DRAFT_SETTING_KEY, &value))
+        .run(move |store| store.set_setting(&key, &value))
         .await
 }
 
-pub(crate) fn dispatch_draft_settings<R: tauri::Runtime>(invoke: tauri::ipc::Invoke<R>) -> bool {
-    let handler: fn(tauri::ipc::Invoke<R>) -> bool = tauri::generate_handler![draft_settings_set];
+pub(crate) fn dispatch_exit_settings<R: tauri::Runtime>(invoke: tauri::ipc::Invoke<R>) -> bool {
+    let handler: fn(tauri::ipc::Invoke<R>) -> bool = tauri::generate_handler![exit_settings_set];
     handler(invoke)
 }
 
