@@ -153,6 +153,9 @@ export const draftPersistence = {
       publish({ saving: true, error: null });
       try {
         while (savedRevision !== revision) {
+          // An attachment may have started while the previous write was in flight.
+          while (pendingAttachments.size)
+            await Promise.allSettled([...pendingAttachments]);
           const current = revision;
           // Capture now: callers can keep editing while IPC is in flight.
           const json = JSON.stringify(snapshot());

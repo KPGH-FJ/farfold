@@ -225,6 +225,91 @@ it("does not publish a new selected tab until explicit selection ACK", async () 
   await adding;
   expect(f.tabs.getSnapshot().selected).not.toBe(a.tab);
 });
+it("keeps an acknowledged tab selected when the switching snapshot arrives late", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const a = await f.open();
+  await f.tabs.add();
+  const b = await f.open("https://b.example");
+  await f.tabs.select(a.tab);
+
+  const switchingRead = deferred<BrowserWorkspaceTabsState>();
+  const began = deferred<BrowserWorkspaceTabsState>();
+  const finish = deferred<void>();
+  vi.mocked(f.client.select).mockImplementationOnce(
+    async ({ label, expectedSelected }) => {
+      expect(expectedSelected).toEqual(f.state.selection);
+      const revision = expectedSelected.revision + 1;
+      // The native begin event can expose the old label at the new revision.
+      f.state.selection = { label: a.result.label, revision };
+      ++f.state.pages.find(({ label }) => label === a.result.label)!.revision;
+      const switching = f.clone();
+      vi.mocked(f.client.tabs).mockReturnValueOnce(switchingRead.promise);
+      f.emit();
+      began.resolve(switching);
+      await finish.promise;
+      f.state.selection = { label, revision };
+      return f.clone();
+    },
+  );
+  vi.mocked(f.client.select).mockClear();
+  const selecting = f.tabs.select(b.tab);
+  const switching = await began.promise;
+  expect(f.tabs.getSnapshot()).toMatchObject({
+    selected: a.tab,
+    changing: true,
+  });
+  expect(f.tabs.canPresent(a.tab)).toBe(false);
+  finish.resolve();
+  await selecting;
+  expect(f.state.selection).toEqual({
+    label: b.result.label,
+    revision: switching.selection.revision,
+  });
+  expect(f.tabs.canPresent(b.tab)).toBe(true);
+  expect(f.tabs.canPresent(a.tab)).toBe(false);
+
+  // Deliver the earlier read after the select ACK, before the completion event.
+  switchingRead.resolve(switching);
+  await switchingRead.promise;
+  const afterLateRead = {
+    selected: f.tabs.getSnapshot().selected,
+    ready: f.tabs.canPresent(b.tab),
+    oldReady: f.tabs.canPresent(a.tab),
+    failed: f.tabs.getSnapshot().failed,
+  };
+  const scope = new BrowserWorkspaceScope(f.tabs.pageClient(b.tab), "task");
+  scope.adopt(b.result);
+  const show = await Promise.allSettled([scope.setVisible(true, bounds)]);
+
+  const bState = f.state.pages.find(({ label }) => label === b.result.label)!;
+  bState.url = "https://b.example/next";
+  ++bState.revision;
+  const completionRead = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.tabs).mockReturnValueOnce(completionRead.promise);
+  f.emit();
+  completionRead.resolve(f.clone());
+  await completionRead.promise;
+  expect(
+    f.tabs.getSnapshot().tabs.find(({ id }) => id === b.tab)?.page?.url,
+  ).toBe(bState.url);
+  expect(f.client.select).toHaveBeenCalledTimes(1);
+  expect(f.client.navigate).not.toHaveBeenCalled();
+  expect(f.client.close).not.toHaveBeenCalled();
+  expect(afterLateRead).toEqual({
+    selected: b.tab,
+    ready: true,
+    oldReady: false,
+    failed: false,
+  });
+  expect(show).toEqual([{ status: "fulfilled", value: undefined }]);
+  expect(f.client.setVisible).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task",
+    label: b.result.label,
+    visible: true,
+    bounds,
+  });
+});
 it("failed selection retains pages, stays blocked after refresh, and retries only explicitly", async () => {
   const f = fixture();
   await f.tabs.start();

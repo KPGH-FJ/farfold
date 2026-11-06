@@ -16,6 +16,7 @@ import {
 import {
   composerDrafts,
   draftPersistence,
+  parseDraftSnapshot,
   type DraftAttachment,
 } from "./drafts";
 import {
@@ -140,6 +141,76 @@ it("keeps owned input behind save across another draft and the quit interaction 
   expect(latestSaved(other).text).toBe("other retained draft");
   expect(imported.report).not.toHaveBeenCalled();
 });
+
+it.each(["finished", "withdrawn"] as const)(
+  "leaves the previous complete snapshot intact until newer clipboard input is %s",
+  async (action) => {
+    const input = selected();
+    const settings = h.invoke.getMockImplementation()!;
+    let startWrite!: () => void;
+    let finishWrite!: () => void;
+    const writing = new Promise<void>((resolve) => (startWrite = resolve));
+    const previousWrite = new Promise<void>(
+      (resolve) => (finishWrite = resolve),
+    );
+    h.invoke.mockImplementationOnce(async (name: string, args: unknown) => {
+      startWrite();
+      await previousWrite;
+      return settings(name, args);
+    });
+    composerDrafts.update(key, () => ({
+      text: "previous draft",
+      attachments: [],
+    }));
+    await writing;
+    const imported = begin([input.file]);
+    composerDrafts.update(key, (draft) => ({ ...draft, text: "newer draft" }));
+    const revision = draftPersistence.revision();
+    try {
+      expect(input.read).toHaveBeenCalledOnce();
+      expect(composerDrafts.read(key).attachments[0]).toMatchObject({
+        kind: "image",
+        loading: true,
+      });
+      finishWrite();
+      await turn();
+      expect.soft(latestSaved(key)).toMatchObject({
+        text: "previous draft",
+        attachments: [],
+      });
+      expect.soft(draftPersistence.isSaved(revision)).toBe(false);
+      expect(h.writes).toHaveLength(1);
+
+      if (action === "finished") {
+        await input.finish();
+        await imported.task;
+      } else {
+        composerDrafts.update(key, (draft) => ({ ...draft, attachments: [] }));
+      }
+      await draftPersistence.flush();
+      expect(h.writes).toHaveLength(2);
+      expect(draftPersistence.isSaved(draftPersistence.revision())).toBe(true);
+      const cold = parseDraftSnapshot(h.writes.at(-1))?.composers.find(
+        ([draftKey]) => draftKey === key,
+      )?.[1];
+      expect(cold?.text).toBe("newer draft");
+      if (action === "finished") {
+        expect(cold?.attachments).toMatchObject([
+          { kind: "image", data: PNG_IMAGE_TEST_DATA, recovered: true },
+        ]);
+      } else {
+        expect(cold?.attachments).toEqual([]);
+        await input.finish();
+        await imported.task;
+        expect(composerDrafts.read(key).attachments).toEqual([]);
+        expect(h.writes).toHaveLength(2);
+      }
+      expect(imported.report).not.toHaveBeenCalled();
+    } finally {
+      finishWrite();
+    }
+  },
+);
 
 it.each(["remove", "clear"] as const)(
   "saves replacement input after %s without waiting for the withdrawn File",

@@ -221,6 +221,7 @@ export function WorkbookFilePreview({
   }, [file, active, sheetId, retry, readingPosition, prepared]);
   const workbook = loaded?.file === file ? loaded.value : null;
   const selectedId = sheetId ?? workbook?.sheet?.id;
+  const sheetActionOwner = current.current;
   const canInteract = () =>
     props.current.active &&
     !props.current.interactionBlocked &&
@@ -244,7 +245,11 @@ export function WorkbookFilePreview({
               value={selectedId}
               disabled={!active || state === "loading"}
               onChange={(event) => {
-                if (!canInteract() || feedbackState.current.state !== "ready")
+                if (
+                  !canInteract() ||
+                  current.current !== sheetActionOwner ||
+                  feedbackState.current.state === "loading"
+                )
                   return;
                 retireSelection.current?.();
                 setSelection({ file, id: event.target.value });

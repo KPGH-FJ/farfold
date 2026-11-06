@@ -8,7 +8,11 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi, type Mock } from "vitest";
 import type { VerifiedFile } from "../runtime/file_delivery";
-import type { WorkbookCapture, WorkbookPreview } from "../runtime/xlsx_types";
+import {
+  XlsxError,
+  type WorkbookCapture,
+  type WorkbookPreview,
+} from "../runtime/xlsx_types";
 import type {
   OfficeTargetAvailability,
   OfficeTargetConfirmation,
@@ -385,6 +389,72 @@ it("an explicitly chosen hidden worksheet keeps its own r:id and name", async ()
     }),
   );
 });
+
+it.each(["fails", "is cancelled"] as const)(
+  "another sheet remains selectable when a sheet read %s",
+  async (outcome) => {
+    await ready();
+    const oldFeedback = button(select("A1"), confirmLabel);
+    let resolve!: (value: WorkbookPreview) => void;
+    let reject!: (error: Error) => void;
+    const pending = new Promise<WorkbookPreview>((done, fail) => {
+      resolve = done;
+      reject = fail;
+    });
+    h.parse.mockReturnValueOnce(pending);
+    const sheetControl = (shown: ReturnType<typeof view>) =>
+      shown.all.find((n) => n.type === "select")!;
+    const changeSheet = (shown: ReturnType<typeof view>, value: string) => {
+      const control = sheetControl(shown);
+      expect(control.props.disabled).toBe(false);
+      (control.props.onChange as (event: unknown) => void)({
+        target: { value },
+      });
+    };
+    changeSheet(view(), "rel_17");
+    view();
+    await drain();
+    const loading = view();
+    expect(sheetControl(loading).props.disabled).toBe(true);
+    expect(h.parse.mock.lastCall?.[1]).toBe("rel_17");
+    const signal = h.parse.mock.lastCall?.[2] as AbortSignal;
+    if (outcome === "fails") reject(new XlsxError("invalid"));
+    else {
+      click(button(loading, S.cancel));
+      expect(signal.aborted).toBe(true);
+    }
+    await drain();
+    const interrupted = view();
+    expect(interrupted.html).toContain(
+      outcome === "fails" ? S.failed : S.cancelled,
+    );
+    expect(interrupted.html).not.toContain('data-cell="A1"');
+    changeSheet(interrupted, "sheet-main");
+    await ready();
+    expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+      undefined,
+      "rel_17",
+      "sheet-main",
+    ]);
+    expect(h.capture).toHaveBeenCalledOnce();
+    expect(h.parse.mock.calls.every(([value]) => value === capture)).toBe(true);
+    if (outcome === "is cancelled") {
+      resolve(book("rel_17"));
+      await drain();
+    }
+    const recovered = view();
+    expect(recovered.html).toContain(S.snapshot);
+    expect(sheetControl(recovered).props.value).toBe("sheet-main");
+    click(oldFeedback);
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    click(button(select("A1"), confirmLabel));
+    expect(props.onOfficeTargetConfirm).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        anchor: expect.objectContaining({ sheetId: "sheet-main" }),
+      }),
+    );
+  },
+);
 
 it("a replayed grid registration creates a new source instead of reusing its retired source", async () => {
   await ready();

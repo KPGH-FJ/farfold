@@ -3,6 +3,7 @@ import {
   BrowserWorkspaceSelectionChangedError,
   type BrowserWorkspaceClient,
   type BrowserWorkspacePageClient,
+  type BrowserWorkspaceSelection,
   type BrowserWorkspaceState,
   type BrowserWorkspaceTabsState,
 } from "./browser_workspace";
@@ -36,6 +37,7 @@ export class BrowserTabs {
   private closers = new Map<string, () => Promise<void>>();
   private opening = new Map<string, Promise<BrowserWorkspaceState>>();
   private server: BrowserWorkspaceTabsState;
+  private confirmedSelection?: BrowserWorkspaceSelection;
   private snapshot: BrowserTabsSnapshot;
 
   constructor(
@@ -120,6 +122,14 @@ export class BrowserTabs {
     const sequence = ++this.refreshSequence;
     const state = await this.client.tabs({ taskKey: this.taskKey });
     if (this.retired || sequence !== this.refreshSequence) return;
+    const confirmed = this.confirmedSelection;
+    // A native switch publishes its new revision before committing the label.
+    if (
+      state.taskKey === this.taskKey &&
+      confirmed?.revision === state.selection.revision &&
+      confirmed.label !== state.selection.label
+    )
+      return;
     this.accept(state);
   }
   async start(): Promise<() => void> {
@@ -167,7 +177,10 @@ export class BrowserTabs {
       label,
       expectedSelected: { ...current.selection },
     });
+    if (result.selection.label !== label)
+      throw new BrowserWorkspaceRetiredError();
     this.accept(result);
+    this.confirmedSelection = result.selection;
   }
   private async change(id: string) {
     const tab = this.tab(id);

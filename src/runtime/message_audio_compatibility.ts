@@ -5,6 +5,7 @@ import {
 } from "./message_attachments";
 import { messageMediaBudget } from "./message_media_budget";
 import { MESSAGE_ATTACHMENTS as S } from "./message_attachment_strings";
+import { MessageRasterReader } from "./message_raster_reader";
 
 export interface CompatibleAudio {
   src: string;
@@ -14,6 +15,24 @@ export interface CompatibleAudio {
 function bytes(data: string): Uint8Array<ArrayBuffer> {
   const binary = atob(data);
   return Uint8Array.from(binary, (value) => value.charCodeAt(0));
+}
+
+function hasCompatibleAudioPrefix(data: string): boolean {
+  const reader = new MessageRasterReader(data);
+  // Match the native decoder's input check. The platform check and actual
+  // decoding still determine whether the admitted source can play.
+  return (
+    reader.matches(0, "fLaC") ||
+    (reader.length >= 7 &&
+      reader.u8(0) === 0xff &&
+      (reader.u8(1) & 0xf6) === 0xf0)
+  );
+}
+
+/** The caller supplies a data URL from successful attachment admission. */
+export function canOfferAudioCompatibility(source: string): boolean {
+  const comma = source.indexOf(",");
+  return comma >= 0 && hasCompatibleAudioPrefix(source.slice(comma + 1));
 }
 
 /** Check the complete returned WAVE, not just fields from an IPC response. */
@@ -95,7 +114,8 @@ export async function prepareCompatibleAudio(
     const mimeType = source.slice(5, comma - 7);
     if (
       attachmentMediaAdmission({ name: "", mimeType, data }).status !==
-      "available"
+        "available" ||
+      !hasCompatibleAudioPrefix(data)
     )
       throw Error(S.audioCompatibilityFailed);
     const hash = Array.from(

@@ -14,6 +14,7 @@ import remarkGfm from "remark-gfm";
 import { inlineFilePath, messageLink } from "../runtime/message-link";
 import type { Attachment } from "../runtime/session_types";
 import { useMessageMediaPreview } from "../runtime/use_message_media_budget";
+import { canOfferAudioCompatibility } from "../runtime/message_audio_compatibility";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
@@ -277,7 +278,8 @@ function MessageAttachment({
             </button>
             {failed &&
               admission?.status === "available" &&
-              admission.media.kind === "audio" && (
+              admission.media.kind === "audio" &&
+              canOfferAudioCompatibility(admission.media.src) && (
                 <MessageAudioCompatibility
                   key={admission.media.src}
                   source={admission.media.src}
