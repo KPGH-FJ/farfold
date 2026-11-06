@@ -56,6 +56,25 @@
       "sameToolWireCompletedAndNativeSuccess": true,
       "promptResult": "end_turn",
       "receiptSha256": "ce0e850802d3852abb3d9fc3f73bd8a0d0641a8b3908763a9735f20c6c0211a2"
+    },
+    "cancellation": {
+      "prompts": 1,
+      "singleUseApprovals": 2,
+      "cancels": 1,
+      "closeCalls": 0,
+      "advertisedSessionClose": true,
+      "knownChildProcessesGoneWithinMs": 24,
+      "copilotAliveAtProcessExit": true,
+      "toolShellHadSeparateProcessGroup": true,
+      "observationAfterCancelMs": 22002,
+      "promptResult": "cancelled",
+      "postCancelOnlyUpdate": "agent_message_chunk",
+      "postCancelOnlyUpdateCanonicalBytes": 223,
+      "matchingToolTerminalOnWire": false,
+      "matchingNativeToolComplete": false,
+      "operatorSignals": 0,
+      "ownedProcessExit": 0,
+      "receiptSha256": "4ae518ff3c25f7b4a290c3168b5d9ce8de5d3c9790d20a8b0fe2f430c6e68938"
     }
   },
   "currentSourceControlChecks": {
