@@ -98,6 +98,7 @@ import { projectFilesFixture } from "../runtime/project_files.test-support";
 import { PROJECT_FILES } from "../runtime/project_files";
 import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { draftImagePreview } from "../runtime/draft_images";
+import { IMAGE_BYTES_STRINGS } from "../runtime/image_bytes";
 import { composerDrafts } from "../runtime/drafts";
 import { filePathUri } from "../runtime/file_paths";
 import { threads } from "../runtime/sessions";
@@ -367,6 +368,57 @@ it.each([
     expect(props.onSend).not.toHaveBeenCalled();
   },
 );
+
+it("clears only the removed image's warning and keeps a valid replacement", async () => {
+  props.imageEnabled = true;
+  const originalText = composerDrafts.read("project-new-a").text;
+  vi.stubGlobal("Image", TestImageDecoder);
+  hooks.openDialog.mockResolvedValue(["/chosen.png", "/too-wide.png"]);
+  let replacement = false;
+  vi.mocked(invoke).mockImplementation(async (command, args) => {
+    expect(command).toBe("draft_attachment_image");
+    return {
+      mimeType: "image/png",
+      data: (args as { uri: string }).uri.endsWith("/too-wide.png")
+        ? tooWidePng()
+        : replacement
+          ? PNG_IMAGE_TEST_DATA
+          : "AAAA",
+    };
+  });
+  const attachments = () => composerDrafts.read("project-new-a").attachments;
+  const notes = () => render().map((node) => node.props.message);
+  const remove = (name: string) => {
+    const item = attachments().find((attachment) => attachment.name === name)!;
+    const component = render().find(
+      (node) => node.type === DocumentComposerAttachments,
+    )!;
+    (component.props.onRemove as (id: string) => void)(item.id);
+  };
+
+  openFilePicker();
+  await vi.waitFor(() =>
+    expect(notes()).toContain(IMAGE_BYTES_STRINGS.tooManyPixels),
+  );
+  remove("too-wide.png");
+  expect(notes()).toContain(IMAGE_BYTES_STRINGS.invalid);
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.tooManyPixels);
+  remove("chosen.png");
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.invalid);
+
+  replacement = true;
+  hooks.openDialog.mockResolvedValue(["/chosen.png"]);
+  openFilePicker();
+  await vi.waitFor(() =>
+    expect(draftImagePreview(attachments().at(-1)!)).toBe(
+      `data:image/png;base64,${PNG_IMAGE_TEST_DATA}`,
+    ),
+  );
+  expect(notes()).not.toContain(IMAGE_BYTES_STRINGS.invalid);
+  expect(composerDrafts.read("project-new-a").text).toBe(originalText);
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+});
 
 it("keeps cancellation and a late chooser response from replacing later draft input", async () => {
   const original = composerDrafts.read("project-new-a");

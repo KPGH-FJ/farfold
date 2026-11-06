@@ -15,7 +15,7 @@ import {
   validateDraftImage,
 } from "./draft_images";
 
-type Report = (message: string) => void;
+type Report = (message: string, failedImageId?: string) => void;
 
 /** Saving waits only for unfinished input that still belongs to this draft.
  * Withdrawing input does not cancel its underlying read. The actual task still
@@ -207,7 +207,7 @@ export async function addPickedAttachments(
             imageChecked: undefined,
           })
         )
-          report(imageInputError(error));
+          report(imageInputError(error), attachment.id);
       } finally {
         work.done(attachment);
       }
@@ -262,7 +262,7 @@ export function addClipboardImages(
             imageChecked: undefined,
           })
         )
-          report(imageInputError(error));
+          report(imageInputError(error), attachment.id);
       } finally {
         work.done(attachment);
       }

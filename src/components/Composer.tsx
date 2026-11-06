@@ -208,8 +208,15 @@ export function Composer({
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
   shortcutOwner.current = shortcutOpen ? storageKey : null;
-  const { sendError, setSendError, setSendFailure, documentSaved, audioSaved } =
-    useComposerSourceError(storageKey, errorContext);
+  const {
+    sendError,
+    setSendError,
+    setSendFailure,
+    documentSaved,
+    audioSaved,
+    imageImportMessage,
+    reportImport,
+  } = useComposerSourceError(storageKey, errorContext, chips);
   const [recoveringPending, setRecoveringPending] = useState(false);
   const [abandonPending, setAbandonPending] =
     useState<PendingConversation | null>(null);
@@ -317,12 +324,12 @@ export function Composer({
       !input.sendPending &&
       !draftSave.interactionLocked,
     add: (owner, paths) => {
-      void addPickedAttachments(owner, paths, imageEnabled, (message) => {
-        if (liveKey.current === owner) setSendError({ message });
-      }).catch(() => {
-        if (liveKey.current === owner)
-          setSendError({ message: STRINGS.repair.requestFailed });
-      });
+      void addPickedAttachments(owner, paths, imageEnabled, reportImport).catch(
+        () => {
+          if (liveKey.current === owner)
+            setSendError({ message: STRINGS.repair.requestFailed });
+        },
+      );
     },
   });
 
@@ -482,9 +489,7 @@ export function Composer({
       storageKey,
       [uriToSelectedPath(uri)!],
       imageEnabled,
-      (message) => {
-        if (liveKey.current === storageKey) setSendError({ message });
-      },
+      reportImport,
       { cwd, path: rel, embed: embedContext },
     );
     setText((prev) => prev.slice(0, mentionAt));
@@ -638,9 +643,7 @@ export function Composer({
     if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
     try {
-      await addPickedAttachments(storageKey, paths, imageEnabled, (message) => {
-        if (liveKey.current === storageKey) setSendError({ message });
-      });
+      await addPickedAttachments(storageKey, paths, imageEnabled, reportImport);
     } catch {
       if (liveKey.current === storageKey)
         setSendError({ message: STRINGS.repair.requestFailed });
@@ -658,9 +661,7 @@ export function Composer({
       return;
     }
     e.preventDefault();
-    void addClipboardImages(storageKey, files, (message) => {
-      if (liveKey.current === storageKey) setSendError({ message });
-    });
+    void addClipboardImages(storageKey, files, reportImport);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -740,6 +741,7 @@ export function Composer({
     [suppressThreadOpenError ? null : thread?.openError, true],
     [thread?.configError, false],
     [sendError?.message, false, sendError?.detail],
+    [imageImportMessage, false],
     [
       !queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
         ? STRINGS.repair.workOff

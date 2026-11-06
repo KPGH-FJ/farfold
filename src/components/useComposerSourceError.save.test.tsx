@@ -15,7 +15,7 @@ vi.mock("react", async (original) => ({
     return [
       state.value,
       (value: unknown) => {
-        state.value = value;
+        state.value = typeof value === "function" ? value(state.value) : value;
       },
     ];
   },
@@ -43,7 +43,7 @@ let key = "new",
   context = "same-choice";
 function render() {
   h.cursor = 0;
-  const value = hook(key, context);
+  const value = hook(key, context, d.composerDrafts.read(key).attachments);
   for (const effect of h.effects.splice(0)) effect();
   return value;
 }
@@ -139,6 +139,26 @@ it("retiring a save notice for a later ordinary notice prevents late clearing", 
   h.failing = false;
   await d.draftPersistence.flush();
   expect(render().sendError).toEqual({ message: "普通 Agent 错误" });
+});
+it("keeps image warnings independent of a send notice and rejects a late report in another draft", () => {
+  const chip = { id: "owned", kind: "image" as const, name: "owned.png" };
+  d.composerDrafts.update(key, (draft) => ({ ...draft, attachments: [chip] }));
+  const original = render();
+  original.setSendError({ message: "send notice" });
+  original.reportImport("unreadable image", chip.id);
+  expect(render()).toMatchObject({
+    sendError: { message: "send notice" },
+    imageImportMessage: "unreadable image",
+  });
+  key = "other";
+  d.composerDrafts.update(key, (draft) => ({ ...draft, attachments: [chip] }));
+  render();
+  render().setSendError({ message: "other send notice" });
+  original.reportImport("late image report", chip.id);
+  expect(render()).toMatchObject({
+    sendError: { message: "other send notice" },
+    imageImportMessage: undefined,
+  });
 });
 it.each([
   "replaced-attachment-list",

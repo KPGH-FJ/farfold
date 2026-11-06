@@ -156,7 +156,7 @@ it("withdrawal releases the draft save wait while actual unfinished candidates k
   expect(saved.composers.new.attachments).toEqual([]);
 
   await track(addClipboardImages("new", [c.file], report));
-  expect(report).toHaveBeenCalledWith(F.checkBusy);
+  expect(report).toHaveBeenCalledWith(F.checkBusy, expect.any(String));
   expect(c.read).not.toHaveBeenCalled();
   expect(encoding).not.toHaveBeenCalled();
   a.release();

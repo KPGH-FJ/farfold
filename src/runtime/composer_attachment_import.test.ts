@@ -106,7 +106,10 @@ it("retains invalid bounded image data and its selected source while reporting a
       },
     ],
   });
-  expect(report).toHaveBeenCalledExactlyOnceWith(IMAGE_BYTES_STRINGS.invalid);
+  expect(report).toHaveBeenCalledExactlyOnceWith(
+    IMAGE_BYTES_STRINGS.invalid,
+    composerDrafts.read(key).attachments[0]!.id,
+  );
 });
 
 it("discards a late read after its draft is cleared without adding it to later input or another conversation", async () => {
@@ -155,7 +158,10 @@ it("keeps refused clipboard contents as unsent data and never starts the browser
     ],
   });
   expect(image).not.toHaveBeenCalled();
-  expect(report).toHaveBeenCalledExactlyOnceWith(IMAGE_BYTES_STRINGS.invalid);
+  expect(report).toHaveBeenCalledExactlyOnceWith(
+    IMAGE_BYTES_STRINGS.invalid,
+    composerDrafts.read(key).attachments[0]!.id,
+  );
   expect(h.invoke).not.toHaveBeenCalled();
 });
 

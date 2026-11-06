@@ -206,11 +206,20 @@
             ]
           },
           {
-            "standards": ["S6", "S7"],
-            "environment": "隔离 Farfold 连接管理器源码 fc7eb6a68，官方 Copilot CLI 1.0.106",
-            "result": "首次审批未获批准的自测 A 明确停止并收到对应关闭回执。同一官方进程中 A 历史文件句柄由 1 降为 0，B 的保持 1 且 B 独立完成；A 的旧工具仍无终态。",
+            "standards": ["S7"],
+            "environment": "官方 Copilot CLI 1.0.106 协议直连，自有空目录",
+            "result": "正常结束的对照收到同一工具完成回执。另一次在确认自有 shell 与 sleep 运行后取消一次，两个子进程消失，Agent 进程仍在，原请求返回已取消；跨过原命令自然结束时点观察 22.002 秒，仍无同一工具终态。范围仅为该工具和这两条直连样本。",
             "evidencePaths": [
-              "docs/evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json"
+              "docs/evidence/2026-11-06-phase1-isolation/README.md"
+            ]
+          },
+          {
+            "standards": ["S4", "S6", "S7"],
+            "environment": "隔离 Farfold 连接管理器源码 fc7eb6a68，官方 Copilot CLI 1.0.106",
+            "result": "首次审批未获批准的自测 A 明确停止并收到对应关闭回执。同一官方进程中 A 历史文件句柄由 1 降为 0，B 的保持 1 且 B 独立完成。B 该次 Auto 请求的原生记录报告 mai-code-1.1-flash，未报告提供方；A 的旧工具仍无终态。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json",
+              "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json"
             ]
           }
         ],
@@ -249,11 +258,12 @@
             ]
           },
           {
-            "standards": ["S6", "S7"],
+            "standards": ["S4", "S6", "S7"],
             "environment": "macOS arm64 正式版 6ce829c5",
-            "result": "同目录两条自测对话中只停止等待审批的 A；B 未收到停止或审批，返回专用标识并完成。",
+            "result": "同目录两条自测对话中只停止等待审批的 A；B 未收到停止或审批，返回专用标识并完成。B 该次 OpenRouter 日志的出站模型为 nvidia/nemotron-3-ultra-550b-a55b:free，流式回复与专用标识核合；回复未提供上游模型或服务字段。",
             "evidencePaths": [
-              "docs/evidence/2026-11-06-phase1-isolation/README.md"
+              "docs/evidence/2026-11-06-phase1-isolation/README.md",
+              "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json"
             ]
           },
           {
@@ -294,10 +304,13 @@
       "stage1Supplement": {
         "verifiedSamples": [
           {
-            "standards": ["S3"],
+            "standards": ["S3", "S4"],
             "environment": "macOS arm64 正式版 dbe23bb6e",
-            "result": "从原桌面目录找到同一原会话并读回正文，沿用 Kilo Gateway 的 Nemotron 3 Ultra (free) 续接，准确返回首条历史标识。",
-            "evidencePaths": ["docs/evidence/2026-11-06-phase1-next/README.md"]
+            "result": "从原桌面目录找到同一原会话并读回正文，沿用 Kilo Gateway 续接，准确返回首条历史标识。该次续接的原生助手记录报告提供方 kilo、模型 nvidia/nemotron-3-ultra-550b-a55b:free，与已保存选择核合；网关上游路由未核。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/README.md",
+              "docs/evidence/2026-11-06-phase1-next/actual-models-readonly.json"
+            ]
           },
           {
             "standards": ["S3"],
@@ -320,9 +333,25 @@
             "environment": "macOS arm64 正式版 dbe23bb6e",
             "result": "同目录及同一免费模型的两条自测对话同时运行，取消只发给 A，A 明确停止，B 独立返回专用标识。",
             "evidencePaths": ["docs/evidence/2026-11-06-phase1-next/README.md"]
+          },
+          {
+            "standards": ["S6"],
+            "environment": "官方 Kilo 7.8.1 协议直连，独立会话库",
+            "result": "同一进程内两个无消息自测会话，仅关闭 A 一次并取得对应回执。B 在同一进程显式重新接入并读回原设置，两条历史均保留。零模型、工具和审批；A 专属资源释放及 B 原路由连续性未证。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json"
+            ]
+          },
+          {
+            "standards": ["S4"],
+            "environment": "官方 Kilo 7.8.1 协议直连，独立会话库",
+            "result": "新建无消息自测会话时，在 Kilo Gateway 官方菜单中核到所查的两个带免费标记候选。零模型设置调用、发送、工具或审批；未证实际切换、冷恢复或计费。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-model-options-isolated.json"
+            ]
           }
         ],
-        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
+        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。同会话切换实际生效及冷恢复、旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
       }
     },
     {
