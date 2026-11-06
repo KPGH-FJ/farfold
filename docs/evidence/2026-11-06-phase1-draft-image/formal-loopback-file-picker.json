@@ -1,0 +1,70 @@
+{
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "scenario": "Three actual macOS file chooser imports in the same completed owned Copilot conversation, with a separate anonymous read-only loopback fixture per run.",
+  "runs": [
+    {
+      "nameType": "png",
+      "pngSha256": "0b7d46713f293806de6712373ec4022e982854588c08f84dc237653c936b7174",
+      "pngBytes": 76,
+      "rawServerEventsSha256": "8fa5d6833740ec73fe1c69d4990fe37452fe4d99ff2a3b60bdc4a11b1a7aee86",
+      "completionClockSource": "final event append file mtime",
+      "holdDurationMs": 9003.847,
+      "completedBeforeOpenButton": true,
+      "bodyCompletionMsAfterOpenButton": -10388.02,
+      "openClickReturnedBeforeBodyCompletion": null,
+      "firstNamedAttachmentObservedMsAfterBodyCompletion": 11075.02,
+      "otherDraftObservedMsAfterBodyCompletion": 11540.02,
+      "sendDisabledAtFirstNamedAttachmentObservation": null,
+      "originalDraftAndRetainedDraftUnchangedAfterCleanup": true,
+      "oldAndOwnedConversationTapsUnchanged": true,
+      "fixturePresentOnlyOnOwnedDraftAndSavedBytesMatched": true,
+      "fixtureRemoved": true
+    },
+    {
+      "nameType": "png",
+      "pngSha256": "c4edbe9aa249e69b04eb90bc8d12e63689fda8b200dfcadc61c03217790e4ec7",
+      "pngBytes": 76,
+      "rawServerEventsSha256": "2e25c131a39f7f6629c1f20a89d2bf8c0b76a06ed999f3cec92a89b718681070",
+      "completionClockSource": "explicit server wall clock",
+      "holdDurationMs": 11005.751,
+      "completedBeforeOpenButton": false,
+      "bodyCompletionMsAfterOpenButton": 9772.419,
+      "openClickReturnedBeforeBodyCompletion": null,
+      "firstNamedAttachmentObservedMsAfterBodyCompletion": 1029.581,
+      "otherDraftObservedMsAfterBodyCompletion": 1725.581,
+      "sendDisabledAtFirstNamedAttachmentObservation": false,
+      "originalDraftAndRetainedDraftUnchangedAfterCleanup": true,
+      "oldAndOwnedConversationTapsUnchanged": true,
+      "fixturePresentOnlyOnOwnedDraftAndSavedBytesMatched": true,
+      "fixtureRemoved": true
+    },
+    {
+      "nameType": "generic",
+      "pngSha256": "52fbdb296d564cbf6f3f535e83d46080255df351df2eb0a159b82f21565d1d27",
+      "pngBytes": 76,
+      "rawServerEventsSha256": "215ec645ae3a67a26a90716e35993ecdfb1d15e4ca24636b15f3aeb85a630d56",
+      "completionClockSource": "explicit server wall clock",
+      "holdDurationMs": 10007.136,
+      "completedBeforeOpenButton": false,
+      "bodyCompletionMsAfterOpenButton": 8770.706,
+      "openClickReturnedBeforeBodyCompletion": true,
+      "firstNamedAttachmentObservedMsAfterBodyCompletion": 1055.294,
+      "otherDraftObservedMsAfterBodyCompletion": 1741.294,
+      "sendDisabledAtFirstNamedAttachmentObservation": false,
+      "originalDraftAndRetainedDraftUnchangedAfterCleanup": true,
+      "oldAndOwnedConversationTapsUnchanged": true,
+      "fixturePresentOnlyOnOwnedDraftAndSavedBytesMatched": true,
+      "fixtureRemoved": true
+    }
+  ],
+  "actualPendingSwitchObserved": false,
+  "selectiveCleanup": "All three temporary volumes unmounted and fixture processes exited. Only exact test attachment references were removed.",
+  "onlyOtherObservedChange": "Last viewed activity time of the owned test conversation. Queues, the other activity rows, and all protected drafts were unchanged.",
+  "limits": [
+    "The mounted filesystem requested each fixture before the open button was activated. The server finished sending the response body before the first observed attachment and before each observed switch.",
+    "An early UI click return alone does not establish a pending attachment, the image-read caller, or the time the user-facing view actually switched.",
+    "The third test confirms recognition of PNG bytes with a generic filename and content type.",
+    "No model send, cold start, database fault or permission change was performed."
+  ]
+}
