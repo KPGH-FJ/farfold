@@ -1021,7 +1021,11 @@ export function Composer({
                   }
                   onClick={() => {
                     try {
-                      const original = threads.beginQueueEdit(thread.key, i);
+                      const original = threads.beginQueueEdit(
+                        thread.key,
+                        i,
+                        blocksOfOne,
+                      );
                       startQueueEditor(thread.key, i, original);
                       setQueueEditOpen(true);
                     } catch (reason) {
@@ -1042,7 +1046,7 @@ export function Composer({
                     (thread.submitting && i === 0)
                   }
                   className="q-x"
-                  onClick={() => threads.dequeue(thread.key, i)}
+                  onClick={() => threads.dequeue(thread.key, i, blocksOfOne)}
                 >
                   ×
                 </button>

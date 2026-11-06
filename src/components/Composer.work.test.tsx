@@ -27,9 +27,15 @@ import { Composer } from "./Composer";
 import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { WorkspaceAccessControl } from "./WorkspaceAccessControl";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
+import { removeQueued } from "../runtime/queue";
 import { freshThreadState, threads } from "../runtime/sessions";
-import { queueEditorKey, startQueueEditor } from "../runtime/queue_edit";
+import {
+  queueEditorKey,
+  queueEditorTarget,
+  startQueueEditor,
+} from "../runtime/queue_edit";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -164,6 +170,73 @@ it("offers recovery for an unknown first-message target without ordinary edit co
   expect(html).not.toContain("已检查，继续编辑");
   expect(html).toMatch(/aria-label="发送" disabled/);
 });
+
+it.each([
+  ["edit", "first item accepted"],
+  ["remove", "first item accepted"],
+  ["edit", "first editor opened"],
+  ["remove", "first editor opened"],
+] as const)(
+  "does not %s the next queued message through a stale Composer row (%s)",
+  (action, race) => {
+    const id = `stale-queue-row-${action}-${race}`;
+    const thread = threads.markOpenFailed(
+      `a:/p:${id}`,
+      "a",
+      "/p",
+      id,
+      "fixture",
+    );
+    thread.openError = null;
+    thread.queuePaused = "stopped";
+    thread.queued = [
+      [{ type: "text", text: "duplicate input" }],
+      [{ type: "text", text: "duplicate input" }],
+    ];
+    const [first, next] = thread.queued;
+    const editorKey = queueEditorKey(thread.key);
+    const send = vi.spyOn(threads, "send");
+    const elements = captureComposer({
+      thread,
+      imageEnabled: false,
+      onGoSettings() {},
+    });
+    const buttons = elements.filter(
+      (node) =>
+        node.type === "button" &&
+        (action === "edit"
+          ? node.props.children === C.editQueued
+          : node.props["aria-label"] === W.removeQueued),
+    );
+    expect(buttons).toHaveLength(2);
+    expect(next).not.toBe(first);
+
+    const accepted = race === "first item accepted";
+    const staleButton = buttons[accepted ? 0 : 1];
+    expect(staleButton.props.disabled).toBe(false);
+    if (accepted) {
+      // The prompt admission path retires its exact input before the next paint.
+      removeQueued(thread, first);
+    } else {
+      const editFirst = elements.find(
+        (node) =>
+          node.type === "button" && node.props.children === C.editQueued,
+      )!;
+      (editFirst.props.onClick as () => void)();
+    }
+    const expectedDraft = composerDrafts.read(editorKey);
+    (staleButton.props.onClick as () => void)();
+
+    expect(send).not.toHaveBeenCalled();
+    expect(thread.queued).toHaveLength(accepted ? 1 : 2);
+    expect(thread.queued[accepted ? 0 : 1]).toBe(next);
+    expect(composerDrafts.read(editorKey)).toBe(expectedDraft);
+    if (!accepted) {
+      expect(thread.queued[0]).toBe(first);
+      expect(queueEditorTarget(expectedDraft, thread.queued)).toBe(first);
+    }
+  },
+);
 
 it("does not save an old queue edit into the target chosen after it was cancelled during persistence", async () => {
   const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { Children, isValidElement, type ReactNode } from "react";
 import { emitOpeningHeader } from "./session_open_test_fixture";
 import type { PromptBlock } from "./session_types";
 
@@ -16,6 +17,10 @@ type PromptWire = {
 };
 const h = vi.hoisted(() => ({
   invoke: vi.fn(),
+  exitListeners: new Map<string, (event: { payload: number }) => void>(),
+  exitHooks: [] as unknown[],
+  exitEffects: [] as (() => void | (() => void))[],
+  exitCursor: 0,
   settings: new Map<string, unknown>(),
   opens: [] as {
     args: OpenWire;
@@ -30,6 +35,32 @@ vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {
     onmessage = (_value: unknown) => {};
   },
+}));
+vi.mock("@tauri-apps/api/event", async (original) => ({
+  ...(await original<typeof import("@tauri-apps/api/event")>()),
+  listen: async (
+    name: string,
+    callback: (event: { payload: number }) => void,
+  ) => {
+    h.exitListeners.set(name, callback);
+    return () => h.exitListeners.delete(name);
+  },
+}));
+vi.mock("react", async (original) => ({
+  ...(await original<typeof import("react")>()),
+  useState(initial: unknown) {
+    const i = h.exitCursor++;
+    if (i === h.exitHooks.length) h.exitHooks.push(initial);
+    return [h.exitHooks[i], (next: unknown) => (h.exitHooks[i] = next)];
+  },
+  useRef(current: unknown) {
+    const i = h.exitCursor++;
+    return (h.exitHooks[i] ??= { current });
+  },
+  useEffect(effect: () => void | (() => void)) {
+    h.exitEffects.push(effect);
+  },
+  useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
 }));
 
 const input = {
@@ -53,6 +84,9 @@ beforeEach(() => {
   h.opens = [];
   h.prompts = [];
   h.admission = "accepted";
+  h.exitListeners.clear();
+  h.exitHooks = [];
+  h.exitEffects = [];
   runtimes.length = 0;
   h.invoke.mockReset().mockImplementation(async (command: string, args) => {
     if (command === "settings_get")
@@ -133,6 +167,10 @@ function ending(value: Record<string, unknown>): void {
 async function coldLoad(previous: Runtime, sessionId = nativeId) {
   previous.threads.pauseQueuesForExit();
   await previous.drafts.draftPersistence.flush();
+  return reloadPersisted(previous, sessionId);
+}
+
+async function reloadPersisted(previous: Runtime, sessionId = nativeId) {
   expect(h.settings.has("unsentWork.v1")).toBe(true);
   // Only the serialized settings value crosses this boundary. In particular,
   // no old ThreadState, channel, prompt owner or native lease is transferred.
@@ -163,6 +201,20 @@ async function coldLoad(previous: Runtime, sessionId = nativeId) {
     ),
   ).toBe(false);
   return { ...runtime, state };
+}
+
+function buttonByText(
+  node: ReactNode,
+  label: string,
+): (() => void) | undefined {
+  for (const child of Children.toArray(node)) {
+    if (!isValidElement<{ children?: ReactNode; onClick?: () => void }>(child))
+      continue;
+    if (child.type === "button" && child.props.children === label)
+      return child.props.onClick;
+    const nested = buttonByText(child.props.children, label);
+    if (nested) return nested;
+  }
 }
 
 function expectNoColdDispatch(promptCount: number): void {
@@ -201,6 +253,147 @@ it("preserves an accepted empty-queue unknown outcome across a complete cold reb
   // User-visible outcome memory, not a requirement to keep a dead process busy
   // or to implement a particular persisted field/second execution ledger.
   expect(cold.threads.needsAttention(cold.state)).toBe(true);
+});
+
+it("preserves an admitted, unfinished owned tool through confirmed exit when cold replay omits it", async () => {
+  const original = await loadRuntime();
+  const a = await original.threads.open(input);
+  const otherId = "independent-quit-conversation";
+  const b = await original.threads.open({ ...input, nativeSessionId: otherId });
+  const aKey = `session:${a.key}`;
+  const bKey = `session:${b.key}`;
+  const aDraft = { text: "Unsent A input", attachments: [] };
+  const bDraft = { text: "Unsent B input", attachments: [] };
+  original.drafts.composerDrafts.update(aKey, () => aDraft);
+  original.drafts.composerDrafts.update(bKey, () => bDraft);
+  expect(
+    await original.threads.send(b.key, blocks("Finished B request")),
+  ).toEqual({ status: "accepted" });
+  expect(original.drafts.draftQueues.read(b.key)?.outcomeUnknown).toBe(true);
+  const bWire = h.opens.find((open) => open.connectionId === b.connectionId)!
+    .args.channel;
+  const bTool = "owned-b-tool";
+  bWire.onmessage({
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId: bTool,
+      title: "B tool",
+      status: "in_progress",
+    },
+  });
+  bWire.onmessage({ kind: "toolActivity", toolCallIds: [bTool] });
+  ending({ stopReason: "end_turn" });
+  expect(b.running).toBe(false);
+  expect(original.drafts.draftQueues.read(b.key)?.outcomeUnknown).toBe(true);
+  bWire.onmessage({
+    update: {
+      sessionUpdate: "tool_call_update",
+      toolCallId: bTool,
+      status: "completed",
+    },
+  });
+  bWire.onmessage({ kind: "toolActivity", toolCallIds: [] });
+  expect(original.drafts.draftQueues.read(b.key)).toBeNull();
+  expect(
+    await original.threads.send(a.key, blocks("Admitted A request")),
+  ).toEqual({ status: "accepted" });
+  const toolCallId = "owned-live-tool-at-quit";
+  const wire = h.opens.find((open) => open.connectionId === a.connectionId)!
+    .args.channel;
+  wire.onmessage({
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId,
+      title: "Unfinished A tool",
+      status: "in_progress",
+    },
+  });
+  wire.onmessage({ kind: "toolActivity", toolCallIds: [toolCallId] });
+  expect(a).toMatchObject({
+    running: true,
+    submitting: false,
+    activeToolCallIds: [toolCallId],
+    queued: [],
+    uncertainPrompt: null,
+    connectionOutcomeUnknown: false,
+  });
+  expect(a.items.some((item) => item.kind === "settled")).toBe(false);
+
+  const { DraftStartup } = await import("../components/DraftStartup");
+  const { EXIT_IMPACT } = await import("./exit_impact");
+  const render = () => {
+    h.exitCursor = 0;
+    return DraftStartup({ children: null });
+  };
+  const baseInvoke = h.invoke.getMockImplementation()!;
+  let savedAtExit: typeof h.settings | undefined;
+  h.invoke.mockImplementation((command, args) => {
+    if (command === "app_exit_after_save")
+      savedAtExit = structuredClone(h.settings);
+    return baseInvoke(command, args);
+  });
+  render();
+  const cleanup = h.exitEffects.splice(0).map((effect) => effect());
+  try {
+    await vi.waitFor(() =>
+      expect(h.exitListeners.has("app:exit-deferred")).toBe(true),
+    );
+    h.exitListeners.get("app:save-before-exit")!({ payload: 61 });
+    const stay = buttonByText(render(), EXIT_IMPACT.stay);
+    expect(stay).toBeDefined();
+    expect(savedAtExit).toBeUndefined();
+    stay!();
+    await vi.waitFor(() =>
+      expect(
+        original.drafts.draftPersistence.snapshot().interactionLocked,
+      ).toBe(false),
+    );
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_cancel", { token: 61 });
+    expect(a.running).toBe(true);
+    expect(a.connectionOutcomeUnknown).toBe(false);
+    expect(a.historicalOutcomeUnknown).toBe(false);
+    expectNoColdDispatch(2);
+
+    h.exitListeners.get("app:save-before-exit")!({ payload: 62 });
+    const confirm = buttonByText(render(), EXIT_IMPACT.exit);
+    expect(confirm).toBeDefined();
+    expect(savedAtExit).toBeUndefined();
+    expect(a.connectionOutcomeUnknown).toBe(false);
+    expect(a.historicalOutcomeUnknown).toBe(false);
+    expect(original.drafts.draftQueues.read(b.key)?.outcomeUnknown).not.toBe(
+      true,
+    );
+    confirm!();
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith(
+        "app_exit_after_save",
+        expect.objectContaining({ token: 62, confirmActivity: true }),
+      ),
+    );
+    const unsent = savedAtExit?.get("unsentWork.v1");
+    expect.soft(unsent).toMatchObject({
+      composers: { [aKey]: aDraft, [bKey]: bDraft },
+      queues: {
+        [a.key]: { blocks: [], uncertainIndex: null, outcomeUnknown: true },
+      },
+    });
+    expect.soft(unsent).not.toHaveProperty(["queues", b.key]);
+
+    h.settings = savedAtExit!;
+    const cold = await reloadPersisted(original);
+    expect(cold.state.items.some((item) => item.kind === "tool")).toBe(false);
+    expect(cold.state.queued).toEqual([]);
+    expect(cold.state.uncertainPrompt).toBeNull();
+    const coldB = await cold.threads.open({
+      ...input,
+      nativeSessionId: otherId,
+    });
+    expect(coldB.historicalOutcomeUnknown).toBe(false);
+    expectNoColdDispatch(2);
+    expect(cold.state.historicalOutcomeUnknown).toBe(true);
+  } finally {
+    for (const dispose of cleanup) dispose?.();
+  }
 });
 
 it.each([

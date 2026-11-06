@@ -262,6 +262,24 @@ class ThreadsStore {
 
   getSnapshot = (): ThreadsSnapshot => this.snapshot;
 
+  // The running state stays live. A cold start cannot infer a result for
+  // owned work interrupted before its exact terminal receipt was observed.
+  private hasUnfinishedOwnedWork(state: ThreadState): boolean {
+    if (!state.connectionId || state.connectionLost) return false;
+    if (
+      !state.historyUnavailable &&
+      state.running &&
+      this.promptOwners.get(state)?.isOffered()
+    )
+      return true;
+    return (
+      state.activeToolCallIds.length > 0 &&
+      (!state.historyUnavailable ||
+        state.historyUnavailable.toolActivityConnectionId ===
+          state.connectionId)
+    );
+  }
+
   private emit(key?: string, preserveQueues = false): void {
     checkDesktopNotifications();
     for (const state of preserveQueues
@@ -280,6 +298,7 @@ class ThreadsStore {
           state.historicalOutcomeUnknown ||
           state.connectionOutcomeUnknown ||
           state.stopUnconfirmed ||
+          this.hasUnfinishedOwnedWork(state) ||
           unfinishedStoppedToolCallIds(state).size > 0,
         ),
       );
@@ -899,12 +918,19 @@ class ThreadsStore {
     this.emit();
   }
 
-  beginQueueEdit(key: string, index: number): PromptBlock[] {
+  beginQueueEdit(
+    key: string,
+    index: number,
+    shown?: PromptBlock[],
+  ): PromptBlock[] {
     const s = this.thread(key);
     const blocks = s?.queued[index];
     if (
       !s ||
       !blocks ||
+      (shown &&
+        (blocks !== shown ||
+          composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
       (s.submitting && index === 0) ||
       blocks === s.uncertainPrompt
     )
@@ -934,12 +960,17 @@ class ThreadsStore {
     this.emit(key);
   }
 
-  dequeue(key: string, index: number): void {
+  dequeue(key: string, index: number, shown?: PromptBlock[]): void {
     const s = this.thread(key);
+    const blocks = s?.queued[index];
     if (
       !s ||
+      !blocks ||
+      (shown &&
+        (blocks !== shown ||
+          composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
       (s.submitting && index === 0) ||
-      s.queued[index] === s.uncertainPrompt
+      blocks === s.uncertainPrompt
     )
       return;
     s.queued.splice(index, 1);

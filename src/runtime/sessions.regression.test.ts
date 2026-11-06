@@ -987,6 +987,17 @@ it("does not dispatch queued input until its pending snapshot is saved", async (
   expect(draftQueues.read(state.key)).toMatchObject({ uncertainIndex: 0 });
   saved();
   expect(await sending).toEqual({ status: "accepted" });
+  expect(state.connectionOutcomeUnknown).toBe(false);
+  expect(draftQueues.read(state.key)).toEqual({
+    blocks: [],
+    uncertainIndex: null,
+    outcomeUnknown: true,
+  });
+  event(state.key, {
+    kind: "turnEnd",
+    promptReceiptId: 1,
+    stopReason: "end_turn",
+  });
   expect(draftQueues.read(state.key)).toBeNull();
 });
 
