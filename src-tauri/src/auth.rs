@@ -902,14 +902,21 @@ pub async fn agent_logout(
 
 /// Read one settings value (`None` when unset).
 #[tauri::command]
-pub fn settings_get(app: AppHandle, key: String) -> Result<Option<serde_json::Value>, String> {
-    app.state::<MetaStore>().get_setting(&key)
+pub fn settings_get(
+    store: tauri::State<'_, MetaStore>,
+    key: String,
+) -> Result<Option<serde_json::Value>, String> {
+    store.get_setting(&key)
 }
 
 /// Write one settings value.
 #[tauri::command]
-pub fn settings_set(app: AppHandle, key: String, value: serde_json::Value) -> Result<(), String> {
-    app.state::<MetaStore>().set_setting(&key, &value)
+pub fn settings_set(
+    store: tauri::State<'_, MetaStore>,
+    key: String,
+    value: serde_json::Value,
+) -> Result<(), String> {
+    store.set_setting(&key, &value)
 }
 
 // ---------------------------------------------------------------------------

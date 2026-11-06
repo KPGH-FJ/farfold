@@ -96,6 +96,22 @@ fn should_stop_agents(event: &tauri::RunEvent) -> bool {
     matches!(event, tauri::RunEvent::Exit)
 }
 
+fn dispatch_storage_command<R: tauri::Runtime>(
+    invoke: tauri::ipc::Invoke<R>,
+    dispatch: impl FnOnce(tauri::ipc::Invoke<R>) -> bool,
+) -> bool {
+    let storage = invoke
+        .message
+        .webview_ref()
+        .app_handle()
+        .try_state::<storage_recovery::StorageRecoveryState>();
+    if !storage.is_some_and(|state| state.allows(invoke.message.command())) {
+        invoke.resolver.reject("本机资料尚未就绪，请先完成资料恢复");
+        return true;
+    }
+    dispatch(invoke)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     performance_trace::start();
@@ -179,15 +195,6 @@ pub fn run() {
         .invoke_handler(|invoke| {
             if !browser_workspace::caller_allowed(invoke.message.webview_ref()) {
                 invoke.resolver.reject("此页面不能操作应用");
-                return true;
-            }
-            let storage = invoke
-                .message
-                .webview_ref()
-                .app_handle()
-                .try_state::<storage_recovery::StorageRecoveryState>();
-            if !storage.is_some_and(|state| state.allows(invoke.message.command())) {
-                invoke.resolver.reject("本机资料尚未就绪，请先完成资料恢复");
                 return true;
             }
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
@@ -428,7 +435,7 @@ pub fn run() {
                 performance_trace::host_performance_origin,
                 performance_trace::host_performance_sample,
             ];
-            handler(invoke)
+            dispatch_storage_command(invoke, handler)
         })
         .build(context)
         .expect("failed to build Farfold")

@@ -38,12 +38,113 @@ fn recovery_gate_rejects_every_existing_non_recovery_command() {
     assert!(checked > 100);
     assert!(!command_allowed(false, "storage_recovery_reset"));
     assert!(!command_allowed(false, "app_drafts_ready"));
-    assert!(
-        source
-            .find("state.allows(invoke.message.command())")
-            .unwrap()
-            < source.find("tauri::generate_handler![").unwrap()
+    let handler = source
+        .split(".invoke_handler(|invoke|")
+        .nth(1)
+        .unwrap()
+        .split(".build(context)")
+        .next()
+        .unwrap();
+    let caller_check = handler.find("browser_workspace::caller_allowed").unwrap();
+    let storage_dispatch = handler
+        .find("dispatch_storage_command(invoke, handler)")
+        .unwrap();
+    assert!(caller_check < storage_dispatch);
+}
+
+#[test]
+fn draft_settings_ipc_preserves_the_saved_value_during_a_sqlite_write_lock() {
+    use tauri::ipc::{CallbackFn, InvokeBody};
+    use tauri::test::{INVOKE_KEY, get_ipc_response, mock_builder, mock_context, noop_assets};
+    use tauri::webview::InvokeRequest;
+
+    let dir = tempfile::tempdir().unwrap();
+    let path = MetaStore::default_path(dir.path());
+    let key = "unsentWork.v1";
+    let snapshot = |text| {
+        json!({
+            "version": 1,
+            "composers": {"new": {"text": text, "attachments": []}},
+            "choice": null,
+            "feedback": {},
+            "queues": {}
+        })
+    };
+    let old = snapshot("owned saved draft");
+    let new = snapshot("owned newer draft");
+    MetaStore::open(&path)
+        .unwrap()
+        .set_setting(key, &old)
+        .unwrap();
+
+    let app = mock_builder()
+        .manage(StorageRecoveryState::new(path.clone()))
+        .invoke_handler(|invoke| {
+            crate::dispatch_storage_command(
+                invoke,
+                tauri::generate_handler![crate::auth::settings_get, crate::auth::settings_set],
+            )
+        })
+        .build(mock_context(noop_assets()))
+        .unwrap();
+    let window = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+        .build()
+        .unwrap();
+    let invoke = |command: &str, body| {
+        get_ipc_response(
+            &window,
+            InvokeRequest {
+                cmd: command.into(),
+                callback: CallbackFn(0),
+                error: CallbackFn(1),
+                url: if cfg!(windows) {
+                    "http://tauri.localhost"
+                } else {
+                    "tauri://localhost"
+                }
+                .parse()
+                .unwrap(),
+                body: InvokeBody::Json(body),
+                headers: Default::default(),
+                invoke_key: INVOKE_KEY.into(),
+            },
+        )
+        .map(|response| response.deserialize::<serde_json::Value>().unwrap())
+    };
+    let get = || invoke("settings_get", json!({"key": key}));
+    let set = || invoke("settings_set", json!({"key": key, "value": new}));
+    let blocked = || Err(json!("本机资料尚未就绪，请先完成资料恢复"));
+
+    assert_eq!(get(), blocked());
+    assert_eq!(set(), blocked());
+    let storage = app.state::<StorageRecoveryState>();
+    storage.0.lock().unwrap().initialize(|store| {
+        assert!(app.manage(store));
+        Ok(())
+    });
+    assert_eq!(get(), Ok(old.clone()));
+    assert_eq!(set(), blocked());
+    storage.mark_editable().unwrap();
+
+    let mut writer = rusqlite::Connection::open(&path).unwrap();
+    let transaction = writer
+        .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+        .unwrap();
+    assert_eq!(
+        set(),
+        Err(json!("FARFOLD_STORAGE:busy:无法读取或保存本机资料"))
     );
+    assert_eq!(get(), Ok(old.clone()));
+    transaction.rollback().unwrap();
+    assert_eq!(get(), Ok(old));
+    assert_eq!(set(), Ok(serde_json::Value::Null));
+    assert_eq!(get(), Ok(new.clone()));
+    drop(writer);
+    drop(window);
+    drop(app);
+
+    let cold = MetaStore::open(&path).unwrap();
+    assert_eq!(cold.get_setting(key).unwrap(), Some(new));
 }
 
 #[test]
