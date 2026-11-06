@@ -7,7 +7,8 @@ import { OwnedSessionChannel, SessionChannels } from "./session_channels";
 import { openDeliveryConsumer } from "./session_open_delivery";
 import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
-import { PromptRequestOwner } from "./prompt_admission";
+import { persistedQueue, retirePromptSubmission } from "./prompt_admission";
+import type { PromptRequestOwner } from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
 import { refreshIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
@@ -298,12 +299,11 @@ class ThreadsStore {
         ? [this.thread(key)]
         : this.threads.values()) {
       if (!state) continue;
-      const uncertain =
-        state.uncertainPrompt ?? (state.submitting ? state.queued[0] : null);
+      const { blocks, uncertainIndex } = persistedQueue(state);
       draftQueues.write(
         state.key,
-        state.queued,
-        uncertain ? state.queued.indexOf(uncertain) : null,
+        blocks,
+        uncertainIndex,
         Boolean(
           state.historicalOutcomeUnknown ||
           state.connectionOutcomeUnknown ||
@@ -577,7 +577,10 @@ class ThreadsStore {
       if (retryState && this.thread(retryState.key) !== retryState)
         throw new Error(STRINGS.repair.reconnectFailed);
       routePrepared = true;
-      if (retryState) this.channels.delete(retryState.key);
+      if (retryState) {
+        retirePromptSubmission(retryState);
+        this.channels.delete(retryState.key);
+      }
       const openToken = replay.token;
       let boundKey: string | null = null;
       const processEndedChannel = new ProcessEndedChannel(

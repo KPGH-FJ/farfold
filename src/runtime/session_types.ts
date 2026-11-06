@@ -269,6 +269,13 @@ export interface ThreadState extends ReportedDetailsOwner {
   identity: "draft" | "established";
   reconnecting: boolean;
   submitting: boolean;
+  /** Exact local queue entry until the send invocation settles. */
+  promptSubmission?: {
+    blocks: PromptBlock[];
+    connectionId?: string;
+    dispatched: boolean;
+    deliveryConfirmed: boolean;
+  };
   promptAdmission?: import("./prompt_admission").PromptAdmissionView | null;
   configuring: boolean;
   configError: string | null;

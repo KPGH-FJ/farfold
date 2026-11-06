@@ -142,9 +142,11 @@ export function applySessionEvent(
           "refusal",
           "cancelled",
         ].includes(String(e.stopReason))
-      )
+      ) {
+        // A known terminal reason confirms delivery before IPC settles.
+        owner.confirmDelivery();
         owner.end();
-      else {
+      } else {
         s.connectionOutcomeUnknown = true;
         pauseQueue(s, "uncertain");
       }

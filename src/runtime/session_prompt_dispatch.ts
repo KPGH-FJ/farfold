@@ -42,6 +42,13 @@ export async function drainPrompt(
     return { status: "queued" };
   const blocks = s.queued[0];
   const finishPreparation = hooks.stop.prepare(s);
+  const submission = {
+    blocks,
+    connectionId: s.connectionId,
+    dispatched: false,
+    deliveryConfirmed: false,
+  };
+  s.promptSubmission = submission;
   s.submitting = true;
   s.running = false;
   const firstPrompt = s.identity === "draft";
@@ -62,7 +69,6 @@ export async function drainPrompt(
   s.roundItemBase = s.items.length;
   beginSuccessDesktopNotification(s, () => hooks.thread(key) === s);
   hooks.emit();
-  let dispatched = false;
   const receivedEnding = () =>
     s.items
       .slice(s.roundItemBase)
@@ -71,7 +77,7 @@ export async function drainPrompt(
           entry.kind === "settled" && entry.replyReceived !== undefined,
       );
   const admit = () => {
-    removeQueued(s, blocks);
+    if (s.promptSubmission === submission) removeQueued(s, blocks);
     if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
     s.identity = "established";
     hooks.retireDraft(s);
@@ -100,6 +106,7 @@ export async function drainPrompt(
     const interrupted = firstSendInterrupted?.();
     if (
       hooks.thread(key) !== s ||
+      s.connectionId !== submission.connectionId ||
       interrupted ||
       composerDrafts.read(`queue-edit:${key}`).queueEdit ||
       !canDrain({ ...s, running: false, submitting: false })
@@ -133,9 +140,12 @@ export async function drainPrompt(
           true,
         );
       },
+      () => {
+        submission.deliveryConfirmed = true;
+      },
     );
     hooks.owners.set(s, owner);
-    dispatched = true;
+    submission.dispatched = true;
     const result = await invoke<PromptAdmission>("session_prompt", {
       agentId: s.agentId,
       cwd: s.cwd,
@@ -190,11 +200,11 @@ export async function drainPrompt(
     return result;
   } catch (error) {
     if (hooks.thread(key) !== s) return { status: "unknown" };
-    if (dispatched && receivedEnding()) {
+    if (submission.dispatched && receivedEnding()) {
       admit();
       return { status: "accepted" };
     }
-    if (!dispatched) {
+    if (!submission.dispatched) {
       s.running = false;
       s.items = s.items.filter((i) => i !== item);
       if (s.uncertainPrompt === blocks) s.uncertainPrompt = null;
@@ -218,6 +228,7 @@ export async function drainPrompt(
     return { status: "unknown" };
   } finally {
     finishPreparation();
+    if (s.promptSubmission === submission) s.promptSubmission = undefined;
     s.submitting = false;
     hooks.emit();
     hooks.finishArchive(s);

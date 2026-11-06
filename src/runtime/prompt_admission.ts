@@ -1,6 +1,6 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { ThreadState } from "./session_types";
-import { pauseQueue } from "./queue";
+import { pauseQueue, removeQueued } from "./queue";
 import { PROMPT_ADMISSION as S } from "./prompt_admission_strings";
 
 export interface PromptAdmissionView {
@@ -11,6 +11,55 @@ export interface PromptAdmissionView {
 type CancelReply = { receiptId: number; outcome: string };
 type CancelDispatch =
   "pendingReceipt" | "acknowledged" | "unconfirmed" | "inactive";
+
+function currentSubmission(thread: ThreadState) {
+  const submission = thread.promptSubmission;
+  return submission && submission.connectionId === thread.connectionId
+    ? submission
+    : undefined;
+}
+
+/** Settle queue ownership before replacing or losing the exact connection. */
+export function retirePromptSubmission(thread: ThreadState): void {
+  const submission = currentSubmission(thread);
+  if (!submission) return;
+  if (submission.deliveryConfirmed) {
+    // A replacement inherits the live queue, not the saved projection.
+    removeQueued(thread, submission.blocks);
+    thread.promptSubmission = undefined;
+    thread.identity = "established";
+  } else if (submission.dispatched) {
+    thread.connectionOutcomeUnknown = true;
+    if (thread.queued.includes(submission.blocks)) {
+      thread.uncertainPrompt = submission.blocks;
+      thread.identity = "established";
+    }
+  }
+}
+
+/** Keep the live queue intact until IPC settles, while excluding a confirmed
+ * delivery from recovery. An unknown outcome still quarantines its exact input. */
+export function persistedQueue(thread: ThreadState) {
+  const submission = currentSubmission(thread);
+  const deliveredIndex = submission?.deliveryConfirmed
+    ? thread.queued.indexOf(submission.blocks)
+    : -1;
+  const blocks =
+    deliveredIndex < 0
+      ? thread.queued
+      : [
+          ...thread.queued.slice(0, deliveredIndex),
+          ...thread.queued.slice(deliveredIndex + 1),
+        ];
+  const uncertain =
+    thread.uncertainPrompt ??
+    (!thread.connectionLost && !submission?.deliveryConfirmed
+      ? submission?.blocks
+      : undefined);
+  const index = uncertain ? blocks.indexOf(uncertain) : -1;
+  return { blocks, uncertainIndex: index < 0 ? null : index };
+}
+
 /** Exactly one current local send. No message history or global request map. */
 export class PromptRequestOwner {
   readonly token = crypto.randomUUID();
@@ -31,6 +80,7 @@ export class PromptRequestOwner {
     private onOffer: () => void,
     private onEnd: () => void,
     private onEarlyStopAcknowledged: () => void,
+    readonly confirmDelivery: () => void,
   ) {
     thread.promptAdmission = { phase: "preparing", cancelling: false };
     this.channel.onmessage = (value) => this.receive(value);

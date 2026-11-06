@@ -29,6 +29,8 @@ const h = vi.hoisted(() => ({
   }[],
   prompts: [] as { args: PromptWire; receiptId: number }[],
   admission: "accepted" as "accepted" | "unknown",
+  pendingAdmission: undefined as Promise<{ status: "unknown" }> | undefined,
+  pendingRouteClose: undefined as Promise<null> | undefined,
 }));
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: h.invoke,
@@ -84,6 +86,8 @@ beforeEach(() => {
   h.opens = [];
   h.prompts = [];
   h.admission = "accepted";
+  h.pendingAdmission = undefined;
+  h.pendingRouteClose = undefined;
   h.exitListeners.clear();
   h.exitHooks = [];
   h.exitEffects = [];
@@ -96,6 +100,7 @@ beforeEach(() => {
       return;
     }
     if (command === "agent_work_get") return { cwd: args.cwd };
+    if (command === "session_close") return h.pendingRouteClose ?? null;
     if (command === "session_open") {
       const wire = args as OpenWire;
       const row = {
@@ -132,6 +137,7 @@ beforeEach(() => {
       const wire = args as PromptWire;
       const receiptId = 41 + h.prompts.length;
       h.prompts.push({ args: wire, receiptId });
+      if (h.pendingAdmission) return h.pendingAdmission;
       wire.admissionChannel.onmessage({ receiptId, phase: "offered" });
       return { status: h.admission };
     }
@@ -230,6 +236,330 @@ function expectNoColdDispatch(promptCount: number): void {
     ),
   ).toEqual([]);
 }
+
+it("restores a known-unsent queue when its exact process ends during local preparation", async () => {
+  const original = await loadRuntime();
+  const a = await original.threads.open({
+    ...input,
+    nativeSessionId: nativeId,
+  });
+  const otherId = "independent-preparation-conversation";
+  const b = await original.threads.open({ ...input, nativeSessionId: otherId });
+  const aKey = `session:${a.key}`;
+  const bKey = `session:${b.key}`;
+  const aDraft = { text: "Separate A editor draft", attachments: [] };
+  const bDraft = { text: "Separate B editor draft", attachments: [] };
+  original.drafts.composerDrafts.update(aKey, () => aDraft);
+  original.drafts.composerDrafts.update(bKey, () => bDraft);
+  const unsent = blocks("Queued A input still being checked");
+  const owner = h.opens.find((open) => open.connectionId === a.connectionId)!;
+  const { archiveActivity } = await import("./archive_activity");
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const begin = archiveActivity.begin;
+  const preparation = vi
+    .spyOn(archiveActivity, "begin")
+    .mockImplementationOnce(async (key) => {
+      await begin(key);
+      await held;
+    });
+  const sending = original.threads.send(a.key, unsent);
+  try {
+    await vi.waitFor(() => expect(preparation).toHaveBeenCalledOnce());
+    expect(a.submitting).toBe(true);
+    expect(a.promptAdmission ?? null).toBeNull();
+    expectNoColdDispatch(0);
+
+    owner.args.processEndedChannel.onmessage({
+      connectionId: owner.connectionId,
+      closeReason: "unexpected",
+    });
+    expect(a.processEndedConnectionId).toBe(owner.connectionId);
+    expect(a.connectionLost).toBe(true);
+    expect(b.connectionLost).toBe(false);
+    expect.soft(a.connectionOutcomeUnknown).toBe(false);
+    expect.soft(a.uncertainPrompt).toBeNull();
+
+    // A successful save while preparation remains held must already record
+    // definite non-delivery. The pending local action may never resume.
+    await original.drafts.draftPersistence.flush();
+    const saved = h.settings.get("unsentWork.v1");
+    expect.soft(saved).toMatchObject({
+      composers: { [aKey]: aDraft, [bKey]: bDraft },
+      queues: { [a.key]: { blocks: [unsent], uncertainIndex: null } },
+    });
+    expect.soft(saved).not.toHaveProperty(["queues", a.key, "outcomeUnknown"]);
+  } finally {
+    release();
+    await sending;
+    preparation.mockRestore();
+  }
+  expect(await sending).toEqual({ status: "rejected", reason: "unavailable" });
+
+  const cold = await coldLoad(original);
+  const coldB = await cold.threads.open({ ...input, nativeSessionId: otherId });
+  expect(cold.drafts.composerDrafts.read(aKey)).toMatchObject(aDraft);
+  expect(cold.drafts.composerDrafts.read(bKey)).toMatchObject(bDraft);
+  expect(coldB.historicalOutcomeUnknown).toBe(false);
+  expect(coldB.queued).toEqual([]);
+  expect(cold.state.queued).toEqual([unsent]);
+  expect(cold.state.queuePaused).toBe("stopped");
+  expect(cold.state.uncertainPrompt).toBeNull();
+  expectNoColdDispatch(0);
+  expect(cold.state.historicalOutcomeUnknown).toBe(false);
+});
+
+it("still quarantines a prompt already in IPC when its exact process ends before admission", async () => {
+  const original = await loadRuntime();
+  const hot = await original.threads.open({
+    ...input,
+    nativeSessionId: nativeId,
+  });
+  const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
+  const pending = blocks("Request awaiting its native admission receipt");
+  let finish!: () => void;
+  h.pendingAdmission = new Promise((resolve) => {
+    finish = () => resolve({ status: "unknown" });
+  });
+  const sending = original.threads.send(hot.key, pending);
+  try {
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith(
+        "session_prompt",
+        expect.objectContaining({ connectionId: owner.connectionId }),
+      ),
+    );
+    expect(hot.promptAdmission?.phase).toBe("preparing");
+    expect(hot.running).toBe(false);
+    owner.args.processEndedChannel.onmessage({
+      connectionId: owner.connectionId,
+      closeReason: "unexpected",
+    });
+    expect(hot.processEndedConnectionId).toBe(owner.connectionId);
+    expect(hot.connectionOutcomeUnknown).toBe(true);
+    expect(hot.uncertainPrompt).toBe(pending);
+    await original.drafts.draftPersistence.flush();
+    expect(h.settings.get("unsentWork.v1")).toMatchObject({
+      queues: {
+        [hot.key]: {
+          blocks: [pending],
+          uncertainIndex: 0,
+          outcomeUnknown: true,
+        },
+      },
+    });
+  } finally {
+    finish();
+    await sending;
+    h.pendingAdmission = undefined;
+  }
+  expect(await sending).toEqual({ status: "unknown" });
+
+  const cold = await coldLoad(original);
+  expect(cold.state.historicalOutcomeUnknown).toBe(true);
+  expect(cold.state.uncertainPrompt).toEqual(pending);
+  expect(cold.state.queuePaused).toBe("uncertain");
+  expectNoColdDispatch(1);
+});
+
+it.each(["cold only", "warm then cold", "closed route then cold"] as const)(
+  "keeps only the next unsent input if a matched ending beats route retirement and the invoke reply (%s)",
+  async (recovery) => {
+    const original = await loadRuntime();
+    const fresh = recovery === "warm then cold";
+    const hot = await original.threads.open(
+      fresh ? input : { ...input, nativeSessionId: nativeId },
+    );
+    expect(hot.identity).toBe(fresh ? "draft" : "established");
+    const owner = h.opens.find(
+      (open) => open.connectionId === hot.connectionId,
+    )!;
+    const delivered = blocks("Already delivered by the original invocation");
+    // Store callers may queue the same input object a second time deliberately.
+    const next = delivered;
+    const tail = blocks("Independent unsent follow-up");
+    let finish!: () => void;
+    h.pendingAdmission = new Promise((resolve) => {
+      finish = () => resolve({ status: "unknown" });
+    });
+    const sending = original.threads.send(hot.key, delivered);
+    try {
+      await vi.waitFor(() => expect(h.prompts).toHaveLength(1));
+      expect(await original.threads.send(hot.key, next)).toEqual({
+        status: "queued",
+      });
+      expect(await original.threads.send(hot.key, tail)).toEqual({
+        status: "queued",
+      });
+      const prompt = h.prompts[0];
+      prompt.args.admissionChannel.onmessage({
+        receiptId: prompt.receiptId,
+        phase: "offered",
+      });
+      owner.args.channel.onmessage({
+        update: {
+          sessionUpdate: "agent_message_chunk",
+          content: { type: "text", text: "Matched Agent reply" },
+        },
+      });
+      ending({ stopReason: "end_turn" });
+      expect(hot.items.at(-1)).toMatchObject({
+        kind: "settled",
+        status: "done",
+      });
+      expect(hot.submitting).toBe(true);
+      expect(hot.promptAdmission).toBeNull();
+      expect(hot.queued).toEqual([delivered, next, tail]);
+      await original.drafts.draftPersistence.flush();
+      const remaining = [next, tail];
+      const savedQueue = { blocks: remaining, uncertainIndex: null };
+      expect
+        .soft(h.settings.get("unsentWork.v1"))
+        .toHaveProperty(["queues", hot.key], savedQueue);
+
+      if (recovery === "closed route then cold") {
+        owner.args.channel.onmessage({ kind: "deliveryUnavailable" });
+        expect(hot.sourceError).toBe(true);
+        expect(hot.connectionLost).toBe(false);
+        expect(hot.queued).toEqual([delivered, next, tail]);
+      } else {
+        owner.args.processEndedChannel.onmessage({
+          connectionId: owner.connectionId,
+          closeReason: "unexpected",
+        });
+        expect(hot.processEndedConnectionId).toBe(owner.connectionId);
+        expect(hot.connectionOutcomeUnknown).toBe(false);
+        expect.soft(hot.identity).toBe("established");
+        expect.soft(hot.queued).toEqual(remaining);
+      }
+      if (recovery !== "cold only") {
+        const recoveryStarted = h.invoke.mock.calls.length;
+        const replacement = await original.threads.reconnect(hot.key);
+        expect(replacement).toBeDefined();
+        expect(replacement).not.toBe(hot);
+        expect(replacement!.connectionId).not.toBe(owner.connectionId);
+        expect.soft(replacement!.queued).toEqual(remaining);
+        if (recovery === "closed route then cold") {
+          const recoveryCalls = h.invoke.mock.calls.slice(recoveryStarted);
+          expect(
+            recoveryCalls.filter(([name]) =>
+              ["session_close", "session_open"].includes(name),
+            ),
+          ).toEqual([
+            [
+              "session_close",
+              expect.objectContaining({
+                agentId: hot.agentId,
+                cwd: hot.cwd,
+                sessionId: hot.nativeSessionId,
+              }),
+            ],
+            [
+              "session_open",
+              expect.objectContaining({ nativeSessionId: nativeId }),
+            ],
+          ]);
+          expect(hot.processEndedConnectionId).toBeUndefined();
+          expect(replacement!.processEndedConnectionId).toBeUndefined();
+        }
+      }
+      await original.drafts.draftPersistence.flush();
+      expect
+        .soft(h.settings.get("unsentWork.v1"))
+        .toHaveProperty(["queues", hot.key], savedQueue);
+
+      const cold = await reloadPersisted(original);
+      expect(cold.state.queued).toEqual(remaining);
+      expect(cold.state.queuePaused).toBe("stopped");
+      expect(cold.state.uncertainPrompt).toBeNull();
+      expect(cold.state.historicalOutcomeUnknown).toBe(false);
+      expectNoColdDispatch(1);
+    } finally {
+      finish();
+      await sending;
+      h.pendingAdmission = undefined;
+    }
+    if (recovery === "cold only")
+      expect(await sending).toEqual({ status: "accepted" });
+    expect(original.threads.thread(hot.key)?.queued).toEqual([next, tail]);
+  },
+);
+
+it("quarantines an offered prompt with no observed ending across an acknowledged route close", async () => {
+  const original = await loadRuntime();
+  const hot = await original.threads.open({
+    ...input,
+    nativeSessionId: nativeId,
+  });
+  const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
+  const pending = blocks("Offered before the renderer lost delivery");
+  const next = blocks("Independent unsent follow-up");
+  let finishPrompt!: () => void;
+  h.pendingAdmission = new Promise((resolve) => {
+    finishPrompt = () => resolve({ status: "unknown" });
+  });
+  let acknowledgeClose!: () => void;
+  h.pendingRouteClose = new Promise((resolve) => {
+    acknowledgeClose = () => resolve(null);
+  });
+  const sending = original.threads.send(hot.key, pending);
+  let reopening: ReturnType<Runtime["threads"]["reconnect"]> | undefined;
+  try {
+    await vi.waitFor(() => expect(h.prompts).toHaveLength(1));
+    const prompt = h.prompts[0];
+    prompt.args.admissionChannel.onmessage({
+      receiptId: prompt.receiptId,
+      phase: "offered",
+    });
+    expect(await original.threads.send(hot.key, next)).toEqual({
+      status: "queued",
+    });
+    owner.args.channel.onmessage({ kind: "deliveryUnavailable" });
+    expect(hot.running).toBe(true);
+    expect(hot.sourceError).toBe(true);
+    expect(hot.connectionLost).toBe(false);
+    reopening = original.threads.reconnect(hot.key);
+    await vi.waitFor(() =>
+      expect(h.invoke).toHaveBeenCalledWith("session_close", {
+        agentId: hot.agentId,
+        cwd: hot.cwd,
+        sessionId: hot.nativeSessionId,
+      }),
+    );
+    expect(h.opens).toHaveLength(1);
+    expect(hot.connectionOutcomeUnknown).toBe(false);
+    expect(hot.uncertainPrompt).toBeNull();
+    // Native close has now confirmed the route was released. The renderer
+    // received neither the old prompt's ending nor a process-exit receipt.
+    acknowledgeClose();
+    const replacement = await reopening;
+    expect(replacement).toBeDefined();
+    expect(replacement).not.toBe(hot);
+    expect(replacement!.connectionId).not.toBe(owner.connectionId);
+    expect(hot.processEndedConnectionId).toBeUndefined();
+    expect(replacement!.processEndedConnectionId).toBeUndefined();
+    expect(replacement!.connectionOutcomeUnknown).toBe(true);
+    expect(replacement!.uncertainPrompt).toBe(pending);
+    expect(replacement!.queued).toEqual([pending, next]);
+    await original.drafts.draftPersistence.flush();
+    const cold = await reloadPersisted(original);
+    expect(cold.state.historicalOutcomeUnknown).toBe(true);
+    expect(cold.state.queuePaused).toBe("uncertain");
+    expect(cold.state.uncertainPrompt).toBe(cold.state.queued[0]);
+    expect(cold.state.queued).toEqual([pending, next]);
+    expectNoColdDispatch(1);
+  } finally {
+    acknowledgeClose();
+    finishPrompt();
+    await Promise.allSettled([reopening, sending]);
+  }
+  const warm = original.threads.thread(hot.key);
+  expect(warm?.uncertainPrompt).toBe(pending);
+  expect(warm?.queued).toEqual([pending, next]);
+  expectNoColdDispatch(1);
+});
 
 it("preserves an accepted empty-queue unknown outcome across a complete cold rebuild without reviving the old live owner", async () => {
   const original = await loadRuntime();
