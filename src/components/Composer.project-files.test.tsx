@@ -258,6 +258,63 @@ it("uses the existing add-file menu to import an image without changing text or 
   ).toContain(`data:image/png;base64,${PNG_IMAGE_TEST_DATA}`);
 });
 
+it("delivers a pending native image read only to its original draft after switching drafts", async () => {
+  const imageRead = deferred<{ mimeType: string; data: string }>();
+  const original = composerDrafts.read("project-new-a");
+  const other = composerDrafts.read("project-new-b");
+  const uri = "file:///chosen/pending.png";
+  props.imageEnabled = true;
+  vi.stubGlobal("Image", TestImageDecoder);
+  hooks.openDialog.mockResolvedValue(["/chosen/pending.png"]);
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "draft_attachment_image"
+      ? imageRead.promise
+      : Promise.resolve(null),
+  );
+
+  openFilePicker();
+  try {
+    await vi.waitFor(() =>
+      expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+        uri,
+        read: true,
+      }),
+    );
+    const pending = composerDrafts.read("project-new-a").attachments.at(-1);
+    expect(pending).toMatchObject({ uri, loading: true });
+    expect(pending?.data).toBeUndefined();
+
+    props.draftKey = "project-new-b";
+    props.workContext = { agentId: "other", cwd: "/other" };
+    const area = render().find((node) => node.type === "textarea")!;
+    expect(area.props.value).toBe(other.text);
+    expect(composerDrafts.read("project-new-b")).toBe(other);
+  } finally {
+    imageRead.resolve({ mimeType: "image/png", data: PNG_IMAGE_TEST_DATA });
+  }
+
+  await vi.waitFor(() =>
+    expect(composerDrafts.read("project-new-a").attachments).toEqual([
+      ...original.attachments,
+      expect.objectContaining({
+        kind: "image",
+        uri,
+        data: PNG_IMAGE_TEST_DATA,
+        loading: false,
+      }),
+    ]),
+  );
+  expect(composerDrafts.read("project-new-a").text).toBe(original.text);
+  expect(composerDrafts.read("project-new-b")).toBe(other);
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+    uri,
+    read: true,
+  });
+  expect(threads.open).not.toHaveBeenCalled();
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+});
+
 function tooWidePng() {
   const bytes = Uint8Array.from(atob(PNG_IMAGE_TEST_DATA), (char) =>
     char.charCodeAt(0),
