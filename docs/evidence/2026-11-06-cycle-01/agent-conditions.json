@@ -18,7 +18,8 @@
     "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json",
     "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json",
-    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json"
+    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -319,6 +320,14 @@
               "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
               "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json",
               "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json"
+            ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "官方 Goose 1.52.0 独立程序，自有空目录及独立会话库",
+            "result": "两条空会话核对扩展及工具均为空，仅将 A 从同服务 Ultra 切到 Super VL。原测试进程正常退出，新进程加载各自原会话，A 恢复 Super VL，B 保持 Ultra，零提示及登录请求。覆盖官方程序原生保存，正式界面与实际回复未验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json"
             ]
           }
         ],

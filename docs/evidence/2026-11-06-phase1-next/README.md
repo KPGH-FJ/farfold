@@ -28,6 +28,8 @@ Goose 正式自测 B 的既有回复，已用原请求编号核对 OpenRouter �
 
 第二免费候选的公开输入与输出费率为零。Goose 的聊天模式会跳过模型要求执行的工具，但构建请求时仍加入 Skills 的名称和说明。上一次同一测试对话的实际出站请求中，核到 5 个来自用户目录的技能名称。本机正式版没有只对这条会话关闭 Skills 的入口，因此这次没有发送新的合成测试消息。[候选端点](https://openrouter.ai/api/v1/models/nvidia/nemotron-3.5-super-vl:free/endpoints) · [提示准备](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/agents/reply_parts.rs#L197-L240) · [Skills 内容](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/skills/client.rs#L248-L269)
 
+另用同一已登记 Goose 1.52.0 程序直接启动独立测试连接。两条空对话分别移除自测范围内唯一扩展，读回扩展和工具均为空。仅把 A 从 Ultra 改为同服务 Super VL，正常关闭自测进程后，用新进程加载同一两个对话。A 读回 Super VL，B 保持 Ultra，扩展与工具仍为空，两条消息数为零。两次自测进程均正常退出，零提示和登录请求。该分项覆盖官方程序自己的模型保存和冷恢复，实际账号、回复、费用和正式应用仍待验证。[Goose 隔离冷恢复](goose-isolated-model-cold-restore.json)
+
 ## 独立验证与缺项
 
 Kilo 7.8.1 的真实隔离连接声明支持关闭、继续和列出。在两个无消息的自测对话中，只对 A 关闭一次，收到同请求回执；B 在同一进程以官方继续入口读回原设置，两条历史都保留。未发送模型、工具或审批。B 原活动路由是否全程连续、A 专属资源是否已释放，以及正式界面和跨版桌面授权仍未验证。[隔离会话关闭回执](kilo-lifecycle-isolated.json)
