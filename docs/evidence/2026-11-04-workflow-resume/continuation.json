@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-05T12:09:52.975025+00:00",
-  "objective": "Continue sole plan after deliveredf54 search/save/management batch. Original151/29x8/data and real-Agent boundaries remain; pointer only,not second queue.",
+  "updatedAt": "2026-11-06T02:55:15.013314+00:00",
+  "objective": "Continue sole plan after 134 draft/config/management stage. Original151/29x8/data and real-Agent boundaries remain; this pointer is not a second queue.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
@@ -34,7 +34,7 @@
     "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
     "mcpSourceAndBrowserEvidence": "c2aa64f11",
     "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
-    "latestSourceEngineeringBinding": "output/2026-11-05-search-maintenance-stage/engineering-independent-review/reader.json",
+    "latestSourceEngineeringBinding": "output/2026-11-06-draft-config-stage/engineering-independent-review/reader.json",
     "capacityToolsAndWindowsScope": "b7147e530742c47b96713495dea8b736dc9ec630",
     "devServerColdScan": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "windowsFullSuccessRun": 41931045918,
@@ -54,7 +54,8 @@
     "currentLifecycleSource": "844f0697c83c1e60208b142d4c30e0a5f855910d",
     "configRetryEngineeringInputCommit": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "configRetryEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json",
-    "currentSearchSaveManagementSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9"
+    "currentSearchSaveManagementSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+    "currentDraftConfigManagementSource": "13422001561df7ccf0328d73e4fb49df19168464"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -89,31 +90,30 @@
     "559 actual seven0(9563frontend/Rust2364+7), Mac formal559 delivered, Windows fixed559 selected30native20frontend0. Original installer PSparse failure retained;5b9 rename not yet natively validated because later run runner0/steps[] provider billing/spending block. User chose other work.755 cached-navigation13 RED7/6->13 GREEN,140 associated, freshfrontend4 715files9576,2385declared endpoints; Rust3 retained via835declared+11supplemental fixture closure with original11endpoints explicitly not captured.755 one build0/candidate9/install6/5newinodes/new3x206275closed manifests equal and exactduplicate cleanup0; independent code/engineering/preparation/delivery all0mustfix. Actual Root cached returns/public2pages/hide/nav/close preserve4draft paragraphs; returnedP02/retained1/zero sends. B3 remains timeout,Q not retriedon755.",
     "38e reliability:pending image transfer/known-identical config retry/skill-MCP prewrite owner/native management focus; fresh7/4code reviews/singleformal update/selectedRootUI passed; original failures retained.",
     "844 pending-control firstpoll active/unknown guard and stale-index/memberABA fix:22/66 control,14files301 index;fresh7/2400/modes/Git/two code readers;oneformal update and Root selectedmetadata/originaldraft UI passed. NativePNG location2cold cycles belong38e,notinline/queue/Agent.",
-    "f54 searchattachment readiness,management cancel-null/oldtimer ownership and finalpublished-byte receipt fixed; controlled original failures separated from harness errors. Three code readers+full7+engineeringGit+textcapsule+actualdelivery independent reviews passed.719files9615frontend/Rust2398pass7ignored;2403complete/2399production/11freshfixtures. Onebuild,9candidate/6installed,5newinode and3closed206275 manifests equal;Root coldP02/retained1/cwd held,zero sends. Native race faults/newcopyUI and completeAgent acceptance remain open."
+    "f54 searchattachment readiness,management cancel-null/oldtimer ownership and finalpublished-byte receipt fixed; controlled original failures separated from harness errors. Three code readers+full7+engineeringGit+textcapsule+actualdelivery independent reviews passed.719files9615frontend/Rust2398pass7ignored;2403complete/2399production/11freshfixtures. Onebuild,9candidate/6installed,5newinode and3closed206275 manifests equal;Root coldP02/retained1/cwd held,zero sends. Native race faults/newcopyUI and completeAgent acceptance remain open.",
+    "134 preserves newer draft edits during retained-draft restore, rejects conflicting protected config replies including return-to-original, and retains actual write scope on management results. Fresh seven720/9621,Rust2401/7,2404inputs. Single formal install and selected cold P02, independent delivery. Earlier f54 actual own-file70-byte native copy; original Dirac workfolder unavailable, no retry."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "sole-plan common capability continuation",
-      "state": "Largerf54 delivered;progress closeout only. No engineering/CI/build job remains. Next available dependency-closed result comes from soleplan."
+      "state": "134 delivered. Next available dependency-closed result comes from the sole plan."
     }
   ],
   "formalPreparation": {
-    "directory": "output/2026-11-05-search-maintenance-stage/formal-preparation",
+    "directory": "output/2026-11-06-draft-config-stage/formal-preparation",
     "state": "actual_single_build_delivery_selected_ui_and_separate_reader_complete",
-    "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
-    "formerFunctionalSource": "844f0697c83c1e60208b142d4c30e0a5f855910d",
+    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
+    "formerFunctionalSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
     "normalSaveExitObserved": true,
     "newCaptureBuildInstallExecuted": true,
-    "independentDeliveryReview": "output/2026-11-05-search-maintenance-stage/formal-delivery-independent-review/reader.json"
+    "independentDeliveryReview": "output/2026-11-06-draft-config-stage/formal-delivery-independent-review/reader.json"
   },
   "remaining": [
-    "Attachment file-source jump delayed DOM readiness/native fault branch not exercised in installed app; current disk-file source entry differs from previously received-text line jump.",
-    "Official skill/MCP cancel-null and stale-timer races not produced in installed UI; actual adoption/connection/calls still missing.",
-    "Publication same-inode mutation remains controlled real owned I/O, not native installed fault injection; new copy native normal-save route untested. Copy remains Unknown; text export returns existing DestinationChanged error, both retain published output.",
-    "One additional full destination read before successful receipt,64KiB buffer/expected-size bound; real2MiB positive passed but maximum-capacity/performance impact not measured. No postreceipt continuous byte immutability guarantee.",
-    "B3/Q root causes, P18/N/O ownership, missing accounts/directories/contracts, storage fault UI, official compaction and NEW24 affected-new-send pause remain. No old requests resent.",
-    "Windows41984263036 still no runner under payment/spending availability; no new retry or billing change. Original151/29x8 remain open at their exact original scopes."
+    "Actual installed delayed preserved-draft restore, conflicting config notification/ACK, and official skill/MCP retained-scope write flows were not fault-injected or executed. Controlled checks remain distinct from installed cold recovery.",
+    "Original Dirac self-test history failed this one read with unavailable work folder. Re-evaluate when original folder is available with ownership confirmed; no substitute empty folder and no retry. Native f54 copy is an independent local file normal path only.",
+    "Official skill/MCP adoption, connection and calls; actual Agent compaction/settings interactions; installed storage faults; B3/Q causes, P18/N/O attribution and NEW24 affected new sends remain open/paused as before.",
+    "Windows run41984263036 still lacks a runner under payment/spending conditions. No repeated dispatch or billing changes, no new Windows acceptance."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -128,51 +128,45 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-05T12:09:52.975025+00:00",
-  "stage": "larger_search_save_management_batch_delivered_selected_cold_ui_verified",
+  "updatedAtUtc": "2026-11-06T02:55:15.013314+00:00",
+  "stage": "larger_draft_config_management_delivered",
   "finalEvidence": {
+    "controlledAndEngineering": "docs/evidence/2026-11-06-draft-config/README.md",
+    "formalAndUi": "docs/evidence/2026-11-06-draft-config/formal-summary.json"
+  },
+  "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-05-search-maintenance/README.md",
     "formalAndUi": "docs/evidence/2026-11-05-search-maintenance/formal-summary.json"
   },
-  "previousFinalEvidence": {
-    "controlledAndEngineering": "docs/evidence/2026-11-05-input-lifecycle/README.md",
-    "formalAndUi": "docs/evidence/2026-11-05-input-lifecycle/formal-summary.json"
-  },
   "stageFinalProtection": {
-    "checkedAtUtc": "2026-11-05T12:09:52.975025+00:00",
+    "checkedAtUtc": "2026-11-06T02:55:15.013314+00:00",
     "protectedUnrelatedSha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
     "protectedMode": "0644",
-    "currentFormalBinarySha256": "4ac9afe08503b13d00154c0a5cb9ae425e0882f9bb7aeee3c860854edd944839",
+    "currentFormalBinarySha256": "ac2853dcb1ba6357497abb57af9f40f97b131d70123028cb1c69dfa4907ad81e",
     "nativeSelectedUiObserved": true
   },
   "formalUnlockInput": {
     "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Read currentstatus and soleplan;continue availableP01/config-history/skillMCP adoption/daily interactions. Three new native race paths/copy normalUI stay unverified; preserveB3Q/P18/NEW24 andWindowsbilling gaps,no oldresend/accountmodelchange/retry. Metadata private;aggregate is inference only. Pureprogressdocs require no full7/reinstall.",
+  "nextExactContinuation": "Read current status and sole plan. Continue available P01, configuration/history and official management under exact conditions. Preserve Dirac original workfolder gap, original B3/Q/P18/NEW24 and Windows billing separately; no old resend/account/model change or automatic CI retry.",
   "initialEngineeringAttempt": {
-    "directory": "output/2026-11-05-search-maintenance-stage/engineering",
+    "directory": "output/2026-11-06-draft-config-stage/engineering",
     "allSevenFirstInvocationNaturalZero": true,
-    "scope": "Finalf54 epoch only; earlier harness/type failures remain controlled capsule originals."
+    "scope": "Final134 epoch; the initial allowlist schema error preceded checks and was corrected without modifying source or collecting a second before-map."
   },
   "finalEngineering": {
-    "directory": "output/2026-11-05-search-maintenance-stage/engineering",
-    "canonicalReport": "output/2026-11-05-search-maintenance-stage/formal-preparation/engineering-result.json",
-    "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
+    "directory": "output/2026-11-06-draft-config-stage/engineering",
     "freshNaturalZeroCommands": 7,
-    "frontendFiles": 719,
-    "frontendPassed": 9615,
-    "rustPassed": 2398,
+    "inputs": 2404,
+    "productionInputs": 2400,
+    "freshFixtures": 11,
+    "frontendFiles": 720,
+    "frontendPassed": 9621,
+    "rustPassed": 2401,
     "rustFailed": 0,
     "rustIgnored": 7,
-    "completeDeclaredInputs": 2403,
-    "completeProductionInputs": 2399,
-    "freshFixturesIncludedInBothEndpoints": 11,
-    "legacyHelperProjectionProduction": 2388,
-    "legacyHelperProjectionAdmitted": 2391,
-    "sourceBeforeAfterShaEqual": true,
-    "currentModesAndGitIndependentlyVerified": true,
-    "historicalModeEndpointsCaptured": false,
     "oldRustReuse": false
   },
   "selectedWindowsPreparation": {
@@ -186,18 +180,17 @@
     "state": "success30native20frontend;selected not full/installer/realAgent"
   },
   "latestFormalStage": {
-    "sourceCommit": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
-    "evidence": "docs/evidence/2026-11-05-search-maintenance/formal-summary.json",
-    "mainSha256": "4ac9afe08503b13d00154c0a5cb9ae425e0882f9bb7aeee3c860854edd944839",
-    "actualRootUiReceipt": "output/2026-11-05-search-maintenance-stage/formal-preparation/formal/ui/root-selected-installed-observation.json",
-    "actualRootUiSha256": "85f677828812c401ca6b03f8b6f0735f42a3215f27d522cee92abd71c31ff2e7",
+    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
+    "evidence": "docs/evidence/2026-11-06-draft-config/formal-summary.json",
+    "mainSha256": "ac2853dcb1ba6357497abb57af9f40f97b131d70123028cb1c69dfa4907ad81e",
+    "actualRootUiReceipt": "output/2026-11-06-draft-config-stage/formal-preparation/formal/ui/root-selected-installed-observation.json",
+    "actualRootUiSha256": "7f16dc28029a884acdbc3abe0bd1425bbc992bb19254703b27ef2ee89cae9aa4",
     "closedManifestEntriesEach": 206275,
-    "closedManifestSha256": "a09d6f6070b4277aeda038408d5566b75753123f74cf544d51d657ca43a4ce83",
-    "currentView": "originalP02,retained1,originalcwd,Agentunset,no testattachment,indexdisplay91",
+    "closedManifestSha256": "8b2c9a3ecbe34eea4fa40d7bc03ea55f6f21def8f8f3121aff7a6c63564fb776",
+    "currentView": "originalP02,retained1,originalcwd,Agentunset,no test attachment",
     "newPrompts": 0,
     "oldResends": 0,
-    "currentProcessNotRecorded": true,
-    "sourceVsLaterDocuments": "f54 source/engineering/build/closeddata/UI epoch distinct from later progress-only docs; no extra full7/install."
+    "sourceVsLaterDocuments": "134 source/check/build/closed-data/UI epoch is distinct from later progress-only docs."
   },
   "windowsInstallBlocked": {
     "run": 41984263036,
@@ -222,8 +215,8 @@
     "formalFileOnlyObservationAtThatTime": "output/2026-11-05-next-capability-stage/formal-identity.json; AEB binary still exact, no UI unlock probe/exit/update."
   },
   "previousEngineeringAttempt": {
-    "directory": "output/2026-11-05-input-lifecycle-stage/engineering",
+    "directory": "output/2026-11-05-search-maintenance-stage/engineering",
     "allSevenFirstInvocationNaturalZero": true,
-    "laterOrchestrationError": "KeyError grouping archive reader mustFix[] as mustFixCount after all7 andcanonicalcopy completed;correctedwithout source/evidencechange or rerun.Original correctionrecord retained."
+    "scope": "Finalf54 epoch only; earlier harness/type failures remain controlled capsule originals."
   }
 }

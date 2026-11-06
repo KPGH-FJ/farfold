@@ -1,0 +1,310 @@
+{
+  "kind": "DraftConfigSafeTextEvidenceCapsule",
+  "state": "FROZEN_CANDIDATE_FOR_INDEPENDENT_SAFETY_REVIEW",
+  "preparedAtUtc": "2026-11-06T02:41:43.505917+00:00",
+  "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
+  "parent": "071ffea6803eef222053424870f1d70c46aa6f71",
+  "ownedSourceFiles": {
+    "src/runtime/drafts.ts": "1218d0517ef2771d7a71e6aecfd17de915d5b3a04473ace69d68dd82b73471a9",
+    "src/runtime/draft_preservation.overlap.test.ts": "8aa3aa49e45de9e4bde244f1942865b89a4f3675db4c965afd37034d50087357",
+    "src/runtime/skill_management_controller.ts": "d1841fdf0abe1aa9bf7353df793cdef10292c06f36424f1996a9018549d3af54",
+    "src/components/SkillChangeReview.tsx": "661dec26a59d320b44473aa936b1225c200888a00f824dea2de27c5d9ea5ffc0",
+    "src/runtime/skill_management.retained-write.test.tsx": "bdc69cdb2f309d90f6c4565160654fd133133d69740727a480fdc1f2a0469c8b",
+    "src-tauri/src/acp_client/model_guard/switch_transport_tests.rs": "427c6b255fd7880de401a014faecc3f756985f8708398499ab7d0687f0f02ba2",
+    "src-tauri/src/acp_client/session_config.rs": "1816627071a09fe81f6a0ae9772a17a04963b75d3e358dea78a09f5ab54173c4",
+    "src-tauri/src/acp_client/pump.rs": "98c9b41c8e41cc0258f84739b41eca45a00fdb0ef5c92126ab5c4de96e73127b",
+    "src-tauri/src/acp_client/pump/restore_config.rs": "a6b10407eff7ec52866a7aa4a7c7ae1b4884b271e3580a98752d98e2ff5cc4c6"
+  },
+  "retainedDraftRestore": {
+    "requirements": ["P01"],
+    "behavior": "Capture the active new draft and choice at restore entry. Recheck after the earlier save and before copying, after saving the copy, and before applying the retained draft. Keep the existing failure protections and other-conversation edit.",
+    "sealedThree": {
+      "red": {
+        "passed": 1,
+        "failed": 2,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 3,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 8,
+      "passed": 103,
+      "failed": 0,
+      "skipped": 0,
+      "includesSealedThree": true
+    },
+    "redBoundary": "Both original failures observed replaced active input. In the late-choice case that assertion precedes the separate Agent choice assertion. GREEN verifies the later choice, older retained file reference and mock cold reload.",
+    "implementation": {
+      "path": "output/2026-11-06-draft-config-stage/p01/implementation-summary.json",
+      "sha256": "27af05e8f825c50d29332175df034c136569d75ff31842cb36420ede4f871074",
+      "bytes": 8766
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-draft-config-stage/p01-independent-review/reader.json",
+      "sha256": "859fe4d30f39aa91771114c3e907e9eed17cb98c902a084f5a27bbc3cf4b49da",
+      "bytes": 12675
+    },
+    "boundary": "Production draft store and serialized settings writer with controlled IPC and module reload. Installed interaction, real disk failure, attachment data and official Agent remain outside this evidence."
+  },
+  "managementWriteScope": {
+    "requirements": ["P39", "P40", "P41"],
+    "behavior": "Retain a display-only snapshot of the exact accepted user/profile scope. The existing last actual write record carries its own scope through explicit original-target readback and a new review. Unwritten refusal cannot replace the old write or suggest that the new scope was written.",
+    "sealedTwelve": {
+      "red": {
+        "passed": 9,
+        "failed": 3,
+        "naturalExitCode": 1
+      },
+      "green": {
+        "passed": 12,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "related": {
+      "files": 21,
+      "passed": 216,
+      "failed": 0,
+      "skipped": 0,
+      "includesSealedTwelve": true
+    },
+    "finalSourceQualification": "A display-only comment followed the first GREEN. The final associated set, app-project TypeScript check and exact formatting check bind the final source.",
+    "implementation": {
+      "path": "output/2026-11-06-draft-config-stage/management/implementation-summary.json",
+      "sha256": "6d818a4f85def9200e5755c1be28bc3f520c43411ae7158e6fc568ca890b447c",
+      "bytes": 7200
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-draft-config-stage/management-independent-review/reader.json",
+      "sha256": "64c4ae04abb38700275476b8aa757b465f4afc36011aba205ca104a9774f4a0d",
+      "bytes": 14428
+    },
+    "boundary": "Real inventory/controller and static review rendering with controlled ports. The new tests call the controller directly. No installed click, official config adoption or MCP connection/tool effect."
+  },
+  "protectedConfigReceipt": {
+    "requirements": ["ARCH-20"],
+    "behavior": "During one ordinary protected modern setter, preserve evidence that an observed protected choice moved away from admission. Validate the full reply against latest observed protected choices before replacing live options or saving the chosen config. Conflicting result preserves the known saved baseline and uses existing unknown/send-block behavior.",
+    "firstOriginalWitness": {
+      "red": {
+        "passed": 0,
+        "failed": 1,
+        "naturalExitCode": 101
+      },
+      "green": {
+        "passed": 1,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true
+    },
+    "intermediateReturnToOriginalWitness": {
+      "red": {
+        "passed": 2,
+        "failed": 1,
+        "naturalExitCode": 101
+      },
+      "green": {
+        "passed": 3,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytesWithinPair": true,
+      "laterFixtureIsDistinct": true
+    },
+    "finalSealedThree": {
+      "baseline": "Exact first-fix V1 production bytes",
+      "red": {
+        "passed": 2,
+        "failed": 1,
+        "naturalExitCode": 101
+      },
+      "green": {
+        "passed": 3,
+        "failed": 0,
+        "naturalExitCode": 0
+      },
+      "sameFixtureBytes": true,
+      "ignored": 0
+    },
+    "related": {
+      "groups": [7, 18, 3, 8, 1],
+      "passed": 37,
+      "failed": 0,
+      "ignored": 0,
+      "includesFinalThree": true
+    },
+    "receiptQualification": "The producer aggregate text saying three groups is retained. Five actual native run receipts and the independent reader confirm five groups. The shared receive path for a concurrent rejected restore-selection drain was traced in source. That distinct interleaving was not forced as a separate test.",
+    "implementation": {
+      "path": "output/2026-11-06-draft-config-stage/config/implementation-summary.json",
+      "sha256": "050eb35c87748d9f95e981157cdf0f0c8ee904e99857bdbc1f11764d7008e883",
+      "bytes": 11975
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-draft-config-stage/config-independent-review/reader.json",
+      "sha256": "c7aafb247daec2bb5050122ddd977231027d79b86c0536d077e13c45c5e22af6",
+      "bytes": 7338
+    },
+    "boundary": "Production ACP SDK and actor with a self-owned peer and SQLite fixture. Only already-observed protected model and thinking choices are covered. No actual provider/model, official Agent, user DB or installed config change."
+  },
+  "freshMacEngineering": {
+    "counts": {
+      "sourceInputs": 2404,
+      "frontendFiles": 720,
+      "frontendPassed": 9621,
+      "rustPassed": 2401,
+      "rustIgnored": 7
+    },
+    "scope": {
+      "freshCommands": 7,
+      "fullDeclaredInputs": 2404,
+      "fullProductionInputs": 2400,
+      "explicitAuthorityConfigInputs": 4,
+      "freshFixtureInputs": 11,
+      "ownedChangedSourceTestFiles": 9
+    },
+    "sourceCheckpoint": {
+      "path": "output/2026-11-06-draft-config-stage/source-commit.json",
+      "sha256": "abd25f2d3480486138a3b9ec95db00399c9062682455bbd473ad46ec15542488",
+      "bytes": 1394
+    },
+    "report": {
+      "path": "output/2026-11-06-draft-config-stage/engineering-result.json",
+      "sha256": "46427229ecbcc2e521f9268fca3a075efb7a40afec9d035564fe9f3b763d1ebb",
+      "bytes": 5491
+    },
+    "independentReader": {
+      "path": "output/2026-11-06-draft-config-stage/engineering-independent-review/reader.json",
+      "sha256": "67e38382f7fd5a968cc43feb75c9e8c739b6ed03628fb7ecd4f24f40d89d79a9",
+      "bytes": 24544
+    },
+    "originalInputMaps": [
+      {
+        "path": "output/2026-11-06-draft-config-stage/engineering/source-before.json",
+        "sha256": "a735eac4a03333a40f5be59af61106eab1acd38e1f901173a168513a4fba9279"
+      },
+      {
+        "path": "output/2026-11-06-draft-config-stage/engineering/source-after.json",
+        "sha256": "a735eac4a03333a40f5be59af61106eab1acd38e1f901173a168513a4fba9279"
+      }
+    ],
+    "commands": [
+      {
+        "log": "format-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "format:check"],
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/format-final.json",
+          "sha256": "f76a5b88b763c473492898271add498dbd7f0b47db904f6a66a2dc1a5feae502"
+        }
+      },
+      {
+        "log": "typecheck-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/typecheck-final.json",
+          "sha256": "7713de9a9643744a3fb3a8d3946b24312126bf28bd213eb7ce6e74c77b425dac"
+        }
+      },
+      {
+        "log": "frontend-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "test"],
+        "sha256": "fbd5fb2a3dafa78804b40033ec772cf7ebc9098025ebfe3723591f7aca2999bf",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/frontend-final.json",
+          "sha256": "47a97b13513ad48cea607539245d23ad811df37a91721135b435c0ca3c182274"
+        }
+      },
+      {
+        "log": "build-final.log",
+        "naturalExitCode": 0,
+        "argv": ["corepack", "pnpm", "build"],
+        "sha256": "3b7f12a9da5b686432db24beac8e143b832161b8f27be909a2046161071f7534",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/build-final.json",
+          "sha256": "bdb1033de0e4bf9946e981d6c903d5e7b16a33f7c262322f94222d3fe5c486e4"
+        }
+      },
+      {
+        "log": "cargo-fmt.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/cargo-fmt.json",
+          "sha256": "4a4e4294e5dba502f70fe090a566bab91d3c179a42f6abe7dffe49e83d07cbab"
+        }
+      },
+      {
+        "log": "clippy.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "sha256": "9f3bb835097127a777a4e08ab363415091eede9a61518587f96a8d6b9fd6f14a",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/clippy.json",
+          "sha256": "68b27953fa11f18c3b7f92b21fe605f6f1bea3e739ac9d855f14e1483b3c9e04"
+        }
+      },
+      {
+        "log": "rust-full.log",
+        "naturalExitCode": 0,
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "sha256": "b720b3964801c4f02c572be9dc06ef6e5d3fc66b98274749aca66f532e380bff",
+        "receipt": {
+          "path": "output/2026-11-06-draft-config-stage/engineering/checks/rust-full.json",
+          "sha256": "3ce19e988ecb2d966dceb6cfd21ad08854e48c75d2c1d3babe36e76489532829"
+        }
+      }
+    ],
+    "qualification": "Seven fresh natural-zero commands on macOS. All declared input endpoints matched and independent reader bound current bytes and modes to fixed Git. Rust ignores are excluded from passes. Frontend build retains the Vite chunk-size advisory. The scope is the declared engineering inputs, including 11 fixtures."
+  },
+  "publicationBoundary": {
+    "exactOriginalTextFiles": 172,
+    "derivedMembers": [
+      "README.md",
+      "summary.json",
+      "text-allowlist.json",
+      "safety-check.json"
+    ],
+    "excluded": [
+      "native-file/ and any raw accessibility/UI recording, screenshots, actual user content and private local file observation",
+      "All databases, copies and backups, draft text, metadata diagnostics, retention logs and user-data manifests",
+      "Formal installer parameters, tools, source-external environment, signing material and installation archives",
+      "Binary files, test executables, original attachment bytes, credentials and Windows raw bundles"
+    ],
+    "formalOrUiResultsIncluded": false,
+    "windowsResultsIncluded": false,
+    "officialAgentActivityIncluded": false,
+    "qualification": "A text-only source and check capsule. Selected originals retain their bytes. Packaging checks by the author and independent source reviewers serve different roles. Scope does not close complete P01, P39–P41, ARCH-20 or the 29 Agent eight-item acceptance."
+  }
+}
