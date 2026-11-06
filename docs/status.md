@@ -48,6 +48,8 @@
 
 **第1阶段Goose与Copilot隔离管理器实测。** 当前源码接实际官方程序和独立测试库。两家均在A的首个审批未批准时只停A，确认原轮已取消后只关闭A。同连接B保持并准确完成，A工具终态仍未取得。Goose 1.52.0查询确认A的活动会话消失，管理器工作占用下降。Copilot CLI 1.0.106在同一官方进程中A的历史文件句柄1→0、B保持1，工作计数2→1。正式应用复验仍待。[Goose隔离回执](evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json) · [Copilot隔离回执](evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json)
 
+**第1阶段11月7日复核。** 旧正式版三条原连接仍活着，匹配结束记录和已保存未知标记均为0，原稿及保留1份核合。指定关闭与冷启动的新增受控用例确认，A关闭前已保存未知、草稿、附件和暂停待发，冷开恢复且零重发，B独立完成。59项定向通过，正式应用的组合复验待安全退出。[旧版复核](evidence/2026-11-06-phase1-old-exit/README.md) · [关闭与冷启动验证](evidence/2026-11-06-stopped-work-recovery/README.md)
+
 **第1阶段缺条件。** 首波完整验收0/3，三家各有原会话真实续接样本，其余审批分项和完整标准继续核验。安装版存储故障已明确需隔离的macOS图形测试账号或实例，同机测试须顺序启动同一正式应用；Windows安装待可用runner。OpenCode所选原记录的工作目录不可用；Mistral原目录可访问，连接检查超时且原因未定。两条均为一次只读尝试，原草稿保持。已有六家历史分项按各自原配置保留。[29家证据及缺项](evidence/2026-11-06-cycle-01/agent-conditions.json)
 
 **前批草稿、资料与网页补强 adf80c9e5 已正式更新。** 草稿写入等当前批图片导入；音频兼容入口按实际字节显示；工作表失败或取消后可另选；网页标签忽略迟到的同版本旧选中读回。 四处受控回归均保留修复前后的证据，代码独审通过。[本批原件](evidence/2026-11-06-material-continuation/README.md)

@@ -392,6 +392,165 @@ it.each([
   },
 );
 
+it("saves the exact stopped work before closing and restores it after a cold open that omits the tool", async () => {
+  const original = await loadRuntime();
+  const a = await original.threads.open(input);
+  const b = await original.threads.open({
+    ...input,
+    nativeSessionId: "separate-owned-conversation",
+  });
+  const draftKey = `session:${a.key}`;
+  const attachment = {
+    id: "owned-stopped-draft-file",
+    kind: "file" as const,
+    name: "retained.txt",
+    uri: "file:///owned-cold-outcome/retained.txt",
+    deliveryMode: "location" as const,
+  };
+  const draft = { text: "Original unsent draft", attachments: [attachment] };
+  const editedDraft = { ...draft, text: "Last edit before closing" };
+  const queued = blocks("Original paused input");
+  original.drafts.composerDrafts.update(draftKey, () => draft);
+  original.drafts.composerDrafts.update(`session:${b.key}`, () => ({
+    text: "Other unsent draft",
+    attachments: [],
+  }));
+  await expect(
+    original.threads.send(a.key, blocks("Owned first request")),
+  ).resolves.toEqual({
+    status: "accepted",
+  });
+  await expect(original.threads.send(a.key, queued)).resolves.toEqual({
+    status: "queued",
+  });
+  const toolCallId = "stopped-without-terminal";
+  const wire = h.opens.find((open) => open.connectionId === a.connectionId)!
+    .args.channel;
+  wire.onmessage({
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId,
+      title: "Exact tool",
+      status: "pending",
+    },
+  });
+  wire.onmessage({ kind: "toolActivity", toolCallIds: [toolCallId] });
+  ending({ stopReason: "cancelled" });
+  await expect(
+    original.threads.send(b.key, blocks("Independent request")),
+  ).resolves.toEqual({
+    status: "accepted",
+  });
+
+  const { stoppedWorkTarget } = await import("./stopped_work_close");
+  const target = stoppedWorkTarget(a)!;
+  expect(target).toMatchObject({ sessionId: a.nativeSessionId, toolCallId });
+  const proof = {
+    connectionId: target.connectionId,
+    sessionId: target.sessionId,
+    toolCallId,
+    proofId: "41",
+  };
+  const baseInvoke = h.invoke.getMockImplementation()!;
+  let finishSave!: () => void;
+  const heldSave = new Promise<void>((resolve) => {
+    finishSave = resolve;
+  });
+  let saveStarted = false;
+  h.invoke.mockImplementation(async (command: string, args: unknown) => {
+    if (command === "session_check_unapproved_stopped_close") return proof;
+    if (command === "settings_set") {
+      const request = args as {
+        key: string;
+        value?: { composers?: Record<string, { text: string }> };
+      };
+      if (
+        request.key === "unsentWork.v1" &&
+        request.value?.composers?.[draftKey]?.text === editedDraft.text
+      ) {
+        saveStarted = true;
+        await heldSave;
+      }
+    }
+    if (command === "session_close_unapproved_stopped") {
+      expect(args).toEqual({ ...proof, agentId: a.agentId, cwd: a.cwd });
+      // The storage response must already include the original stopped tool's
+      // uncertainty and input before a close can remove the live owner.
+      expect(h.settings.get("unsentWork.v1")).toMatchObject({
+        composers: { [draftKey]: editedDraft },
+        queues: {
+          [a.key]: {
+            blocks: [queued],
+            uncertainIndex: null,
+            outcomeUnknown: true,
+          },
+        },
+      });
+      return proof;
+    }
+    return baseInvoke(command, args);
+  });
+  await expect(
+    original.threads.checkStoppedWorkClose(a, target),
+  ).resolves.toEqual(proof);
+  let closing: Promise<void> | undefined;
+  try {
+    original.drafts.composerDrafts.update(draftKey, () => editedDraft);
+    await vi.waitFor(() => expect(saveStarted).toBe(true));
+    expect(h.settings.get("unsentWork.v1")).toMatchObject({
+      composers: { [draftKey]: draft },
+    });
+    closing = original.threads.closeStoppedWork(a, target, proof);
+    await Promise.resolve();
+    expect(
+      h.invoke.mock.calls.filter(
+        ([cmd]) => cmd === "session_close_unapproved_stopped",
+      ),
+    ).toHaveLength(0);
+  } finally {
+    finishSave();
+    await closing;
+  }
+  expect(a.historicalOutcomeUnknown).toBe(true);
+  expect(b.running).toBe(true);
+  expect(b.connectionLost).toBe(false);
+  h.opens
+    .find((open) => open.connectionId === b.connectionId)!
+    .args.channel.onmessage({
+      update: {
+        sessionUpdate: "agent_message_chunk",
+        content: { type: "text", text: "Independent reply" },
+      },
+    });
+  ending({ stopReason: "end_turn" });
+  expect(b.running).toBe(false);
+  expect(b.items.at(-1)).toMatchObject({ kind: "settled", status: "done" });
+
+  const cold = await coldLoad(original);
+  expect(cold.state.items.some((item) => item.kind === "tool")).toBe(false);
+  expect(cold.state.historicalOutcomeUnknown).toBe(true);
+  expect(cold.state.queued).toEqual([queued]);
+  expect(cold.state.queuePaused).toBe("stopped");
+  expect(cold.drafts.composerDrafts.read(draftKey)).toMatchObject({
+    text: editedDraft.text,
+    attachments: [{ ...attachment, recovered: true }],
+  });
+  const coldB = await cold.threads.open({
+    ...input,
+    nativeSessionId: b.nativeSessionId,
+  });
+  expect(coldB.historicalOutcomeUnknown).toBe(false);
+  expect(cold.drafts.composerDrafts.read(`session:${coldB.key}`).text).toBe(
+    "Other unsent draft",
+  );
+  expect(
+    h.invoke.mock.calls.filter(
+      ([cmd]) => cmd === "session_close_unapproved_stopped",
+    ),
+  ).toHaveLength(1);
+  expectNoColdDispatch(2);
+});
+
 it("does not invent cold uncertainty after an owned finite ending", async () => {
   const original = await loadRuntime();
   const hot = await original.threads.open(input);
