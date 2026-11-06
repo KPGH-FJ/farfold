@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-06T06:17:29.746679+00:00",
+  "updatedAt": "2026-11-06T06:56:33.337994+00:00",
   "objective": "Execute the approved sole five-stage fourteen-cycle plan.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -99,13 +99,14 @@
     "adf80c9e5 fixed attachment autosave, audio affordance, workbook recovery and delayed browser selection read. Fresh seven 721/9630 and Rust2401/7. Single formal install and closed-state preservation. Root selected original draft/owned location attachment restored and rechecked; only own test reference removed.",
     "First phase engineering: five scoped fixes, fresh final seven, formal update and two owned location references cold restore/recheck. First wave and full fault acceptance remain open.",
     "First-wave actual read-only attempts on three agents; no historical read confirmed. 68aefdb formal selected Goose timeout retest, protected draft, independent code/engineering/delivery; first phase still open.",
-    "First-wave differential real reads: Copilot and Kilo initialize in isolated manager but not in formal app; Goose same old history read directly and isolated, formal remains incomplete. Kilo buffered first input, both Goose and Kilo stack samples in getcwd. Storage IPC isolation verified; original draft preserved."
+    "First-wave differential real reads: Copilot and Kilo initialize in isolated manager but not in formal app; Goose same old history read directly and isolated, formal remains incomplete. Kilo buffered first input, both Goose and Kilo stack samples in getcwd. Storage IPC isolation verified; original draft preserved.",
+    "Formal Kilo placement comparison: default and owned neutral positive, original and empty Desktop negative; Desktop toggle visibly on. Exact Kilo and Copilot owned originals loaded directly; prior Goose direct original retained. Independent two-process isolated SQLite cold queue explicit continuation passed."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "first-phase remaining actual acceptance",
-      "state": "0/3 full acceptance. Formal Kilo/Goose sampled in OS cwd resolution; Copilot formal init timeout. Missing syscall results or attributable environment evidence; stored details in first-wave diagnostic summary."
+      "state": "0/3 complete. Formal child work-directory boundary on Desktop for selected samples; underlying syscall outcome/authority unknown. Independent original history reads all three available."
     }
   ],
   "formalPreparation": {
@@ -120,7 +121,7 @@
   "remaining": [
     "原 OpenCode 自测记录 | 一次正式版打开报告原工作文件夹不存在或不可访问，未读回历史。 | 同一原工作位置恢复且可访问。",
     "原 Mistral 自测记录 | 原自有目录可访问；正式版打开一次由读取中转为连接检查超时，原因未定。 | 有归属明确的官方初始化进度、终态或启动/登录条件变化后，再复核该对象。",
-    "首波三家 | Goose原历史直连/隔离可恢复，正式仍缺终态；Kilo与Copilot正式初始化超时。Goose/Kilo同现工作目录系统调用停滞。 | 获取确切系统调用结果或可归属的启动条件变化；三家原历史、实际模型、审批、停止及续接仍按原条件分别验。",
+    "首波三家 | 三条原自测历史可直读；Kilo桌面内原目录/空目录正式超时，Goose原历史与Copilot原历史正式终态仍待验。 | 有可归属的目录调用结果或实际环境变化后，沿同一原路径核身份、模型、审批、停止及续接。",
     "完整存储与退出故障 | 本轮由真实隔离SQLite及受控组件证明所选故障；正式版已验位置附件正常与缺件恢复。 | 独立的应用数据与进程归属环境、可控存储故障样本，以及可观察的原生退出和冷启。",
     "Windows实际安装及桌面 | 已记录安装验证运行未分配runner，本批无新Windows验证。 | 账户付款或额度恢复并有可用runner及对应真机环境。"
   ],
@@ -137,13 +138,14 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-06T06:17:29.746679+00:00",
-  "stage": "first_phase_formal_cwd_diagnosis_acceptance_open",
+  "updatedAtUtc": "2026-11-06T06:56:33.337994+00:00",
+  "stage": "first_phase_formal_desktop_boundary_partial_evidence",
   "finalEvidence": {
     "stageEngineering": "docs/evidence/2026-11-06-cycle-01/summary.json",
     "agentConditions": "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
     "firstWave": "docs/evidence/2026-11-06-wave-01/summary.json",
-    "firstWaveDiagnostics": "docs/evidence/2026-11-06-wave-01-diagnostics/summary.json"
+    "firstWaveDiagnostics": "docs/evidence/2026-11-06-wave-01-diagnostics/summary.json",
+    "formalCwdComparison": "docs/evidence/2026-11-06-formal-cwd/summary.json"
   },
   "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-06-material-continuation/README.md",
@@ -160,7 +162,7 @@
     "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Capture a formally attributed cwd syscall outcome or confirmed environment variable in a scoped observation. Re-open only the affected owned history when a qualifying input or instrument changes. Continue independent work under the sole plan.",
+  "nextExactContinuation": "Preserve original folders and choices. Use an attributable filesystem decision or qualifying scoped environment change to retest formal original histories. Continue independent tests within the sole plan.",
   "initialEngineeringAttempt": {
     "directory": "output/2026-11-06-material-continuation/engineering",
     "allSevenFirstInvocationNaturalZero": true,
