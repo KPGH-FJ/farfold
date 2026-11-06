@@ -1,0 +1,17 @@
+{
+  "installedSource": "6ce829c5",
+  "scope": "Native picker with 20 generated 4096x4096 PNGs in the same completed Copilot test conversation.",
+  "ownedImages": 20,
+  "decodedWidth": 4096,
+  "decodedHeight": 4096,
+  "originalTotalBytes": 1459566,
+  "storedBytesMatchAllOriginals": true,
+  "ownerAndOriginalDraftSwitchVerified": true,
+  "firstAccessibilityObservationAfterPickerUtc": "2026-11-06T18:37:04.023Z",
+  "firstObservationSendEnabled": true,
+  "preparedWhileSwitchingProven": false,
+  "testDraftCleared": true,
+  "originalDraftMatchesBeforeAndAfter": true,
+  "retainedDraftsAfterCleanup": 1,
+  "ownedTestTransportMatchesPriorSeal": true
+}

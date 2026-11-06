@@ -1,0 +1,56 @@
+it.each([
+  ["work-first", true],
+  ["typed-first", true],
+  ["raw-lost-first", true],
+  ["typed-first-with-only-tool-card", false],
+] as const)("old installed source: %s", async (order, tracksTool) => {
+  const original = await loadRuntime();
+  const hot = await original.threads.open(input);
+  const other = await original.threads.open({ ...input, nativeSessionId: "owned-other" });
+  const own = h.opens.find((row) => row.connectionId === hot.connectionId)!;
+  const peer = h.opens.find((row) => row.connectionId === other.connectionId)!;
+  const toolCallId = "owned-pending-approval";
+  const draft = { text: "original local draft", attachments: [] };
+  const otherDraft = { text: "other local draft", attachments: [] };
+  original.drafts.composerDrafts.update(`session:${hot.key}`, () => draft);
+  original.drafts.composerDrafts.update(`session:${other.key}`, () => otherDraft);
+  expect(await original.threads.send(hot.key, blocks("owned synthetic input"))).toEqual({ status: "accepted" });
+  const raw = own.args.channel;
+  raw.onmessage({ update: { sessionUpdate: "tool_call", toolCallId, title: "awaited tool", kind: "execute", status: "pending" }});
+  if (tracksTool) raw.onmessage({ kind: "toolActivity", toolCallIds: [toolCallId] });
+  ending({ stopReason: "cancelled" });
+  expect(hot.items.at(-1)).toMatchObject({ kind: "settled", status: "stopped", stopReason: "cancelled" });
+  expect(hot.activeToolCallIds).toEqual(tracksTool ? [toolCallId] : []);
+  expect(hot.connectionOutcomeUnknown).toBe(false);
+  expect(hot.queued).toEqual([]);
+  await original.drafts.draftPersistence.flush();
+  expect(original.drafts.draftQueues.read(hot.key)).toBeNull();
+  const receipt = { connectionId: own.connectionId, closeReason: "unexpected" };
+  own.args.processEndedChannel.onmessage({ ...receipt, connectionId: peer.connectionId });
+  peer.args.processEndedChannel.onmessage(receipt);
+  expect(hot.processEndedConnectionId).toBeUndefined();
+  expect(other.processEndedConnectionId).toBeUndefined();
+  const toolEnd = () => raw.onmessage({ kind: "toolActivity", toolCallIds: [], reason: "process_ended" });
+  const compactionEnd = () => raw.onmessage({ kind: "compactionActivity", connectionId: own.connectionId, sessionId: own.sessionId, compactionIds: [], uncertain: false, reason: "process_ended" });
+  const rawEnd = () => raw.onmessage({ kind: "connectionLost", closeReason: "unexpected" });
+  const typedEnd = () => own.args.processEndedChannel.onmessage(receipt);
+  if (order === "work-first") { toolEnd(); compactionEnd(); rawEnd(); typedEnd(); }
+  else if (order === "raw-lost-first") { rawEnd(); typedEnd(); toolEnd(); compactionEnd(); }
+  else { typedEnd(); toolEnd(); compactionEnd(); rawEnd(); }
+  expect(hot.processEndedConnectionId).toBe(own.connectionId);
+  expect(hot.connectionLost).toBe(true);
+  expect(hot.connectionOutcomeUnknown).toBe(tracksTool);
+  expect(hot.items.find((item) => item.kind === "tool")).toMatchObject({ call: { toolCallId, status: "pending" } });
+  expect(other.connectionLost).toBe(false);
+  expect(other.processEndedConnectionId).toBeUndefined();
+  expect(other.connectionOutcomeUnknown).toBe(false);
+  await original.drafts.draftPersistence.flush();
+  const stored = h.settings.get("unsentWork.v1") as { queues: Record<string, unknown> };
+  expect(stored.queues[hot.key]).toEqual(tracksTool ? { blocks: [], uncertainIndex: null, outcomeUnknown: true } : undefined);
+  expect(stored.queues[other.key]).toBeUndefined();
+  const cold = await coldLoad(original);
+  expect(cold.state.historicalOutcomeUnknown).toBe(tracksTool);
+  expect(cold.drafts.composerDrafts.read(`session:${hot.key}`)).toMatchObject(draft);
+  expect(cold.drafts.composerDrafts.read(`session:${other.key}`)).toMatchObject(otherDraft);
+  expectNoColdDispatch(1);
+});
