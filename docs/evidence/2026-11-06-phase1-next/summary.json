@@ -1,0 +1,242 @@
+{
+  "kind": "Phase1ExactOriginalHistoryAndSameAgentIsolation",
+  "formalSource": "dbe23bb6ea3eaa714205b4290f32cafffe1218f9",
+  "privateEvidenceRoot": "output/2026-11-06-phase1-next/",
+  "scope": "Existing formal app, scoped user-owned originals and isolation fixtures. No code, installation or OS permission changes by the agent.",
+  "kilo": {
+    "priorSameRequestExistingSignatureMismatchConfirmed": true,
+    "storedRequirementMatchesCurrentAppAfterRetry": false,
+    "samePriorAuthorizationTerminalObserved": false,
+    "operatorSawPromptOnRetry": false,
+    "formalOriginalDiscovery": true,
+    "formalOriginalReadBack": true,
+    "formalOriginalExactContinuation": true,
+    "persistentAuthorizationRecoveryClaimed": false,
+    "refs": [
+      {
+        "path": "kilo-agent/persisted-prompt-chain.json",
+        "bytes": 3402,
+        "sha256": "b5c0cab2a1b1edaa3a269f7f69dbb4cf5cbb10c81e387b3fd1696d2996b13e94"
+      },
+      {
+        "path": "kilo-tcc-desktop-requirement-match.json",
+        "bytes": 550,
+        "sha256": "b8e04de1c5191c84708c89e4f8dea469ee63a9ef3286d64609f12662068c1c04"
+      },
+      {
+        "path": "kilo-tcc-desktop-after-user-availability.json",
+        "bytes": 270,
+        "sha256": "b0cd6e467490618c08781ee0215b624205b6e50d90d5a0615526a6c9a6085d57"
+      },
+      {
+        "path": "kilo-operator-observation.json",
+        "bytes": 121,
+        "sha256": "d6fe59aae8e4db41af7a5d9c5217ceb27dd493ad96d1e90bc8dd0bc678c8820a"
+      },
+      {
+        "path": "kilo-agent/repeat-persisted-window-receipt.json",
+        "bytes": 2166,
+        "sha256": "b28232da8439b199e7b5212de81317221daf6d2737b57815b7bd60f47d53e856"
+      },
+      {
+        "path": "kilo-reprompt-list.ax.txt",
+        "bytes": 869,
+        "sha256": "e52368f09fe252759b36d2d1dc958ad0601b2018848df2e767119c410bbe13cc"
+      },
+      {
+        "path": "kilo-reprompt-exact-preview.ax.txt",
+        "bytes": 665,
+        "sha256": "5426a34786be5fb13d928848f5a240ef54f1eb62843335d51429d39360860321"
+      },
+      {
+        "path": "kilo-original-readback.ax.txt",
+        "bytes": 268,
+        "sha256": "d705b355a0c23d6c8c1f44b75d49f661c5f5c168204198bb47e0c34c1689265d"
+      },
+      {
+        "path": "kilo-original-choice.ax.txt",
+        "bytes": 362,
+        "sha256": "c731d7e9be9b6ac887966967cc9ce3c968c04c0dbfcf87edb9e8047c976a54f6"
+      },
+      {
+        "path": "kilo-original-recall-before.ax.txt",
+        "bytes": 223,
+        "sha256": "8145f30d61c63f224500996665fd1ef9889787796dc441c5421b0e8ee288d931"
+      },
+      {
+        "path": "kilo-original-recall-result.ax.txt",
+        "bytes": 406,
+        "sha256": "e470c1be4db50ec0eaae2e069f61b27bedef1650b9107a1bfc2fe163754035a6"
+      },
+      {
+        "path": "kilo-formal-original-wire.json",
+        "bytes": 731,
+        "sha256": "0aa8558249b9d176e49564665c4a50a24d9967086acb76738796c6e19475f1cb"
+      }
+    ]
+  },
+  "goose": {
+    "replays": 0,
+    "nativeCancelHandlerObserved": true,
+    "formalLateStopUiConfirmed": true,
+    "cancelTimingScope": "Farfold queue tap to Goose handler, no transport write receipt.",
+    "refs": [
+      {
+        "path": "goose-agent/goose-original-late-boundary.json",
+        "bytes": 3545,
+        "sha256": "e49137e21a87453b111412aa028220d52aa0ef374ec0fd3bd04d2b98b416d39b"
+      },
+      {
+        "path": "goose-late-stop-ui.ax.txt",
+        "bytes": 222,
+        "sha256": "12ffbb1be9555af6435129f10b0ea1daad08d71e8751ff4691c389879e6627ba"
+      }
+    ],
+    "newOriginalContextProbeCount": 1,
+    "newOriginalExactContextContinuation": true,
+    "newProbeMatchedProtocolReplyMs": 5540,
+    "newProbeDidNotReproduceOldDelay": true,
+    "newProbeRefs": [
+      {
+        "path": "goose-new-probe-choice.ax.txt",
+        "bytes": 269,
+        "sha256": "d6aed7f522f8243452bd976a0c5ab4f0f5ef42cb651b732cf89739406c8f2026"
+      },
+      {
+        "path": "goose-original-new-probe-before.ax.txt",
+        "bytes": 259,
+        "sha256": "059b6c74257bde202c355a5ffa20f6cf0bce0e5f824d79da736ad36b83baca16"
+      },
+      {
+        "path": "goose-original-new-probe-action.json",
+        "bytes": 118,
+        "sha256": "1b1ae8794f815cab0358e1789f3317bc4eaf0cd30ca459322f063f8066620b8c"
+      },
+      {
+        "path": "goose-original-new-probe-completed.ax.txt",
+        "bytes": 591,
+        "sha256": "c1a58ace32010f57e585cdbe4819e780dcc67228787b857b198516b758ef65c6"
+      },
+      {
+        "path": "goose-agent/goose-original-new-probe-bounded-observation.json",
+        "bytes": 7354,
+        "sha256": "9c9809a6ab22a85c8bd1c9f44b7a8caf609cbbe606ed1d5a74a3524fd7334d41"
+      }
+    ],
+    "priorOriginalPromptCount": 1,
+    "priorAssistantReplyObserved": false,
+    "lateInternalContextBeforeNextProviderPreparationObserved": true,
+    "priorProviderEndpointReached": null,
+    "priorExactWaitCauseKnown": false
+  },
+  "copilot": {
+    "sameExactHistoricalSnapshotsWithEmptyModelChoices": 13,
+    "earliestEvidenceDateLocal": "2026-10-09",
+    "historicalE954IsAnotherOwnedFixture": true,
+    "originalSendRemainsPaused": true,
+    "freeCreditsSupportedByOfficialDocs": true,
+    "newModelRequestsThisBatch": 0,
+    "refs": [
+      {
+        "path": "copilot-agent/original-copilot-model-baseline-history.json",
+        "bytes": 9488,
+        "sha256": "fefcc87e3a89d67ba568478a3ef92a71fb66fbcede6415e27c0ee24edee40a8c"
+      },
+      {
+        "path": "copilot-agent/original-copilot-baseline-origin.json",
+        "bytes": 3639,
+        "sha256": "b0e87da7b1af2f7495bc6e40959ff50d52b2614066e9d1e4c04961ddaae8d7ed"
+      },
+      {
+        "path": "copilot-agent/original-copilot-native-configured-model.json",
+        "bytes": 2141,
+        "sha256": "40acac7323aa5c3c117b99b689a86b3da3158786cbb4f39df1017782d6816fdd"
+      }
+    ],
+    "historicalNativeSelectedModel": "auto",
+    "nativeSelectedModelEventCount": 4,
+    "farfoldPersistedBaselinePresent": false,
+    "historicalNativeAndFarfoldVersionFieldDifferenceResolved": false,
+    "contemporaneousFarfoldFirstSelectionEvidence": "Farfold recorded existing settings with an Agent default, without an exact selection. Separate Copilot native history records Auto."
+  },
+  "independentSameAgentIsolation": {
+    "kiloSameWorkingDirectoryCases": 1,
+    "actualDistinctNativeConversations": 2,
+    "cancelOnlyA": true,
+    "aStopped": true,
+    "bOwnResponseCompleted": true,
+    "actualApprovalsTested": false,
+    "refs": [
+      {
+        "path": "kilo-isolation-second-bootstrap-result.ax.txt",
+        "bytes": 402,
+        "sha256": "ad712757c272dfe581cb3fa00c30b4311f05d03434629cd73e3d00cfcf76fa65"
+      },
+      {
+        "path": "same-kilo-a-model.ax.txt",
+        "bytes": 332,
+        "sha256": "10db26a2a942b344e47ebe56e9b390eed83348e14704aed9ddda87a77a6dee51"
+      },
+      {
+        "path": "same-kilo-both-running.ax.txt",
+        "bytes": 358,
+        "sha256": "97055e9e2249fabded39ed847f0478a62f72b7c31cc01965fd9a8b979e573bf1"
+      },
+      {
+        "path": "same-kilo-a-stop-before.ax.txt",
+        "bytes": 322,
+        "sha256": "48470e06338c5bb31825415b80c8aec3a954287d8e6afc750c3c7115bde49bc5"
+      },
+      {
+        "path": "same-kilo-a-stop-action.ax.txt",
+        "bytes": 342,
+        "sha256": "46c1b96050f575ccd4cd63ba5f98446bc01eff2ea8d881f0488add9a4c565a8b"
+      },
+      {
+        "path": "same-kilo-a-stopped.ax.txt",
+        "bytes": 439,
+        "sha256": "e065f1f990fd5bb87fe9442f5950eb6d4668c883a60d18d3ac35d51110a7ac5a"
+      },
+      {
+        "path": "same-kilo-b-completed.ax.txt",
+        "bytes": 657,
+        "sha256": "16f88de38aae4bb2a14a5505860994df03b2b08d9c3fa2010ed699bc56b5c93c"
+      },
+      {
+        "path": "same-kilo-distinct-identities.json",
+        "bytes": 177,
+        "sha256": "d5fb9926e966dbb09ac07a8a543c5c6c7da1576afe950d262786ea091510bfcf"
+      },
+      {
+        "path": "same-kilo-formal-wire.json",
+        "bytes": 1443,
+        "sha256": "f830632e5015b30d0abaa8125d6b3442bef8e7ff1d3e91ced7d858146cb2dba9"
+      }
+    ]
+  },
+  "preservation": {
+    "originalDraftAndLocationRestored": true,
+    "retainedDrafts": 1,
+    "oldRequestsReplayed": 0,
+    "ref": {
+      "path": "original-draft-restored.ax.txt",
+      "bytes": 325,
+      "sha256": "8723ac526dbbfe76bbc10f170dfa34d111bc3a7a52bc02a5e38fff08f8cf47c6"
+    },
+    "finalAfterNewGooseProbe": {
+      "path": "original-draft-after-goose-probe.ax.txt",
+      "bytes": 325,
+      "sha256": "05b9855a4cb38b6d71d41cb7a13a9e6036e02854ae51763ba9f7c422aadfd40b"
+    }
+  },
+  "firstWave": {
+    "complete": 0,
+    "total": 3,
+    "open": [
+      "Kilo长期桌面授权与前次提示未结算",
+      "Goose前次回复准备等待点和取消交付时点",
+      "Copilot的Farfold模型基线恢复和旧工具状态",
+      "真实审批、安装版存储故障和Windows安装"
+    ]
+  }
+}
