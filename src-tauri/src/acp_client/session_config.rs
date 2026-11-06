@@ -5,6 +5,7 @@ use agent_client_protocol::{Agent, ConnectionTo, Dispatch, UntypedMessage};
 use serde_json::{Value, json};
 
 use super::{
+    model_guard::ModelGuard,
     operations::Operation,
     pump::{describe_acp_error, parse_config_value},
 };
@@ -31,6 +32,7 @@ pub(crate) struct ConfigRequest {
     value: Value,
     legacy: bool,
     revision: u64,
+    saw_protected_change: bool,
 }
 
 fn allows_legacy(options: Option<&Value>) -> bool {
@@ -134,6 +136,7 @@ impl SessionConfig {
             value: value.clone(),
             legacy,
             revision: self.revision,
+            saw_protected_change: false,
         })
     }
 
@@ -190,6 +193,30 @@ impl SessionConfig {
         self.options().ok_or_else(|| UNCONFIRMED.into())
     }
 
+    /// An already observed protected change may contradict this full reply.
+    /// Check before replacing the current options or permitting a local save.
+    pub(crate) fn complete_choice(
+        &mut self,
+        request: &ConfigRequest,
+        reply: Value,
+        prior: &ModelGuard,
+        observed: &ModelGuard,
+    ) -> Result<Value, String> {
+        if !request.saw_protected_change {
+            return self.complete(request, reply);
+        }
+        let current = observed.current_value();
+        let mut candidate = self.clone();
+        let options = candidate.complete(request, reply)?;
+        let mut reported = prior.clone();
+        reported.observe(&options);
+        if reported.current_value() != current {
+            return Err("设置结果尚未确认，请重新检查此对话".into());
+        }
+        *self = candidate;
+        Ok(options)
+    }
+
     fn configuration_update(dispatch: &Dispatch) -> Option<&Value> {
         let Dispatch::Notification(message) = dispatch else {
             return None;
@@ -235,6 +262,14 @@ impl SessionConfig {
 }
 
 impl ConfigRequest {
+    /// Keep this fact for the lifetime of the one pending request, including
+    /// when a later observation returns to the original protected values.
+    pub(crate) fn observe_choices(&mut self, prior: &ModelGuard, current: &ModelGuard) {
+        if !self.legacy && !self.saw_protected_change {
+            self.saw_protected_change = current.current_value() != prior.current_value();
+        }
+    }
+
     pub(crate) fn send(
         &self,
         cx: &ConnectionTo<Agent>,

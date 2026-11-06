@@ -303,6 +303,7 @@ pub(super) async fn next_mutation(
 pub(super) fn update(
     options: &Value,
     modern: bool,
+    guard: &ModelGuard,
     opening: &mut Option<Opening>,
     mutation: &mut Option<Mutation>,
 ) {
@@ -310,12 +311,14 @@ pub(super) fn update(
         opening.options = Some(options.clone());
         opening.config_options_modern = modern;
     }
-    if let Some(Mutation {
-        kind: MutationKind::Restore { plan, .. },
-        ..
-    }) = mutation
-    {
-        plan.observe(options);
+    match mutation.as_mut().map(|active| &mut active.kind) {
+        Some(MutationKind::Restore { plan, .. }) => plan.observe(options),
+        Some(MutationKind::Config {
+            request,
+            prior_guard: Some(prior),
+            ..
+        }) => request.observe_choices(prior, guard),
+        _ => {}
     }
 }
 
@@ -342,6 +345,7 @@ pub(super) fn drain(
             update(
                 options,
                 configuration.modern_options().is_some(),
+                guard,
                 opening,
                 mutation,
             );

@@ -715,7 +715,7 @@ async fn session_pump(
                         model_guard.observe(options);
                                 if !options.is_array() { model_guard.change_unknown(); }
                         permission_guard.observe(options);
-                        restore_config::update(options, configuration.modern_options().is_some(), &mut opening, &mut mutation);
+                        restore_config::update(options, configuration.modern_options().is_some(), &model_guard, &mut opening, &mut mutation);
                         if opening.is_none() {
                             events(permission_guard.event());
                             events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
@@ -837,6 +837,8 @@ async fn session_pump(
                 if let Some(outcome) = outcome {
                     let mut completed = mutation.take().expect("completed mutation exists");
                     let mut outcome = match &completed.kind {
+                        MutationKind::Config { request, prior_guard: Some(prior), .. } =>
+                            outcome.and_then(|reply| configuration.complete_choice(request, reply, prior, &model_guard)),
                         MutationKind::Restore { request, .. } | MutationKind::Config { request, .. } =>
                             outcome.and_then(|reply| configuration.complete(request, reply)),
                         _ => outcome,

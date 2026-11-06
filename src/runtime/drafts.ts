@@ -93,6 +93,13 @@ type PreservedNew = {
   generation: number;
   selection: string;
 };
+function capturePreservedNew(): PreservedNew {
+  return {
+    draft: composerDrafts.read("new"),
+    generation: composerDrafts.generation("new"),
+    selection: JSON.stringify(choice),
+  };
+}
 function assertPreservedNew(ticket: PreservedNew) {
   if (
     composerDrafts.read("new") !== ticket.draft ||
@@ -117,24 +124,14 @@ export const composerDrafts = {
     );
   },
   /** Persist the original before the caller replaces the active input. */
-  async preserveNew() {
+  async preserveNew(expected?: PreservedNew) {
     await draftPersistence.flush();
-    const current = this.read("new");
-    if (
-      current.sendPending ||
-      current.pendingConversation ||
-      current.attachments.some((a) => a.loading)
-    )
-      throw new Error(REDESIGN.pendingDraft);
-    const ticket = {
-      draft: current,
-      generation: this.generation("new"),
-      selection: JSON.stringify(choice),
-    };
+    const ticket = expected ?? capturePreservedNew();
+    assertPreservedNew(ticket);
     if (!this.hasContent("new")) return ticket;
     const key = `saved-new:${crypto.randomUUID()}`;
     values.set(key, {
-      ...structuredClone(current),
+      ...structuredClone(ticket.draft),
       savedChoice: structuredClone(choice),
     });
     changed();
@@ -149,7 +146,9 @@ export const composerDrafts = {
   async restorePreserved(key: string) {
     const saved = values.get(key);
     if (!key.startsWith("saved-new:") || !saved?.savedChoice) return false;
-    const ticket = await this.preserveNew();
+    // The restore belongs to the draft visible when the user requested it,
+    // including while an earlier save still owns the storage writer.
+    const ticket = await this.preserveNew(capturePreservedNew());
     assertPreservedNew(ticket);
     const { savedChoice, ...content } = structuredClone(saved);
     values.set("new", {

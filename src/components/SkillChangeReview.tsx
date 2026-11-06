@@ -13,6 +13,7 @@ import { EXTENSION_INVENTORY_STRINGS as I } from "../runtime/extension_inventory
 import { MCP_MANAGEMENT_STRINGS as MCP } from "../runtime/mcp_management_strings";
 import "./SkillChangeReview.css";
 import type { ExtensionChangeRequest } from "../runtime/extension_management_types";
+import type { SkillChangeScope } from "../runtime/skill_management_types";
 
 function stringsForTarget(target: ExtensionChangeRequest["target"]) {
   return !("kind" in target)
@@ -24,6 +25,18 @@ function stringsForTarget(target: ExtensionChangeRequest["target"]) {
           ? HTTP
           : ADD
         : MCP;
+}
+
+function WriteScope({ scope }: { scope: Readonly<SkillChangeScope> }) {
+  return (
+    <>
+      <p>
+        {SKILLS.scope}：
+        {scope.kind === "profile" ? SKILLS.profile : SKILLS.user}
+      </p>
+      <p className="skill-change-path">{scope.configDisplayPath}</p>
+    </>
+  );
 }
 
 export function SkillChangeReview({
@@ -203,6 +216,10 @@ export function SkillChangeReview({
       {isRemoval && "transport" in request.target && (
         <p>{I.transport[request.target.transport]}</p>
       )}
+      {view.confirmedScope &&
+        (view.unresolved || view.trackingReleased || op?.writeDispatched) && (
+          <WriteScope scope={view.confirmedScope} />
+        )}
       {prior && (
         <div className="agent-extension-progress">
           <p>
@@ -214,6 +231,9 @@ export function SkillChangeReview({
           <p className="skill-change-path">
             {SKILLS.priorDirectory}：{prior.cwd}
           </p>
+          {view.originalWriteScope && (
+            <WriteScope scope={view.originalWriteScope} />
+          )}
           <p role="status">
             {!prior.outcome || prior.outcome === "unknown"
               ? "kind" in prior.target && prior.target.kind === "mcpRemoval"
@@ -294,13 +314,7 @@ export function SkillChangeReview({
               {S.reported}：{review.reportedEnabled ? S.enabled : S.disabled}
             </p>
           )}
-          <p>
-            {S.scope}：
-            {review.writeScope.kind === "profile" ? S.profile : S.user}
-          </p>
-          <p className="skill-change-path">
-            {review.writeScope.configDisplayPath}
-          </p>
+          <WriteScope scope={review.writeScope} />
           {"parentHandling" in review && (
             <p>{REMOVE.parentHandling[review.parentHandling]}</p>
           )}

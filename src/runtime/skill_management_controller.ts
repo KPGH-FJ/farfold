@@ -17,6 +17,7 @@ import {
   type SkillManagementPort,
 } from "./skill_management";
 import { mcpManagementPort } from "./mcp_management";
+import type { SkillChangeScope } from "./skill_management_types";
 import {
   parseExtensionChangeOperation as parseSkillChangeOperation,
   parseExtensionChangeCancellation as parseSkillChangeCancellation,
@@ -43,7 +44,10 @@ export interface SkillManagementView {
   trackingReleased: boolean;
   admissionRejected: boolean;
   error: McpAddCode | McpRemoveCode | null;
+  // Display only, captured from the review explicitly accepted for this request.
+  confirmedScope: Readonly<SkillChangeScope> | null;
   originalOperation: SkillChangeOperation | null;
+  originalWriteScope: Readonly<SkillChangeScope> | null;
   additionInput: McpAddInput | null;
 }
 const EMPTY: SkillManagementView = Object.freeze({
@@ -58,7 +62,9 @@ const EMPTY: SkillManagementView = Object.freeze({
   admissionRejected: false,
   error: null,
   additionInput: null,
+  confirmedScope: null,
   originalOperation: null,
+  originalWriteScope: null,
 });
 type ChangeTarget = Pick<
   SkillChangeTargetOwner,
@@ -68,6 +74,7 @@ type RemovalParent = "mayRemainEmpty" | "preserveSiblings" | null;
 interface LastWrite {
   request: SkillChangeRequest;
   operation: SkillChangeOperation;
+  scope: Readonly<SkillChangeScope> | null;
   port: SkillManagementPort;
   target: ChangeTarget;
   removalParent: RemovalParent;
@@ -219,6 +226,7 @@ export class SkillManagementController {
       f.lastWrite = {
         request: f.view.request,
         operation: op,
+        scope: f.view.confirmedScope,
         port: f.port,
         target: f.target,
         removalParent: f.removalParent,
@@ -227,6 +235,7 @@ export class SkillManagementController {
     this.publish(f, {
       operation: op,
       originalOperation: f.lastWrite?.operation ?? null,
+      originalWriteScope: f.lastWrite?.scope ?? null,
       review: rev,
       reviewRetired: !!op.review && !rev,
       unresolved: !op.settled,
@@ -360,6 +369,7 @@ export class SkillManagementController {
         request,
         unresolved: true,
         originalOperation: previous?.lastWrite?.operation ?? null,
+        originalWriteScope: previous?.lastWrite?.scope ?? null,
         additionInput: "input" in target ? target.input : null,
       },
       retired: false,
@@ -452,7 +462,9 @@ export class SkillManagementController {
         request,
         unresolved: true,
         reviewRetired: true,
+        confirmedScope: Object.freeze({ ...review.writeScope }),
         originalOperation: old.lastWrite?.operation ?? null,
+        originalWriteScope: old.lastWrite?.scope ?? null,
         additionInput: old.view.additionInput,
       },
       dispatched: false,
@@ -608,6 +620,7 @@ export class SkillManagementController {
         unresolved: true,
         reviewRetired: true,
         originalOperation: write.operation,
+        originalWriteScope: write.scope,
       },
       retired: true,
       inspectionRevoked: true,

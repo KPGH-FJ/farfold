@@ -18,6 +18,8 @@ import {
 import {
   item as skillItem,
   operation as skillOperation,
+  setup as skillSetup,
+  written as skillWritten,
 } from "./skill_management.test-support";
 import { deferred, flush } from "./extension_inventory.test-support";
 import type { ExtensionChangeRequest } from "./extension_management_types";
@@ -360,4 +362,161 @@ it("shows the prior target and uncertainty separately from the current read-only
   expect(html).not.toContain("均已核对为所选状态");
   expect(h.port.confirm).toHaveBeenCalledTimes(1);
   h.close();
+});
+
+it.each(["skill", "mcp"] as const)(
+  "keeps the reviewed %s scope from confirmation through the result and readback",
+  async (domain) => {
+    vi.useFakeTimers();
+    const h = domain === "skill" ? await skillSetup() : await setup();
+    const controller = "client" in h ? h.client : h.controller;
+    const replies = "pending" in h ? h.pending : h;
+    const get = () => controller.get(h.owner.agentId);
+    vi.spyOn(skillManagement, "get").mockImplementation(controller.get);
+    vi.spyOn(skillManagement, "canConfirm").mockImplementation(
+      (owner, review) => controller.canConfirm(owner, review),
+    );
+    const render = () =>
+      renderToStaticMarkup(
+        <SkillChangeReview agentId={h.owner.agentId} owner={h.owner} active />,
+      );
+    expect(controller.inspect(h.target)).toBe(true);
+    await flush();
+    replies.inspect.resolve(
+      domain === "skill"
+        ? skillOperation(get().request!, "ready")
+        : operation(get().request!, true),
+    );
+    await flush();
+    const review = get().review!;
+    const scopePath = review.writeScope.configDisplayPath;
+    const preview = render();
+    expect(preview).toContain(scopePath);
+    expect(preview).toContain("所选用户配置方案");
+    expect(controller.confirm(h.owner, review)).toBe(true);
+    await flush();
+    const pending = render();
+    const confirmed = get().request!;
+    const result = domain === "skill" ? skillWritten : written;
+    replies.confirm.resolve(result(confirmed));
+    await flush();
+    expect(get().operation).toMatchObject({
+      settled: true,
+      writeDispatched: true,
+      writeAck: "ok",
+      outcome: "verified",
+    });
+    const verified = render();
+    expect(h.port.recheck).not.toHaveBeenCalled();
+    expect(controller.recheck(h.owner.agentId, confirmed.requestId)).toBe(true);
+    await flush();
+    const readback = get().request!;
+    expect(h.port.recheck).toHaveBeenCalledExactlyOnceWith({
+      agentId: h.owner.agentId,
+      requestId: readback.requestId,
+      operationId: confirmed.requestId,
+    });
+    replies.recheck.resolve(result(readback));
+    await flush();
+    expect(get().operation).toMatchObject({
+      outcome: "observed",
+      writeAck: "ok",
+      observation: { sessionApplicability: "unverified" },
+    });
+    expect(h.port.confirm).toHaveBeenCalledExactlyOnceWith({
+      agentId: h.owner.agentId,
+      requestId: confirmed.requestId,
+      reviewId: review.reviewId,
+    });
+    const observed = render();
+    h.close();
+    expect(
+      [pending, verified, observed].map((html) => ({
+        scopePathOccurrences: html.split(scopePath).length - 1,
+        profile: html.includes("所选用户配置方案"),
+      })),
+    ).toEqual([
+      { scopePathOccurrences: 1, profile: true },
+      { scopePathOccurrences: 1, profile: true },
+      { scopePathOccurrences: 1, profile: true },
+    ]);
+  },
+);
+
+it("shows the unknown original scope separately from a new review and keeps it through a refused confirmation", async () => {
+  const { h, request, original } = await unknownWrite();
+  const originalPath = "~/.example/work.config.toml";
+  const next = await nextReview(h, true);
+  const newPath = "~/.example/config.toml";
+  next.pending.resolve({
+    ...next.ready,
+    review: {
+      ...next.ready.review,
+      writeScope: { kind: "user", configDisplayPath: newPath },
+    },
+  });
+  await flush();
+  const get = () => h.controller.get(h.owner.agentId);
+  vi.spyOn(skillManagement, "get").mockImplementation(h.controller.get);
+  vi.spyOn(skillManagement, "canConfirm").mockImplementation((owner, review) =>
+    h.controller.canConfirm(owner, review),
+  );
+  const render = () =>
+    renderToStaticMarkup(
+      <SkillChangeReview agentId={h.owner.agentId} owner={next.owner} active />,
+    );
+  const reviewed = render();
+  expect(reviewed).toContain(newPath);
+  expect(get().originalOperation).toBe(original);
+  const confirm = deferred();
+  vi.mocked(h.skills.confirm).mockReturnValueOnce(confirm.promise);
+  expect(h.controller.confirm(next.owner, get().review!)).toBe(true);
+  await flush();
+  const refused = get().request!;
+  confirm.resolve({
+    ...skillOperation(refused, "ready"),
+    state: "failed",
+    code: "configurationChanged",
+  });
+  await flush();
+  expect(get()).toMatchObject({
+    operation: { writeDispatched: false, outcome: "notDispatched" },
+    originalOperation: original,
+  });
+  const rejected = render();
+  expect(rejected).not.toContain(newPath);
+  expect(h.controller.recheck(h.owner.agentId, refused.requestId)).toBe(true);
+  await flush();
+  const readback = get().request!;
+  h.pending.recheck.resolve(written(readback, true));
+  await flush();
+  expect(h.port.recheck).toHaveBeenCalledExactlyOnceWith({
+    agentId: h.owner.agentId,
+    requestId: readback.requestId,
+    operationId: request.requestId,
+  });
+  expect(h.skills.recheck).not.toHaveBeenCalled();
+  expect(h.port.confirm).toHaveBeenCalledTimes(1);
+  expect(h.skills.confirm).toHaveBeenCalledTimes(1);
+  expect(get()).toMatchObject({
+    operation: { outcome: "observed", writeAck: "unknown" },
+    originalOperation: original,
+  });
+  const observed = render();
+  h.close();
+  const originalCard = (html: string) =>
+    html.split("此前已发出的修改")[1]?.split("</div>")[0] ?? "";
+  const cards = [reviewed, rejected, observed].map(originalCard);
+  expect(cards.map((card) => card.includes(originalPath))).toEqual([
+    true,
+    true,
+    true,
+  ]);
+  for (const card of cards) {
+    expect(card).toContain(original.target.name);
+    expect(card).toContain(original.cwd);
+    expect(card).toContain("所选用户配置方案");
+    expect(card).toContain("此前修改结果仍未确认");
+    expect(card).not.toContain(newPath);
+  }
 });
