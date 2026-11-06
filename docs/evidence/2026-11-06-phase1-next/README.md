@@ -28,7 +28,13 @@ Copilot Free 每月含免费 AI Credits，模型走 Auto。同账号前一批测
 
 Goose 正式自测 B 的既有回复，已用原请求编号核对 OpenRouter 账户和默认工作区日志。详细页显示 NVIDIA，工作区同一行费用显示 $0.00。当前同工作区的 Response Healing 和 Pareto Router 开关为关，服务器网页搜索显示可用。服务器工具仍需在请求中显式声明，旧网页搜索插件的实际默认值没有读到。本次只读既有日志和开关，没有更改账号或发新请求。[同请求回执](goose-openrouter-workspace-readonly.json) · [OpenRouter 工具](https://openrouter.ai/docs/guides/features/server-tools/overview) · [OpenRouter 插件](https://openrouter.ai/docs/guides/features/plugins/overview)
 
+再打开默认工作区四个具体插件的配置对话框。网页搜索、PDF、响应修复、Pareto Router 的「禁止覆盖」均为关，逐个取消关闭，零设置变更。官方支持对未禁止覆盖的插件按请求明确关闭。进程与原通信记录另外核到，旧 B 第三次发送对应上述工作区账单，后来切换及切回也沿用该连接。旧记录无法区分实际凭据来自钥匙串还是覆盖设置，新 Goose 连接仍缺该工作区归属证据。[工作区只读回执](goose-openrouter-workspace-readonly.json) · [OpenRouter 插件覆盖规则](https://openrouter.ai/docs/guides/features/plugins/overview)
+
 第二免费候选的公开输入与输出费率为零。Goose 的聊天模式会跳过模型要求执行的工具，但构建请求时仍加入 Skills 的名称和说明。上一次同一测试对话的实际出站请求中，核到 5 个来自用户目录的技能名称。本机正式版没有只对这条会话关闭 Skills 的入口，因此这次没有发送新的合成测试消息。[候选端点](https://openrouter.ai/api/v1/models/nvidia/nemotron-3.5-super-vl:free/endpoints) · [提示准备](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/agents/reply_parts.rs#L197-L240) · [Skills 内容](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/skills/client.rs#L248-L269)
+
+用已登记的 Goose `1.52.0` 程序只向本机模拟地址发出一次合成提示。只许访问专用端口的系统限制已用另一端口和用户目录读取做反例；程序使用假密钥、关闭钥匙串、独立空目录。移除自测中自动加载的一个内置扩展后，官方回执确认扩展和工具为空。请求体核到准确 Super VL 免费模型、仅 NVIDIA、无模型或提供方回退、输入和输出费率上限为 0，并显式关闭网页搜索、PDF 解析、响应修复、Pareto Router 和 Auto Router。程序仍附加自身的 `middle-out` 设置。首次实际发送的用户文本严格断言失败，本机拒绝后共观察到四次 HTTP 尝试，未取得预期模拟回复。没有外部推理、真实密钥或生产改动，进程正常退出。[首轮本机回执](goose-loopback-routing-first-attempt.json) · [Goose 请求参数](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/documentation/docs/getting-started/providers.md) · [OpenRouter 公开接口](https://openrouter.ai/openapi.json)
+
+首轮夹具遗漏了 Goose 追加并合入用户消息的回合信息。新空对话保留相同路由参数，按源码逐项比对后通过。一次提示产生一次本机生成请求并读回预期模拟标识，另有一次本机模型目录查询。系统文字在空白归一化后匹配官方固定模板，用户原文后只有按分钟记录的本地时间、时区偏移和独立测试目录，三个会话标识均属于新测试对话。测试进程读取用户目录的样本路径被拒，请求无用户目录内容、扩展文字或工具字段。自测进程正常退出，临时数据已移除。本地样本未使用真实凭据，仍未核当前新连接的 OpenRouter 工作区归属、实际模型回复或费用。[复验回执](goose-loopback-routing-exact-context.json) · [Goose 回合信息](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/agents/moim.rs#L124-L180)
 
 另用同一已登记 Goose 1.52.0 程序直接启动独立测试连接。两条空对话分别移除自测范围内唯一扩展，读回扩展和工具均为空。仅把 A 从 Ultra 改为同服务 Super VL，正常关闭自测进程后，用新进程加载同一两个对话。A 读回 Super VL，B 保持 Ultra，扩展与工具仍为空，两条消息数为零。两次自测进程均正常退出，零提示和登录请求。该分项覆盖官方程序自己的模型保存和冷恢复，实际账号、回复、费用和正式应用仍待验证。[Goose 隔离冷恢复](goose-isolated-model-cold-restore.json)
 

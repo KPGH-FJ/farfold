@@ -82,6 +82,8 @@
 
 **第1阶段原服务计费与模型隔离。** Goose旧正式自测的请求编号与OpenRouter默认工作区准确匹配，该次账单显示$0.00。聊天模式仍携带本地Skills上下文，当前正式版没有单对话关闭入口，第二候选未发送。Kilo官方7.8.1隔离自测仅切A到同服务免费Dots3再恢复Ultra，B设置读回一致，零提示，测试进程自然退出。Kilo正式版和真实回复仍待。[Goose工作区核对](evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json) · [Kilo隔离切换](evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json)
 
+**第1阶段Goose发出内容核对。** 真实Goose 1.52.0使用假凭据和只准访问专用本机端口的测试环境，核到请求指定免费Super VL、仅NVIDIA、零模型价格上限、无回退，并将五个指定插件标为关闭。首轮夹具漏计Goose追加的回合信息，模拟端拒绝，四次本机尝试；复验逐项核到固定系统文字、自测目录与时间、仅新会话的标识，一次本机生成请求返回预期模拟标识。OpenRouter默认工作区四项已见插件可由请求覆盖，新进程凭据归属和真实回复仍待核。[工作区核对](evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json) · [本机复验](evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json)
+
 **第1阶段Kilo模型冷恢复。** 当前连接管理器与官方7.8.1在独立库中核合。只读打开两条原自测会话均返回默认模型。普通冷开两条独立连接均先加载原会话再应用已保存选择，A恢复Dots3、B保持Ultra，均就绪。两条保存记录不被覆盖，零新增消息。定向1项通过，首次夹具误读已处理字段，修正为独立只读对照。本轮只核恢复，实际回复见下条。[管理器冷恢复回执](evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json)
 
 **第1阶段Kilo匿名实际模型。** 另一次隔离自测中，当前连接管理器用官方7.8.1冷开后恢复同一A的免费Dots3。仅发一次合成提示，2.764秒准确回复，原生记录报告准确模型和费用0。B的Ultra、会话行、保存设置及连接保持，零工具或审批。实际网关请求次数未采，正式界面、已登录账号和跨版授权继续待验。[匿名冷开回执](evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json)
