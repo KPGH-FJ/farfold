@@ -7,10 +7,13 @@ import { SIDEBAR_STRINGS } from "./sidebar_strings";
  * these so existing imports keep working.
  */
 import type { AgentOnlyRow, IndexRow, ThreadState } from "./sessions";
-import { hasActiveTools, hasPendingRequests } from "./session_types";
+import { hasActiveTools } from "./session_types";
 import { hasUnsentWork } from "./drafts";
 import { hasActiveCompaction } from "./compaction_activity";
-import { threadNeedsAttention } from "./thread_attention";
+import {
+  hasUnconfirmedToolTail,
+  threadNeedsAttention,
+} from "./thread_attention";
 
 export interface SidebarRow {
   key: string;
@@ -45,28 +48,6 @@ export function shortPath(path: string, max = 48): string {
   return `${p.slice(0, keep)}…${p.slice(p.length - keep)}`;
 }
 
-/** Keep the official activity untouched; its last reply ending only changes
- * how a remaining tool is described. A newer request cannot inherit it. */
-function toolTailUnconfirmed(s: ThreadState): boolean {
-  if (
-    s.running ||
-    s.submitting ||
-    s.reconnecting ||
-    s.configuring ||
-    s.stopping ||
-    !hasActiveTools(s) ||
-    hasPendingRequests(s)
-  )
-    return false;
-  for (let i = s.items.length - 1; i >= 0; i -= 1) {
-    const item = s.items[i];
-    if (item.kind === "user") return false;
-    if (item.kind === "settled")
-      return item.status === "stopped" || item.status === "failed";
-  }
-  return false;
-}
-
 /** Merge index rows (plus agent-side `session/list` rows) with live
  *  thread state, then group by project directory. Pinned first, then
  *  attention > running > idle, then `updatedAt` desc within a group.
@@ -93,7 +74,9 @@ export function groupSidebarRows(
   };
   for (const row of rows) {
     const liveState = live.get(row.id);
-    const unconfirmedTail = liveState ? toolTailUnconfirmed(liveState) : false;
+    const unconfirmedTail = liveState
+      ? hasUnconfirmedToolTail(liveState)
+      : false;
     const status: SidebarRow["status"] = liveState
       ? threadNeedsAttention(liveState) || unconfirmedTail
         ? "need"

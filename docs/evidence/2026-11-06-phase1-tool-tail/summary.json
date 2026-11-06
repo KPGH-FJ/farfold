@@ -1,0 +1,66 @@
+{
+  "platform": "macOS 27.0 arm64 (26A425)",
+  "installedRevision": "6ce829c53",
+  "completeFirstWaveAgents": 0,
+  "copilot": {
+    "scope": "one owned empty-directory conversation; existing service, Auto",
+    "newPrompts": 1,
+    "onceApprovals": 2,
+    "cancels": 1,
+    "cancelToResponseMs": 8,
+    "nativeAbort": "user_abort",
+    "matchingToolComplete": false,
+    "directShellAndSleepPresentBeforeStop": true,
+    "directShellAndSleepAbsentBeforeNaturalDeadline": true,
+    "preciseProcessExitTimeKnown": false,
+    "continuousWatcherAttributionUsable": false,
+    "watcherUnboundExactShellSamples": 60,
+    "operatorSignals": 0,
+    "priorOriginalContinuation": {
+      "selectedOption": "auto",
+      "reportedModel": "gpt-6-luna",
+      "reportedProvider": "copilot",
+      "futureRoutingOrChargeInferred": false
+    }
+  },
+  "kilo": {
+    "sameBuildColdProcess": true,
+    "folderReselected": false,
+    "matchingDesktopSystemAllow": true,
+    "desktopPromptCount": 0,
+    "permissionDecisionMs": 3.187,
+    "historyLoadMs": 2172,
+    "historyUpdates": 37,
+    "newPrompts": 0,
+    "crossUpdateAuthorizationVerified": false
+  },
+  "goose": {
+    "scopedOfficialLists": 1,
+    "listToReplyMs": 4,
+    "matchedExistingOriginal": true,
+    "newPrompts": 0
+  },
+  "longWait": {
+    "copilotOriginalAllowedToNativeUserMessageMs": 2429,
+    "causalityEstablished": false,
+    "pipeFixtureDistinguishesPositiveQueuesByHop": true,
+    "zeroBothQueuesCanOccurBeforeWriteBetweenHopsOrAfterRead": true,
+    "filesystemBaselinePassed": 9,
+    "filesystemTimeoutControlPreservedLastStep": true
+  },
+  "preservation": {
+    "protectedDraftSavedDigestUnchanged": true,
+    "originalLocationVisible": true,
+    "oldRequestsResent": 0,
+    "installedDatabaseFaultInjected": false
+  },
+  "receipts": {
+    "copilotNativeAndWire": "02fa11707db90902ff53a73863777e016841ae350efa045ae00e58c35fdc876d",
+    "copilotOriginalRoutePriorPrefix": "723416470d168bbfef948524b34d529196761a742dcce8a0d2a1798c219503b2",
+    "copilotAndGitDesktop": "9fef2a518d6663af316f3af73acbe982ab4275edd9134af3e7a186bc82858d93",
+    "kiloDesktop": "6b7fd1adabdbc769bf2fe8a154259dcc0a7647212327230ab7e3d987a2247168",
+    "gooseOfficialList": "f3a727063248557bb71eb02bdcafa370fdaf5c386802ba5df561874ed5161e95",
+    "twoHopPipeFixture": "bb355a3f6c615b4d272e1e09501ece7f6a8de79ee69dc8a1135269b620432fd7",
+    "filesystemBaseline": "037981d7841dafa9e03d82446d0c6845e1cd6d10de58fcc06b5082c2d75aec0d"
+  }
+}

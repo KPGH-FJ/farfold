@@ -48,6 +48,7 @@ import {
 } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
+import { hasUnconfirmedToolTail } from "../runtime/thread_attention";
 import {
   threads,
   basename,
@@ -253,9 +254,11 @@ export function ThreadPage({
                 ·{" "}
                 {threads.needsAttention(thread)
                   ? LIBRARY.attention
-                  : thread.running || hasActiveWork(thread)
-                    ? LIBRARY.running
-                    : LIBRARY.notRunning}
+                  : hasUnconfirmedToolTail(thread)
+                    ? STRINGS.thread.unknown
+                    : thread.running || hasActiveWork(thread)
+                      ? LIBRARY.running
+                      : LIBRARY.notRunning}
               </>
             )}
           </span>

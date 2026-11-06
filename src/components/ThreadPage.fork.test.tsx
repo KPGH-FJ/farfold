@@ -132,6 +132,7 @@ beforeEach(() => {
     nativeSessionId: "native-parent",
     title: "父对话",
     items: [],
+    activeToolCallIds: [],
     pendingPermissions: [],
     pendingElicitations: [],
     queued: [],
