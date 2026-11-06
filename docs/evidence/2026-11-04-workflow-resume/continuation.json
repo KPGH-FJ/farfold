@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-06T04:46:20.310158+00:00",
+  "updatedAt": "2026-11-06T05:40:49.798599+00:00",
   "objective": "Execute the approved sole five-stage fourteen-cycle plan.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -34,7 +34,7 @@
     "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
     "mcpSourceAndBrowserEvidence": "c2aa64f11",
     "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
-    "latestSourceEngineeringBinding": "output/2026-11-06-material-continuation/engineering-independent-review/reader.json",
+    "latestSourceEngineeringBinding": "output/2026-11-06-wave-01/engineering-independent-review/reader.json",
     "capacityToolsAndWindowsScope": "b7147e530742c47b96713495dea8b736dc9ec630",
     "devServerColdScan": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "windowsFullSuccessRun": 41931045918,
@@ -57,7 +57,8 @@
     "currentSearchSaveManagementSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
     "currentDraftConfigManagementSource": "13422001561df7ccf0328d73e4fb49df19168464",
     "currentMaterialContinuationSource": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
-    "firstPhaseSource": "8ac6dcb094b38bde589be1b296bb0a58c397a2df"
+    "firstPhaseSource": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
+    "firstWaveDiagnosticsSource": "68aefdb496c284252a38e86049d269baf0432439"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -95,28 +96,29 @@
     "f54 searchattachment readiness,management cancel-null/oldtimer ownership and finalpublished-byte receipt fixed; controlled original failures separated from harness errors. Three code readers+full7+engineeringGit+textcapsule+actualdelivery independent reviews passed.719files9615frontend/Rust2398pass7ignored;2403complete/2399production/11freshfixtures. Onebuild,9candidate/6installed,5newinode and3closed206275 manifests equal;Root coldP02/retained1/cwd held,zero sends. Native race faults/newcopyUI and completeAgent acceptance remain open.",
     "134 preserves newer draft edits during retained-draft restore, rejects conflicting protected config replies including return-to-original, and retains actual write scope on management results. Fresh seven720/9621,Rust2401/7,2404inputs. Single formal install and selected cold P02, independent delivery. Earlier f54 actual own-file70-byte native copy; original Dirac workfolder unavailable, no retry.",
     "adf80c9e5 fixed attachment autosave, audio affordance, workbook recovery and delayed browser selection read. Fresh seven 721/9630 and Rust2401/7. Single formal install and closed-state preservation. Root selected original draft/owned location attachment restored and rechecked; only own test reference removed.",
-    "First phase engineering: five scoped fixes, fresh final seven, formal update and two owned location references cold restore/recheck. First wave and full fault acceptance remain open."
+    "First phase engineering: five scoped fixes, fresh final seven, formal update and two owned location references cold restore/recheck. First wave and full fault acceptance remain open.",
+    "First-wave actual read-only attempts on three agents; no historical read confirmed. 68aefdb formal selected Goose timeout retest, protected draft, independent code/engineering/delivery; first phase still open."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "first-phase remaining actual acceptance",
-      "state": "Cycles 1–3 common fixes installed. Real owned history, configuration, stop and isolated storage fault conditions remain."
+      "state": "First wave 0/3 fully accepted. Goose lacks final historical response, Copilot and Kilo lack connection response. Separate original workspace and isolated storage conditions retained."
     }
   ],
   "formalPreparation": {
-    "directory": "output/2026-11-06-cycle-01/formal-preparation",
+    "directory": "output/2026-11-06-wave-01/formal-preparation",
     "state": "actual_single_delivery_and_selected_ui_complete",
-    "sourceCommit": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
-    "formerFunctionalSource": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+    "formerFunctionalSource": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
     "normalSaveExitObserved": true,
     "newCaptureBuildInstallExecuted": true,
-    "independentDeliveryReview": "output/2026-11-06-cycle-01/delivery-independent-review/reader.json"
+    "independentDeliveryReview": "output/2026-11-06-wave-01/delivery-independent-review/reader.json"
   },
   "remaining": [
     "原 OpenCode 自测记录 | 一次正式版打开报告原工作文件夹不存在或不可访问，未读回历史。 | 同一原工作位置恢复且可访问。",
     "原 Mistral 自测记录 | 原自有目录可访问；正式版打开一次由读取中转为连接检查超时，原因未定。 | 有归属明确的官方初始化进度、终态或启动/登录条件变化后，再复核该对象。",
-    "首波三家、真实配置与控制 | 逐家证据已盘点；三家真实身份、原配置模型生效、审批及实际停止和恢复证据未齐。 | 合格的原对象、服务及官方接口到位；NEW-24受影响发送维持原保护。",
+    "首波三家 | Goose缺原历史读取终态，Copilot和Kilo连接检查超时，三家实际模型、审批、停止及续接证据未齐。 | 有同原对象的官方读取终态、可归属连接变化或独立合格原对象后逐家复测。",
     "完整存储与退出故障 | 本轮由真实隔离SQLite及受控组件证明所选故障；正式版已验位置附件正常与缺件恢复。 | 独立的应用数据与进程归属环境、可控存储故障样本，以及可观察的原生退出和冷启。",
     "Windows实际安装及桌面 | 已记录安装验证运行未分配runner，本批无新Windows验证。 | 账户付款或额度恢复并有可用runner及对应真机环境。"
   ],
@@ -133,42 +135,43 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-06T04:46:20.310158+00:00",
-  "stage": "first_phase_engineering_delivered_acceptance_open",
+  "updatedAtUtc": "2026-11-06T05:40:49.798599+00:00",
+  "stage": "first_phase_wave_attempted_acceptance_open",
   "finalEvidence": {
     "stageEngineering": "docs/evidence/2026-11-06-cycle-01/summary.json",
-    "agentConditions": "docs/evidence/2026-11-06-cycle-01/agent-conditions.json"
+    "agentConditions": "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
+    "firstWave": "docs/evidence/2026-11-06-wave-01/summary.json"
   },
   "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-06-material-continuation/README.md",
     "formalAndUi": "docs/evidence/2026-11-06-material-continuation/formal-summary.json"
   },
   "stageFinalProtection": {
-    "checkedAtUtc": "2026-11-06T04:46:20.310158+00:00",
+    "checkedAtUtc": "2026-11-06T05:40:49.798599+00:00",
     "protectedUnrelatedSha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
     "protectedMode": "0644",
-    "currentFormalBinarySha256": "bf205a76f7ff255b8d6d3d3bf7fd6bc296b338eda8e7407402f9f54a9d03cec5",
+    "currentFormalBinarySha256": "ad8b6ed5613404ed6e65a1686bba9882d2eedcd55732b1c67eb842149d667c5c",
     "nativeSelectedUiObserved": true
   },
   "formalUnlockInput": {
     "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Use the sole plan and status. Continue independent work and re-evaluate exact unresolved first-phase conditions as qualifying input changes.",
+  "nextExactContinuation": "Use the sole plan and the recorded first-wave conditions. Resume owned histories after the corresponding connection/load or workspace change; continue independent work with available conditions.",
   "initialEngineeringAttempt": {
     "directory": "output/2026-11-06-material-continuation/engineering",
     "allSevenFirstInvocationNaturalZero": true,
     "scope": "Final adf80c9e5 source epoch."
   },
   "finalEngineering": {
-    "sourceCommit": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
-    "directory": "output/2026-11-06-cycle-01/engineering-final",
+    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+    "directory": "output/2026-11-06-wave-01/engineering-final",
     "freshNaturalZeroCommands": 7,
     "inputs": 2405,
     "fixtures": 11,
     "frontendFiles": 721,
-    "frontendPassed": 9639,
-    "rustPassed": 2403,
+    "frontendPassed": 9642,
+    "rustPassed": 2404,
     "rustIgnored": 7
   },
   "selectedWindowsPreparation": {
@@ -182,14 +185,14 @@
     "state": "success30native20frontend;selected not full/installer/realAgent"
   },
   "latestFormalStage": {
-    "sourceCommit": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
-    "evidence": "docs/evidence/2026-11-06-cycle-01/summary.json",
-    "mainSha256": "bf205a76f7ff255b8d6d3d3bf7fd6bc296b338eda8e7407402f9f54a9d03cec5",
-    "actualRootUiReceipt": "output/2026-11-06-cycle-01/formal-preparation/formal/ui/root-selected-installed-observation.json",
-    "actualRootUiSha256": "103a71059d6e2ba26c21de8732e555203d609af6a7e0e0222d8d67d5fb4dd640",
+    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+    "evidence": "docs/evidence/2026-11-06-wave-01/summary.json",
+    "mainSha256": "ad8b6ed5613404ed6e65a1686bba9882d2eedcd55732b1c67eb842149d667c5c",
+    "actualRootUiReceipt": "output/2026-11-06-wave-01/formal-preparation/formal/ui/root-selected-installed-observation.json",
+    "actualRootUiSha256": "ff28298e709f4f297c2ef849ea7793211f43ae379755cdd33029d2270d37c3f3",
     "closedManifestEntriesEach": 206275,
-    "closedManifestSha256": "8e9bb6441cb403952d458aeb6843c008dc92297a64849af8e9ddf1ac4eba5e67",
-    "currentView": "Original P02 and retained one, owned fixtures removed after positive recheck.",
+    "closedManifestSha256": "d6260fc084b4d058f61823486e09aaa5b153d359b9858c3c84d0ed394d7db8f3",
+    "currentView": "Original P02 and retained one, original location and no Agent selection after the selected Goose history timeout.",
     "newPrompts": 0,
     "oldResends": 0
   },

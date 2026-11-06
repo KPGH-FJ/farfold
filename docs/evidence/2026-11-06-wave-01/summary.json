@@ -1,0 +1,99 @@
+{
+  "kind": "FirstWaveRealHistoryAndOpenDiagnosticsCheckpoint",
+  "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
+  "baselineSourceCommit": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
+  "platform": "macOS arm64",
+  "firstPhaseComplete": false,
+  "firstWaveFullyAccepted": 0,
+  "agents": [
+    {
+      "name": "Goose",
+      "baselineReadStarts": 2,
+      "baselineReadUpdates": [9, 4],
+      "baselineHistoryReadsConfirmed": 0,
+      "installedFocusedRetest": {
+        "sameOwnedHistory": true,
+        "historyUpdates": 5,
+        "additionalResponsesAfterLoadInEventOrder": 0,
+        "historyReadConfirmed": false,
+        "specificTimeoutAndRetentionVisible": true
+      },
+      "resumeCondition": "A complete official read response for the same owned history or a verified independent existing object and known original service."
+    },
+    {
+      "name": "GitHub Copilot",
+      "baselineReadStarts": 1,
+      "baselineWaitingCancelled": 1,
+      "baselineInitializeResponseObserved": false,
+      "baselineLoadDispatched": false,
+      "resumeCondition": "Observable official connection/start or login change, with same owned object and confirmed service."
+    },
+    {
+      "name": "Kilo",
+      "baselineReadStarts": 1,
+      "baselineInitializeResponseObserved": false,
+      "baselineLoadDispatched": false,
+      "resumeCondition": "Observable official connection/start or login change, with same owned object and confirmed service."
+    }
+  ],
+  "baselineGooseAOrdering": "The one inbound response was matched to initialize and preceded the outbound load in event order, with the same millisecond. No additional response observed.",
+  "otherConditions": [
+    {
+      "subject": "OpenCode and Poolside",
+      "blockedOn": "Exact owned historical working locations are absent."
+    },
+    {
+      "subject": "Mistral Vibe",
+      "blockedOn": "Previous selected initialization timed out; root cause unknown."
+    },
+    {
+      "subject": "Full installed storage failure acceptance",
+      "blockedOn": "Isolated app data and process attribution with controllable storage fault and native exit/relaunch."
+    },
+    {
+      "subject": "Windows installation",
+      "blockedOn": "Account billing or spend limit and a usable runner for 41984263036."
+    }
+  ],
+  "activity": {
+    "newModelSends": 0,
+    "oldRequestResends": 0,
+    "permissionResponses": 0,
+    "actualAgentStops": 0
+  },
+  "engineering": {
+    "sourceInputs": 2405,
+    "frontendFiles": 721,
+    "frontendPassed": 9642,
+    "rustPassed": 2404,
+    "rustIgnored": 7,
+    "freshSuccessfulCommands": 7,
+    "codeIndependentMustFix": 0,
+    "engineeringIndependentMustFix": 0
+  },
+  "formal": {
+    "bundleIdentifier": "ai.farfold.desktop",
+    "mainSha256": "ad8b6ed5613404ed6e65a1686bba9882d2eedcd55732b1c67eb842149d667c5c",
+    "candidateBuilds": 1,
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 6,
+    "filesAtomicallyReplaced": 5,
+    "closedManifestsCompared": 3,
+    "closedManifestEntriesEach": 206275,
+    "closedManifestSha256": "d6260fc084b4d058f61823486e09aaa5b153d359b9858c3c84d0ed394d7db8f3",
+    "independentDeliveryMustFix": 0,
+    "duplicateBundleAbsent": true,
+    "originalUnsentDraftVisibleAfterColdStart": true,
+    "retainedDraftCount": 1,
+    "originalWorkingLocationVisible": true
+  },
+  "evidenceDigests": {
+    "baselineAcceptanceIndependent": "b1559a96c50bca0b11c35f3ac24bb3b9c0043efef16774020e134b2de5deda0a",
+    "conditionsIndependent": "d62fa1c0e16fbb203ff433ae0687d671979e8d25aa3443518b8f65032b3c134e",
+    "sourceIndependent": "5551293effdefd7ed3676f224ce3247fb8f7affe3ede45c21b18834b50be3ed3",
+    "engineeringIndependent": "af3f909fedaea898dcb8642f02aa2f88df4b9250dbd9bebfeb91033ba890ab26",
+    "formalDeliveryIndependent": "3cf04a3980238adee1b355f1c72bd854a4a8dc1e73827cd34a67af5c9bb8509f",
+    "installedRootSelectedUi": "ff28298e709f4f297c2ef849ea7793211f43ae379755cdd33029d2270d37c3f3"
+  },
+  "scope": "The three agents were read-only attempts. The installed selected timeout and checks are scoped evidence. Actual identity, model effect, permission, stopping and resumed work remain open."
+}
