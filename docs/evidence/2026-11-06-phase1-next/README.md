@@ -66,6 +66,10 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 另用已登记 Kilo 7.8.1、空资料目录和只允许访问指定本机端口的环境完成设备授权对照。官方程序在本机服务返回待授权再批准后取资料和默认模型，将唯一合成凭据写为权限 0600，第二个官方进程读回 Kilo OAuth 类型。另一组由本机服务返回明确拒绝，官方程序显示拒绝并退出，无凭据写入。两次尝试从本机发停止信号时仍继续轮询，超时后清理；即时取消未通过。全部只用合成响应，真实账户、服务端取消和收费仍未验证。[本机批准、拒绝及取消回执](kilo-local-device-approval-and-denial.json)
 
+复核 7.8.1 的授权入口与锁定的 Clack 依赖。Kilo 启动等待动画后单独等待授权回调。Clack 首次收到 INT 或 TERM 会取消动画并撤下两种信号监听；这里没有向授权回调传递取消。这与先前继续轮询、再向同一进程发 TERM 才退出的观测吻合。旧试验没有记录首个信号的处理回执。[Kilo 授权入口](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/cli/cmd/providers.ts#L96-L109) · [等待动画包装](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/cli/effect/prompt.ts#L26-L33) · [Clack 发布版本](https://www.npmjs.com/package/@clack/prompts/v/1.0.0-alpha.1)
+
+用当前 Farfold 的终端管理器另测同一官方程序。收到首次待授权响应后关闭一次确切的测试终端，29 毫秒得到相符的退出回执，进程组消失，终端和登记均释放。再观察 6.26 秒没有轮询，也没有凭据文件。范围为本机合成服务及终端管理器，真实账号、远端设备挑战的撤回和正式界面取消仍待实测。[终端关闭回执](kilo-native-pty-device-cancel.json)
+
 此轮先核发行来源。官方下载 ZIP 与当时 ACP 登记和 GitHub 发布摘要一致，GitHub 签发的软件物料清单证明通过，408 个归档文件逐一与登记目录相同。严格签名核验在正式程序和官方解压件上都失败，源于最后一个不完整页的哈希按补零后长度生成。两份原字节保持，未重新签名或替换。[历史登记](../2026-09-30-agent-access-mechanisms/kilo/static-receipt.json) · [官方发行](https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.1)
 
 首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)

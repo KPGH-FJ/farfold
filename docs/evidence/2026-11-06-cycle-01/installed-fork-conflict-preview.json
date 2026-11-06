@@ -1,0 +1,30 @@
+{
+  "kind": "InstalledForkDraftConflictPreview",
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "platform": "macOS arm64",
+  "application": "/Applications/Farfold.app",
+  "installedSource": "6ce829c5",
+  "scenario": "From a completed owned Copilot test conversation, open the preview for a new conversation from one owned test message while an earlier unsent draft exists, then cancel and return to the unsent draft.",
+  "observed": {
+    "oldDraftAndSelectedMessageDisplayedSeparately": true,
+    "selectedMessageExactMatch": true,
+    "testConversationAgentAndLocationShown": true,
+    "oldDraftAndSelectedMessageAttachmentCounts": [0, 0],
+    "returnAndKeepDraftOptionsShown": true,
+    "escapeRestoredTriggerFocus": true,
+    "testConversationMessageAndReplyRetained": true,
+    "originalDraftTextAndLocationRetained": true,
+    "retainedDraftCountBeforeAndAfter": [1, 1],
+    "originalDraftDigestUnchanged": true,
+    "otherDraftsQueueAndAgentChoiceUnchanged": true,
+    "sealedConversationTapsUnchanged": 4,
+    "applicationDirectChildrenBeforeAndAfter": [6, 6],
+    "continuedOrSent": false
+  },
+  "limits": [
+    "Warm installed preview and cancellation only.",
+    "No new conversation was confirmed and no Agent request was sent.",
+    "No nonempty attachment set, failed write, quit, or cold restore was exercised."
+  ]
+}

@@ -106,11 +106,13 @@
 
 **第1阶段首发退出与编辑保留。** 已复现等待首次保存时退出、再选择留下，旧点击仍能提交。源码从输入框到发出前记住退出锁的变化，受控回归保持原稿和附件，零补发，明确重按可发送一次。另用旧正式版已完成的自测对话验证关闭并重开同一编辑窗口，两行原字节读回，原稿及通信保持。实际复现附件菜单被挡在弹窗后，已补源码和键盘回归，正式附件仍待复验。[首发分项](evidence/2026-11-07-stop-during-draft-save/README.md#新对话首发与退出) · [正式回执](evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json)
 
+**第1阶段正式草稿冲突预览。** 从已完成的自测消息打开新对话预览，原未发稿和选中消息分开显示。按 Esc 返回后，原消息、回复、草稿字节、工作位置和保留1份均保持，四份通信摘要一致。未确认创建或发送；带附件冲突、保存失败和冷恢复继续开放。[正式分项](evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json)
+
 **第1阶段缺条件。** 首波完整验收0/3，三家各有原会话真实续接样本。三家声明各有一条登录或配置方式。Copilot核对过同一已有账号，Goose核对了已有请求的付费工作区。完整新登录及退出换号待实测。安装版存储故障仍需隔离的macOS图形测试账号或实例，同机须顺序启动；Windows安装待可用runner。OpenCode所选原记录的工作目录不可用；Mistral原目录可访问，连接检查超时且原因未定。两条均为一次只读尝试，原草稿保持；已分别补入29家索引。已有六家历史分项按原配置保留。[29家证据及缺项](evidence/2026-11-06-cycle-01/agent-conditions.json)
 
 **第1阶段独立登录尝试。** Kilo隔离登录启动阶段记录Git执行受限，设备挑战及取消未确认，专用认证文件未生成。Copilot严隔离复验在握手前退出，未进入账号读取。两者均未完成新登录或模型请求，失败留证，首波完整验收不变。[独立登录尝试](evidence/2026-11-06-phase1-next/README.md#独立登录尝试)
 
-**第1阶段登录补证。** 已登记Kilo与官方ZIP逐一核合。本机模拟批准后，官方CLI保存并由新进程读回合成OAuth；模拟明确拒绝后未生成认证文件。即时停止未证，真实登录仍待。Copilot的独立官方运行程序在回复SDK连接前退出，未读账号。索引已补成功范围和失败回执，首波仍为0/3。[Kilo本机回执](evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json) · [Copilot隔离回执](evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json)
+**第1阶段登录补证。** 已登记Kilo与官方ZIP逐一核合。本机模拟批准后，官方CLI保存并由新进程读回合成OAuth；模拟明确拒绝后未生成认证文件。直接停止信号对照仍继续轮询。改由实际终端管理器关闭确切测试终端，29毫秒收到退出，核到对应进程组和终端已释放，随后6.26秒零轮询及零凭据文件。真实登录、远端取消和正式界面仍待。Copilot的独立官方运行程序在回复SDK连接前退出，未读账号。首波仍为0/3。[Kilo本机回执](evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json) · [终端关闭](evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json) · [Copilot隔离回执](evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json)
 
 **前批草稿、资料与网页补强 adf80c9e5 已正式更新。** 草稿写入等当前批图片导入；音频兼容入口按实际字节显示；工作表失败或取消后可另选；网页标签忽略迟到的同版本旧选中读回。 四处受控回归均保留修复前后的证据，代码独审通过。[本批原件](evidence/2026-11-06-material-continuation/README.md)
 

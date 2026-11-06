@@ -26,9 +26,11 @@
     "docs/evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
-    "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json"
+    "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json",
+    "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -375,7 +377,7 @@
       ],
       "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。首个隔离设备挑战尝试未确认。本机模拟批准时官方程序保存并由新进程读回合成认证，服务拒绝时未写认证；本机停止信号的即时取消未通过。当前付款身份、网关路由和计费、完整新登录与退出换号待实测。",
+        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。首个隔离设备挑战尝试未确认。本机模拟批准时官方程序保存并由新进程读回合成认证，服务拒绝时未写认证。直接信号取消对照仍轮询；实际终端管理器关闭本机待授权测试进程后，进程组释放且未再轮询或写认证。当前付款身份、网关路由和计费、完整新登录与退出换号、正式界面取消和远端撤回待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3", "S4"],
