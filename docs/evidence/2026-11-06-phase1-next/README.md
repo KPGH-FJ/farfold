@@ -56,4 +56,10 @@ Kilo 7.8.1 官方程序在隔离目录和会话库中建立两个无消息测试
 
 两条 Kilo 测试对话共用一个自有空目录，并使用同一免费模型。两条对话的 Agent 原会话标识和协议记录分别核对。两条请求同时运行时，取消只发给 A，A 明确停止，B 独立回复其专属标识并回到空闲。范围限这一次同 Agent、同目录测试。
 
+## 独立登录尝试
+
+Kilo 7.8.1 的真实终端登录由已登记程序执行。对应官方协议方法返回空对象，不能作为已登录证据。以空白资料目录、真实用户目录读取保护和禁止打开浏览器的条件尝试一次设备授权。隔离日志核到启动阶段的 Git 执行受限，终端夹具未可靠确认挑战或取消，清理信号曾返回权限错误。随后只读查到仅剩原正式 Kilo，测试目录无认证文件，已清理专用数据。是否曾在服务侧创建临时挑战仍未知。[Kilo 尝试回执](kilo-isolated-device-start-attempt.json) · [官方授权实现](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/auth/device-auth-tui.ts)
+
+Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目录，禁止网络、实际用户目录读取和两个钥匙串服务查询。首次启动的路径解析限制已定位并在隔离对照中修正；再次尝试仍在握手返回前退出。未启动后续账号读取，零登录、退出账号或模型请求。既有账号的正式应用证据保持独立，隔离状态与新登录仍待核。[Copilot 尝试回执](copilot-isolated-startup-guard-attempt.json) · [官方凭据存放规则](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli#how-copilot-cli-stores-credentials)
+
 首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)

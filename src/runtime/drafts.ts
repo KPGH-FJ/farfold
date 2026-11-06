@@ -69,6 +69,7 @@ export interface PendingConversation {
 
 const empty: ComposerDraft = { text: "", attachments: [] };
 const values = new Map<string, ComposerDraft>();
+const queueHandoffDrafts = new WeakMap<ComposerDraft, string>();
 const listeners = new Set<() => void>();
 const generations = new Map<string, number>();
 let draftRevision = 0;
@@ -191,6 +192,11 @@ export const composerDrafts = {
   },
   read(key: string): ComposerDraft {
     return values.get(key) ?? empty;
+  },
+  /** Keep the editor visible while the same snapshot gives the queue ownership. */
+  holdForQueue(key: string, draft: ComposerDraft): () => void {
+    queueHandoffDrafts.set(draft, key);
+    return () => queueHandoffDrafts.delete(draft);
   },
   update(key: string, update: (draft: ComposerDraft) => ComposerDraft) {
     let next = update(this.read(key));
@@ -909,6 +915,7 @@ draftPersistence.configure(
               key.startsWith("resend:") ||
               key.startsWith("saved-new:"),
           )
+          .filter(([key, draft]) => queueHandoffDrafts.get(draft) !== key)
           .map(([key, value]) => [key, serializeComposer(value)]),
       ),
       choice,

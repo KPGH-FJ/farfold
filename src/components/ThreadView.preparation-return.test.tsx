@@ -2,6 +2,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import {
   Children,
   isValidElement,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -51,8 +52,10 @@ import { Composer } from "./Composer";
 import {
   threads,
   freshThreadState,
+  type PromptBlock,
   type ThreadState,
 } from "../runtime/sessions";
+import { composerDrafts } from "../runtime/drafts";
 import { preparationFor } from "../runtime/agent_preparation";
 import { STRINGS } from "../runtime/strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
@@ -163,8 +166,28 @@ it.each(["existing-conversation", "other-directory", "api-source"])(
       const send = vi
         .spyOn(threads, "send")
         .mockResolvedValue({ status: "accepted" });
-      await (composer.props.onSend as (blocks: unknown[]) => Promise<void>)([]);
-      expect(send).toHaveBeenCalledWith(thread.key, []);
+      const key = `session:${thread.key}`;
+      const text = "Original prepared draft";
+      const blocks: PromptBlock[] = [{ type: "text", text }];
+      composerDrafts.update(key, () => ({
+        text,
+        attachments: [],
+        sendPending: true,
+      }));
+      const submitted = composerDrafts.read(key);
+      const onSend = composer.props.onSend as NonNullable<
+        ComponentProps<typeof Composer>["onSend"]
+      >;
+      try {
+        await onSend(blocks, submitted);
+        expect(send).toHaveBeenCalledWith(thread.key, blocks, {
+          key,
+          value: submitted,
+        });
+        expect(send.mock.calls[0]?.[2]?.value).toBe(submitted);
+      } finally {
+        composerDrafts.clear(key);
+      }
     }
   },
 );

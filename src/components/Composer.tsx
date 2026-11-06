@@ -603,7 +603,10 @@ export function Composer({
       if (onSend) {
         sent = await onSend(payload, submitted);
       } else if (thread) {
-        await threads.send(thread.key, payload);
+        await threads.send(thread.key, payload, {
+          key: targetKey,
+          value: submitted,
+        });
       }
       // `false` means the send did not happen (e.g. waiting on a folder
       // choice): keep the draft instead of treating it as delivered.

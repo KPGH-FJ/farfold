@@ -1309,7 +1309,7 @@ export function ThreadView({
               prepareAction={draftReadRequired ? onGoSettings : undefined}
               onSend={
                 thread.identity === "draft"
-                  ? async (blocks) => {
+                  ? async (blocks, submitted) => {
                       // Composer calls after attachments and draft persistence settle.
                       if (
                         thread.connectionLost ||
@@ -1321,7 +1321,10 @@ export function ThreadView({
                         pendingPreparationRead(thread)
                       )
                         throw new Error(C.readRequired);
-                      await threads.send(thread.key, blocks);
+                      await threads.send(thread.key, blocks, {
+                        key: `session:${thread.key}`,
+                        value: submitted,
+                      });
                     }
                   : undefined
               }

@@ -68,8 +68,17 @@ import { artifactPaneCards } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
-import { recordStopIntent, StopConfirmation } from "./stop_confirmation";
-import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
+import {
+  captureSubmissionStop,
+  recordStopIntent,
+  StopConfirmation,
+} from "./stop_confirmation";
+import {
+  composerDrafts,
+  draftQueues,
+  draftPersistence,
+  type ComposerDraft,
+} from "./drafts";
 import {
   markRestoredQueueAttachments,
   queuedAttachmentsNeedReview,
@@ -101,6 +110,7 @@ import {
   removeQueued,
   type PromptAdmission,
 } from "./queue";
+import { configurationPauseRevision } from "./configuration_pause";
 
 export type { PaneCard };
 export { paneCards };
@@ -842,22 +852,89 @@ class ThreadsStore {
     await this.refreshIndex();
   }
 
+  private pendingQueueHandoffs = new WeakSet<PromptBlock[]>();
+
   /** Submission acknowledgement, not optimistic rendering, consumes a queued message. */
-  async send(key: string, blocks: PromptBlock[]): Promise<SendAdmission> {
+  async send(
+    key: string,
+    blocks: PromptBlock[],
+    sourceDraft?: { key: string; value: ComposerDraft },
+  ): Promise<SendAdmission> {
     const s = this.thread(key);
-    if (!s || !blocks.length)
+    if (!s || !blocks.length) {
+      if (sourceDraft) throw new Error(STRINGS.repair.sendFailed);
       return { status: "rejected", reason: "unavailable" };
+    }
+    const connectionId = s.connectionId;
+    const stopped = captureSubmissionStop(s);
+    const interrupted = () =>
+      stopped() ||
+      s.connectionLost ||
+      s.reconnecting ||
+      s.connectionId !== connectionId ||
+      this.thread(key) !== s;
     if (s.configuring) await this.configurations.requests.get(key);
     if (s.configError) throw new Error(STRINGS.repair.configFailed);
+    if (
+      sourceDraft &&
+      (interrupted() ||
+        draftPersistence.snapshot().interactionLocked ||
+        (sourceDraft.key !== `session:${key}` &&
+          sourceDraft.key !== `resend:${key}`) ||
+        composerDrafts.read(sourceDraft.key) !== sourceDraft.value)
+    )
+      throw new Error(STRINGS.repair.sendFailed);
     // Explicit new input can start after permission/work is restored for an
     // empty queue. Never resume existing or uncertain queued input.
-    if (canReleaseEmptyQueuePause(s, blocks)) s.queuePaused = null;
+    const pauseRevision = configurationPauseRevision(s);
+    const releasePause = canReleaseEmptyQueuePause(s, blocks);
+    if (sourceDraft) this.pendingQueueHandoffs.add(blocks);
+    else if (releasePause) s.queuePaused = null;
+    const releaseDraft = sourceDraft
+      ? composerDrafts.holdForQueue(sourceDraft.key, sourceDraft.value)
+      : undefined;
     s.queued.push(blocks);
     this.emit();
+    if (releaseDraft) {
+      const revision = draftPersistence.revision();
+      // No request can drain while the queue is taking ownership of this input.
+      try {
+        await draftPersistence.flush().catch((error: unknown) => {
+          if (!draftPersistence.wasSaved(revision)) throw error;
+        });
+        if (interrupted()) throw new Error(STRINGS.repair.sendFailed);
+      } catch (error) {
+        releaseDraft();
+        removeQueued(s, blocks);
+        this.emit(key);
+        if (draftPersistence.wasSaved(revision))
+          await draftPersistence.flush().catch(() => undefined);
+        throw error;
+      } finally {
+        this.pendingQueueHandoffs.delete(blocks);
+      }
+      if (draftPersistence.snapshot().interactionLocked) {
+        if (!s.queuePaused) {
+          pauseQueue(s, "stopped");
+          this.emit(key);
+        }
+        return { status: "queued" };
+      }
+      if (
+        releasePause &&
+        s.queued[0] === blocks &&
+        configurationPauseRevision(s) === pauseRevision &&
+        canReleaseEmptyQueuePause({ ...s, queued: [] }, blocks)
+      )
+        s.queuePaused = null;
+    }
     return this.drainQueue(key);
   }
 
   private drainQueue(key: string): Promise<SendAdmission> {
+    const next = this.thread(key)?.queued[0];
+    if (next && this.pendingQueueHandoffs.has(next))
+      return Promise.resolve({ status: "queued" });
     return drainPrompt(key, {
       thread: (key) => this.thread(key),
       emit: (key) => this.emit(key),
@@ -931,6 +1008,7 @@ class ThreadsStore {
       (shown &&
         (blocks !== shown ||
           composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
+      this.pendingQueueHandoffs.has(blocks) ||
       (s.submitting && index === 0) ||
       blocks === s.uncertainPrompt
     )
@@ -951,6 +1029,7 @@ class ThreadsStore {
       !s ||
       index < 0 ||
       !replacement.length ||
+      this.pendingQueueHandoffs.has(original) ||
       (s.submitting && index === 0) ||
       original === s.uncertainPrompt
     )
@@ -969,6 +1048,7 @@ class ThreadsStore {
       (shown &&
         (blocks !== shown ||
           composerDrafts.read(`queue-edit:${key}`).queueEdit)) ||
+      this.pendingQueueHandoffs.has(blocks) ||
       (s.submitting && index === 0) ||
       blocks === s.uncertainPrompt
     )

@@ -83,12 +83,18 @@ export const draftPersistence = {
   },
   snapshot: () => status,
   revision: () => revision,
-  /** Only a completed write of all current input proves this revision saved. */
-  isSaved(expectedRevision: number): boolean {
+  /** An earlier snapshot can be durable while a newer write still needs retry. */
+  wasSaved(expectedRevision: number): boolean {
     return (
       Number.isSafeInteger(expectedRevision) &&
       expectedRevision >= 0 &&
-      expectedRevision <= savedRevision &&
+      expectedRevision <= savedRevision
+    );
+  },
+  /** Only a completed write of all current input proves this revision saved. */
+  isSaved(expectedRevision: number): boolean {
+    return (
+      this.wasSaved(expectedRevision) &&
       savedRevision === revision &&
       status.ready &&
       !status.saving &&

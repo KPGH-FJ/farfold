@@ -28,8 +28,19 @@ import {
   applyTurnEnd,
   applyUpdate,
 } from "../runtime/session_projection";
-import { threads, type ThreadState } from "../runtime/sessions";
-import { composerDrafts, draftPersistence } from "../runtime/drafts";
+import {
+  threads,
+  type PromptBlock,
+  type ThreadState,
+} from "../runtime/sessions";
+import {
+  composerDrafts,
+  draftPersistence,
+  draftQueues,
+  parseDraftSnapshot,
+  type ComposerDraft,
+} from "../runtime/drafts";
+import { DraftSaveError } from "../runtime/draft_storage";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { STRINGS } from "../runtime/strings";
@@ -453,6 +464,491 @@ it("keeps a held submission in the draft when the reconnect button installs a re
   ).toEqual([]);
   composerDrafts.clear(key);
 });
+
+type SavedWork = {
+  composers: Record<string, ComposerDraft>;
+  queues: Record<string, { blocks: PromptBlock[][] }>;
+};
+
+it.each(["idle", "running"] as const)(
+  "keeps the original composer editable when the pending queue cannot be saved while %s",
+  async (activity) => {
+    const id = `queue-handoff-storage-refusal-${activity}`;
+    const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+    thread.openError = null;
+    thread.connectionId = "original-connection";
+    const key = `session:${thread.key}`;
+    const otherKey = `session:independent-${id}`;
+    const draft: ComposerDraft = {
+      text: "Keep this unsent input",
+      attachments: [
+        {
+          id: "owned-file",
+          kind: "file",
+          name: "owned.txt",
+          uri: "file:///fixture/owned.txt",
+          deliveryMode: "location",
+        },
+      ],
+    };
+    const other: ComposerDraft = { text: "Independent draft", attachments: [] };
+    const activeText = "Previously admitted input";
+    const activeReceiptId = 81;
+    const existing: PromptBlock[] = [{ type: "text", text: "Already queued" }];
+    const priorQueue = activity === "running" ? [existing] : [];
+    const newBlocks: PromptBlock[] = [
+      { type: "text", text: draft.text },
+      {
+        type: "resource_link",
+        uri: "file:///fixture/owned.txt",
+        name: "owned.txt",
+      },
+    ];
+    const committed: SavedWork[] = [];
+    const rejected: SavedWork[] = [];
+    let blockHandoff = true;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (
+        command === "session_prompt" &&
+        args.content[0]?.text === activeText
+      ) {
+        args.admissionChannel.onmessage({
+          receiptId: activeReceiptId,
+          phase: "offered",
+        });
+        return { status: "accepted" };
+      }
+      if (command === "settings_set" && args.key === "unsentWork.v1") {
+        const snapshot = structuredClone(args.value as SavedWork);
+        if (
+          blockHandoff &&
+          (rejected.length > 0 ||
+            (snapshot.queues[thread.key]?.blocks.length ?? 0) >
+              priorQueue.length)
+        ) {
+          rejected.push(snapshot);
+          throw "FARFOLD_STORAGE:busy:fixture queue write locked";
+        }
+        committed.push(snapshot);
+      }
+      return null;
+    });
+    try {
+      await draftPersistence.load();
+      if (activity === "running") {
+        await expect(
+          threads.send(thread.key, [{ type: "text", text: activeText }]),
+        ).resolves.toEqual({ status: "accepted" });
+        expect(thread.running).toBe(true);
+        await expect(threads.send(thread.key, existing)).resolves.toEqual({
+          status: "queued",
+        });
+      }
+      composerDrafts.update(key, () => draft);
+      composerDrafts.update(otherKey, () => other);
+      await draftPersistence.flush();
+      expect(committed.at(-1)?.composers[key]).toEqual(draft);
+
+      const send = vi.spyOn(threads, "send");
+      const action =
+        activity === "idle" ? STRINGS.composer.sendTitle : C.addQueued;
+      const submit = render(thread).button(action)!;
+      expect(submit.props.disabled).toBe(false);
+      (submit.props.onClick as () => void)();
+      await vi.waitFor(() => expect(send).toHaveBeenCalledTimes(1));
+      expect(send).toHaveBeenCalledWith(thread.key, newBlocks, {
+        key,
+        value: { ...draft, sendPending: true },
+      });
+      const delivery = send.mock.results[0]!.value;
+      await expect(delivery).rejects.toBeInstanceOf(DraftSaveError);
+      await expect(delivery).rejects.toThrow(
+        STRINGS.storageRecovery.issues.busy,
+      );
+      await vi.waitFor(() =>
+        expect(composerDrafts.read(key).sendPending).not.toBe(true),
+      );
+      await expect(draftPersistence.flush()).rejects.toThrow();
+
+      const priorSave = committed.at(-1);
+      expect(priorSave?.composers[key]).toEqual({
+        ...draft,
+        sendPending: true,
+      });
+      expect(priorSave?.composers[otherKey]).toEqual(other);
+      expect(priorSave?.queues[thread.key]?.blocks ?? []).toEqual(priorQueue);
+      expect(rejected[0]?.queues[thread.key]?.blocks).toEqual([
+        ...priorQueue,
+        newBlocks,
+      ]);
+      expect(rejected[0]?.composers[key]).toBeUndefined();
+      expect(
+        h.invoke.mock.calls
+          .filter(([command]) => command === "session_prompt")
+          .map(([, args]) => args.content[0].text),
+      ).toEqual(activity === "running" ? [activeText] : []);
+      expect(thread.queued).toEqual(priorQueue);
+      if (activity === "running") expect(thread.queued[0]).toBe(existing);
+      expect(draftQueues.read(thread.key)?.blocks ?? []).toEqual(priorQueue);
+      expect(thread.running).toBe(activity === "running");
+      expect(composerDrafts.read(otherKey)).toBe(other);
+      expect(composerDrafts.read(key)).toMatchObject(draft);
+      expect(render(thread).button(action)?.props.disabled).toBe(false);
+    } finally {
+      blockHandoff = false;
+      for (let index = thread.queued.length - 1; index >= 0; index--)
+        threads.dequeue(thread.key, index);
+      if (activity === "running") {
+        (
+          threads as unknown as {
+            applyChannelEvent(key: string, event: unknown): void;
+          }
+        ).applyChannelEvent(thread.key, {
+          kind: "turnEnd",
+          promptReceiptId: activeReceiptId,
+          stopReason: "end_turn",
+        });
+      }
+      composerDrafts.clear(key);
+      composerDrafts.clear(otherKey);
+      await draftPersistence.flush();
+    }
+  },
+);
+
+it("keeps one saved queue copy when a later independent write fails", async () => {
+  const id = "saved-handoff-later-write-refusal";
+  const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+  thread.openError = null;
+  thread.connectionId = "original-connection";
+  thread.queuePaused = "unavailable";
+  const key = `session:${thread.key}`;
+  const siblingKey = `session:independent-${id}`;
+  const submitted = "Original queued input";
+  const blocks: PromptBlock[] = [{ type: "text", text: submitted }];
+  const newer = { text: "Newer input in the same editor", attachments: [] };
+  const sibling = { text: "Earlier independent input", attachments: [] };
+  const newerSibling = { text: "Newer independent input", attachments: [] };
+  const committed: SavedWork[] = [];
+  const refused: SavedWork[] = [];
+  let acknowledge!: () => void;
+  const receipt = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  let handoffCommitted = false;
+  let failLaterWrites = true;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "settings_set" || args.key !== "unsentWork.v1") return null;
+    const snapshot = structuredClone(args.value as SavedWork);
+    if (!handoffCommitted && snapshot.queues[thread.key]?.blocks.length) {
+      handoffCommitted = true;
+      committed.push(snapshot);
+      await receipt;
+    } else if (handoffCommitted && failLaterWrites) {
+      refused.push(snapshot);
+      throw "FARFOLD_STORAGE:busy:fixture later write locked";
+    } else committed.push(snapshot);
+    return null;
+  });
+  const send = vi.spyOn(threads, "send");
+  const prompts = () =>
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt");
+  try {
+    await draftPersistence.load();
+    composerDrafts.update(key, () => ({ text: submitted, attachments: [] }));
+    composerDrafts.update(siblingKey, () => sibling);
+    await draftPersistence.flush();
+
+    const enqueue = render(thread).button(C.addQueued)!;
+    expect(enqueue.props.disabled).toBe(false);
+    (enqueue.props.onClick as () => void)();
+    await vi.waitFor(() => expect(handoffCommitted).toBe(true));
+    const atomic = committed.at(-1)!;
+    expect(atomic.queues[thread.key]?.blocks).toEqual([blocks]);
+    expect(atomic.composers[key]).toBeUndefined();
+    expect(atomic.composers[siblingKey]).toEqual(sibling);
+    expect(composerDrafts.read(key)).toMatchObject({
+      text: submitted,
+      sendPending: true,
+    });
+    expect(prompts()).toEqual([]);
+
+    composerDrafts.update(key, (current) => ({ ...current, ...newer }));
+    composerDrafts.update(siblingKey, () => newerSibling);
+    acknowledge();
+    await expect(send.mock.results[0]!.value).resolves.toEqual({
+      status: "queued",
+    });
+    await vi.waitFor(() =>
+      expect(composerDrafts.read(key).sendPending).not.toBe(true),
+    );
+    await expect(draftPersistence.flush()).rejects.toThrow(
+      STRINGS.storageRecovery.issues.busy,
+    );
+    expect(refused[0]?.composers[key]).toMatchObject(newer);
+    expect(refused[0]?.composers[siblingKey]).toEqual(newerSibling);
+    expect(committed.at(-1)).toBe(atomic);
+    expect(composerDrafts.read(key)).toMatchObject(newer);
+    expect(composerDrafts.read(siblingKey)).toBe(newerSibling);
+    expect(thread.queued).toEqual([blocks]);
+    expect(thread.queuePaused).toBe("unavailable");
+    expect(prompts()).toEqual([]);
+
+    failLaterWrites = false;
+    await draftPersistence.flush();
+    expect(committed.at(-1)?.composers[key]).toMatchObject(newer);
+    expect(committed.at(-1)?.composers[siblingKey]).toEqual(newerSibling);
+    expect(committed.at(-1)?.queues[thread.key]?.blocks).toEqual([blocks]);
+    expect(prompts()).toEqual([]);
+  } finally {
+    acknowledge();
+    failLaterWrites = false;
+    await send.mock.results[0]?.value.catch(() => undefined);
+    threads.dequeue(thread.key, 0);
+    composerDrafts.clear(key);
+    composerDrafts.clear(siblingKey);
+    await draftPersistence.flush();
+  }
+});
+
+it("retains only one saved copy when a disconnected handoff cannot be rolled back", async () => {
+  const id = "disconnected-handoff-rollback-refused";
+  const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+  thread.openError = null;
+  thread.connectionId = `connection-${id}`;
+  const key = `session:${thread.key}`;
+  const draft: ComposerDraft = {
+    text: "Unsent at disconnect",
+    attachments: [],
+  };
+  const blocks: PromptBlock[] = [{ type: "text", text: draft.text }];
+  const committed: SavedWork[] = [];
+  const refused: SavedWork[] = [];
+  const send = vi.spyOn(threads, "send");
+  let acknowledge!: () => void;
+  const receipt = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  let committedHandoff = false;
+  let failCompensation = true;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command !== "settings_set" || args.key !== "unsentWork.v1") return null;
+    const snapshot = structuredClone(args.value as SavedWork);
+    if (!committedHandoff && snapshot.queues[thread.key]?.blocks.length) {
+      committedHandoff = true;
+      committed.push(snapshot);
+      await receipt;
+    } else if (committedHandoff && failCompensation) {
+      refused.push(snapshot);
+      throw "FARFOLD_STORAGE:busy:fixture compensation locked";
+    } else committed.push(snapshot);
+    return null;
+  });
+  const prompts = () =>
+    h.invoke.mock.calls.filter(([command]) => command === "session_prompt");
+  try {
+    await draftPersistence.load();
+    composerDrafts.update(key, () => draft);
+    await draftPersistence.flush();
+    const submit = render(thread).button(STRINGS.composer.sendTitle)!;
+    expect(submit.props.disabled).toBe(false);
+    (submit.props.onClick as () => void)();
+    await vi.waitFor(() => expect(committedHandoff).toBe(true));
+    expect(composerDrafts.read(key)).toMatchObject({
+      ...draft,
+      sendPending: true,
+    });
+    expect(thread.queued).toEqual([blocks]);
+    expect(prompts()).toEqual([]);
+    (
+      threads as unknown as {
+        applyChannelEvent(key: string, event: unknown): void;
+      }
+    ).applyChannelEvent(thread.key, {
+      kind: "connectionLost",
+      closeReason: "unexpected",
+    });
+    expect(thread.connectionLost).toBe(true);
+
+    acknowledge();
+    await expect(send.mock.results[0]!.value).rejects.toThrow(
+      STRINGS.repair.sendFailed,
+    );
+    expect(refused[0]?.composers[key]).toMatchObject(draft);
+    expect(refused[0]?.queues[thread.key]).toBeUndefined();
+    await vi.waitFor(() =>
+      expect(composerDrafts.read(key).sendPending).not.toBe(true),
+    );
+    expect(composerDrafts.read(key)).toMatchObject(draft);
+    expect(thread.queued).toEqual([]);
+    expect(draftQueues.read(thread.key)).toBeNull();
+    expect(prompts()).toEqual([]);
+
+    const beforeRecovery = parseDraftSnapshot(committed.at(-1))!;
+    expect(new Map(beforeRecovery.composers).has(key)).toBe(false);
+    expect(new Map(beforeRecovery.queues).get(thread.key)).toEqual({
+      blocks: [blocks],
+      uncertainIndex: null,
+    });
+    failCompensation = false;
+    await draftPersistence.flush();
+    const afterRecovery = parseDraftSnapshot(committed.at(-1))!;
+    expect(new Map(afterRecovery.composers).get(key)).toMatchObject({
+      ...draft,
+      sendPending: false,
+    });
+    expect(new Map(afterRecovery.queues).has(thread.key)).toBe(false);
+    expect(composerDrafts.read(key)).toMatchObject(draft);
+    expect(thread.queued).toEqual([]);
+    expect(prompts()).toEqual([]);
+  } finally {
+    acknowledge();
+    failCompensation = false;
+    await send.mock.results[0]?.value.catch(() => undefined);
+    threads.dequeue(thread.key, 0);
+    composerDrafts.clear(key);
+    await draftPersistence.flush();
+  }
+});
+
+it("keeps the original draft when exit takes its lock before queue handoff", async () => {
+  const id = "exit-lock-before-queue-handoff";
+  const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+  thread.openError = null;
+  thread.connectionId = `connection-${id}`;
+  const key = `session:${thread.key}`;
+  const draft = { text: "Original unsent input at quit", attachments: [] };
+  const snapshots: SavedWork[] = [];
+  const send = vi.spyOn(threads, "send");
+  let acknowledge!: () => void;
+  const receipt = new Promise<void>((resolve) => {
+    acknowledge = resolve;
+  });
+  let pendingSaveWaiting = false;
+  let releaseExit: (() => void) | undefined;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "settings_set" && args.key === "unsentWork.v1") {
+      const snapshot = structuredClone(args.value as SavedWork);
+      snapshots.push(snapshot);
+      if (snapshot.composers[key]?.sendPending && !pendingSaveWaiting) {
+        pendingSaveWaiting = true;
+        await receipt;
+      }
+    }
+    return command === "session_prompt" ? { status: "accepted" } : null;
+  });
+  try {
+    await draftPersistence.load();
+    composerDrafts.update(key, () => draft);
+    await draftPersistence.flush();
+    const submit = render(thread).button(STRINGS.composer.sendTitle)!;
+    expect(submit.props.disabled).toBe(false);
+    (submit.props.onClick as () => void)();
+    await vi.waitFor(() => expect(pendingSaveWaiting).toBe(true));
+    expect(send).not.toHaveBeenCalled();
+    expect(thread.queued).toEqual([]);
+
+    threads.pauseQueuesForExit();
+    releaseExit = draftPersistence.acquireInteractionLock();
+    acknowledge();
+    await vi.waitFor(() =>
+      expect(composerDrafts.read(key).sendPending).not.toBe(true),
+    );
+    await draftPersistence.flush();
+    expect(draftPersistence.snapshot().interactionLocked).toBe(true);
+    expect(snapshots.every((value) => !value.queues[thread.key])).toBe(true);
+    expect(snapshots.at(-1)?.composers[key]).toMatchObject(draft);
+    expect(composerDrafts.read(key)).toMatchObject(draft);
+    expect(thread.queued).toEqual([]);
+    expect(
+      h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+    ).toEqual([]);
+  } finally {
+    acknowledge();
+    releaseExit?.();
+    await send.mock.results[0]?.value.catch(() => undefined);
+    threads.dequeue(thread.key, 0);
+    composerDrafts.clear(key);
+    await draftPersistence.flush();
+  }
+});
+
+it.each(["quit pause", "no newer pause"] as const)(
+  "keeps the correct outcome when a durable handoff receives %s",
+  async (scenario) => {
+    const id = `empty-pause-handoff-${scenario}`;
+    const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+    thread.openError = null;
+    thread.connectionId = `connection-${id}`;
+    thread.queuePaused = "stopped";
+    const key = `session:${thread.key}`;
+    const text = "One explicit message after a pause";
+    const blocks: PromptBlock[] = [{ type: "text", text }];
+    const send = vi.spyOn(threads, "send");
+    let releaseSave!: () => void;
+    const heldSave = new Promise<void>((resolve) => {
+      releaseSave = resolve;
+    });
+    let handoffWaiting = false;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (
+        command === "settings_set" &&
+        args.key === "unsentWork.v1" &&
+        args.value.queues[thread.key]?.blocks.length &&
+        !handoffWaiting
+      ) {
+        handoffWaiting = true;
+        await heldSave;
+      }
+      return command === "session_prompt" ? { status: "accepted" } : null;
+    });
+    vi.stubGlobal("requestAnimationFrame", vi.fn());
+    const prompts = () =>
+      h.invoke.mock.calls
+        .filter(([command]) => command === "session_prompt")
+        .map(([, args]) => args.content);
+
+    try {
+      await draftPersistence.load();
+      composerDrafts.update(key, () => ({ text, attachments: [] }));
+      await draftPersistence.flush();
+      const submit = render(thread).button(STRINGS.composer.sendTitle)!;
+      expect(submit.props.disabled).toBe(false);
+      (submit.props.onClick as () => void)();
+      await vi.waitFor(() => expect(handoffWaiting).toBe(true));
+      expect(thread.queued).toEqual([blocks]);
+      expect(thread.queuePaused).toBe("stopped");
+      expect(prompts()).toEqual([]);
+      expect(composerDrafts.read(key).sendPending).toBe(true);
+
+      const quitting = scenario === "quit pause";
+      if (quitting) threads.pauseQueuesForExit();
+      // The new exit pause has the same reason as the one seen by Send.
+      expect(thread.queuePaused).toBe("stopped");
+      releaseSave();
+      const result = await send.mock.results[0]!.value;
+      await vi.waitFor(() =>
+        expect(composerDrafts.hasContent(key)).toBe(false),
+      );
+      await draftPersistence.flush();
+
+      expect(prompts()).toEqual(quitting ? [] : [blocks]);
+      expect(result).toEqual({ status: quitting ? "queued" : "accepted" });
+      expect(thread.queuePaused).toBe(quitting ? "stopped" : null);
+      expect(thread.queued).toEqual(quitting ? [blocks] : []);
+      expect(draftQueues.read(thread.key)?.blocks ?? []).toEqual(
+        quitting ? [blocks] : [],
+      );
+    } finally {
+      releaseSave();
+      await send.mock.results[0]?.value.catch(() => undefined);
+      threads.dequeue(thread.key, 0);
+      composerDrafts.clear(key);
+      await draftPersistence.flush();
+      vi.unstubAllGlobals();
+    }
+  },
+);
 
 it("keeps the edited resend open and unsent when its connection ends during the pending save", async () => {
   const id = "held-resend-disconnected";

@@ -436,10 +436,17 @@ it("keeps Tab navigation and normal Enter dispatch when a slash token has no vis
   (area.props.onKeyDown as (event: unknown) => void)(enter);
   await vi.waitFor(() => expect(threads.send).toHaveBeenCalledOnce());
   expect(enter.preventDefault).toHaveBeenCalledOnce();
-  expect(threads.send).toHaveBeenCalledWith("shortcut-a", [
-    { type: "text", text: "/unlisted" },
-    { type: "resource_link", name: "notes.md", uri: "file:///p/notes.md" },
-  ]);
+  expect(threads.send).toHaveBeenCalledWith(
+    "shortcut-a",
+    [
+      { type: "text", text: "/unlisted" },
+      { type: "resource_link", name: "notes.md", uri: "file:///p/notes.md" },
+    ],
+    {
+      key: "session:shortcut-a",
+      value: { ...before, sendPending: true },
+    },
+  );
 });
 
 it("shows the declared command input hint only while its argument is empty, without inserting or sending it", () => {
