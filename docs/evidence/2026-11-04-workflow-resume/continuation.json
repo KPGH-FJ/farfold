@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-06T02:55:15.013314+00:00",
-  "objective": "Continue sole plan after 134 draft/config/management stage. Original151/29x8/data and real-Agent boundaries remain; this pointer is not a second queue.",
+  "updatedAt": "2026-11-06T04:00:45.041395+00:00",
+  "objective": "Continue sole plan after adf80c9e5. Original 151 requirements and 29x8 criteria apply.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
     "documentation": "6bab747d0",
@@ -34,7 +34,7 @@
     "mcpReviewFocus": "65c6c661b688edc5d9c8d458dac7055ee244ca1f",
     "mcpSourceAndBrowserEvidence": "c2aa64f11",
     "mcpRefusalPresentation": "6f01327cb5e47a8da6d8ea424237cab24914b3cd",
-    "latestSourceEngineeringBinding": "output/2026-11-06-draft-config-stage/engineering-independent-review/reader.json",
+    "latestSourceEngineeringBinding": "output/2026-11-06-material-continuation/engineering-independent-review/reader.json",
     "capacityToolsAndWindowsScope": "b7147e530742c47b96713495dea8b736dc9ec630",
     "devServerColdScan": "ea6c01a9def7e51dcc042b8b8277e5b4989cf65e",
     "windowsFullSuccessRun": 41931045918,
@@ -55,7 +55,8 @@
     "configRetryEngineeringInputCommit": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "configRetryEngineeringBindingReceipt": "output/2026-11-04-config-save-retry/engineering-final-boundary/commit-source-binding.json",
     "currentSearchSaveManagementSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
-    "currentDraftConfigManagementSource": "13422001561df7ccf0328d73e4fb49df19168464"
+    "currentDraftConfigManagementSource": "13422001561df7ccf0328d73e4fb49df19168464",
+    "currentMaterialContinuationSource": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -91,29 +92,30 @@
     "38e reliability:pending image transfer/known-identical config retry/skill-MCP prewrite owner/native management focus; fresh7/4code reviews/singleformal update/selectedRootUI passed; original failures retained.",
     "844 pending-control firstpoll active/unknown guard and stale-index/memberABA fix:22/66 control,14files301 index;fresh7/2400/modes/Git/two code readers;oneformal update and Root selectedmetadata/originaldraft UI passed. NativePNG location2cold cycles belong38e,notinline/queue/Agent.",
     "f54 searchattachment readiness,management cancel-null/oldtimer ownership and finalpublished-byte receipt fixed; controlled original failures separated from harness errors. Three code readers+full7+engineeringGit+textcapsule+actualdelivery independent reviews passed.719files9615frontend/Rust2398pass7ignored;2403complete/2399production/11freshfixtures. Onebuild,9candidate/6installed,5newinode and3closed206275 manifests equal;Root coldP02/retained1/cwd held,zero sends. Native race faults/newcopyUI and completeAgent acceptance remain open.",
-    "134 preserves newer draft edits during retained-draft restore, rejects conflicting protected config replies including return-to-original, and retains actual write scope on management results. Fresh seven720/9621,Rust2401/7,2404inputs. Single formal install and selected cold P02, independent delivery. Earlier f54 actual own-file70-byte native copy; original Dirac workfolder unavailable, no retry."
+    "134 preserves newer draft edits during retained-draft restore, rejects conflicting protected config replies including return-to-original, and retains actual write scope on management results. Fresh seven720/9621,Rust2401/7,2404inputs. Single formal install and selected cold P02, independent delivery. Earlier f54 actual own-file70-byte native copy; original Dirac workfolder unavailable, no retry.",
+    "adf80c9e5 fixed attachment autosave, audio affordance, workbook recovery and delayed browser selection read. Fresh seven 721/9630 and Rust2401/7. Single formal install and closed-state preservation. Root selected original draft/owned location attachment restored and rechecked; only own test reference removed."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "sole-plan common capability continuation",
-      "state": "134 delivered. Next available dependency-closed result comes from the sole plan."
+      "state": "adf80c9e5 delivered. Next available dependency-closed result comes from the sole plan."
     }
   ],
   "formalPreparation": {
-    "directory": "output/2026-11-06-draft-config-stage/formal-preparation",
+    "directory": "output/2026-11-06-material-continuation/formal-preparation",
     "state": "actual_single_build_delivery_selected_ui_and_separate_reader_complete",
-    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
-    "formerFunctionalSource": "f54a9513d5f3cac188a82ea107374722fd4bafc9",
+    "sourceCommit": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+    "formerFunctionalSource": "13422001561df7ccf0328d73e4fb49df19168464",
     "normalSaveExitObserved": true,
     "newCaptureBuildInstallExecuted": true,
-    "independentDeliveryReview": "output/2026-11-06-draft-config-stage/formal-delivery-independent-review/reader.json"
+    "independentDeliveryReview": "output/2026-11-06-material-continuation/delivery-independent-review/reader.json"
   },
   "remaining": [
-    "Actual installed delayed preserved-draft restore, conflicting config notification/ACK, and official skill/MCP retained-scope write flows were not fault-injected or executed. Controlled checks remain distinct from installed cold recovery.",
-    "Original Dirac self-test history failed this one read with unavailable work folder. Re-evaluate when original folder is available with ownership confirmed; no substitute empty folder and no retry. Native f54 copy is an independent local file normal path only.",
-    "Official skill/MCP adoption, connection and calls; actual Agent compaction/settings interactions; installed storage faults; B3/Q causes, P18/N/O attribution and NEW24 affected new sends remain open/paused as before.",
-    "Windows run41984263036 still lacks a runner under payment/spending conditions. No repeated dispatch or billing changes, no new Windows acceptance."
+    "Queued inline image bytes, installed storage faults, live Agent message audio playback, actual native workbook failure/cancellation interleavings and installed browser delayed readback remain unverified in this batch.",
+    "P27 remote screenshot/Agent transfer still lacks a qualifying target. B3/Q causes remain open; original Dirac history needs the original work folder. The earlier installed configuration/management fault paths remain open.",
+    "Official skill/MCP adoption, connection and calls, P18 original N/O/unknown-object evidence and NEW-24 affected sends retain their prior scope and conditions.",
+    "Windows run 41984263036 received no runner because of account payment/spending conditions. No new Windows execution in this batch."
   ],
   "constraints": [
     "Single writable checkout.",
@@ -128,42 +130,42 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-06T02:55:15.013314+00:00",
-  "stage": "larger_draft_config_management_delivered",
+  "updatedAtUtc": "2026-11-06T04:00:45.041395+00:00",
+  "stage": "larger_material_continuation_delivered",
   "finalEvidence": {
+    "controlledAndEngineering": "docs/evidence/2026-11-06-material-continuation/README.md",
+    "formalAndUi": "docs/evidence/2026-11-06-material-continuation/formal-summary.json"
+  },
+  "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-06-draft-config/README.md",
     "formalAndUi": "docs/evidence/2026-11-06-draft-config/formal-summary.json"
   },
-  "previousFinalEvidence": {
-    "controlledAndEngineering": "docs/evidence/2026-11-05-search-maintenance/README.md",
-    "formalAndUi": "docs/evidence/2026-11-05-search-maintenance/formal-summary.json"
-  },
   "stageFinalProtection": {
-    "checkedAtUtc": "2026-11-06T02:55:15.013314+00:00",
+    "checkedAtUtc": "2026-11-06T04:00:45.041395+00:00",
     "protectedUnrelatedSha256": "90117ac99ab7c58b3091eababce0ea3771fdae277542118d71547298ff567166",
     "protectedMode": "0644",
-    "currentFormalBinarySha256": "ac2853dcb1ba6357497abb57af9f40f97b131d70123028cb1c69dfa4907ad81e",
+    "currentFormalBinarySha256": "7cbc489d73e9c67837f7c92267b70b4730cd946201cfeb80645c3491c15239a1",
     "nativeSelectedUiObserved": true
   },
   "formalUnlockInput": {
     "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Read current status and sole plan. Continue available P01, configuration/history and official management under exact conditions. Preserve Dirac original workfolder gap, original B3/Q/P18/NEW24 and Windows billing separately; no old resend/account/model change or automatic CI retry.",
+  "nextExactContinuation": "Use sole plan and current status. Continue available P01, configuration/history, official management and native material paths. Preserve Dirac, B3/Q, P18, NEW24, P27 and Windows conditions separately.",
   "initialEngineeringAttempt": {
-    "directory": "output/2026-11-06-draft-config-stage/engineering",
+    "directory": "output/2026-11-06-material-continuation/engineering",
     "allSevenFirstInvocationNaturalZero": true,
-    "scope": "Final134 epoch; the initial allowlist schema error preceded checks and was corrected without modifying source or collecting a second before-map."
+    "scope": "Final adf80c9e5 source epoch."
   },
   "finalEngineering": {
-    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
-    "directory": "output/2026-11-06-draft-config-stage/engineering",
+    "sourceCommit": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+    "directory": "output/2026-11-06-material-continuation/engineering",
     "freshNaturalZeroCommands": 7,
-    "inputs": 2404,
-    "productionInputs": 2400,
+    "inputs": 2405,
+    "productionInputs": 2401,
     "freshFixtures": 11,
-    "frontendFiles": 720,
-    "frontendPassed": 9621,
+    "frontendFiles": 721,
+    "frontendPassed": 9630,
     "rustPassed": 2401,
     "rustFailed": 0,
     "rustIgnored": 7,
@@ -180,17 +182,17 @@
     "state": "success30native20frontend;selected not full/installer/realAgent"
   },
   "latestFormalStage": {
-    "sourceCommit": "13422001561df7ccf0328d73e4fb49df19168464",
-    "evidence": "docs/evidence/2026-11-06-draft-config/formal-summary.json",
-    "mainSha256": "ac2853dcb1ba6357497abb57af9f40f97b131d70123028cb1c69dfa4907ad81e",
-    "actualRootUiReceipt": "output/2026-11-06-draft-config-stage/formal-preparation/formal/ui/root-selected-installed-observation.json",
-    "actualRootUiSha256": "7f16dc28029a884acdbc3abe0bd1425bbc992bb19254703b27ef2ee89cae9aa4",
+    "sourceCommit": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+    "evidence": "docs/evidence/2026-11-06-material-continuation/formal-summary.json",
+    "mainSha256": "7cbc489d73e9c67837f7c92267b70b4730cd946201cfeb80645c3491c15239a1",
+    "actualRootUiReceipt": "output/2026-11-06-material-continuation/formal-preparation/formal/ui/root-selected-installed-observation.json",
+    "actualRootUiSha256": "f5bb00d0591f4f8c3a6f33f75a28d470024b43cb9660fb764fcfc94456d93adc",
     "closedManifestEntriesEach": 206275,
-    "closedManifestSha256": "8b2c9a3ecbe34eea4fa40d7bc03ea55f6f21def8f8f3121aff7a6c63564fb776",
-    "currentView": "originalP02,retained1,originalcwd,Agentunset,no test attachment",
+    "closedManifestSha256": "cefbffa344650f9c45df3f0f7825501bdf6887a4a1c89f7041ee3f0f6bea766a",
+    "currentView": "originalP02,retained1,originalcwd,Agentunset,owned test attachment removed after successful recheck",
     "newPrompts": 0,
     "oldResends": 0,
-    "sourceVsLaterDocuments": "134 source/check/build/closed-data/UI epoch is distinct from later progress-only docs."
+    "sourceVsLaterDocuments": "adf80c9e5 source/check/build/closed-data/UI epoch is distinct from later progress-only docs."
   },
   "windowsInstallBlocked": {
     "run": 41984263036,
@@ -215,8 +217,8 @@
     "formalFileOnlyObservationAtThatTime": "output/2026-11-05-next-capability-stage/formal-identity.json; AEB binary still exact, no UI unlock probe/exit/update."
   },
   "previousEngineeringAttempt": {
-    "directory": "output/2026-11-05-search-maintenance-stage/engineering",
+    "directory": "output/2026-11-06-draft-config-stage/engineering",
     "allSevenFirstInvocationNaturalZero": true,
-    "scope": "Finalf54 epoch only; earlier harness/type failures remain controlled capsule originals."
+    "scope": "Final134 epoch; the initial allowlist schema error preceded checks and was corrected without modifying source or collecting a second before-map."
   }
 }

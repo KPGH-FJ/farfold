@@ -1,0 +1,119 @@
+{
+  "kind": "DerivedMaterialContinuationStageFormalSummary",
+  "sourceCommit": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+  "recordedAtUtc": "2026-11-06T04:00:45.041395+00:00",
+  "formerFunctionalSource": "13422001561df7ccf0328d73e4fb49df19168464",
+  "status": "delivered_with_explicit_unverified_scope",
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "inputs": 2405,
+    "productionInputs": 2401,
+    "freshFixtures": 11,
+    "frontendFiles": 721,
+    "frontendPassed": 9630,
+    "rustPassed": 2401,
+    "rustFailed": 0,
+    "rustIgnored": 7,
+    "oldRustReuse": false
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "mainSha256": "7cbc489d73e9c67837f7c92267b70b4730cd946201cfeb80645c3491c15239a1",
+    "candidateBuildCount": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "atomicNewInodeFiles": 5,
+    "normalSavedExit": true,
+    "forcedQuit": false,
+    "closedStateManifests": {
+      "entriesEach": 206275,
+      "sha256": "cefbffa344650f9c45df3f0f7825501bdf6887a4a1c89f7041ee3f0f6bea766a",
+      "equal": true,
+      "scope": "Closed-state interval only."
+    },
+    "backupIntegrity": "ok on the independently copied database",
+    "generatedDuplicateAppRemoved": true,
+    "candidateZipRetainedSha256": "7c7f2617deab4e9e7895f83617f09ec81dec21efef8d5f0e78799d0df0e450a0"
+  },
+  "rootNativeColdUi": {
+    "originalDraftAndWorkingFolderPreserved": true,
+    "retainedDrafts": 1,
+    "agentUnselected": true,
+    "ownedLocationAttachmentRestoredAndRechecked": true,
+    "onlyOwnedLocationAttachmentRemoved": true,
+    "source": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/ui/root-selected-installed-observation.json",
+      "sha256": "f5bb00d0591f4f8c3a6f33f75a28d470024b43cb9660fb764fcfc94456d93adc"
+    },
+    "scope": "Single UI witness. Local file location reference only. Private AX and user state remain outside Git."
+  },
+  "independentReaders": {
+    "draft": {
+      "path": "output/2026-11-06-material-continuation/draft-independent-review/reader.json",
+      "sha256": "85bef2212efafd374b97d635dc42343394418d50ea647328197ced180c9cf10b"
+    },
+    "media": {
+      "path": "output/2026-11-06-material-continuation/media-independent-review/reader.json",
+      "sha256": "a23516d7811cbc2dfd04cd7406733acdfa3f95d660d62d5804e4cadb266210bb"
+    },
+    "document": {
+      "path": "output/2026-11-06-material-continuation/document-independent-review/reader.json",
+      "sha256": "53d1427e342902aa4fafc27cd473638067353a1b615887ab03e57a7e4d3a5848"
+    },
+    "browser": {
+      "path": "output/2026-11-06-material-continuation/browser-independent-review/reader.json",
+      "sha256": "462b8416f062ed5111f3f75e4c44a2a759ecd6615790e779129f8187eec3c7d9"
+    },
+    "engineering": {
+      "path": "output/2026-11-06-material-continuation/engineering-independent-review/reader.json",
+      "sha256": "dca5cfc420c88d9baac91053e239f0f917229fc11969a64cd686c3911840d13d"
+    },
+    "capsule": {
+      "path": "output/2026-11-06-material-continuation/capsule-independent-review/reader.json",
+      "sha256": "94ace1e3f44593eb5d1ffe94ee688f25fc2a5d015074affd24ea1a1e4c001134"
+    },
+    "delivery": {
+      "path": "output/2026-11-06-material-continuation/delivery-independent-review/reader.json",
+      "sha256": "786bc5887e3c35888f0d0d9760016bf01ca5a400d68fa5c3044fbfc19ac94126"
+    }
+  },
+  "privateReceiptReferences": {
+    "exit": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/root-normal-exit-current-draft-ui.json",
+      "sha256": "b10fbd341287a6c2bb8e9ac7fa5b343f20251a02b1723242afbe9a4754c8ad6b"
+    },
+    "delivery": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/root-delivery-completion.json",
+      "sha256": "20590d5aca694598cbdaa14aa35144f1123cac8a62ff477f0d664efe6572139b"
+    },
+    "install": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/install/install-result.json",
+      "sha256": "64d5db03530b2b0fa03c5cdcd96bba09e595900945a6edcd6f78d46715f77d20"
+    },
+    "closedData": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/install/installed-independent-review-private.json",
+      "sha256": "bc86169404e683fe8393fc02a5f208c6416cc3ab4e88766c7655559c4a374dc6"
+    },
+    "cleanup": {
+      "path": "output/2026-11-06-material-continuation/formal-preparation/formal/install/candidate-cleanup.json",
+      "sha256": "6ac268cd0907dba605503c50799a4a176115b69a8aa5c1d7dbd72b2cc00d934e"
+    }
+  },
+  "newModelSends": 0,
+  "oldRequestResends": 0,
+  "remaining": [
+    "Queued inline image bytes, installed storage faults, live Agent message audio playback, actual native workbook failure/cancellation interleavings and installed browser delayed readback remain unverified in this batch.",
+    "P27 remote screenshot/Agent transfer still lacks a qualifying target. B3/Q causes remain open; original Dirac history needs the original work folder. The earlier installed configuration/management fault paths remain open.",
+    "Official skill/MCP adoption, connection and calls, P18 original N/O/unknown-object evidence and NEW-24 affected sends retain their prior scope and conditions.",
+    "Windows run 41984263036 received no runner because of account payment/spending conditions. No new Windows execution in this batch."
+  ],
+  "scope": {
+    "originalRequirements": 151,
+    "agents": 29,
+    "standardsEach": 8,
+    "wholeItemOrAgentAcceptanceClaimed": false
+  }
+}
