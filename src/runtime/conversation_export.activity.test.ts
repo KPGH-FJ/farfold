@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import {
   applyConnectionLost,
   applyUpdate,
@@ -257,13 +257,21 @@ it.each([
   },
 );
 
-it("keeps the cancelled tool unknown during other rounds and isolates a sibling reusing its tool ID", () => {
+it("keeps the cancelled tool unknown during other rounds and isolates a sibling reusing its tool ID", ({
+  onTestFinished,
+}) => {
+  const clock = vi.spyOn(Date, "now").mockReturnValue(100);
+  onTestFinished(() => {
+    clock.mockRestore();
+  });
   const a = freshThreadState("owner-a", "fixture", "/work", "a");
   a.connectionId = "connection-a";
   beginTool(a, "background");
   applySessionEvent(a, { kind: "turnEnd", stopReason: "end_turn" }, true);
+  clock.mockReturnValue(200);
   beginTool(a, "shared-id", "pending");
   applySessionEvent(a, { kind: "turnEnd", stopReason: "cancelled" }, true);
+  clock.mockReturnValue(300);
   beginTool(a, "new-round");
 
   const b = freshThreadState("owner-b", "fixture", "/work", "b");
@@ -275,12 +283,16 @@ it("keeps the cancelled tool unknown during other rounds and isolates a sibling 
     `（${E.status.pending}）`,
   );
 
+  clock.mockReturnValue(400);
   finishTool(a, "background", "completed");
   finishTool(b, "shared-id", "completed");
   expect.soft(renderToolStates(a)).toEqual(["finished", "unknown", "active"]);
-  expect
-    .soft(paneCards(a).map((card) => card.status))
-    .toEqual(["completed", "unknown", "in_progress"]);
+  // The drawer uses the completion time when a tool finishes.
+  expect.soft(paneCards(a)).toMatchObject([
+    { kind: "command", title: "shared-id", status: "unknown", time: 200 },
+    { kind: "command", title: "new-round", status: "in_progress", time: 300 },
+    { kind: "command", title: "background", status: "completed", time: 400 },
+  ]);
   const markdown = transcriptMarkdown(a, "Own A", "Fixture");
   expect.soft(markdown).toContain(`（${E.unknown}）`);
   expect.soft(markdown).not.toContain(`（${E.status.pending}）`);
