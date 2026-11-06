@@ -7,6 +7,7 @@ import {
 import { fileBasename, filePathUri } from "./file_paths";
 import { composerDrafts, type DraftAttachment } from "./drafts";
 import { draftPersistence } from "./draft_storage";
+import { IMAGE_BYTES_STRINGS } from "./image_bytes";
 import {
   IMAGE_INPUT_STRINGS,
   clipboardImageCandidate,
@@ -201,13 +202,20 @@ export async function addPickedAttachments(
           });
         }
       } catch (error) {
+        const message = imageInputError(error);
+        // These two native read failures occur only after identifying a bitmap.
+        const knownImage =
+          imageEnabled &&
+          (message === IMAGE_BYTES_STRINGS.tooLarge ||
+            message === IMAGE_INPUT_STRINGS.changed);
         if (
           work.patch(attachment, {
+            ...(knownImage ? { kind: "image", deliveryMode: undefined } : {}),
             loading: false,
             imageChecked: undefined,
           })
         )
-          report(imageInputError(error), attachment.id);
+          report(message, attachment.id);
       } finally {
         work.done(attachment);
       }

@@ -29,11 +29,13 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-local-synthetic-logout.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-held-provider-cancel.json",
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json",
-    "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json"
+    "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json",
+    "docs/evidence/2026-11-06-phase1-draft-image/installed-oversize-image-kind.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -102,11 +104,12 @@
     {
       "agentId": "codebuddy-code",
       "name": "CodeBuddy",
-      "remainingCondition": "实际账号及付费来源、配置生效、原历史继续和其它标准未随一次回答取得。按确定的原服务、模型、对象单独留证。",
+      "remainingCondition": "6ce829c5 打开指定自测对话后原待发逐字节保持暂停，旧工具仍未知；原模型和思考与当前声明不一致。原配置可用时复核编辑保存、继续和实际配置。账号、费用及其余标准分别留证。",
       "evidencePaths": [
         "docs/agent-first-release.md",
         "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
-        "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json"
+        "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json",
+        "docs/evidence/2026-11-06-cycle-01/installed-codebuddy-paused-model-drift.json"
       ],
       "scopedHistoryEvidence": null
     },
@@ -380,7 +383,7 @@
       ],
       "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。首个隔离设备挑战尝试未确认。本机模拟批准时官方程序保存并由新进程读回合成认证，服务拒绝时未写认证。直接信号取消对照仍轮询；实际终端管理器关闭本机待授权测试进程后，进程组释放且未再轮询或写认证。当前付款身份、网关路由和计费、完整新登录与退出换号、正式界面取消和远端撤回待实测。",
+        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。首个隔离设备挑战尝试未确认。本机模拟批准时官方程序保存并由新进程读回合成认证，服务拒绝时未写认证；隔离本地退出清除合成凭据并由新进程确认。直接信号取消对照仍轮询；实际终端管理器关闭本机待授权测试进程后，进程组释放且未再轮询或写认证。当前付款身份、网关路由和计费、完整新登录与退出换号、正式界面取消和远端撤回待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3", "S4"],

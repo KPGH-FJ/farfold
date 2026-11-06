@@ -127,3 +127,75 @@ it.each(["later input", "later choice", "another conversation"] as const)(
     expect(cold.composerDrafts.preserved()[0]).toMatchObject([key, retained]);
   },
 );
+
+it.each(["later input", "cancelled quit"] as const)(
+  "requires another preservation confirmation after %s during the first save",
+  async (change) => {
+    const started = deferred();
+    const release = deferred();
+    const before = { text: "initial unsent draft", attachments: [] };
+    const newer = { ...before, text: "newer unsent draft" };
+    let disk: unknown = {
+      version: 1,
+      composers: { new: before, [key]: retained },
+      choice: activeChoice,
+      feedback: {},
+      queues: {},
+    };
+    let writes = 0;
+    h.invoke.mockImplementation(
+      async (command: string, args: { key: string; value?: unknown }) => {
+        expect(args.key).toBe("unsentWork.v1");
+        if (command === "settings_get") return structuredClone(disk);
+        expect(command).toBe("settings_set");
+        if (++writes === 1) {
+          started.resolve();
+          await release.promise;
+        }
+        disk = structuredClone(args.value);
+      },
+    );
+    const d = await import("./drafts");
+    await d.draftPersistence.load();
+    const preservedBefore = structuredClone(d.composerDrafts.preserved());
+    d.newConversationChoice.config = { thinking: true };
+    await started.promise;
+
+    const confirming = Promise.allSettled([
+      d.composerDrafts
+        .preserveNew()
+        .then((ticket) => d.composerDrafts.clearPreservedNew(ticket)),
+    ]);
+    if (change === "later input") {
+      d.composerDrafts.update("new", () => newer);
+    } else {
+      const cancelQuit = d.draftPersistence.acquireInteractionLock();
+      cancelQuit();
+    }
+    release.resolve();
+
+    const [result] = await confirming;
+    expect.soft(result).toMatchObject({
+      status: "rejected",
+      reason: { message: REDESIGN.draftChanged },
+    });
+    await d.draftPersistence.flush();
+    const expected = change === "later input" ? newer : before;
+    expect(d.composerDrafts.read("new")).toMatchObject(expected);
+    expect(d.composerDrafts.preserved()).toEqual(preservedBefore);
+
+    vi.resetModules();
+    const cold = await import("./drafts");
+    await cold.draftPersistence.load();
+    expect(cold.composerDrafts.read("new")).toMatchObject(expected);
+    expect(cold.composerDrafts.preserved()).toEqual(preservedBefore);
+
+    const retry = await cold.composerDrafts.preserveNew();
+    cold.composerDrafts.clearPreservedNew(retry);
+    await cold.draftPersistence.flush();
+    expect(cold.composerDrafts.read("new").text).toBe("");
+    expect(
+      cold.composerDrafts.preserved().map(([, draft]) => draft.text),
+    ).toEqual([retained.text, expected.text]);
+  },
+);

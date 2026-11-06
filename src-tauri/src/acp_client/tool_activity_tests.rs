@@ -434,7 +434,14 @@ threading.Thread(target=exit_after_fence, daemon=True).start()
                 "typedReceipt"
             ]
         );
-        target.life.closed().await.unwrap();
+        if exit_kind == b"self SIGTERM" {
+            // The receipts prove termination and cleanup, independent of a
+            // successful command exit for this deliberately signalled peer.
+            target.life.terminated().await;
+            assert!(target.life.finished());
+        } else {
+            target.life.closed().await.unwrap();
+        }
         let work_at_closed = target.life.work.load(Ordering::SeqCst);
         assert!(
             manager

@@ -23,6 +23,12 @@ import {
   PNG_IMAGE_TEST_DATA,
   TestImageDecoder,
 } from "./image_fixtures.test-support";
+import { IMAGE_BYTES_STRINGS } from "./image_bytes";
+import { IMAGE_INPUT_STRINGS } from "./draft_images";
+import {
+  attachmentPromptBlocks,
+  prepareDraftAttachments,
+} from "./draft_attachments";
 
 // Real Node File bytes; only its arrayBuffer delivery is controlled. The actual
 // importer, draft store and persistence implementation remain in use. The
@@ -87,8 +93,9 @@ function latestSaved(target: string) {
 }
 beforeEach(async () => {
   h.failSave = false;
-  h.invoke.mockImplementation(
-    async (name: string, args: { value?: unknown }) => {
+  h.invoke
+    .mockClear()
+    .mockImplementation(async (name: string, args: { value?: unknown }) => {
       if (name === "settings_get") return null;
       if (name === "settings_set") {
         if (h.failSave) throw new Error("owned settings write failure");
@@ -96,8 +103,7 @@ beforeEach(async () => {
         return;
       }
       throw new Error("Unexpected IPC outside settings-only seam: " + name);
-    },
-  );
+    });
   vi.stubGlobal("Image", TestImageDecoder);
   await draftPersistence.load();
   composerDrafts.clear(key);
@@ -120,6 +126,89 @@ afterEach(async () => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
+
+it.each([IMAGE_BYTES_STRINGS.tooLarge, IMAGE_INPUT_STRINGS.changed])(
+  "keeps a native bitmap read failure as a recoverable image instead of sending a file link (%s)",
+  async (failure) => {
+    const settings = h.invoke.getMockImplementation()!;
+    const path = "/owned/bitmap-with-an-ordinary-name.txt";
+    const uri = `file://${path}`;
+    let restoredSettings: unknown = null;
+    let readableImage = false;
+    h.invoke.mockImplementation(async (name, args) => {
+      if (name === "settings_get") return structuredClone(restoredSettings);
+      if (name === "draft_attachment_audio_candidate") return null;
+      if (name === "draft_attachment_image") {
+        expect(args).toEqual({ uri, read: true });
+        if (!readableImage) throw failure;
+        return { mimeType: "image/png", data: PNG_IMAGE_TEST_DATA };
+      }
+      if (name === "draft_attachment_check") return null;
+      return settings(name, args);
+    });
+    composerDrafts.update(key, () => ({
+      text: "retained text",
+      attachments: [],
+    }));
+    const report = vi.fn();
+    await addPickedAttachments(key, [path], true, report);
+    const hot = composerDrafts.read(key);
+    const attachment = hot.attachments[0]!;
+    expect(report).toHaveBeenCalledExactlyOnceWith(failure, attachment.id);
+    expect
+      .soft(attachment)
+      .toMatchObject({ kind: "image", uri, loading: false });
+    await expect
+      .soft(prepareDraftAttachments(hot.attachments, true))
+      .rejects.toThrow(failure);
+    await draftPersistence.flush();
+    restoredSettings = structuredClone(h.writes.at(-1));
+
+    vi.resetModules();
+    const cold = await import("./drafts");
+    const { captureAttachmentReview, confirmAttachmentReview } =
+      await import("./attachment_review");
+    await cold.draftPersistence.load();
+    const restored = cold.composerDrafts.read(key);
+    expect(restored.text).toBe(hot.text);
+    expect.soft(restored.attachments[0]).toMatchObject({
+      id: attachment.id,
+      kind: "image",
+      uri,
+      recovered: true,
+    });
+    const review = captureAttachmentReview(key, null);
+    const kept = new Set(review.entries.map(({ id }) => id));
+    const confirm = () =>
+      confirmAttachmentReview(review, kept, true, () => true);
+    await expect.soft(confirm()).rejects.toThrow();
+    expect(cold.composerDrafts.read(key)).toBe(restored);
+
+    readableImage = true;
+    expect(await confirm()).toBe(true);
+    const checked = cold.composerDrafts.read(key);
+    expect(
+      attachmentPromptBlocks(checked.text, checked.attachments, true),
+    ).toEqual([
+      { type: "text", text: "retained text" },
+      { type: "image", data: PNG_IMAGE_TEST_DATA, mimeType: "image/png", uri },
+    ]);
+    expect(checked.attachments[0]?.recovered).toBe(false);
+    await cold.draftPersistence.flush();
+    expect(latestSaved(key)).toMatchObject({
+      text: hot.text,
+      attachments: [
+        { id: attachment.id, kind: "image", uri, data: PNG_IMAGE_TEST_DATA },
+      ],
+    });
+    expect(h.invoke.mock.calls.map(([name]) => name)).not.toContain(
+      "draft_attachment_check",
+    );
+    expect(h.invoke.mock.calls.map(([name]) => name)).not.toContain(
+      "session_prompt",
+    );
+  },
+);
 
 it("keeps owned input behind save across another draft and the quit interaction lock", async () => {
   const input = selected();

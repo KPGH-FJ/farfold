@@ -1,0 +1,28 @@
+{
+  "kind": "InstalledOversizeImageKindMismatch",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c5",
+  "scenario": "Use the installed app's file picker to import an owned valid PNG with a .txt extension into the empty editor of a completed test conversation.",
+  "fixture": {
+    "format": "PNG",
+    "extension": ".txt",
+    "width": 1920,
+    "height": 1600,
+    "bytes": 9220468,
+    "sha256": "0a955f74dee4ba300134c4b2853986e144d2796cc6c46953a8d6f45b1045e61b"
+  },
+  "observed": {
+    "installedWarning": "图片大小超过 8 MiB，请缩小后重新添加。",
+    "storedKind": "file",
+    "storedDeliveryMode": "location",
+    "storedSourceMatchedSelectedFile": true,
+    "storedImageBytesAbsent": true,
+    "testAttachmentRemoved": true,
+    "originalDraftAndOtherUnsentWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "protectedAndTargetProtocolTapsUnchanged": 4,
+    "newAgentRequests": 0
+  },
+  "scope": "Installed warm import and read-only storage observation. Actual delivery and the repaired installed app are separate verification."
+}

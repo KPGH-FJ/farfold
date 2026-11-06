@@ -93,6 +93,7 @@ type PreservedNew = {
   draft: ComposerDraft;
   generation: number;
   selection: string;
+  interrupted: () => boolean;
 };
 const retainedNewKeys = new WeakMap<ComposerDraft, Map<string, string>>();
 function capturePreservedNew(): PreservedNew {
@@ -100,10 +101,12 @@ function capturePreservedNew(): PreservedNew {
     draft: composerDrafts.read("new"),
     generation: composerDrafts.generation("new"),
     selection: JSON.stringify(choice),
+    interrupted: draftPersistence.captureInteractionInterruption(),
   };
 }
 function assertPreservedNew(ticket: PreservedNew) {
   if (
+    ticket.interrupted() ||
     composerDrafts.read("new") !== ticket.draft ||
     composerDrafts.generation("new") !== ticket.generation ||
     JSON.stringify(choice) !== ticket.selection
@@ -126,9 +129,8 @@ export const composerDrafts = {
     );
   },
   /** Persist the original before the caller replaces the active input. */
-  async preserveNew(expected?: PreservedNew) {
+  async preserveNew(ticket = capturePreservedNew()) {
     await draftPersistence.flush();
-    const ticket = expected ?? capturePreservedNew();
     assertPreservedNew(ticket);
     if (!this.hasContent("new")) return ticket;
     let retained = retainedNewKeys.get(ticket.draft);
