@@ -1,0 +1,74 @@
+{
+  "installedRevision": "6ce829c53",
+  "formalUpdatePerformed": false,
+  "completeFirstWaveAgents": 0,
+  "noModelResourceWitness": {
+    "goose": {
+      "version": "1.52.0",
+      "sameTransport": true,
+      "distinctBoundMcpChildren": true,
+      "closeCallsA": 1,
+      "closeCallsB": 0,
+      "ackMs": 1,
+      "aChildNoLongerRunningWithinMs": 159,
+      "aChildLoggedEofAndExit": true,
+      "bChildAndOfficialAgentStillAlive": true,
+      "receiptSha256": "c3158485d5eb28d4addfc9526eab40a1fdcabd8f385b468ed9b54e4e6c163356"
+    },
+    "copilot": {
+      "version": "1.0.106",
+      "closeAdvertised": true,
+      "mcpChildrenObservedBeforeClose": false,
+      "closeCalls": 0,
+      "receiptSha256": "98d003499201d1dcc349cfdfed584112b6a6b1f45e81379235aa19735a5b90ec"
+    }
+  },
+  "copilotScopedClose": {
+    "version": "1.0.106",
+    "distinctSessionsSameTransport": true,
+    "aCommandAndChildStoppedBeforeClose": true,
+    "aProcessesGoneWithinMsAfterCancel": 25,
+    "noMatchingToolTerminal": true,
+    "aNativeRoutineShutdown": true,
+    "aOpenFileCountBefore": 1,
+    "aOpenFileCountAfter": 0,
+    "bOpenFileCountBefore": 1,
+    "bOpenFileCountAfter": 1,
+    "bStillPendingAtAClosed": true,
+    "bActualToolAndReplyComplete": true,
+    "bCloseOrCancelCalls": 0,
+    "oldHistoryPreserved": true,
+    "testOperatorSignals": 0,
+    "receiptSha256": "0effaef4f71694261e620adb85af6abbc294bbc73b20ffca5e4a2eef7ad27ad3"
+  },
+  "formalPreservation": {
+    "installedBinaryUnchanged": true,
+    "originalDraftDigestSame": true,
+    "retainedDraftCount": 1,
+    "existingThreeToolTailTapsUnchanged": true,
+    "receiptSha256": "073b102fc767403b378a5dbcea728793b41c75800d56508b1ea6441bccdd23b4"
+  },
+  "targetedExistingChecks": {
+    "rustCloseAndToolActivity": 13,
+    "frontendUpdateAndToolActivity": 36
+  },
+  "gooseScopedClose": {
+    "version": "1.52.0",
+    "distinctSessionsSameTransport": true,
+    "preflightModelMismatchPrompts": 0,
+    "preflightReceiptSha256": "96b1bee50c600f5a690d060b8316e4ab65195f4216925feb279c93f74824328d",
+    "sameExistingFreeModelAndThinkingOffConfirmed": true,
+    "aOnlyManualModeChange": true,
+    "aPermissionCancelledWithoutApproval": true,
+    "aOfficialCancelled": true,
+    "noMatchingToolTerminal": true,
+    "aNoLongerActiveExactOwnerError": -32002,
+    "bStillQueryableAndContinuedAfterClose": true,
+    "bCloseOrCancelCalls": 0,
+    "bExactReplyAndEndTurn": true,
+    "aDurableHistoryPreserved": true,
+    "childProcessesObservedBeforeOrAfterClose": 0,
+    "testTransportExitCode": 0,
+    "receiptSha256": "f780d36cb573643df4259bd4e593822b05d780f72e44632f6a4bde7849298c80"
+  }
+}
