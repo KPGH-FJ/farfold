@@ -27,6 +27,7 @@ type ImageImportNotice = {
   id: string;
   message: string;
 };
+type DraftSourceNotice<T> = T & { generation: number };
 
 /** A notice belongs to its failed input, independently of editable draft text. */
 export function useComposerSourceError(
@@ -39,8 +40,8 @@ export function useComposerSourceError(
     ImageImportNotice[]
   >([]);
   const generation = composerDrafts.generation(draftKey);
-  const source = useRef<DocumentSourceNotice | null>(null);
-  const audioSource = useRef<AudioSourceNotice | null>(null);
+  const source = useRef<DraftSourceNotice<DocumentSourceNotice> | null>(null);
+  const audioSource = useRef<DraftSourceNotice<AudioSourceNotice> | null>(null);
   const save = useRef<ReturnType<typeof watchDraftSave> | null>(null);
   const context = useRef({ draftKey, errorContext });
   context.current = { draftKey, errorContext };
@@ -64,6 +65,7 @@ export function useComposerSourceError(
     failedSource !== null &&
     (failedSource.draftKey !== draftKey ||
       failedSource.errorContext !== errorContext ||
+      failedSource.generation !== generation ||
       !attachments.some(({ id }) => id === failedSource.error.attachmentId));
   useEffect(() => {
     if (
@@ -110,11 +112,11 @@ export function useComposerSourceError(
       save.current = null;
       audioSource.current =
         error instanceof AudioSourceError
-          ? { draftKey, errorContext, error }
+          ? { draftKey, errorContext, generation, error }
           : null;
       source.current =
         error instanceof DocumentSourceError
-          ? { draftKey, errorContext, error }
+          ? { draftKey, errorContext, generation, error }
           : null;
       updateError(toUiNotice(error, STRINGS.repair.sendFailed));
       if (error instanceof DraftSaveError) {

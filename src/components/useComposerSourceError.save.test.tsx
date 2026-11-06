@@ -360,7 +360,32 @@ it("a document source failure stays until its own explicit source confirmation, 
     attachments: [confirmation.applied],
   }));
   await d.draftPersistence.flush();
+  expect(render().sendError?.message).toBe(failure.message);
   render().documentSaved(confirmation);
+  expect(render().sendError).toBeNull();
+});
+it("retires a document source notice when restoring the whole draft with the same attachment ID", async () => {
+  const { failure, confirmation } = await documentSourceFixture();
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [confirmation.attachment],
+  }));
+  // The original is still active if opening the next conversation stops
+  // after preserving its copy and before clearing the active input.
+  await d.composerDrafts.preserveNew();
+  const [[retainedKey]] = d.composerDrafts.preserved();
+  const generation = d.composerDrafts.generation(key);
+  render().setSendFailure(failure);
+  expect(render().sendError?.message).toBe(failure.message);
+
+  expect(await d.composerDrafts.restorePreserved(retainedKey)).toBe(true);
+  const restored = d.composerDrafts.read(key);
+  expect(d.composerDrafts.generation(key)).toBe(generation + 1);
+  expect(restored.text).toBe("ORIGINAL");
+  expect(restored.attachments).toEqual([
+    { ...confirmation.attachment, recovered: true },
+  ]);
+  expect(restored.attachments[0]).not.toBe(confirmation.attachment);
   expect(render().sendError).toBeNull();
 });
 it("retires a removed document's source notice and leaves a newer warning intact after late approval", async () => {
