@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-06T05:40:49.798599+00:00",
+  "updatedAt": "2026-11-06T06:17:29.746679+00:00",
   "objective": "Execute the approved sole five-stage fourteen-cycle plan.",
   "branch": "codex/2026-11-04-development-resume",
   "checkpoints": {
@@ -58,7 +58,8 @@
     "currentDraftConfigManagementSource": "13422001561df7ccf0328d73e4fb49df19168464",
     "currentMaterialContinuationSource": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
     "firstPhaseSource": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
-    "firstWaveDiagnosticsSource": "68aefdb496c284252a38e86049d269baf0432439"
+    "firstWaveDiagnosticsSource": "68aefdb496c284252a38e86049d269baf0432439",
+    "firstWaveStorageIpcSource": "8f487c843a00573511d1165660b0a6ef1a0ac155"
   },
   "completed": [
     "Plan/AGENTS/status updated and independently reviewed; original 151 conditions and29x8 preserved.",
@@ -97,13 +98,14 @@
     "134 preserves newer draft edits during retained-draft restore, rejects conflicting protected config replies including return-to-original, and retains actual write scope on management results. Fresh seven720/9621,Rust2401/7,2404inputs. Single formal install and selected cold P02, independent delivery. Earlier f54 actual own-file70-byte native copy; original Dirac workfolder unavailable, no retry.",
     "adf80c9e5 fixed attachment autosave, audio affordance, workbook recovery and delayed browser selection read. Fresh seven 721/9630 and Rust2401/7. Single formal install and closed-state preservation. Root selected original draft/owned location attachment restored and rechecked; only own test reference removed.",
     "First phase engineering: five scoped fixes, fresh final seven, formal update and two owned location references cold restore/recheck. First wave and full fault acceptance remain open.",
-    "First-wave actual read-only attempts on three agents; no historical read confirmed. 68aefdb formal selected Goose timeout retest, protected draft, independent code/engineering/delivery; first phase still open."
+    "First-wave actual read-only attempts on three agents; no historical read confirmed. 68aefdb formal selected Goose timeout retest, protected draft, independent code/engineering/delivery; first phase still open.",
+    "First-wave differential real reads: Copilot and Kilo initialize in isolated manager but not in formal app; Goose same old history read directly and isolated, formal remains incomplete. Kilo buffered first input, both Goose and Kilo stack samples in getcwd. Storage IPC isolation verified; original draft preserved."
   ],
   "active": [
     {
       "owner": "root",
       "scope": "first-phase remaining actual acceptance",
-      "state": "First wave 0/3 fully accepted. Goose lacks final historical response, Copilot and Kilo lack connection response. Separate original workspace and isolated storage conditions retained."
+      "state": "0/3 full acceptance. Formal Kilo/Goose sampled in OS cwd resolution; Copilot formal init timeout. Missing syscall results or attributable environment evidence; stored details in first-wave diagnostic summary."
     }
   ],
   "formalPreparation": {
@@ -118,7 +120,7 @@
   "remaining": [
     "原 OpenCode 自测记录 | 一次正式版打开报告原工作文件夹不存在或不可访问，未读回历史。 | 同一原工作位置恢复且可访问。",
     "原 Mistral 自测记录 | 原自有目录可访问；正式版打开一次由读取中转为连接检查超时，原因未定。 | 有归属明确的官方初始化进度、终态或启动/登录条件变化后，再复核该对象。",
-    "首波三家 | Goose缺原历史读取终态，Copilot和Kilo连接检查超时，三家实际模型、审批、停止及续接证据未齐。 | 有同原对象的官方读取终态、可归属连接变化或独立合格原对象后逐家复测。",
+    "首波三家 | Goose原历史直连/隔离可恢复，正式仍缺终态；Kilo与Copilot正式初始化超时。Goose/Kilo同现工作目录系统调用停滞。 | 获取确切系统调用结果或可归属的启动条件变化；三家原历史、实际模型、审批、停止及续接仍按原条件分别验。",
     "完整存储与退出故障 | 本轮由真实隔离SQLite及受控组件证明所选故障；正式版已验位置附件正常与缺件恢复。 | 独立的应用数据与进程归属环境、可控存储故障样本，以及可观察的原生退出和冷启。",
     "Windows实际安装及桌面 | 已记录安装验证运行未分配runner，本批无新Windows验证。 | 账户付款或额度恢复并有可用runner及对应真机环境。"
   ],
@@ -135,12 +137,13 @@
     "sourceCheckpoint": "2f5c90550f41e701db64725947db505e0f3bbbd5",
     "formalSourceAtOriginalEvidence": "aeb0dc491"
   },
-  "updatedAtUtc": "2026-11-06T05:40:49.798599+00:00",
-  "stage": "first_phase_wave_attempted_acceptance_open",
+  "updatedAtUtc": "2026-11-06T06:17:29.746679+00:00",
+  "stage": "first_phase_formal_cwd_diagnosis_acceptance_open",
   "finalEvidence": {
     "stageEngineering": "docs/evidence/2026-11-06-cycle-01/summary.json",
     "agentConditions": "docs/evidence/2026-11-06-cycle-01/agent-conditions.json",
-    "firstWave": "docs/evidence/2026-11-06-wave-01/summary.json"
+    "firstWave": "docs/evidence/2026-11-06-wave-01/summary.json",
+    "firstWaveDiagnostics": "docs/evidence/2026-11-06-wave-01-diagnostics/summary.json"
   },
   "previousFinalEvidence": {
     "controlledAndEngineering": "docs/evidence/2026-11-06-material-continuation/README.md",
@@ -157,21 +160,21 @@
     "state": "Actualnative Cua accessible in this batch,no pending unlock request",
     "normalSaveExitAndSelectedPostUpdateUiObserved": true
   },
-  "nextExactContinuation": "Use the sole plan and the recorded first-wave conditions. Resume owned histories after the corresponding connection/load or workspace change; continue independent work with available conditions.",
+  "nextExactContinuation": "Capture a formally attributed cwd syscall outcome or confirmed environment variable in a scoped observation. Re-open only the affected owned history when a qualifying input or instrument changes. Continue independent work under the sole plan.",
   "initialEngineeringAttempt": {
     "directory": "output/2026-11-06-material-continuation/engineering",
     "allSevenFirstInvocationNaturalZero": true,
     "scope": "Final adf80c9e5 source epoch."
   },
   "finalEngineering": {
-    "sourceCommit": "68aefdb496c284252a38e86049d269baf0432439",
-    "directory": "output/2026-11-06-wave-01/engineering-final",
+    "sourceCommit": "8f487c843a00573511d1165660b0a6ef1a0ac155",
+    "directory": "output/2026-11-06-wave-01-diagnostics/engineering",
     "freshNaturalZeroCommands": 7,
     "inputs": 2405,
     "fixtures": 11,
     "frontendFiles": 721,
     "frontendPassed": 9642,
-    "rustPassed": 2404,
+    "rustPassed": 2405,
     "rustIgnored": 7
   },
   "selectedWindowsPreparation": {
