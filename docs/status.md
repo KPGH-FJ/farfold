@@ -76,9 +76,11 @@
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档19个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。候选模型真实回复及冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档20个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
 
 **第1阶段原服务计费与模型隔离。** Goose旧正式自测的请求编号与OpenRouter默认工作区准确匹配，该次账单显示$0.00。聊天模式仍携带本地Skills上下文，当前正式版没有单对话关闭入口，第二候选未发送。Kilo官方7.8.1隔离自测仅切A到同服务免费Dots3再恢复Ultra，B设置读回一致，零提示，测试进程自然退出。Kilo正式版和真实回复仍待。[Goose工作区核对](evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json) · [Kilo隔离切换](evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json)
+
+**第1阶段Kilo模型冷恢复。** 当前连接管理器与官方7.8.1在独立库中核合。只读打开两条原自测会话均返回默认模型。普通冷开两条独立连接均先加载原会话再应用已保存选择，A恢复Dots3、B保持Ultra，均就绪。两条保存记录不被覆盖，零新增消息。定向1项通过，首次夹具误读已处理字段，修正为独立只读对照。正式界面、账号、实际回复和跨版授权仍待。[管理器冷恢复回执](evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json)
 
 **第1阶段Kilo隔离会话关闭。** 官方程序7.8.1在独立库创建两个无消息自测会话，仅关闭A一次并收到对应回执；B在同一进程重新接入并读回原设置，两条历史保留。零模型、工具和审批；A专属资源及B原路由连续性未证，不替代正式复验或跨版授权。[隔离回执](evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json)
 

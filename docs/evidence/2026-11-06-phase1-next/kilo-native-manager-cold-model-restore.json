@@ -1,0 +1,106 @@
+{
+  "currentFarfoldNativeManager": true,
+  "officialKiloVersion": "7.8.1",
+  "installedAppOperated": false,
+  "userConfigOrCredentialCopied": false,
+  "privateHomeCreated": false,
+  "existingSignedAccountUsed": false,
+  "isolatedXdgRootsAndNativeDb": true,
+  "directHarnessSignalsSent": 0,
+  "twoOwnedOfficialSessions": true,
+  "factoryDiffersFromTargetAlternative": true,
+  "fixtureSetup": {
+    "exactOfficialBaseline": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free",
+    "explicitlySeededViaProductionConfigStoreAfterOfficialAcks": true,
+    "reason": "No first prompt or synthetic Agent message was used to establish the two owned index rows.",
+    "shutdown": {
+      "outboundCounts": {
+        "initialize": 2,
+        "session/new": 2,
+        "session/set_config_option": 2
+      },
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 0
+    }
+  },
+  "managerSetterSavedAOnly": true,
+  "beforeRestart": {
+    "outboundCounts": {
+      "initialize": 2,
+      "session/load": 2,
+      "session/set_config_option": 3
+    },
+    "confirmedGroupsGone": 2,
+    "killEscalations": 0,
+    "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 1
+  },
+  "separateReadOnlyLoadControl": {
+    "aOfficialFactoryModelThroughReadOnlyLoad": true,
+    "bOfficialFactoryModelThroughReadOnlyLoad": true,
+    "shutdown": {
+      "outboundCounts": {
+        "initialize": 2,
+        "session/load": 2
+      },
+      "confirmedGroupsGone": 2,
+      "killEscalations": 0,
+      "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 0
+    }
+  },
+  "coldOwner": {
+    "aSameNativeId": true,
+    "bSameNativeId": true,
+    "separateOfficialReadOnlyDefaultControlUsed": true
+  },
+  "coldFarfoldConfig": {
+    "aExactAlternateEffective": true,
+    "bOriginalExactModelEffective": true,
+    "aReady": true,
+    "bReady": true,
+    "aIssueCount": 0,
+    "bIssueCount": 0,
+    "distinctNewProcesses": true
+  },
+  "afterRestart": {
+    "outboundCounts": {
+      "initialize": 2,
+      "session/load": 2,
+      "session/set_config_option": 2
+    },
+    "confirmedGroupsGone": 2,
+    "killEscalations": 0,
+    "singleOwnedRouteLogsWithExactlyOneLoadThenOneSetter": 2
+  },
+  "zeroNativeMessages": true,
+  "nativeHistoriesStillBothOwned": true,
+  "savedAAndBRecordsUnchangedByColdRead": true,
+  "productionProfileFileMetadataUnchanged": true,
+  "temporaryFixtureRemoved": true,
+  "outcome": "passed",
+  "sourceCommitAtTestStart": "f8fa10a0f73c65f0d5f982ba933c8705727b022b",
+  "exactModels": {
+    "aSavedBeforeColdOpen": "kilo/dots-studio/dots-3-note-preview:free",
+    "bSavedBeforeColdOpen": "kilo/nvidia/nemotron-3-ultra-550b-a55b:free"
+  },
+  "rawEvidenceSha256": {
+    "sanitizedOriginal": "b833d1b415fdc4c35a1df77d3235dfd30dca94b7f709ef8a0cd19833497695c5",
+    "temporaryHarness": "dad777d5110c4f4453f819ce081e94df4c18dcabea1b7e3a12322adec078fe6e",
+    "targetedCargoLog": "32504e2b4b4b40576cf09e2b0fdadd4d6bc34dbf264eb3249e85aefa7a114fc9",
+    "initialHarnessFailure": "17f8ec8710f3d93802eac87c1bd3455de4a62cd37de2b398dfef7a1ddacf7b2b"
+  },
+  "sourceRegistrationRestoredByteForByte": true,
+  "independentReview": "Verified same owner IDs and load/setter order, unchanged saved model values, independent raw-default control, zero prompts and eight reaped owned process groups. The test seeded the two isolated index records after the official baseline acknowledgements.",
+  "testResult": {
+    "passed": 1,
+    "failed": 0,
+    "productSourceChanged": false
+  },
+  "initialHarnessFailureResolved": "The first harness compared the manager response after production had already replaced its config options with the final effective options. The rerun used separate live read-only loads on both native IDs to observe the actual factory options before checking the ordinary cold-open path.",
+  "limits": [
+    "Only isolated official Kilo 7.8.1 and current Farfold native manager code. No Farfold installed GUI, user account, actual model reply, billing or Desktop access was tested.",
+    "The isolated Farfold index was seeded through the actual store from real baseline acknowledgements, without a first prompt or fabricated Agent history.",
+    "The manager shut down only its eight owned groups across four phases. The test harness sent no direct signals and the manager needed no KILL escalation.",
+    "The test did not use credentials or replace any installed program. Existing profile checks compared the selected file metadata."
+  ]
+}

@@ -17,7 +17,8 @@
     "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
     "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json",
     "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json",
-    "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json"
+    "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -403,6 +404,14 @@
             "result": "同一进程两个无消息测试会话，A 从明确设置的原免费 Ultra 切到同服务免费 Dots3，再恢复 Ultra。B 仅重设当前模式以读回完整设置，模型、模式和可用的推理选项保持。零提示发送，隔离进程自然退出。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json"
+            ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "当前 Farfold 连接管理器与官方 Kilo 7.8.1，独立资料目录和会话库",
+            "result": "A 切到同服务 Dots3 后仅 A 保存值变化。两条原会话的独立只读加载均报告官方默认模型。新进程普通冷开，各自先加载同一原会话再应用已保存选择，A 恢复 Dots3、B 保持 Ultra，均就绪，原保存值保持，零新增消息。测试使用按官方回执预置的索引。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json"
             ]
           }
         ],
