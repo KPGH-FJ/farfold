@@ -59,8 +59,21 @@ export function useComposerSourceError(
       save.current = null;
     };
   }, [draftKey, errorContext]);
+  const failedSource = audioSource.current ?? source.current;
+  const sourceRetired =
+    failedSource !== null &&
+    (failedSource.draftKey !== draftKey ||
+      failedSource.errorContext !== errorContext ||
+      !attachments.some(({ id }) => id === failedSource.error.attachmentId));
+  useEffect(() => {
+    if (
+      sourceRetired &&
+      failedSource === (audioSource.current ?? source.current)
+    )
+      setSendError(null);
+  }, [failedSource, sourceRetired]);
   return {
-    sendError,
+    sendError: sourceRetired ? null : sendError,
     setSendError,
     imageImportMessage: imageImportNotices.find(
       (notice) =>

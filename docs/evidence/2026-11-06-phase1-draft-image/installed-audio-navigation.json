@@ -1,0 +1,20 @@
+{
+  "installedSource": "6ce829c5",
+  "scope": "One previously completed owned Copilot conversation and one generated silent 1-second PCM WAV.",
+  "fixtureBytes": 32044,
+  "fixtureSha256": "643f8a8dc8bd9c19225afffad2becfec5426180b3749cb208abdf1a6c8354efc",
+  "nativePickerSelectionShownAsLocation": true,
+  "initialReviewCancelledWithoutEmbedding": true,
+  "explicitCompleteAudioConfirmation": true,
+  "originalDraftHadNoTestAudioOnSwitch": true,
+  "returnedOwnerDraftStoredExactBytesAndSourceMetadata": true,
+  "missingSourceRereadRejectedInUi": true,
+  "missingSourceKeptExactStoredDraft": true,
+  "sourceRestoredAndExplicitConfirmationReopenedAndAccepted": true,
+  "sendDisabledForAudioOnThisConnection": true,
+  "ownedTestInputRemoved": true,
+  "originalDraftAndRetainedAndQueuesUnchangedAfterCleanup": true,
+  "transportByteIdenticalAfterCleanup": true,
+  "newPrompts": 0,
+  "coldRestartPerformed": false
+}

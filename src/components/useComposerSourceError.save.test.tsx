@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import type { ApprovedDocumentText } from "../runtime/document_input_types";
 const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
@@ -160,6 +161,90 @@ it("keeps image warnings independent of a send notice and rejects a late report 
     imageImportMessage: undefined,
   });
 });
+it("retires a missing audio source notice when its attachment is removed", async () => {
+  const { audioAttachment } =
+    await import("../runtime/audio_input.test-support");
+  const { AudioSourceError } = await import("../runtime/audio_source_error");
+  const { prepareDraftAttachments } =
+    await import("../runtime/draft_attachments");
+  const original = audioAttachment();
+  const image = {
+    id: "other-image",
+    kind: "image" as const,
+    name: "other.png",
+  };
+  const unrelatedWarning = "unrelated image warning";
+  const fallback = h.invoke.getMockImplementation()!;
+  h.invoke.mockImplementation(async (name, args) => {
+    if (name !== "draft_attachment_audio") return fallback(name, args);
+    expect(args).toEqual({
+      uri: original.uri,
+      expected: original.localAudio?.file,
+    });
+    throw { code: "unreadable" };
+  });
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [original, image],
+  }));
+  await d.draftPersistence.flush();
+
+  const failure = await prepareDraftAttachments([original], true).catch(
+    (error: unknown) => error,
+  );
+  expect(failure).toBeInstanceOf(AudioSourceError);
+  expect(failure).toMatchObject({
+    code: "unreadable",
+    attachmentId: original.id,
+  });
+  render().setSendFailure(failure);
+  render().reportImport(unrelatedWarning, image.id);
+  expect(render()).toMatchObject({
+    sendError: { message: (failure as Error).message },
+    imageImportMessage: unrelatedWarning,
+  });
+
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: draft.attachments.filter((item) => item.id !== original.id),
+  }));
+  expect.soft(render().sendError).toBeNull();
+  expect.soft(render().imageImportMessage).toBe(unrelatedWarning);
+
+  const replacementSource = {
+    id: "new-audio",
+    kind: "file" as const,
+    name: original.name,
+    uri: original.uri,
+  };
+  const applied = { ...audioAttachment(), id: replacementSource.id };
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [...draft.attachments, replacementSource],
+  }));
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: draft.attachments.map((item) =>
+      item === replacementSource ? applied : item,
+    ),
+  }));
+  await d.draftPersistence.flush();
+  const confirmation = {
+    draftKey: key,
+    attachment: replacementSource,
+    applied,
+  };
+  render().audioSaved(confirmation);
+  expect.soft(render().sendError).toBeNull();
+  expect.soft(render().imageImportMessage).toBe(unrelatedWarning);
+  render().setSendError({ message: "unrelated Agent notice" });
+  render().audioSaved(confirmation);
+  expect(render().sendError).toEqual({ message: "unrelated Agent notice" });
+  expect(d.composerDrafts.read(key).text).toBe("ORIGINAL");
+  expect(h.invoke.mock.calls.map(([name]) => name)).not.toContain(
+    "session_prompt",
+  );
+});
 it.each([
   "replaced-attachment-list",
   "same-object-ABA",
@@ -211,30 +296,99 @@ it("context away-and-back does not let an earlier write clear a new notice", asy
   await retry;
   expect(render().sendError).toEqual({ message: "新提示" });
 });
-it("a document source failure stays until its own explicit source confirmation, even after another save succeeds", async () => {
-  await writeFailure();
+async function documentSourceFixture() {
   const { DocumentInputError } =
     await import("../runtime/document_input_types");
-  const { documentSourceError } =
+  const { DocumentSourceError, documentSourceError } =
     await import("../runtime/document_source_error");
   const attachment = {
     id: "old-file",
     kind: "file" as const,
-    name: "old.xlsx",
-    uri: "file:///owned/old.xlsx",
+    name: "old.docx",
+    uri: "file:///owned/old.docx",
     documentText: { text: "retained old source", local: null },
   };
   const failure = documentSourceError(
     new DocumentInputError("sourceUnknown"),
     attachment,
   );
-  expect(failure).toBeInstanceOf(Error);
-  if (!(failure instanceof Error))
-    throw new Error("expected typed source failure");
+  if (!(failure instanceof DocumentSourceError))
+    throw new Error("expected typed document source failure");
+  const approved: ApprovedDocumentText = {
+    text: "Reviewed current text",
+    local: {
+      schema: 1,
+      format: "docx",
+      source: {
+        root: "/owned",
+        path: "/owned/old.docx",
+        resolvedPath: "/owned/old.docx",
+        name: attachment.name,
+        size: 100,
+        sha256: "a".repeat(64),
+        version: "reviewed",
+      },
+      textSha256: "b".repeat(64),
+      utf8Bytes: 21,
+      selection: "read-visible-text",
+      partial: false,
+      partialSelected: false,
+      warnings: [],
+      imageReferences: 0,
+    },
+  };
+  const applied = { ...attachment, documentText: approved };
+  return {
+    failure,
+    confirmation: { draftKey: key, attachment, applied, approved },
+  };
+}
+it("a document source failure stays until its own explicit source confirmation, even after another save succeeds", async () => {
+  await writeFailure();
+  const { failure, confirmation } = await documentSourceFixture();
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [confirmation.attachment],
+  }));
   render().setSendFailure(failure);
   h.failing = false;
   await d.draftPersistence.flush();
   expect(render().sendError?.message).toBe(failure.message);
+
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [confirmation.applied],
+  }));
+  await d.draftPersistence.flush();
+  render().documentSaved(confirmation);
+  expect(render().sendError).toBeNull();
+});
+it("retires a removed document's source notice and leaves a newer warning intact after late approval", async () => {
+  const { failure, confirmation } = await documentSourceFixture();
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [confirmation.attachment],
+  }));
+  await d.draftPersistence.flush();
+  render().setSendFailure(failure);
+  expect(render().sendError?.message).toBe(failure.message);
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: draft.attachments.filter(
+      (item) => item.id !== confirmation.attachment.id,
+    ),
+  }));
+  expect.soft(render().sendError).toBeNull();
+
+  const newer = { message: failure.message, detail: "unrelated later warning" };
+  render().setSendError(newer);
+  render().documentSaved(confirmation);
+  expect(render().sendError).toEqual(newer);
+  expect(d.composerDrafts.read(key).attachments).toEqual([]);
+  expect(d.composerDrafts.read(key).text).toBe("ORIGINAL");
+  expect(h.invoke.mock.calls.map(([name]) => name)).not.toContain(
+    "session_prompt",
+  );
 });
 it("updates an obsolete storage notice after an ordinary text edit of the same unsent input is actually saved", async () => {
   await writeFailure();
