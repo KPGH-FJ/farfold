@@ -62,6 +62,7 @@ import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 import { hasPendingRequests } from "../runtime/session_types";
 import { canReleaseEmptyQueuePause } from "../runtime/queue";
+import { captureSubmissionStop } from "../runtime/stop_confirmation";
 import { hasActiveCompaction } from "../runtime/compaction_activity";
 import { LIBRARY } from "../runtime/library_strings";
 import { abandonPendingConversation } from "../runtime/pending_conversation";
@@ -566,6 +567,7 @@ export function Composer({
     let submitted = input;
     const targetKey = storageKey;
     const targetErrorContext = errorContext;
+    const submissionStopped = captureSubmissionStop(thread);
     let releasePending = () => {};
     try {
       await draftPersistence.flush();
@@ -577,15 +579,15 @@ export function Composer({
       if (composerDrafts.read(targetKey) !== submitted) return;
       // A stop may arrive while attachments or the draft are being saved.
       // Keep that input in place rather than silently adding it to the queue.
-      if (
-        thread?.stopping ||
-        thread?.stopUnconfirmed ||
-        thread?.connectionOutcomeUnknown
-      )
-        return;
+      if (submissionStopped()) return;
       if (!queueEditing) releasePending = beginComposerPendingSend(targetKey);
       submitted = composerDrafts.read(targetKey);
       await draftPersistence.flush();
+      if (submissionStopped()) {
+        releasePending();
+        await draftPersistence.flush();
+        return;
+      }
       let sent: void | boolean = true;
       if (onSend) {
         sent = await onSend(payload, submitted);

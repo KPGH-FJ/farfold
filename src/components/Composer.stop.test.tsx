@@ -199,6 +199,126 @@ it("offers mouse queue submission alongside stop without starting another reques
   composerDrafts.clear(`session:${thread.key}`);
 });
 
+it.each(["waiting", "confirmed"] as const)(
+  "keeps an earlier queue click in the draft when a stop is %s during its pending save",
+  async (outcome) => {
+    const id = `stop-during-pending-save-${outcome}`;
+    const thread = threads.markOpenFailed(id, "a", "/p", id, "fixture");
+    thread.openError = null;
+    thread.identity = "established";
+    thread.connectionId = `connection-${id}`;
+    const key = `session:${thread.key}`;
+    const draft = { text: "Keep this input in the draft", attachments: [] };
+    const receiptId = 41;
+    const channel = threads as unknown as {
+      applyChannelEvent(key: string, event: unknown): void;
+    };
+    const confirmStop = () =>
+      channel.applyChannelEvent(thread.key, {
+        kind: "turnEnd",
+        promptReceiptId: receiptId,
+        stopReason: "cancelled",
+      });
+    h.invoke.mockImplementation(async (command: string, args: unknown) => {
+      if (command === "session_prompt") {
+        const { admissionChannel } = args as {
+          admissionChannel: { onmessage(value: unknown): void };
+        };
+        admissionChannel.onmessage({ receiptId, phase: "offered" });
+        return { status: "accepted" };
+      }
+      if (command === "session_prompt_cancel")
+        return { receiptId, outcome: "cancelRequested" };
+      return null;
+    });
+    const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+    await expect(
+      threads.send(thread.key, [{ type: "text", text: "Already running" }]),
+    ).resolves.toEqual({ status: "accepted" });
+    expect(thread.running).toBe(true);
+    expect(thread.queued).toEqual([]);
+    composerDrafts.update(key, () => draft);
+
+    let releaseSave!: () => void;
+    const heldSave = new Promise<void>((resolve) => {
+      releaseSave = resolve;
+    });
+    let pendingSaveStarted = false;
+    flush.mockImplementation(async () => {
+      if (!composerDrafts.read(key).sendPending) return;
+      pendingSaveStarted = true;
+      await heldSave;
+    });
+
+    try {
+      const enqueue = render(thread).button(C.addQueued)!;
+      expect(enqueue.props.disabled).toBe(false);
+      (enqueue.props.onClick as () => void)();
+      await vi.waitFor(() => expect(pendingSaveStarted).toBe(true));
+      expect(composerDrafts.read(key)).toMatchObject({
+        ...draft,
+        sendPending: true,
+      });
+      expect(thread.queued).toEqual([]);
+
+      const stop = render(thread).button(STRINGS.composer.stopTitle)!;
+      expect(stop.props.disabled).toBe(false);
+      (stop.props.onClick as () => void)();
+      await vi.waitFor(() =>
+        expect(h.invoke).toHaveBeenCalledWith(
+          "session_prompt_cancel",
+          expect.objectContaining({
+            sessionId: id,
+            connectionId: thread.connectionId,
+            receiptId,
+          }),
+        ),
+      );
+      expect(thread.stopping).toBe(true);
+      expect(thread.queuePaused).toBe("stopped");
+      if (outcome === "confirmed") {
+        confirmStop();
+        expect(thread.stopping).toBe(false);
+        expect(thread.running).toBe(false);
+        expect(thread.items.at(-1)).toMatchObject({
+          kind: "settled",
+          status: "stopped",
+          stopReason: "cancelled",
+        });
+      }
+    } finally {
+      releaseSave();
+    }
+    await vi.waitFor(() =>
+      expect(composerDrafts.read(key).sendPending).not.toBe(true),
+    );
+    expect.soft(composerDrafts.read(key)).toMatchObject(draft);
+    expect.soft(thread.queued).toEqual([]);
+    expect
+      .soft(
+        h.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+      )
+      .toHaveLength(1);
+    if (outcome === "waiting") confirmStop();
+    else {
+      const send = render(thread).button(STRINGS.composer.sendTitle)!;
+      expect(send.props.disabled).toBe(false);
+      (send.props.onClick as () => void)();
+      await vi.waitFor(() =>
+        expect(h.invoke).toHaveBeenCalledWith(
+          "session_prompt",
+          expect.objectContaining({
+            content: [{ type: "text", text: draft.text }],
+          }),
+        ),
+      );
+      await vi.waitFor(() => expect(composerDrafts.read(key).text).toBe(""));
+      confirmStop();
+    }
+    composerDrafts.clear(key);
+  },
+);
+
 it("keeps the waiting confirmation beside the input with a disabled stop control", () => {
   const thread = freshThreadState("a:/p:waiting", "a", "/p", "waiting");
   thread.running = true;

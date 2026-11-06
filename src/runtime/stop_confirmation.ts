@@ -2,6 +2,27 @@ import { invoke } from "@tauri-apps/api/core";
 import { pauseQueue } from "./queue";
 import type { ThreadState } from "./session_types";
 
+const stopIntents = new WeakMap<ThreadState, object>();
+
+export function recordStopIntent(thread: ThreadState): void {
+  stopIntents.set(thread, {});
+}
+
+/** A completed stop also invalidates a composer action still waiting to submit. */
+export function captureSubmissionStop(
+  thread?: ThreadState | null,
+): () => boolean {
+  const intent = thread && stopIntents.get(thread);
+  return () =>
+    Boolean(
+      thread &&
+      (stopIntents.get(thread) !== intent ||
+        thread.stopping ||
+        thread.stopUnconfirmed ||
+        thread.connectionOutcomeUnknown),
+    );
+}
+
 /** A cancel acknowledgement is not a prompt completion. No normal-task timeout. */
 export class StopConfirmation {
   private timers = new Map<string, ReturnType<typeof setTimeout>>();

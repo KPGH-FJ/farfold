@@ -67,7 +67,7 @@ import { artifactPaneCards } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
-import { StopConfirmation } from "./stop_confirmation";
+import { recordStopIntent, StopConfirmation } from "./stop_confirmation";
 import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
 import {
   markRestoredQueueAttachments,
@@ -1029,6 +1029,7 @@ class ThreadsStore {
 
   async cancel(key: string): Promise<void> {
     const thread = this.thread(key);
+    if (thread) recordStopIntent(thread);
     const owner = thread && this.promptOwners.get(thread);
     if (owner && !owner.isOffered()) {
       await owner.cancel();
