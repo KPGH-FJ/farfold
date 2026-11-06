@@ -1,0 +1,334 @@
+{
+  "kind": "AgentAcceptanceConditionsAtStage1",
+  "basedOnCommit": "b7763508e0fd0aa77e819df336987254e05ea583",
+  "counts": {
+    "agents": 29,
+    "standardsPerAgent": 8,
+    "scopedHistoryCombinations": 6,
+    "wholeAgentConfirmed": 0
+  },
+  "scope": "Current re-entry notes derived from committed records. Scoped historical evidence retains its original scope. Scheduling and requirements remain in their respective existing documents.",
+  "rows": [
+    {
+      "agentId": "amp-acp",
+      "name": "Amp",
+      "remainingCondition": "保留原未知对象和发送保护。原状态经可信观察可归属且已有授权的官方认证条件明确后，再分别核原对象或新验证。不得复用未知发送。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/amp-formal-c876-ack-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "antigravity-acp",
+      "name": "Antigravity",
+      "remainingCondition": "具体官方认证方式及用户本人具备的可用授权，另核回调路由所需的明确协议条件。完成认证不等于模型或实际请求通过。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "autohand",
+      "name": "Autohand",
+      "remainingCondition": "明确可执行的官方准备和认证条件。历史伴随CLI安装仍需明确安装对象与条件。没有当前认证成功或首发回执。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "claude-acp",
+      "name": "Claude",
+      "remainingCondition": "确认原保存配置能在所用声明中逐项读回及保存，再沿同一对象和选择验证。点复制还需确切已用接口、节点归属及安全样本。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+        "docs/evidence/2026-11-05-p11-official-interfaces/interface-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "cline",
+      "name": "Cline",
+      "remainingCondition": "历史只证旧候选连接和方法展示。需同一确定的官方程序和选择可用于核安装、模型及实际请求。当前账号状态未知。",
+      "evidencePaths": ["docs/agent-first-release.md"],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "codebuddy-code",
+      "name": "CodeBuddy",
+      "remainingCondition": "实际账号及付费来源、配置生效、原历史继续和其它标准未随一次回答取得。按确定的原服务、模型、对象单独留证。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-5b31-config-guard-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/codebuddy-formal-e6e1-ack-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "codex-acp",
+      "name": "Codex",
+      "remainingCondition": "保留旧冷恢复模型漂移与发送保护。原历史需要有效原配置确认。管理采用及点复制分别需已选官方对象和实际对应回执。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-11-03-conversation-controls/control-formal-summary.json",
+        "docs/evidence/2026-11-05-p11-official-interfaces/interface-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "cursor",
+      "name": "Cursor",
+      "remainingCondition": "已知旧连接后模型要求认证。需要可用的官方Cursor登录或已有明确选择，以及此后真实模型和请求的证据。旧认证观察不代表当前实测。",
+      "evidencePaths": ["docs/agent-first-release.md"],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "devin",
+      "name": "Devin",
+      "remainingCondition": "原选择、保存配置与官方声明的归属可核后检查配置未确认分支，不能把当前失败归为缺账号。回调另待具体官方契约。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "dimcode",
+      "name": "DimCode",
+      "remainingCondition": "需官方程序对应声明可读和具体失败归属，另补实际回调契约。标准终端启动/取消不能代替认证与模型。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "dirac",
+      "name": "Dirac",
+      "remainingCondition": "恢复原工作位置且可访问后才重评该原历史，不新建空目录替代。历史完整继续、身份和工具条件仍按原证据分开。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/dirac-formal-c876-ack-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "factory-droid",
+      "name": "Factory Droid",
+      "remainingCondition": "可信原终态/恢复依据出现才复核原对象。401界面文字不能当HTTP原件或唯一账号归因。另核官方回调路线。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/droid-formal-e6e1-ack-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "fast-agent",
+      "name": "fast-agent",
+      "remainingCondition": "原后端、服务和权限归属明确后才评价当前效果。历史冷恢复与显式续接窄证保留，未合成官方查找/完整S3。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/fast-agent-formal-c876-preparation-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "gemini",
+      "name": "Gemini",
+      "remainingCondition": "具体官方认证方式和可用用户授权，之后单独核模型、服务及真实请求。保留等待。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "github-copilot-cli",
+      "name": "GitHub Copilot",
+      "remainingCondition": "保留原对象/原选择的限定S3。其他对象和选择、身份付费、模型与任务隔离等仍须原条件证据。思考未提供，不能补等级。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/additional-preparation-observations-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json"
+      ],
+      "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed."
+    },
+    {
+      "agentId": "goose",
+      "name": "Goose",
+      "remainingCondition": "原有免费配置的原对象S3仅限记录范围。旧Sonnet分支需明确可用替代，旧N/O需可归属的官方恢复或工具证据。无自动重发。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/goose-formal-625158ab-history-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/goose-formal-e6e1-summary.json",
+        "docs/evidence/2026-11-02-p18-edit-diff-formal/conditions-and-preservation-summary.json"
+      ],
+      "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers."
+    },
+    {
+      "agentId": "grok-build",
+      "name": "Grok Build",
+      "remainingCondition": "官方发行映射、明确可用的认证/准备条件和有效配置读回。保留旧认证等待，不以日志分类代账号判断。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/additional-preparation-observations-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "kilo",
+      "name": "Kilo",
+      "remainingCondition": "新版官方发现和原对象S3组合限定，其他历史/配置仍需各自证据。旧文件失败和目录超时条件保持。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-5b31-owned-file-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-625158ab-saved-details-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/kilo-formal-e954-history-continuation-summary.json"
+      ],
+      "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee."
+    },
+    {
+      "agentId": "kimchi",
+      "name": "Kimchi",
+      "remainingCondition": "原未知由可信原状态核实，保存模型与实际运行配置差异需同对象证据，不能靠默认值、重发或终止补判。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/kimchi-ba574-preparation-ack-stop-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "kimi",
+      "name": "Kimi",
+      "remainingCondition": "保留一次失败，当前可用服务/模型及得到可读实际响应的条件待核。不能把未证思考标签或旧认证观察当实际原因。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/kimi-formal-5b31-owned-ack-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/later-preparation-and-stop-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "minimax-code",
+      "name": "MiniMax",
+      "remainingCondition": "可信原请求终态和所属对象明确后再评，当前未知与暂停保持。Auto标签不证明权限效果。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/minimax-formal-5b31-owned-ack-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "remainingCondition": "原对象旧恢复缺可靠回放和归属，旧S3的另一次已证组合保留。技能管理需明确当前实际官方启动路径和管理会话。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/p40-mistral-official-management-contract-summary.json",
+        "docs/evidence/2026-11-01-p18-formal/mistral-restore-blocker-summary.json"
+      ],
+      "scopedHistoryEvidence": {
+        "agent": "mistral-vibe",
+        "platform": "macOS arm64",
+        "service": "Existing",
+        "modelLabel": "Mistral Medium 3.5",
+        "reasoningLabel": "High",
+        "modeLabel": "Accept Edits",
+        "objectScope": "One original owned conversation"
+      }
+    },
+    {
+      "agentId": "nova",
+      "name": "Nova",
+      "remainingCondition": "用户本人具备的明确官方认证条件，另核实际所用版本权限契约。保留等待，不把旧声明当可执行成功。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/existing-config-results-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "opencode",
+      "name": "OpenCode",
+      "remainingCondition": "原对象/原配置S3组合保持。其它配置、历史及工作能力必须分别归属验证，旧准备超时与当前原S3组合不能互相覆盖。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/opencode-formal-e954-history-continuation-summary.json",
+        "docs/evidence/2026-11-01-p18-zero-entry/zero-entry-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": "The one original owned OpenCode conversation, macOS arm64, existing settings / OpenCode Big Pickle / build; reasoning not exposed."
+    },
+    {
+      "agentId": "pi-acp",
+      "name": "Pi",
+      "remainingCondition": "原保存键与实际程序所用声明逐项核实，取得确切运行版本及启动映射。保留旧402与无正文结果，不能从静态模型列表补通过。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/configuration-preparation-failures-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "poolside",
+      "name": "Poolside",
+      "remainingCondition": "原目录恢复并可访问后复核该原历史。限定S3结论不证明这次失败对象、其它配置或当前版本。另待具体官方回调契约。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-5b31-owned-ack-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/poolside-formal-e954-history-continuation-summary.json",
+        "docs/evidence/2026-11-01-p18-live-capacity/remaining-conditions-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": "The one original owned Poolside conversation, macOS arm64, existing settings / poolside/laguna-s-2.1 / Max / Always ask / Build."
+    },
+    {
+      "agentId": "qoder",
+      "name": "Qoder",
+      "remainingCondition": "原冷开失败需原对象、原配置和可归属恢复回执。登录身份、付费、完整历史与其他标准未随一次回答验证。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/qoder-formal-5b31-owned-ack-summary.json",
+        "docs/status.md"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "qwen-code",
+      "name": "Qwen",
+      "remainingCondition": "同原对象的上下文继续及实际结果未齐，不用其它对象的短答凑S3。账号、模型生效及其它标准各自待实际证据。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-e6e1-ack-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    },
+    {
+      "agentId": "sigit",
+      "name": "siGit",
+      "remainingCondition": "原对象的可信终态及实际官方正文/上下文条件须齐。Ready不补回复或历史，保留未知发送保护。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-24-agent-acceptance/sigit-formal-e6e1-summary.json"
+      ],
+      "scopedHistoryEvidence": null
+    }
+  ]
+}

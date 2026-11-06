@@ -1,0 +1,126 @@
+{
+  "kind": "DerivedFirstPhaseImplementationAndEvidenceCheckpoint",
+  "status": "engineering_delivered_first_phase_acceptance_open",
+  "recordedAtUtc": "2026-11-06T04:46:20.310158+00:00",
+  "sourceCommit": "8ac6dcb094b38bde589be1b296bb0a58c397a2df",
+  "formerFunctionalSource": "adf80c9e524e39780d6b9ac3329ce1fd93fd7feb",
+  "cycles": [
+    {
+      "cycle": 1,
+      "scope": "草稿、附件、恢复退出和29家证据",
+      "result": "三条源码修复和受控回归通过；正式版实测两个本地位置附件的恢复、缺件提示和重新核对。"
+    },
+    {
+      "cycle": 2,
+      "scope": "设置、模型和历史",
+      "result": "修复旧模式回执覆盖新声明；两条原对话读取各尝试一次，实际失败分别留证。"
+    },
+    {
+      "cycle": 3,
+      "scope": "停止、未知和队列归属",
+      "result": "修复提前停止漏观察和等待按钮重复取消；真实首波三家未收齐。"
+    }
+  ],
+  "remainingConditions": [
+    {
+      "scope": "原 OpenCode 自测记录",
+      "observed": "一次正式版打开报告原工作文件夹不存在或不可访问，未读回历史。",
+      "reentry": "同一原工作位置恢复且可访问。"
+    },
+    {
+      "scope": "原 Mistral 自测记录",
+      "observed": "原自有目录可访问；正式版打开一次由读取中转为连接检查超时，原因未定。",
+      "reentry": "有归属明确的官方初始化进度、终态或启动/登录条件变化后，再复核该对象。"
+    },
+    {
+      "scope": "首波三家、真实配置与控制",
+      "observed": "逐家证据已盘点；三家真实身份、原配置模型生效、审批及实际停止和恢复证据未齐。",
+      "reentry": "合格的原对象、服务及官方接口到位；NEW-24受影响发送维持原保护。"
+    },
+    {
+      "scope": "完整存储与退出故障",
+      "observed": "本轮由真实隔离SQLite及受控组件证明所选故障；正式版已验位置附件正常与缺件恢复。",
+      "reentry": "独立的应用数据与进程归属环境、可控存储故障样本，以及可观察的原生退出和冷启。"
+    },
+    {
+      "scope": "Windows实际安装及桌面",
+      "observed": "已记录安装验证运行未分配runner，本批无新Windows验证。",
+      "reentry": "账户付款或额度恢复并有可用runner及对应真机环境。"
+    }
+  ],
+  "engineering": {
+    "freshNaturalZeroCommands": 7,
+    "inputs": 2405,
+    "fixtures": 11,
+    "frontendFiles": 721,
+    "frontendPassed": 9639,
+    "rustPassed": 2403,
+    "rustIgnored": 7
+  },
+  "formal": {
+    "appPath": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "mainSha256": "bf205a76f7ff255b8d6d3d3bf7fd6bc296b338eda8e7407402f9f54a9d03cec5",
+    "candidateBuildCount": 1,
+    "candidateChecks": 9,
+    "installedChecks": 6,
+    "atomicNewInodeFiles": 5,
+    "closedManifests": {
+      "entriesEach": 206275,
+      "sha256": "8e9bb6441cb403952d458aeb6843c008dc92297a64849af8e9ddf1ac4eba5e67",
+      "equal": true,
+      "scope": "Closed interval before relaunch."
+    }
+  },
+  "selectedActualUi": {
+    "path": "output/2026-11-06-cycle-01/formal-preparation/formal/ui/root-selected-installed-observation.json",
+    "sha256": "103a71059d6e2ba26c21de8732e555203d609af6a7e0e0222d8d67d5fb4dd640"
+  },
+  "independentReaders": {
+    "attachment": {
+      "path": "output/2026-11-06-cycle-01/attachments-independent-review/reader.json",
+      "sha256": "455baaecfb93ab6c1a6ddfe62c446e473f8b4d6a4b7a725bf9a2daa41013f80b"
+    },
+    "preservation": {
+      "path": "output/2026-11-06-cycle-01/preservation/final-independent-review.json",
+      "sha256": "42de6eb68d48b0a29bbe35ee4bc66d17b9c4ece9817a252004c60768faba4a32"
+    },
+    "storage": {
+      "path": "output/2026-11-06-cycle-01/storage-exit/root-independent-review.json",
+      "sha256": "5e27279d792dd49af84a51a1b146919ac14edaddea40766779f517e13f68baa4"
+    },
+    "configuration": {
+      "path": "output/2026-11-06-cycle-01/configuration-independent-review/reader.json",
+      "sha256": "ef625da1ae2fc6f0e10252f4147f0a3f8e77905b8614798312f9ca00159a75eb"
+    },
+    "stop": {
+      "path": "output/2026-11-06-cycle-01/control-stop-independent-review/reader.json",
+      "sha256": "d6583eef6a86e5f9db672e005fcd6cc17ea2f52f265eb61250f45a0fd1713838"
+    },
+    "engineering": {
+      "path": "output/2026-11-06-cycle-01/engineering-independent-review/reader.json",
+      "sha256": "276ea8667a9f43cc64867e3a94ebafce75e2b36d40dbc478a075d243f6464604"
+    },
+    "delivery": {
+      "path": "output/2026-11-06-cycle-01/delivery-independent-review/reader.json",
+      "sha256": "8dd6c2fd5f853d6ec03d6b3ac5787879584bf1c6b5bf56a567fdac5aea76ada4"
+    }
+  },
+  "officialHistoryActualAttempts": {
+    "opencode-original-work-location-result.json": {
+      "path": "output/2026-11-06-cycle-01/official-existing/opencode-original-work-location-result.json",
+      "sha256": "b1dc41d7a6ef4f984c26d2e11bb633f542edf79ceb7aebfb49fe8e1125e2584b"
+    },
+    "mistral-original-connection-result.json": {
+      "path": "output/2026-11-06-cycle-01/official-existing/mistral-original-connection-result.json",
+      "sha256": "f47f4a3a40308fdde79b4bf155fbc3bf2dbb23bce6336f0d5d6d35a9a029bd70"
+    }
+  },
+  "agentEvidence": {
+    "agents": 29,
+    "scopedHistoryCombinations": 6,
+    "newCompleteAgentAcceptances": 0,
+    "derivedConditions": "agent-conditions.json"
+  },
+  "publicationScope": "Derived state and receipt references. Private UI source, database, credentials, user content and full retention lists are local."
+}
