@@ -1,0 +1,79 @@
+{
+  "recordedAtUtc": "2026-11-06T14:32:53.924030+00:00",
+  "scope": "read-only check of the currently running sole formal macOS application and the three preselected test connections",
+  "formalVersion": "6ce829c5",
+  "installedBinaryMatchesPriorSeal": true,
+  "formalProcessStillRunning": true,
+  "exactOldTaps": {
+    "observed": 3,
+    "matchPriorWholeFileSeals": 3,
+    "stillOpenInFormalProcess": 3,
+    "withTransportCleanupOrChildReapRecorded": 0
+  },
+  "exactOldTransports": {
+    "liveProcessGroups": 3,
+    "observedAdditionalGroupMembers": 0
+  },
+  "otherLiveTransports": {
+    "count": 3,
+    "agents": ["Goose", "GitHub Copilot", "Kilo"],
+    "contentFreeFrameCountsShowOutstandingRequests": false,
+    "contentFreeFrameCountsShowPendingPermission": false
+  },
+  "persistedStorage": {
+    "originalDraftObjectMatchesPriorDigest": true,
+    "originalDraftTextMatchesPriorDigest": true,
+    "retainedDraftCount": 1,
+    "unrelatedOneBlockQueueCount": 3,
+    "unrelatedEmptyOutcomeUnknownQueueCount": 4,
+    "oldTargetsWithSavedComposer": 0,
+    "oldTargetsWithQueuedBlocks": 0,
+    "oldTargetsWithExplicitOutcomeUnknownMarker": 0,
+    "oldTargetsWithArchiveActivityMarkedUnfinished": 3
+  },
+  "oldTargets": {
+    "copilotRunningToolStop": {
+      "contentFreeCancelFrames": 1,
+      "contentFreePromptResponseAfterCancel": true,
+      "nativeUserAbortCount": 1,
+      "nativeToolStartsInTest": 1,
+      "matchingNativeToolTerminals": 0,
+      "nativeShutdownAfterAbortCount": 0,
+      "nativeApprovalsInTest": 2,
+      "previousIndependentObservationExactCommandAndSleepEndedBeforeNaturalDeadline": true,
+      "currentTransportStillLive": true
+    },
+    "copilotIsolationApprovalStop": {
+      "contentFreeCancelFrames": 1,
+      "contentFreePromptResponseAfterCancel": true,
+      "nativeUserAbortCount": 1,
+      "nativeToolStartsInTest": 1,
+      "matchingNativeToolTerminals": 0,
+      "nativeShutdownAfterAbortCount": 0,
+      "nativeInteractiveDenialsInTest": 1,
+      "currentTransportStillLive": true
+    },
+    "gooseIsolationApprovalStop": {
+      "contentFreeCancelFrames": 1,
+      "contentFreePermissionResponseDuringCancel": true,
+      "contentFreePromptResponseAfterCancel": true,
+      "nativeRowsAtOrAfterExactPrompt": 2,
+      "nativeUserTextPartsAtOrAfterExactPrompt": 2,
+      "nativeAssistantOrToolRowsAtOrAfterExactPrompt": 0,
+      "nativeToolTerminalRowsAtOrAfterExactPrompt": 0,
+      "currentTransportStillLive": true
+    }
+  },
+  "limitations": [
+    "Content-free frames do not disclose the inbound response body, tool status payloads, or confirmation of OS resource cleanup.",
+    "For Copilot the native user abort records independently establish request cancellation. Goose has no matching durable tool record for this turn.",
+    "No current exact Copilot native event-file handles were observed, so handle absence cannot independently certify release on this installation.",
+    "No additional members of the observed process groups were found in the process snapshot. Detached descendants and memory resources were not exhaustively accounted for.",
+    "Transport liveness, request cancellation, command exit, and persisted tool outcome are separate observations.",
+    "The unfinished archive activity record is separate from the saved outcomeUnknown marker used for historical notices."
+  ],
+  "productionWrites": 0,
+  "newAgentActions": 0,
+  "signalsSent": 0,
+  "safeExitProven": false
+}

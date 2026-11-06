@@ -60,6 +60,7 @@ beforeEach(() => {
       h.settings.set(args.key, structuredClone(args.value));
       return;
     }
+    if (command === "agent_work_get") return { cwd: args.cwd };
     if (command === "session_open") {
       const wire = args as OpenWire;
       const row = {
@@ -200,6 +201,196 @@ it("preserves an accepted empty-queue unknown outcome across a complete cold reb
   // or to implement a particular persisted field/second execution ledger.
   expect(cold.threads.needsAttention(cold.state)).toBe(true);
 });
+
+it.each([
+  {
+    event: "no terminal",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
+    event: "no terminal",
+    priorUnknown: false,
+    hasQueue: false,
+    expectUnknown: true,
+  },
+  {
+    event: "different terminal",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
+    event: "malformed terminal",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
+    event: "agent-shaped activity",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
+    event: "newer prompt",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+  {
+    event: "matching terminal",
+    priorUnknown: false,
+    hasQueue: true,
+    expectUnknown: false,
+  },
+  {
+    event: "matching terminal",
+    priorUnknown: true,
+    hasQueue: true,
+    expectUnknown: true,
+  },
+])(
+  "cold restores stopped-tool results with $event, queued $hasQueue, and prior unknown $priorUnknown only in their own conversation",
+  async ({ event, priorUnknown, hasQueue, expectUnknown }) => {
+    let original = await loadRuntime();
+    let hot = await original.threads.open(input);
+    if (priorUnknown) {
+      await original.threads.send(hot.key, blocks("Earlier unknown request"));
+      ending({ error: "AUTH_REQUIRED" });
+      const restored = await coldLoad(original);
+      original = restored;
+      hot = restored.state;
+      expect(hot.historicalOutcomeUnknown).toBe(true);
+    }
+    const otherId = "other-owned-native-conversation";
+    const other = await original.threads.open({
+      ...input,
+      nativeSessionId: otherId,
+    });
+    const pending = blocks("Wait here for explicit continuation");
+    const draftKey = `session:${hot.key}`;
+    const otherDraftKey = `session:${other.key}`;
+    original.drafts.composerDrafts.update(draftKey, () => ({
+      text: "Exact original draft",
+      attachments: [],
+    }));
+    original.drafts.composerDrafts.update(otherDraftKey, () => ({
+      text: "Other draft",
+      attachments: [],
+    }));
+    expect(
+      await original.threads.send(hot.key, blocks("Starts the stopped tool")),
+    ).toEqual({ status: "accepted" });
+    if (hasQueue && event !== "newer prompt")
+      expect(await original.threads.send(hot.key, pending)).toEqual({
+        status: "queued",
+      });
+    const toolCallId = "7";
+    const wire = h.opens.find((open) => open.connectionId === hot.connectionId)!
+      .args.channel;
+    wire.onmessage({
+      update: {
+        sessionUpdate: "tool_call",
+        toolCallId,
+        title: "Pending exact tool",
+        kind: "execute",
+        status: "pending",
+      },
+    });
+    wire.onmessage({
+      kind: "toolActivity",
+      toolCallIds: [toolCallId],
+    });
+    ending({ stopReason: "cancelled" });
+    expect(hot.items.at(-1)).toMatchObject({
+      kind: "settled",
+      status: "stopped",
+      stopReason: "cancelled",
+    });
+    expect(hot.activeToolCallIds).toEqual([toolCallId]);
+    expect(hot.queuePaused).toBe("stopped");
+    expect(hot.connectionOutcomeUnknown).toBe(false);
+
+    if (event === "newer prompt") {
+      expect(
+        await original.threads.send(hot.key, blocks("New explicit request")),
+      ).toEqual({ status: "accepted" });
+      expect(await original.threads.send(hot.key, pending)).toEqual({
+        status: "queued",
+      });
+      expect(hot.activeToolCallIds).toEqual([toolCallId]);
+    } else if (event === "agent-shaped activity") {
+      const impostor = {
+        sessionId: hot.nativeSessionId,
+        kind: "toolActivity",
+        toolCallIds: [],
+      };
+      // The router must keep the original session/update envelope even if it
+      // omits its update object. It is not a locally generated work receipt.
+      wire.onmessage(impostor);
+      expect(hot.activeToolCallIds).toEqual([toolCallId]);
+      expect(hot.items.at(-1)).toMatchObject({
+        kind: "raw",
+        update: impostor,
+      });
+    } else if (
+      event === "different terminal" ||
+      event === "malformed terminal" ||
+      event === "matching terminal"
+    ) {
+      await original.drafts.draftPersistence.flush();
+      wire.onmessage({
+        update: {
+          sessionUpdate: "tool_call_update",
+          toolCallId:
+            event === "matching terminal"
+              ? toolCallId
+              : event === "malformed terminal"
+                ? Number(toolCallId)
+                : "unrelated-tool",
+          status: "completed",
+        },
+      });
+      if (event === "matching terminal")
+        wire.onmessage({ kind: "toolActivity", toolCallIds: [] });
+      if (event === "malformed terminal") {
+        // A tolerant display parser stringifies the ID; the owning backend's
+        // real activity still includes the pending step.
+        expect(hot.items.find((item) => item.kind === "tool")).toMatchObject({
+          call: { toolCallId, status: "completed" },
+        });
+        expect(hot.activeToolCallIds).toEqual([toolCallId]);
+      }
+    }
+
+    const cold = await coldLoad(original);
+    expect(cold.state.items.some((item) => item.kind === "tool")).toBe(false);
+    expect(cold.state.activeToolCallIds).toEqual([]);
+    expect(cold.state.historicalOutcomeUnknown).toBe(expectUnknown);
+    expect(cold.threads.needsAttention(cold.state)).toBe(expectUnknown);
+    expect(cold.state.queued).toEqual(hasQueue ? [pending] : []);
+    expect(cold.state.uncertainPrompt).toBeNull();
+    expect(cold.state.queuePaused).toBe(hasQueue ? "stopped" : null);
+    expect(cold.drafts.composerDrafts.read(draftKey).text).toBe(
+      "Exact original draft",
+    );
+    const coldOther = await cold.threads.open({
+      ...input,
+      nativeSessionId: otherId,
+    });
+    expect(coldOther.historicalOutcomeUnknown).toBe(false);
+    expect(cold.threads.needsAttention(coldOther)).toBe(false);
+    expect(coldOther.queued).toEqual([]);
+    expect(cold.drafts.composerDrafts.read(otherDraftKey).text).toBe(
+      "Other draft",
+    );
+    expectNoColdDispatch(
+      1 + Number(priorUnknown) + Number(event === "newer prompt"),
+    );
+  },
+);
 
 it("does not invent cold uncertainty after an owned finite ending", async () => {
   const original = await loadRuntime();

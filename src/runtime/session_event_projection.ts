@@ -63,12 +63,14 @@ export function applySessionEvent(
   const updateEnvelope = hasOwnUpdate(e);
   const kind = updateEnvelope ? undefined : e.kind;
   const endingOwner = kind === "turnEnd" ? effects?.promptOwner() : undefined;
-  // Validate before notifications or projection can treat an ending as ours.
+  // Validate before projection can treat work evidence as ours.
   // Unknown Agent envelopes and foreign receipts remain raw observations.
   if (
-    kind === "turnEnd" &&
-    (Object.hasOwn(e, "sessionId") ||
-      (endingOwner && !endingOwner.ending(e.promptReceiptId)))
+    ((kind === "turnEnd" || kind === "toolActivity") &&
+      Object.hasOwn(e, "sessionId")) ||
+    (kind === "turnEnd" &&
+      endingOwner &&
+      !endingOwner.ending(e.promptReceiptId))
   ) {
     pushRaw(s, e);
     effects?.emit();
