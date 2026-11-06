@@ -22,6 +22,7 @@ export class PromptRequestOwner {
   private cancelledBeforeOffer = false;
   private cancelRequested = false;
   private earlyCancel = false;
+  private unconfirmedWaitingStop = false;
   private cancelling: Promise<CancelDispatch> | null = null;
   constructor(
     private thread: ThreadState,
@@ -65,8 +66,18 @@ export class PromptRequestOwner {
     this.offered = true;
     this.thread.promptAdmission = { phase: "offered", cancelling: false };
     this.thread.running = true;
+    if (this.unconfirmedWaitingStop) this.preserveUnconfirmedWaitingStop();
     this.onOffer();
     this.emit();
+  }
+  private preserveUnconfirmedWaitingStop(): void {
+    // A waiting prompt can still be definitively rejected. Only promote the
+    // lost stop reply to a running prompt's unknown stop once it was offered.
+    this.unconfirmedWaitingStop = !this.offered;
+    if (this.offered) {
+      this.thread.stopUnconfirmed = true;
+      pauseQueue(this.thread, "uncertain");
+    }
   }
   ending(receipt: unknown): boolean {
     if (
@@ -124,17 +135,22 @@ export class PromptRequestOwner {
             // tentative display after the matching rejected admission returns.
             if (this.offered) throw new Error("late cancellation");
             this.cancelledBeforeOffer = true;
+            this.unconfirmedWaitingStop = false;
             if (this.thread.promptAdmission)
               this.thread.promptAdmission.notice = S.cancelled;
           } else if (reply.outcome !== "cancelRequested") {
             throw new Error("unconfirmed");
           } else if (early && !this.endingObserved) {
+            this.unconfirmedWaitingStop = false;
             this.onEarlyStopAcknowledged();
           }
           return "acknowledged";
         } catch {
-          if (!this.ended && this.current() && this.thread.promptAdmission)
+          if (!this.ended && this.current() && this.thread.promptAdmission) {
             this.thread.promptAdmission.notice = S.unconfirmed;
+            if (early && !this.endingObserved)
+              this.preserveUnconfirmedWaitingStop();
+          }
           return "unconfirmed";
         } finally {
           this.cancelling = null;

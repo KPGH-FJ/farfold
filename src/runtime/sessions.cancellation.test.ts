@@ -308,6 +308,136 @@ it.each(["ack-first", "offer-first", "offer-after-deadline"] as const)(
   },
 );
 
+it.each([
+  ["failure-first", "cancelled", "stopped"],
+  ["offer-first", "end_turn", "done"],
+] as const)(
+  "keeps an unconfirmed waiting stop when the same prompt is offered (%s)",
+  async (order, stopReason, status) => {
+    const id = `waiting-stop-lost-after-offer-${order}`;
+    const state = threads.markOpenFailed(
+      `a:/p:${id}`,
+      "a",
+      "/p",
+      id,
+      "fixture",
+    );
+    ready(state);
+    const dispatched = deferred();
+    const admit = deferred();
+    const cancelSent = deferred();
+    const loseCancelReply = deferred();
+    let prompt!: PromptArgs;
+    invoke.mockImplementation(async (command: string, args) => {
+      if (command === "session_prompt") {
+        prompt = args;
+        offer(args, "waiting");
+        dispatched.resolve();
+        await admit.promise;
+        return { status: "accepted" };
+      }
+      if (command === "session_prompt_cancel") {
+        cancelSent.resolve();
+        await loseCancelReply.promise;
+        throw new Error("Cancellation reply unavailable");
+      }
+      return command === "session_index_list" ? [] : null;
+    });
+    const first: PromptBlock[] = [{ type: "text", text: "Current request" }];
+    const next: PromptBlock[] = [{ type: "text", text: "Keep later input" }];
+    const sending = threads.send(state.key, first);
+    await dispatched.promise;
+    await threads.send(state.key, next);
+    const stopping = threads.cancel(state.key);
+    try {
+      await cancelSent.promise;
+      const ownedReceipt = receipt(prompt);
+      prompt.admissionChannel.onmessage({
+        receiptId: ownedReceipt + 1,
+        phase: "offered",
+      });
+      expect(state.running).toBe(false);
+      expect(state.queued).toEqual([first, next]);
+      if (order === "offer-first") offer(prompt);
+      loseCancelReply.resolve();
+      await stopping;
+      if (order === "failure-first") {
+        expect(state.stopUnconfirmed).toBe(false);
+        expect(state.queued).toEqual([first, next]);
+        expect(
+          renderToStaticMarkup(
+            PromptAdmissionStatus({ thread: state, active: true }),
+          ),
+        ).toContain(S.unconfirmed);
+        offer(prompt);
+      }
+      expect.soft(state.stopUnconfirmed).toBe(true);
+      admit.resolve();
+      expect(await sending).toEqual({ status: "accepted" });
+      expect.soft(state).toMatchObject({
+        running: true,
+        stopping: false,
+        stopUnconfirmed: true,
+        queuePaused: "uncertain",
+        queued: [next],
+      });
+      await threads.continueQueue(state.key);
+      expect.soft(state.queuePaused).toBe("uncertain");
+
+      const channel = threads as unknown as {
+        applyChannelEvent(key: string, event: unknown): void;
+      };
+      const finish = (promptReceiptId: number, reason: string) =>
+        channel.applyChannelEvent(state.key, {
+          kind: "turnEnd",
+          promptReceiptId,
+          stopReason: reason,
+        });
+      finish(ownedReceipt + 1, "cancelled");
+      expect(state.items.some((item) => item.kind === "settled")).toBe(false);
+      expect.soft(state.stopUnconfirmed).toBe(true);
+      if (stopReason === "end_turn") {
+        channel.applyChannelEvent(state.key, {
+          sessionId: id,
+          update: {
+            sessionUpdate: "agent_message_chunk",
+            content: { type: "text", text: "Finished normally" },
+          },
+        });
+      }
+      finish(ownedReceipt, stopReason);
+      expect(state.stopUnconfirmed).toBe(false);
+      expect(state.running).toBe(false);
+      expect(state.items.filter((item) => item.kind === "settled")).toEqual([
+        expect.objectContaining({ status, stopReason }),
+      ]);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(state.queued).toEqual([next]);
+      expect(
+        invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+      ).toHaveLength(1);
+      expect(
+        invoke.mock.calls.filter(([name]) => name === "session_prompt_cancel"),
+      ).toEqual([
+        [
+          "session_prompt_cancel",
+          expect.objectContaining({
+            promptToken: prompt.promptToken,
+            receiptId: ownedReceipt,
+          }),
+        ],
+      ]);
+      expect(
+        invoke.mock.calls.filter(([name]) => name === "session_cancel"),
+      ).toHaveLength(0);
+    } finally {
+      loseCancelReply.resolve();
+      admit.resolve();
+      await Promise.all([stopping, sending]);
+    }
+  },
+);
+
 it.each(["cancelRequested", "notFound"] as const)(
   "blocks repeat waiting stop clicks and permits an explicit retry after expiry (%s)",
   async (outcome) => {
