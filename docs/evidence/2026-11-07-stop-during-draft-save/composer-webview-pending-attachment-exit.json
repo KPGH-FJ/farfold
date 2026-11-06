@@ -1,0 +1,39 @@
+{
+  "sourceCommit": "65819a2d1546d8344a71f74e35672566e7cca148",
+  "warmTraceSha256": "dc5c8c1be141f673455499446c24c8a23a580e8ed74c1a475438e3cb30b38a5c",
+  "coldTraceSha256": "936d89ff244f71c5ac0b5e171a8fc59b06f5aa0a99ca12702821bde993d01758",
+  "warmEventCount": 20,
+  "coldEventCount": 16,
+  "orderingSteps": 13,
+  "pngByteLength": 76,
+  "nativeQuitObservedWhileAttachmentResultHeld": true,
+  "independentReadKeptBothOldDraftsBeforeDelivery": true,
+  "settingsWritesBeforeRelease": 0,
+  "exitConfirmationsBeforeRelease": 0,
+  "exactSettingsWritesAfterRelease": 1,
+  "nativeExitCount": {
+    "warm": 1,
+    "cold": 1
+  },
+  "verifiedProcessExitCodes": {
+    "warm": 0,
+    "cold": 0
+  },
+  "coldNativeLaunchReopenedBothDraftsAndExactPng": true,
+  "independentReview": "Matched both raw trace digests, the same first quit token, no write or exit acknowledgement before release, and equality of the four native snapshots from two acknowledged exits. Production input, storage and quit source files matched the recorded commit.",
+  "agentRequests": 0,
+  "scopeLimits": [
+    "Hidden nonpersistent WebKit, real Composer and DraftStartup, and an isolated real SQLite database.",
+    "Synthetic paste, draft selection and quit. The fixture held the bytes returned by a real WebKit File.arrayBuffer on that one File instance.",
+    "The native read may have already finished during the quit; its result had not reached the product handler.",
+    "No system picker, physical clipboard, Dock quit, database lock, formal app or live Agent."
+  ],
+  "checkedSourceEquivalentToCurrentHead": "12d97ab666511569ead9d7458b5c3b946a061157",
+  "syntheticInputSourceSha256": {
+    "frontend": "8a27065de7ab1eccdd0fd916c35b50d8af5a3785354fef00708bab16e8027579",
+    "nativeHarness": "1db70d2275ed19c60d9c6a40bf08cc07876491652b8d8fef750c9069dbd2e9ec",
+    "nativeContext": "84e2d88571a63a587bd91046254489b48d55a0fed98e44c5cbed5aa9406c0c0b",
+    "validator": "b0c0e559fca69984653fd30e029553671a8d0f517b488f440201631d2bc69fec",
+    "testExecutable": "8e67c19c5d2cbcebd088860bb1af5b3c52663886b761f4375f682a14aef1cbd1"
+  }
+}

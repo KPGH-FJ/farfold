@@ -17,6 +17,16 @@
     "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
     "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json"
   ],
+  "installedCapabilityDeclarationCheck": {
+    "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
+    "projectionSha256": "f950d64c3280dcb6922a5cea74d5aefa8346f846e218e59c4d0a9c8f907ef3ec",
+    "scope": "仅核官方程序声明的入口，另由第二读者核合。三家各声明一个登录或配置方法，均声明读取历史与指定关闭，均未声明账号状态推送。只有 Copilot 声明标准退出登录。未触发登录、退出、历史读取或关闭，未核当前账号状态。",
+    "reportedProgramVersions": {
+      "github-copilot-cli": "1.0.106",
+      "goose": "1.52.0",
+      "kilo": "7.8.1"
+    }
+  },
   "rows": [
     {
       "agentId": "amp-acp",
@@ -63,8 +73,12 @@
     {
       "agentId": "cline",
       "name": "Cline",
-      "remainingCondition": "历史只证旧候选连接和方法展示。需同一确定的官方程序和选择可用于核安装、模型及实际请求。当前账号状态未知。",
-      "evidencePaths": ["docs/agent-first-release.md"],
+      "remainingCondition": "旧正式版使用 Cline 3.0.65，界面确认模型设置成功，首次短消息以 internal_error 结束，未取得回复；另一次连接检查超时，两次原因均未定。需核现用官方程序、当前账号及所选模型，再单独验证实际回复。",
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-06-macos-batch1/README.md",
+        "docs/evidence/2026-10-06-macos-batch1/installed-836-first-results.json"
+      ],
       "scopedHistoryEvidence": null
     },
     {
@@ -93,7 +107,11 @@
       "agentId": "cursor",
       "name": "Cursor",
       "remainingCondition": "已知旧连接后模型要求认证。需要可用的官方Cursor登录或已有明确选择，以及此后真实模型和请求的证据。旧认证观察不代表当前实测。",
-      "evidencePaths": ["docs/agent-first-release.md"],
+      "evidencePaths": [
+        "docs/agent-first-release.md",
+        "docs/evidence/2026-10-01-agent-access-directory-batch5/README.md",
+        "docs/evidence/2026-10-06-macos-batch1/protocol-qwen-cursor-preparation.json"
+      ],
       "scopedHistoryEvidence": null
     },
     {
@@ -167,17 +185,19 @@
       "remainingCondition": "保留原对象/原选择的限定S3。其他对象和选择、身份付费、模型与任务隔离等仍须原条件证据。思考未提供，不能补等级。",
       "evidencePaths": [
         "docs/agent-first-release.md",
+        "docs/evidence/2026-10-01-agent-copilot-login/installed.md",
         "docs/evidence/2026-10-24-agent-acceptance/additional-preparation-observations-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-5b31-owned-ack-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/copilot-formal-e954-history-continuation-summary.json"
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。当前 Farfold 版本的完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
           {
             "standards": ["S2"],
             "environment": "macOS arm64 正式版 dbe23bb6e，官方 Copilot CLI 1.0.106",
-            "result": "同一已有账号为 Copilot Free，实测前网页显示包含额度已用 0% 且 CLI 启用，SDK 报告不允许超额；沿用 Auto 完成一次短回复。未改套餐，未核该次实际扣费。",
+            "result": "网页、官方 SDK 和 CLI 核对为同一已有 Copilot Free 账号。实测前网页显示包含额度已用 0% 且 CLI 启用，SDK 报告不允许超额；沿用 Auto 完成一次短回复。未改套餐，未核该次实际扣费。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-followup/README.md"
             ]
@@ -250,6 +270,7 @@
       ],
       "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers.",
       "stage1Supplement": {
+        "authenticationBoundary": "已有 OpenRouter 设置确实用于一次正式回复，出站服务和测试回复核合。当前付款身份、实际计费、完整新登录和退出换号待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3"],
@@ -324,6 +345,7 @@
       ],
       "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
       "stage1Supplement": {
+        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。当前付款身份、网关路由和计费、完整新登录与退出换号待实测。",
         "verifiedSamples": [
           {
             "standards": ["S3", "S4"],
@@ -411,12 +433,13 @@
     {
       "agentId": "mistral-vibe",
       "name": "Mistral Vibe",
-      "remainingCondition": "原对象旧恢复缺可靠回放和归属，旧S3的另一次已证组合保留。技能管理需明确当前实际官方启动路径和管理会话。",
+      "remainingCondition": "8ac6dcb09正式版中，所选原目录可访问，打开一次后连接检查超时，未读回历史，原因未定。有可归属的官方初始化进度、终态或启动/登录条件变化后再复核该对象。另一次已证S3组合保留。技能管理仍需明确实际官方启动路径和管理会话。",
       "evidencePaths": [
         "docs/agent-first-release.md",
         "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/p40-mistral-official-management-contract-summary.json",
-        "docs/evidence/2026-11-01-p18-formal/mistral-restore-blocker-summary.json"
+        "docs/evidence/2026-11-01-p18-formal/mistral-restore-blocker-summary.json",
+        "docs/evidence/2026-11-06-cycle-01/summary.json"
       ],
       "scopedHistoryEvidence": {
         "agent": "mistral-vibe",
@@ -442,11 +465,12 @@
     {
       "agentId": "opencode",
       "name": "OpenCode",
-      "remainingCondition": "原对象/原配置S3组合保持。其它配置、历史及工作能力必须分别归属验证，旧准备超时与当前原S3组合不能互相覆盖。",
+      "remainingCondition": "8ac6dcb09正式版中，所选原记录的工作文件夹不存在或不可访问，打开一次未读回历史。待同一原工作位置恢复且可访问后再复核。已证的原对象/原配置S3组合保留，其他配置、历史及工作能力分别验证。",
       "evidencePaths": [
         "docs/agent-first-release.md",
         "docs/evidence/2026-10-24-agent-acceptance/opencode-formal-e954-history-continuation-summary.json",
         "docs/evidence/2026-11-01-p18-zero-entry/zero-entry-summary.json",
+        "docs/evidence/2026-11-06-cycle-01/summary.json",
         "docs/status.md"
       ],
       "scopedHistoryEvidence": "The one original owned OpenCode conversation, macOS arm64, existing settings / OpenCode Big Pickle / build; reasoning not exposed."

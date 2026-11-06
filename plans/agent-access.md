@@ -43,7 +43,7 @@
 - P18未知工具需归属明确且官方可恢复的现有对象；N/O仍缺终态和归属。NEW-24受影响的新真实发送维持暂停，待官方权限时点、文件/网络读回和恢复核实。
 - Goose正式自测对话同服务切换与切回已核原生和保存记录，第二候选的实际回复及冷恢复待验。[正式回执](../docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
 - P01正式版内嵌图片导入、切换及冷恢复已验证；读取中切换待实测。[图片草稿证据](../docs/evidence/2026-11-06-phase1-draft-image/README.md)
-- P01独立WebKit已核实际输入框图片读取中切换、SQLite写锁保稿、重试退出及冷开。安装版仍等隔离的macOS图形账号或实例。同机需先核当前应用正常退出。[独立组件回执](../docs/evidence/2026-11-07-stop-during-draft-save/composer-webview-write-lock.json)
+- P01独立WebKit已核实际输入框读取中切换、等待图片后退出、SQLite写锁保稿、重试及冷开。安装版等隔离的macOS图形账号或实例，同机需先核当前应用正常退出。[独立组件回执](../docs/evidence/2026-11-07-stop-during-draft-save/README.md#独立-macos-webkit-与原生退出分项)
 - 每项记录缺什么、影响和重评条件。条件未变时继续独立工作。X范围待定及Z后置/排除沿原契约。
 
 ## 执行与收口

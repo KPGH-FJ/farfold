@@ -42,6 +42,8 @@ Kilo 跨版本授权等待正式更新后再测。安装版写入故障继续等
 
 03:37 只读复核仍无自然结束、匹配终态或持久未知。已加载的 Copilot 审批停止自测对话在旧正式界面显示「回复已停止，仍有步骤未确认结束」。使用系统保存面板导出同一对话的 Markdown 快照，界面确认保存，文件仍将工具写作「执行（等待中）」，缺工具状态未确认，回复则记为已停止。这是旧版导出的正式复现。自测通信字节以及原稿、保留稿与待发摘要均核对一致，未发新 Agent 请求。当前源码已有对应导出和卡片回归，正式修复待更新后复验。 [正式导出回执](installed-export-stopped-tool.json)
 
+另核官方命令能否从第二个客户端关闭三条旧连接。两条 Copilot 连接由原 Farfold 独占标准管道；官方 SDK 的接入只查同一进程的活动会话，另一客户端同编号关闭的成功回执无法证明原连接结束。Goose 的关闭处理只移除接收该请求的进程内会话；命令行读回原历史会启动自己的连接。仍需由原连接或原进程给出可归属的结束回执。三份原通信仍与封存一致，零新增帧。此次仅查阅说明和封存，不启动客户端。 [Copilot 传输](https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server#choosing-between-stdio-and-tcp) · [SDK 接入](https://github.com/github/copilot-sdk/blob/c74ef966/nodejs/src/generated/rpc.ts#L35594-L35609) · [Goose 命令](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/documentation/docs/guides/goose-cli-commands.md#L684-L698) · [Goose 关闭](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server.rs#L2621-L2643)
+
 ## 独立源码补强：冷启动保留未知
 
 已明确取消的原轮若仍有已观察到、归属该轮且未结束的工具，保存时复用当前对话的未知标记。另一工具的终态和新请求不会清除旧未知；只有原连接确认该步骤离开活动集合，才撤下这次派生的标记，原已保存的历史未知仍保留。格式不正确、只改变卡片展示的工具消息不能代替原连接回执；带对话号的同名原始 Agent 消息也不能清活动集合，原内容照常保留。未新增存储字段，没有从普通归档活动反推工具状态，也没有回写旧正式版的三个对象。
