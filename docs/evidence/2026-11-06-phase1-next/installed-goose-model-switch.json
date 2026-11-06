@@ -1,0 +1,36 @@
+{
+  "installedSource": "6ce829c5",
+  "gooseVersion": "1.52.0",
+  "gooseSourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "checkedAtUtc": "2026-11-06T19:54:38.191226+00:00",
+  "scope": "One warm idle owned Goose test conversation, exact existing OpenRouter provider, model change and restore only.",
+  "originalModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "testedAlternative": "nvidia/nemotron-3.5-super-vl:free",
+  "nativeAndFarfoldPersistedAlternativeAfterFirstReply": true,
+  "nativeAndFarfoldPersistedOriginalAfterSecondReply": true,
+  "conversationConfirmationShowedExactRequestedAndPreviousModels": true,
+  "protocolCounts": {
+    "out:session/set_config_option": 2,
+    "in:session/update": 2,
+    "in:response": 2
+  },
+  "targetHistoryUnchanged": true,
+  "otherGooseAndFarfoldModelSettingsUnchanged": true,
+  "gooseProfileConfigFileUnchanged": true,
+  "originalDraftRetainedDraftAndQueuesUnchanged": true,
+  "exactTargetModelConfigAndSelectedNativeFieldsRestored": true,
+  "newPrompts": 0,
+  "actualReplyFromAlternateModelVerified": false,
+  "coldRestoreVerified": false,
+  "limits": [
+    "Native comparison includes provider, model configuration, mode, saved token/cost fields and archive state, and excludes mutable updated_at.",
+    "Non-target comparison covers model/config rows, original draft, retained draft and queues, rather than unrelated application metadata."
+  ],
+  "independentPostRestoreCheck": {
+    "checkedAtBeijing": "2026-11-07 03:56:28",
+    "oldBlockedConnectionTapsMatchingPriorSeal": 3,
+    "oldBlockedConnectionsWithNewEndEvidence": 0,
+    "oldBlockedConnectionsWithDurableUnknownMarker": 0,
+    "oldBlockedConnectionsWithQueuedBlocks": 0
+  }
+}

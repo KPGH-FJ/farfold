@@ -64,11 +64,13 @@
 
 **第1阶段退出期间并发保存。** 草稿、未读和准备进度同时遇到隔离SQLite写锁时，退出派发探针先应答，解锁后三项均写入并由新连接读回。源码还会等待退出期间才开始写入的准备进度回执。原生19项和前端相关80项定向通过，正式图形故障验证仍待。[派发与存储回执](evidence/2026-11-07-stop-during-draft-save/README.md#保存等待期间仍可处理下一条命令)
 
+**第1阶段独立WebKit写锁验收。** 真实退出组件在独立WebKit和SQLite中，写锁下可取消退出并恢复编辑，再次退出报告保存失败，旧盘值与窗口新稿均保持。解锁重试后实际原生退出，确认入口、退出事件和退出后三次读库一致。输入框和点按来自测试夹具，正式应用与Dock退出仍待。[组件与原生回执](evidence/2026-11-07-stop-during-draft-save/real-draft-startup-webview-bridge.json)
+
 **第1阶段待发与退出结果归属。** 已复现旧待发按钮能误编辑或移除移位后的另一条，及确认退出后丢失仍运行请求的冷启动未知提示。源码核对按钮对应的消息，且保存当前确切未结束工作以供冷启动。取消退出仍按真实运行状态显示，收到匹配终态后撤下派生标记。正式版仍待安全退出后更新。[受控分项](evidence/2026-11-07-stop-during-draft-save/README.md#待发按钮归属与退出时尚无终态的工作)
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档18个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。新补Goose正式第二候选菜单及Copilot旧版停止状态导出差异。原模型分别核到Kilo原对话报告值、Goose正式样本的出站选择及回复、Copilot隔离Auto样本的报告值。零新增请求。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式候选](evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档18个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。候选模型真实回复及冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
 
 **第1阶段Kilo隔离会话关闭。** 官方程序7.8.1在独立库创建两个无消息自测会话，仅关闭A一次并收到对应回执；B在同一进程重新接入并读回原设置，两条历史保留。零模型、工具和审批；A专属资源及B原路由连续性未证，不替代正式复验或跨版授权。[隔离回执](evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json)
 

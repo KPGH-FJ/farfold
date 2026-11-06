@@ -14,7 +14,8 @@
     "docs/evidence/2026-11-06-phase1-old-exit/README.md",
     "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
     "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json",
-    "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json"
+    "docs/evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json",
+    "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json"
   ],
   "rows": [
     {
@@ -288,10 +289,11 @@
           {
             "standards": ["S4"],
             "environment": "macOS arm64 正式版 6ce829c5，已加载的 Goose 自测对话",
-            "result": "保留 OpenRouter 和原 Ultra Free，同一模型菜单明确列出 nvidia/nemotron-3.5-super-vl:free。通信逐字保持，未选新模型或发送；该选项实际启用、运行及冷恢复待验。",
+            "result": "同一已加载自测对话保持 OpenRouter，在正式菜单选择候选 nvidia/nemotron-3.5-super-vl:free。两次设置回执与独立读库分别确认切换和恢复 Ultra Free，原历史、其他对话配置及 Goose 配置文件保持。零新增发送；候选模型真实回复与冷恢复待验。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/installed-goose-model-candidate.json",
-              "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json"
+              "docs/evidence/2026-11-06-phase1-next/public-model-eligibility-2026-11-07.json",
+              "docs/evidence/2026-11-06-phase1-next/installed-goose-model-switch.json"
             ]
           }
         ],
