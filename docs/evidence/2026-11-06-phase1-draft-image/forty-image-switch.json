@@ -1,0 +1,18 @@
+{
+  "installedSource": "6ce829c5",
+  "scope": "Native picker with 40 generated images in an already-open completed test conversation. No Agent send, permission changes, or app exit.",
+  "ownedImages": 40,
+  "originalTotalBytes": 5257240,
+  "storedBytesMatchAllOriginals": true,
+  "originalDraftMatchesBeforeAndAfter": true,
+  "retainedDraftsAfterCleanup": 1,
+  "ownedTestTransportMatchesPriorSeal": true,
+  "ownerAndOriginalDraftSwitchVerified": true,
+  "firstAccessibilityObservationAfterPickerUtc": "2026-11-06T18:30:13.019Z",
+  "firstObservationSendEnabled": true,
+  "originalDraftObservedUtc": "2026-11-06T18:30:13.689Z",
+  "ownerDraftReturnObservedUtc": "2026-11-06T18:30:14.374Z",
+  "preparedWhileSwitchingProven": false,
+  "testDraftCleared": true,
+  "testAttachmentReferencesRemaining": 0
+}

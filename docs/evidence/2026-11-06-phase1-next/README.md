@@ -28,6 +28,8 @@ Copilot Free 每月含免费 AI Credits，模型走 Auto。同账号前一批测
 
 Kilo 7.8.1 的真实隔离连接声明支持关闭、继续和列出。在两个无消息的自测对话中，只对 A 关闭一次，收到同请求回执；B 在同一进程以官方继续入口读回原设置，两条历史都保留。未发送模型、工具或审批。B 原活动路由是否全程连续、A 专属资源是否已释放，以及正式界面和跨版桌面授权仍未验证。[隔离会话关闭回执](kilo-lifecycle-isolated.json)
 
+另一次同样隔离的 Kilo 零发送查询，官方新对话实际列出 Kilo Gateway 的既有 Ultra 和两个免费候选 Super VL、Dots。新对话的默认值与原对话不同，不能代替原基线。未改模型或服务；免费主模型仍不证明后台标题等请求不会产生费用，真实切换等待这项条件。Copilot 的 Free 账号仅 Auto，Goose 尚缺原服务实际提供第二选项的回执。[实际模型菜单](kilo-model-options-isolated.json) · [Kilo 免费及后台请求说明](https://kilo.ai/docs/getting-started/using-kilo-for-free) · [Copilot 模型访问说明](https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/configure-access-to-ai-models)
+
 两条 Kilo 测试对话共用一个自有空目录，并使用同一免费模型。两条对话的 Agent 原会话标识和协议记录分别核对。两条请求同时运行时，取消只发给 A，A 明确停止，B 独立回复其专属标识并回到空闲。范围限这一次同 Agent、同目录测试。
 
 首波完整验收仍为 0/3。Kilo 长期授权、Goose 前次续接等待点、Copilot 的 Farfold 模型基线恢复与旧工具状态、真实审批、安装版存储故障及 Windows 安装仍按各自条件推进。 [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)
