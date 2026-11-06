@@ -1,0 +1,60 @@
+{
+  "observedUtc": "2026-11-06T20:56:09.338813+00:00",
+  "exactOwnersSameBeforeAfter": true,
+  "exactTapSealsSameBeforeAfter": true,
+  "samples": {
+    "copilot-running-tool-parent": {
+      "exitCode": 0,
+      "receiptExists": true,
+      "sha256": "c20b644a94fb2296f7f8e4d70df656428ff3243278dd80dc12e419cb01798128",
+      "observationsPerThread": 84,
+      "threadsObserved": 7,
+      "projection": "Node synchronous child runner waiting in kqueue"
+    },
+    "copilot-running-tool-cli": {
+      "exitCode": 0,
+      "receiptExists": true,
+      "sha256": "ca2856a040ebd16ec3e7c86dedc0217f9995340d2b0f81b31a1e767ec8bdf5de",
+      "observationsPerThread": 80,
+      "threadsObserved": 43,
+      "projection": "libuv kqueue and one runtime read with file descriptor unproven"
+    },
+    "goose-approval-cli": {
+      "exitCode": 0,
+      "receiptExists": true,
+      "sha256": "6e1f09b523be738a4b1d4d5edc42708a7c11cd176913d19edc73500430cf2df7",
+      "observationsPerThread": 84,
+      "threadsObserved": 15,
+      "projection": "main thread waiting for worker; runtime stdin blocking read"
+    },
+    "copilot-approval-parent": {
+      "exitCode": 0,
+      "receiptExists": true,
+      "sha256": "9ad69685fc56b4e1705e4bd5d56367177e8830ac82e22dc71f7770fea5119c61",
+      "observationsPerThread": 85,
+      "threadsObserved": 7,
+      "projection": "Node synchronous child runner waiting in kqueue"
+    },
+    "copilot-approval-cli": {
+      "exitCode": 0,
+      "receiptExists": true,
+      "sha256": "053e5ba07e7cb641e030c7ee9108d2fc9d4c5d03cb26e810c4289f03eb92a9c6",
+      "observationsPerThread": 81,
+      "threadsObserved": 43,
+      "projection": "libuv kqueue and one runtime read with file descriptor unproven"
+    }
+  },
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "samplingSecondsPerProcess": 1,
+  "samplingIntervalMs": 10,
+  "exactOldGroups": 3,
+  "toolEndOrConnectionEndReceiptsAdded": 0,
+  "terminationSignalsSentByThisProbe": 0,
+  "appOrAgentStateMutationsByThisProbe": 0,
+  "independentReview": "A second reader matched the five sampled process owners, the Copilot wait classes and the Goose standard-input stack. All prior wire seals stayed identical.",
+  "limits": [
+    "Samples cover local stacks only during the bounded observation.",
+    "A kqueue or blocked read does not establish whether a remote tool finished or whether an unobserved resource is active. Copilot CLI read file descriptors were not proven.",
+    "Local wait states and an unchanged wire log are not a connection-close receipt or a persisted unknown result."
+  ]
+}

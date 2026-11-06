@@ -44,6 +44,8 @@ Kilo 跨版本授权等待正式更新后再测。安装版写入故障继续等
 
 另核官方命令能否从第二个客户端关闭三条旧连接。两条 Copilot 连接由原 Farfold 独占标准管道；官方 SDK 的接入只查同一进程的活动会话，另一客户端同编号关闭的成功回执无法证明原连接结束。Goose 的关闭处理只移除接收该请求的进程内会话；命令行读回原历史会启动自己的连接。仍需由原连接或原进程给出可归属的结束回执。三份原通信仍与封存一致，零新增帧。此次仅查阅说明和封存，不启动客户端。 [Copilot 传输](https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server#choosing-between-stdio-and-tcp) · [SDK 接入](https://github.com/github/copilot-sdk/blob/c74ef966/nodejs/src/generated/rpc.ts#L35594-L35609) · [Goose 命令](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/documentation/docs/guides/goose-cli-commands.md#L684-L698) · [Goose 关闭](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server.rs#L2621-L2643)
 
+11 月 7 日 04:56 对三个原进程组的五个进程各取样一秒。两个 Copilot 包装进程在等各自子进程，子进程的事件循环在等系统事件，各有一条线程停在读取系统调用，文件描述符未证。Goose 主线程在等工作线程，工作线程的调用链明确在读标准输入。采样前后进程身份和三份封存通信一致。此分项确认本地取样窗口内的等待状态，匹配结束回执与未知状态落盘仍待。 [原进程取样](old-transports-bounded-stack-sample.json)
+
 ## 独立源码补强：冷启动保留未知
 
 已明确取消的原轮若仍有已观察到、归属该轮且未结束的工具，保存时复用当前对话的未知标记。另一工具的终态和新请求不会清除旧未知；只有原连接确认该步骤离开活动集合，才撤下这次派生的标记，原已保存的历史未知仍保留。格式不正确、只改变卡片展示的工具消息不能代替原连接回执；带对话号的同名原始 Agent 消息也不能清活动集合，原内容照常保留。未新增存储字段，没有从普通归档活动反推工具状态，也没有回写旧正式版的三个对象。

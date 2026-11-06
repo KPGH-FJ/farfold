@@ -66,5 +66,19 @@
     "An early UI click return alone does not establish a pending attachment, the image-read caller, or the time the user-facing view actually switched.",
     "The third test confirms recognition of PNG bytes with a generic filename and content type.",
     "No model send, cold start, database fault or permission change was performed."
-  ]
+  ],
+  "screenshotFollowup": {
+    "rawServerEventsSha256": "c6b99b10e9df686110411d6369a17cd249c6c21880d93372df185cc1c2cecdf9",
+    "genericFilename": true,
+    "actualScreenObserved": true,
+    "openActionReturnedMsBeforeBodyCompletion": 10753.728,
+    "firstScreenshotReturnedMsAfterBodyCompletion": 1055.272,
+    "heldForMs": 13516.129,
+    "firstScreenshotShowedCompletedThumbnail": true,
+    "pendingSwitchObserved": false,
+    "savedBytesIndependentlyReadThisRun": false,
+    "fixtureRemovedAndVolumeUnmounted": true,
+    "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
+    "scope": "This run used screenshot observation instead of an accessibility tree, but the first screenshot still returned after the body had finished. It cannot distinguish screenshot-tool waiting from the system picker or app transition."
+  }
 }
