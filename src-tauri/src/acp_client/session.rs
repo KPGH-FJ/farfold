@@ -1407,3 +1407,8 @@ pub struct SessionListEntry {
     pub pinned: bool,
     pub archived: bool,
 }
+
+mod stopped_tool_close;
+
+#[cfg(test)]
+mod stopped_tool_close_tests;

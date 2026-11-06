@@ -254,6 +254,7 @@ pub(super) async fn next_mutation(
     opening: &Option<Opening>,
     ctx: &mut DispatchContext<'_>,
     permissions: &super::super::permission_guard::PermissionGuard,
+    stopped_close_ready: impl FnOnce() -> bool,
 ) -> Option<Result<Value, String>> {
     // This async body runs only when the select branch is polled. An inbox
     // update can invalidate a prepared continuation before its first poll.
@@ -269,6 +270,13 @@ pub(super) async fn next_mutation(
             }
             MutationKind::Mode | MutationKind::Close | MutationKind::Delete if work_busy(ctx) => {
                 Some("上次请求尚未结束，请先停止或等待")
+            }
+            MutationKind::StoppedToolClose(expected)
+                if !stopped_close_ready()
+                    || !permissions.admissible()
+                    || stopped_tool_close::candidate(ctx).as_ref() != Some(expected) =>
+            {
+                Some(stopped_tool_close::INELIGIBLE)
             }
             _ => None,
         };

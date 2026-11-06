@@ -183,11 +183,14 @@ pub(super) async fn send(
         })
         .map_err(describe_acp_error);
     if sent.is_ok() {
-        ctx.tools.begin_live();
+        ctx.tools.start_prompt(receipt_id);
         ctx.compactions.begin_live();
         (ctx.events)(serde_json::json!({"kind":"configCheck","check":model_guard.check()}));
-    } else if let Some(requests) = mcp {
-        requests.set_prompt_active(false);
+    } else {
+        ctx.tools.invalidate_stopped_close();
+        if let Some(requests) = mcp {
+            requests.set_prompt_active(false);
+        }
     }
     Ok(Started { active, sent })
 }

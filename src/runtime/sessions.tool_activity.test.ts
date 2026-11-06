@@ -7,8 +7,9 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads, groupSidebarRows, type IndexRow } from "./sessions";
-import { draftPersistence } from "./drafts";
+import { composerDrafts, draftPersistence, draftQueues } from "./drafts";
 import type { CompletionEvent } from "./completion";
+import { stoppedWorkTarget } from "./stopped_work_close";
 
 const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown): void;
@@ -64,6 +65,110 @@ function row(id: string): IndexRow {
     configOptions: null,
   };
 }
+
+it("checks without closing, then closes only the approved original route and preserves its queue", async () => {
+  const a = seed("explicit-stopped-work-a");
+  const b = seed("explicit-stopped-work-b");
+  a.connectionId = "owned-connection";
+  a.queued = [[{ type: "text", text: "original queued input" }]];
+  const draftKey = `session:${a.key}`;
+  composerDrafts.update(draftKey, () => ({
+    text: "original unsent input",
+    attachments: [],
+  }));
+  const original = a.queued;
+  const target = stoppedWorkTarget(a)!;
+  const proof = {
+    sessionId: a.nativeSessionId,
+    connectionId: a.connectionId,
+    toolCallId: "tool",
+    proofId: "4",
+  };
+  const otherInvoke = invoke.getMockImplementation()!;
+  invoke.mockImplementation((command: string, ...args: unknown[]) => {
+    if (
+      command === "session_check_unapproved_stopped_close" ||
+      command === "session_close_unapproved_stopped"
+    )
+      return Promise.resolve(proof);
+    return otherInvoke(command, ...args);
+  });
+
+  expect(await threads.checkStoppedWorkClose(a, target)).toEqual(proof);
+  expect(
+    invoke.mock.calls.some(
+      ([cmd]) => cmd === "session_close_unapproved_stopped",
+    ),
+  ).toBe(false);
+  expect(a.activeToolCallIds).toEqual(["tool"]);
+  await threads.closeStoppedWork(a, target, proof);
+  expect(invoke).toHaveBeenCalledWith("session_close_unapproved_stopped", {
+    agentId: a.agentId,
+    cwd: a.cwd,
+    ...proof,
+  });
+  expect(threads.thread(a.key)).toBe(a);
+  expect(a.connectionLost).toBe(true);
+  expect(a.historicalOutcomeUnknown).toBe(true);
+  expect(a.queued).toBe(original);
+  expect(a.queuePaused).toBe("stopped");
+  expect(draftQueues.read(a.key)).toMatchObject({
+    blocks: original,
+    outcomeUnknown: true,
+    uncertainIndex: null,
+  });
+  expect(composerDrafts.read(draftKey).text).toBe("original unsent input");
+  expect(b.activeToolCallIds).toEqual(["tool"]);
+  expect(b.connectionLost).toBe(false);
+});
+
+it("does not dispatch a reviewed close if a newer stopped turn appears during saving", async () => {
+  const a = seed("explicit-stopped-work-replaced");
+  a.connectionId = "owned-connection";
+  const target = stoppedWorkTarget(a)!;
+  let finishSaving!: () => void;
+  const saving = new Promise<void>((resolve) => {
+    finishSaving = resolve;
+  });
+  vi.mocked(draftPersistence.flush).mockReturnValueOnce(saving);
+  const close = threads.closeStoppedWork(a, target, {
+    ...target,
+    proofId: "1",
+  });
+  a.running = true;
+  channel.applyChannelEvent(a.key, {
+    kind: "turnEnd",
+    stopReason: "cancelled",
+  });
+  finishSaving();
+  await expect(close).rejects.toThrow();
+  expect(
+    invoke.mock.calls.some(
+      ([cmd]) => cmd === "session_close_unapproved_stopped",
+    ),
+  ).toBe(false);
+  expect(a.activeToolCallIds).toEqual(["tool"]);
+});
+
+it("does not send a reviewed close while the existing unsent work cannot be saved", async () => {
+  const a = seed("explicit-stopped-work-storage");
+  a.connectionId = "owned-connection";
+  const target = stoppedWorkTarget(a)!;
+  vi.mocked(draftPersistence.flush).mockRejectedValueOnce(
+    new Error("write blocked"),
+  );
+  await expect(
+    threads.closeStoppedWork(a, target, { ...target, proofId: "1" }),
+  ).rejects.toThrow("write blocked");
+  expect(
+    invoke.mock.calls.some(
+      ([cmd]) => cmd === "session_close_unapproved_stopped",
+    ),
+  ).toBe(false);
+  expect(a.activeToolCallIds).toEqual(["tool"]);
+  expect(a.connectionLost).toBe(false);
+});
+
 it("keeps stopped replies with official unfinished tools active and reachable until terminal receipt", () => {
   const s = seed("tool-tail-sidebar");
   expect(s.running).toBe(false);

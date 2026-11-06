@@ -91,18 +91,6 @@ pub(crate) struct PendingPermission {
 }
 pub(crate) type PendingPermissions = Arc<Mutex<HashMap<String, PendingPermission>>>;
 
-fn cancel_permissions(pending: &PendingPermissions, ids: &mut Vec<String>) {
-    if let Ok(mut map) = pending.lock() {
-        for id in ids.drain(..) {
-            if let Some(request) = map.remove(&id)
-                && let Some(responder) = request.responder
-            {
-                let _ = responder.respond(serde_json::json!({"outcome":{"outcome":"cancelled"}}));
-            }
-        }
-    }
-}
-
 pub(super) fn model_ids(options: &Value) -> HashSet<String> {
     options
         .as_array()
@@ -208,6 +196,9 @@ impl SessionEntry {
 mod control;
 pub(crate) use control::SessionControl;
 mod fork;
+mod stopped_tool_close;
+pub(crate) use stopped_tool_close::StoppedToolCloseReceipt;
+use stopped_tool_close::{cancel_permissions, observe_cancellation};
 #[path = "pump/prompt.rs"]
 mod prompt;
 
@@ -352,24 +343,6 @@ struct DispatchContext<'a> {
     prompt_cancelling: bool,
 }
 
-fn observe_cancellation(
-    responder: &Responder<Value>,
-    id: &str,
-    expirations: &mpsc::UnboundedSender<String>,
-) -> (RequestCancellation, oneshot::Sender<()>) {
-    let marker = responder.cancellation();
-    let cancellation = marker.clone();
-    let (completed, done) = oneshot::channel();
-    let (id, expirations) = (id.to_owned(), expirations.clone());
-    super::manager::runtime().spawn(async move {
-        tokio::select! {
-            _ = done => {}
-            _ = cancellation.cancelled() => { let _ = expirations.send(id); }
-        }
-    });
-    (marker, completed)
-}
-
 /// Handle one session-scoped dispatch: forward notifications to the frontend
 /// and serve agent→client requests (permission, elicitation).
 fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
@@ -416,6 +389,9 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
         Dispatch::Request(message, responder) => {
             let method = message.method();
             let params = message.params().clone();
+            if method != "session/request_permission" || ctx.prompt_cancelling {
+                ctx.tools.invalidate_stopped_close();
+            }
             // An interaction already in transit can arrive after session/cancel.
             // Resolve it without reopening a decision while the original prompt
             // is still acknowledging cancellation. Updates continue unchanged.
@@ -436,6 +412,8 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
             match method {
                 "session/request_permission" => {
                     let request_id = next_request_id();
+                    ctx.tools
+                        .observe_permission(&request_id, &params["toolCall"]);
                     let owner = serde_json::json!({
                         "connectionId": ctx.ops.connection_id,
                         "sessionId": ctx.session_id,
@@ -532,8 +510,15 @@ fn send_session_cancel(
         .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
         .map_err(describe_acp_error);
     if sent.is_ok() {
+        let first = ctx.tools.first_permission_id().map(str::to_owned);
+        let cancelled = stopped_tool_close::cancel_permissions_recording(
+            ctx.pending,
+            ctx.permission_ids,
+            first.as_deref().map(|id| (id, &ctx.ops.life)),
+        );
+        ctx.tools
+            .cancel_first_permission(prompt_in_flight && !ctx.prompt_cancelling && cancelled);
         ctx.prompt_cancelling = prompt_in_flight;
-        cancel_permissions(ctx.pending, ctx.permission_ids);
         cancel_elicitations(&ctx.ops.elicitations, ctx.elicitation_ids);
         if let Some(requests) = mcp_requests {
             requests.set_prompt_active(false);
@@ -605,6 +590,14 @@ async fn session_pump(
             break;
         }
         let task_deadline = async_tasks.deadline();
+        let stopped_close_ready = !prompt_in_flight
+            && !prompt_cancelling
+            && !prompt_owner
+                .as_ref()
+                .is_some_and(prompt::Active::unresolved)
+            && identity_read.is_none()
+            && workspace_access_read.is_none()
+            && purpose == super::open_purpose::OpenPurpose::Conversation;
         let mut ctx = DispatchContext {
             session_id: &session_id,
             events: &events,
@@ -808,6 +801,7 @@ async fn session_pump(
             outcome = turn_rx.recv() => {
                 if let Some(prompt::Outcome { receipt_id, result: outcome }) = outcome {
                     ops.life.touch();
+                    ctx.tools.finish_prompt(receipt_id, outcome.as_ref().is_ok_and(|reply| reply["stopReason"] == "cancelled"));
                     fork_execution_known = outcome.as_ref().is_ok_and(|reply|matches!(reply.get("stopReason").and_then(Value::as_str),Some("end_turn"|"max_tokens"|"max_turn_requests"|"refusal"|"cancelled")));
                     if prompt_in_flight {
                         prompt_in_flight = false;
@@ -833,9 +827,20 @@ async fn session_pump(
                     events(serde_json::json!({"kind":"interactionExpired", "requestId":request_id}));
                 }
             }
-            outcome = restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permission_guard) => {
+            outcome = restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permission_guard, || {
+                stopped_close_ready && model_guard.is_established() && model_guard.admissible()
+                    && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible())
+            }) => {
                 if let Some(outcome) = outcome {
                     let mut completed = mutation.take().expect("completed mutation exists");
+                    if matches!(&completed.kind, MutationKind::StoppedToolClose(_)) {
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
+                            &mut permission_guard, &mut opening, &mut mutation);
+                        let ready = stopped_close_ready && model_guard.is_established() && model_guard.admissible() && permission_guard.admissible()
+                            && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible());
+                        if stopped_tool_close::complete(&mut ctx, &sessions, completed, outcome, ready) { break; }
+                        continue;
+                    }
                     let mut outcome = match &completed.kind {
                         MutationKind::Config { request, prior_guard: Some(prior), .. } =>
                             outcome.and_then(|reply| configuration.complete_choice(request, reply, prior, &model_guard)),
@@ -1054,6 +1059,20 @@ async fn session_pump(
                         store.archive_session_row_in_directory(&row, &canonical_cwd)
                     }).await;
                     let _ = result.send(outcome);
+                }
+                command @ (SessionControl::CheckUnapprovedStoppedClose { .. } | SessionControl::CloseUnapprovedStopped { .. }) => {
+                    let eligible = stopped_close_ready && mutation.is_none() && model_guard.is_established() && model_guard.admissible()
+                        && permission_guard.admissible() && mcp_requests.as_ref().is_none_or(|mcp| mcp.fork_admissible());
+                    let proof = eligible.then(|| stopped_tool_close::candidate(&ctx)).flatten();
+                    match command {
+                        SessionControl::CheckUnapprovedStoppedClose { result, .. } => { let _ = result.send(Ok(proof)); }
+                        SessionControl::CloseUnapprovedStopped { tool_call_id, proof_id, deadline, result } => {
+                            if let Some(proof) = proof.filter(|proof| proof.tool_call_id == tool_call_id && proof.proof_id == proof_id) {
+                                mutation = stopped_tool_close::start(&cx, &ctx, proof, deadline, result);
+                            } else { let _ = result.send(Err(stopped_tool_close::INELIGIBLE.into())); }
+                        }
+                        _ => unreachable!(),
+                    }
                 }
                 SessionControl::Detach { result, .. } => {
                     let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())

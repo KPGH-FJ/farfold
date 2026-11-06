@@ -95,6 +95,16 @@ pub(crate) enum SessionControl {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
     },
+    CheckUnapprovedStoppedClose {
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<Option<StoppedToolCloseReceipt>, String>>,
+    },
+    CloseUnapprovedStopped {
+        tool_call_id: String,
+        proof_id: String,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<StoppedToolCloseReceipt, String>>,
+    },
     /// Internal handoff owner retains this one close until its actual reply.
     ForkClose {
         result: oneshot::Sender<Result<(), String>>,
@@ -166,6 +176,12 @@ impl SessionControl {
             | Self::ConfirmConfig { result, .. } => {
                 let _ = result.send(Err(error));
             }
+            Self::CheckUnapprovedStoppedClose { result, .. } => {
+                let _ = result.send(Err(error));
+            }
+            Self::CloseUnapprovedStopped { result, .. } => {
+                let _ = result.send(Err(error));
+            }
             Self::Archive { result, .. } => {
                 let _ = result.send(Err(error));
             }
@@ -211,6 +227,12 @@ impl SessionControl {
                 deadline, result, ..
             }
             | Self::ConfirmConfig {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
+            Self::CheckUnapprovedStoppedClose { deadline, result } => {
+                (*deadline, result.is_closed())
+            }
+            Self::CloseUnapprovedStopped {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),
             Self::Archive {

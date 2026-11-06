@@ -20,6 +20,7 @@ pub(crate) enum Kind {
     },
     Mode,
     Close,
+    StoppedToolClose(super::pump::StoppedToolCloseReceipt),
     Delete,
 }
 
@@ -27,6 +28,7 @@ pub(crate) enum Reply {
     Open(oneshot::Sender<Result<super::pump::restore_config::OpenState, String>>),
     Config(oneshot::Sender<Result<Value, String>>),
     Unit(oneshot::Sender<Result<(), String>>),
+    StoppedToolClose(oneshot::Sender<Result<super::pump::StoppedToolCloseReceipt, String>>),
 }
 impl Reply {
     fn is_closed(&self) -> bool {
@@ -34,6 +36,7 @@ impl Reply {
             Self::Open(reply) => reply.is_closed(),
             Self::Config(reply) => reply.is_closed(),
             Self::Unit(reply) => reply.is_closed(),
+            Self::StoppedToolClose(reply) => reply.is_closed(),
         }
     }
     pub fn send(self, value: Result<Value, String>) {
@@ -49,6 +52,11 @@ impl Reply {
             Self::Unit(reply) => {
                 let _ = reply.send(value.map(|_| ()));
             }
+            Self::StoppedToolClose(reply) => {
+                let _ = reply.send(Err(value
+                    .err()
+                    .unwrap_or_else(|| "关闭结果尚未确认，请等待".into())));
+            }
         }
     }
     async fn closed(&mut self) {
@@ -56,6 +64,7 @@ impl Reply {
             Self::Open(reply) => reply.closed().await,
             Self::Config(reply) => reply.closed().await,
             Self::Unit(reply) => reply.closed().await,
+            Self::StoppedToolClose(reply) => reply.closed().await,
         }
     }
 }
@@ -87,6 +96,22 @@ impl Mutation {
         if let Some(reply) = reply {
             reply.send(outcome);
         }
+    }
+    pub(crate) fn finish_stopped_tool_close(
+        mut self,
+        outcome: Result<super::pump::StoppedToolCloseReceipt, String>,
+    ) -> bool {
+        let reply = self.reply.take();
+        let deadline = self.deadline;
+        drop(self);
+        let Some(Reply::StoppedToolClose(reply)) = reply else {
+            return false;
+        };
+        if outcome.is_ok() && tokio::time::Instant::now() >= deadline {
+            let _ = reply.send(Err("关闭结果尚未确认，请等待".into()));
+            return false;
+        }
+        reply.send(outcome).is_ok()
     }
     pub(crate) fn finish_open(
         mut self,
@@ -161,9 +186,12 @@ impl Mutation {
         }
         self.operation.abandon();
         if let Some(reply) = self.reply.take() {
-            reply.send(Err(
-                "Agent 无响应，设置结果尚未确认，请等待或断开后重试".into()
-            ));
+            let error = if matches!(self.kind, Kind::StoppedToolClose(_)) {
+                "关闭结果尚未确认，请等待"
+            } else {
+                "Agent 无响应，设置结果尚未确认，请等待或断开后重试"
+            };
+            reply.send(Err(error.into()));
         }
         None
     }

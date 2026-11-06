@@ -66,6 +66,7 @@ import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
 import { FailedToolQueueHint } from "./FailedToolQueueHint";
+import { StoppedWorkClose } from "./StoppedWorkClose";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
 import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
@@ -828,6 +829,9 @@ export function ThreadView({
                 {lastCompletion?.status === "stopped"
                   ? STRINGS.thread.toolsAfterStop
                   : STRINGS.thread.toolsAfterReply}
+                {active && lastCompletion?.status === "stopped" && (
+                  <StoppedWorkClose thread={thread} ownsView={ownsContent} />
+                )}
                 {active &&
                   lastCompletion?.status === "failed" &&
                   !draftReadRequired &&

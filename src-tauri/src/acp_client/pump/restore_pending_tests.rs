@@ -178,6 +178,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
             &opening,
             &mut ctx,
             &permissions,
+            || true,
         ));
         let first =
             std::future::poll_fn(|cx| std::task::Poll::Ready(advance.as_mut().poll(cx))).await;
@@ -246,8 +247,14 @@ async fn exercise(mode: &str, expected_polls: usize) {
         .unwrap()
         .push(json!({"stage":"received-state-before-admission","mode":mode}));
     finish_send.take().unwrap().send(()).unwrap();
-    let outcome =
-        super::restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permissions).await;
+    let outcome = super::restore_config::next_mutation(
+        &mut mutation,
+        &opening,
+        &mut ctx,
+        &permissions,
+        || true,
+    )
+    .await;
     eprintln!(
         "PENDING_RESTORE_ORDER={}",
         serde_json::to_string(&*trace.lock().unwrap()).unwrap()

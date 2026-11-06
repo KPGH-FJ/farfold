@@ -289,6 +289,8 @@ pub fn run() {
                 acp_client::session_discovery::session_import_commit,
                 acp_client::session_discovery::session_import_close,
                 acp_client::session_commands::session_close,
+                acp_client::session_commands::session_check_unapproved_stopped_close,
+                acp_client::session_commands::session_close_unapproved_stopped,
                 acp_client::session_commands::session_detach_for_config_check,
                 acp_client::session_commands::session_touch,
                 acp_client::session_commands::session_meta_rename,

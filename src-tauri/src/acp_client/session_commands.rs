@@ -14,7 +14,7 @@ use tauri::{AppHandle, Manager as _};
 
 use crate::acp_client::manager::{AcpManager, require_agent_row, validate_cwd, validate_cwd_async};
 pub use crate::acp_client::pump::ProcessEndedReceipt;
-use crate::acp_client::pump::SessionSink;
+use crate::acp_client::pump::{SessionSink, StoppedToolCloseReceipt};
 use crate::acp_client::session::{InteractionReply, SessionListEntry, SessionOpenResult};
 use crate::acp_client::session_index::{
     iso8601_millis, parse_config_map, same_dir, touch_session_row,
@@ -679,6 +679,45 @@ pub async fn session_close(
     } else {
         manager.close_session(&agent_id, &cwd, &session_id).await
     }
+}
+
+/// Read the owning pump's current proof without requesting Agent work.
+#[tauri::command]
+pub async fn session_check_unapproved_stopped_close(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+) -> Result<Option<StoppedToolCloseReceipt>, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .check_unapproved_stopped_close(&agent_id, &cwd, &session_id, &connection_id)
+        .await
+}
+
+/// Close only the exact session, tool and stop shown for explicit review.
+#[tauri::command]
+pub async fn session_close_unapproved_stopped(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    tool_call_id: String,
+    proof_id: String,
+) -> Result<StoppedToolCloseReceipt, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .close_unapproved_stopped(
+            &agent_id,
+            &cwd,
+            &session_id,
+            &connection_id,
+            tool_call_id,
+            proof_id,
+        )
+        .await
 }
 
 /// Explicitly recheck a configuration without closing or deleting the Agent's

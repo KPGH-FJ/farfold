@@ -96,6 +96,17 @@ it("describes an officially pending step as waiting without changing its status"
   expect(html).toContain("回复已停止，仍有步骤未确认结束");
 });
 
+it("offers a check on the stopped live owner without offering an immediate close", () => {
+  const thread = state();
+  thread.connectionId = "owner";
+  thread.identity = "established";
+  const html = render(thread);
+  expect(html).toContain("检查能否关闭此对话的连接");
+  expect(html).not.toContain(">关闭此对话的连接</button>");
+  thread.stopUnconfirmed = true;
+  expect(render(thread)).not.toContain("检查能否关闭此对话的连接");
+});
+
 it("explains the explicit queue path only for a failed reply whose new input can be staged", () => {
   const failed = () => {
     const thread = state();

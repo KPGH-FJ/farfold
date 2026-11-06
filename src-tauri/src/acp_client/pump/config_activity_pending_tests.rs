@@ -102,6 +102,15 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
             let (expirations, _expired) = mpsc::unbounded_channel();
             let mut tools = ToolActivity::new(life.clone());
             tools.begin_live();
+            if kind == "stopped-close" {
+                tools.start_prompt(47);
+                tools.observe(
+                    &json!({"update":{"sessionUpdate":"tool_call","toolCallId":"candidate"}}),
+                );
+                tools.observe_permission("held", &json!({"toolCallId":"candidate"}));
+                tools.cancel_first_permission(true);
+                tools.finish_prompt(47, true);
+            }
             let mut tasks = crate::acp_client::async_tasks::Tasks::new(
                 false,
                 ops.connection_id.clone(),
@@ -136,7 +145,9 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                             "session/set_mode",
                             json!({"sessionId":SESSION,"modeId":"two"}),
                         ),
-                        "close" | "fork-close" => ("session/close", json!({"sessionId":SESSION})),
+                        "close" | "fork-close" | "stopped-close" => {
+                            ("session/close", json!({"sessionId":SESSION}))
+                        }
                         "delete" => ("session/delete", json!({"sessionId":SESSION})),
                         _ => unreachable!(),
                     };
@@ -169,6 +180,9 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 },
                 "mode" => MutationKind::Mode,
                 "close" | "fork-close" => MutationKind::Close,
+                "stopped-close" => {
+                    MutationKind::StoppedToolClose(stopped_tool_close::candidate(&ctx).unwrap())
+                }
                 "delete" => MutationKind::Delete,
                 _ => unreachable!(),
             };
@@ -204,6 +218,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                     &opening,
                     &mut ctx,
                     &permissions,
+                    || true,
                 ));
                 let poll =
                     std::future::poll_fn(|cx| std::task::Poll::Ready(first.as_mut().poll(cx)))
@@ -213,7 +228,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 assert!(mutation.as_ref().unwrap().started());
             }
             let received = match mode.as_str() {
-                "clear" => 0,
+                "clear" | "context-changed" => 0,
                 "completed" => 2,
                 "settled-replay" => 3,
                 _ => 1,
@@ -225,7 +240,10 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
             assert!(inbox.try_recv().is_err());
             assert_eq!(
                 ctx.compactions.busy(),
-                !matches!(mode.as_str(), "clear" | "completed" | "settled-replay")
+                !matches!(
+                    mode.as_str(),
+                    "clear" | "context-changed" | "completed" | "settled-replay"
+                )
             );
             peer_trace.lock().unwrap().push(json!({
                 "stage":"received-and-sunk-before-next-poll",
@@ -236,10 +254,15 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 drop(receiver.take());
             }
             release_reply.send(()).unwrap();
-            let result =
-                restore_config::next_mutation(&mut mutation, &opening, &mut ctx, &permissions)
-                    .await
-                    .expect("one actual mutation outcome");
+            let result = restore_config::next_mutation(
+                &mut mutation,
+                &opening,
+                &mut ctx,
+                &permissions,
+                || mode != "context-changed",
+            )
+            .await
+            .expect("one actual mutation outcome");
             *actual_outcome.lock().unwrap() = Some(result.is_ok());
             drop(receiver);
             drop(mutation);
@@ -273,7 +296,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 ))
                 .unwrap();
         };
-        if !matches!(peer_mode.as_str(), "started" | "clear") {
+        if !matches!(peer_mode.as_str(), "started" | "clear" | "context-changed") {
             send_activity(if peer_mode == "unknown" {
                 "future_status"
             } else {
@@ -292,7 +315,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
             let expected_method = match peer_kind.as_str() {
                 "config" => "session/set_config_option",
                 "mode" => "session/set_mode",
-                "close" | "fork-close" => "session/close",
+                "close" | "fork-close" | "stopped-close" => "session/close",
                 "delete" => "session/delete",
                 _ => unreachable!(),
             };
@@ -448,4 +471,11 @@ async fn started_fork_close_with_closed_caller_keeps_actual_reply_after_activity
 #[tokio::test]
 async fn received_activity_before_unstarted_fork_close_still_preserves_work() {
     exercise_kind("fork-close", "in-progress", 0).await;
+}
+
+#[tokio::test]
+async fn stopped_tool_close_rechecks_context_and_other_work_before_first_wire_poll() {
+    exercise_kind("stopped-close", "context-changed", 0).await;
+    exercise_kind("stopped-close", "in-progress", 0).await;
+    exercise_kind("stopped-close", "clear", 1).await;
 }

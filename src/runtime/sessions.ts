@@ -39,6 +39,14 @@ import { hasActiveCompaction } from "./compaction_activity";
 import { hasActiveFork } from "./session_fork_activity";
 import { SessionForks } from "./session_fork";
 import { threadNeedsAttention } from "./thread_attention";
+import {
+  applyStoppedWorkClose,
+  currentStoppedWork,
+  STOPPED_WORK_CLOSE,
+  validStoppedWorkProof,
+  type StoppedWorkCloseReceipt,
+  type StoppedWorkTarget,
+} from "./stopped_work_close";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
@@ -1157,6 +1165,71 @@ class ThreadsStore {
     const revision = this.permissionRevisions.get(key) ?? 0;
     this.permissionRevisions.delete(key);
     return revision;
+  }
+
+  async checkStoppedWorkClose(
+    s: ThreadState,
+    expected: StoppedWorkTarget,
+  ): Promise<StoppedWorkCloseReceipt | null> {
+    if (this.thread(s.key) !== s || !currentStoppedWork(s, expected))
+      return null;
+    const proof = await invoke<StoppedWorkCloseReceipt | null>(
+      "session_check_unapproved_stopped_close",
+      {
+        agentId: expected.agentId,
+        cwd: expected.cwd,
+        sessionId: expected.sessionId,
+        connectionId: expected.connectionId,
+      },
+    );
+    return this.thread(s.key) === s &&
+      currentStoppedWork(s, expected) &&
+      validStoppedWorkProof(expected, proof)
+      ? proof
+      : null;
+  }
+
+  private stoppedWorkClosing = new WeakSet<ThreadState>();
+
+  async closeStoppedWork(
+    s: ThreadState,
+    expected: StoppedWorkTarget,
+    proof: StoppedWorkCloseReceipt,
+  ): Promise<void> {
+    if (
+      this.thread(s.key) !== s ||
+      !currentStoppedWork(s, expected) ||
+      !validStoppedWorkProof(expected, proof) ||
+      this.stoppedWorkClosing.has(s)
+    )
+      throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
+    this.stoppedWorkClosing.add(s);
+    try {
+      await draftPersistence.flush();
+      if (this.thread(s.key) !== s || !currentStoppedWork(s, expected))
+        throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
+      const receipt = await invoke<StoppedWorkCloseReceipt>(
+        "session_close_unapproved_stopped",
+        {
+          agentId: expected.agentId,
+          cwd: expected.cwd,
+          sessionId: expected.sessionId,
+          connectionId: expected.connectionId,
+          toolCallId: expected.toolCallId,
+          proofId: proof.proofId,
+        },
+      );
+      if (
+        this.thread(s.key) !== s ||
+        !applyStoppedWorkClose(s, expected, proof, receipt)
+      )
+        throw new Error(STOPPED_WORK_CLOSE.unconfirmed);
+      this.channels.delete(s.key);
+      this.stopConfirmation.clear(s.key);
+      this.emit(s.key);
+    } finally {
+      this.stoppedWorkClosing.delete(s);
+    }
   }
 
   async close(key: string): Promise<void> {
