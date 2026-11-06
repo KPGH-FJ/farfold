@@ -1,0 +1,40 @@
+{
+  "platform": "macOS arm64",
+  "installed": {
+    "revision": "6ce829c53",
+    "binarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+    "existingApplication": true
+  },
+  "fixture": {
+    "mimeType": "image/png",
+    "width": 4096,
+    "height": 4096,
+    "bytes": 6917984,
+    "sha256": "cf7f509bb6d498596686bce6eb4ad2f7d59f90b8f044526b350c3624375f9140"
+  },
+  "switch": {
+    "observedWhileLoading": false,
+    "onlyInOwningDraft": true,
+    "persistedBytesMatch": true
+  },
+  "coldRestart": {
+    "normalSaveAndQuit": true,
+    "oldProcessesExited": true,
+    "newApplicationProcessObserved": true,
+    "requiredExplicitReview": true,
+    "sendDisabledBeforeReview": true,
+    "persistedBytesMatchBeforeQuit": true,
+    "persistedBytesMatchAfterReview": true
+  },
+  "final": {
+    "testAttachmentReferences": 0,
+    "protectedDraftDigestUnchanged": true,
+    "protectedDraftAndWorkLocationVisible": true,
+    "modelRequests": 0,
+    "oldRequestsResent": 0
+  },
+  "targetedTests": {
+    "files": 2,
+    "passed": 14
+  }
+}
