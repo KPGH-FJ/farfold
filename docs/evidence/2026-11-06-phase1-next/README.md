@@ -4,9 +4,9 @@
 
 ## Kilo 原目录
 
-前次同一桌面权限请求中，系统日志先记录 Farfold 的代码要求不匹配，随后进入 `AUTHREQ_PROMPTING`。已存授权对应上一版 `68aefdb49` 的临时签名。当前正式版自身签名校验通过，但用旧授权里的签名要求校验返回 `errSecCSReqFailed`。这解释了系统设置显示开启时为何仍进入重新询问。同一请求未见授权决定。附近的系统通知前台事件支持提示处理曾启动，具体弹窗内容和未结算原因仍无直接证据。 [Apple 文件权限说明](https://developer.apple.com/forums/thread/678819) · [Apple 代码签名要求](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements/)
+前次同一桌面权限请求中，系统日志比较了上一正式版 `68aefdb49` 与当前版 `dbe23bb6e` 的临时签名，记录代码要求不匹配后进入 `AUTHREQ_PROMPTING`。后续只读核查显示，磁盘上的允许记录对应更早的 `e6e1c3796` 临时签名，用该要求校验当前版同样返回 `errSecCSReqFailed`。因此系统设置显示开启与当前版重新被询问可以同时发生。日志中旧签名的来源仍未知。同一请求未见授权决定，附近的系统通知前台事件也无法确认具体弹窗内容。 [签名核对与终态排查](../2026-11-06-phase1-model-repair/diagnostics.md#kilo-桌面授权) · [Apple 文件权限说明](https://developer.apple.com/forums/thread/678819)
 
-本次用户未看到弹窗，持久授权仍匹配旧签名。正式应用从原目录列出已加入的原会话，打开并读回正文。沿用 Kilo Gateway 的 Nemotron 3 Ultra (free) 后，一次不带答案的续接准确返回首条消息的标识。列表、加载和续接均有独立界面或协议证据。此结果覆盖本次原会话，长期桌面授权和旧提示未结算仍单列。
+本次用户未看到弹窗，磁盘授权记录仍匹配 `e6e1c3796`。正式应用从原目录列出已加入的原会话，打开并读回正文。沿用 Kilo Gateway 的 Nemotron 3 Ultra (free) 后，一次不带答案的续接准确返回首条消息的标识。列表、加载和续接均有独立界面或协议证据。此结果覆盖本次原会话，长期桌面授权和前次提示的授权结果仍待核。
 
 ## Goose 原会话
 

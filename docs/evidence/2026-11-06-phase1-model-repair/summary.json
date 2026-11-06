@@ -1,0 +1,90 @@
+{
+  "kind": "Phase1OriginalModelBaselineAndScopedContinuation",
+  "formalSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "formalBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "engineering": {
+    "sevenPassed": true,
+    "frontendFiles": 721,
+    "frontendPassed": 9645,
+    "rustPassed": 2407,
+    "rustIgnored": 7,
+    "sourceInputsMatched": 2405,
+    "closedManifest": {
+      "sha256": "66ee42c0b92e5972aa7b0b818108de6e40795210b6f19c7e796d49ed12cd4212",
+      "entries": 206275
+    },
+    "privateDatabaseIntegrity": "ok"
+  },
+  "savedAuto": {
+    "sameArchivedRecord": true,
+    "settingsSent": 0,
+    "promptsSentByConfirmation": 0,
+    "ref": {
+      "path": "output/2026-11-06-phase1-model-repair/original-after-confirm.json",
+      "bytes": 923,
+      "sha256": "77484d559228ff023a7e840fe3668b53690a8b078c7ec96ff827424b0dade8b6"
+    }
+  },
+  "oldAttempt": {
+    "outboundToCancelMs": 203785,
+    "outboundToLateReplyMs": 913454,
+    "cancelToLateReplyMs": 709669,
+    "nativeAbort": "user_abort",
+    "formalUiStopped": true,
+    "historyAnswerProduced": false,
+    "replayed": false,
+    "earlyObservation": {
+      "path": "output/2026-11-06-phase1-model-repair/followup/original-continuation.private.json",
+      "bytes": 703,
+      "sha256": "74d99ec5ebfbb0935101daee729e9a2c6aac928780e496c7da810adefd26a335"
+    }
+  },
+  "newOriginalSessionProbe": {
+    "exactHistoryAnswer": true,
+    "formalUiCompleted": true,
+    "promptToResponseMs": 6757,
+    "nativeAndWireCounts": {
+      "native": {
+        "user.message": 1,
+        "assistant.turn_start": 1,
+        "instruction.update_delivery": 1,
+        "session.usage_record": 1,
+        "assistant.message": 1,
+        "assistant.turn_end": 1,
+        "session.usage_checkpoint": 1
+      },
+      "wire": {
+        "session/prompt:out": 1,
+        "session/update:in": 19,
+        "response:in": 1
+      }
+    },
+    "originalDraftRestored": true,
+    "refs": [
+      {
+        "path": "output/2026-11-06-phase1-post-stop/baseline.private.json",
+        "bytes": 609,
+        "sha256": "ff546ed5056ccac439133585c2fe7d1936e9134991badf49bf984ea4b8303d66"
+      },
+      {
+        "path": "output/2026-11-06-phase1-post-stop/final.private.json",
+        "bytes": 1076,
+        "sha256": "42539c15403933d1fffdd9a616641ed6fd548085fc62a0da0eb7d2b03f2b43ec"
+      }
+    ]
+  },
+  "firstWaveFullyAccepted": 0,
+  "firstWaveTotal": 3,
+  "installRefs": [
+    {
+      "path": "output/2026-11-06-phase1-model-repair/followup/formal/install.json",
+      "bytes": 2020,
+      "sha256": "2812da1b76032cf2f229cfa32cba5815e3d57ee9eb41fb0bd3f617eb67b4041a"
+    },
+    {
+      "path": "output/2026-11-06-phase1-model-repair/followup/formal/candidate-review.json",
+      "bytes": 1178,
+      "sha256": "4261e1043f7ebc0d96870209932db16a4c73592723aca0a4a1ffba7433056a38"
+    }
+  ]
+}
