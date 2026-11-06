@@ -54,7 +54,11 @@ import {
   type ThreadItem,
   type ThreadState,
 } from "../runtime/sessions";
-import { configCheckMessage } from "../runtime/config_check";
+import {
+  configCheckMessage,
+  configurationConfirmationBusy,
+  confirmingMissingModel,
+} from "../runtime/config_check";
 import { streamTailItem } from "../runtime/session_streams";
 import { ReportedDetails } from "./ReportedDetails";
 import { CompressionDescription } from "./CompressionDescription";
@@ -96,10 +100,7 @@ import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
 import { SessionOptionsList } from "./SessionOptionsMenu";
 import { ReasoningControl } from "./ReasoningControl";
-import {
-  configChangeBusy,
-  configOptionChangeBlocked,
-} from "../runtime/protected_config";
+import { configOptionChangeBlocked } from "../runtime/protected_config";
 import { useAuthenticationActivity } from "../runtime/authentication";
 import { PermissionControl } from "./PermissionControl";
 import { listCredentials } from "../runtime/credentials";
@@ -733,14 +734,16 @@ export function ThreadView({
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={configChangeBusy(thread)}
+                      disabled={configurationConfirmationBusy(thread)}
                       onClick={() => void threads.confirmConfig(thread.key)}
                     >
                       {thread.configuring
                         ? STRINGS.repair.confirmingConfig
                         : thread.configCheck.status === "record_failed"
                           ? STRINGS.repair.retryConfigRecord
-                          : STRINGS.repair.confirmConfig}
+                          : confirmingMissingModel(thread.configCheck)
+                            ? STRINGS.repair.confirmCurrentModel
+                            : STRINGS.repair.confirmConfig}
                     </button>
                   )}
                 {(thread.modelDrift || thread.configError) &&

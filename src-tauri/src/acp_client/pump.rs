@@ -1230,7 +1230,7 @@ async fn session_pump(
                         MutationReply::Config(result), operation, lease, deadline,
                         future));
                 }
-                SessionControl::ConfirmConfig { displayed, restore_selection, deadline, result } => {
+                SessionControl::ConfirmConfig { displayed, connection_id, restore_selection, deadline, result } => {
                     if identity_read.is_some() { let _=result.send(Err(super::identity_read::ReadError::from(super::identity_read::Code::Busy).message.into()));continue; }
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
@@ -1279,12 +1279,32 @@ async fn session_pump(
                         }
                         continue;
                     }
-                    let outcome = if mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
+                    let save_model = model_guard.needs_model_record();
+                    let mut reviewed_options = None;
+                    let saved = if save_model {
+                        restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
+                            &mut permission_guard, &mut opening, &mut mutation);
+                        if purpose != super::open_purpose::OpenPurpose::Conversation
+                            || connection_id.as_deref() != Some(ops.connection_id.as_str())
+                            || mutation.is_some() || prompt_in_flight || !fork_execution_known
+                            || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved)
+                            || restore_config::busy(&ctx) || !permission_guard.admissible()
+                            || *stopping.borrow() || result.is_closed() || tokio::time::Instant::now() >= deadline
+                            || !model_guard.can_record_model(configuration.modern_options())
+                            || !model_guard.confirmable(&displayed) {
+                            Err("当前模型或待处理事项已变化，请重新检查".into())
+                        } else if let Ok(_lease) = ops.life.operation(format!("confirm-model:{session_id}")) {
+                            reviewed_options = configuration.modern_options().cloned();
+                            config_store.save_missing_model(&session_id, model_guard.record()).await.map(|()| model_guard.saved_session())
+                        } else {
+                            Err("对话已断开，请重新打开后检查模型".into())
+                        }
+                    } else if mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
-                    } else if let Err(error) = save_confirmed_change(&session_id, &mut model_guard,
-                        &mut config_store, &mut pending_config_store).await {
-                        Err(error)
                     } else {
+                        save_confirmed_change(&session_id, &mut model_guard, &mut config_store, &mut pending_config_store).await
+                    };
+                    let outcome = saved.and_then(|()| {
                         // Saving yields; a newly arrived value must not be accepted as
                         // the value the user just reviewed. Keep that saved value as
                         // expected and expose any subsequent change as drift.
@@ -1300,7 +1320,11 @@ async fn session_pump(
                             handle_session_dispatch(dispatch, &mut ctx);
                             if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                         }
-                        if displayed != model_guard.current_value() || !model_guard.admissible() {
+                        if displayed != model_guard.current_value() || !model_guard.admissible()
+                            || (save_model && (restore_config::busy(&ctx) || !permission_guard.admissible()
+                                || reviewed_options.as_ref() != configuration.modern_options()
+                                || *stopping.borrow() || result.is_closed() || tokio::time::Instant::now() >= deadline)) {
+                            if save_model { model_guard.change_unknown(); }
                             Err("当前设置已变化，请重新检查".to_string())
                         } else {
                             let mut check = serde_json::to_value(model_guard.check()).unwrap();
@@ -1308,9 +1332,14 @@ async fn session_pump(
                                 configuration.modern_options().is_some(), &model_guard, &config_store, &permission_guard);
                             Ok(check)
                         }
-                    };
-                    events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                    let _ = result.send(outcome);
+                    });
+                    if save_model {
+                        if result.send(outcome).is_err() && model_guard.admissible() { model_guard.change_unknown(); }
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                    } else {
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                        let _ = result.send(outcome);
+                    }
                 }
                 command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::ForkClose { .. } | SessionControl::Delete { .. }) => {
                     let actual_reply = matches!(&command,SessionControl::ForkClose { .. });

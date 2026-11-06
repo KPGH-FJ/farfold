@@ -478,6 +478,52 @@ impl MetaStore {
             .map_err(|_| "未能更新对话，请重试".to_string())
     }
 
+    /// Fill a missing baseline on the original index row without reviving a
+    /// removed conversation or overwriting a concurrent configuration save.
+    pub(crate) fn compare_session_config(
+        &self,
+        id: &str,
+        owner: (String, String, String),
+        previous: &serde_json::Value,
+        next: &serde_json::Value,
+    ) -> Result<(), String> {
+        let changed = "对话的已保存设置已变化，请重新检查";
+        let failed = "未能保存确认值，请重试";
+        let (agent, cwd, native) = owner;
+        let mut db = self.lock()?;
+        let transaction = db
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(|_| failed.to_string())?;
+        let stored: String = transaction
+            .query_row(
+                "SELECT config_options FROM sessions WHERE id=?1 AND agent_id=?2 AND cwd=?3
+             AND native_session_id=?4 AND config_options IS NOT NULL",
+                params![id, agent, cwd, native],
+                |row| row.get(0),
+            )
+            .optional()
+            .map_err(|_| failed.to_string())?
+            .ok_or(changed)?;
+        if serde_json::from_str::<serde_json::Value>(&stored)
+            .as_ref()
+            .ok()
+            != Some(previous)
+        {
+            return Err(changed.into());
+        }
+        let rows = transaction
+            .execute(
+                "UPDATE sessions SET config_options=?1 WHERE id=?2 AND agent_id=?3 AND cwd=?4
+             AND native_session_id=?5 AND config_options=?6",
+                params![next.to_string(), id, agent, cwd, native, stored],
+            )
+            .map_err(|_| failed.to_string())?;
+        if rows != 1 {
+            return Err(changed.into());
+        }
+        transaction.commit().map_err(|_| failed.to_string())
+    }
+
     pub fn upsert_session(&self, session: &SessionRow) -> Result<(), String> {
         let connection = self.lock()?;
         let config_options = session

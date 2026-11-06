@@ -276,6 +276,7 @@ export const STRINGS = {
     configBlocked: "已暂停发送，请重新检查。原内容和待发消息已保留。",
     configRecordFailed: "未能保存会话设置，已暂停发送。请重试保存。",
     confirmConfig: "确认当前选项",
+    confirmCurrentModel: "确认并保存当前模型",
     retryConfigRecord: "重试保存",
     confirmingConfig: "正在确认…",
     confirmConfigFailed: "确认失败，请核对当前设置后重试",

@@ -1,6 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import {
   applyConfigCheck,
+  configurationConfirmationBusy,
+  confirmingMissingModel,
   releaseConfigurationPause,
   type ConfigCheck,
 } from "./config_check";
@@ -138,7 +140,7 @@ export class SessionConfiguration {
 
   async confirm(key: string, refresh: () => Promise<void>): Promise<void> {
     const s = this.hooks.thread(key);
-    if (!s?.configCheck || configChangeBusy(s)) return;
+    if (!s?.configCheck || configurationConfirmationBusy(s)) return;
     const confirmation = new ConfigurationConfirmation(
       s,
       () => this.hooks.thread(key),
@@ -163,6 +165,9 @@ export class SessionConfiguration {
           agentId: s.agentId,
           cwd: s.cwd,
           sessionId: s.nativeSessionId,
+          ...(confirmingMissingModel(s.configCheck)
+            ? { connectionId: s.connectionId }
+            : {}),
           displayed: structuredClone(confirmation.displayed),
         });
         if (this.hooks.thread(key) !== s) return;

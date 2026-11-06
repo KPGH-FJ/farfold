@@ -514,11 +514,19 @@ pub async fn session_confirm_config(
     cwd: String,
     session_id: String,
     displayed: Value,
+    connection_id: Option<String>,
     restore_selection: Option<Value>,
 ) -> Result<Value, String> {
     let cwd = validate_cwd_async(&cwd).await?;
     app.state::<AcpManager>()
-        .confirm_config_selection(&agent_id, &cwd, &session_id, displayed, restore_selection)
+        .confirm_config_selection(
+            &agent_id,
+            &cwd,
+            &session_id,
+            displayed,
+            connection_id,
+            restore_selection,
+        )
         .await
 }
 

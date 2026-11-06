@@ -53,6 +53,144 @@ fn stored_choice(store: &MetaStore, row_id: &str, option_id: &str) -> Value {
         .unwrap()["value"]
         .clone()
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn missing_model_confirmation_only_updates_the_original_empty_row() {
+    let dir = tempfile::tempdir().unwrap();
+    let cwd = dir.path().canonicalize().unwrap();
+    let peer = cwd.join("peer.py");
+    let calls = cwd.join("calls");
+    std::fs::write(&peer, PEER.replace("def send", "options = options[:1]\ndef send")
+        .replace(" if method=='initialize'", " with open(sys.argv[2],'a') as out: out.write(str(method)+'\\n')\n if method=='initialize'"))
+        .unwrap();
+    let db = cwd.join("meta.db");
+    let store = MetaStore::open(&db).unwrap();
+    let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
+    let _stop = Stop(manager.clone());
+    let row = AgentRow {
+        id: "missing-model".into(),
+        name: "Fixture".into(),
+        source: "custom".into(),
+        command: crate::platform_tests::python(),
+        args: vec![
+            "-u".into(),
+            peer.to_string_lossy().into(),
+            cwd.join("no-effort").to_string_lossy().into(),
+            calls.to_string_lossy().into(),
+        ],
+        env: vec![],
+        version: None,
+        handshake: None,
+        created_at: 0,
+        updated_at: 0,
+    };
+    store.insert_agent(&row).unwrap();
+    let empty = json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[]});
+    let mut original = touch_session_row(
+        &store,
+        &row.id,
+        &cwd.to_string_lossy(),
+        "proof",
+        Some("keep title"),
+        Some(empty.clone()),
+    )
+    .unwrap();
+    original.archived = true;
+    original.pinned = true;
+    store.upsert_session(&original).unwrap();
+    let sink: SessionSink = Arc::new(|_| {});
+    let open = manager
+        .open_session(
+            &row,
+            &cwd,
+            Some("proof".into()),
+            vec![],
+            sink.clone(),
+            &store,
+        )
+        .await
+        .unwrap();
+    let displayed = open.config_check.current;
+    assert_eq!(open.config_check.status, "confirmation_required");
+    assert_eq!(
+        store.get_session(&original.id).unwrap(),
+        Some(original.clone())
+    );
+    let blocks = serde_json::from_value(json!([{"type":"text","text":"proof"}])).unwrap();
+    assert!(
+        manager
+            .session_prompt(&row.id, &cwd, "proof", blocks)
+            .await
+            .unwrap_err()
+            .contains("CONFIG_CONFIRMATION_REQUIRED")
+    );
+    assert!(
+        manager
+            .confirm_config(&row.id, &cwd, "proof", displayed.clone())
+            .await
+            .is_err()
+    );
+    assert!(
+        manager
+            .confirm_config_selection(
+                &row.id,
+                &cwd,
+                "proof",
+                json!({}),
+                Some(open.connection_id.clone()),
+                None
+            )
+            .await
+            .is_err()
+    );
+
+    let mut changed = original.clone();
+    changed.config_options = Some(json!({"model":"other"}));
+    store.upsert_session(&changed).unwrap();
+    let confirm = || {
+        manager.confirm_config_selection(
+            &row.id,
+            &cwd,
+            "proof",
+            displayed.clone(),
+            Some(open.connection_id.clone()),
+            None,
+        )
+    };
+    assert!(confirm().await.is_err());
+    assert_eq!(store.get_session(&original.id).unwrap(), Some(changed));
+    let sql = rusqlite::Connection::open(&db).unwrap();
+    sql.execute("DELETE FROM sessions WHERE id=?1", [&original.id])
+        .unwrap();
+    assert!(confirm().await.is_err());
+    assert!(store.get_session(&original.id).unwrap().is_none());
+    store.upsert_session(&original).unwrap();
+    assert_eq!(confirm().await.unwrap()["status"], "ready");
+    let mut expected = original.clone();
+    expected.config_options = Some(
+        json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":displayed["choices"]}),
+    );
+    assert_eq!(store.get_session(&original.id).unwrap(), Some(expected));
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    let cold = manager
+        .open_session(&row, &cwd, Some("proof".into()), vec![], sink, &store)
+        .await
+        .unwrap();
+    assert_eq!(cold.config_check.status, "ready");
+    let calls = std::fs::read_to_string(calls).unwrap();
+    assert_eq!(
+        calls
+            .lines()
+            .filter(|method| *method == "session/load")
+            .count(),
+        2
+    );
+    assert!(
+        !calls
+            .lines()
+            .any(|method| matches!(method, "session/prompt" | "session/set_config_option"))
+    );
+}
 #[tokio::test(flavor = "multi_thread")]
 async fn configuration_change_persisted_effort_and_legacy_confirmation_are_guarded() {
     let dir = tempfile::tempdir().unwrap();

@@ -79,6 +79,27 @@ export interface ConfigCheck {
   current: unknown;
   protectedIds?: string[];
 }
+export function confirmingMissingModel(check: ConfigCheck | null): boolean {
+  return (
+    check?.status === "confirmation_required" &&
+    check.issues.some(
+      (issue) => issue.category === "model" && issue.reason === "unrecorded",
+    )
+  );
+}
+
+export function configurationConfirmationBusy(s: ThreadState): boolean {
+  return (
+    configChangeBusy(s) ||
+    (confirmingMissingModel(s.configCheck) &&
+      (!s.resumed ||
+        !s.connectionId ||
+        s.historicalOutcomeUnknown === true ||
+        s.permissionState !== "ready" ||
+        configurationInputBusy(s)))
+  );
+}
+
 export function applyConfigCheck(s: ThreadState, check: ConfigCheck): void {
   s.configCheck = check;
   s.modelDrift = check.status !== "ready";

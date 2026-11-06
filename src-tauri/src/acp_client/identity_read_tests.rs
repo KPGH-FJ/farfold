@@ -447,6 +447,7 @@ async fn identity_read_closed_delivery_keeps_scope_and_rejects_config_confirmati
         .unwrap()
         .control
         .send(super::super::pump::SessionControl::ConfirmConfig {
+            connection_id: None,
             displayed: Value::Null,
             restore_selection: Some(json!({"model":"a"})),
             deadline: tokio::time::Instant::now() + Duration::from_secs(1),

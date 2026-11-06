@@ -95,6 +95,50 @@ it("accepts the matching complete RPC before the queued ready body is pulled", a
   ).toBe(false);
 });
 
+it("requires the original connection for a missing model and preserves paused work", async () => {
+  const { s, check } = fixture();
+  s.resumed = true;
+  s.permissionState = "ready";
+  s.queued = [[{ type: "text", text: "keep paused" }]];
+  s.historicalOutcomeUnknown = true;
+  event(s, {
+    ...check,
+    status: "confirmation_required",
+    issues: [
+      {
+        id: "model",
+        category: "model",
+        reason: "unrecorded",
+        expected: null,
+        current: "b",
+      },
+    ],
+  });
+  await threads.confirmConfig(s.key);
+  expect(h.invoke).not.toHaveBeenCalledWith(
+    "session_confirm_config",
+    expect.anything(),
+  );
+  expect(s.modelDrift).toBe(true);
+
+  s.historicalOutcomeUnknown = false;
+  await threads.confirmConfig(s.key);
+  expect(h.invoke).toHaveBeenCalledWith(
+    "session_confirm_config",
+    expect.objectContaining({
+      connectionId: s.connectionId,
+      displayed: check.current,
+    }),
+  );
+  expect(s.modelDrift).toBe(false);
+  expect(s.queued).toEqual([[{ type: "text", text: "keep paused" }]]);
+  expect(s.queuePaused).toBe("unavailable");
+  expect(h.invoke).not.toHaveBeenCalledWith(
+    "session_prompt",
+    expect.anything(),
+  );
+});
+
 it("accepts a saved protected ID whose current display category has changed", async () => {
   const { s, check, options } = fixture();
   // The real guard retains a saved ID's role; current categories describe UX.

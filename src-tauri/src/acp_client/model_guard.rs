@@ -65,6 +65,8 @@ pub(crate) struct ModelGuard {
     current: Snapshot,
     expected: Snapshot,
     model_known: bool,
+    empty_existing_record: bool,
+    explicit_model: bool,
     locked: bool,
     established: bool,
     pending: Option<Snapshot>,
@@ -89,10 +91,13 @@ impl ModelGuard {
             }
         };
         let (current, invalid, declared_ids) = format::observe(options, &baseline.snapshot);
+        let explicit_model = explicit_model(options, &current);
         Self {
             current,
             expected: baseline.snapshot,
             model_known: baseline.model_known,
+            empty_existing_record: restored && recorded == Some(&empty_existing_record()),
+            explicit_model,
             locked: restored,
             established: restored,
             pending: None,
@@ -106,6 +111,20 @@ impl ModelGuard {
     }
     pub(crate) fn observe(&mut self, options: &Value) {
         (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
+        self.explicit_model = explicit_model(options, &self.current);
+    }
+    pub(crate) fn needs_model_record(&self) -> bool {
+        self.empty_existing_record
+            && self.expected.choices.is_empty()
+            && self.explicit_model
+            && self.invalid.is_empty()
+            && !self.change_unknown
+            && self.pending.is_none()
+    }
+
+    pub(crate) fn can_record_model(&self, modern_options: Option<&Value>) -> bool {
+        self.needs_model_record()
+            && modern_options.is_some_and(|options| explicit_model(options, &self.current))
     }
     pub(crate) fn is_established(&self) -> bool {
         self.established
@@ -263,9 +282,10 @@ impl ModelGuard {
             "record_failed"
         } else if issues.is_empty() {
             "ready"
-        } else if issues
-            .iter()
-            .all(|i| i.category == "thought_level" && i.reason == "unrecorded")
+        } else if self.needs_model_record()
+            || issues
+                .iter()
+                .all(|i| i.category == "thought_level" && i.reason == "unrecorded")
         {
             "confirmation_required"
         } else {
@@ -350,6 +370,65 @@ impl ModelGuard {
     }
 }
 
+fn empty_existing_record() -> Value {
+    json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[]})
+}
+
+fn explicit_model(options: &Value, snapshot: &Snapshot) -> bool {
+    let [choice] = snapshot.choices.as_slice() else {
+        return false;
+    };
+    if choice.category != "model"
+        || choice.value.trim().is_empty()
+        || choice.id == super::session_config::LEGACY_MODEL_ID
+    {
+        return false;
+    }
+    fn matching_choices(entries: &[Value], value: &str) -> Option<usize> {
+        let named = |item: &Value| {
+            item["name"]
+                .as_str()
+                .is_some_and(|name| !name.trim().is_empty())
+        };
+        let mut matches = 0;
+        for entry in entries {
+            if !named(entry) {
+                return None;
+            }
+            if let Some(leaf) = entry["value"].as_str() {
+                if entry.get("options").is_some() {
+                    return None;
+                }
+                matches += usize::from(leaf == value);
+            } else {
+                entry["group"].as_str()?;
+                for leaf in entry["options"].as_array()? {
+                    if !named(leaf) || leaf.get("options").is_some() {
+                        return None;
+                    }
+                    matches += usize::from(leaf["value"].as_str()? == value);
+                }
+            }
+        }
+        Some(matches)
+    }
+    options.as_array().is_some_and(|entries| {
+        entries.iter().any(|entry| {
+            entry["id"] == choice.id
+                && entry["category"] == "model"
+                && entry["type"] == "select"
+                && entry["name"]
+                    .as_str()
+                    .is_some_and(|name| !name.trim().is_empty())
+                && entry["currentValue"] == choice.value
+                && entry["options"]
+                    .as_array()
+                    .and_then(|entries| matching_choices(entries, &choice.value))
+                    == Some(1)
+        })
+    })
+}
+
 #[derive(Clone)]
 pub(crate) struct ConfigStore {
     pub store: crate::meta_store::MetaStore,
@@ -360,6 +439,30 @@ pub(crate) struct ConfigStore {
     pub verified_permission_option: bool,
 }
 impl ConfigStore {
+    pub(crate) async fn save_missing_model(
+        &self,
+        session_id: &str,
+        mut value: Value,
+    ) -> Result<(), String> {
+        if self.service_record != Some(super::service_connection::ServiceRecord::Existing)
+            || self.expected_model.is_some()
+        {
+            return Err("无法确认此对话的原服务来源，请重新检查".into());
+        }
+        value["_farfoldService"] = json!({"kind":"existing"});
+        let id = super::session_index::session_row_id(&self.agent_id, &self.cwd, session_id);
+        let owner = (
+            self.agent_id.clone(),
+            self.cwd.clone(),
+            session_id.to_owned(),
+        );
+        self.store
+            .run(move |store| {
+                store.compare_session_config(&id, owner, &empty_existing_record(), &value)
+            })
+            .await
+    }
+
     pub(crate) async fn for_choice(&self, choice: Option<&Choice>) -> Result<Self, String> {
         let mut candidate = self.clone();
         let Some(choice) = choice.filter(|choice| choice.category == "model") else {
@@ -431,6 +534,28 @@ mod tests {
     use super::*;
     fn options(model: &str, effort: &str) -> Value {
         json!([{"id":"model","category":"model","currentValue":model}, {"id":"reasoning_effort","category":"thought_level","currentValue":effort}])
+    }
+    #[test]
+    fn missing_model_record_requires_an_explicit_unambiguous_current_choice() {
+        let record = empty_existing_record();
+        let mut options = json!([{"id":"model","name":"Model","category":"model","type":"select","currentValue":"auto","options":[{"value":"auto","name":"Auto"}]}]);
+        let mut guard = ModelGuard::new(&options, Some(&record), true);
+        assert_eq!(guard.check().status, "confirmation_required");
+        assert!(!guard.admissible());
+        assert!(!guard.may_set("model"));
+        assert!(!guard.can_record_model(None));
+        assert!(guard.can_record_model(Some(&options)));
+        let mut wrong_service = record.clone();
+        wrong_service["_farfoldService"] = json!({"kind":"configured"});
+        assert!(!ModelGuard::new(&options, Some(&wrong_service), true).needs_model_record());
+        assert!(!ModelGuard::new(&options, None, true).needs_model_record());
+        options[0]["options"] = json!([{"value":"auto","name":"A"},{"value":"auto","name":"B"}]);
+        guard.observe(&options);
+        assert_eq!(guard.check().status, "blocked");
+        options[0]["options"] = json!([{"value":"auto","name":"Auto"}]);
+        options[0].as_object_mut().unwrap().remove("category");
+        guard.observe(&options);
+        assert!(!guard.needs_model_record());
     }
     #[test]
     fn same_model_effort_drift_and_missing_option_block() {

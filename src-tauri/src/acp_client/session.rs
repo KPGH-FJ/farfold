@@ -880,7 +880,7 @@ impl AcpManager {
         session_id: &str,
         displayed: Value,
     ) -> Result<Value, String> {
-        self.confirm_config_selection(agent_id, cwd, session_id, displayed, None)
+        self.confirm_config_selection(agent_id, cwd, session_id, displayed, None, None)
             .await
     }
 
@@ -890,6 +890,7 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
         displayed: Value,
+        connection_id: Option<String>,
         restore_selection: Option<Value>,
     ) -> Result<Value, String> {
         let control = self.session_control_tx(agent_id, cwd, session_id)?;
@@ -897,6 +898,7 @@ impl AcpManager {
         control
             .send(SessionControl::ConfirmConfig {
                 displayed,
+                connection_id,
                 restore_selection,
                 result,
                 deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),

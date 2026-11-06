@@ -1,6 +1,10 @@
-import { sameConfigurationSnapshot, type ConfigCheck } from "./config_check";
+import {
+  configurationConfirmationBusy,
+  sameConfigurationSnapshot,
+  type ConfigCheck,
+} from "./config_check";
 import { captureConfigurationOwner } from "./saved_configuration_restore";
-import { configChangeBusy, protectedConfigIds } from "./protected_config";
+import { protectedConfigIds } from "./protected_config";
 import { normalizeConfigOptions } from "./session_projection";
 import { readPermissionEffect } from "./permission_effect";
 import type { ConfirmedConfigUpdate } from "./session_configuration";
@@ -126,7 +130,7 @@ export class ConfigurationConfirmation {
         this.initialPermission,
       ) &&
       sameConfigurationSnapshot(this.state.configCheck, this.initialCheck) &&
-      !configChangeBusy({ ...this.state, configuring: false })
+      !configurationConfirmationBusy({ ...this.state, configuring: false })
     );
   }
 

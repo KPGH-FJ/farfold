@@ -77,6 +77,7 @@ pub(crate) enum SessionControl {
     },
     ConfirmConfig {
         displayed: Value,
+        connection_id: Option<String>,
         restore_selection: Option<Value>,
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<Value, String>>,

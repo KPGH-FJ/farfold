@@ -19,7 +19,7 @@ fn assert_no_index(f: &Fixture) {
 
 async fn confirm(f: &Fixture, displayed: Value, selection: Value) -> Result<Value, String> {
     f.manager
-        .confirm_config_selection(&f.row.id, &f.cwd, SESSION, displayed, Some(selection))
+        .confirm_config_selection(&f.row.id, &f.cwd, SESSION, displayed, None, Some(selection))
         .await
 }
 
@@ -195,6 +195,7 @@ async fn saved_restore_closed_and_expired_controls_do_not_establish_protection()
         }
         control
             .send(SessionControl::ConfirmConfig {
+                connection_id: None,
                 displayed: displayed.clone(),
                 restore_selection: Some(saved("m1", "low")),
                 result,
@@ -246,6 +247,7 @@ async fn saved_restore_interest_lost_or_deadline_during_delivery_cannot_succeed(
         }));
         control(&f)
             .send(SessionControl::ConfirmConfig {
+                connection_id: None,
                 displayed: displayed.clone(),
                 restore_selection: Some(saved("m1", "low")),
                 result,
