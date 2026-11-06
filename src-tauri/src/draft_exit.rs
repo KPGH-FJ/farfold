@@ -171,12 +171,22 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                 copies.take();
                 worktrees.take();
                 let store = app.try_state::<crate::meta_store::MetaStore>();
-                match admit_file_exit(
-                    &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
-                    &app.state::<crate::worktrees::Worktrees>(),
-                    store.as_deref(),
-                    false,
-                ) {
+                let admit = || {
+                    admit_file_exit(
+                        &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
+                        &app.state::<crate::worktrees::Worktrees>(),
+                        store.as_deref(),
+                        false,
+                    )
+                };
+                // Storage can be open while the renderer is still in recovery.
+                let admission = if store.is_some() {
+                    app.state::<crate::storage_recovery::StorageRecoveryState>()
+                        .admit_startup_exit(admit)
+                } else {
+                    admit()
+                };
+                match admission {
                     Ok((copy, worktree)) => {
                         *copies = Some(copy);
                         *worktrees = Some(worktree);
@@ -184,6 +194,15 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                     Err(_) => api.prevent_exit(),
                 }
             }
+        } else if let tauri::RunEvent::WindowEvent {
+            event: tauri::WindowEvent::CloseRequested { api, .. },
+            ..
+        } = event
+            && app.try_state::<crate::meta_store::MetaStore>().is_some()
+        {
+            // Keep the recovery window available if the exit is blocked.
+            api.prevent_close();
+            app.exit(0);
         }
         return;
     }

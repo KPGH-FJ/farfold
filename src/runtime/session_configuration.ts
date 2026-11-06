@@ -293,7 +293,8 @@ export class SessionConfiguration {
           });
           if (this.hooks.thread(key) !== s)
             throw new Error(STRINGS.repair.configFailed);
-          if (s.connectionLost || s.reconnecting)
+          // The Agent may have published a modern declaration during this call.
+          if (!s.modesSeparate || s.connectionLost || s.reconnecting)
             throw new Error(STRINGS.repair.configFailed);
           forgetSessionIdentity(s);
           s.currentModeId = String(value);

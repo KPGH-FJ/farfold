@@ -150,6 +150,7 @@ export async function validateQueuedAttachments(
   blocks: PromptBlock[],
   options: { reparseDocuments?: boolean; signal?: AbortSignal } = {},
 ): Promise<void> {
+  const updates: (() => void)[] = [];
   let audioBytes = 0;
   for (const block of blocks) {
     if (block.type === "audio") {
@@ -167,22 +168,26 @@ export async function validateQueuedAttachments(
           signal: options.signal,
         });
       } else if (block.resource.uri.startsWith("file:")) {
-        const content = await checkFile(
-          block.resource.uri,
-          true,
-          block.resource,
-        );
-        if (content !== null) block.resource.text = content;
+        const resource = block.resource;
+        const content = await checkFile(resource.uri, true, resource);
+        if (content !== null)
+          updates.push(() => {
+            resource.text = content;
+          });
       }
     }
     if (block.type === "image") {
       const image = block.uri
         ? await readFileImage(block.uri)
         : await validateDraftImage(block.data, block.mimeType);
-      block.data = image.data;
-      block.mimeType = image.mimeType;
+      updates.push(() => {
+        block.data = image.data;
+        block.mimeType = image.mimeType;
+      });
     }
   }
+  // The live queue can be saved even when a later attachment check fails.
+  for (const update of updates) update();
 }
 
 export async function prepareDraftAttachments(

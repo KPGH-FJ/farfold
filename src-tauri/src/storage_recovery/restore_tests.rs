@@ -12,6 +12,128 @@ fn saved(dir: &Path, text: &str) -> (PathBuf, MetaStore) {
         .unwrap();
     (path, store)
 }
+
+fn startup_restore_fixture(
+    source: &Path,
+    target: &Path,
+) -> (StorageRecoveryState, MetaStore, RestorePreview) {
+    let (source_path, source_store) = saved(source, "candidate");
+    let candidate: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../src/runtime/fixtures/storage-restore-v1.json"
+    ))
+    .unwrap();
+    for key in KEYS {
+        source_store.set_setting(key, &candidate[key]).unwrap();
+    }
+    drop(source_store);
+    let (path, store) = saved(target, "original");
+    store
+        .set_setting(KEYS[0], &json!({"version":99,"text":"original"}))
+        .unwrap();
+    drop(store);
+
+    let recovery = StorageRecoveryState::new(path);
+    let mut store = None;
+    let preview = {
+        let mut state = recovery.0.lock().unwrap();
+        state.initialize(|opened| {
+            store = Some(opened);
+            Ok(())
+        });
+        assert!(state.status.ready && !state.editable);
+        state
+            .restore
+            .preview(store.as_ref().unwrap(), &source_path)
+            .unwrap()
+    };
+    (recovery, store.unwrap(), preview)
+}
+
+#[test]
+fn a_startup_record_restore_cannot_write_after_exit_admission() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (state, store, preview) = startup_restore_fixture(source.path(), target.path());
+    let exit = state.begin_change().unwrap();
+    exit.reserve_exit().unwrap();
+    drop(exit);
+
+    let result =
+        state.apply_startup_restore(Some(&store), &preview.id, &[KEYS[0].into()], copies.path());
+    let error = result.as_ref().err().map(|failure| failure.code);
+    let current = store.get_setting(KEYS[0]).unwrap();
+    let backups = fs::read_dir(copies.path()).unwrap().count();
+    assert_eq!(
+        (
+            error,
+            current.as_ref().and_then(|value| value["version"].as_u64()),
+            backups
+        ),
+        (Some("unavailable"), Some(99), 0),
+    );
+    assert_eq!(current, Some(json!({"version":99,"text":"original"})));
+}
+
+#[test]
+fn a_startup_record_restore_blocks_exit_until_the_receipt_and_releases_admission() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (state, store, preview) = startup_restore_fixture(source.path(), target.path());
+    let worktrees = crate::worktrees::Worktrees::default();
+    let blocked_worktree = worktrees.seal_exit(None, false).unwrap();
+    assert!(
+        state
+            .admit_startup_exit(|| worktrees.seal_exit(Some(&store), false))
+            .is_err()
+    );
+    drop(blocked_worktree);
+
+    let receipt = std::thread::scope(|scope| {
+        // Hold the real recovery mutex so apply cannot reach the backup while
+        // the main-thread exit admission is checked.
+        let locked = state.0.lock().unwrap();
+        let applying = scope.spawn(|| {
+            state.apply_startup_restore(Some(&store), &preview.id, &[KEYS[0].into()], copies.path())
+        });
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+        while state.1.load(Ordering::SeqCst) == AVAILABLE {
+            assert!(
+                std::time::Instant::now() < deadline,
+                "restore never admitted"
+            );
+            std::thread::yield_now();
+        }
+        assert_eq!(state.1.load(Ordering::SeqCst), CHANGING);
+        assert!(
+            state
+                .admit_startup_exit::<()>(|| panic!("exit crossed active recovery"))
+                .is_err()
+        );
+        assert_eq!(fs::read_dir(copies.path()).unwrap().count(), 0);
+        drop(locked);
+        applying.join().unwrap().unwrap()
+    });
+    assert_eq!(receipt.id, preview.id);
+    assert_eq!(
+        store.get_setting(KEYS[0]).unwrap(),
+        Some(serde_json::from_str(preview.values[KEYS[0]].as_deref().unwrap()).unwrap()),
+    );
+    let backup =
+        MetaStore::open(&Path::new(&receipt.protected_path).join("farfold.sqlite3")).unwrap();
+    assert_eq!(
+        backup.get_setting(KEYS[0]).unwrap(),
+        Some(json!({"version":99,"text":"original"})),
+    );
+    assert_eq!(fs::read_dir(copies.path()).unwrap().count(), 1);
+    assert!(
+        state
+            .admit_startup_exit(|| worktrees.seal_exit(Some(&store), false))
+            .is_ok()
+    );
+}
+
 #[test]
 fn preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file() {
     let source = tempfile::tempdir().unwrap();

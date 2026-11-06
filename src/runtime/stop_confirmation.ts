@@ -73,6 +73,7 @@ export class StopConfirmation {
     s: ThreadState,
     current: () => ThreadState | undefined,
     emit: () => void,
+    includePendingAdmission = false,
   ): () => boolean {
     this.clear(s.key);
     s.stopUnconfirmed = false;
@@ -80,7 +81,9 @@ export class StopConfirmation {
       this.timers.delete(s.key);
       if (
         current() !== s ||
-        (!s.running && !s.connectionOutcomeUnknown) ||
+        (!s.running &&
+          !s.connectionOutcomeUnknown &&
+          !(includePendingAdmission && s.submitting)) ||
         !s.stopping
       )
         return;

@@ -115,6 +115,18 @@ export async function drainPrompt(
       () => {
         if (hooks.owners.get(s) === owner) hooks.owners.delete(s);
       },
+      () => {
+        // The matched stop receipt can arrive before the offer or admission.
+        // Observe its outcome without sending another stop or accepting input.
+        if (s.stopping) return;
+        s.stopping = true;
+        hooks.stop.start(
+          s,
+          () => hooks.thread(key),
+          () => hooks.emit(),
+          true,
+        );
+      },
     );
     hooks.owners.set(s, owner);
     dispatched = true;

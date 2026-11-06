@@ -93,6 +93,7 @@ type PreservedNew = {
   generation: number;
   selection: string;
 };
+const retainedNewKeys = new WeakMap<ComposerDraft, Map<string, string>>();
 function capturePreservedNew(): PreservedNew {
   return {
     draft: composerDrafts.read("new"),
@@ -129,12 +130,24 @@ export const composerDrafts = {
     const ticket = expected ?? capturePreservedNew();
     assertPreservedNew(ticket);
     if (!this.hasContent("new")) return ticket;
-    const key = `saved-new:${crypto.randomUUID()}`;
-    values.set(key, {
-      ...structuredClone(ticket.draft),
-      savedChoice: structuredClone(choice),
-    });
-    changed();
+    let retained = retainedNewKeys.get(ticket.draft);
+    if (!retained) {
+      retained = new Map();
+      retainedNewKeys.set(ticket.draft, retained);
+    }
+    const identity = `${ticket.generation}:${ticket.selection}`;
+    const retainedKey = retained.get(identity);
+    // A failed save keeps the staged copy. Retry that exact input and
+    // selection instead of appending another copy to the same snapshot.
+    if (!retainedKey || !values.has(retainedKey)) {
+      const key = `saved-new:${crypto.randomUUID()}`;
+      values.set(key, {
+        ...structuredClone(ticket.draft),
+        savedChoice: structuredClone(choice),
+      });
+      retained.set(identity, key);
+      changed();
+    }
     await draftPersistence.flush();
     assertPreservedNew(ticket);
     return ticket;

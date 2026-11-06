@@ -336,3 +336,65 @@ it("preserves a legacy-only choice until a complete modern declaration replaces 
   ).rejects.toThrow();
   expect(h.invoke).not.toHaveBeenCalled();
 });
+
+it("keeps the modern mode when a previously dispatched legacy setter replies", async () => {
+  let channel!: { onmessage: (event: unknown) => void };
+  let finishLegacy!: () => void;
+  h.invoke.mockImplementation(async (command, args) => {
+    if (command === "session_open") {
+      channel = args.channel;
+      const result = {
+        cwd: "/config-surfaces",
+        nativeSessionId: "legacy-setter-modern-update",
+        connectionId: "legacy-setter-modern-update-connection",
+        resumed: false,
+        configOptions: null,
+        modes,
+      };
+      emitOpeningHeader(args, result);
+      return result;
+    }
+    if (command === "session_set_mode")
+      return new Promise<void>((resolve) => {
+        finishLegacy = resolve;
+      });
+    return [];
+  });
+  const state = await threads.open({
+    agentId: "config-surfaces-legacy-transition",
+    cwd: "/config-surfaces",
+    fresh: true,
+  });
+  const setter = threads.setConfig(state.key, "mode", "off");
+  const settled = Promise.allSettled([setter]);
+  expect(finishLegacy).toBeTypeOf("function");
+  channel.onmessage({
+    kind: "configOptions",
+    modern: true,
+    options: [
+      {
+        id: "mode",
+        category: "mode",
+        type: "select",
+        name: "Mode",
+        currentValue: "review",
+        options: [{ value: "review", name: "Review" }],
+      },
+    ],
+  });
+  expect(state.modesSeparate).toBe(false);
+  finishLegacy();
+  const [receipt] = await settled;
+
+  expect(state.configOptions[0].currentValue).toBe("review");
+  expect(receipt.status).toBe("rejected");
+  expect(state.configuring).toBe(false);
+  expect(
+    h.invoke.mock.calls.filter(([command]) => command === "session_set_mode"),
+  ).toHaveLength(1);
+  expect(
+    h.invoke.mock.calls.some(([command]) =>
+      ["session_set_config", "session_prompt"].includes(command),
+    ),
+  ).toBe(false);
+});

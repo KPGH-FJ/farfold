@@ -21,6 +21,7 @@ export class PromptRequestOwner {
   private offered = false;
   private cancelledBeforeOffer = false;
   private cancelRequested = false;
+  private earlyCancel = false;
   private cancelling: Promise<CancelDispatch> | null = null;
   constructor(
     private thread: ThreadState,
@@ -28,6 +29,7 @@ export class PromptRequestOwner {
     private emit: () => void,
     private onOffer: () => void,
     private onEnd: () => void,
+    private onEarlyStopAcknowledged: () => void,
   ) {
     thread.promptAdmission = { phase: "preparing", cancelling: false };
     this.channel.onmessage = (value) => this.receive(value);
@@ -88,16 +90,20 @@ export class PromptRequestOwner {
   async cancel(explicit = true): Promise<CancelDispatch> {
     if (this.ended || !this.current()) return "inactive";
     if (this.cancelling) return this.cancelling;
+    if (explicit && !this.offered && this.thread.stopping) return "inactive";
     // A click before the receipt arrives remains an explicit cancellation;
     // it is sent once upon receipt, not turned into a bare session cancel.
     if (!explicit && !this.cancelRequested) return "inactive";
+    if (explicit && !this.offered) this.earlyCancel = true;
     this.cancelRequested = true;
-    pauseQueue(this.thread, "stopped");
+    if (!this.thread.stopUnconfirmed) pauseQueue(this.thread, "stopped");
     if (this.thread.promptAdmission)
       this.thread.promptAdmission.cancelling = true;
     this.emit();
     if (this.receipt === null) return "pendingReceipt";
     const receipt = this.receipt;
+    const early = this.earlyCancel;
+    this.earlyCancel = false;
     this.cancelRequested = false;
     this.cancelling = Promise.resolve().then(
       async (): Promise<CancelDispatch> => {
@@ -122,6 +128,8 @@ export class PromptRequestOwner {
               this.thread.promptAdmission.notice = S.cancelled;
           } else if (reply.outcome !== "cancelRequested") {
             throw new Error("unconfirmed");
+          } else if (early && !this.endingObserved) {
+            this.onEarlyStopAcknowledged();
           }
           return "acknowledged";
         } catch {

@@ -112,6 +112,58 @@ it("keeps the active draft and selection when saving the retained copy fails", a
   expect(d.composerDrafts.preserved()[0][1].text).toBe(original.text);
   expect(d.draftPersistence.snapshot().error).toBeTruthy();
 });
+it("retries preservation of the same active draft without leaving a second retained copy", async () => {
+  const d = await setup();
+  let disk = lastWritten();
+  let writable = false;
+  mock.invoke.mockImplementation(async (command, args) => {
+    if (command === "settings_get") return structuredClone(disk);
+    if (command !== "settings_set") return;
+    if (!writable) throw new Error("disk full");
+    disk = structuredClone(args.value);
+  });
+  await expect(d.composerDrafts.preserveNew()).rejects.toThrow();
+  const [[retainedKey]] = d.composerDrafts.preserved();
+  expect(disk.composers[retainedKey]).toBeUndefined();
+  expect(d.composerDrafts.read("new").text).toBe(input().text);
+
+  writable = true;
+  const ticket = await d.composerDrafts.preserveNew();
+  d.composerDrafts.clearPreservedNew(ticket);
+  await d.draftPersistence.flush();
+
+  vi.resetModules();
+  const cold = await import("./drafts");
+  await cold.draftPersistence.load();
+  expect(cold.composerDrafts.read("new").text).toBe("");
+  expect(cold.composerDrafts.preserved()).toEqual([
+    [
+      retainedKey,
+      expect.objectContaining({
+        text: input().text,
+        savedChoice: originalChoice,
+        attachments: [expect.objectContaining({ data: "original-image-data" })],
+      }),
+    ],
+  ]);
+});
+it("reuses a retained copy when the same active draft returns to its original selection", async () => {
+  const d = await setup();
+  await d.composerDrafts.preserveNew();
+  const [[firstKey]] = d.composerDrafts.preserved();
+  d.newConversationChoice.agentId = "other-agent";
+  await d.composerDrafts.preserveNew();
+  const [, [otherKey]] = d.composerDrafts.preserved();
+  d.newConversationChoice.agentId = originalChoice.agentId;
+  const ticket = await d.composerDrafts.preserveNew();
+  d.composerDrafts.clearPreservedNew(ticket);
+  await d.draftPersistence.flush();
+  expect(d.composerDrafts.preserved().map(([key]) => key)).toEqual([
+    firstKey,
+    otherKey,
+  ]);
+  expect(Object.keys(lastWritten().composers)).toEqual([firstKey, otherKey]);
+});
 it.each(["editing", "sending", "choice", "clear-generation"])(
   "invalidates the final preservation ticket after %s without clearing the current content",
   async (change) => {
