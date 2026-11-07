@@ -35,7 +35,6 @@ import type {
   WorkspaceAccessScope,
   WorkspaceAccessResult,
 } from "./workspace_access_types";
-import { confirmSavedConfiguration } from "./saved_configuration_restore";
 import { configChangeBusy } from "./protected_config";
 import type { AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
@@ -1242,7 +1241,7 @@ class ThreadsStore {
     key: string,
     savedSelection: Record<string, unknown>,
   ): Promise<void> {
-    return confirmSavedConfiguration(this.thread(key), savedSelection, {
+    return this.channels.confirmRestored(key, savedSelection, {
       current: () => this.thread(key),
       emit: () => this.emit(key),
     });

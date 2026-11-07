@@ -21,9 +21,12 @@ import { applyConfigCheck, ownsConfigurationPause } from "./config_check";
 import { sendNewConversation } from "./new_conversation";
 import { rememberPendingConversation } from "./pending_conversation";
 import { pauseQueue } from "./queue";
+import { SessionDeliveryFlow } from "./session_delivery_flow";
+import { OwnedSessionChannel, type SessionChannels } from "./session_channels";
 
 let state: ThreadState;
 let serial = 0;
+const channels = (threads as unknown as { channels: SessionChannels }).channels;
 const saved = { model: "kept", thought_level: "medium" };
 const check = () => ({
   status: "ready" as const,
@@ -74,8 +77,18 @@ beforeEach(() => {
     })),
   );
   state.configCheck = check();
+  // These direct-state fixtures model a completed owned delivery receipt.
+  // The cross-IPC regression below replaces this with the actual FIFO flow.
+  channels.set(
+    state.key,
+    new OwnedSessionChannel({
+      dispose: () => {},
+      settle: async () => {},
+    }),
+  );
 });
 afterEach(async () => {
+  channels.delete(state.key);
   await draftPersistence.flush();
 });
 
@@ -223,6 +236,150 @@ it.each(["rejected", "not-ready", "owner-changed", "busy-after"] as const)(
   },
 );
 
+it("confirms the changed model when an older blocked delivery follows the setter reply but ready deliveries remain queued", async () => {
+  const model = "owned-next-model";
+  const selection = { ...saved, model };
+  const options = state.configOptions.map((option) =>
+    option.id === "model"
+      ? {
+          ...option,
+          options: [...option.options, { value: model, name: "Next" }],
+        }
+      : option,
+  );
+  state.configOptions = options;
+  const updated = options.map((option) =>
+    option.id === "model" ? { ...option, currentValue: model } : option,
+  );
+  const ready = {
+    ...check(),
+    current: {
+      choices: check().current.choices.map((choice) =>
+        choice.id === "model" ? { ...choice, value: model } : choice,
+      ),
+    },
+  };
+  const blocked = {
+    ...ready,
+    status: "blocked",
+    issues: [
+      {
+        id: "model",
+        category: "model",
+        reason: "changed",
+        expected: saved.model,
+        current: model,
+      },
+    ],
+  };
+  const pending: { sequence: string; event: unknown }[] = [
+    { sequence: "1", event: { kind: "configCheck", check: blocked } },
+    {
+      sequence: "2",
+      event: { kind: "configOptions", options: updated, modern: true },
+    },
+    { sequence: "3", event: { kind: "configCheck", check: ready } },
+    { sequence: "4", event: { kind: "configCheck", check: ready } },
+  ];
+  const trace: string[] = [];
+  let releaseFirstPull!: () => void;
+  let sawBlocked!: () => void;
+  const blockedConsumed = new Promise<void>((resolve) => {
+    sawBlocked = resolve;
+  });
+  let enteredConfirmation!: () => void;
+  const confirmationStarted = new Promise<void>((resolve) => {
+    enteredConfirmation = resolve;
+  });
+  let endedFlow!: () => void;
+  const flowEnded = new Promise<void>((resolve) => {
+    endedFlow = resolve;
+  });
+  const flow = new SessionDeliveryFlow(state.agentId, "owned-race-open");
+  channels.set(state.key, new OwnedSessionChannel(flow));
+  let pulls = 0;
+  h.invoke.mockImplementation(async (name, input) => {
+    if (name === "session_set_config") {
+      flow.receive(
+        {
+          farfoldDeliveryWake: {
+            openToken: "owned-race-open",
+            queueId: "00000000000040008000000000000001",
+          },
+        },
+        (body) => {
+          event(body);
+          const status = (body as { check?: { status?: string } }).check
+            ?.status;
+          if (status) trace.push("channel-" + status);
+          if (status === "blocked") sawBlocked();
+          return "consumed";
+        },
+      );
+      return {
+        configOptions: updated,
+        configOptionsModern: true,
+        configCheck: ready,
+        service: null,
+        permissionState: "ready",
+      };
+    }
+    if (name === "session_delivery_pull") {
+      if (++pulls === 1)
+        return new Promise((resolve) => {
+          releaseFirstPull = () => resolve(pending.shift());
+        });
+      const next = pending.shift() ?? null;
+      if (!next) endedFlow();
+      return next;
+    }
+    if (name === "session_delivery_ack") {
+      // A real pull ACK is independent from configuration command replies.
+      // Keep the later FIFO bodies queued until strict confirmation has begun.
+      if (input.receipt.sequence === "1") await confirmationStarted;
+      return true;
+    }
+    if (name === "session_confirm_config") {
+      trace.push("confirm-reply-ready");
+      expect(input.displayed).toEqual(ready.current);
+      enteredConfirmation();
+      return ready;
+    }
+    return name === "settings_get" ? null : [];
+  });
+  try {
+    await threads.setConfig(state.key, "model", model);
+    expect(state.configCheck).toEqual(ready);
+    trace.push("setter-reply-ready");
+    releaseFirstPull();
+    await blockedConsumed;
+    expect(state.configCheck?.status).toBe("blocked");
+    const outcome = await threads
+      .confirmRestoredConfig(state.key, selection)
+      .catch((error: unknown) => error);
+    await flowEnded;
+    expect.soft(outcome).toBeUndefined();
+    expect.soft(state.configError).toBeNull();
+    expect(state.configCheck).toEqual(ready);
+    expect(trace).toEqual([
+      "setter-reply-ready",
+      "channel-blocked",
+      "confirm-reply-ready",
+      "channel-ready",
+      "channel-ready",
+    ]);
+    expect(calls()).toHaveLength(1);
+    expect(
+      h.invoke.mock.calls.filter(([name]) => name === "session_set_config"),
+    ).toHaveLength(1);
+    expect(
+      h.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(0);
+  } finally {
+    flow.dispose();
+  }
+});
+
 it("uses the real strict invoke bridge with the saved map and ordered ready event, without manual refresh or a setter", async () => {
   h.invoke.mockImplementation(async (name) => {
     if (name !== "session_confirm_config")
@@ -254,6 +411,161 @@ it("uses the real strict invoke bridge with the saved map and ordered ready even
       ].includes(name),
     ),
   ).toHaveLength(0);
+});
+
+it("still rejects a real blocked event after ready when both arrive through the confirmation delivery barrier", async () => {
+  const flow = new SessionDeliveryFlow(state.agentId, "owned-drift-open");
+  let startDelivery!: () => void;
+  let enteredBarrier!: () => void;
+  const barrierEntered = new Promise<void>((resolve) => {
+    enteredBarrier = resolve;
+  });
+  const pending = [
+    { sequence: "1", event: { kind: "configCheck", check: check() } },
+    {
+      sequence: "2",
+      event: { kind: "configCheck", check: { ...check(), status: "blocked" } },
+    },
+  ];
+  channels.set(
+    state.key,
+    new OwnedSessionChannel({
+      dispose: () => flow.dispose(),
+      settle: (deadline) => {
+        enteredBarrier();
+        return flow.settle(deadline);
+      },
+    }),
+  );
+  let pulls = 0;
+  h.invoke.mockImplementation(async (name) => {
+    if (name === "session_confirm_config") {
+      flow.receive(
+        {
+          farfoldDeliveryWake: {
+            openToken: "owned-drift-open",
+            queueId: "00000000000040008000000000000001",
+          },
+        },
+        (body) => {
+          event(body);
+          return "consumed";
+        },
+      );
+      return check();
+    }
+    if (name === "session_delivery_pull") {
+      if (++pulls === 1)
+        return new Promise((resolve) => {
+          startDelivery = () => resolve(pending.shift());
+        });
+      return pending.shift() ?? null;
+    }
+    if (name === "session_delivery_ack") return true;
+    return name === "settings_get" ? null : [];
+  });
+  const outcome = threads
+    .confirmRestoredConfig(state.key, saved)
+    .catch((error: unknown) => error);
+  await barrierEntered;
+  startDelivery();
+  const failure = await outcome;
+  expect(configurationConfirmationNotice(failure)?.detail).toBe(
+    STRINGS.repair.confirmConfigReasons["state-not-ready"],
+  );
+  expect(state.configCheck?.status).toBe("blocked");
+  expect(state.modelDrift).toBe(true);
+  expect(state.queuePaused).toBe("unavailable");
+  expect(calls()).toHaveLength(1);
+  expect(h.invoke.mock.calls.some(([name]) => name === "session_prompt")).toBe(
+    false,
+  );
+});
+
+it.each(["missing", "replaced", "retired", "rejected"] as const)(
+  "does not confirm against a %s delivery owner even when the IPC reply is ready",
+  async (condition) => {
+    const captured = channels.get(state.key)!;
+    if (condition === "missing") channels.delete(state.key);
+    if (condition === "retired") captured.dispose();
+    if (condition === "rejected")
+      channels.set(
+        state.key,
+        new OwnedSessionChannel({
+          dispose: () => {},
+          settle: async () => {
+            throw new Error("PRIVATE_DELIVERY_CANARY");
+          },
+        }),
+      );
+    h.invoke.mockImplementation(async (name) => {
+      if (name === "session_confirm_config") {
+        if (condition === "replaced")
+          channels.set(
+            state.key,
+            new OwnedSessionChannel({
+              dispose: () => {},
+              settle: async () => {},
+            }),
+          );
+        return check();
+      }
+      return name === "settings_get" ? null : [];
+    });
+    const failure = await threads
+      .confirmRestoredConfig(state.key, saved)
+      .catch((error: unknown) => error);
+    expect(configurationConfirmationNotice(failure)).toEqual({
+      message: STRINGS.repair.confirmConfigFailed,
+      detail:
+        STRINGS.repair.confirmConfigReasons[
+          condition === "replaced" ? "owner-changed" : "delivery-incomplete"
+        ],
+    });
+    expect(state.configError).toBe(
+      condition === "replaced" ? null : STRINGS.repair.confirmConfigFailed,
+    );
+    expect(state.configuring).toBe(condition === "replaced");
+    expect(calls()).toHaveLength(1);
+    expect(
+      h.invoke.mock.calls.some(([name]) => name === "session_prompt"),
+    ).toBe(false);
+  },
+);
+
+it("does not commit confirmation after its completed delivery owner is replaced before the strict continuation", async () => {
+  channels.set(
+    state.key,
+    new OwnedSessionChannel({
+      dispose: () => {},
+      settle: async () => {
+        // The wrapper's own continuation checks the current channel first;
+        // replacement in the next microtask must still invalidate strict commit.
+        queueMicrotask(() =>
+          queueMicrotask(() =>
+            channels.set(
+              state.key,
+              new OwnedSessionChannel({
+                dispose: () => {},
+                settle: async () => {},
+              }),
+            ),
+          ),
+        );
+      },
+    }),
+  );
+  h.invoke.mockImplementation(async (name) =>
+    name === "session_confirm_config" ? check() : [],
+  );
+  const failure = await threads
+    .confirmRestoredConfig(state.key, saved)
+    .catch((error: unknown) => error);
+  expect(configurationConfirmationNotice(failure)?.detail).toBe(
+    STRINGS.repair.confirmConfigReasons["owner-changed"],
+  );
+  expect(state.configError).toBeNull();
+  expect(calls()).toHaveLength(1);
 });
 
 it.each([

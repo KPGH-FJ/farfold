@@ -289,6 +289,7 @@ export const STRINGS = {
       "busy-after": "确认后仍有未结束的事项",
       "reply-not-ready": "确认结果尚未就绪。",
       "state-not-ready": "当前设置仍未就绪。",
+      "delivery-incomplete": "当前设置的接收尚未确认，请重试。",
       "snapshot-changed": "确认结果与当前设置不一致。",
       "values-changed": "当前选项与准备确认的选择不一致。",
     },

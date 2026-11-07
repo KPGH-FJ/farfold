@@ -131,7 +131,11 @@ function cloneConfirmationValue<T>(value: T): T {
 export async function confirmSavedConfiguration(
   state: ThreadState | undefined,
   selection: Record<string, unknown>,
-  hooks: { current(): ThreadState | undefined; emit(): void },
+  hooks: {
+    current(): ThreadState | undefined;
+    emit(): void;
+    settleDelivery(deadline: number): Promise<void>;
+  },
 ): Promise<void> {
   if (!state?.configCheck)
     throw new ConfigurationConfirmationError("missing-check");
@@ -158,6 +162,9 @@ export async function confirmSavedConfiguration(
   let confirmed = false;
   try {
     const displayed = cloneConfirmationValue(initialCheck.current);
+    // Match the existing native confirmation operation's 30-second limit;
+    // delivery uses only what remains, rather than starting a second deadline.
+    const deadline = performance.now() + 30_000;
     let reply: ConfigCheck;
     try {
       reply = await invoke<ConfigCheck>("session_confirm_config", {
@@ -176,6 +183,18 @@ export async function confirmSavedConfiguration(
       throw new ConfigurationConfirmationError("busy-after", busyAfter);
     if (reply?.status !== "ready")
       throw new ConfigurationConfirmationError("reply-not-ready");
+    try {
+      await hooks.settleDelivery(deadline);
+    } catch {
+      throw new ConfigurationConfirmationError("delivery-incomplete");
+    }
+    if (!current()) throw new ConfigurationConfirmationError("owner-changed");
+    const busyDelivered = configChangeBusyReason({
+      ...state,
+      configuring: false,
+    });
+    if (busyDelivered)
+      throw new ConfigurationConfirmationError("busy-after", busyDelivered);
     if (state.configCheck?.status !== "ready")
       throw new ConfigurationConfirmationError("state-not-ready");
     if (!sameConfigurationSnapshot(state.configCheck.current, reply.current))
