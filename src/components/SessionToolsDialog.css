@@ -1,3 +1,16 @@
+.workspace-dialog[open]:has(.session-tools-context) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.workspace-dialog:has(.session-tools-context) > .workspace-dialog-title,
+.workspace-dialog:has(.session-tools-context) > footer {
+  flex-shrink: 0;
+}
+.workspace-dialog:has(.session-tools-context) > .workspace-dialog-body {
+  min-height: 0;
+  overflow-y: auto;
+}
 .session-tools-context {
   overflow-wrap: anywhere;
   color: var(--ink-2);
