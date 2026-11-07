@@ -80,6 +80,10 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 向同一版本客户端使用的官方 HTTPS 发起入口发送一次无凭据请求，取得 HTTP 200 和 JSON 对象。本次夹具额外限制码长、字符、地址长度和整数有效期，首层合并校验未通过，后续验证地址及轮询未执行。回执只保留合并结果，无法判定具体字段，也无法确认有效挑战。官方客户端成功响应后解析 JSON，其公开类型没有夹具的长度和整数限制。没有保存原响应、浏览器登录或账号操作，未重试。[实网发起回执](kilo-live-device-start-bounded.json) · [官方发起实现](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/auth/device.ts#L4-L20) · [公开类型](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/kilo-gateway/src/types.ts#L8-L18)
 
+另核同版完整官方发布包在独立资料下启动。408 个文件按发布包准备，实际程序版本和空凭据列表核合。仅通过本机校验的设备发起请求才会转发。这次 24 秒内零本机发起请求通过校验，实网发起和状态查询各为零。超时后仅回收对应测试进程及目录。计数在本机校验之后，超时回执没有保留是否收到被拦请求或具体启动错误。与先前 HTTP 200 的额外校验失败分别记录。[官方程序发起回执](kilo-official-cli-live-relay-preflight.json)
+
+本机对照把空凭据检查和登录放在两份不同的临时资料中，先于校验统计每条请求。官方 CLI 使用全新资料进入设备流程，收到一条合成挑战、发出一次匹配轮询并按本机模拟过期退出。设备请求和轮询均核到确切进程，无本机校验拒绝，凭据文件未生成。只连接本机。主程序退出时进程组尚未确认释放，随后只读未见临时目录中的程序仍活动，原组完整释放仍缺确证。前次超时的原因保持未知。[本机阶段对照](kilo-official-cli-local-startup-diagnostic.json)
+
 此轮先核发行来源。官方下载 ZIP 与当时 ACP 登记和 GitHub 发布摘要一致，GitHub 签发的软件物料清单证明通过，408 个归档文件逐一与登记目录相同。严格签名核验在正式程序和官方解压件上都失败，源于最后一个不完整页的哈希按补零后长度生成。两份原字节保持，未重新签名或替换。[历史登记](../2026-09-30-agent-access-mechanisms/kilo/static-receipt.json) · [官方发行](https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.1)
 
 首波完整验收仍为 0/3。Kilo 跨版本授权、Goose 前次续接等待点、Copilot 旧工具终态、首波新登录及安装版存储故障仍按各自条件推进。后续已取得的 Copilot 原模型补录和真实审批另见对应批次。[原模型补录](../2026-11-06-phase1-model-repair/README.md) · [三家审批](../2026-11-06-phase1-approval/README.md) · [证据指纹](summary.json) · [当前计划](../../../plans/agent-access.md)

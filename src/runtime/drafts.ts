@@ -129,6 +129,10 @@ export const composerDrafts = {
       ([key, draft]) => key.startsWith("saved-new:") && !!draft.savedChoice,
     );
   },
+  /** A displayed row may outlive its source or its pending restore. */
+  canRestorePreserved(key: string, listed: ComposerDraft): boolean {
+    return values.get(key) === listed && !savingRestoredDrafts.has(listed);
+  },
   /** Persist the original before the caller replaces the active input. */
   async preserveNew(ticket = capturePreservedNew()) {
     await draftPersistence.flush();

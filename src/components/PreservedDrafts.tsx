@@ -38,6 +38,7 @@ export function PreservedDrafts({
             className="btn btn-ghost"
             disabled={busy !== null}
             onClick={async () => {
+              if (!composerDrafts.canRestorePreserved(key, draft)) return;
               setBusy(key);
               setError("");
               try {

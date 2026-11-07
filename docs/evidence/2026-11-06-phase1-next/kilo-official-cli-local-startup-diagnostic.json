@@ -1,0 +1,122 @@
+{
+  "archiveAndHelperProofSourceSha256": "03910b81ba15d57cb260a295c94a4198683d470b6084ba364c91179852df9680",
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "arrivalsBeforeAnyGuardByInvocation": {
+    "fresh-login": {
+      "device-create": 1,
+      "matching-device-poll": 1,
+      "public-model-catalog": 2
+    },
+    "offline-auth-list": {
+      "public-model-catalog": 1
+    }
+  },
+  "cleanupSignals": 0,
+  "differentProfileAndDatabasePaths": true,
+  "endedUtc": "2026-11-06T23:56:19.474258+00:00",
+  "exactLoginPeerConfirmedForDeviceCreate": true,
+  "exactLoginPeerConfirmedForDevicePoll": true,
+  "exactOfflineVersion": "7.8.1",
+  "exactOwnedCliImageParentAndGroupConfirmed": true,
+  "firstLocalGuardFailure": null,
+  "freshLoginOutputMarkers": {
+    "addCredentialIntro": true,
+    "authorizationCodeExpired": true,
+    "challengeInstructionsMatchedOwnedSyntheticPair": true,
+    "failedToAuthorize": true,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": true,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": false,
+    "zeroCredentialsReport": false
+  },
+  "freshLoginRootsStillPristine": true,
+  "freshLoginTimedOut": false,
+  "isolatedLoginAuthFileAbsentAfter": true,
+  "kernelPolicyByProfile": {
+    "freshLogin": {
+      "homeDataReadAndWriteDenied": true,
+      "otherReachablePortDenied": true,
+      "ownLoopbackAllowed": true,
+      "ownedScratchWriteAllowed": true,
+      "realBrowserOpenerDenied": true,
+      "registeredBinaryReadable": true
+    },
+    "offline": {
+      "homeDataReadAndWriteDenied": true,
+      "otherReachablePortDenied": true,
+      "ownLoopbackAllowed": true,
+      "ownedScratchWriteAllowed": true,
+      "realBrowserOpenerDenied": true,
+      "registeredBinaryReadable": true
+    }
+  },
+  "kind": "KiloRelocatedOfficialCliLocalOnlyStartupPhaseDiagnostic",
+  "modelPrompts": 0,
+  "nativeLoginExitCode": 1,
+  "nativeLoginLaunches": 1,
+  "officialArchiveRegularMembers": 408,
+  "offline-auth-listExit": 0,
+  "offline-auth-listOutputMarkers": {
+    "addCredentialIntro": false,
+    "authorizationCodeExpired": false,
+    "challengeInstructionsMatchedOwnedSyntheticPair": false,
+    "failedToAuthorize": false,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": true,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": false,
+    "zeroCredentialsReport": true
+  },
+  "offline-versionExit": 0,
+  "offline-versionOutputMarkers": {
+    "addCredentialIntro": false,
+    "authorizationCodeExpired": false,
+    "challengeInstructionsMatchedOwnedSyntheticPair": false,
+    "failedToAuthorize": false,
+    "failedToInitiateDeviceAuthorization": false,
+    "gitStartupErrorClass": false,
+    "loginSuccessful": false,
+    "permissionDeniedClass": false,
+    "stderrHadBytes": false,
+    "stdoutHadBytes": true,
+    "unexpectedError": false,
+    "waitingForAuthorization": false,
+    "zeroCredentialsReport": false
+  },
+  "offlineAuthListZeroAndAuthFileAbsent": true,
+  "ordinaryHomePreservedBothProfiles": true,
+  "outcome": "isolated-cleanup-or-auth-absence-unconfirmed",
+  "ownedCliGroupGone": false,
+  "ownedTemporaryLayoutAndProfilesRemoved": true,
+  "phase": "fresh-login",
+  "productionDataUsed": false,
+  "rawOutputRetained": false,
+  "realBrowserOpened": false,
+  "realCredentialsOrAccountUsed": false,
+  "remoteGets": 0,
+  "remotePosts": 0,
+  "remoteServiceAttempted": false,
+  "responsesByInvocation": {
+    "fresh-login": {
+      "device-create:200": 1,
+      "matching-device-poll:410": 1,
+      "public-model-catalog:200": 2
+    },
+    "offline-auth-list": {
+      "public-model-catalog:200": 1
+    }
+  },
+  "sameLoopbackOnlyBothProfiles": true,
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "startedUtc": "2026-11-06T23:56:14.793751+00:00"
+}
