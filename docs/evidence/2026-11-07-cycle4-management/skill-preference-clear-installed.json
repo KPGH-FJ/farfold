@@ -1,0 +1,304 @@
+{
+  "kind": "InstalledSkillPreferenceLifecycleEvidence",
+  "sourceCodeCommit": "92e17842363af5ae96bbce727ac72b4b7fecebbd",
+  "agent": "Codex",
+  "result": "verified-scoped-happy-path",
+  "scope": "One owned project skill, exact path-only preference lifecycle through official management APIs and the single formal Farfold app.",
+  "ownedSkillName": "farfold-owned-cycle4-clear-20261107",
+  "uiEvents": {
+    "path": "output/2026-11-07-cycle4-skill-clear/ui-events.json",
+    "sha256": "e0aab359450222fddd141539f419dd41769bc5fb5c29039d9f5b35d9735193bd"
+  },
+  "lifecycle": [
+    {
+      "step": "no-preference inspection",
+      "utc": "2026-11-07T13:14:20.127Z",
+      "writeDispatched": false,
+      "evidence": "root UI no-dispatch receipt; independent before snapshot followed this step"
+    },
+    {
+      "step": "disable",
+      "utc": "2026-11-07T13:15:10.753Z",
+      "clicks": 1,
+      "persistedRuleCount": 1,
+      "persistedEnabled": false,
+      "officialReportedEnabled": false,
+      "operationResult": "verified"
+    },
+    {
+      "step": "enable",
+      "utc": "2026-11-07T13:17:59.227Z",
+      "clicks": 1,
+      "persistedRuleCount": 1,
+      "persistedEnabled": true,
+      "officialReportedEnabled": true,
+      "operationResult": "verified"
+    },
+    {
+      "step": "clear exact path preference",
+      "utc": "2026-11-07T13:20:13.927Z",
+      "clicks": 1,
+      "ruleCountBefore": 1,
+      "ruleCountAfter": 0,
+      "persistedPreference": "absent",
+      "officialReportedEnabled": true,
+      "skillsConfig": "absent",
+      "skillsParent": "empty table",
+      "operationResult": "verified"
+    },
+    {
+      "step": "explicit read-only recheck",
+      "utc": "2026-11-07T13:21:10.684Z",
+      "writeRepeated": false,
+      "operationResult": "observed",
+      "originalVerifiedWriteRetainedSeparately": true,
+      "postRecheckFileRawHashMatchesCleared": true
+    }
+  ],
+  "independentPersistedConfig": {
+    "observerHelperSha256": "b7903707cce0fc008e4b13063d8b539ab03e5b9ea034513735f8ddf619e85a2a",
+    "observerHelperUnchanged": true,
+    "fourReceipts": [
+      {
+        "phase": "before",
+        "observedAtUtc": "2026-11-07T13:14:54.227238+00:00",
+        "receipt": "output/2026-11-07-cycle4-skill-clear/read-only-config/before.json",
+        "receiptSha256": "28eb253909c91d501012a20daf6668c7fa716f260e0856080bf8a1025ec62a24",
+        "skillsParentPresent": false,
+        "skillsParentEmpty": false,
+        "skillsParentOtherKeyCount": null,
+        "skillsConfigPresent": false,
+        "skillsConfigArrayEmpty": false,
+        "exactPathMatchingRuleCount": 0,
+        "uniqueExactPathOnlyEnabled": null,
+        "comparisonOnlyNormalizedContainers": []
+      },
+      {
+        "phase": "disabled",
+        "observedAtUtc": "2026-11-07T13:16:10.001310+00:00",
+        "receipt": "output/2026-11-07-cycle4-skill-clear/read-only-config/disabled.json",
+        "receiptSha256": "59415f303880b0297df755213ebbb0c86871789d69e4a53cd9a51e29b184a05d",
+        "skillsParentPresent": true,
+        "skillsParentEmpty": false,
+        "skillsParentOtherKeyCount": 0,
+        "skillsConfigPresent": true,
+        "skillsConfigArrayEmpty": false,
+        "exactPathMatchingRuleCount": 1,
+        "uniqueExactPathOnlyEnabled": false,
+        "comparisonOnlyNormalizedContainers": [
+          "empty-skills.config-array-only",
+          "empty-skills-parent-only"
+        ]
+      },
+      {
+        "phase": "enabled",
+        "observedAtUtc": "2026-11-07T13:18:32.939027+00:00",
+        "receipt": "output/2026-11-07-cycle4-skill-clear/read-only-config/enabled.json",
+        "receiptSha256": "e60aaf51d140033fe938bc5fb4fc2ede8db1dc3c80306ce7ed8c995a6f4c28b7",
+        "skillsParentPresent": true,
+        "skillsParentEmpty": false,
+        "skillsParentOtherKeyCount": 0,
+        "skillsConfigPresent": true,
+        "skillsConfigArrayEmpty": false,
+        "exactPathMatchingRuleCount": 1,
+        "uniqueExactPathOnlyEnabled": true,
+        "comparisonOnlyNormalizedContainers": [
+          "empty-skills.config-array-only",
+          "empty-skills-parent-only"
+        ]
+      },
+      {
+        "phase": "cleared",
+        "observedAtUtc": "2026-11-07T13:20:51.067281+00:00",
+        "receipt": "output/2026-11-07-cycle4-skill-clear/read-only-config/cleared.json",
+        "receiptSha256": "783e8d532548d955716dc832a3e89c87f0ff074eda8b190a0e3e1434360039bc",
+        "skillsParentPresent": true,
+        "skillsParentEmpty": true,
+        "skillsParentOtherKeyCount": 0,
+        "skillsConfigPresent": false,
+        "skillsConfigArrayEmpty": false,
+        "exactPathMatchingRuleCount": 0,
+        "uniqueExactPathOnlyEnabled": null,
+        "comparisonOnlyNormalizedContainers": ["empty-skills-parent-only"]
+      }
+    ],
+    "strictComparison": {
+      "beforeClearedRawFileEqual": false,
+      "beforeClearedFullSemanticEqual": false,
+      "beforeClearedStrictNonownedSemanticEqual": false,
+      "reason": "Before: skills table absent. After clear: skills.config absent and empty skills table retained."
+    },
+    "comparisonOnlyEmptyContainerComparison": {
+      "allFourEqual": true,
+      "normalization": "Exclude only the exact owned path/enabled boolean rule; remove a resulting empty skills.config array, then remove only a wholly empty skills table. No other configuration values or array order are normalized.",
+      "provesByteOrFullSemanticRestoration": false
+    },
+    "otherRuleSequenceHashesEqual": true,
+    "otherRuleSequenceEmptyInThisSample": true,
+    "postRecheckSingleRawHashRead": {
+      "observedAtUtc": "2026-11-07T13:25:59.362033+00:00",
+      "readCount": 1,
+      "sourceWrites": 0,
+      "status": "observed",
+      "stable": true,
+      "bytes": 10088,
+      "matchesClearedRawFile": true
+    },
+    "configurationValuesCopiedOrEmitted": false,
+    "observerSourceWrites": 0,
+    "observerAgentRequests": 0
+  },
+  "ownedSkillFile": {
+    "bytes": 316,
+    "sha256": "8ec4407dbb296014c564f7f3e53521179a4172ebf264401991f3767e380eca3d",
+    "unchangedFromCreationReceipt": true,
+    "deleted": false
+  },
+  "limitations": [
+    "The before snapshot was after the no-preference inspection; its no-dispatch outcome is a root-observed UI receipt, not an independent pre/post file comparison of that inspection.",
+    "Official reported enabled values and verified/observed operation strengths come from root contemporaneous UI observations; the independent observer reads persisted file shape and hashes only.",
+    "Clearing left an empty skills table whereas before had no skills table. Raw bytes, full typed semantics and strict nonowned hashes differ; no exact byte/full-semantic restoration is claimed.",
+    "The comparison-only hash removes only a post-exclusion empty skills.config array and then a wholly empty skills table. No other field, array order or value is normalized.",
+    "This sample has no other skills.config rules; preservation of nonempty peer-rule order is controlled-test evidence, not newly exercised by this installed sample.",
+    "No model request, skill invocation or adoption by a current conversation was tested.",
+    "Installed cancellation, version-conflict, unknown-ACK and malformed-output combinations were not forced; controlled tests remain a separate evidence level.",
+    "This is an artifact and result cross-check. The observer author did not independently re-review their own helper source; a separate reviewer receipt is linked.",
+    "No whole P40 or all-Agent acceptance is claimed."
+  ],
+  "p40Complete": false,
+  "engineering": {
+    "allSevenPassed": true,
+    "checks": [
+      {
+        "name": "format",
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "seconds": 26.611,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/format.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "typecheck",
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "seconds": 8.16,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/typecheck.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "frontend",
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "seconds": 41.788,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/frontend.log",
+        "logSha256": "129d65d70594a23bd50e63baa4878f81535be7e16783b81f31d7836ae02de884"
+      },
+      {
+        "name": "build",
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "seconds": 8.622,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/build.log",
+        "logSha256": "d457d631c755958e8fac8bb6e4b43cb78fa60fb269a4cb24a2ee5596ed27488d"
+      },
+      {
+        "name": "rust-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "seconds": 1.35,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/rust-fmt.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "seconds": 9.608,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/clippy.log",
+        "logSha256": "cf17de8b95a5049c7dfc981c5496f45241d4cc709eaedc1d3191d3c37eb011e3"
+      },
+      {
+        "name": "rust-test",
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "seconds": 154.64,
+        "log": "output/2026-11-07-cycle4-skill-clear/checks/rust-test.log",
+        "logSha256": "f42a68f6c52d8e997981d62711edb66b8c954917085ad10e214c6f746d5d1ec2"
+      }
+    ],
+    "frontendFiles": 730,
+    "frontendPassed": 9891,
+    "nativePassed": 2442,
+    "nativeFailed": 0,
+    "nativeExistingIgnored": 7,
+    "affectedNativeTests": 13,
+    "rootAffectedUiFiles": 4,
+    "rootAffectedUiTests": 14,
+    "boundary": "Controlled protocol/peer/controller tests are separate from installed official happy-path acceptance."
+  },
+  "formalApplication": {
+    "sourceCodeCommit": "92e17842363af5ae96bbce727ac72b4b7fecebbd",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "signature": "adhoc",
+    "cdhash": "718c472b450f118ed0da2e88ed7bf82e7b9f88bd",
+    "fiveFileReplacement": true,
+    "dataEntriesCompared": 206275,
+    "dataUnchangedDuringReplacement": true,
+    "originalGooseHistoryColdRead": true,
+    "duplicateAppRemoved": true,
+    "notPubliclyDistributedOrNotarized": true
+  },
+  "independentEvidence": [
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/independent-review.json",
+      "sha256": "dbb4b693479b546c16972e1f7f15dda9c4417c5c457c2166ed4a0d15a20d513d"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/helper-review.json",
+      "sha256": "0dfb8f867ce9eebd43777d5eecc606d0ee8699472bcc750caf73b290ab00a777"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/final-observer-review.json",
+      "sha256": "5a1ed36f9a2c53113bf44b2899b047fa614090725996b3fdde8effe2446b9733"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/formal/install.json",
+      "sha256": "853f89cd4a4df26e8ed84ea42182a483670a04c1f1870eab72d80dae82e5eb96"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/formal/installed-launch.json",
+      "sha256": "440a8a9f88415e7c9ba31dc7083562ec5edb684300bf5c97792de333c8972477"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-skill-clear/formal/duplicate-candidate-cleanup.json",
+      "sha256": "d0d0605a38db9342533b3c7ff9bd4ba4f215e0853985192d8d1756e2da59dbbe"
+    }
+  ],
+  "ownedFixtureSource": {
+    "path": "output/2026-11-07-cycle4-skill-clear/owned-skill-source.md",
+    "sha256": "8ec4407dbb296014c564f7f3e53521179a4172ebf264401991f3767e380eca3d"
+  }
+}
