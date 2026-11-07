@@ -20,6 +20,7 @@
 use super::lifecycle::{ConnectionLife, WorkLease};
 use super::mutation::{Kind as MutationKind, Mutation, Reply as MutationReply};
 use super::operations::Operation;
+use super::restore_confirmation::Code as RestoreConfirmCode;
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -636,7 +637,10 @@ async fn session_pump(
                 continue;
             }
             if purpose == super::open_purpose::OpenPurpose::SearchReadOnly {
-                command.reject("此对话仅供查看，请先关闭查看结果再继续".into());
+                command.reject_restore(
+                    "此对话仅供查看，请先关闭查看结果再继续".into(),
+                    RestoreConfirmCode::ReadOnly,
+                );
                 continue;
             }
             ops.life.touch();
@@ -1002,18 +1006,18 @@ async fn session_pump(
                     if command.abandoned() { continue; }
                     if purpose == super::open_purpose::OpenPurpose::SearchReadOnly
                         && !matches!(command, SessionControl::Close { .. } | SessionControl::Detach { .. } | SessionControl::Shutdown) {
-                        command.reject("此对话仅供查看，请先关闭查看结果再继续".into());
+                        command.reject_restore("此对话仅供查看，请先关闭查看结果再继续".into(), RestoreConfirmCode::ReadOnly);
                         continue;
                     }
                     ops.life.touch();
                     if opening.is_some() {
                         let error="对话正在恢复，请稍后重试".to_string();
                         if matches!(command,SessionControl::Shutdown) { break; }
-                        command.reject(error);
+                        command.reject_restore(error, RestoreConfirmCode::Opening);
                         continue;
                     }
                     if fork_state.as_ref().is_some_and(|fork|fork.busy.load(Ordering::SeqCst)) && !matches!(command,SessionControl::Shutdown) {
-                        command.reject("复制结果尚未确认，请等待此操作结束".into());
+                        command.reject_restore("复制结果尚未确认，请等待此操作结束".into(), RestoreConfirmCode::ForkPending);
                         continue;
                     }
                     match command {
@@ -1250,7 +1254,7 @@ async fn session_pump(
                         future));
                 }
                 SessionControl::ConfirmConfig { displayed, connection_id, restore_selection, deadline, result } => {
-                    if identity_read.is_some() { let _=result.send(Err(super::identity_read::ReadError::from(super::identity_read::Code::Busy).message.into()));continue; }
+                    if identity_read.is_some() { let _=result.send(Err(RestoreConfirmCode::IdentityRead.for_restore(restore_selection.is_some(), super::identity_read::ReadError::from(super::identity_read::Code::Busy).message.into())));continue; }
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
                     if let Some(selection) = restore_selection {
@@ -1259,8 +1263,8 @@ async fn session_pump(
                             || restore_config::busy(&ctx)
                             || !matches!(permission_guard.state(), "ready" | "required")
                             || awaiting || result.is_closed() || tokio::time::Instant::now() >= deadline {
-                            Err("当前设置已变化或无法确认，请重新检查".to_string())
-                        } else { config_store.validate_service().await };
+                            Err(RestoreConfirmCode::BusyBefore.into())
+                        } else { config_store.validate_service().await.map_err(|_| String::from(RestoreConfirmCode::Service)) };
                         restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                             &mut permission_guard, &mut opening, &mut mutation);
                         let candidate = before.and_then(|()| {
@@ -1269,10 +1273,10 @@ async fn session_pump(
                                 || restore_config::busy(&ctx)
                                 || !matches!(permission_guard.state(), "ready" | "required")
                                 || result.is_closed() || tokio::time::Instant::now() >= deadline {
-                                return Err("当前设置已变化或无法确认，请重新检查".into());
+                                return Err(RestoreConfirmCode::BusyAfter.into());
                             }
                             let options = configuration.options().unwrap_or(Value::Null);
-                            config_store.validate_model(&options)?;
+                            config_store.validate_model(&options).map_err(|_| String::from(RestoreConfirmCode::Model))?;
                             model_guard.confirm_restored_selection(&displayed, &selection, &options)
                         });
                         match candidate {
@@ -1285,7 +1289,7 @@ async fn session_pump(
                                 if result.is_closed() || tokio::time::Instant::now() >= deadline {
                                     model_guard = prior;
                                     events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
-                                    let _ = result.send(Err("当前设置已变化或无法确认，请重新检查".into()));
+                                    let _ = result.send(Err(RestoreConfirmCode::Delivery.into()));
                                 } else if result.send(Ok(check)).is_err() {
                                     model_guard = prior;
                                     events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));

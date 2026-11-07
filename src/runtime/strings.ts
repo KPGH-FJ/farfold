@@ -282,6 +282,7 @@ export const STRINGS = {
     confirmConfigFailed: "确认失败，请核对当前设置后重试",
     confirmConfigReasons: {
       "missing-check": "尚无可确认的设置信息。",
+      "prepare-failed": "确认所需的信息未能准备完成。",
       "busy-before": "确认前仍有未结束的事项",
       "invoke-rejected": "确认请求未成功完成。",
       "owner-changed": "确认时，对话或连接已发生变化。",
@@ -290,6 +291,38 @@ export const STRINGS = {
       "state-not-ready": "当前设置仍未就绪。",
       "snapshot-changed": "确认结果与当前设置不一致。",
       "values-changed": "当前选项与准备确认的选择不一致。",
+    },
+    confirmConfigNativeReasons: {
+      FARFOLD_RESTORE_CONFIRM_CWD_INVALID: "工作文件夹当前不可用。",
+      FARFOLD_RESTORE_CONFIRM_ROUTE_UNAVAILABLE: "未找到唯一可用的对话连接。",
+      FARFOLD_RESTORE_CONFIRM_CONTROL_SEND: "确认请求未能送达。",
+      FARFOLD_RESTORE_CONFIRM_WAIT_TIMEOUT: "等待确认结果超时。",
+      FARFOLD_RESTORE_CONFIRM_WAIT_CLOSED: "确认结果未能返回。",
+      FARFOLD_RESTORE_CONFIRM_READ_ONLY: "当前对话仅供查看。",
+      FARFOLD_RESTORE_CONFIRM_OPENING: "对话仍在打开。",
+      FARFOLD_RESTORE_CONFIRM_FORK_PENDING: "仍有未结束的对话操作。",
+      FARFOLD_RESTORE_CONFIRM_IDENTITY_READ: "账号信息仍在核对。",
+      FARFOLD_RESTORE_CONFIRM_BUSY_BEFORE: "确认前的状态或等待条件尚未满足。",
+      FARFOLD_RESTORE_CONFIRM_SERVICE: "服务设置暂时无法核对。",
+      FARFOLD_RESTORE_CONFIRM_BUSY_AFTER: "确认后的状态或等待条件尚未满足。",
+      FARFOLD_RESTORE_CONFIRM_MODEL: "模型设置暂时无法核对。",
+      FARFOLD_RESTORE_CONFIRM_DELIVERY: "确认结果返回前已失效。",
+      FARFOLD_RESTORE_CONFIRM_SELECTION_INVALID: "准备确认的选择不完整。",
+      FARFOLD_RESTORE_CONFIRM_GUARD_NOT_READY: "当前模型和思考设置尚未确认。",
+      FARFOLD_RESTORE_CONFIRM_DISPLAYED_CHANGED:
+        "确认时，显示的设置已发生变化。",
+      FARFOLD_RESTORE_CONFIRM_OPTIONS_INVALID: "当前选项信息不完整。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_MISSING: "缺少需要确认的选项。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_DUPLICATE: "需要确认的选项存在重复。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_TYPE:
+        "需要确认的选项类型不符合要求。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_VALUE: "需要确认的选项值不一致。",
+      FARFOLD_RESTORE_CONFIRM_DECLARATION_OPTIONS:
+        "需要确认的可选值信息不完整。",
+      FARFOLD_RESTORE_CONFIRM_SELECTED_MISSING: "准备确认的选项已不存在。",
+      FARFOLD_RESTORE_CONFIRM_SELECTED_MISMATCH: "准备确认的选择与当前值不同。",
+      FARFOLD_RESTORE_CONFIRM_NO_PROTECTED_SELECTION:
+        "尚未选择需要确认的模型或思考选项。",
     },
     confirmConfigBusyReasons: {
       running: "任务正在运行",

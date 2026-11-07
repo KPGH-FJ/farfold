@@ -58,6 +58,7 @@ pub mod pump;
 pub(crate) mod recipes;
 mod reported_file_input;
 mod reported_output;
+mod restore_confirmation;
 pub(crate) mod service_config;
 pub mod service_connection;
 mod service_delivery;

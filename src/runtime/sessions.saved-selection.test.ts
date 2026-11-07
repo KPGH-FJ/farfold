@@ -159,6 +159,117 @@ it.each([
   }
 });
 
+it.each(Object.entries(STRINGS.repair.confirmConfigNativeReasons))(
+  "classifies only the exact confirmation rejection %s without changing protection",
+  async (code, detail) => {
+    h.invoke.mockImplementation(async (name) => {
+      if (name === "session_confirm_config") throw code;
+      return name === "settings_get" ? null : [];
+    });
+    const failure = await threads
+      .confirmRestoredConfig(state.key, saved)
+      .catch((error: unknown) => error);
+    const notice = configurationConfirmationNotice(failure);
+    expect(notice).toEqual({
+      message: STRINGS.repair.confirmConfigFailed,
+      detail,
+    });
+    expect(isConfigurationRestoreNotice(notice)).toBe(false);
+    expect(calls()).toHaveLength(1);
+    expect(state.configuring).toBe(false);
+    expect(state.configError).toBe(STRINGS.repair.confirmConfigFailed);
+    expect(state.configCheck).toEqual(check());
+  },
+);
+
+it.each([
+  "unknown",
+  "before",
+  "after",
+  "space",
+  "wrapped",
+  "object",
+  "coercion",
+] as const)(
+  "hides unknown or decorated confirmation rejection payloads: %s",
+  async (kind) => {
+    const privateCanary = "PRIVATE_ACCOUNT_MODEL_DIRECTORY_ERROR_CANARY";
+    const code = "FARFOLD_RESTORE_CONFIRM_GUARD_NOT_READY";
+    const reason: unknown =
+      kind === "before"
+        ? `${privateCanary}${code}`
+        : kind === "after"
+          ? `${code}:${privateCanary}`
+          : kind === "space"
+            ? `${code} `
+            : kind === "wrapped"
+              ? new Error(code)
+              : kind === "object"
+                ? { code, message: privateCanary }
+                : kind === "coercion"
+                  ? {
+                      toString() {
+                        throw new Error(privateCanary);
+                      },
+                    }
+                  : `FARFOLD_RESTORE_CONFIRM_${privateCanary}`;
+    h.invoke.mockImplementation(async (name) => {
+      if (name === "session_confirm_config") throw reason;
+      return name === "settings_get" ? null : [];
+    });
+    const failure = await threads
+      .confirmRestoredConfig(state.key, saved)
+      .catch((error: unknown) => error);
+    const notice = configurationConfirmationNotice(failure);
+    expect(notice).toEqual({
+      message: STRINGS.repair.confirmConfigFailed,
+      detail: STRINGS.repair.confirmConfigReasons["invoke-rejected"],
+    });
+    expect(JSON.stringify(notice)).not.toContain(privateCanary);
+    expect(JSON.stringify(notice)).not.toContain(code);
+    expect(isConfigurationRestoreNotice(notice)).toBe(false);
+    expect(calls()).toHaveLength(1);
+    expect(state.configCheck).toEqual(check());
+  },
+);
+
+it.each(["selection", "owner", "displayed"] as const)(
+  "separates %s preparation failure from an invoked rejection without exposing its cause",
+  async (kind) => {
+    const privateCanary = "PRIVATE_PREPARATION_ERROR_CANARY";
+    const originalClone = globalThis.structuredClone.bind(globalThis);
+    const target =
+      kind === "selection"
+        ? saved
+        : kind === "owner"
+          ? (state.service ?? null)
+          : state.configCheck!.current;
+    const clone = vi
+      .spyOn(globalThis, "structuredClone")
+      .mockImplementation((value) => {
+        if (value === target) throw new Error(privateCanary);
+        return originalClone(value);
+      });
+    let failure: unknown;
+    try {
+      failure = await threads
+        .confirmRestoredConfig(state.key, saved)
+        .catch((error: unknown) => error);
+    } finally {
+      clone.mockRestore();
+    }
+    const notice = configurationConfirmationNotice(failure);
+    expect(notice).toEqual({
+      message: STRINGS.repair.confirmConfigFailed,
+      detail: STRINGS.repair.confirmConfigReasons["prepare-failed"],
+    });
+    expect(JSON.stringify(notice)).not.toContain(privateCanary);
+    expect(isConfigurationRestoreNotice(notice)).toBe(false);
+    expect(calls()).toHaveLength(0);
+    expect(state.configuring).toBe(false);
+  },
+);
+
 it.each(["missing", "busy", "mismatched-saved", "empty-intent"])(
   "rejects %s before invoking confirmation",
   async (reason) => {

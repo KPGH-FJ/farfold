@@ -79,6 +79,36 @@ async fn saved_restore_equal_values_with_zero_setters_confirm_without_an_index()
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn saved_restore_missing_route_is_fixed_while_manual_error_is_unchanged() {
+    let mut f = Fixture::open().await;
+    let displayed = f.check("ready").await["current"].clone();
+    let missing = "PRIVATE_NATIVE_SESSION_ACCOUNT_KEY_DIRECTORY_CANARY";
+    let restored = f
+        .manager
+        .confirm_config_selection(
+            &f.row.id,
+            &f.cwd,
+            missing,
+            displayed.clone(),
+            None,
+            Some(saved("m1", "low")),
+        )
+        .await
+        .unwrap_err();
+    assert_eq!(restored, "FARFOLD_RESTORE_CONFIRM_ROUTE_UNAVAILABLE");
+    assert!(!restored.contains("PRIVATE_"));
+    assert_eq!(
+        f.manager
+            .confirm_config(&f.row.id, &f.cwd, missing, displayed)
+            .await
+            .unwrap_err(),
+        "会话已断开，请重新连接"
+    );
+    assert_no_index(&f);
+    f.assert_calls(1, 0, 0, 0);
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn saved_restore_model_first_then_thought_and_explicit_changes_do_not_index() {
     let mut f = Fixture::open().await;
     f.drain();

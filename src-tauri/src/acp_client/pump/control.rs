@@ -133,6 +133,20 @@ pub(crate) enum SessionControl {
 }
 
 impl SessionControl {
+    pub(super) fn reject_restore(
+        self,
+        error: String,
+        code: super::super::restore_confirmation::Code,
+    ) {
+        let restore = matches!(
+            &self,
+            Self::ConfirmConfig {
+                restore_selection: Some(_),
+                ..
+            }
+        );
+        self.reject(code.for_restore(restore, error));
+    }
     pub(super) fn reject(self, error: String) {
         match self {
             Self::IdentityRead { result, .. } => {
@@ -241,5 +255,49 @@ impl SessionControl {
             Self::Shutdown => return false,
         };
         closed || tokio::time::Instant::now() >= deadline
+    }
+}
+
+#[cfg(test)]
+mod restore_confirmation_tests {
+    use super::*;
+    use crate::acp_client::restore_confirmation::Code;
+
+    #[tokio::test]
+    async fn common_rejection_only_classifies_saved_selection_confirmation() {
+        for code in [Code::ReadOnly, Code::Opening, Code::ForkPending] {
+            for restore in [false, true] {
+                let (result, receive) = oneshot::channel();
+                let command = SessionControl::ConfirmConfig {
+                    displayed: serde_json::json!({"private":"PRIVATE_DISPLAYED_CANARY"}),
+                    connection_id: Some("PRIVATE_CONNECTION_CANARY".into()),
+                    restore_selection: restore
+                        .then(|| serde_json::json!({"private":"PRIVATE_SELECTED_CANARY"})),
+                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(1),
+                    result,
+                };
+                command.reject_restore("PRIVATE_ORIGINAL_ERROR_CANARY".into(), code);
+                assert_eq!(
+                    receive.await.unwrap(),
+                    Err::<Value, _>(if restore {
+                        code.into()
+                    } else {
+                        "PRIVATE_ORIGINAL_ERROR_CANARY".into()
+                    })
+                );
+            }
+        }
+        let (result, receive) = oneshot::channel();
+        SessionControl::SetConfig {
+            config_id: "PRIVATE_CONFIG_CANARY".into(),
+            value: Value::Null,
+            deadline: tokio::time::Instant::now(),
+            result,
+        }
+        .reject_restore("unchanged unrelated command".into(), Code::Opening);
+        assert_eq!(
+            receive.await.unwrap(),
+            Err::<Value, _>("unchanged unrelated command".into())
+        );
     }
 }

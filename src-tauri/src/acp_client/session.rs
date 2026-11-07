@@ -893,7 +893,12 @@ impl AcpManager {
         connection_id: Option<String>,
         restore_selection: Option<Value>,
     ) -> Result<Value, String> {
-        let control = self.session_control_tx(agent_id, cwd, session_id)?;
+        let restore = restore_selection.is_some();
+        let control = self
+            .session_control_tx(agent_id, cwd, session_id)
+            .map_err(|error| {
+                super::restore_confirmation::Code::RouteUnavailable.for_restore(restore, error)
+            })?;
         let (result, receive) = oneshot::channel();
         control
             .send(SessionControl::ConfirmConfig {
@@ -903,13 +908,12 @@ impl AcpManager {
                 result,
                 deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
             })
-            .map_err(|_| "会话已断开，请重新连接".to_string())?;
-        super::wait::reply(
-            receive,
-            std::time::Duration::from_secs(30),
-            "confirm config",
-        )
-        .await?
+            .map_err(|_| {
+                super::restore_confirmation::Code::ControlSend
+                    .for_restore(restore, "会话已断开，请重新连接".into())
+            })?;
+        super::restore_confirmation::reply(receive, std::time::Duration::from_secs(30), restore)
+            .await?
     }
 
     /// Agent-side `session/list` (raw `SessionInfo` objects). Empty when the

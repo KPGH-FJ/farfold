@@ -8,6 +8,7 @@ import {
   requireSavedConfigurationOption,
   requireRestoredConfigurationValues,
   ConfigurationConfirmationError,
+  configurationConfirmationRejection,
 } from "./configuration_restore_feedback";
 
 interface RestoreHooks {
@@ -114,6 +115,14 @@ export function captureConfigurationOwner(state: ThreadState) {
     ]) && sameConfigurationSnapshot(service, state.service ?? null);
 }
 
+function cloneConfirmationValue<T>(value: T): T {
+  try {
+    return structuredClone(value);
+  } catch {
+    throw new ConfigurationConfirmationError("prepare-failed");
+  }
+}
+
 /** Strict restore/explicit-choice path. Manual confirmation retains its own semantics. */
 export async function confirmSavedConfiguration(
   state: ThreadState | undefined,
@@ -125,30 +134,36 @@ export async function confirmSavedConfiguration(
   const busyBefore = configChangeBusyReason(state);
   if (busyBefore)
     throw new ConfigurationConfirmationError("busy-before", busyBefore);
-  const saved = structuredClone(selection);
+  const saved = cloneConfirmationValue(selection);
   const choices = Object.entries(saved);
   const protectedIds = protectedConfigIds(state.configOptions);
   if (!choices.some(([id]) => protectedIds.has(id)))
     throw new ConfigurationConfirmationError("missing-check");
   requireRestoredConfigurationValues(state.configOptions, choices);
   const initialCheck = state.configCheck;
-  const sameOwner = captureConfigurationOwner(state);
+  let sameOwner: () => boolean;
+  try {
+    sameOwner = captureConfigurationOwner(state);
+  } catch {
+    throw new ConfigurationConfirmationError("prepare-failed");
+  }
   const current = () => hooks.current() === state && sameOwner();
   state.configuring = true;
   state.configError = null;
   hooks.emit();
   try {
+    const displayed = cloneConfirmationValue(initialCheck.current);
     let reply: ConfigCheck;
     try {
       reply = await invoke<ConfigCheck>("session_confirm_config", {
         agentId: state.agentId,
         cwd: state.cwd,
         sessionId: state.nativeSessionId,
-        displayed: structuredClone(initialCheck.current),
+        displayed,
         restoreSelection: saved,
       });
-    } catch {
-      throw new ConfigurationConfirmationError("invoke-rejected");
+    } catch (error) {
+      throw configurationConfirmationRejection(error);
     }
     if (!current()) throw new ConfigurationConfirmationError("owner-changed");
     const busyAfter = configChangeBusyReason({ ...state, configuring: false });

@@ -3,7 +3,11 @@ import { STRINGS } from "./strings";
 import { toUiNotice, type UiNotice } from "./ui_error";
 import type { ConfigBusyReason } from "./protected_config";
 
-type ConfirmationFailure = keyof typeof STRINGS.repair.confirmConfigReasons;
+const confirmationReasons = {
+  ...STRINGS.repair.confirmConfigReasons,
+  ...STRINGS.repair.confirmConfigNativeReasons,
+};
+type ConfirmationFailure = keyof typeof confirmationReasons;
 
 /** Separate from saved-option feedback: a confirmation error never changes retry policy. */
 export class ConfigurationConfirmationError extends Error {
@@ -12,9 +16,21 @@ export class ConfigurationConfirmationError extends Error {
   constructor(reason: ConfirmationFailure, busy?: ConfigBusyReason) {
     super(STRINGS.repair.confirmConfigFailed);
     this.detail = busy
-      ? `${STRINGS.repair.confirmConfigReasons[reason]}：${STRINGS.repair.confirmConfigBusyReasons[busy]}。`
-      : STRINGS.repair.confirmConfigReasons[reason];
+      ? `${confirmationReasons[reason]}：${STRINGS.repair.confirmConfigBusyReasons[busy]}。`
+      : confirmationReasons[reason];
   }
+}
+
+/** Only an exact app-owned string code is eligible; never inspect arbitrary payloads. */
+export function configurationConfirmationRejection(
+  reason: unknown,
+): ConfigurationConfirmationError {
+  const code =
+    typeof reason === "string" &&
+    Object.hasOwn(STRINGS.repair.confirmConfigNativeReasons, reason)
+      ? (reason as keyof typeof STRINGS.repair.confirmConfigNativeReasons)
+      : "invoke-rejected";
+  return new ConfigurationConfirmationError(code);
 }
 
 /** Only our local fixed classification is presentable; never use an IPC error's text. */
