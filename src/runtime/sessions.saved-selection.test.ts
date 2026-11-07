@@ -7,7 +7,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 import { threads, type ThreadState } from "./sessions";
-import { draftPersistence } from "./drafts";
+import { composerDrafts, draftPersistence } from "./drafts";
 import { freshThreadState, normalizeConfigOptions } from "./session_projection";
 import { STRINGS } from "./strings";
 import { restoreSavedConfiguration } from "./saved_configuration_restore";
@@ -17,6 +17,10 @@ import {
 } from "./configuration_restore_feedback";
 import { configChangeBusy, configChangeBusyReason } from "./protected_config";
 import { authenticationActivity } from "./authentication";
+import { applyConfigCheck, ownsConfigurationPause } from "./config_check";
+import { sendNewConversation } from "./new_conversation";
+import { rememberPendingConversation } from "./pending_conversation";
+import { pauseQueue } from "./queue";
 
 let state: ThreadState;
 let serial = 0;
@@ -74,6 +78,150 @@ beforeEach(() => {
 afterEach(async () => {
   await draftPersistence.flush();
 });
+
+it("sends exactly one first prompt after strict confirmation of a fresh draft's changed model", async () => {
+  const model = "explicit-fresh-model";
+  const selection = { ...saved, model };
+  const ready = {
+    ...check(),
+    current: {
+      choices: check().current.choices.map((choice) =>
+        choice.id === "model" ? { ...choice, value: model } : choice,
+      ),
+    },
+  };
+  state.workEnabled = true;
+  state.configOptions[0].options.push({ value: model, name: "Explicit model" });
+  applyConfigCheck(state, { ...check(), status: "blocked" });
+  applyConfigCheck(state, check());
+  expect(state.queuePaused).toBe("unavailable");
+  expect(ownsConfigurationPause(state)).toBe(true);
+  h.invoke.mockImplementation(async (name, args) => {
+    if (name === "session_set_config")
+      return {
+        configOptions: state.configOptions.map((option) =>
+          option.id === "model" ? { ...option, currentValue: model } : option,
+        ),
+        configOptionsModern: true,
+        configCheck: ready,
+        permissionState: "ready",
+        service: null,
+      };
+    if (name === "session_confirm_config") return ready;
+    if (name === "session_prompt") {
+      args.admissionChannel.onmessage({ receiptId: 83, phase: "offered" });
+      return { status: "accepted" };
+    }
+    return name === "settings_get" ? null : [];
+  });
+  await threads.setConfig(state.key, "model", model);
+  expect(state.queuePaused).toBe("unavailable");
+  await threads.confirmRestoredConfig(state.key, selection);
+  expect(state.queuePaused).toBeNull();
+  expect(ownsConfigurationPause(state)).toBe(false);
+  const blocks = [{ type: "text" as const, text: "Owned first input" }];
+  composerDrafts.update("new", () => ({
+    text: blocks[0].text,
+    attachments: [],
+    sendPending: true,
+  }));
+  const attempt = await rememberPendingConversation(
+    "new",
+    composerDrafts.read("new"),
+    state,
+  );
+  try {
+    const outcome = await sendNewConversation(state.key, blocks, attempt).catch(
+      (error: unknown) => error,
+    );
+    expect.soft(outcome).toBeUndefined();
+    expect
+      .soft(h.invoke.mock.calls.filter(([name]) => name === "session_prompt"))
+      .toHaveLength(1);
+    expect.soft(state.identity).toBe("established");
+    expect(state.queued).toEqual([]);
+    expect(calls()).toHaveLength(1);
+  } finally {
+    composerDrafts.clear("new");
+  }
+});
+
+it.each([
+  "established",
+  "resumed",
+  "history",
+  "earlier-round",
+  "queued",
+  "manual",
+  "work-disabled",
+  "unknown-pause",
+] as const)(
+  "keeps the %s pause after strict confirmation",
+  async (condition) => {
+    applyConfigCheck(state, { ...check(), status: "blocked" });
+    applyConfigCheck(state, check());
+    if (condition === "established") state.identity = "established";
+    if (condition === "resumed") state.resumed = true;
+    if (condition === "history")
+      event({
+        update: {
+          sessionUpdate: "agent_message_chunk",
+          content: { type: "text", text: "Owned prior history" },
+        },
+      });
+    if (condition === "earlier-round") state.roundItemBase = 1;
+    if (condition === "queued")
+      state.queued = [[{ type: "text", text: "Existing queued input" }]];
+    if (condition === "manual") pauseQueue(state, "unavailable");
+    if (condition === "work-disabled") pauseQueue(state, "work_disabled");
+    if (condition === "unknown-pause") pauseQueue(state, "uncertain");
+    const pause = state.queuePaused;
+    const queued = state.queued.slice();
+    h.invoke.mockImplementation(async (name) =>
+      name === "session_confirm_config"
+        ? check()
+        : name === "settings_get"
+          ? null
+          : [],
+    );
+    await expect(
+      threads.confirmRestoredConfig(state.key, saved),
+    ).resolves.toBeUndefined();
+    expect(state.queuePaused).toBe(pause);
+    expect(state.queued).toEqual(queued);
+    expect(calls()).toHaveLength(1);
+    expect(
+      h.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(0);
+  },
+);
+
+it.each(["rejected", "not-ready", "owner-changed", "busy-after"] as const)(
+  "keeps a fresh draft's configuration pause when confirmation is %s",
+  async (failure) => {
+    applyConfigCheck(state, { ...check(), status: "blocked" });
+    applyConfigCheck(state, check());
+    h.invoke.mockImplementation(async (name) => {
+      if (name !== "session_confirm_config")
+        return name === "settings_get" ? null : [];
+      if (failure === "rejected")
+        throw "FARFOLD_RESTORE_CONFIRM_GUARD_NOT_READY";
+      if (failure === "not-ready") return { ...check(), status: "blocked" };
+      if (failure === "owner-changed") state.connectionId = "replaced-owner";
+      if (failure === "busy-after") state.running = true;
+      return check();
+    });
+    await expect(
+      threads.confirmRestoredConfig(state.key, saved),
+    ).rejects.toThrow(STRINGS.repair.confirmConfigFailed);
+    expect(state.queuePaused).toBe("unavailable");
+    expect(ownsConfigurationPause(state)).toBe(true);
+    expect(calls()).toHaveLength(1);
+    expect(
+      h.invoke.mock.calls.filter(([name]) => name === "session_prompt"),
+    ).toHaveLength(0);
+  },
+);
 
 it("uses the real strict invoke bridge with the saved map and ordered ready event, without manual refresh or a setter", async () => {
   h.invoke.mockImplementation(async (name) => {

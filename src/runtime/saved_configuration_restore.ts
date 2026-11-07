@@ -1,5 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
-import { sameConfigurationSnapshot, type ConfigCheck } from "./config_check";
+import {
+  releaseConfigurationPause,
+  sameConfigurationSnapshot,
+  type ConfigCheck,
+} from "./config_check";
 import { configChangeBusyReason, protectedConfigIds } from "./protected_config";
 import { modelConfigOption } from "./session_projection";
 import type { ThreadState } from "./session_types";
@@ -151,6 +155,7 @@ export async function confirmSavedConfiguration(
   state.configuring = true;
   state.configError = null;
   hooks.emit();
+  let confirmed = false;
   try {
     const displayed = cloneConfirmationValue(initialCheck.current);
     let reply: ConfigCheck;
@@ -181,6 +186,7 @@ export async function confirmSavedConfiguration(
       throw new ConfigurationConfirmationError("values-changed");
     }
     // Channel order owns the guard. Never apply a possibly stale ready reply.
+    confirmed = true;
   } catch (error) {
     if (current()) state.configError = STRINGS.repair.confirmConfigFailed;
     throw error instanceof ConfigurationConfirmationError
@@ -189,6 +195,16 @@ export async function confirmSavedConfiguration(
   } finally {
     if (current()) {
       state.configuring = false;
+      // A fresh first-message editor has no history or existing work to resume.
+      // Only the completed strict confirmation may release its own empty pause.
+      if (
+        confirmed &&
+        state.identity === "draft" &&
+        !state.resumed &&
+        state.roundItemBase === 0 &&
+        state.items.length === 0
+      )
+        releaseConfigurationPause(state);
       hooks.emit();
     }
   }
