@@ -90,6 +90,8 @@
 
 **第1阶段Goose模型冷恢复。** 用已登记的官方1.52.0程序在独立目录打开两个空自测会话，核对扩展和工具为空。只切A到Super VL，新进程按原会话加载后A保持Super VL、B保持Ultra，零提示及登录请求。仅覆盖官方程序自己保存恢复，Farfold正式界面、账号归属及实际回复仍待。[Goose隔离冷恢复](evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json)
 
+**第1阶段Goose管理器冷开前置。** 隔离管理器经官方1.52.0创建两个空对话，均以OpenRouter和Ultra保存。一次本机目录刷新写入两个预期模型，首个响应和刷新时间同在一毫秒。首条的模型选项及就绪联合检查未过，具体缺项未证；两组进程已收回，零配置设置、冷开、登录和模型请求。下一次先单独核对两候选、当前项和就绪状态。[隔离前置回执](evidence/2026-11-06-phase1-next/goose-manager-local-catalogue-preflight.json)
+
 **第1阶段Kilo隔离会话关闭。** 官方程序7.8.1在独立库创建两个无消息自测会话，仅关闭A一次并收到对应回执；B在同一进程重新接入并读回原设置，两条历史保留。零模型、工具和审批；A专属资源及B原路由连续性未证，不替代正式复验或跨版授权。[隔离回执](evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json)
 
 **第1阶段正式多图保真与Kilo模型菜单。** 已完成的Copilot自测对话通过正式系统选择器导入40张独立PNG，切换前后全在原测试稿，5,257,240字节逐一核合。清理测试引用后原稿、保留1份及测试通信摘要保持；第一次观察时附件已准备好，读取中切换仍缺证。Kilo隔离零发送的新会话确实列出同服务两个免费候选，后台计费、实际切换及冷恢复未验证。[正式多图](evidence/2026-11-06-phase1-draft-image/forty-image-switch.json) · [Kilo模型菜单](evidence/2026-11-06-phase1-next/kilo-model-options-isolated.json)

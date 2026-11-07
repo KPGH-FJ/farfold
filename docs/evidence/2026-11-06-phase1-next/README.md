@@ -38,6 +38,10 @@ Goose 正式自测 B 的既有回复，已用原请求编号核对 OpenRouter �
 
 另用同一已登记 Goose 1.52.0 程序直接启动独立测试连接。两条空对话分别移除自测范围内唯一扩展，读回扩展和工具均为空。仅把 A 从 Ultra 改为同服务 Super VL，正常关闭自测进程后，用新进程加载同一两个对话。A 读回 Super VL，B 保持 Ultra，扩展与工具仍为空，两条消息数为零。两次自测进程均正常退出，零提示和登录请求。该分项覆盖官方程序自己的模型保存和冷恢复，实际账号、回复、费用和正式应用仍待验证。[Goose 隔离冷恢复](goose-isolated-model-cold-restore.json)
 
+进一步用隔离的 Farfold 连接管理器启动同版官方程序，只放行一个本机目录服务。两个空自测对话均初始化并创建成功，Goose 临时库两条原生记录均为 OpenRouter 和 Ultra，只有一次本机模型目录查询。首轮版本检查把官方输出前置空格误判，校正后版本命令退出 0。随后首条对话的模型选项和就绪联合检查失败，未下发配置、冷读、登录或模型请求，两组测试进程均收回。已有通信只记录请求类型，需在切换前分别留证当前选项、可选模型及就绪状态。Farfold 冷开配置核对仍未实测。[隔离前置回执](goose-manager-local-catalogue-preflight.json)
+
+临时库确认异步刷新写入了 Ultra 和 Super VL。首条响应与刷新记录时间在同一毫秒，首条响应比第二条多 563 字节。官方内置目录不含 Super VL，新建对话不会等待刷新，因此首条可能仍返回内置目录。现有回执只保留时间和帧大小，首条具体菜单、就绪状态及提交时序仍待分项取证。[内置目录](https://github.com/block/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose-providers/src/openrouter.rs#L24-L38) · [异步刷新](https://github.com/block/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server.rs#L957-L995)
+
 ## 独立验证与缺项
 
 Kilo 7.8.1 的真实隔离连接声明支持关闭、继续和列出。在两个无消息的自测对话中，只对 A 关闭一次，收到同请求回执；B 在同一进程以官方继续入口读回原设置，两条历史都保留。未发送模型、工具或审批。B 原活动路由是否全程连续、A 专属资源是否已释放，以及正式界面和跨版桌面授权仍未验证。[隔离会话关闭回执](kilo-lifecycle-isolated.json)
