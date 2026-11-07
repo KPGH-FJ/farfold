@@ -1,0 +1,102 @@
+{
+  "archiveSha256": "ed8f7895f1721fb129d08b5139d140a01af5df716c319698fd79f8fb7f9e19a1",
+  "argv": ["login", "--with-token"],
+  "authProfileEmptyBeforeLaunch": true,
+  "autoUpdateEnvDisabled": true,
+  "browserOrDeviceMarkerObserved": false,
+  "classifierTests": {
+    "allPassed": true,
+    "cases": [
+      {
+        "name": "full-formatted-error",
+        "passed": true
+      },
+      {
+        "name": "prompt-and-full-error",
+        "passed": true
+      },
+      {
+        "name": "generic-login-error",
+        "passed": true
+      },
+      {
+        "name": "old-short-expectation",
+        "passed": true
+      },
+      {
+        "name": "empty",
+        "passed": true
+      }
+    ],
+    "checkedUtc": "2026-11-07T03:42:04.116822+00:00",
+    "kind": "exact-official-formatted-empty-token-classifier",
+    "sourceSha256": "67b1b3b2073a82b587fd4fbdb927cf08195ab62b0d9e3f8438c3d5130460ba1e",
+    "testSourceSha256": "b01f1e8399750a8802d078319ddb87a711e0ea99d63ae9ddc4dc60a2487d40e1"
+  },
+  "combinedPtyOutputHadBytes": true,
+  "copilotLaunches": 1,
+  "credentialBytesWritten": 0,
+  "directSignals": 0,
+  "echoDisabledBeforeEof": true,
+  "emptyEofControlsWritten": 1,
+  "endedUtc": "2026-11-07T03:42:06.764522+00:00",
+  "exactOfficialOwnerBeforeEof": true,
+  "executableSha256": "fde4cb4bfc3c5a9fe1d546433488f9e22ea63dab71d94ff9347ef9a46d5a04d8",
+  "externalNetworkAllowed": false,
+  "isolatedConfigCreated": false,
+  "isolatedCredentialOrIdentityStatePresent": false,
+  "isolatedGhCredentialFilePresent": false,
+  "kernel": {
+    "exactTwoExeAllowlist": true,
+    "homeOpenDenied": true,
+    "knownKeychainLookupDenied": true,
+    "networkBothDirectionsDeniedWithoutRequest": true,
+    "nonAllowlistedInertExecutableDenied": true,
+    "outsideScratchWriteDenied": true,
+    "ownControllingTtyWithAllInheritedFds": true,
+    "ttyReadWriteReopenStillDenied": true
+  },
+  "kernelCanaryInheritedStdout": true,
+  "kernelCanaryNaturalExit": true,
+  "kind": "PublishedCopilotCanonicalEmptyTokenClassifierCorrection",
+  "loginSuccessMarkerObserved": false,
+  "modelPrompts": 0,
+  "nativeExitCode": 1,
+  "naturalTerminalEof": true,
+  "officialEmptyInputRefusalObserved": true,
+  "officialLoginSource": {
+    "branchChecks": {
+      "emptyTokenThrowsError": true,
+      "errorCatchPrefixesLoginFailed": true,
+      "errorFormatterUsesStringError": true,
+      "readlineCloseResolvesEmpty": true
+    },
+    "bytes": 8998057,
+    "catchByteOffset": 8869236,
+    "embeddedPayloadOffset": 93450390,
+    "emptyThrowByteOffset": 8869386,
+    "formatErrorByteOffset": 22863,
+    "member": "package/cli-main.js",
+    "readlineCloseByteOffset": 8869932,
+    "sha256": "c43f5eaedb88061eade81de763a461e79fcb9122cb0dd32c4bba5427ab197025"
+  },
+  "officialVersion": "1.0.106",
+  "originalPolicySourceSha256": "2433899a6f557b4b0ca2d14ead1279302ec90adc83f5fa40a938b497dc34caf5",
+  "outcome": "official-empty-token-withdrawal-confirmed",
+  "ownedProcessGroupGone": true,
+  "ownedTemporaryProfileRemoved": true,
+  "policySha256": "f58fd27b6ad99cc80162a5d07563d0f21c418360af1753fcc1d57564ad711481",
+  "productionPathsUsed": false,
+  "ptyEofBeforePrompt": false,
+  "rawTerminalDataRetained": false,
+  "realAccountUsed": false,
+  "realBrowserOpened": false,
+  "sourceSha256": "f19b550b17ac908ec6d6625c63b35c8fcac36415690a31d4a31ed8027614e767",
+  "startedUtc": "2026-11-07T03:42:04.166588+00:00",
+  "strictCodesignVerified": true,
+  "terminalErrorClasses": [
+    "official-full-formatted-empty-input-refusal",
+    "login-error"
+  ],
+  "tokenPromptObserved": true
+}

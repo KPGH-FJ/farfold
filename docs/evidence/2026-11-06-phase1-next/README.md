@@ -92,6 +92,8 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 随后在同规则下用无业务探针实测，三个继承描述符均为正常终端，能读终端属性并输出标记。重新以读写方式打开终端设备会被拒，原限制保留。按官方 `login --with-token` 形式另启动一次同签名程序，实际出现准确输入提示。核对原进程归属和关闭回显后，只送一次空结束控制，零凭据。进程报通用登录错误，自然退出 1，终端与进程组释放，临时档案清理。确切的「未提供令牌」提示未观察到，前次退出原因仍未知。此次覆盖离线输入等待与退出，默认登录、账户变更和确切空令牌拒绝另验。[终端探针](copilot-standalone-offline-controlling-pty-canary.json) · [官方提示回执](copilot-standalone-offline-canonical-token-prompt.json)
 
+再从同一签名程序中提取内嵌源码并核合摘要。空输入会抛出错误，统一格式化会加上 `Error:`，前次夹具漏了这一前缀。旧输出已丢弃，保留原未知结论。修正匹配并通过五项正反例后，另一个空档案的一次官方启动实际显示提示；单次空结束控制后，准确返回 `Login failed: Error: no token was provided`，自然退出 1。进程组、终端和临时档案释放，零凭据、联网、浏览器及模型。范围限离线凭据输入前撤回，默认登录、OAuth 取消、真实账号和正式界面另验。[准确拒绝回执](copilot-standalone-offline-empty-token-refusal.json)
+
 另在全禁网的独立档案里，用已登记的官方 Goose 1.52.0 导入两条自制 Pi 格式记录。两个不同进程各完成一次初始化和四次历史列表查询。全量 2 条、两个目录各 1 条、空目录 0 条，标识、目录及标题逐一核合，无重复或正文片段。两次均正常退出，临时档案清理。该项覆盖官方列表的目录过滤及冷开，官方固定页长 50，此两条未触发分页，未用真实账号、模型或工具。[Goose 目录回执](goose-official-offline-history-directory-scope.json) · [官方列表实现](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server/list_sessions.rs)
 
 随后通过官方导入命令在同类全禁网档案里准备 52 条自制记录。两次独立启动中，目录 A 均分两页返回 50＋1 条，目录 B 返回 1 条，空目录返回 0 条。标识、目录、标题和顺序逐项核合。冷启动后可在原目录继续用旧游标，换目录或省略目录时明确拒绝。两次列表进程正常退出，测试资料已清理。运行时样本的时间戳均不同，同时间戳排序仅核源码，真实历史和正式界面仍按各自回执验收。[Goose 分页回执](goose-official-offline-history-pagination.json) · [官方列表实现](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server/list_sessions.rs)
