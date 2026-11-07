@@ -1,0 +1,156 @@
+{
+  "kind": "InstalledOfficialGooseCompactSample",
+  "formalSourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "nativeSession": "20261107_14",
+  "scope": "One root-owned new neutral-directory Goose conversation; seed, actual declared compact command and same-conversation recall, each sent once.",
+  "result": "verified-for-this-command-and-recall-sample",
+  "checks": {
+    "threeExplicitUiSendsAndThreeOutboundPrompts": true,
+    "eachPromptHasOneTemporalNonErrorResponse": true,
+    "noCancel": true,
+    "noProtocolErrors": true,
+    "noNewLoadOrConfigRequestAfterFirstPrompt": true,
+    "nativeExactSeedAndRememberedReplyRetained": true,
+    "nativeExactCompactAndCompletionReplyRetained": true,
+    "nativeExactRecallAnswer": true,
+    "zeroNativeToolRequestsAndResponses": true,
+    "savedModelUltraAndThoughtLevelOff": true,
+    "nativeModelUltraAndProviderOpenRouter": true,
+    "metadataCorrectionMatchesOriginalAllHashes": true
+  },
+  "steps": [
+    {
+      "step": "seed",
+      "rootUiSendClickUtc": "2026-11-07T11:56:40.330Z",
+      "rootUiSendClicks": 1,
+      "ownedUserText": "记住合成代号 N7-COMPACT-BIRCH-42，只回复“已记住”。不要使用工具，不要读取或修改文件。",
+      "rootObservedReply": "已记住",
+      "rootObservedCompletion": "已完成",
+      "outPromptAtUtc": "2026-11-07T11:56:40.468000+00:00",
+      "promptAfterClickMs": 138.0,
+      "outPromptBytes": 280,
+      "temporalFollowingResponseCount": 1,
+      "responseAtUtc": "2026-11-07T11:56:45.393000+00:00",
+      "responseError": "none",
+      "responseAfterPromptSeconds": 4.925
+    },
+    {
+      "step": "official_compact",
+      "rootUiSendClickUtc": "2026-11-07T11:58:29.243Z",
+      "rootUiSendClicks": 1,
+      "ownedUserText": "/compact",
+      "rootObservedReply": "Compaction complete",
+      "rootObservedCompletion": "已完成",
+      "outPromptAtUtc": "2026-11-07T11:58:29.353000+00:00",
+      "promptAfterClickMs": 110.0,
+      "outPromptBytes": 169,
+      "temporalFollowingResponseCount": 1,
+      "responseAtUtc": "2026-11-07T11:58:35.767000+00:00",
+      "responseError": "none",
+      "responseAfterPromptSeconds": 6.414
+    },
+    {
+      "step": "same_conversation_recall",
+      "rootUiSendClickUtc": "2026-11-07T12:00:51.188Z",
+      "rootUiSendClicks": 1,
+      "ownedUserText": "此前给出的代号是什么？只回复代号，不要使用工具，不要读取或修改文件。",
+      "rootObservedReply": "N7-COMPACT-BIRCH-42",
+      "rootObservedCompletion": "已完成",
+      "outPromptAtUtc": "2026-11-07T12:00:51.326000+00:00",
+      "promptAfterClickMs": 138.0,
+      "outPromptBytes": 263,
+      "temporalFollowingResponseCount": 1,
+      "responseAtUtc": "2026-11-07T12:00:54.619000+00:00",
+      "responseError": "none",
+      "responseAfterPromptSeconds": 3.293
+    }
+  ],
+  "configuration": {
+    "savedChoices": [
+      {
+        "id": "model",
+        "category": "model",
+        "type": "select",
+        "value": "nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      {
+        "id": "thinking_effort",
+        "category": "thought_level",
+        "type": "select",
+        "value": "off"
+      }
+    ],
+    "nativeProvider": "openrouter",
+    "nativeModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nativeMode": "auto",
+    "actualProviderReasoningBehavior": "unverified; saved off is a confirmed choice, not a provider trace"
+  },
+  "storedContext": {
+    "messageCount": 10,
+    "originalSeedAndFirstAnswerStillUserVisible": true,
+    "originalSeedAndFirstAnswerNowNotAgentVisible": true,
+    "agentOnlySummaryPairPresent": true,
+    "compactAndFixedReplyRetainedForUserNotAgent": true,
+    "recallUserAndAnswerBothVisible": true,
+    "boundary": "Current stored structure matches the official implementation; no pre-compaction physical snapshot was captured."
+  },
+  "protocol": {
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/load": 0,
+      "session/set_config_option": 2,
+      "session/prompt": 3,
+      "session/cancel": 0,
+      "other": 0
+    },
+    "protocolErrorCount": 0,
+    "responseAttribution": "One non-error response between successive isolated prompt sends in the same controlled connection; temporal correlation, not retained RPC-ID matching.",
+    "rpcIdsOrBodiesRetained": false
+  },
+  "typedCompactionActivity": {
+    "actualTypedLifecycleReceiptCaptured": false,
+    "retainedTapHasUpdateBodies": false,
+    "runtimeEmissionFromThisTap": "unknown; content-free session/update frames cannot establish typed activity or its absence",
+    "sourceEvidence": "The separate official v1.52 source review found no typed compaction_update/compaction_summary_chunk producer in the inspected ACP path. This source observation is separate from runtime event proof.",
+    "fullARCH36OrNEW29Claimed": false
+  },
+  "rawReadonlyResult": {
+    "path": "output/2026-11-07-cycle4-mcp-config/goose-compaction/result-readonly.json",
+    "sha256": "80ad56ae94daf041fa6a4033e07f7788c5785e5b8f1db7228dfd9e21ea84187f"
+  },
+  "evidence": [
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/goose-compaction/after-compact-and-followup.json",
+      "sha256": "3309010977caabe77bc6d86f3f5305ed82edb6d7183ec82ab255dcf65fb0d50d"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/goose-compaction/reader-format-correction.json",
+      "sha256": "46f78c058b6f8fc8fbc60b5c206fac78810b945e62c1731c882eaeb5f762cd33"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/goose-compaction/ui-events.json",
+      "sha256": "cfe81e4dc6353b72130a056b9a28b027664c7b73b64a3ec2afdf51d64be9d6d9"
+    },
+    {
+      "path": "output/2026-11-07-cycle4-mcp-config/goose-official-lifecycle-source.json",
+      "sha256": "99dc1189a0c390b223925ed6cf04c76a56c49f5448740cc0ab0e3b703932f22d"
+    }
+  ],
+  "readerFormatCorrection": {
+    "initialIncompleteReceiptPreserved": true,
+    "correctedFields": [
+      "choices array",
+      "metadata camelCase visibility",
+      "typed native model reasoning"
+    ],
+    "sameSampleHashesMatched": true,
+    "productDefectClaimedFromReaderBug": false
+  },
+  "limitations": [
+    "First answer was observed by root UI before compact; the independent native history was first captured after compact and recall. No pre/post physical snapshot or exact original row-byte preservation is claimed.",
+    "Native reported token usage is retained only for the two ordinary assistant messages; auxiliary compaction usage and provider-internal HTTP request/retry counts are not established. No token savings are inferred.",
+    "The final accurate recall shows this one selected same-conversation continuation. Failure/cancel, typed activity protection, long history, branch/checkpoint, other models and complete Agent acceptance remain separate.",
+    "No native reasoning text, ambient context text, credential source or other Agent history was copied to these receipts."
+  ]
+}
