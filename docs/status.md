@@ -68,6 +68,8 @@
 
 **第1阶段独立WebKit写锁验收。** 在真实输入框中粘贴自测PNG，读取中切到B后，图片只回到A。独立SQLite持锁时可取消退出；再退出报告保存失败，旧盘值和窗口新稿均保持。解锁重试并正常退出后，新进程的输入框及独立读库核合两份草稿与图片字节。两次各退出一次，零Agent请求。粘贴、切换和退出由夹具触发，正式应用系统选图、存储故障和Dock退出仍待实测。[输入框和原生回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-write-lock.json)
 
+**第1阶段macOS发布编译预检。** d3529ff52用锁定依赖生成arm64可执行文件，原安装版摘要保持。本次未生成新应用包或运行该可执行文件。安装版写入故障仍待隔离桌面，旧版三条连接和现有草稿保留。[编译回执](evidence/2026-11-07-stop-during-draft-save/arm64-release-executable-preflight.json)
+
 **第1阶段退出等待图片。** 独立WebKit中，真实退出事件先到达，输入框还在等A图片的读取回执；旧盘两份草稿保持，零保存或退出确认。放行后一次保存和退出，冷开读回A的新文字与原图片，B保持。夹具延迟交付实际WebKit读取结果。正式系统选图、退出交错和Dock仍待实测。[待图片退出回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-pending-attachment-exit.json)
 
 **第1阶段独立原生文件读取。** 在原生命令实际等待只读测试卷时切到B并触发退出。放行前独立SQLite读回两份旧稿，零保存或退出确认。放行后图片只归A，一次保存和正常退出；卸载测试卷后新进程读回两份稿及完全一致的PNG，零Agent请求。选择器返回、切换与退出触发由夹具提供，正式系统选图、Finder拖放和Dock路径仍待。[原生读取回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-native-file-read.json)
@@ -97,6 +99,8 @@
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
 **第1阶段首波证据对齐。** 29家清单为首波三家已归档30个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+
+**第1阶段29家既有证据复核。** 逐家核对保留名单和索引后，补入Mistral自有命令实际停止及单文件返工、Qwen原稿和附件名的更新后回读与重核，以及fast-agent界面报停止后对应命令仍在的失败。五份原回执的版本和范围各自保留。六个限定历史组合与整家通过计数保持。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json)
 
 **第1阶段Goose官方历史分页。** 在全禁网独立档案里，官方程序的两次启动均把指定目录51条自制记录按顺序列为50＋1条，无漏项或重复。冷启动后原目录旧游标仍可用，换目录或省略目录均拒绝。同时间戳仅核源码，未涉及真实历史、模型或正式界面。[分页回执](evidence/2026-11-06-phase1-next/goose-official-offline-history-pagination.json)
 

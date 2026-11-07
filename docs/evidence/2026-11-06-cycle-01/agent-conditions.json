@@ -211,10 +211,11 @@
     {
       "agentId": "fast-agent",
       "name": "fast-agent",
-      "remainingCondition": "原后端、服务和权限归属明确后才评价当前效果。历史冷恢复与显式续接窄证保留，未合成官方查找/完整S3。",
+      "remainingCondition": "原后端、服务和权限归属明确后才评价当前效果。历史冷恢复与显式续接窄证保留，未合成官方查找/完整S3。843f3a78 的旧停止失败仍开放：界面显示停止约8.47秒后，同一自建命令仍活着。后来单独清理及新请求续接不能补该次停止，责任层未知。",
       "evidencePaths": [
         "docs/agent-first-release.md",
-        "docs/evidence/2026-10-24-agent-acceptance/fast-agent-formal-c876-preparation-summary.json"
+        "docs/evidence/2026-10-24-agent-acceptance/fast-agent-formal-c876-preparation-summary.json",
+        "docs/evidence/2026-10-06-macos-batch1/installed-843-results.json"
       ],
       "scopedHistoryEvidence": null
     },
@@ -579,10 +580,12 @@
     {
       "agentId": "mistral-vibe",
       "name": "Mistral Vibe",
-      "remainingCondition": "8ac6dcb09正式版中，所选原目录可访问，打开一次后连接检查超时，未读回历史，原因未定。有可归属的官方初始化进度、终态或启动/登录条件变化后再复核该对象。另一次已证S3组合保留。技能管理仍需明确实际官方启动路径和管理会话。",
+      "remainingCondition": "8ac6dcb09正式版中，所选原目录可访问，打开一次后连接检查超时，未读回历史，原因未定。有可归属的官方初始化进度、终态或启动/登录条件变化后再复核该对象。另一次已证S3组合保留。cb43一次明确停止后自有命令在自然截止前已消失，未测停止后恢复。c876另一件自有文字文件实际返工并另存，独立读回同字节，仅覆盖该文件正常链路。技能管理仍需明确实际官方启动路径和管理会话。",
       "evidencePaths": [
         "docs/agent-first-release.md",
         "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-history-discovery-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/mistral-formal-cb43-owned-stop-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/p22-formal-c876-versioned-rework-summary.json",
         "docs/evidence/2026-10-24-agent-acceptance/p40-mistral-official-management-contract-summary.json",
         "docs/evidence/2026-11-01-p18-formal/mistral-restore-blocker-summary.json",
         "docs/evidence/2026-11-06-cycle-01/summary.json"
@@ -658,11 +661,13 @@
     {
       "agentId": "qwen-code",
       "name": "Qwen",
-      "remainingCondition": "同原对象的上下文继续及实际结果未齐，不用其它对象的短答凑S3。账号、模型生效及其它标准各自待实际证据。",
+      "remainingCondition": "同原对象的上下文继续及实际结果未齐，不用其它对象的短答凑S3。一次具名正常退出更新后普通打开原对象，界面读回42字节原稿、附件名和重核防护；另一次明确重核后原稿和附件名保持，发送入口恢复。两次均零发送，仅覆盖所见界面，未核附件字节或Agent接收。账号、模型生效及其它标准各自待实际证据。",
       "evidencePaths": [
         "docs/agent-first-release.md",
         "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-625158ab-history-retention-summary.json",
-        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-e6e1-ack-summary.json"
+        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-e6e1-ack-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-cfc-required-update-retention-summary.json",
+        "docs/evidence/2026-10-24-agent-acceptance/qwen-formal-52aa-local-attachment-review-summary.json"
       ],
       "scopedHistoryEvidence": null
     },
