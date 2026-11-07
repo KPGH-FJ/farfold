@@ -22,6 +22,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-manager-local-catalogue-preflight.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-native-manager-cold-reconciliation.json",
     "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
     "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-anonymous-cold-reply.json",
@@ -43,7 +44,8 @@
     "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json",
     "docs/evidence/2026-11-06-phase1-draft-image/installed-oversize-image-kind.json",
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-permission-retry.json",
-    "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-source-replacement.json"
+    "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-source-replacement.json",
+    "docs/evidence/2026-11-06-phase1-draft-image/installed-same-name-attachment-identity.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -361,6 +363,14 @@
             "result": "两条空会话核对扩展及工具均为空，仅将 A 从同服务 Ultra 切到 Super VL。原测试进程正常退出，新进程加载各自原会话，A 恢复 Super VL，B 保持 Ultra，零提示及登录请求。覆盖官方程序原生保存，正式界面与实际回复未验。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json"
+            ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "官方 Goose 1.52.0 与隔离 Farfold 管理器，目录服务仅本机可达",
+            "result": "先核目录刷新前首条已就绪但无第二候选，刷新后两条均可见两个模型。已保存为 Super VL 的 A 在原生配置漂移后，冷开只发一次针对 A 的校正，B 保持 Ultra，两条原标识及保存记录核合。零模型发送与认证，正式冷开仍待。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/goose-native-manager-cold-reconciliation.json"
             ]
           }
         ],
