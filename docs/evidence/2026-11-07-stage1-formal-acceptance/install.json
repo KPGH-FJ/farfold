@@ -1,0 +1,75 @@
+{
+  "sourceCodeCommit": "d3529ff52",
+  "headCommit": "44b90573e617ea95eb47eb473f7cb4652ee90a14",
+  "finishedUtc": "2026-11-07T05:25:57.862543+00:00",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "525e91665479f41cd8b051d0c2008a92587ad971"
+  },
+  "installed": {
+    "Contents/Info.plist": {
+      "sha256": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "mode": 420,
+      "inode": 6575170
+    },
+    "Contents/_CodeSignature/CodeResources": {
+      "sha256": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "mode": 420,
+      "inode": 6575174
+    },
+    "Contents/MacOS/farfold": {
+      "sha256": "ac22adcb72549c26153ec1c409e362957179ac411093c941ce577560b32aefc1",
+      "mode": 493,
+      "inode": 6575171
+    },
+    "Contents/Resources/icon.icns": {
+      "sha256": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "mode": 420,
+      "inode": 6575172
+    },
+    "Contents/Resources/release-manifest.json": {
+      "sha256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "mode": 420,
+      "inode": 6575173
+    }
+  },
+  "before": {
+    "sha256": "166754852bfd078cfe088d7ca1bc48da78c9b4268ead796231255368709e4260",
+    "entries": 206275
+  },
+  "after": {
+    "sha256": "166754852bfd078cfe088d7ca1bc48da78c9b4268ead796231255368709e4260",
+    "entries": 206275
+  },
+  "dataRootsUnchanged": true,
+  "privateBackup": {
+    "lockingBeforeBackupOrFirstWalAccess": "exclusive",
+    "modeBefore": "wal",
+    "checkpointBeforeDelete": [0, 0, 0],
+    "modeAfter": "delete",
+    "checkpointAfterDelete": [0, -1, -1],
+    "integrity": "ok",
+    "connectionsClosedVerified": true,
+    "sidecarsAbsentAfterClose": true,
+    "deletedOrMovedSidecars": false,
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly"
+  },
+  "candidateIndependentReviewApproved": true,
+  "installerIndependentReviewApproved": true,
+  "normalSaveAndExit": true,
+  "originalDraftAndRetainedOneVisibleAfterLaunch": true,
+  "duplicateCandidateRemoved": true,
+  "rawInstallReceiptSha256": "ea652bf411b2d0acc9af3ab8cfe26458dc9cedb6f6224381ca0f32bd85932bf6",
+  "compressedDataManifestFiles": [
+    "output/2026-11-07-stage1-formal-acceptance/install-data-before.jsonl.gz",
+    "output/2026-11-07-stage1-formal-acceptance/install-data-after.jsonl.gz"
+  ],
+  "notClaimed": [
+    "Stage1 complete",
+    "29 Agents x8 complete",
+    "Storage fault installed test passed"
+  ]
+}

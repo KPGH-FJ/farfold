@@ -1,0 +1,43 @@
+{
+  "kind": "ConfigurationConfirmationFeedbackEngineering",
+  "sourceCommit": "2ce9c57e4efeec3a7d4640f187a97a81da2b25ad",
+  "recordedAtUtc": "2026-11-07T06:07:06.336139+00:00",
+  "scope": "safe local failure classification only; original confirmation gates and retry policy retained; Goose cause and actual recovery still unconfirmed",
+  "affectedCheck": {
+    "files": 8,
+    "passed": 169,
+    "naturalExitCode": 0,
+    "typecheckNaturalExitCode": 0,
+    "source": "output/2026-11-07-stage1-formal-acceptance/goose-create-diagnosis.json"
+  },
+  "fullFrontend": {
+    "passedFiles": 724,
+    "passedTests": 9792,
+    "naturalExitCode": 0,
+    "logSha256": "9defe877994838765e28eeb35e7f9ae87251a3b69ff1e1baeeaa48a343cbbf00"
+  },
+  "frontendBuild": {
+    "naturalExitCode": 0,
+    "logSha256": "113ae3fd8ce219ebd57c8a01240c6528f351aeb05832d79ec3fb84c11d6d9b69"
+  },
+  "globalFormatCheck": {
+    "naturalExitCode": 0
+  },
+  "docsCheck": {
+    "naturalExitCode": 0,
+    "conditions": 151,
+    "agents": 29,
+    "standardsPerAgent": 8,
+    "activePlans": 1
+  },
+  "nativeRustSourceAndDependenciesChanged": false,
+  "nativeEvidenceReuse": "docs/evidence/2026-11-07-stage1-formal-acceptance/engineering-reuse.json; reuse limited to unchanged native inputs, not a claim to have rerun all seven commands for this frontend increment",
+  "releaseBuild": {
+    "naturalExitCode": 0,
+    "logSha256": "fa2b6f0311bc7246f5a6902414a86d9cd6dbb2ba8d4844f1761fc07312bcfd32"
+  },
+  "sourceIndependentReviewApproved": true,
+  "candidateIndependentReviewSha256": "08578db83ff4787188b9a013ffde39c32e2ebf0eba95a010ba8430e489693aa5",
+  "emptyStateLines": 1497,
+  "gooseFunctionalFixClaimed": false
+}

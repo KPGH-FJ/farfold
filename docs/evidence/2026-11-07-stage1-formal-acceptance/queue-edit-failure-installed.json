@@ -1,0 +1,93 @@
+{
+  "sourceCodeCommit": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+  "formalApplication": true,
+  "nativeSession": "20261107_11",
+  "initialQueueCount": 2,
+  "writeLock": {
+    "maximumSeconds": 30,
+    "heldSeconds": 28.887309625,
+    "changesByLocker": 0
+  },
+  "failedEdit": {
+    "explicitBusyNotSaved": true,
+    "newEditStillVisible": true,
+    "bothOriginalQueueBlocksUnchanged": true,
+    "wholeStoredUnsentValueUnchanged": true
+  },
+  "explicitSaveQueueRetry": {
+    "onlyFirstItemEdited": true,
+    "secondExactlyUnchanged": true,
+    "editingDraftCleared": true,
+    "pausedQueueCount": 2,
+    "continueButtonAvailable": true,
+    "totalBPromptsStillOne": true,
+    "nativeBMessagesStillFive": true
+  },
+  "coldRestoreAndExplicitOrderedContinue": {
+    "result": "verified-for-this-owned-conversation",
+    "coldRestore": {
+      "formalCandidate": "efea18144cf307e7b3d3a857e6649055f8334775",
+      "observedAtUtc": "2026-11-07T08:03:50.931102+00:00",
+      "sameNativeSession": "20261107_11",
+      "pausedQueueCountObservedByRoot": 2,
+      "queueBlockCount": 2,
+      "queueExactlyMatchesSavedRetry": true,
+      "editingDraftAbsent": true,
+      "provider": "openrouter",
+      "model": "nvidia/nemotron-3.5-super-vl:free",
+      "thinking": "off",
+      "mode": "auto",
+      "originalNativeMessageCount": 5,
+      "originalNativeMessagesExactlyUnchanged": true,
+      "loadCount": 1,
+      "additionalPromptCountBeforeContinue": 0
+    },
+    "explicitOrderedContinue": {
+      "continueClicksObservedByRoot": 1,
+      "continueClickUtc": "2026-11-07T08:04:15.918Z",
+      "completionObservedAtUtc": "2026-11-07T08:06:01.298870+00:00",
+      "additionalProtocolPromptCount": 2,
+      "inboundResponseCount": 2,
+      "additionalCancelCount": 0,
+      "protocolErrorCount": 0,
+      "eachPromptFollowedByOneNonErrorResponseBeforeNextPrompt": true,
+      "event1TapPrefixExactlyUnchanged": true,
+      "nativeUserAndAssistantOrder": [
+        "Q1 edited text",
+        "FARFOLD_QUEUE_FIRST_EDITED_OK_1107",
+        "Q2 original text",
+        "FARFOLD_QUEUE_SECOND_OK_1107"
+      ],
+      "queuedUserTextsExact": true,
+      "assistantMarkersExact": true,
+      "nativeQueueExecutionOrderVerified": true,
+      "originalFiveMessagesUnchanged": true,
+      "newNativeMessageCount": 6,
+      "totalNativeMessageCount": 11,
+      "newNativeToolEntryCount": 0,
+      "queueBlockCountAfter": 0,
+      "queueAbsentAfter": true,
+      "inputUtf8BytesAfter": 0,
+      "sendPendingAfter": false,
+      "editingDraftAbsentAfter": true,
+      "sameModelAfter": "nvidia/nemotron-3.5-super-vl:free"
+    },
+    "rawEvidence": {
+      "coldBeforeContinue": {
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/p03-event1-cold-before-continue-readonly.json",
+        "sha256": "458bf781c04656471594e659322d4a501b9ebd6bfcc82ae3be18ee8a48f96955"
+      },
+      "afterExplicitContinue": {
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/p03-event2-after-continue-readonly.json",
+        "sha256": "47ae5b4b87e0e4a1ec13dd9f727f4dc68b4c0b6156769773fa72d02c2dcb2fca"
+      }
+    },
+    "evidenceBoundary": [
+      "UI cold-open/paused state and the single Continue click are root observations; independent read-only receipts verify stored queue, native messages/model and protocol-count changes.",
+      "Protocol diagnostics retain no request or native-session IDs. Response matching here is temporal within the isolated observed connection, not retained-ID matching.",
+      "Only this owned Goose conversation and the two saved queue items are covered; these receipts do not establish all P03 conditions or any complete Agent acceptance.",
+      "Goose scoped-close validation has not started; no close/isolation success is claimed."
+    ]
+  },
+  "sourceCodeCommitScope": "Initial installed queue edit failure and explicit retry; the subsequent cold restore and Continue below used the formal efea18144cf307e7b3d3a857e6649055f8334775 candidate."
+}

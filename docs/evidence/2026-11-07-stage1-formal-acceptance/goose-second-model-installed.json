@@ -1,0 +1,116 @@
+{
+  "sourceCodeCommit": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+  "formalApplication": true,
+  "agent": "goose",
+  "nativeSession": "20261107_11",
+  "provider": "openrouter",
+  "explicitModel": "nvidia/nemotron-3.5-super-vl:free",
+  "thinking": "off",
+  "nativeMessageCount": 11,
+  "tool": {
+    "name": "shell",
+    "oneRequestAndMatchingResponse": true,
+    "requestedSeconds": 60,
+    "officialStatus": "success",
+    "resultType": "complete",
+    "isError": false,
+    "reportedExitCode": 0,
+    "stdoutExactMarker": "FARFOLD_GOOSE_SCOPE_B_DONE_1107",
+    "stderrEmpty": true
+  },
+  "assistantExactMarker": "FARFOLD_GOOSE_SCOPE_B_DONE_1107",
+  "rawReceiptSha256": "8bf8a0f59f691dd94fad20c45dfecbc0b1a26b9109c85d665e9b68b81fc8eae4",
+  "billingBoundary": "No assertion about account billing; free is the exposed model identifier/label.",
+  "sourceCodeCommitScope": "Initial actual model/tool request; cold restore and the two queued continuations below used the formal efea18144cf307e7b3d3a857e6649055f8334775 candidate.",
+  "initialActualBodyPromptCount": 1,
+  "additionalExplicitlyContinuedBodyPromptCount": 2,
+  "totalActualBodyPromptCount": 3,
+  "nativeMessageCountBeforeQueuedContinue": 5,
+  "coldRestoreAndExplicitQueuedContinuation": {
+    "result": "verified-for-this-owned-conversation",
+    "coldRestore": {
+      "formalCandidate": "efea18144cf307e7b3d3a857e6649055f8334775",
+      "observedAtUtc": "2026-11-07T08:03:50.931102+00:00",
+      "sameNativeSession": "20261107_11",
+      "pausedQueueCountObservedByRoot": 2,
+      "queueBlockCount": 2,
+      "queueExactlyMatchesSavedRetry": true,
+      "editingDraftAbsent": true,
+      "provider": "openrouter",
+      "model": "nvidia/nemotron-3.5-super-vl:free",
+      "thinking": "off",
+      "mode": "auto",
+      "originalNativeMessageCount": 5,
+      "originalNativeMessagesExactlyUnchanged": true,
+      "loadCount": 1,
+      "additionalPromptCountBeforeContinue": 0
+    },
+    "explicitOrderedContinue": {
+      "continueClicksObservedByRoot": 1,
+      "continueClickUtc": "2026-11-07T08:04:15.918Z",
+      "completionObservedAtUtc": "2026-11-07T08:06:01.298870+00:00",
+      "additionalProtocolPromptCount": 2,
+      "inboundResponseCount": 2,
+      "additionalCancelCount": 0,
+      "protocolErrorCount": 0,
+      "eachPromptFollowedByOneNonErrorResponseBeforeNextPrompt": true,
+      "event1TapPrefixExactlyUnchanged": true,
+      "nativeUserAndAssistantOrder": [
+        "Q1 edited text",
+        "FARFOLD_QUEUE_FIRST_EDITED_OK_1107",
+        "Q2 original text",
+        "FARFOLD_QUEUE_SECOND_OK_1107"
+      ],
+      "queuedUserTextsExact": true,
+      "assistantMarkersExact": true,
+      "nativeQueueExecutionOrderVerified": true,
+      "originalFiveMessagesUnchanged": true,
+      "newNativeMessageCount": 6,
+      "totalNativeMessageCount": 11,
+      "newNativeToolEntryCount": 0,
+      "queueBlockCountAfter": 0,
+      "queueAbsentAfter": true,
+      "inputUtf8BytesAfter": 0,
+      "sendPendingAfter": false,
+      "editingDraftAbsentAfter": true,
+      "sameModelAfter": "nvidia/nemotron-3.5-super-vl:free"
+    },
+    "rawEvidence": {
+      "coldBeforeContinue": {
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/p03-event1-cold-before-continue-readonly.json",
+        "sha256": "458bf781c04656471594e659322d4a501b9ebd6bfcc82ae3be18ee8a48f96955"
+      },
+      "afterExplicitContinue": {
+        "receipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/p03-event2-after-continue-readonly.json",
+        "sha256": "47ae5b4b87e0e4a1ec13dd9f727f4dc68b4c0b6156769773fa72d02c2dcb2fca"
+      }
+    },
+    "evidenceBoundary": [
+      "UI cold-open/paused state and the single Continue click are root observations; independent read-only receipts verify stored queue, native messages/model and protocol-count changes.",
+      "Protocol diagnostics retain no request or native-session IDs. Response matching here is temporal within the isolated observed connection, not retained-ID matching.",
+      "Only this owned Goose conversation and the two saved queue items are covered; these receipts do not establish all P03 conditions or any complete Agent acceptance.",
+      "Goose scoped-close validation has not started; no close/isolation success is claimed."
+    ]
+  },
+  "existingHistorySwitchAndCold091": {
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "nativeSession": "20261107_11",
+    "beforeModel": "nvidia/nemotron-3.5-super-vl:free",
+    "afterModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "historyBefore": 11,
+    "historyAfter": 16,
+    "originalElevenSha256": "fca7d54fe67cb94d14c4e5a0b07d4ca0eaf13e978b635793bd35a69af57fb13e",
+    "allSixteenSha256": "5c6d7f1c2d98925435d2c74b3734d246d28b31d766200f8e7478426f32dca6ff",
+    "actualNextToolAndExactReply": true,
+    "normalQuitAndColdModelHistoryPreserved": true,
+    "coldExtraPrompts": 0,
+    "coldReceiptSha256": "29ff7adfbfb126fc6b16eb1d86f017b79f6ab5d8a426bae1194a4cf50ea42fda",
+    "actualResultReceiptSha256": "177b8f28157ab933f0e6d1ac884563f240df69975723ce9af6d7e5e50517e727",
+    "scope": "Same existing native conversation and service, history retained, next actual request uses the confirmed saved model; no billing claim."
+  },
+  "historicalRemainingAsOf809": "Goose scoped-close validation has not started. The earlier cold-restored A was ineligible for live stopped-work close and no scoped close was requested; this remains an uncovered condition, not a product failure.",
+  "remaining": [
+    "Whole-Agent eight-standard acceptance and billing are not claimed by these scoped samples.",
+    "Newer installed091 scoped close and cold recovery passed in goose-close-installed.json. Actual internal view/operation counts and natural30-minute idle reaping were not measured."
+  ]
+}

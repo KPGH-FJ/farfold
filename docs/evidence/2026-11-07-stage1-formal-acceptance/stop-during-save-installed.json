@@ -1,0 +1,36 @@
+{
+  "observedAtUtc": "2026-11-07T07:00:41.611965+00:00",
+  "queueClickUtc": "2026-11-07T07:00:10.671Z",
+  "stopClickUtc": "2026-11-07T07:00:11.356Z",
+  "pendingQueueButtonDisabledBeforeStop": true,
+  "draftStillVisibleBeforeStop": true,
+  "noStorageErrorBeforeStop": true,
+  "stopClickedWithinMsOfQueue": 685,
+  "writeLockHeldAcrossBothClicks": true,
+  "uiStopAcknowledged": true,
+  "uiOldToolResultUnknown": true,
+  "draftTextMatchesBefore": true,
+  "sendPendingCleared": true,
+  "queueBlockCount": 0,
+  "tapCounts": {
+    "session/new": 1,
+    "session/prompt": 1,
+    "session/cancel": 1
+  },
+  "noAdditionalPrompt": true,
+  "sqlDataChangesByLocker": 0,
+  "scope": "Second save boundary established by already-durable draft, no content edits, disabled queue action while SQLite write lock held; Stop occurs before 5s write timeout. Old tool completion remains unknown.",
+  "sourceCodeCommit": "ed50985a14e952ff3e08417ad2ad638d626aedbf",
+  "currentMacAccount": true,
+  "formalApplication": true,
+  "approvalDecisionsGranted": 0,
+  "nativeSessionId": "6995cc03-fb2e-47c5-a9a3-aa709790eeeb",
+  "coldReopen": {
+    "originalDraftVisible": true,
+    "oldToolStillUnknown": true,
+    "bannerNoAutomaticResend": true,
+    "newColdConnectionPrompts": 0,
+    "newColdConnectionCancels": 0
+  },
+  "independentReview": "output/2026-11-07-stage1-formal-acceptance/current-account-storage/stop-during-save-independent-review.json"
+}

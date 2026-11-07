@@ -1,0 +1,33 @@
+{
+  "sourceCodeCommit": "ed50985a14e952ff3e08417ad2ad638d626aedbf",
+  "currentMacAccount": true,
+  "formalApplication": true,
+  "writeLock": "BEGIN IMMEDIATE; no SQL data changes; explicit rollback after16.65s",
+  "noAgentChosenOrPromptSent": true,
+  "failedWrite": {
+    "uiShowsBusyAndNotSaved": true,
+    "uiKeepsLatestDraftB": true,
+    "databaseKeepsOriginalA": true
+  },
+  "release": {
+    "latestBStored": true,
+    "uiErrorGone": true,
+    "explicitRetry": "not-proven; stale target not dispatched after pending save completed"
+  },
+  "coldReopen": {
+    "latestBVisible": true,
+    "allConversations": 0
+  },
+  "remaining": "Stop during second save and other scoped P02/P03 combinations remain open.",
+  "explicitRetry": {
+    "newSyntheticDraftC": true,
+    "uiShowsBusyAndLatestTextBeforeRetry": true,
+    "freshFullAxClickSucceeded": true,
+    "databaseReadbackMatchesC": true,
+    "normalQuitAndColdReopenCVisible": true,
+    "zeroConversationsAndZeroPrompts": true,
+    "lockReleasedBy": "30 second bounded timeout",
+    "exactClickVersusLockReleaseTiming": "not claimed",
+    "invalidDiffElementIds": "Tool targeting issue; failed clicks not counted as actions."
+  }
+}

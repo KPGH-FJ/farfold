@@ -1,0 +1,392 @@
+{
+  "recordedAtUtc": "2026-11-07T09:15:57.449140+00:00",
+  "scope": "Installed macOS Goose warm session-scoped close after an unapproved tool request was stopped, with A draft/unknown retained, B completing its in-flight real request after the close, and normal-exit/cold-load preservation without resend.",
+  "status": {
+    "warmSessionScopedClose": "verified-for-this-owned-sample",
+    "coldRecovery": "verified-for-this-owned-sample",
+    "completeAgentAcceptanceClaimed": false
+  },
+  "formalApplication": {
+    "pid": 96069,
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "b94fa0425b91953be227d32395ffd38a891da933dd3b79e318888b7583e3f72a",
+    "installationReceipt": "output/2026-11-07-stage1-formal-acceptance/confirmation-delivery/install.json",
+    "installationReceiptSha256": "020df24966d629f766825f3b4b66dbc8dbce9f68f04ee051f6415be60aff7ba7"
+  },
+  "officialAgent": {
+    "id": "registry:goose",
+    "provider": "openrouter",
+    "workingDirectory": "/private/tmp/farfold-phase1-neutral.tGZU83dX",
+    "modelForThisSample": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "thinkingChoiceObservedByRoot": "off",
+    "versionNotIndependentlyRequeriedForThisSample": true
+  },
+  "evidenceSnapshots": [
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-event1-readonly.json",
+      "sha256": "957b71b0b39c5bb4a2e2995df0d9709bff199fa6605f1fe0d68ac7094bd85ec4",
+      "observedAtUtc": "2026-11-07T09:02:06.154434+00:00"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-event2-resources-readonly.json",
+      "sha256": "99ea49afeba7565ffef3590e3c04b751da3a4811d34c449076e4b98916d6afa3",
+      "observedAtUtc": "2026-11-07T09:03:51.699113+00:00"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-event3-b-result-readonly.json",
+      "sha256": "177b8f28157ab933f0e6d1ac884563f240df69975723ce9af6d7e5e50517e727",
+      "observedAtUtc": "2026-11-07T09:06:27.962385+00:00"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/resource-final-normal-exit.json",
+      "sha256": "280e386015e81abbddabdba11f86dbc451a04544f222363a5efdcb85c9ee8a0a",
+      "observedAtUtc": "2026-11-07T09:15:46.494387+00:00"
+    },
+    {
+      "path": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-cold-recovery-readonly.json",
+      "sha256": "29ff7adfbfb126fc6b16eb1d86f017b79f6ab5d8a426bae1194a4cf50ea42fda",
+      "observedAtUtc": "2026-11-07T09:19:18.738550+00:00"
+    }
+  ],
+  "A": {
+    "nativeSessionId": "20261107_13",
+    "ownPromptMarker": "FARFOLD_GOOSE_FINAL_CLOSE_A_1107",
+    "bodySendClickUtcObservedByRoot": "2026-11-07T08:56:34.863Z",
+    "mode": "approve",
+    "stop": {
+      "clickUtcObservedByRoot": "2026-11-07T08:57:37.319Z",
+      "firstToolPermissionApprovedByRoot": false,
+      "rootObservedAcknowledgedStopAndUnknownTool": true,
+      "outPromptCount": 1,
+      "outCancelCount": 1,
+      "persistedNativeToolRequestCountAtEvent1": 0,
+      "persistedNativeToolResponseCountAtEvent1": 0,
+      "nativePersistenceDoesNotSubstituteForLiveToolStatus": true
+    },
+    "close": {
+      "checkSucceededObservedByRoot": true,
+      "explicitConfirmationClicksObservedByRoot": 1,
+      "clickUtcObservedByRoot": "2026-11-07T09:02:29.468Z",
+      "rootObservedUi": "Connection ended/reconnect available; old tool remained unknown and original draft remained visible.",
+      "sessionScopedCloseSucceeded": true,
+      "correlatedOutboundTransportFrame": {
+        "version": 1,
+        "ts": 1794042149541,
+        "dir": "out",
+        "event": "other",
+        "bytes": 123,
+        "error": "none"
+      },
+      "followingNoErrorTransportResponse": {
+        "version": 1,
+        "ts": 1794042149544,
+        "dir": "in",
+        "event": "response",
+        "bytes": 73,
+        "error": "none"
+      },
+      "protocolErrorCount": 0,
+      "rawCloseMethodIdsAndResultBodyPersistedInTap": false,
+      "successEvidenceBoundary": "Root observed the installed typed-close UI success; the content-free tap shows the correlated request/response without an error. Native result-body validation and local session release are source-informed inferences, not directly captured in-process receipts."
+    },
+    "persistence": {
+      "draftText": "FARFOLD_GOOSE_FINAL_A_KEEP_1107：关闭后仍要保留，不发送。",
+      "draftUtf8Bytes": 70,
+      "draftTextSha256": "034180de1d570a329aa455bdf10836b3eb1e5c6ca368db04512f3c86f6b4aac4",
+      "wholeComposerSha256BeforeClose": "6dd5d4bfe76629efaa5f0b771c52acfa4b8c27e31c7fc2779ae49219b0824793",
+      "sameDraftTextAfterClose": true,
+      "sameWholeComposerAfterClose": true,
+      "sendPendingAfterClose": false,
+      "queueAfterClose": {
+        "blocks": [],
+        "uncertainIndex": null,
+        "outcomeUnknown": true
+      },
+      "queueSha256AfterClose": "297585dd02ad92ac0d350a760ca775f34902aa36010bd693a574c700f00054cd",
+      "toolOutcomePromotedToSuccess": false
+    },
+    "processAndResourceBoundary": {
+      "correlatedProcessPid": 96435,
+      "parentAppPid": 96069,
+      "processStartedLocal": "Sat Nov 7 16:51:06 2026",
+      "nativeCreatedAtUtc": "2026-11-07 08:51:06",
+      "correlationBasis": "Unique own native prompt marker, root-controlled creation order, same-second native/new-session tap/process creation, exact app parent and reciprocal standard-pipe observations.",
+      "directNativeIdToPidReceiptAvailable": false,
+      "processPresentAtEvent2": true,
+      "reciprocalStandardPipePairCountAtEvent2": 3,
+      "tapCleanupLifecycleObserved": false,
+      "wholeProcessExitClaimed": false,
+      "immediateWholeProcessExitRequiredForThisSessionClose": false,
+      "cachedTransportInterpretation": "Independent source reviews by goose_prompt and candidate, reported by root, established that official session close does not exit the server. Removing the Manager SessionEntry drops session retention and its stopped-work lease; a retained transport can remain cached until the existing idle policy reaps it.",
+      "existingIdlePolicyReportedBySourceReview": {
+        "idleThresholdMinutes": 30,
+        "reaperIntervalSeconds": 60
+      },
+      "localSessionEntryAndLeaseRelease": "Source-informed inference from the successful installed close path; no in-process aggregate was captured.",
+      "viewAndOperationLeaseAggregateActuallyMeasured": false,
+      "viewAndOperationLeaseAggregateResult": "unknown",
+      "processPresenceAloneClassifiedAsProductBug": false,
+      "sourceReviewAnchors": {
+        "reviewers": "goose_prompt and candidate; independently reported to root. These anchors are source evidence, not new runtime measurements.",
+        "officialGoose": {
+          "version": "1.52",
+          "path": "crates/goose/src/acp/server.rs",
+          "onCloseSessionLines": "2621-2643",
+          "serveContinuesFromLine": 2651,
+          "behavior": "Cancel run/voice, remove the specified session and loaded agent, and return an empty reply; the server connection continues."
+        },
+        "farfold": [
+          {
+            "path": "src-tauri/src/acp_client/pump/stopped_tool_close.rs",
+            "lines": "153-175",
+            "behavior": "After empty-object result, readiness, exact proof and accepted typed receipt, remove the matching SessionEntry and release stopped-tool work under the same lock."
+          },
+          {
+            "path": "src-tauri/src/acp_client/pump/open.rs",
+            "line": 360,
+            "behavior": "Register session retention."
+          },
+          {
+            "path": "src-tauri/src/acp_client/lifecycle.rs",
+            "lines": "560-566",
+            "behavior": "Dropping registered retention decrements sessions."
+          },
+          {
+            "path": "src-tauri/src/acp_client/tool_activity.rs",
+            "lines": "54-57",
+            "behavior": "Release removes active work and drops its work lease."
+          },
+          {
+            "path": "src-tauri/src/acp_client/lifecycle.rs",
+            "lines": "592-607",
+            "behavior": "Dropping the work lease decrements work."
+          },
+          {
+            "path": "src-tauri/src/acp_client/manager.rs",
+            "lines": "63-65",
+            "behavior": "Existing 30-minute idle threshold and 60-second reap interval."
+          },
+          {
+            "path": "src-tauri/src/acp_client/lifecycle.rs",
+            "lines": "441-455",
+            "behavior": "Idle eligibility also checks work, unclaimed work, operations, views, session retention and readiness."
+          }
+        ],
+        "actualAggregateLeaseCountResult": "unknown; typed IPC result body and in-process view/operation counters were not retained."
+      }
+    },
+    "protocol": {
+      "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794041466300-1.jsonl",
+      "bytesAtEvent3": 5331,
+      "sha256AtEvent3": "cfc3d6d84a8fc022ddbfcb9c5564e25e07283626f01fa46c6e14bb6c6dda3ca3",
+      "outboundCountsAtEvent3": {
+        "initialize": 1,
+        "session/new": 1,
+        "session/set_config_option": 3,
+        "session/prompt": 1,
+        "session/cancel": 1,
+        "response": 1,
+        "other": 1
+      }
+    }
+  },
+  "B": {
+    "nativeSessionId": "20261107_11",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "mode": "auto",
+    "modelSelectionConfirmedByRootUtc": "2026-11-07T08:59:49.015Z",
+    "continueClickUtcObservedByRoot": "2026-11-07T09:00:40.048Z",
+    "bodyPromptCountInCurrentTap": 1,
+    "connection": {
+      "pid": 96411,
+      "parentAppPid": 96069,
+      "processGroup": 96411,
+      "startedLocal": "Sat Nov 7 16:50:21 2026",
+      "samePidAndStartAcrossEvent1AndEvent2": true,
+      "sameReciprocalAppPipePairsAcrossEvent1AndEvent2": true,
+      "standardPipeAppPeerFds": {
+        "stdin": 25,
+        "stdout": 27,
+        "stderr": 29
+      },
+      "singleTapInitializeCount": 1,
+      "singleTapLoadCount": 1,
+      "tapResetObserved": false,
+      "outCancelCount": 0,
+      "originalConnectionPreservedForThisObservedRequest": true
+    },
+    "actualTool": {
+      "matchingRequestAndResponseId": "call-886e4ba0-4228-45ab-b3b5-b7cc4bb82e58",
+      "name": "shell",
+      "exactRequestedCommand": "/bin/sh -c '/bin/sleep 90; printf \"%s\\n\" FARFOLD_GOOSE_FINAL_B_DONE_1107'",
+      "requestedTimeoutSeconds": 180,
+      "shellPidBeforeClose": 97375,
+      "sleepPidBeforeClose": 97376,
+      "shellAndSleepObservedAliveAtEvent1": true,
+      "shellAndSleepAbsentAtEvent2": true,
+      "officialStatus": "success",
+      "resultType": "complete",
+      "isError": false,
+      "reportedExitCode": 0,
+      "stdoutExactMarker": "FARFOLD_GOOSE_FINAL_B_DONE_1107",
+      "stderrEmpty": true,
+      "matchingNewToolRequestCount": 1,
+      "matchingNewToolResponseCount": 1
+    },
+    "completion": {
+      "nativeUpdatedAtUtc": "2026-11-07 09:02:35",
+      "finalProtocolResponseUtc": "2026-11-07T09:02:35.982000+00:00",
+      "finalProtocolResponseAfterACloseClickSeconds": 6.514,
+      "completedAfterAClose": true,
+      "assistantExactlyMatchesMarker": true,
+      "assistantMarker": "FARFOLD_GOOSE_FINAL_B_DONE_1107",
+      "protocolErrorCount": 0
+    },
+    "history": {
+      "oldMessageCount": 11,
+      "oldMessagesSha256": "fca7d54fe67cb94d14c4e5a0b07d4ca0eaf13e978b635793bd35a69af57fb13e",
+      "oldElevenExactlyUnchanged": true,
+      "newMessageCount": 5,
+      "totalMessageCount": 16
+    },
+    "protocol": {
+      "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794041421041-0.jsonl",
+      "bytesAtEvent3": 7145,
+      "sha256AtEvent3": "c91878e6cad048b3153e95963acb30ac764a6923b802de2fb2b3820da2d208e4"
+    },
+    "timingBoundary": "EVENT2 sampling was 82 seconds after the A close click, so no process snapshot caught sleep still alive immediately after close. B nevertheless completed 6.514 seconds after close with the original observed PID/pipe relationships, unchanged tap and no cancel. The missed instantaneous sample is not an added acceptance gate."
+  },
+  "coldRecovery": {
+    "status": "verified-for-this-owned-sample",
+    "success": true,
+    "formalSourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "observedAtUtc": "2026-11-07T09:19:18.738550+00:00",
+    "rootObservedColdOpenOrder": ["20261107_11", "20261107_13"],
+    "B": {
+      "rootObserved16HistoricalMessagesVisible": true,
+      "rootObservedModel": "Ultra free",
+      "rootObservedThinking": "off",
+      "nativeProvider": "openrouter",
+      "nativeModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "nativeMode": "auto",
+      "nativeMessageCount": 16,
+      "wholeNativeMessagesSha256": "5c6d7f1c2d98925435d2c74b3734d246d28b31d766200f8e7478426f32dca6ff",
+      "wholeNativeMessagesExactlyMatchNormalExit": true,
+      "oldElevenMessagesSha256": "fca7d54fe67cb94d14c4e5a0b07d4ca0eaf13e978b635793bd35a69af57fb13e",
+      "composerAndQueueExactlyMatchNormalExit": true,
+      "queueBlockCount": 0,
+      "sendPending": false
+    },
+    "A": {
+      "rootObservedOriginalDraftAndUnconfirmedResultVisible": true,
+      "draftUtf8Bytes": 70,
+      "draftTextSha256": "034180de1d570a329aa455bdf10836b3eb1e5c6ca368db04512f3c86f6b4aac4",
+      "wholeComposerSha256": "6dd5d4bfe76629efaa5f0b771c52acfa4b8c27e31c7fc2779ae49219b0824793",
+      "composerAndQueueExactlyMatchNormalExit": true,
+      "outcomeUnknown": true,
+      "queueBlockCount": 0,
+      "sendPending": false,
+      "nativeMessageCount": 2,
+      "nativeMessagesSha256": "02d8ea731ea43b0393de94bce189112c1e809eba0db1ffdbece69aa7eff68cfd",
+      "nativeMessagesModelAndModeExactlyMatchNormalExit": true
+    },
+    "twoNewLoadConnections": [
+      {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794043016770-0.jsonl",
+        "sha256": "2b7c995ac68e2976bac694304dd7cf0424b8d27e58150568b9d796d1d3f95928",
+        "bytes": 4452,
+        "rootControlledColdOpenNative": "20261107_11",
+        "outboundCounts": {
+          "initialize": 1,
+          "session/new": 0,
+          "session/load": 1,
+          "session/set_config_option": 0,
+          "session/prompt": 0,
+          "session/cancel": 0,
+          "other": 0
+        },
+        "protocolErrorCount": 0
+      },
+      {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794043037582-1.jsonl",
+        "sha256": "44905d7ee9f701f25e5de9b774bfecf0e898b1fad681dedbf888bf87b68cad41",
+        "bytes": 2820,
+        "rootControlledColdOpenNative": "20261107_13",
+        "outboundCounts": {
+          "initialize": 1,
+          "session/new": 0,
+          "session/load": 1,
+          "session/set_config_option": 0,
+          "session/prompt": 0,
+          "session/cancel": 0,
+          "other": 0
+        },
+        "protocolErrorCount": 0
+      }
+    ],
+    "newPromptCount": 0,
+    "newCancelCount": 0,
+    "newSetterCount": 0,
+    "newProtocolErrorCount": 0,
+    "noAutomaticResendObserved": true,
+    "sendClicksObservedByRoot": 0,
+    "continueClicksObservedByRoot": 0,
+    "acknowledgeUnknownClicksObservedByRoot": 0,
+    "receipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/final-close-cold-recovery-readonly.json",
+    "receiptSha256": "29ff7adfbfb126fc6b16eb1d86f017b79f6ab5d8a426bae1194a4cf50ea42fda",
+    "evidenceBoundary": "UI visibility and no button clicks are root observations. Independent read-only capture verifies two load-only taps, no prompt/cancel/setter, and exact draft/queue/native hashes against the normal-exit receipt. Taps retain no native-session IDs; the two mappings use root-controlled cold-open order."
+  },
+  "readerActions": {
+    "agentRequests": 0,
+    "uiActions": 0,
+    "signals": 0,
+    "productionWrites": 0,
+    "newRuntimeProbesForThisPublicReceipt": 0,
+    "publicReceiptSources": "Existing warm EVENT1/2/3, installation and root normal-exit receipts, plus one authorized read-only cold capture; no observer Agent/UI actions.",
+    "authorizedReadOnlyColdCaptures": 1
+  },
+  "limitations": [
+    "This is one owned warm Goose session-scoped close and its normal-exit/cold recovery on the installed macOS arm64 candidate; complete Agent/Stage1 acceptance remains separate.",
+    "Taps contain no native-session or RPC IDs and no result bodies. A native identity is established by its own marker, while the direct native-to-process binding remains unknown.",
+    "A cached process and pipes remained in the delayed warm-close snapshot. Immediate process exit and measured aggregate view/operation lease release were not established there; later normal application Save-and-Exit cleanup is recorded separately.",
+    "B reported exit_code=0 is official native tool evidence rather than an independently instrumented OS wait result. Stored model plus this real request does not establish provider billing or every model-switch condition.",
+    "Root UI/actions, content-free protocol observations, native persistence and source-informed local-release interpretation are explicitly distinct evidence.",
+    "Cold recovery does not measure the existing 30-minute natural idle policy or in-process view/operation lease aggregates. Earlier A-to-process direct ID evidence remains unknown; later normal application exit separately confirms cleanup of the specified old processes and transports."
+  ],
+  "normalExit": {
+    "normalSaveQuitClickUtcObservedByRoot": "2026-11-07T09:14:56.411Z",
+    "resourceReceipt": "output/2026-11-07-stage1-formal-acceptance/current-account-goose/resource-final-normal-exit.json",
+    "resourceReceiptSha256": "280e386015e81abbddabdba11f86dbc451a04544f222363a5efdcb85c9ee8a0a",
+    "observedAtUtc": "2026-11-07T09:15:46.494387+00:00",
+    "allSpecifiedOldAppAgentToolProcessesGone": true,
+    "oldAGroupsEmpty": true,
+    "oldBGroupsEmpty": true,
+    "oldReciprocalPipesEmpty": true,
+    "bothOldTransportsReapedGroupEndedAndRemoved": true,
+    "oldTransportCleanup": [
+      {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794041421041-0.jsonl",
+        "sha256": "1b7393f2dba4088d10de9938dc4c3e1baa23202851f709f8fa85793a73134f32",
+        "childReaped": true,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "termRequested": true,
+        "exitSignal": 15,
+        "killRequested": false
+      },
+      {
+        "path": "/Users/tw/Library/Logs/Farfold/protocol-v1-1794041466300-1.jsonl",
+        "sha256": "8dc8cfcc41c7aa350d524bfbd0b91ceb22a3e595f58d723fc5bfe98697d849cc",
+        "childReaped": true,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "termRequested": true,
+        "exitSignal": 15,
+        "killRequested": false
+      }
+    ],
+    "evidenceBoundary": "This is later normal application Save-and-Exit cleanup from the root-local existing receipt. TERM was requested by the application and both transports report signal 15, with no KILL. It does not demonstrate natural idle reaping or immediate process exit after the earlier session-only close."
+  }
+}

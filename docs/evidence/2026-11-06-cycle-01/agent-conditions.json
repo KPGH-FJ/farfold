@@ -8,7 +8,7 @@
     "wholeAgentConfirmed": 0
   },
   "scope": "Current re-entry notes derived from committed records. Scoped historical evidence retains its original scope. Scheduling and requirements remain in their respective existing documents.",
-  "stage1SupplementScope": "首波三家后续分项按实际版本与证据层级记录。原字段及计数仍为 b7763508 底稿；S1–S7 标注对应的八项标准分项，首波完整验收仍为 0/3。认证按当前选择及实际支持方式逐项验证，API和免登录方式可直接使用；已呈现的其他认证入口、获准账号的退出换号仍按原条件开放。同会话改模型实际生效与冷恢复、永久审批及其冷恢复、安装版草稿写入故障及其余八项条件继续开放。",
+  "stage1SupplementScope": "第1阶段共用实现与当前可执行验收已收口。逐家分项按实际版本和证据层级保留，原底稿与整家通过计数保持；首波八项仍0/3、最终29家八项不变。保存故障/停止保稿/多稿/待发/模型冷恢复/指定关闭已有本批正式结果，缺条件路径、其他认证/永久审批等余量不因阶段收口计为通过。验收证据和回滚库留存后按已确认范围清掉本轮测试数据，正式界面0条。",
   "stage1SupplementEvidencePaths": [
     "PRODUCT.md",
     "docs/evidence/2026-11-06-phase1-old-exit/README.md",
@@ -47,6 +47,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-local-startup-diagnostic.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-device-pending.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-pending-pty-close-preflight.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-live-pending-manager-close-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-new-error.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-new-session-phase-attribution.json",
@@ -58,6 +59,10 @@
     "docs/evidence/2026-11-06-phase1-approval/goose-remember-rule-network-preflight.json",
     "docs/evidence/2026-11-06-phase1-approval/goose-remember-rule-lo0-ownership.json",
     "docs/evidence/2026-11-06-phase1-approval/fixed-ipv4-active-listener-canary.json",
+    "docs/evidence/2026-11-06-phase1-approval/goose-permanent-session-preflight.json",
+    "docs/evidence/2026-11-06-phase1-approval/goose-create-only-diagnostic.json",
+    "docs/evidence/2026-11-06-phase1-approval/goose-create-storage-source-trace.json",
+    "docs/evidence/2026-11-06-phase1-approval/goose-storage-system-sqlite-canary.json",
     "docs/evidence/2026-11-06-phase1-approval/goose-provider-tls-static.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
@@ -68,7 +73,28 @@
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-permission-retry.json",
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-source-replacement.json",
     "docs/evidence/2026-11-06-phase1-draft-image/installed-same-name-attachment-identity.json",
-    "docs/evidence/2026-11-06-phase1-draft-image/installed-image-source-replacement-warm.json"
+    "docs/evidence/2026-11-06-phase1-draft-image/installed-image-source-replacement-warm.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/README.md",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/old-exit.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/install.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-model-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-pending-close-native.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-original-directory-absent.json",
+    "docs/status.md",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/current-account-cleanup.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/storage-failure-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/stop-during-save-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/retained-drafts-failure-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/queue-edit-failure-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-second-model-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/fresh-model-first-send.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/manual-model-feedback-engineering.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/image-evidence-reuse.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/configuration-delivery-engineering.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/configuration-delivery-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-close-installed.json",
+    "docs/evidence/2026-11-07-stage1-formal-acceptance/final-test-cleanup.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",
@@ -348,9 +374,18 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json"
             ]
+          },
+          {
+            "standards": ["S6", "S7"],
+            "environment": "macOS arm64 正式版 d3529ff52，官方 Copilot CLI 1.0.107，已有 Auto 设置及同目录自测 A/B",
+            "result": "A 首个工具审批未获批准，明确停止后经正式入口检查并只关闭 A。官方 A 记录会话结束，旧工具仍无终态；A 草稿及未知标记保持，并在再次正常退出、冷开后读回，零自动重发。B 的同一受控命令在关闭前后实际运行，原进程及管道连续，随后准确输出并完成，零取消；Agent 自行追加一次 read_bash 读取同一 shell 结果，未重发 OS 命令。A 后台程序仍在，管理路由和工作释放为已部署成功路径推断，未直接读取内部计数或证明文件句柄 1→0。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/copilot-close-installed.json",
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/README.md"
+            ]
           }
         ],
-        "remainingCondition": "原长等待的系统原因和旧工具终态仍缺。两条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+        "remainingCondition": "原长等待的系统原因和旧工具终态仍缺。两条旧正式测试连接已准确结束并保存未知，新正式版指定关闭、原稿及未知冷恢复已有本批限定样本；暂停待发与附件的关闭后冷读、更多隔离及其他未覆盖恢复组合仍待原条件实测。"
       }
     },
     {
@@ -444,9 +479,38 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/goose-native-manager-cold-reconciliation.json"
             ]
+          },
+          {
+            "standards": ["S1"],
+            "environment": "macOS arm64 正式版 d3529ff52，沿用 Goose 相同设置再开一段",
+            "result": "官方新建和模型设置已成功，Farfold 最终确认失败，零新正文请求。该失败仍为当前缺项；现有分项不能唯一归因，安全原因分类及正式复现继续开放，不记为根因已修复或指定关闭通过。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/README.md",
+              "docs/status.md"
+            ]
+          },
+          {
+            "standards": ["S4", "S7"],
+            "environment": "macOS arm64, formal 809bb88d5 and efea18144, official Goose 1.52.0",
+            "result": "正式B11沿OpenRouter选择Super VL free/off/auto，首次正文实际调用唯一shell并完成，准确回复；efea正常冷开保留模型和原五条消息。真实写锁下待发编辑失败保原两项，显式保存只更改第一项；冷开暂停两项，一次继续后按序各发一次、准确回复、零新增工具，队列归空。它是该新对话的选择/回复及恢复分项，不冒称同一旧历史切模型全项或账单免费。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-second-model-installed.json",
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/queue-edit-failure-installed.json"
+            ]
+          },
+          {
+            "sampleKind": "Installed091ScopedCloseAndHistoryModelCold",
+            "standards": ["S4", "S6", "S7"],
+            "environment": "macOS arm64, formal091fac1c7, registered official Goose1.52.0",
+            "result": "正式091中新A手选Ultra确认/首次发送成功；A未批准工具停止后只关闭A，70字节原稿及旧工具未知保持。已有B11原11条历史切到Ultra后真实执行一次sleep90+printf，关闭A后6.514秒原连接准确完成，零B取消；冷开全部16条/Ultra和A原稿未知保持，共0新正文、0取消、0设置。会话资源释放由已审释放链支持推断，后台缓存与未测聚合计数分列；之后正常退出实际旧进程组和管道均收口。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-close-installed.json",
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/configuration-delivery-installed.json",
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/goose-second-model-installed.json"
+            ]
           }
         ],
-        "remainingCondition": "原长等待已采到回复前的 Git 忽略规则读取，确切路径与等待时点待核。正式聊天模式仍带本地技能信息，本机模拟已核隔离后的请求内容，第二候选的真实工作区、回复和费用仍待。旧 Sonnet 和旧 N/O 条件保持。一条旧正式测试连接尚无匹配结束回执及持久未知标记；指定关闭、草稿和暂停待发冷读及更多隔离组合待更新正式版后复验。"
+        "remainingCondition": "原目录长等待已有部分Git忽略规则读取证据，旧Sonnet及N/O条件仍保留，不能宣称全部旧等待已同因解决。091的设置交付竞态有受控红绿回归及正式手选/首发通过；同一B保历史切Ultra、实际回复与冷恢复通过。A指定关闭保稿未知、B原连接完成及冷恢复通过；会话资源释放为已审链支持推断，实际view/ops聚合和30分钟自然回收未测。其他认证、永久审批等全量八项剩余组合仍开放。"
       }
     },
     {
@@ -473,7 +537,7 @@
       ],
       "scopedHistoryEvidence": "Original Kilo ACK object, original Existing / Kilo Gateway NVIDIA Nemotron3Ultra(free) / None / code labels and macOS arm64. e954 full choice observations are reused within their own scope; no fresh625 full model/source or backend guarantee.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。先前实网无凭据响应未通过夹具额外限制，具体字段未知。后续隔离官方程序收到有效真实设备挑战并匹配 HTTP 202 待授权；本机模拟过期后确认进程组释放、未生成凭据。合成批准和拒绝分别验证，隔离本地退出清除合成凭据并由新进程确认。实际终端管理器另核本机待授权测试进程的关闭与释放。真实账号授权、付款身份、计费、退出换号、正式界面取消和远端撤回待实测。",
+        "authenticationBoundary": "已有 Kilo Gateway 设置确实用于一次正式续接，官方记录报告提供方和模型。先前实网无凭据响应未通过夹具额外限制，具体字段未知。后续隔离官方程序收到有效真实设备挑战并匹配 HTTP 202 待授权；本机模拟过期后确认进程组释放、未生成凭据。合成批准和拒绝分别验证，隔离本地退出清除合成凭据并由新进程确认。实际终端管理器另核本机待授权测试进程的关闭与释放。真实账号授权、付款身份、计费、退出换号、正式界面取消和远端撤回待实测。 新补官方真实设备挑战 HTTP 200、匹配待授权 HTTP 202 后，由实际终端管理器只关闭确切测试终端一次并核到释放；不代表正式图形界面、账号授权或服务端撤回。",
         "verifiedSamples": [
           {
             "standards": ["S2"],
@@ -569,9 +633,42 @@
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json"
             ]
+          },
+          {
+            "standards": ["S4", "S6"],
+            "environment": "macOS arm64 正式版 d3529ff52，官方 Kilo 7.8.1，同一已有自测 B 及沿用已有服务",
+            "result": "B 确认保存同服务免费 Dots3 后仅发送一次，准确回复专用标识；官方本机记录的提供方 kilo、模型 dots-studio/dots-3-note-preview:free、档位 instant 与该次请求和已保存选择核合。另一自测 A 的全部 Farfold 字段和原 Ultra/none 设置保持。B 原档位由 none 变 instant，不计为原思考值保持；原生费用字段为 0，未核账单。所选配置正式冷开及切回原 Ultra/none 仍待。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-model-installed.json"
+            ]
+          },
+          {
+            "standards": ["S1"],
+            "environment": "macOS arm64，官方 Kilo 7.8.1 隔离资料及实际 Farfold 终端管理器",
+            "result": "一次真实设备发起获官方 HTTP 200，一次匹配轮询获 HTTP 202，确认待授权后仅关闭确切测试终端一次。56 毫秒收到匹配关闭结果，终端、登记、主终端、退出等待和原进程组释放；随后 6.255 秒零轮询，初末均无凭据，未输入账号或打开浏览器。范围限实际管理器组合；正式图形、真实账号授权和服务端撤回仍待。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-pending-close-native.json"
+            ]
+          },
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64 正式版 d3529ff52，官方默认列表及已加入的原 Kilo 自测记录",
+            "result": "官方默认列表成功，原自测记录显示已加入；打开该条目时应用明确拒绝并保留原内容，独立 stat 确认原临时目录不存在（errno 2）。零新正文请求，未新建替代目录、重新带入或改账号模型。该样本是目录缺失，不归为桌面授权失败；原桌面目录的跨版本授权仍另验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-original-directory-absent.json"
+            ]
+          },
+          {
+            "sampleKind": "FormalColdAndOriginalBaselineRestore",
+            "standards": ["S4"],
+            "environment": "macOS arm64, formal 2ce9c57e4, official Kilo 7.8.1",
+            "result": "补记同一B正常冷开明确显示Dots3/Instant、保存选择一致且零新发送；再经正式界面明确切回原Ultra/None，保存选择及界面读回核合，A不变。原生最近消息模型仍Dots3，不作为切回后实时配置证明，未新发Ultra请求。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-07-stage1-formal-acceptance/kilo-model-installed.json"
+            ]
           }
         ],
-        "remainingCondition": "先前桌面询问的终态、长期及跨版本授权仍待验；跨版本验证需待正式应用更新。正式版切换后的实际模型回复和冷恢复，以及旧文件失败、目录超时、更多隔离及停止后恢复组合仍待验。"
+        "remainingCondition": "跨版本桌面授权的终态及长期条件仍待实际样本，本批旧临时目录errno2不归为桌面授权。Dots3/Instant正式实际回复、正常冷恢复及明确切回Ultra/None均已验；切回后未新发模型请求。旧文件失败、其他目录超时及更多停止恢复组合按原条件开放。真实待授权关闭有实际管理器组合，正式图形、账号授权和服务端撤回另验。"
       }
     },
     {
@@ -710,5 +807,14 @@
       ],
       "scopedHistoryEvidence": null
     }
-  ]
+  ],
+  "stage1Exit": {
+    "decision": "common-capabilities-and-currently-executable-acceptance-closed",
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "evidencePath": "docs/evidence/2026-11-07-stage1-formal-acceptance/README.md",
+    "missingConditionsCountedPassed": false,
+    "wholeAgentAcceptanceUnchanged": true,
+    "nextCycle": 4,
+    "nextStageNotStarted": true
+  }
 }

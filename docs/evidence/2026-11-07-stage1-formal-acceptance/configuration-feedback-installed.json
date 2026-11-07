@@ -1,0 +1,87 @@
+{
+  "sourceCodeCommit": "2ce9c57e4efeec3a7d4640f187a97a81da2b25ad",
+  "headCommit": "2ce9c57e4efeec3a7d4640f187a97a81da2b25ad",
+  "finishedUtc": "2026-11-07T06:07:11.884104+00:00",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "b17cd15c9af56ff79a90eb04c847ebf0d7c9db24"
+  },
+  "installed": {
+    "Contents/Info.plist": {
+      "sha256": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "mode": 420,
+      "inode": 6585439
+    },
+    "Contents/_CodeSignature/CodeResources": {
+      "sha256": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "mode": 420,
+      "inode": 6585443
+    },
+    "Contents/MacOS/farfold": {
+      "sha256": "19520b831bde7ef6397d38701322a49ba48d15641833ae5fa278d1d42b6d8b00",
+      "mode": 493,
+      "inode": 6585440
+    },
+    "Contents/Resources/icon.icns": {
+      "sha256": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "mode": 420,
+      "inode": 6585441
+    },
+    "Contents/Resources/release-manifest.json": {
+      "sha256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "mode": 420,
+      "inode": 6585442
+    }
+  },
+  "before": {
+    "sha256": "bb220f2356a1decbc268d76d91f4d8bb3bb0b84ce948e0f84b379fd60930a763",
+    "entries": 206275
+  },
+  "after": {
+    "sha256": "bb220f2356a1decbc268d76d91f4d8bb3bb0b84ce948e0f84b379fd60930a763",
+    "entries": 206275
+  },
+  "dataRootsUnchanged": true,
+  "privateBackup": {
+    "lockingBeforeBackupOrFirstWalAccess": "exclusive",
+    "modeBefore": "wal",
+    "checkpointBeforeDelete": [0, 0, 0],
+    "modeAfter": "delete",
+    "checkpointAfterDelete": [0, -1, -1],
+    "integrity": "ok",
+    "connectionsClosedVerified": true,
+    "sidecarsAbsentAfterClose": true,
+    "deletedOrMovedSidecars": false,
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly"
+  },
+  "candidateReviewSha256": "08578db83ff4787188b9a013ffde39c32e2ebf0eba95a010ba8430e489693aa5",
+  "normalExitSha256": "1546fadcd6d4b9f68e191e7e0f66e5d2192418dba23736c4e6e3c3b3d7e02723",
+  "primitiveSourceSha256": "768ccd0302321bc120a21640f5e7fa0d4fcdd8ad6cf14b4ffe2c8eb025b6089f",
+  "formalLaunchVerified": true,
+  "duplicateCandidateRemoved": true,
+  "normalSaveAndExitBeforeUpdate": true,
+  "draftQueueChoiceAndSessionRowsPreservedBeforeUpdate": true,
+  "dataManifestsLosslesslyCompressed": true,
+  "reproduction": {
+    "action": "same completed Goose B -> use same settings -> enter new conversation, once",
+    "newPromptSent": false,
+    "uiMain": "创建会话失败：确认失败，请核对当前设置后重试",
+    "expandedFixedDetail": "确认请求未成功完成。",
+    "classification": "confirmation call failed; payload preparation / invoke rejection boundary not yet directly distinguished",
+    "excludesForThisSample": [
+      "explicit before-busy",
+      "explicit after-busy",
+      "owner-changed",
+      "reply-not-ready",
+      "state-not-ready",
+      "snapshot-changed",
+      "values-changed"
+    ],
+    "backendCauseConfirmed": false,
+    "backendRejectionDirectlyObserved": false
+  },
+  "recordedAtUtc": "2026-11-07T06:13:03.726222+00:00"
+}

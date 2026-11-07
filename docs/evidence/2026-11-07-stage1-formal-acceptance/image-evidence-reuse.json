@@ -1,0 +1,106 @@
+{
+  "kind": "Stage1ScopedImageEvidenceReuse",
+  "recordedAtUtc": "2026-11-07T07:20:09.946077+00:00",
+  "currentSourceCommit": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+  "interpretation": "Existing controlled real-WebKit/native-command evidence and installed real-picker/navigation/save/cold evidence jointly support their stated Stage 1 image-preservation outcomes. Evidence levels and timing limits remain separate; they are not combined into an unobserved installed OS-read-pending result.",
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-11-07-stop-during-draft-save/composer-webview-write-lock.json",
+      "sha256": "a41084c76b210e136e88852d7c2ac4c5e1ad843805860a96c2726342756279b8",
+      "bytes": 2239,
+      "level": "controlled-real-webkit-and-isolated-sqlite",
+      "covers": "Real Composer/WebKit image-read switch A to B, actual SQLite write refusal, explicit retry and cold read of both drafts and exact PNG.",
+      "limits": "Synthetic paste/switch/quit; hidden nonpersistent WebKit and private database. No installed app, system picker, physical clipboard or Dock exit."
+    },
+    {
+      "path": "docs/evidence/2026-11-07-stop-during-draft-save/composer-webview-pending-attachment-exit.json",
+      "sha256": "78fba44b8c877a1820b1c8b2ed1aa2ac708dd5cba49099fda8acf96b85b51f51",
+      "bytes": 2097,
+      "level": "controlled-real-webkit-and-native-exit",
+      "covers": "Quit while the real File.arrayBuffer result was withheld from the product handler: no settings write or exit acknowledgement before release; one save/exit afterward and exact cold image.",
+      "limits": "The actual OS read may already have completed. This proves product delivery remained pending, not OS byte-read pending. Synthetic paste/switch/quit; not the installed app."
+    },
+    {
+      "path": "docs/evidence/2026-11-07-stop-during-draft-save/composer-webview-native-file-read.json",
+      "sha256": "35a60d72646593e503f3f39d5c71a19dc7a4ec10cf840b9fd75613ac4012178b",
+      "bytes": 3289,
+      "level": "controlled-native-file-command-and-real-webkit",
+      "covers": "Actual first native attachment prefix-read command had not received its bytes while switching and requesting quit; release led to one save/exit and correct cold image ownership.",
+      "limits": "Historical isolated fixture with synthetic chooser result/switch/quit. Held command was draft_attachment_audio_candidate; the later image command may read cached bytes. No installed GUI or Dock proof."
+    },
+    {
+      "path": "docs/evidence/2026-11-06-phase1-draft-image/summary.json",
+      "sha256": "40b645168ed4586559b144e8bae63c67cb49e60e65248e7f1f0a859948293589",
+      "bytes": 1057,
+      "level": "installed-macos-gui",
+      "covers": "Formal 6ce829c5 system-picker image import, navigation ownership, normal save/quit/cold reopen, explicit attachment review and exact stored image bytes.",
+      "limits": "First observation already showed a prepared image. Does not establish switch or quit while reading."
+    },
+    {
+      "path": "docs/evidence/2026-11-06-phase1-draft-image/batch-switch-summary.json",
+      "sha256": "721906be988f8dc836c414fdffba69280cee11b08eb6cca25a8ea059d6350e8d",
+      "bytes": 663,
+      "level": "installed-macos-gui",
+      "covers": "Formal 6ce829c5 system-picker multi-select of three images; navigation retained exact image bytes only in the owning draft.",
+      "limits": "No read-pending observation or app restart in this batch."
+    },
+    {
+      "path": "docs/evidence/2026-11-06-phase1-draft-image/forty-image-switch.json",
+      "sha256": "8e885707321bcbaf3b0a42a02861e19c576ab8b36cc4cc5d1636a7f235d8c652",
+      "bytes": 799,
+      "level": "installed-macos-gui",
+      "covers": "Formal 6ce829c5 system-picker import of 40 images; draft ownership and every saved image byte matched the originals.",
+      "limits": "Images were already prepared at first observation. No app exit or pending-read claim."
+    },
+    {
+      "path": "docs/evidence/2026-11-06-phase1-draft-image/high-decode-switch.json",
+      "sha256": "7e9119b4fa335bcd3d6fc556e7d3a1fa15bcd1766b0d530a02242d11841449d6",
+      "bytes": 648,
+      "level": "installed-macos-gui",
+      "covers": "Formal 6ce829c5 system-picker import of 20 high-resolution images; navigation ownership and every stored image byte matched.",
+      "limits": "No observed pending-read window, exit or new Agent request."
+    },
+    {
+      "path": "docs/evidence/2026-11-07-stage1-formal-acceptance/oversize-image-installed.json",
+      "sha256": "7efe3b56c68ab88723505f9bc79ed993d60a6d16aa99fabc5e5eadbaa1f002ec",
+      "bytes": 1439,
+      "level": "installed-macos-gui",
+      "covers": "Formal d3529ff52 retained an oversized PNG as an image, blocked sending, and preserved the same attachment when cold-reopen recheck failed.",
+      "limits": "One exact oversized-image sample; no asynchronous read/switch/quit timing claim."
+    }
+  ],
+  "unchangedMechanismProof": {
+    "comparedWithCommit": "fdee9478b2d9263e5ede9aa20773b664c7254292",
+    "checksPerformed": "Read-only extraction and exact byte comparison; no test or runtime rerun.",
+    "exactEqualSource": [
+      {
+        "path": "src/runtime/composer_attachment_import.ts",
+        "scope": "entire attachmentWork helper, from function attachmentWork to the next addPickedAttachments documentation marker",
+        "sourceBlockSha256": "20749d1c49d1146be7121660be413838ae3cc50e788a2ef291cb900da6761f4c",
+        "equalToBaseline": true
+      },
+      {
+        "path": "src/runtime/draft_storage.ts",
+        "scope": "complete file",
+        "sha256": "102f6157270d6d984fda2511470918be7a8efc4a0599af739942e37c7d79020b",
+        "equalToBaseline": true
+      }
+    ],
+    "coveredMechanisms": [
+      "Attachment result ownership remains with its original draft generation and exact live attachment member.",
+      "Saving waits for still-owned pending attachment delivery before capturing and writing the latest snapshot.",
+      "Withdrawn attachment members cannot regain write ownership from late results."
+    ],
+    "notClaimed": "No whole-module, whole-application or all-input equivalence beyond these explicitly compared scopes."
+  },
+  "remainingObservation": "Installed GUI switching or quitting while the OS is still reading the selected image bytes has not been directly observed. SQLite save locks do not establish this timing; they delay persistence, not the independent attachment read.",
+  "stageBoundary": "This timing limitation stays explicitly untested within P01. It does not add a new stage gate, require a new delay mechanism, or reopen already-covered normal image selection, navigation, preservation and cold-recovery paths. Original P01/P02/P04 conditions and the sole plan retain authority.",
+  "newActions": {
+    "runtimeProbes": 0,
+    "builds": 0,
+    "tests": 0,
+    "mounts": 0,
+    "applicationOperations": 0,
+    "productionDataWrites": 0
+  }
+}

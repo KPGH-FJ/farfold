@@ -1,0 +1,569 @@
+{
+  "allSuccessfulGuardObservationBudgetsWithin500ms": true,
+  "browserOpened": false,
+  "clonePreparation": {
+    "agentLaunches": 0,
+    "cloneElapsedSeconds": 0.177,
+    "cloneExit": 0,
+    "cloneFilesMatchedOfficialArchive": 408,
+    "distinctSourceAndCloneInodeCount": 408,
+    "freeBytesAfterClone": 327561216,
+    "freeBytesBeforeClone": 327864320,
+    "kind": "VerifiedOfficialKiloManagedLayoutApfsClone",
+    "logicalLayoutBytes": 205387117,
+    "officialRequests": 0,
+    "officialVersion": "7.8.1",
+    "rawCopyCommandOutputRetained": false,
+    "recordedUtc": "2026-11-07T05:33:00.141695+00:00",
+    "sourceAndDestinationSameVolume": true,
+    "sourceMetadataUnchangedCount": 408,
+    "sourceOrCredentialConfigurationChanged": false,
+    "sourceRegularFilesVerifiedAgainstArchive": 408
+  },
+  "closeTimeConfigAtomicallySampled": false,
+  "credentialLikeTopLevelFieldPresent": false,
+  "deviceCodeOrVerificationUrlPersisted": false,
+  "directOwnedCleanupSignals": 0,
+  "elapsedSeconds": 12.086,
+  "endedUtc": "2026-11-07T05:33:52.375295+00:00",
+  "eofControlsWritten": 0,
+  "exactKiloImageParentSoleGroupAndEmptyAuthConfirmed": true,
+  "exactTestActuallyExecuted": true,
+  "finalIsolatedAuthAbsent": true,
+  "firstGuardFailureClass": null,
+  "fixedActiveListenerStableAtEnd": true,
+  "formalAppOrProductionDataOperated": false,
+  "initialIsolatedAuthAbsent": true,
+  "inputBytesWritten": 0,
+  "isolatedChallengeMaterialScanComplete": true,
+  "isolatedFilesContainingChallengeMaterialCount": 0,
+  "isolatedFilesScannedForChallengeMaterialBytes": 340354,
+  "kiloLaunchesConfirmed": 1,
+  "kind": "OfficialKiloRealDevicePendingThenActualFarfoldTerminalManagerClose",
+  "knownAlternativeFieldPresence": {
+    "data": false,
+    "deviceCode": false,
+    "device_code": true,
+    "error": false,
+    "expires_in": false,
+    "message": false,
+    "status": false,
+    "success": false,
+    "user_code": true,
+    "verification_uri": false
+  },
+  "liveChallengeShapeAndSafetyConfirmed": true,
+  "liveCreateJsonObject": true,
+  "localResponseCounts": {
+    "device-create:200": 1,
+    "local-synthetic-catalog:200": 2,
+    "matching-device-poll:202": 1
+  },
+  "localRouteCounts": {
+    "device-create": 1,
+    "local-synthetic-catalog": 2,
+    "matching-device-poll": 1
+  },
+  "minimalExplicitEnvironmentKeyCount": 20,
+  "modelCalls": 0,
+  "native": {
+    "closeApiSucceeded": true,
+    "closeCalls": 1,
+    "closeDurationMs": 56,
+    "closeReturnedCode": 1,
+    "exactOfficialImageIsSoleLiveGroupLeaderAtRequest": true,
+    "exactPtyRemoved": true,
+    "exitLatchMatchedCloseReceipt": true,
+    "inputBytesWritten": 0,
+    "originalGroupGone": true,
+    "ownerPublished": true,
+    "rawTerminalOutputRetained": false,
+    "readinessMode": "official-device-pending",
+    "safeReadyEvidenceSeenBeforeClose": true,
+    "terminalExitFrameMatchedCloseReceipt": true,
+    "terminalMasterReleased": true,
+    "terminalOutputOverflow": false
+  },
+  "nativeArtifactSha256": "56d3df2d8dde6e2b0617fd762011be13b9b61a950e1738124267cda04a2a793c",
+  "newCorrectedAttemptAfterPreservedFailure": true,
+  "officialArchiveAndArtifactDigestsRechecked": true,
+  "officialArchiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "officialCreateHttpStatus": 200,
+  "officialDeviceCreatePostAttempts": 1,
+  "officialExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "officialMatchingDevicePollGetAttempts": 1,
+  "officialPollHttpStatus": 202,
+  "officialRequestSocketTimeoutSeconds": 3,
+  "officialRequiredFieldTypes": {
+    "code": "string",
+    "expiresIn": "number",
+    "verificationUrl": "string"
+  },
+  "officialRequiredTypesMatch": true,
+  "officialVersion": "7.8.1",
+  "ordinaryHomePreserved": true,
+  "otherOfficialHttpCalls": 0,
+  "outcome": "real-official-device-202-then-exact-terminal-manager-close-confirmed",
+  "ownedKiloGroupGone": true,
+  "ownedPreparedLayoutRemoved": true,
+  "ownedProfileRemoved": true,
+  "ownerPredicateEvents": [
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "local-synthetic-catalog",
+      "sameRequestCumulativeObservationMs": 36.846,
+      "samples": [
+        {
+          "elapsedMs": 37,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "local-request-arrival"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "local-synthetic-catalog",
+      "sameRequestCumulativeObservationMs": 32.022,
+      "samples": [
+        {
+          "elapsedMs": 32,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "local-request-arrival"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "device-create",
+      "sameRequestCumulativeObservationMs": 32.662,
+      "samples": [
+        {
+          "elapsedMs": 33,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "local-request-arrival"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "device-create",
+      "sameRequestCumulativeObservationMs": 64.808,
+      "samples": [
+        {
+          "elapsedMs": 32,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "immediately-before-official-forward"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "device-create",
+      "sameRequestCumulativeObservationMs": 98.143,
+      "samples": [
+        {
+          "elapsedMs": 33,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "after-official-create-before-local-response"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "matching-device-poll",
+      "sameRequestCumulativeObservationMs": 377.104,
+      "samples": [
+        {
+          "elapsedMs": 31,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 87,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 142,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 204,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 263,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 320,
+          "extraMemberCount": 1,
+          "extraMembers": [
+            {
+              "directChildOfExactAgent": true,
+              "imageCategory": "inert-browser-opener",
+              "imagePathSha256": "6f01c06faf299058de8ce1df189f0eaf420f85df3ed078e2a78f00f0de09f3cb"
+            }
+          ],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": false,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        },
+        {
+          "elapsedMs": 377,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "local-request-arrival"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "matching-device-poll",
+      "sameRequestCumulativeObservationMs": 409.107,
+      "samples": [
+        {
+          "elapsedMs": 32,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "immediately-before-official-forward"
+    },
+    {
+      "allOriginalGuardsRestored": true,
+      "requestKind": "matching-device-poll",
+      "sameRequestCumulativeObservationMs": 441.185,
+      "samples": [
+        {
+          "elapsedMs": 32,
+          "extraMemberCount": 0,
+          "extraMembers": [],
+          "peerErrorClass": null,
+          "snapshotErrorClass": null,
+          "values": {
+            "exactTestProcessAlive": true,
+            "fixedListenerStable": true,
+            "groupContainsOnlyExactLeader": true,
+            "groupEqualsExactPid": true,
+            "imageMatchesExactOfficialBinary": true,
+            "isolatedAuthAbsent": true,
+            "nativeOwnerOriginalSoleLeaderConfirmed": true,
+            "nativeOwnerParentMatchesTest": true,
+            "nativeOwnerPidIsInteger": true,
+            "nativeOwnerReceiptPresent": true,
+            "parentMatchesExactTest": true,
+            "peerAddressIsFixedIpv4": true,
+            "peerSocketOwnedByExactAgent": true,
+            "pidPresent": true
+          }
+        }
+      ],
+      "stage": "after-official-pending-before-local-response"
+    }
+  ],
+  "ownerPredicateObservationsAtomic": false,
+  "policySha256": "44fd479935857b621ae042cc80df40e3c032fb75cb0c404b26ebe3b13d079a05",
+  "pollsAfterCloseRequest": 0,
+  "pollsAfterConfirmedClose": 0,
+  "postCloseObservationMs": 6255,
+  "preexistingProtectedProcessCount": 7,
+  "preexistingProtectedProcessIdentitiesUnchanged": true,
+  "preparedPolicyProofReusedWithExactScratchPortAndImageChanges": true,
+  "proxyUsed": false,
+  "rawTerminalOrNetworkPayloadRetained": false,
+  "realAccountUsed": false,
+  "realPendingFlushedBeforeBooleanReady": true,
+  "realPendingFlushedBeforeCloseRequest": true,
+  "realPollResponseBodyRead": false,
+  "redirectsFollowed": 0,
+  "remainingDeviceGrantServerSideState": "not-queried-or-revoked",
+  "requestCredentialsOrCookiesSent": false,
+  "sameAcceptedRequestGuardBudgetMs": 500,
+  "sameRunFixedActiveListenerMarkerPassed": true,
+  "scope": "Official Kilo CLI in an isolated profile through the actual Farfold terminal manager. Formal application UI, account approval and remote grant revocation remain outside this run.",
+  "separateOperationSafetyChecks": {
+    "codeOneSafePathSegment": true,
+    "expiryPositiveFiniteInOfficialSecondsCalculation": true,
+    "verificationHttpsRecognizedNoUserInfo": true
+  },
+  "sourceSha256": "9d8f8fda18514b1ea188afe38b24ea2174b6d59f057dd62e415e77b2d6f0553f",
+  "startedUtc": "2026-11-07T05:33:40.288756+00:00",
+  "temporaryReadyAndInputsContainNoDeviceCode": true,
+  "testExecutions": 1,
+  "testExit": 0,
+  "testFailureClassesOnly": [],
+  "totalWallBudgetSeconds": 45,
+  "unknownTopLevelFieldCount": 3,
+  "verifiedExistingClonedLayoutReused": true,
+  "reusableCompiledTestArtifact": "retired after completed tests; source and compile recipe retained in output/2026-11-06-phase1-next/copilot-native-manager-close and original fixture directory; rebuild required before next run"
+}

@@ -1,0 +1,42 @@
+{
+  "sourceCodeCommit": "efea18144cf307e7b3d3a857e6649055f8334775",
+  "scope": "Manual model confirmation errors retain only local fixed classifications, visible above the long model list and as matching main-view detail; no guard or retry change.",
+  "affectedTestsPassed": 224,
+  "frontendFull": {
+    "files": 724,
+    "tests": 9848,
+    "format": 0,
+    "typecheck": 0,
+    "test": 0
+  },
+  "nativeReuse": {
+    "sourceCodeCommit": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+    "nativeSourceCargoLockConfigDiff": "empty",
+    "changedTsFilesReferencedByNativeSourceContracts": false,
+    "previousCargoFmt": 0,
+    "previousClippy": 0,
+    "previousRustTests": {
+      "passed": 2428,
+      "failed": 0,
+      "ignored": 7
+    },
+    "scope": "These three native checks were reused for unchanged native sources. Fresh production build validates embedding the changed frontend; not reported as a newly repeated Rust suite."
+  },
+  "independentReview": "approved",
+  "formalUi": {
+    "installedCommit": "efea18144cf307e7b3d3a857e6649055f8334775",
+    "runningPid": 85934,
+    "uiUrl": "tauri://localhost",
+    "installedFiveHashesMatch": true,
+    "closedDataEntriesUnchanged": 206275,
+    "duplicateBundleRemoved": true,
+    "actualManualSelectionUtc": "2026-11-07T08:07:00.525Z",
+    "visibleFailure": "确认失败，请核对当前设置后重试",
+    "expandedFixedDetail": "当前设置仍未就绪。",
+    "localClassification": "state-not-ready",
+    "observation": "Apply failure is visible directly below search above the 353-choice scroll region. Detail was expanded and read from the installed app screenshot. The picker closes with Escape after refusal; disabled choices are not a pending-promise/deadlock proof.",
+    "underlyingCause": "Not yet established. This source change exposes the reason but does not alter confirmation guards.",
+    "launchReceipt": "output/2026-11-07-stage1-formal-acceptance/fixed-feedback/installed-launch.json"
+  },
+  "knownBoundary": "Confirmation failure underlying cause not fixed or claimed by this display change. Unbundled dev startup/HMR succeeded but current UI tool could not attach, so no developer-window acceptance claimed."
+}

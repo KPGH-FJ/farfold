@@ -1,0 +1,107 @@
+{
+  "kind": "Stage1ExistingEngineeringEvidenceReuse",
+  "checkedAtUtc": "2026-11-07T05:22:28.637602+00:00",
+  "sourceCommit": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+  "sourceAttribution": "Pre-commit checks for the batch committed as d3529ff52; reused by affected input scope. This is not a claim that all seven commands ran under one continuously frozen final input manifest.",
+  "originalToolEvidence": {
+    "localRawPath": "/Users/tw/.codex/sessions/2026/11/04/rollout-2026-11-04T17-33-32-01a1a5e8-1210-7aa3-a23c-d5c4992839ad.jsonl",
+    "rawContentCopied": false,
+    "events": [
+      {
+        "rawLine": 59313,
+        "toolEventId": "exec-350375ed-db1d-4429-a8d4-18b9537daf02",
+        "completedAtUtc": "2026-11-07T03:15:01.441Z",
+        "checks": [
+          "typecheck",
+          "format:check",
+          "docs:check",
+          "cargo fmt --check"
+        ],
+        "naturalExitCode": 0,
+        "rawEventSha256": "0163efee776d3ed4e034c9e84c01993f47cd41eab6f383c04e5ad88d5b70e0d0",
+        "toolOutputSha256": "5a7be94f09e8e62185b8028e9f5203080509b4a4a05eab16ee7a81478ace3e36"
+      },
+      {
+        "rawLine": 59346,
+        "toolEventId": "exec-8215f336-8756-430a-9ee4-f496fee0bf25",
+        "completedAtUtc": "2026-11-07T03:16:00.678Z",
+        "checks": ["frontend test", "frontend build"],
+        "naturalExitCode": 0,
+        "rawEventSha256": "433f4952563fa984c70e189753396ca53fd7d8c2e489c83057c31069703f6fe6",
+        "toolOutputSha256": "1950b66f15da42b57cdd4af61765ab6344bad72c4e78ad55bae45cb016092176",
+        "frontend": {
+          "passedFiles": 724,
+          "passedTests": 9770
+        }
+      },
+      {
+        "rawLine": 59445,
+        "toolEventId": "exec-243c0c97-ec3b-4bc3-af5b-3199a17cc8c9",
+        "completedAtUtc": "2026-11-07T03:21:12.189Z",
+        "checks": ["cargo clippy", "cargo test"],
+        "naturalExitCode": 0,
+        "rawEventSha256": "093409333d7f1973b010685b320a94b9db93817ab7d1a3c03ee94f00ebcd287b",
+        "toolOutputSha256": "9bf02f37cfe97984a95a67754927aa6743b51601360e36d6240991f2811bdb83",
+        "rust": {
+          "passed": 2423,
+          "failed": 0,
+          "ignored": 7,
+          "testPackageOverrides": {
+            "debug": 0,
+            "incremental": false
+          },
+          "jobs": 1,
+          "quiet": true,
+          "locked": true
+        }
+      },
+      {
+        "rawLine": 59459,
+        "toolEventId": "exec-184eb7b8-a983-4f5e-939e-0938ecd145fd",
+        "completedAtUtc": "2026-11-07T03:21:32.110Z",
+        "checks": [
+          "docs:check",
+          "affected document formatting",
+          "cargo fmt --check",
+          "git diff --check"
+        ],
+        "naturalExitCode": 0,
+        "rawEventSha256": "8328e89875f899df0953c22471695e571a9db3b2eb6cf0c34f9f86d81f063f35",
+        "toolOutputSha256": "3ab587d5818f5bcf84ae777c7d5ccb36a682ce41d41d65c370cef8e814f71f8b"
+      },
+      {
+        "rawLine": 59471,
+        "toolEventId": "exec-b939fb06-210e-4348-b080-03f2ffcbbb4e",
+        "completedAtUtc": "2026-11-07T03:21:48.141Z",
+        "checks": ["commit and remote branch equality"],
+        "naturalExitCode": 0,
+        "rawEventSha256": "73affebef40a839e96635c7e293eaf2a584cd18272a4ed15a14a991ce72b00e1",
+        "toolOutputSha256": "e83478a3de6d9538f5fb4c388ec8d2041cadefe3b0e3cc495d6d19c6e58edb9c"
+      }
+    ]
+  },
+  "followupRustChange": {
+    "rawLine": 59362,
+    "changedProductFile": "src-tauri/src/project_index_scan.rs",
+    "change": "Treat a filled mount snapshot buffer as unusable.",
+    "finalClippyAndFullRustTestRawLine": 59445,
+    "finalRustFormattingRawLine": 59459,
+    "frontendInputsChangedByThisCorrection": false
+  },
+  "currentProductComparison": {
+    "observedHead": "44b90573e617ea95eb47eb473f7cb4652ee90a14",
+    "comparedTo": "d3529ff521532d0de4b437d9350ea1c962ddde66",
+    "trackedInputCount": 2694,
+    "excludedPathPrefixes": ["docs/", "plans/", "output/"],
+    "excludedDocumentationFiles": [
+      "AGENTS.md",
+      "README.md",
+      "INTERNAL-USE.md",
+      "PRODUCT.md"
+    ],
+    "changedTrackedInputs": [],
+    "untrackedInputs": []
+  },
+  "documentationBoundary": "Later plan, status and evidence edits require their own documentation checks; this receipt does not claim those later documents were included in the original seven checks.",
+  "newBuildsOrTestsRunForThisReceipt": false
+}

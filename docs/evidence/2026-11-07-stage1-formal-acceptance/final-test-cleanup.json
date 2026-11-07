@@ -1,0 +1,30 @@
+{
+  "kind": "FinalAuthorizedFarfoldTestDataCleanup",
+  "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "authorization": "Same explicitly approved scope as initial current-account cleanup: Farfold conversations/drafts/attachment references/queues only; all data identified by user as disposable development data.",
+  "initialOldSessionsRemoved": 168,
+  "newAcceptanceSessionsRemoved": 5,
+  "afterSessionCount": 0,
+  "coldInstalledUiConversationCount": 0,
+  "coldInstalledUiDraftAttachmentQueueEmpty": true,
+  "retainedAgents": 40,
+  "otherSettingsPreservedByteForByte": 50,
+  "groupDefinitionsPreserved": 3,
+  "nativeAgentOperations": 0,
+  "filesystemNamespacesDeleted": 0,
+  "programsCredentialsServicesSourceEvidencePreserved": true,
+  "nativeAgentHistoriesRetained": true,
+  "scope": "Acceptance observations and the verified private rollback database retain the tested draft/unknown evidence. Their deliberate removal from the Farfold UI is the separately authorized cleanup, not data loss during a tested operation.",
+  "originals": {
+    "applied": {
+      "path": "output/2026-11-07-stage1-formal-acceptance/final-test-cleanup/applied.json",
+      "sha256": "363d87e411aef84397dda73ba10edc703bde46cde620e0fd8ab0c600500a6fc3"
+    },
+    "review": {
+      "path": "output/2026-11-07-stage1-formal-acceptance/final-test-cleanup/cleanup-independent-review.json",
+      "sha256": "25519e394181514d436ef3d1bdcae5cd7f3e27e42a4c40787c196e32bf99cef2"
+    },
+    "rollbackDatabaseSha256": "e037ddcd70d4fbbcbca1a46603f22fc31f4b36925abbef9a023cc0c3c81ece15"
+  },
+  "rollbackIntegrity": "ok"
+}

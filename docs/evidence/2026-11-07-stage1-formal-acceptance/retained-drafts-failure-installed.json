@@ -1,0 +1,30 @@
+{
+  "sourceCodeCommit": "ed50985a14e952ff3e08417ad2ad638d626aedbf",
+  "currentMacAccount": true,
+  "formalApplication": true,
+  "twoDistinctDrafts": {
+    "originalRetainedXBytes": 64,
+    "otherCurrentBBytes": 300
+  },
+  "lockedRestore": {
+    "explicitBusyNotSaved": true,
+    "uiRetainedBothCopies": true,
+    "uiCurrentXStillEditable": true,
+    "databaseWholeUnsentValueUnchanged": true
+  },
+  "explicitSameDraftRestoreRetry": {
+    "succeeded": true,
+    "currentXHashMatchesOriginal": true,
+    "exactlyOneRetainedBOtherDraft": true,
+    "noDuplicateRetainedX": true,
+    "zeroAdditionalPrompts": true
+  },
+  "coldReopen": {
+    "onSource": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+    "currentXAndRetainedBVisible": true,
+    "twoHashesExact": true,
+    "wholeUnsentValueMatchesPreQuit": true,
+    "zeroAdditionalPrompts": true
+  },
+  "physicalFullDisk": "not tested"
+}

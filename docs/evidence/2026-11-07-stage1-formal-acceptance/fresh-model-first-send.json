@@ -1,0 +1,75 @@
+{
+  "sourceCodeCommit": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+  "problem": "A newly prepared conversation can retain its own empty configuration pause after an explicit model choice was strictly confirmed. The first-message handoff queues then returns the input without sending.",
+  "realFailure": {
+    "nativeSession": "20261107_6",
+    "nativeMessageCount": 0,
+    "protocolNew": 1,
+    "protocolSetConfig": 2,
+    "protocolPrompts": 0,
+    "protocolErrors": 0,
+    "draftPreserved": true
+  },
+  "regression": {
+    "beforeFix": "same not-sent error; 0 prompts; identity still draft",
+    "afterFix": "real set -> strict confirmation -> pending handoff -> exactly1 accepted prompt",
+    "affectedTests": 280,
+    "independentReview": "approved"
+  },
+  "change": "After all strict guards succeed, a fresh, unresumed, history-free first-message draft may release only its own empty configuration pause using the existing guarded helper. Established/history/queued/external/unknown pauses retain their prior behavior.",
+  "engineering": {
+    "frontendFiles": 724,
+    "frontendPassed": 9841,
+    "rustPassed": 2428,
+    "rustIgnored": 7,
+    "failed": 0,
+    "allSevenChecksPassed": true,
+    "commands": [
+      {
+        "name": "format",
+        "exitCode": 0,
+        "seconds": 30.677,
+        "completedUtc": "2026-11-07T07:15:12.178652+00:00"
+      },
+      {
+        "name": "typecheck",
+        "exitCode": 0,
+        "seconds": 8.09,
+        "completedUtc": "2026-11-07T07:15:20.268916+00:00"
+      },
+      {
+        "name": "test",
+        "exitCode": 0,
+        "seconds": 40.618,
+        "completedUtc": "2026-11-07T07:16:00.887188+00:00"
+      },
+      {
+        "name": "cargo-fmt",
+        "exitCode": 0,
+        "seconds": 1.568,
+        "completedUtc": "2026-11-07T07:14:43.069203+00:00"
+      },
+      {
+        "name": "clippy",
+        "exitCode": 0,
+        "seconds": 0.611,
+        "completedUtc": "2026-11-07T07:14:43.680390+00:00"
+      },
+      {
+        "name": "cargo-test",
+        "exitCode": 0,
+        "seconds": 122.11,
+        "completedUtc": "2026-11-07T07:16:45.790122+00:00"
+      }
+    ]
+  },
+  "formalRecheck": {
+    "installedSource": "809bb88d57d773a547de1bb6cc89fe796be691e8",
+    "nativeSession": "20261107_11",
+    "path": "Explicit retry restored the saved Super VL free/off/auto choice, then first Send accepted exactly one prompt; actual tool/result and final reply succeeded.",
+    "receipt": "goose-second-model-installed.json",
+    "manualSelectionStillSeparate": true,
+    "scope": "Recovered saved-configuration fresh first-send path passed; manual selection still has a separate state-not-ready refusal under investigation."
+  },
+  "scopeBoundary": "Prior intermittent confirmation failure and mode-list AX behavior remain unexplained; this fix does not claim to resolve them."
+}
