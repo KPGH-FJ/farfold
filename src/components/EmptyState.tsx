@@ -22,7 +22,9 @@ import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
 import type { UiNotice } from "../runtime/ui_error";
 import {
+  configurationApplyNotice,
   configurationPreparationNotice,
+  confirmationFeedback,
   isConfigurationRestoreNotice,
 } from "../runtime/configuration_restore_feedback";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -301,6 +303,7 @@ export function EmptyState({
         explicitReadRequired ||
         (!needsAuthentication &&
           (draftError?.message === STRINGS.repair.configFailed ||
+            draftError?.message === STRINGS.repair.confirmConfigFailed ||
             isConfigurationRestoreNotice(draftError)))
           ? "model"
           : agentRepairPanel(draft, needsAuthentication),
@@ -968,7 +971,7 @@ export function EmptyState({
     (!connectionAllowed ? A.disconnectedHint : null) ??
     work.error ??
     (sendingPaused ? STRINGS.repair.workOff : null) ??
-    draft?.configError ??
+    confirmationFeedback(draftError, draft?.configError) ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
     (draft?.sourceError ? STRINGS.service.reconnect : null) ??
     (!agentId
@@ -1072,7 +1075,7 @@ export function EmptyState({
       newConversationChoice.config = expected;
       setDraftError(null);
     } catch (reason) {
-      if (current()) setDraftError({ message: STRINGS.repair.configFailed });
+      if (current()) setDraftError(configurationApplyNotice(reason));
       throw reason;
     } finally {
       if (applyingModel.current === state.key) applyingModel.current = null;

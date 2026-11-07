@@ -16,7 +16,8 @@ import {
   type Credential,
   type ServiceCapability,
 } from "../runtime/credentials";
-import { uiError, type UiNotice } from "../runtime/ui_error";
+import type { UiNotice } from "../runtime/ui_error";
+import { configurationApplyNotice } from "../runtime/configuration_restore_feedback";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { STRINGS } from "../runtime/strings";
 import { agentStatus } from "../runtime/agent_status";
@@ -252,7 +253,7 @@ export function NewConversationModelDialog({
   const [loadError, setLoadError] = useState(false);
   const [revision, refresh] = useState(0);
   const [applying, setApplying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<UiNotice | null>(null);
   const live = useRef(true);
   const saving = useRef(false);
   const edited = useRef(false);
@@ -390,7 +391,8 @@ export function NewConversationModelDialog({
       await onApply(choice);
       if (live.current) onClose();
     } catch (reason) {
-      if (live.current) setError(uiError(reason, S.applyFailed));
+      if (live.current)
+        setError(configurationApplyNotice(reason, S.applyFailed));
     } finally {
       saving.current = false;
       if (live.current) setApplying(false);
@@ -432,19 +434,24 @@ export function NewConversationModelDialog({
       initialFocusRef={search}
       returnFocusRef={returnFocusRef}
       searchField={
-        <input
-          ref={search}
-          className="new-agent-search"
-          aria-label={S.modelSearch}
-          placeholder={S.modelSearchPlaceholder}
-          value={query}
-          disabled={applying}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setHi(0);
-          }}
-          onKeyDown={onSearchKey}
-        />
+        <>
+          <input
+            ref={search}
+            className="new-agent-search"
+            aria-label={S.modelSearch}
+            placeholder={S.modelSearchPlaceholder}
+            value={query}
+            disabled={applying}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setHi(0);
+            }}
+            onKeyDown={onSearchKey}
+          />
+          {error && (
+            <ErrorNotice message={error.message} detail={error.detail} />
+          )}
+        </>
       }
       onClose={() => {
         if (!saving.current) onClose();
@@ -617,7 +624,6 @@ export function NewConversationModelDialog({
           !loading &&
           !readingModels &&
           (selection.service || !readError) && <p role="alert">{issue}</p>}
-        {error && <p role="alert">{error}</p>}
       </div>
       <p className="new-choice-help">{S.fixedAfterSend}</p>
     </PickerDialog>

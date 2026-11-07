@@ -8,6 +8,7 @@ const confirmationReasons = {
   ...STRINGS.repair.confirmConfigNativeReasons,
 };
 type ConfirmationFailure = keyof typeof confirmationReasons;
+const confirmationNotices = new WeakSet<UiNotice>();
 
 /** Separate from saved-option feedback: a confirmation error never changes retry policy. */
 export class ConfigurationConfirmationError extends Error {
@@ -37,9 +38,33 @@ export function configurationConfirmationRejection(
 export function configurationConfirmationNotice(
   reason: unknown,
 ): UiNotice | null {
-  return reason instanceof ConfigurationConfirmationError
-    ? { message: STRINGS.repair.confirmConfigFailed, detail: reason.detail }
-    : null;
+  if (!(reason instanceof ConfigurationConfirmationError)) return null;
+  const notice = {
+    message: STRINGS.repair.confirmConfigFailed,
+    detail: reason.detail,
+  };
+  confirmationNotices.add(notice);
+  return notice;
+}
+
+/** Selection failures show only local fixed detail; unknown payloads stay private. */
+export function configurationApplyNotice(
+  reason: unknown,
+  fallback: string = STRINGS.repair.configFailed,
+): UiNotice {
+  return configurationConfirmationNotice(reason) ?? { message: fallback };
+}
+
+/** A matching local notice enriches the current guard; it never clears it. */
+export function confirmationFeedback(
+  notice: UiNotice | null,
+  configError: string | null | undefined,
+): UiNotice | string | null {
+  return notice &&
+    confirmationNotices.has(notice) &&
+    notice.message === configError
+    ? notice
+    : (configError ?? null);
 }
 
 /** Keep preparation feedback selection in one place without changing retry markers. */

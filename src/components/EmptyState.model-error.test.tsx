@@ -10,6 +10,8 @@ import type { AgentCardModel } from "../runtime/agents";
 import type { ConfigOptionView, ThreadState } from "../runtime/session_types";
 import {
   ConfigurationConfirmationError,
+  configurationApplyNotice,
+  confirmationFeedback,
   isConfigurationRestoreNotice,
 } from "../runtime/configuration_restore_feedback";
 
@@ -642,6 +644,106 @@ it("confirms an explicit same-value model click without a setter or converting i
   });
   expect(h.setConfig).not.toHaveBeenCalled();
   expect(newConversationChoice.config).toEqual({ model: "kept-choice" });
+});
+
+it("enriches only a matching local confirmation notice without trusting a copied or conflicting notice", () => {
+  const notice = configurationApplyNotice(
+    new ConfigurationConfirmationError(
+      "FARFOLD_RESTORE_CONFIRM_DISPLAYED_CHANGED",
+    ),
+  );
+  const guard = STRINGS.repair.confirmConfigFailed;
+  expect(confirmationFeedback(notice, guard)).toBe(notice);
+  expect(confirmationFeedback({ ...notice }, guard)).toBe(guard);
+  expect(
+    confirmationFeedback(
+      { message: guard, detail: "私密 PRIVATE_NOTICE_CANARY" },
+      guard,
+    ),
+  ).toBe(guard);
+  expect(confirmationFeedback(notice, STRINGS.repair.configFailed)).toBe(
+    STRINGS.repair.configFailed,
+  );
+  expect(
+    configurationApplyNotice({ message: guard, detail: "PRIVATE_RAW_CANARY" }),
+  ).toEqual({
+    message: STRINGS.repair.configFailed,
+  });
+});
+
+it("keeps model repair navigation when confirmation fails before the thread has a config error", async () => {
+  startRestore({});
+  await vi.advanceTimersByTimeAsync(300);
+  const prepared = await settle();
+  h.confirmRestored.mockImplementation(async () => {
+    h.live!.connectionOutcomeUnknown = true;
+    throw new ConfigurationConfirmationError(
+      "busy-before",
+      "connectionOutcomeUnknown",
+    );
+  });
+  await expect(
+    (prepared.dialog!.props.onApply as (choice: unknown) => Promise<void>)({
+      service: null,
+      modelValue: "kept-choice",
+    }),
+  ).rejects.toThrow(STRINGS.repair.confirmConfigFailed);
+  const failed = await settle();
+  expect(h.live!.configError).toBeNull();
+  expect(h.live!.modelDrift).toBe(false);
+  (failed.composer.props.onGoSettings as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith(
+    "A",
+    expect.objectContaining({ panel: "model", needsAuthentication: false }),
+  );
+  expect(h.live!.connectionOutcomeUnknown).toBe(true);
+  expect(h.confirmRestored).toHaveBeenCalledOnce();
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it("keeps a manual model confirmation's safe detail visible without releasing its failure guard when the picker closes", async () => {
+  const before = composerDrafts.read("new");
+  startRestore({});
+  await vi.advanceTimersByTimeAsync(300);
+  const prepared = await settle();
+  h.live!.queuePaused = "unavailable";
+  h.confirmRestored.mockImplementation(async () => {
+    h.live!.configError = STRINGS.repair.confirmConfigFailed;
+    h.live!.modelDrift = true;
+    throw new ConfigurationConfirmationError(
+      "FARFOLD_RESTORE_CONFIRM_IDENTITY_READ",
+    );
+  });
+  await expect(
+    (prepared.dialog!.props.onApply as (choice: unknown) => Promise<void>)({
+      service: null,
+      modelValue: "kept-choice",
+    }),
+  ).rejects.toThrow(STRINGS.repair.confirmConfigFailed);
+  const failed = await settle();
+  const detail =
+    STRINGS.repair.confirmConfigNativeReasons
+      .FARFOLD_RESTORE_CONFIRM_IDENTITY_READ;
+  expect(failed.composer.props.note).toEqual({
+    message: STRINGS.repair.confirmConfigFailed,
+    detail,
+  });
+  expect(failed.dialog!.props.readError).toEqual({
+    message: `${STRINGS.empty.openFailed}：${STRINGS.repair.confirmConfigFailed}`,
+    detail,
+  });
+  (failed.dialog!.props.onClose as () => void)();
+  const closed = await settle();
+  expect(closed.dialog).toBeUndefined();
+  expect(closed.composer.props.note).toEqual(failed.composer.props.note);
+  expect(closed.composer.props.disabled).toBe(true);
+  expect(h.live!.configError).toBe(STRINGS.repair.confirmConfigFailed);
+  expect(h.live!.modelDrift).toBe(true);
+  expect(h.live!.queuePaused).toBe("unavailable");
+  expect(newConversationChoice.config).toEqual({});
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(h.confirmRestored).toHaveBeenCalledOnce();
+  expect(props.onStarted).not.toHaveBeenCalled();
 });
 
 it("keeps the input and saved choice blocked when restored-baseline confirmation fails", async () => {
