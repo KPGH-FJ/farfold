@@ -856,6 +856,7 @@ it("shows bounded partial results and lets the user refine a display-limited mat
             unreadableDirectories: 1,
             unreadableEntries: 3,
             unsupportedNames: 0,
+            skippedNonlocalDirectories: 1,
           },
         },
       ),
@@ -867,6 +868,7 @@ it("shows bounded partial results and lets the user refine a display-limited mat
   expect(scanText()).toContain(PROJECT_FILES.partial);
   expect(scanText()).toContain(PROJECT_FILES.truncated);
   expect(scanText()).toContain(PROJECT_FILES.matchesLimited);
+  expect(scanText()).toContain("已跳过 1 个非本地挂载目录");
   expect(scanText()).toContain("node_modules");
   typeMention("Keep @file-69");
   expect(options()).toHaveLength(1);

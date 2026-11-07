@@ -2,7 +2,8 @@
 use super::Failure;
 use serde::Serialize;
 use std::{
-    path::Path,
+    collections::HashSet,
+    path::{Path, PathBuf},
     sync::atomic::{AtomicBool, Ordering},
     time::Instant,
 };
@@ -69,9 +70,14 @@ pub(super) struct Counts {
     pub entries: usize,
     pub directories: usize,
     pub skipped_directories: usize,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub skipped_nonlocal_directories: usize,
     pub unreadable_directories: usize,
     pub unreadable_entries: usize,
     pub unsupported_names: usize,
+}
+fn is_zero(count: &usize) -> bool {
+    *count == 0
 }
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -123,7 +129,7 @@ fn relative_name(path: &Path) -> Option<String> {
 }
 #[derive(Clone)]
 struct Directory {
-    path: std::path::PathBuf,
+    path: PathBuf,
     depth: usize,
     identity: crate::file_access::Identity,
 }
@@ -148,11 +154,75 @@ impl Directory {
         std::fs::read_dir(&self.path)
     }
 }
+
+#[cfg(target_os = "macos")]
+fn nested_nonlocal_mounts(root: &Path) -> HashSet<PathBuf> {
+    use std::{collections::HashMap, ffi::OsStr, mem::MaybeUninit, os::unix::ffi::OsStrExt};
+
+    // Read the kernel's cached mount table without probing individual volumes.
+    // This is a best-effort snapshot. Mounts can change during the scan.
+    // SAFETY: A null buffer asks Darwin for the current mount count only.
+    let count = unsafe { libc::getfsstat(std::ptr::null_mut(), 0, libc::MNT_NOWAIT) };
+    if count <= 0 {
+        return HashSet::new();
+    }
+    let slots = (count as usize + 8).min(1024);
+    let mut mounts = vec![MaybeUninit::<libc::statfs>::uninit(); slots];
+    let bytes = (slots * std::mem::size_of::<libc::statfs>()) as libc::c_int;
+    // SAFETY: The buffer is writable for the supplied byte length, which is
+    // bounded by 1024 records and fits c_int.
+    let filled = unsafe { libc::getfsstat(mounts.as_mut_ptr().cast(), bytes, libc::MNT_NOWAIT) };
+    // A full buffer may hide an overlapping local mount. Do not use that
+    // snapshot to decide what is visible at any particular path.
+    if filled < 0 || filled as usize >= mounts.len() {
+        return HashSet::new();
+    }
+
+    let mut known = HashMap::new();
+    for mount in &mounts[..filled as usize] {
+        // SAFETY: A successful getfsstat initializes its returned prefix.
+        let mount = unsafe { mount.assume_init_ref() };
+        let name = &mount.f_mntonname;
+        let Some(end) = name.iter().position(|&byte| byte == 0) else {
+            continue;
+        };
+        let bytes: Vec<_> = name[..end].iter().map(|&byte| byte as u8).collect();
+        let path = Path::new(OsStr::from_bytes(&bytes));
+        if !path.is_absolute() || path == root || !path.starts_with(root) {
+            continue;
+        }
+        let nonlocal = mount.f_flags & libc::MNT_LOCAL as u32 == 0;
+        // An overlapping local record makes the exact path ambiguous.
+        *known.entry(path.to_path_buf()).or_insert(true) &= nonlocal;
+    }
+    known
+        .into_iter()
+        .filter_map(|(path, nonlocal)| nonlocal.then_some(path))
+        .collect()
+}
+
+#[cfg(not(target_os = "macos"))]
+fn nested_nonlocal_mounts(_root: &Path) -> HashSet<PathBuf> {
+    HashSet::new()
+}
+
 pub(super) fn scan(
     root: &Path,
     request_id: String,
     cancel: &AtomicBool,
     limits: Limits,
+) -> Result<ProjectFiles, Failure> {
+    scan_with_mounts(root, request_id, cancel, limits, || {
+        nested_nonlocal_mounts(root)
+    })
+}
+
+fn scan_with_mounts(
+    root: &Path,
+    request_id: String,
+    cancel: &AtomicBool,
+    limits: Limits,
+    nested_mounts: impl FnOnce() -> HashSet<PathBuf>,
 ) -> Result<ProjectFiles, Failure> {
     let started = Instant::now();
     let mut result = ProjectFiles {
@@ -166,6 +236,10 @@ pub(super) fn scan(
         limit_reasons: Vec::new(),
         excluded_directory_names: EXCLUDED,
     };
+    if result.stopped(cancel, started) {
+        return Ok(result);
+    }
+    let nested_mounts = nested_mounts();
     if result.stopped(cancel, started) {
         return Ok(result);
     }
@@ -227,6 +301,10 @@ pub(super) fn scan(
                 }
             };
             let path = entry.path();
+            if nested_mounts.contains(&path) {
+                result.counts.skipped_nonlocal_directories += 1;
+                continue;
+            }
             let Some(relative) = path.strip_prefix(root).ok().and_then(relative_name) else {
                 result.counts.unsupported_names += 1;
                 continue;
@@ -301,6 +379,7 @@ pub(super) fn scan(
     result.partial = result.counts.unreadable_directories
         + result.counts.unreadable_entries
         + result.counts.unsupported_names
+        + result.counts.skipped_nonlocal_directories
         > 0;
     result.files.sort();
     result.files.dedup();

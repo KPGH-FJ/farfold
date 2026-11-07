@@ -33,6 +33,39 @@ fn files(root: &Path, count: usize) {
 }
 
 #[test]
+fn skips_only_known_nested_mounts_and_marks_the_result_partial() {
+    let project = tempfile::tempdir().unwrap();
+    let root = project.path().canonicalize().unwrap();
+    let mount = root.join("remote");
+    let sibling = root.join("remote-local");
+    std::fs::create_dir(&mount).unwrap();
+    std::fs::create_dir(&sibling).unwrap();
+    std::fs::write(mount.join("not-listed.txt"), "remote").unwrap();
+    std::fs::write(sibling.join("listed.txt"), "local").unwrap();
+
+    let scan = |root: &Path| {
+        scan_with_mounts(
+            root,
+            "mount-test".into(),
+            &AtomicBool::new(false),
+            Limits::default(),
+            || HashSet::from([mount.clone()]),
+        )
+        .unwrap()
+    };
+    let project_scan = scan(&root);
+    assert_eq!(project_scan.files, vec!["remote-local/listed.txt"]);
+    assert!(project_scan.partial && !project_scan.truncated);
+    assert_eq!(project_scan.counts.skipped_nonlocal_directories, 1);
+    assert_eq!(project_scan.counts.unreadable_directories, 0);
+
+    let direct_scan = scan(&mount);
+    assert_eq!(direct_scan.files, vec!["not-listed.txt"]);
+    assert!(!direct_scan.partial);
+    assert_eq!(direct_scan.counts.skipped_nonlocal_directories, 0);
+}
+
+#[test]
 fn unreadable_root_is_not_a_successful_empty_listing() {
     let dir = tempfile::tempdir().unwrap();
     assert_eq!(

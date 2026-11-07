@@ -14,7 +14,8 @@ export const PROJECT_FILES = {
   pending: "扫描尚未确认结束，可直接选择文件或稍后重试。",
   pendingCancel: "已请求取消扫描，尚未确认结束。",
   cancelFailed: "未能确认取消，仍在等待扫描结果。",
-  partial: "部分位置无法读取，下面的结果不完整。",
+  partial: "下面的结果不完整，可直接选择未列出的文件。",
+  skippedNonlocal: (count: number) => `已跳过 ${count} 个非本地挂载目录。`,
   truncated: "已达到扫描范围，下面仅列出部分文件。",
   noMatch: "已扫描的文件中没有匹配项。",
   matchesLimited: "仅显示前 50 个匹配项，可继续输入文件名缩小范围。",
@@ -58,6 +59,7 @@ export type ProjectFilesResult = {
     unreadableDirectories: number;
     unreadableEntries: number;
     unsupportedNames: number;
+    skippedNonlocalDirectories?: number;
   };
   limitReasons: (keyof typeof PROJECT_FILE_LIMIT_REASONS)[];
   excludedDirectoryNames: string[];
@@ -94,18 +96,21 @@ export function projectFilesResult(
         Number.isSafeInteger(r.limits[key as keyof typeof r.limits]) &&
         r.limits[key as keyof typeof r.limits] > 0,
     ) ||
-    ![
-      "entries",
-      "directories",
-      "skippedDirectories",
-      "unreadableDirectories",
-      "unreadableEntries",
-      "unsupportedNames",
-    ].every(
-      (key) =>
-        Number.isSafeInteger(r.counts[key as keyof typeof r.counts]) &&
-        r.counts[key as keyof typeof r.counts] >= 0,
+    !(
+      [
+        "entries",
+        "directories",
+        "skippedDirectories",
+        "unreadableDirectories",
+        "unreadableEntries",
+        "unsupportedNames",
+      ] as const
+    ).every(
+      (key) => Number.isSafeInteger(r.counts[key]) && r.counts[key] >= 0,
     ) ||
+    (r.counts.skippedNonlocalDirectories !== undefined &&
+      (!Number.isSafeInteger(r.counts.skippedNonlocalDirectories) ||
+        r.counts.skippedNonlocalDirectories < 0)) ||
     !Array.isArray(r.limitReasons) ||
     r.limitReasons.length > 7 ||
     !r.limitReasons.every((v) =>
