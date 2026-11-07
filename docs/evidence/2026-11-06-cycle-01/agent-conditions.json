@@ -21,6 +21,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-model-switch.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-directory-scope.json",
     "docs/evidence/2026-11-06-phase1-next/goose-manager-local-catalogue-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/goose-native-manager-cold-reconciliation.json",
     "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
@@ -29,6 +30,8 @@
     "docs/evidence/2026-11-06-phase1-next/copilot-isolated-startup-guard-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-native-isolated-sdk-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-official-standalone-noauth-preflight.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-version-gate.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
@@ -236,8 +239,16 @@
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
-        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 的隔离程序三种启动路线（含官方独立包）均未返回连接确认，未进入账号读取。完整新登录、退出换号与影响范围仍待实测。",
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 官方独立包已离线完成 ACP 握手并声明终端登录；先前 SDK 连接失败、未进入账号读取的结果分开保留。完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
+          {
+            "standards": ["S1"],
+            "environment": "macOS arm64，官方签名独立包 1.0.106，空白隔离资料及禁止联网",
+            "result": "一次协议版本 1 初始化确实声明 copilot-login 为终端登录，终端命令存在。另声明历史读取、列表、关闭、图片和嵌入内容。进程正常退出，范围限启动及声明，零认证、会话和模型请求。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json"
+            ]
+          },
           {
             "standards": ["S2"],
             "environment": "macOS arm64 正式版 dbe23bb6e，官方 Copilot CLI 1.0.106",
@@ -324,6 +335,14 @@
       "stage1Supplement": {
         "authenticationBoundary": "已有 OpenRouter 设置用于一次正式回复，同一请求编号核对到既有账户的默认工作区，账单显示 $0.00。完整新登录和退出换号待实测。",
         "verifiedSamples": [
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64，已登记的官方 Goose 1.52.0，全禁网独立档案",
+            "result": "官方导入两条自制记录；两个独立进程的列表均返回全量 2、指定目录 A/B 各 1、空目录 0。标识、目录及标题核合，零模型。仅覆盖指定目录过滤和冷开列表，真实账号及运行时分页未验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-directory-scope.json"
+            ]
+          },
           {
             "standards": ["S3"],
             "environment": "macOS arm64 正式版 dbe23bb6e、6ce829c5",

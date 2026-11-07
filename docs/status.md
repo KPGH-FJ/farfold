@@ -82,6 +82,8 @@
 
 **第1阶段正式版特殊文件名。** 系统选图和切换后，字面`%2F`仍按原名保存为`%252F`。独立读库核到单次解码的准确地址和原PNG字节，另一份草稿无该附件。只移除测试引用，原稿、保留稿、待发和四份通信保持。[特殊文件名回执](evidence/2026-11-06-phase1-draft-image/installed-special-image-file-uri.json)
 
+**第1阶段项目扫描隔离。** 正式版扫描专用只读卷触发系统「网络宗卷」访问请求，等待到期后重扫、再取消，两个底层打开目录仍未返回。源码限制扫描最多占一个读取位置，总上限保持两个，拒绝的新重试不登记。自测输入已清除，原稿和四份通信保持；测试服务已退出，卷未列出，卸载调用仍待回执。未进入附件读取或切换。[现场回执](evidence/2026-11-06-phase1-draft-image/installed-project-scan-network-volume-wait.json)
+
 **第1阶段待发与退出结果归属。** 已复现旧待发按钮能误编辑或移除移位后的另一条，及确认退出后丢失仍运行请求的冷启动未知提示。源码核对按钮对应的消息，且保存当前确切未结束工作以供冷启动。取消退出仍按真实运行状态显示，收到匹配终态后撤下派生标记。正式版仍待安全退出后更新。[受控分项](evidence/2026-11-07-stop-during-draft-save/README.md#待发按钮归属与退出时尚无终态的工作)
 
 **第1阶段退出前尚未发出的待发。** 已建立对话仍在检查附件时，旧逻辑确认退出后会在冷读误报未知。现保留原待发和暂停，晚到的检查不能换掉附件、标成失败或再发请求。已派发的未知保护和首条消息的防重发保持。使用实际前端和受控回执验证，正式复验待安全更新。[退出回执](evidence/2026-11-07-stop-during-draft-save/README.md#待发按钮归属与退出时尚无终态的工作)
@@ -92,7 +94,7 @@
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档27个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档29个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
 
 **第1阶段Copilot正式模型与同账号额度。** 6ce829c5已完成的自测对话，模型菜单空搜索仅显示已选中的Auto，已保存模型、原稿、保留1份和四份通信摘要均保持。GitHub同账号页面显示Free、CLI启用及包含额度已用0%，账单当前筛选无明细。零发送或设置变更，未核新登录、冷开和逐笔费用。[正式只读回执](evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json)
 
@@ -183,6 +185,10 @@
 **第1阶段Kilo正式模型与Goose等待对照。** Kilo同一正式自测对话确认保存Dots3并恢复原免费Ultra，两次对应设置回执、界面和数据库核合，其他对话、草稿及原通信保持，零新请求；实际模型回复和正式冷开继续开放。Goose官方程序在隔离本机服务扣住回复正文时明确停止，并在自测进程仍运行时关闭对应网络连接；原目录等待及远端执行仍待核。[Kilo正式切换](evidence/2026-11-06-phase1-next/installed-kilo-model-switch-restore.json) · [Goose本机等待](evidence/2026-11-06-phase1-next/goose-loopback-held-provider-cancel.json)
 
 **第1阶段Copilot独立发行对照。** 同版本官方独立包校验通过。在实测禁止联网、读取用户文件及钥匙串、写出隔离区或启动未许可程序的条件下，唯一一次启动在本地连接确认前退出1，账号状态尚未读取。既有同账号正式样本保持，真实新登录继续待验。[独立发行回执](evidence/2026-11-06-phase1-next/copilot-official-standalone-noauth-preflight.json)
+
+**第1阶段Copilot离线启动声明。** 同一签名官方独立包通过1.0.106版本核对及一次离线ACP初始化，明确声明`copilot-login`终端方法。标准输入结束后进程正常退出。此前SDK连接失败仍独立保留，账号状态及真实登录待验。[离线初始化回执](evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json)
+
+**第1阶段Goose目录过滤。** 官方1.52.0离线导入两条自制记录，两个独立进程列表均返回全量2、两目录各1及空目录0，标识、目录及标题核合。零真实账号、模型或工具，固定50条分页未触发。[隔离冷开列表回执](evidence/2026-11-06-phase1-next/goose-official-offline-history-directory-scope.json)
 
 **第1阶段Kilo本地退出。** 官方程序在隔离资料中由新进程读回合成OAuth，指定退出后凭据文件清空、权限保持0600，另一新进程读到零凭据。该项覆盖本地清理，真实换号、远端撤回和正式界面待验。[本地退出回执](evidence/2026-11-06-phase1-next/kilo-local-synthetic-logout.json)
 

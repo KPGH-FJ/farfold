@@ -86,6 +86,10 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 又用同版本官方公开独立包，在普通用户目录之外准备唯一可执行件。归档摘要和严格签名通过，先实测隔离环境拒绝网络、用户文件内容、隔离外写入、钥匙串和未许可程序执行，再启动一次并发送一次本地连接请求。进程在返回连接确认前退出 1，错误类别未能归属，账号状态查询没有开始。此次仍受严隔离条件约束，未能确定退出的具体原因。[独立发行版回执](copilot-official-standalone-noauth-preflight.json) · [官方发行](https://github.com/github/copilot-cli/releases/tag/v1.0.106)
 
+改用独立包的官方 ACP 入口，先核版本。首次版本命令正常退出，但夹具漏识别官方版本号后的句点，按门槛停在握手前。核实内嵌版本输出格式后，只修正这一判定并复测。相同签名程序报 1.0.106，另一个空白隔离档案中的单次协议版本 1 初始化，返回 `copilot-login` 终端方法及命令存在标记，并声明历史加载、列表、关闭、图片和嵌入内容。标准输入结束后进程自然退出 0，进程组释放。范围限离线启动及官方声明，真实登录、SDK 账号状态、会话和模型另验。[版本门记录](copilot-standalone-offline-version-gate.json) · [ACP 初始化回执](copilot-standalone-offline-acp-initialize.json)
+
+另在全禁网的独立档案里，用已登记的官方 Goose 1.52.0 导入两条自制 Pi 格式记录。两个不同进程各完成一次初始化和四次历史列表查询。全量 2 条、两个目录各 1 条、空目录 0 条，标识、目录及标题逐一核合，无重复或正文片段。两次均正常退出，临时档案清理。该项覆盖官方列表的目录过滤及冷开，官方固定页长 50，此两条未触发分页，未用真实账号、模型或工具。[Goose 目录回执](goose-official-offline-history-directory-scope.json) · [官方列表实现](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server/list_sessions.rs)
+
 另用已登记 Kilo 7.8.1、空资料目录和只允许访问指定本机端口的环境完成设备授权对照。官方程序在本机服务返回待授权再批准后取资料和默认模型，将唯一合成凭据写为权限 0600，第二个官方进程读回 Kilo OAuth 类型。另一组由本机服务返回明确拒绝，官方程序显示拒绝并退出，无凭据写入。两次尝试从本机发停止信号时仍继续轮询，超时后清理；即时取消未通过。全部只用合成响应，真实账户、服务端取消和收费仍未验证。[本机批准、拒绝及取消回执](kilo-local-device-approval-and-denial.json)
 
 复核 7.8.1 的授权入口与锁定的 Clack 依赖。Kilo 启动等待动画后单独等待授权回调。Clack 首次收到 INT 或 TERM 会取消动画并撤下两种信号监听；这里没有向授权回调传递取消。这与先前继续轮询、再向同一进程发 TERM 才退出的观测吻合。旧试验没有记录首个信号的处理回执。[Kilo 授权入口](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/cli/cmd/providers.ts#L96-L109) · [等待动画包装](https://github.com/Kilo-Org/kilocode/blob/4089197545a01bbc9fa8041c1305b3fb0b0f8e66/packages/opencode/src/cli/effect/prompt.ts#L26-L33) · [Clack 发布版本](https://www.npmjs.com/package/@clack/prompts/v/1.0.0-alpha.1)
