@@ -1,0 +1,53 @@
+{
+  "boundedConclusion": "An exact host IP SAN plus a private ephemeral CA improves rejection of wrong-name or untrusted peers, while retaining other platform roots. It does not establish an exclusive test trust anchor or any off-host egress protection. No handshake was tested here.",
+  "checkedAtUtc": "2026-11-07T02:20:38.645204+00:00",
+  "compiledCallChain": {
+    "builtinRootScope": "Apple platform trust store retained alongside any configured extra CA",
+    "customCaSetsAppleAnchorOnlyToFalse": true,
+    "defaultRootSource": "Apple platform trust store, not webpki bundle only",
+    "officialOllamaInvokesProviderApiClient": true,
+    "providerApiClientInvokesReqwestDefaultBuilder": true,
+    "reqwestCustomCaBranchInvokesRustlsApplePlatformVerifier": true,
+    "verifierUsesAppleSecTrustServerEvaluation": true
+  },
+  "embeddedDependencyVersions": [
+    "reqwest-0.13.5",
+    "rustls-platform-verifier-0.7.0"
+  ],
+  "gooseSourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "kind": "RegisteredGooseMacArm64ProviderTlsStaticInspection",
+  "officialGooseVersion": "1.52.0",
+  "provenance": {
+    "dependencySource": [
+      "rustls-platform-verifier-0.7.0/src/verification/apple.rs:43-89",
+      "rustls-platform-verifier-0.7.0/src/verification/apple.rs:168-180"
+    ],
+    "gooseSource": [
+      "crates/goose/src/providers/ollama_def.rs:59-98",
+      "crates/goose-providers/src/api_client.rs:273-296",
+      "crates/goose-providers/src/api_client.rs:379-397"
+    ],
+    "primary": "Installed release Mach-O symbol table, ARM64 call sites, import stubs and embedded version strings",
+    "versionReceipts": [
+      "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
+      "docs/evidence/2026-11-06-phase1-next/goose-openrouter-workspace-readonly.json"
+    ]
+  },
+  "registeredBinary": {
+    "arch": "macOS arm64",
+    "sha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+    "sizeBytes": 260427648,
+    "stableInodeSizeAndMtime": true,
+    "versionBasis": "Prior official initialize receipts for same registered executable"
+  },
+  "runCounts": {
+    "credentialReads": 0,
+    "modelRequests": 0,
+    "networkRequests": 0,
+    "officialGooseLaunches": 0,
+    "otherAgentLaunches": 0,
+    "productionWrites": 0,
+    "providerRequests": 0,
+    "tlsHandshakes": 0
+  }
+}

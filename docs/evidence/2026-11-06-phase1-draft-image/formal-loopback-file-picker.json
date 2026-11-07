@@ -80,5 +80,24 @@
     "fixtureRemovedAndVolumeUnmounted": true,
     "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
     "scope": "This run used screenshot observation instead of an accessibility tree, but the first screenshot still returned after the body had finished. It cannot distinguish screenshot-tool waiting from the system picker or app transition."
+  },
+  "manualHoldFollowup": {
+    "rawServerEventsSha256": "4df27e5aed7ad746fd4f6d2c0af79c53c45a7178865bddb960fdec588905ff50",
+    "pngSha256": "f01852c057fad0e9254806a2f9c7ef4ca1f4bcd03ec6e591b449cccfe03d7840",
+    "pngBytes": 76,
+    "headersSentBeforeHold": true,
+    "holdDurationMs": 50024.704,
+    "requestBeforeOpenClick": true,
+    "openActionReturnedMsBeforeBodyCompletion": 30457.764,
+    "firstAccessibilityObservationTimedOutWhileBodyHeld": true,
+    "manualReleaseIssued": false,
+    "databaseReadWhileHeldHadNoFixtureAttachment": true,
+    "firstCompletedObservationSawTheAttachment": true,
+    "savedOwnedPngBytesMatchedAfterBodyCompletion": true,
+    "actualPendingSwitchObserved": false,
+    "originalAndRetainedDraftsQueuesAndFourTapsPreserved": true,
+    "fixtureRemovedAndVolumeUnmounted": true,
+    "agentRequests": 0,
+    "scope": "The chooser click returned while the anonymous fixture still held the response body, but the accessibility observation timed out while the hold was active. The network caller and a completed switch during the hold are not established."
   }
 }

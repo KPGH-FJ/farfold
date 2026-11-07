@@ -166,10 +166,9 @@ export class InteractionActions {
     if (!s || !p) return;
     await replyToElicitation(p, action, values, {
       sessionId: s.nativeSessionId,
-      current: () =>
-        !s.stopping &&
-        (!s.stopUnconfirmed || action !== "accept") &&
-        this.current(s, p),
+      current: () => this.current(s, p),
+      canSubmit: () =>
+        !s.stopping && (!s.stopUnconfirmed || action !== "accept"),
       changed: () => this.publish(s),
       remove: (notice) => {
         if (notice) expirePendingRequest(s, p.requestId);

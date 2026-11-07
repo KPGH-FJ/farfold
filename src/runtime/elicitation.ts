@@ -61,6 +61,7 @@ export function inquiryUrl(raw?: string): URL | null {
 
 export interface InquiryPorts {
   current: () => boolean;
+  canSubmit?: () => boolean;
   changed: () => void;
   remove: (notice?: string) => void;
   sessionId?: string | null;
@@ -78,9 +79,10 @@ export async function replyToElicitation(
     action === "accept"
       ? draftPersistence.captureInteractionInterruption()
       : undefined;
+  const canSubmit = () => ports.current() && ports.canSubmit?.() !== false;
   if (
     interrupted?.() ||
-    !ports.current() ||
+    !canSubmit() ||
     p.status !== "pending" ||
     (action === "accept" && p.opening)
   )
@@ -105,7 +107,7 @@ export async function replyToElicitation(
           timer = setTimeout(() => resolve("unknown"), 15_000);
         }),
       ]);
-      if (!ports.current() || p.status !== "pending") return;
+      if (!canSubmit() || p.status !== "pending") return;
       if (outcome !== "opened") {
         p.error = outcome === "unknown" ? S.openUnknown : S.openFailed;
         if (outcome === "unknown") p.status = "uncertain";
@@ -114,11 +116,11 @@ export async function replyToElicitation(
     } finally {
       clearTimeout(timer);
       p.opening = false;
-      if (ports.current()) ports.changed();
+      if (canSubmit()) ports.changed();
     }
   }
   // Opening the browser does not revive a choice interrupted by exit.
-  if (interrupted?.() || !ports.current() || p.status !== "pending") return;
+  if (interrupted?.() || !canSubmit() || p.status !== "pending") return;
   p.status = "submitting";
   p.error = null;
   ports.changed();
@@ -135,6 +137,7 @@ export async function replyToElicitation(
   } catch {
     reply = { status: "uncertain" };
   }
+  // An already issued reply can settle during stop while it still owns this request.
   if (!ports.current()) return;
   if (reply?.status === "submitted") {
     if (p.mode === "url" && action === "accept") {
