@@ -37,6 +37,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-relay-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-local-startup-diagnostic.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-device-pending.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-held-provider-cancel.json",
