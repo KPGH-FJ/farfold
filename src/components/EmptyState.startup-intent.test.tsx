@@ -397,7 +397,6 @@ it.each(["duplicate", "different source", "retry after failure"] as const)(
     });
     vi.mocked(draftPersistence.flush)
       .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
       .mockReturnValueOnce(writing);
     const retainedSlots: typeof h.slots = [];
     function restoreButton(text = saved.text) {

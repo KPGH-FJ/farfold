@@ -80,10 +80,15 @@ function conversationKey(key: string): string | undefined {
   if (key.startsWith("resend:")) return key.slice("resend:".length);
   return undefined;
 }
-function changed(threadKey?: string) {
+function publishDrafts() {
   draftRevision++;
-  if (threadKey) archiveActivity.stageDraftEdit(threadKey);
   listeners.forEach((fn) => fn());
+}
+function changed(threadKey?: string) {
+  if (restoredHandoff && !ownsRestoredHandoff(restoredHandoff))
+    releaseRestoredHandoff(restoredHandoff);
+  if (threadKey) archiveActivity.stageDraftEdit(threadKey);
+  publishDrafts();
   draftPersistence.changed();
   if (threadKey && draftPersistence.snapshot().ready)
     void archiveActivity.flush().catch(() => undefined);
@@ -97,6 +102,53 @@ type PreservedNew = {
 };
 const retainedNewKeys = new WeakMap<ComposerDraft, Map<string, string>>();
 const savingRestoredDrafts = new WeakSet<ComposerDraft>();
+type RestoredHandoff = {
+  key: string;
+  source: ComposerDraft;
+  active: ComposerDraft;
+  generation: number;
+  selection: string;
+  unsubscribe: () => void;
+};
+let restoredHandoff: RestoredHandoff | undefined;
+
+function sameRestoredDraft(handoff: RestoredHandoff): boolean {
+  return (
+    values.get("new") === handoff.active &&
+    composerDrafts.generation("new") === handoff.generation &&
+    JSON.stringify(choice) === handoff.selection
+  );
+}
+
+function ownsRestoredHandoff(handoff: RestoredHandoff): boolean {
+  return (
+    restoredHandoff === handoff &&
+    values.get(handoff.key) === handoff.source &&
+    sameRestoredDraft(handoff)
+  );
+}
+
+function releaseRestoredHandoff(handoff: RestoredHandoff): void {
+  restoredHandoff = undefined;
+  handoff.unsubscribe();
+}
+
+function finishRestoredHandoff(handoff: RestoredHandoff): void {
+  if (!ownsRestoredHandoff(handoff)) return;
+  releaseRestoredHandoff(handoff);
+  values.delete(handoff.key);
+  // The acknowledged snapshot already omitted this source.
+  publishDrafts();
+}
+
+function isRestoredSource(key: string, draft: ComposerDraft): boolean {
+  return (
+    restoredHandoff?.key === key &&
+    restoredHandoff.source === draft &&
+    ownsRestoredHandoff(restoredHandoff)
+  );
+}
+
 function capturePreservedNew(): PreservedNew {
   return {
     draft: composerDrafts.read("new"),
@@ -121,6 +173,26 @@ function assertPreservedNew(ticket: PreservedNew) {
     throw new Error(REDESIGN.pendingDraft);
 }
 
+function stagePreservedNew(ticket: PreservedNew): boolean {
+  if (!composerDrafts.hasContent("new")) return false;
+  let retained = retainedNewKeys.get(ticket.draft);
+  if (!retained) {
+    retained = new Map();
+    retainedNewKeys.set(ticket.draft, retained);
+  }
+  const identity = `${ticket.generation}:${ticket.selection}`;
+  const retainedKey = retained.get(identity);
+  // A failed write keeps the staged copy for a retry of this exact input.
+  if (retainedKey && values.has(retainedKey)) return false;
+  const key = `saved-new:${crypto.randomUUID()}`;
+  values.set(key, {
+    ...structuredClone(ticket.draft),
+    savedChoice: structuredClone(choice),
+  });
+  retained.set(identity, key);
+  return true;
+}
+
 /** Only unsent input. No Agent transcript, events, auth forms or secrets. */
 export const composerDrafts = {
   revision: () => draftRevision,
@@ -138,24 +210,7 @@ export const composerDrafts = {
     await draftPersistence.flush();
     assertPreservedNew(ticket);
     if (!this.hasContent("new")) return ticket;
-    let retained = retainedNewKeys.get(ticket.draft);
-    if (!retained) {
-      retained = new Map();
-      retainedNewKeys.set(ticket.draft, retained);
-    }
-    const identity = `${ticket.generation}:${ticket.selection}`;
-    const retainedKey = retained.get(identity);
-    // A failed save keeps the staged copy. Retry that exact input and
-    // selection instead of appending another copy to the same snapshot.
-    if (!retainedKey || !values.has(retainedKey)) {
-      const key = `saved-new:${crypto.randomUUID()}`;
-      values.set(key, {
-        ...structuredClone(ticket.draft),
-        savedChoice: structuredClone(choice),
-      });
-      retained.set(identity, key);
-      changed();
-    }
+    if (stagePreservedNew(ticket)) changed();
     await draftPersistence.flush();
     assertPreservedNew(ticket);
     return ticket;
@@ -172,35 +227,69 @@ export const composerDrafts = {
       savingRestoredDrafts.has(saved)
     )
       return false;
+    const pending = restoredHandoff;
+    if (
+      pending?.key === key &&
+      pending.source === saved &&
+      ownsRestoredHandoff(pending)
+    ) {
+      savingRestoredDrafts.add(saved);
+      try {
+        await draftPersistence.flush();
+        if (!sameRestoredDraft(pending)) throw new Error(REDESIGN.draftChanged);
+        finishRestoredHandoff(pending);
+        return true;
+      } finally {
+        savingRestoredDrafts.delete(saved);
+      }
+    }
     // The restore belongs to the draft visible when the user requested it,
     // including while an earlier save still owns the storage writer.
-    const ticket = await this.preserveNew(capturePreservedNew());
+    const ticket = capturePreservedNew();
+    await draftPersistence.flush();
     assertPreservedNew(ticket);
     if (values.get(key) !== saved) return false;
     const { savedChoice, ...content } = structuredClone(saved);
     savingRestoredDrafts.add(saved);
-    values.set("new", {
+    const active = {
       ...content,
       attachments: content.attachments.map((a) => ({
         ...a,
         recovered: true,
         imageChecked: undefined,
       })),
+    };
+    // Both original drafts are durable. Swap their roles in one snapshot so
+    // neither full attachment set has to fit twice during the move.
+    stagePreservedNew(ticket);
+    values.set("new", active);
+    Object.assign(choice, savedChoice, {
+      reviewRequired:
+        savedChoice?.reviewRequired === true ||
+        Boolean(savedChoice?.service && !savedChoice.service.revision),
     });
-    Object.assign(choice, savedChoice);
-    generations.set("new", this.generation("new") + 1);
+    const generation = this.generation("new") + 1;
+    generations.set("new", generation);
+    if (restoredHandoff) releaseRestoredHandoff(restoredHandoff);
+    const revision = draftPersistence.revision() + 1;
+    const handoff: RestoredHandoff = {
+      key,
+      source: saved,
+      active,
+      generation,
+      selection: JSON.stringify(choice),
+      unsubscribe: draftPersistence.subscribe(() => {
+        if (draftPersistence.isSaved(revision)) finishRestoredHandoff(handoff);
+      }),
+    };
+    restoredHandoff = handoff;
     changed();
     // Publish the restored choice to the UI immediately. A failed save keeps
     // both retained copies and the global save-error guard; it must not leave
     // restored text displayed under the previous Agent selection.
     void draftPersistence
       .flush()
-      .then(() => {
-        if (values.get(key) === saved) {
-          values.delete(key);
-          changed();
-        }
-      })
+      .then(() => finishRestoredHandoff(handoff))
       .catch(() => undefined)
       .finally(() => {
         savingRestoredDrafts.delete(saved);
@@ -932,7 +1021,11 @@ draftPersistence.configure(
               key.startsWith("resend:") ||
               key.startsWith("saved-new:"),
           )
-          .filter(([key, draft]) => queueHandoffDrafts.get(draft) !== key)
+          .filter(
+            ([key, draft]) =>
+              queueHandoffDrafts.get(draft) !== key &&
+              !isRestoredSource(key, draft),
+          )
           .map(([key, value]) => [key, serializeComposer(value)]),
       ),
       choice,
