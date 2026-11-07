@@ -137,6 +137,7 @@ export function createAudioInputTarget(
                 loading: false,
                 recovered: false,
                 audioClassificationFailed: undefined,
+                imageClassificationFailed: undefined,
               }
             : item,
         ),

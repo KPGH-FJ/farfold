@@ -16,6 +16,10 @@ export const IMAGE_INPUT_STRINGS = {
   invalid: "图片无法读取，请重新选择或移除",
   changed: "图片内容已变化，请重新选择",
   sourceUnreadable: "图片已识别，但暂时无法读取，请重新选择或移除。",
+  sourceCheckPending:
+    "图片已识别，文件检查尚未返回。请稍后重新选择或移除这张图片。",
+  classificationFailed:
+    "附件类型尚未确认，不能发送。请移除该附件，需要时再添加。",
   decodeUnavailable: "当前无法检查图片，请稍后重新添加",
   decodeWaitExpired: "图片检查尚未返回，请重新添加或移除这张图片",
   decodeBusy: "已有图片检查尚未结束，请稍后重试",

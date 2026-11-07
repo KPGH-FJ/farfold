@@ -111,6 +111,7 @@ export function createDocumentInputTarget(
                 deliveryMode: "text",
                 documentText: approved,
                 content: undefined,
+                imageClassificationFailed: undefined,
                 loading: false,
                 recovered: false,
               }

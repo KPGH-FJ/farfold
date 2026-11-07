@@ -31,6 +31,7 @@ export interface DraftAttachment {
   kind: "file" | "image" | "audio";
   localAudio?: LocalAudio | null;
   audioClassificationFailed?: boolean;
+  imageClassificationFailed?: true;
   name: string;
   uri?: string;
   data?: string;
@@ -783,6 +784,7 @@ function parseComposer(value: unknown): ComposerDraft {
               "documentText",
               "localAudio",
               "audioClassificationFailed",
+              "imageClassificationFailed",
               // Known legacy transient fields remain readable but are not trusted.
               "content",
               "loading",
@@ -794,6 +796,8 @@ function parseComposer(value: unknown): ComposerDraft {
         typeof a.name !== "string" ||
         typeof a.kind !== "string" ||
         !["file", "image", "audio"].includes(a.kind) ||
+        (a.imageClassificationFailed !== undefined &&
+          a.imageClassificationFailed !== true) ||
         ["uri", "data", "mimeType"].some(
           (key) => a[key] !== undefined && typeof a[key] !== "string",
         )
@@ -826,6 +830,9 @@ function parseComposer(value: unknown): ComposerDraft {
         ...(a.kind === "audio" ? { localAudio: audioSource } : {}),
         ...(a.audioClassificationFailed === true
           ? { audioClassificationFailed: true }
+          : {}),
+        ...(a.imageClassificationFailed === true
+          ? { imageClassificationFailed: true as const }
           : {}),
         uri: a.kind === "audio" && !audioSource ? undefined : uri,
         data: typeof a.data === "string" ? a.data : undefined,

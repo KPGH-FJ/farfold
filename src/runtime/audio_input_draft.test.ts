@@ -61,13 +61,20 @@ it("approves once and does not transmit or mutate the originally selected file p
     h.invoke.mock.calls.every(([cmd]) => cmd.startsWith("settings_")),
   ).toBe(true);
 });
-it("does not retain a file delivery marker when an explicit audio review replaces the located file, and remains restorable", async () => {
+it("explicit audio review clears file delivery and unclassified input, and remains restorable", async () => {
+  d.composerDrafts.update("new", (draft) => ({
+    ...draft,
+    attachments: [{ ...draft.attachments[0], imageClassificationFailed: true }],
+  }));
   const selected = d.composerDrafts.read("new").attachments[0];
   expect(selected.deliveryMode).toBe("location");
   const target = create("new", selected, () => true);
   expect(target.apply(audioCapture())).toBe(true);
   expect(
     d.composerDrafts.read("new").attachments[0].deliveryMode,
+  ).toBeUndefined();
+  expect(
+    d.composerDrafts.read("new").attachments[0].imageClassificationFailed,
   ).toBeUndefined();
   await d.draftPersistence.flush();
   const saved = h.invoke.mock.calls
@@ -78,6 +85,7 @@ it("does not retain a file delivery marker when an explicit audio review replace
       .attachments[0],
   ).toMatchObject({ kind: "audio", recovered: true });
   expect(selected.deliveryMode).toBe("location");
+  expect(selected.imageClassificationFailed).toBe(true);
 });
 it.each([
   "text",

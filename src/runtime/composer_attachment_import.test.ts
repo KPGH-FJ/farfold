@@ -19,6 +19,7 @@ import {
   prepareDraftAttachments,
 } from "./draft_attachments";
 import { IMAGE_INPUT_STRINGS } from "./draft_images";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { IMAGE_BYTES_STRINGS } from "./image_bytes";
 import {
   PNG_IMAGE_TEST_DATA,
@@ -125,6 +126,7 @@ it.each([
     expect(attachment).toMatchObject({
       kind: "file",
       deliveryMode: "location",
+      imageClassificationFailed: true,
       uri: "file:///chosen.png",
       loading: false,
     });
@@ -132,6 +134,41 @@ it.each([
       IMAGE_INPUT_STRINGS.invalid,
       attachment.id,
     );
+  },
+);
+
+it.each([
+  [FILE_DELIVERY_STRINGS.checkWaitExpired, true],
+  [FILE_DELIVERY_STRINGS.checkBusy, false],
+] as const)(
+  "does not send a file location if its image check failed (%s, read: %s)",
+  async (failure, read) => {
+    h.invoke.mockRejectedValueOnce(failure).mockResolvedValue(null);
+    await addPickedAttachments(
+      key,
+      ["/chosen/possibly-image.txt"],
+      read,
+      vi.fn(),
+    );
+    const draft = composerDrafts.read(key);
+    expect(draft.text).toBe("keep my text");
+    expect(draft.attachments[0]).toMatchObject({
+      kind: "file",
+      uri: "file:///chosen/possibly-image.txt",
+      loading: false,
+      imageClassificationFailed: true,
+    });
+    const message = IMAGE_INPUT_STRINGS.classificationFailed;
+    await expect(
+      prepareDraftAttachments(draft.attachments, true),
+    ).rejects.toThrow(message);
+    expect(() =>
+      attachmentPromptBlocks(draft.text, draft.attachments, true),
+    ).toThrow(message);
+    expect(h.invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+      uri: "file:///chosen/possibly-image.txt",
+      read,
+    });
   },
 );
 

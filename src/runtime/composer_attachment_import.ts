@@ -166,8 +166,28 @@ export async function addPickedAttachments(
         const candidate = await selectedImageCandidate(
           attachment.uri!,
           imageEnabled,
-        );
-        if (!work.present(attachment)) continue;
+        ).catch((error) => {
+          const message = imageInputError(error);
+          // Only these fixed native outcomes establish a bitmap before reading
+          // all its bytes. An interrupted classifier establishes no file type.
+          const knownImage =
+            imageEnabled &&
+            (message === IMAGE_BYTES_STRINGS.tooLarge ||
+              message === IMAGE_INPUT_STRINGS.changed ||
+              message === IMAGE_INPUT_STRINGS.sourceUnreadable ||
+              message === IMAGE_INPUT_STRINGS.sourceCheckPending);
+          if (
+            work.patch(attachment, {
+              ...(knownImage
+                ? { kind: "image", deliveryMode: undefined }
+                : { imageClassificationFailed: true }),
+              loading: false,
+            })
+          )
+            report(message, attachment.id);
+          return undefined;
+        });
+        if (candidate === undefined || !work.present(attachment)) continue;
         if (!candidate) {
           work.patch(attachment, {
             loading: false,
@@ -202,21 +222,13 @@ export async function addPickedAttachments(
           });
         }
       } catch (error) {
-        const message = imageInputError(error);
-        // These native read failures occur only after identifying a bitmap.
-        const knownImage =
-          imageEnabled &&
-          (message === IMAGE_BYTES_STRINGS.tooLarge ||
-            message === IMAGE_INPUT_STRINGS.changed ||
-            message === IMAGE_INPUT_STRINGS.sourceUnreadable);
         if (
           work.patch(attachment, {
-            ...(knownImage ? { kind: "image", deliveryMode: undefined } : {}),
             loading: false,
             imageChecked: undefined,
           })
         )
-          report(message, attachment.id);
+          report(imageInputError(error), attachment.id);
       } finally {
         work.done(attachment);
       }

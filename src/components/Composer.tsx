@@ -498,9 +498,11 @@ export function Composer({
     areaRef.current?.focus();
     requestAnimationFrame(autogrow);
   };
-
-  const unsupportedImages =
-    !imageEnabled && chips.some((chip) => chip.kind === "image");
+  const imageNotice = chips.some((chip) => chip.imageClassificationFailed)
+    ? IMAGE_INPUT_STRINGS.classificationFailed
+    : !imageEnabled && chips.some((chip) => chip.kind === "image")
+      ? W.imageUnsupported
+      : null;
   const audioNotice = chips.some((chip) => chip.audioClassificationFailed)
     ? AUDIO_INPUT.classificationFailed
     : chips.some((chip) => chip.kind === "audio")
@@ -518,7 +520,7 @@ export function Composer({
     !input.sendPending &&
     !input.pendingConversation &&
     !chips.some((chip) => chip.recovered) &&
-    !unsupportedImages &&
+    !imageNotice &&
     !audioNotice &&
     !chips.some((chip) => chip.loading);
   useEffect(() => {
@@ -744,7 +746,7 @@ export function Composer({
   const noteDetail = note && typeof note === "object" ? note.detail : undefined;
   const notes: [string | null | undefined, boolean, string?][] = [
     [permissionNote, false],
-    [unsupportedImages ? W.imageUnsupported : null, false],
+    [imageNotice, false],
     [audioNotice, false],
     [suppressThreadOpenError ? null : thread?.openError, true],
     [thread?.configError, false],

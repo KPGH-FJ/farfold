@@ -17,6 +17,7 @@ import { localResourcePath } from "./file_delivery";
 import { documentMediaFormat } from "./document_media_type";
 import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import {
+  IMAGE_INPUT_STRINGS,
   isBitmapMime,
   readFileImage,
   validateDraftImage,
@@ -202,6 +203,8 @@ export async function prepareDraftAttachments(
   for (const attachment of attachments) {
     if (attachment.audioClassificationFailed)
       throw new AudioInputError("classificationFailed");
+    if (attachment.imageClassificationFailed)
+      throw new Error(IMAGE_INPUT_STRINGS.classificationFailed);
     if (attachment.kind === "audio") {
       try {
         if (!attachment.localAudio)
@@ -275,6 +278,8 @@ export function attachmentPromptBlocks(
   for (const attachment of attachments) {
     if (attachment.audioClassificationFailed)
       throw new AudioInputError("classificationFailed");
+    if (attachment.imageClassificationFailed)
+      throw new Error(IMAGE_INPUT_STRINGS.classificationFailed);
     if (attachment.kind === "audio") {
       if (
         !attachment.localAudio ||

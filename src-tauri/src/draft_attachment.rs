@@ -2,6 +2,10 @@
 //! Agent file tool and does not read or store conversation history.
 use serde::Serialize;
 use std::path::{Path, PathBuf};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
 
 use crate::file_delivery::{self, DeliveryError};
 
@@ -146,7 +150,15 @@ pub async fn draft_attachment_image(
         return Err("请从主界面操作附件".to_owned());
     }
     let path = attachment_path(&uri)?;
-    crate::file_read_check::run(move || images::read_candidate(&path, read)).await
+    let recognized = Arc::new(AtomicBool::new(false));
+    let worker_recognized = Arc::clone(&recognized);
+    crate::file_read_check::run(move || {
+        images::read_candidate(&path, read, || {
+            worker_recognized.store(true, Ordering::Release);
+        })
+    })
+    .await
+    .map_err(|error| images::preserve_read_progress(error, recognized.load(Ordering::Acquire)))
 }
 
 #[cfg(test)]

@@ -343,6 +343,59 @@ async function documentSourceFixture() {
     confirmation: { draftKey: key, attachment, applied, approved },
   };
 }
+it("retires only the failed image classification notice after exact document confirmation", async () => {
+  const { confirmation } = await documentSourceFixture();
+  const { createDocumentInputTarget } =
+    await import("../runtime/document_input_draft");
+  const { attachmentPromptBlocks } =
+    await import("../runtime/draft_attachments");
+  const document = {
+    ...confirmation.attachment,
+    imageClassificationFailed: true as const,
+  };
+  const image = {
+    id: "separate-image",
+    kind: "image" as const,
+    name: "unreadable.png",
+  };
+  d.composerDrafts.update(key, (draft) => ({
+    ...draft,
+    attachments: [document, image],
+  }));
+  render().reportImport("separate unreadable image", image.id);
+  render().reportImport(
+    "image classification failed for the document",
+    document.id,
+  );
+  expect(render().imageImportMessage).toBe(
+    "image classification failed for the document",
+  );
+
+  const target = createDocumentInputTarget(key, document, () => true);
+  expect(target.apply({ text: "unverified", local: null })).toBe(false);
+  expect(render().imageImportMessage).toBe(
+    "image classification failed for the document",
+  );
+  expect(target.apply(confirmation.approved)).toBe(true);
+  await d.draftPersistence.flush();
+  const draft = d.composerDrafts.read(key);
+  const [applied, other] = draft.attachments;
+  expect(applied.imageClassificationFailed).toBeUndefined();
+  expect(other).toBe(image);
+  expect(render().imageImportMessage).toBe("separate unreadable image");
+  expect(attachmentPromptBlocks(draft.text, [applied], true)).toEqual([
+    { type: "text", text: draft.text },
+    {
+      type: "resource",
+      resource: {
+        uri: document.uri,
+        mimeType: "text/plain",
+        text: confirmation.approved.text,
+      },
+      localDocumentText: confirmation.approved.local,
+    },
+  ]);
+});
 it("a document source failure stays until its own explicit source confirmation, even after another save succeeds", async () => {
   await writeFailure();
   const { failure, confirmation } = await documentSourceFixture();

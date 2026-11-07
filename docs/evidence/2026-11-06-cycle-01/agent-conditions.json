@@ -41,7 +41,8 @@
     "docs/evidence/2026-11-07-stop-during-draft-save/installed-resend-editor-retention.json",
     "docs/evidence/2026-11-06-cycle-01/installed-fork-conflict-preview.json",
     "docs/evidence/2026-11-06-phase1-draft-image/installed-oversize-image-kind.json",
-    "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-permission-retry.json"
+    "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-permission-retry.json",
+    "docs/evidence/2026-11-07-stop-during-draft-save/installed-docx-source-replacement.json"
   ],
   "installedCapabilityDeclarationCheck": {
     "environment": "macOS arm64 正式版 6ce829c5，11月7日只读核对已保存的三份声明",

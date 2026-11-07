@@ -82,7 +82,12 @@ export function useComposerSourceError(
         notice.draftKey === draftKey &&
         notice.errorContext === errorContext &&
         notice.generation === generation &&
-        attachments.some((attachment) => attachment.id === notice.id),
+        attachments.some(
+          (attachment) =>
+            attachment.id === notice.id &&
+            (attachment.kind === "image" ||
+              attachment.imageClassificationFailed),
+        ),
     )?.message,
     reportImport(message: string, failedImageId?: string) {
       const current = context.current;
