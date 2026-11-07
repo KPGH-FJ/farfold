@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { draftPersistence } from "./draft_storage";
 import { freshThreadState } from "./session_projection";
 
 const h = vi.hoisted(() => ({ invoke: vi.fn(), open: vi.fn() }));
@@ -201,6 +202,54 @@ it("keeps the common remember undo window and does not submit an aborted caller'
   expect(h.invoke).not.toHaveBeenCalled();
   expect(value.snapshot().permissions[0].decision).toBeNull();
 });
+
+it.each(["held", "released"])(
+  "keeps a remembered opening permission pending after an exit lock is %s during handoff",
+  async (lock) => {
+    vi.useFakeTimers();
+    const value = owner();
+    value.receive({
+      ...permission,
+      options: [
+        { optionId: "remember", name: "Remember", kind: "allow_always" },
+      ],
+    });
+    const request = value.snapshot().permissions[0];
+    value.decidePermission(request.requestId, "remember");
+    expect(request.decision?.undoable).toBe(true);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(h.invoke).not.toHaveBeenCalled();
+
+    const release = draftPersistence.acquireInteractionLock();
+    try {
+      const state = freshThreadState(
+        "a:/controlled:loading-session",
+        "a",
+        "/controlled",
+        "loading-session",
+      );
+      state.connectionId = permission.owner.connectionId;
+      value.handoffPermissions(
+        state,
+        () => true,
+        () => {},
+      );
+      value.finish();
+      expect(state.pendingPermissions[0]).toBe(request);
+      if (lock === "released") release();
+      expect(draftPersistence.snapshot().interactionLocked).toBe(
+        lock === "held",
+      );
+      await vi.advanceTimersByTimeAsync(4000);
+      expect.soft(h.invoke).not.toHaveBeenCalled();
+      expect.soft(state.pendingPermissions[0]).toBe(request);
+      expect.soft(request.status).toBe("pending");
+      expect(request.decision).toBeNull();
+    } finally {
+      release();
+    }
+  },
+);
 
 it("moves the same submitting request to the live view and applies only its actual late receipt", async () => {
   vi.useFakeTimers();

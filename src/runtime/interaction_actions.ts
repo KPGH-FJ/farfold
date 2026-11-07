@@ -12,6 +12,7 @@ import {
 import { STRINGS } from "./strings";
 import { uiError } from "./ui_error";
 import { selectablePermissionOption } from "./permission_options";
+import { draftPersistence } from "./draft_storage";
 
 interface InteractionReply {
   status: "submitted" | "retryable" | "expired" | "uncertain";
@@ -92,9 +93,11 @@ export class InteractionActions {
   ): void {
     const s = this.get(key);
     const p = s?.pendingPermissions.find((p) => p.requestId === requestId);
+    const interrupted = draftPersistence.captureInteractionInterruption();
     if (
       !s ||
       s.stopping ||
+      interrupted() ||
       !p ||
       p.status !== "pending" ||
       p.decision ||
@@ -116,9 +119,9 @@ export class InteractionActions {
           p.status !== "pending"
         )
           return;
-        if (s.stopping) {
-          // A queued local choice must not become a new reply during stop.
-          // Keep the same request so a later explicit decision remains possible.
+        if (s.stopping || interrupted()) {
+          // Stop or an interaction lock interrupts a queued choice. Keep the
+          // request available for a later explicit decision.
           p.decision = null;
           this.publish(s);
           return;

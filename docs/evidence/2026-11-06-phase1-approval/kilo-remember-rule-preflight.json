@@ -1,0 +1,76 @@
+{
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "authenticationCalls": 0,
+  "commandToolCalls": 0,
+  "endUtc": "2026-11-07T01:52:00.101125+00:00",
+  "exactOfficialVersion": "7.8.1",
+  "inertFilePolicyDecision": {
+    "insideExistingRead": "allow",
+    "insideExistingWrite": "allow",
+    "outsideExistingWrite": "deny"
+  },
+  "initialKernelCounters": {
+    "homeDataReadAndWriteDenied": true,
+    "otherReachablePortDenied": true,
+    "ownLoopbackAllowed": true,
+    "ownedScratchWriteAllowed": true,
+    "realBrowserOpenerDenied": true,
+    "registeredBinaryReadable": true
+  },
+  "kind": "OfficialKiloExternalDirectoryRememberRuleIsolatedLocalModel",
+  "localHttpCounts": {
+    "public-catalogue": 1
+  },
+  "noIsolatedAuthFile": true,
+  "officialArchiveRegularMembers": 408,
+  "outcome": "model-route-or-exact-read-only-tool-menu-unconfirmed",
+  "ownedCleanup": {
+    "warm": {
+      "eof": true,
+      "escalated": false,
+      "groupGone": true,
+      "naturalExit": true
+    }
+  },
+  "ownedTemporaryLayoutRemoved": true,
+  "rawMessagesPathsPatternsOrIdsPersisted": false,
+  "realCredentialAccountOrAppTouched": false,
+  "remoteRequests": 0,
+  "rounds": {
+    "warm-approved": {
+      "expectedRead": true,
+      "ownedFileMarkerInAcpToolResult": false,
+      "permissionPreview": null,
+      "readToolCompletion": false,
+      "selectedOption": null
+    }
+  },
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "startUtc": "2026-11-07T01:51:54.528783+00:00",
+  "syntheticToolMenuClass": {
+    "containsBash": true,
+    "exactReadOnly": false,
+    "toolCount": 2
+  },
+  "unexpectedLocalRouteAbsent": false,
+  "warmChildPolicy": {
+    "homeCredentialReadPolicyDenied": true,
+    "insideExistingFileReadableAndWritable": true,
+    "keychainMachDenied": true,
+    "managedKiloConfigReadPolicyDenied": true,
+    "outsideExistingFileWriteDenied": true,
+    "unrelatedMachControlAllowed": true
+  },
+  "warmExactEndpointControl": {
+    "allDiagnosticSocketApplicationBytes": 0,
+    "childOwnerAndSingleFixedIpv4ListenerVerifiedBeforeAnyRpc": true,
+    "exactOfficialListenerAllowedAndDifferentReachablePortDenied": true,
+    "relayAllowedAndDifferentReachablePortDenied": true
+  },
+  "warmOutboundCounts": {
+    "initialize": 1,
+    "session/new": 1,
+    "session/prompt": 1
+  }
+}
