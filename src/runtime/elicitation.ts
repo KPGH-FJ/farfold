@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { draftPersistence } from "./draft_storage";
 import type { PendingElicitation } from "./session_types";
 import { INQUIRY as S } from "./elicitation_strings";
 
@@ -73,7 +74,12 @@ export async function replyToElicitation(
   values: Record<string, unknown> | undefined,
   ports: InquiryPorts,
 ): Promise<void> {
+  const interrupted =
+    action === "accept"
+      ? draftPersistence.captureInteractionInterruption()
+      : undefined;
   if (
+    interrupted?.() ||
     !ports.current() ||
     p.status !== "pending" ||
     (action === "accept" && p.opening)
@@ -111,7 +117,8 @@ export async function replyToElicitation(
       if (ports.current()) ports.changed();
     }
   }
-  if (!ports.current() || p.status !== "pending") return;
+  // Opening the browser does not revive a choice interrupted by exit.
+  if (interrupted?.() || !ports.current() || p.status !== "pending") return;
   p.status = "submitting";
   p.error = null;
   ports.changed();

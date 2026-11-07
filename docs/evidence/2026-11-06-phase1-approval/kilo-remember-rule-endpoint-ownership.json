@@ -1,0 +1,70 @@
+{
+  "agentLaunches": 0,
+  "applicationPayloadBytesSent": 0,
+  "assignedAddressCountByFamily": {
+    "ipv4": 3,
+    "ipv6": 21
+  },
+  "assignedAndWildcardRivalBindsDenied": false,
+  "bothExactIPv4TargetsReached": true,
+  "boundOnlyAlternatesNeverListened": true,
+  "differentReachablePortDenied": true,
+  "endUtc": "2026-11-07T02:02:07.399756+00:00",
+  "externalConnections": 0,
+  "ipv6ReservationMode": "all-assigned-scoped-ipv6-bind-only",
+  "kind": "InertMacOSTwoPortOwnershipFeasibility",
+  "outcome": "inert-coverage-incomplete",
+  "rawAddressesPortsOrPidsRetained": false,
+  "representativeUnassignedLoopbackBindsDenied": true,
+  "rivalBindingControls": {
+    "same-port-rival": {
+      "address-in-use": 196,
+      "success": 12
+    },
+    "unassigned-v4-loopback-rival": {
+      "address-not-available": 4
+    }
+  },
+  "routeMonitor": {
+    "finished": false,
+    "lossOrParseFailureObserved": true,
+    "routeAddressOrInterfaceEvents": 0
+  },
+  "sameAssignedAddressSetAfterControl": true,
+  "samePortAlternateAddressesRefusedOrDenied": false,
+  "samePortUdpDenied": true,
+  "sandboxConnectionControls": {
+    "different-owned-reachable-ipv4": {
+      "policy-denied": 1
+    },
+    "exact-ipv4": {
+      "success": 2
+    },
+    "mapped-alternate-ipv4": {
+      "policy-denied": 4
+    },
+    "mapped-equivalent-ipv4": {
+      "success": 2
+    },
+    "same-port-assigned-v4": {
+      "timeout-or-other": 4
+    },
+    "same-port-assigned-v6": {
+      "success": 4,
+      "timeout-or-other": 38
+    },
+    "same-port-udp": {
+      "policy-denied": 2
+    },
+    "unassigned-loopback-alias": {
+      "policy-denied": 4
+    }
+  },
+  "startUtc": "2026-11-07T02:01:43.256657+00:00",
+  "wildcardIPv6RivalBinding": {
+    "v6-wildcard-rival": {
+      "address-in-use": 50,
+      "success": 126
+    }
+  }
+}

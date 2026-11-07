@@ -9,6 +9,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: h.open }));
 import { threads } from "./sessions";
 import { OpeningInquiryOwner, openingInquiries } from "./opening_inquiries";
+import { draftPersistence } from "./draft_storage";
 import { INQUIRY } from "./elicitation_strings";
 import { STRINGS } from "./strings";
 function replyWithIdentity(
@@ -229,6 +230,32 @@ it("cancellation during a pending browser open prevents late consent", async () 
   await answering;
   expect(h.invoke.mock.calls.map((c) => c[1].action)).toEqual(["cancel"]);
   expect(owner.snapshot().requests).toEqual([]);
+});
+it("does not send opening consent when the browser settles after an exit lock was released", async () => {
+  let opened!: () => void;
+  h.open.mockReturnValue(new Promise<void>((resolve) => (opened = resolve)));
+  h.invoke.mockResolvedValue({ status: "submitted" });
+  const owner = new OpeningInquiryOwner("a", "/p", () => {});
+  owner.addInterest();
+  owner.receive(question);
+  const inquiry = owner.snapshot().requests[0];
+  const answering = owner.reply(inquiry.requestId, "accept");
+  try {
+    expect(h.open).toHaveBeenCalledExactlyOnceWith(question.url);
+    expect(h.invoke).not.toHaveBeenCalled();
+    const release = draftPersistence.acquireInteractionLock();
+    release();
+    opened();
+    await answering;
+    expect.soft(h.invoke).not.toHaveBeenCalled();
+    expect(owner.snapshot().requests[0]).toBe(inquiry);
+    expect.soft(inquiry.status).toBe("pending");
+    expect(inquiry.handoff).toBeUndefined();
+  } finally {
+    opened();
+    await answering;
+    owner.retire();
+  }
 });
 it("invalidated preparation cannot answer or open a late URL", async () => {
   h.invoke.mockResolvedValue({ status: "submitted" });

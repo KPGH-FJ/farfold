@@ -1,0 +1,220 @@
+{
+  "activeAddressCounts": {
+    "ipv4": 3,
+    "ipv6": 20
+  },
+  "applicationBytesFromRejectedPeer": 0,
+  "boundBeforeInterfaceBeforeListen": true,
+  "boundWildcardDualStack": true,
+  "checkedAtUtc": "2026-11-07T02:01:00.955636+00:00",
+  "competingBindsBeforeListen": {
+    "attempted": 372,
+    "configured": 372,
+    "failedErrno": {
+      "48": 100,
+      "49": 8
+    },
+    "setupErrno": {},
+    "successful": [
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": true,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": true,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": true,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "loopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": false,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv4",
+        "interfaceBound": true,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": true,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv6",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": false
+      },
+      {
+        "family": "ipv6",
+        "interfaceBound": false,
+        "loopbackInterface": false,
+        "reuseAddress": true,
+        "reusePort": false,
+        "target": "nonloopback",
+        "v6Only": true
+      }
+    ],
+    "successfulCount": 264
+  },
+  "credentialReads": 0,
+  "deviceReadbackExactName": true,
+  "deviceReadbackSameIndexIPv4AndIPv6": [false, true],
+  "failure": {
+    "category": "guard_refused",
+    "reason": "competing-address-can-bind-same-port-before-listen"
+  },
+  "gooseLaunches": 0,
+  "kind": "NoAgentLoopbackPortExclusivityPreflight",
+  "listenerEverStarted": false,
+  "modelRequests": 0,
+  "normalSocketCleanup": true,
+  "offHostConnectionsAttempted": 0,
+  "probeSourceSha256": "3ef945e2b26fff128c778d80642872b43143f2f82d14e10c826d2a6d044278b6",
+  "productionWrites": 0,
+  "result": "blocked",
+  "reusesDisabled": true,
+  "routeChanges": 0
+}
