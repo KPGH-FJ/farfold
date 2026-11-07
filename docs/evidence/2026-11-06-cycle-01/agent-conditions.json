@@ -34,6 +34,8 @@
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-version-gate.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-token-withdrawal.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-controlling-pty-canary.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-canonical-token-prompt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
@@ -242,7 +244,7 @@
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
-        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 官方独立包已离线完成 ACP 握手并声明终端登录；令牌入口在提示前退出，未送输入或验证撤回。先前 SDK 连接失败、未进入账号读取的结果分开保留。完整新登录、退出换号与影响范围仍待实测。",
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 官方独立包已离线完成 ACP 握手并声明终端登录。首次令牌尝试在提示前退出；改用官方命令形式后看到提示，单次空输入结束后通用登录错误退出，确切空令牌拒绝仍未核合。先前 SDK 连接失败分开保留。完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
           {
             "standards": ["S1"],
@@ -250,6 +252,14 @@
             "result": "一次协议版本 1 初始化确实声明 copilot-login 为终端登录，终端命令存在。另声明历史读取、列表、关闭、图片和嵌入内容。进程正常退出，范围限启动及声明，零认证、会话和模型请求。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json"
+            ]
+          },
+          {
+            "standards": ["S1"],
+            "environment": "macOS arm64，官方签名独立包 1.0.106，专用终端、空资料及禁止联网",
+            "result": "官方令牌命令显示确切输入提示。只发送一次空结束控制，零凭据，终端报通用登录错误后进程自然退出 1，进程组及临时资料释放。确切空令牌拒绝、正式版入口和真实登录仍待核验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-canonical-token-prompt.json"
             ]
           },
           {
