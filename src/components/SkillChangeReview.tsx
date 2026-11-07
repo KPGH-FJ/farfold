@@ -1,5 +1,6 @@
 import { isHttpInput } from "../runtime/mcp_add_types";
 import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
+import { SKILL_PREFERENCE_REMOVE_STRINGS as SKILL_REMOVE } from "../runtime/skill_preference_remove_strings";
 import {
   MCP_ADD_STRINGS as ADD,
   MCP_HTTP_ADD_STRINGS as HTTP,
@@ -18,13 +19,15 @@ import type { SkillChangeScope } from "../runtime/skill_management_types";
 function stringsForTarget(target: ExtensionChangeRequest["target"]) {
   return !("kind" in target)
     ? SKILLS
-    : target.kind === "mcpRemoval"
-      ? REMOVE
-      : target.kind === "mcpAddition"
-        ? target.transport === "streamableHttp"
-          ? HTTP
-          : ADD
-        : MCP;
+    : target.kind === "skillPreferenceRemoval"
+      ? SKILL_REMOVE
+      : target.kind === "mcpRemoval"
+        ? REMOVE
+        : target.kind === "mcpAddition"
+          ? target.transport === "streamableHttp"
+            ? HTTP
+            : ADD
+          : MCP;
 }
 
 function WriteScope({ scope }: { scope: Readonly<SkillChangeScope> }) {
@@ -100,22 +103,18 @@ export function SkillChangeReview({
           if (allowed()) setClosed(null);
         }}
       >
-        {
-          ("kind" in request.target
-            ? request.target.kind === "mcpRemoval"
-              ? REMOVE
-              : request.target.kind === "mcpAddition"
-                ? ADD
-                : MCP
-            : SKILLS
-          ).reopen
-        }
+        {stringsForTarget(request.target).reopen}
       </button>
     );
   const isAddition =
     "kind" in request.target && request.target.kind === "mcpAddition";
   const isRemoval =
-    "kind" in request.target && request.target.kind === "mcpRemoval";
+    "kind" in request.target &&
+    ["mcpRemoval", "skillPreferenceRemoval"].includes(request.target.kind);
+  const isSkillRemoval =
+    "kind" in request.target &&
+    request.target.kind === "skillPreferenceRemoval";
+  const R = isSkillRemoval ? SKILL_REMOVE : REMOVE;
   const S = stringsForTarget(request.target);
   const prior =
     view.originalOperation?.requestId !== op?.requestId
@@ -146,7 +145,7 @@ export function SkillChangeReview({
             : request.action === "inspect"
               ? S.inspect
               : isRemoval && request.action === "recheck"
-                ? REMOVE.checkingResult
+                ? R.checkingResult
                 : S.waiting
         : request.action === "inspect"
           ? refusedWithoutReview ||
@@ -157,7 +156,7 @@ export function SkillChangeReview({
             ? isRemoval &&
               request.action === "recheck" &&
               ["unknown", "notDispatched"].includes(outcome)
-              ? REMOVE.checkUnknown
+              ? R.checkUnknown
               : S[outcome]
             : S.unknown;
   const readback =
@@ -208,7 +207,7 @@ export function SkillChangeReview({
       <p>
         {S.requested}：
         {isRemoval
-          ? REMOVE.remove
+          ? R.remove
           : request.requestedEnabled
             ? S.enabled
             : S.disabled}
@@ -224,7 +223,7 @@ export function SkillChangeReview({
         <div className="agent-extension-progress">
           <p>
             {isRemoval && request.action === "recheck"
-              ? REMOVE.original
+              ? R.original
               : SKILLS.priorOperation}
           </p>
           <p>{prior.target.name}</p>
@@ -236,8 +235,11 @@ export function SkillChangeReview({
           )}
           <p role="status">
             {!prior.outcome || prior.outcome === "unknown"
-              ? "kind" in prior.target && prior.target.kind === "mcpRemoval"
-                ? REMOVE.unknown
+              ? "kind" in prior.target &&
+                ["mcpRemoval", "skillPreferenceRemoval"].includes(
+                  prior.target.kind,
+                )
+                ? stringsForTarget(prior.target).unknown
                 : SKILLS.priorUnknown
               : stringsForTarget(prior.target)[prior.outcome]}
           </p>
@@ -305,7 +307,7 @@ export function SkillChangeReview({
           )}
           {"configuredEnabled" in review && !isAddition && (
             <p>
-              {MCP.configured}：
+              {isSkillRemoval ? SKILL_REMOVE.configured : MCP.configured}：
               {review.configuredEnabled ? S.enabled : S.disabled}
             </p>
           )}
@@ -316,7 +318,7 @@ export function SkillChangeReview({
           )}
           <WriteScope scope={review.writeScope} />
           {"parentHandling" in review && (
-            <p>{REMOVE.parentHandling[review.parentHandling]}</p>
+            <p>{R.parentHandling[review.parentHandling]}</p>
           )}
           <p>{S.notice}</p>
           <details>
@@ -348,7 +350,7 @@ export function SkillChangeReview({
             }}
           >
             {isRemoval
-              ? REMOVE.confirm
+              ? R.confirm
               : isAddition
                 ? ADD.confirm
                 : review.requestedEnabled
@@ -365,10 +367,10 @@ export function SkillChangeReview({
         <>
           {"configuredEnabled" in op.observation && (
             <p>
-              {MCP.configured}：
+              {isSkillRemoval ? SKILL_REMOVE.configured : MCP.configured}：
               {op.observation.configuredEnabled === null
                 ? isRemoval && op.observation.configuration === "matching"
-                  ? REMOVE.configurationAbsent
+                  ? R.configurationAbsent
                   : S.unverified
                 : op.observation.configuredEnabled
                   ? S.enabled
@@ -401,12 +403,14 @@ export function SkillChangeReview({
           </p>
           {"parentOutcome" in op.observation && (
             <>
-              {op.observation.mcp === "present" && <p>{REMOVE.present}</p>}
+              {"mcp" in op.observation && op.observation.mcp === "present" && (
+                <p>{REMOVE.present}</p>
+              )}
               <p>
-                {REMOVE.parent}：
+                {R.parent}：
                 {op.observation.parentOutcome === null
                   ? S.unverified
-                  : REMOVE.parentOutcomes[op.observation.parentOutcome]}
+                  : R.parentOutcomes[op.observation.parentOutcome]}
               </p>
             </>
           )}

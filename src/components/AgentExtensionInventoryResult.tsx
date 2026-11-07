@@ -3,6 +3,7 @@ import type { InventoryResult } from "../runtime/extension_inventory_controller"
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
 import { SKILL_MANAGEMENT_STRINGS as M } from "../runtime/skill_management_strings";
 import { MCP_MANAGEMENT_STRINGS as C } from "../runtime/mcp_management_strings";
+import { SKILL_PREFERENCE_REMOVE_STRINGS as CLEAR } from "../runtime/skill_preference_remove_strings";
 import type {
   InventoryItem,
   SkillInventoryItem,
@@ -14,10 +15,15 @@ export function AgentExtensionInventoryResult({
   stale,
   management,
   removal,
+  skillPreferenceRemoval,
 }: {
   result: InventoryResult;
   stale: boolean;
   removal?: { enabled: boolean; inspect(item: InventoryItem): void };
+  skillPreferenceRemoval?: {
+    enabled: boolean;
+    inspect(item: SkillInventoryItem): void;
+  };
   management?: {
     enabled: boolean;
     inspect(
@@ -162,6 +168,25 @@ export function AgentExtensionInventoryResult({
                     item.enablement.availability === "unavailable" ? (
                     <span>{M.reasons[item.enablement.reason]}</span>
                   ) : null}
+                  {skillPreferenceRemoval &&
+                    !discoveryOnly &&
+                    snapshot.complete &&
+                    item.name &&
+                    !item.pluginReported &&
+                    ["user", "repo"].includes(item.origin) &&
+                    item.enablement.availability === "reviewable" && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        disabled={stale || !skillPreferenceRemoval.enabled}
+                        onClick={() => {
+                          if (!stale && skillPreferenceRemoval.enabled)
+                            skillPreferenceRemoval.inspect(item);
+                        }}
+                      >
+                        {CLEAR.reviewRemove}
+                      </button>
+                    )}
                 </li>
               ))}
         </ul>

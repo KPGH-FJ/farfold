@@ -1,4 +1,9 @@
 import { mcpRemovePort } from "./mcp_remove";
+import { skillPreferenceRemovePort } from "./skill_preference_remove";
+import {
+  skillPreferenceRemoveFailure,
+  type SkillPreferenceRemoveCode,
+} from "./skill_preference_remove_types";
 import { mcpRemoveFailure, type McpRemoveCode } from "./mcp_remove_types";
 import { mcpAddPort } from "./mcp_add";
 import {
@@ -30,6 +35,7 @@ import {
   isMcpRequest,
   isAddRequest,
   isRemoveRequest,
+  isSkillPreferenceRemoveRequest,
 } from "./extension_management_types";
 export type { ExtensionChangeTargetOwner as SkillChangeTargetOwner } from "./extension_management_types";
 
@@ -43,7 +49,7 @@ export interface SkillManagementView {
   cancelRequested: boolean;
   trackingReleased: boolean;
   admissionRejected: boolean;
-  error: McpAddCode | McpRemoveCode | null;
+  error: McpAddCode | McpRemoveCode | SkillPreferenceRemoveCode | null;
   // Display only, captured from the review explicitly accepted for this request.
   confirmedScope: Readonly<SkillChangeScope> | null;
   originalOperation: SkillChangeOperation | null;
@@ -110,6 +116,7 @@ export class SkillManagementController {
     private mcpPort: SkillManagementPort = mcpManagementPort,
     private addPort: SkillManagementPort = mcpAddPort,
     private removePort: SkillManagementPort = mcpRemovePort,
+    private skillPreferenceRemovalPort: SkillManagementPort = skillPreferenceRemovePort,
   ) {}
   subscribe = (fn: () => void) => {
     this.listeners.add(fn);
@@ -291,9 +298,11 @@ export class SkillManagementController {
         if (!this.attached(f) || !f.view.unresolved || epoch !== f.epoch)
           return;
         const code =
-          (f.view.request && isRemoveRequest(f.view.request)
-            ? mcpRemoveFailure(reason)
-            : mcpAddFailure(reason)) ?? "unavailable";
+          (f.view.request && isSkillPreferenceRemoveRequest(f.view.request)
+            ? skillPreferenceRemoveFailure(reason)
+            : f.view.request && isRemoveRequest(f.view.request)
+              ? mcpRemoveFailure(reason)
+              : mcpAddFailure(reason)) ?? "unavailable";
         // Only these direct, fresh confirm errors are guaranteed before admission.
         // A timeout/status/other failure cannot be reclassified as an unwritten request.
         if (
@@ -348,13 +357,15 @@ export class SkillManagementController {
       this.revokeReview(previous);
     }
     const f: Flight = {
-      port: isRemoveRequest(request)
-        ? this.removePort
-        : isAddRequest(request)
-          ? this.addPort
-          : isMcpRequest(request)
-            ? this.mcpPort
-            : this.port,
+      port: isSkillPreferenceRemoveRequest(request)
+        ? this.skillPreferenceRemovalPort
+        : isRemoveRequest(request)
+          ? this.removePort
+          : isAddRequest(request)
+            ? this.addPort
+            : isMcpRequest(request)
+              ? this.mcpPort
+              : this.port,
       target:
         "input" in target && isHttpInput(target.input)
           ? {
@@ -416,7 +427,7 @@ export class SkillManagementController {
           input: f.view.additionInput,
         });
       }
-      if (isRemoveRequest(request))
+      if (isRemoveRequest(request) || isSkillPreferenceRemoveRequest(request))
         return f.port.inspect({
           agentId: request.agentId,
           requestId: request.requestId,

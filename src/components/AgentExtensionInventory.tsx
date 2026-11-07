@@ -202,6 +202,9 @@ export function AgentExtensionInventory({
   }, [owner, result]);
   const removalAvailable =
     kind === "mcp" && cap?.value?.mcpRemoval?.availability === "available";
+  const skillPreferenceRemovalAvailable =
+    kind === "skills" &&
+    cap?.value?.skillPreferenceRemoval?.availability === "available";
   const httpAdditionAvailable =
     kind === "mcp" && cap?.value?.mcpHttpAddition?.availability === "available";
   const additionAvailable =
@@ -452,6 +455,33 @@ export function AgentExtensionInventory({
             <AgentExtensionInventoryResult
               result={result}
               stale={!!stale}
+              skillPreferenceRemoval={
+                skillPreferenceRemovalAvailable
+                  ? {
+                      enabled:
+                        active &&
+                        !blocked &&
+                        !managementView.unresolved &&
+                        !pluginView.unresolved,
+                      inspect: (item) => {
+                        const current = () =>
+                          owner.current() &&
+                          liveCapability.current === capabilityKey &&
+                          skillPreferenceRemovalAvailable &&
+                          extensionInventory.isCurrentResult(owner, result);
+                        if (current())
+                          skillManagement.inspect({
+                            kind: "skillPreferenceRemoval",
+                            owner,
+                            result,
+                            item,
+                            current,
+                            changed: () => extensionInventory.markStale(result),
+                          });
+                      },
+                    }
+                  : undefined
+              }
               removal={
                 removalAvailable
                   ? {

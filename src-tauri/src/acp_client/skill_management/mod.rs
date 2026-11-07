@@ -11,6 +11,8 @@ mod mcp_remove_plan;
 mod plan;
 mod requests;
 mod rpc;
+pub mod skill_preference_remove;
+mod skill_preference_remove_plan;
 mod types;
 use crate::{acp_client::extension_inventory as inventory, meta_store::MetaStore};
 use requests::Job;
@@ -250,6 +252,8 @@ mod independent_tests;
 mod prewrite_owner_tests;
 #[cfg(test)]
 mod shared_scope_tests;
+#[cfg(test)]
+mod skill_preference_remove_tests;
 #[cfg(test)]
 mod tests;
 

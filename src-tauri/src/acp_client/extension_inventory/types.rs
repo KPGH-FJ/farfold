@@ -23,6 +23,7 @@ pub enum Code {
     RequestConflict,
     Unavailable,
     TargetUnavailable,
+    PreferenceNotConfigured,
     TargetChanged,
     TargetEnabled,
     InventoryIncomplete,
@@ -69,6 +70,8 @@ pub struct ExtensionCapabilities {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub skills_extra_roots_inventory: Option<InventoryCapability>,
     pub skill_enablement: InventoryCapability,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub skill_preference_removal: Option<InventoryCapability>,
     pub mcp_enablement: InventoryCapability,
     pub mcp_addition: InventoryCapability,
     pub mcp_http_addition: InventoryCapability,

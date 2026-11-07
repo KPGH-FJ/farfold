@@ -52,6 +52,16 @@ pub struct SkillChangeTarget {
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
+pub struct SkillPreferenceRemovalTarget {
+    pub kind: &'static str,
+    pub inventory_request_id: String,
+    pub item_id: usize,
+    pub name: String,
+    pub origin: String,
+    pub display_path: String,
+}
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
 pub struct McpChangeTarget {
     pub kind: &'static str,
     pub inventory_request_id: String,
@@ -63,6 +73,7 @@ pub struct McpChangeTarget {
 #[serde(untagged)]
 pub enum Target {
     Skill(SkillChangeTarget),
+    SkillPreferenceRemoval(SkillPreferenceRemovalTarget),
     Mcp(McpChangeTarget),
     McpAddition(super::mcp_add_input::PublicTarget),
     McpRemoval(McpChangeTarget),
