@@ -813,7 +813,6 @@ export function EmptyState({
       !sameSource
     )
       throw new Error(STRINGS.repair.sendFailed);
-    // This waits for admission only; the actual agent work continues in the store.
     handedOffKeys.current.add(key);
     let pending: PendingAttempt | undefined;
     try {
@@ -846,7 +845,7 @@ export function EmptyState({
         throw new Error(STRINGS.repair.sendFailed);
       if (selectionReviewRef.current) throw new Error(R.selectionReview);
       if (readRequired()) throw new Error(C.readRequired);
-      await sendNewConversation(key, blocks);
+      await sendNewConversation(key, blocks, pending);
       finishPendingConversation(
         pending,
         threads.thread(key)?.uncertainPrompt ? "unknown" : "accepted",
@@ -860,6 +859,8 @@ export function EmptyState({
       const failed = threads.thread(key);
       if (
         failed?.identity === "draft" &&
+        (!pending || failed === pending.state) &&
+        (!pending || failed.connectionId === pending.connectionId) &&
         !failed.uncertainPrompt &&
         !failed.items.length &&
         !failed.queued.length
@@ -872,6 +873,7 @@ export function EmptyState({
         )
           void threads.discardDraft(key);
       }
+      if (pending?.returnedToEditor) return false;
       throw error;
     }
     if (preparationIntent.current === sentIntent)
@@ -882,7 +884,6 @@ export function EmptyState({
       if (activeRef.current) onStarted(key);
     }
   };
-
   const agentSendable =
     !archiveBlocked &&
     candidateSelected &&

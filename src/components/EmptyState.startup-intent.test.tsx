@@ -119,6 +119,7 @@ import {
 } from "../runtime/drafts";
 import { allowAutomaticConnection } from "../runtime/connection_intent";
 import { freshThreadState } from "../runtime/session_projection";
+import { pauseQueueForExit } from "../runtime/prompt_admission";
 import type { AgentCardModel } from "../runtime/agents";
 import { removalArchive } from "../runtime/worktree_remove.test-fixtures";
 
@@ -741,4 +742,53 @@ it("an unknown first-send result retains its target and never prepares or sends 
   expect(h.open).toHaveBeenCalledOnce();
   expect(h.send).toHaveBeenCalledOnce();
   expect(composerDrafts.read("new")).toBe(pending);
+});
+
+it("returns an undispatched first send without closing a same-key replacement after quit", async () => {
+  chooseSameAgent();
+  await vi.advanceTimersByTimeAsync(300);
+  render();
+  const original = h.threads.get("prepared")!;
+  original.connectionId = "original-prepared-connection";
+  let release!: () => void;
+  const check = new Promise<void>((resolve) => (release = resolve));
+  h.send.mockImplementation(
+    async (_key, blocks: ThreadState["queued"][number]) => {
+      original.submitting = true;
+      original.queued.push(blocks);
+      original.promptSubmission = {
+        blocks,
+        connectionId: original.connectionId,
+        dispatched: false,
+        deliveryConfirmed: false,
+      };
+      await check;
+      original.submitting = false;
+      return { status: "rejected", reason: "unavailable" };
+    },
+  );
+  const sending = beginSend();
+  try {
+    await settle();
+    expect(h.send).toHaveBeenCalledOnce();
+    expect(
+      composerDrafts.read("new").pendingConversation?.nativeSessionId,
+    ).toBe(original.nativeSessionId);
+    pauseQueueForExit(original, true);
+    const returned = composerDrafts.read("new");
+    expect(returned.pendingConversation).toBeUndefined();
+    unmount();
+    h.discard.mockClear();
+    const replacement = prepared();
+    replacement.connectionId = "replacement-prepared-connection";
+    h.threads.set(replacement.key, replacement);
+    release();
+    expect(await sending).toBe(false);
+    expect(h.discard).not.toHaveBeenCalled();
+    expect(h.threads.get(replacement.key)).toBe(replacement);
+    expect(composerDrafts.read("new")).toBe(returned);
+  } finally {
+    release();
+    await sending;
+  }
 });

@@ -880,6 +880,71 @@ it.each(["exit stays open", "exit cancelled"] as const)(
   },
 );
 
+it.each(["returned by quit", "ordinary deferred send"] as const)(
+  "only saves a changed pending release when a first send is %s",
+  async (scenario) => {
+    const key = "new";
+    const input = { text: "Original editable input", attachments: [] };
+    let refused = false;
+    let writes = 0;
+    let atReturn = 0;
+    let saved: SavedWork | undefined;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "settings_set" && args.key === "unsentWork.v1") {
+        writes++;
+        if (refused) throw new Error("controlled quit save failure");
+        saved = structuredClone(args.value);
+      }
+      return null;
+    });
+    const returned = scenario === "returned by quit";
+    const onSend = vi.fn(async (): Promise<false> => {
+      if (returned) {
+        refused = true;
+        composerDrafts.update(key, (draft) => ({
+          ...draft,
+          sendPending: false,
+        }));
+        await expect(draftPersistence.flush()).rejects.toThrow();
+      }
+      atReturn = writes;
+      return false;
+    });
+    try {
+      await draftPersistence.load();
+      composerDrafts.update(key, () => input);
+      await draftPersistence.flush();
+      const submit = renderComposer({
+        thread: null,
+        draftKey: key,
+        imageEnabled: false,
+        onSend,
+        onGoSettings() {},
+      }).button(STRINGS.composer.sendTitle)!;
+      (submit.props.onClick as () => void)();
+      await vi.waitFor(() => expect(onSend).toHaveBeenCalledOnce());
+      await onSend.mock.results[0]?.value;
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(writes).toBe(atReturn + (returned ? 0 : 1));
+      expect(composerDrafts.read(key)).toMatchObject({
+        ...input,
+        sendPending: false,
+      });
+      expect(saved?.composers[key]).toMatchObject({
+        ...input,
+        sendPending: returned,
+      });
+      expect(
+        h.invoke.mock.calls.some(([command]) => command === "session_prompt"),
+      ).toBe(false);
+    } finally {
+      refused = false;
+      composerDrafts.clear(key);
+      await draftPersistence.flush();
+    }
+  },
+);
+
 it.each(["quit pause", "no newer pause"] as const)(
   "keeps the correct outcome when a durable handoff receives %s",
   async (scenario) => {

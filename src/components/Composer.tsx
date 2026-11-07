@@ -586,7 +586,7 @@ export function Composer({
         thread &&
         (thread.connectionLost || threads.thread(thread.key) !== thread),
       );
-    let releasePending = () => {};
+    let releasePending = () => false;
     try {
       await draftPersistence.flush();
       if (submissionInterrupted()) return;
@@ -618,8 +618,8 @@ export function Composer({
       // `false` means the send did not happen (e.g. waiting on a folder
       // choice): keep the draft instead of treating it as delivered.
       if (sent !== false) composerDrafts.clearIfUnchanged(targetKey, submitted);
-      releasePending();
-      await draftPersistence.flush();
+      const released = releasePending();
+      if (sent !== false || released) await draftPersistence.flush();
       requestAnimationFrame(autogrow);
     } catch (error) {
       releasePending();

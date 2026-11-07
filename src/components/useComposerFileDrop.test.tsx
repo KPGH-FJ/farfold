@@ -19,7 +19,7 @@ import { composerDrafts } from "../runtime/drafts";
 import { draftPersistence } from "../runtime/draft_storage";
 
 const key = "native-file-drop";
-function mount(enabled = true) {
+function mount(enabled = true, platform = "Win32") {
   let callback: (event: { payload: FileDropEvent }) => void;
   let finish: (stop: () => void) => void;
   let fail: () => void;
@@ -47,6 +47,7 @@ function mount(enabled = true) {
   };
   element.ownerDocument.elementFromPoint.mockReturnValue(element);
   vi.stubGlobal("window", { devicePixelRatio: 2 });
+  vi.stubGlobal("navigator", { platform });
   function Probe() {
     useComposerFileDrop({
       key,
@@ -78,16 +79,40 @@ afterEach(() => {
   draftPersistence.lockInteraction(false);
   vi.unstubAllGlobals();
 });
-it("converts Retina physical coordinates and imports only the hit input", () => {
-  const s = mount();
-  s.send("enter");
-  s.send("drop");
-  expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
-    110,
-    210,
-  );
-  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+it.each(["Win32", "Linux x86_64", ""])(
+  "converts physical coordinates and imports only the hit input (%s)",
+  (platform) => {
+    const s = mount(true, platform);
+    s.send("enter");
+    s.send("drop");
+    expect(s.element.ownerDocument.elementFromPoint).toHaveBeenLastCalledWith(
+      110,
+      210,
+    );
+    expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+    s.cleanup();
+  },
+);
+it("hit-tests macOS drag points without applying the Retina scale again", () => {
+  const s = mount(true, "MacIntel");
+  const inside = { x: 220, y: 320 };
+  s.send("enter", inside);
+  s.send("drop", inside);
   s.cleanup();
+  expect
+    .soft(s.element.ownerDocument.elementFromPoint)
+    .toHaveBeenLastCalledWith(220, 320);
+  expect(s.add).toHaveBeenCalledExactlyOnceWith(key, ["/file.txt"]);
+});
+it("rejects a macOS drop outside the input even when its half coordinates would hit", () => {
+  const s = mount(true, "MacIntel");
+  s.send("enter", { x: 220, y: 320 });
+  s.send("drop", { x: 220, y: 420 });
+  s.cleanup();
+  expect
+    .soft(s.element.ownerDocument.elementFromPoint)
+    .toHaveBeenCalledExactlyOnceWith(220, 320);
+  expect(s.add).not.toHaveBeenCalled();
 });
 it.each(["hidden", "covered", "inert", "pending", "exit", "preparing"])(
   "does not add files through %s input",

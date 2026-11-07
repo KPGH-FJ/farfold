@@ -12,6 +12,9 @@ export interface PendingAttempt {
   snapshot: ComposerDraft;
   target: PendingConversation;
   clearOnAccepted: boolean;
+  state: ThreadState;
+  connectionId?: string;
+  returnedToEditor?: true;
 }
 
 /** Save the actual opened target before any first-message dispatch. */
@@ -43,6 +46,8 @@ export async function rememberPendingConversation(
     snapshot: composerDrafts.read(draftKey),
     target,
     clearOnAccepted,
+    state,
+    connectionId: state.connectionId,
   };
   try {
     await draftPersistence.flush();

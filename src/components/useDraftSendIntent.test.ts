@@ -34,6 +34,33 @@ function render(view: View) {
   return send;
 }
 
+it.each([false, undefined])(
+  "preserves the ready first-send result (%s)",
+  async (result) => {
+    const draft = { text: "original input", attachments: [] };
+    const blocks = [{ type: "text" as const, text: draft.text }];
+    const send = vi.fn().mockResolvedValue(result);
+    const submit = render({
+      pending: { current: null },
+      pair: "A:/ready",
+      cwd: "/ready",
+      active: true,
+      ready: true,
+      error: false,
+      draft,
+      requireCurrent: vi.fn(),
+      retireLocation: vi.fn(),
+      prepare: vi.fn(),
+      send,
+      pickProject: vi.fn(),
+      requestSend: vi.fn(),
+      folderCancelled: vi.fn(),
+    });
+    expect(await submit(blocks, draft)).toBe(result !== false);
+    expect(send).toHaveBeenCalledExactlyOnceWith(blocks, draft);
+  },
+);
+
 it.each([false, true])(
   "a folderless send keeps its one-shot only while file delivery intent is unchanged (changed: %s)",
   async (changed) => {

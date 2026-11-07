@@ -43,7 +43,10 @@ export function useComposerFileDrop({
       }),
       accepts: ({ x, y }) => {
         const element = box.current;
-        const scale = window.devicePixelRatio;
+        // The pinned macOS drag handler forwards AppKit points as-is.
+        const scale = navigator.platform.startsWith("Mac")
+          ? 1
+          : window.devicePixelRatio;
         if (
           !element ||
           element.closest("[inert]") ||

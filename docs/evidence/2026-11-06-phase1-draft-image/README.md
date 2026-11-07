@@ -14,6 +14,8 @@
 
 11 月 7 日在同一已完成自测对话尝试从 Finder 拖入专用 PNG 和文本。两件文件均选中，尝试后输入区和只读存储都没有收到测试附件，未取得拖放到达输入区的证据。返回原稿后只读核合原稿保存摘要、保留 1 份及自测稿保存值，两个测试源文件仍在专用目录。本次未触发发送，P07 正式拖放和 P01 读取中切换仍待复验。
 
+另核锁定的 macOS 拖放链路。Wry 0.55.1 传出 AppKit 点坐标，Tauri 保留原值，旧输入框却再按屏幕倍率除一次。2× 回归中，旧逻辑拒绝真实框内点，也会接收缩放后碰巧落入的框外点。现在 macOS 直接用点坐标，Windows 等其他平台保留原换算，仍需核对输入框范围、遮挡和原草稿归属。关联 6 文件 54 项通过，独立复核无阻断。当前正式机逻辑及像素分辨率均为 1920×1080，是 1×。此次在独立 Finder 窗口准备测试文件，未取得可确认的跨窗落点，已关闭该窗并返回原稿。既有 1× 尝试和此源码修复各自留证，正式 Finder 拖放及高分屏复验仍待。[AppKit 坐标](https://developer.apple.com/documentation/appkit/nsdragginginfo/dragginglocation) · [高分屏点与像素](https://developer.apple.com/library/archive/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Explained/Explained.html) · [锁定 Wry](https://github.com/tauri-apps/wry/blob/wry-v0.55.1/src/wkwebview/drag_drop.rs#L34-L91)
+
 02:30 在同一正式版的已完成 Copilot 自测对话中，以系统选择器选取 40 张生成的自有 PNG，共 5,257,240 字节。第一次读到 40 张已准备好；切回原稿时无测试附件，回到测试稿仍为 40 张。只读核实保存图像逐字节等于原件，其他草稿无这批图片，原稿摘要和保留 1 份保持。同一自测连接的完整通信摘要未变。随后仅清除这批测试附件引用和自有文字，并重新核对原稿。此轮补强正式多选及数据保真，不算读取中切换或正式故障测试。[四十图分项](forty-image-switch.json)
 
 另以系统选择器在已完成的自测对话中加入四张不同字节的自有 PNG，其中两张同名、分属两个目录。重复选取第一张的原路径后，四个附件标识与整份测试稿摘要一致。展开能分别看到完整路径；按第一张所在行移除后，另一张同名图片和两个对照附件仍为原标识和原字节。随后只清理这四个自测引用，返回原稿，原稿、保留 1 份、待发和四条原通信保持，零发送。[正式同名附件回执](installed-same-name-attachment-identity.json)

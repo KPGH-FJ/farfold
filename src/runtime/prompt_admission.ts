@@ -1,5 +1,7 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import type { ThreadState } from "./session_types";
+import { composerDrafts } from "./drafts";
+import type { PendingAttempt } from "./pending_conversation";
 import { pauseQueue, removeQueued } from "./queue";
 import { PROMPT_ADMISSION as S } from "./prompt_admission_strings";
 
@@ -19,6 +21,53 @@ function currentSubmission(thread: ThreadState) {
     : undefined;
 }
 
+type FirstPromptDraft = {
+  blocks: NonNullable<ThreadState["promptSubmission"]>["blocks"];
+  attempt: PendingAttempt;
+  returnDraft: () => void;
+};
+const firstPromptDrafts = new WeakMap<ThreadState, FirstPromptDraft>();
+
+export function holdFirstPromptDraft(owner: FirstPromptDraft): () => void {
+  const state = owner.attempt.state;
+  firstPromptDrafts.set(state, owner);
+  return () => {
+    if (firstPromptDrafts.get(state) === owner) firstPromptDrafts.delete(state);
+  };
+}
+
+function returnFirstPromptDraft(
+  thread: ThreadState,
+  submission: NonNullable<ThreadState["promptSubmission"]>,
+): void {
+  const owner = firstPromptDrafts.get(thread);
+  if (
+    !owner ||
+    owner.blocks !== submission.blocks ||
+    thread.queued[0] !== owner.blocks ||
+    thread.connectionLost ||
+    thread.connectionOutcomeUnknown ||
+    thread.uncertainPrompt
+  )
+    return;
+  const { attempt } = owner;
+  const editor = composerDrafts.read(attempt.draftKey);
+  if (
+    attempt.draftKey !== "new" ||
+    attempt.connectionId !== submission.connectionId ||
+    !attempt.clearOnAccepted ||
+    editor !== attempt.snapshot ||
+    editor.pendingConversation !== attempt.target
+  )
+    return;
+  // Remove only the proven queue occurrence and return the editor before the
+  // exit caller emits the combined draft/queue settings snapshot.
+  attempt.returnedToEditor = true;
+  thread.promptSubmission = undefined;
+  removeQueued(thread, owner.blocks);
+  owner.returnDraft();
+}
+
 export function pauseQueueForExit(
   thread: ThreadState,
   confirmed: boolean,
@@ -26,16 +75,10 @@ export function pauseQueueForExit(
   if (thread.queued.length)
     pauseQueue(thread, thread.uncertainPrompt ? "uncertain" : "stopped");
   const submission = currentSubmission(thread);
-  // A confirmed quit can revoke this local preparation before it reaches IPC.
-  // Keep its queue entry, but drop the tentative cold quarantine.
-  // A first message still has a separate protected editor target.
-  if (
-    confirmed &&
-    thread.identity !== "draft" &&
-    submission &&
-    !submission.dispatched
-  )
-    thread.promptSubmission = undefined;
+  if (!confirmed || !submission || submission.dispatched) return;
+  // A confirmed quit can revoke local preparation before it reaches IPC.
+  if (thread.identity === "draft") returnFirstPromptDraft(thread, submission);
+  else thread.promptSubmission = undefined;
 }
 
 /** Settle queue ownership before replacing or losing the exact connection. */

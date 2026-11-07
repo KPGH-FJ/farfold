@@ -1402,14 +1402,14 @@ it("exposes only a prepared real draft and keeps its original input and attachme
 it.each(["rejected", "unknown"])(
   "uses the original first-send protection from the prepared workspace (%s)",
   async (outcome) => {
-    props.onPreparedKey = vi.fn();
     await startEditableDraft();
     const { draftPersistence } = await import("../runtime/drafts");
     const sending = await import("../runtime/new_conversation");
     const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
     const dispatch = vi
       .spyOn(sending, "sendNewConversation")
-      .mockImplementation(async () => {
+      .mockImplementation(async (_key, _blocks, attempt) => {
+        expect(attempt?.state).toBe(h.live);
         if (outcome === "unknown")
           h.live!.uncertainPrompt = [{ type: "text", text: "Keep my draft" }];
         throw new Error("controlled rejection");
@@ -1426,7 +1426,7 @@ it.each(["rejected", "unknown"])(
           composerDrafts.read("new"),
         ),
       ).rejects.toThrow("controlled rejection");
-      expect(dispatch).toHaveBeenCalledWith("new-A", blocks);
+      expect(dispatch.mock.calls[0]?.slice(0, 2)).toEqual(["new-A", blocks]);
       expect(composerDrafts.read("new").text).toBe("Keep my draft");
       expect(!!composerDrafts.read("new").pendingConversation).toBe(
         outcome === "unknown",
