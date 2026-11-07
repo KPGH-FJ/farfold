@@ -37,6 +37,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-relay-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-local-startup-diagnostic.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-official-cli-live-device-pending.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-pending-pty-close-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-new-error.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-new-session-phase-attribution.json",
