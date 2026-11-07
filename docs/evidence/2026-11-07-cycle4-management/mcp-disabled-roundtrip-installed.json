@@ -1,0 +1,127 @@
+{
+  "publicationStatus": "published-bounded-installed-result",
+  "scope": "Installed macOS official MCP configuration: add one owned disabled local item, explicitly recheck it, then remove the exact item and restore the full original configuration.",
+  "requirementIds": ["P39", "P41"],
+  "formalApplication": {
+    "sourceCodeCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "identitySource": "Root formal UI observation; install identity established in prior stage receipt."
+  },
+  "rootObservedOfficialUi": {
+    "listAndAdditionReview": true,
+    "confirmAddClicks": 1,
+    "confirmAddUtc": "2026-11-07T11:33:40.324Z",
+    "addedEnabled": false,
+    "addedCommand": "/usr/bin/true",
+    "addedArgs": [],
+    "explicitRecheck": true,
+    "freshReadingMethodAndCompleteListBeforeRemoval": true,
+    "exactTestItemRemovalReview": true,
+    "confirmRemoveClicks": 1,
+    "confirmRemoveUtc": "2026-11-07T11:39:59.330Z",
+    "removedOutcome": true,
+    "testNameAbsentFromCompleteRemovalReportAfterRemoval": true,
+    "ownedTestEntryName": "farfold_cycle4_disabled_20261107_1932",
+    "officialUiTargetPath": "~/.codex/config.toml",
+    "oldFiveRowCatalogueRemainedStaleAfterRemoval": true,
+    "newCatalogueQueryAfterRemoval": false
+  },
+  "independentConfigurationObservation": {
+    "result": "passed-for-this-owned-config-roundtrip",
+    "onlyUniqueTestLeafDifferentAfterAdd": true,
+    "addedLeafDisabledTrueCommandNoArgs": true,
+    "explicitRecheckLeavesFileExactlyUnchanged": true,
+    "afterRemoveFileExactlyEqualsBefore": true,
+    "afterRemoveCompleteSemanticConfigExactlyEqualsBefore": true,
+    "hashEncoding": "typed TOML; sorted table keys; ordered arrays; empty parents retained"
+  },
+  "rawEvidence": [
+    {
+      "label": "before",
+      "path": "output/2026-11-07-cycle4-mcp-config/readonly-config-8bp0pswe/before.json",
+      "sha256": "e7a3056029a55659f73f111caf14781635dbc848b52328cbfbee7536bfdb3ea3",
+      "observedAtUtc": "2026-11-07T11:33:14.899780+00:00"
+    },
+    {
+      "label": "add",
+      "path": "output/2026-11-07-cycle4-mcp-config/readonly-config-8bp0pswe/add.json",
+      "sha256": "2218ebde9414357ddb732fe93b908145103d03e0716ae6f920c1e6a619d7de92",
+      "observedAtUtc": "2026-11-07T11:34:37.856664+00:00"
+    },
+    {
+      "label": "recheck",
+      "path": "output/2026-11-07-cycle4-mcp-config/readonly-config-8bp0pswe/recheck.json",
+      "sha256": "431c11d1e0a56dd4d274972809ddb2c351e726a769230483e6e738eb15b2c2ad",
+      "observedAtUtc": "2026-11-07T11:35:57.672283+00:00"
+    },
+    {
+      "label": "remove",
+      "path": "output/2026-11-07-cycle4-mcp-config/readonly-config-8bp0pswe/remove.json",
+      "sha256": "557a0424106d9d96011844083c5b98bcfda2e5f56895ece84f144cd1188d2cfa",
+      "observedAtUtc": "2026-11-07T11:41:32.120678+00:00"
+    }
+  ],
+  "independentReview": {
+    "path": "output/2026-11-07-cycle4-mcp-config/readonly-config-8bp0pswe/independent-review.json",
+    "sha256": "f9de009c3597c9b32e5b9b7946bbb644c50bed246db7fe315e95d31203b2e902"
+  },
+  "evidenceBoundaries": [
+    "Root observed installed UI actions and official outcomes in the referenced UI record; the independent reader maps its exact target path to all four hash receipts and verifies configuration preservation with the unchanged helper.",
+    "This closes only the observed successful add/recheck/remove configuration sample. The added program remains disabled and was not invoked as an MCP server by this flow.",
+    "MCP connection, tool calls, current-session adoption, authentication, failure/cancel and other Agents remain unverified. No complete P39/P41 or Agent acceptance is claimed.",
+    "The four observation receipts retain no plaintext source path or test name; the referenced root UI record supplies exact target/name attribution. The old five-row catalogue remained stale after removal: absence is proved by the complete removal report plus exact file restoration, not a newly queried catalogue."
+  ],
+  "privacy": {
+    "sourceConfigurationCopiedByObserver": false,
+    "otherConfigurationValuesPublished": false,
+    "observerAgentCalls": 0,
+    "observerSourceWrites": 0
+  },
+  "rootUiRecord": {
+    "path": "output/2026-11-07-cycle4-mcp-config/ui-events.json",
+    "sha256": "75ad0b27da382899a639c888dc4fb67ce9fa2f6eeac5fc7a9780177583b313ba",
+    "sourceKind": "root-observed-installed-ui-actions",
+    "scope": "Contemporaneous root UI observations structured without replay; not a raw official response or a second independent UI witness."
+  },
+  "rootUiEvidence": {
+    "path": "output/2026-11-07-cycle4-mcp-config/ui-events.json",
+    "sha256": "75ad0b27da382899a639c888dc4fb67ce9fa2f6eeac5fc7a9780177583b313ba"
+  },
+  "readingMethodObservation": {
+    "observed": "About seven minutes after the original list query, the reading method was reported expired or changed. Explicitly rechecking the reading method then querying succeeded.",
+    "sourceSupportedExplanation": "The existing selection has a non-sliding 300-second lifetime. Management writes only mark the old catalogue stale; no write-triggered selection revocation was found.",
+    "boundary": "Exact issue time was not observed; TTL is consistent with timing, not proven as the sole possible cause. No product defect or fix is claimed.",
+    "source": [
+      "src-tauri/src/acp_client/extension_inventory/launch.rs:149",
+      "src-tauri/src/acp_client/extension_inventory/launch.rs:189",
+      "src/runtime/extension_inventory_controller.ts:369"
+    ]
+  },
+  "developmentSmoke": {
+    "typecheck": {
+      "exitCode": 0
+    },
+    "focusedFrontend": {
+      "exitCode": 0,
+      "files": 3,
+      "tests": 32,
+      "log": "output/2026-11-07-cycle4-mcp-config/focused-frontend.log"
+    },
+    "rustDependencyMetadata": {
+      "exitCode": 0,
+      "offline": true,
+      "locked": true,
+      "noDeps": true,
+      "receipt": "output/2026-11-07-cycle4-mcp-config/cargo-metadata.json"
+    },
+    "boundary": "No source changes; these are bounded tooling checks, not a fresh full seven-check run or Rust compilation."
+  },
+  "skillManagementNextCondition": {
+    "officialTargetInspectedReadOnly": true,
+    "existingPreferenceRules": 0,
+    "actualSkillToggleTested": false,
+    "reason": "No existing owned last-path preference rule was available for a byte-exact roundtrip. User skills were not used as disposable test objects; no skill/configuration rule was created by this inspection."
+  }
+}

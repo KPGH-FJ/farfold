@@ -1,0 +1,25 @@
+{
+  "completedUtc": "2026-11-07T11:23:16.905974+00:00",
+  "scope": "Only exact fresh generated Rust object/incremental cache allowlist. Source, dirty work, Git, all test executables, dependency archives/rmeta, evidence, backups, user data/configuration, tools and sole formal app retained.",
+  "removedRegularFiles": 17243,
+  "removedDirectories": 26,
+  "representedAllocationBytes": 40294977536,
+  "mainMeasuredAvailableIncreaseBytes": 38002577408,
+  "bootstrapMeasuredAvailableIncreaseBytes": 625500160,
+  "measuredWindowsIncreaseBytes": 38628077568,
+  "afterMainVerificationAvailableBytes": 41427742720,
+  "note": "APFS represented allocation is not unique physical reclaim. Independent system space changes outside the two deletion windows are not attributed to this cleanup. Current available space may subsequently change.",
+  "protectedProjectAndFormalContentAndMetadataEqual": true,
+  "gitStateEqual": true,
+  "originalTrackedUserDiffSha256": "86d2c3c4e5888c03f2cb5a936f5b8254182eb0edec43348f4b309630fc83b1d5",
+  "formalSourceCommit": "091fac1c7dc0ec2ff67747317aa7ff7a25d05b7d",
+  "initialAttempt": "Stopped before deletion on ENOSPC recording protection; retained.",
+  "bootstrap": "8 original approved objects removed with no-follow/identity safeguards and streamed intent/removed journal; disk journal immediately persisted and verified.",
+  "normalAttempt": "Exact original remaining scope, new manifest/journal/review; completed, never retry.",
+  "independentReview": {
+    "approved": true,
+    "path": "output/2026-11-07-storage-recovery/attempt2/final-review.json",
+    "sha256": "8c6d1bf9e9262906227ee302ef8989be2fc74bfd97b23b12bd9e994a0f038a4d"
+  },
+  "originalRecords": "output/2026-11-07-storage-recovery"
+}
