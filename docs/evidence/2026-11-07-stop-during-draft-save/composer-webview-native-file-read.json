@@ -1,0 +1,60 @@
+{
+  "sourceCommit": "fdee9478b2d9263e5ede9aa20773b664c7254292",
+  "hiddenNonpersistentWebKit": true,
+  "actualAttachmentCommands": [
+    "draft_attachment_audio_candidate",
+    "draft_attachment_image"
+  ],
+  "heldGetAtNativeCommand": "draft_attachment_audio_candidate",
+  "heldGetDurationMs": 60,
+  "nativeReadBytesPresentBeforeRelease": false,
+  "switchedBeforeRelease": true,
+  "nativeQuitAndWaitBeforeRelease": true,
+  "independentOldDatabaseBeforeRelease": true,
+  "settingsWritesBeforeRelease": 0,
+  "exitConfirmationsBeforeRelease": 0,
+  "warmSettingsWritesAfterRelease": 1,
+  "coldSettingsWrites": 0,
+  "nativeExitConfirmations": {
+    "warm": 1,
+    "cold": 1
+  },
+  "ownedProcessExitCodes": {
+    "warm": 0,
+    "cold": 0
+  },
+  "exactImageBytes": 76,
+  "exactImageSha256": "0b7d46713f293806de6712373ec4022e982854588c08f84dc237653c936b7174",
+  "coldActualComposerReopenedBothDraftsAndExactImage": true,
+  "coldImageRequiresReview": true,
+  "otherDraftAndChoicePreserved": true,
+  "loopbackNoPreRead": true,
+  "agentRequests": 0,
+  "warmValidatorFirstExit": 1,
+  "warmValidatorFirstFailure": "Runner compared Python 3.9.6 process-local macOS monotonic epochs. Actual native process had exited 0. Warm artifacts retained; only cold was launched after this correction.",
+  "resumeValidatorPreColdAdjustment": "Compare native Result Ok envelopes containing identical SQLite snapshots. This adjustment preceded cold process launch.",
+  "warmReadReleaseCausality": "GET handler marked its exact body held after native dispatch. UI only switched after that marker. Original runner observed native quit + old independent SQLite + zero write/ack before creating its release marker. Server logged manual release and body completion from its own clock.",
+  "traceSha256": {
+    "warm": "5f5bd59190b7053e38b0934c95cb2565489ce26ed828c63038267e89464ddfc1",
+    "cold": "0c7b71755d89726c9a4b92b1fca402ac411ddd096cc39f331633f099335a8630",
+    "loopback": "215d4308a709ee8326dc224c7d68251354d6338a9500ad0ca26c6631c86a311e"
+  },
+  "fixtureSourceSha256": {
+    "originalWarmRunner": "7fb40dcdbe7c6d3684a2499a129df54e6d5315b368c75e46ba2fea16bfe60134",
+    "correctedColdValidator": "61004704a8bac2f1834ad31ba6a27e1759032c106cd7266e78de32e43a7226d1",
+    "nativeHarness": "48a3bde421b6226f08fa0a7d40a65b00e92a950f5f8b924aba345746163fcdb6",
+    "nativeContext": "6f897981445a1f0c92f58e281024925f85649f90d76c867368760f4e8bd27ae9",
+    "composerFixture": "2b7ab854db90be1879c7228659b01a72ea9c766b100742ac617099d565cdd6ac",
+    "chooserOnlyStub": "265d41331e389d486f496d85c1dfe7c7f97ba5b176fee81a8cad5124d2cc3fd6",
+    "loopbackFixture": "e67656a714556ffcbb8c0b187f09932c3d110ca350e27611dbda93cb4375bf0b",
+    "binary": "6ce76b19a7a74f24733196fe63d8f948615bebdaf4f468c4fe9a6f2cb6e57a9e"
+  },
+  "limitations": [
+    "Only the chooser result, switch buttons, edit event and trigger for native exit are fixtures.",
+    "No native file chooser, Finder drag, installed Farfold, physical Dock quit, live Agent, or user database.",
+    "The held HTTP GET is during the first identified native command. The later image command may read cached bytes.",
+    "Only a new anonymous read-only loopback mount and two isolated draft keys were used."
+  ],
+  "normalOwnedUnmount": true,
+  "loopbackServerStopped": true
+}

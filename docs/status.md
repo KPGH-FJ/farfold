@@ -54,6 +54,8 @@
 
 **第1阶段Goose与Copilot隔离管理器实测。** 当前源码接实际官方程序和独立测试库。两家均在A的首个审批未批准时只停A，确认原轮已取消后只关闭A。同连接B保持并准确完成，A工具终态仍未取得。Goose 1.52.0查询确认A的活动会话消失，管理器工作占用下降。Copilot CLI 1.0.106在同一官方进程中A的历史文件句柄1→0、B保持1，工作计数2→1。正式应用复验仍待。[Goose隔离回执](evidence/2026-11-06-stopped-work-recovery/goose-isolated-summary.json) · [Copilot隔离回执](evidence/2026-11-06-stopped-work-recovery/copilot-isolated-summary.json)
 
+**第1阶段指定关闭回执。** 源码修复两处受控复现：成功回执须等A的原路由移除及工具占用释放，关闭期间暂停工作位置也不会误丢匹配回执。原草稿、暂停待发和旧工具未知均保持，B独立继续。完整七项、文档检查与独立复核通过；正式复验待安全更新。[关闭分项](evidence/2026-11-06-stopped-work-recovery/README.md#关闭成功与本地资源释放顺序)
+
 **第1阶段11月7日复核。** 旧正式版三条原连接仍活着，匹配结束记录和已保存未知标记均为0，原稿及保留1份核合。指定关闭与冷启动的新增受控用例确认，A关闭前已保存未知、草稿、附件和暂停待发，冷开恢复且零重发，B独立完成。59项定向通过，正式应用的组合复验待安全退出。[旧版复核](evidence/2026-11-06-phase1-old-exit/README.md) · [关闭与冷启动验证](evidence/2026-11-06-stopped-work-recovery/README.md)
 
 **第1阶段停止与草稿保存交错。** 受控复现表明，旧逻辑可在第二次保存等待期间错过停止，随后清稿入队或发起新请求。源码补同一对话的停止保护，两种时序保留原稿、待发不变、零新增请求；确认停止后仍可明确再发。旧正式版00:35只读核对仍缺逐条结束和未知落盘，安装与正式复验待条件具备。[停止与草稿保存](evidence/2026-11-07-stop-during-draft-save/README.md)
@@ -67,6 +69,8 @@
 **第1阶段独立WebKit写锁验收。** 在真实输入框中粘贴自测PNG，读取中切到B后，图片只回到A。独立SQLite持锁时可取消退出；再退出报告保存失败，旧盘值和窗口新稿均保持。解锁重试并正常退出后，新进程的输入框及独立读库核合两份草稿与图片字节。两次各退出一次，零Agent请求。粘贴、切换和退出由夹具触发，正式应用系统选图、存储故障和Dock退出仍待实测。[输入框和原生回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-write-lock.json)
 
 **第1阶段退出等待图片。** 独立WebKit中，真实退出事件先到达，输入框还在等A图片的读取回执；旧盘两份草稿保持，零保存或退出确认。放行后一次保存和退出，冷开读回A的新文字与原图片，B保持。夹具延迟交付实际WebKit读取结果。正式系统选图、退出交错和Dock仍待实测。[待图片退出回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-pending-attachment-exit.json)
+
+**第1阶段独立原生文件读取。** 在原生命令实际等待只读测试卷时切到B并触发退出。放行前独立SQLite读回两份旧稿，零保存或退出确认。放行后图片只归A，一次保存和正常退出；卸载测试卷后新进程读回两份稿及完全一致的PNG，零Agent请求。选择器返回、切换与退出触发由夹具提供，正式系统选图、Finder拖放和Dock路径仍待。[原生读取回执](evidence/2026-11-07-stop-during-draft-save/composer-webview-native-file-read.json)
 
 **第1阶段正式版只读卷图片。** 6ce829c5通过系统选择器三次导入本机只读测试卷的图片，保存字节和原件核合。普通扩展名也按实际内容识别为PNG。三次在首次界面观测前文件响应均已结束，读取中切换仍待实测。精确移除测试引用并卸载测试卷，原稿、保留稿、待发和旧通信保持。[正式只读卷回执](evidence/2026-11-06-phase1-draft-image/formal-loopback-file-picker.json)
 
@@ -82,7 +86,7 @@
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档23个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档27个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
 
 **第1阶段Copilot正式模型与同账号额度。** 6ce829c5已完成的自测对话，模型菜单空搜索仅显示已选中的Auto，已保存模型、原稿、保留1份和四份通信摘要均保持。GitHub同账号页面显示Free、CLI启用及包含额度已用0%，账单当前筛选无明细。零发送或设置变更，未核新登录、冷开和逐笔费用。[正式只读回执](evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json)
 
@@ -105,6 +109,8 @@
 **第1阶段Kilo原路由连续性前置。** 官方7.8.1在新隔离资料握手并声明关闭、列出。第一条新建对话缺成功回执，仍无法区分官方错误和返回结构不符，未发关闭或模型请求。只有一次本机目录查询，原测试进程组已退出。现有A关闭、B重新接入回执仍按原范围保留。[隔离前置回执](evidence/2026-11-06-phase1-next/kilo-active-route-close-preflight.json)
 
 **第1阶段Kilo新建回执归因。** 官方程序第一条新建返回`-32603`，阶段类别为`directory`，官方标记证实尚未进入会话创建。隔离库会话和消息均为零，仅一次本机模拟公开目录查询，零关闭、认证及模型请求，测试进程正常退出。目录准备内的失败点及关闭后B原路由连续性仍待验。[错误分类](evidence/2026-11-06-phase1-next/kilo-active-route-close-new-error.json) · [阶段回执](evidence/2026-11-06-phase1-next/kilo-new-session-phase-attribution.json)
+
+**第1阶段Kilo活动路由隔离。** 目录错误来自测试隔离规则拦住Kilo自有监听。只放行该监听及已有模拟目录后，官方7.8.1同进程新建A、B，关闭一次只移除A的活动路由，B沿原路由成功且设置保持。两条历史保留，零模型、认证或远端请求。原桌面授权、正式界面及活动工具资源释放另验。[目录对照](evidence/2026-11-06-phase1-next/kilo-owned-listener-denial.json) · [指定关闭回执](evidence/2026-11-06-phase1-next/kilo-scoped-live-route-close.json)
 
 **第1阶段正式多图保真与Kilo模型菜单。** 已完成的Copilot自测对话通过正式系统选择器导入40张独立PNG，切换前后全在原测试稿，5,257,240字节逐一核合。清理测试引用后原稿、保留1份及测试通信摘要保持；第一次观察时附件已准备好，读取中切换仍缺证。Kilo隔离零发送的新会话确实列出同服务两个免费候选，后台计费、实际切换及冷恢复未验证。[正式多图](evidence/2026-11-06-phase1-draft-image/forty-image-switch.json) · [Kilo模型菜单](evidence/2026-11-06-phase1-next/kilo-model-options-isolated.json)
 

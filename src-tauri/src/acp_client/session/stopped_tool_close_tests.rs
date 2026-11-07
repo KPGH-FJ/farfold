@@ -275,6 +275,7 @@ async fn stopped_tool_close_releases_exact_route_and_lease_while_other_approval_
         .unwrap();
     let work_before = connection.life.work.load(Ordering::SeqCst);
     assert_eq!(f.close(&a, &proof).await.unwrap(), proof);
+    assert_eq!(connection.life.work.load(Ordering::SeqCst), work_before - 1);
     assert!(
         f.manager
             .session_connection(&f.row.id, &f.cwd, &a.session_id)
@@ -285,10 +286,100 @@ async fn stopped_tool_close_releases_exact_route_and_lease_while_other_approval_
             .session_connection(&f.row.id, &f.cwd, &b.session_id)
             .is_ok()
     );
-    assert_eq!(connection.life.work.load(Ordering::SeqCst), work_before - 1);
     allow(&f, &b, &b_request);
     assert_eq!(next(&b_events, "turnEnd")["stopReason"], "end_turn");
     assert_eq!(f.closes(), [json!(["session/close", a.session_id])]);
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn stopped_tool_close_waits_for_the_exact_route_commit_after_a_receipt() {
+    use std::time::Duration;
+
+    let f = Fixture::new();
+    let (opened, events) = f.open().await;
+    f.prompt(&opened, "approval-text").await;
+    next(&events, "permissionRequest");
+    f.stop(&opened, &events).await;
+    let proof = f.check(&opened).await.unwrap();
+    let sessions = f
+        .manager
+        .session_connection(&f.row.id, &f.cwd, &opened.session_id)
+        .unwrap()
+        .sessions;
+    let (control, mut commands) = tokio::sync::mpsc::unbounded_channel();
+    let original_control = std::mem::replace(
+        &mut sessions
+            .lock()
+            .unwrap()
+            .get_mut(&opened.session_id)
+            .unwrap()
+            .control,
+        control,
+    );
+    let mut closing = tokio::spawn({
+        let (manager, agent, cwd) = (f.manager.clone(), f.row.id.clone(), f.cwd.clone());
+        let proof = proof.clone();
+        async move {
+            manager
+                .close_unapproved_stopped(
+                    &agent,
+                    &cwd,
+                    &proof.session_id,
+                    &proof.connection_id,
+                    proof.tool_call_id,
+                    proof.proof_id,
+                )
+                .await
+        }
+    });
+    let Some(SessionControl::CloseUnapprovedStopped {
+        tool_call_id,
+        proof_id,
+        result,
+        ..
+    }) = tokio::time::timeout(Duration::from_secs(2), commands.recv())
+        .await
+        .unwrap()
+    else {
+        panic!("the command must reach the exact prepared route");
+    };
+    assert_eq!(tool_call_id, proof.tool_call_id);
+    assert_eq!(proof_id, proof.proof_id);
+
+    // Model the pump's existing order: send to its waiting command while
+    // holding the route lock, then finish the local commit under that lock.
+    let (receipt_sent, received) = tokio::sync::oneshot::channel();
+    let (release, held) = mpsc::channel();
+    let commit = std::thread::spawn({
+        let proof = proof.clone();
+        move || {
+            let mut entries = sessions.lock().unwrap();
+            let session_id = proof.session_id.clone();
+            let sent = result.send(Ok(proof));
+            let notified = receipt_sent.send(());
+            let released = held.recv_timeout(Duration::from_secs(5));
+            entries.get_mut(&session_id).unwrap().control = original_control;
+            drop(entries);
+            sent.unwrap();
+            notified.unwrap();
+            released.unwrap();
+        }
+    });
+    let received = tokio::time::timeout(Duration::from_secs(2), received).await;
+    let early = if matches!(received, Ok(Ok(()))) {
+        Some(tokio::time::timeout(Duration::from_millis(100), &mut closing).await)
+    } else {
+        None
+    };
+    let released = release.send(());
+    commit.join().unwrap();
+    released.unwrap();
+    received.unwrap().unwrap();
+    assert!(
+        early.unwrap().is_err(),
+        "returned before committing the original route"
+    );
+    assert_eq!(closing.await.unwrap().unwrap(), proof);
 }
 
 #[tokio::test(flavor = "multi_thread")]

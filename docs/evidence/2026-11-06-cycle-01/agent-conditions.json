@@ -40,6 +40,9 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-active-route-close-new-error.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-new-session-phase-attribution.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-owned-listener-denial.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-two-endpoint-new-session-control.json",
+    "docs/evidence/2026-11-06-phase1-next/kilo-scoped-live-route-close.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-held-provider-cancel.json",
@@ -452,6 +455,14 @@
             "result": "同一进程内两个无消息自测会话，仅关闭 A 一次并取得对应回执。B 在同一进程显式重新接入并读回原设置，两条历史均保留。零模型、工具和审批；A 专属资源释放及 B 原路由连续性未证。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/kilo-lifecycle-isolated.json"
+            ]
+          },
+          {
+            "standards": ["S6"],
+            "environment": "官方 Kilo 7.8.1 协议直连，隔离会话库与本机模拟目录",
+            "result": "一次匹配关闭仅移除 A 的活动路由，B 同一原路由与配置保持，无重新接入。官方列表和测试库保留两条无消息历史，零模型、认证或远端请求。范围限路由隔离，正式界面及活动工具资源释放未覆盖。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/kilo-scoped-live-route-close.json"
             ]
           },
           {

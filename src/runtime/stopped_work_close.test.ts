@@ -46,27 +46,32 @@ it("clears only the exact closed activity and retains history and paused input",
   expect(updateConversationBlocker(thread)).toBeNull();
 });
 
-it("preserves protection when the owner, tool, or current work has changed", () => {
-  const thread = stopped();
-  const target = stoppedWorkTarget(thread)!;
-  const proof = { ...target, proofId: "1" };
-  expect(
-    applyStoppedWorkClose(thread, target, proof, {
-      ...proof,
-      toolCallId: "other-tool",
-    }),
-  ).toBe(false);
-  expect(
-    applyStoppedWorkClose(thread, target, proof, { ...proof, proofId: "2" }),
-  ).toBe(false);
-  thread.connectionId = "new-owner";
-  expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
-  thread.connectionId = target.connectionId;
-  thread.running = true;
-  expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
-  applyTurnEnd(thread, { stopReason: "cancelled" });
-  expect(stoppedWorkTarget(thread)?.turnItemId).not.toBe(target.turnItemId);
-  expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
-  expect(thread.activeToolCallIds).toEqual(["awaited-tool"]);
-  expect(thread.historicalOutcomeUnknown).toBeFalsy();
-});
+it.each(["stopped", "work_disabled"] as const)(
+  "preserves protection when the owner, tool, or current work has changed (%s)",
+  (pause) => {
+    const thread = stopped();
+    const target = stoppedWorkTarget(thread)!;
+    const proof = { ...target, proofId: "1" };
+    thread.queuePaused = pause;
+    expect(
+      applyStoppedWorkClose(thread, target, proof, {
+        ...proof,
+        toolCallId: "other-tool",
+      }),
+    ).toBe(false);
+    expect(
+      applyStoppedWorkClose(thread, target, proof, { ...proof, proofId: "2" }),
+    ).toBe(false);
+    thread.connectionId = "new-owner";
+    expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
+    thread.connectionId = target.connectionId;
+    thread.running = true;
+    expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
+    applyTurnEnd(thread, { stopReason: "cancelled" });
+    expect(stoppedWorkTarget(thread)?.turnItemId).not.toBe(target.turnItemId);
+    thread.queuePaused = pause;
+    expect(applyStoppedWorkClose(thread, target, proof, proof)).toBe(false);
+    expect(thread.activeToolCallIds).toEqual(["awaited-tool"]);
+    expect(thread.historicalOutcomeUnknown).toBeFalsy();
+  },
+);

@@ -118,16 +118,21 @@ export function applyStoppedWorkClose(
   approved: StoppedWorkCloseReceipt,
   receipt: StoppedWorkCloseReceipt,
 ): boolean {
+  // A location policy can pause sending while the exact close is in flight.
+  const workDisabled = thread.queuePaused === "work_disabled";
   if (
     !validStoppedWorkProof(expected, approved) ||
     !validStoppedWorkProof(expected, receipt) ||
     approved.proofId !== receipt.proofId ||
-    !currentStoppedWork(thread, expected)
+    !currentStoppedWork(
+      workDisabled ? { ...thread, queuePaused: "stopped" } : thread,
+      expected,
+    )
   )
     return false;
   thread.activeToolCallIds = [];
   applyConnectionLost(thread, "user");
   thread.historicalOutcomeUnknown = true;
-  pauseQueue(thread, "stopped");
+  pauseQueue(thread, workDisabled ? "work_disabled" : "stopped");
   return true;
 }

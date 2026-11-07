@@ -28,8 +28,12 @@ afterEach(() => {
   vi.restoreAllMocks();
   invoke.mockReset();
 });
-function seed(id: string, end: CompletionEvent = { stopReason: "cancelled" }) {
-  const s = threads.markOpenFailed(`a:/p:${id}`, "a", "/p", id, "fixture");
+function seed(
+  id: string,
+  end: CompletionEvent = { stopReason: "cancelled" },
+  cwd = "/p",
+) {
+  const s = threads.markOpenFailed(`a:${cwd}:${id}`, "a", cwd, id, "fixture");
   s.openError = null;
   s.running = true;
   channel.applyChannelEvent(s.key, {
@@ -66,61 +70,94 @@ function row(id: string): IndexRow {
   };
 }
 
-it("checks without closing, then closes only the approved original route and preserves its queue", async () => {
-  const a = seed("explicit-stopped-work-a");
-  const b = seed("explicit-stopped-work-b");
-  a.connectionId = "owned-connection";
-  a.queued = [[{ type: "text", text: "original queued input" }]];
-  const draftKey = `session:${a.key}`;
-  composerDrafts.update(draftKey, () => ({
-    text: "original unsent input",
-    attachments: [],
-  }));
-  const original = a.queued;
-  const target = stoppedWorkTarget(a)!;
-  const proof = {
-    sessionId: a.nativeSessionId,
-    connectionId: a.connectionId,
-    toolCallId: "tool",
-    proofId: "4",
-  };
-  const otherInvoke = invoke.getMockImplementation()!;
-  invoke.mockImplementation((command: string, ...args: unknown[]) => {
-    if (
-      command === "session_check_unapproved_stopped_close" ||
-      command === "session_close_unapproved_stopped"
-    )
-      return Promise.resolve(proof);
-    return otherInvoke(command, ...args);
-  });
+it.each([false, true])(
+  "checks and closes only the approved route, preserving its queue when work is paused during the receipt: %s",
+  async (disabled) => {
+    const cwd = `/owned-close-${disabled}`;
+    const a = seed("explicit-stopped-work-a", undefined, cwd);
+    const b = seed("explicit-stopped-work-b", undefined, cwd);
+    a.connectionId = "owned-connection";
+    b.connectionId = a.connectionId;
+    a.queued = [[{ type: "text", text: "original queued input" }]];
+    const draftKey = `session:${a.key}`;
+    composerDrafts.update(draftKey, () => ({
+      text: "original unsent input",
+      attachments: [],
+    }));
+    const original = a.queued;
+    const target = stoppedWorkTarget(a)!;
+    const proof = {
+      sessionId: a.nativeSessionId,
+      connectionId: a.connectionId,
+      toolCallId: "tool",
+      proofId: "4",
+    };
+    const otherInvoke = invoke.getMockImplementation()!;
+    let release!: (value: typeof proof) => void;
+    const receipt = new Promise<typeof proof>((resolve) => (release = resolve));
+    invoke.mockImplementation((command: string, ...args: unknown[]) => {
+      if (command === "session_check_unapproved_stopped_close")
+        return Promise.resolve(proof);
+      if (command === "session_close_unapproved_stopped") return receipt;
+      return otherInvoke(command, ...args);
+    });
 
-  expect(await threads.checkStoppedWorkClose(a, target)).toEqual(proof);
-  expect(
-    invoke.mock.calls.some(
-      ([cmd]) => cmd === "session_close_unapproved_stopped",
-    ),
-  ).toBe(false);
-  expect(a.activeToolCallIds).toEqual(["tool"]);
-  await threads.closeStoppedWork(a, target, proof);
-  expect(invoke).toHaveBeenCalledWith("session_close_unapproved_stopped", {
-    agentId: a.agentId,
-    cwd: a.cwd,
-    ...proof,
-  });
-  expect(threads.thread(a.key)).toBe(a);
-  expect(a.connectionLost).toBe(true);
-  expect(a.historicalOutcomeUnknown).toBe(true);
-  expect(a.queued).toBe(original);
-  expect(a.queuePaused).toBe("stopped");
-  expect(draftQueues.read(a.key)).toMatchObject({
-    blocks: original,
-    outcomeUnknown: true,
-    uncertainIndex: null,
-  });
-  expect(composerDrafts.read(draftKey).text).toBe("original unsent input");
-  expect(b.activeToolCallIds).toEqual(["tool"]);
-  expect(b.connectionLost).toBe(false);
-});
+    expect(await threads.checkStoppedWorkClose(a, target)).toEqual(proof);
+    expect(
+      invoke.mock.calls.some(
+        ([cmd]) => cmd === "session_close_unapproved_stopped",
+      ),
+    ).toBe(false);
+    expect(a.activeToolCallIds).toEqual(["tool"]);
+    const closing = threads.closeStoppedWork(a, target, proof);
+    try {
+      await vi.waitFor(() =>
+        expect(invoke).toHaveBeenCalledWith(
+          "session_close_unapproved_stopped",
+          {
+            agentId: a.agentId,
+            cwd: a.cwd,
+            ...proof,
+          },
+        ),
+      );
+      if (disabled) {
+        threads.updateWork(a.cwd, {}, false);
+        expect(stoppedWorkTarget(a)).toBeNull();
+        await expect(
+          threads.checkStoppedWorkClose(a, target),
+        ).resolves.toBeNull();
+        expect(a.queuePaused).toBe("work_disabled");
+      }
+    } finally {
+      release(proof);
+      await closing;
+    }
+    expect(threads.thread(a.key)).toBe(a);
+    expect(a.connectionLost).toBe(true);
+    expect(a.historicalOutcomeUnknown).toBe(true);
+    expect(a.queued).toBe(original);
+    expect(a.queuePaused).toBe(disabled ? "work_disabled" : "stopped");
+    expect(a.workEnabled).toBe(!disabled);
+    expect(draftQueues.read(a.key)).toMatchObject({
+      blocks: original,
+      outcomeUnknown: true,
+      uncertainIndex: null,
+    });
+    expect(composerDrafts.read(draftKey).text).toBe("original unsent input");
+    expect(b.activeToolCallIds).toEqual(["tool"]);
+    expect(b.connectionLost).toBe(false);
+    expect(b.historicalOutcomeUnknown).toBe(false);
+    expect(
+      invoke.mock.calls.filter(([command]) =>
+        [
+          "session_check_unapproved_stopped_close",
+          "session_close_unapproved_stopped",
+        ].includes(command),
+      ),
+    ).toHaveLength(2);
+  },
+);
 
 it("does not dispatch a reviewed close if a newer stopped turn appears during saving", async () => {
   const a = seed("explicit-stopped-work-replaced");
