@@ -24,6 +24,7 @@ import {
   PNG_IMAGE_TEST_DATA,
   TestImageDecoder,
 } from "./image_fixtures.test-support";
+import { MAX_IMAGE_BYTES } from "./image_bytes";
 
 let serial = 0;
 const file = (name = "notes.md", recovered = true): DraftAttachment => ({
@@ -42,11 +43,19 @@ const resource = (name: string): PromptBlock => ({
   },
 });
 const text = (value: string): PromptBlock => ({ type: "text", text: value });
-const image = (data = PNG_IMAGE_TEST_DATA): PromptBlock => ({
+const image = (
+  data = PNG_IMAGE_TEST_DATA,
+): Extract<PromptBlock, { type: "image" }> => ({
   type: "image",
   data,
   mimeType: "image/png",
 });
+const replacementImage =
+  "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA8P8/AAj+Av6xMrqrAAAAAElFTkSuQmCC";
+// The same static fixture with a CRC-checked tEXt chunk makes the final
+// Base64 group padded, so an older encoder can retain nonzero padding bits.
+const paddedImage =
+  "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAABHRFWHR4AGFixlUEqQAAAA9JREFUeJxj+M/AwNDwHwAIAAJ/nEVATgAAAABJRU5ErkJggg==";
 function seed(queue: PromptBlock[][], uncertainIndex: number | null = null) {
   const key = `review-${++serial}`;
   draftQueues.write(key, queue, uncertainIndex);
@@ -199,6 +208,138 @@ it.each(["draft", "queue"])(
     expect(state.queued).toEqual(review.queue);
     expect(send).not.toHaveBeenCalled();
     expect(resume).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["draft", "queue"] as const)(
+  "refuses a valid replacement for a saved %s image and accepts the restored original",
+  async (source) => {
+    const uri = "file:///p/saved-image.png";
+    const state = seed([
+      [
+        text("keep queued body"),
+        source === "queue" ? { ...image(), uri } : resource("other.md"),
+      ],
+    ]);
+    const key = `session:${state.key}`;
+    composerDrafts.update(key, () => ({
+      text: "keep draft body",
+      attachments:
+        source === "draft"
+          ? [
+              {
+                ...file("saved-image.png"),
+                kind: "image",
+                data: PNG_IMAGE_TEST_DATA,
+                mimeType: "image/png",
+              },
+            ]
+          : [file()],
+    }));
+    const review = captureAttachmentReview(key, state);
+    let fileData = replacementImage;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "draft_attachment_check") return "current text";
+      expect(command).toBe("draft_attachment_image");
+      expect(args).toEqual({ uri, read: true });
+      return { data: fileData, mimeType: "image/png" };
+    });
+    const send = vi.spyOn(threads, "send");
+    const resume = vi.spyOn(threads, "continueQueue");
+
+    await expect(
+      confirmAttachmentReview(review, keepAll(review), true, () => true),
+    ).rejects.toThrow("图片文件与已保存内容不同");
+    expect(composerDrafts.read(key)).toBe(review.draft);
+    expect(state.queued[0]).toBe(review.queue[0]);
+    expect(JSON.stringify(state.queued[0])).toBe(review.queueContents[0]);
+    expect(queuedAttachmentsNeedReview(state.queued[0])).toBe(true);
+
+    fileData = PNG_IMAGE_TEST_DATA;
+    await expect(
+      confirmAttachmentReview(review, keepAll(review), true, () => true),
+    ).resolves.toBe(true);
+    if (source === "draft")
+      expect(composerDrafts.read(key).attachments[0]).toMatchObject({
+        data: PNG_IMAGE_TEST_DATA,
+        uri,
+        recovered: false,
+      });
+    else expect(state.queued[0][1]).toEqual({ ...image(), uri });
+    expect(queuedAttachmentsNeedReview(state.queued[0])).toBe(false);
+    expect(state.queuePaused).toBe("stopped");
+    expect(send).not.toHaveBeenCalled();
+    expect(resume).not.toHaveBeenCalled();
+  },
+);
+
+it("still recovers legacy file-backed draft and queue images without saved bytes", async () => {
+  const uri = "file:///p/legacy-image.png";
+  const state = seed([[text("keep queued body"), { ...image(""), uri }]]);
+  const key = `session:${state.key}`;
+  composerDrafts.update(key, () => ({
+    text: "keep draft body",
+    attachments: [{ ...file("legacy-image.png"), kind: "image" }],
+  }));
+  h.invoke.mockResolvedValue({ data: replacementImage, mimeType: "image/png" });
+  const review = captureAttachmentReview(key, state);
+  await expect(
+    confirmAttachmentReview(review, keepAll(review), true, () => true),
+  ).resolves.toBe(true);
+  expect(composerDrafts.read(key).attachments[0]).toMatchObject({
+    data: replacementImage,
+    uri,
+    recovered: false,
+  });
+  expect(state.queued[0][1]).toEqual({ ...image(replacementImage), uri });
+  expect(h.invoke.mock.calls).toEqual([
+    ["draft_attachment_image", { uri, read: true }],
+    ["draft_attachment_image", { uri, read: true }],
+  ]);
+});
+
+it("accepts an older Base64 representation of the same saved draft and queue image bytes", async () => {
+  const uri = "file:///p/saved-image.png";
+  const saved = paddedImage.replace(/g==$/, "h==");
+  expect(saved).not.toBe(paddedImage);
+  expect(atob(saved)).toBe(atob(paddedImage));
+  const state = seed([[{ ...image(saved), uri }]]);
+  const key = `session:${state.key}`;
+  composerDrafts.update(key, () => ({
+    text: "keep",
+    attachments: [{ ...file("saved-image.png"), kind: "image", data: saved }],
+  }));
+  h.invoke.mockResolvedValue({ data: paddedImage, mimeType: "image/png" });
+  const review = captureAttachmentReview(key, state);
+  await expect(
+    confirmAttachmentReview(review, keepAll(review), true, () => true),
+  ).resolves.toBe(true);
+  expect(composerDrafts.read(key).attachments[0]).toMatchObject({
+    data: paddedImage,
+    uri,
+    recovered: false,
+  });
+  expect(state.queued).toEqual([[{ ...image(paddedImage), uri }]]);
+});
+
+it.each(["malformed", "overbound"] as const)(
+  "keeps a %s saved image unconfirmed despite a valid local file",
+  async (kind) => {
+    const key = `review-old-image-${kind}`;
+    const data =
+      kind === "malformed"
+        ? `!${paddedImage.slice(1)}`
+        : "A".repeat(4 * Math.ceil(MAX_IMAGE_BYTES / 3) + 4);
+    composerDrafts.update(key, () => ({
+      text: "keep",
+      attachments: [{ ...file("saved-image.png"), kind: "image", data }],
+    }));
+    h.invoke.mockResolvedValue({ data: paddedImage, mimeType: "image/png" });
+    const review = captureAttachmentReview(key, null);
+    await expect(
+      confirmAttachmentReview(review, keepAll(review), true, () => true),
+    ).rejects.toThrow("图片文件与已保存内容不同");
+    expect(composerDrafts.read(key)).toBe(review.draft);
   },
 );
 

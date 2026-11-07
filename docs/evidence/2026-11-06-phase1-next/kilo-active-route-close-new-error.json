@@ -1,0 +1,80 @@
+{
+  "approvalRequests": 0,
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "authCalls": 0,
+  "endedUtc": "2026-11-07T01:16:50.162765+00:00",
+  "exactOfficialAcpAndCloseList": true,
+  "exactOwnedChildImageParentAndGroup": true,
+  "exactPreviouslyProvenLifecycleInitializeTemplateUsed": true,
+  "inertFilePolicyDecision": {
+    "insideExistingRead": "allow",
+    "insideExistingWrite": "allow",
+    "outsideExistingWrite": "deny"
+  },
+  "isolatedAuthFileAbsent": true,
+  "isolatedDurableCountsOnNewFailure": {
+    "messages": 0,
+    "sessions": 0
+  },
+  "kind": "OfficialKiloActiveRouteRemovalWithoutBReattach",
+  "localHttpRouteCategories": {
+    "served-public-catalogue": 1
+  },
+  "localHttpRouteCounts": {
+    "localCatalogue": 1
+  },
+  "modelPrompts": 0,
+  "newIsolatedDatabaseAbsentBeforeAcpLaunch": true,
+  "newSessionEnvelopes": [
+    {
+      "allowlistedErrorMarkers": ["internal"],
+      "configArrayField": false,
+      "errorCode": -32603,
+      "errorDataPresent": true,
+      "errorMessagePresent": true,
+      "errorObject": true,
+      "errorPresent": true,
+      "matchingResponseId": true,
+      "resultClass": "absent",
+      "sessionIdField": false
+    }
+  ],
+  "officialArchiveRegularMembers": 408,
+  "offlineOfficialVersion7_8_1": true,
+  "outboundMethodCounts": {
+    "initialize": 1,
+    "session/new": 1
+  },
+  "outcome": "new-session-official-error",
+  "ownedChildMachAndProfileIsolation": {
+    "homeCredentialReadPolicyDenied": true,
+    "insideExistingFileReadableAndWritable": true,
+    "keychainMachDenied": true,
+    "managedKiloConfigReadPolicyDenied": true,
+    "outsideExistingFileWriteDenied": true,
+    "unrelatedMachControlAllowed": true
+  },
+  "ownedCleanup": {
+    "exitCode": 0,
+    "processGroupGone": true,
+    "signals": 0,
+    "stdinEof": true
+  },
+  "ownedTemporaryLayoutRemoved": true,
+  "productionDataUsed": false,
+  "rawProtocolPayloadsRetained": false,
+  "realCredentialsOrAccountUsed": false,
+  "remoteRequests": 0,
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "startedUtc": "2026-11-07T01:16:45.984853+00:00",
+  "toolRequests": 0,
+  "verifiedKernelIsolation": {
+    "homeDataReadAndWriteDenied": true,
+    "otherReachablePortDenied": true,
+    "ownLoopbackAllowed": true,
+    "ownedScratchWriteAllowed": true,
+    "realBrowserOpenerDenied": true,
+    "registeredBinaryReadable": true
+  }
+}

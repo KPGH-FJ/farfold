@@ -1,0 +1,28 @@
+{
+  "kind": "InstalledWarmImageDraftKeepsSnapshotUntilExplicitReselection",
+  "date": "2026-11-07",
+  "platform": "macOS arm64",
+  "installedSource": "6ce829c538da454414bd1158ef0c8bbb521b2a20",
+  "installedBinarySha256": "40758ffc653c3de0e7554730bbbc604590267bc4fd95b988edaaab0014f2da73",
+  "scope": "An already completed owned Copilot test conversation, one self-generated attachment at a time.",
+  "fixtures": {
+    "pngBytesEach": 73,
+    "originalSha256": "45e1e18473ff27f679a4688f02f1141d6fba929d1348b08f00907468fa5a11f1",
+    "replacementSha256": "32f5711ed9cb54af634e4b400a170410f5aa91e659ce56e1c3e94e593ca93ac8"
+  },
+  "observed": {
+    "originalThumbnailVisibleAndSavedBytesMatched": true,
+    "sourceReplacedAtomicallyAtSamePathWithDifferentInodeAndBytes": true,
+    "otherDraftHadNoTestAttachment": true,
+    "returnedToTestDraftAndReselectedExactSamePath": true,
+    "sameThumbnailAttachmentIdAndSavedDraftAfterReplacementAndReselection": true,
+    "explicitRemovalThenReselectionShowedAndSavedReplacement": true,
+    "explicitReselectionCreatedNewAttachmentId": true,
+    "testAttachmentRemovedAndOriginalViewRestored": true,
+    "originalDraftAndOtherUnsentWorkPreserved": true,
+    "retainedDraftCount": 1,
+    "protectedAndTargetProtocolTapsUnchanged": 4,
+    "newAgentRequests": 0
+  },
+  "boundary": "Warm installed draft snapshot, navigation, duplicate picker selection and explicit replacement. No cold recovery review, outgoing payload, model dispatch or database fault was exercised."
+}

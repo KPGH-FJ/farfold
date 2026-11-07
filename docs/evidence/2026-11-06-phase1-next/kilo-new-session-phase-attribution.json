@@ -1,0 +1,87 @@
+{
+  "approvalRequests": 0,
+  "archiveIncludesAdjacentWorkerAndConsole": true,
+  "archiveSha256": "d94ab724ce384f9a8e7cda72460c5eb643ed44cb481f80cdd4b7571d005cc0b1",
+  "authCalls": 0,
+  "endedUtc": "2026-11-07T01:23:56.929574+00:00",
+  "exactOfficialAcpAndCloseList": true,
+  "exactOwnedChildImageParentAndGroup": true,
+  "exactPreviouslyProvenLifecycleInitializeTemplateUsed": true,
+  "inertFilePolicyDecision": {
+    "insideExistingRead": "allow",
+    "insideExistingWrite": "allow",
+    "outsideExistingWrite": "deny"
+  },
+  "isolatedAuthFileAbsent": true,
+  "isolatedDurableCountsAfterNewAttempt": {
+    "messages": 0,
+    "sessions": 0
+  },
+  "kind": "OfficialKiloNewSessionFailurePhaseAttribution",
+  "localHttpRouteCategories": {
+    "served-public-catalogue": 1
+  },
+  "localHttpRouteCounts": {
+    "localCatalogue": 1
+  },
+  "modelPrompts": 0,
+  "newIsolatedDatabaseAbsentBeforeAcpLaunch": true,
+  "newSessionEnvelope": {
+    "configArrayField": false,
+    "errorCode": -32603,
+    "errorMessageClass": "sdk-service-failure",
+    "errorObject": true,
+    "errorPresent": true,
+    "errorServiceClass": "directory",
+    "matchingResponseId": true,
+    "resultClass": "absent",
+    "sessionIdField": false
+  },
+  "officialArchiveRegularMembers": 408,
+  "officialProfile": {
+    "complete": true,
+    "markers": {
+      "directorySnapshotCompleted": false,
+      "initializeProfileControl": true,
+      "newSessionSuccessful": false,
+      "sessionCreateAttemptedAndSettled": false
+    },
+    "truncated": false
+  },
+  "offlineOfficialVersion7_8_1": true,
+  "outboundMethodCounts": {
+    "initialize": 1,
+    "session/new": 1
+  },
+  "outcome": "new-session-official-error",
+  "ownedChildMachAndProfileIsolation": {
+    "homeCredentialReadPolicyDenied": true,
+    "insideExistingFileReadableAndWritable": true,
+    "keychainMachDenied": true,
+    "managedKiloConfigReadPolicyDenied": true,
+    "outsideExistingFileWriteDenied": true,
+    "unrelatedMachControlAllowed": true
+  },
+  "ownedCleanup": {
+    "exitCode": 0,
+    "processGroupGone": true,
+    "signals": 0,
+    "stdinEof": true
+  },
+  "ownedTemporaryLayoutRemoved": true,
+  "productionDataUsed": false,
+  "rawProtocolPayloadsRetained": false,
+  "realCredentialsOrAccountUsed": false,
+  "remoteRequests": 0,
+  "scratchExecutableSha256": "ac6b36ebcd5eed45ce172287cebeff6ed0eb27ce8ba3413ebe9814beca8f0dca",
+  "startedUtc": "2026-11-07T01:23:53.189415+00:00",
+  "toolRequests": 0,
+  "verifiedKernelIsolation": {
+    "homeDataReadAndWriteDenied": true,
+    "otherReachablePortDenied": true,
+    "ownLoopbackAllowed": true,
+    "ownedScratchWriteAllowed": true,
+    "realBrowserOpenerDenied": true,
+    "registeredBinaryReadable": true
+  }
+}
