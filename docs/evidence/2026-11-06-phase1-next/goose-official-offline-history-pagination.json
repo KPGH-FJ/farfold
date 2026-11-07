@@ -1,0 +1,247 @@
+{
+  "acpProcesses": {
+    "cold": {
+      "combinedNoDuplicationOrOmission": true,
+      "cursorAnchorMatchesExactLastSessionAndTimestamp": true,
+      "cursorCrossDirectoryRejected": {
+        "code": -32602,
+        "exactReasonMatches": true
+      },
+      "cursorFilterHashWellFormed": true,
+      "cursorSha256": "a5412e85f01333357cb3bc70d330ad715560e9675af2e3d8f10afc484296c50d",
+      "cursorUnfilteredReplayRejected": {
+        "code": -32602,
+        "exactReasonMatches": true
+      },
+      "incomingUnsolicited": 0,
+      "lists": {
+        "AFirst": {
+          "count": 50,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": true,
+          "noMessageSnippet": true
+        },
+        "ANext": {
+          "count": 1,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "B": {
+          "count": 1,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "empty": {
+          "count": 0,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        }
+      },
+      "normalEofExit": 0,
+      "outgoing": [
+        "initialize",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list"
+      ],
+      "sameFirstCursorAcrossProcesses": true,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usedOriginalWarmCursor": true,
+      "versionVerified": true
+    },
+    "first": {
+      "combinedNoDuplicationOrOmission": true,
+      "cursorAnchorMatchesExactLastSessionAndTimestamp": true,
+      "cursorCrossDirectoryRejected": {
+        "code": -32602,
+        "exactReasonMatches": true
+      },
+      "cursorFilterHashWellFormed": true,
+      "cursorSha256": "a5412e85f01333357cb3bc70d330ad715560e9675af2e3d8f10afc484296c50d",
+      "cursorUnfilteredReplayRejected": {
+        "code": -32602,
+        "exactReasonMatches": true
+      },
+      "incomingUnsolicited": 0,
+      "lists": {
+        "AFirst": {
+          "count": 50,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": true,
+          "noMessageSnippet": true
+        },
+        "ANext": {
+          "count": 1,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "B": {
+          "count": 1,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        },
+        "empty": {
+          "count": 0,
+          "duplicates": 0,
+          "exactCwdAndTitle": true,
+          "idsInExactExpectedOrder": true,
+          "nextCursorPresent": false,
+          "noMessageSnippet": true
+        }
+      },
+      "normalEofExit": 0,
+      "outgoing": [
+        "initialize",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list",
+        "session/list"
+      ],
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usedOriginalWarmCursor": false,
+      "versionVerified": true
+    }
+  },
+  "allSyntheticTimestampsDistinct": true,
+  "allTestProcessesNaturallyEnded": true,
+  "allThreeWorkingDirectoriesStillEmpty": true,
+  "authRequests": 0,
+  "bound": {
+    "maxScratchBytes": 8388608,
+    "maxSeconds": 35,
+    "maxSessions": 52,
+    "perFileKernelLimitBytes": 4194304
+  },
+  "checkedAtUtc": "2026-11-07T03:05:54.733531+00:00",
+  "cursorSourceSemantics": "descending sort timestamp and id; effective filters hashed into cursor; only sessions with messages",
+  "directSqliteEdits": 0,
+  "elapsedSeconds": 0.928,
+  "expectedOrderedIdDigests": {
+    "A": [
+      "91599707f0ea857a5baad3d1d86ea545bc10a427d4c8bc2c1b727f754fe3c12b",
+      "3a3d1c1320ca66536f7f3208e77427332daa92e3a89737578777332bfc4f9f82",
+      "fac9a9b5fe29ddff6fdb32364d6ab6ee6d37a7610edcc90bd5f7f0e2d24e088c",
+      "edb5499962af0981b54efa2647429761c7795c0712bbc7491241b35d5b353e37",
+      "fe397724a48d626cb50c0f23a385079d211ddf4a14a014a1060f8e3c8e0250d2",
+      "2f4de156cb7acc593467859f1cfca1cb595dea6eec44bc9335eb9aedf155aa88",
+      "81bb89727dc54f19fb9647110845c1f2aa634bf2b46b946cfd7ee56dd2dd367d",
+      "736897aa9be07d9ff7920951a17982accc6d981947a710aae554da5f590651d1",
+      "c82c3c5e0546fc4746b47d3f6cb9a4d0fbb02f10bcb852c73767f32c77886a9e",
+      "669dcb7e13094ad2b1fe82abbcc29da7241f6aba93733199e26aa8a89382456b",
+      "dce8a8b5c5faef6987a24dfdf406bf967811485d4f47a623bb6b21b512b3cc83",
+      "d1a5101cf736bbedbb34fee9e055df71ca43dd8f7fb4f7a78050ebc05ed066df",
+      "3f0e520786dcb7048cc9eac5c2dc421000e506f1775c8ef322959580fdc575fe",
+      "9bf91c8719230329b7db14623cb9c20790da1cb4ca4212692b70cf5c91f1f1d3",
+      "f7065be215814058ee849ebf4fd3415e2b90c9ab4f48bfea700e7137f3739d99",
+      "eabb9dcc9f7eb2e8ee740983b377dd901536834c7529afdb83cbdb3f4071cf16",
+      "ff37ca931583b5d719e3032a770f6b306e9aa1150256b448574724215737db7a",
+      "36ee54944765c7801cfa65dfdce1c4577c571b421028ba12093c545bd5e0382b",
+      "85c7c8209ab9a4477ffc9418ea97783739b9bbc665bad6dbfc329fa5ce218f37",
+      "682630ab4f2aa2c64c4f9c817449641518261fc047aeff8af4d70208dc48d01c",
+      "07e95a1bf18af561ab5f2821954622398e815317b2d8659d7bca67c06e77164d",
+      "9c9b7ba236c63ee176215e3c70aabf378dee86cb403b0b1781527cc06e3c84a7",
+      "3d1e2f8eeb74631cd3030222cfdee568f94a692cda05e7b9c619718c9b8e3e94",
+      "a6ae20e3377853fe8939a3328da8b0c64f54a6f3f7c5ce91c0cdf96d0897bb0f",
+      "6dbe65b916ddd4ef0609dee18599c1c2a76914837a82da873b1f1794ba6cb287",
+      "6033441aa6a03167561647b7b54bb19cad4143c153ae608de13df65a1b712375",
+      "e22e1113bcbf0eb14f601b569be66f4d5a6d01cd0e32e0339dc9f0c3426417ed",
+      "f9141eba26b7cbccb6eb47ebcc8cc54a43f2e98da316a6bf96819f00487f515e",
+      "19f0bb217d4a9538e1c938bf206732ef08585c3f9f132d56ce0fb405446accae",
+      "f88a1dd934ddf291f11b86c32d75a7e926e8a7911dc548c7b3733a156f7fd20c",
+      "b00dc966b10fae487c5e44d39eca58b2737c315800a2f2496675fc722916be1a",
+      "94cbe58eec63e32e86786d86e0ef8b93d0c0ba0de2d31e466a9c9f80cb075709",
+      "5337ea83ab76f470f417bdb7b64148d3ec18e83635b3cd85459815805d863530",
+      "7bb939d1b7a8763afaf3d4175235af8ece59fe935fc08ad5e076b4a6d2156af1",
+      "db158289ab8af208ef1fb3fb3e3199abfd23f8987a8e1891e05173e21a5b5bf8",
+      "5dd47d744fc5f25b5bc8aa917e9db59ea092e2acc1b3749628730c444b69d018",
+      "d015c19385938be60301aa9e64354620d566067b859222112f8e195066d2800c",
+      "14f4b958eefb069d49b4d4dd083690ea492f0c67a571d337b0661831a51d501c",
+      "cc650d656fcaa6a2ad813adb0f0aa5dbc52abc9492891b8f39cebf34310aa235",
+      "9f17c758be96a9a7af985b4f93cf7356e1b736d9e8fd8f847b0842d7bc24d9bb",
+      "994be65bc67d7239877e26fb4c5d56f156bbf8073fd7e84ebf357f87108c4efd",
+      "752dd9592f7fada7e47fea8b4a64ae53f02cd741466daabbaf15427ba98e8eaf",
+      "0b8331e832d21a5df88f811abc1eecfe8bcf7e0a38aa0a08f3b9f2e11b57c088",
+      "02294b65e99009713a91fd980a4686fa418882a1c7b8fa873af2b4ecb4d7edda",
+      "ac43ca387db36bd4aa4351ca8c00b8e4704f0a5109e2554921b0f69d4f3e83c6",
+      "6a1fcd79d536db4d7e504d11c5e971033e5bfd53e6d866001e523be62c924afd",
+      "66f17fec93a98101cc951a09ae8c74aa54956d4cfc598d6cd9379948d426cd3f",
+      "e27923ecabfc71fa0156c37a15ff6a163f3161dc31c281a5eb88703e68a7be92",
+      "c9d93796b7b9e47c03e2b0bb924dcedae1ee124360781b51d911015e03e7de74",
+      "f453c060c3caead6fa705bf2474fd85bb44b1b2e1631e6f0871e706b8855de12",
+      "599cbfd776d2088061e0ab650aae164329e784a690b76631106fdb342fb197ec"
+    ],
+    "B": ["8f0ac259c529b9ff07dcc65ba44a6a8ed21cd5151973d6fd984242960e18d1cf"]
+  },
+  "fixtureInputsDigest": "8524d5a8e3772e66f22527b2e2f9ce7d8b025ca5a77c57fae9a0a2416c42a444",
+  "gooseLaunches": 54,
+  "gooseNetworkRequests": 0,
+  "gooseOfficialSource": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+  "gooseVersionExpected": "1.52.0",
+  "guardErrorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "guardProcessExit": 0,
+  "harnessSha256": "500d3520ae85feba7c58e758105da62c72d705600ecbed2a145f8b83daafb8ca",
+  "importExitCodeHistogram": {
+    "0": 52
+  },
+  "inputOrigin": "Fifty-one synthetic one-text-line Pi-format files in one owned directory and one in the owned other directory, generated for this test and imported by the official local Goose CLI",
+  "kind": "OfficialGooseFixedPageCursorOfflineColdAndWarm",
+  "modelRequests": 0,
+  "observedScratchPeakBytes": 3078043,
+  "officialPageSize": 50,
+  "officialProfileSha256": "cd10ca634950e211f71579804668cce69dfaa37bda1d67b3b6c124ec9f9f5a86",
+  "offlineGuard": {
+    "homeDirectoryOpenDenied": true,
+    "insideWriteAndRead": true,
+    "otherProgramDenied": true,
+    "outsideCanaryReadDenied": true,
+    "outsideCanaryWriteDenied": true,
+    "tcpV4Denied": true,
+    "tcpV6Denied": true,
+    "udpV4Denied": true,
+    "unixSocketDenied": true
+  },
+  "ownedDataAndFixturesRemoved": true,
+  "productionProfileAccess": 0,
+  "productionWrites": 0,
+  "promptRequests": 0,
+  "realCredentialAccess": 0,
+  "registeredBinarySha256": "b7a38f3ff1e2d48b34b6550f84cf4104f3f7d797429e1231d1255d0501d47702",
+  "result": "official-offline-fixed-pagination-and-directory-binding-passed",
+  "runtimePaginationVerified": true,
+  "sameTimestampTieRuntimeVerified": false,
+  "separateOfficialAcpProcesses": true,
+  "sourceReview": [
+    "crates/goose/src/acp/server/list_sessions.rs:14,160-206",
+    "crates/goose/src/session/session_manager.rs:1950-1991,2108-2147,2386-2422",
+    "crates/goose-cli/src/commands/session.rs:313-341",
+    "crates/goose/src/session/import_formats/pi.rs:20-34,100-110,184-213",
+    "crates/goose/src/config/paths.rs:5-41"
+  ],
+  "testSessionsCreated": 52,
+  "toolRequests": 0,
+  "usedPagination": true
+}

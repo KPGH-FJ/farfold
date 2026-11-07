@@ -22,6 +22,7 @@
     "docs/evidence/2026-11-06-phase1-next/kilo-native-manager-cold-model-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-isolated-model-cold-restore.json",
     "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-directory-scope.json",
+    "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-pagination.json",
     "docs/evidence/2026-11-06-phase1-next/goose-manager-local-catalogue-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/goose-native-manager-cold-reconciliation.json",
     "docs/evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json",
@@ -32,6 +33,7 @@
     "docs/evidence/2026-11-06-phase1-next/copilot-official-standalone-noauth-preflight.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-version-gate.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-acp-initialize.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-token-withdrawal.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
@@ -239,7 +241,7 @@
       ],
       "scopedHistoryEvidence": "The one original owned Copilot conversation, macOS arm64, existing settings / Auto / Agent / Allow All Off; reasoning not exposed.",
       "stage1Supplement": {
-        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 官方独立包已离线完成 ACP 握手并声明终端登录；先前 SDK 连接失败、未进入账号读取的结果分开保留。完整新登录、退出换号与影响范围仍待实测。",
+        "authenticationBoundary": "网页、官方 SDK 和 CLI 曾核实为同一已有账号，原 Free 套餐复用有实际短回复。旧正式版对 Copilot CLI 1.0.89 的测试只覆盖登录程序启动、暂离返回及取消。1.0.106 官方独立包已离线完成 ACP 握手并声明终端登录；令牌入口在提示前退出，未送输入或验证撤回。先前 SDK 连接失败、未进入账号读取的结果分开保留。完整新登录、退出换号与影响范围仍待实测。",
         "verifiedSamples": [
           {
             "standards": ["S1"],
@@ -338,9 +340,17 @@
           {
             "standards": ["S3"],
             "environment": "macOS arm64，已登记的官方 Goose 1.52.0，全禁网独立档案",
-            "result": "官方导入两条自制记录；两个独立进程的列表均返回全量 2、指定目录 A/B 各 1、空目录 0。标识、目录及标题核合，零模型。仅覆盖指定目录过滤和冷开列表，真实账号及运行时分页未验。",
+            "result": "官方导入两条自制记录；两个独立进程的列表均返回全量 2、指定目录 A/B 各 1、空目录 0。标识、目录及标题核合，零模型。该样本覆盖指定目录过滤和冷开列表，未触发分页。",
             "evidencePaths": [
               "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-directory-scope.json"
+            ]
+          },
+          {
+            "standards": ["S3"],
+            "environment": "macOS arm64，已登记的官方 Goose 1.52.0，全禁网独立档案",
+            "result": "官方导入 52 条自制记录，目录 A 分两页返回 50＋1 条，B 返回 1 条，空目录为 0。两个独立进程的顺序和原目录游标核合，换目录或省略目录拒绝该游标。仅覆盖不同时间戳的官方分页，不含真实历史或正式界面。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/goose-official-offline-history-pagination.json"
             ]
           },
           {

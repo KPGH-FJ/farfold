@@ -88,7 +88,11 @@ Copilot 1.0.106 只读使用已缓存的官方程序，另设配置及缓存目�
 
 改用独立包的官方 ACP 入口，先核版本。首次版本命令正常退出，但夹具漏识别官方版本号后的句点，按门槛停在握手前。核实内嵌版本输出格式后，只修正这一判定并复测。相同签名程序报 1.0.106，另一个空白隔离档案中的单次协议版本 1 初始化，返回 `copilot-login` 终端方法及命令存在标记，并声明历史加载、列表、关闭、图片和嵌入内容。标准输入结束后进程自然退出 0，进程组释放。范围限离线启动及官方声明，真实登录、SDK 账号状态、会话和模型另验。[版本门记录](copilot-standalone-offline-version-gate.json) · [ACP 初始化回执](copilot-standalone-offline-acp-initialize.json)
 
+同一官方独立包的令牌入口另在全禁网空档案和专用终端中启动一次。隔离预检通过，程序在确认输入提示前自然退出 1，原因未知。终端和进程组已释放，未发送结束控制或凭据，未进入浏览器或模型。离线令牌等待及撤回、默认登录、真实账户仍待验证。[令牌入口尝试](copilot-standalone-offline-token-withdrawal.json) · [官方选项](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#copilot-login-options)
+
 另在全禁网的独立档案里，用已登记的官方 Goose 1.52.0 导入两条自制 Pi 格式记录。两个不同进程各完成一次初始化和四次历史列表查询。全量 2 条、两个目录各 1 条、空目录 0 条，标识、目录及标题逐一核合，无重复或正文片段。两次均正常退出，临时档案清理。该项覆盖官方列表的目录过滤及冷开，官方固定页长 50，此两条未触发分页，未用真实账号、模型或工具。[Goose 目录回执](goose-official-offline-history-directory-scope.json) · [官方列表实现](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server/list_sessions.rs)
+
+随后通过官方导入命令在同类全禁网档案里准备 52 条自制记录。两次独立启动中，目录 A 均分两页返回 50＋1 条，目录 B 返回 1 条，空目录返回 0 条。标识、目录、标题和顺序逐项核合。冷启动后可在原目录继续用旧游标，换目录或省略目录时明确拒绝。两次列表进程正常退出，测试资料已清理。运行时样本的时间戳均不同，同时间戳排序仅核源码，真实历史和正式界面仍按各自回执验收。[Goose 分页回执](goose-official-offline-history-pagination.json) · [官方列表实现](https://github.com/aaif-goose/goose/blob/302b60806639ea9f0ae8f053f49f8bf0e88b26f4/crates/goose/src/acp/server/list_sessions.rs)
 
 另用已登记 Kilo 7.8.1、空资料目录和只允许访问指定本机端口的环境完成设备授权对照。官方程序在本机服务返回待授权再批准后取资料和默认模型，将唯一合成凭据写为权限 0600，第二个官方进程读回 Kilo OAuth 类型。另一组由本机服务返回明确拒绝，官方程序显示拒绝并退出，无凭据写入。两次尝试从本机发停止信号时仍继续轮询，超时后清理；即时取消未通过。全部只用合成响应，真实账户、服务端取消和收费仍未验证。[本机批准、拒绝及取消回执](kilo-local-device-approval-and-denial.json)
 

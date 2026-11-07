@@ -94,7 +94,11 @@
 
 **第1阶段正式版停止状态导出。** 6ce829c5的专用Copilot对话显示回复已停、步骤仍未确认，同一快照的Markdown却把工具写成等待中。实际文件与通信摘要已核对，零新增Agent请求，原稿、保留稿和待发保持。当前源码的导出状态补强已有受控回归，正式复验仍待更新。[正式导出回执](evidence/2026-11-06-phase1-old-exit/installed-export-stopped-tool.json)
 
-**第1阶段首波证据对齐。** 29家清单为首波三家已归档29个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+**第1阶段首波证据对齐。** 29家清单为首波三家已归档30个限定样本，正式应用和真实程序隔离验证分列，首波完整验收仍为0/3。Goose同一正式自测对话沿用OpenRouter切到第二免费模型并切回，两边保存核合，零模型发送。Copilot旧版停止状态导出差异已正式复现。Goose候选模型真实回复及正式冷恢复继续待验。[逐家条件索引](evidence/2026-11-06-cycle-01/agent-conditions.json) · [Goose正式切换](evidence/2026-11-06-phase1-next/installed-goose-model-switch.json)
+
+**第1阶段Goose官方历史分页。** 在全禁网独立档案里，官方程序的两次启动均把指定目录51条自制记录按顺序列为50＋1条，无漏项或重复。冷启动后原目录旧游标仍可用，换目录或省略目录均拒绝。同时间戳仅核源码，未涉及真实历史、模型或正式界面。[分页回执](evidence/2026-11-06-phase1-next/goose-official-offline-history-pagination.json)
+
+**第1阶段Copilot官方离线令牌入口。** 1.0.106的独立测试终端在输入提示前退出1，终端和进程组释放，未输入凭据或结束控制。退出原因未知，未验证令牌等待、撤回或真实登录。[尝试回执](evidence/2026-11-06-phase1-next/copilot-standalone-offline-token-withdrawal.json)
 
 **第1阶段Copilot正式模型与同账号额度。** 6ce829c5已完成的自测对话，模型菜单空搜索仅显示已选中的Auto，已保存模型、原稿、保留1份和四份通信摘要均保持。GitHub同账号页面显示Free、CLI启用及包含额度已用0%，账单当前筛选无明细。零发送或设置变更，未核新登录、冷开和逐笔费用。[正式只读回执](evidence/2026-11-06-phase1-next/installed-copilot-auto-eligibility.json)
 
