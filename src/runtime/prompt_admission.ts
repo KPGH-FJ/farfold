@@ -19,6 +19,25 @@ function currentSubmission(thread: ThreadState) {
     : undefined;
 }
 
+export function pauseQueueForExit(
+  thread: ThreadState,
+  confirmed: boolean,
+): void {
+  if (thread.queued.length)
+    pauseQueue(thread, thread.uncertainPrompt ? "uncertain" : "stopped");
+  const submission = currentSubmission(thread);
+  // A confirmed quit can revoke this local preparation before it reaches IPC.
+  // Keep its queue entry, but drop the tentative cold quarantine.
+  // A first message still has a separate protected editor target.
+  if (
+    confirmed &&
+    thread.identity !== "draft" &&
+    submission &&
+    !submission.dispatched
+  )
+    thread.promptSubmission = undefined;
+}
+
 /** Settle queue ownership before replacing or losing the exact connection. */
 export function retirePromptSubmission(thread: ThreadState): void {
   const submission = currentSubmission(thread);

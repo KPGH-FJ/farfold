@@ -159,6 +159,10 @@ async function loadRuntime(): Promise<Runtime> {
   return runtime;
 }
 
+function openRetained(runtime: Runtime, sessionId = nativeId) {
+  return runtime.threads.open({ ...input, nativeSessionId: sessionId });
+}
+
 function ending(value: Record<string, unknown>): void {
   const prompt = h.prompts.at(-1)!;
   const opened = h.opens.find(
@@ -186,10 +190,7 @@ async function reloadPersisted(previous: Runtime, sessionId = nativeId) {
   const runtime = await loadRuntime();
   expect(runtime.threads).not.toBe(previous.threads);
   expect(runtime.threads.getSnapshot().threads.size).toBe(0);
-  const state = await runtime.threads.open({
-    ...input,
-    nativeSessionId: sessionId,
-  });
+  const state = await openRetained(runtime, sessionId);
   expect(state.nativeSessionId).toBe(sessionId);
   expect(state.resumed).toBe(true);
   expect(state.openError).toBeNull();
@@ -224,6 +225,33 @@ function buttonByText(
   }
 }
 
+async function mountExitProbe() {
+  const { DraftStartup } = await import("../components/DraftStartup");
+  const { EXIT_IMPACT } = await import("./exit_impact");
+  const render = () => {
+    h.exitCursor = 0;
+    return DraftStartup({ children: null });
+  };
+  let saved: typeof h.settings | undefined;
+  const baseInvoke = h.invoke.getMockImplementation()!;
+  h.invoke.mockImplementation((command, args) => {
+    if (command === "app_exit_after_save") saved = structuredClone(h.settings);
+    return baseInvoke(command, args);
+  });
+  render();
+  const cleanup = h.exitEffects.splice(0).map((effect) => effect());
+  return {
+    ready: () =>
+      vi.waitFor(() =>
+        expect(h.exitListeners.has("app:exit-deferred")).toBe(true),
+      ),
+    button: (label: "stay" | "exit") =>
+      buttonByText(render(), EXIT_IMPACT[label]),
+    saved: () => saved,
+    dispose: () => cleanup.forEach((dispose) => dispose?.()),
+  };
+}
+
 function expectNoColdDispatch(promptCount: number): void {
   expect(h.prompts).toHaveLength(promptCount);
   expect(
@@ -240,10 +268,7 @@ function expectNoColdDispatch(promptCount: number): void {
 
 it("restores a known-unsent queue when its exact process ends during local preparation", async () => {
   const original = await loadRuntime();
-  const a = await original.threads.open({
-    ...input,
-    nativeSessionId: nativeId,
-  });
+  const a = await openRetained(original);
   const otherId = "independent-preparation-conversation";
   const b = await original.threads.open({ ...input, nativeSessionId: otherId });
   const aKey = `session:${a.key}`;
@@ -314,10 +339,7 @@ it("restores a known-unsent queue when its exact process ends during local prepa
 
 it("still quarantines a prompt already in IPC when its exact process ends before admission", async () => {
   const original = await loadRuntime();
-  const hot = await original.threads.open({
-    ...input,
-    nativeSessionId: nativeId,
-  });
+  const hot = await openRetained(original);
   const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
   const pending = blocks("Request awaiting its native admission receipt");
   let finish!: () => void;
@@ -490,10 +512,7 @@ it.each(["cold only", "warm then cold", "closed route then cold"] as const)(
 
 it("quarantines an offered prompt with no observed ending across an acknowledged route close", async () => {
   const original = await loadRuntime();
-  const hot = await original.threads.open({
-    ...input,
-    nativeSessionId: nativeId,
-  });
+  const hot = await openRetained(original);
   const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
   const pending = blocks("Offered before the renderer lost delivery");
   const next = blocks("Independent unsent follow-up");
@@ -564,10 +583,7 @@ it("quarantines an offered prompt with no observed ending across an acknowledged
 
 it("does not transfer an acknowledged input's uncertainty to a repeated queue item during reconnect", async () => {
   const original = await loadRuntime();
-  const hot = await original.threads.open({
-    ...input,
-    nativeSessionId: nativeId,
-  });
+  const hot = await openRetained(original);
   const owner = h.opens.find((open) => open.connectionId === hot.connectionId)!;
   const repeated = blocks("Same input deliberately queued a second time");
   const tail = blocks("Independent unsent follow-up");
@@ -657,6 +673,95 @@ it("preserves an accepted empty-queue unknown outcome across a complete cold reb
   expect(cold.threads.needsAttention(cold.state)).toBe(true);
 });
 
+it.each(["success", "failure"] as const)(
+  "saves queued input as known unsent when confirmed exit overtakes its local file check (%s)",
+  async (late) => {
+    const original = await loadRuntime();
+    const a = await openRetained(original);
+    const aKey = `session:${a.key}`;
+    const bKey = "session:independent-file-check-at-quit";
+    const aDraft = { text: "A editor draft", attachments: [] };
+    const bDraft = { text: "B editor draft", attachments: [] };
+    original.drafts.composerDrafts.update(aKey, () => aDraft);
+    original.drafts.composerDrafts.update(bKey, () => bDraft);
+    const uri = "file:///owned-cold-outcome/local.txt";
+    const queued = blocks("Queued with local file still being checked");
+    queued.push({
+      type: "resource",
+      resource: { uri, mimeType: "text/plain", text: "原文件文字" },
+    });
+    const before = structuredClone(queued);
+    let release!: () => void;
+    const read = new Promise<void>((resolve) => (release = resolve));
+    const baseInvoke = h.invoke.getMockImplementation()!;
+    h.invoke.mockImplementation(async (command, args) => {
+      if (command === "draft_attachment_check") {
+        await read;
+        if (late === "failure") throw { code: "unreadable" };
+        return "复核读到的新文件文字";
+      }
+      if (command === "app_exit_after_save" && late === "success")
+        throw new Error("fixture native exit failed");
+      return baseInvoke(command, args);
+    });
+    const exit = await mountExitProbe();
+    const { archiveActivity } = await import("./archive_activity");
+    const archive = vi.spyOn(archiveActivity, "begin");
+    const sending = original.threads.send(a.key, queued);
+    try {
+      const check = { uri, embed: true };
+      await vi.waitFor(() =>
+        expect(h.invoke).toHaveBeenCalledWith("draft_attachment_check", check),
+      );
+      await exit.ready();
+      expect(a.promptSubmission?.dispatched).toBe(false);
+      h.exitListeners.get("app:save-before-exit")!({ payload: 63 });
+      expect(original.drafts.draftQueues.read(a.key)?.uncertainIndex).toBe(0);
+      expect(exit.saved()).toBeUndefined();
+      exit.button("exit")!();
+      await vi.waitFor(() =>
+        expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+          token: 63,
+          confirmActivity: true,
+        }),
+      );
+      const saved = {
+        composers: { [aKey]: aDraft, [bKey]: bDraft },
+        queues: { [a.key]: { blocks: [before], uncertainIndex: null } },
+      };
+      expect.soft(exit.saved()?.get("unsentWork.v1")).toMatchObject(saved);
+      await vi.waitFor(() =>
+        expect(
+          original.drafts.draftPersistence.snapshot().interactionLocked,
+        ).toBe(late === "failure"),
+      );
+      release();
+      expect((await sending).status).toBe("rejected");
+      expect.soft(a.queued).toEqual([before]);
+      expect.soft(a.queuePaused).toBe("stopped");
+      expect.soft(a.submitting).toBe(false);
+      expect.soft(a.items.some((item) => item.kind === "notice")).toBe(false);
+      expect.soft(archive).not.toHaveBeenCalled();
+      expect
+        .soft(h.settings.get("unsentWork.v1"))
+        .toEqual(exit.saved()?.get("unsentWork.v1"));
+      h.settings = exit.saved()!;
+      const cold = await reloadPersisted(original);
+      expect.soft(cold.state.queued).toEqual([before]);
+      expect.soft(cold.state.queuePaused).toBe("stopped");
+      expect.soft(cold.state.uncertainPrompt).toBeNull();
+      expect(cold.state.historicalOutcomeUnknown).toBe(false);
+      expect(cold.drafts.composerDrafts.read(bKey)).toMatchObject(bDraft);
+      expectNoColdDispatch(0);
+    } finally {
+      release();
+      await sending;
+      archive.mockRestore();
+      exit.dispose();
+    }
+  },
+);
+
 it("preserves an admitted, unfinished owned tool through confirmed exit when cold replay omits it", async () => {
   const original = await loadRuntime();
   const a = await original.threads.open(input);
@@ -721,29 +826,13 @@ it("preserves an admitted, unfinished owned tool through confirmed exit when col
   });
   expect(a.items.some((item) => item.kind === "settled")).toBe(false);
 
-  const { DraftStartup } = await import("../components/DraftStartup");
-  const { EXIT_IMPACT } = await import("./exit_impact");
-  const render = () => {
-    h.exitCursor = 0;
-    return DraftStartup({ children: null });
-  };
-  const baseInvoke = h.invoke.getMockImplementation()!;
-  let savedAtExit: typeof h.settings | undefined;
-  h.invoke.mockImplementation((command, args) => {
-    if (command === "app_exit_after_save")
-      savedAtExit = structuredClone(h.settings);
-    return baseInvoke(command, args);
-  });
-  render();
-  const cleanup = h.exitEffects.splice(0).map((effect) => effect());
+  const exit = await mountExitProbe();
   try {
-    await vi.waitFor(() =>
-      expect(h.exitListeners.has("app:exit-deferred")).toBe(true),
-    );
+    await exit.ready();
     h.exitListeners.get("app:save-before-exit")!({ payload: 61 });
-    const stay = buttonByText(render(), EXIT_IMPACT.stay);
+    const stay = exit.button("stay");
     expect(stay).toBeDefined();
-    expect(savedAtExit).toBeUndefined();
+    expect(exit.saved()).toBeUndefined();
     stay!();
     await vi.waitFor(() =>
       expect(
@@ -757,9 +846,9 @@ it("preserves an admitted, unfinished owned tool through confirmed exit when col
     expectNoColdDispatch(2);
 
     h.exitListeners.get("app:save-before-exit")!({ payload: 62 });
-    const confirm = buttonByText(render(), EXIT_IMPACT.exit);
+    const confirm = exit.button("exit");
     expect(confirm).toBeDefined();
-    expect(savedAtExit).toBeUndefined();
+    expect(exit.saved()).toBeUndefined();
     expect(a.connectionOutcomeUnknown).toBe(false);
     expect(a.historicalOutcomeUnknown).toBe(false);
     expect(original.drafts.draftQueues.read(b.key)?.outcomeUnknown).not.toBe(
@@ -772,7 +861,7 @@ it("preserves an admitted, unfinished owned tool through confirmed exit when col
         expect.objectContaining({ token: 62, confirmActivity: true }),
       ),
     );
-    const unsent = savedAtExit?.get("unsentWork.v1");
+    const unsent = exit.saved()?.get("unsentWork.v1");
     expect.soft(unsent).toMatchObject({
       composers: { [aKey]: aDraft, [bKey]: bDraft },
       queues: {
@@ -781,20 +870,17 @@ it("preserves an admitted, unfinished owned tool through confirmed exit when col
     });
     expect.soft(unsent).not.toHaveProperty(["queues", b.key]);
 
-    h.settings = savedAtExit!;
+    h.settings = exit.saved()!;
     const cold = await reloadPersisted(original);
     expect(cold.state.items.some((item) => item.kind === "tool")).toBe(false);
     expect(cold.state.queued).toEqual([]);
     expect(cold.state.uncertainPrompt).toBeNull();
-    const coldB = await cold.threads.open({
-      ...input,
-      nativeSessionId: otherId,
-    });
+    const coldB = await openRetained(cold, otherId);
     expect(coldB.historicalOutcomeUnknown).toBe(false);
     expectNoColdDispatch(2);
     expect(cold.state.historicalOutcomeUnknown).toBe(true);
   } finally {
-    for (const dispose of cleanup) dispose?.();
+    exit.dispose();
   }
 });
 
@@ -867,10 +953,7 @@ it.each([
       expect(hot.historicalOutcomeUnknown).toBe(true);
     }
     const otherId = "other-owned-native-conversation";
-    const other = await original.threads.open({
-      ...input,
-      nativeSessionId: otherId,
-    });
+    const other = await openRetained(original, otherId);
     const pending = blocks("Wait here for explicit continuation");
     const draftKey = `session:${hot.key}`;
     const otherDraftKey = `session:${other.key}`;
@@ -1045,10 +1128,7 @@ it.each([
     expect(cold.drafts.composerDrafts.read(draftKey).text).toBe(
       "Exact original draft",
     );
-    const coldOther = await cold.threads.open({
-      ...input,
-      nativeSessionId: otherId,
-    });
+    const coldOther = await openRetained(cold, otherId);
     expect(coldOther.historicalOutcomeUnknown).toBe(false);
     expect(cold.threads.needsAttention(coldOther)).toBe(false);
     expect(coldOther.queued).toEqual([]);
@@ -1064,10 +1144,7 @@ it.each([
 it("saves the exact stopped work before closing and restores it after a cold open that omits the tool", async () => {
   const original = await loadRuntime();
   const a = await original.threads.open(input);
-  const b = await original.threads.open({
-    ...input,
-    nativeSessionId: "separate-owned-conversation",
-  });
+  const b = await openRetained(original, "separate-owned-conversation");
   const draftKey = `session:${a.key}`;
   const attachment = {
     id: "owned-stopped-draft-file",
@@ -1204,10 +1281,7 @@ it("saves the exact stopped work before closing and restores it after a cold ope
     text: editedDraft.text,
     attachments: [{ ...attachment, recovered: true }],
   });
-  const coldB = await cold.threads.open({
-    ...input,
-    nativeSessionId: b.nativeSessionId,
-  });
+  const coldB = await openRetained(cold, b.nativeSessionId);
   expect(coldB.historicalOutcomeUnknown).toBe(false);
   expect(cold.drafts.composerDrafts.read(`session:${coldB.key}`).text).toBe(
     "Other unsent draft",
@@ -1416,10 +1490,7 @@ it("does not let a stale pre-reconnect view acknowledge a newer owner", async ()
   const cold = await coldLoad(original);
   // An ended connection allows the real open/replay path to replace its view.
   cold.state.connectionLost = true;
-  const current = await cold.threads.open({
-    ...input,
-    nativeSessionId: nativeId,
-  });
+  const current = await openRetained(cold);
   expect(current).not.toBe(cold.state);
   expect(current.historicalOutcomeUnknown).toBe(true);
   cold.threads.acknowledgeHistoricalOutcome(cold.state);

@@ -6,7 +6,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { threads, normalizeConfigOptions, type PromptBlock } from "./sessions";
 import { sendNewConversation } from "./new_conversation";
-import { composerDrafts, draftPersistence } from "./drafts";
+import { composerDrafts, draftPersistence, parseDraftSnapshot } from "./drafts";
 import { DRAFT_STORAGE_KEY } from "./draft_storage";
 import { STRINGS } from "./strings";
 import { PROMPT_ADMISSION as P } from "./prompt_admission_strings";
@@ -455,4 +455,64 @@ it("keeps an invalid attachment in the first-send editor without dispatch or a f
   expect(
     mock.invoke.mock.calls.filter(([name]) => name === "session_prompt_cancel"),
   ).toHaveLength(0);
+});
+
+it("keeps the first-send editor and its exact queue quarantined at confirmed exit", async () => {
+  const state = permissionDraft("first-attachment-check-at-quit");
+  state.connectionId = "first-quit-connection";
+  const uri = "file:///controlled/first-quit.txt";
+  const blocks: PromptBlock[] = [
+    { type: "text", text: "first unsent input" },
+    { type: "resource_link", name: "first-quit.txt", uri },
+  ];
+  composerDrafts.update("new", () => ({
+    text: "first unsent input",
+    attachments: [
+      { id: "first-quit", kind: "file", name: "first-quit.txt", uri },
+    ],
+    sendPending: true,
+  }));
+  const attempt = await rememberPendingConversation(
+    "new",
+    composerDrafts.read("new"),
+    state,
+  );
+  let release!: (value: null) => void;
+  const fileCheck = new Promise<null>((resolve) => (release = resolve));
+  mock.invoke.mockImplementation(async (command, args) =>
+    command === "draft_attachment_check"
+      ? fileCheck
+      : localCommand(command, args),
+  );
+  const sending = expect(
+    sendNewConversation(state.key, blocks),
+  ).rejects.toThrow();
+  try {
+    await vi.waitFor(() =>
+      expect(mock.invoke).toHaveBeenCalledWith("draft_attachment_check", {
+        uri,
+        embed: false,
+      }),
+    );
+    expect(state.identity).toBe("draft");
+    expect(state.promptSubmission?.dispatched).toBe(false);
+    threads.pauseQueuesForExit(true);
+    await draftPersistence.flush();
+    const stored = structuredClone(settings.get(DRAFT_STORAGE_KEY));
+    const cold = parseDraftSnapshot(stored)!;
+    expect(Object.fromEntries(cold.composers).new).toMatchObject(
+      JSON.parse(JSON.stringify(attempt.snapshot)),
+    );
+    expect(Object.fromEntries(cold.queues)[state.key]).toMatchObject({
+      blocks: [blocks],
+      uncertainIndex: 0,
+    });
+  } finally {
+    release(null);
+    await sending;
+    finishPendingConversation(attempt, "rejected");
+  }
+  expect(
+    mock.invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toEqual([]);
 });

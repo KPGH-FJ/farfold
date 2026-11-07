@@ -104,7 +104,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setBackendCopyReview(false);
     setBackendWorktreeReview(false);
     setCancellingExit(null);
-    threads.pauseQueuesForExit();
+    threads.pauseQueuesForExit(confirmActivity);
     exitInteraction.current ??= draftPersistence.acquireInteractionLock();
     if (
       hasUnsettledFileCopies() ||

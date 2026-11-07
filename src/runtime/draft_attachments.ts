@@ -149,11 +149,16 @@ function readsFileText(attachment: DraftAttachment, embed: boolean): boolean {
  * restart. Never send cached file contents from before the restart. */
 export async function validateQueuedAttachments(
   blocks: PromptBlock[],
-  options: { reparseDocuments?: boolean; signal?: AbortSignal } = {},
+  options: {
+    reparseDocuments?: boolean;
+    signal?: AbortSignal;
+    canApplyUpdates?: () => boolean;
+  } = {},
 ): Promise<void> {
   const updates: (() => void)[] = [];
   let audioBytes = 0;
   for (const block of blocks) {
+    if (options.canApplyUpdates?.() === false) return;
     if (block.type === "audio") {
       const capture = await verifyAudioInput(block);
       audioBytes = addAudioBytes(audioBytes, capture.file.size);
@@ -187,7 +192,9 @@ export async function validateQueuedAttachments(
       });
     }
   }
-  // The live queue can be saved even when a later attachment check fails.
+  // Keep the last saved bytes until every check succeeds and the original
+  // preparation still owns the live queue.
+  if (options.canApplyUpdates?.() === false) return;
   for (const update of updates) update();
 }
 

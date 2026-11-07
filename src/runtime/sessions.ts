@@ -7,8 +7,11 @@ import { OwnedSessionChannel, SessionChannels } from "./session_channels";
 import { openDeliveryConsumer } from "./session_open_delivery";
 import { openingInquiries } from "./opening_inquiries";
 import { drainPrompt } from "./session_prompt_dispatch";
-import { persistedQueue, retirePromptSubmission } from "./prompt_admission";
-import type { PromptRequestOwner } from "./prompt_admission";
+import { pauseQueueForExit, persistedQueue } from "./prompt_admission";
+import {
+  retirePromptSubmission,
+  type PromptRequestOwner,
+} from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
 import { refreshIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
@@ -997,11 +1000,8 @@ class ThreadsStore {
     this.emit();
   }
 
-  pauseQueuesForExit(): void {
-    for (const s of this.threads.values()) {
-      if (s.queued.length)
-        pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
-    }
+  pauseQueuesForExit(confirmed = false): void {
+    for (const s of this.threads.values()) pauseQueueForExit(s, confirmed);
     this.emit();
   }
 
