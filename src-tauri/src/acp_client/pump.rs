@@ -71,6 +71,8 @@ pub(crate) use open::open_session_on_connection;
 mod list;
 #[path = "pump/restore_config.rs"]
 pub(crate) mod restore_config;
+#[path = "session_tools/dispatch.rs"]
+mod tools_report;
 pub(crate) use list::list_sessions_on_connection;
 
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
@@ -164,6 +166,7 @@ pub(crate) struct SessionEntry {
     pub(crate) workspace: Option<Vec<std::path::PathBuf>>,
     pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     pub control: mpsc::UnboundedSender<SessionControl>,
+    pub(crate) tools_report: Arc<super::session_tools::Slot>,
     pub events: SessionSink,
     process_ended_sink: Option<ProcessEndedSink>,
     pub(super) prompt_snapshot: super::active_prompt::PublicSnapshot,
@@ -1116,6 +1119,9 @@ async fn session_pump(
                 }
                 SessionControl::StopTask { connection_id, task_id, result, .. } => {
                     events(ctx.async_tasks.start(&cx, &connection_id, &task_id, result, task_tx.clone()));
+                }
+                SessionControl::ToolsRead { request, deadline, result } => {
+                    tools_report::admit(*request, &cx, &ctx, identity_read.is_some() || workspace_access_read.is_some() || mutation.is_some() || prompt_in_flight || prompt_owner.as_ref().is_some_and(prompt::Active::unresolved), deadline, result);
                 }
                 SessionControl::IdentityRead { request, scope, result, deadline } => {
                     use super::identity_read::Code;

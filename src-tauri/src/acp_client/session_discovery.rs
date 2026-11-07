@@ -231,6 +231,7 @@ pub(super) async fn open_preview(
         purpose: opened.purpose.preview_name().ok_or("无法确认读取状态")?,
         session: super::session::SessionOpenResult {
             identity_read: None,
+            session_tool_inventory: None,
             workspace_access: None, // A preview is not an executable session owner.
             session_operations,
             connection_id: opened.connection_id,

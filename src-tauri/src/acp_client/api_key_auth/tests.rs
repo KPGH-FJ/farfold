@@ -122,6 +122,7 @@ fn register(
             account_query: None,
             workspace_access: crate::acp_client::workspace_access::Availability::new(None),
             identity_read: crate::acp_client::identity_read::Availability::new(None),
+            session_tools: crate::acp_client::session_tools::Availability::unavailable(),
             command_tx,
             state: Arc::new(AtomicU8::new(STATE_READY)),
             handshake: Arc::new(handshake),

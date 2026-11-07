@@ -140,9 +140,11 @@ fn opened_result(
     let session_operations = capabilities(&connection, &opened.session_id);
     let workspace_access = super::workspace_access::capability(&connection);
     let identity_read = super::identity_read::capability(&connection);
+    let session_tool_inventory = super::session_tools::capability(&connection);
     let source = connection.service;
     SessionOpenResult {
         identity_read,
+        session_tool_inventory,
         workspace_access,
         session_operations,
         connection_id: opened.connection_id,

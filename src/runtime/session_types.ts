@@ -252,6 +252,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   workspaceAccess?:
     import("./workspace_access_types").WorkspaceAccessCapability | null;
   identityRead?: import("./session_identity_types").IdentityReadSupport | null;
+  sessionToolInventory?:
+    import("./session_tools_types").SessionToolInventoryCapability | null;
   /** Only the latest explicit read, never saved with history or account settings. */
   sessionIdentityRead?: import("./session_identity_types").SessionIdentityRead;
   forkOperation?: import("./session_fork_types").ForkOperation;

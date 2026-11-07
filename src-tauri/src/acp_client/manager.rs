@@ -544,6 +544,8 @@ impl AcpManager {
         let account_query = super::account_launch::reviewed(agent);
         let workspace_access = super::workspace_access::Availability::new(account_query);
         let identity_read = super::identity_read::Availability::new(account_query);
+        let session_tools = super::session_tools::Availability::new(agent);
+        let receive_session_tools = session_tools.clone();
         let receive_workspace_access = workspace_access.clone();
         let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
@@ -582,6 +584,7 @@ impl AcpManager {
                     account_query,
                     workspace_access,
                     identity_read,
+                    session_tools,
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),
@@ -636,6 +639,7 @@ impl AcpManager {
                     async move |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
                         receive_workspace_access.observe_decision(&dispatch);
                         receive_identity_read.observe(&dispatch);
+                        receive_session_tools.observe(&dispatch);
                         if receive_observer.observe(&dispatch) {
                             return Ok(Handled::Yes);
                         }

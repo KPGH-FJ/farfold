@@ -382,6 +382,8 @@ pub fn run() {
                 acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_status,
                 acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_cancel,
                 acp_client::skill_management::skill_preference_remove::agent_skill_preference_remove_recheck,
+                acp_client::session_tools::session_tools_read,
+                acp_client::session_tools::session_tools_status,
                 acp_client::skill_management::mcp::agent_mcp_change_inspect,
                 acp_client::skill_management::mcp::agent_mcp_change_confirm,
                 acp_client::skill_management::mcp::agent_mcp_change_status,

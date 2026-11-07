@@ -3,6 +3,7 @@ import { replacePermissionEffect } from "./permission_effect";
 import { pauseQueue } from "./queue";
 import { sessionOperations } from "./session_fork_types";
 import { workspaceAccessCapability } from "./workspace_access_types";
+import { sessionToolInventoryCapability } from "./session_tools_types";
 import {
   forgetSessionIdentity,
   identityReadSupport,
@@ -78,6 +79,9 @@ export function applyOpeningResult(
   state.sessionOperations = sessionOperations(result.sessionOperations);
   state.workspaceAccess = workspaceAccessCapability(result.workspaceAccess);
   state.identityRead = identityReadSupport(result.identityRead);
+  state.sessionToolInventory = sessionToolInventoryCapability(
+    result.sessionToolInventory,
+  );
   state.draftGroup = draftGroup(input);
   state.resumed = result.resumed;
   state.identity = result.resumed ? "established" : "draft";

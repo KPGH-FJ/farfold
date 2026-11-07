@@ -350,6 +350,7 @@ pub(crate) async fn open_session_on_connection(
                 preview_token,
                 workspace: Some(Vec::new()),
                 browser_unavailable,
+                tools_report: Arc::new(super::super::session_tools::Slot::new(&control_tx)),
                 control: control_tx,
                 events: events.clone(),
                 process_ended_sink: None,

@@ -1,0 +1,39 @@
+.session-tools-context {
+  overflow-wrap: anywhere;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+.session-tools-report {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.session-tools-note {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.session-tools-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(44vh, 360px);
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+.session-tools-items > li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+.session-tools-items strong {
+  font-size: 13px;
+}
+.session-tools-items p,
+.session-tools-items summary {
+  font-size: 12px;
+}
+.session-tools-description {
+  white-space: pre-wrap;
+  unicode-bidi: plaintext;
+}

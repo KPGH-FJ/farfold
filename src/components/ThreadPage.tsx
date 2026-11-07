@@ -36,6 +36,8 @@ import { ThreadView } from "./ThreadView";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { SessionForkDialog } from "./SessionForkDialog";
+import { SessionToolsDialog } from "./SessionToolsDialog";
+import { SESSION_TOOLS_STRINGS as TOOLS } from "../runtime/session_tools_strings";
 import { sessionForkControl } from "../runtime/session_fork_ui";
 import { SESSION_FORK_STRINGS as FORK } from "../runtime/session_fork_strings";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
@@ -188,6 +190,19 @@ export function ThreadPage({
   const [name, setName] = useState(title);
   const [moving, setMoving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [toolsOwner, setToolsOwner] = useState<{
+    thread: ThreadState;
+    connectionId: string | undefined;
+  } | null>(null);
+  const toolsVisible = Boolean(
+    active &&
+    toolsOwner &&
+    toolsOwner.thread === thread &&
+    toolsOwner.connectionId === thread?.connectionId,
+  );
+  useEffect(() => {
+    if (toolsOwner && !toolsVisible) setToolsOwner(null);
+  }, [toolsOwner, toolsVisible]);
   const forkControl = sessionForkControl(thread, onOpened);
   const [forkReview, setForkReview] = useState<{
     owner: object;
@@ -215,6 +230,7 @@ export function ThreadPage({
     setRename(false);
     setMoving(false);
     setDeleting(false);
+    setToolsOwner(null);
     if (forkReview) forkReview.retired = true;
     setForkReview(null);
     setExported(null);
@@ -427,6 +443,23 @@ export function ThreadPage({
             onClose={closeDialog}
           >
             <div className="workspace-action-body">
+              {thread?.sessionToolInventory && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={saving || !thread.connectionId}
+                  onClick={() => {
+                    if (!active || !thread.connectionId) return;
+                    setToolsOwner({
+                      thread,
+                      connectionId: thread.connectionId,
+                    });
+                    setMenu(false);
+                  }}
+                >
+                  {TOOLS.open}
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-ghost"
@@ -628,6 +661,15 @@ export function ThreadPage({
               {error && <p role="alert">{error}</p>}
             </div>
           </WorkspaceActionMenu>
+        )}
+        {toolsVisible && toolsOwner && (
+          <SessionToolsDialog
+            thread={toolsOwner.thread}
+            title={title}
+            active={active}
+            onClose={() => setToolsOwner(null)}
+            returnFocusRef={menuAnchor}
+          />
         )}
         {active && exported && (
           <ConversationExportHost

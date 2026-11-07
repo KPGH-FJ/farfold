@@ -1370,6 +1370,7 @@ impl InteractionReply {
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
     pub identity_read: Option<super::identity_read::Capability>,
+    pub session_tool_inventory: Option<super::session_tools::Capability>,
     pub workspace_access: Option<super::workspace_access::Capability>,
     pub session_operations: super::session_fork::SessionOperations,
     pub connection_id: String,

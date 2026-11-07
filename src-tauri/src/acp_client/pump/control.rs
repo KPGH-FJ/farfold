@@ -4,6 +4,11 @@ use agent_client_protocol::schema::v1::ContentBlock;
 
 /// Commands delivered to the session pump task.
 pub(crate) enum SessionControl {
+    ToolsRead {
+        request: Box<super::super::session_tools::Request>,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<(), super::super::session_tools::ToolsError>>,
+    },
     IdentityRead {
         request: Box<super::super::identity_read::Request>,
         scope: super::super::manager::AccountScope,
@@ -149,6 +154,9 @@ impl SessionControl {
     }
     pub(super) fn reject(self, error: String) {
         match self {
+            Self::ToolsRead { result, .. } => {
+                let _ = result.send(Err(super::super::session_tools::Code::Changed.into()));
+            }
             Self::IdentityRead { result, .. } => {
                 let _ = result.send(Err(super::super::identity_read::Code::Changed.into()));
             }
@@ -207,6 +215,9 @@ impl SessionControl {
     }
     pub(super) fn abandoned(&self) -> bool {
         let (deadline, closed) = match self {
+            Self::ToolsRead {
+                deadline, result, ..
+            } => (*deadline, result.is_closed()),
             Self::IdentityRead {
                 deadline, result, ..
             } => (*deadline, result.is_closed()),

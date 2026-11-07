@@ -173,6 +173,7 @@ pub async fn session_open(
     let session_operations = super::session_fork::capabilities(&connection, &opened.session_id);
     let workspace_access = super::workspace_access::capability(&connection);
     let identity_read = super::identity_read::capability(&connection);
+    let session_tool_inventory = super::session_tools::capability(&connection);
     let source = connection.service;
     let cwd_string = cwd.to_string_lossy().into_owned();
     if resumed {
@@ -185,6 +186,7 @@ pub async fn session_open(
     }
     Ok(SessionOpenResult {
         identity_read,
+        session_tool_inventory,
         workspace_access,
         session_operations,
         connection_id: opened.connection_id,
