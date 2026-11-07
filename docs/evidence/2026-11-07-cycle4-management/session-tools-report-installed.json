@@ -1,0 +1,173 @@
+{
+  "kind": "InstalledCurrentConversationToolReportEvidence",
+  "updatedDate": "2026-11-08",
+  "featureSourceCommit": "a9d18cf7a441fded63a31870cb0bc7d79980d63c",
+  "formalSourceCommit": "6de9c2010ce57ad9d1f8731c06e5e7e02d1f2544",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "2768fc009f589e9bad6d2a7b9f3f34752130959d"
+  },
+  "result": "verified-one-Goose-report-and-CSS-followup",
+  "implemented": [
+    "Capability-driven common conversation menu; explicit current live-owner read only, no auto-read, reconnect or historical-session activation.",
+    "Operation identity, original actor ownership, local delivery timeout versus actual completion, and status-only followup protect unresolved work.",
+    "Bounded names/descriptions and reported permissions as plain text; every valid report retains completeness unreported, including zero items.",
+    "Closing/reopening on the same owner retains the result and received timestamp without another query; source changes retire the old controller.",
+    "CSS followup keeps header/footer visible and scrolls the body under long reports."
+  ],
+  "officialSourceReview": {
+    "agent": "Goose",
+    "fixedCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+    "method": "_goose/unstable/tools/list",
+    "scope": "Existing exact live session; sessionId and extensionName:null. Existing clients can return partial results and Agent-defined items; no complete MCP-only catalogue is asserted.",
+    "runtimeVersionProbedAgain": false
+  },
+  "installedSample": {
+    "agent": "Goose existing official registration",
+    "nativeSession": "20261107_14",
+    "modelSaved": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "thinkingSaved": "off",
+    "uiEvents": {
+      "path": "output/2026-11-07-session-tools-report/ui-events.json",
+      "sha256": "4d7b569f9d32b99b72a4fe0d54eb063aeb8138c66bf6962e40b8dafd8a3e9545"
+    },
+    "reportedItems": 17,
+    "firstReportReceivedLocal": "2026/11/7 23:40:38",
+    "explicitReadClicks": 1,
+    "sameOwnerReopenRetainedSameReport": true,
+    "descriptionShownAsPlainText": true,
+    "completeness": "unreported",
+    "permissionsInThisReport": "unreported",
+    "snapshots": [
+      {
+        "path": "output/2026-11-07-session-tools-report/read-only/before.json",
+        "sha256": "f417fa8fa2ebebcca9933f20bf6d7053172207b82b98af01769b3ebf463fc9a9"
+      },
+      {
+        "path": "output/2026-11-07-session-tools-report/read-only/after-read.json",
+        "sha256": "5af741ad6f61e339cc6bc37e06ea69391835c200568a2e89d93fbeb7880f8825"
+      },
+      {
+        "path": "output/2026-11-07-session-tools-report/read-only/reopen-cache.json",
+        "sha256": "0d0f567e3833af0a03ff7165e6118f684fd77b8e041795466a2f582ef1192a7d"
+      }
+    ],
+    "farfoldConfigAndServiceDigestsEqual": true,
+    "nativeModelAndTenMessageDigestsEqual": true,
+    "readIntervalOutboundDelta": {
+      "initialize": 0,
+      "session/new": 0,
+      "session/load": 0,
+      "session/set_config_option": 0,
+      "session/prompt": 0,
+      "session/cancel": 0,
+      "other": 1
+    },
+    "reopenProtocolBytesAndHashEqual": true,
+    "independentResultReview": {
+      "path": "output/2026-11-07-session-tools-report/read-only/result-review.json",
+      "sha256": "78c46aadf8eb71c1c1ae3ccb2ae10390fac402100f186ad3b7e2ca36d47de305"
+    }
+  },
+  "engineering": {
+    "fullSevenOnFeatureSourceAllExitZero": true,
+    "frontendFilesPassed": 734,
+    "frontendTestsPassed": 9927,
+    "rustTestsPassed": 2456,
+    "rustExistingIgnored": 7,
+    "results": {
+      "path": "output/2026-11-07-session-tools-report/checks/engineering-results.json",
+      "sha256": "ff075afd5b77ab83f8d67773ddd816c98cd31fe7fc524a00d95158347b30578a"
+    },
+    "frozenInputs": {
+      "path": "output/2026-11-07-session-tools-report/checks/engineering-inputs.json",
+      "sha256": "775c3b555a10285c1c43ae8901deec1f99808f60b90c81fb6569d0dbecb229f6"
+    },
+    "sourceReview": {
+      "path": "output/2026-11-07-session-tools-report/independent-review.json",
+      "sha256": "4ae78764e9fc1ac3495a1bea616df230ad2a0cbe1fe4460d7ed587147fd338e3"
+    },
+    "sourceDeltaReview": {
+      "path": "output/2026-11-07-session-tools-report/review-delta.json",
+      "sha256": "25d0710ff61e3130e9f3704b339ea983a48a685a09103a45e56e2b74fb58cb3f"
+    },
+    "layoutOnlyChange": "src/components/SessionToolsDialog.css, +13 lines",
+    "unchangedInputsReused": 2336,
+    "originalInputCount": 2337,
+    "layoutFormatAndBuildExitZero": true,
+    "layoutChecks": {
+      "path": "output/2026-11-07-session-tools-report/layout-followup/checks.json",
+      "sha256": "89e14ca564081cbe33ca52dd572ba0b9db55602e776170c81106868b7a012cad"
+    },
+    "layoutReview": {
+      "path": "output/2026-11-07-session-tools-report/layout-followup/review.json",
+      "sha256": "4f11bfc9c36c80fb46ac7ae3b097b8ccffadbeea3afcd28fba61ec9e50e9dfd1"
+    }
+  },
+  "formalUpdate": {
+    "featureInstall": {
+      "path": "output/2026-11-07-session-tools-report/formal/install.json",
+      "sha256": "4501aa4cbaa1d9e7f0e4c4b767cb35e801382aa42f70a4e8766408044ac87056"
+    },
+    "featureCandidateReview": {
+      "path": "output/2026-11-07-session-tools-report/formal/candidate-review.json",
+      "sha256": "7b73381701c5e3aad22accb1a3d5c17f90ee688864815cdbf6a689057902a406"
+    },
+    "layoutInstall": {
+      "path": "output/2026-11-07-session-tools-report/layout-followup/formal/install.json",
+      "sha256": "8cf0ba48aaf99dda9d27b0ae197593eb3cb068a435201df4b23795ade5ef8f28"
+    },
+    "layoutCandidateReview": {
+      "path": "output/2026-11-07-session-tools-report/layout-followup/formal/candidate-review.json",
+      "sha256": "6fc56e22fb592574d795e67a938cb3b9b6d3001b261bb027fd46d24cf4fb8653"
+    },
+    "dataEntriesEachInstall": 206275,
+    "dataRootsUnchangedEachInstall": true,
+    "normalSaveQuitReceipts": [
+      {
+        "path": "output/2026-11-07-session-tools-report/formal/normal-exit.json",
+        "sha256": "d1b1f58091a203f60ec33fc42c962d6684eb32f9cbec6e7735ec77b09698397b"
+      },
+      {
+        "path": "output/2026-11-07-session-tools-report/layout-followup/formal/normal-exit.json",
+        "sha256": "8cc1e81a3f2d80f5e62aaeca04b5f704f0a07b86b4d13f0aa73894060d7c9d8d"
+      }
+    ],
+    "duplicateRemovalReceipts": [
+      {
+        "path": "output/2026-11-07-session-tools-report/formal/duplicate-cleanup.json",
+        "sha256": "03ee097071ef58f37272140b046f485be413a43fb3ea47607e51fb43e62f2793"
+      },
+      {
+        "path": "output/2026-11-07-session-tools-report/layout-followup/formal/duplicate-cleanup.json",
+        "sha256": "5b81dbbaf51ae79f3a92ee012075effcbc0dd8e51591659682a61f45c2768a94"
+      }
+    ]
+  },
+  "layoutInstalled": {
+    "uiEvents": {
+      "path": "output/2026-11-07-session-tools-report/layout-followup/ui-events.json",
+      "sha256": "83ea75dbca876417dfd90d1b0783eb2c52f413f68ebc362c9112796e1af14e4f"
+    },
+    "viewport": [1280, 820],
+    "reportedItems": 17,
+    "receivedLocal": "2026/11/8 01:05:22",
+    "expandedDescriptionHeaderAndFooterVisible": true,
+    "visibleFooterCloseWorked": true,
+    "originalHistoryOffAndEmptyComposerVisible": true
+  },
+  "limits": [
+    "Root UI proves displayed 17-item results and received timestamps; the sanitized protocol other frame is only temporal correlation, not a decoded method/request-ID proof.",
+    "The read interval has no new/load/prompt/cancel/config request increment. This does not prove all MCP transports terminated or prohibit querying an existing client catalogue.",
+    "Catalogue receipt does not prove completeness, source mapping of every item, healthy MCP connection, tool invocation, authentication or current configuration adoption.",
+    "CSS followup repeats the relevant real viewport sample; the earlier source-a9 three data/protocol snapshots are not misrepresented as snapshots of the later launch.",
+    "No real timeout, cancellation, malformed-output or multi-dialog race was forced; controlled checks remain a separate evidence level.",
+    "Historical-node fork, complete skills/MCP management, other Agents and P39/P41/Stage2 acceptance remain open."
+  ],
+  "p39Complete": false,
+  "p41Complete": false,
+  "stage2Complete": false
+}
