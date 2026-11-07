@@ -8,7 +8,7 @@
     "wholeAgentConfirmed": 0
   },
   "scope": "Current re-entry notes derived from committed records. Scoped historical evidence retains its original scope. Scheduling and requirements remain in their respective existing documents.",
-  "stage1SupplementScope": "首波三家后续分项按实际版本与证据层级记录。原字段及计数仍为 b7763508 底稿；S2–S7 标注对应的八项标准分项，首波完整验收仍为 0/3。新登录及换号、同会话改模型实际生效与冷恢复、永久审批及其冷恢复、安装版草稿写入故障及其余八项条件继续开放。",
+  "stage1SupplementScope": "首波三家后续分项按实际版本与证据层级记录。原字段及计数仍为 b7763508 底稿；S1–S7 标注对应的八项标准分项，首波完整验收仍为 0/3。认证按当前选择及实际支持方式逐项验证，API和免登录方式可直接使用；已呈现的其他认证入口、获准账号的退出换号仍按原条件开放。同会话改模型实际生效与冷恢复、永久审批及其冷恢复、安装版草稿写入故障及其余八项条件继续开放。",
   "stage1SupplementEvidencePaths": [
     "PRODUCT.md",
     "docs/evidence/2026-11-06-phase1-old-exit/README.md",
@@ -37,6 +37,7 @@
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-controlling-pty-canary.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-canonical-token-prompt.json",
     "docs/evidence/2026-11-06-phase1-next/copilot-standalone-offline-empty-token-refusal.json",
+    "docs/evidence/2026-11-06-phase1-next/copilot-native-pty-token-prompt-close.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-isolated-device-start-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-local-device-approval-and-denial.json",
     "docs/evidence/2026-11-06-phase1-next/kilo-native-pty-device-cancel.json",
@@ -56,6 +57,7 @@
     "docs/evidence/2026-11-06-phase1-approval/kilo-remember-rule-endpoint-ownership.json",
     "docs/evidence/2026-11-06-phase1-approval/goose-remember-rule-network-preflight.json",
     "docs/evidence/2026-11-06-phase1-approval/goose-remember-rule-lo0-ownership.json",
+    "docs/evidence/2026-11-06-phase1-approval/fixed-ipv4-active-listener-canary.json",
     "docs/evidence/2026-11-06-phase1-approval/goose-provider-tls-static.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-first-attempt.json",
     "docs/evidence/2026-11-06-phase1-next/goose-loopback-routing-exact-context.json",
@@ -272,6 +274,14 @@
             ]
           },
           {
+            "standards": ["S1"],
+            "environment": "当前Farfold终端管理器源码，macOS arm64，官方签名独立包1.0.106，全禁网空资料",
+            "result": "准确令牌提示和原进程归属确认后，仅关闭对应终端一次。收到匹配退出回执，等待状态、主终端、登记及进程组均释放，零输入或EOF。初末隔离资料无凭据，关闭时未原子采样配置。正式界面、默认授权和真实登录另验。",
+            "evidencePaths": [
+              "docs/evidence/2026-11-06-phase1-next/copilot-native-pty-token-prompt-close.json"
+            ]
+          },
+          {
             "standards": ["S2"],
             "environment": "macOS arm64 正式版 dbe23bb6e，官方 Copilot CLI 1.0.106",
             "result": "网页、官方 SDK 和 CLI 核对为同一已有 Copilot Free 账号。实测前网页显示包含额度已用 0% 且 CLI 启用，SDK 报告不允许超额；沿用 Auto 完成一次短回复。未改套餐，未核该次实际扣费。",
@@ -355,7 +365,7 @@
       ],
       "scopedHistoryEvidence": "Original owned Goose object on macOS arm64, original Existing / OpenRouter / Nemotron3Ultra(free) / auto / off labels actually recorded before the c876 question. The625 official finding/open/body evidence and c876 actual continuation are separate layers.",
       "stage1Supplement": {
-        "authenticationBoundary": "已有 OpenRouter 设置用于一次正式回复，同一请求编号核对到既有账户的默认工作区，账单显示 $0.00。完整新登录和退出换号待实测。",
+        "authenticationBoundary": "已有 OpenRouter 设置用于一次正式回复，同一请求编号核对到既有账户的默认工作区，账单显示 $0.00。当前 API 方式可直接使用，新连接的身份来源、服务切换与共享范围仍待核实；其他实际支持的认证入口及获准账号退出换号按原条件另验。",
         "verifiedSamples": [
           {
             "standards": ["S3"],
