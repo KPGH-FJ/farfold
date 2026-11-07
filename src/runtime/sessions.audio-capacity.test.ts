@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { createHash } from "node:crypto";
-import { mkdtempSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { largeAudioCapture } from "./audio_input.test-support";
+import {
+  createDraftSqliteFixture,
+  draftSqliteAvailable,
+} from "./draft_sqlite.test-support";
 // The exact16MiB correctness cases include full validation and persistence.
 // This local runner allowance is not a product interaction/performance target.
 const CAPACITY_TEST_TIMEOUT_MS = 10_000;
@@ -307,47 +308,24 @@ it.each(["cancel", "confirm"])(
   },
 );
 
-const sqlite = process.getBuiltinModule("node:sqlite") as
-  typeof import("node:sqlite") | undefined;
-
-it.skipIf(!sqlite)(
+it.skipIf(!draftSqliteAvailable)(
   "retains a paused 16MiB audio queue and its edit across SQLite write refusal and cold recovery",
   { timeout: CAPACITY_TEST_TIMEOUT_MS },
   async () => {
-    const { DatabaseSync } = sqlite!;
-    const directory = mkdtempSync(join(tmpdir(), "farfold-audio-queue-"));
-    const database = join(directory, "drafts.sqlite3");
-    const key = "unsentWork.v1";
-    const writer = new DatabaseSync(database);
-    const lock = new DatabaseSync(database);
+    const { key, read, write, holdWriteLock, close } =
+      createDraftSqliteFixture();
     const invoke = h.invoke.getMockImplementation()!;
     let sqliteFailure: unknown;
-    const read = () => {
-      const reader = new DatabaseSync(database, { readOnly: true });
-      try {
-        return reader
-          .prepare("SELECT value FROM settings WHERE key = ?")
-          .get(key)?.value as string | undefined;
-      } finally {
-        reader.close();
-      }
-    };
     const digest = (value: string | Buffer) =>
       createHash("sha256").update(value).digest("hex");
 
     try {
-      writer.exec(
-        "PRAGMA journal_mode = WAL; CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
-      );
-      const save = writer.prepare(
-        "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
-      );
       h.invoke.mockImplementation(async (command, args) => {
         if (args?.key !== key) return invoke(command, args);
         if (command === "settings_get") return JSON.parse(read() ?? "null");
         if (command !== "settings_set") throw Error("unexpected draft command");
         try {
-          save.run(key, JSON.stringify(args.value));
+          write(args.value);
         } catch (error) {
           sqliteFailure = error;
           throw error;
@@ -369,7 +347,7 @@ it.skipIf(!sqlite)(
       const previous = digest(read()!);
       const editKey = `queue-edit:${s.key}`;
 
-      lock.exec("BEGIN IMMEDIATE");
+      const releaseLock = holdWriteLock();
       try {
         startQueueEditor(s.key, 0, original);
         d.composerDrafts.update(editKey, (draft) => ({
@@ -391,7 +369,7 @@ it.skipIf(!sqlite)(
         expect(s.queued[0]).toBe(original);
         expect(s.queuePaused).toBe("stopped");
       } finally {
-        lock.exec("ROLLBACK");
+        releaseLock();
       }
 
       expect(digest(read()!)).toBe(previous);
@@ -444,9 +422,7 @@ it.skipIf(!sqlite)(
       expect(h.prompts).toHaveLength(0);
     } finally {
       h.invoke.mockImplementation(invoke);
-      lock.close();
-      writer.close();
-      rmSync(directory, { recursive: true });
+      close();
     }
   },
 );

@@ -1,5 +1,11 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import type { ComposerDraft, ConversationChoice } from "./drafts";
+import {
+  createDraftSqliteFixture,
+  draftSqliteAvailable,
+} from "./draft_sqlite.test-support";
+import { PNG_IMAGE_TEST_DATA } from "./image_fixtures.test-support";
+import { MESSAGE_APNG_TEST_DATA } from "./message_apng_fixtures.test-support";
 const mock = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: mock.invoke }));
 beforeEach(() => {
@@ -489,6 +495,130 @@ it.each([
     ).toEqual(
       expectedSource ? [retained.text, displaced.text] : [displaced.text],
     );
+  },
+);
+
+it.skipIf(!draftSqliteAvailable)(
+  "atomically restores a retained draft after real SQLite BUSY and cold load",
+  async () => {
+    const sourceKey = "saved-new:sqlite-restore";
+    const image = (id: string, data: string) => ({
+      id,
+      kind: "image" as const,
+      name: `${id}.png`,
+      uri: `file:///fixture/${id}.png`,
+      mimeType: "image/png",
+      data,
+    });
+    const a = {
+      text: "原保留稿\nA",
+      attachments: [image("a", PNG_IMAGE_TEST_DATA)],
+      sendPending: false,
+    };
+    const b = {
+      text: "原编辑稿\nB",
+      attachments: [image("b", MESSAGE_APNG_TEST_DATA)],
+      sendPending: false,
+    };
+    const bChoice: ConversationChoice = {
+      agentId: "other-agent",
+      cwd: "/fixture/other",
+      reviewRequired: false,
+      service: {
+        id: "other-source",
+        model: "other-model",
+        revision: "revision-b",
+      },
+      config: { model: "other-model", budget: 42 },
+    };
+    const retainedA = { ...a, savedChoice: originalChoice };
+    const retainedB = { ...b, savedChoice: bChoice };
+    const db = createDraftSqliteFixture();
+    const writes: string[] = [];
+    let sqliteFailure: unknown;
+    try {
+      db.write({
+        version: 1,
+        composers: { new: b, [sourceKey]: retainedA },
+        choice: bChoice,
+        feedback: {},
+        queues: {},
+      });
+      const before = db.read()!;
+      expect(JSON.parse(before)).toMatchObject({
+        composers: { new: b, [sourceKey]: retainedA },
+        choice: bChoice,
+      });
+      mock.invoke.mockImplementation(async (command, args) => {
+        expect(args.key).toBe(db.key);
+        if (command === "settings_get") return JSON.parse(db.read() ?? "null");
+        expect(command).toBe("settings_set");
+        writes.push(JSON.stringify(args.value));
+        try {
+          db.write(args.value);
+        } catch (error) {
+          sqliteFailure = error;
+          throw error;
+        }
+      });
+      const d = await import("./drafts");
+      await d.draftPersistence.load();
+      const releaseLock = db.holdWriteLock();
+      try {
+        expect(await d.composerDrafts.restorePreserved(sourceKey)).toBe(true);
+        await expect(d.draftPersistence.flush()).rejects.toThrow();
+        expect(sqliteFailure).toMatchObject({ errcode: 5 });
+        expect(writes).toHaveLength(1);
+        expect(db.read()).toBe(before);
+        expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+          false,
+        );
+        expect(d.composerDrafts.read("new")).toMatchObject(a);
+        expect(d.newConversationChoice).toEqual(originalChoice);
+        expect(d.composerDrafts.preserved()).toMatchObject([
+          [sourceKey, retainedA],
+          [expect.stringMatching(/^saved-new:/), retainedB],
+        ]);
+      } finally {
+        releaseLock();
+      }
+
+      expect(db.read()).toBe(before);
+      await d.draftPersistence.flush();
+      expect(d.draftPersistence.isSaved(d.draftPersistence.revision())).toBe(
+        true,
+      );
+      const [[displacedKey]] = d.composerDrafts.preserved();
+      expect(displacedKey).not.toBe(sourceKey);
+      const committed = db.read()!;
+      expect(writes).toEqual([committed, committed]);
+      const after = JSON.parse(committed);
+      expect(after.choice).toEqual(originalChoice);
+      expect(after.composers).toEqual({
+        new: a,
+        [displacedKey]: retainedB,
+      });
+
+      vi.resetModules();
+      const cold = await import("./drafts");
+      await cold.draftPersistence.load();
+      expect(cold.composerDrafts.read("new")).toMatchObject({
+        ...a,
+        attachments: [{ ...a.attachments[0], recovered: true }],
+      });
+      expect(cold.newConversationChoice).toEqual(originalChoice);
+      expect(cold.composerDrafts.preserved()).toMatchObject([
+        [displacedKey, retainedB],
+      ]);
+      expect(mock.invoke.mock.calls.map(([command]) => command)).toEqual([
+        "settings_get",
+        "settings_set",
+        "settings_set",
+        "settings_get",
+      ]);
+    } finally {
+      db.close();
+    }
   },
 );
 
