@@ -1,12 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import { sameConfigurationSnapshot, type ConfigCheck } from "./config_check";
-import { configChangeBusy, protectedConfigIds } from "./protected_config";
+import { configChangeBusyReason, protectedConfigIds } from "./protected_config";
 import { modelConfigOption } from "./session_projection";
 import type { ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 import {
   requireSavedConfigurationOption,
   requireRestoredConfigurationValues,
+  ConfigurationConfirmationError,
 } from "./configuration_restore_feedback";
 
 interface RestoreHooks {
@@ -119,12 +120,16 @@ export async function confirmSavedConfiguration(
   selection: Record<string, unknown>,
   hooks: { current(): ThreadState | undefined; emit(): void },
 ): Promise<void> {
-  const failure = () => new Error(STRINGS.repair.confirmConfigFailed);
-  if (!state?.configCheck || configChangeBusy(state)) throw failure();
+  if (!state?.configCheck)
+    throw new ConfigurationConfirmationError("missing-check");
+  const busyBefore = configChangeBusyReason(state);
+  if (busyBefore)
+    throw new ConfigurationConfirmationError("busy-before", busyBefore);
   const saved = structuredClone(selection);
   const choices = Object.entries(saved);
   const protectedIds = protectedConfigIds(state.configOptions);
-  if (!choices.some(([id]) => protectedIds.has(id))) throw failure();
+  if (!choices.some(([id]) => protectedIds.has(id)))
+    throw new ConfigurationConfirmationError("missing-check");
   requireRestoredConfigurationValues(state.configOptions, choices);
   const initialCheck = state.configCheck;
   const sameOwner = captureConfigurationOwner(state);
@@ -133,26 +138,39 @@ export async function confirmSavedConfiguration(
   state.configError = null;
   hooks.emit();
   try {
-    const reply = await invoke<ConfigCheck>("session_confirm_config", {
-      agentId: state.agentId,
-      cwd: state.cwd,
-      sessionId: state.nativeSessionId,
-      displayed: structuredClone(initialCheck.current),
-      restoreSelection: saved,
-    });
-    if (
-      !current() ||
-      configChangeBusy({ ...state, configuring: false }) ||
-      reply?.status !== "ready" ||
-      state.configCheck?.status !== "ready" ||
-      !sameConfigurationSnapshot(state.configCheck.current, reply.current)
-    )
-      throw failure();
-    requireRestoredConfigurationValues(state.configOptions, choices);
+    let reply: ConfigCheck;
+    try {
+      reply = await invoke<ConfigCheck>("session_confirm_config", {
+        agentId: state.agentId,
+        cwd: state.cwd,
+        sessionId: state.nativeSessionId,
+        displayed: structuredClone(initialCheck.current),
+        restoreSelection: saved,
+      });
+    } catch {
+      throw new ConfigurationConfirmationError("invoke-rejected");
+    }
+    if (!current()) throw new ConfigurationConfirmationError("owner-changed");
+    const busyAfter = configChangeBusyReason({ ...state, configuring: false });
+    if (busyAfter)
+      throw new ConfigurationConfirmationError("busy-after", busyAfter);
+    if (reply?.status !== "ready")
+      throw new ConfigurationConfirmationError("reply-not-ready");
+    if (state.configCheck?.status !== "ready")
+      throw new ConfigurationConfirmationError("state-not-ready");
+    if (!sameConfigurationSnapshot(state.configCheck.current, reply.current))
+      throw new ConfigurationConfirmationError("snapshot-changed");
+    try {
+      requireRestoredConfigurationValues(state.configOptions, choices);
+    } catch {
+      throw new ConfigurationConfirmationError("values-changed");
+    }
     // Channel order owns the guard. Never apply a possibly stale ready reply.
-  } catch {
+  } catch (error) {
     if (current()) state.configError = STRINGS.repair.confirmConfigFailed;
-    throw failure();
+    throw error instanceof ConfigurationConfirmationError
+      ? error
+      : new ConfigurationConfirmationError("invoke-rejected");
   } finally {
     if (current()) {
       state.configuring = false;

@@ -8,6 +8,10 @@ import {
 } from "react";
 import type { AgentCardModel } from "../runtime/agents";
 import type { ConfigOptionView, ThreadState } from "../runtime/session_types";
+import {
+  ConfigurationConfirmationError,
+  isConfigurationRestoreNotice,
+} from "../runtime/configuration_restore_feedback";
 
 const h = vi.hoisted(() => ({
   cursor: 0,
@@ -653,6 +657,33 @@ it("keeps the input and saved choice blocked when restored-baseline confirmation
   expect(failed.composer.props.thread).toBeNull();
   expect(newConversationChoice.config).toEqual({ model: "kept-choice" });
   expect(composerDrafts.read("new")).toBe(before);
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+it("shows only the fixed local confirmation detail without changing the draft or retry classification", async () => {
+  const before = composerDrafts.read("new");
+  startRestore({ model: "kept-choice" });
+  h.confirmRestored.mockRejectedValue(
+    new ConfigurationConfirmationError(
+      "busy-before",
+      "connectionOutcomeUnknown",
+    ),
+  );
+  await vi.advanceTimersByTimeAsync(300);
+  const failed = await settle();
+  const notice = failed.composer.props.note as {
+    message: string;
+    detail: string;
+  };
+  expect(notice).toEqual({
+    message: `${STRINGS.empty.openFailed}：${STRINGS.repair.confirmConfigFailed}`,
+    detail: `${STRINGS.repair.confirmConfigReasons["busy-before"]}：${STRINGS.repair.confirmConfigBusyReasons.connectionOutcomeUnknown}。`,
+  });
+  expect(isConfigurationRestoreNotice(notice)).toBe(false);
+  expect(failed.composer.props.disabled).toBe(true);
+  expect(failed.composer.props.thread).toBeNull();
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(newConversationChoice.config).toEqual({ model: "kept-choice" });
+  expect(h.confirmRestored).toHaveBeenCalledOnce();
   expect(props.onStarted).not.toHaveBeenCalled();
 });
 async function expectRestoreFailure(

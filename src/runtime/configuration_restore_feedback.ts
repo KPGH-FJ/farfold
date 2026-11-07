@@ -1,6 +1,39 @@
 import type { ConfigOptionView } from "./session_types";
 import { STRINGS } from "./strings";
-import type { UiNotice } from "./ui_error";
+import { toUiNotice, type UiNotice } from "./ui_error";
+import type { ConfigBusyReason } from "./protected_config";
+
+type ConfirmationFailure = keyof typeof STRINGS.repair.confirmConfigReasons;
+
+/** Separate from saved-option feedback: a confirmation error never changes retry policy. */
+export class ConfigurationConfirmationError extends Error {
+  readonly detail: string;
+
+  constructor(reason: ConfirmationFailure, busy?: ConfigBusyReason) {
+    super(STRINGS.repair.confirmConfigFailed);
+    this.detail = busy
+      ? `${STRINGS.repair.confirmConfigReasons[reason]}：${STRINGS.repair.confirmConfigBusyReasons[busy]}。`
+      : STRINGS.repair.confirmConfigReasons[reason];
+  }
+}
+
+/** Only our local fixed classification is presentable; never use an IPC error's text. */
+export function configurationConfirmationNotice(
+  reason: unknown,
+): UiNotice | null {
+  return reason instanceof ConfigurationConfirmationError
+    ? { message: STRINGS.repair.confirmConfigFailed, detail: reason.detail }
+    : null;
+}
+
+/** Keep preparation feedback selection in one place without changing retry markers. */
+export function configurationPreparationNotice(reason: unknown): UiNotice {
+  return (
+    configurationConfirmationNotice(reason) ??
+    configurationRestoreNotice(reason) ??
+    toUiNotice(reason, STRINGS.repair.requestFailed)
+  );
+}
 
 type RestoreFailure =
   "missing-option" | "value-unavailable" | "readback-unconfirmed";

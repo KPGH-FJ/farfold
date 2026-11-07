@@ -20,9 +20,9 @@ import { REDESIGN as R } from "../runtime/redesign_strings";
 import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
-import { toUiNotice, type UiNotice } from "../runtime/ui_error";
+import type { UiNotice } from "../runtime/ui_error";
 import {
-  configurationRestoreNotice,
+  configurationPreparationNotice,
   isConfigurationRestoreNotice,
 } from "../runtime/configuration_restore_feedback";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -622,10 +622,7 @@ export function EmptyState({
             !(error instanceof DraftArchiveBlockedError)
           ) {
             failedPairRef.current = pair;
-            setDraftError(
-              configurationRestoreNotice(error) ??
-                toUiNotice(error, STRINGS.repair.requestFailed),
-            );
+            setDraftError(configurationPreparationNotice(error));
           }
         })
         .finally(() => {
