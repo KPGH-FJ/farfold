@@ -6,6 +6,7 @@ import { receiveFileInput } from "./tool_file_input";
 import { applyConfigCheck, type ConfigCheck } from "./config_check";
 import { receiveAsyncTasks } from "./async_tasks";
 import { receiveWorkActivity } from "./session_work_activity";
+import { receiveProgramStatus } from "./program_status";
 import { hasActiveFork, receiveForkActivity } from "./session_fork_activity";
 import { replacePermissionEffect } from "./permission_effect";
 import { retainReportedDetails } from "./reported_details";
@@ -60,6 +61,12 @@ export function applySessionEvent(
 ): void {
   if (!event || typeof event !== "object") return;
   const e = event as Record<string, unknown>;
+  // Recognized live-only hints cannot be smuggled into history by an own
+  // `update` field. The original envelope has already traversed the event bus.
+  if (receiveProgramStatus(s, e, live, effects?.owns, activityConnectionId)) {
+    if (live && effects?.owns()) effects.emit();
+    return;
+  }
   const updateEnvelope = hasOwnUpdate(e);
   const kind = updateEnvelope ? undefined : e.kind;
   const endingOwner = kind === "turnEnd" ? effects?.promptOwner() : undefined;

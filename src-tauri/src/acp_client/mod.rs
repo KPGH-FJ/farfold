@@ -41,6 +41,7 @@ pub mod identity_read;
 mod initialization;
 pub(crate) mod installation_parameters;
 mod lifecycle;
+pub(crate) mod live_status;
 pub mod manager;
 mod model_guard;
 mod mutation;

@@ -545,10 +545,12 @@ impl AcpManager {
         let workspace_access = super::workspace_access::Availability::new(account_query);
         let identity_read = super::identity_read::Availability::new(account_query);
         let session_tools = super::session_tools::Availability::new(agent);
+        let live_status_enabled = super::recipes::goose_acp(agent);
         let receive_session_tools = session_tools.clone();
         let receive_workspace_access = workspace_access.clone();
         let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
+            live_status_enabled,
             workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
             opening: None,
@@ -680,6 +682,7 @@ impl AcpManager {
                                             "air": super::failures::capability()
                                         }),
                                     );
+                                    super::live_status::initialize_meta(&mut meta, live_status_enabled);
                                     meta
                                 }),
                         );

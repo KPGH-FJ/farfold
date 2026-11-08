@@ -10,6 +10,7 @@ import {
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
 import { pushRaw } from "./session_projection";
+import { isProgramStatusNotification } from "./program_status";
 
 /** Delivery fallback for an already-failed read, not a second projector.
  * Actual new message bytes remain exact raw envelopes: they cannot repair or
@@ -20,6 +21,7 @@ export function applyFailedHistoryEvent(
   apply: (event: unknown) => void,
   emit: () => void,
 ): void {
+  if (isProgramStatusNotification(event)) return;
   const update = hasOwnUpdate(event)
     ? (event as { update: unknown }).update
     : undefined;

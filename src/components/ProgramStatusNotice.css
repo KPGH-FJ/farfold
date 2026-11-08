@@ -1,0 +1,46 @@
+.program-status {
+  flex-shrink: 0;
+  min-width: 0;
+  margin: 0 20px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 12px;
+}
+.program-status summary {
+  padding: 8px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.program-status-label {
+  margin-inline-end: 8px;
+  font-weight: 500;
+}
+.program-status-preview,
+.program-status-received {
+  color: var(--ink-2);
+}
+.program-status-preview {
+  unicode-bidi: isolate;
+}
+.program-status-details {
+  padding: 0 12px 10px;
+  line-height: 1.7;
+}
+.program-status-message {
+  max-height: 12rem;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  unicode-bidi: plaintext;
+}
+.program-status-received {
+  margin-top: 8px;
+}
+@media (max-width: 600px) {
+  .program-status {
+    margin-inline: 12px;
+  }
+}

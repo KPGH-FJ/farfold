@@ -118,6 +118,7 @@ pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicit
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
+    pub(crate) live_status_enabled: bool,
     pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
     pub(crate) opening: Option<super::lifecycle::OpenReservation>,
@@ -178,6 +179,10 @@ pub(crate) struct SessionEntry {
 }
 
 impl SessionEntry {
+    pub(crate) fn connection_is(&self, id: &str) -> bool {
+        self.connection_id == id
+    }
+
     /// Register under the same map lock used by notify_connection_lost/drain.
     /// An existing read owner is never replaced by a second observer.
     pub(crate) fn observe_process_end(
@@ -334,6 +339,7 @@ fn turn_end_event(outcome: Result<Value, String>) -> Value {
 /// the event sink, the shared pending-request registries, and the ids
 /// cleaned up when the pump exits.
 struct DispatchContext<'a> {
+    live_status: &'a super::live_status::Owner,
     session_id: &'a str,
     events: &'a SessionSink,
     pending: &'a PendingPermissions,
@@ -383,11 +389,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     (ctx.events)(input);
                 }
             } else {
-                (ctx.events)(serde_json::json!({
-                    "kind": "notification",
-                    "method": message.method(),
-                    "params": message.params(),
-                }));
+                (ctx.events)(super::live_status::notification(message, ctx.live_status));
             }
         }
         Dispatch::Request(message, responder) => {
@@ -562,6 +564,7 @@ async fn session_pump(
     });
     let purpose = opening.purpose;
     let mut opening = Some(opening);
+    let live_status = super::live_status::Owner::new(&ops, &session_id, &sessions);
     let mut detached = None;
     let mut fork_state: Option<Arc<super::session_fork::SourceFork>> = None;
     let mut stopping = ops.life.stop_receiver();
@@ -602,7 +605,9 @@ async fn session_pump(
             && identity_read.is_none()
             && workspace_access_read.is_none()
             && purpose == super::open_purpose::OpenPurpose::Conversation;
+        live_status.set_display_allowed(opening.is_none());
         let mut ctx = DispatchContext {
+            live_status: &live_status,
             session_id: &session_id,
             events: &events,
             pending: &pending,

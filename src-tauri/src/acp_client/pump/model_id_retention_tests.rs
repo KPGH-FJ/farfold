@@ -32,6 +32,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     life.ready().unwrap();
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
+        live_status_enabled: false,
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),
@@ -52,7 +53,9 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     let mut tools = ToolActivity::new(life.clone());
     let mut compactions = CompactionActivity::new(life.clone(), connection.into(), session.into());
     let mut tasks = Tasks::new(false, connection.into(), session.into(), life);
+    let live_status = crate::acp_client::live_status::Owner::inactive(&ops, session);
     let mut ctx = DispatchContext {
+        live_status: &live_status,
         session_id: session,
         events: &sink,
         pending: &pending,

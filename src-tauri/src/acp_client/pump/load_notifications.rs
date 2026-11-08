@@ -80,6 +80,7 @@ impl State {
         load: impl std::future::Future<Output = T>,
     ) -> T {
         tokio::pin!(load);
+        let live_status = super::super::live_status::Owner::inactive(ops, session_id);
         loop {
             tokio::select! {
                 // A continuously ready replay may not starve the real reply.
@@ -97,6 +98,7 @@ impl State {
                     self.deferred.observe(&dispatch);
                     observe_failure(&dispatch, &mut self.failures, false);
                     let mut context = DispatchContext {
+                        live_status: &live_status,
                         session_id,
                         events,
                         pending,

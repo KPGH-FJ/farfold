@@ -4,6 +4,20 @@ use std::path::Path;
 
 use crate::meta_store::AgentRow;
 
+/// Reviewed official Goose ACP launch shape, shared by read-only supplements.
+/// No program authentication, version gate, configuration read or process probe.
+pub(crate) fn goose_acp(agent: &AgentRow) -> bool {
+    let command = Path::new(&agent.command);
+    agent.source == "registry"
+        && agent.id == "registry:goose"
+        && agent.args == ["acp"]
+        && command.is_absolute()
+        && command
+            .file_name()
+            .and_then(|s| s.to_str())
+            .is_some_and(|s| s == "goose" || (cfg!(windows) && s.eq_ignore_ascii_case("goose.exe")))
+}
+
 /// Official @github/copilot 1.0.89 loader forwards argv to this platform export.
 /// Supplement scope only, never an Agent installation/connection version gate.
 /// Source: https://github.com/github/copilot-cli/releases/tag/v1.0.89 and the

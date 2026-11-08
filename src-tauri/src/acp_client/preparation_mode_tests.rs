@@ -151,6 +151,7 @@ async fn read(
                 &sessions,
                 &pending,
                 SessionOps {
+                    live_status_enabled: false,
                     workspace_access: super::super::workspace_access::Availability::new(None),
                     prompt_escrow: Default::default(),
                     async_tasks_supported: Arc::new(AtomicBool::new(false)),

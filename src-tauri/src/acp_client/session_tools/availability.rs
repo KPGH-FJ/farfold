@@ -14,18 +14,7 @@ pub(crate) struct Availability {
 }
 impl Availability {
     pub(crate) fn new(agent: &crate::meta_store::AgentRow) -> Arc<Self> {
-        let command = Path::new(&agent.command);
-        let reviewed = agent.source == "registry"
-            && agent.id == "registry:goose"
-            && agent.args == ["acp"]
-            && command.is_absolute()
-            && command
-                .file_name()
-                .and_then(|s| s.to_str())
-                .is_some_and(|s| {
-                    s == "goose" || (cfg!(windows) && s.eq_ignore_ascii_case("goose.exe"))
-                });
-        Self::with_available(reviewed)
+        Self::with_available(super::super::recipes::goose_acp(agent))
     }
     fn with_available(available: bool) -> Arc<Self> {
         Arc::new(Self {

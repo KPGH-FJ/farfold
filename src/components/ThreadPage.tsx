@@ -14,6 +14,7 @@ import { TranscriptSearchContext } from "./transcript-search";
 import { ConversationFind } from "./ConversationFind";
 import { HistoryReadStatus } from "./HistoryReadStatus";
 import { PromptAdmissionStatus } from "./PromptAdmissionStatus";
+import { ProgramStatusNotice } from "./ProgramStatusNotice";
 import { LoadedSearchJump, type LoadedSearchRequest } from "./LoadedSearchJump";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
@@ -342,6 +343,7 @@ export function ThreadPage({
       </header>
       <HistoryReadStatus target={viewKey} active={active} />
       <PromptAdmissionStatus thread={thread} active={active} />
+      <ProgramStatusNotice thread={thread} active={active} />
       {active && finding && (
         <ConversationFind
           key={viewKey}
