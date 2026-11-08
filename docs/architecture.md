@@ -77,7 +77,7 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [audio_input_draft.ts](../src/runtime/audio_input_draft.ts)为仍归属当前音频审阅的读取登记保存等待，[useAudioComposerAttachments.tsx](../src/components/useAudioComposerAttachments.tsx)初读和确认重读共用该责任。取消、移除或归属失效时退役该等待；仅仍归属本次的附件恢复原对象，已移除的附件不重建。真实读取仍由调用方等待，系统许可不在此释放。迟到的有效内容不能覆盖新文字、恢复旧附件或提示已保存。文档输入原有取消等待与共用存储代码保持；受控组件与设置写入仍不替代正式退出/重启、真实文件读取或长期内存验证。
 
-[live_status.rs](../src-tauri/src/acp_client/live_status.rs)只为已核官方通知附加共用临时呈现，原方法与参数完整保留；前端[program_status.ts](../src/runtime/program_status.ts)仅为当前已发布的精确对话对象保留最近提示，不写正文或元数据，也不改变工作与整理责任。已识别的打开期提示保留原件但不给显示权；实际用量消息专门呈现与完整生命周期的边界见[当前状态](status.md)。
+[live_status.rs](../src-tauri/src/acp_client/live_status.rs)只为已核官方通知附加共用临时呈现，原方法与参数完整保留；前端[program_status.ts](../src/runtime/program_status.ts)仅为当前已发布的精确对话对象保留最近提示，不写正文或元数据，也不改变工作与整理责任。已识别的打开期状态提示保留原件但不给显示权。官方单条用量经独立nullable DTO进入共用[message_usage.ts](../src/runtime/message_usage.ts)，仅在精确连接的同一视图保留最近一条；有效公共打开可随成功历史视图转交，预览和退役归属不展示。它与上下文/累计值分开，不猜消息关联或费用币种，不推断整理终态；实际边界见[当前状态](status.md)。
 
 ## 文件输入、成果和意见
 
@@ -90,6 +90,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 内容栏命令、日志与差异由同一工具活动依据派生等待、进行中或未知；呈现状态不改Agent报告的原状态，停止回复不等于工具终态。文件成果分开“工具报告”与“磁盘核验”。消息中的写入参数、路径或差异摘要只证明报告内容；明确打开文件后，[file_access.rs](../src-tauri/src/file_access.rs) 才按路径和文件句柄边界读取。项目索引有遍历数量、深度、名称和时间预算，不是持久全文索引；同句柄校验不提供整个文件系统原子快照。
 
 [OpenedFileView.tsx](../src/components/OpenedFileView.tsx) 及 [workers](../src/workers) 实现文字、Markdown、Office及PDF的有限预览。PPTX始终是部分预览；表格范围、PDF文字和DOCX结构不等同源应用全部显示。HTML由网页预览处理，其他文件可交系统应用。 DOCX图片由[DocumentImages](../src/runtime/document_images.ts)按当前显示者引用计数共用Blob URL；[DocxDocumentView.tsx](../src/components/DocxDocumentView.tsx)在失败时先撤本节点来源，再释放自己的引用，最后一个显示者释放才撤销URL。当前来源及存活状态校验隔离迟到错误，换源或卸载清理幂等；不自动重试，不据URL撤销推断原文档字节或物理解码内存已经释放。
+
+工作簿刷新和重开把同根同路径的保留页提示交给[xlsx_directory.ts](../src/runtime/xlsx_directory.ts)的共用纯选择函数；先校验新捕获目录，再一次解析确认的实际页，显式新选择优先。取消/失败不触发换页重试，完整成功前原预览与版本意见保持。
 
 [xlsx_sheet.ts](../src/runtime/xlsx_sheet.ts)为每张已选工作表使用16,385项Uint32列索引（65,540字节数据区），以样式编号加一保存覆盖，默认样式0也能拒绝重叠。有效区间总覆盖不超过16,384列；区间检查与填充有界，单元格按行/列默认与显式样式优先级读取，列布局保持输入顺序。XML、单元格及展开文字原上限不变；这不是总解析内存或耗时保证。
 
