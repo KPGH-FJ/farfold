@@ -8,6 +8,7 @@ import {
 import type { OpenResult } from "./session_open_types";
 import type { ThreadState } from "./session_types";
 import { isProgramStatusNotification } from "./program_status";
+import { isMessageUsageNotification } from "./message_usage";
 import { STRINGS } from "./strings";
 
 export type HistoryProjectionPhase = "history" | "following";
@@ -63,6 +64,7 @@ export class HistoryReplayProjection {
     // Temporary live receipts never enter even an already-failed raw replay.
     if (isProgramStatusNotification(event)) return "consumed";
     if (this.failed) {
+      if (isMessageUsageNotification(event)) return "consumed";
       pushRaw(state, event);
       return "consumed";
     }

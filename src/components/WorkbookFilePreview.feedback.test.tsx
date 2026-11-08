@@ -8,10 +8,14 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi, type Mock } from "vitest";
 import type { VerifiedFile } from "../runtime/file_delivery";
+import { parseWorkbook } from "../runtime/xlsx_parse";
+import { firstSheetFailureFixture } from "../runtime/xlsx_directory.test-support";
 import {
   XlsxError,
   type WorkbookCapture,
   type WorkbookPreview,
+  type WorkbookDirectory,
+  type WorkbookSheetRestore,
 } from "../runtime/xlsx_types";
 import type {
   OfficeTargetAvailability,
@@ -455,6 +459,56 @@ it.each(["fails", "is cancelled"] as const)(
     );
   },
 );
+
+it("cold reading resolves the retained sheet before parsing an unrelated bad default, while explicit choices still win", async () => {
+  const input = firstSheetFailureFixture();
+  const saved = { id: "sheet2", name: "Good second sheet" };
+  props = {
+    ...props,
+    readingPosition: {
+      current: {
+        root: file.root,
+        resolvedPath: file.resolvedPath,
+        kind: "workbook",
+        sheet: saved,
+        row: 1,
+        column: 1,
+        showHidden: false,
+      },
+    },
+  };
+  h.parse.mockImplementation(
+    async (
+      _value: WorkbookCapture,
+      sheetId: string | undefined,
+      _signal: AbortSignal,
+      onDirectory?: (directory: WorkbookDirectory) => void,
+      restoreSheet?: WorkbookSheetRestore,
+    ) => parseWorkbook({ ...input, sheetId, restoreSheet }, onDirectory),
+  );
+  await ready();
+  const first = select("A1");
+  const oldConfirm = button(first, confirmLabel);
+  expect(first.html).toContain('data-cell="A1"');
+  expect(h.parse).toHaveBeenCalledOnce();
+  expect(h.parse.mock.calls[0][1]).toBeUndefined();
+  expect(h.parse.mock.calls[0][4]).toEqual(saved);
+  expect(h.parse.mock.calls[0][4]).not.toBe(saved);
+  const control = first.all.find((node) => node.type === "select")!;
+  expect(control.props.value).toBe("sheet2");
+  (control.props.onChange as (event: unknown) => void)({
+    target: { value: "sheet1" },
+  });
+  await ready();
+  expect(view().html).toContain(S.failed);
+  expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+    undefined,
+    "sheet1",
+  ]);
+  expect(h.capture).toHaveBeenCalledOnce();
+  click(oldConfirm);
+  expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+});
 
 it("a replayed grid registration creates a new source instead of reusing its retired source", async () => {
   await ready();

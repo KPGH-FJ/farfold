@@ -6,7 +6,7 @@ import { readWorkbookCapture, readWorkbookPreview } from "./xlsx_preview";
 import { readPptxCapture, readPptxPreview } from "./pptx_preview";
 import type { PptxPreview } from "./pptx_types";
 import {
-  restoredWorkbookSheet,
+  savedWorkbookPosition,
   type PreviewReadingPositionRef,
 } from "./preview_reading_position";
 
@@ -60,12 +60,15 @@ export async function prepareOfficePreview(
   if (!/\.xlsx$/i.test(file.name)) throw { code: "unsupported" };
   const capture = await readWorkbookCapture(file, captureSignal);
   check();
-  let value = await readWorkbookPreview(capture, undefined, parserSignal);
+  const saved = savedWorkbookPosition(file, readingPosition);
+  const restoreSheet = saved ? { ...saved.sheet } : undefined;
+  const value = await readWorkbookPreview(
+    capture,
+    undefined,
+    parserSignal,
+    undefined,
+    restoreSheet,
+  );
   check();
-  const restored = restoredWorkbookSheet(file, value, readingPosition);
-  if (restored && restored !== value.sheet?.id) {
-    value = await readWorkbookPreview(capture, restored, parserSignal);
-    check();
-  }
   return { kind: "workbook", file, capture, value };
 }

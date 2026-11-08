@@ -223,3 +223,39 @@ it("rechecks the original capture identity before delivering any directory", asy
   await expect(pending).rejects.toMatchObject({ code: "invalid" });
   expect(receive).not.toHaveBeenCalled();
 });
+
+it("keeps a cloned reading hint and validates its selected page against the actual directory", async () => {
+  vi.stubGlobal("Worker", ControlledWorker);
+  const receive = vi.fn();
+  const hint = { id: "sheet2", name: "Good second sheet" };
+  const pending = readWorkbookPreview(
+    capture,
+    undefined,
+    new AbortController().signal,
+    receive,
+    hint,
+  );
+  hint.name = "Changed after dispatch";
+  ControlledWorker.instances[0].directory({
+    ...directory,
+    selectedId: "sheet2",
+  });
+  ControlledWorker.instances[0].ready();
+  await expect(pending).resolves.toHaveProperty("sheet.id", "sheet2");
+  expect(receive).toHaveBeenCalledOnce();
+});
+
+it("does not accept a default-page packet when the validated retained page is different", async () => {
+  vi.stubGlobal("Worker", ControlledWorker);
+  const receive = vi.fn();
+  const pending = readWorkbookPreview(
+    capture,
+    undefined,
+    new AbortController().signal,
+    receive,
+    { id: "sheet2", name: "Good second sheet" },
+  );
+  ControlledWorker.instances[0].directory();
+  await expect(pending).rejects.toMatchObject({ code: "invalid" });
+  expect(receive).not.toHaveBeenCalled();
+});

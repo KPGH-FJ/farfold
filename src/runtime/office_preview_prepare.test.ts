@@ -115,13 +115,6 @@ it("fully prepares the retained worksheet from the new capture before replacemen
   const workbookFile = { ...file, name: "a.xlsx" };
   const capture = { file: workbookFile };
   h.wc.mockResolvedValue(capture);
-  h.wp.mockResolvedValueOnce({
-    sheets: [
-      { id: "1", name: "First", state: "visible" },
-      { id: "2", name: "Notes", state: "visible" },
-    ],
-    sheet: { id: "1" },
-  });
   const value = {
     sheets: [{ id: "2", name: "Notes", state: "visible" }],
     sheet: { id: "2" },
@@ -144,7 +137,13 @@ it("fully prepares the retained worksheet from the new capture before replacemen
     () => true,
   );
   expect(h.wc).toHaveBeenCalledOnce();
-  expect(h.wp.mock.calls.map((c) => c[1])).toEqual([undefined, "2"]);
+  expect(h.wp).toHaveBeenCalledExactlyOnceWith(
+    capture,
+    undefined,
+    expect.any(AbortSignal),
+    undefined,
+    { id: "2", name: "Notes" },
+  );
   expect(prepared).toEqual({
     kind: "workbook",
     file: workbookFile,

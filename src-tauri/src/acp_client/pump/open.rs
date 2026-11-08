@@ -164,10 +164,24 @@ pub(crate) async fn open_session_on_connection(
                 || cx.send_request_to(Agent, request),
                 events.clone(),
             );
+            let presentation = super::super::live_status::Owner::loading(
+                &ops,
+                &id,
+                purpose,
+                preview_token.as_deref(),
+                &operation,
+            );
             match received
                 .as_mut()
                 .expect("load owns its dispatch state")
-                .while_loading(&id, &mut inbox_rx, &events, pending, &ops, load)
+                .while_loading(
+                    &id,
+                    &mut inbox_rx,
+                    &events,
+                    pending,
+                    (&ops, &presentation),
+                    load,
+                )
                 .await
             {
                 Ok(response) => {

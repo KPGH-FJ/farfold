@@ -10,6 +10,7 @@ import type { WorkbookPreview } from "./xlsx_types";
 import { sheetExtent } from "./workbook_view";
 import { DOCUMENT_WINDOW, paragraphParts } from "./document_view";
 import { MAX_PDF_PAGES } from "./visual_preview";
+import { restoredWorkbookSheetId } from "./xlsx_directory";
 import type { PptxPreview } from "./pptx_types";
 
 interface FilePosition {
@@ -224,14 +225,7 @@ export function restoredWorkbookSheet(
 ): string | undefined {
   const p = savedWorkbookPosition(file, ref);
   if (!p) return undefined;
-  // A recycled ID with another name must not borrow the old sheet's location.
-  const sheet =
-    workbook.sheets.find(
-      (s) => s.id === p.sheet.id && s.name === p.sheet.name,
-    ) ?? workbook.sheets.find((s) => s.name === p.sheet.name);
-  return sheet && (sheet.state === "visible" || p.sheet.hiddenSelected === true)
-    ? sheet.id
-    : undefined;
+  return restoredWorkbookSheetId(workbook.sheets, p.sheet);
 }
 export function restoredWorkbookWindow(
   file: VerifiedFile,

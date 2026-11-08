@@ -22,6 +22,13 @@ impl Drop for Fixture {
 }
 impl Fixture {
     async fn open(native: &str, reviewed: bool) -> (Self, ManagedConnection) {
+        Self::open_with_usage(native, reviewed, false).await
+    }
+    async fn open_with_usage(
+        native: &str,
+        reviewed: bool,
+        usage: bool,
+    ) -> (Self, ManagedConnection) {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
         let body = include_str!("../session_tools/peer.py").replace("owned-tools", native);
@@ -38,6 +45,18 @@ impl Fixture {
         let marker = "        threading.Thread(target=tools, args=(message,), daemon=True).start()";
         assert_eq!(body.matches(marker).count(), 1);
         let body = body.replace(marker, &format!("{insertion}{marker}"));
+        let body = if usage {
+            let updates = r#"        for update in [
+            {"sessionUpdate":"message_usage","messageId":"exact-message","usage":{"inputTokens":7,"outputTokens":2,"totalTokens":40,"cost":0.25,"costSource":"estimated","elapsedMs":120,"timeToFirstTokenMs":0,"isCompaction":True},"unknown":{"raw":"RAW_USAGE_CANARY"}},
+            {"sessionUpdate":"message_usage","messageId":None,"usage":{"inputTokens":0}},
+            {"sessionUpdate":"message_usage","messageId":"invalid","usage":{"totalTokens":-1}},
+        ]:
+            send({"method":"_goose/unstable/session/update","params":{"sessionId":message["params"]["sessionId"],"update":update,"_meta":{"exact":"retained"}}})
+"#;
+            body.replace(marker, &format!("{updates}{marker}"))
+        } else {
+            body
+        };
         let body = body.replace(
             "\"agentCapabilities\": {}",
             "\"agentCapabilities\": {\"loadSession\": True}",
@@ -45,6 +64,7 @@ impl Fixture {
         let marker = "    elif method == \"_goose/unstable/tools/list\":";
         let loading = r#"    elif method == "session/load":
         send({"method":"_goose/unstable/session/update","params":{"sessionId":message["params"]["sessionId"],"update":{"sessionUpdate":"status_message","status":{"type":"notice","message":"opening status is live-only"}},"_meta":{"future":"retained"}}})
+        send({"method":"_goose/unstable/session/update","params":{"sessionId":message["params"]["sessionId"],"update":{"sessionUpdate":"message_usage","messageId":"history-message","usage":{"inputTokens":5,"isCompaction":False}},"_meta":{"history":"retained"}}})
         while not pathlib.Path("release-load").exists():
             time.sleep(0.005)
         reply(message, {"configOptions": []})
@@ -131,6 +151,9 @@ impl Fixture {
             .collect()
     }
 }
+
+#[path = "message_usage_wire_tests.rs"]
+mod message_usage_tests;
 
 #[tokio::test(flavor = "multi_thread")]
 async fn live_status_real_initialize_and_actor_preserve_raw_fifo_without_prompt_or_configuration() {

@@ -26,3 +26,14 @@
   line-height: 1.6;
   color: var(--ink-3);
 }
+
+.thread-message-usage {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+.thread-message-usage h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}

@@ -2,11 +2,71 @@ import {
   XLSX_LIMITS,
   XlsxError,
   type WorkbookDirectory,
+  type WorkbookSheetRestore,
   type XlsxSheetInfo,
 } from "./xlsx_types";
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+export function checkedWorkbookSheetRestore(
+  value: unknown,
+): WorkbookSheetRestore | undefined {
+  if (value === undefined) return undefined;
+  if (
+    !record(value) ||
+    !Object.hasOwn(value, "id") ||
+    !Object.hasOwn(value, "name") ||
+    Object.keys(value).some(
+      (key) => !["id", "name", "hiddenSelected"].includes(key),
+    ) ||
+    typeof value.id !== "string" ||
+    !value.id ||
+    typeof value.name !== "string" ||
+    !value.name ||
+    value.name.length > 128 ||
+    (Object.hasOwn(value, "hiddenSelected") &&
+      typeof value.hiddenSelected !== "boolean")
+  )
+    throw new XlsxError("invalid");
+  return {
+    id: value.id,
+    name: value.name,
+    ...(Object.hasOwn(value, "hiddenSelected") &&
+    typeof value.hiddenSelected === "boolean"
+      ? { hiddenSelected: value.hiddenSelected }
+      : {}),
+  };
+}
+
+/** A recycled ID alone cannot borrow an old page; hidden pages need the saved
+ * explicit choice. Reading position never changes a version-bound opinion. */
+export function restoredWorkbookSheetId(
+  sheets: XlsxSheetInfo[],
+  restore?: WorkbookSheetRestore,
+): string | undefined {
+  if (!restore) return undefined;
+  const sheet =
+    sheets.find(
+      (item) => item.id === restore.id && item.name === restore.name,
+    ) ?? sheets.find((item) => item.name === restore.name);
+  return sheet && (sheet.state === "visible" || restore.hiddenSelected === true)
+    ? sheet.id
+    : undefined;
+}
+
+export function selectedWorkbookSheetId(
+  sheets: XlsxSheetInfo[],
+  requestedId?: string,
+  restore?: WorkbookSheetRestore,
+): string | undefined {
+  return (
+    requestedId ??
+    restoredWorkbookSheetId(sheets, restore) ??
+    sheets.find((sheet) => sheet.state === "visible")?.id ??
+    sheets[0]?.id
+  );
 }
 function exact(value: Record<string, unknown>, keys: string[]): boolean {
   return (
@@ -19,6 +79,7 @@ function exact(value: Record<string, unknown>, keys: string[]): boolean {
 export function checkedWorkbookDirectory(
   value: unknown,
   requestedId?: string,
+  restore?: WorkbookSheetRestore,
 ): WorkbookDirectory {
   if (
     !record(value) ||
@@ -54,11 +115,8 @@ export function checkedWorkbookDirectory(
       state: sheet.state as XlsxSheetInfo["state"],
     };
   });
-  const selected =
-    requestedId ??
-    sheets.find((sheet) => sheet.state === "visible")?.id ??
-    sheets[0].id;
-  if (value.selectedId !== selected || !ids.has(selected))
+  const selected = selectedWorkbookSheetId(sheets, requestedId, restore);
+  if (!selected || value.selectedId !== selected || !ids.has(selected))
     throw new XlsxError("invalid");
   return { sheets, selectedId: selected };
 }

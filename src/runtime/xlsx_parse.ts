@@ -7,6 +7,10 @@ import {
   type XlsxWorkerInput,
 } from "./xlsx_types";
 import { workbookContext } from "./xlsx_workbook_context";
+import {
+  checkedWorkbookSheetRestore,
+  selectedWorkbookSheetId,
+} from "./xlsx_directory";
 
 export function parseWorkbook(
   input: XlsxWorkerInput,
@@ -25,10 +29,12 @@ export function parseWorkbook(
     themes,
     read,
   } = workbookContext(input);
-  const selected =
-    input.sheetId ??
-    sheets.find((s) => s.state === "visible")?.id ??
-    sheets[0].id;
+  const selected = selectedWorkbookSheetId(
+    sheets,
+    input.sheetId,
+    checkedWorkbookSheetRestore(input.restoreSheet),
+  );
+  if (!selected) throw new XlsxError("invalid");
   const sheetPart = sheetParts.get(selected);
   if (!sheetPart) throw new XlsxError("invalid");
   // Global package, directory and shared metadata have passed. A bad sheet

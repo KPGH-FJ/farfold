@@ -29,6 +29,7 @@ import {
 } from "../runtime/workbook_view";
 import {
   restoredWorkbookSheet,
+  savedWorkbookPosition,
   restoredWorkbookWindow,
   saveReadingPosition,
   type PreviewReadingPositionRef,
@@ -183,6 +184,8 @@ export function WorkbookFilePreview({
       const receiveDirectory = (directory: WorkbookDirectory) => {
         if (owns()) setDirectory({ file, capture: value, value: directory });
       };
+      const saved = savedWorkbookPosition(file, readingPosition);
+      const restoreSheet = saved ? { ...saved.sheet } : undefined;
       let workbook =
         staged && (sheetId === undefined || staged.value.sheet?.id === sheetId)
           ? staged.value
@@ -191,11 +194,12 @@ export function WorkbookFilePreview({
               sheetId,
               operation.signal,
               receiveDirectory,
+              restoreSheet,
             );
       if (!owns()) return;
       // Resolve a stored location against the new workbook's actual directory.
       // Never ask the parser to guess a removed or recycled sheet ID.
-      if (sheetId === undefined) {
+      if (staged && sheetId === undefined) {
         const restored =
           restoredWorkbookSheet(file, workbook, readingPosition) ??
           (staged

@@ -9,7 +9,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { DocxPreview } from "../runtime/docx_types";
-import type { WorkbookPreview } from "../runtime/xlsx_types";
+import type {
+  WorkbookDirectory,
+  WorkbookPreview,
+  WorkbookSheetRestore,
+} from "../runtime/xlsx_types";
+import { selectedWorkbookSheetId } from "../runtime/xlsx_directory";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 const h = vi.hoisted(() => ({
   owner: "",
@@ -172,6 +177,23 @@ function book(
     },
   };
 }
+// Match the current preview port: resolve a saved location against this new
+// directory before returning one completed sheet, with the same dimensions.
+function workbookReader(row = 220, column = 30) {
+  return async (
+    capture: { file: VerifiedFile },
+    id: string | undefined,
+    _signal: AbortSignal,
+    onDirectory?: (directory: WorkbookDirectory) => void,
+    restoreSheet?: WorkbookSheetRestore,
+  ) => {
+    const sheets = book(capture.file).sheets;
+    const selected = selectedWorkbookSheetId(sheets, id, restoreSheet);
+    const value = book(capture.file, selected, row, column);
+    onDirectory?.({ sheets: value.sheets, selectedId: value.sheet!.id });
+    return value;
+  };
+}
 function document(file: VerifiedFile, count = 45): DocxPreview {
   const blocks = Array.from({ length: count }, (_, i) => ({
     kind: "paragraph" as const,
@@ -211,9 +233,7 @@ beforeEach(() => {
   h.effects = [];
   vi.clearAllMocks();
   h.captureWorkbook.mockImplementation(async (file) => ({ file }));
-  h.readWorkbook.mockImplementation(async (capture, id) =>
-    book(capture.file, id),
-  );
+  h.readWorkbook.mockImplementation(workbookReader());
   h.captureDocument.mockImplementation(async (file) => ({ file }));
   h.readDocument.mockImplementation(async (capture) => document(capture.file));
 });
@@ -245,9 +265,12 @@ it("restores the matching sheet/window on a new revision and clamps to real shru
   expect(view.html).toContain('value="second" selected');
   expect(view.html).toContain("Y201");
   expect(view.html).toContain("v2-second");
-  h.readWorkbook.mockImplementation(async (capture, id) =>
-    book(capture.file, id, 8, 4),
-  );
+  expect(h.readWorkbook).toHaveBeenCalledOnce();
+  expect(h.readWorkbook.mock.calls[0][4]).toEqual({
+    id: "second",
+    name: "Second",
+  });
+  h.readWorkbook.mockImplementation(workbookReader(8, 4));
   render(null);
   const small = (
     <WorkbookFilePreview

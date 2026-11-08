@@ -136,6 +136,12 @@ export interface WorkbookDirectory {
   sheets: XlsxSheetInfo[];
   selectedId: string;
 }
+/** A previous reading location, resolved only against the new directory. */
+export interface WorkbookSheetRestore {
+  id: string;
+  name: string;
+  hiddenSelected?: boolean;
+}
 export interface XlsxSheet {
   id: string;
   cells: XlsxCell[];
@@ -165,4 +171,5 @@ export interface XlsxWorkerInput {
   parts: WorkbookPart[];
   entries: string[];
   sheetId?: string;
+  restoreSheet?: WorkbookSheetRestore;
 }
