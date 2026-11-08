@@ -77,6 +77,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 [audio_input_draft.ts](../src/runtime/audio_input_draft.ts)为仍归属当前音频审阅的读取登记保存等待，[useAudioComposerAttachments.tsx](../src/components/useAudioComposerAttachments.tsx)初读和确认重读共用该责任。取消、移除或归属失效时退役该等待；仅仍归属本次的附件恢复原对象，已移除的附件不重建。真实读取仍由调用方等待，系统许可不在此释放。迟到的有效内容不能覆盖新文字、恢复旧附件或提示已保存。文档输入原有取消等待与共用存储代码保持；受控组件与设置写入仍不替代正式退出/重启、真实文件读取或长期内存验证。
 
+[live_status.rs](../src-tauri/src/acp_client/live_status.rs)只为已核官方通知附加共用临时呈现，原方法与参数完整保留；前端[program_status.ts](../src/runtime/program_status.ts)仅为当前已发布的精确对话对象保留最近提示，不写正文或元数据，也不改变工作与整理责任。已识别的打开期提示保留原件但不给显示权；实际用量消息专门呈现与完整生命周期的边界见[当前状态](status.md)。
+
 ## 文件输入、成果和意见
 
 输入资料先检查 Agent实际声明的能力及工作位置。图片输入的8 MiB、尺寸和动画规则由 [image_bytes.ts](../src/runtime/image_bytes.ts) 管理；它与收到消息的媒体预览是两个入口。音频、PDF、DOCX、XLSX等资料依各自格式、大小、部分内容提示及明确确认处理，不以附件位置或旧确认代替当前文件核验。
@@ -98,6 +100,8 @@ PDF外层[预览](../src/runtime/pdf_preview.ts)及内层[绘制线程](../src/w
 PDF文件预览在[组件](../src/components/VisualFilePreview.tsx)先核原文件身份、MIME与编码长度，再向原共用绘制入口交付延后取字节的方法；[pdf_preview.ts](../src/runtime/pdf_preview.ts)取得既有名额后才调用实际字节校验与展开。入口仍接受直接字节；准备失败或取消在原`finally`归还自己的名额，未新增资源池或自动重试。真实受控WebKit验证真实解析、画布像素、满额拒绝和隐藏后迟到位图清理；只暂留已完成结果的交付，不证明物理解析忙态、进程内存或正式应用界面。
 
 意见绑定原对话、规范路径和具体磁盘版本；DOCX结构位置、XLSX单元格范围、PPTX预览位置等只对实际已解析的内容有效。明确加入原草稿后才由用户发送，不自动提交。刷新、切换、隐藏和迟到回包需核对版本与归属；自动刷新失败保留旧预览并标明状态，不能把旧位置当新文件。只有 Agent真实修改及重新核验文件，才证明返工完成。
+
+[xlsx_parse.ts](../src/runtime/xlsx_parse.ts)在全局元数据核验后可先发轻量目录，再解析所选页；工作线程中间包不结束请求、不延长时限或提前释放共用名额。[WorkbookFilePreview.tsx](../src/components/WorkbookFilePreview.tsx)把同捕获目录与成功网格分开，首次坏页也能另选；网格、意见及版本刷新仍沿原成功与归属边界。目录不是完整内容证明，完整输入读取不采用此中间包。
 
 ## 消息图片与音频预览
 
