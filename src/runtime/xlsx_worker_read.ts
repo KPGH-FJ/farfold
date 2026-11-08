@@ -8,6 +8,7 @@ export async function readXlsxWorker<T>(
   kind: "ready" | "inputReady",
   validate: (value: unknown) => T,
   signal: AbortSignal,
+  onDirectory?: (value: unknown) => void,
 ): Promise<T> {
   if (signal.aborted) throw new XlsxError("cancelled");
   if (typeof Worker === "undefined") throw new XlsxError("unsupported");
@@ -31,6 +32,7 @@ export async function readXlsxWorker<T>(
   try {
     return await new Promise<T>((resolve, reject) => {
       let settled = false;
+      let directoryReceived = false;
       const fail = (error: XlsxError | XlsxInputError) => {
         if (!settled) {
           settled = true;
@@ -67,6 +69,25 @@ export async function readXlsxWorker<T>(
           return;
         }
         try {
+          if (event.data?.kind === "directory") {
+            if (
+              kind !== "ready" ||
+              !onDirectory ||
+              directoryReceived ||
+              Array.isArray(event.data) ||
+              Object.keys(event.data).length !== 2 ||
+              !Object.hasOwn(event.data, "kind") ||
+              !Object.hasOwn(event.data, "directory")
+            )
+              throw new XlsxError("invalid");
+            if (signal.aborted) {
+              abort?.();
+              return;
+            }
+            directoryReceived = true;
+            onDirectory(event.data.directory);
+            return;
+          }
           if (
             !event.data ||
             Object.keys(event.data).length !== 2 ||

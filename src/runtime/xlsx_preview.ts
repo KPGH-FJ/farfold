@@ -1,4 +1,5 @@
 import { readXlsxWorker } from "./xlsx_worker_read";
+import { checkedWorkbookDirectory } from "./xlsx_directory";
 import {
   checkedXlsxInputRequest,
   type XlsxInputRequest,
@@ -14,6 +15,7 @@ import {
   type XlsxFailure,
   type WorkbookCapture,
   type WorkbookPreview,
+  type WorkbookDirectory,
 } from "./xlsx_types";
 
 function checkedCapture(
@@ -119,20 +121,39 @@ export async function readWorkbookPreview(
   capture: WorkbookCapture,
   sheetId: string | undefined,
   signal: AbortSignal,
+  onDirectory?: (directory: WorkbookDirectory) => void,
 ): Promise<WorkbookPreview> {
   if (signal.aborted) throw new XlsxError("cancelled");
-  checkedCapture(capture.file, capture);
+  const expected = { ...capture.file };
+  checkedCapture(expected, capture);
+  let directoryKey: string | undefined;
   return readXlsxWorker(
     capture,
     { parts: capture.parts, entries: capture.entries, sheetId },
     "ready",
     (value) => {
       const result = checkedResult(value as WorkbookPreview);
+      checkedCapture(expected, capture);
       if (sheetId !== undefined && result.sheet?.id !== sheetId)
+        throw new XlsxError("invalid");
+      const directory = checkedWorkbookDirectory(
+        { sheets: result.sheets, selectedId: result.sheet!.id },
+        sheetId,
+      );
+      if (
+        directoryKey !== undefined &&
+        JSON.stringify(directory) !== directoryKey
+      )
         throw new XlsxError("invalid");
       return result;
     },
     signal,
+    (value) => {
+      checkedCapture(expected, capture);
+      const directory = checkedWorkbookDirectory(value, sheetId);
+      directoryKey = JSON.stringify(directory);
+      onDirectory?.(directory);
+    },
   );
 }
 

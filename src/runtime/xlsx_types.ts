@@ -131,6 +131,11 @@ export interface XlsxSheetInfo {
   name: string;
   state: "visible" | "hidden" | "veryHidden";
 }
+/** A validated choice directory, not a successful selected-sheet preview. */
+export interface WorkbookDirectory {
+  sheets: XlsxSheetInfo[];
+  selectedId: string;
+}
 export interface XlsxSheet {
   id: string;
   cells: XlsxCell[];

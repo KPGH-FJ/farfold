@@ -685,3 +685,86 @@ it("a queued retry remains inert until an explicit unblocked action", async () =
   expect(h.capture).toHaveBeenCalledTimes(2);
   expect(view().html).toContain('data-cell="A1"');
 });
+
+it.each(["fails", "is cancelled"] as const)(
+  "the first worksheet read %s after its directory and another sheet can recover without an earlier preview",
+  async (outcome) => {
+    const directory = { sheets: book().sheets, selectedId: "sheet-main" };
+    let rejectFirst!: (error: Error) => void;
+    const first = new Promise<WorkbookPreview>((_resolve, reject) => {
+      rejectFirst = reject;
+    });
+    const second = book("rel_17");
+    second.sheet!.cells[0] = {
+      ...second.sheet!.cells[0],
+      type: "text",
+      raw: "FIRST_FAILURE_SECOND_READY",
+      value: "FIRST_FAILURE_SECOND_READY",
+      display: "FIRST_FAILURE_SECOND_READY",
+    };
+    h.parse.mockImplementation(
+      async (
+        value: WorkbookCapture,
+        id: string | undefined,
+        _signal: AbortSignal,
+        onDirectory?: (value: typeof directory) => void,
+      ) => {
+        expect(value).toBe(capture);
+        onDirectory?.({ ...directory, selectedId: id ?? "sheet-main" });
+        if (id === "rel_17") return second;
+        if (outcome === "fails") throw new XlsxError("invalid");
+        return first;
+      },
+    );
+
+    await ready();
+    const initialSignal = h.parse.mock.calls[0][2] as AbortSignal;
+    if (outcome === "is cancelled") {
+      click(button(view(), S.cancel));
+      expect(initialSignal.aborted).toBe(true);
+    }
+    await drain();
+    const interrupted = view();
+    expect(interrupted.html).toContain(
+      outcome === "fails" ? S.failed : S.cancelled,
+    );
+    expect(interrupted.html).not.toContain('data-cell="A1"');
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    const control = interrupted.all.find((n) => n.type === "select");
+    expect(
+      control,
+      "directory must remain usable before any sheet succeeds",
+    ).toBeDefined();
+    expect(control!.props.disabled).toBe(false);
+    expect(control!.props.value).toBe("sheet-main");
+    (control!.props.onChange as (event: unknown) => void)({
+      target: { value: "rel_17" },
+    });
+    await ready();
+    if (outcome === "is cancelled") {
+      rejectFirst(new XlsxError("invalid"));
+      await drain();
+    }
+    const recovered = view();
+    expect(recovered.html).toContain("FIRST_FAILURE_SECOND_READY");
+    expect(recovered.html).toContain(S.snapshot);
+    expect(recovered.html).not.toContain(S.failed);
+    expect(h.capture).toHaveBeenCalledOnce();
+    expect(h.parse.mock.calls.map((call) => call[1])).toEqual([
+      undefined,
+      "rel_17",
+    ]);
+    expect(h.parse.mock.calls.every(([value]) => value === capture)).toBe(true);
+    expect(h.parse.mock.calls[0][3]).toEqual(expect.any(Function));
+    expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    click(button(select("A1"), confirmLabel));
+    expect(props.onOfficeTargetConfirm).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        anchor: expect.objectContaining({
+          sheetId: "rel_17",
+          sheetName: "同文副本",
+        }),
+      }),
+    );
+  },
+);

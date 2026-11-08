@@ -7,6 +7,7 @@ import {
 } from "../runtime/xlsx_preview";
 import type {
   WorkbookCapture,
+  WorkbookDirectory,
   WorkbookPreview,
   XlsxCell,
 } from "../runtime/xlsx_types";
@@ -136,6 +137,11 @@ export function WorkbookFilePreview({
     capture: WorkbookCapture;
     operation: AbortController;
   } | null>(null);
+  const [directory, setDirectory] = useState<{
+    file: VerifiedFile;
+    capture: WorkbookCapture;
+    value: WorkbookDirectory;
+  } | null>(null);
   const feedbackState = useRef({ state, loaded, sheetId });
   feedbackState.current = { state, loaded, sheetId };
   useLayoutEffect(() => {
@@ -174,10 +180,18 @@ export function WorkbookFilePreview({
         captureReader.current.read(file, retry, readWorkbookCapture));
       if (!owns()) return;
       capture.current = { file, value };
+      const receiveDirectory = (directory: WorkbookDirectory) => {
+        if (owns()) setDirectory({ file, capture: value, value: directory });
+      };
       let workbook =
         staged && (sheetId === undefined || staged.value.sheet?.id === sheetId)
           ? staged.value
-          : await readWorkbookPreview(value, sheetId, operation.signal);
+          : await readWorkbookPreview(
+              value,
+              sheetId,
+              operation.signal,
+              receiveDirectory,
+            );
       if (!owns()) return;
       // Resolve a stored location against the new workbook's actual directory.
       // Never ask the parser to guess a removed or recycled sheet ID.
@@ -192,10 +206,16 @@ export function WorkbookFilePreview({
             value,
             restored,
             operation.signal,
+            receiveDirectory,
           );
           if (!owns()) return;
         }
       }
+      if (workbook.sheet)
+        receiveDirectory({
+          sheets: workbook.sheets,
+          selectedId: workbook.sheet.id,
+        });
       setLoaded({ file, value: workbook, capture: value, operation });
       setState("ready");
       status.current?.({ file, state: "ready" });
@@ -220,7 +240,13 @@ export function WorkbookFilePreview({
     };
   }, [file, active, sheetId, retry, readingPosition, prepared]);
   const workbook = loaded?.file === file ? loaded.value : null;
-  const selectedId = sheetId ?? workbook?.sheet?.id;
+  const knownDirectory =
+    directory?.file === file && directory.capture === capture.current?.value
+      ? directory.value
+      : null;
+  const sheets = knownDirectory?.sheets ?? workbook?.sheets;
+  const selectedId =
+    sheetId ?? knownDirectory?.selectedId ?? workbook?.sheet?.id;
   const sheetActionOwner = current.current;
   const canInteract = () =>
     props.current.active &&
@@ -237,7 +263,7 @@ export function WorkbookFilePreview({
       inert={interactionBlocked}
     >
       <div className="workbook-controls">
-        {workbook && (
+        {sheets && (
           <label>
             {S.sheet}
             <select
@@ -255,7 +281,7 @@ export function WorkbookFilePreview({
                 setSelection({ file, id: event.target.value });
               }}
             >
-              {workbook.sheets.map((sheet) => (
+              {sheets.map((sheet) => (
                 <option key={sheet.id} value={sheet.id}>
                   {sheet.name}
                   {sheet.state === "visible"
