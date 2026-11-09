@@ -335,6 +335,45 @@ it("keeps a newer page event when a read of the same selected label arrives late
   expect(f.tabs.getSnapshot().tabs[0].page).toEqual(page);
 });
 
+it("discards a failed tabs read after a newer read succeeds", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const { tab } = await f.open();
+  const held = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.tabs).mockReturnValueOnce(held.promise);
+  const old = f.tabs.refresh();
+  await f.tabs.refresh();
+
+  held.reject(Error("old read failed"));
+  await expect(old).resolves.toBeUndefined();
+  expect(f.tabs.canPresent(tab)).toBe(true);
+
+  vi.mocked(f.client.tabs).mockRejectedValueOnce(Error("current read failed"));
+  await expect(f.tabs.refresh()).rejects.toThrow("current read failed");
+});
+
+it("does not publish an old background failure over a newer explicit selection", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const a = await f.open();
+  await f.tabs.add();
+  await f.open("https://b.example");
+
+  const old = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.tabs).mockReturnValueOnce(old.promise);
+  f.emit();
+  old.reject(Error("old read failed"));
+  // The old read settles first. An extra Promise catch would report its
+  // failure after the newer selection has already started.
+  const selection = new Promise<void>((resolve) => {
+    queueMicrotask(() => resolve(f.tabs.select(a.tab)));
+  });
+  await selection;
+
+  expect(f.tabs.getSnapshot().selected).toBe(a.tab);
+  expect(f.tabs.canPresent(a.tab)).toBe(true);
+});
+
 it("failed selection retains pages, stays blocked after refresh, and retries only explicitly", async () => {
   const f = fixture();
   await f.tabs.start();
@@ -440,6 +479,156 @@ it("failed close retains its owner and does not release a sibling or fabricate c
   expect(f.tabs.getSnapshot().tabs).toHaveLength(1);
   expect(f.tabs.getSnapshot().tabs[0].page).toBeNull();
 });
+
+it.each([
+  ["close", "fails"],
+  ["clearHtmlStorage", "fails"],
+  ["close", "stays pending"],
+  ["clearHtmlStorage", "stays pending"],
+] as const)(
+  "keeps the acknowledged %s when the next tabs read %s",
+  async (action, readOutcome) => {
+    const f = fixture();
+    await f.tabs.start();
+    const a = await f.open();
+    if (action === "clearHtmlStorage") {
+      a.result.localFileName = "owned.html";
+      a.result.localStoragePersistent = true;
+    }
+    const scope = new BrowserWorkspaceScope(f.tabs.pageClient(a.tab), "task");
+    scope.adopt(a.result);
+    await f.tabs.add();
+    const b = await f.open("https://b.example");
+    await f.tabs.select(a.tab);
+
+    const held = deferred<BrowserWorkspaceTabsState>();
+    const readStarted = deferred<void>();
+    const native = vi.mocked(f.client[action]);
+    native.mockImplementationOnce(async (input) => {
+      expect(input).toEqual({ taskKey: "task", label: a.result.label });
+      f.state.pages = f.state.pages.filter(
+        (page) => page.label !== input.label,
+      );
+      f.state.selection = {
+        label: null,
+        revision: f.state.selection.revision + 1,
+      };
+      vi.mocked(f.client.tabs).mockImplementationOnce(() => {
+        readStarted.resolve();
+        return readOutcome === "fails"
+          ? Promise.reject(Error("metadata unavailable"))
+          : held.promise;
+      });
+    });
+
+    const operation = scope[action]();
+    if (readOutcome === "stays pending") {
+      await readStarted.promise;
+      const settlement = await Promise.race([
+        operation.then(() => "acknowledged"),
+        new Promise<string>((resolve) => setImmediate(() => resolve("held"))),
+      ]);
+      held.resolve(f.clone());
+      await operation;
+      expect(settlement).toBe("acknowledged");
+    }
+    await expect(operation).resolves.toBeUndefined();
+
+    expect(native).toHaveBeenCalledOnce();
+    expect(scope.current).toBeNull();
+    expect(
+      f.tabs.getSnapshot().tabs.find(({ id }) => id === a.tab)?.page,
+    ).toBeNull();
+    expect(
+      f.tabs.getSnapshot().tabs.find(({ id }) => id === b.tab)?.page,
+    ).toEqual(b.result);
+  },
+);
+
+it("keeps the selected sibling available when a confirmed background close cannot refresh", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const a = await f.open();
+  await f.tabs.add();
+  const b = await f.open("https://b.example");
+  vi.mocked(f.client.close).mockImplementationOnce(async ({ label }) => {
+    expect(label).toBe(a.result.label);
+    f.state.pages = f.state.pages.filter((page) => page.label !== label);
+    vi.mocked(f.client.tabs).mockRejectedValueOnce(
+      Error("metadata unavailable"),
+    );
+  });
+  vi.mocked(f.client.select).mockClear();
+
+  await f.tabs.close(a.tab);
+
+  expect(f.tabs.getSnapshot().tabs.map((tab) => tab.id)).toEqual([b.tab]);
+  expect(f.tabs.getSnapshot().selected).toBe(b.tab);
+  expect(f.tabs.canPresent(b.tab)).toBe(true);
+  expect(f.client.select).not.toHaveBeenCalled();
+});
+
+it("uses one required read after closing the selected tab and rejects the earlier list", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const a = await f.open();
+  await f.tabs.add();
+  const b = await f.open("https://b.example");
+  const earlier = f.clone();
+  const old = deferred<BrowserWorkspaceTabsState>();
+  const readStarted = deferred<void>();
+  const required = deferred<BrowserWorkspaceTabsState>();
+  const duplicate = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.tabs).mockReturnValueOnce(old.promise);
+  const oldRead = f.tabs.refresh();
+  vi.mocked(f.client.tabs).mockClear();
+  vi.mocked(f.client.tabs)
+    .mockImplementationOnce(() => {
+      readStarted.resolve();
+      return required.promise;
+    })
+    .mockReturnValueOnce(duplicate.promise);
+  vi.mocked(f.client.close).mockImplementationOnce(async ({ label }) => {
+    expect(label).toBe(b.result.label);
+    f.state.pages = f.state.pages.filter((page) => page.label !== label);
+    f.state.selection = {
+      label: null,
+      revision: earlier.selection.revision + 1,
+    };
+  });
+  vi.mocked(f.client.select).mockClear();
+  vi.mocked(f.client.select).mockImplementationOnce(
+    async ({ label, expectedSelected }) => {
+      expect(expectedSelected).toEqual(f.state.selection);
+      f.state.selection = { label, revision: expectedSelected.revision + 1 };
+      return f.clone();
+    },
+  );
+
+  const closing = f.tabs.close(b.tab);
+  await readStarted.promise;
+  expect(f.tabs.getSnapshot().changing).toBe(true);
+  old.resolve(earlier);
+  await oldRead;
+  expect(f.tabs.getSnapshot().tabs.map((tab) => tab.id)).toEqual([a.tab]);
+  required.resolve(f.clone());
+  const settlement = await Promise.race([
+    closing.then(() => "selected"),
+    new Promise<string>((resolve) => setImmediate(() => resolve("held"))),
+  ]);
+  duplicate.resolve(f.clone());
+  await closing;
+
+  expect(settlement).toBe("selected");
+  expect(f.client.tabs).toHaveBeenCalledExactlyOnceWith({ taskKey: "task" });
+  expect(f.client.select).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task",
+    label: a.result.label,
+    expectedSelected: { label: null, revision: earlier.selection.revision + 1 },
+  });
+  expect(f.tabs.canPresent(a.tab)).toBe(true);
+});
+
 it("more than three tabs can be created without automatic eviction", async () => {
   const f = fixture();
   await f.tabs.start();

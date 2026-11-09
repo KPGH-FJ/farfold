@@ -521,7 +521,11 @@ it("uses a prepared matching document without a new capture, and reports owned r
   render(node);
   expect(h.captureDocument).not.toHaveBeenCalled();
   expect(h.readDocument).not.toHaveBeenCalled();
-  expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+  expect(status).toHaveBeenLastCalledWith({
+    file: source,
+    state: "ready",
+    readInFlight: false,
+  });
 });
 it("adopts a prepared workbook but reselects the latest position from its same capture", async () => {
   const position: PreviewReadingPositionRef = {
@@ -589,8 +593,18 @@ it.each(["docx", "workbook"] as const)(
       );
     render(element(true));
     await drain();
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "loading",
+      readInFlight: true,
+    });
     const signal = capture.mock.calls[0][1] as AbortSignal;
     render(element(false));
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "paused",
+      readInFlight: true,
+    });
     render(element(true));
     await drain();
     expect(capture).toHaveBeenCalledOnce();
@@ -606,7 +620,7 @@ it.each(["docx", "workbook"] as const)(
       file: source,
       state: "failed",
       code: "readPending",
-      ...(kind === "workbook" ? { readInFlight: false } : {}),
+      readInFlight: false,
     });
     render(element(false));
     render(element(true));
@@ -621,7 +635,7 @@ it.each(["docx", "workbook"] as const)(
     expect(status).toHaveBeenLastCalledWith({
       file: source,
       state: "ready",
-      ...(kind === "workbook" ? { readInFlight: false } : {}),
+      readInFlight: false,
     });
   },
 );
@@ -668,7 +682,7 @@ it.each(["docx", "workbook"] as const)(
     const ready = {
       file: source,
       state: "ready",
-      ...(kind === "workbook" ? { readInFlight: false } : {}),
+      readInFlight: false,
     };
     expect(status).toHaveBeenLastCalledWith(ready);
     const ErrorClass =
@@ -697,6 +711,11 @@ it.each(["docx", "workbook"] as const)(
     render(node);
     await drain();
     action(render(node), "取消预览");
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "paused",
+      readInFlight: true,
+    });
     action(render(node), "重新预览");
     render(node);
     await drain();
@@ -714,7 +733,7 @@ it.each(["docx", "workbook"] as const)(
           file: source,
           state: "failed",
           code: "readPending",
-          ...(kind === "workbook" ? { readInFlight: false } : {}),
+          readInFlight: false,
         },
       ],
     ]);

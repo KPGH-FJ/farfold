@@ -40,6 +40,7 @@ import {
 } from "../runtime/visual_feedback_target";
 import { pptxFailure } from "../runtime/pptx_strings";
 import { workbookFailure } from "../runtime/workbook_strings";
+import { documentFailure } from "../runtime/document_strings";
 import {
   readTextBlock,
   textBlockFailure,
@@ -237,17 +238,13 @@ function isOfficePreview(file: VerifiedFile) {
   return isWorkbook(file) || isDocument(file) || isPresentation(file);
 }
 
-function retainsOfficeReadReceipt(file: VerifiedFile) {
-  return isWorkbook(file) || isPresentation(file);
-}
-
 function officeReadBusy(
   file: VerifiedFile,
   status: PreviewContentStatus | null,
 ) {
   return (
     status?.file === file &&
-    ((retainsOfficeReadReceipt(file) && Boolean(status.readInFlight)) ||
+    ((isOfficePreview(file) && Boolean(status.readInFlight)) ||
       (isWorkbook(file) && status.state === "loading"))
   );
 }
@@ -493,9 +490,14 @@ export function OpenedFileView({
       preserve && previous.visual?.mimeType === "application/pdf"
         ? previous.visual
         : undefined;
+    const oldDocument =
+      preserve && previous.file && isDocument(previous.file)
+        ? previous.file
+        : undefined;
+    const preservedSource = oldPdf?.file ?? oldDocument;
     if (preserve && !valid && previous.file && isWorkbook(previous.file))
       workbookRangeRevision.current++;
-    if (preserve && previous.file && retainsOfficeReadReceipt(previous.file))
+    if (preserve && previous.file && isOfficePreview(previous.file))
       officeRefresh.current = { owner, settled: false, uncertain: false };
     textScroll.current = textContent.current?.scrollTop ?? textScroll.current;
     setView(
@@ -508,7 +510,7 @@ export function OpenedFileView({
         verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
       if (!readCurrent()) return false;
       inspected = file;
-      if (oldPdf && !sameReadingFile(oldPdf.file, file))
+      if (preservedSource && !sameReadingFile(preservedSource, file))
         throw new Error(S.revisionNotices.redirected);
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
@@ -580,10 +582,7 @@ export function OpenedFileView({
         }
       } else if (isOfficePreview(file)) {
         if (preserve) {
-          if (
-            retainsOfficeReadReceipt(file) &&
-            officeRefresh.current?.owner !== owner
-          )
+          if (officeRefresh.current?.owner !== owner)
             officeRefresh.current = {
               owner,
               settled: false,
@@ -649,12 +648,14 @@ export function OpenedFileView({
           ? error.code
           : undefined;
       const failureMessage = error instanceof Error ? error.message : error;
-      const pdfFailure =
-        typeof failureMessage === "string" &&
-        (failureMessage === S.revisionNotices.redirected ||
-          Object.values(V).includes(failureMessage as never))
-          ? failureMessage
-          : undefined;
+      const retainedPreviewFailure =
+        oldDocument && failureMessage !== S.revisionNotices.redirected
+          ? documentFailure(error)
+          : typeof failureMessage === "string" &&
+              (failureMessage === S.revisionNotices.redirected ||
+                Object.values(V).includes(failureMessage as never))
+            ? failureMessage
+            : undefined;
       const ownsOfficeRefresh =
         officeRefresh.current?.owner === owner &&
         mounted.current &&
@@ -701,10 +702,13 @@ export function OpenedFileView({
                     ? pptxFailure(error)
                     : previous.file && isWorkbook(previous.file)
                       ? workbookFailure(error)
-                      : oldPdf
+                      : preservedSource
                         ? valid
-                          ? pdfFailure
-                          : [S.revisionNotices.refreshFailed, pdfFailure]
+                          ? retainedPreviewFailure
+                          : [
+                              S.revisionNotices.refreshFailed,
+                              retainedPreviewFailure,
+                            ]
                               .filter(Boolean)
                               .join(" ")
                         : previous.note,
@@ -1108,7 +1112,7 @@ export function OpenedFileView({
                         isPresentation(file) ||
                         (latestReadiness.current?.source === shown.visual &&
                           latestReadiness.current?.location?.kind === "pdf") ||
-                        (isWorkbook(file) && officeReady()),
+                        (isOfficePreview(file) && officeReady()),
                     )
                   }
                 >
