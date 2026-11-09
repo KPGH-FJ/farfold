@@ -1,0 +1,154 @@
+{
+  "kind": "PresendOpinionRecoveryAndConversationVisibilityEvidence",
+  "date": "2026-11-09",
+  "sourceCodeCommit": "91dadecc8a521eae79f22cb66c52ea07c18b4760",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "dc8cb2e2d525efc66cfea69684ea5856edd40f10"
+  },
+  "engineering": {
+    "allSeven": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/complete-engineering-results.json",
+      "sha256": "100746eb6e989a92e0eedda93c8214e3c219d9f80e15aaf2893d8744dedddffb"
+    },
+    "finalInputs": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/engineering-inputs.json",
+      "sha256": "a782c67838453073b04fdef5c0d1925b9a56d8ea3c0efb68fa70f98e7706c9f4"
+    },
+    "inputCount": 2413,
+    "frontendFiles": 743,
+    "frontendPassed": 10077,
+    "rustPassed": 2478,
+    "rustExistingIgnored": 7,
+    "initialFrontendFailed": {
+      "path": "output/2026-11-09-presend-visibility/checks/frontend.json",
+      "sha256": "f5c782d1bb45f89e91daf4d093ad66e9e5e9ea763876a991490d4626b389623b"
+    },
+    "testOnlyTimingCorrection": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/reuse.json",
+      "sha256": "19560b8715e7b7d5987c497c05ab137990d7f6a89a665cb70b2bfc96b0f948b4"
+    },
+    "initialRustFailed": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/rust-test.json",
+      "sha256": "c24de23117667f34a3fa4ea2c639256cce65e1aa1602e39ce44f69e14acc0a2e"
+    },
+    "exactRustTargeted": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/rust-protocol-error-targeted.json",
+      "sha256": "b55013e81dea232f2b331e4bc8072e6c6ff3485133f2bb9c40cd8b37624f0a51"
+    },
+    "fullRustRepeat": {
+      "path": "output/2026-11-09-presend-visibility/checks-final/rust-test-repeat.json",
+      "sha256": "8a2e521d812befffc6f0c2c69e4e7bc4bc36e97a72f0a5170b8916f46f857cf6"
+    },
+    "p21FinalFocusedPassed": 352,
+    "p38FocusedPassed": 28
+  },
+  "independentReview": {
+    "path": "output/2026-11-09-presend-visibility/independent-review.json",
+    "sha256": "cc93f94a8d6174060f54d5ba2a1e08de623d468a1a97a091f2bcf2be2cd5516c"
+  },
+  "formal": {
+    "normalExit": {
+      "path": "output/2026-11-09-presend-visibility/formal/normal-exit.json",
+      "sha256": "732ef2e8ed9e8810b8c5feb62240110df9b6d78d3d3e6d03576a409e41bae7cd"
+    },
+    "candidateReview": {
+      "path": "output/2026-11-09-presend-visibility/formal/candidate-review.json",
+      "sha256": "0d569d16f6afcceddfdd7bfddde37fa8867bf3da9c8f9d88b8a75e795d7c990d"
+    },
+    "install": {
+      "path": "output/2026-11-09-presend-visibility/formal/install.json",
+      "sha256": "471906362a66ca6beebb5dd2c5ec9d28b7ca25315bcfb043cc2bcfb6bebc07d7"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-11-09-presend-visibility/formal/duplicate-cleanup.json",
+      "sha256": "5dfa86da416876eaa33aea4dc0b5780cbef91113b0d0153b218c878c14a642cb"
+    },
+    "dataEntries": 206275,
+    "dataRootsUnchanged": true
+  },
+  "p21": {
+    "oldFormalReproduction": {
+      "path": "output/2026-11-09-presend-visibility/installed-presend-before.json",
+      "sha256": "efc868ad3b7baa0e9bb7a1b3d9f826c5ee8ca1d66fdb840f7b1ab8432cb555b1"
+    },
+    "newFormalColdAndNavigationRecovery": {
+      "path": "output/2026-11-09-presend-visibility/installed-presend-recovery.json",
+      "sha256": "d36b60d2304b2a6a31616984ba2a738f7b7672096e095c533bd6a3b2c9b73f3d"
+    },
+    "exactOwnedFile": {
+      "path": "docs/evidence/2026-11-09-presend-visibility/presend-note-source.txt",
+      "sha256": "6d8bf3701f1013b22c19cbd503e583e9530b1c2edd4a4751051ab8eb6bd49ef2"
+    },
+    "oldPrepareOutbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 0
+    },
+    "newProtocolFilesDuringRecovery": 0,
+    "originalInputRestorationPending": true
+  },
+  "p31": {
+    "installedMetadataFilter": {
+      "path": "output/2026-11-09-presend-visibility/installed-metadata-filter.json",
+      "sha256": "201bf2a9d4bd7c1d687a59aa2e2290f34739ed442f790a52300c93481696a0df"
+    },
+    "sourceCodeCommit": "f4593d6074b822797f576975e833621060a45125",
+    "scope": "Title, Goose and ungrouped. Empty result, clearing and returning to the original loaded conversation."
+  },
+  "p38": {
+    "controlledTwoRetainedViewsPassed": true,
+    "installedLiveParallelRepliesPending": true
+  },
+  "p27": {
+    "initialSyntheticSamplerMismatch": {
+      "path": "output/2026-11-09-browser-mac27-preflight/capture-final-execution.json",
+      "sha256": "5bf3f47b68f0ad4c6bb2bf9f6698e164bd06d980f5dc1cf7836a2c0adf33bc81"
+    },
+    "syntheticNativePixels": {
+      "path": "output/2026-11-09-browser-mac27-preflight/capture-profile-execution.json",
+      "sha256": "5a84a33ec29150035642989f5a8a4c6243e59dcfc9e465a7d6963f9863dbd0a0"
+    },
+    "firstPublicObservation": {
+      "path": "output/2026-11-09-browser-mac27-preflight/capture-public-execution.json",
+      "sha256": "f899e3f3291c19aba7da48b44b24a95edaf3e3a6c6d892ba8c2b560105bc92e2"
+    },
+    "publicProtectionDiagnosis": {
+      "path": "output/2026-11-09-browser-mac27-preflight/capture-public-diagnostic-execution.json",
+      "sha256": "5140fc274e00f0913717df674491902c634bb07cb4f0401819ad67f62152ccff"
+    },
+    "actualPNG": {
+      "colorsMatch": true,
+      "height": 420,
+      "imageIOSampler": {
+        "alpha": [255, 255],
+        "centerRgb": [12, 132, 44],
+        "declaredChunks": ["sRGB"],
+        "profileName": "sRGB IEC61966-2.1",
+        "rightRgb": [49, 25, 117],
+        "sourceColorSpace": "kCGColorSpaceSRGB",
+        "targetColorSpace": "sRGB"
+      },
+      "pngBytes": 8535,
+      "pngSha256": "408ac05a618e8bc74cf174e2139053c82cccd8e429a117c28ab541d7cd796675",
+      "previousAppKitSampler": {
+        "bitmapSpace": "sRGB IEC61966-2.1",
+        "centerRgb": [0, 147, 58],
+        "rightRgb": [65, 42, 136],
+        "sampleSpace": "Generic RGB",
+        "targetColorSpace": "sRGB"
+      },
+      "width": 600
+    },
+    "publicReasonClass": "pageStructureProtection",
+    "publicPNG": false,
+    "installedRealAgentScreenshotPending": true,
+    "originalCodexPermissionCondition": "NEW-24"
+  },
+  "wholeStage2Accepted": false,
+  "whole29AgentsAccepted": false
+}
