@@ -27,12 +27,47 @@ import {
 } from "./VisualAreaSelection";
 import "./VisualFilePreview.css";
 
+type PdfSurface = {
+  slot: 0 | 1;
+  canvas: { current: HTMLCanvasElement | null };
+};
+type DrawnPdfPage = {
+  element: HTMLCanvasElement;
+  page: number;
+  pageCount: number;
+};
+export type DrawnPdfPreview = DrawnPdfPage & {
+  preview: VisualPreview;
+  surface: PdfSurface;
+};
+export type PdfPreviewCandidate = {
+  preview: VisualPreview;
+  surface: PdfSurface;
+  page: number;
+  controller: AbortController;
+  current: () => boolean;
+  settle: (result: DrawnPdfPage | Error) => void;
+};
+
+function pdfRenderWidth(container: HTMLDivElement | null) {
+  // The selection stage has no intrinsic width while its canvas is hidden.
+  const style = container ? getComputedStyle(container) : null;
+  const width = container
+    ? container.clientWidth -
+      (Number.parseFloat(style?.paddingLeft ?? "0") || 0) -
+      (Number.parseFloat(style?.paddingRight ?? "0") || 0)
+    : 800;
+  return Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2);
+}
+
 export function VisualFilePreview({
   preview,
   active,
   onReadiness,
   readingPosition,
   initialPdfPage,
+  pdfCandidate,
+  drawnPdf,
   interactionBlocked = false,
   onVisualTargetAvailability,
   onVisualTargetConfirm,
@@ -43,9 +78,13 @@ export function VisualFilePreview({
   interactionBlocked?: boolean;
   readingPosition?: PreviewReadingPositionRef;
   initialPdfPage?: AttachmentPdfPreviewTarget;
+  pdfCandidate?: PdfPreviewCandidate;
+  drawnPdf?: DrawnPdfPreview;
   onReadiness?: (value: VisualPreviewReadiness) => void;
 }) {
-  const canvas = useRef<HTMLCanvasElement | null>(null);
+  const initialCanvas = useRef<HTMLCanvasElement | null>(null);
+  const canvas = drawnPdf?.surface.canvas ?? initialCanvas;
+  const adoptedCanvas = useRef<HTMLCanvasElement | null>(null);
   const viewport = useRef<HTMLDivElement | null>(null);
   const current = useRef<AbortController | null>(null);
   const imageElement = useRef<HTMLImageElement>(null);
@@ -57,8 +96,8 @@ export function VisualFilePreview({
   };
   const report = useRef(onReadiness);
   report.current = onReadiness;
-  const source = useRef({ preview, active, interactionBlocked });
-  source.current = { preview, active, interactionBlocked };
+  const source = useRef({ preview, active, interactionBlocked, drawnPdf });
+  source.current = { preview, active, interactionBlocked, drawnPdf };
   const [requested, setRequested] = useState<{
     source: VisualPreview;
     page: number;
@@ -104,6 +143,7 @@ export function VisualFilePreview({
   } | null>(null);
   useLayoutEffect(() => {
     const operation = new AbortController();
+    const element = canvas.current;
     current.current = operation;
     clearDisplay();
     report.current?.({ source: preview, location: null });
@@ -148,38 +188,40 @@ export function VisualFilePreview({
           });
       } else {
         checkedVisualPreviewMetadata(preview.file, preview);
-        if (!owns() || !canvas.current) return;
-        // The optional selection stage is fit-content and has no intrinsic
-        // width while its canvas is hidden. Measure the stable content pane.
-        const container = viewport.current;
-        const style = container ? getComputedStyle(container) : null;
-        const width = container
-          ? container.clientWidth -
-            (Number.parseFloat(style?.paddingLeft ?? "0") || 0) -
-            (Number.parseFloat(style?.paddingRight ?? "0") || 0)
-          : 800;
-        await renderPdfPage(
-          () => checkedVisualPreview(preview.file, preview).bytes,
-          canvas.current,
-          page,
-          Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2),
-          operation.signal,
-          (total, actual = page) => {
-            if (owns() && validPdfPage(actual, total)) {
-              renderedPage = actual;
-              renderedPages = total;
-              setPages(total);
-            }
-          },
-          restorePage,
-        );
+        if (!owns() || !element) return;
+        const ready = (total: number, actual = page) => {
+          if (owns() && validPdfPage(actual, total)) {
+            renderedPage = actual;
+            renderedPages = total;
+            setPages(total);
+          }
+        };
+        if (
+          drawnPdf?.preview === preview &&
+          drawnPdf.element === element &&
+          adoptedCanvas.current !== element &&
+          element.width > 0 &&
+          element.height > 0
+        ) {
+          adoptedCanvas.current = element;
+          ready(drawnPdf.pageCount, drawnPdf.page);
+        } else {
+          await renderPdfPage(
+            () => checkedVisualPreview(preview.file, preview).bytes,
+            element,
+            page,
+            pdfRenderWidth(viewport.current),
+            operation.signal,
+            ready,
+            restorePage,
+          );
+        }
       }
       if (owns()) {
         if (pdf && renderedPages === null) throw new Error(S.failed);
         setState("ready");
         setMessage(S.snapshot);
         if (pdf) {
-          const element = canvas.current;
           if (element && element.width > 0 && element.height > 0) {
             const next: VisualAreaDisplay = {
               kind: "pdf",
@@ -232,16 +274,92 @@ export function VisualFilePreview({
     return () => {
       clearDisplay();
       operation.abort();
-      if (canvas.current) {
-        canvas.current.width = 0;
-        canvas.current.height = 0;
+      if (element) {
+        element.width = 0;
+        element.height = 0;
       }
       if (current.current === operation) {
         current.current = null;
         report.current?.({ source: preview, location: null });
       }
     };
-  }, [preview, active, page, restorePage, readingPosition, searchCurrent]);
+  }, [
+    preview,
+    active,
+    page,
+    restorePage,
+    readingPosition,
+    searchCurrent,
+    drawnPdf,
+  ]);
+  useLayoutEffect(() => {
+    if (!pdfCandidate) return;
+    const {
+      preview: next,
+      surface,
+      page,
+      controller,
+      current,
+      settle,
+    } = pdfCandidate;
+    const element = surface.canvas.current;
+    if (!active || !current()) {
+      controller.abort();
+      return;
+    }
+    if (!element) {
+      settle(new Error(S.failed));
+      return;
+    }
+    element.width = 0;
+    element.height = 0;
+    const stopWhenHidden = () => {
+      if (document.visibilityState === "hidden") controller.abort();
+    };
+    if (typeof document !== "undefined") {
+      stopWhenHidden();
+      document.addEventListener("visibilitychange", stopWhenHidden);
+    }
+    void (async () => {
+      checkedVisualPreviewMetadata(next.file, next);
+      let location: { page: number; pageCount: number } | undefined;
+      await renderPdfPage(
+        () => checkedVisualPreview(next.file, next).bytes,
+        element,
+        page,
+        pdfRenderWidth(viewport.current),
+        controller.signal,
+        (pageCount, actual = page) => {
+          if (validPdfPage(actual, pageCount))
+            location = { page: actual, pageCount };
+        },
+        true,
+      );
+      if (!current() || controller.signal.aborted) throw new Error(S.cancelled);
+      if (!location || !element.width || !element.height)
+        throw new Error(S.failed);
+      settle({ element, ...location });
+    })().catch((error: unknown) =>
+      settle(error instanceof Error ? error : new Error(S.failed)),
+    );
+    return () => {
+      if (typeof document !== "undefined")
+        document.removeEventListener("visibilitychange", stopWhenHidden);
+      controller.abort();
+      // The winning surface is reused by the displayed page's own effect.
+      const displayed = source.current;
+      if (
+        !displayed.active ||
+        displayed.preview !== next ||
+        displayed.drawnPdf?.surface !== surface ||
+        displayed.drawnPdf.element !== element ||
+        surface.canvas.current !== element
+      ) {
+        element.width = 0;
+        element.height = 0;
+      }
+    };
+  }, [active, pdfCandidate]);
   const pdf = preview.mimeType === "application/pdf";
   const actionOwner = current.current;
   const displayedOperation = image?.owner ?? null;
@@ -256,15 +374,23 @@ export function VisualFilePreview({
   const pixels = (
     <>
       {" "}
-      {pdf && (
+      {pdf && [
         <canvas
+          key={drawnPdf?.surface.slot ?? 0}
           ref={canvas}
           hidden={state !== "ready" || !active}
           aria-label={
             pages === null ? "PDF 预览" : S.page(displayedPage, pages)
           }
-        />
-      )}
+        />,
+        pdfCandidate && (
+          <canvas
+            key={pdfCandidate.surface.slot}
+            ref={pdfCandidate.surface.canvas}
+            hidden
+          />
+        ),
+      ]}
       {image && image.source === preview && state === "ready" && active && (
         <img
           ref={imageElement}

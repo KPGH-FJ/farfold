@@ -134,6 +134,7 @@ vi.mock("react", async (original) => {
 });
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
+import type { PdfPreviewCandidate } from "./VisualFilePreview";
 import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
@@ -1255,12 +1256,24 @@ it("keeps old-version page opinions after refresh and rejects old-source readine
   const old = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
   const next = { ...visualReceipt, version: "v2", sha256: "b".repeat(64) };
   h.inspectLink.mockResolvedValue(next);
-  h.readVisual.mockResolvedValue({
+  const replacement = {
     file: next,
     mimeType: "application/pdf",
     data: btoa("%PDF-1"),
-  });
+  };
+  h.readVisual.mockResolvedValue(replacement);
   click(S.refresh);
+  await drain();
+  const staged = render().nodes.find((n) => n.props.preview)!;
+  expect(staged.props.preview).toBe(visual.props.preview);
+  const candidate = staged.props.pdfCandidate as PdfPreviewCandidate;
+  expect(candidate.preview).toBe(replacement);
+  expect(candidate.page).toBe(2);
+  candidate.settle({
+    element: { width: 40, height: 30 } as HTMLCanvasElement,
+    page: 2,
+    pageCount: 3,
+  });
   await drain();
   render();
   reportPage(visual, { kind: "pdf", page: 3, pageCount: 3 });

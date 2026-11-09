@@ -105,8 +105,11 @@ export class BrowserTabs {
       throw new BrowserWorkspaceRetiredError();
     this.server = state;
     const tabs = this.snapshot.tabs.map((tab) => {
-      const page = state.pages.find((page) => page.label === tab.page?.label);
-      return page ? { ...tab, page } : tab;
+      const current = tab.page;
+      if (!current) return tab;
+      const page = state.pages.find((page) => page.label === current.label);
+      // Selection and per-page metadata advance independently.
+      return page && page.revision >= current.revision ? { ...tab, page } : tab;
     });
     // Reservations can be announced before open returns its identity. Never
     // guess which concurrent opener owns one; resolve from the actual reply.

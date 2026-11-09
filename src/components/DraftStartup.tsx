@@ -164,12 +164,18 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       if (
         code === "EXIT_CONFIRMATION_REQUIRED" ||
         code === "FILE_COPY_EXIT_BLOCKED" ||
-        code === "WORKTREE_EXIT_BLOCKED"
+        code === "WORKTREE_EXIT_BLOCKED" ||
+        code === "FILE_COPY_EXIT_REVIEW_REQUIRED" ||
+        code === "WORKTREE_EXIT_REVIEW_REQUIRED"
       ) {
         setBackendCopyReview(code === "FILE_COPY_EXIT_BLOCKED");
         setBackendWorktreeReview(code === "WORKTREE_EXIT_BLOCKED");
         if (code === "EXIT_CONFIRMATION_REQUIRED")
           setActivityReview(E.applicationReview);
+        else if (code === "FILE_COPY_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.copyUnknown);
+        else if (code === "WORKTREE_EXIT_REVIEW_REQUIRED")
+          setActivityReview(E.worktreeUnknown);
         setExitReview(token);
         return;
       }

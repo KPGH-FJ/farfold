@@ -101,6 +101,8 @@ vi.mock("react", async (original) => {
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
+import { VISUAL_PREVIEW_STRINGS as V } from "../runtime/visual_preview";
+import type { PdfPreviewCandidate } from "./VisualFilePreview";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -339,5 +341,116 @@ it.each([false, true])(
     expect(button(S.feedback)?.props.disabled).toBe(false);
     click(S.feedback);
     expect(button(`针对当前第 ${navigate ? 2 : 1} 页`)).toBeDefined();
+  },
+);
+
+it.each([
+  ["automatic", "failure"],
+  ["manual", "failure"],
+  ["automatic", "success"],
+  ["manual", "hidden"],
+  ["manual", "abort-after-draw"],
+])(
+  "keeps the ready PDF until the verified %s refresh finishes drawing (%s)",
+  async (trigger, outcome) => {
+    vi.useFakeTimers();
+    const file = {
+      ...receipt,
+      path: "/work/result.pdf",
+      resolvedPath: "/work/result.pdf",
+      name: "result.pdf",
+      size: 6,
+      sha256: "a".repeat(64),
+    };
+    const visual = { file, mimeType: "application/pdf", data: btoa("%PDF-1") };
+    const next = { ...file, version: "review-v2", sha256: "b".repeat(64) };
+    const replacement = { ...visual, file: next };
+    h.inspectLink.mockResolvedValueOnce(file);
+    h.readVisual.mockResolvedValueOnce(visual);
+    await ready();
+    const report = render().nodes.find((item) => item.props.preview)!.props
+      .onReadiness as (value: unknown) => void;
+    report({
+      source: visual,
+      location: { kind: "pdf", page: 2, pageCount: 3 },
+    });
+    expect(button(S.feedback)?.props.disabled).toBe(false);
+    const contentId = `disk:${JSON.stringify([file.resolvedPath, file.version, file.sha256])}`;
+    const opinion = {
+      contentId,
+      text: "Old exact page opinion",
+      selection: null,
+      scope: "file" as const,
+      anchor: { kind: "pdf-page" as const, page: 2, pageCount: 3 },
+    };
+    fileFeedbackDrafts.update(props.threadKey, file.resolvedPath, opinion);
+
+    h.readVisual.mockResolvedValueOnce(replacement);
+    if (trigger === "automatic") {
+      h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });
+    } else {
+      h.inspectLink.mockResolvedValueOnce(next);
+      click(S.refresh);
+    }
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(h.readVisual.mock.calls).toEqual([[file], [next]]);
+    const pending = render();
+    const child = pending.nodes.find((item) => item.props.preview)!;
+    expect(child.props.preview).toBe(visual);
+    expect(pending.html).toContain(S.pending);
+    expect(button(S.feedback)?.props.disabled).toBe(true);
+    const candidate = child.props.pdfCandidate as PdfPreviewCandidate;
+    expect(candidate.preview).toBe(replacement);
+    expect(candidate.page).toBe(2);
+    if (outcome === "hidden") {
+      render({ ...props, active: false });
+      expect(candidate.controller.signal.aborted).toBe(true);
+      expect(candidate.current()).toBe(false);
+    }
+    const drawn = {
+      element: { width: 40, height: 30 } as HTMLCanvasElement,
+      page: 1,
+      pageCount: 1,
+    };
+    candidate.settle(outcome === "failure" ? new Error(V.password) : drawn);
+    if (outcome === "abort-after-draw") candidate.controller.abort();
+    await vi.advanceTimersByTimeAsync(0);
+    if (outcome === "hidden") render({ ...props, active: true });
+    const finished = render();
+    const displayed = finished.nodes.find((item) => item.props.preview)!;
+    expect(displayed.props.preview).toBe(
+      outcome === "success" ? replacement : visual,
+    );
+    expect(displayed.props.pdfCandidate).toBeUndefined();
+    expect(finished.html).not.toContain(S.pending);
+    expect(
+      fileFeedbackDrafts.read(props.threadKey, file.resolvedPath, contentId),
+    ).toMatchObject(opinion);
+    if (outcome === "success") {
+      expect(displayed.props.drawnPdf).toEqual({
+        ...drawn,
+        preview: replacement,
+        surface: candidate.surface,
+      });
+      expect(button(S.feedback)?.props.disabled).toBe(true);
+      report({
+        source: visual,
+        location: { kind: "pdf", page: 2, pageCount: 3 },
+      });
+      expect(button(S.feedback)?.props.disabled).toBe(true);
+      (displayed.props.onReadiness as (value: unknown) => void)({
+        source: replacement,
+        location: { kind: "pdf", page: 1, pageCount: 1 },
+      });
+      click(S.feedback);
+      expect(button("针对当前第 1 页")).toBeDefined();
+    } else if (outcome === "failure") {
+      expect(finished.html).toContain(V.password);
+      expect(finished.html).toContain(S.revisionNotices.refreshFailed);
+      expect(button(S.feedback)?.props.disabled).toBe(false);
+      click(S.feedback);
+      expect(button("针对当前第 2 页")).toBeDefined();
+      expect(render().html).toContain(opinion.text);
+    }
   },
 );

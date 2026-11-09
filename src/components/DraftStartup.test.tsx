@@ -317,6 +317,26 @@ it("requires review when backend activity starts after the renderer save began",
   expect(nodes(render())).toContain("退出检查时，应用后台还有操作未确认结束。");
 });
 
+it.each([
+  ["FILE_COPY_EXIT_REVIEW_REQUIRED", EXIT_IMPACT.copyUnknown],
+  ["WORKTREE_EXIT_REVIEW_REQUIRED", "工作位置操作的结果尚未确认。"],
+])("explains %s and retains explicit confirmation", async (code, detail) => {
+  h.invoke.mockImplementation((name, input) =>
+    name === "app_exit_after_save" && !input.confirmActivity
+      ? Promise.reject(code)
+      : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 52 });
+  await vi.waitFor(() => expect(nodes(render())).toContain(detail));
+  click(EXIT_IMPACT.exit);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+      token: 52,
+      confirmActivity: true,
+    }),
+  );
+});
+
 it("only an explicit confirm saves and acknowledges active work", async () => {
   h.active = true;
   h.listeners.get("app:save-before-exit")!({ payload: 60 });

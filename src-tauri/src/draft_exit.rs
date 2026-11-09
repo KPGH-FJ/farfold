@@ -339,8 +339,22 @@ fn admit_file_exit(
     ),
     String,
 > {
-    let copy = copies.seal_exit_with_confirmation(confirm)?;
-    let worktree = worktrees.seal_exit(store, confirm)?;
+    let copy = copies
+        .seal_exit_with_confirmation(confirm)
+        .map_err(|error| {
+            if error == "EXIT_CONFIRMATION_REQUIRED" {
+                "FILE_COPY_EXIT_REVIEW_REQUIRED".into()
+            } else {
+                error
+            }
+        })?;
+    let worktree = worktrees.seal_exit(store, confirm).map_err(|error| {
+        if error == "EXIT_CONFIRMATION_REQUIRED" {
+            "WORKTREE_EXIT_REVIEW_REQUIRED".into()
+        } else {
+            error
+        }
+    })?;
     Ok((copy, worktree))
 }
 

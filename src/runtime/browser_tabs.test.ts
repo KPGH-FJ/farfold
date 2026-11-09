@@ -310,6 +310,31 @@ it("keeps an acknowledged tab selected when the switching snapshot arrives late"
     bounds,
   });
 });
+
+it("keeps a newer page event when a read of the same selected label arrives late", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const { tab, result } = await f.open();
+  const earlier = f.clone();
+  const held = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.tabs).mockReturnValueOnce(held.promise);
+  const refreshing = f.tabs.refresh();
+
+  const page = f.state.pages.find(({ label }) => label === result.label)!;
+  page.url = "https://a.example/new";
+  ++page.revision;
+  f.tabs.observe(tab, { ...page });
+  expect(f.tabs.getSnapshot().tabs[0].page).toEqual(page);
+  expect(earlier.selection).toEqual(f.state.selection);
+
+  held.resolve(earlier);
+  await refreshing;
+
+  expect(f.tabs.getSnapshot().selected).toBe(tab);
+  expect(f.tabs.canPresent(tab)).toBe(true);
+  expect(f.tabs.getSnapshot().tabs[0].page).toEqual(page);
+});
+
 it("failed selection retains pages, stays blocked after refresh, and retries only explicitly", async () => {
   const f = fixture();
   await f.tabs.start();
