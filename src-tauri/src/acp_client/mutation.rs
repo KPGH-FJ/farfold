@@ -24,10 +24,17 @@ pub(crate) enum Kind {
     Delete,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum DeleteFailure {
+    NotDispatched,
+    Unconfirmed(String),
+}
+
 pub(crate) enum Reply {
     Open(oneshot::Sender<Result<super::pump::restore_config::OpenState, String>>),
     Config(oneshot::Sender<Result<Value, String>>),
     Unit(oneshot::Sender<Result<(), String>>),
+    Delete(oneshot::Sender<Result<(), DeleteFailure>>),
     StoppedToolClose(oneshot::Sender<Result<super::pump::StoppedToolCloseReceipt, String>>),
 }
 impl Reply {
@@ -36,6 +43,7 @@ impl Reply {
             Self::Open(reply) => reply.is_closed(),
             Self::Config(reply) => reply.is_closed(),
             Self::Unit(reply) => reply.is_closed(),
+            Self::Delete(reply) => reply.is_closed(),
             Self::StoppedToolClose(reply) => reply.is_closed(),
         }
     }
@@ -52,6 +60,9 @@ impl Reply {
             Self::Unit(reply) => {
                 let _ = reply.send(value.map(|_| ()));
             }
+            Self::Delete(reply) => {
+                let _ = reply.send(value.map(|_| ()).map_err(DeleteFailure::Unconfirmed));
+            }
             Self::StoppedToolClose(reply) => {
                 let _ = reply.send(Err(value
                     .err()
@@ -59,11 +70,20 @@ impl Reply {
             }
         }
     }
+    pub(super) fn reject_before_dispatch(self, error: String) {
+        match self {
+            Self::Delete(reply) => {
+                let _ = reply.send(Err(DeleteFailure::NotDispatched));
+            }
+            other => other.send(Err(error)),
+        }
+    }
     async fn closed(&mut self) {
         match self {
             Self::Open(reply) => reply.closed().await,
             Self::Config(reply) => reply.closed().await,
             Self::Unit(reply) => reply.closed().await,
+            Self::Delete(reply) => reply.closed().await,
             Self::StoppedToolClose(reply) => reply.closed().await,
         }
     }
@@ -90,11 +110,15 @@ impl Mutation {
     }
     pub(crate) fn finish(mut self, outcome: Result<Value, String>) {
         let reply = self.reply.take();
+        let started = self.started;
         // A waiting caller may immediately request an account operation.
         // Release the actual mutation lease before waking that caller.
         drop(self);
         if let Some(reply) = reply {
-            reply.send(outcome);
+            match outcome {
+                Err(error) if !started => reply.reject_before_dispatch(error),
+                outcome => reply.send(outcome),
+            }
         }
     }
     pub(crate) fn finish_stopped_tool_close(

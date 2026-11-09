@@ -67,6 +67,38 @@ export function filePathUri(raw: string): string {
     : `file://${encode(path)}`;
 }
 
+/** A locator from the native canonical receipt; opening still rechecks the project root. */
+export function relativeVerifiedFilePath(
+  root: string,
+  resolvedPath: string,
+): string | null {
+  try {
+    const [rootHost, ...rootParts] = filePathUri(root).slice(7).split("/");
+    const [fileHost, ...fileParts] = filePathUri(resolvedPath)
+      .slice(7)
+      .split("/");
+    if (rootParts.at(-1) === "") rootParts.pop();
+    const invalid = (part: string) => !part || part === "." || part === "..";
+    if (
+      rootHost !== fileHost ||
+      rootParts.some(invalid) ||
+      fileParts.some(invalid) ||
+      fileParts.length <= rootParts.length ||
+      !rootParts.every((part, index) => fileParts[index] === part)
+    )
+      return null;
+    const relative = fileParts
+      .slice(rootParts.length)
+      .map(decodeURIComponent)
+      .join("/");
+    return isAbsoluteFilePath(relative) || /^[a-z][a-z0-9+.-]*:/i.test(relative)
+      ? null
+      : relative;
+  } catch {
+    return null;
+  }
+}
+
 /** Joining only a protocol-returned relative candidate; backend checks containment. */
 export function projectFileUri(root: string, relative: string): string {
   if (

@@ -19,6 +19,7 @@ use crate::acp_client::handshake::Handshake;
 use crate::acp_client::manager::{
     AcpManager, ConnectionKey, ManagedConnection, ManagerCommand, STATE_READY,
 };
+use crate::acp_client::mutation::DeleteFailure;
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
@@ -1189,12 +1190,15 @@ impl AcpManager {
         agent_id: &str,
         cwd: &Path,
         session_id: &str,
-    ) -> Result<bool, String> {
-        let connection = match self.session_owner(agent_id, cwd, session_id)? {
-            Some(owner) if owner.state.load(Ordering::SeqCst) == STATE_READY => owner,
-            Some(_) => return Err("对话连接尚未结束，请等待后重试".into()),
+    ) -> Result<bool, DeleteFailure> {
+        let (connection, has_owner) = match self
+            .session_owner(agent_id, cwd, session_id)
+            .map_err(|_| DeleteFailure::NotDispatched)?
+        {
+            Some(owner) if owner.state.load(Ordering::SeqCst) == STATE_READY => (owner, true),
+            Some(_) => return Err(DeleteFailure::NotDispatched),
             None => match self.live_connection(agent_id, cwd) {
-                Ok(connection) => connection,
+                Ok(connection) => (connection, false),
                 Err(_) => return Ok(false),
             },
         };
@@ -1213,34 +1217,45 @@ impl AcpManager {
             let sessions = connection
                 .sessions
                 .lock()
-                .map_err(|_| "session map lock poisoned")?;
+                .map_err(|_| DeleteFailure::NotDispatched)?;
             sessions.get(session_id).map(|entry| entry.control.clone())
         };
-        let (result_tx, result_rx) = oneshot::channel();
+        let wait = std::time::Duration::from_secs(30);
         match control {
             // Open session: delete through its pump (which then exits).
-            Some(control) => control
-                .send(SessionControl::Delete {
-                    result: result_tx,
-                    deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
-                })
-                .map_err(|_| "session is closed".to_string())?,
+            Some(control) => {
+                let (result, receive) = oneshot::channel();
+                control
+                    .send(SessionControl::Delete {
+                        result,
+                        deadline: tokio::time::Instant::now() + wait,
+                    })
+                    .map_err(|_| DeleteFailure::NotDispatched)?;
+                super::wait::reply(receive, wait, "session delete")
+                    .await
+                    .map_err(DeleteFailure::Unconfirmed)??;
+            }
+            // Do not fall through to a connection-level delete after losing the pump.
+            None if has_owner => return Err(DeleteFailure::NotDispatched),
             // Agent-side session never opened here: connection-level delete.
-            None => connection.send(ManagerCommand::DeleteSession {
-                session_id: session_id.to_string(),
-                result: result_tx,
-            })?,
+            None => {
+                let (result, receive) = oneshot::channel();
+                connection
+                    .send(ManagerCommand::DeleteSession {
+                        session_id: session_id.to_string(),
+                        result,
+                    })
+                    .map_err(|_| DeleteFailure::NotDispatched)?;
+                super::wait::reply(receive, wait, "session delete")
+                    .await
+                    .and_then(|outcome| outcome)
+                    .map_err(DeleteFailure::Unconfirmed)?;
+            }
         }
-        super::wait::reply(
-            result_rx,
-            std::time::Duration::from_secs(30),
-            "session delete",
-        )
-        .await??;
         connection
             .sessions
             .lock()
-            .map_err(|_| "session map lock poisoned")?
+            .map_err(|_| DeleteFailure::Unconfirmed("session map lock poisoned".into()))?
             .remove(session_id);
         Ok(true)
     }

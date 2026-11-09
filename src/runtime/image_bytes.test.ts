@@ -1,4 +1,4 @@
-import { crc32 } from "node:zlib";
+import { constants, crc32, deflateSync } from "node:zlib";
 import { expect, it } from "vitest";
 import {
   IMAGE_BYTES_STRINGS as S,
@@ -13,6 +13,9 @@ import {
 // real codec files, not claims that a browser or an Agent decoded them.
 const PNG =
   "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+// Exact bytes of the 160×100 test PNG that WebKit decoded as a black rectangle.
+const PNG_RESERVED_DEFLATE =
+  "iVBORw0KGgoAAAANSUhEUgAAAKAAAABkCAIAAACO1KzYAAAAB0lEQVR4nAcAAAABOVJ/1gAAAABJRU5ErkJggg==";
 const JPEG =
   "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDDh/1Ef+6P5UUUV+iYX+BD0X5HxGP/AN7q/wCKX5s//9k=";
 const GIF = "R0lGODdhAgABAIEAAP8AAACA/wAAAAAAACwAAAAAAgABAAAIBQABBAgIADs=";
@@ -129,6 +132,62 @@ it("rejects corrupt PNG chunks even when its dimensions and magic look valid", (
   ]);
   expect(() => inspectImageBytes(noImage)).toThrow(S.invalid);
 });
+
+function pngWithSplitIdat(template: Uint8Array, compressed: Uint8Array) {
+  const parts = [
+    new Uint8Array(),
+    compressed.subarray(0, 1),
+    compressed.subarray(1, 2),
+    new Uint8Array(),
+    compressed.subarray(2, 3),
+    compressed.subarray(3),
+  ];
+  const chunks = parts.map((part) => {
+    const kindAndData = Buffer.concat([Buffer.from("IDAT"), part]);
+    const chunk = Buffer.alloc(kindAndData.length + 8);
+    chunk.writeUInt32BE(part.length);
+    chunk.set(kindAndData, 4);
+    chunk.writeUInt32BE(crc32(kindAndData), chunk.length - 4);
+    return chunk;
+  });
+  return new Uint8Array(
+    Buffer.concat([
+      template.subarray(0, 33),
+      ...chunks,
+      template.subarray(-12),
+    ]),
+  );
+}
+
+it.each([false, true])(
+  "rejects a reserved first PNG DEFLATE block (split IDAT: %s)",
+  (split) => {
+    const original = bytes(PNG_RESERVED_DEFLATE);
+    const input = split
+      ? pngWithSplitIdat(original, original.subarray(41, 48))
+      : original;
+    expect(() => inspectImageBytes(input)).toThrow(S.invalid);
+  },
+);
+
+it.each([
+  [0, { level: 0 }],
+  [1, { strategy: constants.Z_FIXED }],
+  [2, { level: 9 }],
+] as const)(
+  "accepts PNG DEFLATE block type %i across IDAT chunks",
+  (type, options) => {
+    const scanlines = Buffer.alloc(100 * (1 + 160 * 3));
+    const compressed = deflateSync(scanlines, options);
+    expect((compressed[2] >>> 1) & 3).toBe(type);
+    const input = pngWithSplitIdat(bytes(PNG_RESERVED_DEFLATE), compressed);
+    expect(inspectImageBytes(input)).toEqual({
+      mimeType: "image/png",
+      width: 160,
+      height: 100,
+    });
+  },
+);
 
 function jpegFrame(input: Uint8Array) {
   return input.findIndex(

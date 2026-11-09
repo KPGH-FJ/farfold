@@ -168,6 +168,9 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
                 if kind == "config" {
                     let (reply, receiver) = oneshot::channel::<Result<Value, String>>();
                     (MutationReply::Config(reply), Box::new(receiver))
+                } else if kind == "delete" {
+                    let (reply, receiver) = oneshot::channel();
+                    (MutationReply::Delete(reply), Box::new(receiver))
                 } else {
                     let (reply, receiver) = oneshot::channel::<Result<(), String>>();
                     (MutationReply::Unit(reply), Box::new(receiver))
@@ -267,6 +270,24 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
             .await
             .expect("one actual mutation outcome");
             *actual_outcome.lock().unwrap() = Some(result.is_ok());
+            if kind == "delete" {
+                use crate::acp_client::mutation::DeleteFailure;
+
+                mutation.take().unwrap().finish(result);
+                let receive = receiver
+                    .take()
+                    .unwrap()
+                    .downcast::<oneshot::Receiver<Result<(), DeleteFailure>>>()
+                    .unwrap();
+                assert_eq!(
+                    receive.await.unwrap(),
+                    if expected_writes == 0 {
+                        Err(DeleteFailure::NotDispatched)
+                    } else {
+                        Ok(())
+                    }
+                );
+            }
             drop(receiver);
             drop(mutation);
             Ok(())

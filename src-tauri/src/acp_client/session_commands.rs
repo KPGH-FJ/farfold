@@ -7,6 +7,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::delivery_flow::Wake;
 use super::delivery_observation::DeliveryChannel;
+use super::mutation::DeleteFailure;
 use agent_client_protocol::schema::v1::ContentBlock;
 use serde_json::Value;
 use tauri::ipc::Channel;
@@ -21,7 +22,7 @@ use crate::acp_client::session_index::{
 };
 use crate::lifemodel;
 use crate::logging;
-use crate::meta_store::{MetaStore, SessionRow};
+use crate::meta_store::{LocalSessionDeleteError, MetaStore, SessionRow};
 
 /// Open (or resume) a session. `channel` receives every event for this
 /// session: raw `session/update` params, `permissionRequest`, `turnEnd`,
@@ -810,58 +811,126 @@ pub async fn session_meta_archive(
         .await
 }
 
-/// Delete a session: `session/delete` on the agent when advertised, remove
-/// the index row, and always write a tombstone so agents without a delete
-/// capability cannot resurrect it through `session/list`.
+#[derive(Clone, Copy, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum SessionDeleteAgentResult {
+    Deleted,
+    Unsupported,
+    Unconfirmed,
+}
+
+#[derive(Clone, Copy, serde::Serialize)]
+#[serde(tag = "code", rename_all = "camelCase")]
+pub enum SessionDeleteFailure {
+    LocalNotRemoved {
+        agent: Option<SessionDeleteAgentResult>,
+    },
+    LocalRemovalUnknown {
+        agent: SessionDeleteAgentResult,
+    },
+}
+
+#[cfg(test)]
+#[test]
+fn session_delete_reports_the_agent_result_separately_from_local_failure() {
+    use serde_json::json;
+
+    for (agent, wire) in [
+        (SessionDeleteAgentResult::Deleted, "deleted"),
+        (SessionDeleteAgentResult::Unsupported, "unsupported"),
+        (SessionDeleteAgentResult::Unconfirmed, "unconfirmed"),
+    ] {
+        assert_eq!(serde_json::to_value(agent).unwrap(), json!(wire));
+        assert_eq!(
+            serde_json::to_value(SessionDeleteFailure::LocalNotRemoved { agent: Some(agent) })
+                .unwrap(),
+            json!({"code":"localNotRemoved","agent":wire})
+        );
+        assert_eq!(
+            serde_json::to_value(SessionDeleteFailure::LocalRemovalUnknown { agent }).unwrap(),
+            json!({"code":"localRemovalUnknown","agent":wire})
+        );
+    }
+    assert_eq!(
+        serde_json::to_value(SessionDeleteFailure::LocalNotRemoved { agent: None }).unwrap(),
+        json!({"code":"localNotRemoved","agent":null})
+    );
+}
+
+/// Request official Agent deletion and commit the local removal and history
+/// filter together. A local failure retains the distinct Agent-side result.
 ///
 /// `native_session_id` is passed explicitly so callers can also delete
 /// agent-side sessions that have no index row. The returned value reports the
 /// agent-side outcome so the UI can state residue honestly:
-/// `"deleted"`, `"unsupported"` (no session/delete capability or no live
-/// connection to ask), or `"unconfirmed"` (the remote call failed).
+/// `"deleted"`, `"unsupported"` (no remote deletion requested), or
+/// `"unconfirmed"` (the Agent-side result could not be confirmed).
 #[tauri::command]
 pub async fn session_delete(
     app: AppHandle,
     agent_id: String,
     cwd: String,
     native_session_id: String,
-) -> Result<&'static str, String> {
-    let cwd = validate_cwd_async(&cwd).await?;
+) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
+    let cwd = validate_cwd_async(&cwd)
+        .await
+        .map_err(|_| SessionDeleteFailure::LocalNotRemoved { agent: None })?;
+    delete_session_in_scope(
+        &app.state::<AcpManager>(),
+        &app.state::<MetaStore>(),
+        &agent_id,
+        &cwd,
+        &native_session_id,
+    )
+    .await
+}
+
+pub(super) async fn delete_session_in_scope(
+    manager: &AcpManager,
+    store: &MetaStore,
+    agent_id: &str,
+    cwd: &std::path::Path,
+    native_session_id: &str,
+) -> Result<SessionDeleteAgentResult, SessionDeleteFailure> {
     let cwd_string = cwd.to_string_lossy().into_owned();
-    let row_id = MetaStore::dismissed_id(&agent_id, &cwd_string, &native_session_id);
-    let manager = app.state::<AcpManager>();
+    let row_id = MetaStore::dismissed_id(agent_id, &cwd_string, native_session_id);
     let remote = match manager
-        .delete_session(&agent_id, &cwd, &native_session_id)
+        .delete_session(agent_id, cwd, native_session_id)
         .await
     {
-        Ok(true) => "deleted",
+        Ok(true) => SessionDeleteAgentResult::Deleted,
         Ok(false) => {
             logging::info(
                 "acp_client",
-                format_args!(
-                    "session_delete: {agent_id} lacks session/delete; tombstone only ({row_id})"
-                ),
+                format_args!("session_delete: no Agent deletion requested for {row_id}"),
             );
-            "unsupported"
+            SessionDeleteAgentResult::Unsupported
         }
-        Err(error) => {
-            // Best-effort: the tombstone still prevents resurrection;
-            // surface the failure in the log, not as a hard error.
+        Err(DeleteFailure::NotDispatched) => {
+            return Err(SessionDeleteFailure::LocalNotRemoved { agent: None });
+        }
+        Err(DeleteFailure::Unconfirmed(error)) => {
             logging::warn(
                 "acp_client",
                 format_args!("session_delete remote failed ({row_id}): {error}"),
             );
-            "unconfirmed"
+            SessionDeleteAgentResult::Unconfirmed
         }
     };
-    let store = app.state::<MetaStore>();
-    store
-        .run(move |store| {
-            store.remove_session(&row_id)?;
-            store.dismiss_session(&row_id)
-        })
-        .await?;
-    Ok(remote)
+    match store
+        .run(move |store| Ok(store.remove_and_dismiss_session(&row_id)))
+        .await
+    {
+        Ok(Ok(())) => Ok(remote),
+        Ok(Err(LocalSessionDeleteError::NotRemoved)) => {
+            Err(SessionDeleteFailure::LocalNotRemoved {
+                agent: Some(remote),
+            })
+        }
+        Ok(Err(LocalSessionDeleteError::Unknown)) | Err(_) => {
+            Err(SessionDeleteFailure::LocalRemovalUnknown { agent: remote })
+        }
+    }
 }
 
 /// Tombstone an agent-side session so `session/list` stops surfacing it

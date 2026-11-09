@@ -104,6 +104,28 @@ afterEach(() => {
   for (const s of h.slots) s.cleanup?.();
   vi.unstubAllGlobals();
 });
+it("passes the verified target of a large-file handoff to the current project reader", () => {
+  const card = render().find((node) => node.type === FileArtifactView)!;
+  const expected = {
+    root: "/work",
+    path: "/work/actual/report.md",
+    resolvedPath: "/work/actual/report.md",
+    name: "report.md",
+    size: 1_048_577,
+    sha256: "fixture-hash",
+    version: "verified",
+  };
+  (card.props.onOpenFile as (path: string, file: typeof expected) => void)(
+    "actual/report.md",
+    expected,
+  );
+  expect(opened().props).toMatchObject({
+    path: "actual/report.md",
+    expectedFile: expected,
+    workingDirectory: "/work",
+    threadKey: props.thread.key,
+  });
+});
 it.each(["hide", "inactive", "thread", "cwd", "scope", "hide-return"])(
   "old file handler cannot read after %s transition",
   (change) => {

@@ -727,6 +727,82 @@ it("routes large Markdown to an explicit source fragment, retaining verified fil
   expect(h.open).not.toHaveBeenCalled();
 });
 
+it.each(["native refusal", "mismatched reply"])(
+  "refuses another canonical target before reading a handed-off large file (%s)",
+  async (outcome) => {
+    const expectedFile = largeBlock().file;
+    const different = { ...expectedFile, resolvedPath: "/work/different.md" };
+    h.inspectLink.mockResolvedValue(different);
+    h.readBlock.mockResolvedValue({ ...largeBlock(), file: different });
+    if (outcome === "native refusal")
+      h.checkRevision.mockRejectedValueOnce({ code: "redirected" });
+    else
+      h.checkRevision.mockResolvedValueOnce({
+        kind: "verified",
+        file: different,
+      });
+    render({ ...props, expectedFile });
+    await drain();
+    expect(h.checkRevision).toHaveBeenCalledExactlyOnceWith(
+      expectedFile,
+      "content",
+    );
+    expect(h.inspectLink).not.toHaveBeenCalled();
+    expect(h.readBlock).not.toHaveBeenCalled();
+    expect(render().html).toContain(S.revisionNotices.redirected);
+    expect(button(S.retry)).toBeDefined();
+    expect(button(T.openLocation)).toBeUndefined();
+    expect(button(T.revealLocation)).toBeUndefined();
+  },
+);
+
+it("accepts a new version of the same canonical target on a large-file handoff", async () => {
+  const fresh = largeBlock("v2");
+  const expectedFile = largeBlock().file;
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: fresh.file });
+  h.readBlock.mockResolvedValue(fresh);
+  render({ ...props, expectedFile });
+  await vi.waitFor(() => expect(render().html).toContain(fresh.text));
+  expect(h.checkRevision).toHaveBeenCalledExactlyOnceWith(
+    expectedFile,
+    "content",
+  );
+  expect(h.inspectLink).not.toHaveBeenCalled();
+  expect(h.readBlock).toHaveBeenCalledExactlyOnceWith(fresh.file, 0, true);
+  expect(button(T.save)).toBeDefined();
+});
+
+it("keeps a segmented handoff on the protected block reader when the verified target shrinks", async () => {
+  const expectedFile = largeBlock().file;
+  const fresh = { ...largeBlock("v2"), blockCount: 1, endsMidLine: false };
+  fresh.file = { ...fresh.file, size: fresh.byteEnd };
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: fresh.file });
+  h.readBlock.mockResolvedValue(fresh);
+  h.readText.mockResolvedValue({
+    file: fresh.file,
+    text: "whole read should not run",
+  });
+  render({ ...props, expectedFile });
+  await drain();
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readBlock).toHaveBeenCalledExactlyOnceWith(fresh.file, 0, true);
+  expect(render().html).toContain(fresh.text);
+  expect(button(T.save)).toBeDefined();
+});
+
+it("does not open a live page from a nontext reply to a segmented handoff", async () => {
+  const expectedFile = largeBlock().file;
+  h.checkRevision.mockResolvedValueOnce({
+    kind: "verified",
+    file: { ...expectedFile, name: "page.html" },
+  });
+  render({ ...props, expectedFile });
+  await vi.waitFor(() => expect(button(S.retry)).toBeDefined());
+  expect(props.onOpenHtml).not.toHaveBeenCalled();
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readBlock).not.toHaveBeenCalled();
+});
+
 it("keeps the original path and retries after inspection failure", async () => {
   h.inspectLink.mockRejectedValueOnce(new Error("sensitive backend details"));
   render();

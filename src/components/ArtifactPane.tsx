@@ -99,6 +99,7 @@ export interface OpenedFileRequest {
   taskKey: string;
   cwd: string;
   path: string;
+  expectedFile?: VerifiedFile;
   selection: number;
   pdfSearchTarget?: AttachmentPdfPreviewTarget;
 }
@@ -202,7 +203,7 @@ export function ArtifactPane({
     setOpenedFile({ ...fileRequest, cwd: thread.cwd, scope: roundId });
     chooseContent("files");
   }, [fileRequest, thread.key]);
-  const openFile = (path: string) => {
+  const openFile = (path: string, expectedFile?: VerifiedFile) => {
     if (!ownsContent()) return;
     retirePicker();
     setOpenedFile({
@@ -210,6 +211,7 @@ export function ArtifactPane({
       cwd: thread.cwd,
       scope: roundId,
       path,
+      expectedFile,
       selection: --fileSelection.current,
     });
     chooseContent("files");
@@ -623,6 +625,7 @@ export function ArtifactPane({
             feedbackDestination={contentFeedbackDestination}
             key={`${currentFile.taskKey}:${currentFile.selection}`}
             path={currentFile.path}
+            expectedFile={currentFile.expectedFile}
             threadKey={thread.key}
             workingDirectory={thread.cwd}
             readingPosition={readingPosition}

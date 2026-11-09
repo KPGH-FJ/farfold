@@ -149,6 +149,56 @@ fn forget_and_empty_clear_reject_late_writes_without_touching_sibling_data() {
 }
 
 #[test]
+fn explicit_deletion_rolls_back_index_and_pages_when_dismissal_write_fails() {
+    let store = store();
+    let who = owner("first", 10);
+    let sibling = owner("second", 20);
+    insert(&store, &who);
+    insert(&store, &sibling);
+    let row = store.get_session(&who.session_id).unwrap();
+    let pages = store
+        .remember_page(&who, 0, "https://example.com/a")
+        .unwrap();
+    let sibling_pages = store
+        .remember_page(&sibling, 0, "https://example.org/other")
+        .unwrap();
+    store
+        .lock()
+        .unwrap()
+        .execute_batch(
+            "CREATE TRIGGER refuse_dismissal BEFORE INSERT ON dismissed_sessions \
+             BEGIN SELECT RAISE(ABORT, 'fixture'); END;",
+        )
+        .unwrap();
+
+    assert_eq!(
+        store.remove_and_dismiss_session(&who.session_id),
+        Err(crate::meta_store::LocalSessionDeleteError::NotRemoved)
+    );
+    assert_eq!(store.get_session(&who.session_id).unwrap(), row);
+    assert_eq!(store.remembered_pages(&who).unwrap(), pages);
+    assert!(store.list_dismissed().unwrap().is_empty());
+
+    store
+        .lock()
+        .unwrap()
+        .execute_batch("DROP TRIGGER refuse_dismissal")
+        .unwrap();
+    store.remove_and_dismiss_session(&who.session_id).unwrap();
+    assert!(store.get_session(&who.session_id).unwrap().is_none());
+    assert!(raw(&store, &who).is_none());
+    assert_eq!(store.remembered_pages(&sibling).unwrap(), sibling_pages);
+    assert_eq!(store.list_dismissed().unwrap(), [who.session_id].into());
+
+    // A remote-only item can be hidden even though it has no local index row.
+    let remote_only = "remote-only";
+    store.remove_and_dismiss_session(remote_only).unwrap();
+    store.remove_and_dismiss_session(remote_only).unwrap();
+    assert_eq!(store.list_dismissed().unwrap().len(), 2);
+    assert!(store.list_dismissed().unwrap().contains(remote_only));
+}
+
+#[test]
 fn deletion_is_atomic_and_stale_owner_cannot_restore_pages_after_delete_or_clear() {
     let store = store();
     let who = owner("first", 10);

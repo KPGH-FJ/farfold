@@ -1011,7 +1011,12 @@ async fn session_pump(
             } => match command {
                 None => break,
                 Some(command) => {
-                    if command.abandoned() { continue; }
+                    if command.abandoned() {
+                        if let SessionControl::Delete { result, .. } = command {
+                            let _ = result.send(Err(super::mutation::DeleteFailure::NotDispatched));
+                        }
+                        continue;
+                    }
                     if purpose == super::open_purpose::OpenPurpose::SearchReadOnly
                         && !matches!(command, SessionControl::Close { .. } | SessionControl::Detach { .. } | SessionControl::Shutdown) {
                         command.reject_restore("此对话仅供查看，请先关闭查看结果再继续".into(), RestoreConfirmCode::ReadOnly);
@@ -1391,7 +1396,7 @@ async fn session_pump(
                         SessionControl::SetMode { result, .. } if prompt_owner.as_ref().is_some_and(prompt::Active::unresolved) => {
                             let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into())); continue;
                         }
-                        SessionControl::SetMode { mode_id, result, deadline } => (MutationKind::Mode, result, deadline,
+                        SessionControl::SetMode { mode_id, result, deadline } => (MutationKind::Mode, MutationReply::Unit(result), deadline,
                             "session/set_mode", serde_json::json!({"sessionId":session_id, "modeId":mode_id})),
                         SessionControl::Close { result, deadline, require_idle_interactions } => {
                             if require_idle_interactions
@@ -1403,23 +1408,23 @@ async fn session_pump(
                                 let _ = result.send(Err("请先完成此对话的任务及待处理事项，再关闭或重新连接".into()));
                                 continue;
                             }
-                            (MutationKind::Close, result, deadline, "session/close", serde_json::json!({"sessionId":session_id}))
+                            (MutationKind::Close, MutationReply::Unit(result), deadline, "session/close", serde_json::json!({"sessionId":session_id}))
                         }
-                        SessionControl::Delete { result, deadline } => (MutationKind::Delete, result, deadline,
+                        SessionControl::Delete { result, deadline } => (MutationKind::Delete, MutationReply::Delete(result), deadline,
                             "session/delete", serde_json::json!({"sessionId":session_id})),
                         _ => unreachable!(),
                     };
                     if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) {
-                        let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
+                        result.reject_before_dispatch("上次请求尚未结束，请先停止或等待".into());
                         continue;
                     }
                     let lease = match ops.life.operation(format!("open:{session_id}")) {
                         Ok(lease) => lease,
-                        Err(error) => { let _ = result.send(Err(error)); continue; }
+                        Err(error) => { result.reject_before_dispatch(error); continue; }
                     };
                     let operation = Operation::new();
                     let (request_operation, request_cx) = (operation.clone(), cx.clone());
-                    let pending = Mutation::new(kind, MutationReply::Unit(result), operation, lease,
+                    let pending = Mutation::new(kind, result, operation, lease,
                         deadline, async move {
                             let request = UntypedMessage::new(method, &params).map_err(describe_acp_error)?;
                             request_operation.request(&request_cx, request_cx.send_request_to(Agent, request))

@@ -50,6 +50,7 @@ import {
   useCollections,
 } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
+import { agentDeletionNotice } from "../runtime/session_deletion";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
 import { hasUnconfirmedToolTail } from "../runtime/thread_attention";
 import {
@@ -191,6 +192,7 @@ export function ThreadPage({
   const [name, setName] = useState(title);
   const [moving, setMoving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deletionNotice, setDeletionNotice] = useState<string | null>(null);
   const [toolsOwner, setToolsOwner] = useState<{
     thread: ThreadState;
     connectionId: string | undefined;
@@ -238,7 +240,10 @@ export function ThreadPage({
     setError(null);
   };
   useEffect(() => {
-    if (!active) closeDialog();
+    if (!active) {
+      closeDialog();
+      setDeletionNotice(null);
+    }
     return () => actions.current.invalidate();
   }, [active, viewKey]);
   const mutate = (action: () => Promise<void>) =>
@@ -397,6 +402,7 @@ export function ThreadPage({
               !rename &&
               !moving &&
               !deleting &&
+              !deletionNotice &&
               !exported &&
               !forkVisible
             }
@@ -768,12 +774,44 @@ export function ThreadPage({
             returnFocusRef={menuAnchor}
             onClose={closeDialog}
             onDelete={() =>
-              void mutate(async () => {
-                await threads.delete(row);
-                onBack();
-              })
+              void actions.current.run(
+                async () => {
+                  const outcome = await threads.delete(row);
+                  await collections
+                    .assign([viewKey], "")
+                    .catch(() => undefined);
+                  return outcome;
+                },
+                {
+                  pending: setSaving,
+                  success: (outcome) => {
+                    closeDialog();
+                    if (outcome === "deleted") onBack();
+                    else setDeletionNotice(agentDeletionNotice(outcome));
+                  },
+                  failure: (reason) =>
+                    setError(uiError(reason, LIBRARY.deleteLocalUnknown)),
+                },
+              )
             }
           />
+        )}
+        {active && deletionNotice && (
+          <WorkspaceDialog title={LIBRARY.deleteResult} onClose={onBack}>
+            <div className="workspace-dialog-body" role="status">
+              <p>{LIBRARY.deleteLocalRemoved}</p>
+              <p>{deletionNotice}</p>
+            </div>
+            <footer>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={onBack}
+              >
+                {LIBRARY.back}
+              </button>
+            </footer>
+          </WorkspaceDialog>
         )}
         {active && rename && (
           <WorkspaceDialog

@@ -129,8 +129,17 @@ export const LIBRARY = {
     queued: "还有排队消息，发送或移除后再删除。",
     unsent: "还有未发送的内容，发送或清除后再删除。",
   },
-  deletePartial: (n: number) =>
-    `其中 ${n} 段的 Agent 侧记录未能删除或未能确认，仍保留在 Agent 中。`,
+  deleteLocalNotRemoved: "未从对话列表移除。",
+  deleteLocalUnknown: "本机移除结果尚未确认，请先核对对话列表。",
+  deleteConnectionNotClosed: "尚未确认连接已结束，因此未向 Agent 请求删除。",
+  deleteResult: "对话删除结果",
+  deleteLocalRemoved: "已从对话列表移除。",
+  deleteAgentConfirmed: "Agent 端确认已删除。",
+  deleteAgentNotRequested: "未向 Agent 请求删除。",
+  deleteAgentUnknown: "Agent 端删除结果尚未确认。",
+  deleteNotRequestedCount: (n: number) => `其中 ${n} 段未向 Agent 请求删除。`,
+  deleteAgentUnknownCount: (n: number) =>
+    `其中 ${n} 段的 Agent 端删除结果尚未确认。`,
   clearArchived: "清空已归档",
   clearArchivedTitle: "清空已归档",
   clearArchivedHint: (n: number) =>

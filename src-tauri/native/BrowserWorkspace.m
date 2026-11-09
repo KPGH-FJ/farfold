@@ -658,6 +658,9 @@ static NSDictionary *unknownAction(NSString *observationID, BOOL changed) {
     return @{@"applied":NSNull.null,@"outcome":@"unknown",@"reason":@"操作结果未确认，请查看页面后再决定下一步",
              @"pageChanged":@(changed),@"navigationChanged":@(changed),@"observationId":observationID};
 }
+static NSDictionary *unavailableScreenshot(NSString *reason, NSString *stage, NSString *category) {
+    return @{@"status":@"unavailable",@"reason":reason,@"diagnostic":@{@"stage":stage,@"category":category}};
+}
 static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *request, uint64_t navigation, NSString *url, NSMutableDictionary *result) {
     WKSnapshotConfiguration *configuration = [WKSnapshotConfiguration new];
     NSRect bounds = browser.view.bounds;
@@ -674,9 +677,15 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
         NSData *png = nil;
         NSBitmapImageRep *bitmap = image ? [NSBitmapImageRep imageRepWithData:image.TIFFRepresentation] : nil;
         if (bitmap && !error && bitmap.pixelsWide <= 1024 && bitmap.pixelsHigh <= 1024) png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
-        NSDictionary *screenshot = png && png.length <= 300000 ?
-            @{@"status":@"captured",@"mimeType":@"image/png",@"data":[png base64EncodedStringWithOptions:0],@"width":@(bitmap.pixelsWide),@"height":@(bitmap.pixelsHigh)} :
-            @{@"status":@"unavailable",@"reason":@"截图未完成或超过大小限制"};
+        NSDictionary *screenshot;
+        if (png && png.length <= 300000) {
+            screenshot = @{@"status":@"captured",@"mimeType":@"image/png",@"data":[png base64EncodedStringWithOptions:0],@"width":@(bitmap.pixelsWide),@"height":@(bitmap.pixelsHigh)};
+        } else {
+            NSString *category = @"encoding_failed";
+            if (error || !image) category = @"system_capture_failed";
+            else if (bitmap.pixelsWide > 1024 || bitmap.pixelsHigh > 1024 || png.length > 300000) category = @"image_limit";
+            screenshot = unavailableScreenshot(@"截图未完成或超过大小限制",@"capture",category);
+        }
         [active.view callAsyncJavaScript:observationProgram() arguments:@{@"mode":@"check",@"epochSeed":NSUUID.UUID.UUIDString,@"inspectClosedRoots":@YES} inFrame:nil inContentWorld:observationWorld() completionHandler:^(id checked, NSError *checkError) {
             FFPublicBrowser *current = weakBrowser;
             if (!current || current.readRequest != request) return;
@@ -686,7 +695,8 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
             if (![checked[@"closedRootInspection"] boolValue] ||
                 ![checked[@"documentVersion"] isEqual:result[@"documentVersion"]] ||
                 ![checked[@"viewport"] isEqual:result[@"viewport"]] || ![checked[@"url"] isEqual:url]) { current.observationID = nil; finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
-            result[@"screenshot"] = [checked[@"screenshotReason"] isKindOfClass:NSString.class] ? @{@"status":@"unavailable",@"reason":checked[@"screenshotReason"]} : screenshot;
+            result[@"screenshot"] = [checked[@"screenshotReason"] isKindOfClass:NSString.class] ?
+                unavailableScreenshot(checked[@"screenshotReason"],@"after_capture",@"page_structure") : screenshot;
             finishOperation(current,request,result,nil);
         }];
     }];
@@ -727,10 +737,13 @@ static int32_t startObservation(uint64_t browserID, uint64_t operationID, uint64
         if ([result[@"blocked"] boolValue]) { finishOperation(active,request,result,nil); return; }
         active.observationID = result[@"observationId"];
         NSString *reason = [result[@"screenshotReason"] isKindOfClass:NSString.class] ? result[@"screenshotReason"] : nil;
-        if (screenshot && (!observationInspectsClosedRoots || ![result[@"closedRootInspection"] boolValue]))
+        BOOL closedRootInspectionUnavailable = screenshot && (!observationInspectsClosedRoots || ![result[@"closedRootInspection"] boolValue]);
+        if (closedRootInspectionUnavailable)
             reason = @"当前系统尚不能可靠检查页面的封闭内容，暂不提供截图";
         [result removeObjectForKey:@"screenshotReason"];
-        result[@"screenshot"] = @{@"status":@"unavailable",@"reason":reason ?: @"本次未请求截图"};
+        result[@"screenshot"] = screenshot && reason ? unavailableScreenshot(reason,@"before_capture",
+            closedRootInspectionUnavailable ? @"closed_root_inspection_unavailable" : @"page_structure") :
+            @{@"status":@"unavailable",@"reason":reason ?: @"本次未请求截图"};
         if (!screenshot || reason) finishOperation(active,request,result,nil);
         else takeObservationSnapshot(active,request,navigation,url,result);
     }];

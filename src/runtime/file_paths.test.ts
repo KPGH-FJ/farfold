@@ -4,6 +4,7 @@ import {
   filePathUri,
   isAbsoluteFilePath,
   projectFileUri,
+  relativeVerifiedFilePath,
 } from "./file_paths";
 import {
   fileDelivery,
@@ -73,4 +74,44 @@ it("routes a Windows absolute delivery candidate through explicit file inspectio
   expect(reportedFiles(call)).toEqual([
     { path: "C:\\work\\out.md", toolCallId: "one", source: "location" },
   ]);
+});
+
+it.each([
+  ["/work", "/work/reports/中文 #%.md", "reports/中文 #%.md"],
+  ["/", "/report.md", "report.md"],
+  [
+    "\\\\?\\C:\\work",
+    "\\\\?\\C:\\work\\reports\\result.md",
+    "reports/result.md",
+  ],
+  ["C:\\work", "C:/work/reports/result.md", "reports/result.md"],
+  [
+    "\\\\?\\UNC\\host\\share",
+    "\\\\?\\UNC\\host\\share\\dir\\result.md",
+    "dir/result.md",
+  ],
+  ["", "/work/result.md", null],
+  ["/work", "/work-other/result.md", null],
+  ["/work", "/work/../result.md", null],
+  ["/work", "/work", null],
+  ["C:\\work", "D:\\work\\result.md", null],
+  ["\\\\host-a\\share", "\\\\host-b\\share\\result.md", null],
+])(
+  "derives a relative locator from exact canonical components (%s, %s)",
+  (root, file, expected) => {
+    expect(relativeVerifiedFilePath(root, file)).toBe(expected);
+  },
+);
+
+it("opens the derived Windows locator within its working directory", async () => {
+  vi.mocked(invoke).mockClear();
+  vi.mocked(invoke).mockResolvedValueOnce(undefined);
+  const root = "C:\\work";
+  const path = relativeVerifiedFilePath(root, "C:\\work\\dir\\result.md");
+  expect(path).toBe("dir/result.md");
+  await fileDelivery.inspectLink(root, path!);
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("file_delivery_inspect", {
+    root,
+    path,
+  });
 });

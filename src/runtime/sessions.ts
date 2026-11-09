@@ -14,6 +14,8 @@ import {
 } from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
 import { createSessionIndexReader } from "./session_index_refresh";
+import { requestSessionDeletion, SessionDeletions } from "./session_deletion";
+import type { SessionDeletionInput } from "./session_deletion";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
 import { observeAuthentication } from "./authentication";
@@ -244,11 +246,14 @@ class ThreadsStore {
     refreshIndex: () => this.refreshIndex(),
   });
   forkCurrent(key: string): Promise<ThreadState | undefined> {
-    return this.forks.start(key);
+    return this.deletions.has(key)
+      ? Promise.resolve(undefined)
+      : this.forks.start(key);
   }
   prepareNewFork(key: string, operationId: string): boolean {
-    return this.forks.prepareNew(key, operationId);
+    return !this.deletions.has(key) && this.forks.prepareNew(key, operationId);
   }
+  private deletions = new SessionDeletions();
   /** dedupe concurrent opens (same agent+cwd+native target). */
   private openings = new Map<string, Promise<ThreadState>>();
   /** Unprompted ("draft") conversations per agent+cwd — re-picking the
@@ -518,6 +523,8 @@ class ThreadsStore {
     let retryState: ThreadState | undefined;
     if (input.nativeSessionId) {
       const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
+      if (this.deletions.has(key))
+        return Promise.reject(new Error(LIBRARY.deleteReasons.unconfirmed));
       const existing = this.threads.get(key);
       if (existing && hasActiveFork(existing))
         return Promise.reject(new Error(STRINGS.repair.reconnectFailed));
@@ -864,7 +871,7 @@ class ThreadsStore {
     sourceDraft?: { key: string; value: ComposerDraft },
   ): Promise<SendAdmission> {
     const s = this.thread(key);
-    if (!s || !blocks.length) {
+    if (!s || !blocks.length || this.deletions.has(key)) {
       if (sourceDraft) throw new Error(STRINGS.repair.sendFailed);
       return { status: "rejected", reason: "unavailable" };
     }
@@ -881,6 +888,8 @@ class ThreadsStore {
       s.connectionId !== connectionId ||
       this.thread(key) !== s;
     if (s.configuring) await this.configurations.requests.get(key);
+    if (this.deletions.has(key))
+      return { status: "rejected", reason: "unavailable" };
     if (s.configError) throw new Error(STRINGS.repair.configFailed);
     if (
       sourceDraft &&
@@ -963,6 +972,7 @@ class ThreadsStore {
     const s = this.thread(key);
     if (
       !s ||
+      this.deletions.has(key) ||
       s.uncertainPrompt ||
       s.connectionOutcomeUnknown ||
       s.queued.some(queuedAttachmentsNeedReview) ||
@@ -1197,6 +1207,8 @@ class ThreadsStore {
     configId: string,
     value: unknown,
   ): Promise<void> {
+    if (this.deletions.has(key))
+      throw new Error(LIBRARY.deleteReasons.unconfirmed);
     return this.configurations.set(key, configId, value);
   }
 
@@ -1354,6 +1366,8 @@ class ThreadsStore {
   }
 
   async close(key: string): Promise<void> {
+    if (this.deletions.has(key))
+      throw new Error(LIBRARY.deleteReasons.unconfirmed);
     const s = this.threads.get(key);
     if (s && hasActiveFork(s)) throw new Error(STRINGS.repair.archiveBusy);
     this.stopConfirmation.clear(key);
@@ -1392,6 +1406,7 @@ class ThreadsStore {
 
   /** The UI and mutation share one guard; this reads existing state only. */
   archiveBlockReason(rowId: string) {
+    if (this.deletions.has(rowId)) return "unconfirmed";
     return archiveBlockReason(rowId, this.thread(rowId), (state) =>
       this.needsAttention(state),
     );
@@ -1440,48 +1455,36 @@ class ThreadsStore {
     });
   }
 
-  /** Delete a session — agent-side `session/delete` when supported, index
-   *  row removal, and a tombstone so it cannot reappear. Works for both
-   *  meta rows (`source:"meta"`) and agent-side rows (`source:"agent"`).
-   *  Reports the agent-side outcome: "deleted" (the agent confirmed),
-   *  "unsupported" (it cannot delete or could not be asked — its record
-   *  stays), "unconfirmed" (the request failed, residue unknown). */
-  async delete(row: {
-    id?: string;
-    key?: string;
-    agentId: string;
-    cwd: string;
-    nativeSessionId: string | null;
-  }): Promise<"deleted" | "unsupported" | "unconfirmed"> {
+  /** Retire loaded state only after local deletion is confirmed. */
+  async delete(row: SessionDeletionInput) {
     const native = row.nativeSessionId;
-    if (!native) return "unsupported";
+    if (!native) throw new Error(LIBRARY.deleteLocalNotRemoved);
     const key = row.id ?? row.key ?? `${row.agentId}:${row.cwd}:${native}`;
-    // W3-9：进行中、发送中、停止/结果未确认或还有未发送内容的对话不能
-    // 删除——先完成或清除，避免索引与 Agent 侧活动工作失联。
     const blocked = this.archiveBlockReason(key);
     if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
-    const s = this.threads.get(key);
-    this.removeThread(key);
-    if (s) this.drafts.delete(s.draftGroup ?? "");
-    this.channels.delete(key);
-    this.emit();
-    if (s) {
-      await invoke("session_close", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-      }).catch(() => undefined);
-    }
-    const remote = await invoke<"deleted" | "unsupported" | "unconfirmed">(
-      "session_delete",
-      {
-        agentId: row.agentId,
-        cwd: row.cwd,
-        nativeSessionId: native,
+    return this.deletions.run(
+      key,
+      async () => {
+        const s = this.threads.get(key);
+        this.emit(key);
+        const remote = await requestSessionDeletion(
+          { agentId: row.agentId, cwd: row.cwd, nativeSessionId: native },
+          s,
+          () => {
+            if (s && this.threads.get(key) === s) applyConnectionLost(s);
+          },
+        );
+        if (this.threads.get(key) === s) {
+          this.removeThread(key);
+          if (s && this.drafts.get(s.draftGroup ?? "") === key)
+            this.drafts.delete(s.draftGroup ?? "");
+          this.channels.delete(key);
+        }
+        await this.refreshIndex();
+        return remote;
       },
-    ).catch((): "unconfirmed" => "unconfirmed");
-    await this.refreshIndex();
-    return remote;
+      () => this.emit(key),
+    );
   }
 }
 

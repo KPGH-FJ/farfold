@@ -73,6 +73,12 @@ pub struct SessionRow {
     pub updated_at: i64,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum LocalSessionDeleteError {
+    NotRemoved,
+    Unknown,
+}
+
 /// SQLite-backed metadata store. All access is serialized through a mutex so
 /// the store can be shared as Tauri state from sync command handlers.
 #[derive(Clone)]
@@ -619,17 +625,47 @@ impl MetaStore {
     pub fn remove_session(&self, session_id: &str) -> Result<bool, String> {
         let mut connection = self.lock()?;
         let transaction = connection.transaction().map_err(sqlite_receipt)?;
-        let deleted = transaction
-            .execute("DELETE FROM sessions WHERE id = ?1", params![session_id])
-            .map_err(sqlite_receipt)?;
-        transaction
-            .execute(
-                "DELETE FROM settings WHERE key=?1",
-                [remembered_pages::key(session_id)],
-            )
-            .map_err(sqlite_receipt)?;
+        let deleted =
+            Self::remove_session_metadata(&transaction, session_id).map_err(sqlite_receipt)?;
         transaction.commit().map_err(sqlite_receipt)?;
+        Ok(deleted)
+    }
+
+    fn remove_session_metadata(
+        connection: &Connection,
+        session_id: &str,
+    ) -> rusqlite::Result<bool> {
+        let deleted = connection.execute("DELETE FROM sessions WHERE id = ?1", [session_id])?;
+        connection.execute(
+            "DELETE FROM settings WHERE key=?1",
+            [remembered_pages::key(session_id)],
+        )?;
         Ok(deleted > 0)
+    }
+
+    /// Commit the local removal and its history filter together, including when
+    /// the selected item only exists in the Agent's history.
+    pub(crate) fn remove_and_dismiss_session(
+        &self,
+        session_id: &str,
+    ) -> Result<(), LocalSessionDeleteError> {
+        use LocalSessionDeleteError::{NotRemoved, Unknown};
+
+        let mut connection = self.lock().map_err(|_| NotRemoved)?;
+        let tx = connection.transaction().map_err(|_| NotRemoved)?;
+        if Self::remove_session_metadata(&tx, session_id)
+            .and_then(|_| Self::insert_dismissal(&tx, session_id))
+            .is_err()
+        {
+            // SQLite can already have rolled back on a statement failure. If
+            // it has not, only a successful rollback proves nothing changed.
+            return Err(if tx.is_autocommit() || tx.rollback().is_ok() {
+                NotRemoved
+            } else {
+                Unknown
+            });
+        }
+        tx.commit().map_err(|_| Unknown)
     }
 
     // ------------------------------------------------------------------
@@ -648,13 +684,16 @@ impl MetaStore {
     /// Record a tombstone; idempotent.
     pub fn dismiss_session(&self, id: &str) -> Result<(), String> {
         let connection = self.lock()?;
-        connection
-            .execute(
-                "INSERT INTO dismissed_sessions (id, created_at) VALUES (?1, ?2)
-                 ON CONFLICT(id) DO NOTHING",
-                params![id, now_millis()],
-            )
-            .map_err(|error| format!("cannot dismiss session {id}: {error}"))?;
+        Self::insert_dismissal(&connection, id)
+            .map_err(|error| format!("cannot dismiss session {id}: {error}"))
+    }
+
+    fn insert_dismissal(connection: &Connection, id: &str) -> rusqlite::Result<()> {
+        connection.execute(
+            "INSERT INTO dismissed_sessions (id, created_at) VALUES (?1, ?2)
+             ON CONFLICT(id) DO NOTHING",
+            params![id, now_millis()],
+        )?;
         Ok(())
     }
 

@@ -345,7 +345,7 @@ export function FileArtifactView({
   fileSelector?: ReactNode;
   workingDirectory?: string;
   onOpenHtml?: (file: VerifiedFile) => void;
-  onOpenFile?: (path: string) => void;
+  onOpenFile?: (path: string, expectedFile?: VerifiedFile) => void;
   active?: boolean;
 }) {
   const presentation = filePresentation(card);

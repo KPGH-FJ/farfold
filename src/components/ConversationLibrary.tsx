@@ -484,7 +484,7 @@ export function ConversationLibrary({
   // W3-9：删除（单个/批量/清空归档共用确认）、导出、位置显示、相同设置再开。
   const deleteRows = (targets: SidebarRow[]) =>
     perform(
-      () => {
+      async () => {
         for (const row of targets) {
           const reason = threads.archiveBlockReason(row.key);
           if (reason) throw new Error(LIBRARY.deleteReasons[reason]);
@@ -495,24 +495,38 @@ export function ConversationLibrary({
           )
             throw new Error(R.archivedChanged);
         }
-        return Promise.all(targets.map((row) => threads.delete(row)));
+        const outcomes = await Promise.allSettled(
+          targets.map((row) => threads.delete(row)),
+        );
+        const removed = targets
+          .filter((_, index) => outcomes[index].status === "fulfilled")
+          .map((row) => row.key);
+        if (removed.length)
+          await collections.assign(removed, "").catch(() => undefined);
+        return outcomes;
       },
       (outcomes) => {
-        const remaining = outcomes.filter(
-          (outcome) => outcome !== "deleted",
-        ).length;
-        setSelected(new Set());
+        const failed = targets.filter(
+          (_, i) => outcomes[i].status === "rejected",
+        );
+        const notices = new Set<string>();
+        let notRequested = 0;
+        let agentUnknown = 0;
+        for (const outcome of outcomes) {
+          if (outcome.status === "rejected")
+            notices.add(uiError(outcome.reason, LIBRARY.deleteLocalUnknown));
+          else if (outcome.value === "unsupported") notRequested++;
+          else if (outcome.value === "unconfirmed") agentUnknown++;
+        }
+        if (notRequested)
+          notices.add(LIBRARY.deleteNotRequestedCount(notRequested));
+        if (agentUnknown)
+          notices.add(LIBRARY.deleteAgentUnknownCount(agentUnknown));
+        setSelected(new Set(failed.map((row) => row.key)));
         setDeleting(null);
         setClearing(null);
         setActions(null);
-        setError(remaining ? LIBRARY.deletePartial(remaining) : null);
-        // Deleting a conversation also drops its grouping link.
-        void collections
-          .assign(
-            targets.map((row) => row.key),
-            "",
-          )
-          .catch(() => undefined);
+        setError([...notices].join(" ") || null);
       },
     );
   const exportRow = (row: SidebarRow) => {

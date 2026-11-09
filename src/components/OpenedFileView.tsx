@@ -43,7 +43,9 @@ import { pptxFailure } from "../runtime/pptx_strings";
 import { workbookFailure } from "../runtime/workbook_strings";
 import { documentFailure } from "../runtime/document_strings";
 import {
+  MAX_INLINE_TEXT_BYTES,
   readTextBlock,
+  supportsTextFilePreview,
   textBlockFailure,
   type TextBlockPreview as TextBlock,
 } from "../runtime/text_block_preview";
@@ -102,6 +104,8 @@ export interface OpenedFileViewProps {
   threadKey: string;
   /** Exact local file selected by the user; never an inferred artifact body. */
   path: string;
+  /** Verified target supplied by the delivery card's large-file handoff. */
+  expectedFile?: VerifiedFile;
   workingDirectory: string;
   active: boolean;
   /** Changes for an explicit new selection, including the same path in another task. */
@@ -139,70 +143,6 @@ type Operation = {
   parser?: AbortController;
 };
 
-const MAX_TEXT_BYTES = 1024 * 1024;
-const TEXT_EXTENSIONS = new Set([
-  "md",
-  "markdown",
-  "mdx",
-  "txt",
-  "text",
-  "json",
-  "jsonl",
-  "csv",
-  "tsv",
-  "js",
-  "jsx",
-  "mjs",
-  "cjs",
-  "ts",
-  "tsx",
-  "css",
-  "scss",
-  "sass",
-  "less",
-  "xml",
-  "svg",
-  "yaml",
-  "yml",
-  "toml",
-  "ini",
-  "cfg",
-  "conf",
-  "log",
-  "py",
-  "pyi",
-  "rs",
-  "go",
-  "c",
-  "h",
-  "cc",
-  "cpp",
-  "hpp",
-  "java",
-  "kt",
-  "swift",
-  "m",
-  "mm",
-  "rb",
-  "php",
-  "sh",
-  "bash",
-  "zsh",
-  "fish",
-  "sql",
-  "r",
-  "vue",
-  "svelte",
-  "astro",
-  "tex",
-  "rst",
-  "diff",
-  "patch",
-  "env",
-  "gitignore",
-  "gitattributes",
-  "editorconfig",
-]);
 function extension(name: string) {
   return name.toLowerCase().split(".").pop() ?? "";
 }
@@ -232,14 +172,6 @@ function officeReadBusy(
       (isWorkbook(file) && status.state === "loading"))
   );
 }
-function isText(file: VerifiedFile) {
-  return (
-    TEXT_EXTENSIONS.has(extension(file.name)) ||
-    /^(readme|license|licence|copying|notice|makefile|dockerfile)$/i.test(
-      file.name,
-    )
-  );
-}
 function sameFile(left: VerifiedFile, right: VerifiedFile) {
   return (
     [
@@ -259,10 +191,13 @@ function openFailureNotice(error: unknown): string {
   // rejection, file path or OS error through this recovery view.
   const message = error instanceof Error ? error.message : error;
   if (error && typeof error === "object" && "code" in error)
-    return T.failures[textBlockFailure(error)];
+    return error.code === "redirected"
+      ? S.revisionNotices.redirected
+      : T.failures[textBlockFailure(error)];
   return message === D.checkWaitExpired ||
     message === D.checkBusy ||
-    message === D.unsupportedText
+    message === D.unsupportedText ||
+    message === S.revisionNotices.redirected
     ? message
     : S.failed;
 }
@@ -271,6 +206,7 @@ function openFailureNotice(error: unknown): string {
 export function OpenedFileView({
   threadKey,
   path,
+  expectedFile,
   workingDirectory,
   active,
   selectionKey,
@@ -286,6 +222,8 @@ export function OpenedFileView({
     selectionKey,
     workingDirectory,
     path,
+    expectedFile?.root,
+    expectedFile?.resolvedPath,
   ]);
   const currentProps = useRef({ identity, active, onOpenHtml });
   currentProps.current = { identity, active, onOpenHtml };
@@ -492,9 +430,23 @@ export function OpenedFileView({
         : { identity, phase: "loading" },
     );
     try {
-      const file =
-        verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
+      let file = verified;
+      if (!file && expectedFile) {
+        const check = await fileDelivery.checkRevision(expectedFile, "content");
+        if (check?.kind !== "verified" || !check.file)
+          throw new Error(S.failed);
+        file = check.file;
+      }
+      file ??= await fileDelivery.inspectLink(workingDirectory, path);
       if (!readCurrent()) return false;
+      if (
+        expectedFile &&
+        (file.path !== expectedFile.path ||
+          !sameReadingFile(expectedFile, file))
+      )
+        throw new Error(S.revisionNotices.redirected);
+      if (expectedFile && !supportsTextFilePreview(file.name))
+        throw new Error(S.failed);
       inspected = file;
       if (preservedSource && !sameReadingFile(preservedSource, file))
         throw new Error(S.revisionNotices.redirected);
@@ -588,7 +540,11 @@ export function OpenedFileView({
           if (!current(owner)) return false;
           setView({ identity, phase: "ready", file, office });
         } else setView({ identity, phase: "ready", file });
-      } else if (isText(file) && file.size <= MAX_TEXT_BYTES) {
+      } else if (
+        !expectedFile &&
+        supportsTextFilePreview(file.name) &&
+        file.size <= MAX_INLINE_TEXT_BYTES
+      ) {
         const preview = await fileDelivery.readText(file);
         if (!current(owner)) return false;
         if (!sameFile(preview.file, file)) throw new Error("File changed");
@@ -599,7 +555,7 @@ export function OpenedFileView({
           text: preview.text,
           textSource: createTextFeedbackSource(preview, file),
         });
-      } else if (isText(file)) {
+      } else if (supportsTextFilePreview(file.name)) {
         blockAttempt = true;
         blockReadFlight.current = owner;
         const block = await readTextBlock(
@@ -680,7 +636,10 @@ export function OpenedFileView({
                   workbookRecovery ??
                   (workbookSelection ? previous.workbookRecovery : undefined),
                 note: previous.block
-                  ? T.failures[textBlockFailure(error)]
+                  ? code === "redirected" ||
+                    failureMessage === S.revisionNotices.redirected
+                    ? S.revisionNotices.redirected
+                    : T.failures[textBlockFailure(error)]
                   : previous.file && isPresentation(previous.file)
                     ? pptxFailure(error)
                     : previous.file && isWorkbook(previous.file)
@@ -697,8 +656,9 @@ export function OpenedFileView({
                         : previous.note,
               }
             : inspected &&
-                isText(inspected) &&
-                (inspected.size > MAX_TEXT_BYTES ||
+                supportsTextFilePreview(inspected.name) &&
+                (expectedFile ||
+                  inspected.size > MAX_INLINE_TEXT_BYTES ||
                   failureMessage === D.unsupportedText)
               ? {
                   identity,
@@ -806,6 +766,7 @@ export function OpenedFileView({
       view.identity !== identity ||
       view.phase !== "failed" ||
       view.file ||
+      expectedFile ||
       operation.current
     )
       return;
@@ -833,6 +794,7 @@ export function OpenedFileView({
   const shown =
     view.identity === identity ? view : { identity, phase: "loading" as const };
   const file = shown.file;
+  const locationActions = shown.phase === "failed" && !file && !expectedFile;
   const workbookRecovery = shown.workbookRecovery;
   const disabled =
     !active ||
@@ -1075,7 +1037,7 @@ export function OpenedFileView({
                   {S.openHtml}
                 </button>
               )}
-              {(isText(file) ||
+              {(supportsTextFilePreview(file.name) ||
                 shown.text !== undefined ||
                 shown.block ||
                 visualFileKind(file.name) ||
@@ -1169,7 +1131,7 @@ export function OpenedFileView({
               </button>
             </>
           )}
-          {shown.phase === "failed" && !file && (
+          {locationActions && (
             <>
               <button
                 type="button"
@@ -1214,7 +1176,7 @@ export function OpenedFileView({
           </p>
         )}
       </div>
-      {shown.phase === "failed" && !file && (
+      {locationActions && (
         <p className="artifact-provenance">{T.locationScope}</p>
       )}
       {revisionNotice && (

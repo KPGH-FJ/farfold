@@ -42,6 +42,10 @@ for line in sys.stdin:
   if loaded:update('in_progress','history')
   if p['value']=='start-compaction':update('in_progress','setter')
   options[0]['currentValue']=p['value'];result={'configOptions':options}
+ elif method=='session/delete':
+  pathlib.Path('delete-observed').write_text(p['sessionId'])
+  if pathlib.Path('reject-delete').exists():
+   send({'id':m['id'],'error':{'code':-32603,'message':'上次请求尚未结束，请先停止或等待'}});continue
  if method and 'id' in m:send({'id':m['id'],'result':result})
 "#;
 
@@ -220,8 +224,19 @@ async fn compaction_tail_refuses_all_destructive_controls() {
             .unwrap()
             .control
             .clone();
-        let (result, receive) = tokio::sync::oneshot::channel();
         let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
+        if variant == 1 {
+            let (result, receive) = tokio::sync::oneshot::channel();
+            control
+                .send(SessionControl::Delete { deadline, result })
+                .unwrap();
+            outcomes.push(matches!(
+                receive.await.unwrap(),
+                Err(super::mutation::DeleteFailure::NotDispatched)
+            ));
+            continue;
+        }
+        let (result, receive) = tokio::sync::oneshot::channel();
         control
             .send(match variant {
                 0 => SessionControl::Close {
@@ -229,7 +244,6 @@ async fn compaction_tail_refuses_all_destructive_controls() {
                     result,
                     require_idle_interactions: false,
                 },
-                1 => SessionControl::Delete { deadline, result },
                 _ => SessionControl::Detach { deadline, result },
             })
             .unwrap();
@@ -240,6 +254,68 @@ async fn compaction_tail_refuses_all_destructive_controls() {
         vec![true; 3],
         "close/delete/detach must all retain active compaction"
     );
+}
+
+#[tokio::test]
+async fn active_compaction_blocks_conversation_deletion_and_preserves_local_records() {
+    let f = Fixture::pending().await;
+    let row = super::session_index::touch_session_row(
+        &f.store,
+        &f.agent.id,
+        &f.cwd.to_string_lossy(),
+        &f.session_id,
+        Some("Keep original"),
+        None,
+    )
+    .unwrap();
+    let result = super::session_commands::delete_session_in_scope(
+        &f.manager,
+        &f.store,
+        &f.agent.id,
+        &f.cwd,
+        &f.session_id,
+    )
+    .await;
+    assert!(!f.cwd.join("delete-observed").exists());
+    assert_eq!(f.store.get_session(&row.id).unwrap(), Some(row));
+    assert!(f.store.list_dismissed().unwrap().is_empty());
+    assert!(matches!(
+        result,
+        Err(super::session_commands::SessionDeleteFailure::LocalNotRemoved { agent: None })
+    ));
+}
+
+#[tokio::test]
+async fn agent_error_after_delete_dispatch_does_not_claim_no_dispatch() {
+    let f = Fixture::new(false).await;
+    let row = super::session_index::touch_session_row(
+        &f.store,
+        &f.agent.id,
+        &f.cwd.to_string_lossy(),
+        &f.session_id,
+        Some("Owned delete fixture"),
+        None,
+    )
+    .unwrap();
+    std::fs::write(f.cwd.join("reject-delete"), []).unwrap();
+    let result = super::session_commands::delete_session_in_scope(
+        &f.manager,
+        &f.store,
+        &f.agent.id,
+        &f.cwd,
+        &f.session_id,
+    )
+    .await;
+    assert_eq!(
+        std::fs::read_to_string(f.cwd.join("delete-observed")).unwrap(),
+        f.session_id
+    );
+    assert!(matches!(
+        result,
+        Ok(super::session_commands::SessionDeleteAgentResult::Unconfirmed)
+    ));
+    assert!(f.store.get_session(&row.id).unwrap().is_none());
+    assert!(f.store.list_dismissed().unwrap().contains(&row.id));
 }
 
 #[tokio::test]

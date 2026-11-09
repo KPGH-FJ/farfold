@@ -12,6 +12,14 @@ import { fileCopyJobs } from "../runtime/file_copy_jobs";
 import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
 import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_DELIVERY_STRINGS as S } from "../runtime/file_delivery_strings";
+import {
+  MAX_INLINE_TEXT_BYTES,
+  supportsTextFilePreview,
+} from "../runtime/text_block_preview";
+import {
+  isAbsoluteFilePath,
+  relativeVerifiedFilePath,
+} from "../runtime/file_paths";
 
 export interface FileDeliveryActionsProps {
   card: FileArtifact;
@@ -20,7 +28,7 @@ export interface FileDeliveryActionsProps {
   /** Changes with the original thread, reported revision, path and status. */
   identity: string;
   onOpenHtml?: (file: VerifiedFile) => void;
-  onOpenFile?: (path: string) => void;
+  onOpenFile?: (path: string, expectedFile?: VerifiedFile) => void;
 }
 
 /** Arguments to write/edit tools are not evidence of a reported output file. */
@@ -46,7 +54,12 @@ export function FileDeliveryControls({
 }: FileDeliveryActionsProps) {
   const candidate = reportedArtifactPath(card);
   const [selected, setSelected] = useState<string | null>(null);
-  const [file, setFile] = useState<VerifiedFile | null>(null);
+  const [file, setVerified] = useState<VerifiedFile | null>(null);
+  const currentFile = useRef<VerifiedFile | null>(null);
+  const setFile = (next: VerifiedFile | null) => {
+    currentFile.current = next;
+    setVerified(next);
+  };
   const [preview, setPreview] = useState<TextPreview | null>(null);
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -178,8 +191,28 @@ export function FileDeliveryControls({
       if (current(token)) setResult(S.exported(receipt.destination));
     });
 
+  const inline = file !== null && file.size <= MAX_INLINE_TEXT_BYTES;
+  const panePath =
+    !inline &&
+    file &&
+    supportsTextFilePreview(file.name) &&
+    (selected
+      ? isAbsoluteFilePath(file.resolvedPath)
+        ? file.resolvedPath
+        : null
+      : candidate && relativeVerifiedFilePath(file.root, file.resolvedPath));
   const read = () => {
-    if (!file) return;
+    if (!file || currentFile.current !== file) return;
+    if (!inline) {
+      if (
+        panePath &&
+        mounted.current &&
+        activeRef.current &&
+        busy.current === null
+      )
+        onOpenFile?.(panePath, { ...file, path: file.resolvedPath });
+      return;
+    }
     const value = file;
     return run(S.readPending, async (token) => {
       const next = await fileDelivery.readText(value);
@@ -272,14 +305,16 @@ export function FileDeliveryControls({
             >
               {T.save}
             </button>
-            <button
-              type="button"
-              className="btn btn-text"
-              disabled={disabled}
-              onClick={() => void read()}
-            >
-              {S.current}
-            </button>
+            {(inline || (panePath && onOpenFile)) && (
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={disabled}
+                onClick={() => void read()}
+              >
+                {S.current}
+              </button>
+            )}
           </>
         )}
         <button

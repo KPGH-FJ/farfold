@@ -238,3 +238,30 @@ it("rejects the whole reviewed request when one conversation is restored from ar
     "second title",
   ]);
 });
+
+it("reports exact Agent outcomes and only clears grouping for confirmed local removals", async () => {
+  h.rows.push(row("not-requested"), row("agent-unknown"), row("local-refused"));
+  h.remove.mockImplementation(async (item: SidebarRow) => {
+    if (item.key === "local-refused")
+      throw new Error("未从对话列表移除。Agent 端已确认删除。");
+    if (item.key === "not-requested") return "unsupported";
+    if (item.key === "agent-unknown") return "unconfirmed";
+    return "deleted";
+  });
+  clearArchived();
+  confirm();
+  await vi.waitFor(() =>
+    expect(h.assign).toHaveBeenCalledExactlyOnceWith(
+      ["selected", "not-requested", "agent-unknown"],
+      "",
+    ),
+  );
+  const notices = render()
+    .filter((node) => node.props.role === "alert")
+    .flatMap((node) => Children.toArray(node.props.children as ReactNode))
+    .filter((value) => typeof value === "string");
+  const result = notices.find((notice) => notice.includes("未从对话列表移除"));
+  expect(result).toContain("未从对话列表移除。Agent 端已确认删除。");
+  expect(result).toContain("1 段未向 Agent 请求删除");
+  expect(result).toContain("1 段的 Agent 端删除结果尚未确认");
+});

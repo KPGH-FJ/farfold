@@ -412,8 +412,9 @@ it.each(["decode", "mounted load"])(
   "retains the old visible PNG if the candidate %s fails",
   async (failure) => {
     const onReadiness = await oldImage();
+    // A valid first block and chunk CRC still allow a later zlib checksum error.
     const invalid =
-      "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAB0lEQVR4nAcAAAAATlVPQAAAAABJRU5ErkJggg==";
+      "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn7rQnDYAAAAAElFTkSuQmCC";
     expect(
       raster.inspectImageBytes(Buffer.from(invalid, "base64")),
     ).toMatchObject({ mimeType: "image/png", width: 2, height: 1 });

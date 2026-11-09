@@ -127,17 +127,27 @@ async fn configuration_change_tool_tail_retains_work_after_stop_without_blocking
         .control
         .clone();
     for variant in 0..3 {
-        let (result, receive) = tokio::sync::oneshot::channel();
         let deadline = tokio::time::Instant::now() + Duration::from_secs(2);
+        if variant == 2 {
+            let (result, receive) = tokio::sync::oneshot::channel();
+            control
+                .send(SessionControl::Delete { deadline, result })
+                .unwrap();
+            assert_eq!(
+                receive.await.unwrap(),
+                Err(super::mutation::DeleteFailure::NotDispatched)
+            );
+            continue;
+        }
+        let (result, receive) = tokio::sync::oneshot::channel();
         control
             .send(match variant {
                 0 => SessionControl::Detach { deadline, result },
-                1 => SessionControl::Close {
+                _ => SessionControl::Close {
                     deadline,
                     result,
                     require_idle_interactions: false,
                 },
-                _ => SessionControl::Delete { deadline, result },
             })
             .unwrap();
         assert!(

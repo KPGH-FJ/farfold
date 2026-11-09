@@ -117,7 +117,7 @@ pub(crate) enum SessionControl {
     /// `session/delete` — removes the session agent-side, then ends the pump.
     Delete {
         deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
+        result: oneshot::Sender<Result<(), super::super::mutation::DeleteFailure>>,
     },
     /// Detach a live local route only after this pump confirms it is idle.
     Detach {
@@ -189,9 +189,11 @@ impl SessionControl {
             | Self::SetMode { result, .. }
             | Self::Close { result, .. }
             | Self::ForkClose { result }
-            | Self::Delete { result, .. }
             | Self::Detach { result, .. } => {
                 let _ = result.send(Err(error));
+            }
+            Self::Delete { result, .. } => {
+                let _ = result.send(Err(super::super::mutation::DeleteFailure::NotDispatched));
             }
             Self::StopTask { result, .. }
             | Self::SetConfig { result, .. }
@@ -243,8 +245,8 @@ impl SessionControl {
             | Self::Close {
                 deadline, result, ..
             }
-            | Self::Detach { deadline, result }
-            | Self::Delete { deadline, result } => (*deadline, result.is_closed()),
+            | Self::Detach { deadline, result } => (*deadline, result.is_closed()),
+            Self::Delete { deadline, result } => (*deadline, result.is_closed()),
             Self::StopTask {
                 deadline, result, ..
             }
