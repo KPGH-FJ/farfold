@@ -1,0 +1,2 @@
+FARFOLD_COPY_VERSION_B_20261109
+Revised bytes after the save picker opened.
