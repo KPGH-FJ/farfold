@@ -1,0 +1,137 @@
+{
+  "source": "91dadecc8a521eae79f22cb66c52ea07c18b4760",
+  "installCodeDirectoryHash": "dc8cb2e2d525efc66cfea69684ea5856edd40f10",
+  "platform": "macOS 27.0 arm64",
+  "p21": {
+    "originalRetiredOwner": "20261109_1",
+    "newPreparedOwnerInSameFolder": "20261109_2",
+    "sourceBytes": 91,
+    "sourceSha256": "6d8bf3701f1013b22c19cbd503e583e9530b1c2edd4a4751051ab8eb6bd49ef2",
+    "restoredSameLivePreparedOwnerAfterNavigation": true,
+    "originalInputAndOpinionEachPresentOnce": true,
+    "pathAndOriginalShaRetainedInDraft": true,
+    "retiredOwnerEntryUnchangedAndSeparate": true,
+    "draftRetainedAfterRemovingSelfTestWorkingLocation": true,
+    "onlySyntheticInputClearedAfterRecording": true,
+    "clipboardUsed": false,
+    "preparedInputModelRequests": 0,
+    "coldRestartPerformed": false,
+    "realTextFileRework": {
+      "owner": "20261109_3",
+      "originalBytes": 60,
+      "originalSha256": "41ff8e101492e11e5a1af7cb3af4846983f2238c7a7f1f0e1a22e4d4841bb2ec",
+      "afterBytes": 59,
+      "afterSha256": "fb17007a87f7ba133d02b55b71b6d70fb7e673e537b44aed6afbcf38b8537cbb",
+      "matchesExpectedReplacementIncludingTrailingNewline": true,
+      "otherKnownFixtureHtmlShaUnchanged": true,
+      "promptFrame": {
+        "version": 1,
+        "ts": 1794221243198,
+        "dir": "out",
+        "event": "session/prompt",
+        "bytes": 735,
+        "error": "none"
+      },
+      "terminalFrame": {
+        "version": 1,
+        "ts": 1794221262652,
+        "dir": "in",
+        "event": "response",
+        "bytes": 162,
+        "error": "none"
+      },
+      "ui": {
+        "oldPreviewBeforeSend": true,
+        "originalShaInSubmittedDraftAndConversation": true,
+        "doneMarkerAndComplete": true,
+        "newTextVisibleBeforeExplicitReread": true,
+        "newTextVisibleAfterExplicitReread": true
+      }
+    }
+  },
+  "p38": {
+    "provider": "Goose · OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "reasoning": "off",
+    "backgroundOwner": "20261109_3",
+    "foregroundOwner": "20261107_14",
+    "aSentAtUtc": "2026-11-09T10:40:00.221Z",
+    "bVisibleAtUtc": "2026-11-09T10:40:01.398Z",
+    "bSentAtUtc": "2026-11-09T10:40:01.482Z",
+    "bothRunningObservedAtUtc": "2026-11-09T10:40:01.855Z",
+    "bCompletedAtUtc": "2026-11-09T10:40:10.947Z",
+    "aCompletedAtUtc": "2026-11-09T10:40:14.077Z",
+    "overlapSeconds": 9.465,
+    "unreadBefore": {
+      "A": false,
+      "B": false,
+      "otherCount": 0
+    },
+    "unreadAfterReplies": {
+      "A": true,
+      "B": false,
+      "otherCount": 0
+    },
+    "unreadAfterReadingA": {
+      "A": false,
+      "B": false,
+      "otherCount": 0
+    },
+    "singleAInNewRepliesFilter": true,
+    "aLocalHtmlTabStillPresentOnReturn": true,
+    "bodyRequests": 2,
+    "permissionRequests": 0,
+    "cancelRequests": 0,
+    "coldRestartPerformed": false,
+    "firstReadableChunkOrderProven": false
+  },
+  "exit": {
+    "ordinaryQuitProducedGenericConfirmation": true,
+    "confirmationCancelled": true,
+    "triggerIdentified": false,
+    "forceExit": false
+  },
+  "independentReview": "Read-only inspection of installation identity, exact source bytes, own settings and native rows, and redacted send/terminal receipts. No repeat requests.",
+  "rawReceipts": {
+    "p21-before-add": {
+      "path": "output/2026-11-09-phase2-real-use/p21-before-add.json",
+      "sha256": "e9b2d6a75540128a67bdad63bb832deafe062e2663e00a902a84b6578ebf56e9",
+      "observedAtUtc": "2026-11-09T10:34:06.491758+00:00"
+    },
+    "p21-after-add": {
+      "path": "output/2026-11-09-phase2-real-use/p21-after-add.json",
+      "sha256": "5c951d2b78acb6d2b7a5439600f16962729158ad218cccd473c110e5e0bb5242",
+      "observedAtUtc": "2026-11-09T10:34:22.492823+00:00"
+    },
+    "p21-after-own-retire": {
+      "path": "output/2026-11-09-phase2-real-use/p21-after-own-retire.json",
+      "sha256": "18a3795c13a2777b29d0766ade013091dc68b16946a9fd64e62432c702a1656c",
+      "observedAtUtc": "2026-11-09T10:35:56.818413+00:00"
+    },
+    "p21-test-input-cleared": {
+      "path": "output/2026-11-09-phase2-real-use/p21-test-input-cleared.json",
+      "sha256": "c418cab2541fcd841c2decca6da02f9e5ad88a7a43182c8f52180b83ec124947",
+      "observedAtUtc": "2026-11-09T10:42:21.820398+00:00"
+    },
+    "p38-before": {
+      "path": "output/2026-11-09-phase2-real-use/p38-before.json",
+      "sha256": "7751c2c9671330b8d0172a7c27bdd6ba9009e72e028f70f5575500568904e9d6",
+      "observedAtUtc": "2026-11-09T10:39:18.583491+00:00"
+    },
+    "p38-b-visible": {
+      "path": "output/2026-11-09-phase2-real-use/p38-b-visible.json",
+      "sha256": "52b3fbc78ed21300dad2febb2a92bbfc84a85e829961ff6a5b1287d32392cd48",
+      "observedAtUtc": "2026-11-09T10:40:38.940038+00:00"
+    },
+    "p38-a-read": {
+      "path": "output/2026-11-09-phase2-real-use/p38-a-read.json",
+      "sha256": "9b38f226da64fcbc7dca39c2ff422651d068bf3ec47110d3c9aa011f9326d364",
+      "observedAtUtc": "2026-11-09T10:42:21.786593+00:00"
+    },
+    "p21-real-rework": {
+      "path": "output/2026-11-09-phase2-real-use/p21-real-rework.json",
+      "sha256": "c5eba9705d3815f3bbb063f299b55ea3467f6f7551f199abbfab74f75876da1e",
+      "observedAtUtc": "2026-11-09T10:48:39.750428+00:00"
+    }
+  }
+}
