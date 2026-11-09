@@ -119,18 +119,28 @@ impl ToolSession {
     fn invalidated(self: &Arc<Self>, scope: &FixedPageReadScope) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         let mut page = self.page.lock().unwrap_or_else(|e| e.into_inner());
-        if state.ended
-            || !page
-                .as_ref()
-                .is_some_and(|current| current.same_grant(scope))
+        if state.ended {
+            return;
+        }
+        let standing = page
+            .as_ref()
+            .is_some_and(|current| current.same_grant(scope));
+        if standing {
+            let old = page.take().expect("checked standing grant");
+            old.revoke();
+            state.retiring = Some(old);
+        } else if state.retiring.is_none()
+            && state.active_screenshot.as_ref().is_some_and(|active| {
+                active.scope.same_request(scope) && !active.scope.grant_is_valid()
+            })
         {
+            // A first screenshot has no standing page grant, but it can
+            // still own a response buffered in the helper after navigation.
+            state.retire_screenshot();
+        } else {
             return;
         }
         state.phase = STOPPING;
-        if let Some(old) = page.take() {
-            old.revoke();
-            state.retiring = Some(old);
-        }
         state.revision = state.revision.saturating_add(1);
         drop(page);
         drop(state);
@@ -138,7 +148,13 @@ impl ToolSession {
         let owner = self.clone();
         let expected = scope.clone();
         tauri::async_runtime::spawn(async move {
-            let _ = owner.stop_expected(&expected).await;
+            if standing {
+                let _ = owner.stop_expected(&expected).await;
+            } else {
+                let _ = owner
+                    .stop_if_retiring(|old| old.same_request(&expected))
+                    .await;
+            }
         });
     }
 
@@ -238,6 +254,13 @@ impl ToolSession {
     }
 
     async fn stop_expected(&self, expected: &FixedPageReadScope) -> Result<(), String> {
+        self.stop_if_retiring(|old| old.same_grant(expected)).await
+    }
+
+    async fn stop_if_retiring(
+        &self,
+        matches: impl FnOnce(&FixedPageReadScope) -> bool,
+    ) -> Result<(), String> {
         let _operation = self.operation.lock().await;
         let still_retiring = self
             .state
@@ -245,7 +268,7 @@ impl ToolSession {
             .unwrap_or_else(|e| e.into_inner())
             .retiring
             .as_ref()
-            .is_some_and(|old| old.same_grant(expected));
+            .is_some_and(matches);
         if still_retiring {
             self.stop_locked().await
         } else {
@@ -574,12 +597,21 @@ impl BrowserSharing {
         for entry in self.entries() {
             entry.invalidate_pending_page(info);
             let invalid = {
+                let state = entry.state.lock().unwrap_or_else(|e| e.into_inner());
                 let page = entry.page.lock().unwrap_or_else(|e| e.into_inner());
+                let changed = |scope: &FixedPageReadScope| {
+                    scope.task_key() == info.task_key
+                        && scope.label() == info.label
+                        && !scope.grant_is_valid()
+                };
                 page.as_ref()
-                    .filter(|page| {
-                        page.task_key() == info.task_key
-                            && page.label() == info.label
-                            && !page.is_valid()
+                    .filter(|scope| changed(scope))
+                    .or_else(|| {
+                        state
+                            .active_screenshot
+                            .as_ref()
+                            .map(|active| &active.scope)
+                            .filter(|scope| changed(scope))
                     })
                     .cloned()
             };
@@ -651,6 +683,9 @@ pub(crate) async fn browser_share_allow(
         if state.pending_request.is_some() {
             return Err("请在对话中确认本次网页读取".into());
         }
+        if state.active_screenshot.is_some() {
+            return Err("请先处理原网页读取请求".into());
+        }
         if !state.ready || state.ended || state.phase != READY || state.retiring.is_some() {
             return Err("当前对话尚未接通网页工具，请稍后重试".into());
         }
@@ -669,6 +704,7 @@ pub(crate) async fn browser_share_allow(
             || state.phase != READY
             || state.retiring.is_some()
             || state.pending_request.is_some()
+            || state.active_screenshot.is_some()
             || !page.is_valid()
         {
             page.revoke();

@@ -105,11 +105,7 @@ impl Job {
         status
     }
     fn finish(&self, outcome: CopyOutcome) {
-        let mut status = self
-            .status
-            .lock()
-            .unwrap_or_else(|error| error.into_inner());
-        match outcome {
+        self.settle(|status| match outcome {
             CopyOutcome::Completed(receipt) => {
                 status.state = CopyState::Completed;
                 status.receipt = Some(receipt);
@@ -127,7 +123,14 @@ impl Job {
                 status.state = CopyState::Unknown;
                 status.code = Some("cleanupUnknown");
             }
-        }
+        });
+    }
+    fn settle(&self, update: impl FnOnce(&mut CopyStatus)) {
+        let mut status = self
+            .status
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
+        update(&mut status);
         status.settled = true;
         self.phase.store(FINISHED, Ordering::SeqCst);
         self.admission
@@ -251,10 +254,20 @@ impl FileCopyJobs {
         if job.snapshot().state != CopyState::Ready {
             return Ok(Some(job.snapshot()));
         }
-        if jobs.active.is_some() {
-            return Err(failure("busy"));
-        }
-        let activity = crate::managed_update::activity().map_err(|_| failure("busy"))?;
+        let activity = if jobs.active.is_none() {
+            crate::managed_update::activity().ok()
+        } else {
+            None
+        };
+        let Some(activity) = activity else {
+            // This reservation is still Ready under the registry lock.
+            // Refusing it here cannot race an already admitted writer.
+            job.settle(|status| {
+                status.state = CopyState::Failed;
+                status.code = Some("busy");
+            });
+            return Ok(Some(job.snapshot()));
+        };
         job.status.lock().map_err(|_| failure("unavailable"))?.state = CopyState::Copying;
         jobs.active = Some(id.to_owned());
         let all = self.jobs.clone();

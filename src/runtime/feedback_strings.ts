@@ -21,6 +21,8 @@ export const FEEDBACK_STRINGS = {
   copy: "复制意见",
   copied: "意见已复制。",
   copyFailed: "复制未完成，请重试。",
+  reportChecking: "正在核对意见对应的内容…",
+  reportUnavailable: "未能核对意见对应的内容，请重新打开这份内容。",
   added: "意见已加入这条对话的输入框，尚未发送。",
   textRange: (
     startLine: number,

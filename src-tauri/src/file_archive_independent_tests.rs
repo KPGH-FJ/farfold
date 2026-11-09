@@ -175,9 +175,12 @@ fn independent_cancelled_real_writer_holds_copy_slot_until_handles_are_closed() 
     })
     .unwrap();
     entered_rx.recv_timeout(Duration::from_secs(5)).unwrap();
-    assert_eq!(jobs.start(&copy.operation_id).unwrap_err().code, "busy");
-    jobs.cancel(&copy.operation_id).unwrap();
-    assert!(jobs.release(&copy.operation_id).unwrap());
+    let refused = jobs.start(&copy.operation_id).unwrap().unwrap();
+    assert_eq!(refused.operation_id, copy.operation_id);
+    assert_eq!(refused.state, CopyState::Failed);
+    assert_eq!(refused.code, Some("busy"));
+    assert!(refused.settled && refused.receipt.is_none());
+    assert_eq!(refused.bytes_copied, 0);
     let pending = status(jobs.archive_cancel(&key).unwrap());
     assert_eq!(pending.state, State::Cancelling);
     assert!(!pending.settled);
@@ -200,6 +203,7 @@ fn independent_cancelled_real_writer_holds_copy_slot_until_handles_are_closed() 
     assert_eq!(names(directory.path()), vec!["copy-source.txt"]);
     assert!(jobs.jobs.lock().unwrap().active.is_none());
     assert!(jobs.seal_exit().is_ok());
+    assert!(jobs.release(&copy.operation_id).unwrap());
     assert!(jobs.archive_release(&key).unwrap());
     closed_absence(jobs.archive_start(&key).unwrap(), &key);
     assert!(!destination.exists());
