@@ -257,15 +257,18 @@ export class FileCopyJobs {
     }
   }
   async begin(file: VerifiedFile, destination: string): Promise<void> {
-    if (
-      this.items.some(
-        (j) =>
-          j.destination === destination &&
-          j.phase !== "notStarted" &&
-          (j.phase !== "known" || !j.status || !copyTerminal(j.status.state)),
-      )
-    )
+    const existing = this.items.find(
+      (job) =>
+        job.destination === destination &&
+        job.phase !== "notStarted" &&
+        (job.phase !== "known" ||
+          !job.status ||
+          !copyTerminal(job.status.state)),
+    );
+    if (existing) {
+      if (!samePreviewFile(existing.file, file)) throw { code: "busy" };
       return;
+    }
     if (this.items.length >= 64) throw { code: "busy" };
     const job: FileCopyJob = {
       id: ++this.next,

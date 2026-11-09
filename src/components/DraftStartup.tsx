@@ -9,7 +9,7 @@ import { threads } from "../runtime/sessions";
 import { StorageRecovery } from "./StorageRecovery";
 import { conversationReadState } from "../runtime/conversation_read_state";
 import {
-  exitNeedsReview,
+  exitReviewReason,
   hasUnknownFinishedFileCopies,
   EXIT_IMPACT as E,
 } from "../runtime/exit_impact";
@@ -51,6 +51,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [readsSettled, setReadsSettled] = useState(false);
   const [backendCopyReview, setBackendCopyReview] = useState(false);
   const [backendWorktreeReview, setBackendWorktreeReview] = useState(false);
+  const [activityReview, setActivityReview] = useState<string | null>(null);
   const [cancellingExit, setCancellingExit] = useState<number | null>(null);
   const releaseExitInteraction = () => {
     const release = exitInteraction.current;
@@ -103,15 +104,18 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setCancelError(false);
     setBackendCopyReview(false);
     setBackendWorktreeReview(false);
+    setActivityReview(null);
     setCancellingExit(null);
     threads.pauseQueuesForExit(confirmActivity);
     exitInteraction.current ??= draftPersistence.acquireInteractionLock();
-    if (
-      hasUnsettledFileCopies() ||
-      (!confirmActivity &&
-        (hasUnknownFinishedFileCopies() ||
-          (restartingExit.current !== token && exitNeedsReview())))
-    ) {
+    const checkActivity = !confirmActivity && restartingExit.current !== token;
+    const review = checkActivity ? exitReviewReason() : null;
+    const needsFileReview =
+      !checkActivity &&
+      (hasUnsettledFileCopies() ||
+        (!confirmActivity && hasUnknownFinishedFileCopies()));
+    if (review || needsFileReview) {
+      if (review?.kind === "activity") setActivityReview(review.detail);
       setExitReview(token);
       return;
     }
@@ -164,6 +168,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       ) {
         setBackendCopyReview(code === "FILE_COPY_EXIT_BLOCKED");
         setBackendWorktreeReview(code === "WORKTREE_EXIT_BLOCKED");
+        if (code === "EXIT_CONFIRMATION_REQUIRED")
+          setActivityReview(E.applicationReview);
         setExitReview(token);
         return;
       }
@@ -256,6 +262,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               ) : backendCopyReview ? (
                 <p role="status">{E.copyReview}</p>
               ) : null}
+              {activityReview && <p role="status">{activityReview}</p>}
               <FileCopyJobsStatus />
               <ConversationArchiveJobsStatus />
               {cancellingExit === exitReview && (

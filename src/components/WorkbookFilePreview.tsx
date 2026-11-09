@@ -93,8 +93,10 @@ export function WorkbookFilePreview({
   file,
   active,
   interactionBlocked = false,
+  rangeRevision = 0,
   readingPosition,
   prepared,
+  replacement,
   onStatus,
   onOfficeTargetAvailability,
   onOfficeTargetConfirm,
@@ -103,8 +105,13 @@ export function WorkbookFilePreview({
   file: VerifiedFile;
   active: boolean;
   interactionBlocked?: boolean;
+  rangeRevision?: number;
   readingPosition?: PreviewReadingPositionRef;
   prepared?: PreparedWorkbookPreview;
+  replacement?: {
+    directory: WorkbookDirectory;
+    onSelect: (sheetId: string) => void;
+  };
   onStatus?: (status: PreviewContentStatus) => void;
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
@@ -118,6 +125,8 @@ export function WorkbookFilePreview({
   const current = useRef<AbortController | null>(null);
   const retireSelection = useRef<(() => void) | null>(null);
   const captureReader = useRef(new PreviewCapture<WorkbookCapture>());
+  const flight = useRef<{ file: VerifiedFile } | null>(null);
+  const reading = () => flight.current?.file === file;
   const props = useRef({ file, active, interactionBlocked });
   props.current = { file, active, interactionBlocked };
   const [selection, setSelection] = useState<{
@@ -155,14 +164,14 @@ export function WorkbookFilePreview({
       props.current.active &&
       props.current.file === file;
     if (!active) {
-      status.current?.({ file, state: "paused" });
+      status.current?.({ file, state: "paused", readInFlight: reading() });
       setState("paused");
       setMessage(S.paused);
       return () => operation.abort();
     }
     setState("loading");
     setMessage(S.loading);
-    status.current?.({ file, state: "loading" });
+    status.current?.({ file, state: "loading", readInFlight: reading() });
     void (async () => {
       // A replaced mount must not start an OS read. In development, StrictMode
       // replays effects synchronously; only the surviving owner crosses IPC.
@@ -174,13 +183,35 @@ export function WorkbookFilePreview({
         samePreviewFile(prepared.capture.file, file)
           ? prepared
           : null;
-      const stored =
+      let value =
         staged?.capture ??
         (capture.current?.file === file ? capture.current.value : null);
-      const value = await (stored ??
-        captureReader.current.read(file, retry, readWorkbookCapture));
+      if (!value) {
+        const receipt = { file };
+        flight.current = receipt;
+        status.current?.({ file, state: "loading", readInFlight: true });
+        try {
+          value = await captureReader.current.read(
+            file,
+            retry,
+            readWorkbookCapture,
+          );
+        } finally {
+          if (flight.current === receipt) {
+            flight.current = null;
+            if (
+              props.current.file === file &&
+              attempt.current.retry === retry &&
+              attempt.current.prepared === prepared &&
+              !owns()
+            )
+              status.current?.({ file, state: "paused", readInFlight: false });
+          }
+        }
+      }
       if (!owns()) return;
       capture.current = { file, value };
+      status.current?.({ file, state: "loading", readInFlight: false });
       const receiveDirectory = (directory: WorkbookDirectory) => {
         if (owns()) setDirectory({ file, capture: value, value: directory });
       };
@@ -199,7 +230,11 @@ export function WorkbookFilePreview({
       if (!owns()) return;
       // Resolve a stored location against the new workbook's actual directory.
       // Never ask the parser to guess a removed or recycled sheet ID.
-      if (staged && sheetId === undefined) {
+      if (
+        staged &&
+        sheetId === undefined &&
+        staged.selectedSheetId === undefined
+      ) {
         const restored =
           restoredWorkbookSheet(file, workbook, readingPosition) ??
           (staged
@@ -222,7 +257,7 @@ export function WorkbookFilePreview({
         });
       setLoaded({ file, value: workbook, capture: value, operation });
       setState("ready");
-      status.current?.({ file, state: "ready" });
+      status.current?.({ file, state: "ready", readInFlight: false });
       setMessage(S.snapshot);
     })().catch((error) => {
       const code = error instanceof XlsxError ? error.code : undefined;
@@ -232,7 +267,12 @@ export function WorkbookFilePreview({
         attempt.current.prepared === prepared &&
         (owns() || code === "readPending" || code === "readBusy")
       )
-        status.current?.({ file, state: "failed", ...(code ? { code } : {}) });
+        status.current?.({
+          file,
+          state: "failed",
+          readInFlight: reading(),
+          ...(code ? { code } : {}),
+        });
       if (!owns()) return;
       setState("failed");
       setMessage(workbookFailure(error));
@@ -248,9 +288,14 @@ export function WorkbookFilePreview({
     directory?.file === file && directory.capture === capture.current?.value
       ? directory.value
       : null;
-  const sheets = knownDirectory?.sheets ?? workbook?.sheets;
+  const sheets =
+    replacement?.directory.sheets ?? knownDirectory?.sheets ?? workbook?.sheets;
   const selectedId =
-    sheetId ?? knownDirectory?.selectedId ?? workbook?.sheet?.id;
+    replacement?.directory.selectedId ??
+    sheetId ??
+    knownDirectory?.selectedId ??
+    workbook?.sheet?.id;
+  const sheetLabel = replacement ? S.replacementSheet : S.sheet;
   const sheetActionOwner = current.current;
   const canInteract = () =>
     props.current.active &&
@@ -269,9 +314,9 @@ export function WorkbookFilePreview({
       <div className="workbook-controls">
         {sheets && (
           <label>
-            {S.sheet}
+            {sheetLabel}
             <select
-              aria-label={S.sheet}
+              aria-label={sheetLabel}
               value={selectedId}
               disabled={!active || state === "loading"}
               onChange={(event) => {
@@ -281,12 +326,20 @@ export function WorkbookFilePreview({
                   feedbackState.current.state === "loading"
                 )
                   return;
+                if (replacement) {
+                  replacement.onSelect(event.target.value);
+                  return;
+                }
                 retireSelection.current?.();
                 setSelection({ file, id: event.target.value });
               }}
             >
               {sheets.map((sheet) => (
-                <option key={sheet.id} value={sheet.id}>
+                <option
+                  key={sheet.id}
+                  value={sheet.id}
+                  disabled={sheet.id === replacement?.directory.selectedId}
+                >
                   {sheet.name}
                   {sheet.state === "visible"
                     ? ""
@@ -307,7 +360,11 @@ export function WorkbookFilePreview({
               current.current?.abort();
               setState("paused");
               setMessage(S.cancelled);
-              status.current?.({ file, state: "paused" });
+              status.current?.({
+                file,
+                state: "paused",
+                readInFlight: reading(),
+              });
             }}
           >
             {S.cancel}
@@ -333,6 +390,7 @@ export function WorkbookFilePreview({
         )}
       </div>
       <p role={state === "failed" ? "alert" : "status"}>{message}</p>
+      {replacement && state === "ready" && <p>{S.replacementSnapshot}</p>}
       {state === "ready" &&
         active &&
         workbook?.sheet &&
@@ -341,10 +399,14 @@ export function WorkbookFilePreview({
             key={`${file.root}:${file.resolvedPath}:${file.version}:${file.sha256}:${workbook.sheet.id}`}
             workbook={workbook}
             file={file}
-            explicitSheetSelection={sheetId === workbook.sheet.id}
+            explicitSheetSelection={
+              sheetId === workbook.sheet.id ||
+              prepared?.selectedSheetId === workbook.sheet.id
+            }
             readingPosition={readingPosition}
             capture={loaded!.capture}
             interactionBlocked={interactionBlocked}
+            rangeRevision={rangeRevision}
             retireSelection={retireSelection}
             isCurrent={() => {
               const now = feedbackState.current;
@@ -376,6 +438,7 @@ function WorkbookGrid({
   explicitSheetSelection,
   capture,
   interactionBlocked,
+  rangeRevision,
   retireSelection,
   isCurrent,
   onOfficeTargetAvailability,
@@ -388,6 +451,7 @@ function WorkbookGrid({
   readingPosition?: PreviewReadingPositionRef;
   capture: WorkbookCapture;
   interactionBlocked: boolean;
+  rangeRevision: number;
   retireSelection: { current: (() => void) | null };
   isCurrent: () => boolean;
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
@@ -430,7 +494,10 @@ function WorkbookGrid({
   const [address, setAddress] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [selection, setSelection] = useState<WorkbookPosition | null>(null);
-  const [rangeOpen, setRangeOpen] = useState(false);
+  const [openedRangeRevision, setOpenedRangeRevision] = useState<number | null>(
+    null,
+  );
+  const rangeOpen = openedRangeRevision === rangeRevision;
   const rangeActive = useRef(false);
   rangeActive.current = rangeOpen;
   const [range, setRange] = useState<WorkbookFeedbackRange | null>(null);
@@ -543,9 +610,12 @@ function WorkbookGrid({
   const closeRange = () => {
     rangeActive.current = false;
     setRange(null);
-    setRangeOpen(false);
+    setOpenedRangeRevision(null);
     rangeRetire.current?.();
   };
+  useLayoutEffect(() => {
+    if (openedRangeRevision !== null && !rangeOpen) closeRange();
+  }, [openedRangeRevision, rangeOpen]);
   const chooseWindow = (next: typeof start) => {
     if (!latest.current.isCurrent()) return;
     const owner = latest.current;
@@ -603,7 +673,7 @@ function WorkbookGrid({
             if (!latest.current.isCurrent()) return;
             setSelection(null);
             rangeActive.current = true;
-            setRangeOpen(true);
+            setOpenedRangeRevision(rangeRevision);
           }}
         >
           {S.feedbackRangeOpen}

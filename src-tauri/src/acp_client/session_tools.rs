@@ -263,6 +263,15 @@ pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
     connection.session_tools.capability()
 }
 
+pub(crate) fn opened_capability(
+    connection: &ManagedConnection,
+    response: &serde_json::Value,
+) -> Option<Capability> {
+    let mut capability = capability(connection)?;
+    capability.startup = types::startup_report(response);
+    Some(capability)
+}
+
 #[tauri::command]
 pub async fn session_tools_read(
     app: tauri::AppHandle,

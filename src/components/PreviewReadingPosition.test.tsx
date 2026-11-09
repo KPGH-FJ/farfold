@@ -606,6 +606,7 @@ it.each(["docx", "workbook"] as const)(
       file: source,
       state: "failed",
       code: "readPending",
+      ...(kind === "workbook" ? { readInFlight: false } : {}),
     });
     render(element(false));
     render(element(true));
@@ -617,7 +618,11 @@ it.each(["docx", "workbook"] as const)(
     await drain();
     render(element(true));
     expect(capture).toHaveBeenCalledTimes(2);
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    expect(status).toHaveBeenLastCalledWith({
+      file: source,
+      state: "ready",
+      ...(kind === "workbook" ? { readInFlight: false } : {}),
+    });
   },
 );
 
@@ -660,14 +665,19 @@ it.each(["docx", "workbook"] as const)(
     render(prepared);
     await drain();
     render(prepared);
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    const ready = {
+      file: source,
+      state: "ready",
+      ...(kind === "workbook" ? { readInFlight: false } : {}),
+    };
+    expect(status).toHaveBeenLastCalledWith(ready);
     const ErrorClass =
       kind === "docx"
         ? (await import("../runtime/docx_types")).DocxError
         : (await import("../runtime/xlsx_types")).XlsxError;
     reject(new ErrorClass("readPending"));
     await drain();
-    expect(status).toHaveBeenLastCalledWith({ file: source, state: "ready" });
+    expect(status).toHaveBeenLastCalledWith(ready);
   },
 );
 
@@ -699,7 +709,14 @@ it.each(["docx", "workbook"] as const)(
     await drain();
     render(node);
     expect(status.mock.calls.filter(([s]) => s.state === "failed")).toEqual([
-      [{ file: source, state: "failed", code: "readPending" }],
+      [
+        {
+          file: source,
+          state: "failed",
+          code: "readPending",
+          ...(kind === "workbook" ? { readInFlight: false } : {}),
+        },
+      ],
     ]);
   },
 );

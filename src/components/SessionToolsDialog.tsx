@@ -7,7 +7,10 @@ import {
 } from "react";
 import { threads, type ThreadState } from "../runtime/sessions";
 import { getSessionToolsController } from "../runtime/session_tools_controller";
-import type { SessionToolsReport } from "../runtime/session_tools_types";
+import type {
+  SessionToolsReport,
+  SessionToolStartupReport,
+} from "../runtime/session_tools_types";
 import { SESSION_TOOLS_STRINGS as S } from "../runtime/session_tools_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import "./SessionToolsDialog.css";
@@ -61,6 +64,32 @@ export function SessionToolsReportView({
   );
 }
 
+export function SessionToolStartupView({
+  report,
+}: {
+  report: SessionToolStartupReport;
+}) {
+  const { reportedCount, loadedCount, failedCount, unknownCount } = report;
+  return (
+    <section aria-label={S.startup.title}>
+      <h3>{S.startup.title}</h3>
+      <p>
+        {S.startup.reported} {reportedCount} 项结果
+      </p>
+      {reportedCount > 0 && (
+        <p>
+          {S.startup.loaded} {loadedCount} 项，{S.startup.failed} {failedCount}{" "}
+          项，{S.startup.unknown} {unknownCount} 项。
+        </p>
+      )}
+      {loadedCount + failedCount + unknownCount < reportedCount && (
+        <p>{S.startup.truncated}</p>
+      )}
+      <p className="session-tools-note">{S.startup.limits}</p>
+    </section>
+  );
+}
+
 export function SessionToolsDialog({
   thread,
   title,
@@ -103,6 +132,10 @@ export function SessionToolsDialog({
     if (mounted.current && latest.current.active) latest.current.onClose();
   };
   const report = controller.isCurrent() ? view.operation?.report : null;
+  const startup =
+    active && controller.isCurrent()
+      ? thread.sessionToolInventory?.startup
+      : null;
   return (
     <WorkspaceDialog
       title={S.title}
@@ -123,6 +156,7 @@ export function SessionToolsDialog({
           </p>
         )}
         {error && <p role="status">{S.errors[error]}</p>}
+        {startup && <SessionToolStartupView report={startup} />}
         {report && <SessionToolsReportView report={report} />}
         <p className="session-tools-note">{S.notice}</p>
       </div>

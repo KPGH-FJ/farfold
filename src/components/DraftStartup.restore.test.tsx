@@ -44,7 +44,7 @@ vi.mock("../runtime/conversation_read_state", () => ({
   conversationReadState: {},
 }));
 vi.mock("../runtime/exit_impact", () => ({
-  exitNeedsReview: () => false,
+  exitReviewReason: () => null,
   hasUnknownFinishedFileCopies: () => false,
   EXIT_IMPACT: {},
 }));

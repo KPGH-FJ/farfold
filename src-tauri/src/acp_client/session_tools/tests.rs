@@ -15,6 +15,34 @@ fn empty_report_is_still_unreported_and_never_a_complete_inventory() {
 }
 
 #[test]
+fn opening_report_exposes_only_bounded_result_counts() {
+    let mut results = vec![
+        json!({"name":"PRIVATE_NAME","success":true}),
+        json!({"name":"PRIVATE_NAME","success":false,"error":"PRIVATE_ERROR"}),
+        json!({"name":"PRIVATE_NAME","success":true,"error":"PRIVATE_CONTRADICTION"}),
+        json!({"success":true}),
+    ];
+    results.resize(
+        types::MAX_ITEMS,
+        json!({"name":"PRIVATE_NAME","success":true}),
+    );
+    results.push(json!({"name":"PRIVATE_NAME","success":false}));
+    let report = types::startup_report(&json!({"_meta":{"extensionResults":results}})).unwrap();
+    assert_eq!(
+        serde_json::to_value(report).unwrap(),
+        json!({"reportedCount":257,"loadedCount":253,"failedCount":1,"unknownCount":2}),
+    );
+    assert!(types::startup_report(&json!({})).is_none());
+    assert!(types::startup_report(&json!({"_meta":{"extensionResults":{}}})).is_none());
+    assert_eq!(
+        types::startup_report(&json!({"_meta":{"extensionResults":[]}}))
+            .unwrap()
+            .reported_count,
+        0,
+    );
+}
+
+#[test]
 fn projection_is_bounded_unicode_and_only_exposes_reviewed_fields() {
     let raw = json!({"name":"名".repeat(257),"description":"述".repeat(2049),"permission":"ask_before","parameters":["PRIVATE_SCHEMA_CANARY"],"inputSchema":{"token":"PRIVATE_SCHEMA_CANARY"},"outputSchema":{"secret":"PRIVATE_SCHEMA_CANARY"},"config":"PRIVATE_SCHEMA_CANARY"});
     let report =

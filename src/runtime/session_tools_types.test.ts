@@ -34,6 +34,29 @@ it("requires the exact optional current-conversation supplement, not a handshake
     ),
   ).toBeNull();
 });
+it("accepts only bounded opening result counts in the current conversation supplement", () => {
+  const startup = {
+    reportedCount: 257,
+    loadedCount: 253,
+    failedCount: 1,
+    unknownCount: 2,
+  };
+  const value = { ...capability, startup };
+  expect(sessionToolInventoryCapability(value)).toEqual(value);
+  for (const patch of [
+    { identifier: "PRIVATE_NAME" },
+    { error: "PRIVATE_ERROR" },
+    { loadedCount: 254 },
+    { failedCount: -1 },
+    { unknownCount: 0.5 },
+  ])
+    expect(
+      sessionToolInventoryCapability({
+        ...capability,
+        startup: { ...startup, ...patch },
+      }),
+    ).toBeNull();
+});
 it("empty success remains an unreported-completeness report, distinct from failure", () => {
   expect(parse(ready(target, []), target)).toMatchObject({
     state: "ready",

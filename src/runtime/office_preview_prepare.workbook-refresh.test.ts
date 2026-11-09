@@ -10,7 +10,10 @@ import {
   type PreviewReadingPositionRef,
 } from "./preview_reading_position";
 import type { WorkbookCapture, XlsxWorkerInput } from "./xlsx_types";
-import type { PreparedWorkbookPreview } from "./office_preview_prepare";
+import type {
+  PreparedWorkbookPreview,
+  WorkbookRefreshRecovery,
+} from "./office_preview_prepare";
 
 const h = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
@@ -192,6 +195,67 @@ it.each(["selected-sheet", "global"])(
     expect(h.invoke).toHaveBeenCalledOnce();
   },
 );
+
+it("exposes validated choices after a broken saved sheet and reads only an explicit choice from the same capture", async () => {
+  vi.stubGlobal("Worker", ParserWorker);
+  const input = {
+    ...b,
+    parts: b.parts.map((part) => {
+      const other = part.name.endsWith("/sheet1.xml")
+        ? "sheet2.xml"
+        : part.name.endsWith("/sheet2.xml")
+          ? "sheet1.xml"
+          : null;
+      return other
+        ? {
+            ...part,
+            data: b.parts.find((p) => p.name.endsWith(`/${other}`))!.data,
+          }
+        : part;
+    }),
+  };
+  const replacement = capture(input, "broken-selected-sheet");
+  h.invoke.mockResolvedValue(replacement);
+  let recovery: WorkbookRefreshRecovery | undefined;
+  const onRecovery = (value: WorkbookRefreshRecovery) => (recovery = value);
+  const signal = new AbortController().signal;
+  const initial = prepareOfficePreview(
+    replacement.file,
+    position,
+    signal,
+    () => true,
+    {
+      onRecovery,
+    },
+  );
+  const failed = expect(initial).rejects.toMatchObject({ code: "invalid" });
+  await vi.waitFor(() => expect(ParserWorker.instances).toHaveLength(1));
+  ParserWorker.instances[0].parse();
+  await failed;
+  expect(recovery).toMatchObject({
+    capture: replacement,
+    directory: { selectedId: "sheet2" },
+  });
+  expect(ParserWorker.instances).toHaveLength(1);
+
+  const selected = prepareOfficePreview(
+    replacement.file,
+    position,
+    signal,
+    () => true,
+    {
+      selection: { capture: recovery!.capture, sheetId: "sheet1" },
+    },
+  );
+  await vi.waitFor(() => expect(ParserWorker.instances).toHaveLength(2));
+  ParserWorker.instances[1].parse();
+  await expect(selected).resolves.toMatchObject({
+    file: replacement.file,
+    selectedSheetId: "sheet1",
+    value: { sheet: { id: "sheet1", cells: [{ value: 43 }] } },
+  });
+  expect(h.invoke).toHaveBeenCalledOnce();
+});
 
 it("does not retry an unknown native capture result", async () => {
   vi.stubGlobal("Worker", ParserWorker);

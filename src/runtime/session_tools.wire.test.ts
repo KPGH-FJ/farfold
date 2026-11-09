@@ -40,3 +40,41 @@ it("passes the optional capability through a real acknowledged open, never infer
       .sessionToolInventory,
   ).toBeNull();
 });
+
+it("keeps opening diagnostics on the matching thread without another tool query", () => {
+  const input = { agentId: "fixture", cwd: "/owned" };
+  const result = {
+    nativeSessionId: "native",
+    connectionId: "connection",
+    cwd: "/owned",
+    configOptions: [],
+    resumed: false,
+    warnings: [],
+  };
+  const startup = {
+    reportedCount: 3,
+    loadedCount: 1,
+    failedCount: 1,
+    unknownCount: 1,
+  };
+  expect(
+    openedThreadState(
+      input,
+      { ...result, sessionToolInventory: { ...capability, startup } },
+      null,
+    ).sessionToolInventory?.startup,
+  ).toEqual(startup);
+  expect(
+    openedThreadState(
+      input,
+      {
+        ...result,
+        connectionId: "other",
+        sessionToolInventory: capability,
+        meta: { extensionResults: [{ name: "PRIVATE", success: true }] },
+      },
+      null,
+    ).sessionToolInventory?.startup,
+  ).toBeUndefined();
+  expect(invoke).not.toHaveBeenCalled();
+});

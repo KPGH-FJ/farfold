@@ -62,7 +62,9 @@ vi.mock("../runtime/sessions", () => ({
   threads: {
     pauseQueuesForExit: vi.fn(),
     getSnapshot: () => ({
-      threads: new Map(h.active ? [["a", { running: true }]] : []),
+      threads: new Map(
+        h.active ? [["a", { running: true, title: "测试对话" }]] : [],
+      ),
     }),
   },
 }));
@@ -296,6 +298,7 @@ it("does not acknowledge normal quit while known work is still running", async (
     token: 50,
   });
   expect(h.flush).not.toHaveBeenCalled();
+  expect(nodes(render())).toContain("尝试退出时，「测试对话」仍在执行。");
 });
 
 it("requires review when backend activity starts after the renderer save began", async () => {
@@ -311,6 +314,7 @@ it("requires review when backend activity starts after the renderer save began",
   expect(h.states[1]).toBe(false);
   expect(h.states).toContain(51);
   expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(nodes(render())).toContain("退出检查时，应用后台还有操作未确认结束。");
 });
 
 it("only an explicit confirm saves and acknowledges active work", async () => {

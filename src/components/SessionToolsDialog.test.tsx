@@ -1,6 +1,9 @@
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SessionToolsReportView } from "./SessionToolsDialog";
+import {
+  SessionToolsReportView,
+  SessionToolStartupView,
+} from "./SessionToolsDialog";
 import type { SessionToolsReport } from "../runtime/session_tools_types";
 
 const report: SessionToolsReport = {
@@ -64,4 +67,24 @@ it("reports truncation without changing the returned count to the displayed subs
   expect(html).toContain("程序本次返回 400 项工具信息");
   expect(html).toContain("部分工具信息未展示");
   expect(html).toContain("报告完整性未提供");
+});
+it("renders opening extension diagnostics separately from present connection or call results", () => {
+  const html = renderToStaticMarkup(
+    <SessionToolStartupView
+      report={{
+        reportedCount: 257,
+        loadedCount: 253,
+        failedCount: 1,
+        unknownCount: 2,
+      }}
+    />,
+  );
+  expect(html).toContain("打开对话时的扩展加载报告");
+  expect(html).toContain("程序报告 257 项结果");
+  expect(html).toContain("报告加载成功 253 项");
+  expect(html).toContain("报告加载失败 1 项");
+  expect(html).toContain("结果无法确认 2 项");
+  expect(html).toContain("部分加载结果未统计");
+  expect(html).not.toContain("已连接");
+  expect(html).not.toContain("调用成功");
 });

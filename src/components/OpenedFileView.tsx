@@ -39,6 +39,7 @@ import {
   type VisualAreaFeedbackSource,
 } from "../runtime/visual_feedback_target";
 import { pptxFailure } from "../runtime/pptx_strings";
+import { workbookFailure } from "../runtime/workbook_strings";
 import {
   readTextBlock,
   textBlockFailure,
@@ -63,6 +64,8 @@ import type { PreviewContentStatus } from "../runtime/preview_capture";
 import {
   prepareOfficePreview,
   type PreparedOfficePreview,
+  type WorkbookRefreshRecovery,
+  type WorkbookRefreshSelection,
 } from "../runtime/office_preview_prepare";
 import {
   fileFeedbackDrafts,
@@ -109,6 +112,7 @@ type View = {
   visual?: VisualPreview;
   pdfSearchTarget?: AttachmentPdfPreviewTarget;
   office?: PreparedOfficePreview;
+  workbookRecovery?: WorkbookRefreshRecovery;
   note?: string;
   pending?: boolean;
 };
@@ -200,6 +204,21 @@ function isPresentation(file: VerifiedFile) {
 function isOfficePreview(file: VerifiedFile) {
   return isWorkbook(file) || isDocument(file) || isPresentation(file);
 }
+
+function retainsOfficeReadReceipt(file: VerifiedFile) {
+  return isWorkbook(file) || isPresentation(file);
+}
+
+function officeReadBusy(
+  file: VerifiedFile,
+  status: PreviewContentStatus | null,
+) {
+  return (
+    status?.file === file &&
+    ((retainsOfficeReadReceipt(file) && Boolean(status.readInFlight)) ||
+      (isWorkbook(file) && status.state === "loading"))
+  );
+}
 function isText(file: VerifiedFile) {
   return (
     TEXT_EXTENSIONS.has(extension(file.name)) ||
@@ -259,18 +278,19 @@ export function OpenedFileView({
   currentProps.current = { identity, active, onOpenHtml };
   const mounted = useRef(true);
   const operation = useRef<Operation | null>(null);
+  const workbookRangeRevision = useRef(0);
   const blockReadFlight = useRef<Operation | null>(null);
-  const presentationRefresh = useRef<{
+  const officeRefresh = useRef<{
     owner: Operation;
     settled: boolean;
     uncertain: boolean;
   } | null>(null);
-  const presentationRefreshing = () =>
-    presentationRefresh.current?.owner.identity === identity &&
-    !presentationRefresh.current.settled;
-  const presentationUncertain = () =>
-    presentationRefresh.current?.owner.identity === identity &&
-    presentationRefresh.current.uncertain;
+  const officeRefreshing = () =>
+    officeRefresh.current?.owner.identity === identity &&
+    !officeRefresh.current.settled;
+  const officeRefreshUncertain = () =>
+    officeRefresh.current?.owner.identity === identity &&
+    officeRefresh.current.uncertain;
   const [view, setView] = useState<View>({ identity, phase: "loading" });
   const latestView = useRef(view);
   latestView.current = view;
@@ -388,6 +408,7 @@ export function OpenedFileView({
     verified?: VerifiedFile,
     preserve = false,
     valid?: () => boolean,
+    workbookSelection?: WorkbookRefreshSelection,
   ): Promise<boolean> {
     if (
       !mounted.current ||
@@ -396,17 +417,14 @@ export function OpenedFileView({
       operation.current ||
       (latestView.current.block && latestBlockStatus.current?.readInFlight) ||
       (latestView.current.file &&
-        isPresentation(latestView.current.file) &&
-        latestOfficeStatus.current?.file === latestView.current.file &&
-        latestOfficeStatus.current.readInFlight)
+        officeReadBusy(latestView.current.file, latestOfficeStatus.current))
     )
       return false;
-    if (presentationRefreshing() || (valid && presentationUncertain()))
-      return false;
+    if (officeRefreshing() || (valid && officeRefreshUncertain())) return false;
     // Only an explicit new read retries an unknown receipt. Visibility and the
     // automatic monitor never make an unfinished read safe to repeat.
-    if (!valid && presentationRefresh.current?.owner.identity === identity)
-      presentationRefresh.current = null;
+    if (!valid && officeRefresh.current?.owner.identity === identity)
+      officeRefresh.current = null;
     if (blockReadFlight.current?.identity === identity) return false;
     const owner: Operation = {
       identity,
@@ -433,13 +451,16 @@ export function OpenedFileView({
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
+    let workbookRecovery: WorkbookRefreshRecovery | undefined;
     if (!preserve) {
       latestReadiness.current = null;
       setVisualReadiness(null);
     }
     const previous = latestView.current;
-    if (preserve && previous.file && isPresentation(previous.file))
-      presentationRefresh.current = { owner, settled: false, uncertain: false };
+    if (preserve && !valid && previous.file && isWorkbook(previous.file))
+      workbookRangeRevision.current++;
+    if (preserve && previous.file && retainsOfficeReadReceipt(previous.file))
+      officeRefresh.current = { owner, settled: false, uncertain: false };
     textScroll.current = textContent.current?.scrollTop ?? textScroll.current;
     setView(
       preserve
@@ -494,10 +515,10 @@ export function OpenedFileView({
       } else if (isOfficePreview(file)) {
         if (preserve) {
           if (
-            isPresentation(file) &&
-            presentationRefresh.current?.owner !== owner
+            retainsOfficeReadReceipt(file) &&
+            officeRefresh.current?.owner !== owner
           )
-            presentationRefresh.current = {
+            officeRefresh.current = {
               owner,
               settled: false,
               uncertain: false,
@@ -507,6 +528,14 @@ export function OpenedFileView({
             readingPosition,
             owner.parser!.signal,
             () => current(owner),
+            isWorkbook(file)
+              ? {
+                  selection: workbookSelection,
+                  onRecovery: (value) => {
+                    workbookRecovery = value;
+                  },
+                }
+              : undefined,
           );
           if (!current(owner)) return false;
           setView({ identity, phase: "ready", file, office });
@@ -554,18 +583,18 @@ export function OpenedFileView({
           ? error.code
           : undefined;
       const failureMessage = error instanceof Error ? error.message : error;
-      const ownsPresentation =
-        presentationRefresh.current?.owner === owner &&
+      const ownsOfficeRefresh =
+        officeRefresh.current?.owner === owner &&
         mounted.current &&
         currentProps.current.identity === identity;
       if (
-        ownsPresentation &&
+        ownsOfficeRefresh &&
         (code === "readPending" ||
           code === "readBusy" ||
           failureMessage === D.checkWaitExpired ||
           failureMessage === D.checkBusy)
       )
-        presentationRefresh.current!.uncertain = true;
+        officeRefresh.current!.uncertain = true;
       const ownsHiddenBlock =
         blockAttempt &&
         mounted.current &&
@@ -574,7 +603,7 @@ export function OpenedFileView({
       if (
         current(owner) ||
         ownsHiddenBlock ||
-        (ownsPresentation && code !== "cancelled" && !operation.current)
+        (ownsOfficeRefresh && code !== "cancelled" && !operation.current)
       ) {
         if (preserve && previous.block) {
           const status: PreviewContentStatus = {
@@ -591,11 +620,16 @@ export function OpenedFileView({
             ? {
                 ...previous,
                 pending: false,
+                workbookRecovery:
+                  workbookRecovery ??
+                  (workbookSelection ? previous.workbookRecovery : undefined),
                 note: previous.block
                   ? T.failures[textBlockFailure(error)]
                   : previous.file && isPresentation(previous.file)
                     ? pptxFailure(error)
-                    : previous.note,
+                    : previous.file && isWorkbook(previous.file)
+                      ? workbookFailure(error)
+                      : previous.note,
               }
             : inspected &&
                 isText(inspected) &&
@@ -624,10 +658,9 @@ export function OpenedFileView({
       }
       return false;
     } finally {
-      if (presentationRefresh.current?.owner === owner) {
-        presentationRefresh.current.settled = true;
-        if (!presentationRefresh.current.uncertain)
-          presentationRefresh.current = null;
+      if (officeRefresh.current?.owner === owner) {
+        officeRefresh.current.settled = true;
+        if (!officeRefresh.current.uncertain) officeRefresh.current = null;
         if (mounted.current && currentProps.current.identity === identity)
           setView((latest) => ({ ...latest }));
       }
@@ -735,6 +768,7 @@ export function OpenedFileView({
   const shown =
     view.identity === identity ? view : { identity, phase: "loading" as const };
   const file = shown.file;
+  const workbookRecovery = shown.workbookRecovery;
   const disabled =
     !active ||
     shown.pending ||
@@ -921,7 +955,8 @@ export function OpenedFileView({
         (officeStatus?.file === file && officeStatus.state === "ready")),
     blocked:
       Boolean(shown.pending) ||
-      Boolean(presentationRefreshing() || presentationUncertain()) ||
+      Boolean(officeRefreshing() || officeRefreshUncertain()) ||
+      Boolean(workbookRecovery) ||
       Boolean(shown.block && blockStatus?.readInFlight) ||
       blockReadFlight.current?.identity === identity,
     apply: async (next, valid) => {
@@ -985,17 +1020,15 @@ export function OpenedFileView({
                   className="btn btn-ghost"
                   disabled={
                     disabled ||
-                    Boolean(presentationRefreshing()) ||
-                    Boolean(
-                      isPresentation(file) &&
-                      officeStatus?.file === file &&
-                      officeStatus.readInFlight,
-                    )
+                    Boolean(officeRefreshing()) ||
+                    officeReadBusy(file, officeStatus)
                   }
                   onClick={() =>
                     void load(
                       undefined,
-                      Boolean(shown.block) || isPresentation(file),
+                      Boolean(shown.block) ||
+                        isPresentation(file) ||
+                        (isWorkbook(file) && officeReady()),
                     )
                   }
                 >
@@ -1154,9 +1187,28 @@ export function OpenedFileView({
           file={file}
           active={active}
           interactionBlocked={Boolean(shown.pending)}
+          rangeRevision={workbookRangeRevision.current}
           readingPosition={readingPosition}
           prepared={
             shown.office?.kind === "workbook" ? shown.office : undefined
+          }
+          replacement={
+            workbookRecovery && {
+              directory: workbookRecovery.directory,
+              onSelect: (sheetId) => {
+                if (
+                  latestView.current.workbookRecovery !== workbookRecovery ||
+                  latestView.current.pending ||
+                  sheetId === workbookRecovery.directory.selectedId ||
+                  !workbookRecovery.directory.sheets.some(
+                    (item) => item.id === sheetId,
+                  )
+                )
+                  return;
+                const { capture } = workbookRecovery;
+                void load(capture.file, true, undefined, { capture, sheetId });
+              },
+            }
           }
           onStatus={reportOfficeStatus}
           onOfficeTargetAvailability={targets.reportOffice}

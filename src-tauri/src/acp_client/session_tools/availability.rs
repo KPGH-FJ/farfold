@@ -26,6 +26,7 @@ impl Availability {
         self.available.load(Ordering::SeqCst).then_some(Capability {
             source: "reviewedOfficialSupplement",
             scope: "currentConversation",
+            startup: None,
         })
     }
     pub(crate) fn observe(&self, dispatch: &Dispatch<UntypedMessage, UntypedMessage>) {

@@ -714,14 +714,145 @@ it("blocking an in-progress parse does not pause or restart it", async () => {
   await drain();
   view();
   const blocked = view();
-  expect(onStatus.mock.calls.map(([value]) => value.state)).toEqual([
-    "loading",
-    "ready",
+  expect(
+    onStatus.mock.calls.map(([value]) => [value.state, value.readInFlight]),
+  ).toEqual([
+    ["loading", false],
+    ["loading", true],
+    ["loading", false],
+    ["ready", false],
   ]);
   expect(h.capture).toHaveBeenCalledOnce();
   expect(h.parse).toHaveBeenCalledOnce();
   expect(blocked.html).toContain('data-cell="A1"');
   expect(blocked.all.find((n) => n.type === "section")!.props.inert).toBe(true);
+});
+
+it("keeps the native read receipt after preview cancel until the original capture settles", async () => {
+  let resolve!: (value: WorkbookCapture) => void;
+  h.capture.mockImplementationOnce(
+    () => new Promise((done) => (resolve = done)),
+  );
+  const onStatus = vi.fn();
+  props = { ...props, onStatus };
+  view();
+  await drain();
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "loading",
+    readInFlight: true,
+  });
+  click(button(view(), S.cancel));
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "paused",
+    readInFlight: true,
+  });
+  resolve(capture);
+  await drain();
+  expect(onStatus).toHaveBeenLastCalledWith({
+    file,
+    state: "paused",
+    readInFlight: false,
+  });
+  expect(h.parse).not.toHaveBeenCalled();
+  click(button(view(), S.retry));
+  await ready();
+  expect(h.capture).toHaveBeenCalledOnce();
+  expect(h.parse).toHaveBeenCalledOnce();
+});
+
+it("shows an explicitly chosen hidden replacement sheet instead of restoring the previous sheet", async () => {
+  const readingPosition: NonNullable<typeof props.readingPosition> = {
+    current: {
+      root: file.root,
+      resolvedPath: file.resolvedPath,
+      kind: "workbook",
+      sheet: { id: "sheet-main", name: "数据一" },
+      row: 1,
+      column: 1,
+      showHidden: false,
+    },
+  };
+  props = {
+    ...props,
+    readingPosition,
+    prepared: {
+      kind: "workbook",
+      file,
+      capture,
+      value: book("hidden.note"),
+      selectedSheetId: "hidden.note",
+    },
+  };
+  const shown = await ready();
+  expect(shown.all.find((node) => node.type === "select")?.props.value).toBe(
+    "hidden.note",
+  );
+  expect(readingPosition.current).toMatchObject({
+    sheet: { id: "hidden.note", hiddenSelected: true },
+  });
+  expect(h.parse).not.toHaveBeenCalled();
+});
+
+it("labels the previous grid and routes the replacement sheet control to its owner", async () => {
+  await ready();
+  const onSelect = vi.fn();
+  props = {
+    ...props,
+    replacement: {
+      directory: {
+        selectedId: "broken",
+        sheets: [
+          { id: "broken", name: "Broken", state: "visible" },
+          { id: "replacement", name: "Replacement", state: "visible" },
+        ],
+      },
+      onSelect,
+    },
+  };
+  const shown = view();
+  expect(shown.html).toContain(S.replacementSnapshot);
+  expect(shown.html).toContain('data-cell="A1"');
+  const control = shown.all.find((node) => node.type === "select")!;
+  expect(control.props["aria-label"]).toBe(S.replacementSheet);
+  (control.props.onChange as (event: unknown) => void)({
+    target: { value: "replacement" },
+  });
+  expect(onSelect).toHaveBeenCalledExactlyOnceWith("replacement");
+  expect(h.parse).toHaveBeenCalledOnce();
+});
+
+it("closes only the unsaved range editor when an explicit reread retains the grid", async () => {
+  const previous = await ready();
+  click(button(previous, S.feedbackRangeOpen));
+  const rangeInput = () =>
+    view().all.find(
+      (node) =>
+        node.props["aria-label"] === S.feedbackRangeInput &&
+        node.type === "input",
+    );
+  const originalInput = rangeInput()!;
+  (originalInput.props.onChange as (event: unknown) => void)({
+    target: { value: "A1:" },
+  });
+  const retiredInput = rangeInput()!;
+  expect(retiredInput.props.value).toBe("A1:");
+
+  props = { ...props, interactionBlocked: true, rangeRevision: 1 };
+  expect(rangeInput()).toBeUndefined();
+  expect(view().html).toContain('data-cell="A1"');
+
+  props = { ...props, interactionBlocked: false };
+  click(button(view(), S.feedbackRangeOpen));
+  expect(rangeInput()?.props.value).toBe("");
+  (retiredInput.props.onChange as (event: unknown) => void)({
+    target: { value: "A2" },
+  });
+  expect(rangeInput()?.props.value).toBe("");
+  expect(h.capture).toHaveBeenCalledOnce();
+  expect(h.parse).toHaveBeenCalledOnce();
+  expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
 });
 
 it("a queued retry remains inert until an explicit unblocked action", async () => {

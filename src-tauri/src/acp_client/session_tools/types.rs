@@ -9,6 +9,45 @@ const MAX_DESCRIPTION: usize = 2048;
 pub struct Capability {
     pub source: &'static str,
     pub scope: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub startup: Option<StartupReport>,
+}
+
+/// Counts from the opening reply, independent of the live tools catalogue.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StartupReport {
+    pub reported_count: usize,
+    pub loaded_count: usize,
+    pub failed_count: usize,
+    pub unknown_count: usize,
+}
+
+pub(super) fn startup_report(response: &Value) -> Option<StartupReport> {
+    let results = response.pointer("/_meta/extensionResults")?.as_array()?;
+    let mut report = StartupReport {
+        reported_count: results.len(),
+        loaded_count: 0,
+        failed_count: 0,
+        unknown_count: 0,
+    };
+    // A reported result is not a unique server, a tool invocation, or a
+    // complete inventory. Names and errors may contain private values.
+    for result in results.iter().take(MAX_ITEMS) {
+        let success = result
+            .get("name")
+            .and_then(Value::as_str)
+            .filter(|name| !name.is_empty())
+            .and_then(|_| result.get("success")?.as_bool());
+        match success {
+            Some(true) if result.get("error").is_none_or(Value::is_null) => {
+                report.loaded_count += 1
+            }
+            Some(false) => report.failed_count += 1,
+            _ => report.unknown_count += 1,
+        }
+    }
+    Some(report)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]

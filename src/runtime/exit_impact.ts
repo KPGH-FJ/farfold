@@ -1,7 +1,7 @@
 import { conversationArchiveJobs } from "./conversation_archive_jobs";
 import { threads } from "./sessions";
 import { hasActiveAuthentication } from "./authentication";
-import { updateConversationBlocker } from "./update_impact";
+import { UPDATE_IMPACT, updateConversationBlocker } from "./update_impact";
 import { fileCopyJobs, hasUnsettledFileCopies } from "./file_copy_jobs";
 
 export const EXIT_IMPACT = {
@@ -24,6 +24,10 @@ export const EXIT_IMPACT = {
   copyReview: "退出前需要核对文件保存状态。可先留在应用，查看保存结果。",
   worktreeReview:
     "工作位置操作仍在进行，或尚未确认是否结束。请先留在应用查看结果，再尝试退出。",
+  accountReview: "尝试退出时，Agent 账号操作仍在进行，或结果尚未确认。",
+  conversationReview: (title: string, reason: string) =>
+    `尝试退出时，「${title}」${reason}。`,
+  applicationReview: "退出检查时，应用后台还有操作未确认结束。",
 } as const;
 
 export function hasUnknownFinishedFileCopies(): boolean {
@@ -39,13 +43,22 @@ export function hasUnknownFinishedFileCopies(): boolean {
   );
 }
 
-export function exitNeedsReview(): boolean {
-  return (
-    hasUnsettledFileCopies() ||
-    hasUnknownFinishedFileCopies() ||
-    hasActiveAuthentication() ||
-    [...threads.getSnapshot().threads.values()].some((thread) =>
-      Boolean(updateConversationBlocker(thread)),
-    )
-  );
+export function exitReviewReason():
+  { kind: "file" } | { kind: "activity"; detail: string } | null {
+  if (hasUnsettledFileCopies() || hasUnknownFinishedFileCopies())
+    return { kind: "file" };
+  if (hasActiveAuthentication())
+    return { kind: "activity", detail: EXIT_IMPACT.accountReview };
+  for (const thread of threads.getSnapshot().threads.values()) {
+    const reason = updateConversationBlocker(thread);
+    if (reason)
+      return {
+        kind: "activity",
+        detail: EXIT_IMPACT.conversationReview(
+          thread.title?.trim() || UPDATE_IMPACT.untitled,
+          reason,
+        ),
+      };
+  }
+  return null;
 }

@@ -2,6 +2,13 @@
 export interface SessionToolInventoryCapability {
   source: "reviewedOfficialSupplement";
   scope: "currentConversation";
+  startup?: SessionToolStartupReport;
+}
+export interface SessionToolStartupReport {
+  reportedCount: number;
+  loadedCount: number;
+  failedCount: number;
+  unknownCount: number;
 }
 export const SESSION_TOOLS_CODES = [
   "unavailable",
@@ -53,6 +60,7 @@ export interface SessionToolsOperation {
 
 const object = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === "object" && !Array.isArray(v);
+const MAX_REPORT_ITEMS = 256;
 function invalid(): never {
   throw { code: "invalidResponse" };
 }
@@ -94,14 +102,42 @@ export function sessionToolInventoryCapability(
 ): SessionToolInventoryCapability | null {
   if (
     !object(value) ||
-    Object.keys(value).length !== 2 ||
     !Object.hasOwn(value, "source") ||
     !Object.hasOwn(value, "scope") ||
     value.source !== "reviewedOfficialSupplement" ||
     value.scope !== "currentConversation"
   )
     return null;
-  return { source: "reviewedOfficialSupplement", scope: "currentConversation" };
+  const hasStartup = Object.hasOwn(value, "startup");
+  if (Object.keys(value).length !== (hasStartup ? 3 : 2)) return null;
+  const capability: SessionToolInventoryCapability = {
+    source: "reviewedOfficialSupplement",
+    scope: "currentConversation",
+  };
+  if (!hasStartup) return capability;
+  try {
+    const startup = record(value.startup, [
+      "reportedCount",
+      "loadedCount",
+      "failedCount",
+      "unknownCount",
+    ]);
+    const reportedCount = integer(startup.reportedCount);
+    const loadedCount = integer(startup.loadedCount);
+    const failedCount = integer(startup.failedCount);
+    const unknownCount = integer(startup.unknownCount);
+    if (
+      loadedCount + failedCount + unknownCount !==
+      Math.min(reportedCount, MAX_REPORT_ITEMS)
+    )
+      return null;
+    return {
+      ...capability,
+      startup: { reportedCount, loadedCount, failedCount, unknownCount },
+    };
+  } catch {
+    return null;
+  }
 }
 export function sessionToolsFailure(
   value: unknown,
@@ -158,8 +194,8 @@ function report(value: unknown): SessionToolsReport {
   if (
     v.completeness !== "unreported" ||
     !Array.isArray(v.items) ||
-    v.items.length !== Math.min(reportedItemCount, 256) ||
-    itemsTruncated !== reportedItemCount > 256
+    v.items.length !== Math.min(reportedItemCount, MAX_REPORT_ITEMS) ||
+    itemsTruncated !== reportedItemCount > MAX_REPORT_ITEMS
   )
     invalid();
   return {

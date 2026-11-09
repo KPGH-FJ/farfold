@@ -66,6 +66,28 @@ it("uses one observed job across callers and releases only after explicit dismis
   expect(api.release).toHaveBeenCalledWith("op-1");
   expect(jobs.getSnapshot()).toEqual([]);
 });
+it.each([
+  ["file", { ...file, path: "b", resolvedPath: "/w/b", name: "b" }],
+  ["version", { ...file, version: "2", sha256: "new" }],
+] as const)(
+  "reports a different %s attempting the active destination as busy",
+  async (_kind, other) => {
+    const api = port();
+    const jobs = new FileCopyJobs(api);
+    await jobs.begin(file, "/out/a");
+    const [original] = jobs.getSnapshot();
+    expect(original.status?.state).toBe("copying");
+
+    await expect(jobs.begin(other, "/out/a")).rejects.toEqual({ code: "busy" });
+
+    expect(jobs.getSnapshot()).toEqual([original]);
+    expect(api.prepare).toHaveBeenCalledExactlyOnceWith(file, "/out/a");
+    expect(api.start).toHaveBeenCalledExactlyOnceWith("op-1");
+    expect(api.cancel).not.toHaveBeenCalled();
+    await jobs.check(original.id);
+    expect(jobs.getSnapshot()[0].status).toEqual(completed);
+  },
+);
 it("never starts an unconfirmed prepare, and allows its not-started record to close", async () => {
   const api = port();
   api.prepare.mockRejectedValue(new Error("transport"));
