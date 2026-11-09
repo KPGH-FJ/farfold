@@ -232,6 +232,7 @@ docs/archive/2026-10-09-before-capability-hardening/
 # Preserve exact pre-alignment documents and immutable original conditions.
 docs/archive/2026-10-17-documentation-alignment/**
 !docs/archive/2026-10-17-documentation-alignment/INDEX.md
+docs/archive/2026-11-09-progress-alignment/status-history.md
 
 # Frozen raw browser observations, already hashed in the XLSX evidence receipts.
 docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-first.json
