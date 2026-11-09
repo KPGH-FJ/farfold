@@ -1,0 +1,73 @@
+{
+  "sourceCodeCommit": "da2b73fecfffe6c80bf947800e542bb11b299e54",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "0cc4393b5c94a2c7fd2de264c1959d9744b08a03",
+    "executableSha256": "cb87f9f79b7c7914550f2b42efd9368ea6b1cb1c8f00ca9fb6f298dbef6df937"
+  },
+  "engineering": {
+    "inputs": 2472,
+    "allSevenPassed": true,
+    "frontendFiles": 743,
+    "frontendPassed": 10106,
+    "rustPassed": 2479,
+    "rustIgnored": 7,
+    "unchangedNativeChecksReusedAfterOneFrontendTestChange": true
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "closedRecordsUnchanged": 206312,
+    "duplicateRemoved": true
+  },
+  "pdf": {
+    "oldFileSha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a",
+    "failedFileSha256": "4185a72bd0969f39ced917e2fb20a28329824a9d4e385df6c49c4a1aa370efbc",
+    "newFileSha256": "d3e7db77631b7ee358ad16d6f4554b42a9c69448dc268b788c4208f632c08cf8",
+    "failedReplacementKeptOldPageAndOpinion": true,
+    "validReplacementShowsPageOneOfOne": true,
+    "originalOpinionAnchor": { "kind": "pdf-page", "page": 2, "pageCount": 2 },
+    "modelRequests": 0
+  },
+  "exit": {
+    "installedWorktreeSpecificReviewShown": true,
+    "choseRemainInApplication": true,
+    "originalUnreviewedUnknownUnchanged": true,
+    "worktreeRecordSha256": "4c4439471b317c8f534af5df7da662a297938407625ac45ddf5bc833114afe2d",
+    "fileCopySpecificReviewControlledOnly": true
+  },
+  "browser": {
+    "lateOldSameTabPageSnapshotControlledOnly": true,
+    "publicScreenshotNotRetested": true
+  },
+  "gooseHttpMcp": {
+    "officialGooseVersion": "1.52.0",
+    "isolatedConfigAndLoopback": true,
+    "connectListAndExactCloseWithNoPrompt": true,
+    "readOnlyCallAndAllowOnceWithSimulatedModel": true,
+    "promptCountInToolProbe": 1,
+    "callCountInToolProbe": 1,
+    "exactProcessGroupGone": true,
+    "protectedMetadataUnchanged": true,
+    "farfoldLiveAdoptionVerified": false,
+    "realModelServiceVerified": false
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "second-final-engineering/result.json": "db8e95daf32017820fc2a328365b078cd23510d8d7ea0ccd1138d883c1386041",
+    "formal-second/candidate-review.json": "26f04fe4de2ac8a0c89290e087bf4733b6d525ea0f344ebf3e8b3342c45baa1a",
+    "formal-second/install.json": "bb03dcb67d9fedbdcaac2ccb174a8d0d4df15f889de4c9749b78b6f60c629ffd",
+    "formal-second/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-second/pdf-and-worktree-observation.json": "18d60a4b320c2a533fe1286e36960972e8730783c732eaaeb613375534648f58",
+    "pdf-fixture.json": "4cdeec507e5e65a6fff195cbe38c417d9bff26c86d6e39a1c0e3ad5e24492ab8",
+    "pdf-swap-failure.json": "53c530dae7e46873dcbf63457cd7b64f25b4d722851b144191b8a12dfeeed466",
+    "pdf-swap-new.json": "0f3f2834a2f9921224feebb1d5c750f7b17450cdb7fdbbd84ed3cd11396fa8d5",
+    "goose-mcp-preflight-receipt.json": "ca2d688fb5b0599b714c4032546e23c6009566121e704c509f57627da9d86d23",
+    "goose-mcp-observe-once-receipt.json": "261415a8ef61f40023a8fb86bd3f6f5127a0a9fb641c10529d19ebde74851f96",
+    "goose-mcp-tmp-observe-once-receipt.json": "3105d72ace3ea6f0b69fb9d699f8d20b9fd3ab595c67c14ccd3a3dccf11b816c",
+    "goose-mcp-legacy-fallback-once-receipt.json": "2e7342001c7ec60af77d21bf99a89f4ab4acf04825e89f600bbedcc3f285b660",
+    "goose-mcp-owned-tool-once-receipt.json": "372bb37d654c0f60265884adeb98407c5425a278e37b36647049f0caaad077e7"
+  }
+}
