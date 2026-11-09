@@ -1,0 +1,167 @@
+{
+  "sourceCodeCommit": "69708922576a572b1b4f0d9a9eebc097145dae24",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "5162aa5dcd0192f3b544ee951c6d0950b8c7baaf"
+  },
+  "executableSha256": "2c1c3aa9e06eca952010f82b49fddee3fbdb118106e202f905a841356730cfad",
+  "engineering": {
+    "inputs": 2472,
+    "allSeven": true,
+    "frontendFiles": 743,
+    "frontendPassed": 10093,
+    "rustPassed": 2479,
+    "rustIgnored": 7,
+    "unchangedNativeChecksReused": true
+  },
+  "install": {
+    "closedRecordsUnchanged": 206312,
+    "sameFiveFilesOnly": true,
+    "modeNormalizationPreservedOldModes": true,
+    "duplicateRemoved": true
+  },
+  "workbook": {
+    "uiOldSheetA1": "42",
+    "oldSheetRetainedOnReplacementFailure": true,
+    "explicitNewAlternative": true,
+    "uiNewSheetA1": "77",
+    "uiNewMarker": "FF_NEW_FIRST_SHEET_20261110",
+    "oldOpinionDigestUnchanged": true,
+    "modelRequests": 0
+  },
+  "toolReport": {
+    "agent": "Goose",
+    "startupReportedSuccess": 7,
+    "startupReportedFailed": 0,
+    "startupUnknown": 0,
+    "toolListDisplayedAfterExplicitRead": true
+  },
+  "p38": {
+    "prompt": {
+      "version": 1,
+      "ts": 1794243702432,
+      "dir": "out",
+      "event": "session/prompt",
+      "bytes": 244,
+      "error": "none"
+    },
+    "terminal": {
+      "version": 1,
+      "ts": 1794243708028,
+      "dir": "in",
+      "event": "response",
+      "bytes": 162,
+      "error": "none"
+    },
+    "aOnlyUnreadAtFirstCold": true,
+    "actualAssistantMarkerRead": true,
+    "noUnreadAtSecondCold": true,
+    "mediaAndSystemNotificationUnverified": true
+  },
+  "exit": {
+    "newFormalDistinguishedNativeReview": true,
+    "persistedPriorRestoreUnknownSettledUnreviewed": true,
+    "recordSha256": "4c4439471b317c8f534af5df7da662a297938407625ac45ddf5bc833114afe2d",
+    "recordUnchanged": true,
+    "noForceQuit": true
+  },
+  "isolatedMcp": {
+    "sameHomeNestedRootError": {
+      "rpc": -32603,
+      "stage": "createDb",
+      "sqlite": 14,
+      "httpRequests": 0
+    },
+    "tmpRootObserved": {
+      "ownedStartupSuccess": true,
+      "httpInitialize": 1,
+      "toolsList": 1,
+      "exactClose": true,
+      "overallProofGatePassed": false,
+      "unexpectedMcpCount": 1,
+      "modelPrompts": 0,
+      "toolCalls": 0
+    }
+  },
+  "raw": {
+    "formal/install.json": {
+      "path": "output/2026-11-09-six-hour-stage2/formal/install.json",
+      "sha256": "9686ce075380b1b4be05bdb03248d9d3d1b4fedc5535106a6358862833fd9d62"
+    },
+    "formal/candidate-review.json": {
+      "path": "output/2026-11-09-six-hour-stage2/formal/candidate-review.json",
+      "sha256": "1e83dc2f6faa3bfb7ddf7f279ec4db5612fba4b0c47b64c61d8eccee5538aefe"
+    },
+    "formal/mode-normalization.json": {
+      "path": "output/2026-11-09-six-hour-stage2/formal/mode-normalization.json",
+      "sha256": "0cb32601fd7254ea8ebc1dc7833e954b219788741988e1b9605123387669d364"
+    },
+    "final-engineering/result.json": {
+      "path": "output/2026-11-09-six-hour-stage2/final-engineering/result.json",
+      "sha256": "34c1d1de2cd61390e9e4abe6012fcc414216d54e76d382c9f23d5ae4f06e49d3"
+    },
+    "first-engineering/result.json": {
+      "path": "output/2026-11-09-six-hour-stage2/first-engineering/result.json",
+      "sha256": "72d94f72a7923b9e74f0b548143cfcf6114f605da443f7793a6b8a6c179cb291"
+    },
+    "formal-protection-after.json": {
+      "path": "output/2026-11-09-six-hour-stage2/formal-protection-after.json",
+      "sha256": "8d771625849f9c81700c95600b1d9665652ab556073ef31f10fe2ac009fdf895"
+    },
+    "xlsx-fixture.json": {
+      "path": "output/2026-11-09-six-hour-stage2/xlsx-fixture.json",
+      "sha256": "e2979684ddc0aa0f7aa6c561ed503ddb4d267bcd1654eec35ca37618668991da"
+    },
+    "xlsx-same-path-replacement.json": {
+      "path": "output/2026-11-09-six-hour-stage2/xlsx-same-path-replacement.json",
+      "sha256": "d248bda8b45744ebca81027e5a2220116e83532dc5a5ee454b31b7bac93861ab"
+    },
+    "retired-cold-A.json": {
+      "path": "output/2026-11-09-six-hour-stage2/retired-cold-A.json",
+      "sha256": "afd1aef10e3965b9755656db5f40b70b55e9c380162cadc4729e67971f2801c8"
+    },
+    "retired-cold-B.json": {
+      "path": "output/2026-11-09-six-hour-stage2/retired-cold-B.json",
+      "sha256": "c82295110211c2edc0cc37384fe4d5fd400da21215b9b5f10646eefea34c1621"
+    },
+    "goose-mcp-preflight-receipt.json": {
+      "path": "output/2026-11-09-six-hour-stage2/goose-mcp-preflight-receipt.json",
+      "sha256": "ca2d688fb5b0599b714c4032546e23c6009566121e704c509f57627da9d86d23"
+    },
+    "goose-mcp-observe-once-receipt.json": {
+      "path": "output/2026-11-09-six-hour-stage2/goose-mcp-observe-once-receipt.json",
+      "sha256": "261415a8ef61f40023a8fb86bd3f6f5127a0a9fb641c10529d19ebde74851f96"
+    },
+    "goose-mcp-tmp-observe-once-receipt.json": {
+      "path": "output/2026-11-09-six-hour-stage2/goose-mcp-tmp-observe-once-receipt.json",
+      "sha256": "3105d72ace3ea6f0b69fb9d699f8d20b9fd3ab595c67c14ccd3a3dccf11b816c"
+    },
+    "cold-before-quit.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-before-quit.json",
+      "sha256": "111e821bdf4c07070817067e08bf27abb729d5e1483304367e914ae525684b4a"
+    },
+    "cold-closed-before-read.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-closed-before-read.json",
+      "sha256": "a02a74444d7796ee9e02761128a0975053a05bbbb8d1158d40fde1fa397c5b0a"
+    },
+    "cold-cold-unread-visible.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-cold-unread-visible.json",
+      "sha256": "19a03dfe9077a918a86a0851787db0ace0f348dc8972730bfe6b45ff2f1e4a22"
+    },
+    "cold-marked-read.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-marked-read.json",
+      "sha256": "e93e1e9817680bb3423500ccf43851ce7db3933bb6a9b224cd6abdeb3aa3dcae"
+    },
+    "cold-closed-after-read.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-closed-after-read.json",
+      "sha256": "1a195b8c8a02fede2c044825513dd3f3af775354389a2da6a74e6fa7f665209a"
+    },
+    "cold-cold-after-read.json": {
+      "path": "output/2026-11-09-six-hour-stage2/cold-cold-after-read.json",
+      "sha256": "887a8754daa411cc142fd5dec2c39122f28ec1067738c9e876f4891f66034cbb"
+    }
+  }
+}
