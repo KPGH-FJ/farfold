@@ -125,6 +125,7 @@ export class BrowserTabs {
     if (this.retired) return;
     const sequence = ++this.refreshSequence;
     const current = () => !this.retired && sequence === this.refreshSequence;
+    const confirmedBeforeRead = this.confirmedSelection;
     try {
       const state = await this.client.tabs({ taskKey: this.taskKey });
       if (!current()) return;
@@ -140,7 +141,9 @@ export class BrowserTabs {
     } catch (error) {
       if (!current()) return;
       if (!reportFailure) throw error;
-      this.publish({ failed: true });
+      // A newer selection acknowledgement supersedes an auxiliary failure.
+      if (this.confirmedSelection === confirmedBeforeRead)
+        this.publish({ failed: true });
     }
   }
   async start(): Promise<() => void> {
@@ -193,6 +196,7 @@ export class BrowserTabs {
       throw new BrowserWorkspaceRetiredError();
     this.accept(result);
     this.confirmedSelection = result.selection;
+    if (this.snapshot.failed) this.publish({ failed: false });
   }
   private async change(id: string) {
     const tab = this.tab(id);

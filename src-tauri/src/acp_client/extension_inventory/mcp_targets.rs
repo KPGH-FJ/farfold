@@ -146,7 +146,7 @@ impl Source {
     }
 }
 pub(in crate::acp_client) fn get(agent: &str, id: &str, item: usize) -> Result<Source> {
-    let request = requests::shared().get(agent, id)?;
+    let request = requests::shared().get_for_management(agent, id)?;
     if !request.operation.interested()
         || !request
             .snapshot()
@@ -215,7 +215,7 @@ impl CatalogueSource {
     }
 }
 pub(in crate::acp_client) fn catalogue(agent: &str, id: &str) -> Result<CatalogueSource> {
-    let request = requests::shared().get(agent, id)?;
+    let request = requests::shared().get_for_management(agent, id)?;
     if !request.operation.interested()
         || !request.snapshot().is_some_and(|v| {
             v.settled

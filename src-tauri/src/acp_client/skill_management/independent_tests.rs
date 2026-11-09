@@ -337,6 +337,81 @@ fn independent_malformed_postwrite_error_is_unknown_not_known_rejection() {
 }
 
 #[test]
+fn independent_expired_inventory_refuses_inspection_before_admission() {
+    use super::{domain::Domain, mcp_add_input::Input};
+
+    let f = Fixture::new("ok");
+    let registry = inventory::requests::shared();
+    registry.expire_settled_for_test(&f.inventory_id);
+    let agent = &f.row.id;
+    let source = &f.inventory_id;
+    let id = uuid().unwrap();
+    let input_id = uuid().unwrap();
+    let stdio = serde_json::from_value::<Input>(json!({
+        "name": "fixture-local",
+        "executablePath": crate::platform_tests::python(),
+        "args": []
+    }))
+    .unwrap();
+    let http = serde_json::from_value::<Input>(json!({
+        "transport": "streamableHttp",
+        "name": "fixture-http",
+        "url": "http://127.0.0.1:41995/mcp"
+    }))
+    .unwrap();
+    for (domain, result) in [
+        (
+            Domain::Skill,
+            f.requests.begin_inspect(agent, &id, source, 0, false),
+        ),
+        (
+            Domain::SkillPreferenceRemoval,
+            f.requests
+                .begin_skill_preference_remove_inspect(agent, &id, source, 0),
+        ),
+        (
+            Domain::McpEnabled,
+            f.requests
+                .begin_inspect_kind(agent, &id, source, 0, true, Kind::Mcp),
+        ),
+        (
+            Domain::McpRemove,
+            f.requests.begin_remove_inspect(agent, &id, source, 0),
+        ),
+        (
+            Domain::McpAdd,
+            f.requests
+                .begin_add_inspect(agent, &id, source, &input_id, stdio),
+        ),
+        (
+            Domain::McpAdd,
+            f.requests
+                .begin_add_inspect(agent, &id, source, &input_id, http),
+        ),
+    ] {
+        let failure = result
+            .err()
+            .expect("expired inventory must refuse inspection");
+        assert_eq!(
+            serde_json::to_value(failure).unwrap(),
+            json!({"code":"inventoryExpired"})
+        );
+        assert!(matches!(
+            f.requests.get_domain(agent, &id, domain),
+            Err(Failure {
+                code: Code::UnknownRequest
+            })
+        ));
+    }
+    assert!(matches!(
+        registry.get(agent, source),
+        Err(Failure {
+            code: Code::UnknownRequest
+        })
+    ));
+}
+
+#[test]
 fn independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel() {
     let f = Fixture::new("ok");
     let inspected = f.inspect();

@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { invoke } from "@tauri-apps/api/core";
 import { AgentExtensionInventory } from "./AgentExtensionInventory";
 import { SkillChangeReview } from "./SkillChangeReview";
 import { inventoryPort } from "../runtime/extension_inventory";
@@ -9,6 +10,7 @@ import { skillManagement } from "../runtime/skill_management_controller";
 import { flush } from "../runtime/extension_inventory.test-support";
 import { item, operation } from "../runtime/skill_management.test-support";
 
+vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const ticket = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 const explanation = "读取方式已失效或发生变化，请重新检查读取方式。";
 const ownerFor = (agentId: string) => ({
@@ -16,7 +18,29 @@ const ownerFor = (agentId: string) => ({
   token: {},
   current: () => true,
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.mocked(invoke).mockReset();
+});
+
+function mockSkillRead() {
+  return vi
+    .spyOn(inventoryPort, "read")
+    .mockImplementation(async ({ selectionId: _, ...request }) => ({
+      ...request,
+      state: "ready",
+      settled: true,
+      snapshot: {
+        observedAtMs: 1,
+        source: "officialAppServer",
+        scope: "officialSkillsForDirectory",
+        complete: true,
+        errorCount: 0,
+        sessionApplicability: "unverified",
+        items: [item],
+      },
+    }));
+}
 
 it.each(["mcp", "skills"] as const)(
   "renders a %s selection refusal without asserting that the user's program changed",
@@ -53,22 +77,7 @@ it.each(["mcp", "skills"] as const)(
 
 it("uses the same accurate explanation for a management inspection refusal without confirming or retrying", async () => {
   const owner = ownerFor("expired-management");
-  vi.spyOn(inventoryPort, "read").mockImplementation(
-    async ({ selectionId: _, ...request }) => ({
-      ...request,
-      state: "ready",
-      settled: true,
-      snapshot: {
-        observedAtMs: 1,
-        source: "officialAppServer",
-        scope: "officialSkillsForDirectory",
-        complete: true,
-        errorCount: 0,
-        sessionApplicability: "unverified",
-        items: [item],
-      },
-    }),
-  );
+  mockSkillRead();
   extensionInventory.begin(owner, "/controlled", ticket, "skills");
   await flush();
   const result = extensionInventory.get(owner.agentId).results.skills!;
@@ -102,4 +111,65 @@ it("uses the same accurate explanation for a management inspection refusal witho
   expect(html).not.toContain("确认停用</button>");
   expect(inspect).toHaveBeenCalledTimes(1);
   expect(confirm).not.toHaveBeenCalled();
+});
+
+it("releases an inspection refused before admission when its original list expires", async () => {
+  const owner = ownerFor("expired-inventory-management");
+  const read = mockSkillRead();
+  vi.mocked(invoke).mockRejectedValueOnce({ code: "inventoryExpired" });
+  expect(extensionInventory.begin(owner, "/controlled", ticket, "skills")).toBe(
+    true,
+  );
+  await flush();
+  const result = extensionInventory.get(owner.agentId).results.skills!;
+  expect(
+    skillManagement.inspect({
+      owner,
+      result,
+      item: result.snapshot.items[0] as typeof item,
+      current: () => extensionInventory.isCurrentResult(owner, result),
+      changed: () => extensionInventory.markStale(result),
+    }),
+  ).toBe(true);
+  await flush();
+  const view = skillManagement.get(owner.agentId);
+  expect(invoke).toHaveBeenCalledWith("agent_skill_change_inspect", {
+    agentId: owner.agentId,
+    requestId: view.request?.requestId,
+    inventoryRequestId: result.request.requestId,
+    itemId: 0,
+    enabled: true,
+  });
+  expect(view).toMatchObject({
+    error: "inventoryExpired",
+    unresolved: false,
+    operation: null,
+    review: null,
+  });
+  expect(extensionInventory.get(owner.agentId).results.skills?.stale).toBe(
+    true,
+  );
+  const html = renderToStaticMarkup(
+    <SkillChangeReview agentId={owner.agentId} owner={owner} active />,
+  );
+  expect(html).toContain("此前清单已失效。请重新检查读取方式，再查询清单。");
+  expect(html).not.toContain("请求取消本次操作</button>");
+  expect(html).not.toContain("检查操作状态</button>");
+  expect(read).toHaveBeenCalledTimes(1);
+  const renewed = "cccccccc-cccc-cccc-cccc-cccccccccccc";
+  expect(
+    extensionInventory.begin(owner, "/controlled", renewed, "skills"),
+  ).toBe(true);
+  await flush();
+  expect(read).toHaveBeenCalledTimes(2);
+  expect(read).toHaveBeenLastCalledWith(
+    expect.objectContaining({ selectionId: renewed }),
+  );
+  expect(extensionInventory.get(owner.agentId).results.skills?.stale).toBe(
+    false,
+  );
+  expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
+    "agent_skill_change_inspect",
+    "agent_extension_inventory_cancel",
+  ]);
 });

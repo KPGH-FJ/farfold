@@ -76,6 +76,7 @@ export const SKILL_MANAGEMENT_STRINGS = {
     cancelled: "本次操作已取消。",
     unknownRequest: "暂时无法核实此前操作；请检查状态或明确结束等待。",
     targetUnavailable: "此前清单已不能用于审阅，请重新查询。",
+    inventoryExpired: "此前清单已失效。请重新检查读取方式，再查询清单。",
     targetChanged: "技能位置或报告已变化，请重新查询并审阅。",
     inventoryIncomplete: "技能读取不完整，无法审阅修改。",
     reviewExpired: "此次审阅已过期，请重新审阅。",

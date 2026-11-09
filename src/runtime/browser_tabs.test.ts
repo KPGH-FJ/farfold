@@ -374,6 +374,62 @@ it("does not publish an old background failure over a newer explicit selection",
   expect(f.tabs.canPresent(a.tab)).toBe(true);
 });
 
+it.each([
+  "fails before",
+  "fails after",
+  "returns newer metadata after",
+] as const)(
+  "keeps the confirmed selection when its background read %s the acknowledgement",
+  async (outcome) => {
+    const f = fixture();
+    await f.tabs.start();
+    const a = await f.open();
+    await f.tabs.add();
+    await f.open("https://b.example");
+
+    const background = deferred<BrowserWorkspaceTabsState>();
+    const started = deferred<void>();
+    const acknowledged = deferred<void>();
+    vi.mocked(f.client.select).mockImplementationOnce(
+      async ({ label, expectedSelected }) => {
+        expect(expectedSelected).toEqual(f.state.selection);
+        f.state.selection = { label, revision: expectedSelected.revision + 1 };
+        const result = f.clone();
+        vi.mocked(f.client.tabs).mockReturnValueOnce(background.promise);
+        f.emit();
+        started.resolve();
+        await acknowledged.promise;
+        return result;
+      },
+    );
+
+    const selecting = f.tabs.select(a.tab);
+    await started.promise;
+    if (outcome === "fails before") {
+      background.reject(Error("background metadata unavailable"));
+      await background.promise.catch(() => {});
+    }
+    acknowledged.resolve();
+    await selecting;
+    if (outcome === "fails after") {
+      background.reject(Error("background metadata unavailable"));
+      await background.promise.catch(() => {});
+    } else if (outcome === "returns newer metadata after") {
+      const page = f.state.pages.find(({ label }) => label === a.result.label)!;
+      ++page.revision;
+      page.url = "https://a.example/new";
+      background.resolve(f.clone());
+      await background.promise;
+      expect(
+        f.tabs.getSnapshot().tabs.find(({ id }) => id === a.tab)?.page,
+      ).toEqual(page);
+    }
+
+    expect(f.tabs.getSnapshot().selected).toBe(a.tab);
+    expect(f.tabs.canPresent(a.tab)).toBe(true);
+  },
+);
+
 it("failed selection retains pages, stays blocked after refresh, and retries only explicitly", async () => {
   const f = fixture();
   await f.tabs.start();

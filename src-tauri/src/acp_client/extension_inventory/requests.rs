@@ -214,6 +214,16 @@ impl Requests {
             .cloned()
             .ok_or_else(|| Code::UnknownRequest.into())
     }
+    // A missing source rejects management inspection before it can create a job.
+    pub fn get_for_management(&self, agent: &str, id: &str) -> Result<Arc<Request>> {
+        self.get(agent, id).map_err(|error| {
+            if error.code == Code::UnknownRequest {
+                Code::InventoryExpired.into()
+            } else {
+                error
+            }
+        })
+    }
     pub fn cancel(&self, agent: &str, id: &str) -> Result<Cancellation> {
         validate(agent, id)?;
         let mut entries = self.entries();

@@ -81,7 +81,7 @@ export class ConversationArchiveJobs {
   private accept(id: string, value: unknown, sequence: number) {
     const job = this.find(id),
       owner = this.owners.get(id);
-    if (!job || !owner) return;
+    if (!job || !owner || sequence < owner.applied) return;
     const next = parseArchiveReply(value, job.identity);
     if (
       job.reply &&
@@ -90,7 +90,6 @@ export class ConversationArchiveJobs {
         : job.reply.settled)
     )
       return;
-    if (sequence < owner.applied) return;
     if (job.reply && job.reply.state !== "absent" && next.state !== "absent") {
       if (
         next.processedInputBytes < job.reply.processedInputBytes ||
@@ -110,10 +109,13 @@ export class ConversationArchiveJobs {
       checking: false,
     });
   }
-  private uncertain(id: string, error: unknown) {
+  private uncertain(id: string, error: unknown, sequence: number) {
     const job = this.find(id);
+    const owner = this.owners.get(id);
     if (
       !job ||
+      !owner ||
+      sequence < owner.applied ||
       (job.reply &&
         (job.reply.state === "absent"
           ? job.reply.admissionClosed
@@ -163,12 +165,12 @@ export class ConversationArchiveJobs {
           try {
             this.accept(id, value, sequence);
           } catch (error) {
-            this.uncertain(id, error);
+            this.uncertain(id, error, sequence);
           }
           return true;
         },
         (error) => {
-          this.uncertain(id, error);
+          this.uncertain(id, error, sequence);
           return false;
         },
       )
@@ -186,7 +188,7 @@ export class ConversationArchiveJobs {
         timer = setTimeout(() => {
           expired = true;
           owner.startAllowed = false;
-          this.uncertain(id, undefined);
+          this.uncertain(id, undefined, sequence);
           resolve(false);
         }, this.waitMs);
       }),

@@ -255,7 +255,7 @@ export class SkillManagementController {
     call: () => Promise<unknown>,
     cancellation = false,
     releaseAbsent = false,
-    freshConfirmation = false,
+    freshRequest: "inspect" | "confirm" | null = null,
   ) {
     const epoch = ++f.epoch;
     const timer = setTimeout(() => {
@@ -303,16 +303,24 @@ export class SkillManagementController {
             : f.view.request && isRemoveRequest(f.view.request)
               ? mcpRemoveFailure(reason)
               : mcpAddFailure(reason)) ?? "unavailable";
-        // Only these direct, fresh confirm errors are guaranteed before admission.
-        // A timeout/status/other failure cannot be reclassified as an unwritten request.
+        const expiredInventory =
+          freshRequest === "inspect" && code === "inventoryExpired";
+        const rejectedConfirmation =
+          freshRequest === "confirm" &&
+          (code === "reviewExpired" || code === "reviewConsumed");
+        // Only direct refusals from these request paths prove no admission.
+        // A timeout/status/other failure cannot be reclassified as unwritten.
         if (
-          freshConfirmation &&
+          (expiredInventory || rejectedConfirmation) &&
           !f.lost &&
-          !f.view.operation &&
-          (code === "reviewExpired" || code === "reviewConsumed")
+          !f.view.operation
         ) {
           f.retired = true;
           this.dropHttpInput(f);
+          if (expiredInventory) {
+            f.inspectionRevoked = true;
+            f.target.changed();
+          }
           this.publish(f, {
             checking: false,
             unresolved: false,
@@ -323,7 +331,7 @@ export class SkillManagementController {
           });
           return;
         }
-        if (freshConfirmation) f.target.changed();
+        if (freshRequest === "confirm") f.target.changed();
         this.publish(f, { checking: false, error: code });
       });
   }
@@ -406,7 +414,7 @@ export class SkillManagementController {
       });
       return false;
     }
-    this.observe(f, async () => {
+    const inspect = async () => {
       if (!this.current(f) || f.view.cancelRequested) {
         this.dropHttpInput(f);
         this.publish(f, {
@@ -441,7 +449,8 @@ export class SkillManagementController {
         itemId: request.target.itemId,
         enabled: request.requestedEnabled,
       });
-    });
+    };
+    this.observe(f, inspect, false, false, "inspect");
     return true;
   }
   canConfirm(owner: InventoryOwner, review: SkillChangeReview): boolean {
@@ -508,7 +517,7 @@ export class SkillManagementController {
       },
       false,
       false,
-      true,
+      "confirm",
     );
     return true;
   }

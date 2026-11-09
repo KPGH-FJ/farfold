@@ -27,6 +27,7 @@ pub enum Code {
     TargetChanged,
     TargetEnabled,
     InventoryIncomplete,
+    InventoryExpired,
     ReviewExpired,
     ReviewConsumed,
     ConfigurationUnsupported,

@@ -1,4 +1,5 @@
 import { fileBasename } from "../runtime/file_paths";
+import { MAX_IMAGE_BYTES } from "../runtime/image_bytes";
 import type { AttachmentPdfPreviewTarget } from "../runtime/attachment_search_source";
 import { ATTACHMENT_SEARCH_STRINGS } from "../runtime/attachment_search_strings";
 import {
@@ -55,11 +56,14 @@ import { FILE_COPY_STRINGS as C } from "../runtime/file_copy_strings";
 import { copyFailureCode } from "../runtime/file_copy_types";
 import { fileCopyJobs } from "../runtime/file_copy_jobs";
 import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
+import { VisualFilePreview } from "./VisualFilePreview";
 import {
-  VisualFilePreview,
+  stageVisualReplacement,
   type DrawnPdfPreview,
+  type ImagePreviewCandidate,
+  type LoadedImagePreview,
   type PdfPreviewCandidate,
-} from "./VisualFilePreview";
+} from "./visual_file_replacement";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import { DocxFilePreview } from "./DocxFilePreview";
 import { PptxFilePreview } from "./PptxFilePreview";
@@ -120,6 +124,8 @@ type View = {
   visual?: VisualPreview;
   drawnPdf?: DrawnPdfPreview;
   pdfCandidate?: PdfPreviewCandidate;
+  loadedImage?: LoadedImagePreview;
+  imageCandidate?: ImagePreviewCandidate;
   pdfSearchTarget?: AttachmentPdfPreviewTarget;
   office?: PreparedOfficePreview;
   workbookRecovery?: WorkbookRefreshRecovery;
@@ -133,28 +139,6 @@ type Operation = {
   parser?: AbortController;
 };
 
-function drawPdfReplacement(
-  request: Omit<PdfPreviewCandidate, "settle">,
-  stage: (candidate: PdfPreviewCandidate) => void,
-): Promise<DrawnPdfPreview> {
-  const signal = request.controller.signal;
-  return new Promise((resolve, reject) => {
-    const cancel = () => settle(new Error(V.cancelled));
-    const settle: PdfPreviewCandidate["settle"] = (result) => {
-      signal.removeEventListener("abort", cancel);
-      if (result instanceof Error) reject(result);
-      else
-        resolve({
-          ...result,
-          preview: request.preview,
-          surface: request.surface,
-        });
-    };
-    if (signal.aborted) return cancel();
-    signal.addEventListener("abort", cancel, { once: true });
-    stage({ ...request, settle });
-  });
-}
 const MAX_TEXT_BYTES = 1024 * 1024;
 const TEXT_EXTENSIONS = new Set([
   "md",
@@ -426,7 +410,12 @@ export function OpenedFileView({
         previous.identity === identity &&
         (previous.phase === "loading" || previous.pending)
           ? refreshing && previous.phase === "ready"
-            ? { ...previous, pending: false, pdfCandidate: undefined }
+            ? {
+                ...previous,
+                pending: false,
+                pdfCandidate: undefined,
+                imageCandidate: undefined,
+              }
             : { identity, phase: "paused" }
           : previous,
       );
@@ -486,15 +475,12 @@ export function OpenedFileView({
       setVisualReadiness(null);
     }
     const previous = latestView.current;
-    const oldPdf =
-      preserve && previous.visual?.mimeType === "application/pdf"
-        ? previous.visual
-        : undefined;
+    const oldVisual = preserve ? previous.visual : undefined;
     const oldDocument =
       preserve && previous.file && isDocument(previous.file)
         ? previous.file
         : undefined;
-    const preservedSource = oldPdf?.file ?? oldDocument;
+    const preservedSource = oldVisual?.file ?? oldDocument;
     if (preserve && !valid && previous.file && isWorkbook(previous.file))
       workbookRangeRevision.current++;
     if (preserve && previous.file && isOfficePreview(previous.file))
@@ -518,41 +504,38 @@ export function OpenedFileView({
       } else if (visualFileKind(file.name)) {
         if (
           visualFileKind(file.name) === "image" &&
-          file.size > 8 * 1024 * 1024
+          file.size > MAX_IMAGE_BYTES
         ) {
+          if (oldVisual) throw new Error(V.limit);
           setView({ identity, phase: "ready", file, note: V.limit });
         } else {
           try {
             const visual = await fileDelivery.readVisual(file);
             if (!readCurrent()) return false;
             if (!sameFile(visual.file, file)) throw new Error("File changed");
-            let drawnPdf: DrawnPdfPreview | undefined;
-            if (oldPdf) {
-              if (visual.mimeType !== "application/pdf")
-                throw new Error(V.failed);
-              const readiness = latestReadiness.current;
-              if (
-                readiness?.source === oldPdf &&
-                readiness.location?.kind === "pdf"
-              ) {
-                drawnPdf = await drawPdfReplacement(
-                  {
-                    preview: visual,
-                    page: readiness.location.page,
-                    surface: {
-                      slot: previous.drawnPdf?.surface.slot === 1 ? 0 : 1,
-                      canvas: { current: null },
+            if (
+              oldVisual?.mimeType === "application/pdf" &&
+              visual.mimeType !== "application/pdf"
+            )
+              throw new Error(V.failed);
+            const readiness = latestReadiness.current;
+            const replacement =
+              oldVisual && readiness?.source === oldVisual && readiness.location
+                ? await stageVisualReplacement(
+                    {
+                      preview: visual,
+                      controller: owner.parser!,
+                      current: readCurrent,
                     },
-                    controller: owner.parser!,
-                    current: readCurrent,
-                  },
-                  (pdfCandidate) =>
-                    setView({ ...previous, pending: true, pdfCandidate }),
-                );
-                if (!readCurrent() || owner.parser!.signal.aborted)
-                  return false;
-              }
-            }
+                    readiness.location,
+                    previous.drawnPdf?.surface.slot ??
+                      previous.loadedImage?.surface.slot,
+                    (candidate) =>
+                      setView({ ...previous, pending: true, ...candidate }),
+                  )
+                : undefined;
+            if (replacement && (!readCurrent() || owner.parser?.signal.aborted))
+              return false;
             const exactSearch =
               visual.mimeType === "application/pdf" &&
               searchTarget &&
@@ -567,7 +550,7 @@ export function OpenedFileView({
               phase: "ready",
               file,
               visual,
-              drawnPdf,
+              ...replacement,
               pdfSearchTarget: exactSearch ? searchTarget : undefined,
               note:
                 searchTarget && !exactSearch
@@ -1111,7 +1094,7 @@ export function OpenedFileView({
                       Boolean(shown.block) ||
                         isPresentation(file) ||
                         (latestReadiness.current?.source === shown.visual &&
-                          latestReadiness.current?.location?.kind === "pdf") ||
+                          Boolean(latestReadiness.current?.location)) ||
                         (isOfficePreview(file) && officeReady()),
                     )
                   }
@@ -1253,14 +1236,12 @@ export function OpenedFileView({
       )}
       {shown.visual && (
         <VisualFilePreview
-          key={
-            shown.visual.mimeType === "application/pdf"
-              ? identity
-              : `${identity}:${shown.file?.version}`
-          }
+          key={identity}
           preview={shown.visual}
           drawnPdf={shown.drawnPdf}
           pdfCandidate={shown.pdfCandidate}
+          loadedImage={shown.loadedImage}
+          imageCandidate={shown.imageCandidate}
           active={active}
           onReadiness={reportVisualReadiness}
           interactionBlocked={Boolean(shown.pending)}

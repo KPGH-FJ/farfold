@@ -103,6 +103,8 @@ import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { VISUAL_PREVIEW_STRINGS as V } from "../runtime/visual_preview";
 import type { PdfPreviewCandidate } from "./VisualFilePreview";
+import type { ImagePreviewCandidate } from "./visual_file_replacement";
+import { MAX_IMAGE_BYTES } from "../runtime/image_bytes";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -451,6 +453,131 @@ it.each([
       click(S.feedback);
       expect(button("针对当前第 2 页")).toBeDefined();
       expect(render().html).toContain(opinion.text);
+    }
+  },
+);
+
+it.each([
+  ["manual", "failure"],
+  ["automatic", "failure"],
+  ["automatic", "success"],
+  ["manual", "hidden"],
+  ["manual", "over limit"],
+])(
+  "keeps the visible PNG during a verified %s refresh until the replacement actually loads (%s)",
+  async (trigger, outcome) => {
+    vi.useFakeTimers();
+    const original =
+      "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+    // Correct PNG structure and CRCs, but a reserved deflate block in IDAT.
+    const invalid =
+      "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAB0lEQVR4nAcAAAAATlVPQAAAAABJRU5ErkJggg==";
+    const file = {
+      ...receipt,
+      path: "/work/result.png",
+      resolvedPath: "/work/result.png",
+      name: "result.png",
+      size: Buffer.from(original, "base64").length,
+      sha256: "a".repeat(64),
+    };
+    const old = { file, mimeType: "image/png", data: original };
+    h.inspectLink.mockResolvedValueOnce(file);
+    h.readVisual.mockResolvedValueOnce(old);
+    await ready();
+    const report = render().nodes.find((item) => item.props.preview)!.props
+      .onReadiness as (value: unknown) => void;
+    report({ source: old, location: { kind: "image" } });
+    expect(button(S.feedback)?.props.disabled).toBe(false);
+    const contentId = `disk:${JSON.stringify([file.resolvedPath, file.version, file.sha256])}`;
+    const opinion = {
+      contentId,
+      text: "Old exact image opinion",
+      selection: null,
+      scope: "file" as const,
+    };
+    fileFeedbackDrafts.update(props.threadKey, file.resolvedPath, opinion);
+
+    const nextData = outcome === "failure" ? invalid : original;
+    const next = {
+      ...file,
+      version: "image-v2",
+      sha256: "b".repeat(64),
+      size:
+        outcome === "over limit"
+          ? MAX_IMAGE_BYTES + 1
+          : Buffer.from(nextData, "base64").length,
+    };
+    const replacement = { ...old, file: next, data: nextData };
+    h.readVisual.mockResolvedValueOnce(replacement);
+    if (trigger === "manual") {
+      h.inspectLink.mockResolvedValueOnce(next);
+      click(S.refresh);
+    } else {
+      h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });
+    }
+    await vi.advanceTimersByTimeAsync(5000);
+    if (outcome === "over limit") {
+      expect(h.readVisual.mock.calls).toEqual([[file]]);
+      const kept = render();
+      expect(kept.nodes.find((item) => item.props.preview)?.props.preview).toBe(
+        old,
+      );
+      expect(kept.html).toContain(V.limit);
+      expect(kept.html).toContain(S.revisionNotices.refreshFailed);
+      expect(
+        fileFeedbackDrafts.read(props.threadKey, file.resolvedPath, contentId),
+      ).toMatchObject(opinion);
+      return;
+    }
+    expect(h.readVisual.mock.calls).toEqual([[file], [next]]);
+    const pending = render();
+    const child = pending.nodes.find((item) => item.props.preview)!;
+    expect(child.props.preview).toBe(old);
+    expect(pending.html).toContain(S.pending);
+    expect(button(S.feedback)?.props.disabled).toBe(true);
+    const candidate = child.props.imageCandidate as ImagePreviewCandidate;
+    expect(candidate.preview).toBe(replacement);
+    if (outcome === "hidden") {
+      render({ ...props, active: false });
+      expect(candidate.controller.signal.aborted).toBe(true);
+      expect(candidate.current()).toBe(false);
+    }
+    const loaded = {
+      element: { naturalWidth: 2, naturalHeight: 1 } as HTMLImageElement,
+      url: `data:image/png;base64,${nextData}`,
+    };
+    candidate.settle(outcome === "failure" ? new Error(V.failed) : loaded);
+    await vi.advanceTimersByTimeAsync(0);
+    if (outcome === "hidden") render({ ...props, active: true });
+    const settled = render();
+    const displayed = settled.nodes.find((item) => item.props.preview)!;
+    expect(displayed.props.imageCandidate).toBeUndefined();
+    expect(displayed.props.preview).toBe(
+      outcome === "success" ? replacement : old,
+    );
+    expect(settled.html).not.toContain(S.pending);
+    expect(
+      fileFeedbackDrafts.read(props.threadKey, file.resolvedPath, contentId),
+    ).toMatchObject(opinion);
+    if (outcome === "failure") {
+      expect(settled.html).toContain(V.failed);
+      expect(settled.html).toContain(S.revisionNotices.refreshFailed);
+      expect(button(S.feedback)?.props.disabled).toBe(false);
+      click(S.feedback);
+      expect(render().html).toContain(opinion.text);
+    } else if (outcome === "success") {
+      expect(displayed.props.loadedImage).toEqual({
+        ...loaded,
+        preview: replacement,
+        surface: candidate.surface,
+      });
+      report({ source: old, location: { kind: "image" } });
+      expect(button(S.feedback)?.props.disabled).toBe(true);
+      (displayed.props.onReadiness as (value: unknown) => void)({
+        source: replacement,
+        location: { kind: "image" },
+      });
+      expect(button(S.feedback)?.props.disabled).toBe(false);
     }
   },
 );

@@ -60,7 +60,7 @@ impl Source {
     }
 }
 pub(in crate::acp_client) fn get(agent: &str, id: &str, item: usize) -> Result<Source> {
-    let request = requests::shared().get(agent, id)?;
+    let request = requests::shared().get_for_management(agent, id)?;
     if !request.extra_skill_roots.is_empty()
         || !request.operation.interested()
         || !request

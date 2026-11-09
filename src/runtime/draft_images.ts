@@ -107,6 +107,7 @@ export async function validateDraftImage(
   data: string,
   mimeType?: string,
   expectedBytes?: number,
+  previewElement?: HTMLImageElement,
 ): Promise<DraftImage> {
   // Keep the constant-time input bound ahead of the capacity check. An already
   // full decoder pool must not expand or scan another bounded payload first.
@@ -119,15 +120,32 @@ export async function validateDraftImage(
   const inspection = inspectImageBytes(bytes);
   if (mimeType !== undefined && mimeType !== inspection.mimeType)
     throw new Error(IMAGE_INPUT_STRINGS.invalid);
-  if (typeof Image !== "function")
+  if (!previewElement && typeof Image !== "function")
     throw new Error(IMAGE_INPUT_STRINGS.decodeUnavailable);
   decoding++;
   let image: HTMLImageElement | undefined;
   let started = false;
+  let retained = false;
+  let removeLoadListeners: (() => void) | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    image = new Image();
-    image.src = `data:${inspection.mimeType};base64,${data}`;
+    image = previewElement ?? new Image();
+    // A file replacement needs the mounted element's own load receipt. Reuse
+    // that element and source on success instead of creating a second request.
+    const loaded =
+      previewElement &&
+      new Promise<void>((resolve, reject) => {
+        const load = () => resolve();
+        const error = () => reject(new Error(IMAGE_INPUT_STRINGS.invalid));
+        previewElement.addEventListener("load", load, { once: true });
+        previewElement.addEventListener("error", error, { once: true });
+        removeLoadListeners = () => {
+          previewElement.removeEventListener("load", load);
+          previewElement.removeEventListener("error", error);
+        };
+      });
+    const url = `data:${inspection.mimeType};base64,${data}`;
+    image.src = url;
     const pending = Promise.resolve().then(() => image!.decode());
     started = true;
     // Timeout only ends the caller's wait. A decoder that has not settled
@@ -145,9 +163,10 @@ export async function validateDraftImage(
         () => reject(new Error(IMAGE_INPUT_STRINGS.decodeWaitExpired)),
         15_000,
       );
-      pending.then(resolve, () =>
-        reject(new Error(IMAGE_INPUT_STRINGS.invalid)),
-      );
+      const ready = loaded
+        ? Promise.all([pending, loaded]).then(() => {})
+        : pending;
+      ready.then(resolve, () => reject(new Error(IMAGE_INPUT_STRINGS.invalid)));
     });
     const width = image.naturalWidth,
       height = image.naturalHeight;
@@ -155,7 +174,8 @@ export async function validateDraftImage(
       !Number.isSafeInteger(width) ||
       !Number.isSafeInteger(height) ||
       width < 1 ||
-      height < 1
+      height < 1 ||
+      (previewElement && (!image.complete || image.getAttribute("src") !== url))
     )
       throw new Error(IMAGE_INPUT_STRINGS.invalid);
     if (
@@ -164,13 +184,16 @@ export async function validateDraftImage(
       width * height > MAX_IMAGE_PIXELS
     )
       throw new Error(IMAGE_BYTES_STRINGS.tooManyPixels);
+    retained = Boolean(previewElement);
     return { data, mimeType: inspection.mimeType };
   } finally {
     if (!started) decoding--;
     if (timer !== undefined) clearTimeout(timer);
+    removeLoadListeners?.();
     // Changing src releases this element's request. A timeout alone is not
     // evidence that all browser decoder work has already stopped.
-    if (image) image.src = "";
+    if (previewElement && !retained) previewElement.removeAttribute("src");
+    else if (!previewElement && image) image.src = "";
   }
 }
 
