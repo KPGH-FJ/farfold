@@ -446,7 +446,7 @@ impl MetaStore {
     }
 
     /// Automatic index updates may fill an empty title, never rename an
-    /// existing one or reapply stale pin/archive metadata from a caller.
+    /// existing one, reapply stale pin/archive metadata, or restore a removed row.
     pub(crate) fn touch_session(&self, session: &SessionRow) -> Result<SessionRow, String> {
         let connection = self.lock()?;
         let title = session
@@ -461,7 +461,8 @@ impl MetaStore {
             .query_row(
                 "INSERT INTO sessions (id, agent_id, cwd, native_session_id, title,
                                    config_options, pinned, archived, created_at, updated_at)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, 0, 0, ?7, ?8)
+             SELECT ?1, ?2, ?3, ?4, ?5, ?6, 0, 0, ?7, ?8
+             WHERE NOT EXISTS (SELECT 1 FROM dismissed_sessions WHERE id = ?1)
              ON CONFLICT(id) DO UPDATE SET
                  title = CASE WHEN sessions.title IS NULL OR trim(sessions.title) = ''
                          THEN coalesce(excluded.title, sessions.title) ELSE sessions.title END,
@@ -481,7 +482,10 @@ impl MetaStore {
                 ],
                 row_to_session,
             )
-            .map_err(|_| "未能更新对话，请重试".to_string())
+            .map_err(|error| match error {
+                rusqlite::Error::QueryReturnedNoRows => "这段对话已从列表移除，请先明确加入".into(),
+                _ => "未能更新对话，请重试".into(),
+            })
     }
 
     /// Fill a missing baseline on the original index row without reviving a

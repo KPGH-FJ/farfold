@@ -124,6 +124,40 @@ fn opaque_target_only_resolves_an_existing_row_and_does_not_recreate_deleted_his
 }
 
 #[test]
+fn pending_activation_keeps_the_latest_click_for_a_repeated_conversation() {
+    let a = target_digest("conversation-a");
+    let b = target_digest("conversation-b");
+    let mut pending = VecDeque::new();
+    for digest in [&a, &b, &a] {
+        queue_activation(&mut pending, digest);
+    }
+    // The renderer opens the last valid target returned by the ordered drain.
+    assert_eq!(pending.drain(..).collect::<Vec<_>>(), [b, a]);
+}
+
+#[test]
+fn pending_activation_evicts_only_the_least_recent_distinct_target() {
+    let targets: Vec<_> = (0..17)
+        .map(|number| target_digest(&format!("conversation-{number}")))
+        .collect();
+    let mut pending = VecDeque::new();
+    for digest in &targets[..16] {
+        queue_activation(&mut pending, digest);
+    }
+    queue_activation(&mut pending, &targets[0]);
+    assert_eq!(pending.len(), 16);
+    assert_eq!(pending.front(), Some(&targets[1]));
+    assert_eq!(pending.back(), Some(&targets[0]));
+
+    queue_activation(&mut pending, &targets[16]);
+    assert_eq!(pending.len(), 16);
+    assert_eq!(pending.front(), Some(&targets[2]));
+    assert_eq!(pending.back(), Some(&targets[16]));
+    assert!(pending.contains(&targets[0]));
+    assert!(!pending.contains(&targets[1]));
+}
+
+#[test]
 fn renderer_restart_does_not_suppress_new_notices_with_reused_local_sequences() {
     let tickets = Tickets::default();
     let first = "0123456789abcdef0123456789abcdef";

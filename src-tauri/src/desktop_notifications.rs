@@ -470,6 +470,14 @@ pub fn desktop_notification_withdraw(
         .withdraw(&renderer_nonce, sequence)
 }
 
+fn queue_activation(pending: &mut VecDeque<String>, digest: &str) {
+    pending.retain(|queued| queued != digest);
+    pending.push_back(digest.into());
+    if pending.len() > 16 {
+        pending.pop_front();
+    }
+}
+
 fn activate(app: &AppHandle, digest: &str) {
     if resolve_target(app.state::<MetaStore>().inner(), digest).is_none() {
         return;
@@ -478,12 +486,7 @@ fn activate(app: &AppHandle, digest: &str) {
     let Ok(mut pending) = state.pending.lock() else {
         return;
     };
-    if !pending.iter().any(|d| d == digest) {
-        pending.push_back(digest.into());
-    }
-    if pending.len() > 16 {
-        pending.pop_front();
-    }
+    queue_activation(&mut pending, digest);
     drop(pending);
     if let Some(window) = app.get_webview_window("main") {
         let _ = window.unminimize();

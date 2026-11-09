@@ -199,6 +199,39 @@ fn explicit_deletion_rolls_back_index_and_pages_when_dismissal_write_fails() {
 }
 
 #[test]
+fn automatic_metadata_cannot_restore_a_removed_conversation_before_explicit_import() {
+    let store = store();
+    let id = MetaStore::dismissed_id("fixture", "/fixture", "native");
+    let who = owner(&id, 10);
+    let sibling = owner("sibling", 20);
+    insert(&store, &who);
+    insert(&store, &sibling);
+    let mut neighbor = store.get_session(&sibling.session_id).unwrap().unwrap();
+    neighbor.native_session_id = Some("other-native".into());
+    store.upsert_session(&neighbor).unwrap();
+    let mut stale = store.get_session(&id).unwrap().unwrap();
+    stale.title = Some("Late automatic title".into());
+    stale.updated_at = 50;
+    store.remove_and_dismiss_session(&id).unwrap();
+
+    assert!(store.touch_session(&stale).is_err());
+    assert!(store.get_session(&id).unwrap().is_none());
+    assert_eq!(store.list_dismissed().unwrap(), [id.clone()].into());
+    assert_eq!(
+        store.get_session(&sibling.session_id).unwrap(),
+        Some(neighbor)
+    );
+
+    let restored = store
+        .import_session("fixture", "/fixture", "native", Some("Explicit return"))
+        .unwrap();
+    assert_eq!(restored.id, id);
+    assert!(store.list_dismissed().unwrap().is_empty());
+    let updated = store.touch_session(&stale).unwrap();
+    assert_eq!(updated.title.as_deref(), Some("Explicit return"));
+}
+
+#[test]
 fn deletion_is_atomic_and_stale_owner_cannot_restore_pages_after_delete_or_clear() {
     let store = store();
     let who = owner("first", 10);

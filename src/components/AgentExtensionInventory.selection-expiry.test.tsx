@@ -115,6 +115,11 @@ it("uses the same accurate explanation for a management inspection refusal witho
 
 it("releases an inspection refused before admission when its original list expires", async () => {
   const owner = ownerFor("expired-inventory-management");
+  const expiry = "此前清单已失效。请重新检查读取方式，再查询清单。";
+  const renderReview = (current: typeof owner) =>
+    renderToStaticMarkup(
+      <SkillChangeReview agentId={current.agentId} owner={current} active />,
+    );
   const read = mockSkillRead();
   vi.mocked(invoke).mockRejectedValueOnce({ code: "inventoryExpired" });
   expect(extensionInventory.begin(owner, "/controlled", ticket, "skills")).toBe(
@@ -149,27 +154,54 @@ it("releases an inspection refused before admission when its original list expir
   expect(extensionInventory.get(owner.agentId).results.skills?.stale).toBe(
     true,
   );
-  const html = renderToStaticMarkup(
-    <SkillChangeReview agentId={owner.agentId} owner={owner} active />,
-  );
-  expect(html).toContain("此前清单已失效。请重新检查读取方式，再查询清单。");
+  const html = renderReview(owner);
+  expect(html).toContain(expiry);
   expect(html).not.toContain("请求取消本次操作</button>");
   expect(html).not.toContain("检查操作状态</button>");
   expect(read).toHaveBeenCalledTimes(1);
   const renewed = "cccccccc-cccc-cccc-cccc-cccccccccccc";
+  const nextOwner = ownerFor(owner.agentId);
+  const deliverResultChange = () =>
+    skillManagement.retireInspectionForResult(
+      nextOwner,
+      extensionInventory.get(owner.agentId).results.skills,
+    );
+  extensionInventory.retire(owner);
+  skillManagement.retire(owner);
+  read.mockImplementationOnce(async ({ selectionId: _, ...request }) => ({
+    ...request,
+    state: "failed",
+    settled: true,
+    code: "queryFailed",
+  }));
   expect(
-    extensionInventory.begin(owner, "/controlled", renewed, "skills"),
+    extensionInventory.begin(nextOwner, "/controlled", renewed, "skills"),
   ).toBe(true);
+  deliverResultChange();
+  expect(renderReview(nextOwner)).toContain(expiry);
   await flush();
   expect(read).toHaveBeenCalledTimes(2);
+  deliverResultChange();
+  expect(renderReview(nextOwner)).toContain(expiry);
+  expect(
+    extensionInventory.begin(nextOwner, "/controlled", renewed, "skills"),
+  ).toBe(true);
+  await flush();
+  expect(read).toHaveBeenCalledTimes(3);
   expect(read).toHaveBeenLastCalledWith(
     expect.objectContaining({ selectionId: renewed }),
   );
   expect(extensionInventory.get(owner.agentId).results.skills?.stale).toBe(
     false,
   );
+  const callsBeforeRecovery = vi.mocked(invoke).mock.calls.length;
+  deliverResultChange();
+  expect(renderReview(nextOwner)).not.toContain(expiry);
+  await flush();
+  expect(invoke).toHaveBeenCalledTimes(callsBeforeRecovery);
   expect(vi.mocked(invoke).mock.calls.map(([command]) => command)).toEqual([
     "agent_skill_change_inspect",
+    "agent_extension_inventory_cancel",
     "agent_extension_inventory_cancel",
   ]);
 });

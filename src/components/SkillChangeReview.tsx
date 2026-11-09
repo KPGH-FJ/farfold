@@ -88,7 +88,7 @@ export function SkillChangeReview({
     );
     return () => clearTimeout(timer);
   }, [review]);
-  if (!request) return null;
+  if (!request || (view.expiryResolved && !view.originalOperation)) return null;
   const allowed = () =>
     active &&
     owner.current() &&
@@ -103,7 +103,13 @@ export function SkillChangeReview({
           if (allowed()) setClosed(null);
         }}
       >
-        {stringsForTarget(request.target).reopen}
+        {
+          stringsForTarget(
+            view.expiryResolved && view.originalOperation
+              ? view.originalOperation.target
+              : request.target,
+          ).reopen
+        }
       </button>
     );
   const isAddition =
@@ -174,24 +180,62 @@ export function SkillChangeReview({
         {S.recheck}
       </button>
     ) : null;
+  const priorResult = prior && (
+    <div className="agent-extension-progress">
+      {!view.expiryResolved && (
+        <p>
+          {isRemoval && request.action === "recheck"
+            ? R.original
+            : SKILLS.priorOperation}
+        </p>
+      )}
+      <p>{prior.target.name}</p>
+      <p className="skill-change-path">
+        {SKILLS.priorDirectory}：{prior.cwd}
+      </p>
+      {view.originalWriteScope && (
+        <WriteScope scope={view.originalWriteScope} />
+      )}
+      <p role="status">
+        {!prior.outcome || prior.outcome === "unknown"
+          ? "kind" in prior.target &&
+            ["mcpRemoval", "skillPreferenceRemoval"].includes(prior.target.kind)
+            ? stringsForTarget(prior.target).unknown
+            : SKILLS.priorUnknown
+          : stringsForTarget(prior.target)[prior.outcome]}
+      </p>
+      {readback}
+    </div>
+  );
+  const title = view.expiryResolved ? SKILLS.priorOperation : S.heading;
+  const header = (
+    <div className="skill-change-header">
+      <h5 ref={heading} tabIndex={-1}>
+        {title}
+      </h5>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        onClick={() => {
+          if (!allowed()) return;
+          if (!view.expiryResolved) skillManagement.retire(owner);
+          setClosed(request.requestId);
+        }}
+      >
+        {S.close}
+      </button>
+    </div>
+  );
+  if (view.expiryResolved)
+    return (
+      <section className="skill-change-review" aria-label={title}>
+        {header}
+        {priorResult}
+      </section>
+    );
   return (
-    <section className="skill-change-review" aria-label={S.heading}>
-      <div className="skill-change-header">
-        <h5 ref={heading} tabIndex={-1}>
-          {S.heading}
-        </h5>
-        <button
-          type="button"
-          className="btn btn-ghost"
-          onClick={() => {
-            if (!allowed()) return;
-            skillManagement.retire(owner);
-            setClosed(request.requestId);
-          }}
-        >
-          {S.close}
-        </button>
-      </div>
+    <section className="skill-change-review" aria-label={title}>
+      {header}
       <strong>{request.target.name}</strong>
       {"origin" in request.target && (
         <p>
@@ -219,33 +263,7 @@ export function SkillChangeReview({
         (view.unresolved || view.trackingReleased || op?.writeDispatched) && (
           <WriteScope scope={view.confirmedScope} />
         )}
-      {prior && (
-        <div className="agent-extension-progress">
-          <p>
-            {isRemoval && request.action === "recheck"
-              ? R.original
-              : SKILLS.priorOperation}
-          </p>
-          <p>{prior.target.name}</p>
-          <p className="skill-change-path">
-            {SKILLS.priorDirectory}：{prior.cwd}
-          </p>
-          {view.originalWriteScope && (
-            <WriteScope scope={view.originalWriteScope} />
-          )}
-          <p role="status">
-            {!prior.outcome || prior.outcome === "unknown"
-              ? "kind" in prior.target &&
-                ["mcpRemoval", "skillPreferenceRemoval"].includes(
-                  prior.target.kind,
-                )
-                ? stringsForTarget(prior.target).unknown
-                : SKILLS.priorUnknown
-              : stringsForTarget(prior.target)[prior.outcome]}
-          </p>
-          {readback}
-        </div>
-      )}
+      {priorResult}
       {summary && <p role="status">{summary}</p>}
       {view.error && !view.trackingReleased && (
         <p role="status">

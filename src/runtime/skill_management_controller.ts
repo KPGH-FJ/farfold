@@ -13,10 +13,12 @@ import {
   type McpAddInput,
   type McpAddCode,
 } from "./mcp_add_types";
-import type {
-  InventoryOwner,
-  InventoryResult,
+import {
+  extensionInventory,
+  type InventoryOwner,
+  type InventoryResult,
 } from "./extension_inventory_controller";
+import { sameInventoryExtraRoots } from "./extension_inventory_scope";
 import {
   skillManagementPort,
   type SkillManagementPort,
@@ -49,6 +51,7 @@ export interface SkillManagementView {
   cancelRequested: boolean;
   trackingReleased: boolean;
   admissionRejected: boolean;
+  expiryResolved: boolean;
   error: McpAddCode | McpRemoveCode | SkillPreferenceRemoveCode | null;
   // Display only, captured from the review explicitly accepted for this request.
   confirmedScope: Readonly<SkillChangeScope> | null;
@@ -66,6 +69,7 @@ const EMPTY: SkillManagementView = Object.freeze({
   cancelRequested: false,
   trackingReleased: false,
   admissionRejected: false,
+  expiryResolved: false,
   error: null,
   additionInput: null,
   confirmedScope: null,
@@ -604,6 +608,33 @@ export class SkillManagementController {
     result: InventoryResult | undefined,
   ) {
     const f = this.entries.get(owner.agentId);
+    if (
+      f &&
+      !f.view.expiryResolved &&
+      f.view.admissionRejected &&
+      f.view.error === "inventoryExpired" &&
+      f.view.request?.action === "inspect" &&
+      !f.view.unresolved &&
+      !f.view.operation &&
+      result?.snapshot.complete &&
+      extensionInventory.isCurrentResult(owner, result)
+    ) {
+      const previous = f.target.result.request;
+      if (
+        result.request.requestId !== previous.requestId &&
+        result.request.kind === previous.kind &&
+        result.request.cwd === previous.cwd &&
+        sameInventoryExtraRoots(
+          result.request.extraSkillRoots,
+          previous.extraSkillRoots,
+        )
+      ) {
+        // Only the refused inspection is obsolete. Keep the actual write and
+        // its original readback target, even if the selection owner changed.
+        this.publish(f, { expiryResolved: true });
+        return;
+      }
+    }
     if (
       f?.target.owner === owner &&
       f.view.request?.action === "inspect" &&

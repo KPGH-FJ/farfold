@@ -23,7 +23,10 @@ import {
 } from "./skill_management.test-support";
 import { deferred, flush } from "./extension_inventory.test-support";
 import type { ExtensionChangeRequest } from "./extension_management_types";
-import type { InventoryOwner } from "./extension_inventory_controller";
+import {
+  extensionInventory,
+  type InventoryOwner,
+} from "./extension_inventory_controller";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -361,6 +364,59 @@ it("shows the prior target and uncertainty separately from the current read-only
   expect(html).toContain("核对修改结果");
   expect(html).not.toContain("均已核对为所选状态");
   expect(h.port.confirm).toHaveBeenCalledTimes(1);
+  h.close();
+});
+
+it("retires only the expired inspection after a matching refresh and keeps the original write observable", async () => {
+  const { h, request, original } = await unknownWrite();
+  const next = await nextReview(h);
+  next.pending.reject({ code: "inventoryExpired" });
+  await flush();
+
+  const owner = { agentId: h.owner.agentId, token: {}, current: () => true };
+  vi.spyOn(skillManagement, "get").mockImplementation(h.controller.get);
+  vi.spyOn(extensionInventory, "isCurrentResult").mockImplementation(
+    (current, result) => h.inventory.isCurrentResult(current, result),
+  );
+  const render = () =>
+    renderToStaticMarkup(
+      <SkillChangeReview agentId={owner.agentId} owner={owner} active />,
+    );
+  const refresh = async (cwd: string) => {
+    expect(h.inventory.begin(owner, cwd, id, "mcp")).toBe(true);
+    await flush();
+    h.controller.retireInspectionForResult(
+      owner,
+      h.inventory.get(owner.agentId).results.mcp,
+    );
+  };
+  await refresh("/unrelated");
+  expect(render()).toContain("此前清单已失效");
+  await refresh(next.result.cwd);
+  const html = render();
+  expect(html).not.toContain("此前清单已失效");
+  expect(html).not.toContain(next.request.target.name);
+  expect(html).toContain('aria-label="此前已发出的修改"');
+  expect(html).toContain("收起审阅</button>");
+  expect(html).toContain(original.target.name);
+  expect(html).toContain("此前修改结果仍未确认");
+  expect(html).toContain("核对修改结果");
+  expect(h.controller.get(owner.agentId).originalOperation).toBe(original);
+  expect(h.port.confirm).toHaveBeenCalledTimes(1);
+  expect(h.port.recheck).not.toHaveBeenCalled();
+
+  expect(h.controller.recheck(owner.agentId, next.request.requestId)).toBe(
+    true,
+  );
+  await flush();
+  const recheck = h.controller.get(owner.agentId).request!;
+  expect(h.port.recheck).toHaveBeenCalledExactlyOnceWith({
+    agentId: owner.agentId,
+    requestId: recheck.requestId,
+    operationId: request.requestId,
+  });
+  h.pending.recheck.resolve(observed(recheck));
+  await flush();
   h.close();
 });
 
