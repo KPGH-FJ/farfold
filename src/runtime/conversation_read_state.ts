@@ -35,6 +35,7 @@ let state: ReadState = {
   error: null,
 };
 let visibleKey: string | null = null;
+let visibleRegistration: object | null = null;
 let revision = 0;
 const pending = new Map<string, { unread: boolean; revision: number }>();
 const listeners = new Set<() => void>();
@@ -169,18 +170,26 @@ export function useConversationReadState() {
 /** A hidden page never consumes a reply. Failed/empty history does not mark it read. */
 export function useVisibleConversation(key: string | null, readable: boolean) {
   useEffect(() => {
-    const sync = () =>
+    // Retained pages can receive replies while another conversation is shown.
+    if (!key || !readable) return;
+    const registration = {};
+    visibleRegistration = registration;
+    const sync = () => {
+      if (visibleRegistration !== registration) return;
       conversationReadState.setVisible(
         typeof document === "undefined" || !document.hidden ? key : null,
-        readable,
       );
+    };
     sync();
     if (typeof document !== "undefined")
       document.addEventListener("visibilitychange", sync);
     return () => {
       if (typeof document !== "undefined")
         document.removeEventListener("visibilitychange", sync);
-      conversationReadState.setVisible(null);
+      if (visibleRegistration === registration) {
+        visibleRegistration = null;
+        conversationReadState.setVisible(null);
+      }
     };
   }, [key, readable]);
 }

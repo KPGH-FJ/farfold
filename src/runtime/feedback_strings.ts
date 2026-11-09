@@ -14,6 +14,8 @@ import { formatVisualAreaPercent } from "./visual_area_coordinates";
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
   previous: "其他内容版本的意见",
+  unavailableOwner: (count: number) => `找不到原对话的文件意见（${count}）`,
+  unavailableOwnerHint: "可复制保留的意见。每条意见仍对应当时查看的内容。",
   retained:
     "意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。",
   version: (index: number) => `保留的意见 ${index + 1}`,

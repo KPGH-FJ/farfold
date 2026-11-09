@@ -1,11 +1,14 @@
 import { useState, useSyncExternalStore } from "react";
-import { composerDrafts } from "../runtime/drafts";
+import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
 import { REDESIGN as R } from "../runtime/redesign_strings";
+import { UnavailableOwnerFileFeedback } from "./FileFeedbackDrafts";
 
 export function PreservedDrafts({
   onRestore,
+  availableFeedbackOwners,
 }: {
   onRestore: (key: string) => Promise<void>;
+  availableFeedbackOwners?: ReadonlySet<string>;
 }) {
   useSyncExternalStore(
     composerDrafts.subscribe,
@@ -15,8 +18,14 @@ export function PreservedDrafts({
   const saved = composerDrafts.preserved();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState("");
-  if (!saved.length) return null;
-  return (
+  const retained = availableFeedbackOwners
+    ? fileFeedbackDrafts.withoutAvailableOwner(availableFeedbackOwners)
+    : [];
+  const feedback = retained.length ? (
+    <UnavailableOwnerFileFeedback entries={retained} />
+  ) : null;
+  if (!saved.length) return feedback;
+  const input = (
     <details className="preserved-drafts">
       <summary>{R.savedDrafts(saved.length)}</summary>
       <p>{R.savedDraftHint}</p>
@@ -57,5 +66,11 @@ export function PreservedDrafts({
         </article>
       ))}
     </details>
+  );
+  return (
+    <>
+      {input}
+      {feedback}
+    </>
   );
 }

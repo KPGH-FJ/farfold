@@ -13,7 +13,7 @@ import {
   type PromptRequestOwner,
 } from "./prompt_admission";
 import { ProcessEndedChannel } from "./session_process_ended";
-import { refreshIndexRows } from "./session_index_refresh";
+import { createSessionIndexReader } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
 import { observeAuthentication } from "./authentication";
@@ -183,6 +183,7 @@ export interface ThreadsSnapshot {
   version: number;
   threads: Map<string, ThreadState>;
   index: IndexRow[];
+  indexReady: boolean;
   /** `settings.autoArchiveDays` (0 = off). */
   autoArchiveDays: number;
 }
@@ -201,6 +202,13 @@ class ThreadsStore {
   }
   private threads = new Map<string, ThreadState>();
   private indexRows: IndexRow[] = [];
+  private indexReader = createSessionIndexReader(
+    () => invoke<IndexRow[]>("session_index_list"),
+    () => this.indexRows,
+    (rows) => {
+      this.indexRows = rows;
+    },
+  );
   private autoArchiveDays = 0;
   private archiveRevision = 0;
   private archiveWrite: Promise<void> = Promise.resolve();
@@ -213,6 +221,7 @@ class ThreadsStore {
     version: 0,
     threads: this.threads,
     index: this.indexRows,
+    indexReady: this.indexReader.ready(),
     autoArchiveDays: this.autoArchiveDays,
   };
   /** channel kept alive per thread key. */
@@ -320,6 +329,7 @@ class ThreadsStore {
       version: this.snapshot.version + 1,
       threads: this.threads,
       index: this.indexRows,
+      indexReady: this.indexReader.ready(),
       autoArchiveDays: this.autoArchiveDays,
     };
     for (const fn of this.listeners) fn();
@@ -424,13 +434,7 @@ class ThreadsStore {
   async refreshIndex(): Promise<void> {
     const archiveRevision = this.archiveRevision;
     try {
-      await refreshIndexRows(
-        () => invoke<IndexRow[]>("session_index_list"),
-        () => this.indexRows,
-        (rows) => {
-          this.indexRows = rows;
-        },
-      );
+      await this.indexReader.refresh();
     } catch {
       // Keep the last known index; a failed read must not blank the sidebar.
     }
@@ -657,13 +661,7 @@ class ThreadsStore {
       // before pull pauses. The command can return without any further body.
       await replay.waitForReady(result.resumed);
       const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
-      await refreshIndexRows(
-        () => invoke<IndexRow[]>("session_index_list"),
-        () => this.indexRows,
-        (rows) => {
-          this.indexRows = rows;
-        },
-      ).catch(() => undefined);
+      await this.indexReader.refresh().catch(() => undefined);
       recheck?.validateResult(result);
       let state: ThreadState;
       try {

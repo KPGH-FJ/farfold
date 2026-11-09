@@ -148,7 +148,43 @@ it("keeps unchanged neighbours across reordering and keeps the last index on IPC
   await threads.refreshIndex();
   expect(threads.getSnapshot().index[1]).toBe(before);
   const prior = threads.getSnapshot().index;
+  expect(threads.getSnapshot().indexReady).toBe(true);
   native.fail = true;
   await threads.refreshIndex();
   expect(threads.getSnapshot().index).toBe(prior);
+  expect(threads.getSnapshot().indexReady).toBe(false);
+});
+
+it("keeps newer confirmed index readiness after an older read fails", async () => {
+  let reject!: (reason: Error) => void;
+  native.next = new Promise((_resolve, fail) => {
+    reject = fail;
+  });
+  const older = threads.refreshIndex();
+  native.rows = [];
+  await threads.refreshIndex();
+  const confirmed = threads.getSnapshot().index;
+  reject(new Error("older read failed"));
+  await older;
+  expect(threads.getSnapshot().index).toBe(confirmed);
+  expect(threads.getSnapshot().indexReady).toBe(true);
+});
+
+it("requires another complete read when an older response replaces the latest confirmed list", async () => {
+  let release!: (rows: unknown[]) => void;
+  native.next = new Promise((resolve) => {
+    release = resolve;
+  });
+  const older = threads.refreshIndex();
+  const confirmed = threads.getSnapshot().index;
+  await threads.refreshIndex();
+  expect(threads.getSnapshot().index).toBe(confirmed);
+  expect(threads.getSnapshot().indexReady).toBe(true);
+  release([]);
+  await older;
+  expect(threads.getSnapshot().index).not.toBe(confirmed);
+  expect(threads.getSnapshot().indexReady).toBe(false);
+  await threads.refreshIndex();
+  expect(threads.getSnapshot().index).toEqual([original]);
+  expect(threads.getSnapshot().indexReady).toBe(true);
 });

@@ -116,7 +116,6 @@ import {
 
 const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
 const NO_HISTORY: ReadonlySet<string> = new Set();
-
 export function EmptyState({
   agents,
   historyAgentIds,
@@ -133,8 +132,10 @@ export function EmptyState({
   onPreparedComposerOwner,
   composerTarget,
   onRestoreDraft,
+  availableFeedbackOwners,
 }: {
   onRestoreDraft?: (key: string) => Promise<void>;
+  availableFeedbackOwners?: ReadonlySet<string>;
   onPreparedKey?: (key: string | null) => void;
   onPreparedComposerOwner?: (current: (() => boolean) | null) => void;
   composerTarget?: HTMLElement | null;
@@ -955,7 +956,6 @@ export function EmptyState({
     onPreparedComposerOwner?.(composerOwner);
   }, [onPreparedKey, onPreparedComposerOwner, workspaceKey, composerOwner]);
   useEffect(() => () => onPreparedKey?.(null), [onPreparedKey]);
-
   const sendingPaused = Boolean(
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
@@ -1232,11 +1232,11 @@ export function EmptyState({
       )}
     </>
   );
-
   const editor = (
     <>
       {onRestoreDraft && (
         <PreservedDrafts
+          availableFeedbackOwners={availableFeedbackOwners}
           onRestore={async (key) => {
             preparationIntent.current = null;
             pendingInquiryAbort.current?.abort();

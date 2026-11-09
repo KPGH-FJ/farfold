@@ -425,6 +425,11 @@ export interface FileFeedbackDestination {
 export interface SavedFileFeedback extends FileFeedback {
   path: string;
 }
+export type FileFeedbackDraftEntry = [
+  threadKey: string,
+  key: string,
+  entry: SavedFileFeedback,
+];
 const emptyFeedback: FileFeedback = { text: "", selection: null };
 const emptyFeedbackEntries: Readonly<Record<string, SavedFileFeedback>> = {};
 const feedbackValues = new Map<string, Record<string, SavedFileFeedback>>();
@@ -433,6 +438,16 @@ const feedbackKey = (path: string, contentId?: string) =>
 export const fileFeedbackDrafts = {
   entries(threadKey: string): Readonly<Record<string, SavedFileFeedback>> {
     return feedbackValues.get(threadKey) ?? emptyFeedbackEntries;
+  },
+  withoutAvailableOwner(owners: ReadonlySet<string>): FileFeedbackDraftEntry[] {
+    const retained: FileFeedbackDraftEntry[] = [];
+    for (const [threadKey, entries] of feedbackValues) {
+      if (owners.has(threadKey)) continue;
+      for (const [key, entry] of Object.entries(entries)) {
+        if (entry.text.trim()) retained.push([threadKey, key, entry]);
+      }
+    }
+    return retained;
   },
   read(threadKey: string, path: string, contentId?: string): FileFeedback {
     const entries = this.entries(threadKey);

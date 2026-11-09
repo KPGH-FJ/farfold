@@ -69,3 +69,39 @@ it("the unread bit stays set when a visible page has only partial or failed hist
   useVisibleConversation("partial", true);
   expect(read.snapshot().unread.has("partial")).toBe(false);
 });
+
+it("keeps the visible conversation read when a retained page first receives readable content", async () => {
+  useVisibleConversation(null, false);
+  const stopBackground = harness.cleanup;
+  useVisibleConversation("foreground", true);
+  const stopForeground = harness.cleanup;
+  read.receiveUpdate("foreground", reply);
+  expect(read.snapshot().unread.has("foreground")).toBe(false);
+
+  read.receiveUpdate("retained", reply);
+  stopBackground?.();
+  useVisibleConversation(null, true);
+  read.receiveUpdate("foreground", reply);
+  await read.flush();
+
+  expect(read.snapshot().unread.has("retained")).toBe(true);
+  expect(read.snapshot().unread.has("foreground")).toBe(false);
+  stopForeground?.();
+});
+
+it("ignores an old visible page's delayed event and cleanup after another page takes over", () => {
+  useVisibleConversation("former", true);
+  const stopFormer = harness.cleanup;
+  const syncFormer = page.addEventListener.mock.calls[0][1] as () => void;
+  useVisibleConversation("current", true);
+
+  syncFormer();
+  read.receiveUpdate("current", reply);
+  expect(read.snapshot().unread.has("current")).toBe(false);
+
+  stopFormer?.();
+  read.receiveUpdate("current", reply);
+  read.receiveUpdate("former", reply);
+  expect(read.snapshot().unread.has("current")).toBe(false);
+  expect(read.snapshot().unread.has("former")).toBe(true);
+});

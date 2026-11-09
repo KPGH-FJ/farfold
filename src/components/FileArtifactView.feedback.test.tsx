@@ -56,7 +56,10 @@ vi.mock("react", async (original) => ({
   },
 }));
 import { FileArtifactView, FileDifference } from "./FileArtifactView";
-import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
+import {
+  FileFeedbackDrafts,
+  UnavailableOwnerFileFeedback,
+} from "./FileFeedbackDrafts";
 import {
   composerDrafts,
   fileFeedbackDrafts,
@@ -607,6 +610,31 @@ it("recovers feedback without an artifact and labels legacy line coordinates as 
   (add.props.onClick as () => void)();
   expect(composerDrafts.read(`session:${key}`).text).toContain("RETAINED");
   expect(fileFeedbackDrafts.entries(key)).toEqual({});
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
+it("copies only the presented unavailable-owner opinion and preserves its original draft", async () => {
+  const path = "/p/retired.md";
+  const copy = vi.fn().mockResolvedValue(undefined);
+  vi.stubGlobal("navigator", { clipboard: { writeText: copy } });
+  fileFeedbackDrafts.update(key, path, { text: "ORIGINAL", selection: null });
+  const original = fileFeedbackDrafts.entries(key);
+  const currentDraft = composerDrafts.read("new");
+  const entries = fileFeedbackDrafts.withoutAvailableOwner(new Set());
+  const buttons = elements(UnavailableOwnerFileFeedback({ entries })).filter(
+    (node) => node.type === "button",
+  );
+  expect(buttons).toHaveLength(1);
+  expect(buttons[0].props.children).toBe(FEEDBACK_STRINGS.copy);
+  const click = buttons[0].props.onClick as () => Promise<void>;
+  await click();
+  expect(copy).toHaveBeenCalledWith(expect.stringContaining("ORIGINAL"));
+  expect(fileFeedbackDrafts.entries(key)).toBe(original);
+  expect(composerDrafts.read("new")).toBe(currentDraft);
+  expect(composerDrafts.read(`session:${key}`).text).toBe("");
+  fileFeedbackDrafts.update(key, path, { text: "CHANGED", selection: null });
+  await click();
+  expect(copy).toHaveBeenCalledTimes(1);
   expect(h.invoke).not.toHaveBeenCalled();
 });
 

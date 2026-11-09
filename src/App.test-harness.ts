@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import type { ServiceIdentity } from "./runtime/credentials";
+import type { threads as productionThreads } from "./runtime/sessions";
 const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as unknown[],
@@ -44,6 +45,10 @@ const h = vi.hoisted(() => ({
     cwd?: string;
     nativeSessionId?: string | null;
   }[],
+  indexSource: null as Pick<
+    typeof productionThreads,
+    "getSnapshot" | "refreshIndex"
+  > | null,
   notification: null as ((key: string) => void | Promise<void>) | null,
   prepared: new Set(["A", "B"]),
   selections: new Map<
@@ -171,9 +176,16 @@ vi.mock("./runtime/collections", async (original) => ({
 vi.mock("./runtime/sessions", () => ({
   threads: {
     subscribe: () => () => {},
-    getSnapshot: () => ({ index: h.index, threads: h.threads }),
+    getSnapshot: () =>
+      h.indexSource?.getSnapshot() ?? {
+        index: h.index,
+        indexReady: true,
+        threads: h.threads,
+      },
     thread: (key: string) => h.threads.get(key),
-    refreshIndex: vi.fn(async () => {}),
+    refreshIndex: vi.fn(async () => {
+      await h.indexSource?.refreshIndex();
+    }),
     open: h.open,
     reconnect: h.reconnect,
     markOpenFailed: vi.fn(),
@@ -279,6 +291,7 @@ export async function resetHarness() {
     .mockImplementation(async () => ({ draft: h.draft }));
   h.reconnect.mockReset();
   h.index = [];
+  h.indexSource = null;
   h.notification = null;
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };

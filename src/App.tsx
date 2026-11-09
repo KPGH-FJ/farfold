@@ -136,6 +136,10 @@ export default function App() {
     threads.subscribe,
     () => threads.getSnapshot().index,
   );
+  const indexReady = useSyncExternalStore(
+    threads.subscribe,
+    () => threads.getSnapshot().indexReady,
+  );
   const historyAgents = new Set(index.map((row) => row.agentId));
   const currentReadiness = useRef(readyForConversation);
   currentReadiness.current = readyForConversation;
@@ -199,6 +203,10 @@ export default function App() {
     null,
   );
   const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
+  const availableFeedbackOwners = indexReady
+    ? new Set(index.map((row) => row.id))
+    : undefined;
+  if (preparedDraftKey) availableFeedbackOwners?.add(preparedDraftKey);
   const [preparedComposerOwner, setPreparedComposerOwner] = useState<
     (() => boolean) | null
   >(null);
@@ -1000,6 +1008,7 @@ export default function App() {
                 openAgents(agentId, "use", repair)
               }
               onManageServices={() => openSettings("keys")}
+              availableFeedbackOwners={availableFeedbackOwners}
               onRestoreDraft={async (key) => {
                 await composerDrafts.restorePreserved(key);
               }}

@@ -285,17 +285,26 @@ it("a late old frame preserves the reopened key's current update", async () => {
   expect(store.notifications.pending.has(reopened.key)).toBe(false);
 });
 
-it("a closed channel cannot update a reopened store key or its display snapshot", async () => {
+it("a closed channel cannot update a reopened store key or its display snapshot", async ({
+  onTestFinished,
+}) => {
   const input = {
     agentId: "notification-lifetime-fixture",
     cwd: "/owned-public-fixture",
     nativeSessionId: "reused-channel",
   };
+  const indexRefresh = vi.spyOn(threads, "refreshIndex");
+  onTestFinished(() => {
+    indexRefresh.mockRestore();
+  });
   const old = await threads.open(input);
   keys.add(old.key);
   const oldChannel = h.channels[0];
   await threads.close(old.key);
   const reopened = await threads.open(input);
+  // Both opens publish their index refresh after the conversation is available.
+  expect(indexRefresh).toHaveBeenCalledTimes(2);
+  await Promise.all(indexRefresh.mock.results.map(({ value }) => value));
   const notify = vi.fn();
   subscribe(reopened.key, notify);
   const snapshot = threads.threadVersion(reopened.key);

@@ -23,7 +23,7 @@ export async function refreshIndexRows(
   read: () => Promise<IndexRow[]>,
   current: () => readonly IndexRow[],
   publish: (rows: IndexRow[]) => void,
-): Promise<void> {
+): Promise<readonly IndexRow[] | null> {
   for (let attempt = 0; attempt < 2; attempt++) {
     const before = current();
     const rows = await read();
@@ -35,8 +35,35 @@ export async function refreshIndexRows(
     if (
       next.length !== latest.length ||
       next.some((row, index) => row !== latest[index])
-    )
+    ) {
       publish(next);
-    return;
+      return next;
+    }
+    return latest;
   }
+  return null;
+}
+
+/** Recovery can interpret a missing row only after an accepted local read.
+ * The sidebar keeps its previous rows independently of read failures. */
+export function createSessionIndexReader(
+  read: () => Promise<IndexRow[]>,
+  current: () => readonly IndexRow[],
+  publish: (rows: IndexRow[]) => void,
+) {
+  let confirmed: readonly IndexRow[] | null = null;
+  let latest: object | null = null;
+  return {
+    ready: () => confirmed === current(),
+    async refresh() {
+      const request = {};
+      latest = request;
+      let accepted: readonly IndexRow[] | null = null;
+      try {
+        accepted = await refreshIndexRows(read, current, publish);
+      } finally {
+        if (latest === request) confirmed = accepted;
+      }
+    },
+  };
 }
