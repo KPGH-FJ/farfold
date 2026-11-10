@@ -150,6 +150,12 @@ export function MessageAttachments({
   );
 }
 
+function focusAttachmentSummary(control: HTMLElement) {
+  control.closest("details")?.querySelector("summary")?.focus({
+    preventScroll: true,
+  });
+}
+
 function MessageAttachment({
   attachment,
   mediaVisible,
@@ -216,6 +222,7 @@ function MessageAttachment({
             media={media}
             name={attachment.name}
             onFailure={fail}
+            onFocusedFailure={focusAttachmentSummary}
           />
         )}
         {attachment.uri && (
@@ -266,11 +273,11 @@ function MessageAttachment({
                 // A successful reservation removes this button. Keep keyboard
                 // focus on the stable attachment summary, without stealing
                 // focus if the user has already moved elsewhere.
-                if (document.activeElement === event.currentTarget)
+                if (
+                  event.currentTarget.ownerDocument.activeElement ===
                   event.currentTarget
-                    .closest("details")
-                    ?.querySelector("summary")
-                    ?.focus();
+                )
+                  focusAttachmentSummary(event.currentTarget);
                 retry();
               }}
             >

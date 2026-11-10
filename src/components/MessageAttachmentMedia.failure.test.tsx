@@ -80,3 +80,45 @@ it.each(["image", "audio"] as const)(
     for (const cleanup of hooks.cleanups) cleanup();
   },
 );
+
+it.each([true, false])(
+  "preserves focus on audio failure only when the player owned it (%s)",
+  (focused) => {
+    const src = "data:audio/wav;base64,eA==";
+    const fallback = {};
+    const elsewhere = {};
+    const ownerDocument = { activeElement: elsewhere as object | null };
+    const attributes = new Map([["src", src]]);
+    const node = {
+      tagName: "AUDIO",
+      isConnected: true,
+      ownerDocument,
+      getAttribute: (key: string) => attributes.get(key) ?? null,
+      removeAttribute: (key: string) => attributes.delete(key),
+      pause: () => {
+        if (ownerDocument.activeElement === node)
+          ownerDocument.activeElement = null;
+      },
+      load: vi.fn(),
+    };
+    if (focused) ownerDocument.activeElement = node;
+    const onFocusedFailure = vi.fn(() => {
+      expect(node.getAttribute("src")).toBe(src);
+      ownerDocument.activeElement = fallback;
+    });
+    const props = {
+      media: { kind: "audio" as const, src },
+      name: "original name",
+      onFailure: vi.fn(),
+      onFocusedFailure,
+    };
+    const player = elements(MessageAttachmentMedia(props)).find(
+      (value) => value.type === "audio",
+    );
+    player.props.ref(node);
+    player.props.onError({ currentTarget: node });
+    expect(ownerDocument.activeElement).toBe(focused ? fallback : elsewhere);
+    expect(onFocusedFailure).toHaveBeenCalledTimes(focused ? 1 : 0);
+    expect(props.onFailure).toHaveBeenCalledOnce();
+  },
+);

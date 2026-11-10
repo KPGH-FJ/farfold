@@ -242,6 +242,38 @@ async fn tools_expiry_and_same_id_status_do_not_repeat_rpc_late_reply_settles_or
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn tools_pending_report_blocks_local_close_until_original_reply() {
+    let (f, c) = Fixture::open(true).await;
+    f.flag("hold");
+    assert_eq!(
+        f.short_read(&c, "original").await.unwrap().state,
+        State::Pending
+    );
+    until(|| f.cwd.join("tools-started").exists()).await;
+
+    // The peer declares no remote close; this exercises the public close
+    // path that detaches the local route instead.
+    assert!(
+        f.manager
+            .close_session(&f.row.id, &f.cwd, "owned-tools")
+            .await
+            .is_err(),
+        "closing must not detach the route of an in-flight tools report"
+    );
+    assert_eq!(f.status(&c, "original").unwrap().state, State::Pending);
+
+    std::fs::remove_file(f.cwd.join("hold")).unwrap();
+    until(|| f.status(&c, "original").is_ok_and(|o| o.settled)).await;
+    assert_eq!(f.status(&c, "original").unwrap().state, State::Ready);
+    f.manager
+        .close_session(&f.row.id, &f.cwd, "owned-tools")
+        .await
+        .unwrap();
+    assert_eq!(f.status(&c, "original").unwrap_err().code, Code::Changed);
+    assert_eq!(f.queries(), 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn tools_expired_unpolled_and_busy_actor_admission_have_zero_query() {
     let (f, c) = Fixture::open(true).await;
     drop(f.read(&c, "unpolled"));

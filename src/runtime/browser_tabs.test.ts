@@ -430,6 +430,49 @@ it.each([
   },
 );
 
+it("keeps a page-level close ahead of a delayed selection reply", async () => {
+  const f = fixture();
+  await f.tabs.start();
+  const a = await f.open();
+  await f.tabs.add();
+  const b = await f.open("https://b.example");
+  await f.tabs.select(a.tab);
+
+  const selected = deferred<void>();
+  const delayedReply = deferred<void>();
+  vi.mocked(f.client.select).mockImplementationOnce(async ({ label }) => {
+    f.state.selection = { label, revision: f.state.selection.revision + 1 };
+    const reply = f.clone();
+    selected.resolve();
+    await delayedReply.promise;
+    return reply;
+  });
+  const selection = f.tabs.select(b.tab);
+  await selected.promise;
+
+  const metadata = deferred<BrowserWorkspaceTabsState>();
+  vi.mocked(f.client.close).mockImplementationOnce(async ({ label }) => {
+    expect(label).toBe(a.result.label);
+    f.state.pages = f.state.pages.filter((page) => page.label !== label);
+    vi.mocked(f.client.tabs).mockReturnValueOnce(metadata.promise);
+  });
+  // A retained page scope can acknowledge its own close independently of the
+  // tab row, for example when its project directory changes during selection.
+  await f.tabs
+    .pageClient(a.tab)
+    .close({ taskKey: "task", label: a.result.label });
+  delayedReply.resolve();
+  await selection;
+
+  expect(f.tabs.getSnapshot().tabs.map((tab) => tab.page?.label)).toEqual([
+    undefined,
+    b.result.label,
+  ]);
+  expect(f.tabs.canPresent(b.tab)).toBe(true);
+  metadata.resolve(f.clone());
+  await metadata.promise;
+});
+
 it("failed selection retains pages, stays blocked after refresh, and retries only explicitly", async () => {
   const f = fixture();
   await f.tabs.start();

@@ -1092,15 +1092,8 @@ async fn session_pump(
                     }
                 }
                 SessionControl::Detach { result, .. } => {
-                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())
-                        || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
-                        || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    if busy {
-                        let _ = result.send(Err("请先完成此对话的任务及待处理事项，再关闭或重新连接".into()));
-                        continue;
-                    }
-                    detached = Some(result);
-                    break;
+                    detached = control::LocalDetach::start(&ctx, prompt_in_flight || mutation.is_some(), result);
+                    if detached.is_some() { break; }
                 }
                 SessionControl::Prompt { blocks, grant, result } => {
                     let unresolved = prompt_owner.as_ref().is_some_and(prompt::Active::unresolved);
@@ -1440,14 +1433,8 @@ async fn session_pump(
     drop(prompt_owner); // Non-owning observer only; process escrow survives.
     cancel_permissions(&pending, &mut permission_ids);
     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
-    if let Some(reply) = detached {
-        let outcome = sessions
-            .lock()
-            .map(|mut entries| {
-                entries.remove(&session_id);
-            })
-            .map_err(|_| "无法完成对话关闭，请重试".to_string());
-        let _ = reply.send(outcome);
+    if let Some(detach) = detached {
+        detach.finish(&sessions, &session_id);
     }
 }
 

@@ -38,6 +38,7 @@ export class BrowserTabs {
   private opening = new Map<string, Promise<BrowserWorkspaceState>>();
   private server: BrowserWorkspaceTabsState;
   private confirmedSelection?: BrowserWorkspaceSelection;
+  private closedDuringSelection?: Set<string>;
   private snapshot: BrowserTabsSnapshot;
 
   constructor(
@@ -182,21 +183,38 @@ export class BrowserTabs {
     };
   }
   private async nativeSelect(requested: string | null | (() => string | null)) {
-    // Resynchronize after a prior close/error. Never turn a stale selection
-    // response into an automatic second request.
-    const current = await this.client.tabs({ taskKey: this.taskKey });
-    this.accept(current);
-    const label = typeof requested === "function" ? requested() : requested;
-    const result = await this.client.select({
-      taskKey: this.taskKey,
-      label,
-      expectedSelected: { ...current.selection },
-    });
-    if (result.selection.label !== label)
-      throw new BrowserWorkspaceRetiredError();
-    this.accept(result);
-    this.confirmedSelection = result.selection;
-    if (this.snapshot.failed) this.publish({ failed: false });
+    // A page-level close can acknowledge while these selection snapshots are
+    // in flight. Do not rediscover that exact closed owner from an old reply.
+    const closed = new Set<string>();
+    this.closedDuringSelection = closed;
+    const accept = (state: BrowserWorkspaceTabsState) => {
+      if (state.selection.label !== null && closed.has(state.selection.label))
+        throw new BrowserWorkspaceRetiredError();
+      this.accept(
+        closed.size
+          ? { ...state, pages: state.pages.filter((p) => !closed.has(p.label)) }
+          : state,
+      );
+    };
+    try {
+      // Resynchronize after a prior close/error. Never turn a stale selection
+      // response into an automatic second request.
+      const current = await this.client.tabs({ taskKey: this.taskKey });
+      accept(current);
+      const label = typeof requested === "function" ? requested() : requested;
+      const result = await this.client.select({
+        taskKey: this.taskKey,
+        label,
+        expectedSelected: { ...current.selection },
+      });
+      if (result.selection.label !== label)
+        throw new BrowserWorkspaceRetiredError();
+      accept(result);
+      this.confirmedSelection = result.selection;
+      if (this.snapshot.failed) this.publish({ failed: false });
+    } finally {
+      this.closedDuringSelection = undefined;
+    }
   }
   private async change(id: string) {
     const tab = this.tab(id);
@@ -366,6 +384,7 @@ export class BrowserTabs {
     const base = this.client;
     const acknowledgeClose = (label: string) => {
       ++this.refreshSequence;
+      this.closedDuringSelection?.add(label);
       const tab = this.tab(id);
       if (tab?.page?.label === label) this.patchTab(id, { page: null });
       // The tab-row close owns its own follow-up. A page-level close or

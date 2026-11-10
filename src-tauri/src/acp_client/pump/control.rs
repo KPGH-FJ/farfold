@@ -271,6 +271,47 @@ impl SessionControl {
     }
 }
 
+pub(super) struct LocalDetach {
+    reply: oneshot::Sender<Result<(), String>>,
+    lease: super::super::lifecycle::OperationLease,
+}
+
+impl LocalDetach {
+    pub(super) fn start(
+        ctx: &DispatchContext<'_>,
+        busy: bool,
+        reply: oneshot::Sender<Result<(), String>>,
+    ) -> Option<Self> {
+        if busy || restore_config::busy(ctx) {
+            let _ = reply.send(Err(
+                "请先完成此对话的任务及待处理事项，再关闭或重新连接".into()
+            ));
+            return None;
+        }
+        // Use the same exact session exclusion as remote close. A tool report
+        // can still own this lease after its caller stops waiting.
+        match ctx.ops.life.operation(format!("open:{}", ctx.session_id)) {
+            Ok(lease) => Some(Self { reply, lease }),
+            Err(error) => {
+                let _ = reply.send(Err(error));
+                None
+            }
+        }
+    }
+
+    pub(super) fn finish(self, sessions: &SessionMap, session_id: &str) {
+        let Self { reply, lease } = self;
+        let outcome = sessions
+            .lock()
+            .map(|mut entries| {
+                entries.remove(session_id);
+            })
+            .map_err(|_| "无法完成对话关闭，请重试".to_string());
+        drop(lease);
+        let _ = reply.send(outcome);
+    }
+}
+
 #[cfg(test)]
 mod restore_confirmation_tests {
     use super::*;

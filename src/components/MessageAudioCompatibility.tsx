@@ -111,6 +111,7 @@ export function MessageAudioCompatibility({
           <MessageAttachmentMedia
             media={{ kind: "audio", src: audio.src }}
             name={name}
+            onFocusedFailure={retainControlFocus}
             onFailure={() => {
               // MessageAttachmentMedia retires the source before this releases its lease.
               retainControlFocus();
