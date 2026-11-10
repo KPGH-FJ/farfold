@@ -119,7 +119,7 @@ fn rejects_encryption_truncation_header_mismatch_and_excess_entry_count() {
     assert!(matches!(unpack(&bytes), Err(WorkbookError::Encrypted)));
     let mut bytes = valid();
     bytes.pop();
-    assert!(unpack(&bytes).is_err());
+    assert!(matches!(unpack(&bytes), Err(WorkbookError::Invalid)));
     let mut bytes = valid();
     put32(&mut bytes, local + 22, 999);
     assert!(unpack(&bytes).is_err());

@@ -25,6 +25,15 @@
   color: var(--ink-2);
   font-size: 12px;
 }
+.session-tools-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.session-tools-filter select {
+  max-width: 100%;
+}
 .session-tools-items {
   list-style: none;
   margin: 0;

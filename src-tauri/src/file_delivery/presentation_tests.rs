@@ -258,6 +258,7 @@ fn pptx_capture_returns_encrypted_unsupported_and_invalid_container_codes() {
     let original = package(&[], CompressionMethod::Stored);
     let central = signature(&original, b"PK\x01\x02");
     let local = signature(&original, b"PK\x03\x04");
+    let end = signature(&original, b"PK\x05\x06");
     let mut encrypted = original.clone();
     put16(&mut encrypted, central + 8, 1);
     put16(&mut encrypted, local + 6, 1);
@@ -268,10 +269,24 @@ fn pptx_capture_returns_encrypted_unsupported_and_invalid_container_codes() {
     let mut symlink = original.clone();
     put32(&mut symlink, central + 38, 0o120777 << 16);
     assert_eq!(code(&symlink), "unsupported");
+    let mut zip64 = original.clone();
+    put16(&mut zip64, end + 10, u16::MAX);
+    assert_eq!(code(&zip64), "unsupported");
+    let mut split_volume = original.clone();
+    put16(&mut split_volume, end + 4, 1);
+    assert_eq!(code(&split_volume), "unsupported");
     let mut mismatch = original;
     put32(&mut mismatch, local + 22, 999);
     assert_eq!(code(&mismatch), "invalid");
     assert_eq!(code(b"not a ZIP"), "unsupported");
+}
+
+#[test]
+fn truncated_pptx_with_a_zip_header_reports_an_invalid_container() {
+    let original =
+        include_bytes!("../../../src/runtime/fixtures/pptx/author-two-slide-layout-theme.pptx");
+    assert!(capture(original).is_ok());
+    assert_eq!(code(&original[..152]), "invalid");
 }
 
 #[test]

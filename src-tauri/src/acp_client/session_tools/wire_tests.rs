@@ -75,13 +75,37 @@ impl Fixture {
             .count()
     }
     async fn read(&self, c: &ManagedConnection, id: &str) -> Reply {
+        self.read_extension(c, id, None).await
+    }
+    async fn read_extension(
+        &self,
+        c: &ManagedConnection,
+        id: &str,
+        extension: Option<&str>,
+    ) -> Reply {
         self.manager
-            .tools_read(&self.row.id, &self.cwd, "owned-tools", &c.connection_id, id)
+            .tools_read(
+                &self.row.id,
+                &self.cwd,
+                "owned-tools",
+                &c.connection_id,
+                id,
+                extension,
+            )
             .await
     }
     fn status(&self, c: &ManagedConnection, id: &str) -> Reply {
-        self.manager
-            .tools_status(&self.row.id, &self.cwd, "owned-tools", &c.connection_id, id)
+        self.status_extension(c, id, None)
+    }
+    fn status_extension(&self, c: &ManagedConnection, id: &str, extension: Option<&str>) -> Reply {
+        self.manager.tools_status(
+            &self.row.id,
+            &self.cwd,
+            "owned-tools",
+            &c.connection_id,
+            id,
+            extension,
+        )
     }
     async fn short_read(&self, c: &ManagedConnection, id: &str) -> Reply {
         self.manager
@@ -91,6 +115,7 @@ impl Fixture {
                 "owned-tools",
                 &c.connection_id,
                 id,
+                None,
                 tokio::time::Instant::now() + Duration::from_millis(150),
             )
             .await
@@ -135,6 +160,42 @@ async fn tools_read_exact_actor_single_rpc_sanitized_report_and_status_without_r
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn tools_extension_requires_exact_opening_name_and_keeps_status_on_the_same_scope() {
+    let (f, c) = Fixture::open(true).await;
+    for name in [
+        "ownedreport",
+        "Other Extension",
+        "ambiguous",
+        "invalid/entry",
+    ] {
+        assert_eq!(
+            f.read_extension(&c, "scoped", Some(name))
+                .await
+                .unwrap_err()
+                .code,
+            Code::Changed
+        );
+    }
+    assert_eq!(f.queries(), 0);
+    let name = Some("Owned Report");
+    let operation = f.read_extension(&c, "scoped", name).await.unwrap();
+    assert_eq!(operation.extension_name.as_deref(), name);
+    assert_eq!(operation.state, State::Ready);
+    assert_eq!(f.status_extension(&c, "scoped", name).unwrap(), operation);
+    assert_eq!(
+        f.read_extension(&c, "scoped", name).await.unwrap(),
+        operation
+    );
+    assert_eq!(f.read(&c, "scoped").await.unwrap_err().code, Code::Changed);
+    assert_eq!(f.status(&c, "scoped").unwrap_err().code, Code::Changed);
+    assert_eq!(f.queries(), 1);
+    assert_eq!(
+        f.trace()[2]["params"],
+        json!({"sessionId":"owned-tools","extensionName":"Owned Report"})
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn tools_empty_success_remains_incomplete_and_bad_shape_or_error_never_becomes_empty() {
     let (f, c) = Fixture::open(true).await;
     f.flag("empty");
@@ -171,7 +232,7 @@ async fn tools_unavailable_wrong_owner_preview_and_unknown_session_never_open_or
     c.session_tools.enable_for_test();
     assert_eq!(
         f.manager
-            .tools_read(&f.row.id, &f.cwd, "owned-tools", "foreign", "wrong")
+            .tools_read(&f.row.id, &f.cwd, "owned-tools", "foreign", "wrong", None)
             .await
             .unwrap_err()
             .code,
@@ -184,7 +245,8 @@ async fn tools_unavailable_wrong_owner_preview_and_unknown_session_never_open_or
                 &f.cwd,
                 "historical-id",
                 &c.connection_id,
-                "history"
+                "history",
+                None,
             )
             .await
             .unwrap_err()
@@ -285,6 +347,7 @@ async fn tools_expired_unpolled_and_busy_actor_admission_have_zero_query() {
                 "owned-tools",
                 &c.connection_id,
                 "expired",
+                None,
                 tokio::time::Instant::now() - Duration::from_secs(1)
             )
             .await
@@ -309,7 +372,7 @@ async fn tools_ui_drop_actor_end_and_same_connection_replaced_control_keep_origi
     );
     let task = tokio::spawn(async move {
         manager
-            .tools_read(&agent, &cwd, "owned-tools", &connection, "dropped")
+            .tools_read(&agent, &cwd, "owned-tools", &connection, "dropped", None)
             .await
     });
     until(|| f.cwd.join("tools-started").exists()).await;
@@ -381,6 +444,7 @@ async fn tools_local_transport_error_is_not_method_not_found_and_retains_lease_t
             "owned-tools",
             &c.connection_id,
             "transport",
+            None,
         )
         .unwrap();
     let _ = f.read(&c, "transport").await;

@@ -27,6 +27,7 @@ impl Availability {
             source: "reviewedOfficialSupplement",
             scope: "currentConversation",
             startup: None,
+            extensions: Vec::new(),
         })
     }
     pub(crate) fn observe(&self, dispatch: &Dispatch<UntypedMessage, UntypedMessage>) {
@@ -43,10 +44,11 @@ impl Availability {
         &self,
         cx: &ConnectionTo<Agent>,
         session_id: &str,
+        extension_name: Option<&str>,
     ) -> Result<(Wire, Arc<AtomicBool>), ToolsError> {
         let message = UntypedMessage::new(
             METHOD,
-            serde_json::json!({"sessionId":session_id,"extensionName":null}),
+            serde_json::json!({"sessionId":session_id,"extensionName":extension_name}),
         )
         .map_err(|_| Code::QueryFailed)?;
         // Synchronous enqueue and witness registration share the incoming

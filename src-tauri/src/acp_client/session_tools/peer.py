@@ -44,7 +44,16 @@ for line in sys.stdin:
     if method == "initialize":
         reply(message, {"protocolVersion": 1, "agentCapabilities": {}, "authMethods": []})
     elif method == "session/new":
-        reply(message, {"sessionId": "owned-tools", "configOptions": []})
+        reply(message, {
+            "sessionId": "owned-tools", "configOptions": [],
+            "_meta": {"extensionResults": [
+                {"name": "Owned Report", "success": True},
+                {"name": "Other Extension", "success": False, "error": "PRIVATE_ERROR_CANARY"},
+                {"name": "ambiguous", "success": True},
+                {"name": "Am Biguous", "success": False},
+                {"name": "invalid/entry", "success": True},
+            ]},
+        })
     elif method == "_goose/unstable/tools/list":
         if pathlib.Path("transport-error").exists():
             signal.signal(signal.SIGTERM, lambda *args: None)

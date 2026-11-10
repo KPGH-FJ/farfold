@@ -46,6 +46,7 @@ export const pending = (r: SessionToolsRequest = target) => ({
   cwd: r.cwd,
   nativeSessionId: r.sessionId,
   connectionId: r.connectionId,
+  ...(r.extensionName === undefined ? {} : { extensionName: r.extensionName }),
   state: "pending",
   settled: false,
   report: null,

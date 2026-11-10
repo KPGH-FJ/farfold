@@ -125,7 +125,13 @@ fn directory(bytes: &[u8]) -> Result<Vec<String>, ArchiveError> {
             bytes.get(at..at + 4) == Some(b"PK\x05\x06")
                 && u16_at(bytes, at + 20).is_ok_and(|n| at + 22 + n as usize == bytes.len())
         })
-        .ok_or(ArchiveError::Unsupported)?;
+        .ok_or_else(|| {
+            if bytes.starts_with(b"PK\x03\x04") {
+                ArchiveError::Invalid
+            } else {
+                ArchiveError::Unsupported
+            }
+        })?;
     let count = u16_at(bytes, end + 10)? as usize;
     if count == 65535
         || u32_at(bytes, end + 12)? == u32::MAX

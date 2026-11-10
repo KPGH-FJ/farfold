@@ -61,6 +61,52 @@ it("pending only checks the same known operation, and settled permits a new expl
   expect(h.request().operationId).not.toBe(original.operationId);
   expect(h.port.read).toHaveBeenCalledTimes(2);
 });
+it("keeps an older report when a known extension returns no tools, and only checks the original scope", async () => {
+  const h = fixture();
+  h.owner.sessionToolInventory = {
+    ...capability,
+    startup: {
+      reportedCount: 1,
+      loadedCount: 1,
+      failedCount: 0,
+      unknownCount: 0,
+    },
+    extensions: ["Owned Report"],
+  };
+  expect(h.controller.read("ownedreport")).toBe(false);
+  expect(h.controller.read()).toBe(true);
+  await flush();
+  h.read.resolve(ready(h.request()));
+  await flush();
+  const prior = h.controller.getSnapshot().lastReport;
+  expect(prior?.value.reportedItemCount).toBe(1);
+
+  const scoped = deferred();
+  h.port.read.mockReturnValueOnce(scoped.promise);
+  expect(h.controller.read("Owned Report")).toBe(true);
+  await flush();
+  const request = h.request();
+  expect(request.extensionName).toBe("Owned Report");
+  expect(h.controller.getSnapshot().lastReport).toBe(prior);
+  scoped.resolve(pending(request));
+  await flush();
+  expect(h.controller.read()).toBe(false);
+  expect(h.controller.check()).toBe(true);
+  await flush();
+  expect(h.port.status).toHaveBeenCalledExactlyOnceWith(request);
+  h.status.resolve(ready(request, []));
+  await flush();
+  expect(h.port.read).toHaveBeenCalledTimes(2);
+  expect(h.controller.getSnapshot()).toMatchObject({
+    phase: "ready",
+    unresolved: false,
+    operation: {
+      extensionName: "Owned Report",
+      report: { reportedItemCount: 0, completeness: "unreported" },
+    },
+    lastReport: prior,
+  });
+});
 it.each([
   "running",
   "connectionLost",

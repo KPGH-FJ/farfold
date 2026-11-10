@@ -126,6 +126,7 @@ impl Fixture {
                 native,
                 &c.connection_id,
                 "owned-read",
+                None,
             )
             .await
             .unwrap();
@@ -208,7 +209,8 @@ async fn live_status_real_initialize_and_actor_preserve_raw_fifo_without_prompt_
                 &f.cwd,
                 "live-a",
                 &c.connection_id,
-                "after-status"
+                "after-status",
+                None,
             )
             .await
             .unwrap()

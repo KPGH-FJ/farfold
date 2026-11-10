@@ -30,13 +30,18 @@ type Wire = Pin<Box<dyn Future<Output = agent_client_protocol::Result<serde_json
 /// an index, generation system, operation history or a persistent ledger.
 pub(crate) struct Slot {
     control: tokio::sync::mpsc::WeakUnboundedSender<SessionControl>,
+    extensions: Vec<String>,
     current: Mutex<Option<Operation>>,
     changed: Notify,
 }
 impl Slot {
-    pub(crate) fn new(control: &tokio::sync::mpsc::UnboundedSender<SessionControl>) -> Self {
+    pub(crate) fn new(
+        control: &tokio::sync::mpsc::UnboundedSender<SessionControl>,
+        response: &serde_json::Value,
+    ) -> Self {
         Self {
             control: control.downgrade(),
+            extensions: types::startup_extensions(response),
             current: Mutex::new(None),
             changed: Notify::new(),
         }
@@ -58,10 +63,13 @@ impl Slot {
             .cloned()
             .ok_or_else(|| Code::Changed.into())
     }
-    fn existing(&self, id: &str) -> Result<Option<Operation>, ToolsError> {
+    fn existing(&self, request: &Operation) -> Result<Option<Operation>, ToolsError> {
         let current = self.current.lock().map_err(|_| Code::Changed)?;
         if let Some(operation) = current.as_ref() {
-            if operation.operation_id == id {
+            if operation.operation_id == request.operation_id {
+                if operation.extension_name != request.extension_name {
+                    return Err(Code::Changed.into());
+                }
                 return Ok(Some(operation.clone()));
             }
             if !operation.settled {
@@ -121,6 +129,7 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
+        extension_name: Option<&str>,
     ) -> Result<Owner, ToolsError> {
         if !types::valid_operation_id(operation_id) {
             return Err(Code::Changed.into());
@@ -144,6 +153,9 @@ impl AcpManager {
                 .ok_or(Code::Changed)?;
             (entry.control.clone(), entry.tools_report.clone())
         };
+        if extension_name.is_some_and(|name| !slot.extensions.iter().any(|item| item == name)) {
+            return Err(Code::Changed.into());
+        }
         let (manager, agent, directory, session, owner, original_control, original_slot) = (
             self.clone(),
             agent_id.to_owned(),
@@ -178,6 +190,7 @@ impl AcpManager {
                     cwd: cwd.to_string_lossy().into(),
                     native_session_id: session_id.into(),
                     connection_id: connection_id.into(),
+                    extension_name: extension_name.map(str::to_owned),
                     state: State::Pending,
                     settled: false,
                     report: None,
@@ -197,6 +210,7 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
+        extension_name: Option<&str>,
     ) -> Reply {
         self.tools_read_until(
             agent_id,
@@ -204,6 +218,7 @@ impl AcpManager {
             session_id,
             connection_id,
             operation_id,
+            extension_name,
             tokio::time::Instant::now() + BUDGET,
         )
         .await
@@ -216,11 +231,18 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
+        extension_name: Option<&str>,
         deadline: tokio::time::Instant,
     ) -> Reply {
-        let Owner { request, control } =
-            self.tools_owner(agent_id, cwd, session_id, connection_id, operation_id)?;
-        if request.slot.existing(operation_id)?.is_none() {
+        let Owner { request, control } = self.tools_owner(
+            agent_id,
+            cwd,
+            session_id,
+            connection_id,
+            operation_id,
+            extension_name,
+        )?;
+        if request.slot.existing(&request.operation)?.is_none() {
             if request.availability.capability().is_none() {
                 return Err(Code::Unavailable.into());
             }
@@ -250,10 +272,20 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
+        extension_name: Option<&str>,
     ) -> Reply {
-        let owner = self.tools_owner(agent_id, cwd, session_id, connection_id, operation_id)?;
+        let owner = self.tools_owner(
+            agent_id,
+            cwd,
+            session_id,
+            connection_id,
+            operation_id,
+            extension_name,
+        )?;
         let value = owner.request.slot.snapshot(operation_id)?;
-        if !(owner.request.current_owner)() {
+        if value.extension_name != owner.request.operation.extension_name
+            || !(owner.request.current_owner)()
+        {
             return Err(Code::Changed.into());
         }
         Ok(value)
@@ -265,10 +297,21 @@ pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
 
 pub(crate) fn opened_capability(
     connection: &ManagedConnection,
+    session_id: &str,
     response: &serde_json::Value,
 ) -> Option<Capability> {
     let mut capability = capability(connection)?;
     capability.startup = types::startup_report(response);
+    if let Ok(entries) = connection.sessions.lock()
+        && let Some(entry) = entries.get(session_id)
+        && entry.purpose == super::open_purpose::OpenPurpose::Conversation
+        && entry.preview_token.is_none()
+        && entry.connection_is(&connection.connection_id)
+    {
+        capability
+            .extensions
+            .clone_from(&entry.tools_report.extensions);
+    }
     Some(capability)
 }
 
@@ -280,13 +323,21 @@ pub async fn session_tools_read(
     session_id: String,
     connection_id: String,
     operation_id: String,
+    extension_name: Option<String>,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
         .await
         .map_err(|_| Code::Changed)?;
     app.state::<AcpManager>()
-        .tools_read(&agent_id, &cwd, &session_id, &connection_id, &operation_id)
+        .tools_read(
+            &agent_id,
+            &cwd,
+            &session_id,
+            &connection_id,
+            &operation_id,
+            extension_name.as_deref(),
+        )
         .await
 }
 #[tauri::command]
@@ -297,6 +348,7 @@ pub async fn session_tools_status(
     session_id: String,
     connection_id: String,
     operation_id: String,
+    extension_name: Option<String>,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
@@ -308,6 +360,7 @@ pub async fn session_tools_status(
         &session_id,
         &connection_id,
         &operation_id,
+        extension_name.as_deref(),
     )
 }
 

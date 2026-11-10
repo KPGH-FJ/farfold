@@ -8,6 +8,7 @@ import {
   validSessionToolsOperationId,
   type SessionToolsCode,
   type SessionToolsOperation,
+  type SessionToolsReport,
   type SessionToolsRequest,
   type SessionToolsTarget,
 } from "./session_tools_types";
@@ -16,6 +17,7 @@ export interface SessionToolsSnapshot {
   phase: "idle" | "loading" | "pending" | "ready" | "error";
   operationId: string | null;
   operation: SessionToolsOperation | null;
+  lastReport: { value: SessionToolsReport; extensionName?: string } | null;
   error: SessionToolsCode | null;
   checking: boolean;
   unresolved: boolean;
@@ -24,6 +26,7 @@ const EMPTY: SessionToolsSnapshot = Object.freeze({
   phase: "idle",
   operationId: null,
   operation: null,
+  lastReport: null,
   error: null,
   checking: false,
   unresolved: false,
@@ -48,6 +51,7 @@ export class SessionToolsController {
   private retired = false;
   private unavailable = false;
   private epoch = 0;
+  private request: SessionToolsRequest | null = null;
   private readonly target: SessionToolsTarget;
   private readonly key: string;
   private readonly source: string;
@@ -95,6 +99,9 @@ export class SessionToolsController {
     );
   }
   readonly isCurrent = () => this.matchesOwner(this.current());
+  get requestedExtension(): string | undefined {
+    return this.request?.extensionName;
+  }
   get blockedCode(): SessionToolsCode | null {
     if (!this.isCurrent()) return "changed";
     if (
@@ -114,6 +121,15 @@ export class SessionToolsController {
   }
   private sameRequest(operationId: string) {
     return this.isCurrent() && this.snapshot.operationId === operationId;
+  }
+  private canReadExtension(name?: string): boolean {
+    return (
+      name === undefined ||
+      (sessionToolInventoryCapability(
+        this.owner?.sessionToolInventory,
+      )?.extensions?.includes(name) ??
+        false)
+    );
   }
   private accept(raw: unknown, expected: SessionToolsRequest, epoch: number) {
     if (!this.sameRequest(expected.operationId) || !this.snapshot.unresolved)
@@ -141,6 +157,12 @@ export class SessionToolsController {
             ? "pending"
             : "error",
       operation,
+      lastReport:
+        operation.report &&
+        (operation.extensionName === undefined ||
+          operation.report.reportedItemCount > 0)
+          ? { value: operation.report, extensionName: operation.extensionName }
+          : this.snapshot.lastReport,
       error: operation.error?.code ?? null,
       unresolved: !operation.settled,
       checking: false,
@@ -197,15 +219,21 @@ export class SessionToolsController {
         });
       });
   }
-  read(): boolean {
+  read(extensionName?: string): boolean {
     if (this.snapshot.unresolved || this.snapshot.checking || this.blockedCode)
       return false;
+    if (!this.canReadExtension(extensionName)) return false;
     const operationId = this.uuid();
     if (!validSessionToolsOperationId(operationId)) {
       this.publish({ phase: "error", error: "invalidResponse" });
       return false;
     }
-    const expected = { ...this.target, operationId };
+    const expected = {
+      ...this.target,
+      operationId,
+      ...(extensionName === undefined ? {} : { extensionName }),
+    };
+    this.request = expected;
     this.publish({
       phase: "loading",
       operationId,
@@ -216,10 +244,10 @@ export class SessionToolsController {
     });
     this.observe(expected, () => {
       const code = this.blockedCode;
-      if (code) {
+      if (code || !this.canReadExtension(extensionName)) {
         this.publish({
           phase: "error",
-          error: code,
+          error: code ?? "changed",
           checking: false,
           unresolved: false,
         });
@@ -230,15 +258,14 @@ export class SessionToolsController {
     return true;
   }
   check(): boolean {
-    const operationId = this.snapshot.operationId;
+    const expected = this.request;
     if (
-      !operationId ||
+      !expected ||
       !this.snapshot.unresolved ||
       this.snapshot.checking ||
       !this.isCurrent()
     )
       return false;
-    const expected = { ...this.target, operationId };
     this.publish({ checking: true });
     this.observe(expected, () => this.port.status(expected));
     return true;

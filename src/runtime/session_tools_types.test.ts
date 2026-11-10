@@ -77,6 +77,30 @@ it("empty success remains an unreported-completeness report, distinct from failu
     "PRIVATE_ERROR",
   );
 });
+it("accepts an optional bounded opening scope and binds each response to the requested extension", () => {
+  const startup = {
+    reportedCount: 2,
+    loadedCount: 2,
+    failedCount: 0,
+    unknownCount: 0,
+  };
+  const extensions = ["Owned Report", "Another"];
+  const scoped = { ...capability, startup, extensions };
+  expect(sessionToolInventoryCapability(scoped)).toEqual(scoped);
+  expect(
+    sessionToolInventoryCapability({ ...scoped, extensions: ["Unknown/path"] }),
+  ).toBeNull();
+  expect(
+    sessionToolInventoryCapability({ ...capability, extensions }),
+  ).toBeNull();
+  const request = { ...target, extensionName: extensions[0] };
+  expect(parse(ready(request), request).extensionName).toBe("Owned Report");
+  expect(() =>
+    parse(ready({ ...request, extensionName: extensions[1] }), request),
+  ).toThrow();
+  expect(() => parse(ready(target), request)).toThrow();
+  expect(() => parse(ready(request), target)).toThrow();
+});
 it("rejects every wrong owner/id and unknown authority or schema fields", () => {
   expect(() =>
     parse({ ...ready(), connectionId: "" }, { ...target, connectionId: "" }),

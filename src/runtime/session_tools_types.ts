@@ -3,6 +3,7 @@ export interface SessionToolInventoryCapability {
   source: "reviewedOfficialSupplement";
   scope: "currentConversation";
   startup?: SessionToolStartupReport;
+  extensions?: string[];
 }
 export interface SessionToolStartupReport {
   reportedCount: number;
@@ -31,6 +32,7 @@ export interface SessionToolsTarget {
 }
 export interface SessionToolsRequest extends SessionToolsTarget {
   operationId: string;
+  extensionName?: string;
 }
 export interface SessionToolItem {
   name: string;
@@ -52,6 +54,7 @@ export interface SessionToolsOperation {
   cwd: string;
   nativeSessionId: string;
   connectionId: string;
+  extensionName?: string;
   state: "pending" | "ready" | "failed";
   settled: boolean;
   report: SessionToolsReport | null;
@@ -61,6 +64,12 @@ export interface SessionToolsOperation {
 const object = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === "object" && !Array.isArray(v);
 const MAX_REPORT_ITEMS = 256;
+const isExtensionName = (v: unknown): v is string =>
+  typeof v === "string" &&
+  v.length <= 256 &&
+  v.trim() === v &&
+  /[A-Za-z0-9]/.test(v) &&
+  /^[A-Za-z0-9 _-]+$/.test(v);
 function invalid(): never {
   throw { code: "invalidResponse" };
 }
@@ -109,11 +118,29 @@ export function sessionToolInventoryCapability(
   )
     return null;
   const hasStartup = Object.hasOwn(value, "startup");
-  if (Object.keys(value).length !== (hasStartup ? 3 : 2)) return null;
+  const hasExtensions = Object.hasOwn(value, "extensions");
+  if (
+    Object.keys(value).length !==
+    2 + Number(hasStartup) + Number(hasExtensions)
+  )
+    return null;
   const capability: SessionToolInventoryCapability = {
     source: "reviewedOfficialSupplement",
     scope: "currentConversation",
   };
+  if (hasExtensions) {
+    const names = value.extensions;
+    if (
+      !hasStartup ||
+      !Array.isArray(names) ||
+      names.length === 0 ||
+      names.length > MAX_REPORT_ITEMS ||
+      !names.every(isExtensionName) ||
+      new Set(names).size !== names.length
+    )
+      return null;
+    capability.extensions = names;
+  }
   if (!hasStartup) return capability;
   try {
     const startup = record(value.startup, [
@@ -128,7 +155,8 @@ export function sessionToolInventoryCapability(
     const unknownCount = integer(startup.unknownCount);
     if (
       loadedCount + failedCount + unknownCount !==
-      Math.min(reportedCount, MAX_REPORT_ITEMS)
+        Math.min(reportedCount, MAX_REPORT_ITEMS) ||
+      (capability.extensions?.length ?? 0) > loadedCount
     )
       return null;
     return {
@@ -216,6 +244,7 @@ export function parseSessionToolsOperation(
     "cwd",
     "nativeSessionId",
     "connectionId",
+    ...(expected.extensionName === undefined ? [] : ["extensionName"]),
     "state",
     "settled",
     "report",
@@ -239,7 +268,10 @@ export function parseSessionToolsOperation(
     v.agentId !== expected.agentId ||
     v.cwd !== expected.cwd ||
     v.nativeSessionId !== expected.sessionId ||
-    v.connectionId !== expected.connectionId
+    v.connectionId !== expected.connectionId ||
+    (expected.extensionName !== undefined &&
+      (!isExtensionName(expected.extensionName) ||
+        v.extensionName !== expected.extensionName))
   )
     invalid();
   const settled = bool(v.settled),
@@ -262,6 +294,9 @@ export function parseSessionToolsOperation(
     cwd: expected.cwd,
     nativeSessionId: expected.sessionId,
     connectionId: expected.connectionId,
+    ...(expected.extensionName === undefined
+      ? {}
+      : { extensionName: expected.extensionName }),
     state: v.state as SessionToolsOperation["state"],
     settled,
     report: parsedReport,

@@ -1,5 +1,6 @@
 use serde::Serialize;
 use serde_json::Value;
+use std::collections::HashMap;
 
 pub(super) const MAX_ITEMS: usize = 256;
 const MAX_NAME: usize = 256;
@@ -11,6 +12,8 @@ pub struct Capability {
     pub scope: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub startup: Option<StartupReport>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub extensions: Vec<String>,
 }
 
 /// Counts from the opening reply, independent of the live tools catalogue.
@@ -48,6 +51,52 @@ pub(super) fn startup_report(response: &Value) -> Option<StartupReport> {
         }
     }
     Some(report)
+}
+
+/// Offer only bounded names from the exact opening reply. Goose accepts the
+/// original configuration name and normalizes it when filtering the catalogue.
+/// Normalization here is only for rejecting ambiguous choices.
+pub(super) fn startup_extensions(response: &Value) -> Vec<String> {
+    let Some(results) = response
+        .pointer("/_meta/extensionResults")
+        .and_then(Value::as_array)
+        .filter(|results| results.len() <= MAX_ITEMS)
+    else {
+        return Vec::new();
+    };
+    let mut names = HashMap::new();
+    for result in results {
+        let Some(name) = result
+            .get("name")
+            .and_then(Value::as_str)
+            .filter(|name| !name.is_empty() && name.len() <= MAX_NAME)
+        else {
+            return Vec::new();
+        };
+        let key: String = name
+            .chars()
+            .filter(|c| !c.is_whitespace())
+            .map(|c| match c {
+                'A'..='Z' => c.to_ascii_lowercase(),
+                'a'..='z' | '0'..='9' | '_' | '-' => c,
+                _ => '_',
+            })
+            .collect();
+        let selectable = result.get("success").and_then(Value::as_bool) == Some(true)
+            && result.get("error").is_none_or(Value::is_null)
+            && name.trim() == name
+            && name.bytes().any(|b| b.is_ascii_alphanumeric())
+            && name
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b' ' | b'_' | b'-'));
+        names
+            .entry(key)
+            .and_modify(|candidate| *candidate = None)
+            .or_insert(selectable.then_some(name));
+    }
+    let mut result: Vec<_> = names.into_values().flatten().map(str::to_owned).collect();
+    result.sort_unstable();
+    result
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -124,6 +173,8 @@ pub struct Operation {
     pub cwd: String,
     pub native_session_id: String,
     pub connection_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extension_name: Option<String>,
     pub state: State,
     pub settled: bool,
     pub report: Option<Report>,

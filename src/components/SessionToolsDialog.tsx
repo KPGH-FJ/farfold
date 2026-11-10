@@ -2,6 +2,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
   useSyncExternalStore,
   type RefObject,
 } from "react";
@@ -112,6 +113,10 @@ export function SessionToolsDialog({
     controller.getSnapshot,
     controller.getSnapshot,
   );
+  const [selection, setSelection] = useState(() => ({
+    controller,
+    name: controller.requestedExtension ?? "",
+  }));
   const mounted = useRef(true);
   const latest = useRef({ active, controller, onClose });
   latest.current = { active, controller, onClose };
@@ -131,7 +136,20 @@ export function SessionToolsDialog({
   const close = () => {
     if (mounted.current && latest.current.active) latest.current.onClose();
   };
-  const report = controller.isCurrent() ? view.operation?.report : null;
+  const report = controller.isCurrent() ? view.lastReport : null;
+  const emptyExtension =
+    controller.isCurrent() && view.operation?.report?.reportedItemCount === 0
+      ? view.operation.extensionName
+      : undefined;
+  const extensions =
+    active && controller.isCurrent()
+      ? thread.sessionToolInventory?.extensions
+      : undefined;
+  const scope =
+    selection.controller === controller
+      ? selection.name
+      : (controller.requestedExtension ?? "");
+  const selected = extensions?.includes(scope) ? scope : "";
   const startup =
     active && controller.isCurrent()
       ? thread.sessionToolInventory?.startup
@@ -149,6 +167,26 @@ export function SessionToolsDialog({
       >
         <p className="session-tools-context">{title}</p>
         <p>{S.scope}</p>
+        {!!extensions?.length && (
+          <label className="session-tools-filter">
+            <span>{S.filter}</span>
+            <select
+              value={selected}
+              disabled={view.unresolved || blocked !== null}
+              onChange={(event) => {
+                if (owns())
+                  setSelection({ controller, name: event.target.value });
+              }}
+            >
+              <option value="">{S.allTools}</option>
+              {extensions.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {view.phase === "idle" && <p>{S.initial}</p>}
         {view.unresolved && (
           <p role="status">
@@ -157,7 +195,23 @@ export function SessionToolsDialog({
         )}
         {error && <p role="status">{S.errors[error]}</p>}
         {startup && <SessionToolStartupView report={startup} />}
-        {report && <SessionToolsReportView report={report} />}
+        {emptyExtension && (
+          <p className="session-tools-note">
+            <bdi>{emptyExtension}</bdi> · {S.emptyScopedReport}
+          </p>
+        )}
+        {report && (
+          <>
+            <p className="session-tools-note">
+              {view.operation?.report === report.value &&
+              report.extensionName === (selected || undefined)
+                ? S.filter
+                : S.previousReport}
+              ：<bdi>{report.extensionName ?? S.allTools}</bdi>
+            </p>
+            <SessionToolsReportView report={report.value} />
+          </>
+        )}
         <p className="session-tools-note">{S.notice}</p>
       </div>
       <footer>
@@ -186,10 +240,13 @@ export function SessionToolsDialog({
             className="btn btn-primary"
             disabled={!active || !controller.isCurrent() || blocked !== null}
             onClick={() => {
-              if (owns()) controller.read();
+              if (owns()) controller.read(selected || undefined);
             }}
           >
-            {view.operation || view.error ? S.refresh : S.read}
+            {controller.requestedExtension === (selected || undefined) &&
+            (view.operation || view.error)
+              ? S.refresh
+              : S.read}
           </button>
         )}
       </footer>

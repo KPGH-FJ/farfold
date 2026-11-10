@@ -36,10 +36,11 @@ impl Request {
             self.slot.finish(id, Err(code.into()), true);
             return;
         }
-        let (future, observed) = match self
-            .availability
-            .send(&cx, &self.operation.native_session_id)
-        {
+        let (future, observed) = match self.availability.send(
+            &cx,
+            &self.operation.native_session_id,
+            self.operation.extension_name.as_deref(),
+        ) {
             Ok(sent) => sent,
             Err(error) => {
                 drop(lease);
@@ -90,11 +91,7 @@ pub(crate) fn start(
         if !request.matches(connection_id, session_id) {
             return Err(Code::Changed.into());
         }
-        if request
-            .slot
-            .existing(&request.operation.operation_id)?
-            .is_some()
-        {
+        if request.slot.existing(&request.operation)?.is_some() {
             return Ok(());
         }
         if busy {
