@@ -1,0 +1,64 @@
+{
+  "sourceCodeCommit": "c847a87fb64d103eff584a83237d411d071f849c",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "c12479af2e79d35f058cebf1400d23986d673095",
+    "executableSha256": "646467b09c902e94b814a82f9a840bf81ca711b27360b74742a93487063630d8"
+  },
+  "engineering": {
+    "inputs": 2475,
+    "allSevenPassedFresh": true,
+    "frontendFiles": 744,
+    "frontendPassed": 10182,
+    "rustPassed": 2490,
+    "rustIgnored": 7
+  },
+  "install": {
+    "independentExactFiveFileReview": true,
+    "normalSaveAndExit": true,
+    "closedRecordsUnchanged": 206346,
+    "duplicateRemoved": true
+  },
+  "observations": {
+    "mcpInventory": {
+      "firstListUtc": "2026-11-09T19:42:09Z",
+      "expiredReviewUtc": "2026-11-10T03:46:53.794Z",
+      "refreshedListUtc": "2026-11-10T03:47:24Z",
+      "observedRefreshedUtc": "2026-11-10T03:47:35.566Z",
+      "directoryUnchanged": true,
+      "expiredListAndReviewRejectionVisible": true,
+      "confirmationOpened": false,
+      "warningRetainedDuringRead": true,
+      "manualReadMethodRecheckAndRequery": true,
+      "freshOfficialListAndAddEntryVisible": true,
+      "oldWarningAndExpiryLabelAbsentAfterSuccess": true,
+      "configUnchanged": true,
+      "testEntryAbsent": true,
+      "configurationWrites": 0,
+      "newModelRequests": 0
+    },
+    "controlled": {
+      "automaticTouchCannotRecreateRemovedConversation": true,
+      "explicitImportCanRestoreConversation": true,
+      "nativeNotificationQueueKeepsLatestClickForSameConversation": true,
+      "previousWriteResultAndUnknownAreRetained": true,
+      "realConversationDeleted": false,
+      "osNotificationDeliveredOrClicked": false
+    },
+    "oldWorktreeUnknownUnchanged": true
+  },
+  "localReceiptRoot": "output/2026-11-09-six-hour-stage2",
+  "localReceiptSha256": {
+    "sixth-engineering/result.json": "7807b3207e75330fa3478e6f05f6c33523529ed1f6be1080feb2aa4ef5ce3c72",
+    "formal-sixth/candidate.json": "246419a1c783eb40793d61e92e3168ec72d4516f1b804cb2ecaa5c3bd48639a6",
+    "formal-sixth/candidate-review.json": "c109c69093bd4a932f8244510fec4f11256ad909ee93678a88a74ba42e632112",
+    "formal-sixth/normal-exit.json": "153ff0ac1a9c5ecbc56f03bc84929e538f4da0dc91d2fbdbee648c4962ba7549",
+    "formal-sixth/install.json": "40337d843bfcaff505411dfcf822a2839175e5c7381ce899055b9721d16af6e8",
+    "formal-sixth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "formal-sixth/inventory-baseline.json": "d31a3e816f45f24dba7ca1ee9b9f289da5b0f0fb19706756d3eb6ef3d896cafc",
+    "formal-sixth/inventory-observation.json": "141347644a72efff426663138f97bf0766f19fc669b717d1e60d6e26562870e6"
+  }
+}
