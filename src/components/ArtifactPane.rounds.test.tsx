@@ -20,6 +20,7 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 import { ArtifactPane } from "./ArtifactPane";
+import { FileArtifactView } from "./FileArtifactView";
 import { ThreadView } from "./ThreadView";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { STRINGS } from "../runtime/strings";
@@ -155,6 +156,7 @@ function select(s: ThreadState, value: string) {
 }
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   vi.mocked(invoke).mockReset().mockResolvedValue(null);
 });
 
@@ -249,6 +251,176 @@ it("opens each step's own version of the same path and returns to its containing
   (back.props.onClick as () => void)();
   expect(s.artifactPaneTarget?.roundId).toBe(ended.id);
   expect(html(s)).toContain(W.roundContent);
+});
+
+it("keeps both same-path fragments selectable and copyable in one step, with the latest fragment in wider scopes", async () => {
+  const s = state();
+  const clipboard = vi.fn().mockResolvedValue(undefined);
+  vi.stubGlobal("navigator", { clipboard: { writeText: clipboard } });
+  const copySelected = async () => {
+    const view = pane(s).find((node) => node.type === FileArtifactView)!;
+    const copy = capture(() =>
+      (view.type as (props: Record<string, unknown>) => ReactNode)(view.props),
+    ).find((node) => node.props["aria-label"] === W.copyDiff)!;
+    await (copy.props.onClick as () => Promise<void>)();
+  };
+  applyUpdate(s, {
+    sessionUpdate: "tool_call",
+    toolCallId: "two-fragments",
+    kind: "edit",
+    status: "completed",
+    content: [
+      {
+        type: "diff",
+        path: "/p/shared.md",
+        oldText: "FIRST-OLD",
+        newText: "FIRST-NEW",
+      },
+      {
+        type: "diff",
+        path: "/p/shared.md",
+        oldText: "SECOND-OLD",
+        newText: "SECOND-NEW",
+      },
+    ],
+  });
+  const step = s.items.at(-1)!;
+  applyTurnEnd(s, { stopReason: "end_turn" });
+  const ended = s.items.at(-1) as Settled;
+
+  pointerClick(toolLink(s, step.id)!);
+  const [first, second] = options(s);
+  expect(options(s)).toHaveLength(2);
+  expect(first).not.toBe(second);
+  expect(html(s)).toContain("FIRST-NEW");
+  expect(html(s)).not.toContain("SECOND-NEW");
+  expect(html(s)).toContain(W.reportFragment(1));
+  expect(html(s)).toContain(W.reportFragment(2));
+  await copySelected();
+  select(s, second as string);
+  expect(html(s)).toContain("SECOND-OLD");
+  expect(html(s)).toContain("SECOND-NEW");
+  expect(html(s)).not.toContain("FIRST-NEW");
+  await copySelected();
+  expect(clipboard.mock.calls).toEqual([
+    [`${W.diffFragment} · ${W.diffCounts(1, 1)}\n-FIRST-OLD\n+FIRST-NEW`],
+    [`${W.diffFragment} · ${W.diffCounts(1, 1)}\n-SECOND-OLD\n+SECOND-NEW`],
+  ]);
+  select(s, first as string);
+  expect(html(s)).toContain("FIRST-OLD");
+  expect(html(s)).toContain("FIRST-NEW");
+  expect(html(s)).toContain(W.fragmentNote);
+
+  for (const open of [
+    () => roundClick(s, ended)(),
+    () => threads.openArtifactPane(s.key),
+  ]) {
+    open();
+    expect(options(s)).toEqual(["file:/p/shared.md"]);
+    expect(html(s)).toContain("SECOND-NEW");
+    expect(html(s)).not.toContain("FIRST-NEW");
+  }
+
+  pointerClick(toolLink(s, step.id)!);
+  select(s, second as string);
+  applyUpdate(s, {
+    sessionUpdate: "tool_call_update",
+    toolCallId: "two-fragments",
+    title: "Same report, updated title",
+  });
+  expect(html(s)).toContain("SECOND-NEW");
+
+  applyUpdate(s, {
+    sessionUpdate: "tool_call_update",
+    toolCallId: "two-fragments",
+    content: [
+      {
+        type: "diff",
+        path: "/p/shared.md",
+        oldText: "SECOND-OLD",
+        newText: "SECOND-NEW",
+      },
+      {
+        type: "diff",
+        path: "/p/shared.md",
+        oldText: "FIRST-OLD",
+        newText: "FIRST-NEW",
+      },
+    ],
+  });
+  expect(html(s)).toContain(W.stepFileUnavailable);
+  expect(html(s)).not.toContain("FIRST-NEW");
+  expect(html(s)).not.toContain("SECOND-NEW");
+  const [, newFirst] = options(s);
+  select(s, newFirst as string);
+  expect(html(s)).toContain("SECOND-NEW");
+
+  applyUpdate(s, {
+    sessionUpdate: "tool_call_update",
+    toolCallId: "two-fragments",
+    content: [
+      {
+        type: "diff",
+        path: "/p/shared.md",
+        oldText: "FIRST-OLD",
+        newText: "FIRST-NEW",
+      },
+    ],
+  });
+  expect(html(s)).toContain(W.stepFileUnavailable);
+  expect(html(s)).not.toContain("FIRST-NEW");
+  const [, onlyFile] = options(s);
+  select(s, onlyFile as string);
+  expect(html(s)).toContain("FIRST-NEW");
+});
+
+it("opens the exact file named by a reported source in a multi-file step", () => {
+  const s = state();
+  applyUpdate(s, {
+    sessionUpdate: "tool_call",
+    toolCallId: "multi-file",
+    kind: "edit",
+    status: "completed",
+    locations: [{ path: "/p/location-only.md" }],
+    content: [
+      {
+        type: "diff",
+        path: "/p/alpha.md",
+        oldText: null,
+        newText: "ALPHA-CONTENT",
+      },
+      {
+        type: "diff",
+        path: "/p/beta.md",
+        oldText: null,
+        newText: "BETA-CONTENT",
+      },
+    ],
+  });
+  const step = s.items.at(-1)!;
+  const openSource = (path: string) => {
+    threads.openArtifactPane(s.key);
+    const entry = reportedArtifactFiles(s, null)!.find(
+      (file) => file.path === path,
+    )!;
+    const list = pane(s).find((node) => node.type === ReportedFilesList)!;
+    (list.props.onOpenSource as (entry: unknown, origin: unknown) => void)(
+      entry,
+      entry.origins[0],
+    );
+    expect(s.artifactPaneTarget?.roundId).toBe(step.id);
+  };
+
+  openSource("/p/beta.md");
+  expect(html(s)).toContain("BETA-CONTENT");
+  expect(html(s)).not.toContain("ALPHA-CONTENT");
+  openSource("/p/location-only.md");
+  expect(html(s)).toContain(W.stepFileUnavailable);
+  expect(html(s)).not.toContain("ALPHA-CONTENT");
+  expect(html(s)).not.toContain("BETA-CONTENT");
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([name]) => name.startsWith("file_")),
+  ).toEqual([]);
 });
 
 it("uses neutral file selection hints for input-derived content in all, round and step scopes", () => {

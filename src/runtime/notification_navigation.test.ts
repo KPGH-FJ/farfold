@@ -6,10 +6,12 @@ async function settle() {
 }
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((yes) => {
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((yes, no) => {
     resolve = yes;
+    reject = no;
   });
-  return { promise, resolve };
+  return { promise, resolve, reject };
 }
 it("listens before consuming startup clicks and only selects the latest existing key", async () => {
   const order: string[] = [];
@@ -73,4 +75,46 @@ it("ignores stale/malformed targets and late delivery after UI disposal", async 
     close();
   }
   expect(select).not.toHaveBeenCalled();
+});
+
+it.each(["read", "navigation"])(
+  "keeps a new explicit wake when the prior notification %s fails",
+  async (failure) => {
+    const blocked = deferred<never>();
+    let wake!: () => void;
+    const take = vi.fn().mockResolvedValue(["later"]);
+    if (failure === "read") take.mockReturnValueOnce(blocked.promise);
+    else take.mockResolvedValueOnce(["earlier"]);
+    const select = vi.fn();
+    if (failure === "navigation") select.mockReturnValueOnce(blocked.promise);
+    const stop = await notificationNavigation(select, {
+      listen: async (callback) => {
+        wake = callback;
+        return () => {};
+      },
+      take,
+    });
+    await settle();
+    wake();
+    blocked.reject(new Error("old notification unavailable"));
+    await settle();
+    expect(take).toHaveBeenCalledTimes(2);
+    expect(select.mock.calls).toEqual(
+      failure === "read" ? [["later"]] : [["earlier"], ["later"]],
+    );
+    stop();
+  },
+);
+
+it("does not retry a failed read without another explicit activation", async () => {
+  const take = vi.fn().mockRejectedValue(new Error("unavailable"));
+  const select = vi.fn();
+  const stop = await notificationNavigation(select, {
+    listen: async () => () => {},
+    take,
+  });
+  await settle();
+  expect(take).toHaveBeenCalledOnce();
+  expect(select).not.toHaveBeenCalled();
+  stop();
 });

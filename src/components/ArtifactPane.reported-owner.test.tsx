@@ -236,6 +236,7 @@ it("source navigation is exact and remains passive", () => {
   expect(spy).toHaveBeenCalledExactlyOnceWith(
     props.thread.key,
     props.thread.items[0].id,
+    `file:${value.path}`,
   );
   expect(opened()).toBeUndefined();
 });

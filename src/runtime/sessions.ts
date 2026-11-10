@@ -69,7 +69,7 @@ import {
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { checkDesktopNotifications } from "./desktop_notifications";
 import { paneCards } from "./artifacts";
-import { artifactPaneCards } from "./artifact_view";
+import { canSelectArtifact } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
 import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
@@ -1145,10 +1145,14 @@ class ThreadsStore {
 
   /** Round entry points replace their target; the top-level entry keeps its
    * own manual choice. These references last only as long as the projection. */
-  openArtifactPane(key: string, roundId?: string): void {
+  openArtifactPane(
+    key: string,
+    roundId?: string,
+    selected: string | null = null,
+  ): void {
     const s = this.threads.get(key);
     if (!s) return;
-    s.artifactPaneTarget = roundId ? { roundId, selected: null } : null;
+    s.artifactPaneTarget = roundId ? { roundId, selected } : null;
     s.artifactPaneOpen = true;
     this.emit();
   }
@@ -1156,15 +1160,7 @@ class ThreadsStore {
   selectArtifact(key: string, selected: string, roundId: string | null): void {
     const s = this.threads.get(key);
     if (!s || (s.artifactPaneTarget?.roundId ?? null) !== roundId) return;
-    const cards = artifactPaneCards(s, roundId);
-    if (
-      !cards?.some((card) =>
-        card.kind === "diff"
-          ? `file:${card.path}` === selected
-          : selected === "output",
-      )
-    )
-      return;
+    if (!canSelectArtifact(s, roundId, selected)) return;
     if (s.artifactPaneTarget) s.artifactPaneTarget.selected = selected;
     else s.artifactPaneSelection = selected;
     this.emit();

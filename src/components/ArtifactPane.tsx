@@ -43,7 +43,7 @@ import {
   SidebarSimpleIcon,
 } from "@phosphor-icons/react";
 import {
-  artifactFiles,
+  artifactFileChoices,
   artifactPaneCards,
   selectedArtifactFile,
 } from "../runtime/artifact_view";
@@ -231,7 +231,12 @@ export function ArtifactPane({
       !isReportedArtifactCurrent(thread, roundId, entry)
     )
       return;
-    threads.openArtifactPane(thread.key, origin.toolItemId);
+    retirePicker();
+    threads.openArtifactPane(
+      thread.key,
+      origin.toolItemId,
+      `file:${entry.path}`,
+    );
   };
   const currentFile =
     openedFile?.taskKey === thread.key &&
@@ -367,8 +372,8 @@ export function ArtifactPane({
   const [outputFilter, setOutputFilter] = useState({ scope: "", value: "all" });
   const filter =
     outputFilter.scope === outputScope ? outputFilter.value : "all";
-  const stepTarget =
-    thread.items.find((item) => item.id === roundId)?.kind === "tool";
+  const scope = thread.items.find((item) => item.id === roundId);
+  const stepTarget = scope?.kind === "tool";
   const containingRound = stepTarget
     ? thread.items.find(
         (item) =>
@@ -379,7 +384,7 @@ export function ArtifactPane({
   const scopedCards = artifactPaneCards(thread, roundId);
   const cards = scopedCards ?? [];
   const reportedFiles = reportedArtifactFiles(thread, roundId);
-  const files = artifactFiles(cards);
+  const files = artifactFileChoices(cards, scope);
   const outputs = cards.filter((card) => card.kind !== "diff");
   const visibleOutputs = outputs.filter(
     (card) =>
@@ -418,8 +423,11 @@ export function ArtifactPane({
   const selected = thread.artifactPaneTarget
     ? thread.artifactPaneTarget.selected
     : thread.artifactPaneSelection;
-  const file = selectedArtifactFile(files, selected);
-  const value = file ? `file:${file.path}` : "output";
+  const choice = selectedArtifactFile(files, selected, stepTarget);
+  const file = choice?.card;
+  const missingFile =
+    stepTarget && selected !== null && selected !== "output" && !file;
+  const value = choice?.key ?? (missingFile ? "" : "output");
   const fileSelector = (
     <label
       className="artifact-file-picker"
@@ -438,11 +446,17 @@ export function ArtifactPane({
           threads.selectArtifact(thread.key, event.target.value, roundId);
         }}
       >
-        {files.map((card) => (
-          <option key={card.path} value={`file:${card.path}`}>
+        {missingFile && (
+          <option value="" disabled>
+            {W.stepFileUnavailable}
+          </option>
+        )}
+        {files.map(({ key, card }) => (
+          <option key={key} value={key}>
             {card.path.startsWith(`${thread.cwd}/`)
               ? card.path.slice(thread.cwd.length + 1)
               : card.path}
+            {card.fragment && ` · ${W.reportFragment(card.fragment.number)}`}
           </option>
         ))}
         {outputs.length > 0 && <option value="output">{W.outputChoice}</option>}
@@ -645,7 +659,7 @@ export function ArtifactPane({
         (file ? (
           <FileArtifactView
             feedbackDestination={contentFeedbackDestination}
-            key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
+            key={`${thread.key}:${roundId ?? "all"}:${value}`}
             card={file}
             threadKey={thread.key}
             workingDirectory={thread.cwd}
@@ -707,10 +721,17 @@ export function ArtifactPane({
                     : STRINGS.artifacts.empty}
                 </div>
               )}
-              {cards.length > 0 && visibleOutputs.length === 0 && (
+              {missingFile ? (
                 <div className="a-empty" role="status">
-                  {O.empty}
+                  {W.stepFileUnavailable}
                 </div>
+              ) : (
+                cards.length > 0 &&
+                visibleOutputs.length === 0 && (
+                  <div className="a-empty" role="status">
+                    {O.empty}
+                  </div>
+                )
               )}
               {visibleOutputs.map((card, index) => (
                 <CommandCard key={index} card={card} />

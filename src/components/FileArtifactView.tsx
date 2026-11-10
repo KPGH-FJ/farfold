@@ -64,13 +64,23 @@ async function feedbackContentId({
   scope,
   oldText,
   newText,
-}: Pick<FileArtifact, "source" | "scope" | "oldText" | "newText">) {
-  const bytes = new TextEncoder().encode(
-    JSON.stringify([source, scope, oldText, newText]),
-  );
+  fragmentToolCallId,
+  fragmentNumber,
+}: Pick<FileArtifact, "source" | "scope" | "oldText" | "newText"> & {
+  fragmentToolCallId?: string;
+  fragmentNumber?: number;
+}) {
+  const identity = [source, scope, oldText, newText];
+  const isNumberedFragment =
+    fragmentNumber !== undefined && fragmentToolCallId !== undefined;
+  if (isNumberedFragment)
+    identity.push(fragmentToolCallId, String(fragmentNumber));
+  const bytes = new TextEncoder().encode(JSON.stringify(identity));
   const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
   const hex = Array.from(hash, (byte) => byte.toString(16).padStart(2, "0"));
-  return `reported-sha256-v1:${hex.join("")}`;
+  return isNumberedFragment
+    ? `reported-fragment-sha256-v1:${fragmentNumber}:${hex.join("")}`
+    : `reported-sha256-v1:${hex.join("")}`;
 }
 const PAGE_LINES = 400;
 
@@ -364,9 +374,31 @@ export function FileArtifactView({
   );
   const [requestedMode, setMode] = useState<Mode>("diff");
   const { path, source, scope, oldText, newText } = card;
+  const fragmentToolCallId = card.fragment?.toolCallId;
+  const fragmentNumber = card.fragment?.number;
   const feedbackOwner = useMemo(
-    () => ({ threadKey, path, source, scope, oldText, newText, active }),
-    [threadKey, path, source, scope, oldText, newText, active],
+    () => ({
+      threadKey,
+      path,
+      source,
+      scope,
+      oldText,
+      newText,
+      active,
+      fragmentToolCallId,
+      fragmentNumber,
+    }),
+    [
+      threadKey,
+      path,
+      source,
+      scope,
+      oldText,
+      newText,
+      active,
+      fragmentToolCallId,
+      fragmentNumber,
+    ],
   );
   const latestFeedbackOwner = useRef(feedbackOwner);
   latestFeedbackOwner.current = feedbackOwner;

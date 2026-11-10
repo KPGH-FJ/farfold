@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { applyUpdate, freshThreadState } from "./sessions";
 import { paneCards } from "./artifacts";
 import {
+  artifactFileChoices,
   artifactFiles,
   canPreviewHtml,
   splitDiffRows,
@@ -134,9 +135,10 @@ describe("real file reports", () => {
       last,
     ]);
     expect(files).toEqual([last]);
-    expect(selectedArtifactFile(files, "file:output")).toBe(last);
-    expect(selectedArtifactFile(files, "output")).toBeNull();
-    expect(selectedArtifactFile(files, null)).toBe(last);
+    const choices = artifactFileChoices(files);
+    expect(selectedArtifactFile(choices, "file:output")?.card).toBe(last);
+    expect(selectedArtifactFile(choices, "output")).toBeNull();
+    expect(selectedArtifactFile(choices, null)?.card).toBe(last);
   });
 });
 

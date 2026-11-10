@@ -26,15 +26,21 @@ export async function notificationNavigation(
     try {
       while (dirty && !closed) {
         dirty = false;
-        const pending = await port.take();
-        if (!closed && Array.isArray(pending)) {
-          const key = pending.at(-1);
-          if (typeof key === "string" && key.length > 0 && key.length <= 16384)
-            await select(key);
+        try {
+          const pending = await port.take();
+          if (!closed && Array.isArray(pending)) {
+            const key = pending.at(-1);
+            if (
+              typeof key === "string" &&
+              key.length > 0 &&
+              key.length <= 16384
+            )
+              await select(key);
+          }
+        } catch {
+          // Only a new activation during this attempt can drive another drain.
         }
       }
-    } catch {
-      // No automatic retry or reconstruction of a missing conversation.
     } finally {
       draining = false;
     }

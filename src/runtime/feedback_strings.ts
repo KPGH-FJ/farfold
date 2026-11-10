@@ -10,6 +10,7 @@ import type {
   PptxSlideAnchor,
 } from "./file_feedback_anchor";
 import { formatVisualAreaPercent } from "./visual_area_coordinates";
+import { WORKSPACE_STRINGS as W } from "./workspace_strings";
 
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
@@ -47,6 +48,13 @@ export const FEEDBACK_STRINGS = {
 } as const;
 
 export function fileFeedbackText(entry: SavedFileFeedback): string {
+  const fragment = /^reported-fragment-sha256-v1:([1-9]\d*):[0-9a-f]{64}$/.exec(
+    entry.contentId ?? "",
+  );
+  const report =
+    entry.scope === "fragment" && fragment
+      ? `，${W.reportFragment(Number(fragment[1]))}`
+      : "";
   const side = entry.selection?.side === "before" ? "修改前" : "修改后";
   const lines = entry.selection
     ? `${entry.selection.line}${entry.selection.endLine && entry.selection.endLine !== entry.selection.line ? `–${entry.selection.endLine}` : ""}`
@@ -86,5 +94,5 @@ export function fileFeedbackText(entry: SavedFileFeedback): string {
     entry.anchor?.kind === "pptx-slide" ||
     entry.anchor?.kind === "image-area" ||
     entry.anchor?.kind === "pdf-area";
-  return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
+  return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${report}${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
 }

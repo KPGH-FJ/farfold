@@ -84,6 +84,7 @@ export const WORKSPACE_STRINGS = {
   fileReported: "显示 Agent 报告的差异或文件内容，不代表文件当前状态。",
   fileInput: "显示 Agent 提交的拟写入内容；是否实际写入以步骤结果为准。",
   fragmentNote: "按片段显示，行号从所示内容开头计数，不代表文件中的行号。",
+  reportFragment: (number: number) => `报告片段 ${number}`,
   previewNote:
     "仅预览 Agent 返回的内容，不代表文件当前状态；不运行脚本或加载外部资源。",
   incompleteHtml: "未返回完整页面，可查看源码和差异。",
@@ -133,6 +134,7 @@ export const WORKSPACE_STRINGS = {
   roundContent: "本轮产物",
   stepContent: "这一步的内容",
   chooseStepContent: "仅显示这一步的内容",
+  stepFileUnavailable: "这一步没有可查看的所选差异。",
   showRoundContent: "查看本轮全部内容",
   allArtifacts: "查看会话全部产物",
   roundArtifactsUnavailable: "无法定位这次产物，请从会话产物中重新选择。",

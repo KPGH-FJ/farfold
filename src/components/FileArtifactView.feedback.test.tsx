@@ -164,6 +164,39 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+it("keeps identical reported bytes in different fragments from sharing a line opinion", async () => {
+  const first = {
+    ...card("IDENTICAL"),
+    oldText: "SAME OLD",
+    scope: "fragment" as const,
+    fragment: { toolCallId: "one-edit", number: 1 },
+  };
+  const second = { ...first, fragment: { ...first.fragment, number: 2 } };
+  await write(first, "FIRST FRAGMENT OPINION");
+
+  const other = await openVersion(second);
+  expect(
+    other.find((node) => node.type === FileDifference)?.props.selection,
+  ).toBeNull();
+  expect(
+    other.find((node) => node.type === "textarea")?.props.value ?? "",
+  ).toBe("");
+  await write(second, "SECOND FRAGMENT OPINION", "before");
+  const revisited = await openVersion(first);
+  expect(revisited.find((node) => node.type === "textarea")?.props.value).toBe(
+    "FIRST FRAGMENT OPINION",
+  );
+  expect(
+    Object.values(fileFeedbackDrafts.entries(key)).map((entry) => entry.text),
+  ).toEqual(["FIRST FRAGMENT OPINION", "SECOND FRAGMENT OPINION"]);
+  await submit(second);
+  const inserted = composerDrafts.read(`session:${key}`).text;
+  expect(inserted).toContain(W.reportFragment(2));
+  expect(inserted).toContain("修改前片段第 1 行");
+  expect(inserted).toContain("SECOND FRAGMENT OPINION");
+  expect(inserted).not.toContain("FIRST FRAGMENT OPINION");
+});
+
 it("keeps the opinions and line selections for distinct reported contents with colliding old IDs separate", async () => {
   const a = {
     ...card(""),
