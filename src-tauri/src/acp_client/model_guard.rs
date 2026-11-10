@@ -62,6 +62,7 @@ fn issue(
 
 #[derive(Clone)]
 pub(crate) struct ModelGuard {
+    dialect: super::session_config::Dialect,
     current: Snapshot,
     expected: Snapshot,
     model_known: bool,
@@ -79,6 +80,15 @@ pub(crate) struct ModelGuard {
 }
 impl ModelGuard {
     pub(crate) fn new(options: &Value, recorded: Option<&Value>, restored: bool) -> Self {
+        Self::for_connection(options, recorded, restored, Default::default())
+    }
+
+    pub(crate) fn for_connection(
+        options: &Value,
+        recorded: Option<&Value>,
+        restored: bool,
+        dialect: super::session_config::Dialect,
+    ) -> Self {
         let (current, _, _) = format::observe(options, &Snapshot::default());
         let baseline = if restored {
             format::baseline(recorded, &current, options)
@@ -91,8 +101,9 @@ impl ModelGuard {
             }
         };
         let (current, invalid, declared_ids) = format::observe(options, &baseline.snapshot);
-        let explicit_model = explicit_model(options, &current);
+        let explicit_model = explicit_model(options, &current, dialect);
         Self {
+            dialect,
             current,
             expected: baseline.snapshot,
             model_known: baseline.model_known,
@@ -111,7 +122,7 @@ impl ModelGuard {
     }
     pub(crate) fn observe(&mut self, options: &Value) {
         (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
-        self.explicit_model = explicit_model(options, &self.current);
+        self.explicit_model = explicit_model(options, &self.current, self.dialect);
     }
     pub(crate) fn needs_model_record(&self) -> bool {
         self.empty_existing_record
@@ -124,7 +135,8 @@ impl ModelGuard {
 
     pub(crate) fn can_record_model(&self, modern_options: Option<&Value>) -> bool {
         self.needs_model_record()
-            && modern_options.is_some_and(|options| explicit_model(options, &self.current))
+            && modern_options
+                .is_some_and(|options| explicit_model(options, &self.current, self.dialect))
     }
     pub(crate) fn is_established(&self) -> bool {
         self.established
@@ -136,6 +148,7 @@ impl ModelGuard {
         let Some(current) = self.current.choices.iter().find(|choice| choice.id == id) else {
             if self.protected_ids().iter().any(|saved| saved == id)
                 || matches!(id, "model" | "thought_level" | "reasoning_effort")
+                || self.dialect.is_vibe_thinking(id)
             {
                 return Err("无法读取当前模型或思考选择，请检查后重试".into());
             }
@@ -211,6 +224,9 @@ impl ModelGuard {
         self.change_unknown = true;
         self.pending = None;
         self.authorized_change = None;
+    }
+    pub(crate) fn blocks_vibe_restore(&self) -> bool {
+        self.dialect.is_vibe_family() && self.change_unknown
     }
     pub(crate) fn protected_ids(&self) -> Vec<String> {
         self.declared_ids
@@ -374,14 +390,30 @@ fn empty_existing_record() -> Value {
     json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[]})
 }
 
-fn explicit_model(options: &Value, snapshot: &Snapshot) -> bool {
-    let [choice] = snapshot.choices.as_slice() else {
+fn explicit_model(
+    options: &Value,
+    snapshot: &Snapshot,
+    dialect: super::session_config::Dialect,
+) -> bool {
+    let mut models = snapshot
+        .choices
+        .iter()
+        .filter(|choice| choice.category == "model");
+    let Some(choice) = models.next() else {
         return false;
     };
-    if choice.category != "model"
+    if models.next().is_some()
         || choice.value.trim().is_empty()
         || choice.id == super::session_config::LEGACY_MODEL_ID
     {
+        return false;
+    }
+    let reviewed_vibe_pair = dialect == super::session_config::Dialect::Vibe
+        && snapshot.choices.len() == 2
+        && snapshot.choices.iter().any(|entry| {
+            entry.id == super::session_config::THINKING_ID && entry.category == "thought_level"
+        });
+    if snapshot.choices.len() != 1 && !reviewed_vibe_pair {
         return false;
     }
     fn matching_choices(entries: &[Value], value: &str) -> Option<bool> {

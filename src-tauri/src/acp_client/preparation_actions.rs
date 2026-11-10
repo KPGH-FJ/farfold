@@ -64,6 +64,29 @@ fn matching_registry_installation(row: &AgentRow, item: &Installation, data: &Pa
         && crate::agent_discovery::validate_executable_path(&row.command).is_ok()
 }
 
+fn recorded_installations(store: &MetaStore) -> Result<Vec<Installation>, String> {
+    // Read the existing inventory without granting ownership or writing it.
+    Ok(store
+        .get_setting("installations.v1")?
+        .map(serde_json::from_value)
+        .transpose()
+        .map_err(|_| "无法核对配置程序来源，请重新查看")?
+        .unwrap_or_default())
+}
+
+pub(super) fn has_registry_installation(
+    store: &MetaStore,
+    row: &AgentRow,
+    data: &Path,
+) -> Result<bool, String> {
+    Ok(recorded_installations(store)?
+        .iter()
+        .filter(|item| matching_registry_installation(row, item, data))
+        .take(2)
+        .count()
+        == 1)
+}
+
 fn exact_file(path: &Path) -> bool {
     path.symlink_metadata()
         .is_ok_and(|metadata| metadata.is_file())
@@ -168,13 +191,7 @@ pub(crate) fn actions_for(
     let Some(declaration) = super::recipes::terminal_action_declaration(row) else {
         return Ok(vec![]);
     };
-    // Read the existing inventory, without granting ownership or writing it.
-    let items: Vec<Installation> = store
-        .get_setting("installations.v1")?
-        .map(serde_json::from_value)
-        .transpose()
-        .map_err(|_| "无法核对配置程序来源，请重新查看")?
-        .unwrap_or_default();
+    let items = recorded_installations(store)?;
     let mut args = match declaration.launch {
         TerminalActionLaunch::Native { .. } => {
             if !items

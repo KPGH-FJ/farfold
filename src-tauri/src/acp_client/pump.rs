@@ -118,6 +118,7 @@ pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicit
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
+    pub(crate) configuration_dialect: super::session_config::Dialect,
     pub(crate) live_status_enabled: bool,
     pub(crate) workspace_access: Arc<super::workspace_access::Availability>,
     pub(crate) async_tasks_supported: Arc<AtomicBool>,
@@ -748,8 +749,8 @@ async fn session_pump(
                     || initial.reply.as_ref().is_none_or(|reply| reply.is_closed()) {
                     Err("恢复结果尚未确认，请重新检查此对话".to_string())
                 } else if let Err(error) = source { Err(error) }
-                else if purpose == super::open_purpose::OpenPurpose::SearchReadOnly { Ok(None) }
-                else { restore_config::Plan::new(initial, &config_store) };
+                else if purpose == super::open_purpose::OpenPurpose::SearchReadOnly || model_guard.blocks_vibe_restore() { Ok(None) }
+                else { restore_config::Plan::new(initial, &config_store, ops.configuration_dialect) };
                 let plan = match plan {
                     Ok(plan) => plan,
                     Err(error) => {
@@ -949,7 +950,7 @@ async fn session_pump(
                                     outcome = Err(error);
                                 }
                             } else { model_guard.observe(options); }
-                        } else if choice.is_some() && completed.started() {
+                        } else if (choice.is_some() || configuration.has_invalid_options()) && completed.started() {
                             model_guard.change_unknown();
                         }
                         if choice.is_some() && outcome.is_ok() {

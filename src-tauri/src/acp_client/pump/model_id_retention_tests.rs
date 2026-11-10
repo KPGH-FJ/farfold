@@ -33,6 +33,7 @@ fn drain(initial: Value, snapshots: Vec<Value>) -> Observed {
     let forms: PendingElicitations = Default::default();
     let ops = SessionOps {
         live_status_enabled: false,
+        configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),

@@ -83,6 +83,7 @@ async fn exercise_kind(kind: &str, mode: &str, expected_writes: usize) {
             let forms: PendingElicitations = Default::default();
             let ops = SessionOps {
                 live_status_enabled: false,
+                configuration_dialect: Default::default(),
                 workspace_access: crate::acp_client::workspace_access::Availability::new(None),
                 prompt_escrow: Default::default(),
                 async_tasks_supported: Arc::new(AtomicBool::new(false)),

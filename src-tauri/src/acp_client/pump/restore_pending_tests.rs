@@ -52,9 +52,13 @@ async fn exercise(mode: &str, expected_polls: usize) {
         config_options_modern: true,
         warnings: Vec::new(),
     });
-    let mut plan = super::restore_config::Plan::new(opening.as_ref().unwrap(), &config_store)
-        .unwrap()
-        .unwrap();
+    let mut plan = super::restore_config::Plan::new(
+        opening.as_ref().unwrap(),
+        &config_store,
+        Default::default(),
+    )
+    .unwrap()
+    .unwrap();
     let first = plan.next(&options).unwrap().unwrap();
     assert_eq!(first.id, "model");
     let mut configuration = SessionConfig::from_response(&json!({"configOptions":options}));
@@ -122,6 +126,7 @@ async fn exercise(mode: &str, expected_polls: usize) {
     let forms: super::PendingElicitations = Default::default();
     let ops = super::SessionOps {
         live_status_enabled: false,
+        configuration_dialect: Default::default(),
         workspace_access: crate::acp_client::workspace_access::Availability::new(None),
         prompt_escrow: Default::default(),
         async_tasks_supported: Arc::new(AtomicBool::new(false)),

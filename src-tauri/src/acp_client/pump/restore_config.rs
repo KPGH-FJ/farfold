@@ -45,6 +45,7 @@ impl Opening {
 
 pub(crate) struct Plan {
     pub record: Value,
+    required_vibe_thinking: Option<Choice>,
     remaining: VecDeque<Choice>,
     confirmed: Vec<Choice>,
     requested: Option<Choice>,
@@ -54,7 +55,11 @@ pub(crate) struct Plan {
 const UNCONFIRMED: &str = "无法确认此对话已保存的模型或思考选择，请检查后重试";
 
 impl Plan {
-    pub(super) fn new(opening: &Opening, store: &ConfigStore) -> Result<Option<Self>, String> {
+    pub(super) fn new(
+        opening: &Opening,
+        store: &ConfigStore,
+        dialect: crate::acp_client::session_config::Dialect,
+    ) -> Result<Option<Self>, String> {
         let Some(record) = opening.recorded.as_ref().filter(|_| opening.restored) else {
             return Ok(None);
         };
@@ -105,12 +110,25 @@ impl Plan {
         } else if matches!(source, ServiceRecord::Configured { .. }) {
             return Err("无法确认此对话的 API 模型，请检查原设置".into());
         }
+        let required_vibe_thinking = if dialect.is_vibe_family() {
+            saved
+                .choices
+                .iter()
+                .find(|choice| {
+                    choice.category == "thought_level"
+                        && choice.id == crate::acp_client::session_config::THINKING_ID
+                })
+                .cloned()
+        } else {
+            None
+        };
         let mut choices = saved.choices;
         choices.sort_by(|left, right| {
             (left.category != "model", &left.id).cmp(&(right.category != "model", &right.id))
         });
         Ok(Some(Self {
             record: record.clone(),
+            required_vibe_thinking,
             remaining: choices.into(),
             confirmed: Vec::new(),
             requested: None,
@@ -123,6 +141,12 @@ impl Plan {
     }
 
     fn validate_confirmed(&self, options: &Value) -> Result<(), String> {
+        if let Some(choice) = &self.required_vibe_thinking {
+            let option = declared(options, choice)?;
+            if option["category"] != "thought_level" || !offers(&option["options"], &choice.value) {
+                return Err(UNCONFIRMED.into());
+            }
+        }
         if ModelGuard::new(options, Some(&self.record), true)
             .check()
             .issues

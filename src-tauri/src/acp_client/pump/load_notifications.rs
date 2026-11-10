@@ -95,7 +95,7 @@ impl State {
                 }
                 dispatch = inbox.recv() => {
                     let Some(dispatch) = dispatch else { return load.await; };
-                    self.deferred.observe(&dispatch);
+                    self.deferred.observe(&dispatch, ops.configuration_dialect);
                     observe_failure(&dispatch, &mut self.failures, false);
                     let mut context = DispatchContext {
                         live_status: presentation,

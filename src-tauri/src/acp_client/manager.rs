@@ -542,6 +542,23 @@ impl AcpManager {
             connection_id.clone(),
         );
         let account_query = super::account_launch::reviewed(agent);
+        let managed_vibe = if agent.id == "registry:mistral-vibe" {
+            let verified = if account_query == Some(super::account_query::AccountQuery::Vibe) {
+                let row = agent.clone();
+                let data = self.data_dir.clone();
+                store
+                    .run(move |store| {
+                        super::preparation_actions::has_registry_installation(store, &row, &data)
+                    })
+                    .await
+                    .unwrap_or(false)
+            } else {
+                false
+            };
+            Some(verified)
+        } else {
+            None
+        };
         let workspace_access = super::workspace_access::Availability::new(account_query);
         let identity_read = super::identity_read::Availability::new(account_query);
         let session_tools = super::session_tools::Availability::new(agent);
@@ -550,6 +567,7 @@ impl AcpManager {
         let receive_workspace_access = workspace_access.clone();
         let receive_identity_read = identity_read.clone();
         let ops = SessionOps {
+            configuration_dialect: Default::default(),
             live_status_enabled,
             workspace_access: workspace_access.clone(),
             async_tasks_supported: Arc::new(AtomicBool::new(false)),
@@ -699,6 +717,8 @@ impl AcpManager {
                             return Err(error);
                         }
                     };
+                    let mut ops = ops;
+                    ops.configuration_dialect = super::session_config::Dialect::for_connection(managed_vibe, &init_response);
                     ops.async_tasks_supported.store(super::async_tasks::supported(&init_response.public_json()), Ordering::SeqCst);
                     // A configured service owns this fresh process. Do not
                     // publish ready or admit session work until the official

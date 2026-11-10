@@ -12,12 +12,16 @@ use super::{
 
 pub(crate) const LEGACY_MODEL_ID: &str = "__farfold_legacy_model";
 mod deferred;
+mod vibe;
 pub(crate) use deferred::Deferred;
+pub(crate) use vibe::Dialect;
+pub(super) use vibe::THINKING_ID;
 
 const UNCONFIRMED: &str = "Agent 未确认所选模型，请检查后重试";
 
 #[derive(Clone, Default)]
 pub(crate) struct SessionConfig {
+    dialect: Dialect,
     options: Option<Value>,
     models: Option<Value>,
     revision: u64,
@@ -49,10 +53,19 @@ fn allows_legacy(options: Option<&Value>) -> bool {
 }
 
 impl SessionConfig {
+    #[cfg(test)]
     pub(crate) fn from_response(response: &Value) -> Self {
+        Self::from_connection(response, Dialect::default())
+    }
+
+    pub(crate) fn from_connection(response: &Value, dialect: Dialect) -> Self {
         Self {
-            options: response.get("configOptions").cloned(),
+            options: response
+                .get("configOptions")
+                .cloned()
+                .map(|options| dialect.options(options)),
             models: response.get("models").cloned(),
+            dialect,
             ..Self::default()
         }
     }
@@ -129,6 +142,21 @@ impl SessionConfig {
                 return Err(UNCONFIRMED.into());
             }
         } else {
+            if self.dialect.is_vibe_thinking(id)
+                && !self
+                    .modern_options()
+                    .and_then(Value::as_array)
+                    .is_some_and(|entries| {
+                        entries.iter().any(|entry| {
+                            entry["id"] == id
+                                && entry["options"].as_array().is_some_and(|options| {
+                                    options.iter().any(|option| option["value"] == *value)
+                                })
+                        })
+                    })
+            {
+                return Err(UNCONFIRMED.into());
+            }
             parse_config_value(value)?;
         }
         Ok(ConfigRequest {
@@ -188,7 +216,10 @@ impl SessionConfig {
             if !reply.is_array() {
                 return Err(UNCONFIRMED.into());
             }
-            self.options = Some(reply);
+            self.options = Some(self.dialect.options(reply));
+            if self.has_invalid_options() {
+                return Err(UNCONFIRMED.into());
+            }
         }
         self.options().ok_or_else(|| UNCONFIRMED.into())
     }
@@ -236,7 +267,10 @@ impl SessionConfig {
         let update = Self::configuration_update(dispatch)?;
         match update.get("sessionUpdate").and_then(Value::as_str) {
             Some("config_option_update") => {
-                self.options = Some(update.get("configOptions").cloned().unwrap_or(Value::Null));
+                self.options = Some(
+                    self.dialect
+                        .options(update.get("configOptions").cloned().unwrap_or(Value::Null)),
+                );
                 if self.has_invalid_options() {
                     self.invalid_options_revision = self.revision + 1;
                 } else {

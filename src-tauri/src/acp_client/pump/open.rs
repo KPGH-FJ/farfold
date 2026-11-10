@@ -217,7 +217,9 @@ pub(crate) async fn open_session_on_connection(
         }
     }
     let mut warnings = Vec::new();
-    let mut configuration = super::super::session_config::SessionConfig::from_response(&response);
+    let dialect = ops.configuration_dialect;
+    let mut configuration =
+        super::super::session_config::SessionConfig::from_connection(&response, dialect);
     let mut config_state = configuration.options();
     let mut permission_guard = super::super::permission_guard::PermissionGuard::new(
         config_store.verified_permission_option,
@@ -235,15 +237,17 @@ pub(crate) async fn open_session_on_connection(
         return Err("恢复后请重新选择并确认权限".into());
     }
     let initial_models = model_ids(config_state.as_ref().unwrap_or(&Value::Null));
-    let protected_ids = super::super::model_guard::ModelGuard::new(
+    let protected_ids = super::super::model_guard::ModelGuard::for_connection(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
+        dialect,
     )
     .protected_ids();
     if resumed
         && config_options.iter().any(|(id, _)| {
             matches!(id.as_str(), "model" | "thought_level" | "reasoning_effort")
+                || dialect.is_vibe_thinking(id)
                 || initial_models.contains(id)
                 || protected_ids.contains(id)
         })
@@ -306,10 +310,11 @@ pub(crate) async fn open_session_on_connection(
         config_store.validate_model(config_state.as_ref().unwrap_or(&Value::Null))?;
     }
     config_store.validate_service().await?;
-    let mut model_guard = super::super::model_guard::ModelGuard::new(
+    let mut model_guard = super::super::model_guard::ModelGuard::for_connection(
         config_state.as_ref().unwrap_or(&Value::Null),
         recorded_config.as_ref(),
         resumed,
+        dialect,
     );
     if configuration.has_invalid_options() {
         model_guard.change_unknown();
@@ -407,7 +412,9 @@ pub(crate) async fn open_session_on_connection(
         .await
         .map_err(|_| "会话未能打开，请重试".to_string())??;
     opening_route.delivered = true;
-    if let Some(options) = &ready.options {
+    if dialect == super::super::session_config::Dialect::Standard
+        && let Some(options) = &ready.options
+    {
         response["configOptions"] = options.clone();
     }
     if let Some(mcp) = mcp.take() {

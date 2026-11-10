@@ -29,14 +29,15 @@ pub(crate) struct Deferred {
     models: HashSet<String>,
 }
 impl Deferred {
-    pub(crate) fn observe(&mut self, dispatch: &Dispatch) {
+    pub(crate) fn observe(&mut self, dispatch: &Dispatch, dialect: Dialect) {
         let Some(update) = SessionConfig::configuration_update(dispatch) else {
             return;
         };
         match update["sessionUpdate"].as_str() {
             Some("config_option_update") => {
                 self.position.options = self.position.options.saturating_add(1);
-                let options = update.get("configOptions").cloned().unwrap_or(Value::Null);
+                let options =
+                    dialect.options(update.get("configOptions").cloned().unwrap_or(Value::Null));
                 if options.is_array() {
                     self.valid_options = Some(self.position);
                 } else {
@@ -159,7 +160,7 @@ mod tests {
                                 expected_ids.extend(crate::acp_client::pump::model_ids(&options));
                                 invalid |= !options.is_array();
                             }
-                            deferred.observe(&event);
+                            deferred.observe(&event, Dialect::Standard);
                         }
                         let (ids, actual_invalid) = deferred.apply(&mut actual);
                         assert_eq!(actual.options(), expected.options(), "prefix {length}");

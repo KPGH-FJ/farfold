@@ -54,6 +54,191 @@ fn stored_choice(store: &MetaStore, row_id: &str, option_id: &str) -> Value {
         .clone()
 }
 
+#[cfg(unix)]
+#[tokio::test(flavor = "multi_thread")]
+async fn official_vibe_thinking_is_protected_through_confirmation_and_restore() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let dir = tempfile::tempdir().unwrap();
+    let cwd = dir.path().canonicalize().unwrap();
+    let install = crate::managed_paths::prepare_agent_parent(&cwd, "registry:mistral-vibe")
+        .unwrap()
+        .join("install-fixture");
+    std::fs::create_dir(&install).unwrap();
+    let peer = install.join("vibe-acp");
+    std::fs::write(
+        &peer,
+        format!(
+            "#!/usr/bin/env python3\n{}",
+            PEER.replace("'reasoning_effort'", "'thinking'")
+                .replace("'thought_level'", "'thinking'")
+                .replace(
+                    "'protocolVersion':1,",
+                    "'protocolVersion':1,'agentInfo':{'name':'@mistralai/mistral-vibe','version':'fixture'},"
+                )
+                .replace(
+                    "if method=='session/load' and os.path.exists(sys.argv[1]):",
+                    "if method=='session/load' and os.path.exists('omit-thinking'):"
+                )
+                .replace(
+                    "   options[1]['options']=[{'value':'high','name':'High'}]",
+                    "   options=options[:1]\n   options[0]['currentValue']='drift'\n   options[0]['options'].append({'value':'drift','name':'Drift'})"
+                )
+                .replace(
+                    " if method=='initialize'",
+                    " with open('calls','a') as out: out.write(str(method)+'\\n')\n if method=='initialize'"
+                )
+                .replace(
+                    "  result={'configOptions':options}",
+                    "  send({'method':'session/update','params':{'sessionId':'proof','update':{'sessionUpdate':'config_option_update','configOptions':options}}})\n  result={'configOptions':options}"
+                )
+        ),
+    )
+    .unwrap();
+    std::fs::set_permissions(&peer, std::fs::Permissions::from_mode(0o700)).unwrap();
+    let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
+    let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
+    let _stop = Stop(manager.clone());
+    let row = AgentRow {
+        id: "registry:mistral-vibe".into(),
+        name: "Fixture".into(),
+        source: "registry".into(),
+        command: peer.to_string_lossy().into_owned(),
+        args: vec![],
+        env: vec![],
+        version: None,
+        handshake: None,
+        created_at: 0,
+        updated_at: 0,
+    };
+    store.insert_agent(&row).unwrap();
+    let (tx, rx) = mpsc::channel();
+    let sink: SessionSink = Arc::new(move |v| {
+        let _ = tx.send(v);
+    });
+    let unverified = manager
+        .open_session(&row, &cwd, None, vec![], sink.clone(), &store)
+        .await
+        .unwrap();
+    assert_eq!(unverified.config_check.status, "blocked");
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    crate::installations::record(&store, &row, &install).unwrap();
+    let first = manager
+        .open_session(&row, &cwd, None, vec![], sink.clone(), &store)
+        .await
+        .unwrap();
+    let protected = json!({"choices":[
+        {"id":"model","category":"model","type":"select","value":"m"},
+        {"id":"thinking","category":"thought_level","type":"select","value":"high"}
+    ]});
+    assert_eq!(first.config_check.current, protected);
+    assert_eq!(first.response["configOptions"][1]["category"], "thinking");
+    assert_eq!(
+        first.config_options.unwrap()[1]["category"],
+        "thought_level"
+    );
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+
+    let empty = json!({"_farfoldConfig":2,"_farfoldService":{"kind":"existing"},"choices":[]});
+    let original = touch_session_row(
+        &store,
+        &row.id,
+        &cwd.to_string_lossy(),
+        "proof",
+        Some("keep title"),
+        Some(empty),
+    )
+    .unwrap();
+    let restored = manager
+        .open_session(
+            &row,
+            &cwd,
+            Some("proof".into()),
+            vec![],
+            sink.clone(),
+            &store,
+        )
+        .await
+        .unwrap();
+    assert_eq!(restored.config_check.status, "confirmation_required");
+    assert_eq!(restored.config_check.current, protected);
+    assert_eq!(
+        store.get_session(&original.id).unwrap(),
+        Some(original.clone())
+    );
+    let accepted = manager
+        .confirm_config_selection(
+            &row.id,
+            &cwd,
+            "proof",
+            protected,
+            Some(restored.connection_id),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(accepted["status"], "ready");
+    assert_eq!(stored_choice(&store, &original.id, "thinking"), "high");
+    let changed = manager
+        .session_set_config(&row.id, &cwd, "proof", "thinking", json!("low"))
+        .await
+        .unwrap();
+    assert_eq!(changed["configCheck"]["status"], "ready");
+    assert_eq!(stored_choice(&store, &original.id, "thinking"), "low");
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    let reopened = manager
+        .open_session(
+            &row,
+            &cwd,
+            Some("proof".into()),
+            vec![],
+            sink.clone(),
+            &store,
+        )
+        .await
+        .unwrap();
+    assert_eq!(reopened.config_check.status, "ready");
+    assert_eq!(reopened.config_check.current["choices"][1]["value"], "low");
+    assert!(rx.try_iter().any(|event| {
+        event["update"]["sessionUpdate"] == "config_option_update"
+            && event["update"]["configOptions"][1]["category"] == "thinking"
+    }));
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    let before = store.get_session(&original.id).unwrap();
+    let prior_calls = std::fs::read_to_string(cwd.join("calls")).unwrap();
+    std::fs::write(cwd.join("omit-thinking"), b"fixture").unwrap();
+    let missing = manager
+        .open_session(
+            &row,
+            &cwd,
+            Some("proof".into()),
+            vec![],
+            sink.clone(),
+            &store,
+        )
+        .await
+        .unwrap();
+    assert_eq!(missing.config_check.status, "blocked");
+    let calls = std::fs::read_to_string(cwd.join("calls")).unwrap();
+    assert!(
+        !calls
+            .strip_prefix(&prior_calls)
+            .unwrap()
+            .lines()
+            .any(|method| { matches!(method, "session/set_config_option" | "session/prompt") })
+    );
+    assert_eq!(store.get_session(&original.id).unwrap(), before);
+    manager.disconnect(&row.id, &cwd).await.unwrap();
+    std::fs::remove_file(cwd.join("omit-thinking")).unwrap();
+    store.set_setting("installations.v1", &json!([])).unwrap();
+    let replaced = manager
+        .open_session(&row, &cwd, Some("proof".into()), vec![], sink, &store)
+        .await
+        .unwrap();
+    assert_eq!(replaced.config_check.status, "blocked");
+    assert_eq!(store.get_session(&original.id).unwrap(), before);
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn missing_model_confirmation_only_updates_the_original_empty_row() {
     let dir = tempfile::tempdir().unwrap();
