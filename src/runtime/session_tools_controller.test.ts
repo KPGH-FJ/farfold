@@ -61,6 +61,89 @@ it("pending only checks the same known operation, and settled permits a new expl
   expect(h.request().operationId).not.toBe(original.operationId);
   expect(h.port.read).toHaveBeenCalledTimes(2);
 });
+it("checks only the original configuration request and leaves the tool scope usable if the method is unavailable", async () => {
+  const h = fixture();
+  expect(h.controller.read(undefined, true)).toBe(false);
+  h.owner.sessionToolInventory = { ...capability, configuration: true };
+  expect(h.controller.read("Owned Report", true)).toBe(false);
+  expect(h.controller.read(undefined, true)).toBe(true);
+  await flush();
+  const request = h.request();
+  expect(request.configuration).toBe(true);
+  h.read.resolve(pending(request));
+  await flush();
+  expect(h.controller.read()).toBe(false);
+  expect(h.controller.check()).toBe(true);
+  await flush();
+  expect(h.port.status).toHaveBeenCalledExactlyOnceWith(request);
+  h.status.resolve(failed(request, true, "unavailable"));
+  await flush();
+  expect(h.controller.blockedFor(true)).toBe("unavailable");
+  expect(h.controller.blockedCode).toBeNull();
+  expect(h.controller.read()).toBe(true);
+  await flush();
+  expect(h.request().configuration).toBeUndefined();
+  expect(h.port.read).toHaveBeenCalledTimes(2);
+});
+it("can read configuration alone when a fresh capability excludes the tool method", async () => {
+  const h = fixture();
+  h.owner.sessionToolInventory = {
+    ...capability,
+    configuration: true,
+    toolsUnavailable: true,
+  };
+  expect(h.controller.read()).toBe(false);
+  expect(h.controller.read(undefined, true)).toBe(true);
+  await flush();
+  expect(h.port.read).toHaveBeenCalledOnce();
+  expect(h.request().configuration).toBe(true);
+  h.read.resolve(failed(h.request()));
+});
+it("retains a nonempty configuration when the next receipt is empty and a later read fails", async () => {
+  const h = fixture();
+  h.owner.sessionToolInventory = { ...capability, configuration: true };
+  const item = { name: "HTTP Test", kind: "http" };
+  const configuration = (items: unknown[]) => ({
+    ...pending(h.request()),
+    state: "ready",
+    settled: true,
+    configurationReport: {
+      observedAtMs: 1000,
+      source: "unreported",
+      connectionStatus: "unreported",
+      reportedItemCount: items.length,
+      itemsTruncated: false,
+      items,
+    },
+  });
+  expect(h.controller.read(undefined, true)).toBe(true);
+  await flush();
+  h.read.resolve(configuration([item]));
+  await flush();
+  const prior = h.controller.getSnapshot().lastConfiguration;
+  expect(prior?.items).toEqual([item]);
+
+  const next = deferred();
+  h.port.read.mockReturnValueOnce(next.promise);
+  expect(h.controller.read(undefined, true)).toBe(true);
+  await flush();
+  next.resolve(configuration([]));
+  await flush();
+  expect(
+    h.controller.getSnapshot().operation?.configurationReport
+      ?.reportedItemCount,
+  ).toBe(0);
+  expect(h.controller.getSnapshot().lastConfiguration).toBe(prior);
+
+  const latest = deferred();
+  h.port.read.mockReturnValueOnce(latest.promise);
+  expect(h.controller.read(undefined, true)).toBe(true);
+  await flush();
+  latest.resolve(failed(h.request()));
+  await flush();
+  expect(h.controller.getSnapshot().error).toBe("queryFailed");
+  expect(h.controller.getSnapshot().lastConfiguration).toBe(prior);
+});
 it("keeps an older report when a known extension returns no tools, and only checks the original scope", async () => {
   const h = fixture();
   h.owner.sessionToolInventory = {
@@ -175,6 +258,64 @@ it("local timeout preserves pending and a terminal status wins an older pending 
     unresolved: false,
   });
   expect(h.port.read).toHaveBeenCalledTimes(1);
+});
+it("ignores a late configuration receipt after a new tool read reuses its operation ID", async () => {
+  vi.useFakeTimers();
+  const h = fixture();
+  h.owner.sessionToolInventory = { ...capability, configuration: true };
+  const controller = new SessionToolsController(
+    h.owner,
+    () => h.owner,
+    h.port,
+    100,
+    () => "reused-operation-id",
+  );
+  expect(controller.read(undefined, true)).toBe(true);
+  await flush();
+  const original = h.request();
+  const receipt = {
+    ...pending(original),
+    state: "ready",
+    settled: true,
+    configurationReport: {
+      observedAtMs: 1000,
+      source: "unreported",
+      connectionStatus: "unreported",
+      reportedItemCount: 0,
+      itemsTruncated: false,
+      items: [],
+    },
+  };
+  await vi.advanceTimersByTimeAsync(100);
+  expect(controller.getSnapshot().error).toBe("timeout");
+  expect(controller.check()).toBe(true);
+  await flush();
+  h.status.resolve(receipt);
+  await flush();
+  expect(controller.getSnapshot().operation?.configuration).toBe(true);
+
+  const next = deferred();
+  h.port.read.mockReturnValueOnce(next.promise);
+  expect(controller.read()).toBe(true);
+  await flush();
+  expect(h.request().operationId).toBe(original.operationId);
+  expect(h.request().configuration).toBeUndefined();
+  h.read.resolve(receipt);
+  await flush();
+  expect(controller.getSnapshot()).toMatchObject({
+    phase: "loading",
+    operation: null,
+    unresolved: true,
+  });
+
+  next.reject({ code: "changed", message: "Conversation changed" });
+  await flush();
+  expect(controller.getSnapshot()).toMatchObject({
+    phase: "error",
+    operation: null,
+    error: "changed",
+    unresolved: false,
+  });
 });
 it("a locally failed unsettled read remains status-only and does not become empty success", async () => {
   const h = fixture();

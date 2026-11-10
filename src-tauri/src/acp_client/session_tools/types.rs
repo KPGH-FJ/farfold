@@ -14,6 +14,10 @@ pub struct Capability {
     pub startup: Option<StartupReport>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub extensions: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<bool>,
+    #[serde(rename = "toolsUnavailable", skip_serializing_if = "Option::is_none")]
+    pub tools_unavailable: Option<bool>,
 }
 
 /// Counts from the opening reply, independent of the live tools catalogue.
@@ -84,11 +88,7 @@ pub(super) fn startup_extensions(response: &Value) -> Vec<String> {
             .collect();
         let selectable = result.get("success").and_then(Value::as_bool) == Some(true)
             && result.get("error").is_none_or(Value::is_null)
-            && name.trim() == name
-            && name.bytes().any(|b| b.is_ascii_alphanumeric())
-            && name
-                .bytes()
-                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b' ' | b'_' | b'-'));
+            && displayable_name(name);
         names
             .entry(key)
             .and_modify(|candidate| *candidate = None)
@@ -97,6 +97,30 @@ pub(super) fn startup_extensions(response: &Value) -> Vec<String> {
     let mut result: Vec<_> = names.into_values().flatten().map(str::to_owned).collect();
     result.sort_unstable();
     result
+}
+
+pub(super) fn displayable_name(name: &str) -> bool {
+    name.len() <= MAX_NAME
+        && name.trim() == name
+        && name.bytes().any(|b| b.is_ascii_alphanumeric())
+        && name
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b' ' | b'_' | b'-'))
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(super) enum Query<'a> {
+    Tools(Option<&'a str>),
+    Configuration,
+}
+
+impl Query<'_> {
+    pub(super) fn method(self) -> &'static str {
+        match self {
+            Self::Tools(_) => super::METHOD,
+            Self::Configuration => super::configuration::METHOD,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -108,6 +132,7 @@ pub enum Code {
     Timeout,
     InvalidResponse,
     QueryFailed,
+    ReadLimit,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ToolsError {
@@ -125,6 +150,7 @@ impl From<Code> for ToolsError {
                 Code::Timeout => "工具报告尚未读取完成，请稍后查看",
                 Code::InvalidResponse => "未能核对返回的工具报告",
                 Code::QueryFailed => "暂时无法读取工具报告",
+                Code::ReadLimit => "本次连接的读取次数已达上限，请结束并重新打开这段对话",
             },
         }
     }
@@ -175,10 +201,23 @@ pub struct Operation {
     pub connection_id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extension_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<bool>,
     pub state: State,
     pub settled: bool,
     pub report: Option<Report>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configuration_report: Option<super::configuration::Report>,
     pub error: Option<ToolsError>,
+}
+impl Operation {
+    pub(super) fn query(&self) -> Query<'_> {
+        if self.configuration == Some(true) {
+            Query::Configuration
+        } else {
+            Query::Tools(self.extension_name.as_deref())
+        }
+    }
 }
 pub type Reply = Result<Operation, ToolsError>;
 
@@ -246,15 +285,19 @@ pub(super) fn parse(value: &Value) -> Result<Report, ToolsError> {
         });
     }
     Ok(Report {
-        observed_at_ms: std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_err(|_| Code::QueryFailed)?
-            .as_millis()
-            .try_into()
-            .map_err(|_| Code::QueryFailed)?,
+        observed_at_ms: observed_at_ms()?,
         completeness: "unreported",
         reported_item_count: tools.len(),
         items_truncated: tools.len() > MAX_ITEMS,
         items,
     })
+}
+
+pub(super) fn observed_at_ms() -> Result<u64, ToolsError> {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|_| Code::QueryFailed)?
+        .as_millis()
+        .try_into()
+        .map_err(|_| Code::QueryFailed.into())
 }

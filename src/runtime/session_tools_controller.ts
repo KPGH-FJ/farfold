@@ -11,6 +11,7 @@ import {
   type SessionToolsReport,
   type SessionToolsRequest,
   type SessionToolsTarget,
+  type SessionToolConfigurationReport,
 } from "./session_tools_types";
 
 export interface SessionToolsSnapshot {
@@ -18,6 +19,7 @@ export interface SessionToolsSnapshot {
   operationId: string | null;
   operation: SessionToolsOperation | null;
   lastReport: { value: SessionToolsReport; extensionName?: string } | null;
+  lastConfiguration: SessionToolConfigurationReport | null;
   error: SessionToolsCode | null;
   checking: boolean;
   unresolved: boolean;
@@ -27,6 +29,7 @@ const EMPTY: SessionToolsSnapshot = Object.freeze({
   operationId: null,
   operation: null,
   lastReport: null,
+  lastConfiguration: null,
   error: null,
   checking: false,
   unresolved: false,
@@ -50,6 +53,7 @@ export class SessionToolsController {
   private listeners = new Set<() => void>();
   private retired = false;
   private unavailable = false;
+  private configurationUnavailable = false;
   private epoch = 0;
   private request: SessionToolsRequest | null = null;
   private readonly target: SessionToolsTarget;
@@ -102,11 +106,22 @@ export class SessionToolsController {
   get requestedExtension(): string | undefined {
     return this.request?.extensionName;
   }
+  get requestedConfiguration(): boolean {
+    return this.request?.configuration === true;
+  }
   get blockedCode(): SessionToolsCode | null {
+    return this.blockedFor();
+  }
+  blockedFor(configuration?: true): SessionToolsCode | null {
     if (!this.isCurrent()) return "changed";
+    const capability = sessionToolInventoryCapability(
+      this.owner?.sessionToolInventory,
+    );
     if (
-      this.unavailable ||
-      !sessionToolInventoryCapability(this.owner?.sessionToolInventory)
+      !capability ||
+      (configuration
+        ? this.configurationUnavailable || !capability.configuration
+        : this.unavailable || capability.toolsUnavailable)
     )
       return "unavailable";
     return configChangeBusy(this.owner!) ? "busy" : null;
@@ -119,8 +134,8 @@ export class SessionToolsController {
   refreshCurrent(current: () => ThreadState | undefined) {
     this.current = current;
   }
-  private sameRequest(operationId: string) {
-    return this.isCurrent() && this.snapshot.operationId === operationId;
+  private sameRequest(expected: SessionToolsRequest) {
+    return this.isCurrent() && this.request === expected;
   }
   private canReadExtension(name?: string): boolean {
     return (
@@ -132,8 +147,7 @@ export class SessionToolsController {
     );
   }
   private accept(raw: unknown, expected: SessionToolsRequest, epoch: number) {
-    if (!this.sameRequest(expected.operationId) || !this.snapshot.unresolved)
-      return;
+    if (!this.sameRequest(expected) || !this.snapshot.unresolved) return;
     let operation: SessionToolsOperation;
     try {
       operation = parseSessionToolsOperation(raw, expected);
@@ -148,7 +162,8 @@ export class SessionToolsController {
     }
     if (!operation.settled && epoch !== this.epoch) return;
     if (operation.settled && operation.error?.code === "unavailable")
-      this.unavailable = true;
+      this.markUnavailable(expected);
+    const configuration = operation.configurationReport;
     this.publish({
       phase:
         operation.state === "ready"
@@ -163,33 +178,38 @@ export class SessionToolsController {
           operation.report.reportedItemCount > 0)
           ? { value: operation.report, extensionName: operation.extensionName }
           : this.snapshot.lastReport,
+      lastConfiguration:
+        configuration && configuration.reportedItemCount > 0
+          ? configuration
+          : this.snapshot.lastConfiguration,
       error: operation.error?.code ?? null,
       unresolved: !operation.settled,
       checking: false,
     });
+  }
+  private markUnavailable(expected: SessionToolsRequest) {
+    if (expected.configuration) this.configurationUnavailable = true;
+    else this.unavailable = true;
   }
   private observe(expected: SessionToolsRequest, call: () => Promise<unknown>) {
     const epoch = ++this.epoch;
     const timer = setTimeout(() => {
       if (
         epoch === this.epoch &&
-        this.sameRequest(expected.operationId) &&
+        this.sameRequest(expected) &&
         this.snapshot.unresolved
       )
         this.publish({ phase: "error", error: "timeout", checking: false });
     }, this.waitMs);
     void Promise.resolve()
       .then(() => {
-        if (!this.sameRequest(expected.operationId)) return;
+        if (!this.sameRequest(expected)) return;
         return call();
       })
       .then((raw) => {
         clearTimeout(timer);
         if (raw !== undefined) this.accept(raw, expected, epoch);
-        else if (
-          this.sameRequest(expected.operationId) &&
-          this.snapshot.unresolved
-        )
+        else if (this.sameRequest(expected) && this.snapshot.unresolved)
           this.publish({
             phase: "error",
             error: "invalidResponse",
@@ -200,7 +220,7 @@ export class SessionToolsController {
         clearTimeout(timer);
         if (
           epoch !== this.epoch ||
-          !this.sameRequest(expected.operationId) ||
+          !this.sameRequest(expected) ||
           !this.snapshot.unresolved
         )
           return;
@@ -209,8 +229,9 @@ export class SessionToolsController {
         // These are native pre-admission/obsolete-slot refusals. A local transport
         // error cannot prove the read was not admitted; keep its known ID for status.
         const released =
-          failure && ["changed", "busy", "unavailable"].includes(code);
-        if (failure?.code === "unavailable") this.unavailable = true;
+          failure &&
+          ["changed", "busy", "unavailable", "readLimit"].includes(code);
+        if (failure?.code === "unavailable") this.markUnavailable(expected);
         this.publish({
           phase: "error",
           error: code,
@@ -219,8 +240,13 @@ export class SessionToolsController {
         });
       });
   }
-  read(extensionName?: string): boolean {
-    if (this.snapshot.unresolved || this.snapshot.checking || this.blockedCode)
+  read(extensionName?: string, configuration?: true): boolean {
+    if (
+      this.snapshot.unresolved ||
+      this.snapshot.checking ||
+      this.blockedFor(configuration) ||
+      (configuration && extensionName !== undefined)
+    )
       return false;
     if (!this.canReadExtension(extensionName)) return false;
     const operationId = this.uuid();
@@ -232,6 +258,7 @@ export class SessionToolsController {
       ...this.target,
       operationId,
       ...(extensionName === undefined ? {} : { extensionName }),
+      ...(configuration ? { configuration } : {}),
     };
     this.request = expected;
     this.publish({
@@ -243,7 +270,7 @@ export class SessionToolsController {
       unresolved: true,
     });
     this.observe(expected, () => {
-      const code = this.blockedCode;
+      const code = this.blockedFor(configuration);
       if (code || !this.canReadExtension(extensionName)) {
         this.publish({
           phase: "error",

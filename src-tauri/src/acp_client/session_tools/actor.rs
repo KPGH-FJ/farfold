@@ -22,11 +22,12 @@ impl Request {
         deadline: tokio::time::Instant,
     ) {
         let id = &self.operation.operation_id;
+        let query = self.operation.query();
         let before = if tokio::time::Instant::now() >= deadline {
             Some(Code::Timeout)
         } else if !(self.current_owner)() {
             Some(Code::Changed)
-        } else if self.availability.capability().is_none() {
+        } else if !self.availability.supports(query) {
             Some(Code::Unavailable)
         } else {
             None
@@ -36,25 +37,28 @@ impl Request {
             self.slot.finish(id, Err(code.into()), true);
             return;
         }
-        let (future, observed) = match self.availability.send(
-            &cx,
-            &self.operation.native_session_id,
-            self.operation.extension_name.as_deref(),
-        ) {
-            Ok(sent) => sent,
-            Err(error) => {
-                drop(lease);
-                self.slot.finish(id, Err(error), true);
-                return;
-            }
-        };
+        let (future, observed) =
+            match self
+                .availability
+                .send(&cx, &self.operation.native_session_id, query)
+            {
+                Ok(sent) => sent,
+                Err(error) => {
+                    drop(lease);
+                    self.slot.finish(id, Err(error), true);
+                    return;
+                }
+            };
         let result = super::super::operations::until_owner_ended(&life, future).await;
         let witnessed = observed.load(Ordering::SeqCst);
         let outcome = match result {
-            Some(Ok(value)) if witnessed && (self.current_owner)() => types::parse(&value),
+            Some(Ok(value)) if witnessed && (self.current_owner)() => match query {
+                Query::Tools(_) => types::parse(&value).map(ReadReport::Tools),
+                Query::Configuration => configuration::parse(&value).map(ReadReport::Configuration),
+            },
             Some(Ok(_)) if witnessed => Err(Code::Changed.into()),
             Some(Err(error)) if witnessed && error.code == ErrorCode::MethodNotFound => {
-                self.availability.unsupported();
+                self.availability.unsupported(query);
                 Err(Code::Unavailable.into())
             }
             _ => Err(Code::QueryFailed.into()),
@@ -97,7 +101,7 @@ pub(crate) fn start(
         if busy {
             return Err(Code::Busy.into());
         }
-        if request.availability.capability().is_none() {
+        if !request.availability.supports(request.operation.query()) {
             return Err(Code::Unavailable.into());
         }
         if tokio::time::Instant::now() >= deadline || result.is_closed() {
@@ -106,10 +110,7 @@ pub(crate) fn start(
         let lease = life
             .operation(format!("open:{session_id}"))
             .map_err(|_| Code::Busy)?;
-        {
-            let mut slot = request.slot.current.lock().map_err(|_| Code::Changed)?;
-            *slot = Some(request.operation.clone());
-        }
+        request.slot.admit(&request.operation)?;
         // This independent owner outlives actor/UI disposal. The ordinary
         // actor still delivers all original protocol events without changes.
         super::super::manager::runtime().spawn(request.run(cx, life.clone(), lease, deadline));

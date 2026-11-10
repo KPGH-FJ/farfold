@@ -61,5 +61,15 @@ for line in sys.stdin:
             while True:
                 time.sleep(0.1)
         threading.Thread(target=tools, args=(message,), daemon=True).start()
+    elif method == "_goose/unstable/session/extensions/list":
+        if pathlib.Path("configuration-unsupported").exists():
+            send({"id": message["id"], "error": {"code": -32601, "message": "PRIVATE_ERROR_CANARY"}})
+        elif pathlib.Path("configuration-malformed").exists():
+            reply(message, {"extensions": [{"extensionKey": "broken", "extension": {"type": "mcp", "server": {"name": "Broken", "command": "/PRIVATE_PATH", "args": [], "env": ["PRIVATE_ENV"]}}}]})
+        else:
+            reply(message, {"extensions": [
+                {"extensionKey": "PRIVATE_KEY", "extension": {"type": "mcp", "server": {"type": "http", "name": "HTTP Test", "url": "https://example.invalid/?token=PRIVATE_URL", "headers": [{"name": "Authorization", "value": "PRIVATE_HEADER"}]}, "clientSecretKey": "PRIVATE_SECRET"}},
+                {"extensionKey": "PRIVATE_LOCAL_KEY", "extension": {"type": "mcp", "server": {"name": "Local Test", "command": "/PRIVATE_PATH", "args": ["PRIVATE_ARG"], "env": [{"name": "PRIVATE_ENV", "value": "PRIVATE_ENV_VALUE"}]}, "envKeys": ["PRIVATE_ENV"]}},
+            ]})
     else:
         send({"id": message.get("id"), "error": {"code": -32601, "message": "PRIVATE_ERROR_CANARY"}})

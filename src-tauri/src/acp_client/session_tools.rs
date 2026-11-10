@@ -7,6 +7,7 @@ use super::{
 };
 use agent_client_protocol::{Agent, ConnectionTo, ErrorCode, UntypedMessage};
 use std::{
+    collections::HashSet,
     future::Future,
     path::Path,
     pin::Pin,
@@ -16,23 +17,36 @@ use std::{
 use tokio::sync::{Notify, oneshot};
 
 mod types;
+use types::Query;
 pub use types::{Capability, Code, Operation, Reply, Report, State, ToolsError};
 mod availability;
+mod configuration;
 pub(crate) use availability::Availability;
 mod actor;
 pub(crate) use actor::{Request, start};
 
 const METHOD: &str = "_goose/unstable/tools/list";
 const BUDGET: Duration = Duration::from_secs(10);
+const MAX_OPERATIONS: usize = 4_096;
 type Wire = Pin<Box<dyn Future<Output = agent_client_protocol::Result<serde_json::Value>> + Send>>;
 
-/// One current in-memory request/result per actual SessionEntry. It is not
-/// an index, generation system, operation history or a persistent ledger.
+enum ReadReport {
+    Tools(Report),
+    Configuration(configuration::Report),
+}
+
+/// One current in-memory request/result per actual SessionEntry. Used IDs
+/// cannot be replayed on this actor; no previous request or result is stored.
 pub(crate) struct Slot {
     control: tokio::sync::mpsc::WeakUnboundedSender<SessionControl>,
     extensions: Vec<String>,
-    current: Mutex<Option<Operation>>,
+    reads: Mutex<Reads>,
     changed: Notify,
+}
+#[derive(Default)]
+struct Reads {
+    current: Option<Operation>,
+    admitted_ids: HashSet<String>,
 }
 impl Slot {
     pub(crate) fn new(
@@ -42,7 +56,7 @@ impl Slot {
         Self {
             control: control.downgrade(),
             extensions: types::startup_extensions(response),
-            current: Mutex::new(None),
+            reads: Mutex::new(Reads::default()),
             changed: Notify::new(),
         }
     }
@@ -55,32 +69,51 @@ impl Slot {
             .is_some_and(|original| !original.is_closed() && original.same_channel(control))
     }
     fn snapshot(&self, id: &str) -> Reply {
-        self.current
+        self.reads
             .lock()
             .map_err(|_| Code::Changed)?
+            .current
             .as_ref()
             .filter(|o| o.operation_id == id)
             .cloned()
             .ok_or_else(|| Code::Changed.into())
     }
     fn existing(&self, request: &Operation) -> Result<Option<Operation>, ToolsError> {
-        let current = self.current.lock().map_err(|_| Code::Changed)?;
-        if let Some(operation) = current.as_ref() {
-            if operation.operation_id == request.operation_id {
-                if operation.extension_name != request.extension_name {
-                    return Err(Code::Changed.into());
-                }
-                return Ok(Some(operation.clone()));
+        let reads = self.reads.lock().map_err(|_| Code::Changed)?;
+        if let Some(operation) = reads.current.as_ref()
+            && operation.operation_id == request.operation_id
+        {
+            if operation.query() != request.query() {
+                return Err(Code::Changed.into());
             }
-            if !operation.settled {
-                return Err(Code::Busy.into());
-            }
+            return Ok(Some(operation.clone()));
+        }
+        if reads.admitted_ids.contains(&request.operation_id) {
+            return Err(Code::Changed.into());
+        }
+        if reads
+            .current
+            .as_ref()
+            .is_some_and(|operation| !operation.settled)
+        {
+            return Err(Code::Busy.into());
         }
         Ok(None)
     }
-    fn finish(&self, id: &str, value: Result<Report, ToolsError>, settled: bool) {
-        if let Ok(mut current) = self.current.lock()
-            && let Some(operation) = current.as_mut().filter(|o| o.operation_id == id)
+    fn admit(&self, operation: &Operation) -> Result<(), ToolsError> {
+        let mut reads = self.reads.lock().map_err(|_| Code::Changed)?;
+        if reads.admitted_ids.len() >= MAX_OPERATIONS {
+            return Err(Code::ReadLimit.into());
+        }
+        if !reads.admitted_ids.insert(operation.operation_id.clone()) {
+            return Err(Code::Changed.into());
+        }
+        reads.current = Some(operation.clone());
+        Ok(())
+    }
+    fn finish(&self, id: &str, value: Result<ReadReport, ToolsError>, settled: bool) {
+        if let Ok(mut reads) = self.reads.lock()
+            && let Some(operation) = reads.current.as_mut().filter(|o| o.operation_id == id)
         {
             operation.state = if value.is_ok() {
                 State::Ready
@@ -89,8 +122,12 @@ impl Slot {
             };
             operation.settled = settled;
             match value {
-                Ok(report) => {
+                Ok(ReadReport::Tools(report)) => {
                     operation.report = Some(report);
+                    operation.error = None;
+                }
+                Ok(ReadReport::Configuration(report)) => {
+                    operation.configuration_report = Some(report);
                     operation.error = None;
                 }
                 Err(error) => {
@@ -129,7 +166,7 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
-        extension_name: Option<&str>,
+        query: Query<'_>,
     ) -> Result<Owner, ToolsError> {
         if !types::valid_operation_id(operation_id) {
             return Err(Code::Changed.into());
@@ -153,7 +190,9 @@ impl AcpManager {
                 .ok_or(Code::Changed)?;
             (entry.control.clone(), entry.tools_report.clone())
         };
-        if extension_name.is_some_and(|name| !slot.extensions.iter().any(|item| item == name)) {
+        if let Query::Tools(Some(name)) = query
+            && !slot.extensions.iter().any(|item| item == name)
+        {
             return Err(Code::Changed.into());
         }
         let (manager, agent, directory, session, owner, original_control, original_slot) = (
@@ -190,10 +229,15 @@ impl AcpManager {
                     cwd: cwd.to_string_lossy().into(),
                     native_session_id: session_id.into(),
                     connection_id: connection_id.into(),
-                    extension_name: extension_name.map(str::to_owned),
+                    extension_name: match query {
+                        Query::Tools(name) => name.map(str::to_owned),
+                        Query::Configuration => None,
+                    },
+                    configuration: (query == Query::Configuration).then_some(true),
                     state: State::Pending,
                     settled: false,
                     report: None,
+                    configuration_report: None,
                     error: None,
                 },
                 slot,
@@ -203,6 +247,7 @@ impl AcpManager {
             control,
         })
     }
+    #[cfg(test)]
     pub(crate) async fn tools_read(
         &self,
         agent_id: &str,
@@ -218,7 +263,7 @@ impl AcpManager {
             session_id,
             connection_id,
             operation_id,
-            extension_name,
+            Query::Tools(extension_name),
             tokio::time::Instant::now() + BUDGET,
         )
         .await
@@ -231,7 +276,7 @@ impl AcpManager {
         session_id: &str,
         connection_id: &str,
         operation_id: &str,
-        extension_name: Option<&str>,
+        query: Query<'_>,
         deadline: tokio::time::Instant,
     ) -> Reply {
         let Owner { request, control } = self.tools_owner(
@@ -240,10 +285,10 @@ impl AcpManager {
             session_id,
             connection_id,
             operation_id,
-            extension_name,
+            query,
         )?;
         if request.slot.existing(&request.operation)?.is_none() {
-            if request.availability.capability().is_none() {
+            if !request.availability.supports(query) {
                 return Err(Code::Unavailable.into());
             }
             let (result, receive) = oneshot::channel();
@@ -260,11 +305,12 @@ impl AcpManager {
                 .map_err(|_| Code::Changed)??;
         }
         let value = request.slot.wait(operation_id, deadline).await?;
-        if !(request.current_owner)() {
+        if value.query() != query || !(request.current_owner)() {
             return Err(Code::Changed.into());
         }
         Ok(value)
     }
+    #[cfg(test)]
     pub(crate) fn tools_status(
         &self,
         agent_id: &str,
@@ -274,21 +320,47 @@ impl AcpManager {
         operation_id: &str,
         extension_name: Option<&str>,
     ) -> Reply {
+        self.tools_status_query(
+            agent_id,
+            cwd,
+            session_id,
+            connection_id,
+            operation_id,
+            Query::Tools(extension_name),
+        )
+    }
+    fn tools_status_query(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        connection_id: &str,
+        operation_id: &str,
+        query: Query<'_>,
+    ) -> Reply {
         let owner = self.tools_owner(
             agent_id,
             cwd,
             session_id,
             connection_id,
             operation_id,
-            extension_name,
+            query,
         )?;
         let value = owner.request.slot.snapshot(operation_id)?;
-        if value.extension_name != owner.request.operation.extension_name
-            || !(owner.request.current_owner)()
-        {
+        if value.query() != query || !(owner.request.current_owner)() {
             return Err(Code::Changed.into());
         }
         Ok(value)
+    }
+}
+fn select_query(
+    extension: Option<&str>,
+    configuration: Option<bool>,
+) -> Result<Query<'_>, ToolsError> {
+    match (extension, configuration) {
+        (None, Some(true)) => Ok(Query::Configuration),
+        (extension, None) => Ok(Query::Tools(extension)),
+        _ => Err(Code::Changed.into()),
     }
 }
 pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
@@ -302,7 +374,8 @@ pub(crate) fn opened_capability(
 ) -> Option<Capability> {
     let mut capability = capability(connection)?;
     capability.startup = types::startup_report(response);
-    if let Ok(entries) = connection.sessions.lock()
+    if capability.tools_unavailable.is_none()
+        && let Ok(entries) = connection.sessions.lock()
         && let Some(entry) = entries.get(session_id)
         && entry.purpose == super::open_purpose::OpenPurpose::Conversation
         && entry.preview_token.is_none()
@@ -324,19 +397,21 @@ pub async fn session_tools_read(
     connection_id: String,
     operation_id: String,
     extension_name: Option<String>,
+    configuration: Option<bool>,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
         .await
         .map_err(|_| Code::Changed)?;
     app.state::<AcpManager>()
-        .tools_read(
+        .tools_read_until(
             &agent_id,
             &cwd,
             &session_id,
             &connection_id,
             &operation_id,
-            extension_name.as_deref(),
+            select_query(extension_name.as_deref(), configuration)?,
+            tokio::time::Instant::now() + BUDGET,
         )
         .await
 }
@@ -349,18 +424,19 @@ pub async fn session_tools_status(
     connection_id: String,
     operation_id: String,
     extension_name: Option<String>,
+    configuration: Option<bool>,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
         .await
         .map_err(|_| Code::Changed)?;
-    app.state::<AcpManager>().tools_status(
+    app.state::<AcpManager>().tools_status_query(
         &agent_id,
         &cwd,
         &session_id,
         &connection_id,
         &operation_id,
-        extension_name.as_deref(),
+        select_query(extension_name.as_deref(), configuration)?,
     )
 }
 

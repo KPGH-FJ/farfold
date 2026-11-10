@@ -115,7 +115,7 @@ impl Fixture {
                 "owned-tools",
                 &c.connection_id,
                 id,
-                None,
+                Query::Tools(None),
                 tokio::time::Instant::now() + Duration::from_millis(150),
             )
             .await
@@ -196,6 +196,104 @@ async fn tools_extension_requires_exact_opening_name_and_keeps_status_on_the_sam
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn tools_retired_operation_id_cannot_be_reused_with_another_scope() {
+    let (f, c) = Fixture::open(true).await;
+    assert_eq!(f.read(&c, "original").await.unwrap().state, State::Ready);
+    assert_eq!(f.read(&c, "replacement").await.unwrap().state, State::Ready);
+    assert_eq!(
+        f.read_extension(&c, "original", Some("Owned Report"))
+            .await
+            .unwrap_err()
+            .code,
+        Code::Changed
+    );
+    assert_eq!(f.status(&c, "replacement").unwrap().state, State::Ready);
+    assert_eq!(f.queries(), 2);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn tools_read_limit_rejects_new_queries_and_preserves_the_current_receipt() {
+    let (f, c) = Fixture::open(true).await;
+    let current = f.read(&c, "current").await.unwrap();
+    let slot = c.sessions.lock().unwrap()["owned-tools"]
+        .tools_report
+        .clone();
+    slot.reads
+        .lock()
+        .unwrap()
+        .admitted_ids
+        .extend((1..MAX_OPERATIONS).map(|index| format!("prior-{index}")));
+    assert_eq!(
+        f.read(&c, "past-limit").await.unwrap_err().code,
+        Code::ReadLimit
+    );
+    assert_eq!(f.status(&c, "current").unwrap(), current);
+    assert_eq!(f.read(&c, "current").await.unwrap(), current);
+    assert_eq!(f.queries(), 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_query_projects_only_safe_fields_and_leaves_tool_method_available() {
+    let (f, c) = Fixture::open(true).await;
+    let read = |id| {
+        f.manager.tools_read_until(
+            &f.row.id,
+            &f.cwd,
+            "owned-tools",
+            &c.connection_id,
+            id,
+            Query::Configuration,
+            tokio::time::Instant::now() + BUDGET,
+        )
+    };
+    let configured = read("configuration").await.unwrap();
+    assert_eq!(configured.state, State::Ready);
+    assert!(configured.report.is_none());
+    let public = serde_json::to_value(&configured).unwrap();
+    assert_eq!(public["configuration"], true);
+    assert_eq!(public["configurationReport"]["source"], "unreported");
+    assert_eq!(
+        public["configurationReport"]["connectionStatus"],
+        "unreported"
+    );
+    assert_eq!(
+        public["configurationReport"]["items"],
+        json!([{"name":"HTTP Test","kind":"http"},{"name":"Local Test","kind":"local"}])
+    );
+    assert!(!public.to_string().contains("PRIVATE"));
+    assert_eq!(
+        f.status(&c, "configuration").unwrap_err().code,
+        Code::Changed
+    );
+    assert_eq!(read("configuration").await.unwrap(), configured);
+    assert_eq!(f.trace()[2]["params"], json!({"sessionId":"owned-tools"}));
+    assert_eq!(f.trace()[2]["method"], configuration::METHOD);
+    assert_eq!(f.trace().len(), 3);
+
+    f.flag("configuration-malformed");
+    let malformed = read("configuration-malformed").await.unwrap();
+    assert_eq!(malformed.error.unwrap().code, Code::InvalidResponse);
+    assert!(malformed.configuration_report.is_none());
+    std::fs::remove_file(f.cwd.join("configuration-malformed")).unwrap();
+
+    f.flag("configuration-unsupported");
+    let unavailable = read("configuration-unsupported").await.unwrap();
+    assert_eq!(unavailable.error.unwrap().code, Code::Unavailable);
+    assert!(
+        c.session_tools
+            .capability()
+            .unwrap()
+            .configuration
+            .is_none()
+    );
+    assert_eq!(
+        f.read(&c, "tool-after-configuration").await.unwrap().state,
+        State::Ready
+    );
+    assert_eq!(f.queries(), 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn tools_empty_success_remains_incomplete_and_bad_shape_or_error_never_becomes_empty() {
     let (f, c) = Fixture::open(true).await;
     f.flag("empty");
@@ -271,7 +369,25 @@ async fn tools_real_method_not_found_revokes_only_current_connection_supplement(
     let op = f.read(&c, "unsupported").await.unwrap();
     assert!(op.settled);
     assert_eq!(op.error.unwrap().code, Code::Unavailable);
-    assert!(c.session_tools.capability().is_none());
+    let capability = c.session_tools.capability().unwrap();
+    assert_eq!(capability.configuration, Some(true));
+    assert_eq!(capability.tools_unavailable, Some(true));
+    assert_eq!(
+        f.manager
+            .tools_read_until(
+                &f.row.id,
+                &f.cwd,
+                "owned-tools",
+                &c.connection_id,
+                "configuration-after-tools",
+                Query::Configuration,
+                tokio::time::Instant::now() + BUDGET,
+            )
+            .await
+            .unwrap()
+            .state,
+        State::Ready
+    );
     assert_eq!(
         f.read(&c, "fresh").await.unwrap_err().code,
         Code::Unavailable
@@ -347,7 +463,7 @@ async fn tools_expired_unpolled_and_busy_actor_admission_have_zero_query() {
                 "owned-tools",
                 &c.connection_id,
                 "expired",
-                None,
+                Query::Tools(None),
                 tokio::time::Instant::now() - Duration::from_secs(1)
             )
             .await
@@ -444,7 +560,7 @@ async fn tools_local_transport_error_is_not_method_not_found_and_retains_lease_t
             "owned-tools",
             &c.connection_id,
             "transport",
-            None,
+            Query::Tools(None),
         )
         .unwrap();
     let _ = f.read(&c, "transport").await;

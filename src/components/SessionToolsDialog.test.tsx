@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
+  SessionToolConfigurationView,
   SessionToolsReportView,
   SessionToolStartupView,
 } from "./SessionToolsDialog";
@@ -13,6 +14,59 @@ const report: SessionToolsReport = {
   itemsTruncated: false,
   items: [],
 };
+it("shows the configuration separately with both source and connection unknown", () => {
+  const html = renderToStaticMarkup(
+    <SessionToolConfigurationView
+      report={{
+        observedAtMs: 1000,
+        source: "unreported",
+        connectionStatus: "unreported",
+        reportedItemCount: 2,
+        itemsTruncated: false,
+        items: [
+          { name: "HTTP Test", kind: "http" },
+          { name: null, kind: "local" },
+        ],
+      }}
+    />,
+  );
+  expect(html).toContain("对话扩展配置报告");
+  expect(html).toContain(
+    "程序未说明这些设置是本对话保存的，还是沿用的默认设置。",
+  );
+  expect(html).toContain("当前连接状态未提供。");
+  expect(html).toContain("HTTP Test");
+  expect(html).toContain("名称未提供");
+  expect(html).not.toContain("已连接");
+});
+it("presents the empty configuration receipt separately from the previous returned entries", () => {
+  const base = {
+    observedAtMs: 1000,
+    source: "unreported" as const,
+    connectionStatus: "unreported" as const,
+    itemsTruncated: false,
+  };
+  const html = renderToStaticMarkup(
+    <>
+      <SessionToolConfigurationView
+        report={{ ...base, reportedItemCount: 0, items: [] }}
+      />
+      <SessionToolConfigurationView
+        previous
+        report={{
+          ...base,
+          reportedItemCount: 1,
+          items: [{ name: "HTTP Test", kind: "http" }],
+        }}
+      />
+    </>,
+  );
+  expect(html).toContain("这次没有返回扩展配置，配置情况仍未确认。");
+  expect(html).toContain("程序本次返回 0 项扩展配置");
+  expect(html).toContain("上次收到的报告");
+  expect(html).toContain("程序上次返回 1 项扩展配置");
+  expect(html).toContain("HTTP Test");
+});
 it("keeps a successful zero-item report incomplete and makes no absence or connection claim", () => {
   const html = renderToStaticMarkup(<SessionToolsReportView report={report} />);
   expect(html).toContain("程序本次返回 0 项工具信息");

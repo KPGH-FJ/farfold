@@ -9,12 +9,54 @@ import {
 import { threads, type ThreadState } from "../runtime/sessions";
 import { getSessionToolsController } from "../runtime/session_tools_controller";
 import type {
+  SessionToolConfigurationReport,
   SessionToolsReport,
   SessionToolStartupReport,
 } from "../runtime/session_tools_types";
 import { SESSION_TOOLS_STRINGS as S } from "../runtime/session_tools_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import "./SessionToolsDialog.css";
+
+const CONFIGURATION_SCOPE = ":configuration";
+
+export function SessionToolConfigurationView({
+  report,
+  previous = false,
+}: {
+  report: SessionToolConfigurationReport;
+  previous?: boolean;
+}) {
+  const copy = S.configuration;
+  const heading = previous ? S.previousReport : copy.title;
+  return (
+    <section className="session-tools-report" aria-label={heading}>
+      <h3>{heading}</h3>
+      <p>
+        {previous ? copy.previousCount : S.count} {report.reportedItemCount}{" "}
+        {copy.count}
+      </p>
+      <p className="session-tools-note">
+        {S.received}：
+        <time>{new Date(report.observedAtMs).toLocaleString()}</time>
+      </p>
+      <p className="session-tools-note">
+        {copy.source} {copy.connection}
+      </p>
+      {report.reportedItemCount === 0 && <p>{copy.empty}</p>}
+      {report.itemsTruncated && <p>{S.truncated}</p>}
+      {report.items.length > 0 && (
+        <ul className="session-tools-items">
+          {report.items.map((item, index) => (
+            <li key={index}>
+              <strong>{item.name ?? copy.unnamed}</strong>
+              <p>{copy.kinds[item.kind]}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
 
 /** A returned catalogue is a report, never a connection or invocation receipt. */
 export function SessionToolsReportView({
@@ -113,9 +155,18 @@ export function SessionToolsDialog({
     controller.getSnapshot,
     controller.getSnapshot,
   );
+  const capability =
+    active && controller.isCurrent() ? thread.sessionToolInventory : null;
+  const hasConfiguration = capability?.configuration === true;
+  const configurationOnly =
+    hasConfiguration && capability.toolsUnavailable === true;
+  const requestedScope =
+    controller.requestedConfiguration || configurationOnly
+      ? CONFIGURATION_SCOPE
+      : (controller.requestedExtension ?? "");
   const [selection, setSelection] = useState(() => ({
     controller,
-    name: controller.requestedExtension ?? "",
+    name: requestedScope,
   }));
   const mounted = useRef(true);
   const latest = useRef({ active, controller, onClose });
@@ -131,8 +182,6 @@ export function SessionToolsDialog({
     latest.current.active &&
     latest.current.controller === controller &&
     controller.isCurrent();
-  const blocked = controller.blockedCode;
-  const error = !controller.isCurrent() ? "changed" : (view.error ?? blocked);
   const close = () => {
     if (mounted.current && latest.current.active) latest.current.onClose();
   };
@@ -141,15 +190,18 @@ export function SessionToolsDialog({
     controller.isCurrent() && view.operation?.report?.reportedItemCount === 0
       ? view.operation.extensionName
       : undefined;
-  const extensions =
-    active && controller.isCurrent()
-      ? thread.sessionToolInventory?.extensions
-      : undefined;
+  const extensions = capability?.extensions;
   const scope =
-    selection.controller === controller
+    !configurationOnly && selection.controller === controller
       ? selection.name
-      : (controller.requestedExtension ?? "");
-  const selected = extensions?.includes(scope) ? scope : "";
+      : requestedScope;
+  const configuration = hasConfiguration && scope === CONFIGURATION_SCOPE;
+  const currentConfiguration = configuration
+    ? view.operation?.configurationReport
+    : undefined;
+  const selected = configuration || extensions?.includes(scope) ? scope : "";
+  const blocked = controller.blockedFor(configuration ? true : undefined);
+  const error = requestedScope === selected ? (view.error ?? blocked) : blocked;
   const startup =
     active && controller.isCurrent()
       ? thread.sessionToolInventory?.startup
@@ -167,19 +219,26 @@ export function SessionToolsDialog({
       >
         <p className="session-tools-context">{title}</p>
         <p>{S.scope}</p>
-        {!!extensions?.length && (
+        {!configurationOnly && (hasConfiguration || !!extensions?.length) && (
           <label className="session-tools-filter">
             <span>{S.filter}</span>
             <select
               value={selected}
-              disabled={view.unresolved || blocked !== null}
+              disabled={
+                view.unresolved || blocked === "busy" || blocked === "changed"
+              }
               onChange={(event) => {
                 if (owns())
                   setSelection({ controller, name: event.target.value });
               }}
             >
               <option value="">{S.allTools}</option>
-              {extensions.map((name) => (
+              {hasConfiguration && (
+                <option value={CONFIGURATION_SCOPE}>
+                  {S.configuration.title}
+                </option>
+              )}
+              {extensions?.map((name) => (
                 <option key={name} value={name}>
                   {name}
                 </option>
@@ -187,7 +246,9 @@ export function SessionToolsDialog({
             </select>
           </label>
         )}
-        {view.phase === "idle" && <p>{S.initial}</p>}
+        {view.phase === "idle" && (
+          <p>{configuration ? S.configuration.initial : S.initial}</p>
+        )}
         {view.unresolved && (
           <p role="status">
             {view.phase === "loading" ? S.loading : S.pending}
@@ -195,6 +256,17 @@ export function SessionToolsDialog({
         )}
         {error && <p role="status">{S.errors[error]}</p>}
         {startup && <SessionToolStartupView report={startup} />}
+        {currentConfiguration && (
+          <SessionToolConfigurationView report={currentConfiguration} />
+        )}
+        {configuration &&
+          view.lastConfiguration &&
+          currentConfiguration !== view.lastConfiguration && (
+            <SessionToolConfigurationView
+              report={view.lastConfiguration}
+              previous
+            />
+          )}
         {emptyExtension && (
           <p className="session-tools-note">
             <bdi>{emptyExtension}</bdi> · {S.emptyScopedReport}
@@ -240,11 +312,14 @@ export function SessionToolsDialog({
             className="btn btn-primary"
             disabled={!active || !controller.isCurrent() || blocked !== null}
             onClick={() => {
-              if (owns()) controller.read(selected || undefined);
+              if (owns())
+                controller.read(
+                  configuration ? undefined : selected || undefined,
+                  configuration ? true : undefined,
+                );
             }}
           >
-            {controller.requestedExtension === (selected || undefined) &&
-            (view.operation || view.error)
+            {requestedScope === selected && (view.operation || view.error)
               ? S.refresh
               : S.read}
           </button>

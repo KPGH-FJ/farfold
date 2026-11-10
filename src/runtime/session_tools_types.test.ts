@@ -77,6 +77,67 @@ it("empty success remains an unreported-completeness report, distinct from failu
     "PRIVATE_ERROR",
   );
 });
+it("separates a configuration reply and rejects claims or fields outside its public projection", () => {
+  const request = { ...target, configuration: true as const };
+  const raw = {
+    ...pending(request),
+    state: "ready",
+    settled: true,
+    configurationReport: {
+      observedAtMs: 1000,
+      source: "unreported",
+      connectionStatus: "unreported",
+      reportedItemCount: 1,
+      itemsTruncated: false,
+      items: [{ name: "HTTP Test", kind: "http" }],
+    },
+  };
+  expect(
+    sessionToolInventoryCapability({ ...capability, configuration: true }),
+  ).toEqual({
+    ...capability,
+    configuration: true,
+  });
+  expect(
+    sessionToolInventoryCapability({
+      ...capability,
+      configuration: true,
+      toolsUnavailable: true,
+    }),
+  ).toEqual({ ...capability, configuration: true, toolsUnavailable: true });
+  expect(
+    sessionToolInventoryCapability({ ...capability, toolsUnavailable: true }),
+  ).toBeNull();
+  expect(parse(raw, request).configurationReport).toEqual(
+    raw.configurationReport,
+  );
+  expect(() => parse(raw, target)).toThrow();
+  expect(() => parse(ready(request), request)).toThrow();
+  expect(() =>
+    parse(
+      {
+        ...raw,
+        configurationReport: {
+          ...raw.configurationReport,
+          connectionStatus: "connected",
+        },
+      },
+      request,
+    ),
+  ).toThrow();
+  expect(() =>
+    parse(
+      {
+        ...raw,
+        configurationReport: {
+          ...raw.configurationReport,
+          items: [{ ...raw.configurationReport.items[0], url: "PRIVATE" }],
+        },
+      },
+      request,
+    ),
+  ).toThrow();
+});
 it("accepts an optional bounded opening scope and binds each response to the requested extension", () => {
   const startup = {
     reportedCount: 2,

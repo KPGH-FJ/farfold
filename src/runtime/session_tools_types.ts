@@ -4,6 +4,8 @@ export interface SessionToolInventoryCapability {
   scope: "currentConversation";
   startup?: SessionToolStartupReport;
   extensions?: string[];
+  configuration?: true;
+  toolsUnavailable?: true;
 }
 export interface SessionToolStartupReport {
   reportedCount: number;
@@ -18,6 +20,7 @@ export const SESSION_TOOLS_CODES = [
   "timeout",
   "invalidResponse",
   "queryFailed",
+  "readLimit",
 ] as const;
 export type SessionToolsCode = (typeof SESSION_TOOLS_CODES)[number];
 /** Public display uses the local code mapping; remote error prose is never retained. */
@@ -33,6 +36,7 @@ export interface SessionToolsTarget {
 export interface SessionToolsRequest extends SessionToolsTarget {
   operationId: string;
   extensionName?: string;
+  configuration?: true;
 }
 export interface SessionToolItem {
   name: string;
@@ -48,6 +52,21 @@ export interface SessionToolsReport {
   itemsTruncated: boolean;
   items: SessionToolItem[];
 }
+const CONFIGURATION_KINDS = [
+  "builtin",
+  "platform",
+  "http",
+  "local",
+  "other",
+] as const;
+export interface SessionToolConfigurationReport {
+  observedAtMs: number;
+  source: "unreported";
+  connectionStatus: "unreported";
+  reportedItemCount: number;
+  itemsTruncated: boolean;
+  items: { name: string | null; kind: (typeof CONFIGURATION_KINDS)[number] }[];
+}
 export interface SessionToolsOperation {
   operationId: string;
   agentId: string;
@@ -55,9 +74,11 @@ export interface SessionToolsOperation {
   nativeSessionId: string;
   connectionId: string;
   extensionName?: string;
+  configuration?: true;
   state: "pending" | "ready" | "failed";
   settled: boolean;
   report: SessionToolsReport | null;
+  configurationReport?: SessionToolConfigurationReport;
   error: SessionToolsFailure | null;
 }
 
@@ -119,15 +140,34 @@ export function sessionToolInventoryCapability(
     return null;
   const hasStartup = Object.hasOwn(value, "startup");
   const hasExtensions = Object.hasOwn(value, "extensions");
+  const hasConfiguration = Object.hasOwn(value, "configuration");
+  const toolsUnavailable = Object.hasOwn(value, "toolsUnavailable");
   if (
     Object.keys(value).length !==
-    2 + Number(hasStartup) + Number(hasExtensions)
+    2 +
+      Number(hasStartup) +
+      Number(hasExtensions) +
+      Number(hasConfiguration) +
+      Number(toolsUnavailable)
   )
     return null;
   const capability: SessionToolInventoryCapability = {
     source: "reviewedOfficialSupplement",
     scope: "currentConversation",
   };
+  if (hasConfiguration) {
+    if (value.configuration !== true) return null;
+    capability.configuration = true;
+  }
+  if (toolsUnavailable) {
+    if (
+      value.toolsUnavailable !== true ||
+      !capability.configuration ||
+      hasExtensions
+    )
+      return null;
+    capability.toolsUnavailable = true;
+  }
   if (hasExtensions) {
     const names = value.extensions;
     if (
@@ -234,10 +274,51 @@ function report(value: unknown): SessionToolsReport {
     items: v.items.map(item),
   };
 }
+function configurationReport(value: unknown): SessionToolConfigurationReport {
+  const v = record(value, [
+    "observedAtMs",
+    "source",
+    "connectionStatus",
+    "reportedItemCount",
+    "itemsTruncated",
+    "items",
+  ]);
+  const count = integer(v.reportedItemCount),
+    truncated = bool(v.itemsTruncated);
+  if (
+    v.source !== "unreported" ||
+    v.connectionStatus !== "unreported" ||
+    !Array.isArray(v.items) ||
+    v.items.length !== Math.min(count, MAX_REPORT_ITEMS) ||
+    truncated !== count > MAX_REPORT_ITEMS
+  )
+    invalid();
+  return {
+    observedAtMs: integer(v.observedAtMs),
+    source: "unreported",
+    connectionStatus: "unreported",
+    reportedItemCount: count,
+    itemsTruncated: truncated,
+    items: v.items.map((item) => {
+      const { name, kind } = record(item, ["name", "kind"]);
+      if (
+        (name !== null && !isExtensionName(name)) ||
+        !CONFIGURATION_KINDS.includes(
+          kind as (typeof CONFIGURATION_KINDS)[number],
+        )
+      )
+        invalid();
+      return { name, kind: kind as (typeof CONFIGURATION_KINDS)[number] };
+    }),
+  };
+}
 export function parseSessionToolsOperation(
   value: unknown,
   expected: SessionToolsRequest,
 ): SessionToolsOperation {
+  const configuration = expected.configuration === true;
+  const hasConfigurationReport =
+    object(value) && Object.hasOwn(value, "configurationReport");
   const v = record(value, [
     "operationId",
     "agentId",
@@ -245,6 +326,8 @@ export function parseSessionToolsOperation(
     "nativeSessionId",
     "connectionId",
     ...(expected.extensionName === undefined ? [] : ["extensionName"]),
+    ...(configuration ? ["configuration"] : []),
+    ...(configuration && hasConfigurationReport ? ["configurationReport"] : []),
     "state",
     "settled",
     "report",
@@ -269,6 +352,10 @@ export function parseSessionToolsOperation(
     v.cwd !== expected.cwd ||
     v.nativeSessionId !== expected.sessionId ||
     v.connectionId !== expected.connectionId ||
+    (configuration &&
+      (expected.extensionName !== undefined ||
+        v.configuration !== true ||
+        v.report !== null)) ||
     (expected.extensionName !== undefined &&
       (!isExtensionName(expected.extensionName) ||
         v.extensionName !== expected.extensionName))
@@ -276,15 +363,19 @@ export function parseSessionToolsOperation(
     invalid();
   const settled = bool(v.settled),
     parsedReport = v.report === null ? null : report(v.report),
+    parsedConfiguration = hasConfigurationReport
+      ? configurationReport(v.configurationReport)
+      : undefined,
     error = v.error === null ? null : sessionToolsFailure(v.error);
+  const hasReport = parsedReport !== null || parsedConfiguration !== undefined;
   if (v.error !== null && error === null) invalid();
   if (
     v.state === "pending"
-      ? settled || parsedReport !== null || error !== null
+      ? settled || hasReport || error !== null
       : v.state === "ready"
-        ? !settled || parsedReport === null || error !== null
+        ? !settled || !hasReport || error !== null
         : v.state === "failed"
-          ? parsedReport !== null || error === null
+          ? hasReport || error === null
           : true
   )
     invalid();
@@ -297,6 +388,10 @@ export function parseSessionToolsOperation(
     ...(expected.extensionName === undefined
       ? {}
       : { extensionName: expected.extensionName }),
+    ...(configuration ? { configuration: true } : {}),
+    ...(parsedConfiguration
+      ? { configurationReport: parsedConfiguration }
+      : {}),
     state: v.state as SessionToolsOperation["state"],
     settled,
     report: parsedReport,
