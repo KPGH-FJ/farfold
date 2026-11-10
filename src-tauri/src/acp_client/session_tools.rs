@@ -363,6 +363,14 @@ fn select_query(
         _ => Err(Code::Changed.into()),
     }
 }
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ReportScope {
+    extension_name: Option<String>,
+    configuration: Option<bool>,
+}
+
 pub(crate) fn capability(connection: &ManagedConnection) -> Option<Capability> {
     connection.session_tools.capability()
 }
@@ -396,8 +404,7 @@ pub async fn session_tools_read(
     session_id: String,
     connection_id: String,
     operation_id: String,
-    extension_name: Option<String>,
-    configuration: Option<bool>,
+    scope: ReportScope,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
@@ -410,7 +417,7 @@ pub async fn session_tools_read(
             &session_id,
             &connection_id,
             &operation_id,
-            select_query(extension_name.as_deref(), configuration)?,
+            select_query(scope.extension_name.as_deref(), scope.configuration)?,
             tokio::time::Instant::now() + BUDGET,
         )
         .await
@@ -423,8 +430,7 @@ pub async fn session_tools_status(
     session_id: String,
     connection_id: String,
     operation_id: String,
-    extension_name: Option<String>,
-    configuration: Option<bool>,
+    scope: ReportScope,
 ) -> Reply {
     use tauri::Manager;
     let cwd = super::manager::validate_cwd_async(&cwd)
@@ -436,7 +442,7 @@ pub async fn session_tools_status(
         &session_id,
         &connection_id,
         &operation_id,
-        select_query(extension_name.as_deref(), configuration)?,
+        select_query(scope.extension_name.as_deref(), scope.configuration)?,
     )
 }
 

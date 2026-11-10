@@ -7,14 +7,22 @@ import { capability } from "./session_tools.test-support";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 afterEach(() => vi.mocked(invoke).mockReset());
-it("exposes exactly read and local status with preknown operation ownership, not raw RPC", async () => {
-  await sessionToolsPort.read(target);
-  await sessionToolsPort.status(target);
-  expect(vi.mocked(invoke).mock.calls).toEqual([
-    ["session_tools_read", target],
-    ["session_tools_status", target],
-  ]);
-});
+it.each([
+  {},
+  { extensionName: "Owned Report" },
+  { configuration: true },
+] as const)(
+  "exposes exactly read and local status with the original report scope %o",
+  async (scope) => {
+    const request = { ...target, ...scope };
+    await sessionToolsPort.read(request);
+    await sessionToolsPort.status(request);
+    expect(vi.mocked(invoke).mock.calls).toEqual([
+      ["session_tools_read", { ...target, scope }],
+      ["session_tools_status", { ...target, scope }],
+    ]);
+  },
+);
 it("passes the optional capability through a real acknowledged open, never inferring legacy authority", () => {
   const input = { agentId: "fixture", cwd: "/owned" };
   const result = {
