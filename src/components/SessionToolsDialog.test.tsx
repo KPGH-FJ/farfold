@@ -1,11 +1,107 @@
-import { expect, it } from "vitest";
+import { Children, isValidElement, type ReactNode } from "react";
+import { expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
   SessionToolConfigurationView,
+  SessionToolsDialog,
   SessionToolsReportView,
   SessionToolStartupView,
 } from "./SessionToolsDialog";
+import {
+  capability,
+  fixture,
+  flush,
+  pending,
+} from "../runtime/session_tools.test-support";
+import { SESSION_TOOLS_STRINGS as S } from "../runtime/session_tools_strings";
 import type { SessionToolsReport } from "../runtime/session_tools_types";
+
+const getController = vi.hoisted(() => vi.fn());
+vi.mock("../runtime/session_tools_controller", async (original) => ({
+  ...(await original<typeof import("../runtime/session_tools_controller")>()),
+  getSessionToolsController: getController,
+}));
+vi.mock("react", async (original) => ({
+  ...(await original<typeof import("react")>()),
+  useEffect: () => {},
+  useMemo: (compute: () => unknown) => compute(),
+  useRef: (current: unknown) => ({ current }),
+  useState: (initial: () => unknown) => [initial(), vi.fn()],
+  useSyncExternalStore: (_subscribe: unknown, get: () => unknown) => get(),
+}));
+
+it("keeps the keyboard action mounted and focusable during read, check, and receipt", async () => {
+  const h = fixture();
+  h.owner.sessionToolInventory = {
+    ...capability,
+    configuration: true,
+    toolsUnavailable: true,
+  };
+  getController.mockReturnValue(h.controller);
+  const action = (label: string) => {
+    const tree = SessionToolsDialog({
+      thread: h.owner,
+      title: "Owned report",
+      active: true,
+      onClose: vi.fn(),
+    });
+    const footer = Children.toArray(tree.props.children as ReactNode).find(
+      (node) => isValidElement(node) && node.type === "footer",
+    );
+    if (!isValidElement<{ children: ReactNode }>(footer))
+      throw new Error("Missing report footer");
+    const button = Children.toArray(footer.props.children)[1];
+    if (
+      !isValidElement<{
+        children: ReactNode;
+        disabled?: boolean;
+        "aria-disabled"?: boolean;
+        onClick(): void;
+      }>(button)
+    )
+      throw new Error("Missing keyboard action");
+    expect(button.props.children).toBe(label);
+    return button;
+  };
+  const original = action(S.read);
+  const remainsFocusable = (label: string, waiting: boolean) => {
+    const button = action(label);
+    expect([button.type, button.key]).toEqual([original.type, original.key]);
+    expect(button.props.disabled).not.toBe(true);
+    expect(button.props["aria-disabled"] === true).toBe(waiting);
+    return button;
+  };
+
+  original.props.onClick();
+  await flush();
+  remainsFocusable(S.checking, true).props.onClick();
+  expect(h.port.read).toHaveBeenCalledOnce();
+  expect(h.port.status).not.toHaveBeenCalled();
+
+  const request = h.request();
+  h.read.resolve(pending(request));
+  await flush();
+  remainsFocusable(S.check, false).props.onClick();
+  await flush();
+  remainsFocusable(S.checking, true).props.onClick();
+  expect(h.port.status).toHaveBeenCalledExactlyOnceWith(request);
+
+  h.status.resolve({
+    ...pending(request),
+    state: "ready",
+    settled: true,
+    configurationReport: {
+      observedAtMs: 1000,
+      source: "unreported",
+      connectionStatus: "unreported",
+      reportedItemCount: 0,
+      itemsTruncated: false,
+      items: [],
+    },
+  });
+  await flush();
+  remainsFocusable(S.refresh, false);
+});
 
 const report: SessionToolsReport = {
   observedAtMs: 1000,

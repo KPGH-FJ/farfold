@@ -202,6 +202,12 @@ export function SessionToolsDialog({
   const selected = configuration || extensions?.includes(scope) ? scope : "";
   const blocked = controller.blockedFor(configuration ? true : undefined);
   const error = requestedScope === selected ? (view.error ?? blocked) : blocked;
+  const actionDisabled =
+    !active ||
+    !controller.isCurrent() ||
+    (view.unresolved
+      ? view.checking || view.phase === "loading"
+      : blocked !== null);
   const startup =
     active && controller.isCurrent()
       ? thread.sessionToolInventory?.startup
@@ -290,40 +296,28 @@ export function SessionToolsDialog({
         <button type="button" className="btn btn-ghost" onClick={close}>
           {S.close}
         </button>
-        {view.unresolved ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={
-              !active ||
-              !controller.isCurrent() ||
-              view.checking ||
-              view.phase === "loading"
-            }
-            onClick={() => {
-              if (owns()) controller.check();
-            }}
-          >
-            {view.checking ? S.checking : S.check}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={!active || !controller.isCurrent() || blocked !== null}
-            onClick={() => {
-              if (owns())
-                controller.read(
-                  configuration ? undefined : selected || undefined,
-                  configuration ? true : undefined,
-                );
-            }}
-          >
-            {requestedScope === selected && (view.operation || view.error)
+        <button
+          type="button"
+          className="btn btn-primary"
+          aria-disabled={actionDisabled || undefined}
+          onClick={() => {
+            if (!owns() || actionDisabled) return;
+            if (view.unresolved) controller.check();
+            else
+              controller.read(
+                configuration ? undefined : selected || undefined,
+                configuration ? true : undefined,
+              );
+          }}
+        >
+          {view.unresolved
+            ? view.checking
+              ? S.checking
+              : S.check
+            : requestedScope === selected && (view.operation || view.error)
               ? S.refresh
               : S.read}
-          </button>
-        )}
+        </button>
       </footer>
     </WorkspaceDialog>
   );

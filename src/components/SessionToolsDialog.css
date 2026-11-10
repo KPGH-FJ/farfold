@@ -11,6 +11,13 @@
   min-height: 0;
   overflow-y: auto;
 }
+.workspace-dialog:has(.session-tools-context)
+  > footer
+  > .btn-primary[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+  filter: none;
+}
 .session-tools-context {
   overflow-wrap: anywhere;
   color: var(--ink-2);
