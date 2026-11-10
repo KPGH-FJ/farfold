@@ -1,0 +1,72 @@
+{
+  "sourceCodeCommit": "97479b1850d931c1eea1135750d61189e12a12a3",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "880821e7cab55f27618d4a84cb63d10175ca3150",
+    "executableSha256": "e203f3c31ae7bd472652edc74d57b86bc949f00b52ed3301d6b27ef7d555feae"
+  },
+  "engineering": {
+    "frozenInputs": 2477,
+    "sevenExitCodes": {
+      "format": 0,
+      "typecheck": 0,
+      "frontend": 0,
+      "build": 0,
+      "rust-fmt": 0,
+      "clippy": 0,
+      "rust-test": 0
+    },
+    "frontendFiles": 744,
+    "frontendPassed": 10205,
+    "rustPassed": 2501,
+    "rustExistingIgnored": 7,
+    "boundedRegressionsPassed": 5,
+    "confirmedRegressionFailedOnOldSource": true
+  },
+  "installed": {
+    "dataEntriesIdentical": 206346,
+    "ownedChildrenNormallyExited": 1,
+    "independentReview": true,
+    "candidateRemoved": true
+  },
+  "mistral": {
+    "formalOriginalHistoryRead": true,
+    "observedCurrentModel": "mistral-medium-3.5",
+    "observedCurrentReasoning": "high",
+    "originalSettingsStillUnconfirmed": true,
+    "noIndexAdditionOrPrompt": true,
+    "actualMultiFragmentStillPending": true,
+    "independentProtocolAuditNoPromptOrSetConfig": true
+  },
+  "codexDisabledHttp": {
+    "formalUiExactAddRecheckRemove": true,
+    "originalConfigBytesRestored": true,
+    "nonTestConfigSemanticsPreserved": true,
+    "readbackAfterAddDidNotWrite": true,
+    "neverEnabled": true,
+    "noVerifiedConnectionOrToolUse": true,
+    "independentProofReview": true,
+    "noSessionPromptInObservedCodexTraces": true
+  },
+  "cacheCleanup": {
+    "files": 1190,
+    "actualIncreaseBytes": 2864525312,
+    "independentAudit": true
+  },
+  "evidenceFiles": {
+    "output/2026-11-09-six-hour-stage2/thirteenth-engineering/result.json": "a786a8b343664408a47027e2dad3f8ae5b57299ef92af558ef8ae1430cd22f3d",
+    "output/2026-11-09-six-hour-stage2/thirteenth-engineering/inputs-after.json": "1b2513e85d76623d461b328861ad62b86a021947ea4c4be6aead7f705cdb6a09",
+    "output/2026-11-09-six-hour-stage2/formal-thirteenth/candidate-review.json": "e630c56b49a2099993d546e95db8609a6ea863f7a990616f925227d7cdf8bdbe",
+    "output/2026-11-09-six-hour-stage2/formal-thirteenth/install.json": "5eb5ef7fdb130928449d8ceef75adb355ef674f0405eb62b2abe56066cfa71ab",
+    "output/2026-11-09-six-hour-stage2/formal-thirteenth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "output/2026-11-10-stage2-closeout/p18-mistral-protected-preview.json": "06943348e5fa1ba7cbcc882b88de02bf88c6f46f29e9f7e6b456008c1db9fecd",
+    "output/2026-11-10-stage2-closeout/cache-recovery/second-exact/result.json": "e783dac37b44aa76b98cc37343760b7d9bf54ee76023fd8db40330097d0bb505",
+    "output/2026-11-10-stage2-closeout/p41-codex-disabled-http/before.json": "2675cc937ede7857f1dd23ef4743b548b5c84bb6a9b9b3b26981ca3d66234309",
+    "output/2026-11-10-stage2-closeout/p41-codex-disabled-http/add.json": "3f4869df63006fa97ef05828e449f6605af007097bd9e45ec7dbbf872a67141c",
+    "output/2026-11-10-stage2-closeout/p41-codex-disabled-http/recheck.json": "a426410ca6b880ef4845e4e3b04df30e30f876d1b206831df7aa40514b53f58d",
+    "output/2026-11-10-stage2-closeout/p41-codex-disabled-http/remove.json": "62310dedab5a3a19975edf25f8d1578d35a14ea6885f67c8219dd91278e31bbd"
+  }
+}
