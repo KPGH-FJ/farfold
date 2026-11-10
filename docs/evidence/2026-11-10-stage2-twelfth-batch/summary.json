@@ -1,0 +1,58 @@
+{
+  "sourceCommit": "f92d19505b2fcb431de81f7c61554aa431567b05",
+  "identity": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "arm64": true,
+    "signature": "adhoc",
+    "cdhash": "42bc8483db638a530e11405828fb2de0307c6228",
+    "executableSha256": "c5e789918f0beb3ba07a765fdb4e689752409987be3e16117f6a824938fc9859"
+  },
+  "engineering": {
+    "newChecks": ["format", "typecheck", "frontend", "build"],
+    "frontendFiles": 744,
+    "frontendPassed": 10205,
+    "reusedRustChecks": ["rust-fmt", "clippy", "rust-test"],
+    "rustPassed": 2496,
+    "rustExistingIgnored": 7,
+    "frozenMappedInputs": 2476,
+    "targetedPassed": 66,
+    "regressionFailedBeforeFix": true
+  },
+  "install": {
+    "dataEntriesIdentical": 206346,
+    "ownedChildrenNormallyExited": 1,
+    "independentReview": true,
+    "candidateRemoved": true
+  },
+  "formalKeyboard": {
+    "sourceCommit": "f92d19505b2fcb431de81f7c61554aa431567b05",
+    "reportCount": 7,
+    "keyboardOnlyWithinModal": true,
+    "initialReadActivatedWithReturn": true,
+    "afterReplyFocus": "重新读取",
+    "tabFromLast": "关闭（标题栏）",
+    "shiftTabFromFirst": "重新读取",
+    "escapeRestored": "原对话操作",
+    "modelRequests": 0,
+    "protocol": {
+      "name": "protocol-v1-1794305289965-0.jsonl",
+      "sha256": "7a271b3883de3c0009a37e7d3dcaf63c2a021d95e310d5156a7746570d38749c",
+      "outboundEvents": ["initialize", "session/load", "other"]
+    },
+    "notTested": [
+      "formal long-wait status-check button",
+      "VoiceOver announcing the report",
+      "full zoom and window-size matrix"
+    ]
+  },
+  "evidenceFiles": {
+    "output/2026-11-09-six-hour-stage2/twelfth-engineering/result.json": "bf03a841842c9703ab8d42cc9c242e1a3365e39eab5859c8fef5a4b421329d65",
+    "output/2026-11-09-six-hour-stage2/twelfth-engineering/native-reuse.json": "04bb9b3c050d3229d1888e771cbd5c359c771cee44e4de3febdf17455f07f629",
+    "output/2026-11-09-six-hour-stage2/twelfth-engineering/inputs-after.json": "48677a4d3ddee52b917ebbf3e29946cce86d11ad3be47450059fee3adece739a",
+    "output/2026-11-09-six-hour-stage2/formal-twelfth/install.json": "46431965d65fa6d0b055f6a43f422856d8e85196795d9b96bdf8a2b7d9f06eee",
+    "output/2026-11-09-six-hour-stage2/formal-twelfth/candidate-review.json": "766ac5aef0809a5bba364f39e4cfd3d44f09a5ea64bb57c3f52c6193e8e75b45",
+    "output/2026-11-09-six-hour-stage2/formal-twelfth/duplicate-cleanup.json": "88a1db576ecb74b227ab943f20b27fdd740bb675b3c98685d3a4d9086044c6cf",
+    "output/2026-11-10-stage2-closeout/p45-report-keyboard-formal.json": "f170f9c18d49e378d6382105ec988fc26f02cca983062179d494555fb7e0d3db"
+  }
+}
