@@ -425,8 +425,13 @@ pub fn register_custom(
     command: &str,
     args: &[String],
     env: &[(String, String)],
+    secret_env: &[(String, String)],
     store: &MetaStore,
 ) -> Result<AgentRow, String> {
+    crate::auth::agent_environment::validate(env, secret_env)?;
+    if args.iter().any(|arg| arg.contains('\0')) {
+        return Err("参数不能包含空字符".into());
+    }
     let name = name.trim();
     if name.is_empty() {
         return Err("agent name is empty".to_string());
@@ -444,7 +449,7 @@ pub fn register_custom(
         created_at: now_millis(),
         updated_at: now_millis(),
     };
-    store.insert_custom_agent(row)
+    crate::auth::agent_environment::register(store, row, secret_env)
 }
 
 // ---------------------------------------------------------------------------
@@ -477,14 +482,18 @@ pub async fn agent_add_custom(
     command: String,
     args: Vec<String>,
     env: std::collections::HashMap<String, String>,
+    secret_env: Option<std::collections::HashMap<String, String>>,
 ) -> Result<AgentRow, String> {
+    let activity = crate::managed_update::activity()?;
     tauri::async_runtime::spawn_blocking(move || {
         let store = app.state::<MetaStore>();
+        let _activity = activity;
         let env: Vec<(String, String)> = env.into_iter().collect();
-        register_custom(&name, &command, &args, &env, &store)
+        let secrets: Vec<(String, String)> = secret_env.unwrap_or_default().into_iter().collect();
+        register_custom(&name, &command, &args, &env, &secrets, &store)
     })
     .await
-    .map_err(|error| format!("agent_add_custom failed: {error}"))?
+    .map_err(|_| "无法添加 Agent，请重试".to_string())?
 }
 
 /// Install `agent_id` from the ACP registry (npx private install or binary
@@ -664,9 +673,11 @@ pub async fn agent_remove(
     agent_id: String,
     uninstall_installations: Option<Vec<String>>,
 ) -> Result<RemovalOutcome, String> {
+    let activity = crate::managed_update::activity()?;
     let _guard = crate::install_job::configuration_guard(&agent_id).await;
     release_connections(&app, &agent_id).await?;
     tauri::async_runtime::spawn_blocking(move || {
+        let _activity = activity;
         let _guard = _guard;
         let store = app.state::<MetaStore>();
         let catalog = app.state::<crate::agent_catalog::AgentCatalog>();
@@ -688,7 +699,7 @@ pub async fn agent_remove(
         }
         crate::installations::remember_before_remove(&store, &catalog, &agent_id)?;
         crate::credentials::revoke_agent(&store, &agent_id)?;
-        let removed = store.remove_agent(&agent_id)?;
+        let removed = crate::auth::agent_environment::remove_agent(&store, &agent_id)?;
         // With the row gone, requested installs delete one by one. A refused
         // or failed deletion keeps its receipt and is reported honestly.
         let mut kept_installations = Vec::new();
@@ -773,15 +784,9 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let store = MetaStore::open(&dir.path().join("store.sqlite3")).unwrap();
         let program = existing_program();
-        let old = register_custom(
-            "old",
-            &program,
-            &[],
-            &[("KEY".into(), "__keychain__".into())],
-            &store,
-        )
-        .unwrap();
+        let old = register_custom("old", &program, &[], &[], &[], &store).unwrap();
         let mut old = old;
+        old.env = vec![("KEY".into(), "__keychain__".into())];
         old.id = "codex".into();
         store.insert_agent(&old).unwrap();
         let reviewed = ReviewedInstallation {
@@ -829,12 +834,20 @@ mod tests {
             "助手甲",
             &program,
             &["first-agent".into()],
-            &[("TOKEN".into(), "__keychain__".into())],
+            &[("ORDINARY".into(), "keep".into())],
+            &[],
             &store,
         )
         .unwrap();
-        let second =
-            register_custom("助手乙", &program, &["second-agent".into()], &[], &store).unwrap();
+        let second = register_custom(
+            "助手乙",
+            &program,
+            &["second-agent".into()],
+            &[],
+            &[],
+            &store,
+        )
+        .unwrap();
         assert_ne!(first.id, second.id);
         assert_eq!(store.get_agent(&first.id).unwrap().unwrap(), first);
         assert_eq!(store.list_agents().unwrap().len(), 2);
@@ -877,7 +890,7 @@ mod tests {
             let handles = (0..4)
                 .map(|_| {
                     scope.spawn(|| {
-                        register_custom("助手", &program, &["new".into()], &[], &store)
+                        register_custom("助手", &program, &["new".into()], &[], &[], &store)
                             .unwrap()
                             .id
                     })
@@ -899,14 +912,15 @@ mod tests {
     fn register_custom_writes_row_and_validates() {
         let store = store();
         let program = existing_program();
-        assert!(register_custom("bad", "/no/such/bin", &[], &[], &store).is_err());
-        assert!(register_custom("", &program, &[], &[], &store).is_err());
+        assert!(register_custom("bad", "/no/such/bin", &[], &[], &[], &store).is_err());
+        assert!(register_custom("", &program, &[], &[], &[], &store).is_err());
 
         let row = register_custom(
             "My Agent",
             &program,
             &["--acp".to_string()],
             &[("FOO".to_string(), "1".to_string())],
+            &[],
             &store,
         )
         .unwrap();

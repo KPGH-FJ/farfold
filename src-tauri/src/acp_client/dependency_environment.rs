@@ -43,8 +43,9 @@ fn search_path_program(
     }
     // Preserve an explicitly empty PATH (including its cwd semantics). If the
     // merged environment has no entry, Command would inherit the process PATH.
-    let previous = environment
-        .get("PATH")
+    let names = crate::shell_env::EnvNames::current();
+    let previous = names
+        .get(environment, "PATH")?
         .cloned()
         .or_else(|| std::env::var("PATH").ok());
     let mut paths = vec![std::path::PathBuf::from(parent)];
@@ -52,8 +53,12 @@ fn search_path_program(
         paths.extend(std::env::split_paths(&previous));
     }
     let path = std::env::join_paths(paths).map_err(|_| invalid())?;
-    environment.insert("PATH".into(), path.to_string_lossy().into_owned());
-    environment.insert(variable.into(), name.into());
+    names.insert(
+        environment,
+        "PATH".into(),
+        path.to_string_lossy().into_owned(),
+    );
+    names.insert(environment, variable.into(), name.into());
     Ok(())
 }
 
@@ -69,10 +74,11 @@ pub(crate) fn apply(
         ) {
             continue;
         }
-        if let Some(selected) = environment.get(declaration.program_env).cloned() {
+        let names = crate::shell_env::EnvNames::current();
+        if let Some(selected) = names.get(environment, declaration.program_env)?.cloned() {
             let path = if is_command_name(&selected) {
-                let search = environment
-                    .get("PATH")
+                let search = names
+                    .get(environment, "PATH")?
                     .cloned()
                     .or_else(|| std::env::var("PATH").ok());
                 let directories = search

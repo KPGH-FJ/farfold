@@ -1,6 +1,8 @@
 # Farfold AI Coding Entrypoint
 
 当前续接只按[唯一活动计划](plans/agent-access.md)，验证基线见[当前状态](docs/status.md)。以下日期段保留授权、当时的执行顺序及条件变化。
+2026-11-11 用户批准先按新盘点清理，再按评审安排推进开发。只清理精确列出的可重建编译文件；历史清单仅在原路径和字节核合的条件下无损压缩，源码、Git、正式应用、数据、程序、配置、登录、备份和证据保留。清理保护复核后先修已查实的凭据、草稿恢复和Windows路径缺陷，统一当前结论入口，再续唯一计划第4–7周期；29家八项及151条原条件、具体实测限制保持。
+
 2026-11-07 第1阶段按当前可执行条件收口后，用户授权先清理爆满空间，再继续后续开发。本次仅移除新清单内可重建编译对象/缓存，源码、未提交工作、Git、数据、程序、配置、登录、备份及证据保留。清理和保护复核完成后，恢复唯一计划第2阶段第4周期；此授权解除“停在第1阶段汇报点”，缺条件项及29家八项/151条原条件保持，不重启已知有副作用或条件未变的旧探针。
 
 2026-11-07 用户明确当前 Farfold 内容均为可清理的开发数据，并确认清理对话、草稿、附件引用及待发内容，保留 Agent 程序、登录凭据、模型服务配置、工程源码和开发证据。允许直接使用当前 Mac 账号完成安装版保存失败与保存期间停止测试，无需另建测试账号。清理仅限 Farfold 持有的数据，不删除外部 Agent 自己的历史或工程文件；此授权覆盖本次开发数据的旧保留限制，不扩大其他数据、凭据或公开分发范围。
@@ -30,7 +32,7 @@ This repository is the only writable checkout for Farfold.
 1. `AGENTS.md` (this file)
 2. `PRODUCT.md` — 唯一产品契约；首次了解产品范围时阅读，后续按任务补读受影响的产品边界、页面、术语和接入标准
 3. `docs/status.md` + `plans/agent-access.md` — 日常续接默认入口：当前事实、已知问题及唯一短执行安排
-4. `docs/agent-access-requirements.md` — 单一任务要求与进度参考；按活动计划本批ID读取对应条目、所属工作包和共用完成依据。`corepack pnpm docs:task P39` 直接提取本表当前进度及证据链接，包依赖和普遍条件一并输出；与状态页互核后按链接查原件。NEW条目须显式指定相关包，例如 `corepack pnpm docs:task NEW-24 --package B,C,K`。错误ID失败，不回退打印全表
+4. `docs/agent-access-requirements.md` — 单一任务要求与进度参考；按活动计划本批ID读取对应条目、所属工作包和共用完成依据。`corepack pnpm docs:task P39` 读取已归并条目在状态页的唯一最新结论，其他条目标明为参考进度，包依赖和普遍条件一并输出；与状态页互核后按链接查原件。NEW条目须显式指定相关包，例如 `corepack pnpm docs:task NEW-24 --package B,C,K`。错误ID失败，不回退打印全表
 5. `docs/architecture.md` + task-relevant source — 按涉及模块读取；实际行为以当前源码及对应验证为准，不以计划或参考进度代替
 6. `.design/2026-09-26-agent-access-redesign/workbench/README.md` — 涉及交互时读取唯一原型说明及相关规则。用户已于 2026-09-27 授权基于当前原型先做技术验证，再完整增量落地；2026-09-28 授权删除旧原型及历史设计报告。原型示例不代表真实接入能力
 
@@ -101,7 +103,7 @@ This repository is the only writable checkout for Farfold.
 - Keep one active Markdown plan（`plans/agent-access.md`）。
 - 研发阶段本机只保留 `/Applications/Farfold.app`，开发与打包统一标识 `ai.farfold.desktop`；不另建 Dev/Test/QA 应用或应用备份，更新直接替换这一份。安装验证后移除重复 `.app` 产物；源码与验收证据保留。
 - 文档对齐不等于功能修复或安装验收；契约与实现冲突写入 `docs/status.md`，不改低产品要求。
-- 新证据改变结论时，同批更新状态页及所有受影响任务的当前进度，写清最新结论、证据和剩余缺口；已修问题从当前待修项移出，原失败保留在原始证据中。执行顺序变化时再改唯一计划。提交前实际运行本批 `docs:task` 并对照状态页；`docs:check` 只做结构与原条件核对。
+- 新证据改变结论时，已归并条目只更新状态页中的唯一结论并核对所有受影响任务链接；未归并条目仍同批更新状态页及参考进度，写清最新结论、证据和剩余缺口；已修问题从当前待修项移出，原失败保留在原始证据中。执行顺序变化时再改唯一计划。提交前实际运行本批 `docs:task` 并对照状态页；`docs:check` 只做结构与原条件核对。
 - 目录规则见 `docs/README.md`。旧证据归档；清理只操作明确属于本项目的具体路径，禁止按名称前缀扫删。
 - `src-tauri/target/` 混有历史数据备份，不能整体清空；不要删除正式应用、Agent 配置或用户历史。
 - Never log or commit provider credentials or API keys.

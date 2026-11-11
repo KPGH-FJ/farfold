@@ -1,0 +1,32 @@
+{
+  "authorization": "2026-11-11 explicit user cleanup before development",
+  "outcome": "completed",
+  "idleBeforeSnapshot": {
+    "relevant_processes": [],
+    "open_candidate_files": [],
+    "lsof_exit": 0
+  },
+  "idleBeforeDelete": {
+    "relevant_processes": [],
+    "open_candidate_files": [],
+    "lsof_exit": 0
+  },
+  "spaceBefore": {
+    "time_ns": 1794395579613471000,
+    "available_bytes": 8634572800
+  },
+  "removed": {
+    "file": 34160
+  },
+  "spaceImmediatelyAfter": {
+    "time_ns": 1794395583771734000,
+    "available_bytes": 41833857024
+  },
+  "liveMetadataUnchanged": true,
+  "protectedPreserved": true,
+  "spaceAfterVerification": {
+    "time_ns": 1794395642680630000,
+    "available_bytes": 41548857344
+  },
+  "availableIncreaseBytes": 33199284224
+}

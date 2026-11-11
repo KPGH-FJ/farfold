@@ -363,3 +363,6 @@ docs/maintenance/2026-11-04-download-cache-cleanup/pre-deletion-review.json
 docs/maintenance/2026-11-04-migration-cleanup/final-review.json
 docs/maintenance/2026-11-04-migration-cleanup/plan-summary.json
 docs/maintenance/2026-11-04-migration-cleanup/pre-deletion-review.json
+
+# Preserve the already hashed fifteenth-batch receipt; its captured formatting is evidence.
+docs/evidence/2026-11-11-stage2-fifteenth-batch/summary.json

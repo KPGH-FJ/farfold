@@ -359,3 +359,21 @@
     padding: 10px 6px;
   }
 }
+
+.custom-agent-secrets {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.custom-agent-secrets > div {
+  display: grid;
+  gap: 8px;
+}
+.custom-agent-secrets legend {
+  padding: 0 5px;
+  font-size: 13px;
+}

@@ -106,6 +106,19 @@ pub(crate) fn compile(
     service: &ServiceSnapshot,
     inherited: &HashMap<String, String>,
 ) -> Result<LaunchConfig, String> {
+    compile_with_names(
+        agent,
+        service,
+        inherited,
+        crate::shell_env::EnvNames::current(),
+    )
+}
+fn compile_with_names(
+    agent: &AgentRow,
+    service: &ServiceSnapshot,
+    inherited: &HashMap<String, String>,
+    names: crate::shell_env::EnvNames,
+) -> Result<LaunchConfig, String> {
     let supported = capability(agent);
     if !supported.api_types.contains(&service.api_type.as_str()) {
         return Err(supported
@@ -150,8 +163,8 @@ pub(crate) fn compile(
         .collect::<String>();
     let provider_id = format!("farfold_{suffix}");
     let env_name = format!("FARFOLD_SERVICE_KEY_{}", suffix.to_uppercase());
-    if inherited
-        .get(&env_name)
+    if names
+        .get(inherited, &env_name)?
         .is_some_and(|existing| existing != &service.secret)
     {
         return Err("所选 API 的密钥与已有环境设置冲突，请检查后重试".into());
@@ -159,14 +172,14 @@ pub(crate) fn compile(
 
     let (inline_name, mut config, model_id) = match catalog_id(agent) {
         Some("opencode") => {
-            let mut config = inline_config(inherited, "OPENCODE_CONFIG_CONTENT")?;
+            let mut config = inline_config(inherited, "OPENCODE_CONFIG_CONTENT", names)?;
             let provider = opencode_provider(service, &env_name)?;
             insert_provider(&mut config, "provider", &provider_id, provider)?;
             let model = format!("{provider_id}/{}", service.identity.model);
             ("OPENCODE_CONFIG_CONTENT", config, model)
         }
         Some("codex") if service.api_type == "responses" => {
-            let mut config = inline_config(inherited, "CODEX_CONFIG")?;
+            let mut config = inline_config(inherited, "CODEX_CONFIG", names)?;
             let provider = json!({
                 "name": "Farfold API",
                 "base_url": service.endpoint,
@@ -228,8 +241,12 @@ fn opencode_provider(service: &ServiceSnapshot, env_name: &str) -> Result<Value,
 fn inline_config(
     inherited: &HashMap<String, String>,
     name: &str,
+    names: crate::shell_env::EnvNames,
 ) -> Result<Map<String, Value>, String> {
-    let Some(raw) = inherited.get(name).filter(|raw| !raw.trim().is_empty()) else {
+    let Some(raw) = names
+        .get(inherited, name)?
+        .filter(|raw| !raw.trim().is_empty())
+    else {
         return Ok(Map::new());
     };
     serde_json::from_str::<Value>(raw)
@@ -289,6 +306,42 @@ mod tests {
             models: vec!["custom-model".into(), "second-model".into()],
             secret: "fixture-secret-do-not-log".into(),
             connection_revision: "revision-1".into(),
+        }
+    }
+
+    #[test]
+    fn windows_services_preserve_case_variant_settings_and_reject_conflicting_keys() {
+        let names = crate::shell_env::EnvNames::Windows;
+        for (id, inline_name) in [
+            ("codex", "CODEX_CONFIG"),
+            ("opencode", "OPENCODE_CONFIG_CONTENT"),
+        ] {
+            let selected = service("responses");
+            let inherited = HashMap::from([(
+                inline_name.to_ascii_lowercase(),
+                json!({"model_reasoning_effort":"high", "other":{"keep":true}}).to_string(),
+            )]);
+            let launch = compile_with_names(&agent(id), &selected, &inherited, names).unwrap();
+            let key_name = launch
+                .env_overrides
+                .iter()
+                .find(|(name, _)| name.starts_with("FARFOLD_SERVICE_KEY_"))
+                .unwrap()
+                .0
+                .clone();
+            let mut merged = inherited.clone();
+            names.extend(&mut merged, launch.env_overrides);
+            assert!(!merged.contains_key(&inline_name.to_ascii_lowercase()));
+            let settings: Value = serde_json::from_str(&merged[inline_name]).unwrap();
+            assert_eq!(settings["model_reasoning_effort"], "high");
+            assert_eq!(settings["other"]["keep"], true);
+            assert_eq!(merged[&key_name], selected.secret);
+            let mut conflict = inherited;
+            conflict.insert(
+                key_name.to_ascii_lowercase(),
+                "synthetic-other-account".into(),
+            );
+            assert!(compile_with_names(&agent(id), &selected, &conflict, names).is_err());
         }
     }
 

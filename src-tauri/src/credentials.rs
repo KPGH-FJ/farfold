@@ -620,15 +620,30 @@ fn apply_with(
     env: &mut HashMap<String, String>,
     vault: &dyn Vault,
 ) -> Result<(), String> {
+    apply_with_names(
+        store,
+        agent_id,
+        env,
+        vault,
+        crate::shell_env::EnvNames::current(),
+    )
+}
+fn apply_with_names(
+    store: &MetaStore,
+    agent_id: &str,
+    env: &mut HashMap<String, String>,
+    vault: &dyn Vault,
+    names: crate::shell_env::EnvNames,
+) -> Result<(), String> {
     for c in read(store)?.iter().filter(|c| !c.deleting) {
         for g in c.grants.iter().filter(|g| g.agent_id == agent_id) {
-            if !g.override_existing && env.contains_key(&g.env_name) {
+            if !g.override_existing && names.contains(env, &g.env_name) {
                 return Err("密钥变量出现新的来源冲突，请在设置中确认使用哪份密钥".into());
             }
             let key = vault
                 .get(&c.secret_ref)
                 .ok_or("无法读取已授权的密钥，请检查系统钥匙串后重试")?;
-            env.insert(g.env_name.clone(), key);
+            names.insert(env, g.env_name.clone(), key);
         }
     }
     Ok(())
@@ -895,6 +910,31 @@ mod tests {
         assert_eq!(env_b["TOKEN"], "replacement");
         assert_eq!(read(&store).unwrap()[0].grants.len(), 1);
     }
+    #[test]
+    fn windows_grants_require_explicit_override_of_case_variant_sources() {
+        let (_dir, store) = store();
+        let vault = Fake::default();
+        let saved = save(&store, &vault, input(None, "synthetic-selected")).unwrap();
+        legacy_grant(&store, &saved.id, "a", "TOKEN", false);
+        let original = HashMap::from([("token".into(), "synthetic-inherited".into())]);
+        let mut env = original.clone();
+        let names = crate::shell_env::EnvNames::Windows;
+        assert!(apply_with_names(&store, "a", &mut env, &vault, names).is_err());
+        assert_eq!(env, original);
+        let mut pool = read(&store).unwrap();
+        pool.iter_mut()
+            .find(|item| item.id == saved.id)
+            .unwrap()
+            .grants[0]
+            .override_existing = true;
+        write(&store, &pool).unwrap();
+        apply_with_names(&store, "a", &mut env, &vault, names).unwrap();
+        assert_eq!(
+            env,
+            HashMap::from([("TOKEN".into(), "synthetic-selected".into())])
+        );
+    }
+
     #[test]
     fn historical_grants_isolate_same_named_variables_and_revoke_restores_original() {
         let (_dir, store) = store();

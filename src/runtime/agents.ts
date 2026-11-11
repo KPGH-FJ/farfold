@@ -156,6 +156,7 @@ export function agentAddCustom(input: {
   command: string;
   args: string[];
   env: Record<string, string>;
+  secretEnv?: Record<string, string>;
 }): Promise<AgentRow> {
   return invoke("agent_add_custom", input);
 }
@@ -696,6 +697,7 @@ export interface AgentsState {
     command: string;
     args: string[];
     env?: Record<string, string>;
+    secretEnv?: Record<string, string>;
   }) => Promise<string | null>;
 }
 
@@ -957,6 +959,7 @@ export function useAgents(): AgentsState {
       command: string;
       args: string[];
       env?: Record<string, string>;
+      secretEnv?: Record<string, string>;
     }) => {
       setErrors((prev) => ({ ...prev, __custom: null }));
       try {

@@ -507,7 +507,10 @@ impl AcpManager {
             }
         };
         for (name, value) in dependency_environment {
-            environment.entry(name).or_insert(value);
+            let names = crate::shell_env::EnvNames::current();
+            if !names.contains(&environment, &name) {
+                names.insert(&mut environment, name, value);
+            }
         }
         // This is deliberately last: prepared service and explicit row values
         // must not overwrite the selected program's process-local delivery.

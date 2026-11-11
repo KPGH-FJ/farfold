@@ -68,99 +68,6 @@ export function checkedReceipt(
     throw new Error(S.unknown);
   return value as RestoreReceipt;
 }
-function strictChoice(value: unknown) {
-  const choice = known(value, [
-    "agentId",
-    "cwd",
-    "config",
-    "service",
-    "reviewRequired",
-  ]);
-  if (choice.service !== null)
-    known(choice.service, ["id", "model", "revision"]);
-}
-function strictBlocks(value: unknown) {
-  if (!Array.isArray(value)) throw new Error(S.unsupported);
-  for (const block of value) {
-    const b = object(block);
-    if (b.type === "text") known(b, ["type", "text"]);
-    else if (b.type === "image") known(b, ["type", "data", "mimeType", "uri"]);
-    else if (b.type === "resource_link")
-      known(b, ["type", "name", "uri", "mimeType"]);
-    else if (b.type === "resource") {
-      known(b, ["type", "resource"]);
-      known(b.resource, ["uri", "mimeType", "text"]);
-    } else throw new Error(S.unsupported);
-  }
-}
-
-/** Normal legacy loading has its own compatibility rules. Recovery does not
- * guess the meaning of newer fields that could change pending/send behavior. */
-function strictDraft(value: unknown) {
-  if (value == null) return;
-  const raw = object(value);
-  strictChoice(raw.choice);
-  for (const item of Object.values(object(raw.composers))) {
-    const draft = known(item, [
-      "text",
-      "attachments",
-      "sendPending",
-      "queueEdit",
-      "pendingConversation",
-      "savedChoice",
-    ]);
-    if (draft.queueEdit !== undefined)
-      strictBlocks(known(draft.queueEdit, ["index", "original"]).original);
-    if (draft.savedChoice !== undefined) strictChoice(draft.savedChoice);
-    if (!Array.isArray(draft.attachments)) throw new Error(S.unsupported);
-    draft.attachments.forEach((item) =>
-      known(item, [
-        "id",
-        "name",
-        "kind",
-        "uri",
-        "data",
-        "mimeType",
-        "deliveryMode",
-      ]),
-    );
-    if (draft.pendingConversation !== undefined) {
-      const pending = known(draft.pendingConversation, [
-        "agentId",
-        "cwd",
-        "nativeSessionId",
-        "service",
-        "serviceRevision",
-      ]);
-      if (pending.service !== undefined)
-        known(pending.service, ["id", "model"]);
-    }
-  }
-  for (const queue of Object.values(object(raw.queues))) {
-    const q = known(queue, ["blocks", "uncertainIndex", "outcomeUnknown"]);
-    if (!Array.isArray(q.blocks)) throw new Error(S.unsupported);
-    q.blocks.forEach(strictBlocks);
-  }
-  for (const items of Object.values(object(raw.feedback)))
-    for (const item of Object.values(object(items))) {
-      const feedback = known(item, [
-        "path",
-        "text",
-        "selection",
-        "lineInput",
-        "contentId",
-        "scope",
-        "anchor",
-      ]);
-      if (feedback.selection !== null)
-        known(feedback.selection, ["side", "line", "endLine"]);
-      if (feedback.lineInput !== undefined)
-        known(feedback.lineInput, ["side", "text"]);
-    }
-  if (raw.activity !== undefined)
-    for (const activity of Object.values(object(raw.activity)))
-      known(activity, ["lastActivityAt", "ended"]);
-}
 function strictSetup(value: unknown) {
   if (value == null) return;
   const raw = object(value);
@@ -214,8 +121,7 @@ export function previewEntries(
         throw new Error(S.unsupported);
       const value: unknown = JSON.parse(raw);
       if (key === RESTORE_KEYS[0]) {
-        strictDraft(value);
-        const parsed = parseDraftSnapshot(value);
+        const parsed = parseDraftSnapshot(value, "recovery");
         const drafts = parsed?.composers.length ?? 0;
         const queues =
           parsed?.queues.reduce(

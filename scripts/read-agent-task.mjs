@@ -6,6 +6,8 @@ import {
   renderTaskRequirements,
   selectTaskRequirements,
   taskReferencePath,
+  taskStatusPath,
+  resolveTaskProgress,
 } from "./agent-task-reference.mjs";
 
 export function parseTaskArguments(args) {
@@ -29,8 +31,9 @@ export function parseTaskArguments(args) {
 export function readTaskRequirements(args) {
   const { ids, packages } = parseTaskArguments(args);
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-  const reference = parseTaskReference(
-    readFileSync(resolve(root, taskReferencePath), "utf8"),
+  const reference = resolveTaskProgress(
+    parseTaskReference(readFileSync(resolve(root, taskReferencePath), "utf8")),
+    readFileSync(resolve(root, taskStatusPath), "utf8"),
   );
   return renderTaskRequirements(
     selectTaskRequirements(reference, ids, packages),

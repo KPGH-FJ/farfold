@@ -4,16 +4,31 @@ export interface CustomAgentDraft {
   command: string;
   args: string;
   envText: string;
+  secretEntries?: { name: string; value: string }[];
 }
 let retained: CustomAgentDraft | null = null;
 export const customAgentDraft = {
-  read: () => (retained ? { ...retained } : null),
+  read: () =>
+    retained
+      ? {
+          ...retained,
+          secretEntries: retained.secretEntries?.map((entry) => ({ ...entry })),
+        }
+      : null,
   keep: (draft: CustomAgentDraft) => {
-    retained = { ...draft };
+    retained = {
+      ...draft,
+      secretEntries: draft.secretEntries?.map((entry) => ({ ...entry })),
+    };
   },
   clear: () => {
     retained = null;
   },
 };
 export const hasCustomAgentDraft = (draft: CustomAgentDraft) =>
-  Object.values(draft).some((value) => value.length > 0);
+  [draft.name, draft.command, draft.args, draft.envText].some(
+    (value) => value.length > 0,
+  ) ||
+  !!draft.secretEntries?.some(
+    (entry) => entry.name.length > 0 || entry.value.length > 0,
+  );

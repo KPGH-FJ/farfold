@@ -36,7 +36,11 @@ vi.mock("react", async (original) => ({
 }));
 import { customAgentDraft } from "../runtime/custom_agent_draft";
 import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
-import { CustomAgentDialog } from "./CustomAgentDialog";
+import {
+  CustomAgentDialog,
+  parseEnvLines,
+  parseSecretEntries,
+} from "./CustomAgentDialog";
 import { CUSTOM_AGENT } from "../runtime/custom_agent_strings";
 type Element = ReactElement<Record<string, unknown>>;
 const addCustom = vi.fn(),
@@ -124,6 +128,7 @@ it("retains user input and permits retry when adding fails", async () => {
   expect(
     view
       .filter((node) => node.type === "input")
+      .slice(0, 2)
       .map((node) => node.props.value),
   ).toEqual([" My Agent ", "/chosen/agent"]);
   expect(onAdded).not.toHaveBeenCalled();
@@ -232,6 +237,7 @@ it("retains a custom form only by explicit in-memory choice and restores it on r
   h.effects = [];
   const values = render()
     .filter((node) => node.type === "input")
+    .slice(0, 2)
     .map((node) => node.props.value);
   expect(values).toEqual([" My Agent ", "/chosen/agent"]);
   expect(addCustom).not.toHaveBeenCalled();
@@ -252,4 +258,118 @@ it("discards a retained custom draft only after the explicit discard choice", ()
   )();
   expect(customAgentDraft.read()).toBeNull();
   expect(onClose).toHaveBeenCalledOnce();
+});
+
+it("provides a password input for a protected environment value", () => {
+  expect(
+    render().find(
+      (node) => node.type === "input" && node.props.type === "password",
+    ),
+  ).toBeDefined();
+});
+
+function fillSecret(name: string, value: string) {
+  (
+    render().filter((node) => node.type === "input")[2].props.onChange as (
+      event: unknown,
+    ) => void
+  )({ target: { value: name } });
+  (
+    render().find(
+      (node) => node.type === "input" && node.props.type === "password",
+    )!.props.onChange as (event: unknown) => void
+  )({ target: { value } });
+}
+
+it("submits protected values separately and preserves ordinary spaces exactly", async () => {
+  addCustom.mockResolvedValue("protected-id");
+  fill();
+  (
+    render().filter((node) => node.type === "textarea")[1].props.onChange as (
+      event: unknown,
+    ) => void
+  )({ target: { value: "OPTION=  preserve =  " } });
+  fillSecret("UNCLASSIFIED_NAME", "synthetic-secret = exact");
+  submit();
+  await Promise.resolve();
+  expect(addCustom).toHaveBeenCalledExactlyOnceWith({
+    name: "My Agent",
+    command: "/chosen/agent",
+    args: ["--flag", "argument with spaces"],
+    env: { OPTION: "  preserve =  " },
+    secretEnv: { UNCLASSIFIED_NAME: "synthetic-secret = exact" },
+  });
+  expect(customAgentDraft.read()).toBeNull();
+});
+
+it("rejects a name appearing in both ordinary and protected inputs", () => {
+  fill();
+  (
+    render().filter((node) => node.type === "textarea")[1].props.onChange as (
+      event: unknown,
+    ) => void
+  )({ target: { value: "SAME=ordinary" } });
+  fillSecret("SAME", "synthetic-secret");
+  // Invalid input remains actionable so clicking Add exposes the correction.
+  expect(
+    render().find((node) => node.props.children === CUSTOM_AGENT.add)!.props
+      .disabled,
+  ).toBe(false);
+  submit();
+  expect(addCustom).not.toHaveBeenCalled();
+  expect(
+    render().some(
+      (node) =>
+        node.props.role === "alert" &&
+        node.props.children === CUSTOM_AGENT.envDuplicate("SAME"),
+    ),
+  ).toBe(true);
+});
+
+it("retains protected values only through the explicit in-memory draft choice", () => {
+  fill();
+  fillSecret("TOKEN", "synthetic-secret");
+  (render()[0].props.onClose as () => void)();
+  expect(customAgentDraft.read()).toBeNull();
+  (
+    render().find((node) => node.props.children === U.customKeep)!.props
+      .onClick as () => void
+  )();
+  unmount();
+  h.slots = [];
+  h.effects = [];
+  expect(
+    render().find(
+      (node) => node.type === "input" && node.props.type === "password",
+    )!.props.value,
+  ).toBe("synthetic-secret");
+  (render()[0].props.onClose as () => void)();
+  (
+    render().find((node) => node.props.children === U.customDiscard)!.props
+      .onClick as () => void
+  )();
+  expect(customAgentDraft.read()).toBeNull();
+});
+
+it("treats names literally, rejects duplicate protected names and cannot forge a reference through ordinary input", () => {
+  expect(parseEnvLines("__proto__=ordinary").env.__proto__).toBe("ordinary");
+  expect(parseEnvLines("VALUE=__keychain__").error).toBe(
+    CUSTOM_AGENT.envReserved,
+  );
+  expect(
+    parseSecretEntries([{ name: "VALUE", value: "__keychain__" }], {}).env
+      .VALUE,
+  ).toBe("__keychain__");
+  expect(
+    parseSecretEntries(
+      [
+        { name: "A", value: "one" },
+        { name: "A", value: "two" },
+      ],
+      {},
+    ).error,
+  ).toBe(CUSTOM_AGENT.envDuplicate("A"));
+  expect(parseSecretEntries([{ name: "A", value: "" }], {}).error).toBe(
+    CUSTOM_AGENT.secretInvalid,
+  );
 });

@@ -597,11 +597,41 @@ function record(value: unknown): Record<string, unknown> {
     throw new Error("invalid draft");
   return value as Record<string, unknown>;
 }
-function isPromptBlocks(value: unknown): value is PromptBlock[] {
+type DraftParseMode = "load" | "recovery";
+function knownFields(value: unknown, keys: readonly string[]) {
+  if (Object.keys(record(value)).some((key) => !keys.includes(key)))
+    throw new Error("unsupported draft fields");
+}
+function isPromptBlocks(
+  value: unknown,
+  mode: DraftParseMode,
+): value is PromptBlock[] {
   return (
     Array.isArray(value) &&
     value.every((item) => {
       if (!item || typeof item !== "object") return false;
+      // Ordinary loading retains opaque official metadata. Recovery must not
+      // guess future send semantics, but uses the same supported block shapes.
+      if (mode === "recovery") {
+        if (item.type === "text") knownFields(item, ["type", "text"]);
+        else if (item.type === "image")
+          knownFields(item, ["type", "data", "mimeType", "uri"]);
+        else if (item.type === "audio") {
+          knownFields(item, ["type", "data", "mimeType", "uri", "localAudio"]);
+          parseLocalAudio(item.localAudio);
+        } else if (item.type === "resource_link")
+          knownFields(item, ["type", "name", "uri", "mimeType"]);
+        else if (item.type === "resource") {
+          knownFields(item, ["type", "resource", "localDocumentText"]);
+          knownFields(item.resource, ["uri", "mimeType", "text"]);
+        }
+        if (
+          ["uri", "mimeType"].some(
+            (key) => item[key] !== undefined && typeof item[key] !== "string",
+          )
+        )
+          return false;
+      }
       if (item.type !== "resource" && item.localDocumentText !== undefined)
         return false;
       if (item.type === "text") return typeof item.text === "string";
@@ -639,8 +669,16 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
     })
   );
 }
-function parseChoice(value: unknown): ConversationChoice {
+function parseChoice(value: unknown, mode: DraftParseMode): ConversationChoice {
   const selected = record(value);
+  if (mode === "recovery")
+    knownFields(selected, [
+      "agentId",
+      "cwd",
+      "config",
+      "service",
+      "reviewRequired",
+    ]);
   if (
     (selected.agentId !== null && typeof selected.agentId !== "string") ||
     (selected.cwd !== null && typeof selected.cwd !== "string")
@@ -657,6 +695,7 @@ function parseChoice(value: unknown): ConversationChoice {
     throw new Error("invalid option");
   if (selected.service !== null) {
     const service = record(selected.service);
+    if (mode === "recovery") knownFields(service, ["id", "model", "revision"]);
     if (
       ![service.id, service.model, service.revision].every(
         (v) => typeof v === "string",
@@ -719,7 +758,7 @@ function retainedAudioSource(value: unknown): LocalAudio | null {
     return null;
   }
 }
-function parseComposer(value: unknown): ComposerDraft {
+function parseComposer(value: unknown, mode: DraftParseMode): ComposerDraft {
   const raw = record(value);
   // Reconstructing only supported fields must not silently discard newer
   // persisted input before an ordinary edit replaces the saved snapshot.
@@ -742,11 +781,13 @@ function parseComposer(value: unknown): ComposerDraft {
     throw new Error("invalid draft");
   const editing =
     raw.queueEdit === undefined ? undefined : record(raw.queueEdit);
+  if (editing && mode === "recovery")
+    knownFields(editing, ["index", "original"]);
   if (
     editing &&
     (!Number.isSafeInteger(editing.index) ||
       Number(editing.index) < 0 ||
-      !isPromptBlocks(editing.original))
+      !isPromptBlocks(editing.original, mode))
   )
     throw new Error("invalid queue editor");
   const pending =
@@ -754,6 +795,14 @@ function parseComposer(value: unknown): ComposerDraft {
       ? undefined
       : record(raw.pendingConversation);
   if (pending) {
+    if (mode === "recovery")
+      knownFields(pending, [
+        "agentId",
+        "cwd",
+        "nativeSessionId",
+        "service",
+        "serviceRevision",
+      ]);
     if (
       ![pending.agentId, pending.cwd, pending.nativeSessionId].every(
         (v) => typeof v === "string" && v.length > 0,
@@ -762,6 +811,7 @@ function parseComposer(value: unknown): ComposerDraft {
       throw new Error("invalid pending target");
     if (pending.service !== undefined) {
       const service = record(pending.service);
+      if (mode === "recovery") knownFields(service, ["id", "model"]);
       if (
         ![service.id, service.model].every(
           (v) => typeof v === "string" && v.length > 0,
@@ -779,7 +829,7 @@ function parseComposer(value: unknown): ComposerDraft {
     text: raw.text,
     ...(raw.savedChoice === undefined
       ? {}
-      : { savedChoice: parseChoice(raw.savedChoice) }),
+      : { savedChoice: parseChoice(raw.savedChoice, mode) }),
     pendingConversation: pending as unknown as PendingConversation | undefined,
     queueEdit: editing as ComposerDraft["queueEdit"],
     sendPending: raw.sendPending === true,
@@ -801,10 +851,9 @@ function parseComposer(value: unknown): ComposerDraft {
               "audioClassificationFailed",
               "imageClassificationFailed",
               // Known legacy transient fields remain readable but are not trusted.
-              "content",
-              "loading",
-              "recovered",
-              "imageChecked",
+              ...(mode === "load"
+                ? ["content", "loading", "recovered", "imageChecked"]
+                : []),
             ].includes(key),
         ) ||
         typeof a.id !== "string" ||
@@ -813,6 +862,9 @@ function parseComposer(value: unknown): ComposerDraft {
         !["file", "image", "audio"].includes(a.kind) ||
         (a.imageClassificationFailed !== undefined &&
           a.imageClassificationFailed !== true) ||
+        (mode === "recovery" &&
+          a.audioClassificationFailed !== undefined &&
+          typeof a.audioClassificationFailed !== "boolean") ||
         ["uri", "data", "mimeType"].some(
           (key) => a[key] !== undefined && typeof a[key] !== "string",
         )
@@ -830,6 +882,12 @@ function parseComposer(value: unknown): ComposerDraft {
           : parseApprovedDocumentText(a.documentText);
       if (documentText && (a.kind !== "file" || typeof a.uri !== "string"))
         throw new Error("invalid document attachment");
+      if (
+        mode === "recovery" &&
+        a.kind !== "audio" &&
+        a.localAudio !== undefined
+      )
+        throw new Error("invalid audio attachment");
       let audioSource =
         a.kind === "audio" ? retainedAudioSource(a.localAudio) : null;
       const uri = typeof a.uri === "string" ? a.uri : undefined;
@@ -880,7 +938,13 @@ function serializeComposer(value: ComposerDraft): ComposerDraft {
   };
 }
 
-export function parseDraftSnapshot(value: unknown) {
+/** One persisted format for ordinary load and recovery. Recovery additionally
+ * refuses unknown nested send fields; legacy load keeps its existing rules.
+ * Neither mode publishes state, reads a file, or approves an attachment. */
+export function parseDraftSnapshot(
+  value: unknown,
+  mode: DraftParseMode = "load",
+) {
   if (value === null || value === undefined) return;
   const raw = record(decodeDraftAudio(value));
   if (
@@ -901,9 +965,9 @@ export function parseDraftSnapshot(value: unknown) {
     throw new Error("unsupported draft format");
   // Validate the entire value before publishing any restored content.
   const composers = Object.entries(record(raw.composers)).map(
-    ([key, item]) => [key, parseComposer(item)] as const,
+    ([key, item]) => [key, parseComposer(item, mode)] as const,
   );
-  const selected = parseChoice(raw.choice);
+  const selected = parseChoice(raw.choice, mode);
   const feedback = Object.entries(record(raw.feedback)).map(([key, items]) => {
     const entries = Object.entries(record(items)).map(([storedKey, item]) => {
       const itemValue = record(item);
@@ -1007,7 +1071,7 @@ export function parseDraftSnapshot(value: unknown) {
       throw new Error("invalid outcome notice");
     if (
       !Array.isArray(q.blocks) ||
-      q.blocks.some((blocks) => !isPromptBlocks(blocks))
+      q.blocks.some((blocks) => !isPromptBlocks(blocks, mode))
     )
       throw new Error("invalid queue");
     if (

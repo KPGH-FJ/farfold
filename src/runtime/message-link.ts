@@ -1,3 +1,5 @@
+import { isLocalAbsoluteFilePath, localFileUriPath } from "./file_paths";
+
 export type MessageLink =
   | { kind: "file"; path: string }
   | { kind: "web"; url: string }
@@ -24,30 +26,30 @@ export function messageLink(href: string | undefined): MessageLink {
       const url = new URL(href);
       return { kind: "web", url: url.href };
     }
-    let path = href;
     if (/^file:\/\//i.test(href)) {
       const url = new URL(href);
-      if (
-        (url.hostname && url.hostname !== "localhost") ||
-        url.username ||
-        url.password ||
-        url.port ||
-        url.search ||
-        (url.hash && !SOURCE_HASH.test(url.hash))
-      )
+      if (url.hash && !SOURCE_HASH.test(url.hash))
         return { kind: "unavailable" };
-      path = withoutSourcePosition(url.pathname);
-    } else if (
-      (/^[a-z][a-z0-9+.-]*:/i.test(href) &&
-        !/^[^:/]+\.[^:/]+:\d+(?::\d+)?$/.test(href)) ||
-      href.startsWith("//")
-    ) {
-      return { kind: "unavailable" };
-    } else {
-      path = withoutSourcePosition(path);
+      url.hash = "";
+      url.pathname = withoutSourcePosition(url.pathname);
+      const path = localFileUriPath(url.href);
+      return path && plain(path)
+        ? { kind: "file", path }
+        : { kind: "unavailable" };
     }
-    path = decodeURIComponent(path);
-    if (!plain(path) || path.startsWith("#") || path.startsWith("//"))
+    if (
+      /^[a-z][a-z0-9+.-]*:/i.test(href) &&
+      !isLocalAbsoluteFilePath(href) &&
+      !/^[^:/]+\.[^:/]+:\d+(?::\d+)?$/.test(href)
+    )
+      return { kind: "unavailable" };
+    const path = decodeURIComponent(withoutSourcePosition(href));
+    if (
+      !plain(path) ||
+      path.startsWith("#") ||
+      ((/^[\\/]/.test(path) || /^[a-z]:/i.test(path)) &&
+        !isLocalAbsoluteFilePath(path))
+    )
       return { kind: "unavailable" };
     return { kind: "file", path };
   } catch {
@@ -64,9 +66,9 @@ export function inlineFilePath(value: string): string | null {
     return link.kind === "file" ? link.path : null;
   }
   if (
-    !/^(?:\/(?!\/)|\.{1,2}\/)/.test(value) ||
+    (!isLocalAbsoluteFilePath(value) && !/^\.{1,2}[\\/]/.test(value)) ||
     /[|;&<>`$]/.test(value) ||
-    /\s(?:--?[^/\s]|\/|\.{1,2}\/|[a-zA-Z_]\w*=)/.test(value)
+    /\s(?:--?[^/\s]|[\\/]|[a-z]:[\\/]|\.{1,2}[\\/]|[a-zA-Z_]\w*=)/i.test(value)
   )
     return null;
   return withoutSourcePosition(value);
