@@ -30,7 +30,7 @@ This repository is the only writable checkout for Farfold.
 1. `AGENTS.md` (this file)
 2. `PRODUCT.md` — 唯一产品契约；首次了解产品范围时阅读，后续按任务补读受影响的产品边界、页面、术语和接入标准
 3. `docs/status.md` + `plans/agent-access.md` — 日常续接默认入口：当前事实、已知问题及唯一短执行安排
-4. `docs/agent-access-requirements.md` — 单一任务要求与进度参考；按本次任务ID读取对应条目、所属工作包和共用完成依据，不从参考重新排任务。可用 `corepack pnpm docs:task P13` 提取指定范围；NEW条目须显式指定相关包，例如 `corepack pnpm docs:task NEW-24 --package B,C,K`。工具补读已声明包依赖及普遍条件；错误ID失败，不回退打印全表
+4. `docs/agent-access-requirements.md` — 单一任务要求与进度参考；按活动计划本批ID读取对应条目、所属工作包和共用完成依据。`corepack pnpm docs:task P39` 直接提取本表当前进度及证据链接，包依赖和普遍条件一并输出；与状态页互核后按链接查原件。NEW条目须显式指定相关包，例如 `corepack pnpm docs:task NEW-24 --package B,C,K`。错误ID失败，不回退打印全表
 5. `docs/architecture.md` + task-relevant source — 按涉及模块读取；实际行为以当前源码及对应验证为准，不以计划或参考进度代替
 6. `.design/2026-09-26-agent-access-redesign/workbench/README.md` — 涉及交互时读取唯一原型说明及相关规则。用户已于 2026-09-27 授权基于当前原型先做技术验证，再完整增量落地；2026-09-28 授权删除旧原型及历史设计报告。原型示例不代表真实接入能力
 
@@ -101,6 +101,7 @@ This repository is the only writable checkout for Farfold.
 - Keep one active Markdown plan（`plans/agent-access.md`）。
 - 研发阶段本机只保留 `/Applications/Farfold.app`，开发与打包统一标识 `ai.farfold.desktop`；不另建 Dev/Test/QA 应用或应用备份，更新直接替换这一份。安装验证后移除重复 `.app` 产物；源码与验收证据保留。
 - 文档对齐不等于功能修复或安装验收；契约与实现冲突写入 `docs/status.md`，不改低产品要求。
+- 新证据改变结论时，同批更新状态页及所有受影响任务的当前进度，写清最新结论、证据和剩余缺口；已修问题从当前待修项移出，原失败保留在原始证据中。执行顺序变化时再改唯一计划。提交前实际运行本批 `docs:task` 并对照状态页；`docs:check` 只做结构与原条件核对。
 - 目录规则见 `docs/README.md`。旧证据归档；清理只操作明确属于本项目的具体路径，禁止按名称前缀扫删。
 - `src-tauri/target/` 混有历史数据备份，不能整体清空；不要删除正式应用、Agent 配置或用户历史。
 - Never log or commit provider credentials or API keys.

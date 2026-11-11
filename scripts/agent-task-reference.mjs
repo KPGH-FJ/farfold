@@ -6,7 +6,7 @@ export const referenceRole =
 
 const taskRow = /^\|\s*(ARCH-\d+|NEW-\d+|P\d+|H\d+)\s*\|/;
 const packageIds = "ABCDEFGHIJKLMNXZ";
-const commonPrefixes = ["每个条目的完成依据 =", "每次更新条目必须记录："];
+const commonPrefixes = ["每个条目的完成依据 =", "每次更新条目必须记录"];
 
 export function parseTaskReference(text) {
   text = text.replace(/\r\n/g, "\n");
@@ -106,6 +106,8 @@ export function renderTaskRequirements(selection) {
     "# 按ID读取的要求（只读参考，无调度权）",
     "",
     "执行顺序只见 plans/agent-access.md；当前证据见 docs/status.md。产品要求仍为 PRODUCT.md 的29家八项标准；本输出不改变范围或证明完成。",
+    "",
+    "进度直接摘自 docs/agent-access-requirements.md 的当前进度列，与状态页同批维护。条目内相对证据链接以 docs/ 为起点。",
     "",
     ...selection.common.flatMap((line) => [line, ""]),
     "## 官方接口与范围约束",
