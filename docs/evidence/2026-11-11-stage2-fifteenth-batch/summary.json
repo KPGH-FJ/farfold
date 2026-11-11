@@ -83,16 +83,41 @@
     "output/2026-11-10-stage2-closeout/p13-audio-csp/receipt.json": "59feb95e38bec0580107c7e1592b191cba83afb53d4f18b4217f837c60a1b810",
     "output/2026-11-10-stage2-closeout/p13-audio-csp/native-csp-contrast-v2.json": "96448e7f06dd7c21eb8db575117641afeaccddcc0174983982069535ae6fc9b1",
     "output/2026-11-11-stage2-resume/p11-mistral-point.json": "7294223df21121d203d53047196e9e1df21f90bb8d90ffcd2602615ea3ae4cc4",
-    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-voiceover-user-check.json": "b660f9e630b8640f6c358dbbb0f871072d795857c20b2cb0ae90efe3ee5f98ec"
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-voiceover-user-check.json": "b660f9e630b8640f6c358dbbb0f871072d795857c20b2cb0ae90efe3ee5f98ec",
+    "output/2026-11-09-six-hour-stage2/formal-fifteenth/formal-voiceover-all-tools-retest.json": "7da5cab353aa24c2e2e5291a0fed4c5457cfd01a52aa72994800e6378842dda7"
   },
   "formalToolReportVoiceOverFollowup": {
     "recordedOnSameInstalledSource": true,
     "reportReadStartedUtc": "2026-11-11T05:18:30.083000+00:00",
-    "voiceOverSpeechUserConfirmed": "程序本次返回 7 项扩展配置",
+    "initialUserStatementLaterWithdrawn": "程序本次返回 7 项扩展配置",
     "afterActivationKeyboardFocus": "重新读取",
     "originalVoiceOverSettingRestored": true,
     "modelRequests": 0,
     "coveredPath": "Goose conversation extension configuration report re-read",
-    "speechTimingIndependentlyVerifiedBySystemLog": false
+    "speechTimingIndependentlyVerifiedBySystemLog": false,
+    "correction": {
+      "supersedesDocsCommit": "5715681c3",
+      "initialUserConfirmationWithdrawn": true,
+      "userReportedHearingTargetAnnouncement": false,
+      "actualVoiceOverSpeechVerified": false,
+      "voiceOverMainProcessId": 81921,
+      "voiceOverMainProcessExitUtc": "2026-11-11T05:18:21.666406+00:00",
+      "voiceOverMainProcessExitCode": 0,
+      "voiceOverMainProcessLifetimeMs": 812,
+      "voiceOverQuickstartRunningAtRead": true
+    }
+  },
+  "formalToolReportVoiceOverRetest": {
+    "readStartedUtc": "2026-11-11T05:33:51.538000+00:00",
+    "scope": "全部工具",
+    "previousResultVisible": false,
+    "normalVoiceOverRunningBeforeAndAfterRead": true,
+    "nativeAccessibilityStatus": "程序本次返回 17 项工具信息。",
+    "focusAfterRead": "重新读取",
+    "systemSpeechActivityAfterRead": true,
+    "userHeardSpeechIncludingFarfold": true,
+    "reportResultAnnouncementVerified": false,
+    "voiceOverRestoredOff": true,
+    "modelRequests": 0
   }
 }
