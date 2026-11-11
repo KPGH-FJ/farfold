@@ -1,0 +1,235 @@
+{
+  "kind": "ScopedOfficialMcpLifecycleObservation",
+  "recordedAt": "2026-11-11T14:27:44Z",
+  "scope": "One exact self-owned credential-free HTTP MCP in new empty Goose conversations on this Mac; official program experiment, not Farfold UI acceptance.",
+  "agent": {
+    "id": "goose",
+    "reportedVersion": "1.52.0",
+    "reviewedOfficialSourceCommit": "302b60806639ea9f0ae8f053f49f8bf0e88b26f4",
+    "binaryHashOrVersionGateUsed": false
+  },
+  "selection": {
+    "provider": "openrouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "effort": "off",
+    "mode": "auto"
+  },
+  "environment": {
+    "home": "ordinary existing user HOME",
+    "globalAgentConfigurationWritesRequested": 0,
+    "network": "outbound restricted to this one owned loopback endpoint",
+    "httpProxyException": "child-only NO_PROXY adds 127.0.0.1 and retains the inherited effective value; system proxy unchanged",
+    "temporaryFiles": "child-only TMPDIR under this owned test directory",
+    "officialStartupWrites": "current-day new CLI logs and exact existing sessions-directory chmod, with prior file/owner/mode checks"
+  },
+  "observed": {
+    "storedEntryConfirmed": true,
+    "exactToolReported": true,
+    "withdrawalConfirmed": true,
+    "preLoadListWorked": true,
+    "coldLoadWithoutReactivation": true,
+    "forkWithoutReactivation": true,
+    "retiredEndpointUncontacted": true
+  },
+  "protocolRequests": {
+    "matchedSuccess": 20,
+    "modelPrompts": 0,
+    "toolsCalls": 0
+  },
+  "extensionReports": {
+    "beforeAdd": 1,
+    "afterAdd": 2,
+    "afterRemove": 1,
+    "priorDeveloperUnchanged": true,
+    "exactDescriptorMatchedBeforeRemove": true,
+    "ownToolCountAfterAdd": 1,
+    "allToolCountAfterRemove": 5,
+    "ownToolAbsentAfterRemove": true
+  },
+  "restoration": {
+    "freshOfficialProcess": true,
+    "preLoadPersistentListWorked": true,
+    "coldLoad": true,
+    "fork": true,
+    "sourceAndForkPersistedOnlyDeveloper": true,
+    "modelEffortModeMatchedOnNewLoadFork": true,
+    "forkAdvertisedInHandshake": false,
+    "forkBasis": "reviewed official handler and actual matched successful reply; not inferred from handshake"
+  },
+  "retiredEndpoint": {
+    "countsAtWithdrawal": {
+      "tcpAccepted": 5,
+      "server/discover": 1,
+      "initialize": 1,
+      "notifications/initialized": 1,
+      "tools/list": 1
+    },
+    "countsAfterAllProcessesAndServerClosed": {
+      "tcpAccepted": 5,
+      "server/discover": 1,
+      "initialize": 1,
+      "notifications/initialized": 1,
+      "tools/list": 1
+    },
+    "unchanged": true,
+    "tcpIncludesOneKernelPolicyCanary": true,
+    "scope": "Only the recorded interval through both normal process exits and server handler closure."
+  },
+  "processes": [
+    {
+      "exitCode": 0,
+      "stdinEof": true,
+      "streamsAtEof": true,
+      "remainingGroupCount": 0,
+      "signalsSent": 0
+    },
+    {
+      "exitCode": 0,
+      "stdinEof": true,
+      "streamsAtEof": true,
+      "remainingGroupCount": 0,
+      "signalsSent": 0
+    }
+  ],
+  "preservation": {
+    "originalSessions": 51,
+    "originalMessages": 234,
+    "originalRowsUnchanged": true,
+    "beforeR7RowsIncludingEarlierOwnedRecordsUnchanged": true,
+    "preexistingLogMetadataUnchanged": true,
+    "ownedRecordsRetained": {
+      "20261111_1": {
+        "observedRetained": true,
+        "messageCount": 0,
+        "persistedExtensionCount": 1,
+        "onlyDeveloper": true,
+        "selectedProviderMatches": true,
+        "selectedModeMatches": true,
+        "selectedModelMatches": true
+      },
+      "20261111_2": {
+        "observedRetained": true,
+        "messageCount": 0,
+        "persistedExtensionCount": 1,
+        "onlyDeveloper": true,
+        "selectedProviderMatches": true,
+        "selectedModeMatches": true,
+        "selectedModelMatches": true
+      },
+      "20261111_3": {
+        "observedRetained": true,
+        "messageCount": 0,
+        "persistedExtensionCount": 1,
+        "onlyDeveloper": true,
+        "selectedProviderMatches": true,
+        "selectedModeMatches": true,
+        "selectedModelMatches": true
+      },
+      "20261111_4": {
+        "observedRetained": true,
+        "messageCount": 0,
+        "persistedExtensionCount": 1,
+        "onlyDeveloper": true,
+        "selectedProviderMatches": true,
+        "selectedModeMatches": true,
+        "selectedModelMatches": true
+      }
+    },
+    "sourceDatabaseAndWalUnchangedDuringFinalObservation": true,
+    "productionShmCreatedByFinalObservation": false,
+    "noHistoryDeleteRequested": true,
+    "protectedConfigurationMetadataUnchanged": true,
+    "savedSelectionUnchanged": true
+  },
+  "finalReadBoundary": {
+    "originalReceiptPassed": false,
+    "originalReceiptStoppedAt": "wal-without-existing-shm",
+    "originalReceiptUnmodified": true,
+    "laterVerification": "Stable DB/WAL copied to an owned temporary directory; only that copy replayed WAL. Source metadata and SHA matched before/after, original rows and all four owned records checked, then temporary copy removed. No further Agent run."
+  },
+  "earlierAttempts": [
+    {
+      "attempt": "R1",
+      "originalOuterExitCode": 1,
+      "originalStop": "request-unknown-no-retry",
+      "note": "initialize no reply; startup stderr not retained",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/receipt.json",
+        "sha256": "33b4083788b9ca0a7365321b914173d5a946de140911f105a491fad6759b602e"
+      }
+    },
+    {
+      "attempt": "R2",
+      "originalOuterExitCode": 1,
+      "originalStop": "request-unknown-no-retry",
+      "note": "rolling appender EPERM panic; safe stderr classified",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/attempt-2-startup/receipt.json",
+        "sha256": "fc703dac107d6e342c621ceceb725ac5d685a17624783cc983c1efefb5d52c34"
+      }
+    },
+    {
+      "attempt": "R3",
+      "originalOuterExitCode": 1,
+      "originalStop": "request-unknown-no-retry",
+      "note": "logging passed; exact session directory chmod denied",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/attempt-3-logging/receipt.json",
+        "sha256": "25cf5f9b4155bb748a8edc0daa607392c2683de7f1e165a730fb91d2ddcd4d26"
+      }
+    },
+    {
+      "attempt": "R4",
+      "originalOuterExitCode": 1,
+      "originalStop": "required-official-capabilities-not-declared",
+      "note": "initialize succeeded; fixture wrongly required advertised fork",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/attempt-4-session-mode/receipt.json",
+        "sha256": "d086eb0df3b3ae5c7d94f88fc9ce8a48478fa82d0dfefc562821af47003ff767"
+      }
+    },
+    {
+      "attempt": "R5",
+      "originalOuterExitCode": 1,
+      "originalStop": "request-unknown-no-retry",
+      "note": "new reply unknown; exact new row 20261111_1 retained; developer tempdir dependency identified",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/attempt-5-capabilities/receipt.json",
+        "sha256": "292c820b58a45795219b0b06a988db3077669a31454be4262754e353a3c7fe8a"
+      }
+    },
+    {
+      "attempt": "R6",
+      "originalOuterExitCode": 1,
+      "originalStop": "official-request-error",
+      "note": "new succeeded; HTTP add matched -32603 before fixture TCP; native row 20261111_2 retained",
+      "receipt": {
+        "path": "output/2026-11-11-mcp-lifecycle/attempt-6-owned-tmp/receipt.json",
+        "sha256": "1d02671e6646e9b0e2eefabf99b19b5c10b41494b3401b4375ba11e30dd71b48"
+      }
+    }
+  ],
+  "originals": [
+    {
+      "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/receipt.json",
+      "sha256": "55c622b86521eaf17545a531077c8d0b71ef36f59409bb1b275c16ab1a741404"
+    },
+    {
+      "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/final-observation.json",
+      "sha256": "1f61e7cf9753602817f2a503a3524074c6d211e48edae7262905077ae3995bc3"
+    },
+    {
+      "path": "output/2026-11-11-mcp-lifecycle/execution-summary.json",
+      "sha256": "55426d8fdba6703ce5514481a9a09c8092885fb205da2b8dc2edadaeafe72d9f"
+    }
+  ],
+  "limitations": [
+    "No Farfold current-conversation add/remove UI or installation verification.",
+    "No model prompt, actual tool call or real-service task success.",
+    "Empty conversations only; no selected historical-node fork or old message/context preservation test.",
+    "No injected save failure, lost reply, in-flight cancellation, external concurrent change, authenticated or other MCP transport, other Agent, or Windows verification.",
+    "Empty mcpServers, configuration list alone and a successful mutation reply alone remain insufficient to claim withdrawal.",
+    "No full P41, complete Agent acceptance, or product-wide acceptance."
+  ],
+  "acceptanceVerified": false
+}

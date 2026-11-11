@@ -18,7 +18,7 @@ const parse = (input) =>
   index.parseStage2Evidence(input, authorities, { rootDir: root });
 
 describe("existing stage-two evidence in the default entry", () => {
-  it("reads both real records without creating receipts or changing dated stage-one counts", () => {
+  it("reads the scoped records without creating receipts or changing dated stage-one counts", () => {
     const result = index.runAcceptanceIndex([]);
     const [supplement] = result.agentEvidence.supplements;
     expect(supplement.source).toEqual({
@@ -28,6 +28,7 @@ describe("existing stage-two evidence in the default entry", () => {
     expect(supplement.role).toBe("stage2-scoped-evidence-not-current-status");
     expect(supplement.observations.map((item) => item.agentId)).toEqual([
       "mistral-vibe",
+      "goose",
       "goose",
     ]);
     expect(
@@ -64,13 +65,48 @@ describe("existing stage-two evidence in the default entry", () => {
         .agentEvidence.supplements.flatMap((item) => item.observations);
     expect(query("--agent", "goose").map((item) => item.id)).toEqual([
       document.observations[1].id,
+      document.observations[2].id,
     ]);
     expect(query("--requirement", "P18").map((item) => item.agentId)).toEqual([
       "mistral-vibe",
     ]);
-    expect(query("--standard", "S5")).toHaveLength(2);
+    expect(query("--requirement", "P22").map((item) => item.id)).toEqual([
+      document.observations[1].id,
+    ]);
+    expect(query("--standard", "S5")).toHaveLength(3);
     expect(query("--standard", "S4")).toEqual([]);
     expect(query("--agent", "amp-acp")).toEqual([]);
+  });
+
+  it("keeps the no-model official MCP sample separate from file journeys and receipt coverage", () => {
+    const query = index.runAcceptanceIndex([
+      "--agent",
+      "goose",
+      "--requirement",
+      "P41",
+    ]);
+    const observations = query.agentEvidence.supplements.flatMap(
+      (item) => item.observations,
+    );
+    expect(observations).toHaveLength(1);
+    const [sample] = observations;
+    expect(sample.id).toBe("goose-p41-official-mcp-lifecycle-20261111");
+    expect(sample.standardIds).toEqual(["S5"]);
+    expect(sample.requirementIds).toEqual(["P41"]);
+    expect(sample.result).toBe("unclassified");
+    expect(sample.acceptanceVerified).toBe(false);
+    expect(sample).not.toHaveProperty("attemptResults");
+    const original = JSON.parse(
+      readFileSync(resolve(root, sample.evidence[0].path), "utf8"),
+    );
+    expect(sample.sourceCodeCommits).toEqual([
+      original.agent.reviewedOfficialSourceCommit,
+    ]);
+    expect(original.protocolRequests.modelPrompts).toBe(0);
+    expect(original.protocolRequests.toolsCalls).toBe(0);
+    expect(original.finalReadBoundary.originalReceiptPassed).toBe(false);
+    expect(query.coverage).toEqual([]);
+    expect(query.acceptanceVerified).toBe(false);
   });
 
   it("binds saved indexes to supplemental bytes without making old pure API callers read new files", () => {

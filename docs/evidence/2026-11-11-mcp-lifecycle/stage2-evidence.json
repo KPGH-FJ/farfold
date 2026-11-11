@@ -1,7 +1,7 @@
 {
   "kind": "ScopedStage2AgentEvidence",
-  "recordedAt": "2026-11-11T13:34:46Z",
-  "scope": "2026-11-09至11-10已记录样本的只读索引补充；标准关联为人工窄关联，原正面事实保留，文字不自动生成八项通过。不是最新剩余条件，当前事实仍以docs/status.md为准。",
+  "recordedAt": "2026-11-11T14:32:14Z",
+  "scope": "本批两个历史文件样本（2026-11-09至11-10）与一个官方程序MCP样本（2026-11-11）的索引补充；标准关联为人工窄关联，原事实与各层边界保留，文字不自动生成八项通过。不是最新剩余条件，当前事实仍以docs/status.md为准。",
   "observations": [
     {
       "id": "mistral-p18-two-fragments-20261110",
@@ -82,6 +82,51 @@
           "返工与另存原JSON摘要均与已发表摘要一致。",
           "当前返工源文件仍为59字节，SHA与两份原记录一致。",
           "副本路径和另存协议日志文件名未写入所引原JSON；未为填充索引搜索其他文件或制造回执。"
+        ]
+      }
+    },
+    {
+      "id": "goose-p41-official-mcp-lifecycle-20261111",
+      "agentId": "goose",
+      "standardIds": ["S5"],
+      "requirementIds": ["P41"],
+      "scope": "macOS；Goose 1.52.0官方进程中一项自有无凭据HTTP MCP的新增、撤回和恢复实验，只用新空对话。sourceCodeCommits指所核Goose官方源码，不是Farfold构建；不是Farfold界面验收。",
+      "sourceCodeCommits": ["302b60806639ea9f0ae8f053f49f8bf0e88b26f4"],
+      "selection": "沿用既有OpenRouter/nvidia/nemotron-3-ultra-550b-a55b:free、off、auto，模型请求和实际工具调用均为0。普通用户HOME不变；只在子进程NO_PROXY保留继承值并加入127.0.0.1，系统代理不变；子进程TMPDIR限本次自有目录，出站只准该自有回环端点。",
+      "summary": "R7的20个官方协议请求均有匹配成功回执。精确HTTP项加入后持久配置1→2且报告一项自有工具；核对完整描述和extensionKey后撤回，持久配置2→1、活动报告不再含自有工具，原developer保持。新官方进程在load前可读取持久列表，冷load及空对话fork后未恢复该项；截至两进程正常退出及服务关闭，撤回端点计数保持。原R7总记录passed:false未改写：最后只读核对因WAL存在而SHM缺失停下；随后在自有临时副本核对原记录和四条自有记录，源DB/WAL前后摘要不变，无追加Agent运行。",
+      "limitations": [
+        "仅官方程序、新空对话和此一无凭据HTTP项；未验Farfold当前对话添加/撤回界面或安装流程。",
+        "无模型请求、无实际工具调用，不证明真实服务任务成功或模型采用工具。",
+        "未验指定历史点分支、旧消息/上下文保留；fork依据所核官方处理器和匹配实测回执，握手未声明fork。",
+        "未注入保存失败、回执丢失、在途取消、外部并发修改；认证型MCP、其他传输、其他Agent和Windows未验。",
+        "空mcpServers、配置列表或单个修改成功回执都不能单独证明撤回；端点未重连只限所记录观察区间。",
+        "R1–R6原失败/未知及R7原passed:false保留；后续最终核对不改写原回执，不合成新标准receipt或attempt。",
+        "不提升P41全项、S5全项、整家或全产品验收。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-11-mcp-lifecycle/mcp-lifecycle-summary.json",
+          "sha256": "4a05b734181bb465e93abde6e8930986f4ba4bfc3df70b654e5d68afc2b86ce6"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T14:32:14Z",
+        "originals": [
+          {
+            "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/receipt.json",
+            "sha256": "55c622b86521eaf17545a531077c8d0b71ef36f59409bb1b275c16ab1a741404"
+          },
+          {
+            "path": "output/2026-11-11-mcp-lifecycle/attempt-7-loopback-proxy/final-observation.json",
+            "sha256": "1f61e7cf9753602817f2a503a3524074c6d211e48edae7262905077ae3995bc3"
+          }
+        ],
+        "observations": [
+          "R7原receipt与追加final-observation两份SHA均与公开摘要一致。",
+          "逐项核对原记录的新增、工具报告、撤回、load前读取、冷load和fork观察为真，模型请求与实际工具调用均为0。",
+          "R7原passed:false和wal-without-existing-shm停点保留；final-observation引用同一未改写原SHA，核原51会话/234消息、R7前含自有记录的53会话及四条自有记录，源DB/WAL前后不变。",
+          "受保护配置元数据与已保存选择保持；未读取或核算秘密配置内容摘要，不声称配置文件逐字节核验。",
+          "本次只读核原件与公开摘要，未读取生产数据库、未启动Agent、未制造或重封标准回执。"
         ]
       }
     }
