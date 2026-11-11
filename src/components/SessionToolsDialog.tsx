@@ -352,10 +352,9 @@ export function SessionToolsDialog({
                   configuration ? undefined : selected || undefined,
                   configuration ? true : undefined,
                 );
+            if (!started) return;
             const { operationId } = controller.getSnapshot();
-            setAnnouncedRequest(
-              started && operationId ? { controller, operationId } : null,
-            );
+            if (operationId) setAnnouncedRequest({ controller, operationId });
           }}
         >
           {view.unresolved

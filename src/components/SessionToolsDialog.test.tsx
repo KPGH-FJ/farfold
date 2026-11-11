@@ -159,6 +159,7 @@ it("keeps the keyboard action mounted and focusable during read, check, and rece
   };
 
   original.props.onClick();
+  original.props.onClick();
   await flush();
   const readingStatus = announcement(renderDialog(h), S.loading);
   expect([readingStatus?.type, readingStatus?.key]).toEqual([
