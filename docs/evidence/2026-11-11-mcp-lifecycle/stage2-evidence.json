@@ -1,0 +1,89 @@
+{
+  "kind": "ScopedStage2AgentEvidence",
+  "recordedAt": "2026-11-11T13:34:46Z",
+  "scope": "2026-11-09至11-10已记录样本的只读索引补充；标准关联为人工窄关联，原正面事实保留，文字不自动生成八项通过。不是最新剩余条件，当前事实仍以docs/status.md为准。",
+  "observations": [
+    {
+      "id": "mistral-p18-two-fragments-20261110",
+      "agentId": "mistral-vibe",
+      "standardIds": ["S5"],
+      "requirementIds": ["P18"],
+      "scope": "macOS正式安装版；2026-11-10既有Mistral服务的一次真实请求，一份自有合成文本文件。",
+      "sourceCodeCommits": ["97479b1850d931c1eea1135750d61189e12a12a3"],
+      "selection": "既有Mistral服务；mistral-medium-3.5；high。",
+      "summary": "原正式记录确认：一次读取、一次file_system.search_replace（replace_all）；同一工具记录展示第3、18行两片段且分别可读。文件496字节变494字节，其余字节不变。",
+      "limitations": [
+        "仅这一文件和一次编辑，不代表全部工具、P18全项、S5全项或整家通过。",
+        "本次只读复核原件和磁盘；未重新操作正式界面，UI事实保留为原正式记录的观察。",
+        "协议日志只记录事件元数据，不能单独证明工具内容；3次服务操作不推断计费。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-10-stage2-live-mistral/summary.json",
+          "sha256": "b3376236345acdda550aa792877a44616368c71dfa66e9b977bd967e7cb83554"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T13:34:46Z",
+        "originals": [
+          {
+            "path": "output/2026-11-10-stage2-closeout/p18-mistral-multi-fragment/formal-one-shot-result.json",
+            "sha256": "234484b128b2454c297dace61d0d6cfbea579705f9c1a9a458e6351d43da5a37"
+          }
+        ],
+        "observations": [
+          "原JSON摘要与已发表summary一致。",
+          "当前494字节文件摘要仍匹配；反向还原两个专用标记得到原496字节摘要，标记仅在第3、18行。",
+          "当时协议日志前8080字节（67行）摘要与原JSON一致，包含一次session/prompt；当前日志追加4条startup，整文件摘要不同。",
+          "原协议片段已按原字节另存本批output；没有补写历史回执。"
+        ]
+      }
+    },
+    {
+      "id": "goose-p22-rework-copy-20261109",
+      "agentId": "goose",
+      "standardIds": ["S5"],
+      "requirementIds": ["P22"],
+      "scope": "macOS正式安装版；2026-11-09自有文本文件真实返工及后续独立另存，两批记录而非单次连续旅程。",
+      "sourceCodeCommits": [
+        "91dadecc8a521eae79f22cb66c52ea07c18b4760",
+        "b4025636794e3aafbd6977138dc4d978674b7f1a"
+      ],
+      "selection": "返工沿用Goose/OpenRouter；nvidia/nemotron-3-ultra-550b-a55b:free；off。后续另存未发新模型请求。",
+      "summary": "原返工记录确认提出版本意见后完成改写，发送意见与原消息保留原SHA，新稿可读；60字节变59字节。后续正式另存记录确认副本59字节、与返工后的SHA相同，已显示另存完成。",
+      "limitations": [
+        "返工和另存发生在不同批次；不升级为P22所有成功/取消/失败路径、S5全项或整家通过。",
+        "当前可独立重核原记录及返工源文件；另存原JSON未列副本路径，本次无法重新读取副本，不否定原正式另存观察。",
+        "未重做界面操作、冷恢复或真实请求；只保留两份原记录明确覆盖的事实。"
+      ],
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-11-09-presend-visibility/real-reply-and-restore.json",
+          "sha256": "d5658e95d9880fc831aa71abb1eab80fc913d1d985ad99ad5b1285530cb42655"
+        },
+        {
+          "path": "docs/evidence/2026-11-10-document-tabs-delivery/summary.json",
+          "sha256": "02eacd1520e08690af1739b24c644cec199cbd553e6f8140dd9fa68a464841c5"
+        }
+      ],
+      "originalVerification": {
+        "checkedAt": "2026-11-11T13:34:46Z",
+        "originals": [
+          {
+            "path": "output/2026-11-09-phase2-real-use/p21-real-rework.json",
+            "sha256": "c5eba9705d3815f3bbb063f299b55ea3467f6f7551f199abbfab74f75876da1e"
+          },
+          {
+            "path": "output/2026-11-09-six-hour-stage2/formal-third/actual-document-tabs-delivery.json",
+            "sha256": "52ae2b78b8b313d9475185643996be6551d6489966867337f689bc6b82fdd278"
+          }
+        ],
+        "observations": [
+          "返工与另存原JSON摘要均与已发表摘要一致。",
+          "当前返工源文件仍为59字节，SHA与两份原记录一致。",
+          "副本路径和另存协议日志文件名未写入所引原JSON；未为填充索引搜索其他文件或制造回执。"
+        ]
+      }
+    }
+  ]
+}

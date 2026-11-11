@@ -109,7 +109,16 @@ describe("existing per-Agent evidence in the normal acceptance entry", () => {
       original.rows.find((row) => row.agentId === "mistral-vibe")
         .scopedHistoryEvidence,
     );
-    expect(result.cells[0].observationStatus).toBe("not-indexed");
+    // The explicit stage-two sample is separate from the unassigned stage-one
+    // prose above. Only that new manual link indexes this cell.
+    expect(result.agentEvidence.supplements[0].observations).toHaveLength(1);
+    expect(result.cells[0].declaredObservations).toEqual([
+      expect.objectContaining({
+        sourcePointer: "/observations/0",
+        result: "unclassified",
+      }),
+    ]);
+    expect(result.cells[0].observationStatus).toBe("indexed-unreviewed");
     expect(result.coverage).toEqual([]);
   });
 });

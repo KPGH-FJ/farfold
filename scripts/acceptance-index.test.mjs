@@ -11,6 +11,7 @@ import {
   buildAcceptanceIndex,
   evidenceLevels,
   loadAgentConditions,
+  loadStage2Evidence,
   loadAcceptanceAuthorities,
   normalizeMapping,
   parseAcceptanceAuthorities,
@@ -750,6 +751,7 @@ describe("read-only query and command-line contract", () => {
       buildAcceptanceIndex({
         authorities,
         conditions: loadAgentConditions(root),
+        stage2Evidence: loadStage2Evidence(root),
       }),
     );
     expect(runAcceptanceIndex(["--help"])).toContain("writes JSON to stdout");

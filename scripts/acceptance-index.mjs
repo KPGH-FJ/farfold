@@ -23,6 +23,11 @@ import {
   parseAgentConditions,
 } from "./acceptance-agent-conditions.mjs";
 export { parseAgentConditions } from "./acceptance-agent-conditions.mjs";
+import {
+  parseStage2Evidence,
+  stage2EvidencePath,
+} from "./acceptance-stage2-evidence.mjs";
+export { parseStage2Evidence } from "./acceptance-stage2-evidence.mjs";
 
 // An evidence-side index, not an execution queue or a product event store.
 // Nothing here establishes the truth of an observation or accepts an Agent.
@@ -193,6 +198,13 @@ export function loadAgentConditions(rootDir = root) {
   return {
     path: agentConditionsPath,
     text: readBoundedJson(resolve(rootDir, agentConditionsPath), true),
+  };
+}
+
+export function loadStage2Evidence(rootDir = root) {
+  return {
+    path: stage2EvidencePath,
+    text: readBoundedJson(resolve(rootDir, stage2EvidencePath), true),
   };
 }
 
@@ -484,6 +496,7 @@ export function buildAcceptanceIndex({
   mapping,
   coverage = [],
   conditions,
+  stage2Evidence,
   rootDir = root,
 }) {
   const normalized = normalizeMapping(mapping, authorities);
@@ -491,6 +504,15 @@ export function buildAcceptanceIndex({
     conditions === undefined
       ? undefined
       : parseAgentConditions(conditions, authorities, { rootDir });
+  if (stage2Evidence !== undefined) {
+    assert.ok(
+      agentEvidence,
+      "stage-two supplement requires the Agent evidence index",
+    );
+    agentEvidence.supplements = [
+      parseStage2Evidence(stage2Evidence, authorities, { rootDir }),
+    ];
+  }
   assert.ok(
     Array.isArray(coverage),
     "coverage must be an array of validated cases",
@@ -507,12 +529,20 @@ export function buildAcceptanceIndex({
       const requirementIds =
         normalized.links.find((item) => item.standardId === standard.id)
           ?.requirementIds ?? [];
-      const declaredObservations =
-        agentEvidence?.rows
+      const declaredObservations = [
+        ...(agentEvidence?.rows
           .find((row) => row.agentId === agentId)
           .observations.filter((item) =>
             item.standardIds.includes(standard.id),
-          ) ?? [];
+          ) ?? []),
+        ...(agentEvidence?.supplements?.flatMap((supplement) =>
+          supplement.observations.filter(
+            (item) =>
+              item.agentId === agentId &&
+              item.standardIds.includes(standard.id),
+          ),
+        ) ?? []),
+      ];
       const hasCoverage = coverage.some(
         (item) =>
           item.agentId === agentId && item.standardIds.includes(standard.id),
@@ -530,6 +560,7 @@ export function buildAcceptanceIndex({
           ? {}
           : {
               declaredObservations: declaredObservations.map((item) => ({
+                ...(item.source === undefined ? {} : { source: item.source }),
                 sourcePointer: item.sourcePointer,
                 result: item.result,
               })),
@@ -584,7 +615,7 @@ export function buildAcceptanceIndex({
 export function validateAcceptanceIndex(
   index,
   authorities,
-  { conditions, rootDir = root } = {},
+  { conditions, stage2Evidence, rootDir = root } = {},
 ) {
   object(index, "index");
   const rebuilt = buildAcceptanceIndex({
@@ -595,6 +626,11 @@ export function validateAcceptanceIndex(
       ? {}
       : {
           conditions: conditions ?? loadAgentConditions(rootDir),
+          ...(index.agentEvidence.supplements === undefined
+            ? {}
+            : {
+                stage2Evidence: stage2Evidence ?? loadStage2Evidence(rootDir),
+              }),
           rootDir,
         }),
   });
@@ -620,10 +656,15 @@ export function queryAcceptanceIndex(
   {
     authorities = loadAcceptanceAuthorities(),
     conditions,
+    stage2Evidence,
     rootDir = root,
   } = {},
 ) {
-  validateAcceptanceIndex(index, authorities, { conditions, rootDir });
+  validateAcceptanceIndex(index, authorities, {
+    conditions,
+    stage2Evidence,
+    rootDir,
+  });
   if (agentId !== undefined)
     assert.ok(
       index.authorities.agents.includes(agentId),
@@ -673,6 +714,23 @@ export function queryAcceptanceIndex(
       : {
           agentEvidence: {
             ...index.agentEvidence,
+            ...(index.agentEvidence.supplements === undefined
+              ? {}
+              : {
+                  supplements: index.agentEvidence.supplements.map(
+                    (supplement) => ({
+                      ...supplement,
+                      observations: supplement.observations.filter(
+                        (item) =>
+                          (!agentId || item.agentId === agentId) &&
+                          (!standardId ||
+                            item.standardIds.includes(standardId)) &&
+                          (!requirementId ||
+                            item.requirementIds.includes(requirementId)),
+                      ),
+                    }),
+                  ),
+                }),
             rows: index.agentEvidence.rows
               .filter((row) => !agentId || row.agentId === agentId)
               .map((row) => {
@@ -749,6 +807,7 @@ export function runAcceptanceIndex(args, { rootDir = root } = {}) {
       "Validation establishes index structure and current source identity, never 29-Agent acceptance.",
       "Unmapped requirements remain in the complete 151-item catalog; no pass state is generated.",
       "Default queries also read the dated stage-one Agent ledger; recorded remaining conditions are not current project status.",
+      "Default queries include scoped stage-two observations with explicit manual links and source digests; these remain unclassified, separate from receipt coverage and current status.",
       "not-indexed means 未收录, never 未测. Historical ledger observations and remaining-condition prose remain separate from receipt coverage.",
       "Current task conclusions are read from docs/status.md where migrated; no prose is used to infer standards or passed states.",
     ].join("\n");
@@ -776,17 +835,20 @@ export function runAcceptanceIndex(args, { rootDir = root } = {}) {
     return validation;
   }
   const conditions = loadAgentConditions(rootDir);
+  const stage2Evidence = loadStage2Evidence(rootDir);
   const index = buildAcceptanceIndex({
     authorities,
     mapping: options.mappingFile ? readJson(options.mappingFile) : undefined,
     coverage: options.coverageFile ? readJson(options.coverageFile) : [],
     conditions,
+    stage2Evidence,
     rootDir,
   });
   if (options.agentId || options.standardId || options.requirementId)
     return queryAcceptanceIndex(index, options, {
       authorities,
       conditions,
+      stage2Evidence,
       rootDir,
     });
   return index;
